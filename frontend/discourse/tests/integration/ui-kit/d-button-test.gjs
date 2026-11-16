@@ -1,8 +1,28 @@
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import {
+  click,
+  render,
+  rerender,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
 import I18n, { i18n } from "discourse-i18n";
+
+/**
+ * Clicks the button without settling, so a test can observe what has and has
+ * not run while the dispatch is still on the stack.
+ */
+function dispatchClick() {
+  const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+  document.querySelector(".btn").dispatchEvent(event);
+  return event;
+}
 
 module("Integration | ui-kit | DButton", function (hooks) {
   setupRenderingTest(hooks);
@@ -37,10 +57,10 @@ module("Integration | ui-kit | DButton", function (hooks) {
   });
 
   test("isLoading button", async function (assert) {
-    this.set("isLoading", true);
+    const isLoading = tracked(true);
 
     await render(
-      <template><DButton @isLoading={{this.isLoading}} /></template>
+      <template><DButton @isLoading={{isLoading.value}} /></template>
     );
 
     assert
@@ -48,7 +68,8 @@ module("Integration | ui-kit | DButton", function (hooks) {
       .exists("has a spinner showing");
     assert.dom("button").isDisabled("while loading the button is disabled");
 
-    this.set("isLoading", false);
+    isLoading.value = false;
+    await rerender();
 
     assert
       .dom("button .loading-icon")
@@ -81,36 +102,37 @@ module("Integration | ui-kit | DButton", function (hooks) {
   });
 
   test("disabled button", async function (assert) {
-    this.set("disabled", true);
+    const disabled = tracked(true);
 
-    await render(<template><DButton @disabled={{this.disabled}} /></template>);
+    await render(<template><DButton @disabled={{disabled.value}} /></template>);
 
     assert.dom("button").isDisabled();
 
-    this.set("disabled", false);
+    disabled.value = false;
+    await rerender();
     assert.dom("button").isEnabled();
   });
 
   test("aria-label", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
 
+    const ariaLabel = tracked("test.fooAriaLabel");
+    const translatedAriaLabel = tracked(undefined);
+
     await render(
       <template>
         <DButton
-          @ariaLabel={{this.ariaLabel}}
-          @translatedAriaLabel={{this.translatedAriaLabel}}
+          @ariaLabel={{ariaLabel.value}}
+          @translatedAriaLabel={{translatedAriaLabel.value}}
         />
       </template>
     );
 
-    this.set("ariaLabel", "test.fooAriaLabel");
-
     assert.dom("button").hasAria("label", i18n("test.fooAriaLabel"));
 
-    this.setProperties({
-      ariaLabel: null,
-      translatedAriaLabel: "bar",
-    });
+    ariaLabel.value = null;
+    translatedAriaLabel.value = "bar";
+    await rerender();
 
     assert.dom("button").hasAria("label", "bar");
   });
@@ -118,22 +140,23 @@ module("Integration | ui-kit | DButton", function (hooks) {
   test("title", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
 
+    const title = tracked("test.fooTitle");
+    const translatedTitle = tracked(undefined);
+
     await render(
       <template>
         <DButton
-          @title={{this.title}}
-          @translatedTitle={{this.translatedTitle}}
+          @title={{title.value}}
+          @translatedTitle={{translatedTitle.value}}
         />
       </template>
     );
 
-    this.set("title", "test.fooTitle");
     assert.dom("button").hasAttribute("title", i18n("test.fooTitle"));
 
-    this.setProperties({
-      title: null,
-      translatedTitle: "bar",
-    });
+    title.value = null;
+    translatedTitle.value = "bar";
+    await rerender();
 
     assert.dom("button").hasAttribute("title", "bar");
   });
@@ -141,104 +164,410 @@ module("Integration | ui-kit | DButton", function (hooks) {
   test("label", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
 
+    const label = tracked("test.fooLabel");
+    const translatedLabel = tracked(undefined);
+
     await render(
       <template>
         <DButton
-          @label={{this.label}}
-          @translatedLabel={{this.translatedLabel}}
+          @label={{label.value}}
+          @translatedLabel={{translatedLabel.value}}
         />
       </template>
     );
 
-    this.set("label", "test.fooLabel");
-
     assert.dom("button .d-button-label").hasText(i18n("test.fooLabel"));
 
-    this.setProperties({
-      label: null,
-      translatedLabel: "bar",
-    });
+    label.value = null;
+    translatedLabel.value = "bar";
+    await rerender();
 
     assert.dom("button .d-button-label").hasText("bar");
   });
 
   test("aria-expanded", async function (assert) {
+    const ariaExpanded = tracked(undefined);
+
     await render(
-      <template><DButton @ariaExpanded={{this.ariaExpanded}} /></template>
+      <template><DButton @ariaExpanded={{ariaExpanded.value}} /></template>
     );
 
     assert.dom("button").doesNotHaveAria("expanded");
 
-    this.set("ariaExpanded", true);
+    ariaExpanded.value = true;
+    await rerender();
     assert.dom("button").hasAria("expanded", "true");
 
-    this.set("ariaExpanded", false);
+    ariaExpanded.value = false;
+    await rerender();
     assert.dom("button").hasAria("expanded", "false");
 
-    this.set("ariaExpanded", "false");
+    ariaExpanded.value = "false";
+    await rerender();
     assert.dom("button").doesNotHaveAria("expanded");
 
-    this.set("ariaExpanded", "true");
+    ariaExpanded.value = "true";
+    await rerender();
     assert.dom("button").doesNotHaveAria("expanded");
   });
 
   test("aria-controls", async function (assert) {
-    await render(
-      <template><DButton @ariaControls={{this.ariaControls}} /></template>
-    );
+    await render(<template><DButton @ariaControls="foo-bar" /></template>);
 
-    this.set("ariaControls", "foo-bar");
     assert.dom("button").hasAria("controls", "foo-bar");
   });
 
   test("onKeyDown callback", async function (assert) {
-    this.set("foo", null);
-    this.set("onKeyDown", () => {
-      this.set("foo", "bar");
-    });
-    this.set("action", () => {
-      this.set("foo", "baz");
-    });
+    let foo = null;
+    const onKeyDown = () => {
+      foo = "bar";
+    };
+    const onAction = () => {
+      foo = "baz";
+    };
 
     await render(
       <template>
-        <DButton @action={{this.action}} @onKeyDown={{this.onKeyDown}} />
+        <DButton @action={{onAction}} @onKeyDown={{onKeyDown}} />
       </template>
     );
 
     await triggerKeyEvent(".btn", "keydown", "Space");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
 
     await triggerKeyEvent(".btn", "keydown", "Enter");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
   });
 
   test("press Enter", async function (assert) {
-    this.set("foo", null);
-    this.set("action", () => {
-      this.set("foo", "bar");
-    });
+    let foo = null;
+    const onAction = () => {
+      foo = "bar";
+    };
 
-    await render(<template><DButton @action={{this.action}} /></template>);
+    await render(<template><DButton @action={{onAction}} /></template>);
 
     await triggerKeyEvent(".btn", "keydown", "Space");
-    assert.strictEqual(this.foo, null);
+    assert.strictEqual(foo, null);
 
     await triggerKeyEvent(".btn", "keydown", "Enter");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
   });
 
   test("@action function is triggered on click", async function (assert) {
-    this.set("foo", null);
-    this.set("action", () => {
-      this.set("foo", "bar");
-    });
+    let foo = null;
+    const onAction = () => {
+      foo = "bar";
+    };
 
-    await render(<template><DButton @action={{this.action}} /></template>);
+    await render(<template><DButton @action={{onAction}} /></template>);
 
     await click(".btn");
 
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
+  });
+
+  module("action dispatch", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.calls = [];
+      this.record = (...args) => this.calls.push(args);
+    });
+
+    test("dispatches @actionParam as the only argument", async function (assert) {
+      const record = this.record;
+
+      await render(
+        <template><DButton @action={{record}} @actionParam="topic" /></template>
+      );
+      await click(".btn");
+
+      assert.deepEqual(this.calls, [["topic"]]);
+    });
+
+    test("dispatches undefined when there is no @actionParam", async function (assert) {
+      const record = this.record;
+
+      await render(<template><DButton @action={{record}} /></template>);
+      await click(".btn");
+
+      assert.deepEqual(this.calls, [[undefined]]);
+    });
+
+    test("dispatches the event after @actionParam with @forwardEvent", async function (assert) {
+      const record = this.record;
+
+      await render(
+        <template>
+          <DButton
+            @action={{record}}
+            @actionParam="topic"
+            @forwardEvent={{true}}
+          />
+        </template>
+      );
+      await click(".btn");
+
+      assert.strictEqual(this.calls.length, 1);
+      assert.strictEqual(this.calls[0][0], "topic");
+      assert.true(this.calls[0][1] instanceof MouseEvent, "the click event");
+    });
+
+    test("dispatches the event for a truthy non-boolean @forwardEvent", async function (assert) {
+      const record = this.record;
+
+      await render(
+        <template><DButton @action={{record}} @forwardEvent="true" /></template>
+      );
+      await click(".btn");
+
+      assert.strictEqual(this.calls.length, 1);
+      assert.true(this.calls[0][1] instanceof MouseEvent, "the click event");
+    });
+
+    test("dispatches to the value of an object @action", async function (assert) {
+      const record = this.record;
+
+      await render(
+        <template>
+          <DButton @action={{hash value=record}} @actionParam="topic" />
+          <DButton
+            class="forwarding"
+            @action={{hash value=record}}
+            @actionParam="draft"
+            @forwardEvent={{true}}
+          />
+        </template>
+      );
+      await click(".btn:not(.forwarding)");
+      await click(".btn.forwarding");
+
+      assert.deepEqual(this.calls[0], ["topic"]);
+      assert.strictEqual(this.calls[1][0], "draft");
+      assert.true(this.calls[1][1] instanceof MouseEvent, "the click event");
+    });
+
+    test("dispatches nothing for an object @action without a value", async function (assert) {
+      await render(<template><DButton @action={{hash}} /></template>);
+      await click(".btn");
+
+      assert.dom(".btn").exists("the click is handled without throwing");
+    });
+
+    test("claims the click for an @action it cannot call", async function (assert) {
+      for (const uncallable of ["invalid", 7, {}]) {
+        await render(<template><DButton @action={{uncallable}} /></template>);
+        const event = dispatchClick();
+        await settled();
+
+        assert.true(
+          event.defaultPrevented,
+          `prevents the default for ${JSON.stringify(uncallable)}`
+        );
+      }
+    });
+
+    test("calls a function @action even when it has a value property", async function (assert) {
+      const calls = [];
+      const handler = () => calls.push("function");
+      handler.value = () => calls.push("property");
+
+      await render(<template><DButton @action={{handler}} /></template>);
+      await click(".btn");
+
+      assert.deepEqual(calls, ["function"]);
+    });
+
+    test("@action takes precedence over @route", async function (assert) {
+      const transitionTo = sinon.stub(
+        this.owner.lookup("service:router"),
+        "transitionTo"
+      );
+      const record = this.record;
+
+      await render(
+        <template>
+          <DButton @action={{record}} @route="discovery.latest" />
+        </template>
+      );
+      await click(".btn");
+
+      assert.deepEqual(this.calls, [[undefined]], "runs the action");
+      assert.false(transitionTo.called, "does not navigate");
+    });
+
+    test("dispatches after the click on most platforms", async function (assert) {
+      sinon.stub(capabilities, "isIOS").value(false);
+      const record = this.record;
+
+      await render(<template><DButton @action={{record}} /></template>);
+      document.querySelector(".btn").click();
+
+      assert.deepEqual(this.calls, [], "deferred past the click");
+      await settled();
+      assert.deepEqual(this.calls, [[undefined]]);
+    });
+
+    test("dispatches during the click on iOS", async function (assert) {
+      sinon.stub(capabilities, "isIOS").value(true);
+      const record = this.record;
+
+      await render(
+        <template><DButton @action={{record}} @actionParam="topic" /></template>
+      );
+      document.querySelector(".btn").click();
+
+      assert.deepEqual(this.calls, [["topic"]], "not deferred on iOS");
+    });
+
+    test("@action object form is triggered on click", async function (assert) {
+      // A method, not an arrow: an extracted-reference call would lose `this`
+      // and leave `seen` on the object untouched.
+      const handler = {
+        seen: null,
+        value(param) {
+          this.seen = param;
+        },
+      };
+
+      await render(
+        <template>
+          <DButton @action={{handler}} @actionParam="param" />
+        </template>
+      );
+
+      await click(".btn");
+
+      assert.strictEqual(
+        handler.seen,
+        "param",
+        "invokes value() as a method, so it keeps its receiver"
+      );
+    });
+
+    test("@action object form resolves value at invocation time", async function (assert) {
+      sinon.stub(capabilities, "isIOS").get(() => false);
+
+      const calls = [];
+      const handler = { value: () => calls.push("original") };
+
+      await render(<template><DButton @action={{handler}} /></template>);
+
+      dispatchClick();
+      // Swapped after dispatch but before the deferred run: the replacement wins
+      // only if the lookup happens when the handler actually runs.
+      handler.value = () => calls.push("replacement");
+
+      await settled();
+
+      assert.deepEqual(calls, ["replacement"], "reads .value when it runs");
+    });
+
+    test("@immediate runs the action inside the click dispatch", async function (assert) {
+      sinon.stub(capabilities, "isIOS").get(() => false);
+
+      let ran = false;
+      const handler = () => (ran = true);
+
+      await render(
+        <template><DButton @action={{handler}} @immediate={{true}} /></template>
+      );
+
+      assert.false(ran, "has not run before anything was dispatched");
+
+      dispatchClick();
+
+      assert.true(
+        ran,
+        "runs before the dispatch returns, so transient user activation survives"
+      );
+
+      await settled();
+    });
+
+    test("@immediate forwards the event when asked", async function (assert) {
+      sinon.stub(capabilities, "isIOS").get(() => false);
+
+      const received = [];
+      const handler = (...args) => received.push(args);
+
+      await render(
+        <template>
+          <DButton
+            @action={{handler}}
+            @forwardEvent={{true}}
+            @immediate={{true}}
+          />
+        </template>
+      );
+
+      const dispatched = dispatchClick();
+
+      assert.strictEqual(received.length, 1, "runs exactly once");
+      assert.strictEqual(
+        received[0][1],
+        dispatched,
+        "receives the very event that was dispatched, not merely an Event"
+      );
+
+      await settled();
+
+      assert.strictEqual(
+        received.length,
+        1,
+        "and does not run again on settle"
+      );
+    });
+
+    for (const isIOS of [false, true]) {
+      for (const immediate of [false, true]) {
+        for (const type of ["click", "keydown"]) {
+          test(`forwards the original ${type} event and @actionParam (iOS=${isIOS}, @immediate=${immediate})`, async function (assert) {
+            sinon.stub(capabilities, "isIOS").get(() => isIOS);
+
+            const calls = [];
+            const param = { marker: true };
+            const handler = (value, event) =>
+              calls.push({ value, event, phase: event.eventPhase });
+
+            await render(
+              <template>
+                <DButton
+                  @action={{handler}}
+                  @actionParam={{param}}
+                  @forwardEvent={{true}}
+                  @immediate={{immediate}}
+                />
+              </template>
+            );
+
+            const event =
+              type === "click"
+                ? new MouseEvent(type, { bubbles: true, cancelable: true })
+                : new KeyboardEvent(type, {
+                    key: "Enter",
+                    bubbles: true,
+                    cancelable: true,
+                  });
+            document.querySelector(".btn").dispatchEvent(event);
+
+            const runsInDispatch = isIOS || immediate;
+            assert.strictEqual(calls.length, runsInDispatch ? 1 : 0);
+            assert.true(event.defaultPrevented, "claims the event");
+
+            await settled();
+
+            assert.strictEqual(calls.length, 1, "runs exactly once");
+            assert.strictEqual(calls[0].event, event, "the same event object");
+            assert.strictEqual(calls[0].value, param, "the same param object");
+            assert.strictEqual(
+              calls[0].phase,
+              runsInDispatch ? Event.AT_TARGET : Event.NONE,
+              "runs in the listener, or after the dispatch has finished"
+            );
+          });
+        }
+      }
+    }
   });
 
   test("ellipses", async function (assert) {

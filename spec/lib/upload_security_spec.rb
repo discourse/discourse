@@ -93,6 +93,22 @@ RSpec.describe UploadSecurity do
             end
           end
 
+          describe "for a public type category_background_dark" do
+            let(:type) { "category_background_dark" }
+
+            it "returns false" do
+              expect(security.should_be_secure?).to eq(false)
+            end
+          end
+
+          describe "for a public type branding" do
+            let(:type) { "branding" }
+
+            it "returns false" do
+              expect(security.should_be_secure?).to eq(false)
+            end
+          end
+
           describe "for a custom public type" do
             let(:type) { "my_custom_type" }
 
@@ -321,6 +337,14 @@ RSpec.describe UploadSecurity do
       describe "when the upload is first used for a UserAvatar" do
         it "returns false" do
           Fabricate(:user_avatar, custom_upload: upload)
+          create_secure_post_reference
+          expect(security.should_be_secure?).to eq(false)
+        end
+      end
+
+      describe "when the upload is first used for a UserAssociatedAccount avatar" do
+        it "returns false" do
+          Fabricate(:user_associated_account, avatar_upload: upload)
           create_secure_post_reference
           expect(security.should_be_secure?).to eq(false)
         end

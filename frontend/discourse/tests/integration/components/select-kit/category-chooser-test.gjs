@@ -15,7 +15,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("suppresses hover during teardown", function (assert) {
@@ -48,7 +48,7 @@ module(
     });
 
     test("with value", async function (assert) {
-      this.set("value", 2);
+      this.value = 2;
 
       await render(
         <template><CategoryChooser @value={{this.value}} /></template>
@@ -155,7 +155,12 @@ module(
       assert.strictEqual(this.subject.header().value(), null);
       assert.strictEqual(
         this.subject.header().label(),
-        i18n("category.choose").replace("&hellip;", "…")
+        i18n("category.choose")
+      );
+      assert.strictEqual(
+        this.subject.header().title(),
+        this.subject.header().label(),
+        "the tooltip reads like the label"
       );
     });
 
@@ -192,7 +197,7 @@ module(
       assert.strictEqual(this.subject.header().value(), null);
       assert.strictEqual(
         this.subject.header().label(),
-        i18n("category.choose").replace("&hellip;", "…")
+        i18n("category.choose")
       );
     });
 

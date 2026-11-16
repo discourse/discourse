@@ -56,6 +56,12 @@ RSpec.describe CategoriesController do
       expect(response).to redirect_to("/c/uncategorized")
     end
 
+    it "encodes characters that are invalid in a URL when redirecting /category paths" do
+      get "/category/lounge%5B/quote%5D"
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/lounge%5B/quote%5D")
+    end
+
     it "respects permalinks before redirecting /category paths to /c paths" do
       _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
@@ -538,6 +544,103 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#evaluate_permissions" do
+    fab!(:permitted_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:owners]) }
+
+    it "requires the user to be logged in" do
+      post "/categories/evaluate_permissions.json",
+           params: {
+             group_ids: [permitted_group.id],
+           },
+           as: :json
+
+      expect(response.status).to eq(403)
+    end
+
+    context "when a moderator evaluates public permissions" do
+      fab!(:moderator)
+
+      shared_examples "evaluating moderator access to category grants" do |granular_permissions_enabled:|
+        it "retains moderator access when evaluating an everyone grant" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+            granular_permissions_enabled
+          sign_in(moderator)
+          category.set_permissions(everyone: :readonly)
+          category.save!
+
+          expect(moderator.guardian.can_see_category?(category)).to eq(true)
+
+          post "/categories/evaluate_permissions.json",
+               params: {
+                 group_ids: [Group::AUTO_GROUPS[:everyone]],
+               },
+               as: :json
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            "success" => "OK",
+            "current_user_will_lose_access" => false,
+          )
+        end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: true
+      end
+    end
+
+    context "when logged in" do
+      before { sign_in(user) }
+
+      it "reports that the user retains access through a hidden group membership" do
+        permitted_group.add(user)
+
+        post "/categories/evaluate_permissions.json",
+             params: {
+               group_ids: [permitted_group.id],
+             },
+             as: :json
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "success" => "OK",
+          "current_user_will_lose_access" => false,
+        )
+      end
+
+      it "warns when the user would lose access" do
+        post "/categories/evaluate_permissions.json",
+             params: {
+               group_ids: [permitted_group.id],
+             },
+             as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body).to eq(
+          {
+            "errors" => [I18n.t("category.errors.self_lockout")],
+            "extras" => {
+              "current_user_will_lose_access" => true,
+            },
+          },
+        )
+      end
+
+      it "rejects non-integer group IDs" do
+        post "/categories/evaluate_permissions.json", params: { group_ids: ["invalid"] }, as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly("Group ids is invalid")
+      end
+    end
+  end
+
   describe "#create" do
     it "requires the user to be logged in" do
       post "/categories.json"
@@ -715,6 +818,7 @@ RSpec.describe CategoriesController do
                   "icon" => "memo",
                   "id" => "discussion",
                   "name" => I18n.t("category_types.discussion.name"),
+                  "svg_icon" => "comment",
                   "title" => "discussion",
                   "visible" => true,
                 },
@@ -829,10 +933,7 @@ RSpec.describe CategoriesController do
     it "preloads user fields for restricted categories" do
       category.set_permissions(admins: :full)
       category.save!
-      Fabricate(:category, parent_category: category).tap do |subcategory|
-        subcategory.set_permissions(admins: :full)
-        subcategory.save!
-      end
+      Fabricate(:category, parent_category: category, permissions: { admins: :full })
       sign_in(admin)
 
       get "/c/#{category.slug}/find_by_slug.json"
@@ -908,6 +1009,47 @@ RSpec.describe CategoriesController do
       sign_in(admin)
       post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#set_notifications" do
+    subject(:set_notifications) do
+      post "/category/#{category_id}/notifications.json", params: { notification_level: }
+    end
+
+    let(:category_id) { category.id }
+    let(:notification_level) { CategoryUser.notification_levels[:tracking] }
+
+    before { sign_in(user) }
+
+    context "when the user can see the category" do
+      it "sets the notification level" do
+        expect { set_notifications }.to change {
+          CategoryUser.find_by(user:, category:)&.notification_level
+        }.to(notification_level)
+      end
+    end
+
+    context "when the user cannot see the category" do
+      let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      it "refuses the request" do
+        set_notifications
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "stores no notification level" do
+        expect { set_notifications }.not_to change(CategoryUser, :count)
+      end
+    end
+
+    context "when the category does not exist" do
+      let(:category_id) { -1 }
+
+      it "returns not found" do
+        set_notifications
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 

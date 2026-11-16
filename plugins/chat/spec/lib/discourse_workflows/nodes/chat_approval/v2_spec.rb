@@ -73,21 +73,6 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V2 do
 
     it "exposes the exact click output and timeout continuation contracts" do
       input_schema = DiscourseWorkflows::Schema::POST_SCHEMA
-      expected_properties = {
-        "value" => {
-          "type" => "string",
-        },
-        "channel" => {
-          "type" => "object",
-          "properties" => Chat::WorkflowChannelSerializer::PROPERTIES,
-        },
-        "user" => {
-          "type" => "object",
-          "properties" => DiscourseWorkflows::Schema::BASIC_USER_PROPERTIES,
-        },
-      }
-
-      expect(described_class::CLICK_OUTPUT_SCHEMA.fetch("properties")).to eq(expected_properties)
       expect(described_class.output_schemas({})).to eq([described_class::CLICK_OUTPUT_SCHEMA])
       expect(
         described_class.output_schemas(

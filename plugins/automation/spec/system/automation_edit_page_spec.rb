@@ -10,6 +10,8 @@ describe "DiscourseAutomation | Edit page" do
       field :dog, component: :text, required: false
     end
 
+    DiscourseAutomation::Scriptable.add("key_value_cats") { field :cats, component: :"key-value" }
+
     SiteSetting.discourse_automation_enabled = true
     sign_in(admin)
   end
@@ -55,6 +57,26 @@ describe "DiscourseAutomation | Edit page" do
       expect(tooltip).to be_present(
         text: I18n.t("js.discourse_automation.models.automation.enable_toggle_disabled"),
       )
+    end
+  end
+
+  describe "the key-value field" do
+    it "doesn't save the automation when saving the modal" do
+      automation.update!(script: "key_value_cats")
+      automation_page.visit(automation)
+
+      find(".key-value-field .configure-btn").click
+      modal = PageObjects::Modals::Base.new(modal_selector: ".json-schema-editor-modal")
+      modal.click_primary_button
+
+      expect(modal).to be_closed
+      expect(page).to have_current_path("/admin/plugins/automation/automation/#{automation.id}")
+      expect(automation.fields.where(name: "cats")).to be_empty
+
+      automation_page.update
+
+      expect(page).to have_current_path("/admin/plugins/automation/automation")
+      expect(automation.fields.find_by(name: "cats").metadata["value"]).to be_present
     end
   end
 end

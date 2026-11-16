@@ -58,7 +58,12 @@ module DiscourseAi
             )
           end
 
-          reviewable = Reviewable.viewable_by(guardian.user).find_by(id: parameters[:reviewable_id])
+          # AI tool approvals require a person's decision, not another agent tool call.
+          reviewable =
+            Reviewable
+              .viewable_by(guardian.user)
+              .where.not(type: ReviewableAiToolAction.sti_name)
+              .find_by(id: parameters[:reviewable_id])
           if !reviewable
             return(
               error_response(
@@ -86,7 +91,15 @@ module DiscourseAi
             )
           end
 
-          reviewable.reviewable_notes.create!(user: acting_user, content: reason)
+          note = reviewable.reviewable_notes.build(user: acting_user, content: reason)
+          if !note.save
+            return(
+              error_response(
+                note.errors.full_messages.join(", ").presence ||
+                  I18n.t("discourse_ai.ai_bot.perform_reviewable_action.errors.action_failed"),
+              )
+            )
+          end
 
           begin
             result =
@@ -95,6 +108,7 @@ module DiscourseAi
                 action_id,
                 version: reviewable.version,
                 guardian: guardian,
+                decision_automation: decision_automation,
               )
           rescue Reviewable::InvalidAction
             return(
@@ -134,6 +148,17 @@ module DiscourseAi
 
         def description_args
           { reviewable_id: parameters[:reviewable_id], action: parameters[:action_id] }
+        end
+
+        private
+
+        def decision_automation
+          return :partial if context.reviewable_id
+          if context.feature_context.key?(:automation_id) ||
+               %w[llm_triage llm_tagger ai_report ai_tool_action].include?(context.feature_name)
+            return :full
+          end
+          :partial if context.feature_name == "bot" && (context.post_id || context.message_id)
         end
       end
     end

@@ -40,7 +40,7 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateImage do
     toggle_enabled_bots(bots: [gpt_35_turbo])
   end
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_35_turbo.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(gpt_35_turbo) }
   let(:progress_blk) { Proc.new {} }
 

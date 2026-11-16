@@ -22,6 +22,13 @@ module DiscourseTopicVoting
           DiscourseWorkflows::Schema::USER_SCHEMA,
           VOTE_SCHEMA,
         ).freeze
+
+      TOPIC_RECEIVED_VOTE_V2_OUTPUT_SCHEMA =
+        DiscourseWorkflows::Schema.merge(
+          TOPIC_RECEIVED_VOTE_OUTPUT_SCHEMA,
+          DiscourseWorkflows::Schema::TOPIC_AUTHOR_SCHEMA,
+          DiscourseWorkflows::Schema::ACTOR_SCHEMA,
+        ).freeze
     end
   end
 end

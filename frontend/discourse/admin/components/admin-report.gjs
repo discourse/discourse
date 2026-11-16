@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import AdminReportBody from "discourse/admin/components/admin-report-body";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
@@ -58,15 +57,31 @@ export function updateReportFilters(filters, id, value) {
   return customFilters;
 }
 
+/**
+ * @typedef {import("discourse/admin/components/admin-report-table-cell").ReportTableOptions & {
+ *   chartGrouping?: string,
+ *   hiddenLabels?: string[],
+ *   legendPosition?: string,
+ *   onLegendClick?: (key: string) => void
+ * }} AdminReportOptions
+ */
 export default class AdminReport extends Component {
-  @service siteSettings;
-
   @tracked isLoading = false;
+
+  /** @type {string | null} */
   @tracked rateLimitationString = null;
+
+  /** @type {import("discourse/admin/models/report").default | null} */
   @tracked model = null;
   @tracked currentMode = this.args.filters?.mode;
+
+  /** @type {AdminReportOptions | null | undefined} */
   @tracked options = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked dateRangeFrom = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked dateRangeTo = null;
   @tracked userHasCustomDates = false;
 
@@ -108,14 +123,6 @@ export default class AdminReport extends Component {
 
   get reportClasses() {
     const builtReportClasses = ["is-enabled"];
-
-    if (this.isHidden) {
-      builtReportClasses.push("hidden");
-    }
-
-    if (!this.isHidden) {
-      builtReportClasses.push("is-visible");
-    }
 
     if (this.isLoading) {
       builtReportClasses.push("is-loading");
@@ -179,13 +186,6 @@ export default class AdminReport extends Component {
 
   get disabledLabel() {
     return this.args.disabledLabel || i18n("admin.dashboard.disabled");
-  }
-
-  get isHidden() {
-    return (this.siteSettings.dashboard_hidden_reports || "")
-      .split("|")
-      .filter(Boolean)
-      .includes(this.args.dataSourceName);
   }
 
   get dasherizedDataSourceName() {

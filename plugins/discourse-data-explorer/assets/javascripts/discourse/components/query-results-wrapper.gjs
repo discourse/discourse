@@ -1,4 +1,4 @@
-import QueryResult from "./query-result";
+import QueryResult from "./query-result.gjs";
 
 const QueryResultsWrapper = <template>
   {{#if @results}}

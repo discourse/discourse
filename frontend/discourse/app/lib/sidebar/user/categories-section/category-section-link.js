@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { get, set } from "@ember/object";
+import categoryStyleType from "discourse/lib/category-style-type";
 import { bind } from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -148,7 +149,7 @@ export default class CategorySectionLink {
       return customPrefixType;
     }
 
-    return this.category.styleType;
+    return categoryStyleType(this.category.styleType);
   }
 
   get prefixValue() {
@@ -159,7 +160,7 @@ export default class CategorySectionLink {
       return customPrefixValue;
     }
 
-    const styleType = this.category.styleType;
+    const styleType = categoryStyleType(this.category.styleType);
 
     if (styleType === "icon") {
       return this.category.icon;

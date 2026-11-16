@@ -3,6 +3,33 @@
 RSpec.describe DiscourseAi::Mcp::ToolRegistry do
   before { enable_current_plugin }
 
+  describe ".refresh!" do
+    it "discovers and caches tools from a modern-only server" do
+      server = Fabricate(:ai_mcp_server, url: "https://mcp.example.com")
+      AiMcpServer.stubs(:validate_hostname_public!).returns(true)
+      stub_request(:post, server.url).to_return do |request|
+        result =
+          if JSON.parse(request.body)["method"] == "server/discover"
+            { supportedVersions: ["2026-07-28"], capabilities: { tools: {} } }
+          else
+            { tools: [{ name: "search", inputSchema: { type: "object" } }] }
+          end
+        { status: 200, body: { jsonrpc: "2.0", result: result }.to_json }
+      end
+
+      definitions = described_class.refresh!(server, raise_on_error: true)
+
+      expect(definitions.pluck("name")).to eq(["search"])
+      expect(server.reload.protocol_version).to eq("2026-07-28")
+      expect(server.last_health_status).to eq("healthy")
+      expect(
+        a_request(:post, server.url).with do |request|
+          JSON.parse(request.body)["method"] == "initialize"
+        end,
+      ).not_to have_been_made
+    end
+  end
+
   describe ".cache_key" do
     it "namespaces the cache by current multisite database" do
       RailsMultisite::ConnectionManagement.stubs(:current_db).returns("second")

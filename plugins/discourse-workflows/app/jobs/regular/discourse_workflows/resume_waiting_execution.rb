@@ -5,19 +5,22 @@ module Jobs
     class ResumeWaitingExecution < ::Jobs::Base
       def execute(args)
         return unless SiteSetting.enable_discourse_workflows
+        return if args[:resume_token].blank?
 
-        execution = ::DiscourseWorkflows::Execution.find_by(id: args[:execution_id])
-        return if execution.nil? || !execution.waiting?
-        return if execution.waiting_until.present? && execution.waiting_until > Time.current
+        execution =
+          ::DiscourseWorkflows::Execution.find_by(
+            id: args[:execution_id],
+            status: :waiting,
+            resume_token: args[:resume_token],
+          )
+        return if execution.nil?
+        return if execution.waiting_until.nil? || execution.waiting_until > Time.current
+        return execution.fail_with_timeout! if execution.timeout_action == "fail"
 
-        if execution.timeout_action == "fail"
-          execution.fail_with_timeout!
-        else
-          claimed = ::DiscourseWorkflows::Execution.claim_for_resume(execution)
-          return if claimed.nil?
+        claimed = ::DiscourseWorkflows::Execution.claim_for_resume(execution)
+        return if claimed.nil?
 
-          ::DiscourseWorkflows::Executor.resume(claimed, claimed.waiting_step_input_items)
-        end
+        ::DiscourseWorkflows::Executor.resume(claimed, claimed.waiting_step_input_items)
       end
     end
   end

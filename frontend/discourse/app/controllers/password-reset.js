@@ -14,7 +14,11 @@ export default class PasswordResetController extends Controller {
   @tracked accountPassword;
 
   passwordRequired = true;
+
+  /** @type {string | null} */
   errorMessage = null;
+
+  /** @type {string | null} */
   successMessage = null;
   requiresApproval = false;
   redirected = false;

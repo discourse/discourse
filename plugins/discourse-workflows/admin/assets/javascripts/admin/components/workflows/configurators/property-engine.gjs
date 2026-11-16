@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import CONTROL_REGISTRY from "../../../lib/workflows/control-registry";
+import CONTROL_REGISTRY from "../../../lib/workflows/control-registry.js";
 import {
   resolveNodeTypeVersion,
   typeVersionForNode,
-} from "../../../lib/workflows/node-types";
+} from "../../../lib/workflows/node-types.js";
 import {
   credentialSlotAnchorField,
   credentialSlotVisible,
@@ -16,9 +15,9 @@ import {
   fieldVisible,
   findNodeType,
   normalizeSchema,
-} from "../../../lib/workflows/property-engine";
-import CredentialControl from "./credential";
-import Field from "./field";
+} from "../../../lib/workflows/property-engine.js";
+import CredentialControl from "./credential.gjs";
+import Field from "./field.gjs";
 
 function credentialSlotLabel(slot) {
   return i18n(slot.label_key || "discourse_workflows.credentials.type");
@@ -116,6 +115,7 @@ export default class PropertyEngineConfigurator extends Component {
               @nodeType={{this.nodeType}}
               @nodeTypes={{@nodeTypes}}
               @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+              @onChange={{@onChange}}
               @schema={{field}}
               @session={{@session}}
             />

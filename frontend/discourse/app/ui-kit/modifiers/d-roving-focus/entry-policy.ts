@@ -1,4 +1,4 @@
-import type { DRovingFocusConfig } from "./config";
+import type { DRovingFocusConfig } from "./config.ts";
 
 function hasCurrentToken(item: HTMLElement): boolean {
   const current = item.getAttribute("aria-current");

@@ -15,6 +15,24 @@ describe DiscourseAi::Translation::EntryPoint do
       expect_job_enqueued(job: :detect_translate_post, args: { post_id: post.id })
     end
 
+    it "passes skip_workflows to the detection job" do
+      post =
+        PostCreator.create!(
+          Fabricate(:user),
+          raw: "post",
+          title: "topic",
+          skip_validations: true,
+          skip_workflows: true,
+        )
+      expect_job_enqueued(
+        job: :detect_translate_post,
+        args: {
+          post_id: post.id,
+          skip_workflows: true,
+        },
+      )
+    end
+
     it "does not enqueue if setting disabled" do
       SiteSetting.ai_translation_enabled = false
       post = Fabricate(:post)
@@ -165,6 +183,19 @@ describe DiscourseAi::Translation::EntryPoint do
       )
       expect(job_enqueued?(job: :detect_translate_topic)).to eq false
     end
+
+    it "passes skip_workflows to the detection job" do
+      post = Fabricate(:post, post_number: 2)
+      post.revise(post.user, { raw: "new raw" }, skip_workflows: true)
+
+      expect_job_enqueued(
+        job: :detect_translate_post,
+        args: {
+          post_id: post.id,
+          skip_workflows: true,
+        },
+      )
+    end
   end
 
   describe "upon category updated" do
@@ -250,6 +281,34 @@ describe DiscourseAi::Translation::EntryPoint do
       tag.update!(staff_topic_count: 1)
 
       expect(job_enqueued?(job: :localize_tags)).to eq(false)
+    end
+  end
+
+  describe "push notifications for new posts" do
+    fab!(:user) { Fabricate(:user, locale: "ja", last_seen_at: 1.hour.ago) }
+    fab!(:post)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      Fabricate(:push_subscription, user: user)
+    end
+
+    it "holds the push until the translation is stored" do
+      PushNotificationPusher.expects(:push).never
+
+      Jobs::DeliverPushNotification.new.execute(
+        user_id: user.id,
+        payload: {
+          post_id: post.id,
+          topic_id: post.topic_id,
+          excerpt: post.excerpt,
+        },
+      )
+
+      held = Jobs::DeliverPushNotification.jobs.last["args"].first
+      expect(held["localization_wait_token"]).to be_present
     end
   end
 end

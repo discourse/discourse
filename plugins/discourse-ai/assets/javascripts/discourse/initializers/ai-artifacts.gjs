@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import AiArtifact from "../components/ai-artifact";
+import AiArtifact from "../components/ai-artifact.gjs";
 
 function initializeAiArtifacts(api) {
   api.decorateCookedElement(
@@ -10,6 +10,10 @@ function initializeAiArtifacts(api) {
 
       [...element.querySelectorAll("div.ai-artifact")].forEach(
         (artifactElement) => {
+          const shareKey = artifactElement.getAttribute(
+            "data-ai-artifact-share-key"
+          );
+
           const artifactId = artifactElement.getAttribute(
             "data-ai-artifact-id"
           );
@@ -34,6 +38,7 @@ function initializeAiArtifacts(api) {
           for (const attr of artifactElement.attributes) {
             if (
               attr.name.startsWith("data-") &&
+              attr.name !== "data-ai-artifact-share-key" &&
               attr.name !== "data-ai-artifact-id" &&
               attr.name !== "data-ai-artifact-version" &&
               attr.name !== "data-ai-artifact-height" &&
@@ -54,6 +59,7 @@ function initializeAiArtifacts(api) {
                 @autorun={{autorun}}
                 @dataAttributes={{dataAttributes}}
                 @seamless={{seamless}}
+                @shareKey={{shareKey}}
               />
             </template>
           );

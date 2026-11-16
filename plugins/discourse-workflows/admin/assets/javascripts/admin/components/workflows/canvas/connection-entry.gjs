@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import ConnectionToolbar from "./connection-toolbar";
+import ConnectionToolbar from "./connection-toolbar.gjs";
 
 const SVG_STYLE = trustHTML(
   "overflow:visible;position:absolute;pointer-events:none;width:9999px;height:9999px"

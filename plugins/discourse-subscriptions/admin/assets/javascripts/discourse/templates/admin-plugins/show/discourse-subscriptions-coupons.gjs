@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import CreateCouponForm from "discourse/plugins/discourse-subscriptions/discourse/components/create-coupon-form";
-import SubscriptionsStripeUnconfigured from "../../../components/subscriptions-stripe-unconfigured";
+import SubscriptionsStripeUnconfigured from "../../../components/subscriptions-stripe-unconfigured.gjs";
 
 export default <template>
   {{#if @controller.model.unconfigured}}

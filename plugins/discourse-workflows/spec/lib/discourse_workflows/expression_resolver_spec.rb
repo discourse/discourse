@@ -321,6 +321,25 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       expect(resolver.resolve("={{ $trigger.tags }}")).to eq(%w[bug help])
     end
 
+    it "evaluates a single whole expression only when its braces close at the end" do
+      {
+        "={{ { id: $trigger.topic_id } }}" => {
+          "id" => 42,
+        },
+        "={{ {a: {b: 1} } }}" => {
+          "a" => {
+            "b" => 1,
+          },
+        },
+        "={{ (() => { return 1 })() }}" => 1,
+        "= {{ $trigger.topic_id }} " => 42,
+        "={{ JSON.stringify({ a: { b: 1 } }) }}" => '{"a":{"b":1}}',
+        "={{ 1 }} x {{ 2 }}" => "1 x 2",
+        "={{ $trigger.topic_id" => "{{ $trigger.topic_id",
+        "={{  }}" => nil,
+      }.each { |value, expected| expect(resolver.resolve(value)).to eq(expected), value }
+    end
+
     it "formats arrays when interpolating into a larger string" do
       expect(resolver.resolve("=tags: {{ $trigger.tags }}")).to eq("tags: bug, help")
     end
@@ -620,6 +639,21 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       segments = resolver.resolve_segments("hello {{ $json.title")
       expect(segments.last[:kind]).to eq("plaintext")
       expect(segments.last[:text]).to include("{{")
+    end
+  end
+
+  describe ".empty_expression?" do
+    it "is true only for an expression with nothing to evaluate" do
+      {
+        "=" => true,
+        "=  " => true,
+        "={{ }}" => true,
+        "= {{   }} " => true,
+        "={{ x }}" => false,
+        "={{ }}{{ x }}" => false,
+        "" => false,
+        nil => false,
+      }.each { |value, expected| expect(described_class.empty_expression?(value)).to eq(expected) }
     end
   end
 

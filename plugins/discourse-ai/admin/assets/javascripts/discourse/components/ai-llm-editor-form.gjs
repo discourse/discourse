@@ -13,21 +13,20 @@ import {
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import { groupPath } from "discourse/lib/url";
-import { eq, gt, not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
 import AiLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-llm-selector";
+import DurationSelector from "discourse/plugins/discourse-ai/discourse/components/ai-quota-duration-selector";
+import AiSecretSelector from "discourse/plugins/discourse-ai/discourse/components/ai-secret-selector";
+import AiLlmQuotaModal from "discourse/plugins/discourse-ai/discourse/components/modal/ai-llm-quota-modal";
 import {
   isProviderParamHidden,
   normalizeProviderParams,
   providerParamLabel,
 } from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
-import DurationSelector from "./ai-quota-duration-selector";
-import AiSecretSelector from "./ai-secret-selector";
-import AiLlmQuotaModal from "./modal/ai-llm-quota-modal";
 
 export default class AiLlmEditorForm extends Component {
   @service toasts;
@@ -326,7 +325,7 @@ export default class AiLlmEditorForm extends Component {
           .then(() => {
             removeValueFromArray(this.args.llms.content, this.args.model);
             this.router.transitionTo(
-              "adminPlugins.show.discourse-ai-llms.index"
+              "adminPlugins.show.discourse-ai-models.index"
             );
           })
           .catch(popupAjaxError);

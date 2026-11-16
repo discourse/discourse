@@ -2,7 +2,7 @@
 
 class AdminNotice < ActiveRecord::Base
   TRANSLATION_KEY_DETAIL = "_translation_key"
-  MESSAGE_ALLOWED_TAGS = %w[a pre ul li].freeze
+  MESSAGE_ALLOWED_TAGS = %w[a code pre ul li].freeze
   MESSAGE_ALLOWED_ATTRIBUTES =
     (%w[href target rel] + SiteSettings::LabelFormatter::LINK_ATTRIBUTES).freeze
   MESSAGE_SANITIZER = Rails::Html::SafeListSanitizer.new

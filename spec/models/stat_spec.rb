@@ -15,8 +15,14 @@ RSpec.describe Stat do
       )
     end
 
-    it "keeps the onboarding stats out of the public API stats" do
-      expect(Stat.api_stats.keys).not_to include(:onboarding)
+    it "counts the categories of each configured type" do
+      Categories::TypeRegistry.stubs(:configured_counts).returns({ support: 2, ideas: 1 })
+
+      expect(Stat.all_stats[:category_types]).to eq(categories_support: 2, categories_ideas: 1)
+    end
+
+    it "keeps the site setup stats out of the public API stats" do
+      expect(Stat.api_stats.keys).not_to include(:onboarding, :category_types)
     end
 
     context "when display_eu_visitor_stats is enabled" do

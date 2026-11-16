@@ -30,6 +30,9 @@ nb_NO:
           other: "%{count} svar"
         assign: "Tildel"
         unassign: "Fjern tildelning"
+        owners:
+          one: "Eier"
+          other: "Eiere"
       manage:
         name: "Navn"
         slug: "Navn i URL"

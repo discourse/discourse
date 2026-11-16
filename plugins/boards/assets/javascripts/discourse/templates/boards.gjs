@@ -1,4 +1,4 @@
-import BoardsPage from "../components/boards-page";
+import BoardsPage from "../components/boards-page.gjs";
 
 export default <template>
   <BoardsPage

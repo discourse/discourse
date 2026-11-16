@@ -25,6 +25,11 @@ ko:
         context_menu:
           actions:
             delete: "삭제"
+        reorderable_list:
+          policies_pinned: "핀 지정됨"
+          policies_required: "필수"
+          table_type: "형식"
+          cross_list_primary: "기본"
         font_scale:
           title: "글꼴 시스템"
         colors:

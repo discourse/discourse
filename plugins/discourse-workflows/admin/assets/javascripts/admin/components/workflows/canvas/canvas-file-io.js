@@ -1,13 +1,13 @@
-import { isStaticDataMap } from "../../../lib/workflows/static-data";
-import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note";
+import { isStaticDataMap } from "../../../lib/workflows/static-data.js";
+import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note.js";
 import {
   deserializeConnections,
   serializeConnections,
-} from "../../../models/workflow-connection";
+} from "../../../models/workflow-connection.js";
 import WorkflowNode, {
   NODE_DIRECT_SETTING_KEYS,
-} from "../../../models/workflow-node";
-import { defaultNodeName } from "../editor/node-factory";
+} from "../../../models/workflow-node.js";
+import { defaultNodeName } from "../editor/node-factory.js";
 
 function sanitizeImportedObject(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -38,6 +38,38 @@ function importedStaticData(data) {
   }
 
   return structuredClone(staticData);
+}
+
+function importedVariables(data) {
+  if (!Object.hasOwn(data, "variables")) {
+    return undefined;
+  }
+
+  const variables = data.variables;
+  if (!Array.isArray(variables)) {
+    return { error: "invalid" };
+  }
+
+  return variables
+    .filter(
+      (variable) =>
+        variable &&
+        typeof variable === "object" &&
+        typeof variable.key === "string"
+    )
+    .map((variable) => ({
+      key: variable.key,
+      description:
+        typeof variable.description === "string" ? variable.description : null,
+      variable_type:
+        typeof variable.variable_type === "string"
+          ? variable.variable_type
+          : "string",
+      type_options:
+        variable.type_options && typeof variable.type_options === "object"
+          ? variable.type_options
+          : {},
+    }));
 }
 
 function directSettingsFromImportedNode(node) {
@@ -83,7 +115,6 @@ export function buildWorkflowExportPayload(
   const allNodes = [...exportedNodes, ...exportedStickyNotes];
 
   return {
-    id: workflowMetadata.id?.toString() || null,
     name: workflowMetadata.name || null,
     nodes: allNodes,
     connections: serializeConnections(connections || [], [
@@ -91,11 +122,13 @@ export function buildWorkflowExportPayload(
       ...(stickyNotes || []),
     ]),
     settings: cloneObject(workflowMetadata.settings),
+    variables: (workflowMetadata.variables || []).map((variable) => ({
+      key: variable.key,
+      description: variable.description,
+      variable_type: variable.variable_type,
+      type_options: variable.type_options,
+    })),
     staticData: cloneObject(workflowMetadata.staticData),
-    pinData: cloneObject(workflowMetadata.pinData),
-    versionId: workflowMetadata.versionId || null,
-    activeVersionId: workflowMetadata.activeVersionId || null,
-    versionCounter: workflowMetadata.versionCounter || null,
   };
 }
 
@@ -150,6 +183,11 @@ export function parseWorkflowImport(text) {
     return staticData;
   }
 
+  const variables = importedVariables(data);
+  if (variables?.error) {
+    return variables;
+  }
+
   const allImportedNodes = data.nodes.map((n) =>
     WorkflowNode.create({
       clientId: crypto.randomUUID(),
@@ -195,6 +233,10 @@ export function parseWorkflowImport(text) {
 
   if (staticData !== undefined) {
     result.staticData = staticData;
+  }
+
+  if (variables !== undefined) {
+    result.variables = variables;
   }
 
   return result;

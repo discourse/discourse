@@ -104,6 +104,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(result).to include("post_id" => topic.first_post.id, "post_number" => 1)
         expect(result.dig("post", "id")).to eq(topic.first_post.id)
         expect(result.dig("post", "trust_level")).to eq(admin.trust_level)
+        expect(result).to match_node_output_schema(described_class)
       end
 
       it "creates a topic as the system user when actor_username is 'system'" do
@@ -160,7 +161,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
             },
             item: item,
           )
-        end.to raise_error(DiscourseWorkflows::NodeError, "User 'nonexistent_user' not found")
+        end.to raise_error(
+          DiscourseWorkflows::NodeError,
+          node_error_message(
+            :not_found,
+            scope: :actor,
+            item_index: 0,
+            username: "nonexistent_user",
+          ),
+        )
       end
 
       it "raises when topic creation fails validation" do
@@ -198,6 +207,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
 
         expect(result["topic"]["id"]).to eq(topic.id)
         expect(result["topic"]["title"]).to eq(topic.title)
+        expect(result["topic"]["url"]).to eq(topic.url)
         expect(result["topic"]["category_id"]).to eq(category.id)
         expect(result["topic"]["tags"]).to eq([])
         expect(result["post"]).to include(
@@ -552,16 +562,12 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(topic_data["tags"].map { |topic_tag| topic_tag["name"] }).to contain_exactly(
           tag.name,
         )
-        expect(topic_data["posts_count"]).to be_present
-        expect(topic_data["views"]).to be_present
-        expect(topic_data["like_count"]).to be_present
-        expect(topic_data["created_at"]).to be_present
-        expect(topic_data["bumped_at"]).to be_present
         expect(post_data).to include(
           "id" => topic_1.first_post.id,
           "topic_id" => topic_1.id,
           "trust_level" => user.trust_level,
         )
+        expect(topic_entry).to match_node_output_schema(described_class)
       end
 
       it "preloads selected custom fields when requested" do
@@ -721,24 +727,23 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
       fab!(:post) { Fabricate(:post, topic: topic, user: user) }
 
       it "sets topic custom fields as the configured actor" do
-        result =
-          execute_node(
-            configuration: {
-              "operation" => "set_custom_fields",
-              "topic_id" => topic.id.to_s,
-              "custom_fields" =>
-                custom_field_entries(
-                  { "key" => "foo", "value" => "bar" },
-                  { "key" => "answer", "value" => "42" },
-                ),
-              "actor_username" => admin.username,
-            },
-            item: item,
-          )
+        config = {
+          "operation" => "set_custom_fields",
+          "topic_id" => topic.id.to_s,
+          "custom_fields" =>
+            custom_field_entries(
+              { "key" => "foo", "value" => "bar" },
+              { "key" => "answer", "value" => "42" },
+            ),
+          "actor_username" => admin.username,
+        }
+
+        result = execute_node(configuration: config, item: item)
 
         expect(topic.reload.custom_fields["foo"]).to eq("bar")
         expect(topic.custom_fields["answer"]).to eq("42")
         expect(result["topic"]["custom_fields"]).to eq("foo" => "bar", "answer" => "42")
+        expect(result).to match_node_output_schema(described_class, configuration: config)
       end
 
       it "resolves expressions in custom field values" do

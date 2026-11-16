@@ -17,5 +17,9 @@ gl:
         chat_usage:
           author: Vostede
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} min."
+            other: "%{count} min."
         writing_analysis:
           menu_other: Outro

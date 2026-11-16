@@ -69,7 +69,7 @@ export function registerHtmlDecorator(decorator, type) {
  * Applies registered HTML decorators to a DOM element and returns their cleanup functions.
  *
  * @param {HTMLElement} element - The DOM element to apply decorators to
- * @param {Object} helper - Helper object passed to each decorator. Use NULL_HELPER for contexts without a model.
+ * @param {DecorateHtmlHelper | typeof NULL_HELPER} helper - Helper object passed to each decorator. Use NULL_HELPER for contexts without a model.
  * @param {Symbol|string} [type=NON_STREAM_HTML_DECORATOR] - The type of decorators to apply.
  * @returns {Function[]} Array of cleanup functions from decorators that returned them.
  */
@@ -323,10 +323,11 @@ class DecorateHtmlHelper {
    * Renders a Glimmer component into a specified target HTML element with provided data.
    * Handles deprecation warnings if invalid parameters are passed.
    *
+   * @template T
    * @param {Element} targetElement The HTML element where the Glimmer component should be rendered. Must be a valid DOM element.
-   * @param {Object} component The Glimmer component object to render. Should not have a name of "factory" to avoid deprecation warnings.
-   * @param {Object} data The data to be passed to the Glimmer component for rendering.
-   * @param {Object} [opts={}] Additional options for rendering. Supports an `append` boolean property that defaults to `true` to determine if the content should be appended to the target element.
+   * @param {import("@glint/template").ComponentLike<{ Args: { data: T } }>} component The Glimmer component object to render. Should not have a name of "factory" to avoid deprecation warnings.
+   * @param {T} [data] The data to be passed to the Glimmer component as `@data`.
+   * @param {{ append?: boolean }} [opts={}] Additional options for rendering. Supports an `append` boolean property that defaults to `true` to determine if the content should be appended to the target element.
    * @return {void}
    */
   renderGlimmer(targetElement, component, data, opts = {}) {

@@ -246,7 +246,7 @@ module DiscourseAi
 
       def token_total_columns
         [
-          "SUM(COALESCE(request_tokens, 0) + COALESCE(response_tokens, 0) + COALESCE(cache_read_tokens, 0) + COALESCE(cache_write_tokens, 0)) as total_tokens",
+          "SUM(COALESCE(request_tokens, 0)::bigint + COALESCE(response_tokens, 0) + COALESCE(cache_read_tokens, 0) + COALESCE(cache_write_tokens, 0))::bigint as total_tokens",
           "SUM(COALESCE(cache_read_tokens, 0)) as total_cache_read_tokens",
           "SUM(COALESCE(cache_write_tokens,0)) as total_cache_write_tokens",
           "SUM(COALESCE(request_tokens,0)) as total_request_tokens",

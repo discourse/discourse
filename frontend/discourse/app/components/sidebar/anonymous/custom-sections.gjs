@@ -1,4 +1,4 @@
-import SidebarCustomSections from "../common/custom-sections";
+import SidebarCustomSections from "../common/custom-sections.gjs";
 
 export default class SidebarAnonymousCustomSections extends SidebarCustomSections {
   anonymous = true;

@@ -9,6 +9,9 @@ class LocalDoc
   # fragments are dropped on sync because Discourse heading anchors include the post id.
   DOC_LINK_REGEX = %r{\]\((?![a-z][a-z0-9+.-]*:|/)([^)\s#]+\.md)(?:#[^)\s]*)?\)}i
 
+  # Markdown images, e.g. `![alt](/assets/image.png)`. Captures the path.
+  IMAGE_REGEX = /![^\]]+\]\(([^)]+)\)/
+
   attr_accessor :path,
                 :frontmatter,
                 :content,
@@ -38,7 +41,7 @@ class LocalDoc
     unused_assets = assets.dup
 
     result =
-      content.gsub(/![^\]]+\]\(([^)]+)\)/) do |match|
+      content.gsub(IMAGE_REGEX) do |match|
         path = $1
         next match if !path.start_with?("/")
 

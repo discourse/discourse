@@ -73,7 +73,10 @@ RSpec.describe "Quoting chat message transcripts" do
         topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
 
         expect(page).to have_css(".d-editor-preview .chat-transcript", count: 2)
-        expect(page).to have_content("Originally sent in #{chat_channel_1.name}")
+        expect(page).to have_css(
+          ".d-editor-preview .chat-transcript-group__channel",
+          text: chat_channel_1.name,
+        )
 
         topic_page.send_reply
 
@@ -119,6 +122,79 @@ RSpec.describe "Quoting chat message transcripts" do
 
         expect(page).to have_css(".chat-message", count: 2)
         expect(page).to have_css(".chat-transcript")
+      end
+    end
+  end
+
+  context "when viewing a transcript from several users in a post" do
+    fab!(:other_user, :user)
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1, user: current_user) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1, user: other_user) }
+
+    let(:user_card) { PageObjects::Components::UserCard.new }
+    let!(:post_1) do
+      Fabricate(:post, raw: generate_transcript([message_1, message_2], current_user))
+    end
+
+    it "groups the messages in one box under the channel" do
+      topic_page.visit_topic(post_1.topic)
+
+      within(topic_page.post_by_number_selector(1)) do
+        expect(page).to have_css(".chat-transcript-group", count: 1)
+        expect(page).to have_css(".chat-transcript-group__channel", text: chat_channel_1.name)
+        expect(page).to have_css(".chat-transcript-group__body .chat-transcript", count: 2)
+      end
+    end
+
+    it "links each timestamp to its message" do
+      topic_page.visit_topic(post_1.topic)
+
+      within(topic_page.post_by_number_selector(1)) do
+        [message_1, message_2].each do |message|
+          expect(page).to have_css(
+            ".chat-transcript-datetime a[href$='/chat/c/-/#{chat_channel_1.id}/#{message.id}']",
+          )
+        end
+      end
+    end
+
+    it "opens the user card from the username" do
+      topic_page.visit_topic(post_1.topic)
+
+      find(".chat-transcript[data-message-id='#{message_2.id}'] .chat-transcript-username a").click
+
+      expect(user_card).to be_showing_user(other_user.username)
+      expect(page).to have_current_path(%r{/t/[^/]+/#{post_1.topic.id}})
+    end
+  end
+
+  context "when viewing a transcript of a thread in a post" do
+    fab!(:thread) do
+      Fabricate(:chat_thread, channel: chat_channel_1, title: "Ideas", with_replies: 2)
+    end
+
+    before { chat_channel_1.update!(threading_enabled: true) }
+
+    let!(:post_1) do
+      Fabricate(:post, raw: generate_transcript(thread.original_message, current_user))
+    end
+
+    it "shows the thread expanded, titled in the header" do
+      topic_page.visit_topic(post_1.topic)
+
+      within(topic_page.post_by_number_selector(1)) do
+        expect(page).to have_no_css(".chat-transcript details")
+        expect(page).to have_css(
+          ".chat-transcript-group__thread a[href$='/chat/c/-/#{chat_channel_1.id}/t/#{thread.id}']",
+          text: "Ideas",
+        )
+        expect(page).to have_no_css(".chat-transcript-group__body .chat-transcript-thread-header")
+
+        thread.replies.each do |reply|
+          expect(page).to have_css(
+            ".chat-transcript-datetime a[href$='/chat/c/-/#{chat_channel_1.id}/t/#{thread.id}/#{reply.id}']",
+          )
+        end
       end
     end
   end

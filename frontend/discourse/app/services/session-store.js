@@ -7,6 +7,7 @@ const DISCOURSE_PREFIX = "discourse_";
 
 @disableImplicitInjections
 export default class SessionStoreService extends Service {
+  /** @type {string | null} */
   context = null;
 
   constructor(ctx = DISCOURSE_PREFIX) {

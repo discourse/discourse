@@ -6,6 +6,17 @@
 
 da:
   js:
+    dsa_notice:
+      choice_title: "Det er ulovligt"
+      email: "E-mail adresse"
+    code_editor:
+      search:
+        replace: "Erstat"
+        next: "Næste"
+        previous: "Forrige"
+        close: "Luk"
+      fold:
+        to: "til"
     user_api_key:
       authorize: "Autoriser"
       deny: "Annuller"
@@ -25,6 +36,7 @@ da:
     access_control:
       manage:
         access_permission_editor: "Redaktør"
+        access_permission_owner: "Ejer"
         access_permission_remove: "Fjern"
     number:
       format:
@@ -263,7 +275,6 @@ da:
       zh_CN:
         name: Forenklet kinesisk
     share:
-      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber} af @%{username}"
       close: "luk"
       twitter: "Del på X"
@@ -311,6 +322,11 @@ da:
     topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Spring til hovedindhold"
     skip_user_nav: "Spring til profilindhold"
+    reorder:
+      removed: "Fjernede %{label}"
+      move_up: "Flyt op"
+      move_down: "Flyt ned"
+      position: "%{position} af %{total}"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     emails_are_disabled_non_staff: "Udgående post er slået fra alle andre end personalet."
     software_update_prompt:
@@ -413,9 +429,6 @@ da:
     max_of_count:
       one: "maks af %{count}"
       other: "maks af %{count}"
-    character_count:
-      one: "%{count} tegn"
-      other: "%{count} tegn"
     period_chooser:
       aria_label: "Filtrer efter periode"
     related_messages:
@@ -426,24 +439,20 @@ da:
       title: "Nye og ulæste emner"
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Tilbage"
     design_wizard:
       back: "Tilbage"
       next: "Næste"
       sections:
-        theme: "Tema"
         fonts: "Skrifttyper"
+        logo: "Logo"
         homepage: "Hjemmeside"
-        search: "Søg"
       theme:
         selected: "Valgt"
-      colors:
-        light: "Lys"
-        dark: "Mørk"
       fonts:
-        heading_font: "Overskrifts skrifttype"
+        base_font: "Brødtekst"
+        heading_font: "Overskrifter"
+      logo:
+        help_text: "Anbefalet størrelse er 600 x 80 pixels."
       homepage:
         topics: "Emner"
         categories: "Kategorier"
@@ -508,6 +517,9 @@ da:
           other: "Oprettet %{count} år siden"
     bookmarked:
       title: "Bogmærke"
+      edit_bookmark:
+        one: "Rediger bogmærke"
+        other: "Rediger bogmærker"
       help:
         bookmark: "Klik for at bogmærke dette emne"
         edit_bookmark_for_topic: "Klik for at redigere bogmærket for dette emne"
@@ -632,6 +644,8 @@ da:
       title:
         search: "Søg efter en besked"
         placeholder: "indtast beskeds titel, url eller id her"
+    dsa_statements:
+      category: "Kategori"
     review:
       show_more: "Vis mere"
       show_less: "Vis mindre"
@@ -803,6 +817,7 @@ da:
           title: "Alting"
       context_question:
         delimiter: "eller"
+        something_wrong_with_post: "Er der noget galt med dette indlæg?"
       types:
         reviewable_flagged_post:
           title: "Markeret indlæg"
@@ -1658,7 +1673,6 @@ da:
         upload_title: "Overfør dit profil billede"
         image_is_not_a_square: "Advarsel: vi har beskåret billedet; bredde og højde var ikke ens."
         logo_small: "Webstedets lille logo. Anvendes som standard."
-        use_custom: "Eller overfør en brugerdefineret avatar:"
       change_profile_background:
         title: "Profiloverskrift"
         instructions: "Profiloverskrifter vil blive centreret og har en standardbredde på 1110px."
@@ -1847,6 +1861,7 @@ da:
         redeemed_tab_with_count: "Indløst (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} indløst)"
+        invited_via_link_without_key: "link (%{count} / %{max} indløst)"
         groups: "Grupper"
         topic: "Emne"
         sent: "Oprettet/Senest Sendt"
@@ -2410,6 +2425,7 @@ da:
       clear: "Ryd filter"
     filter_controls:
       reset: "Nulstil"
+      sort_label: "Sorter efter"
     shared_drafts:
       title: "Delte kladder"
       notice: "Dette emne er kun synligt for dem, der kan udgive delte kladder."
@@ -2475,8 +2491,7 @@ da:
       discard: "Kassér"
       draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
-      title_placeholder: "Hvad handler diskussionen om i korte træk?"
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
@@ -3475,6 +3490,9 @@ da:
           one: "Er du sikker på, at du vil slette dette indlæg?"
           other: "Er du sikker på, at du vil slette disse %{count}indlæg?"
       revisions:
+        visibility:
+          hidden:
+            title: "Skjult"
         locale:
           locale_removed: "Sprog fjernet"
         controls:
@@ -3482,9 +3500,6 @@ da:
           previous: "Forrige udgave"
           next: "Næste udgave"
           last: "Sidste udgave"
-          hide: "Skjul udgave"
-          show: "Vis udgave"
-          destroy: "Slet revisioner"
           revert: "Vend tilbage til revision %{revision}"
           edit_wiki: "Ret Wiki"
           edit_post: "Ret Indlæg"
@@ -3546,7 +3561,6 @@ da:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "Kategori&hellip;"
       edit: "Rediger"
       edit_title: "Rediger denne kategori"
       edit_dialog_title: "Rediger: %{categoryName}"
@@ -3962,9 +3976,6 @@ da:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Blev tildelt dette emblem %{count} gang"
-        other: "Blev tildelt dette emblem %{count} gange"
       granted_on: "Tildelt %{date}"
       others_count:
         one: "Givet til andre %{count} gang"
@@ -4331,45 +4342,6 @@ da:
           number: "Indtast venligst et tal."
           text: "Indtast venligst en tekstværdi."
           url: "Indtast venligst en gyldig URL."
-    table_builder:
-      title: "Tabel Bygger"
-      modal:
-        title: "Tabel Bygger"
-        create: "Byg Tabel"
-        help:
-          enter_key: "Enter"
-          tab_key: "Fane"
-      edit:
-        btn_edit: "Rediger tabel"
-        modal:
-          title: "Rediger tabel"
-          cancel: "annuller"
-          create: "Gem"
-          reason: "Hvorfor redigerer du?"
-          trigger_reason: "Tilføj årsag til redigering"
-      default_header:
-        col_1: "Kolonne 1"
-        col_2: "Kolonne 2"
-        col_3: "Kolonne 3"
-        col_4: "Kolonne 4"
-      spreadsheet:
-        show: "Vis"
-        about: "Om"
-        cells_already_merged: "Celle allerede flettet"
-        no_cells_selected: "Ingen celler valgt"
-        context_menu:
-          row:
-            before: "Indsæt en ny række før"
-            after: "Indsæt en ny række efter"
-            delete: "Slet valgte rækker"
-          col:
-            before: "Indsæt en ny kolonne før"
-            after: "Indsæt en ny kolonne efter"
-            delete: "Slet valgte kolonner"
-            rename: "Omdøb denne kolonne"
-          copy: "Kopiér..."
-          paste: "Indsæt..."
-          save: "Gem som..."
     powered_by_discourse: "Drevet af Discourse"
     filter:
       description:
@@ -4430,11 +4402,11 @@ da:
           title: "Avanceret"
       upcoming_changes:
         name: "Navn"
-        enabled: "Aktiveret"
+        enabled: "Aktiveret?"
+        feedback: "Tilbagemelding"
         select_groups: "Vælg grupper…"
+        settings: "Indstillinger"
         preview: "Forhåndsvisning"
-        enabled_for_options:
-          everyone: "Alle"
         statuses:
           experimental: "Eksperimentel"
         impact_roles:
@@ -4452,6 +4424,9 @@ da:
           impact_role_admins: "Admins"
           impact_role_moderators: "Moderatorer"
           impact_role_staff: "Personale"
+        sort:
+          status: "Status"
+          name: "Navn"
       config:
         about:
           title: "Om dit websted"
@@ -4482,6 +4457,7 @@ da:
             block: "Blokér"
             presets:
               custom: "Tilpasset"
+            automatic: "Automatisk"
           authorizations:
             user: "Bruger"
             status: "Status"
@@ -4729,32 +4705,15 @@ da:
           anonymous_human: "Anonym"
       dashboard:
         title: "Dashboard"
-        last_updated: "instrumentbræt opdateret:"
-        discourse_last_updated: "Discourse opdateret:"
         version: "Installeret version"
         up_to_date: "Du kører den seneste version af Discourse."
         updates_available: "Opdatering er tilgængelige."
-        please_update: "Opdatér venligst!"
-        no_check_performed: "Der er ikke blevet søgt efter opdateringer. Kontrollér om sidekiq kører."
-        stale_data: "Der er ikke blevet søgt efter opdateringer på det seneste. Kontrollér om sidekiq kører."
         version_check_pending: "Det ser ud til, at du har opdateret for nylig. Fantastisk!"
-        installed_version: "Installeret"
-        github: "GitHub"
-        problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         dismiss_notice: "Ignorér"
         new_features:
           title: "Hvad er nyt?"
           learn_more: "Lær mere..."
-        last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
-        no_problems: "Ingen problemer fundet."
-        moderators: "Moderatorer:"
-        admins: "Admins:"
-        silenced: "Mådeholdt (silenced):"
-        suspended: "Suspenderet:"
-        private_messages_short: "Beskeder"
-        private_messages_title: "Beskeder"
-        mobile_title: "Mobil"
         space_used: "%{usedSize} brugt"
         space_used_and_free: "%{usedSize} (%{freeSize} fri)"
         uploads: "Overførsler"
@@ -4763,20 +4722,7 @@ da:
           one: "%{count} backup på %{location}"
           other: "%{count} backups på %{location}"
         lastest_backup: "Senest: %{date}"
-        traffic_short: "Trafik"
-        traffic: "Applikation web forespørgsler"
-        page_views: "Sidevisninger"
-        page_views_short: "Sidevisninger"
-        show_traffic_report: "Vist detaljeret trafik rapport"
-        community_health: Fællesskabets sundhed
-        moderators_activity: Moderator aktivitet
         whats_new_in_discourse: Hvad er nyt i Discourse?
-        activity_metrics: Aktivitetsmåling
-        all_reports: "Alle rapporter"
-        general_tab: "Overordnet"
-        moderation_tab: "Moderation"
-        security_tab: "Sikkerhed"
-        reports_tab: "Rapporter"
         report_filter_any: "alle"
         disabled: Deaktiveret
         timeout_error: Beklager, forespørgslen tager for lang tid. Vælg et kortere interval
@@ -4814,7 +4760,6 @@ da:
             title: "System"
             status: "Status"
             discourse_updated: "Discourse opdateret"
-            dashboard_updated: "instrumentbræt opdateret"
         reports_section:
           header_action: "Administrér"
           no_data: "Ingen data at vise"
@@ -4827,11 +4772,6 @@ da:
             anonymous: "Anonym"
             crawlers: "Crawlere"
           crawler_learn_more: "Lær mere"
-        period:
-          last_7_days: "Seneste 7 dage"
-          last_30_days: "Seneste 30 dage"
-          last_3_months: "Seneste 3 måneder"
-          custom: "Tilpasset"
         reports:
           trend_title: "%{percent} ændring. I øjeblikket %{current}, var %{prev} i forrige periode."
           percent_change_tooltip: "%{percent} ændring."
@@ -4863,9 +4803,6 @@ da:
             posts_count:
               one: "%{count} indlæg"
               other: "%{count} indlæg"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Søgninger</a>'
-            disabled: 'Rapport over søge tendenser er deaktiveret. Aktivér <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log søgeforespørgelser for</a> at indsamle data.'
           sort_button: "Sorter efter %{column}"
           sort_ascending: "stigende"
           sort_descending: "faldende"
@@ -5339,7 +5276,6 @@ da:
           uploading: "Overfører…"
           uploading_progress: "Overfører… %{progress}%"
           success: "'%{filename}' er blevet overført. Filen behandles nu og vil tage op til et minut for at blive vist på listen."
-          error: "Der skete en fejl da filen '%{filename}' blev forsøgt overført: %{message}"
         settings: "Indstillinger"
         operations:
           failed: "%{operation} gik galt. Kig venligst i logfilerne."
@@ -5493,8 +5429,8 @@ da:
           upload: "Overfør"
           select_component: "Vælg en komponent…"
           unsaved_changes_alert: "Du har ikke gemt dine ændringer endnu, vil du kassere dem og gå videre?"
-          unsaved_parent_themes: "Du har ikke tildelt komponenten til temaer, vil du fortsætte?"
           discard: "Kassér"
+          leave: "Forlad"
           stay: "Bliv"
           delete_upload_confirm: "Slet denne overførsel? (Tema CSS kan muligvis stoppe med at virke!)"
           component_on_themes: "Inkluder komponent i disse temaer"
@@ -6023,6 +5959,11 @@ da:
           all: "Alle brugere"
           activated: "Aktiveret"
         approved: "Godkendt?"
+        source: "Kilde"
+        bots:
+          name: "Navn"
+          username: "Brugernavn"
+          trust_level: "Tillidsniveau"
         titles:
           active: "Aktive brugere"
           new: "Nye brugere"
@@ -6057,16 +5998,13 @@ da:
           no_constructive_purpose: "Intet konstruktivt formål med deres handlinger andet end at skabe uenighed i fællesskabet"
           custom: "Brugerdefineret…"
         suspend_message: "Email Besked"
-        suspend_message_placeholder: "Angiv eventuelt mere information om suspensionen, og den vil blive sendt til brugeren."
         suspended_by: "Suspenderet af"
         silence_reason: "Grund"
         silenced_by: "Mådeholdt (silenced) af"
         silence_modal_title: "Mådehold (silence) Bruger"
         silence_duration: "Hvor længe vil brugeren være mådeholdt (silenced)?"
-        silence_reason_label: "Hvorfor mådeholder (silencing) du denne bruger?"
         silence_reason_placeholder: "Årsag for mådeholdenhed (silence)"
         silence_message: "Email Besked"
-        silence_message_placeholder: "(lad være tom for at sende standard besked)"
         suspended_until: "(indtil %{until})"
         cant_suspend: "Denne bruger kan ikke suspenderes."
         delete_posts_failed: "Der opstod et problem med at slette indlægene."

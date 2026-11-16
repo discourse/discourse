@@ -163,12 +163,21 @@ sk:
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Navrhnúť s AI"
       copied: "Skopírované"
       ai_decoded_transcript:
         tool: "Nástroj"
         type: "Typ"
         error: "Chyba"
         response: "Odpoveď"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Meno"
+          type: "Typ"
+          type_score: "Skóre"
       ai_tool_approval:
         loading: "Prebieha načítavanie..."
         tool: "Akcia"
@@ -177,27 +186,32 @@ sk:
         reject: "Zamietnuť"
         approved: "Schválený"
         rejected: "Zamietnuté"
+      default_llm:
+        title: "Predvolený jazykový model"
       llm_selector:
         none: "Žiadny"
       features:
         short_title: "Funkcie"
-        disabled: "(vypnuté)"
-        groups: "Skupiny:"
-        llm:
-          one: "LLM:"
-          few: "LLMs:"
-          many: "LLMs:"
-          other: "LLMs:"
+        table:
+          status: "Stav"
+          enabled: "Povolené"
+          feature: "Funkcia"
+          llm: "LLM"
+          groups: "Skupiny"
+        status:
+          "on": "Zapnuté"
+          "off": "Vypnuté"
+        chatbot:
+          column: "Chatbot"
+          places:
+            personal_messages: "Osobné správy"
+            chat_direct_messages: "Chat správy"
+            none: "Nedostupné"
+        set_up: "Nastavenie"
         no_llm: "Nie je vybraný žiadny LLM"
         no_agent: "Nie je nastavené"
         no_groups: "Žiadny"
         edit: "Nastavení"
-        expand_list:
-          one: "(%{count} ďalší)"
-          few: "(%{count} ďalšie)"
-          many: "(%{count} ďalších)"
-          other: "(%{count} ďalší)"
-        collapse_list: "(zobraziť menej)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -205,9 +219,15 @@ sk:
         nav:
           enabled: "Povolené"
         filters:
-          all: "Všetky"
           no_results: "Nenašli sa žiadne funkcie, ktoré by vyhovovali vašim filtrom."
           reset: "Resetovať"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Emócia"
+          enabled: "Povolené"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emócia"
         summarization:
           name: "Súhrny"
           description: "Sprístupňuje tlačidlo na zhrnutie, ktoré umožňuje návštevníkom zhrnúť témy"
@@ -219,11 +239,9 @@ sk:
           ask_ai: "Spýtajte sa AI"
         embeddings:
           name: "Vkladania"
-          description: "Vytvára sémantické reprezentácie textu a podporuje funkcie ako Súvisiace témy a Vyhľadávanie pomocou umelej inteligencie."
-          hyde: "HyDE"
+          related_topics: "Súvisiace témy"
         discord:
           name: "Integrácia služby Discord"
-          description: "Pridáva možnosť vyhľadávať kanály Discord"
           search: "Vyhľadávanie v službe Discord"
         inference:
           name: "Odvodené koncepty"
@@ -266,7 +284,20 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
-        category_scope: "Kategórie"
+        sections:
+          advanced: "Pokročilé"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategórie"
+          ai_translation_personal_messages:
+            label: "Osobné správy"
+            choices:
+              none: "Žiadny"
+              all: "Všetky"
+          content_localization_language_switcher:
+            choices:
+              none: "Nikto"
+              all: "Každý"
         model_progress:
           detail:
             retry: "Skúsiť znova"
@@ -283,6 +314,8 @@ sk:
               title: "Kategórie"
             tag:
               title: "Značky"
+        admin_actions:
+          enabled: "Povolené"
         stats:
           eta_minutes:
             one: "%{count} minútu"
@@ -312,6 +345,8 @@ sk:
         short_title: "Spam"
         title: "Konfigurácia spracovania spamu"
         select_llm: "Vyberte si LLM"
+        no_llm_selected: "Žiadny"
+        no_decision_model_selected: "Žiadny"
         custom_instructions: "Vlastné pokyny"
         custom_instructions_help: "Prispôsobené pokyny špecifické pre vašu stránku, ktoré pomôžu umelej inteligencii identifikovať spam, napr. „Buďte agresívnejší pri skenovaní príspevkov, ktoré nie sú v angličtine“."
         last_seven_days: "Posledných 7 dní"
@@ -574,6 +609,16 @@ sk:
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      decision_models:
+        no_preset: "Žiadny"
+        display_name: "Meno"
+        model: "Model"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        test: "Spustiť test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Meno"
         description: "Popis"
@@ -590,6 +635,19 @@ sk:
         tools_modal:
           parameters: "Parametre"
           required: "Povinné"
+      models:
+        new: "Nový model"
+        name: "Meno"
+        type: "Typ"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        seeded_warning: "Toto je predkonfigurované na vašej stránke a nie je možné to upravovať."
+        select_type: "Vyberte"
+        types:
+          embedding: "Vkladám"
+        filters:
+          all: "Všetky typy"
+          reset: "Obnovenie filtrov"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"
@@ -761,7 +819,6 @@ sk:
         presets: "Vyberte predvoľbu..."
         configure_manually: "Konfigurovať manuálne"
         edit: "Upraviť"
-        seeded_warning: "Toto je predkonfigurované na vašej stránke a nie je možné to upravovať."
         tests:
           title: "Spustiť test"
           running: "Spustenie testu..."
@@ -793,6 +850,7 @@ sk:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Vlastné"
         provider_fields:
@@ -803,9 +861,23 @@ sk:
         quick_search:
           suffix: "vo všetkých témach a príspevkoch s AI"
       ai_artifact:
+        editor:
+          version: "Verzia"
+          default: "Predvolené"
+          option_on: "Zapnuté"
+          option_off: "Vypnuté"
+          apply: "Použi"
         expand_view_label: "Rozbaliť zobrazenie"
         collapse_view_label: "Ukončiť režim celej obrazovky (tlačidlo ESC alebo Späť)"
         click_to_run_label: "Spustiť artefakt"
+        share: "Zdieľať"
+        create_link: "Vytvorte odkaz"
+        copied: "Skopírované do schránky"
+        copy_link: "Kopírovať odkaz"
+        copy_embed: "Kopírovať vloženie"
+        new_tab: "Zobraziť na novej karte"
+        filter_all: "Všetky"
+        filter_standalone: "Samostatný"
       ai_bot:
         title: "AI bot"
         llm: "Model:"
@@ -882,10 +954,7 @@ sk:
           uploads_in_progress: "Nemožno odoslať, keď prebieha nahrávanie"
           scroll_to_bottom: "Prejdite nadol"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Prehľad nálad"
           analysis: "Analýza nálad"
         sentiment_analysis:
           share_chart: "Skopírujte odkaz na graf"
@@ -919,6 +988,17 @@ sk:
             compact: "Kompaktné"
             expanded: "Rozšírené"
             expanded_description: "so súhrnmi AI"
+      ai_search:
+        related_topics: "Súvisiace témy"
+        related_replies:
+          one: "%{count} odpoveď"
+          few: "%{count} odpovede"
+          many: "%{count} odpovedí"
+          other: "%{count} odpovedí"
+        tabs:
+          ask: "Spýtajte sa AI"
+          topics: "Témy"
+          messages: "Správy"
       discobot_discoveries:
         main_title: "Spýtajte sa AI"
         loading_convo: "Načítanie konverzácie"

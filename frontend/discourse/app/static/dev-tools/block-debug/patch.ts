@@ -20,11 +20,11 @@ import type {
   BlockEntry,
 } from "discourse/lib/blocks/-internals/types";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import devToolsState from "../state";
-import BlockInfo from "./block-info";
-import { blockDebugLogger } from "./debug-logger";
-import GhostBlock from "./ghost-block";
-import OutletInfo from "./outlet-info";
+import devToolsState from "../state.js";
+import BlockInfo from "./block-info.gts";
+import { blockDebugLogger } from "./debug-logger.ts";
+import GhostBlock from "./ghost-block.gts";
+import OutletInfo from "./outlet-info.gts";
 
 /**
  * A function that resolves a block reference (string name or class) to a

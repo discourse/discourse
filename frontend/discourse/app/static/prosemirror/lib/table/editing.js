@@ -1,10 +1,10 @@
 import { Fragment, Slice } from "prosemirror-model";
 import { Plugin, TextSelection } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
-import { currentCell, goToNextCell } from "./commands";
-import { cellAround, findTable } from "./grid";
-import handleTablePaste from "./paste";
-import { fixTables } from "./repair";
+import { currentCell, goToNextCell } from "./commands.js";
+import { cellAround, findTable } from "./grid.js";
+import handleTablePaste from "./paste.js";
+import { fixTables } from "./repair.js";
 
 export default function tableEditing() {
   return new Plugin({

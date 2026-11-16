@@ -358,38 +358,42 @@ module DiscourseAi
 
       def eval_with_timeout(script, timeout: nil)
         timeout ||= @timeout
+        context = mini_racer_context
         mutex = Mutex.new
         done = false
         elapsed = 0
 
-        t =
+        watchdog =
           Thread.new do
-            while !done
-              # this is not accurate. but reasonable enough for a timeout
+            loop do
+              # Ruby callbacks are not interruptible by the script watchdog.
               sleep(0.001)
-              elapsed += 1 if !running_attached_function
-              if elapsed > timeout
-                mutex.synchronize { mini_racer_context.stop unless done }
-                break
-              end
+              finished =
+                mutex.synchronize do
+                  if done
+                    true
+                  else
+                    elapsed += 1 if !running_attached_function
+                    if elapsed > timeout
+                      context.stop
+                      true
+                    else
+                      false
+                    end
+                  end
+                end
+              break if finished
             end
           rescue => e
             STDERR.puts e
             STDERR.puts "FAILED TO TERMINATE DUE TO TIMEOUT"
           end
 
-        rval = mini_racer_context.eval(script)
-
-        mutex.synchronize { done = true }
-
-        # ensure we do not leak a thread in state
-        t.join
-        t = nil
-
-        rval
+        context.eval(script)
       ensure
-        # exceptions need to be handled
-        t&.join
+        # Failed evaluations must release the watchdog too, without stopping a later evaluation.
+        mutex&.synchronize { done = true }
+        watchdog&.join
       end
 
       def invoke(progress_callback: nil)

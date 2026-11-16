@@ -10,7 +10,7 @@ module Boards
       validates :name, presence: true
     end
 
-    policy :can_manage
+    policy :can_create_board, class_name: Boards::Policy::CanCreateBoard
 
     transaction do
       model :board, :create_board
@@ -21,16 +21,12 @@ module Boards
 
     private
 
-    def can_manage(guardian:)
-      guardian.can_create_board?
-    end
-
     def create_board(guardian:)
       raw = context[:raw_board_params]&.dup || {}
       if raw.key?("tag_names")
         raw["tag_ids"] = VisibleTagResolver.resolve_names!(raw.delete("tag_names"), guardian:)
       end
-      board = Board.new(raw.except("columns", "acl"))
+      board = Board.new(raw.except("columns", "acl", "owner_user_ids"))
       board.created_by_id = guardian.user.id
       board.updated_by_id = guardian.user.id
       board.save!
@@ -51,14 +47,15 @@ module Boards
       raw = context[:raw_board_params] || {}
       flattened_acl = raw["acl"] || []
 
-      # TODO (martin) We need to add the current user as Owner here
-      # when we have the user functionality ready for ACLs
-      AccessControlListManager.call(
+      AccessControlList::Apply.call(
         guardian:,
         params: {
-          target: board,
-          flattened_acl: flattened_acl,
-          owner: Boards::PLUGIN_NAME,
+          acl_target_type: board.class.name,
+          acl_target_id: board.id,
+          acl_entries: flattened_acl,
+          source: Boards::PLUGIN_NAME,
+          initial_owner_user_id: guardian.user.id,
+          owner_user_ids: raw["owner_user_ids"],
         },
       ) do |result|
         on_failure do

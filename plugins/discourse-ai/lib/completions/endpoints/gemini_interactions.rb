@@ -150,13 +150,13 @@ module DiscourseAi
           level if THINKING_LEVELS.include?(level)
         end
 
-        def prepare_request(payload)
-          if @streaming_mode
-            @processor = nil
-            @streaming_decoder = nil
-            @pending_stream_error = nil
-          end
+        def reset_attempt_state!
+          super
+          @streaming_decoder = nil
+          @pending_stream_error = nil
+        end
 
+        def prepare_request(payload)
           headers = { "Content-Type" => "application/json", "x-goog-api-key" => llm_model.api_key }
           headers.merge!(extra_request_headers)
           Net::HTTP::Post.new(model_uri, headers).tap { |request| request.body = payload }
@@ -237,6 +237,10 @@ module DiscourseAi
           when "image"
             inline_data_to_upload_markdown(mimeType: content[:mime_type], data: content[:data])
           end
+        end
+
+        def reported_reasoning_tokens
+          processor.reasoning_tokens
         end
 
         def final_log_update(log)

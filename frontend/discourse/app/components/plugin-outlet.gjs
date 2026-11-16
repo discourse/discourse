@@ -4,7 +4,6 @@ import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { concat } from "@ember/helper";
-import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
@@ -17,10 +16,7 @@ import {
   connectorsExist,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
-import { or } from "discourse/truth-helpers";
 
-const GET_DEPRECATION_MSG =
-  "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
 const ARGS_DEPRECATION_MSG =
   "PluginOutlet arguments should now be passed using `@outletArgs=` instead of `@args=`";
 
@@ -31,8 +27,8 @@ const VALID_POSITIONS = ["before", "after"];
  * Normalizes an alias entry to a consistent object form.
  * Accepts either a plain string or an object with a `name` property.
  *
- * @param {string|Object} alias - The alias entry to normalize.
- * @returns {{ name: string, deprecated?: boolean, position?: string, since?: string, message?: string, id?: string, url?: string, raiseError?: boolean }}
+ * @param {string | PluginOutletAlias} alias - The alias entry to normalize.
+ * @returns {PluginOutletAlias}
  */
 export function normalizeAlias(alias) {
   if (typeof alias === "string") {
@@ -348,12 +344,6 @@ export default class PluginOutlet extends Component {
 
   context = {
     ...helperContext(),
-    get() {
-      deprecated(GET_DEPRECATION_MSG, {
-        id: "discourse.plugin-outlet-context-get",
-      });
-      return get(this, ...arguments);
-    },
   };
 
   constructor() {
@@ -372,7 +362,7 @@ export default class PluginOutlet extends Component {
    * Normalized alias entries from @aliases arg.
    * Each entry is an object with at least a `name` property.
    *
-   * @returns {Array<{ name: string, deprecated?: boolean, since?: string, message?: string, id?: string, url?: string, raiseError?: boolean }>}
+   * @returns {PluginOutletAlias[]}
    */
   @cached
   get normalizedAliases() {
@@ -388,7 +378,7 @@ export default class PluginOutlet extends Component {
    * standalone outlets into a wrapper's before slot), plus `__before` variants
    * of all aliases without a position (for inheriting wrapper sub-outlet connectors).
    *
-   * @returns {Array<Object>}
+   * @returns {PluginOutletAlias[]}
    */
   @cached
   get aliasesForBefore() {
@@ -413,7 +403,7 @@ export default class PluginOutlet extends Component {
    * standalone outlets into a wrapper's after slot), plus `__after` variants
    * of all aliases without a position (for inheriting wrapper sub-outlet connectors).
    *
-   * @returns {Array<Object>}
+   * @returns {PluginOutletAlias[]}
    */
   @cached
   get aliasesForAfter() {

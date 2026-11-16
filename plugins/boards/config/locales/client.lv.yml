@@ -27,6 +27,10 @@ lv:
           zero: "%{count} atbildes"
           one: "%{count} atbilde"
           other: "%{count} atbildes"
+        owners:
+          zero: "Īpašnieki"
+          one: "Īpašnieks"
+          other: "Īpašnieki"
       manage:
         name: "Vārds"
         constraint_categories: "Sadaļas"

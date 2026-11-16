@@ -1,4 +1,4 @@
-import UploadPlaceholderNodeView from "../components/upload-placeholder-node-view";
+import UploadPlaceholderNodeView from "../components/upload-placeholder-node-view.gjs";
 
 /** @type {RichEditorExtension} */
 const extension = {

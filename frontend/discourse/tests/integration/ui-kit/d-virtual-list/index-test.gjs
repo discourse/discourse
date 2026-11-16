@@ -149,16 +149,6 @@ module("Integration | ui-kit | DVirtualList", function (hooks) {
 
 const ROW_PX = 40;
 
-// Consumers hand DVirtualList a new array reference on change; this is the
-// smallest tracked holder that lets a test do the same.
-class State {
-  @tracked value;
-
-  constructor(value) {
-    this.value = value;
-  }
-}
-
 function buildRows(count) {
   return Array.from({ length: count }, (_, i) => ({ id: i, text: `row ${i}` }));
 }
@@ -328,7 +318,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
     // awaiting settled() after render proves nothing: render has already settled,
     // so no engine callback fires and the assertion holds even with the gate removed.
     const items = buildRows(200);
-    const state = new State(() => 40);
+    const estimateSize = tracked(() => 40);
     let ranges = 0;
     const onVisibleRangeChange = () => ranges++;
 
@@ -342,7 +332,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
           }
         </style>
         <DVirtualList
-          @estimateSize={{state.value}}
+          @estimateSize={{estimateSize.value}}
           @items={{items}}
           @onVisibleRangeChange={{onVisibleRangeChange}}
           as |item|
@@ -357,7 +347,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
     // A fresh function identity re-runs modify() and busts the engine's
     // measurement memo, but every size is identical, so the published window is
     // byte-for-byte the same and the gate must swallow it.
-    state.value = () => 40;
+    estimateSize.value = () => 40;
     await settled();
 
     assert.strictEqual(
@@ -376,7 +366,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
     // anchorTo:"end" — which does NOT control resting position (it is consulted
     // only at the prepend-anchor gate and the wasAtEnd resize branch), so a
     // top-resting list can opt in without becoming bottom-anchored.
-    const state = new State(buildRows(200));
+    const items = tracked(buildRows(200));
 
     await render(
       <template>
@@ -389,7 +379,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
         </style>
         <DVirtualList
           @estimateSize={{estimate}}
-          @items={{state.value}}
+          @items={{items.value}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -411,7 +401,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
       id: -100 + i,
       text: `older ${i}`,
     }));
-    state.value = [...older, ...state.value];
+    items.value = [...older, ...items.value];
     await settled();
 
     const movedRow = findAll(".d-virtual-list__item").find(
@@ -434,7 +424,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
     // The published window pairs each virtual key with items[index]. Replacing an
     // object strictly inside the window must change that row's key, or keyed row
     // state stays attached to the previous object.
-    const state = new State(buildRows(1000));
+    const items = tracked(buildRows(1000));
 
     await render(
       <template>
@@ -447,7 +437,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
         </style>
         <DVirtualList
           @estimateSize={{estimate}}
-          @items={{state.value}}
+          @items={{items.value}}
           as |item row|
         >
           <div class="row" data-key={{row.key}} style="height: 40px">
@@ -461,9 +451,9 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
       ".d-virtual-list__item[data-index='5'] .row"
     ).getAttribute("data-key");
 
-    const next = state.value.slice();
+    const next = items.value.slice();
     next[5] = { id: 5, text: "replaced" };
-    state.value = next;
+    items.value = next;
     await settled();
 
     const keyAfter = find(

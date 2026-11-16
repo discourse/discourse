@@ -9,9 +9,10 @@ module JsonApiKit
 
     def to_s = address
 
-    def relationship(name) = Url.new("#{address}/relationships/#{path_segment(name)}")
+    def relationship(name, parameters: {}) =
+      Url.new("#{address}/relationships/#{path_segment(name)}", parameters)
 
-    def related(name) = Url.new("#{address}/#{path_segment(name)}")
+    def related(name, parameters: {}) = Url.new("#{address}/#{path_segment(name)}", parameters)
 
     private
 

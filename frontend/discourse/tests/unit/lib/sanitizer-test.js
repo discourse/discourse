@@ -1,7 +1,13 @@
 import { setupTest } from "ember-qunit";
 import AllowLister from "pretty-text/allow-lister";
-import { hrefAllowed, sanitize } from "pretty-text/sanitizer";
+import {
+  escape,
+  hrefAllowed,
+  isAllowListedAttr,
+  sanitize,
+} from "pretty-text/sanitizer";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import DiscourseMarkdownIt from "discourse-markdown-it";
 
 function build(options) {
@@ -10,6 +16,47 @@ function build(options) {
 
 module("Unit | Utility | sanitizer", function (hooks) {
   setupTest(hooks);
+
+  test("preserves attribute whitespace normalization", function (assert) {
+    const allowLister = new AllowLister();
+
+    for (const whitespace of ["\t", "\n", "\r", "\f", "\u00a0"]) {
+      assert.strictEqual(
+        sanitize(
+          `<a title="first${whitespace}value" title="second${whitespace}value">link</a>`,
+          allowLister
+        ),
+        `<a title="first${whitespace}value" title="second value">link</a>`,
+        "preserves quoted whitespace before normalization starts"
+      );
+      assert.strictEqual(
+        sanitize(`<a title = "first${whitespace}value">link</a>`, allowLister),
+        '<a title="first value">link</a>',
+        "normalizes quoted whitespace after unquoted whitespace"
+      );
+    }
+  });
+
+  test("does not repeatedly normalize the entire attribute string", function (assert) {
+    const attributes = Array(128).fill('title="value"').join(" ");
+    const input = `<a ${attributes}>link</a>`;
+    const replace = sinon.spy(String.prototype, "replace");
+    let output;
+    let replacements;
+
+    try {
+      output = sanitize(input, new AllowLister());
+      // Count full-input scans instead of asserting a machine-dependent duration.
+      replacements = replace.getCalls().filter((call) => {
+        return call.thisValue === attributes && call.args[0]?.global;
+      }).length;
+    } finally {
+      replace.restore();
+    }
+
+    assert.strictEqual(output, input);
+    assert.strictEqual(replacements, 1, "normalizes the attribute string once");
+  });
 
   test("sanitize", function (assert) {
     const engine = build({
@@ -445,5 +492,42 @@ module("Unit | Utility | sanitizer", function (hooks) {
       sanitize("<div data-cat-dog=1></div>", allowLister),
       '<div data-cat-dog="1"></div>'
     );
+  });
+
+  test("isAllowListedAttr checks a tag's attribute rules", function (assert) {
+    const forTag = {
+      rel: ["nofollow"],
+      title: ["*"],
+      "data-gadget-*": ["on"],
+    };
+
+    assert.true(isAllowListedAttr(forTag, "rel", "nofollow"));
+    assert.false(isAllowListedAttr(forTag, "rel", "ugc"));
+    assert.true(isAllowListedAttr(forTag, "title", "anything"));
+    assert.true(isAllowListedAttr(forTag, "data-gadget-size", "on"));
+    assert.false(isAllowListedAttr(forTag, "data-gadget-size", "off"));
+    assert.false(isAllowListedAttr(forTag, "href", "/x"));
+    assert.true(
+      isAllowListedAttr({ "data-*": ["*"] }, "data-anything", "x"),
+      "allows any data attribute"
+    );
+    assert.false(
+      isAllowListedAttr({ "data-*": ["*"] }, "data-html-gadget", "x"),
+      "never allows data-html- attributes"
+    );
+  });
+
+  test("hrefAllowed accepts the extra matchers", function (assert) {
+    assert.strictEqual(hrefAllowed("tel:123", null), undefined);
+    assert.strictEqual(hrefAllowed("tel:123", [/^tel:/]), "tel:123");
+    assert.strictEqual(
+      hrefAllowed("/it's", null),
+      "/it%27s",
+      "escapes single quotes"
+    );
+  });
+
+  test("re-exports escape", function (assert) {
+    assert.strictEqual(escape("<b>"), "&lt;b&gt;");
   });
 });

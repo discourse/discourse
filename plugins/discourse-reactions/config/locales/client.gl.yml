@@ -11,6 +11,10 @@ gl:
         all: "Todas"
       main_reaction:
         add: "Gústame esta publicación"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Engadido"
+        changes_removed: "Retirado"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       titles:

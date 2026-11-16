@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import CanvasHoverToolbar from "./hover-toolbar";
+import CanvasHoverToolbar from "./hover-toolbar.gjs";
 
 function stopAndCall(callback, e) {
   e.stopPropagation();

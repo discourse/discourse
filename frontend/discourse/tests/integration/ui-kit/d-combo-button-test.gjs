@@ -1,7 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { render, rerender, triggerEvent } from "@ember/test-helpers";
+import { click, render, rerender, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 
 module("Integration | ui-kit | DComboButton", function (hooks) {
@@ -106,13 +107,11 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
   });
 
   test("toggling @hasMenu moves the class and the menu together", async function (assert) {
-    const state = new (class {
-      @tracked hasMenu = false;
-    })();
+    const hasMenu = tracked(false);
 
     await render(
       <template>
-        <DComboButton @hasMenu={{state.hasMenu}} as |combo|>
+        <DComboButton @hasMenu={{hasMenu.value}} as |combo|>
           <combo.Button @translatedLabel="Action" />
           <combo.Menu @inline={{true}}>content</combo.Menu>
         </DComboButton>
@@ -122,13 +121,13 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
     assert.dom(".d-combo-button").doesNotHaveClass("--has-menu");
     assert.dom(".d-combo-button-menu").doesNotExist();
 
-    state.hasMenu = true;
+    hasMenu.value = true;
     await rerender();
 
     assert.dom(".d-combo-button").hasClass("--has-menu");
     assert.dom(".d-combo-button-menu").exists();
 
-    state.hasMenu = false;
+    hasMenu.value = false;
     await rerender();
 
     assert.dom(".d-combo-button").doesNotHaveClass("--has-menu");
@@ -166,13 +165,11 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
   });
 
   test("--has-menu survives a consumer's dynamic class changing", async function (assert) {
-    const state = new (class {
-      @tracked extra = "first";
-    })();
+    const extra = tracked("first");
 
     await render(
       <template>
-        <DComboButton class={{state.extra}} @hasMenu={{true}} as |combo|>
+        <DComboButton class={{extra.value}} @hasMenu={{true}} as |combo|>
           <combo.Button @translatedLabel="Action" />
           <combo.Menu @inline={{true}}>content</combo.Menu>
         </DComboButton>
@@ -182,7 +179,7 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
     assert.dom(".d-combo-button").hasClass("--has-menu");
     assert.dom(".d-combo-button").hasClass("first");
 
-    state.extra = "second";
+    extra.value = "second";
     await rerender();
 
     assert
@@ -190,5 +187,38 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
       .hasClass("--has-menu", "the group's own token is not dropped");
     assert.dom(".d-combo-button").hasClass("second");
     assert.dom(".d-combo-button").doesNotHaveClass("first");
+  });
+
+  test("combo.Menu yields the menu API so its content can close it", async function (assert) {
+    await render(
+      <template>
+        <DComboButton @hasMenu={{true}} as |combo|>
+          <combo.Button @translatedLabel="Action" />
+          <combo.Menu @inline={{true}} @visibilityOptimizer="none" as |menu|>
+            <DButton class="inert" @translatedLabel="Inert" />
+            <DButton
+              class="close-from-content"
+              @action={{menu.close}}
+              @translatedLabel="Close"
+            />
+          </combo.Menu>
+        </DComboButton>
+      </template>
+    );
+    await open();
+
+    assert.dom(".close-from-content").exists("the content block rendered");
+
+    await click(".inert");
+
+    assert
+      .dom(".fk-d-menu")
+      .exists("a click inside the content alone does not close it");
+
+    await click(".close-from-content");
+
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist("the yielded close() shut the menu it belongs to");
   });
 });

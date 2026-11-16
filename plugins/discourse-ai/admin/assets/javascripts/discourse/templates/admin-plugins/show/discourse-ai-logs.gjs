@@ -1,4 +1,4 @@
-import AiLogs from "../../../components/ai-logs";
+import AiLogs from "../../../components/ai-logs.gjs";
 
 export default <template>
   <AiLogs

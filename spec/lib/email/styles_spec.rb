@@ -57,6 +57,39 @@ RSpec.describe Email::Styles do
     end
   end
 
+  describe "custom formatter" do
+    shared_examples "applying CSS beside an unsupported selector" do |selector:|
+      it "skips the unsupported selector and applies supported styles" do
+        SiteSetting.email_custom_css_compiled = <<~CSS
+          p { color: red; }
+          #{selector}, a:first-child { letter-spacing: 3px; }
+          a { background-color: green; }
+        CSS
+
+        frag =
+          html_fragment(
+            '<p>Text</p><div><a href="/">Link</a><a href="/" id="other">Other link</a></div>',
+          )
+
+        expect(frag.at("p")["style"]).to include("color:red")
+        expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
+        expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
+      end
+    end
+
+    context "with the a:visited selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a:visited"
+    end
+
+    context "with the a:hover selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a:hover"
+    end
+
+    context "with the a[ selector" do
+      include_examples "applying CSS beside an unsupported selector", selector: "a["
+    end
+  end
+
   describe "html template formatter" do
     it "attaches a style to h3 tags" do
       frag = html_fragment("<h3>hello</h3>")
@@ -232,6 +265,14 @@ RSpec.describe Email::Styles do
       style = Email::Styles.new(emoji)
       style.strip_avatars_and_emojis
       expect(style.to_html).to match_html("cry_cry")
+    end
+
+    it "inserts emoji title as text" do
+      emoji =
+        "<img title='&lt;span data-injected&gt;x&lt;/span&gt;' src='/images/emoji/twitter/smile.png'>"
+      style = Email::Styles.new(emoji)
+      style.strip_avatars_and_emojis
+      expect(style.to_html).to match_html("&lt;span data-injected&gt;x&lt;/span&gt;")
     end
 
     it "works if img tag has no attrs" do
@@ -413,6 +454,19 @@ RSpec.describe Email::Styles do
 
       expect(@frag.to_s).not_to include("cid:email/test.png")
       expect(@frag.css("[data-stripped-secure-upload]")).to be_present
+    end
+
+    it "uses the default size when the dimensions are not numbers" do
+      styler = Email::Styles.new(<<~HTML)
+        <div data-stripped-secure-upload="/secure-uploads/original/1X/123456.png" data-width='1" onerror="alert(1)' data-height="1"></div>
+      HTML
+      styler.inline_secure_images(attachments, attachments_index)
+
+      expect(Nokogiri::HTML5.fragment(styler.to_s).at_css("img").to_h).to eq(
+        "src" => "cid:email/test.png",
+        "data-embedded-secure-image" => "true",
+        "style" => "max-width: 50%; max-height: #{Email::Styles::MAX_IMAGE_DIMENSION}px;",
+      )
     end
 
     context "when an optimized image is used instead of the original" do

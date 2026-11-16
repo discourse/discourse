@@ -22,9 +22,16 @@ if defined?(DiscourseWorkflows)
               },
             ],
             properties: {
-              **CATEGORY_FILTER_PROPERTIES,
-              **TAG_FILTER_PROPERTIES,
+              **TOPIC_SCOPE_FILTER_PROPERTIES,
             },
+          )
+
+          deprecated(
+            superseded_by: "2.0",
+            changes: {
+              "user" => "actor",
+            },
+            notice_key: "discourse_workflows.node_deprecated.user_is_topic_author",
           )
 
           def initialize(vote, *)
@@ -38,7 +45,7 @@ if defined?(DiscourseWorkflows)
 
           def output
             {
-              topic: serialize_record(topic, TopicListItemSerializer),
+              topic: serialize_topic_list_item(topic),
               user: serialize_user(voter),
               vote: {
                 id: @vote.id,
@@ -49,12 +56,7 @@ if defined?(DiscourseWorkflows)
           end
 
           def matches?(trigger_ctx)
-            matches_category_ids?(
-              topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) &&
-              matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+            matches_topic_filters?(topic, trigger_ctx)
           end
 
           private

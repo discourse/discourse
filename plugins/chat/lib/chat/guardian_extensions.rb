@@ -94,6 +94,9 @@ module Chat
     # so this isn't too dangerous, if we end up wanting to change
     # more things in future we may want to re-evaluate to be staff-only here.
     def can_edit_thread?(thread)
+      return false if !can_post_in_chatable?(thread.channel.chatable)
+      return false if !can_modify_channel_message?(thread.channel)
+
       is_staff? || thread.original_message_user_id == @user.id
     end
 
@@ -207,6 +210,11 @@ module Chat
       @user.in_any_groups?(SiteSetting.chat_message_flag_allowed_groups_map)
     end
 
+    # Illegal content must be reportable by anyone, regardless of flagging permissions.
+    def can_only_flag_chat_messages_as_illegal?
+      SiteSetting.allow_all_users_to_flag_illegal_content && !can_flag_chat_messages?
+    end
+
     def can_flag_in_chat_channel?(chat_channel, post_allowed_category_ids: nil)
       return false if !can_modify_channel_message?(chat_channel)
 
@@ -220,13 +228,24 @@ module Chat
       return false if chat_message.user.staff? && !SiteSetting.allow_flagging_staff
       return false if chat_message.user_id == @user.id
 
-      can_flag_chat_messages? && can_flag_in_chat_channel?(chat_message.chat_channel)
+      (can_flag_chat_messages? || SiteSetting.allow_all_users_to_flag_illegal_content) &&
+        can_flag_in_chat_channel?(chat_message.chat_channel)
+    end
+
+    def chat_flag_types
+      @chat_flag_types ||= PostActionType.flag_types
     end
 
     def can_flag_message_as?(chat_message, flag_type_id, opts)
+      return false if flag_type_id == chat_flag_types[:illegal] && SiteSetting.dsa_reporting_enabled
+
       return false if !is_staff? && (opts[:take_action] || opts[:queue_for_review])
 
-      if flag_type_id == ReviewableScore.types[:notify_user]
+      if can_only_flag_chat_messages_as_illegal? && flag_type_id != chat_flag_types[:illegal]
+        return false
+      end
+
+      if flag_type_id == chat_flag_types[:notify_user]
         is_warning = ActiveRecord::Type::Boolean.new.deserialize(opts[:is_warning])
 
         return false if is_warning && !is_staff?

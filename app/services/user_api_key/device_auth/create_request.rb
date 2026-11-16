@@ -42,7 +42,7 @@ class UserApiKey::DeviceAuth::CreateRequest
 
   def build_grant(params:, client:)
     request_params = params.attributes.symbolize_keys
-    scopes = request_params[:scopes].split(",")
+    scopes = request_params[:scopes].split(",").uniq
     expires_in_seconds = UserApiKey::Expiry.parse_seconds!(request_params[:expires_in_seconds])
     device_code = SecureRandom.hex(32)
 

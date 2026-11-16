@@ -20,6 +20,11 @@ he:
           author: אני
           author_others: "%{username}"
           status_online: "● מקוון"
+        live_usage:
+          minutes:
+            one: "דקה"
+            two: "%{count} דקות"
+            other: "%{count} דקות"
         invites:
           label_invitations_sent: "נשלחו הזמנות:"
         new_user_interactions:

@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Ai
     module Tools
       class WorkflowResolveEntity < Base
-        SUPPORTED_KINDS = %w[category tag tag_group user group badge data_table].freeze
+        SUPPORTED_KINDS = %w[category tag tag_group user group badge data_table topic].freeze
         MAX_RESULTS = 10
 
         def self.signature
@@ -21,7 +21,7 @@ module DiscourseWorkflows
               },
               {
                 name: "query",
-                description: "Name, slug, username, or partial text to search for",
+                description: "Name, slug, username, topic id, or partial text to search for",
                 type: "string",
                 required: true,
               },
@@ -102,6 +102,22 @@ module DiscourseWorkflows
             .limit(MAX_RESULTS)
             .pluck(:id, :name)
             .map { |id, name| { id: id, name: name } }
+        end
+
+        def resolve_topic(query)
+          scope = Topic.listable_topics
+          scope =
+            if query.match?(/\A\d+\z/)
+              scope.where(id: query.to_i)
+            else
+              scope.where("title ILIKE ?", "%#{Topic.sanitize_sql_like(query)}%")
+            end
+
+          scope
+            .order(bumped_at: :desc)
+            .limit(MAX_RESULTS)
+            .pluck(:id, :title, :slug)
+            .map { |id, title, slug| { id: id, title: title, slug: slug } }
         end
 
         def resolve_data_table(query)

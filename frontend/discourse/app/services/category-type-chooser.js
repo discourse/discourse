@@ -1,10 +1,42 @@
 import Service, { service } from "@ember/service";
 
+/**
+ * @typedef {{
+ *   id: string,
+ *   name: string,
+ *   title: string,
+ *   description: string,
+ *   icon: string,
+ *   available: boolean,
+ *   visible: boolean,
+ *   configuration_schema: Record<string, Record<string, unknown>[]>,
+ *   required_plugin?: string,
+ *   can_enable_plugin?: boolean,
+ *   contact_admin_username?: string,
+ *   [key: string]: unknown,
+ * }} CategoryType
+ */
+
+/**
+ * @typedef {{
+ *   type: string,
+ *   typeName: string,
+ *   typeSchema: CategoryType["configuration_schema"],
+ *   typeTitle: string,
+ *   visible: boolean,
+ *   available: boolean,
+ *   count: number,
+ * }} CategoryTypeSelection
+ */
+
 export default class CategoryTypeChooser extends Service {
   @service router;
 
+  /** @type {CategoryTypeSelection | null} */
   _selection = null;
   _setupComplete = false;
+
+  /** @type {CategoryType[] | null} */
   _allTypes = null;
 
   get allTypes() {

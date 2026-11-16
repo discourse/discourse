@@ -9,7 +9,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DModal from "discourse/ui-kit/d-modal";
@@ -18,10 +17,10 @@ import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../../lib/ai-errors";
-import DiffStreamer from "../../lib/diff-streamer";
-import SmoothStreamer from "../../lib/smooth-streamer";
-import AiIndicatorWave from "../ai-indicator-wave";
+} from "../../lib/ai-errors.js";
+import DiffStreamer from "../../lib/diff-streamer.gjs";
+import SmoothStreamer from "../../lib/smooth-streamer.gjs";
+import AiIndicatorWave from "../ai-indicator-wave.gjs";
 
 export default class ModalDiffModal extends Component {
   @service messageBus;

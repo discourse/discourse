@@ -19,6 +19,10 @@ sv:
         chat_usage:
           author: Du
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} min"
+            other: "%{count} min"
         invites:
           label_invitations_sent: "Inbjudningar skickade:"
         writing_analysis:

@@ -7,7 +7,7 @@ module("Component | ChatEmojiAvatar", function (hooks) {
   setupRenderingTest(hooks);
 
   test("uses an emoji as avatar", async function (assert) {
-    this.set("emoji", ":otter:");
+    this.emoji = ":otter:";
 
     await render(
       <template><ChatEmojiAvatar @emoji={{this.emoji}} /></template>

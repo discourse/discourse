@@ -10,10 +10,8 @@
   },
   "packages": {
     "@fortawesome/fontawesome-free": "*",
-    "@jspreadsheet/formula": "2.0.2",
     "cli-table": "0.3.11",
     "jsonify": "0.0.1",
-    "jspreadsheet-ce": "5.0.4",
     "@embroider/vite": "1.7.5"
   },
   "corrections": true,

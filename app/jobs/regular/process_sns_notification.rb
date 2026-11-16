@@ -17,7 +17,7 @@ module Jobs
         end
 
       return unless message && message["notificationType"] == "Bounce"
-      return unless message_id = message.dig("mail", "messageId").presence
+      return unless message_id = original_message_id(message["mail"])
       return unless bounce_type = message.dig("bounce", "bounceType").presence
 
       return if !Email::Sns.allowed_topic_arn?(json["TopicArn"])
@@ -38,6 +38,16 @@ module Jobs
           Email::Receiver.update_bounce_score(email_log.user.email, SiteSetting.hard_bounce_score)
         end
       end
+    end
+
+    private
+
+    def original_message_id(mail)
+      header =
+        Array(mail&.dig("headers")).find { |entry| entry["name"].to_s.casecmp?("Message-ID") }
+      message_id = header&.dig("value").presence || mail&.dig("commonHeaders", "messageId").presence
+      # Provider-assigned IDs do not identify the original message stored in EmailLog.
+      Email::MessageIdService.message_id_clean(message_id.strip) if message_id
     end
   end
 end

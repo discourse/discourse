@@ -10,7 +10,10 @@ describe "User preferences | Profile" do
 
   describe "changing bio" do
     it "correctly updates the bio" do
+      user.user_option.update!(timezone: nil)
+
       user_preferences_profile_page.visit(user)
+      expect(user.user_option.reload.timezone).to be_present
 
       user_preferences_profile_page.expand_profile_details
       user_preferences_profile_page.fill_bio(with: "I am a human.")

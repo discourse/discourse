@@ -18,6 +18,7 @@ RSpec.describe "markdown extraction round trip" do
   let(:fixtures) { ExtractionRoundTrip.round_trip_bodies }
 
   describe "resolution with nothing mapped" do
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     ExtractionRoundTrip.round_trip_bodies.each_key do |name|
       it "restores the #{name.tr("_", " ")} body, rewriting only source-site origins" do
         outcome = round_trip(fixtures.slice(name))
@@ -25,6 +26,7 @@ RSpec.describe "markdown extraction round trip" do
         expect(outcome.resolved[name]).to eq(outcome.expected[name])
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
     # Every construct the fixtures carry must survive the scanner intact;
     # otherwise the round trip above would be checking verbatim passthrough.

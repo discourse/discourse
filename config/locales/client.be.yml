@@ -6,6 +6,12 @@
 
 be:
   js:
+    code_editor:
+      search:
+        next: "Далей"
+        close: "Закрыць"
+      fold:
+        to: "каму"
     user_api_key:
       authorize: "Аўтарызаваць"
       deny: "Скасаваць"
@@ -311,7 +317,6 @@ be:
       zh_CN:
         name: Кітайская спрошчаная
     share:
-      topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       post: "допіс №%{postNumber} ад карыстальніка @%{username}"
       close: "закрыць"
       twitter: "Абагуліць у X"
@@ -414,29 +419,18 @@ be:
       few: "не больш за %{count}"
       many: "не больш за %{count}"
       other: "не больш за %{count}"
-    character_count:
-      one: "%{count} сімвал"
-      few: "%{count} сімвалы"
-      many: "%{count} сімвалаў"
-      other: "%{count} сімвалаў"
     related_messages:
       title: "Звязаныя паведамленні"
       pill: "Звязаныя паведамленні"
     suggested_topics:
       pm_title: "Прапанаваныя паведамленні"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Назад"
     design_wizard:
       back: "Назад"
       next: "Далей"
       sections:
-        theme: "Тэма"
         homepage: "Галоўная старонка"
-        search: "Пошук"
-      colors:
-        light: "Светлая"
-        dark: "Цёмная"
+      fonts:
+        base_font: "Тэкст"
       homepage:
         topics: "тэмы"
         categories: "катэгорыі"
@@ -653,6 +647,8 @@ be:
       title:
         search: "Пошук паведамлення"
         placeholder: "увядзіце загаловак, URL-адрас або ідэнтыфікатар паведамлення"
+    dsa_statements:
+      category: "Катэгорыя"
     review:
       show_more: "Паказаць больш"
       show_less: "Паказаць менш"
@@ -722,6 +718,7 @@ be:
           title: "Усё"
       context_question:
         delimiter: "або"
+        something_wrong_with_post: "Штосьці не так з гэтай публікацыяй?"
       types:
         reviewable_flagged_post:
           noun: "пост"
@@ -1378,6 +1375,7 @@ be:
       flags: Сцягі
     filter_controls:
       reset: "Скінуць"
+      sort_label: "сартаваць па"
     composer:
       options: "Параметры"
       posting_not_on_topic: "У якой тэме вы хочаце адказаць?"
@@ -1390,8 +1388,7 @@ be:
       reply: "Адказаць"
       cancel: "Скасаваць"
       create_topic: "Стварыць тэму"
-      title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
-      title_placeholder_redesign: "Загаловак"
+      title_placeholder: "Загаловак"
       title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
       edit_reason_placeholder: "Чаму вы рэдагуеце допіс?"
       reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
@@ -1698,8 +1695,6 @@ be:
           previous: "Папярэдняя версія"
           next: "Наступная версія"
           last: "Апошняя версія"
-          hide: "Схаваць версію"
-          show: "Паказаць версію"
         displays:
           inline:
             title: "Паказаць атрыманы вынік з дададзенымі і выдаленымі элементамі ў радку"
@@ -1710,7 +1705,6 @@ be:
     category:
       none: "(без катэгорыі)"
       all: "Усе катэгорыі"
-      choose: "Катэгорыя&hellip;"
       edit: "Рэдагаваць"
       view: "Прагляд тэм у катэгорыі"
       general: "Агульныя"
@@ -2064,14 +2058,6 @@ be:
         type_mismatch:
           default: "Увядзіце правільнае значэнне."
           email: "Увядзіце правільны адрас электроннай пошты."
-    table_builder:
-      edit:
-        modal:
-          cancel: "скасаваць"
-          create: "Захаваць"
-          reason: "Чаму вы рэдагуеце допіс?"
-      spreadsheet:
-        about: "Пра сайт"
     filter:
       description:
         yesterday: "Учора"
@@ -2112,9 +2098,8 @@ be:
           title: "Убудовы"
       upcoming_changes:
         name: "Назва"
+        settings: "Налады"
         preview: "Перадпрагляд"
-        enabled_for_options:
-          everyone: "Усе"
         impact_roles:
           admins: "Адміністратары"
           moderators: "Мадэратары"
@@ -2128,6 +2113,9 @@ be:
           impact_role_admins: "Адміністратары"
           impact_role_moderators: "Мадэратары"
           impact_role_staff: "Персанал"
+        sort:
+          status: "Статус"
+          name: "Імя"
       config:
         developer:
           title: "Распрацоўшчык"
@@ -2298,35 +2286,15 @@ be:
           anonymous_human: "ананімны"
       dashboard:
         title: "Панэль кіравання"
-        last_updated: "Панэль кіравання абноўлена:"
         version: "Версія"
         up_to_date: "У вас апошняя версія!"
         updates_available: "Даступны абнаўленні."
-        no_check_performed: "Праверка абнаўленняў не была выканана. Пераканайцеся, што Sidekiq працуе."
-        stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."
-        installed_version: "Усталяваная"
         dismiss_notice: "Ігнараваць"
         new_features:
           learn_more: "Даведацца больш..."
-        last_checked: "Апошняя праверка"
         refresh_problems: "Абнавіць"
-        no_problems: "Праблем не выяўлена."
-        moderators: "Мадэратары:"
-        admins: "Адміністратары:"
-        silenced: "Заглушаныя:"
-        suspended: "Прыпыненыя:"
-        private_messages_short: "Павед."
-        private_messages_title: "Паведамленні"
-        mobile_title: "Мабільны"
         uploads: "Запампоўкі"
         backups: "Рэзервовыя копіі"
-        traffic_short: "Трафік"
-        page_views: "Прагляды старонак"
-        page_views_short: "Прагляды"
-        general_tab: "Агульныя"
-        moderation_tab: "Мадэрацыя"
-        security_tab: "Бяспека"
-        reports_tab: "Справаздачы"
         report_filter_any: "любы"
         disabled: Адключана
         sections:
@@ -2357,7 +2325,6 @@ be:
           system:
             title: "сістэма"
             status: "Статус"
-            dashboard_updated: "Панэль кіравання абноўлена"
         reports_section:
           modal:
             apply: "Прымяніць"
@@ -2866,6 +2833,9 @@ be:
           suspended: "Прыпыненыя"
           silenced: "Заглушаныя"
         approved: "Ухвалены?"
+        bots:
+          name: "Імя"
+          username: "Імя карыстальніка"
         titles:
           staff: "Персанал"
           moderators: "Мадэратары"

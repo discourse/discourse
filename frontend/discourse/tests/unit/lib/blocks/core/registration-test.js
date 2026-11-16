@@ -232,6 +232,12 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     test("returns false for unregistered name", function (assert) {
       assert.false(hasBlock("unregistered-block"));
     });
+
+    test("returns false for a class that was never decorated", function (assert) {
+      class NeverDecoratedBlock {}
+
+      assert.false(hasBlock(NeverDecoratedBlock));
+    });
   });
 
   module("isBlockResolved", function () {

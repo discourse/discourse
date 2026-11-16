@@ -7,7 +7,7 @@ import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import AdComponent from "./ad-component";
+import AdComponent from "./ad-component.js";
 
 let _loaded = false,
   _promise = null,

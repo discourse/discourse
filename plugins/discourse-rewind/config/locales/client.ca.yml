@@ -17,5 +17,9 @@ ca:
         chat_usage:
           author: Vós
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} min"
+            other: "%{count} min"
         writing_analysis:
           menu_other: Altres

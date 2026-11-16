@@ -22,6 +22,10 @@ module DiscourseWorkflows
       WorkflowDocument.node_type_version(node) || Registry::DEFAULT_VERSION
     end
 
+    def node_type(node)
+      Registry.find_node_type(read(node, "type"), version: type_version(node))
+    end
+
     def webhook_id(node)
       WorkflowDocument.node_webhook_id(node)
     end

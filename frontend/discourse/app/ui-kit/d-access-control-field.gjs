@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { or } from "discourse/truth-helpers";
 import DAccessControl from "discourse/ui-kit/d-access-control";
 import { i18n } from "discourse-i18n";
 
@@ -32,6 +31,20 @@ export default class DAccessControlField extends Component {
           }),
         });
       }
+    }
+
+    if (
+      this.args.aclTarget.id &&
+      !acl.some(
+        (entry) => entry.type === "user" && entry.permission === "owner"
+      )
+    ) {
+      addError(name, {
+        title: this.args.title,
+        message: i18n("access_control.manage.owner_required", {
+          typeName: this.args.aclTarget.name,
+        }),
+      });
     }
 
     let evaluation = {};
@@ -100,7 +113,9 @@ export default class DAccessControlField extends Component {
         <DAccessControl
           @acl={{field.value}}
           @aclTarget={{@aclTarget}}
+          @canManageOwners={{@canManageOwners}}
           @groups={{this.site.groups}}
+          @isNew={{@isNew}}
           @onChange={{or @onChange field.set}}
           @transformPermissionOptions={{@transformPermissionOptions}}
         />

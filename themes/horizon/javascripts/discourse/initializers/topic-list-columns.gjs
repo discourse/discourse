@@ -1,12 +1,12 @@
 import { settings } from "virtual:theme";
 import HeaderTopicCell from "discourse/components/topic-list/header/topic-cell";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import HighContextTopicCard from "../components/card/high-context-topic-card";
-import TopicActivityColumn from "../components/card/topic-activity-column";
-import TopicCategoryColumn from "../components/card/topic-category-column";
-import TopicCreatorColumn from "../components/card/topic-creator-column";
-import TopicRepliesColumn from "../components/card/topic-replies-column";
-import TopicStatusColumn from "../components/card/topic-status-column";
+import HighContextTopicCard from "../components/card/high-context-topic-card.gjs";
+import TopicActivityColumn from "../components/card/topic-activity-column.gjs";
+import TopicCategoryColumn from "../components/card/topic-category-column.gjs";
+import TopicCreatorColumn from "../components/card/topic-creator-column.gjs";
+import TopicRepliesColumn from "../components/card/topic-replies-column.gjs";
+import TopicStatusColumn from "../components/card/topic-status-column.gjs";
 
 const TOPIC_CARD_CONTEXTS = [
   "discovery",

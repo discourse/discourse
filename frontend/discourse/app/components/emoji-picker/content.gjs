@@ -13,7 +13,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import noop from "discourse/helpers/noop";
 import withEventValue from "discourse/helpers/with-event-value";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
@@ -24,7 +23,7 @@ import { makeArray } from "discourse/lib/helpers";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
-import { eq, gt, includes, notEq } from "discourse/truth-helpers";
+import { includes } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
@@ -32,7 +31,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
-import DiversityMenu from "./diversity-menu";
+import DiversityMenu from "./diversity-menu.gjs";
 
 const DEFAULT_LAST_SECTION = "favorites";
 
@@ -59,6 +58,8 @@ export default class EmojiPicker extends Component {
   @service siteSettings;
 
   @tracked isFiltering = false;
+
+  /** @type {{ name: string, tonable: boolean }[] | null} */
   @tracked filteredEmojis = null;
   @tracked scrollObserverEnabled = true;
   @tracked scrollDirection = "up";
@@ -362,7 +363,7 @@ export default class EmojiPicker extends Component {
     this.loading = true;
 
     try {
-      this.emojiStore.list = await ajax("/emojis.json");
+      await this.emojiStore.loadList();
 
       // we cant filter an empty list so have to wait for it
       this.didInputFilter(this.term);
@@ -426,9 +427,9 @@ export default class EmojiPicker extends Component {
       let sectionElement;
 
       if (this.scrollDirection === "up" || this.prevYPosition < 50) {
-        sectionElement = visibleSections.firstObject;
+        sectionElement = visibleSections.at(0);
       } else {
-        sectionElement = visibleSections.lastObject;
+        sectionElement = visibleSections.at(-1);
       }
 
       this.lastVisibleSection = sectionElement.dataset.section;
@@ -612,7 +613,7 @@ export default class EmojiPicker extends Component {
                       }}
                       class={{dConcatClass
                         "emoji-picker__section"
-                        (if (notEq this.filteredEmojis null) "hidden")
+                        (if (neq this.filteredEmojis null) "hidden")
                       }}
                       data-section={{section}}
                       role="region"

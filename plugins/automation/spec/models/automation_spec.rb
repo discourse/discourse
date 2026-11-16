@@ -306,6 +306,17 @@ describe DiscourseAutomation::Automation do
     context "when the perform_required_fields_validation flag is true" do
       before { automation.perform_required_fields_validation = true }
 
+      it "allows disabling the automation when both required fields are missing" do
+        automation.fields.destroy_all
+        automation.update_attribute(:enabled, true)
+        automation.reload
+        expect(automation.enabled).to eq(true)
+
+        automation.enabled = false
+        expect(automation.save).to eq(true)
+        expect(automation.errors.full_messages).to be_empty
+      end
+
       context "when a script required field is missing" do
         before do
           automation.fields.create!(
@@ -353,17 +364,6 @@ describe DiscourseAutomation::Automation do
               fields: "cat",
             ),
           )
-        end
-
-        it "doesn't block disabling the automation" do
-          automation.fields.destroy_all
-          automation.update_attribute(:enabled, true)
-          automation.reload
-          expect(automation.enabled).to eq(true)
-
-          automation.enabled = false
-          expect(automation.save).to eq(true)
-          expect(automation.errors.full_messages).to be_empty
         end
       end
 
@@ -414,17 +414,6 @@ describe DiscourseAutomation::Automation do
               fields: "litterbox",
             ),
           )
-        end
-
-        it "doesn't block disabling the automation" do
-          automation.fields.destroy_all
-          automation.update_attribute(:enabled, true)
-          automation.reload
-          expect(automation.enabled).to eq(true)
-
-          automation.enabled = false
-          expect(automation.save).to eq(true)
-          expect(automation.errors.full_messages).to be_empty
         end
       end
 

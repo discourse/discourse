@@ -1,7 +1,7 @@
 import {
   FORM_TRIGGER_WEBHOOK_ID_KEY,
   NODE_DIRECT_SETTING_KEYS,
-} from "../lib/workflows/node-data-shape";
+} from "../lib/workflows/node-data-shape.js";
 
 export { NODE_DIRECT_SETTING_KEYS };
 

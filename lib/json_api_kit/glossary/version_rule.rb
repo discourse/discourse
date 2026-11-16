@@ -7,12 +7,13 @@ module JsonApiKit
         @changes = changes
       end
 
-      def declared_attributes(attributes)
+      def declared_attributes(attributes, existing: ExistingValues::None)
         changes
           .each_with_index
           .reduce(attributes) do |result, (change, index)|
-            change.current_attributes(result)
-          rescue VersionChange::Converter::Failure => failure
+            change.current_attributes(result, existing: existing.after(change))
+          rescue VersionChange::Converter::Failure,
+                 VersionChange::Converter::Tuple::InvalidResult => failure
             raise failure.convert_names { previous_names(it, changes: changes.take(index)) }
           end
       end

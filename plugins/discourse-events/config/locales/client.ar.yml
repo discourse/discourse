@@ -40,6 +40,8 @@ ar:
           load_error: "لقد غادرت الندوة عبر الإنترنت أو يتعذَّر علينا تحميل Zoom في هذه الصفحة."
           too_early: "يمكنك الانضمام إلى الندوة عبر الإنترنت عند اقتراب وقت بدء الحدث."
           view_topic: "عرض موضوع الحدث"
+          guest_prompt:
+            register: "التسجيل"
         chat:
           rsvp_to_event: "أكِّد حضورك للحدث لبدء الدردشة"
           rsvp_to_event_with_link: "أكِّد حضورك <a href='%{url}'>للحدث</a> لبدء الدردشة"
@@ -351,6 +353,8 @@ ar:
         topic_id: "معرِّف الموضوع"
     discourse_post_event:
       new_event: "حدث جديد"
+      onebox:
+        all_day: "طوال اليوم"
       notifications:
         before_event_reminder: "هناك حدث على وشك البدء"
         after_event_reminder: "هناك حدث انتهى"
@@ -394,6 +398,7 @@ ar:
         filter_placeholder: "تصفية المستخدمين"
         remove_invitee: "إزالة المدعو من القائمة"
         add_invitee: "إضافة مدعو إلى القائمة"
+        this_event: "هذا الحدث"
       bulk_invite_modal:
         confirm: "تأكيد"
         text: "تحميل ملف CSV"
@@ -470,7 +475,6 @@ ar:
               many: "%{count} مستخدمًا تمت دعوتهم"
               other: "%{count} مستخدم تمت دعوتهم"
         event:
-          expired: "انتهى"
           closed: "مغلق"
           full: "كامل"
           status:
@@ -483,6 +487,8 @@ ar:
             private:
               title: "خاص"
               description: "لا يمكن إلا للمستخدمين المدعوين الانضمام إلى حدثٍ خاص."
+      recording_modal:
+        save: "حفظ"
       composer:
         name_placeholder: "اسم الحدث"
         end_date_placeholder: "تاريخ الانتهاء"

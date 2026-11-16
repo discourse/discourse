@@ -6,7 +6,21 @@
 
 lt:
   chat:
+    design_wizard_homepage_name: "Pokalbis"
     deleted_chat_username: ištrintas
+    crawler:
+      directory_title: "Pokalbių kanalai"
+      nav_title: "Pokalbis"
+      members_count:
+        one: "%{count} narys"
+        few: "%{count} nariai"
+        many: "%{count} narių"
+        other: "%{count} narių"
+      thread_replies:
+        one: "%{count} atsakymas"
+        few: "%{count} atsakymai"
+        many: "%{count} atsakymai"
+        other: "%{count} atsakymai"
     errors:
       not_accepting_dms: "Atsiprašome, %{username} šiuo metu nepriima pranešimų."
     reviewables:
@@ -46,6 +60,34 @@ lt:
     chat_approval:
       default_approve_label: "Patvirtinti"
       default_deny_label: "Atsisakyti"
+    errors:
+      send_chat_message:
+        invalid_params: "Pranešimas netinkamas: %{errors}"
+        channel_blocked: "Negalima skelbti pranešimų kanale %{channel_id}: %{reason}"
+        failed: "Nepavyko išsiųsti pokalbio žinutės (nepavykęs veiksmas: %{step})."
+        recipient_blank: "Gavėjų naudotojų vardai nebuvo nurodyti."
+        recipient_staged: "\"%{username}\" yra parengiamojoje stadijoje esantis naudotojas ir negali naudotis pokalbių funkcija."
+        recipient_suspended: "\"%{username}\" paskyra sustabdyta, todėl vartotojas negali gauti tiesioginių žinučių."
+        recipient_inactive: "\"%{username}\" dar neaktyvavo savo paskyros."
+        recipient_chat_disabled: "\"%{username}\" savo nuostatose išjungė pokalbius."
+        recipient_cannot_chat: "\"%{username}\" negali naudotis pokalbių funkcija, nes nepriklauso grupei, kuriai tai leidžiama pagal „pokalbiams leidžiamų grupių“ nuostatą."
+        sender_chat_disabled: "Siuntėjas \"%{sender}\" savo nuostatose išjungė pokalbius."
+        sender_cannot_chat: "Siuntėjas \"%{sender}\" negali naudotis pokalbių funkcija, nes nepriklauso grupei, kurią leidžia nustatymas „chat allowed groups“."
+        sender_cannot_create_dm: "Siuntėjui \"%{sender}\" neleidžiama siųsti tiesioginių žinučių (žr. nustatymą „grupės, kuriose įgalintos tiesioginės žinutės“)."
+        sender_dms_disabled: "Siuntėjas \"%{sender}\" savo nuostatose išjungė asmenines žinutes."
+        user_blocked: "\"%{sender}\" negali išsiųsti tiesioginės žinutės \"%{username}\": %{reason}"
+        group_blocked: "\"%{sender}\" negali išsiųsti tiesioginės grupės žinutės naudotojams %{usernames}: %{reason}"
+      chat_approval:
+        channel_blocked: "Nepavyko išsiųsti pokalbio žinutės: negalima rašyti kanale %{channel_id}: %{reason}"
+        failed_step: "Nepavyko išsiųsti pokalbio žinutės (nepavykęs veiksmas: %{step})."
+    hints:
+      send_chat_message:
+        self_message: "Siuntėjas ir gavėjas yra tas pats asmuo – „%{username}“, todėl žinutė buvo paskelbta jų asmeniniame pokalbyje."
+        preferences_bypassed: "\"%{username}\" nepriima tiesioginių žinučių iš \"%{sender}\", tačiau žinutė buvo pristatyta, nes siuntėjas yra personalo narys."
+    logs:
+      send_chat_message:
+        sent_to_user: "Elementas %{item_index}: \"%{sender}\" išsiuntė pranešimą %{message_id} vartotojui \"%{username}\"."
+        sent_to_group: "Elementas %{item_index}: \"%{sender}\" išsiuntė žinutę %{message_id} į grupinį susirašinėjimą su %{usernames}."
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

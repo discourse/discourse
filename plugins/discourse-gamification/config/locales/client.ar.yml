@@ -54,7 +54,6 @@ ar:
         scoring_configuration: "إعدادات النقاط"
         scoring_configuration_description: "تجاوز قواعد احتساب النقاط العامة لقائمة المتصدرين هذه. اترك الحقول فارغة لاستخدام القيم الافتراضية العامة."
         scorable_categories: "الفئات القابلة للاحتساب"
-        scorable_categories_help: "الفئات التي سيتم تضمينها في احتساب النقاط. اتركها فارغة لاستخدام الإعداد العام."
         score_overrides: "أوزان النقاط"
         score_overrides_help: "تجاوز قيم النقاط لكل إجراء. اترك الحقول فارغة لاستخدام القيم الافتراضية العامة. اضبط القيمة على 0 للإيقاف."
         weight:
@@ -86,9 +85,7 @@ ar:
       close: "إغلاق"
       delete: "حذف"
       edit: "تعديل"
-      back: "رجوع"
       save: "حفظ"
-      apply: "تطبيق"
       recalculate: "إعادة حساب النقاط"
       recalculating: "جارٍ إعادة حساب النقاط..."
       completed: "تم! تمت إعادة حساب النقاط بنجاح."
@@ -111,9 +108,11 @@ ar:
       admin:
         title: "التلعيب"
         name: "الاسم"
+        created_by: "تم إنشاؤه بواسطة"
         period: "الفترة"
     discourse_workflows:
       gamification_score:
         username: "المستخدم"
         date: "التاريخ"
         description: "الوصف"
+        category_id: "الفئة"

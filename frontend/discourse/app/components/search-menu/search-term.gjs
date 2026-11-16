@@ -22,6 +22,7 @@ export default class SearchTerm extends Component {
   @service search;
   @service capabilities;
 
+  /** @type {number | null} */
   @tracked lastEnterTimestamp = null;
   @tracked searchCleared = !this.search.activeGlobalSearchTerm;
 

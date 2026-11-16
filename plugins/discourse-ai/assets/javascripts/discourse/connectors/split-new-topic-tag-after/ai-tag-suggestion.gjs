@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import AiSplitTopicSuggester from "../../components/ai-split-topic-suggester";
-import { showPostAIHelper } from "../../lib/show-ai-helper";
+import AiSplitTopicSuggester from "../../components/ai-split-topic-suggester.gjs";
+import { showPostAIHelper } from "../../lib/show-ai-helper.js";
 
 export default class AiTagSuggestion extends Component {
   static shouldRender(args, context) {

@@ -537,4 +537,909 @@ describe "MCP group tools" do
     expect(response.status).to eq(403)
     expect(response.body).not_to include(post.topic.title)
   end
+
+  describe "write tools" do
+    fab!(:group)
+    fab!(:member, :user)
+
+    def tool_error
+      response.parsed_body.dig("result", "content", 0, "text")
+    end
+
+    it "requires the group write scope" do
+      authorize("mcp:groups:read")
+
+      {
+        "discourse_create_group" => {
+          name: "new-group",
+        },
+        "discourse_update_group" => {
+          group_id: group.id,
+          bio_raw: "hi",
+        },
+        "discourse_delete_group" => {
+          group_id: group.id,
+          expected_name: group.name,
+          confirm: true,
+        },
+        "discourse_manage_group_members" => {
+          group_id: group.id,
+          action: "add",
+          usernames: [member.username],
+        },
+        "discourse_invite_group_members" => {
+          group_id: group.id,
+          emails: ["newcomer@example.com"],
+        },
+        "discourse_manage_group_owners" => {
+          group_id: group.id,
+          action: "add",
+          usernames: [member.username],
+        },
+        "discourse_manage_group_membership" => {
+          group_id: group.id,
+          action: "join",
+        },
+        "discourse_handle_group_membership_request" => {
+          group_id: group.id,
+          username: member.username,
+          action: "approve",
+        },
+      }.each do |name, arguments|
+        call_tool(name, arguments)
+        aggregate_failures(name) do
+          expect(response.status).to eq(403)
+          expect(response.headers["WWW-Authenticate"]).to include(
+            'error="insufficient_scope"',
+            'scope="mcp:groups:write"',
+          )
+        end
+      end
+    end
+
+    it "denies every management tool when the token has scope but the user has no group rights" do
+      authorize("mcp:groups:write")
+
+      {
+        "discourse_create_group" => {
+          name: "new-group",
+        },
+        "discourse_update_group" => {
+          group_id: group.id,
+          bio_raw: "hi",
+        },
+        "discourse_delete_group" => {
+          group_id: group.id,
+          expected_name: group.name,
+          confirm: true,
+        },
+        "discourse_manage_group_members" => {
+          group_id: group.id,
+          action: "add",
+          usernames: [member.username],
+        },
+        "discourse_invite_group_members" => {
+          group_id: group.id,
+          emails: ["newcomer@example.com"],
+        },
+        "discourse_manage_group_owners" => {
+          group_id: group.id,
+          action: "add",
+          usernames: [member.username],
+        },
+        "discourse_handle_group_membership_request" => {
+          group_id: group.id,
+          username: member.username,
+          action: "approve",
+        },
+      }.each do |name, arguments|
+        call_tool(name, arguments)
+        aggregate_failures(name) { expect(response.status).to eq(403) }
+      end
+
+      expect(Group.exists?(group.id)).to eq(true)
+      expect(group.reload.users).not_to include(member)
+    end
+
+    it "does not reveal groups the user cannot see" do
+      hidden = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+      make_owner(hidden, Fabricate(:user))
+      authorize("mcp:groups:write")
+
+      call_tool("discourse_update_group", { group_id: hidden.id, bio_raw: "hi" })
+
+      expect(response.status).to eq(200)
+      expect(tool_error).to eq(I18n.t("mcp.errors.group_not_found"))
+    end
+
+    describe "discourse_create_group" do
+      it "creates a group with owners and members for an admin" do
+        admin = Fabricate(:admin, refresh_auto_groups: true)
+        authorize("mcp:groups:write", auth_user: admin)
+
+        call_tool(
+          "discourse_create_group",
+          {
+            name: "docs-team",
+            full_name: "Documentation 猫",
+            visibility_level: Group.visibility_levels[:logged_on_users],
+            owner_usernames: [member.username],
+          },
+        )
+
+        expect(response.status).to eq(200)
+        created = Group.find(structured_content["id"])
+        expect(created.name).to eq("docs-team")
+        expect(created.full_name).to eq("Documentation 猫")
+        expect(created.visibility_level).to eq(Group.visibility_levels[:logged_on_users])
+        expect(created.group_users.find_by(user: member).owner).to eq(true)
+      end
+
+      it "creates a group with a unicode name when unicode usernames are enabled" do
+        SiteSetting.unicode_usernames = true
+        admin = Fabricate(:admin, refresh_auto_groups: true)
+        authorize("mcp:groups:write", auth_user: admin)
+
+        call_tool("discourse_create_group", { name: "docs-猫" })
+
+        expect(response.status).to eq(200)
+        expect(Group.find(structured_content["id"]).name).to eq("docs-猫")
+      end
+
+      it "lets a moderator create a group only when moderators manage groups" do
+        moderator = Fabricate(:moderator, refresh_auto_groups: true)
+        authorize("mcp:groups:write", auth_user: moderator)
+
+        call_tool("discourse_create_group", { name: "mod-group" })
+        expect(response.status).to eq(403)
+
+        SiteSetting.moderators_manage_groups = true
+        call_tool("discourse_create_group", { name: "mod-group" })
+        expect(response.status).to eq(200)
+      end
+
+      it "reports validation errors without creating a group" do
+        admin = Fabricate(:admin, refresh_auto_groups: true)
+        authorize("mcp:groups:write", auth_user: admin)
+
+        expect { call_tool("discourse_create_group", { name: group.name }) }.not_to change {
+          Group.count
+        }
+        expect(response.parsed_body.dig("result", "isError")).to eq(true)
+      end
+
+      it "rejects fields the tool does not expose" do
+        admin = Fabricate(:admin, refresh_auto_groups: true)
+        authorize("mcp:groups:write", auth_user: admin)
+
+        call_tool("discourse_create_group", { name: "smtp-group", smtp_server: "evil.example.com" })
+
+        expect(response.parsed_body.dig("error", "code")).to eq(-32_602)
+      end
+    end
+
+    describe "discourse_update_group" do
+      it "applies only existing categories to group and member notification defaults" do
+        category = Fabricate(:category)
+        missing_id = Category.maximum(:id) + 1
+        make_owner(group, user)
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_update_group",
+          {
+            group_id: group.id,
+            watching_category_ids: [category.id, missing_id],
+            update_existing_users: true,
+          },
+        )
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("result", "isError")).to eq(false)
+        expect(group.reload.group_category_notification_defaults.pluck(:category_id)).to eq(
+          [category.id],
+        )
+        expect(CategoryUser.where(user:).pluck(:category_id, :notification_level)).to eq(
+          [[category.id, NotificationLevels.all[:watching]]],
+        )
+      end
+
+      it "rejects conflicting tag levels including synonyms before changing the group or its members" do
+        tag = Fabricate(:tag)
+        synonym = Fabricate(:tag, target_tag: tag)
+        make_owner(group, user)
+        group.update!(watching_tags: [tag.name])
+        original_bio = group.bio_raw
+        TagUser.change(user.id, tag.id, NotificationLevels.all[:watching])
+        authorize("mcp:groups:write")
+
+        [tag.name, synonym.name.upcase].each do |name|
+          call_tool(
+            "discourse_update_group",
+            {
+              group_id: group.id,
+              bio_raw: "Must not be saved",
+              watching_tags: [tag.name],
+              tracking_tags: [name],
+              update_existing_users: true,
+            },
+          )
+
+          expect(response.parsed_body.dig("result", "isError")).to eq(true)
+          expect(tool_error).to eq(I18n.t("groups.errors.conflicting_notification_defaults"))
+          expect(group.reload.bio_raw).to eq(original_bio)
+          expect(group.group_tag_notification_defaults.pluck(:tag_id, :notification_level)).to eq(
+            [[tag.id, NotificationLevels.all[:watching]]],
+          )
+          expect(TagUser.find_by!(user:, tag:).notification_level).to eq(
+            NotificationLevels.all[:watching],
+          )
+        end
+      end
+
+      it "rejects conflicting category levels even when existing members would be left alone" do
+        category = Fabricate(:category)
+        make_owner(group, user)
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_update_group",
+          {
+            group_id: group.id,
+            watching_category_ids: [category.id],
+            muted_category_ids: [category.id],
+            update_existing_users: false,
+          },
+        )
+
+        expect(response.parsed_body.dig("result", "isError")).to eq(true)
+        expect(tool_error).to eq(I18n.t("groups.errors.conflicting_notification_defaults"))
+        expect(group.reload.group_category_notification_defaults).to be_empty
+        expect(CategoryUser.where(user:, category:)).to be_empty
+      end
+
+      it "moves a tag default and matching member preferences with a partial update" do
+        tag = Fabricate(:tag)
+        make_owner(group, user)
+        group.update!(tracking_tags: [tag.name])
+        TagUser.change(user.id, tag.id, NotificationLevels.all[:tracking])
+        group.add(member)
+        TagUser.change(member.id, tag.id, NotificationLevels.all[:muted])
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_update_group",
+          { group_id: group.id, watching_tags: [tag.name], update_existing_users: true },
+        )
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+        expect(
+          group.reload.group_tag_notification_defaults.pluck(:tag_id, :notification_level),
+        ).to eq([[tag.id, NotificationLevels.all[:watching]]])
+        expect(TagUser.find_by!(user:, tag:).notification_level).to eq(
+          NotificationLevels.all[:watching],
+        )
+        expect(TagUser.find_by!(user: member, tag:).notification_level).to eq(
+          NotificationLevels.all[:muted],
+        )
+        newcomer = Fabricate(:user)
+        group.add(newcomer)
+        expect(TagUser.find_by!(user: newcomer, tag:).notification_level).to eq(
+          NotificationLevels.all[:watching],
+        )
+      end
+
+      it "applies mixed-case tag names and synonyms to the canonical tags for members" do
+        tag = Fabricate(:tag, name: "release-猫")
+        target = Fabricate(:tag)
+        synonym = Fabricate(:tag, target_tag: target)
+        make_owner(group, user)
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_update_group",
+          {
+            group_id: group.id,
+            watching_tags: [tag.name.upcase, synonym.name, target.name],
+            update_existing_users: true,
+          },
+        )
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+        expect(group.reload.group_tag_notification_defaults.pluck(:tag_id)).to contain_exactly(
+          tag.id,
+          target.id,
+        )
+        expect(TagUser.where(user:).pluck(:tag_id, :notification_level)).to contain_exactly(
+          [tag.id, NotificationLevels.all[:watching]],
+          [target.id, NotificationLevels.all[:watching]],
+        )
+      end
+
+      it "preserves omitted notification defaults when editing the profile" do
+        category = Fabricate(:category)
+        tag = Fabricate(:tag)
+        make_owner(group, user)
+        group.update!(watching_category_ids: [category.id], tracking_tags: [tag.name])
+        group.add(member)
+        CategoryUser.set_notification_level_for_category(
+          member,
+          NotificationLevels.all[:watching],
+          category.id,
+        )
+        TagUser.change(member.id, tag.id, NotificationLevels.all[:tracking])
+        authorize("mcp:groups:write")
+
+        [nil, true].each do |choice|
+          arguments = { group_id: group.id, bio_raw: "Updated bio 猫" }
+          arguments[:update_existing_users] = choice unless choice.nil?
+          call_tool("discourse_update_group", arguments)
+
+          expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+          expect(CategoryUser.find_by(user: member, category:)&.notification_level).to eq(
+            NotificationLevels.all[:watching],
+          )
+          expect(TagUser.find_by(user: member, tag:)&.notification_level).to eq(
+            NotificationLevels.all[:tracking],
+          )
+        end
+        expect(group.reload.bio_raw).to eq("Updated bio 猫")
+      end
+
+      it "lets a group owner change the profile but ignores staff-only fields" do
+        make_owner(group, user)
+        original_name = group.name
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_update_group",
+          { group_id: group.id, bio_raw: "We write docs 猫", name: "renamed" },
+        )
+
+        expect(response.status).to eq(200)
+        group.reload
+        expect(group.bio_raw).to eq("We write docs 猫")
+        expect(group.name).to eq(original_name)
+      end
+
+      it "requires at least one field the user may change" do
+        make_owner(group, user)
+        authorize("mcp:groups:write")
+
+        call_tool("discourse_update_group", { group_id: group.id, name: "renamed" })
+
+        expect(tool_error).to eq(I18n.t("mcp.errors.group_update_required"))
+      end
+
+      it "asks for confirmation before changing notification defaults of existing members" do
+        admin = Fabricate(:admin, refresh_auto_groups: true)
+        category = Fabricate(:category)
+        group.add(member)
+        authorize("mcp:groups:write", auth_user: admin)
+
+        call_tool(
+          "discourse_update_group",
+          { group_id: group.id, watching_category_ids: [category.id] },
+        )
+
+        expect(response.parsed_body.dig("result", "isError")).to eq(true)
+        expect(tool_error).to eq(
+          I18n.t("mcp.errors.group_update_existing_users_required", count: 1),
+        )
+        expect(CategoryUser.where(user: member, category:)).to be_empty
+
+        call_tool(
+          "discourse_update_group",
+          { group_id: group.id, watching_category_ids: [category.id], update_existing_users: true },
+        )
+
+        expect(response.status).to eq(200)
+        expect(CategoryUser.find_by(user: member, category:).notification_level).to eq(
+          NotificationLevels.all[:watching],
+        )
+      end
+    end
+
+    describe "discourse_delete_group" do
+      fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+
+      it "deletes a group for an admin after confirmation" do
+        authorize("mcp:groups:write", auth_user: admin)
+
+        call_tool(
+          "discourse_delete_group",
+          { group_id: group.id, expected_name: group.name, confirm: true },
+        )
+
+        expect(response.status).to eq(200)
+        expect(structured_content).to eq("deleted" => true, "group_id" => group.id)
+        expect(Group.exists?(group.id)).to eq(false)
+      end
+
+      it "refuses without confirmation or with the wrong name" do
+        authorize("mcp:groups:write", auth_user: admin)
+
+        call_tool(
+          "discourse_delete_group",
+          { group_id: group.id, expected_name: group.name, confirm: false },
+        )
+        expect(tool_error).to eq(I18n.t("mcp.errors.group_delete_confirmation_required"))
+
+        call_tool(
+          "discourse_delete_group",
+          { group_id: group.id, expected_name: "wrong", confirm: true },
+        )
+        expect(tool_error).to eq(I18n.t("mcp.errors.group_delete_name_mismatch"))
+        expect(Group.exists?(group.id)).to eq(true)
+      end
+
+      it "refuses an automatic group" do
+        authorize("mcp:groups:write", auth_user: admin)
+        automatic = Group.find(Group::AUTO_GROUPS[:trust_level_1])
+
+        call_tool(
+          "discourse_delete_group",
+          { group_id: automatic.id, expected_name: automatic.name, confirm: true },
+        )
+
+        expect(tool_error).to eq(I18n.t("groups.errors.can_not_modify_automatic"))
+        expect(Group.exists?(automatic.id)).to eq(true)
+      end
+
+      it "refuses a moderator who may otherwise manage groups" do
+        SiteSetting.moderators_manage_groups = true
+        moderator = Fabricate(:moderator, refresh_auto_groups: true)
+        make_owner(group, moderator)
+        authorize("mcp:groups:write", auth_user: moderator)
+
+        call_tool(
+          "discourse_delete_group",
+          { group_id: group.id, expected_name: group.name, confirm: true },
+        )
+
+        expect(response.status).to eq(403)
+        expect(Group.exists?(group.id)).to eq(true)
+      end
+    end
+
+    describe "discourse_manage_group_members" do
+      before { make_owner(group, user) }
+
+      it "rejects conflicting selectors without changing members or owners" do
+        authorize("mcp:groups:write")
+        %w[discourse_manage_group_members discourse_manage_group_owners].each do |tool|
+          expect do
+            call_tool(
+              tool,
+              {
+                group_id: group.id,
+                action: "add",
+                usernames: [member.username],
+                user_ids: [user.id],
+              },
+            )
+          end.not_to change { group.group_users.count }
+
+          expect(response.parsed_body.dig("result", "isError")).to eq(true)
+          expect(tool_error).to eq(I18n.t("mcp.errors.group_member_selector_required"))
+        end
+      end
+
+      it "resolves mixed-case account emails for a user who may view emails" do
+        authorize("mcp:groups:write", auth_user: Fabricate(:admin, refresh_auto_groups: true))
+        call_tool(
+          "discourse_manage_group_members",
+          { group_id: group.id, action: "add", user_emails: [member.email.upcase] },
+        )
+
+        expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+        expect(group.users).to include(member)
+      end
+
+      it "refuses the email selector for an owner who may not view emails" do
+        authorize("mcp:groups:write")
+        expect(user.guardian.can_see_emails?).to eq(false)
+
+        %w[discourse_manage_group_members discourse_manage_group_owners].each do |tool|
+          [member.email, "missing@example.com"].each do |email|
+            call_tool(tool, { group_id: group.id, action: "add", user_emails: [email] })
+            expect(response.status).to eq(403)
+            expect(response.body).not_to include(email, member.username)
+          end
+        end
+        expect(group.reload.users).not_to include(member)
+      end
+
+      it "rejects more than 100 parsed usernames before changing members or owners" do
+        selected_users = 101.times.map { |index| Fabricate(:user, username: "limituser#{index}") }
+        usernames = selected_users.map(&:username).each_slice(2).map { |names| names.join(",") }
+        authorize("mcp:groups:write")
+
+        %w[discourse_manage_group_members discourse_manage_group_owners].each do |tool|
+          expect do
+            call_tool(tool, { group_id: group.id, action: "add", usernames: })
+          end.not_to change { group.group_users.count }
+
+          expect(response.parsed_body.dig("result", "isError")).to eq(true)
+          expect(tool_error).to eq(I18n.t("mcp.errors.group_user_limit", count: 100))
+        end
+      end
+
+      it "accepts exactly 100 parsed usernames for member and owner changes" do
+        selected_users = 100.times.map { |index| Fabricate(:user, username: "limituser#{index}") }
+        usernames = selected_users.map(&:username).each_slice(2).map { |names| names.join(",") }
+        authorize("mcp:groups:write")
+
+        %w[discourse_manage_group_members discourse_manage_group_owners].each do |tool|
+          call_tool(tool, { group_id: group.id, action: "add", usernames: })
+
+          expect(response.parsed_body.dig("result", "isError")).to eq(false)
+          expect(structured_content["usernames"]).to match_array(selected_users.map(&:username))
+        end
+        expect(group.group_users.where(owner: true).pluck(:user_id)).to match_array(
+          [user.id, *selected_users.map(&:id)],
+        )
+      end
+
+      it "resolves decomposed Unicode usernames" do
+        SiteSetting.unicode_usernames = true
+        unicode_user = Fabricate(:user, username: "café猫")
+        authorize("mcp:groups:write")
+        call_tool(
+          "discourse_manage_group_members",
+          {
+            group_id: group.id,
+            action: "add",
+            usernames: [unicode_user.username.unicode_normalize(:nfd)],
+          },
+        )
+
+        expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+        expect(group.users).to include(unicode_user)
+      end
+
+      it "reports unknown usernames and makes no partial membership change" do
+        authorize("mcp:groups:write")
+        unknown_username = "missing_group_user"
+        [[member.username, unknown_username], [unknown_username]].each do |usernames|
+          expect do
+            call_tool(
+              "discourse_manage_group_members",
+              { group_id: group.id, action: "add", usernames: },
+            )
+          end.not_to change { group.group_users.count }
+
+          expect(response.parsed_body.dig("result", "isError")).to eq(true)
+          expect(tool_error).to eq(
+            I18n.t("groups.errors.users_not_found", values: unknown_username),
+          )
+        end
+      end
+
+      it "adds and removes members by username" do
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_manage_group_members",
+          { group_id: group.id, action: "add", usernames: [member.username] },
+        )
+
+        expect(response.status).to eq(200)
+        expect(structured_content["usernames"]).to eq([member.username])
+        expect(group.reload.users).to include(member)
+
+        call_tool(
+          "discourse_manage_group_members",
+          { group_id: group.id, action: "remove", user_ids: [member.id] },
+        )
+
+        expect(response.status).to eq(200)
+        expect(group.reload.users).not_to include(member)
+      end
+
+      it "reports existing members as skipped when adding a mixed selection" do
+        authorize("mcp:groups:write")
+
+        expect_enqueued_with(
+          job: :notify_users_added_to_group,
+          args: {
+            user_ids: [member.id],
+            group_id: group.id,
+          },
+        ) do
+          call_tool(
+            "discourse_manage_group_members",
+            {
+              group_id: group.id,
+              action: "add",
+              usernames: [user.username, member.username],
+              notify_users: true,
+            },
+          )
+        end
+
+        expect(response.status).to eq(200)
+        expect(structured_content["usernames"]).to eq([member.username])
+        expect(structured_content["skipped_usernames"]).to eq([user.username])
+        expect(group.reload.users).to contain_exactly(user, member)
+      end
+
+      it "reports users who were never members as skipped" do
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_manage_group_members",
+          { group_id: group.id, action: "remove", usernames: [member.username] },
+        )
+
+        expect(structured_content["skipped_usernames"]).to eq([member.username])
+      end
+
+      it "requires a user selector" do
+        authorize("mcp:groups:write")
+
+        call_tool("discourse_manage_group_members", { group_id: group.id, action: "add" })
+
+        expect(tool_error).to eq(I18n.t("mcp.errors.group_member_selector_required"))
+      end
+
+      it "refuses a member who does not own the group" do
+        group.add(member)
+        authorize("mcp:groups:write", auth_user: member)
+
+        call_tool(
+          "discourse_manage_group_members",
+          { group_id: group.id, action: "add", usernames: [user.username] },
+        )
+
+        expect(response.status).to eq(403)
+      end
+
+      it "refuses an automatic group" do
+        authorize("mcp:groups:write", auth_user: Fabricate(:admin, refresh_auto_groups: true))
+
+        call_tool(
+          "discourse_manage_group_members",
+          {
+            group_id: Group::AUTO_GROUPS[:trust_level_1],
+            action: "add",
+            usernames: [member.username],
+          },
+        )
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    describe "discourse_invite_group_members" do
+      it "adds known addresses and invites the rest" do
+        admin = Fabricate(:admin, refresh_auto_groups: true)
+        authorize("mcp:groups:write", auth_user: admin)
+
+        call_tool(
+          "discourse_invite_group_members",
+          { group_id: group.id, emails: [member.email, "newcomer@example.com"] },
+        )
+
+        expect(response.status).to eq(200)
+        expect(structured_content["usernames"]).to eq([member.username])
+        expect(structured_content["emails"]).to eq(["newcomer@example.com"])
+        expect(group.reload.users).to include(member)
+        expect(Invite.last.groups).to eq([group])
+      end
+
+      it "refuses a TL2 group owner who may invite but may not view emails" do
+        owner = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+        make_owner(group, owner)
+        authorize("mcp:groups:write", auth_user: owner)
+        expect(owner.guardian.can_invite_to_forum?([group])).to eq(true)
+        expect(owner.guardian.can_see_emails?).to eq(false)
+
+        expect do
+          call_tool(
+            "discourse_invite_group_members",
+            { group_id: group.id, emails: [member.email, "newcomer@example.com"] },
+          )
+        end.not_to change { Invite.count }
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(member.email, member.username)
+        expect(group.reload.users).not_to include(member)
+      end
+    end
+
+    describe "discourse_manage_group_owners" do
+      before { make_owner(group, user) }
+
+      it "lets an owner grant ownership and an admin revoke it" do
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_manage_group_owners",
+          { group_id: group.id, action: "add", usernames: [member.username] },
+        )
+
+        expect(response.status).to eq(200)
+        expect(group.group_users.find_by(user: member).owner).to eq(true)
+
+        authorize("mcp:groups:write", auth_user: Fabricate(:admin, refresh_auto_groups: true))
+        call_tool(
+          "discourse_manage_group_owners",
+          { group_id: group.id, action: "remove", usernames: [member.username] },
+        )
+
+        expect(response.status).to eq(200)
+        expect(group.group_users.find_by(user: member).owner).to eq(false)
+        expect(group.reload.users).to include(member)
+      end
+
+      it "refuses owner removal by a non-staff owner even with write scope" do
+        make_owner(group, member)
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_manage_group_owners",
+          { group_id: group.id, action: "remove", user_ids: [member.id] },
+        )
+
+        expect(response.status).to eq(403)
+        expect(group.group_users.find_by(user: member)).to be_owner
+      end
+
+      it "allows moderator owner removal only when they can manage the group" do
+        moderator = Fabricate(:moderator, refresh_auto_groups: true)
+        make_owner(group, member)
+        authorize("mcp:groups:write", auth_user: moderator)
+
+        SiteSetting.moderators_manage_groups = false
+        call_tool(
+          "discourse_manage_group_owners",
+          { group_id: group.id, action: "remove", user_ids: [member.id] },
+        )
+        expect(response.status).to eq(403)
+        expect(group.group_users.find_by(user: member)).to be_owner
+
+        SiteSetting.moderators_manage_groups = true
+        call_tool(
+          "discourse_manage_group_owners",
+          { group_id: group.id, action: "remove", user_ids: [member.id] },
+        )
+        expect(response.parsed_body.dig("result", "isError")).not_to eq(true)
+        expect(group.group_users.find_by(user: member)).not_to be_owner
+      end
+
+      it "refuses an automatic group" do
+        authorize("mcp:groups:write", auth_user: Fabricate(:admin, refresh_auto_groups: true))
+
+        call_tool(
+          "discourse_manage_group_owners",
+          {
+            group_id: Group::AUTO_GROUPS[:trust_level_1],
+            action: "add",
+            usernames: [member.username],
+          },
+        )
+
+        expect(tool_error).to eq(I18n.t("groups.errors.can_not_modify_automatic"))
+      end
+    end
+
+    describe "discourse_manage_group_membership" do
+      it "joins and leaves a group that allows public admission and exit" do
+        group.update!(public_admission: true, public_exit: true)
+        authorize("mcp:groups:write")
+
+        call_tool("discourse_manage_group_membership", { group_id: group.id, action: "join" })
+
+        expect(response.status).to eq(200)
+        expect(structured_content).to include("changed" => true, "member" => true)
+        expect(group.reload.users).to include(user)
+
+        call_tool("discourse_manage_group_membership", { group_id: group.id, action: "leave" })
+
+        expect(structured_content).to include("changed" => true, "member" => false)
+        expect(group.reload.users).not_to include(user)
+      end
+
+      it "refuses to join a group that does not allow public admission" do
+        authorize("mcp:groups:write")
+
+        call_tool("discourse_manage_group_membership", { group_id: group.id, action: "join" })
+
+        expect(response.status).to eq(403)
+        expect(group.reload.users).not_to include(user)
+      end
+
+      it "requests membership and messages the owners" do
+        owner = Fabricate(:user)
+        make_owner(group, owner)
+        group.update!(allow_membership_requests: true)
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_manage_group_membership",
+          { group_id: group.id, action: "request", reason: "I write the docs 猫" },
+        )
+
+        expect(response.status).to eq(200)
+        expect(GroupRequest.find_by(group:, user:).reason).to eq("I write the docs 猫")
+        topic = Topic.find(structured_content["topic_id"])
+        expect(topic.archetype).to eq(Archetype.private_message)
+        expect(topic.allowed_users).to include(owner)
+      end
+
+      it "requires a reason to request membership" do
+        make_owner(group, Fabricate(:user))
+        group.update!(allow_membership_requests: true)
+        authorize("mcp:groups:write")
+
+        call_tool("discourse_manage_group_membership", { group_id: group.id, action: "request" })
+
+        expect(tool_error).to eq(I18n.t("mcp.errors.group_request_reason_required"))
+      end
+    end
+
+    describe "discourse_handle_group_membership_request" do
+      fab!(:requester, :user)
+
+      before do
+        make_owner(group, user)
+        group.update!(allow_membership_requests: true)
+        GroupMembershipRequester.request(requester.guardian, group, "I write the docs")
+      end
+
+      it "approves a request and adds the requester" do
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_handle_group_membership_request",
+          { group_id: group.id, username: requester.username, action: "approve" },
+        )
+
+        expect(response.status).to eq(200)
+        expect(structured_content).to include("accepted" => true)
+        expect(group.reload.users).to include(requester)
+        expect(GroupRequest.where(group:, user: requester)).to be_empty
+      end
+
+      it "denies a request without adding the requester" do
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_handle_group_membership_request",
+          { group_id: group.id, username: requester.username, action: "deny" },
+        )
+
+        expect(response.status).to eq(200)
+        expect(structured_content).to include("accepted" => false)
+        expect(group.reload.users).not_to include(requester)
+        expect(GroupRequest.where(group:, user: requester)).to be_empty
+      end
+
+      it "reports a user with no pending request" do
+        authorize("mcp:groups:write")
+
+        call_tool(
+          "discourse_handle_group_membership_request",
+          { group_id: group.id, username: member.username, action: "approve" },
+        )
+
+        expect(tool_error).to eq(I18n.t("mcp.errors.group_membership_request_not_found"))
+      end
+
+      it "does not tell a non-owner whether a request exists" do
+        authorize("mcp:groups:write", auth_user: member)
+
+        call_tool(
+          "discourse_handle_group_membership_request",
+          { group_id: group.id, username: requester.username, action: "approve" },
+        )
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(requester.username)
+      end
+    end
+  end
 end

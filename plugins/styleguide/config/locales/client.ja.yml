@@ -38,6 +38,12 @@ ja:
             delete: "削除"
         multi_select:
           title: "複数選択"
+        reorderable_list:
+          policies_pinned: "固定"
+          policies_required: "必須"
+          table_field: "フィールド"
+          table_type: "タイプ"
+          cross_list_primary: "プライマリー"
         toasts:
           title: "トースト"
         font_scale:

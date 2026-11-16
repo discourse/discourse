@@ -1,7 +1,6 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import ReviewIndex from "discourse/components/reviewable/index";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DNavItem from "discourse/ui-kit/d-nav-item";
@@ -50,7 +49,7 @@ export default <template>
           )
         }}</span>
       <div class="unknown-reviewables__options">
-        <LinkTo class="btn" @route="adminPlugins.index">
+        <LinkTo class="btn btn-default" @route="adminPlugins.index">
           {{dIcon "puzzle-piece"}}
           <span>{{i18n "review.unknown.enable_plugins"}}</span>
         </LinkTo>

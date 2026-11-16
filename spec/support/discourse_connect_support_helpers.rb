@@ -61,7 +61,7 @@ module DiscourseConnectHelpers
 
   def shutdown_test_discourse_connect_server
     @server&.shutdown
-    @server_thread&.kill
+    @server_thread&.join
   end
 
   def server_responding?(sso_url)

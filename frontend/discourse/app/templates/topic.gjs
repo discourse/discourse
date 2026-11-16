@@ -40,14 +40,13 @@ import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import booleanString from "../helpers/boolean-string";
+import booleanString from "../helpers/boolean-string.js";
 
 export default <template>
   {{#unless @controller.shouldRenderNestedView}}
@@ -464,6 +463,22 @@ export default <template>
                 @outletArgs={{lazyHash model=@controller.model}}
               />
             </TopicNavigation>
+
+            {{#if
+              (and
+                @controller.loadedAllPosts
+                @controller.currentUser
+                (not @controller.session.showSignupCta)
+              )
+            }}
+              <div class="topic-footer-presence">
+                <PluginOutlet
+                  @connectorTagName="div"
+                  @name="topic-footer-presence"
+                  @outletArgs={{lazyHash model=@controller.model}}
+                />
+              </div>
+            {{/if}}
 
             <div class="row">
               <section

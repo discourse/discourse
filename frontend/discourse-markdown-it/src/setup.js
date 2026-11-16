@@ -1,7 +1,6 @@
 import { textReplace } from "pretty-text/text-replace";
-import deprecated from "discourse/lib/deprecated";
 import { cloneJSON } from "discourse/lib/object";
-import makeEngine, { cook } from "./engine";
+import makeEngine, { cook } from "./engine.js";
 
 // note, this will mutate options due to the way the API is designed
 // may need a refactor
@@ -289,15 +288,6 @@ class API {
 
   allowList(info) {
     this.#setup("allowList", [this.#name, info]);
-  }
-
-  whiteList(info) {
-    deprecated("`whiteList` has been replaced with `allowList`", {
-      since: "2.6.0.beta.4",
-      id: "discourse.markdown-it.whitelist",
-    });
-
-    this.allowList(info);
   }
 
   registerOptions(callback) {

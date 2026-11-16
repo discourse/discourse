@@ -14,10 +14,14 @@ import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import CalendarPrompt from "./calendar-prompt";
+import promptAnonymousLivestreamJoin from "../../lib/prompt-anonymous-livestream-join.js";
+import CalendarPrompt from "./calendar-prompt.gjs";
 
 const statusButtonClass = (selected) =>
   selected ? "btn-primary" : "btn-default";
+
+const goingButtonClass = (selected) =>
+  selected ? "btn-success" : "btn-default";
 
 const GoingDropdown = <template>
   <DDropdownMenu as |dropdown|>
@@ -213,11 +217,20 @@ export default class DiscoursePostEventStatus extends Component {
       if (!payload.status) {
         return;
       }
-      return deferAnonymousAction(this, "rsvp_event", {
-        event_id: this.args.event.id,
-        status: payload.status,
-        recurring: payload.recurring ?? false,
-      });
+
+      const event = this.args.event;
+      const register = () =>
+        deferAnonymousAction(this, "rsvp_event", {
+          event_id: event.id,
+          status: payload.status,
+          recurring: payload.recurring ?? false,
+        });
+      const topic = event.post?.topic;
+      if (event.isZoomLivestream && event.allowAnonymousLivestream && topic) {
+        return promptAnonymousLivestreamJoin(this, event, register);
+      }
+
+      return register();
     }
 
     const event = this.args.event;
@@ -285,7 +298,7 @@ export default class DiscoursePostEventStatus extends Component {
                   <DMenu
                     class={{dConcatClass
                       "going-button"
-                      (statusButtonClass this.isGoing)
+                      (goingButtonClass this.isGoing)
                     }}
                     @disabled={{this.goingButtonDisabled}}
                     @icon={{this.goingTriggerIcon}}
@@ -301,7 +314,7 @@ export default class DiscoursePostEventStatus extends Component {
                 {{else}}
                   <DComboButton
                     class="going-button"
-                    @btnTypeClass={{statusButtonClass this.isGoing}}
+                    @btnTypeClass={{goingButtonClass this.isGoing}}
                     @hasMenu={{true}}
                     as |combo|
                   >
@@ -329,7 +342,7 @@ export default class DiscoursePostEventStatus extends Component {
                 <DButton
                   class={{dConcatClass
                     "going-button"
-                    (statusButtonClass this.isGoing)
+                    (goingButtonClass this.isGoing)
                   }}
                   @action={{fn this.changeWatchingInviteeStatus "going"}}
                   @ariaPressed={{this.isGoing}}

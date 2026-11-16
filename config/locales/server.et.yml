@@ -16,6 +16,7 @@ et:
       location: "Asukoht"
   mcp:
     errors:
+      category_not_found: "Kategooriat ei leitud"
       draft_too_long: "Mustand on liiga pikk"
       topic_not_found: "Teemat ei leitud"
     oauth:
@@ -863,6 +864,8 @@ et:
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
     errors:
       invalid_integer: "Väärtuseks peab olema täisarv."
+    keywords:
+      company_url: "veebileht"
   search:
     within_post: "postituse nr%{post_number} tegi %{username}"
     types:
@@ -1115,6 +1118,8 @@ et:
   design_wizard:
     palette_pairs:
       default: "Vaikimisi"
+      neutral: "Neutraalne"
+      summer: "Suvi"
   wizard:
     title: "Discourse sätted"
     step:
@@ -1128,13 +1133,24 @@ et:
               private:
                 label: "Privaatne"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Iga päev"
+        ordinals:
+          last: "viimane"
+        weekdays:
+          monday: "Esmaspäev"
     google_meet:
       meeting_code: "Kood:"
     github:
+      header:
+        success: "Korras"
       closed: "suletud"
-      status_date:
-        approved: "heakskiidetud"
-        closed: "suletud"
+      pr_status:
+        draft: "Mustand"
+        open: "Ava"
+        approved: "Heakskiidetud"
+        closed: "Suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -1159,6 +1175,10 @@ et:
         one: "%{count} sekund"
         other: "%{count} sekundit"
     actions:
+      answer_yes:
+        title: "Jah"
+      answer_no:
+        title: "Ei"
       agree:
         title: "Jah"
       delete:

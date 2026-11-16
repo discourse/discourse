@@ -40,13 +40,11 @@ def gather_uploads
       source = "#{public_directory}#{from}"
       destination = "#{public_directory}#{to}"
 
-      # create destination directory & copy file unless it already exists
       unless file_exists?(destination)
-        `mkdir -p '#{File.dirname(destination)}'`
-        `cp --link '#{source}' '#{destination}'`
+        FileUtils.mkdir_p(File.dirname(destination))
+        FileUtils.ln(source, destination)
       end
 
-      # ensure file has been successfully copied over
       raise unless file_exists?(destination)
 
       # remap links in db
@@ -301,6 +299,9 @@ def regenerate_missing_optimized
   missing_uploads = Set.new
 
   avatar_upload_ids = UserAvatar.all.pluck(:custom_upload_id, :gravatar_upload_id).flatten.compact
+  avatar_upload_ids.concat(
+    UserAssociatedAccount.where.not(avatar_upload_id: nil).pluck(:avatar_upload_id),
+  )
 
   default_scope = OptimizedImage.includes(:upload)
 

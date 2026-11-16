@@ -1,8 +1,8 @@
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { i18n } from "discourse-i18n";
-import { moveColumn, moveRow, runCommand } from "./commands";
-import dragAutoscroll from "./drag-autoscroll";
+import { moveColumn, moveRow, runCommand } from "./commands.js";
+import dragAutoscroll from "./drag-autoscroll.js";
 import {
   cellAround,
   cellCoords,
@@ -10,9 +10,9 @@ import {
   isTable,
   rectFor,
   tableGrid,
-} from "./grid";
-import { handleContextMenuKey, openGripMenu } from "./menu";
-import trackPointer from "./track-pointer";
+} from "./grid.js";
+import { handleContextMenuKey, openGripMenu } from "./menu.js";
+import trackPointer from "./track-pointer.js";
 
 const DRAG_THRESHOLD = 4;
 const TOUCH_DRAG_THRESHOLD = 12;

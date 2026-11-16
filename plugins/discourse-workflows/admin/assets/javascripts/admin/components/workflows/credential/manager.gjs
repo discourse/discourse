@@ -6,11 +6,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
-import AdminTable from "../admin-table";
-import EmptyState from "../empty-state";
-import InUseDialog from "../in-use-dialog";
-import PaginatedListManager from "../paginated-list-manager";
-import CredentialModal from "./modal";
+import AdminTable from "../admin-table.gjs";
+import EmptyState from "../empty-state.gjs";
+import InUseDialog from "../in-use-dialog.gjs";
+import PaginatedListManager from "../paginated-list-manager.js";
+import CredentialModal from "./modal.gjs";
 
 export default class CredentialsManager extends PaginatedListManager {
   get collectionKey() {

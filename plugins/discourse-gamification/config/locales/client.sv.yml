@@ -48,9 +48,7 @@ sv:
       close: "Stäng"
       delete: "Ta bort"
       edit: "Redigera"
-      back: "Tillbaka"
       save: "Spara"
-      apply: "Tillämpa"
       update_range:
         last_10_days: "Senaste 10 dagarna"
         last_30_days: "Senaste 30 dagarna"
@@ -60,9 +58,11 @@ sv:
       admin:
         title: "Gamification"
         name: "Namn"
+        created_by: "Skapat av"
         period: "Period"
     discourse_workflows:
       gamification_score:
         username: "Användare"
         date: "Datum"
         description: "Beskrivning"
+        category_id: "Kategori"

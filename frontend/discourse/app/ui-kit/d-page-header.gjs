@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { bind } from "discourse/lib/decorators";
-import { or } from "discourse/truth-helpers";
 import DBreadcrumbsContainer from "discourse/ui-kit/d-breadcrumbs-container";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";

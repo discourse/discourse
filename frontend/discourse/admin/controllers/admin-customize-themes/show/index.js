@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ChangeThemeSourceModal from "discourse/admin/components/modal/change-theme-source";
+import { alertSkippedComponents } from "discourse/admin/components/skipped-theme-components";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
@@ -15,7 +16,7 @@ import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import ThemeUploadAddModal from "../../../components/theme-upload-add";
+import ThemeUploadAddModal from "../../../components/theme-upload-add.gjs";
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -27,6 +28,9 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @service toasts;
 
   editRouteName = "adminCustomizeThemes.edit";
+  parentThemesSaved = false;
+
+  #translationRequests = new WeakMap();
 
   @computed("model.id")
   get downloadUrl() {
@@ -121,6 +125,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @computed("model.themeable_site_settings")
   get themeSiteSettings() {
     return this.model?.themeable_site_settings;
+  }
+
+  get pendingSettings() {
+    return [
+      ...(this.settings ?? []),
+      ...(this.themeSiteSettings ?? []),
+      ...(this.translations ?? []),
+      this.model.component
+        ? this.relativesSelectorSettingsForComponent
+        : this.relativesSelectorSettingsForTheme,
+    ].filter((setting) => setting.hasPendingChanges);
   }
 
   @computed("model.component", "model.remote_theme")
@@ -234,7 +249,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     });
   }
 
-  @computed("model.childThemesNames.[]")
+  @computed("model.childThemes.[]")
   get relativesSelectorSettingsForTheme() {
     return SiteSetting.create({
       list_type: "compact",
@@ -419,8 +434,9 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     this.modal.show(ChangeThemeSourceModal, {
       model: {
         theme: this.model,
-        onSuccess: () => {
+        onSuccess: (result) => {
           this.send("routeRefreshModel");
+          alertSkippedComponents(this.dialog, result);
         },
       },
     });
@@ -444,13 +460,32 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  updateLocale(value) {
-    this.set("model.loadingTranslations", true);
-    this.set("model.locale", value);
-    ajax(this.getTranslationsUrl).then(({ translations }) => {
-      this.set("model.translations", translations);
-      this.set("model.loadingTranslations", false);
-    });
+  async updateLocale(value) {
+    const model = this.model;
+    model.setProperties({ loadingTranslations: true, locale: value });
+    const request = ajax(this.getTranslationsUrl);
+    this.#translationRequests.set(model, request);
+
+    try {
+      const { translations } = await request;
+      if (this.#translationRequests.get(model) === request) {
+        model.setProperties({ translations, translations_locale: value });
+      }
+    } catch (error) {
+      if (this.#translationRequests.get(model) === request) {
+        if (model.translations_locale) {
+          model.set("locale", model.translations_locale);
+        }
+        if (this.model === model) {
+          popupAjaxError(error);
+        }
+      }
+    } finally {
+      if (this.#translationRequests.get(model) === request) {
+        this.#translationRequests.delete(model);
+        model.set("loadingTranslations", false);
+      }
+    }
   }
 
   @action
@@ -538,6 +573,11 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
+  markParentThemesSaved() {
+    this.parentThemesSaved = true;
+  }
+
+  @action
   removeChildTheme(theme) {
     this.model.removeChildTheme(theme).then(() => this.store.findAll("theme"));
   }
@@ -550,7 +590,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       }),
       didConfirm: () => {
         const model = this.model;
-        model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           removeValueFromArray(this.allThemes, model);
 

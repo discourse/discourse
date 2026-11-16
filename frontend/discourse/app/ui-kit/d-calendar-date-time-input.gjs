@@ -14,6 +14,8 @@ export default class DCalendarDateTimeInput extends Component {
   _timeFormat = this.args.timeFormat || "HH:mm:ss";
   _dateFormat = this.args.dateFormat || "YYYY-MM-DD";
   _dateTimeFormat = this.args.dateTimeFormat || "YYYY-MM-DD HH:mm:ss";
+
+  /** @type {{ setDate: (date: Date | string | null, preventOnSelect?: boolean) => void, setMinDate: (date: Date | null) => void, destroy: () => void } | null} */
   _picker = null;
 
   @tracked _time;

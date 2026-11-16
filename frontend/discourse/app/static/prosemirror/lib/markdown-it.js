@@ -26,7 +26,10 @@ export function resetEngine() {
 
 export const parse = (text) => getEngine().parse(text);
 
+/** @returns {import("discourse/lib/link-matcher").LinkMatcher} */
 export const getLinkify = () => getEngine().linkify;
+
+export const getAllowLister = () => getEngine().allowLister;
 
 export const isWhiteSpace = (str, index) =>
   !str || getEngine().options.engine.utils.isWhiteSpace(str.charCodeAt(index));

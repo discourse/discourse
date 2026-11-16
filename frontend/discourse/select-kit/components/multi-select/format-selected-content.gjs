@@ -8,7 +8,10 @@ import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 @tagName("")
 @selectKitPropUtils
 export default class FormatSelectedContent extends Component {
+  /** @type {unknown} */
   content = null;
+
+  /** @type {import("discourse/select-kit/components/select-kit").SelectKitState | null} */
   selectKit = null;
 
   @computed("content")

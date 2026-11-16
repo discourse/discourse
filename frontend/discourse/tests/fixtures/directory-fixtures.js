@@ -1,3 +1,8 @@
+/**
+ * Recorded server responses.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
 const directoryFixtures = {
   directory_items: {
     directory_items: [

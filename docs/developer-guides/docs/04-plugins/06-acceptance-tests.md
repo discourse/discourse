@@ -76,13 +76,15 @@ After we simulate a click on the button, we can check whether the tentacle appea
 assert.ok(exists(".tentacle"), "the tentacle wants to rule the world!");
 ```
 
-Not too bad is it? You can try the test yourself by visiting `http://localhost:3000/tests?qunit_single_plugin=purple-tentacle&qunit_skip_core=1` on your development machine. You should very quickly see the purple tentacle appear and all tests will pass.
+Not too bad is it? You can try the test yourself by visiting `http://localhost:3000/tests?target=purple-tentacle` on your development machine. You should very quickly see the purple tentacle appear and all tests will pass.
 
-If you want to run the plugin qunit tests on the command line using PhantomJS, you can run
+If you want to run the plugin qunit tests on the command line, you can run
 
 ```
-rake plugin:qunit['purple-tentacle']
+bin/qunit --target purple-tentacle
 ```
+
+(add `--standalone` if your development server isn't running)
 
 (where `purple-tentacle` is the folder name of your plugin)
 

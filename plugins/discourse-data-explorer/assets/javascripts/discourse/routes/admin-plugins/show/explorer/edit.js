@@ -61,6 +61,8 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
       results: showCachedResult ? cachedResult : null,
       showResults: showCachedResult,
       isCachedResult: showCachedResult,
+      dashboardMounted: !!model.model.dashboard_mounted,
+      dashboardMountable: !!model.model.dashboard_mountable,
       shouldAutoRun,
       mode: defaultMode,
       aiPrompt: "",
@@ -75,5 +77,9 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
       controller._teardownAi();
       controller.releasePanes();
     }
+  }
+
+  titleToken() {
+    return this.currentModel?.model?.name;
   }
 }

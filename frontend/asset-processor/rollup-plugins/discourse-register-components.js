@@ -1,5 +1,5 @@
 import MagicString from "magic-string";
-import { stripExtension } from "../rollup-virtual-imports";
+import { stripExtension } from "../rollup-virtual-imports.js";
 
 const STORE = "discourse/lib/deferred-class-modifications";
 const BINDING = "__discourseComponentClass";

@@ -16,7 +16,8 @@ module DiscourseWorkflows
       credentials: {},
       webhook_id: nil,
       position: nil,
-      configuration: {}
+      configuration: {},
+      type_version: "1.0"
     )
       configuration = configuration.deep_stringify_keys
       webhook_id ||=
@@ -35,7 +36,7 @@ module DiscourseWorkflows
       node = {
         "id" => id,
         "type" => type,
-        "typeVersion" => "1.0",
+        "typeVersion" => type_version,
         "name" => name || id.to_s.humanize,
         "position" => position || { "x" => @position_counter * 220, "y" => 0 },
         "parameters" => split["parameters"],

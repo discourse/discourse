@@ -17,6 +17,7 @@ import ListSetting from "discourse/select-kit/components/list-setting";
  * @param {boolean} allowAny - Whether to allow arbitrary values
  */
 export default class CompactList extends Component {
+  /** @type {Array<string | { name: string, value: string }> | null} */
   @tracked createdChoices = null;
   tokenSeparator = "|";
 

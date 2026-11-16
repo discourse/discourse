@@ -1,80 +1,76 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
 import { on } from "@ember/modifier";
-import { tagName } from "@ember-decorators/component";
 import routeAction from "discourse/helpers/route-action";
 import DButton from "discourse/ui-kit/d-button";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
-export default class SelectedPosts extends Component {
-  <template>
-    <div ...attributes>
+const SelectedPosts = <template>
+  <div ...attributes>
+    <p>
+      <DCountI18n
+        @count={{@selectedPostsCount}}
+        @key="topic.multi_select.description"
+      />
+    </p>
+
+    {{#if @canSelectAll}}
       <p>
-        <DCountI18n
-          @count={{this.selectedPostsCount}}
-          @key="topic.multi_select.description"
-        />
-      </p>
-
-      {{#if this.canSelectAll}}
-        <p>
-          <a class="select-all" href {{on "click" this.selectAll}}>
-            {{i18n "topic.multi_select.select_all"}}
-          </a>
-        </p>
-      {{/if}}
-
-      {{#if this.canDeselectAll}}
-        <p>
-          <a href {{on "click" this.deselectAll}}>
-            {{i18n "topic.multi_select.deselect_all"}}
-          </a>
-        </p>
-      {{/if}}
-
-      {{#if this.canDeleteSelected}}
-        <DButton
-          class="btn-danger"
-          @action={{this.deleteSelected}}
-          @icon="trash-can"
-          @label="topic.multi_select.delete"
-        />
-      {{/if}}
-
-      {{#if this.canMergeTopic}}
-        <DButton
-          class="btn-primary move-to-topic"
-          @action={{routeAction "moveToTopic"}}
-          @icon="right-from-bracket"
-          @label="topic.move_to.action"
-        />
-      {{/if}}
-
-      {{#if this.canChangeOwner}}
-        <DButton
-          class="btn-primary"
-          @action={{routeAction "changeOwner"}}
-          @icon="user"
-          @label="topic.change_owner.action"
-        />
-      {{/if}}
-
-      {{#if this.canMergePosts}}
-        <DButton
-          class="btn-primary"
-          @action={{this.mergePosts}}
-          @icon="up-down"
-          @label="topic.merge_posts.action"
-        />
-      {{/if}}
-
-      <p class="cancel">
-        <a href {{on "click" this.toggleMultiSelect}}>
-          {{i18n "topic.multi_select.cancel"}}
+        <a class="select-all" href {{on "click" @selectAll}}>
+          {{i18n "topic.multi_select.select_all"}}
         </a>
       </p>
-    </div>
-  </template>
-}
+    {{/if}}
+
+    {{#if @canDeselectAll}}
+      <p>
+        <a href {{on "click" @deselectAll}}>
+          {{i18n "topic.multi_select.deselect_all"}}
+        </a>
+      </p>
+    {{/if}}
+
+    {{#if @canDeleteSelected}}
+      <DButton
+        class="btn-danger"
+        @action={{@deleteSelected}}
+        @icon="trash-can"
+        @label="topic.multi_select.delete"
+      />
+    {{/if}}
+
+    {{#if @canMergeTopic}}
+      <DButton
+        class="btn-primary move-to-topic"
+        @action={{routeAction "moveToTopic"}}
+        @icon="right-from-bracket"
+        @label="topic.move_to.action"
+      />
+    {{/if}}
+
+    {{#if @canChangeOwner}}
+      <DButton
+        class="btn-primary"
+        @action={{routeAction "changeOwner"}}
+        @icon="user"
+        @label="topic.change_owner.action"
+      />
+    {{/if}}
+
+    {{#if @canMergePosts}}
+      <DButton
+        class="btn-primary"
+        @action={{@mergePosts}}
+        @icon="up-down"
+        @label="topic.merge_posts.action"
+      />
+    {{/if}}
+
+    <p class="cancel">
+      <a href {{on "click" @toggleMultiSelect}}>
+        {{i18n "topic.multi_select.cancel"}}
+      </a>
+    </p>
+  </div>
+</template>;
+
+export default SelectedPosts;

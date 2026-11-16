@@ -161,6 +161,10 @@
     &.--failed {
       color: var(--danger);
     }
+
+    &.--warning {
+      color: color-mix(in srgb, var(--highlight-high) 80%, var(--primary));
+    }
   }
 
   &__flag {

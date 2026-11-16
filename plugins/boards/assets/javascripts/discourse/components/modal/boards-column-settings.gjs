@@ -9,7 +9,6 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
@@ -21,8 +20,8 @@ import {
   PRESET_COLUMN_COLORS,
   STATUS_OPTIONS,
   tagToArray,
-} from "../../lib/boards-column-helpers";
-import BoardsEditableTitle from "../boards-editable-title";
+} from "../../lib/boards-column-helpers.js";
+import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 export default class BoardsColumnSettings extends Component {
   @tracked showAdvanced = false;

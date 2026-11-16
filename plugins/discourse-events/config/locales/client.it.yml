@@ -27,6 +27,10 @@ it:
               label: ID dell'argomento
     discourse_events:
       title: "Eventi"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registra"
       preferences:
         reminders:
           preferences:
@@ -425,7 +429,6 @@ it:
               one: "%{count} utente invitato"
               other: "%{count} utenti invitati"
         event:
-          expired: "Scaduto"
           closed: "Chiuso"
           status:
             standalone:
@@ -437,6 +440,8 @@ it:
             private:
               title: "Privato"
               description: "Solo gli utenti invitati possono partecipare a un evento privato."
+      recording_modal:
+        save: "Salva"
       composer:
         name_placeholder: "Nome dell'evento"
         url_placeholder: "Aggiungi URL"

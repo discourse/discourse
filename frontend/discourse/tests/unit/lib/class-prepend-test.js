@@ -1,3 +1,4 @@
+/* eslint-disable discourse/no-tracked-state-class -- tests `@tracked` class fields */
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { module, test } from "qunit";

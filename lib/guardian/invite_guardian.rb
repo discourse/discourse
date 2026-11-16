@@ -5,6 +5,10 @@ module InviteGuardian
     is_staff? || is_me?(user)
   end
 
+  def can_see_invite_key?(user)
+    is_admin? || is_me?(user)
+  end
+
   def can_see_invite_emails?(user)
     is_staff? || is_me?(user)
   end

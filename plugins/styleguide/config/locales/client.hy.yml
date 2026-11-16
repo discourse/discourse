@@ -16,6 +16,11 @@ hy:
         context_menu:
           actions:
             delete: "Ջնջել"
+        reorderable_list:
+          policies_pinned: "Ամրակցված"
+          policies_required: "Պարտադիր"
+          table_type: "Տիպ"
+          cross_list_primary: "Հիմնական"
         colors:
           title: "Գույներ"
         icons:

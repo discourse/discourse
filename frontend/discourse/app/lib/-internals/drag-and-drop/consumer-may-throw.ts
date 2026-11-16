@@ -17,6 +17,8 @@ import { reportClientError } from "discourse/lib/report-client-error";
  * @param fallback - Returned when the callback throws. Give a gate its
  *   conservative answer.
  */
+export function consumerMayThrow<T>(run: () => T, fallback: T): T;
+export function consumerMayThrow<T>(run: () => T): T | undefined;
 export function consumerMayThrow<T>(run: () => T, fallback?: T): T | undefined {
   try {
     return run();

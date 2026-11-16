@@ -155,10 +155,7 @@ describe DiscourseSolved::GuardianExtensions do
     end
     fab!(:support_topic) { Fabricate(:topic_with_op, category: support_category, user: other_user) }
 
-    before do
-      SiteSetting.enable_solved_shared_issues = true
-      DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
-    end
+    before { DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache }
 
     describe ".can_create_shared_issue?" do
       it "returns true for a regular topic in a support category" do

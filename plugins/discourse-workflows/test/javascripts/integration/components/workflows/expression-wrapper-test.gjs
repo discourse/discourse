@@ -16,18 +16,6 @@ function variableTransfer(variable) {
   };
 }
 
-class TestField {
-  @tracked value;
-
-  constructor(value) {
-    this.value = value;
-  }
-
-  set(newValue) {
-    this.value = newValue;
-  }
-}
-
 module(
   "Integration | Component | Workflows | ExpressionWrapper",
   function (hooks) {
@@ -124,7 +112,7 @@ module(
     });
 
     test("appends a variable when dropping on the mode control", async function (assert) {
-      this.field = new TestField("Existing prompt");
+      this.field = tracked("Existing prompt");
       this.schema = { type: "string" };
 
       await render(
@@ -156,7 +144,7 @@ module(
     });
 
     test("preserves populated single-line text controls", async function (assert) {
-      this.field = new TestField("Existing title");
+      this.field = tracked("Existing title");
       this.schema = { type: "string" };
 
       await render(
@@ -188,7 +176,7 @@ module(
     });
 
     test("keeps replacement behavior for string-valued non-text controls", async function (assert) {
-      this.field = new TestField("first");
+      this.field = tracked("first");
       this.schema = { type: "string" };
 
       await render(
@@ -220,7 +208,7 @@ module(
     });
 
     test("converts fixed arrays to whole expressions", async function (assert) {
-      this.field = new TestField(["sam", "alice"]);
+      this.field = tracked(["sam", "alice"]);
       this.schema = { type: "array" };
 
       await render(
@@ -247,7 +235,7 @@ module(
     });
 
     test("converts comma-separated dynamic values to fixed arrays", async function (assert) {
-      this.field = new TestField("=sam,alice");
+      this.field = tracked("=sam,alice");
       this.schema = { type: "array" };
 
       await render(
@@ -274,7 +262,7 @@ module(
     });
 
     test("converts dynamic array literals to fixed arrays", async function (assert) {
-      this.field = new TestField('={{ ["sam","alice"] }}');
+      this.field = tracked('={{ ["sam","alice"] }}');
       this.schema = { type: "array" };
 
       await render(

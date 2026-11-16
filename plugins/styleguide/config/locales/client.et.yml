@@ -16,6 +16,10 @@ et:
         context_menu:
           actions:
             delete: "Kustuta"
+        reorderable_list:
+          policies_pinned: "Esiletõstetud"
+          policies_required: "Nõutud"
+          table_type: "Tüüp"
         colors:
           title: "Värvid"
         icons:

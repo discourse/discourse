@@ -45,6 +45,7 @@ export default <template>
         @inputPlaceholder={{i18n "admin.plugins.filters.search_placeholder"}}
         @noResultsMessage={{i18n "admin.plugins.filters.no_results"}}
         @searchableProps={{@controller.searchableProps}}
+        @textFilterQueryParam="filter"
       >
         <:content as |filteredPlugins|>
           <AdminPluginsList @plugins={{filteredPlugins}} />

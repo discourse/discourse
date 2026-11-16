@@ -5,6 +5,7 @@ module Jobs
     def execute(args)
       group_id = args[:group_id]
       user_id = args[:user_id]
+      user_id = nil if user_id.present? && User.exists?(id: user_id)
       return if group_id.blank? && user_id.blank?
 
       if group_id.present?

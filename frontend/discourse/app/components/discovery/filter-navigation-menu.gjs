@@ -12,7 +12,6 @@ import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -50,6 +49,9 @@ const FilterNavigationMenuList = <template>
 </template>;
 
 /**
+ * @typedef {{ name: string, description?: string, category?: import("discourse/models/category").default, term?: string, isSuggestion?: boolean, delimiters?: { name: string, description?: string }[], alias?: string, type?: string, priority?: number, prefixes?: { name: string, description?: string }[], extra_entries?: { name: string, description: string }[], min?: number }} FilterSuggestion
+ */
+/**
  * FilterNavigationMenu - A simpler UI component for filter input and suggestions
  *
  * This component manages:
@@ -65,20 +67,30 @@ export default class FilterNavigationMenu extends Component {
   @service site;
 
   @tracked currentInputValue = this.args.initialInputValue || "";
+
+  /** @type {FilterSuggestion[]} */
   @tracked suggestions = [];
+
+  /** @type {string | null} */
   @tracked activeFilter = null;
 
   lastSuggestionInput = "";
   suggestionRequestId = 0;
 
+  /** @type {{ suggestions: FilterSuggestion[], selectedIndex: number | null, selectItem: FilterNavigationMenu["selectItem"] }} */
   trackedMenuListData = trackedObject({
     suggestions: [],
     selectedIndex: null,
     selectItem: this.selectItem,
   });
 
+  /** @type {import("@ember/runloop").Timer | null} */
   searchTimer = null;
+
+  /** @type {HTMLInputElement | null} */
   inputElement = null;
+
+  /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null | undefined} */
   dMenuInstance = null;
   _selectedIndex = -1;
 
@@ -234,7 +246,6 @@ export default class FilterNavigationMenu extends Component {
       identifier: "filter-navigation-menu-list",
       component: FilterNavigationMenuList,
       data: this.trackedMenuListData,
-      maxWidth: 2000,
       matchTriggerWidth: true,
       visibilityOptimizer: VISIBILITY_OPTIMIZERS.NONE,
       constrainHeightToViewport: true,

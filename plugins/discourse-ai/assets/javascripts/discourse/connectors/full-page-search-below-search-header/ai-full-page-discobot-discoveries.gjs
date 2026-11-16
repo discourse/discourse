@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import AiSearchDiscoveries from "../../components/ai-search-discoveries";
-import { SEARCH_TYPE_ASK_AI } from "../../lib/full-page-search-types";
+import AiSearchDiscoveries from "../../components/ai-search-discoveries.gjs";
+import { SEARCH_TYPE_ASK_AI } from "../../lib/full-page-search-types.js";
 
 export default class AiFullPageDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
