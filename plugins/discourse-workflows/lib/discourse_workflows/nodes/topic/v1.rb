@@ -25,6 +25,7 @@ module DiscourseWorkflows
           Schema.entity(
             "post",
             Schema::POST_PROPERTIES.except(
+              "action_code",
               "category_name",
               "excerpt",
               "like_count",
