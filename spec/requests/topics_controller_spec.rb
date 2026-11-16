@@ -7925,6 +7925,55 @@ RSpec.describe TopicsController do
       end
     end
 
+    context "when a watching group member is ignoring the inviter" do
+      fab!(:inviter) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:victim, :user)
+
+      before do
+        pm.allowed_users << inviter
+        Fabricate(:post, topic: pm)
+        group.add(victim)
+        group
+          .group_users
+          .find_by(user_id: victim.id)
+          .update!(notification_level: NotificationLevels.all[:watching])
+        Fabricate(:ignored_user, user: victim, ignored_user: inviter)
+      end
+
+      it "does not create an invited_to_private_message notification for the ignoring member" do
+        sign_in(inviter)
+
+        Notification.delete_all
+        Jobs.run_immediately!
+        post "/t/#{pm.id}/invite-group.json", params: { group: group.name }
+
+        expect(response.status).to eq(200)
+        expect(
+          Notification.where(
+            user_id: victim.id,
+            notification_type: Notification.types[:invited_to_private_message],
+          ).count,
+        ).to eq(0)
+      end
+
+      it "still notifies the ignoring member when the inviter is staff" do
+        sign_in(admin)
+
+        Notification.delete_all
+        Jobs.run_immediately!
+        post "/t/#{pm.id}/invite-group.json", params: { group: group.name }
+
+        expect(response.status).to eq(200)
+        expect(
+          Notification.where(
+            user_id: victim.id,
+            notification_type: Notification.types[:invited_to_private_message],
+          ).count,
+        ).to eq(1)
+      end
+    end
+
     context "when PM has reached maximum allowed numbers of recipients" do
       fab!(:group) { Fabricate(:group, messageable_level: 99) }
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
