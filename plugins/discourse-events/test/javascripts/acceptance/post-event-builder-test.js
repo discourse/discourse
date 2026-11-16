@@ -45,20 +45,16 @@ acceptance("Post event - composer", function (needs) {
 
     await fillIn(`${modal} .from input[type=date]`, "2022-07-01");
 
-    const fromTime = selectKit(`${modal} .from .d-time-input .select-kit`);
-    await fromTime.expand();
-    await fromTime.selectRowByName("12:00 PM");
+    await fillIn(`${modal} .from .time-input`, "12:00");
 
     await fillIn(`${modal} .to input[type=date]`, "2022-07-01");
-    const toTime = selectKit(`${modal} .to .d-time-input .select-kit`);
-    await toTime.expand();
-    await toTime.selectRowByName("1:00 PM");
+    await fillIn(`${modal} .to .time-input`, "13:00");
 
     await timezoneInput.expand();
     await timezoneInput.selectRowByName("Europe/Paris");
 
-    assert.strictEqual(fromTime.header().name(), "12:00 PM");
-    assert.strictEqual(toTime.header().name(), "1:00 PM");
+    assert.dom(`${modal} .from .time-input`).hasValue("12:00");
+    assert.dom(`${modal} .to .time-input`).hasValue("13:00");
 
     await click(`${modal} .d-modal__footer .btn-primary`);
 
@@ -178,9 +174,7 @@ acceptance("Post event - composer - custom fields", function (needs) {
       .exists("the allowed custom field renders as a form field");
 
     await fillIn(`${modal} .from input[type=date]`, "2022-07-01");
-    const fromTime = selectKit(`${modal} .from .d-time-input .select-kit`);
-    await fromTime.expand();
-    await fromTime.selectRowByName("12:00 PM");
+    await fillIn(`${modal} .from .time-input`, "12:00");
 
     await fillIn(
       `${modal} [data-name="customFields.fancy_field"] input`,

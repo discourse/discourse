@@ -323,6 +323,11 @@ const workflows = [
     matchId: "discourse.ace-editor",
     env: "qunit-test",
   },
+  {
+    handler: "silence",
+    matchId: "discourse.d-time-input",
+    env: "qunit-test",
+  },
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins

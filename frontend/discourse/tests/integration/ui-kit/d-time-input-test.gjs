@@ -1,5 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import {
+  registerUniversalDeprecationHandler,
+  unregisterUniversalDeprecationHandler,
+} from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DTimeInput from "discourse/ui-kit/d-time-input";
@@ -14,6 +18,23 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
 
   hooks.beforeEach(function () {
     this.set("subject", selectKit());
+  });
+
+  test("is deprecated in favour of a native time input", async function (assert) {
+    const ids = [];
+    const handler = (_message, options) => ids.push(options?.id);
+    registerUniversalDeprecationHandler(handler);
+
+    try {
+      await render(<template><DTimeInput /></template>);
+    } finally {
+      unregisterUniversalDeprecationHandler(handler);
+    }
+
+    assert.true(
+      ids.includes("discourse.d-time-input"),
+      "rendering it reports the deprecation"
+    );
   });
 
   test("default", async function (assert) {
