@@ -613,4 +613,76 @@ RSpec.describe DiscourseAi::Agents::Tools::Mcp do
       { status: "error", error: "Not found: Project google.com:chops-prod" },
     )
   end
+
+  it "stops identical failures without treating distinct batch inputs as retries" do
+    context = DiscourseAi::Agents::BotContext.new(messages: [])
+    context.store_mcp_session(ai_mcp_server.id, nil, protocol_version: "2025-11-25")
+    AiMcpServer.stubs(:validate_hostname_public!).returns(true)
+    message = "Record not found"
+    stub_request(:post, ai_mcp_server.url).to_return(
+      status: 200,
+      body: { result: { isError: true, content: [{ type: "text", text: message }] } }.to_json,
+    )
+
+    8.times do |index|
+      tool = tool_class.new({ query: "item-#{index}" }, bot_user: user, llm: nil, context: context)
+      expect(tool.invoke).to eq(status: "error", error: message)
+    end
+    expect(context.mcp_failure_limit_reached?).to eq(false)
+
+    tool = tool_class.new({ query: "same-item" }, bot_user: user, llm: nil, context: context)
+    3.times { expect(tool.invoke).to eq(status: "error", error: message) }
+    expect(tool.invoke).to eq(
+      status: "error",
+      error: I18n.t("discourse_ai.mcp_servers.errors.failure_limit"),
+    )
+    expect(a_request(:post, ai_mcp_server.url)).to have_been_made.times(11)
+  end
+
+  it "counts authorization and blocked connection failures toward the limit" do
+    context = DiscourseAi::Agents::BotContext.new(messages: [])
+    DiscourseAi::Mcp::Client
+      .any_instance
+      .stubs(:initialize_session)
+      .raises(DiscourseAi::Mcp::Client::AuthorizationRequiredError, "auth required")
+      .then
+      .raises(DiscourseAi::Mcp::Client::AuthorizationRequiredError, "auth required")
+      .then
+      .raises(DiscourseAi::Mcp::Client::ConnectionBlockedError, "blocked")
+      .then
+      .raises(DiscourseAi::Mcp::Client::ConnectionBlockedError, "blocked")
+      .then
+      .raises(DiscourseAi::Mcp::Client::AuthorizationRequiredError, "auth required")
+    tool = tool_class.new({ query: "bug" }, bot_user: user, llm: nil, context: context)
+
+    4.times { tool.invoke }
+    expect(context.mcp_failure_limit_reached?).to eq(false)
+
+    expect(tool.invoke).to eq(
+      status: "error",
+      error: I18n.t("discourse_ai.mcp_servers.errors.reconnect_required"),
+    )
+    expect(context.mcp_failure_limit_reached?).to eq(true)
+  end
+
+  it "allows a corrected call after a success resets failures for that input" do
+    context = DiscourseAi::Agents::BotContext.new(messages: [])
+    context.store_mcp_session(ai_mcp_server.id, nil, protocol_version: "2025-11-25")
+    AiMcpServer.stubs(:validate_hostname_public!).returns(true)
+    failure = {
+      status: 200,
+      body: { result: { isError: true, content: [{ type: "text", text: "Unavailable" }] } }.to_json,
+    }
+    success = {
+      status: 200,
+      body: { result: { content: [{ type: "text", text: "Recovered" }] } }.to_json,
+    }
+    stub_request(:post, ai_mcp_server.url).to_return(failure, failure, success, failure, failure)
+    tool = tool_class.new({ query: "item" }, bot_user: user, llm: nil, context: context)
+
+    2.times { expect(tool.invoke[:status]).to eq("error") }
+    expect(tool.invoke).to eq(result: "Recovered")
+    2.times { expect(tool.invoke[:status]).to eq("error") }
+    expect(context.mcp_failure_limit_reached?).to eq(false)
+  end
 end

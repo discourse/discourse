@@ -440,6 +440,7 @@ en:
         tool_catalog_too_large: "The MCP server tool catalog exceeded %{max} bytes."
         too_many_tools: "The MCP server advertised more than %{max} tools."
         repeated_tool_list_cursor: "The MCP server repeated a tool list pagination cursor."
+        failure_limit: "Repeated MCP failures stopped further calls for this turn. Explain the error and the unfinished work; do not claim success or retry again."
         oauth_authorization_required: "OAuth authorization is required before this MCP server can be used. Connect it to %{issuer} from the admin UI."
         oauth_discovery_failed: "Unable to discover OAuth authorization details for this MCP server."
         oauth_discovery_failed_with_status: "OAuth discovery failed with status %{status}."
