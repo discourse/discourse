@@ -16,6 +16,14 @@ module PageObjects
       private_constant :INTERVAL_MAP
 
       def set_relative_time_interval(interval)
+        if SiteSetting.enable_new_select_controls
+          return(
+            PageObjects::Components::UiKit::DSelect.at(".relative-time-intervals").select_value(
+              INTERVAL_MAP[interval] || interval,
+            )
+          )
+        end
+
         select_kit = PageObjects::Components::SelectKit.new(".relative-time-intervals")
         select_kit.expand
         select_kit.select_row_by_value(INTERVAL_MAP[interval] || interval)

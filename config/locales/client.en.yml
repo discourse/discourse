@@ -1403,6 +1403,7 @@ en:
         one: "year"
         other: "years"
       relative: "Relative"
+      unit: "Unit"
 
     time_shortcut:
       now: "Now"

@@ -2,8 +2,10 @@ import { tracked } from "@glimmer/tracking";
 import { fillIn, render, settled, typeIn } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | RelativeTimePicker", function (hooks) {
   setupRenderingTest(hooks);
@@ -326,5 +328,76 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
       2 * 60 * 24,
       "onChange called with 2 days in minutes when durationOutputUnit is not set"
     );
+  });
+
+  module("with the new select controls", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    test("names the unit select and holds days by default", async function (assert) {
+      await render(<template><DRelativeTimePicker /></template>);
+
+      assert
+        .dom(".relative-time-picker [role='combobox']")
+        .hasAria("label", i18n("relative_time_picker.unit"));
+      assert
+        .dom(".relative-time-intervals.d-select")
+        .hasAttribute("data-value", "days");
+    });
+
+    test("holds the unit that fits the start value", async function (assert) {
+      await render(
+        <template><DRelativeTimePicker @durationMinutes={{120}} /></template>
+      );
+
+      assert.dom(".relative-time-duration").hasValue("2");
+      assert
+        .dom(".relative-time-intervals.d-select")
+        .hasAttribute("data-value", "hours");
+    });
+
+    test("converts the duration when a unit is picked", async function (assert) {
+      let updatedValue;
+      const update = (value) => (updatedValue = value);
+
+      await render(
+        <template><DRelativeTimePicker @onChange={{update}} /></template>
+      );
+      await typeIn(".relative-time-duration", "5");
+      await dSelect(".relative-time-intervals").select("hours");
+
+      assert.dom(".relative-time-duration").hasValue("5");
+      assert.strictEqual(updatedValue, 5 * 60);
+      assert
+        .dom(".relative-time-intervals.d-select")
+        .hasAttribute("data-value", "hours");
+    });
+
+    test("names the units for the duration and hides the hidden ones", async function (assert) {
+      const hiddenIntervals = ["months", "years"];
+
+      await render(
+        <template>
+          <DRelativeTimePicker
+            @durationMinutes={{1}}
+            @hiddenIntervals={{hiddenIntervals}}
+          />
+        </template>
+      );
+      await dSelect(".relative-time-intervals").open();
+
+      assert.deepEqual(
+        [...document.querySelectorAll("[role='option']")].map((option) => [
+          option.dataset.value,
+          option.dataset.name,
+        ]),
+        [
+          ["mins", i18n("relative_time_picker.minutes", { count: 1 })],
+          ["hours", i18n("relative_time_picker.hours", { count: 1 })],
+          ["days", i18n("relative_time_picker.days", { count: 1 })],
+        ]
+      );
+    });
   });
 });

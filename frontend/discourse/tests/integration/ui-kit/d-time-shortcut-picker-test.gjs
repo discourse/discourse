@@ -187,4 +187,25 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
       .dom("div#tap_tile_next_month div.tap-tile-date")
       .hasText("Feb 1, 8:00 am");
   });
+
+  test("centres the relative unit caret on its label with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template><DTimeShortcutPicker @_itsatrap={{this.itsatrap}} /></template>
+    );
+    await click("#tap_tile_custom");
+
+    const middle = (selector) => {
+      const rect = document
+        .querySelector(`.custom-relative-wrap ${selector}`)
+        .getBoundingClientRect();
+      return rect.top + rect.height / 2;
+    };
+
+    assert.true(
+      Math.abs(middle(".d-select__caret") - middle(".d-select__value")) < 1,
+      "the caret and the unit label share a vertical centre"
+    );
+  });
 });

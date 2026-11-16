@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 const HOUR = 60;
@@ -52,6 +55,8 @@ function intervalFromMinutes(minutes) {
 }
 
 export default class DRelativeTimePicker extends Component {
+  @service siteSettings;
+
   @tracked inputValue;
   @tracked duration;
   @tracked interval;
@@ -197,12 +202,25 @@ export default class DRelativeTimePicker extends Component {
         {{didUpdate this.initValues @durationMinutes @durationHours}}
         {{on "change" this.onChangeDuration}}
       />
-      <ComboBox
-        class="relative-time-intervals"
-        @content={{this.intervals}}
-        @onChange={{this.onChangeInterval}}
-        @value={{this.interval}}
-      />
+      {{! TODO (select-kit-replacement-cleanup) }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DSelect
+          class="relative-time-intervals"
+          @onChange={{this.onChangeInterval}}
+          @options={{this.intervals}}
+          @texts={{hash ariaLabel=(i18n "relative_time_picker.unit")}}
+          @value={{this.interval}}
+          @variant="static"
+        />
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup) }}
+        <ComboBox
+          class="relative-time-intervals"
+          @content={{this.intervals}}
+          @onChange={{this.onChangeInterval}}
+          @value={{this.interval}}
+        />
+      {{/if}}
     </div>
   </template>
 }
