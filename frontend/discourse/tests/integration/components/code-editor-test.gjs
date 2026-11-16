@@ -29,6 +29,7 @@ import { capabilities } from "discourse/services/capabilities";
 import { codeEditorView } from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { dragPointer } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import DModal from "discourse/ui-kit/d-modal";
 import I18n, { i18n } from "discourse-i18n";
 
 // The editor binds to whichever modifier the platform uses for its commands.
@@ -165,29 +166,70 @@ module("Integration | Component | code-editor", function (hooks) {
       assert.true(view.hasFocus, "without leaving the editor");
 
       await triggerKeyEvent(".cm-content", "keydown", "Escape");
+      assert.dom(".cm-editor").isFocused("the next leaves the text");
+      assert
+        .dom(".cm-content")
+        .hasAttribute("tabindex", "-1", "so Tab moves past the editor");
       assert.strictEqual(seen.length, 0, "neither reaches the document");
 
-      await triggerKeyEvent(".cm-content", "keydown", "Escape");
-      assert.strictEqual(seen.length, 1, "a third passes through");
+      find(".cm-editor").dispatchEvent(new FocusEvent("focusout"));
+      assert
+        .dom(".cm-content")
+        .hasAttribute("tabindex", "-1", "a window switch keeps it out");
 
-      const tab = new KeyboardEvent("keydown", {
-        key: "Tab",
-        keyCode: 9,
-        bubbles: true,
-        cancelable: true,
-      });
-      view.contentDOM.dispatchEvent(tab);
-      assert.false(tab.defaultPrevented, "and Tab is free to move focus");
-      assert.strictEqual(view.state.doc.toString(), "one", "not indent");
+      await triggerKeyEvent(".cm-editor", "keydown", "Escape");
+      assert.strictEqual(seen.length, 1, "a third belongs to the page");
 
-      await triggerKeyEvent(".cm-content", "keydown", 65);
-      await triggerKeyEvent(".cm-content", "keydown", "Escape");
-      assert.strictEqual(seen.length, 1, "typing re-arms the sequence");
+      view.focus();
+      assert
+        .dom(".cm-content")
+        .doesNotHaveAttribute("tabindex", "coming back restores the tab order");
     } finally {
       document.documentElement.removeEventListener("keydown", spy, {
         capture: true,
       });
     }
+  });
+
+  test("Escape keeps focus inside a surrounding dialog", async function (assert) {
+    const closeModal = sinon.spy();
+    await render(
+      <template>
+        <DModal @closeModal={{closeModal}} @inline={{true}} @title="test">
+          <CodeEditor @value="one" />
+          <button type="button">After</button>
+        </DModal>
+      </template>
+    );
+    await waitFor(".cm-editor");
+    codeEditorView().focus();
+
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+    assert.dom(".cm-editor").isFocused();
+    assert.false(closeModal.called, "the dialog stays open");
+
+    const tab = new KeyboardEvent("keydown", {
+      key: "Tab",
+      bubbles: true,
+      cancelable: true,
+    });
+    find(".cm-editor").dispatchEvent(tab);
+    assert.false(tab.defaultPrevented, "Tab can move on");
+
+    await triggerKeyEvent(".cm-editor", "keydown", "Escape");
+    assert.true(closeModal.called, "the next Escape closes the dialog");
+  });
+
+  test("Escape leaves the bare editor even with a selection", async function (assert) {
+    const Editor = await loadCodemirror();
+    await render(<template><Editor @value="one two" /></template>);
+    const view = codeEditorView(".codemirror-editor");
+
+    view.focus();
+    view.dispatch({ selection: { anchor: 0, head: 3 } });
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+
+    assert.dom(".cm-content").isNotFocused();
   });
 
   test("turns on code-editing behaviour", async function (assert) {
@@ -357,6 +399,44 @@ module("Integration | Component | code-editor", function (hooks) {
     await settled();
 
     assert.dom(".cm-content").doesNotHaveAttribute("aria-invalid");
+  });
+
+  test("is named and focused by its label", async function (assert) {
+    await render(
+      <template>
+        <label for="field" id="name">Name</label>
+        <CodeEditor @inputId="field" @labelledBy="name" @value="" />
+      </template>
+    );
+    await waitFor(".cm-editor");
+
+    assert.dom(".cm-content").hasAttribute("aria-labelledby", "name");
+
+    await click("label");
+    assert.true(codeEditorView().hasFocus);
+  });
+
+  test("leaves clicks on controls inside its label alone", async function (assert) {
+    await render(
+      <template>
+        <label for="field">
+          Name
+          <button type="button">Help</button>
+        </label>
+        <CodeEditor @inputId="field" @value="" />
+      </template>
+    );
+    await waitFor(".cm-editor");
+    // Tooltip triggers are spans with a button role.
+    const trigger = document.createElement("span");
+    trigger.setAttribute("role", "button");
+    find("label").append(trigger);
+
+    await click("label button");
+    assert.dom(".cm-content").isNotFocused();
+
+    await click("label [role='button']");
+    assert.dom(".cm-content").isNotFocused();
   });
 
   test("shows an error when the editor fails to load", async function (assert) {

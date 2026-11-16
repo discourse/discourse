@@ -83,6 +83,7 @@ export interface CodemirrorEditorSignature {
     placeholder?: string | TrustedHTML;
     lineWarnings?: readonly LineWarning[];
     inputId?: string;
+    labelledBy?: string;
     describedBy?: string;
     invalid?: boolean;
     /** Everyday code-editing behaviour: brackets, folding, search, Tab. */
@@ -95,9 +96,29 @@ export interface CodemirrorEditorSignature {
 // Specs reach the document through the element.
 type HandleElement = HTMLDivElement & { codemirrorView?: EditorView };
 
-// How long after Escape the next Tab moves focus instead of indenting.
-const TAB_FOCUS_WINDOW = 2000;
-const MODIFIER_KEYS = ["Alt", "CapsLock", "Control", "Meta", "Shift"];
+// A contenteditable isn't labelable, so `<label for>` clicks don't reach it.
+function focusFromLabel(event: MouseEvent) {
+  const target = event.target as Element | null;
+  const label = target?.closest?.("label");
+  if (!label?.htmlFor) {
+    return;
+  }
+
+  const control = target?.closest(
+    'a[href], button, input, select, textarea, [tabindex], [role="button"]'
+  );
+
+  if (control && label.contains(control)) {
+    return;
+  }
+
+  const content = document.getElementById(label.htmlFor);
+  if (content?.classList.contains("cm-content")) {
+    EditorView.findFromDOM(content)?.focus();
+  }
+}
+
+let labelFocusInstalled = false;
 
 function editorPhrases() {
   return {
@@ -209,6 +230,11 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
   @action
   setup(container: HandleElement) {
+    if (!labelFocusInstalled) {
+      document.addEventListener("click", focusFromLabel);
+      labelFocusInstalled = true;
+    }
+
     const codeMode = this.args.codeMode;
     const extensions: Extension[] = [
       // Ahead of the defaults so a caller's shortcut wins.
@@ -245,6 +271,9 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
           ? { "aria-description": i18n("code_editor.tab_hint") }
           : {}),
         ...(this.args.inputId ? { id: this.args.inputId } : {}),
+        ...(this.args.labelledBy
+          ? { "aria-labelledby": this.args.labelledBy }
+          : {}),
         ...(this.args.describedBy
           ? { "aria-describedby": this.args.describedBy }
           : {}),
@@ -282,51 +311,63 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
 
     // Settled ahead of any surrounding dialog. Propagation stops here, so the
     // editor's own Escape bindings never run.
-    let tabFocusArmedAt = 0;
     const handleKeydown = (view: EditorView, event: KeyboardEvent) => {
       if (event.key !== "Escape") {
-        if (!MODIFIER_KEYS.includes(event.key)) {
-          tabFocusArmedAt = 0;
-        }
         return;
       }
 
       if (completionStatus(view.state)) {
         closeCompletion(view);
+      } else if (!codeMode) {
+        view.contentDOM.blur();
+        event.preventDefault();
+        return;
       } else if (!closeSearchPanel(view) && !simplifySelection(view)) {
-        if (!codeMode) {
-          view.contentDOM.blur();
-          event.preventDefault();
-          return;
-        }
-        if (Date.now() - tabFocusArmedAt < TAB_FOCUS_WINDOW) {
-          return;
-        }
-        view.setTabFocusMode(TAB_FOCUS_WINDOW);
-        tabFocusArmedAt = Date.now();
+        // Leaves the text but not the editor's box, so a surrounding dialog
+        // keeps focus. The content steps out of the tab order meanwhile, so
+        // Tab moves past the editor instead of back into it.
+        view.dom.tabIndex = -1;
+        view.contentDOM.tabIndex = -1;
+        view.dom.focus({ preventScroll: true });
       }
       event.preventDefault();
       event.stopPropagation();
+    };
+
+    const restoreTabOrder = (view: EditorView, event: FocusEvent) => {
+      // Switching windows blurs without moving focus anywhere.
+      if (event.target === view.dom && document.activeElement !== view.dom) {
+        view.dom.removeAttribute("tabindex");
+        view.contentDOM.removeAttribute("tabindex");
+      }
     };
 
     extensions.push(
       ViewPlugin.fromClass(
         class {
           handler: (event: KeyboardEvent) => void;
+          restoreHandler: (event: FocusEvent) => void;
+          view: EditorView;
 
           constructor(view: EditorView) {
+            this.view = view;
+            // With the box focused, the next Escape belongs to the page.
             this.handler = (event) => {
-              if (view.dom.contains(document.activeElement)) {
+              const active = document.activeElement;
+              if (active !== view.dom && view.dom.contains(active)) {
                 handleKeydown(view, event);
               }
             };
+            this.restoreHandler = (event) => restoreTabOrder(view, event);
             window.addEventListener("keydown", this.handler, { capture: true });
+            view.dom.addEventListener("focusout", this.restoreHandler);
           }
 
           destroy() {
             window.removeEventListener("keydown", this.handler, {
               capture: true,
             });
+            this.view.dom.removeEventListener("focusout", this.restoreHandler);
           }
         }
       )
@@ -490,7 +531,13 @@ export default class CodemirrorEditor extends Component<CodemirrorEditorSignatur
       ...attributes
       {{didInsert this.setup}}
       {{didUpdate this.updateValue @value}}
-      {{didUpdate this.updateContentAttributes @inputId @describedBy @invalid}}
+      {{didUpdate
+        this.updateContentAttributes
+        @inputId
+        @labelledBy
+        @describedBy
+        @invalid
+      }}
       {{didUpdate this.updateLanguage @language}}
       {{didUpdate this.updateLanguage @languageOptions}}
       {{didUpdate this.updateReadOnly @readOnly}}
