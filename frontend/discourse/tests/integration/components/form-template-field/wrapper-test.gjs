@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Wrapper from "discourse/components/form-template-field/wrapper";
@@ -29,15 +30,18 @@ module(
       }
       const selections = [];
       const onSelect = (fields, id) => selections.push(id);
-      this.set("templateId", 1);
+      const templateId = tracked(1);
       const renderPromise = render(
         <template>
-          <Wrapper @id={{this.templateId}} @onSelectFormTemplate={{onSelect}} />
+          <Wrapper
+            @id={{templateId.value}}
+            @onSelectFormTemplate={{onSelect}}
+          />
         </template>
       );
 
       await waitUntil(() => requests.firstRequested);
-      this.set("templateId", 2);
+      templateId.value = 2;
       await renderPromise;
 
       assert.dom("[name='field-2']").exists();
@@ -65,16 +69,19 @@ module(
       }
       const selections = [];
       const onSelect = (fields, id) => selections.push(id);
-      this.set("templateId", 1);
+      const templateId = tracked(1);
       await render(
         <template>
-          <Wrapper @id={{this.templateId}} @onSelectFormTemplate={{onSelect}} />
+          <Wrapper
+            @id={{templateId.value}}
+            @onSelectFormTemplate={{onSelect}}
+          />
         </template>
       );
 
-      this.set("templateId", 2);
+      templateId.value = 2;
       await waitUntil(() => requests.secondRequested);
-      this.set("templateId", 3);
+      templateId.value = 3;
       await settled();
 
       assert.dom("[name='field-3']").exists("the current template is rendered");
