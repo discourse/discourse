@@ -1909,6 +1909,15 @@ RSpec.describe TopicQuery do
               TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics,
             ).to eq([private_message])
           end
+
+          it "returns nothing for a tag hidden from the user" do
+            Fabricate(:topic_tag, topic: private_message, tag: tag)
+            create_hidden_tags([tag.name])
+
+            expect(
+              TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics,
+            ).to be_empty
+          end
         end
       end
 
