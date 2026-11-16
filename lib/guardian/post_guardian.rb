@@ -6,6 +6,11 @@ module PostGuardian
     authenticated? && @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map)
   end
 
+  def can_embed_media?
+    is_staff? ||
+      (authenticated? && @user.in_any_groups?(SiteSetting.embedded_media_post_allowed_groups_map))
+  end
+
   def link_posting_access
     if unrestricted_link_posting?
       "full"

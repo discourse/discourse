@@ -231,6 +231,10 @@ class CookedPostProcessor
 
   private
 
+  def onebox_allowed?(url, onebox)
+    @post.onebox_allowed?(url, onebox, @doc)
+  end
+
   # quote_regexp cuts raw without parsing it, so it can swallow markup that only
   # balanced a later "[/quote]" (an opening code fence for example) and revive
   # content that was inert when the post was validated. Accept the cut only when
