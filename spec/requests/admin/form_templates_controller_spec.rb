@@ -63,6 +63,20 @@ RSpec.describe Admin::FormTemplatesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
+      it "saves an optional output template and returns it to administrators" do
+        output = "## Report\n{{ answers.name }}"
+        post "/admin/customize/form-templates.json",
+             params: {
+               name: "Custom output",
+               template: form_template.template,
+               output_template: output,
+             }
+        expect(response.status).to eq(200)
+        created = FormTemplate.find(response.parsed_body["form_template"]["id"])
+        expect(created.output_template).to eq(output)
+        expect(response.parsed_body["form_template"]["output_template"]).to eq(output)
+      end
+
       it "creates a form template" do
         expect {
           post "/admin/customize/form-templates.json",
@@ -99,6 +113,21 @@ RSpec.describe Admin::FormTemplatesController do
   describe "#update" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
+      it "preserves output templates when older clients omit the parameter and allows clearing them" do
+        output = "{{ answers.name }}"
+        form_template.update!(output_template: output)
+        attributes = { name: form_template.name, template: form_template.template }
+
+        put "/admin/customize/form-templates/#{form_template.id}.json", params: attributes
+        expect(response.status).to eq(200)
+        expect(form_template.reload.output_template).to eq(output)
+
+        put "/admin/customize/form-templates/#{form_template.id}.json",
+            params: attributes.merge(output_template: "")
+        expect(response.status).to eq(200)
+        expect(form_template.reload.output_template).to eq("")
+      end
 
       it "updates a form template" do
         put "/admin/customize/form-templates/#{form_template.id}.json",

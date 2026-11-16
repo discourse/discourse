@@ -20,7 +20,7 @@ import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
 import { decorateImageControls } from "discourse/lib/composer/image-controls";
 import { bind, debounce } from "discourse/lib/decorators";
-import prepareFormTemplateData from "discourse/lib/form-template-validation";
+import renderFormTemplate from "discourse/lib/form-template-validation";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
@@ -110,6 +110,8 @@ export default class ComposerEditor extends Component {
 
   fileUploadElementId = "file-uploader";
 
+  #formPreviewSequence = 0;
+
   init() {
     super.init(...arguments);
     this.warnedCannotSeeMentions = [];
@@ -127,13 +129,10 @@ export default class ComposerEditor extends Component {
 
   @computed("composer.formTemplateIds")
   get selectedFormTemplateId() {
-    if (this._selectedFormTemplateId) {
-      return this._selectedFormTemplateId;
-    }
-
-    return (
-      this.composer.model.formTemplateId || this.composer.formTemplateIds?.[0]
-    );
+    const ids = this.composer.formTemplateIds || [];
+    const selectedId =
+      this._selectedFormTemplateId || this.composer.model.formTemplateId;
+    return ids.find((id) => String(id) === String(selectedId)) ?? ids[0];
   }
 
   set selectedFormTemplateId(value) {
@@ -488,19 +487,9 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  async updateFormPreview() {
-    const formTemplateData = prepareFormTemplateData(
-      document.querySelector("#form-template-form"),
-      this.composer.selectedFormTemplate,
-      false
-    );
-
-    this.composer.model.set("reply", formTemplateData);
-
-    this.preview = await this.cachedCookAsync(
-      formTemplateData,
-      this.markdownOptions
-    );
+  updateFormPreview() {
+    this.#formPreviewSequence++;
+    this._updateFormPreview();
   }
 
   async cachedCookAsync(text, options) {
@@ -516,6 +505,64 @@ export default class ComposerEditor extends Component {
   @action
   showUploadModal() {
     document.getElementById(this.fileUploadElementId).click();
+  }
+
+  #formPreviewRequest() {
+    const model = this.composer.model;
+    if (!model || this.isDestroying) {
+      return null;
+    }
+    return {
+      sequence: this.#formPreviewSequence,
+      model,
+      categoryId: model.categoryId,
+      templateId: this.selectedFormTemplateId,
+    };
+  }
+
+  #isCurrentFormPreview({ sequence, model, categoryId, templateId }) {
+    return (
+      sequence === this.#formPreviewSequence &&
+      !this.isDestroying &&
+      model === this.composer.model &&
+      categoryId === model.categoryId &&
+      templateId === this.selectedFormTemplateId
+    );
+  }
+
+  @debounce(300)
+  async _updateFormPreview() {
+    const request = this.#formPreviewRequest();
+    if (!request) {
+      return;
+    }
+    try {
+      const result = await renderFormTemplate(
+        document.querySelector("#form-template-form"),
+        this.composer.selectedFormTemplate,
+        request.templateId,
+        request.categoryId,
+        false
+      );
+      if (!result || !this.#isCurrentFormPreview(request)) {
+        return;
+      }
+      const preview = await this.cachedCookAsync(
+        result.raw,
+        this.markdownOptions
+      );
+      if (!this.#isCurrentFormPreview(request)) {
+        return;
+      }
+      request.model.set("reply", result.raw);
+      this.preview = preview;
+    } catch (error) {
+      // the preview runs on every keystroke, so a rejected render keeps the
+      // last good preview and leaves reporting to the save
+      if (!error?.jqXHR) {
+        throw error;
+      }
+    }
   }
 
   @on("didInsertElement")

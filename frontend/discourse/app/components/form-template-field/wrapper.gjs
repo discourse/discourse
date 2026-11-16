@@ -50,15 +50,17 @@ export default class FormTemplateFieldWrapper extends Component {
     composer: ComposerField,
   };
 
+  #templateLoadSequence = 0;
+
   constructor() {
     super(...arguments);
 
     if (this.args.content) {
       // Content used when no id exists yet
       // (i.e. previewing while creating a new template)
-      this._loadTemplate(this.args.content);
+      this.#loadTemplate(this.args.content);
     } else if (this.args.id) {
-      this._fetchTemplate(this.args.id);
+      this.#fetchTemplate(this.args.id);
     }
 
     next(this, () => {
@@ -80,33 +82,45 @@ export default class FormTemplateFieldWrapper extends Component {
       return;
     }
 
-    return this._fetchTemplate(this.args.id);
+    return this.#fetchTemplate(this.args.id);
   }
 
-  async _loadTemplate(templateContent) {
+  async #fetchTemplate(id) {
+    const sequence = ++this.#templateLoadSequence;
+    const response = await FormTemplate.findById(id);
+    const templateContent = await response.form_template.template;
+    return this.#loadTemplate(templateContent, id, sequence);
+  }
+
+  async #loadTemplate(
+    templateContent,
+    id = this.args.id,
+    sequence = ++this.#templateLoadSequence
+  ) {
     try {
       const promise = import("js-yaml");
       waitForPromise(promise);
       const { load } = await promise;
+      if (
+        sequence !== this.#templateLoadSequence ||
+        id !== this.args.id ||
+        this.isDestroying
+      ) {
+        return;
+      }
       this.parsedTemplate = load(templateContent);
-      this.args.onSelectFormTemplate?.(this.parsedTemplate);
+      this.args.onSelectFormTemplate?.(this.parsedTemplate, id);
     } catch (e) {
       this.error = e;
     }
   }
 
-  async _fetchTemplate(id) {
-    const response = await FormTemplate.findById(id);
-    const templateContent = await response.form_template.template;
-    return this._loadTemplate(templateContent);
-  }
-
   <template>
-    {{#if this.parsedTemplate}}
-      <div
-        class="form-template-form__wrapper"
-        {{didUpdate this.refreshTemplate @id}}
-      >
+    <div
+      class="form-template-form__wrapper"
+      {{didUpdate this.refreshTemplate @id}}
+    >
+      {{#if this.parsedTemplate}}
         {{#each this.parsedTemplate as |content|}}
           <FormTemplateField
             @component={{get this.fieldTypes content.type}}
@@ -116,11 +130,11 @@ export default class FormTemplateFieldWrapper extends Component {
             @uppyComposerUpload={{@uppyComposerUpload}}
           />
         {{/each}}
-      </div>
-    {{else if this.error}}
-      <div class="alert alert-error">
-        {{this.error}}
-      </div>
-    {{/if}}
+      {{else if this.error}}
+        <div class="alert alert-error">
+          {{this.error}}
+        </div>
+      {{/if}}
+    </div>
   </template>
 }
