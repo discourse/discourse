@@ -6017,6 +6017,8 @@ RSpec.describe UsersController do
       end
 
       it "sanitizes suspension and silencing reasons" do
+        SiteSetting.hide_suspension_reasons = false
+        SiteSetting.hide_silencing_reasons = false
         payload = "public <img src=x onerror=alert(1)> reason"
         penalized_user = Fabricate(:user)
         penalized_user.user_stat.update!(post_count: 1)
