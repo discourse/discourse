@@ -885,13 +885,15 @@ export default class Composer extends RestModel {
   }
 
   /** TODO(typescript-pending): numeric settings casts can go when SiteSettingsService types its factory result. */
-  @computed("privateMessage")
+  @computed("privateMessage", "categoryId")
   get minimumTitleLength() {
-    if (this.privateMessage) {
-      return this.siteSettings.min_personal_message_title_length as number;
-    } else {
-      return this.siteSettings.min_topic_title_length as number;
-    }
+    const length = this.privateMessage
+      ? (this.siteSettings.min_personal_message_title_length as number)
+      : (this.siteSettings.min_topic_title_length as number);
+
+    return applyValueTransformer("composer-minimum-title-length", length, {
+      composer: this,
+    });
   }
 
   @computed("minimumPostLength", "replyLength", "canEditTopicFeaturedLink")

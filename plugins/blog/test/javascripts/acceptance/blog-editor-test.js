@@ -412,3 +412,32 @@ acceptance("Blog editor", function (needs) {
       .doesNotExist("there is nothing to reset");
   });
 });
+
+acceptance("Blog composer", function (needs) {
+  needs.user({ admin: true, moderator: false });
+  needs.settings({
+    blog_enabled: true,
+    blog_category: 3,
+    blog_drafts_category: 10,
+    min_topic_title_length: 15,
+  });
+  needs.pretender((server, helper) => {
+    server.get("/blog-editor.json", () =>
+      helper.response({ topics: [], blog_url: "https://blog.example.com" })
+    );
+  });
+
+  test("accepts a short title for a page", async function (assert) {
+    await visit("/blog-editor");
+    await click(".d-page-header__actions .btn-primary");
+    await fillIn("#reply-title", "Contact");
+    await click(".submit-panel .create");
+
+    assert
+      .dom(".title-input .popup-tip.bad")
+      .doesNotExist("a draft title can be as short as Contact");
+    assert
+      .dom(".d-editor-textarea-wrapper .popup-tip.bad")
+      .exists("the composer still validated the draft");
+  });
+});
