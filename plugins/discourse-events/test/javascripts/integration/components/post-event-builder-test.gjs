@@ -4,7 +4,6 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
@@ -351,9 +350,7 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     const event = eventWith({ ends_at: "2022-07-01T12:00:00Z" });
     await renderAdvanced(event);
 
-    const toTime = selectKit(".to .d-time-input .select-kit");
-    await toTime.expand();
-    await toTime.selectRowByName("10:00 AM");
+    await fillIn(".to .time-input", "10:00");
 
     assert.strictEqual(
       moment(event.endsAt).toISOString(),

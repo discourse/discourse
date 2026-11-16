@@ -5,6 +5,7 @@ import { action, computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
+import deprecated from "discourse/lib/deprecated";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -62,6 +63,18 @@ export default class DTimeInput extends Component {
 
   /** @type {import("moment").Moment | null | undefined} */
   relativeDate = null;
+
+  init() {
+    super.init(...arguments);
+
+    deprecated(
+      '<DTimeInput> is deprecated. Use a native <input type="time">: its value is the time as "HH:mm" in 24-hour form.',
+      {
+        since: "2026.11.0",
+        id: "discourse.d-time-input",
+      }
+    );
+  }
 
   @computed("relativeDate", "date")
   get minimumTime() {

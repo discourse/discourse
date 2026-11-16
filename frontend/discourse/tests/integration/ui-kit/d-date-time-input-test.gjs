@@ -1,7 +1,6 @@
 import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
@@ -21,9 +20,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
     await render(<template><DDateTimeInput @date={{this.date}} /></template>);
 
     assert.dom(".date-picker").hasValue("2019-01-29");
-    assert
-      .dom(".d-time-input .combo-box-header")
-      .hasAttribute("data-name", "2:45 PM");
+    assert.dom(".time-input").hasAttribute("type", "time").hasValue("14:45");
   });
 
   test("prevents mutations", async function (assert) {
@@ -89,6 +86,21 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
       .hasValue("2019-01-29", "it keeps showing the date");
   });
 
+  test("emptying the time reports nothing", async function (assert) {
+    const changes = [];
+    const onChange = (date) => changes.push(date);
+
+    await render(
+      <template>
+        <DDateTimeInput @date={{DEFAULT_DATE_TIME}} @onChange={{onChange}} />
+      </template>
+    );
+
+    await fillIn(".time-input", "");
+
+    assert.deepEqual(changes, [], "the date keeps its time");
+  });
+
   test("emptying the date does nothing without @onChange", async function (assert) {
     await render(
       <template><DDateTimeInput @date={{DEFAULT_DATE_TIME}} /></template>
@@ -108,7 +120,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-time-input .combo-box-header").doesNotExist();
+    assert.dom(".time-input").doesNotExist();
   });
 
   test("supports swapping timezone without changing visible date/time", async function (assert) {
@@ -149,9 +161,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
         </template>
       );
 
-      const timeSelectKit = selectKit(".d-time-input .select-kit");
-      await timeSelectKit.expand();
-      await timeSelectKit.selectRowByName("2:45 PM");
+      await fillIn(".time-input", "14:45");
 
       assert.strictEqual(
         this.date.toISOString(),
@@ -213,9 +223,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
         </template>
       );
 
-      const timeSelectKit = selectKit(".d-time-input .select-kit");
-      await timeSelectKit.expand();
-      await timeSelectKit.selectRowByName("11:00 AM");
+      await fillIn(".time-input", "11:00");
 
       assert.strictEqual(
         this.date.toISOString(),

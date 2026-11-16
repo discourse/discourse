@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import withEventValue from "discourse/helpers/with-event-value";
 import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
-import DTimeInput from "discourse/ui-kit/d-time-input";
 
 export default class DDateTimeInput extends Component {
   // Subclasses read the inputs by name (`this.date`), so they stay getters.
@@ -28,6 +29,10 @@ export default class DDateTimeInput extends Component {
 
   get minutes() {
     return this.date && this.showTime ? this.date.minutes() : null;
+  }
+
+  get time() {
+    return this.date && this.showTime ? this.date.format("HH:mm") : null;
   }
 
   get resolvedTimezone() {
@@ -58,6 +63,16 @@ export default class DDateTimeInput extends Component {
         })
       );
     }
+  }
+
+  /** Reads the time input's "HH:mm"; an emptied input keeps the date's time. */
+  @action
+  onInputTime(value) {
+    if (!value) {
+      return;
+    }
+    const [hours, minutes] = value.split(":").map(Number);
+    this.onChangeTime({ hours, minutes });
   }
 
   @action
@@ -101,10 +116,11 @@ export default class DDateTimeInput extends Component {
       {{/unless}}
 
       {{#if this.showTime}}
-        <DTimeInput
-          @date={{this.date}}
-          @onChange={{this.onChangeTime}}
-          @relativeDate={{this.relativeDate}}
+        <input
+          class="time-input"
+          type="time"
+          value={{this.time}}
+          {{on "input" (withEventValue this.onInputTime)}}
         />
       {{/if}}
 
