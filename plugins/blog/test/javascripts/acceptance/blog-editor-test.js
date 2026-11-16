@@ -65,6 +65,7 @@ acceptance("Blog editor", function (needs) {
           drafts: [draft],
           published: [published],
           unpublished: [],
+          pages: [draft, published].filter((topic) => topic.page),
         }[status || "all"],
         blog_url: "https://blog.example.com",
       });
@@ -103,6 +104,22 @@ acceptance("Blog editor", function (needs) {
     assert
       .dom(".blog-dashboard__row")
       .exists({ count: 2 }, "resetting the filters lists everything again");
+  });
+
+  test("marks standalone pages and filters them", async function (assert) {
+    published = { ...published, page: true };
+    await visit("/blog-editor");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__page-badge')
+      .hasText("Page", "standalone pages are marked");
+    assert
+      .dom('[data-topic-id="123"] .blog-dashboard__page-badge')
+      .doesNotExist("articles are not");
+    await select(".d-filter-controls__dropdown", "pages");
+    assert.dom('[data-topic-id="124"]').exists("pages are shown");
+    assert
+      .dom('[data-topic-id="123"]')
+      .doesNotExist("articles are filtered out");
   });
 
   test("separates published articles from private correction work", async function (assert) {

@@ -503,10 +503,11 @@ style `.blog-post-summary` without reaching into cooked article content.
 time and loads the next page as you scroll near the end of the list, while another
 page exists.
 
-The All articles, Drafts, Published, and Not on the blog filters run on the server
+The All, Drafts, Published, Not on the blog, and Pages filters run on the server
 before pagination. Not on the blog means discussions in the public publication
 category which are not currently live articles; private drafts have their own
-filter. Search matches titles, slugs, and stored article paths case-insensitively,
+filter. Pages lists standalone pages, which are also marked with a Page badge.
+Search matches titles, slugs, and stored article paths case-insensitively,
 across the entire authorized editorial collection, not just downloaded entries.
 Search and status apply to every page that loads and are kept in the URL, so a
 filtered view survives a reload; changing either starts at the first page. Search input is bounded to 100 characters and SQL wildcards are
