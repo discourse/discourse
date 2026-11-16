@@ -21,6 +21,9 @@ import Badge from "discourse/models/badge";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 
+/** Server default page size for the badge grants feed; a shorter page means the feed is exhausted. */
+export const USER_BADGES_PAGE_SIZE = 96;
+
 // Restores the setter these getters displace, shadowing the getter from then
 // on so admin's read-then-write `groupedBadges` doesn't trip Glimmer.
 function shadow(instance, name, value) {
