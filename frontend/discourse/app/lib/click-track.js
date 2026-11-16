@@ -1,7 +1,5 @@
-import jQuery from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL, { samePrefix } from "discourse/lib/get-url";
@@ -11,15 +9,6 @@ import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export function isValidLink(link) {
-  if (link instanceof jQuery) {
-    link = link[0];
-
-    deprecated("isValidLink now expects an Element, not a jQuery object", {
-      since: "2.9.0.beta7",
-      id: "discourse.click-track.is-valid-link-jquery",
-    });
-  }
-
   // .hashtag/.hashtag-cooked == category/tag link
   // .back == quote back ^ button
   if (

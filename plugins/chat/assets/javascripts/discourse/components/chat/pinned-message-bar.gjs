@@ -27,7 +27,6 @@ export default class ChatPinnedMessageBar extends Component {
   @service chatApi;
   @service messageBus;
   @service router;
-  @service siteSettings;
 
   @tracked pins = [];
   subscribe = modifierFn((_element, [channelId]) => {
@@ -51,10 +50,7 @@ export default class ChatPinnedMessageBar extends Component {
   }
 
   get showBar() {
-    return (
-      this.siteSettings.chat_pinned_messages &&
-      this.args.channel?.hasPinnedMessages
-    );
+    return this.args.channel?.hasPinnedMessages;
   }
 
   get visiblePins() {
@@ -297,7 +293,9 @@ export default class ChatPinnedMessageBar extends Component {
           >
             {{dIcon "list"}}
             {{#if @channel.hasUnseenPins}}
-              <span class="chat-pinned-bar__unread-indicator"></span>
+              <span
+                class="chat-pinned-bar__unread-indicator d-new-indicator"
+              ></span>
             {{/if}}
           </LinkTo>
         {{/if}}

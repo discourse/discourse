@@ -2,8 +2,6 @@
 
 class Chat::Api::ChannelPinsController < Chat::ApiController
   def index
-    raise Discourse::NotFound unless SiteSetting.chat_pinned_messages
-
     Chat::ListChannelPins.call(service_params) do
       on_success do |pins:, membership:|
         render_serialized({ pins:, membership: }, Chat::ChannelPinsSerializer, root: false)
@@ -21,8 +19,6 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
   end
 
   def mark_read
-    raise Discourse::NotFound unless SiteSetting.chat_pinned_messages
-
     Chat::MarkPinsAsRead.call(params: { channel_id: params[:channel_id] }, guardian: guardian) do
       on_success { render json: success_json }
       on_model_not_found(:channel) { raise Discourse::NotFound }
@@ -36,8 +32,6 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
   end
 
   def create
-    raise Discourse::NotFound unless SiteSetting.chat_pinned_messages
-
     Chat::PinMessage.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
@@ -69,8 +63,6 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
   end
 
   def destroy
-    raise Discourse::NotFound unless SiteSetting.chat_pinned_messages
-
     Chat::UnpinMessage.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: :unprocessable_entity) }

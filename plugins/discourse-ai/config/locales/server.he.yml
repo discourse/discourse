@@ -194,10 +194,6 @@ he:
           name: "יצירת תמונות…"
         image_generation_custom:
           name: "מותאם"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "ננו בננה"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -572,6 +568,18 @@ he:
       assign:
         errors:
           not_found: "הנושא לא נמצא."
+    appearance_authoring:
+      default_theme: "ערכת עיצוב כברירת מחדל"
+      colors:
+        light:
+          header_background: "כותרת"
+      fonts:
+        base_font: "גופן גוף"
+        heading_font: "גופן כותרת"
+    mcp_theme_access:
+      none: "ללא"
+    mcp_app_setup:
+      none: "ללא"
     reviewables:
       ai_tool_action:
         approve:
@@ -625,6 +633,7 @@ he:
     embeddings:
       delete_failed: "זה המודל שנמצא בשימוש. יש לעדכן את `ai embeddings selected model`."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
+      missing_provider_param: "%{param} לא יכול להישאר ריק"
       configuration:
         disable_embeddings: "יש להשבית קודם את ‚הטמעת בינה מלאכותית פעילה’."
         choose_model: "יש לעדכן את ‚ai embeddings selected model’."

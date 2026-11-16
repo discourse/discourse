@@ -238,6 +238,8 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Sugerir con IA"
       ai_decoded_transcript:
         thinking: "Pensando"
         tool: "Herramienta"
@@ -272,23 +274,30 @@ es:
         short_title: "Características"
         back: "Volver a las características de IA"
         settings_save_error: "Algunos ajustes no se han podido guardar."
-        disabled: "(desactivado)"
-        agent:
-          one: "Agente:"
-          other: "Agentes:"
-        groups: "Grupos:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Estado"
+          enabled: "Activado"
+          feature: "Característica"
+          agent: "Agente"
+          llm: "LLM"
+          groups: "Grupos"
+        who_can_use:
+          no_one: "Nadie"
+        status:
+          "on": "Activado"
+          "off": "Desactivado"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Nuevo agente"
+          places:
+            personal_messages: "Mensajes personales"
+            chat_direct_messages: "Mensajes de chat"
+            none: "No disponible"
+        set_up: "Configurar"
         no_llm: "No hay LLM seleccionados"
         no_agent: "No establecido"
         no_groups: "Ninguna"
-        classification_model: "Modelo:"
         edit: "Ajustes"
-        expand_list:
-          one: "(%{count} más)"
-          other: "(%{count} más)"
-        collapse_list: "(mostrar menos)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -301,7 +310,6 @@ es:
         nav:
           enabled: "Activado"
         filters:
-          all: "Todo"
           no_results: "No se han encontrado características que coincidan con tus filtros."
           reset: "Restablecer"
         no_automations: "Aún no hay automatizaciones"
@@ -332,8 +340,7 @@ es:
             access_control: "Control de acceso"
         embeddings:
           name: "Incrustaciones"
-          description: "Impulsa características como Temas relacionados y Búsqueda de IA al generar representaciones semánticas de texto"
-          hyde: "HyDE"
+          related_topics: "Temas relacionados"
           setting_groups:
             model_settings: "Ajustes del modelo"
             related_topics: "Temas relacionados"
@@ -343,7 +350,6 @@ es:
             settings: "Ajustes básicos"
         discord:
           name: "Integración de Discord"
-          description: "Añade la posibilidad de buscar canales de Discord"
           search: "Búsqueda de Discord"
           setting_groups:
             settings: "Ajustes básicos"
@@ -394,10 +400,6 @@ es:
             one: "Traducción programada para %{count} publicación no traducida."
             other: "Traducción programada para %{count} publicaciones no traducidas."
           schedule_topic_error: "Error al programar las traducciones. Inténtalo de nuevo."
-          setting_groups:
-            settings: "Ajustes básicos"
-            agents: "Agentes"
-            backfill_and_limits: "Relleno y límites"
         spam:
           name: "Spam"
           description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
@@ -416,8 +418,20 @@ es:
       translations:
         title: "Traducciones"
         description: "Traduce automáticamente todo el contenido de tu foro al idioma preferido del usuario"
-        supported_locales: "Idiomas compatibles"
-        category_scope: "Categorías"
+        sections:
+          advanced: "Avanzado"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorías"
+          ai_translation_personal_messages:
+            label: "Mensajes personales"
+            choices:
+              none: "Ninguna"
+              all: "Todo"
+          content_localization_language_switcher:
+            choices:
+              none: "Nadie"
+              all: "Todos"
         cached_results_notice: "Mostrando resultados en caché de %{relative_time}."
         model_progress:
           detail:
@@ -436,7 +450,7 @@ es:
             tag:
               title: "Etiquetas"
         admin_actions:
-          enable_translations: "Activar traducciones automáticas"
+          enabled: "Activado"
         stats:
           title: "Estadísticas de traducción"
           backfill_disabled: "El relleno está desactivado, solo se traducirán las publicaciones nuevas."
@@ -471,6 +485,8 @@ es:
         short_title: "Spam"
         title: "Configurar el manejo de spam"
         select_llm: "Seleccionar LLM"
+        no_llm_selected: "Ninguna"
+        no_decision_model_selected: "Ninguna"
         select_agent: "Seleccionar agente"
         custom_instructions: "Instrucciones personalizadas"
         custom_instructions_help: "Instrucciones personalizadas específicas de tu sitio para ayudar a guiar a la IA en la identificación de spam, por ejemplo: «Sé más agresivo a la hora de escanear las publicaciones que no estén en inglés»."
@@ -847,6 +863,8 @@ es:
         edit: "Editar"
         delete: "Eliminar"
         test: "Ejecutar prueba"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Servidores MCP"
         new: "Nuevo servidor MCP"
@@ -934,6 +952,7 @@ es:
         type: "Tipo"
         provider: "Proveedor"
         edit: "Editar"
+        seeded_warning: "Esto está preconfigurado en tu web y no se puede editar."
         select_type: "Seleccionar"
         types:
           embedding: "Incrustado"
@@ -1145,7 +1164,6 @@ es:
         presets: "Selecciona un preajuste..."
         configure_manually: "Configurar manualmente"
         edit: "Editar"
-        seeded_warning: "Esto está preconfigurado en tu web y no se puede editar."
         tests:
           title: "Ejecutar prueba"
           running: "Ejecutando prueba..."
@@ -1177,6 +1195,7 @@ es:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizado"
         provider_fields:
@@ -1289,10 +1308,7 @@ es:
           scroll_to_bottom: "Desplazar hacia abajo"
           editing_post: "Editando publicación"
       sentiments:
-        dashboard:
-          title: "Sentimiento"
         sidebar:
-          overview: "Visión general de sentimiento"
           analysis: "Análisis de sentimiento"
         sentiment_analysis:
           share_chart: "Copiar enlace al gráfico"

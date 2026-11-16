@@ -427,9 +427,9 @@ export default class EmojiPicker extends Component {
       let sectionElement;
 
       if (this.scrollDirection === "up" || this.prevYPosition < 50) {
-        sectionElement = visibleSections.firstObject;
+        sectionElement = visibleSections.at(0);
       } else {
-        sectionElement = visibleSections.lastObject;
+        sectionElement = visibleSections.at(-1);
       }
 
       this.lastVisibleSection = sectionElement.dataset.section;

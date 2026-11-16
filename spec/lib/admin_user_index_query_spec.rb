@@ -65,26 +65,30 @@ RSpec.describe AdminUserIndexQuery do
   end
 
   describe "no users with trust level" do
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     TrustLevel.levels.each do |key, value|
       it "#{key} returns no records" do
         query = ::AdminUserIndexQuery.new(query: key.to_s)
         expect(real_users(query)).to eq([])
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   describe "users with trust level" do
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     TrustLevel.levels.each do |key, value|
       it "finds user with trust #{key}" do
         user = Fabricate(:user, trust_level: value)
 
-        next if !TrustLevel.valid?(value + 1)
-        Fabricate(:user, trust_level: value + 1)
+        other_level = TrustLevel.levels.values.find { |level| level != value }
+        Fabricate(:user, trust_level: other_level)
 
         query = ::AdminUserIndexQuery.new(query: key.to_s)
         expect(real_users(query).to_a).to eq([user])
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   describe "with a pending user" do
@@ -160,7 +164,7 @@ RSpec.describe AdminUserIndexQuery do
     end
 
     it "sorts bot activity and creation dates in both directions" do
-      other_bot = Fabricate(:user, id: -102, created_at: 2.days.ago)
+      other_bot = Fabricate(:user, id: -102, username: "other_bot", created_at: 2.days.ago)
       bot.update!(created_at: 1.day.ago)
       bot.user_stat.update!(topics_entered: 2, posts_read_count: 4, post_count: 6)
       other_bot.user_stat.update!(topics_entered: 1, posts_read_count: 3, post_count: 5)

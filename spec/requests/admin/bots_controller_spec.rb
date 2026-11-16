@@ -98,6 +98,48 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#create_bot" do
+    context "with a plugin bot creation parameter" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:received) { [] }
+
+      before do
+        sign_in(admin)
+        @original_bot_creation_params = DiscoursePluginRegistry.bot_creation_params.dup
+        plugin.register_bot_creation_param(:test_bot_option) do |bot, value|
+          received << [bot.id, value]
+        end
+      end
+
+      after { DiscoursePluginRegistry.bot_creation_params.replace(@original_bot_creation_params) }
+
+      it "accepts scalar parameters inside the bot envelope" do
+        post "/admin/users/bots.json",
+             params: {
+               bot: {
+                 username: "plugin_bot",
+                 test_bot_option: true,
+               },
+             }
+        expect(response.status).to eq(201)
+        expect(received).to eq([[response.parsed_body.dig("user", "id"), "true"]])
+      end
+
+      it "ignores parameters outside the envelope and non-scalar values" do
+        post "/admin/users/bots.json",
+             params: {
+               bot: {
+                 username: "nested_bot",
+                 test_bot_option: {
+                   admin: true,
+                 },
+               },
+               test_bot_option: true,
+             }
+        expect(response.status).to eq(201)
+        expect(received).to be_empty
+      end
+    end
+
     let(:bot_params) { { name: "Release helper", username: "release_helper", trust_level: 0 } }
 
     it "rejects anonymous requests without creating a user" do

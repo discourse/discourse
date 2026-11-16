@@ -186,10 +186,12 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
+  # Themes saved as appearance changes only hold palettes, which the wizard can
+  # replace, so they don't stop it from being offered.
   def include_can_run_design_wizard?
     return false if !object.admin?
 
-    theme_ids = DesignWizard::Themes.ids
+    theme_ids = DesignWizard::Themes.ids + AppearanceChange.palette_only_theme_ids
     theme_ids.include?(SiteSetting.default_theme_id) && !Theme.where.not(id: theme_ids).exists?
   end
 

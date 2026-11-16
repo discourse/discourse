@@ -5,94 +5,151 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { capitalize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import UpcomingChangeBadges from "discourse/admin/components/admin-config-areas/upcoming-change-badges";
+import UpcomingChangeGroupControl from "discourse/admin/components/admin-config-areas/upcoming-change-group-control";
+import AdminSiteSetting from "discourse/admin/models/site-setting";
 import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
-import GroupSelector from "discourse/components/group-selector";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import { bind } from "discourse/lib/decorators";
-import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import { sanitize } from "discourse/lib/text";
-import Group from "discourse/models/group";
-import DButton from "discourse/ui-kit/d-button";
-import DNativeSelect from "discourse/ui-kit/d-native-select";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const ROLE_GROUPS = {
+  all_members: [AUTO_GROUPS.logged_in_users, AUTO_GROUPS.anonymous_users],
+  staff: [AUTO_GROUPS.staff],
+  admins: [AUTO_GROUPS.admins],
+  developers: [AUTO_GROUPS.admins],
+  moderators: [AUTO_GROUPS.moderators],
+};
+
 export default class UpcomingChangeItem extends Component {
   @service site;
   @service toasts;
+  @service siteSettingChangeTracker;
 
-  @tracked bufferedGroups = this.args.change.groups;
+  @tracked
+  bufferedGroups = this.args.change.groups?.split(",").filter(Boolean) || [];
   @tracked bufferedEnabledFor = this.args.change.upcoming_change.enabled_for;
   @tracked savingEnabledFor = false;
-  @tracked bufferedGroupsDirty = false;
-
-  /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null} */
-  registeredMenu = null;
+  @tracked enableAfterSelection = false;
 
   applyLightbox = modifier((element) => lightbox(element));
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    cancel(this._savingEnabledForTimeout);
+  @tracked _linkedGroupSetting = this.args.change.group_setting;
+
+  get allowEnabledFor() {
+    return this.args.change.upcoming_change.allow_enabled_for;
   }
 
-  get enabledForOptions() {
-    const allow = this.args.change.upcoming_change.allow_enabled_for ?? [
-      "everyone",
-      "staff",
-      "specific_groups",
-    ];
+  // Changes that only read the boolean setting can't be scoped, so their
+  // audience is shown as the groups the change affects rather than stored.
+  get isLocked() {
+    return Boolean(
+      !this._linkedGroupSetting &&
+      this.allowEnabledFor &&
+      !this.allowEnabledFor.includes("specific_groups")
+    );
+  }
 
-    const options = [
-      {
-        label: i18n("admin.upcoming_changes.enabled_for_options.no_one"),
-        value: "no_one",
-      },
-    ];
+  get roleGroups() {
+    const groups =
+      ROLE_GROUPS[this.args.change.upcoming_change.impact_role] ||
+      ROLE_GROUPS.all_members;
+    return groups.map(
+      (group) => this.site.groupsById[group.id]?.name || group.name
+    );
+  }
 
-    if (allow.includes("everyone")) {
-      options.push({
-        label: i18n("admin.upcoming_changes.enabled_for_options.everyone"),
-        value: "everyone",
-      });
+  get displayGroups() {
+    if (this._linkedGroupSetting) {
+      return this.bufferedGroups;
     }
-
-    if (allow.includes("staff")) {
-      options.push({
-        label: capitalize(this.staffGroupName),
-        value: this.staffGroupName,
-      });
+    if (this.isLocked) {
+      return this.requiresStaff ? [this.staffGroupName] : this.roleGroups;
     }
-
-    if (allow.includes("specific_groups")) {
-      options.push({
-        label: i18n(
-          "admin.upcoming_changes.enabled_for_options.specific_groups"
-        ),
-        value: "groups",
-      });
+    if (this.requiresStaff) {
+      return [...new Set([this.staffGroupName, ...this.bufferedGroups])];
     }
+    if (!this.allowEnabledFor && !this.bufferedGroups.length) {
+      return this.roleGroups;
+    }
+    return this.bufferedGroups;
+  }
 
-    return options;
+  get isEnabled() {
+    return this.bufferedEnabledFor !== "no_one";
+  }
+
+  get requiresStaff() {
+    return !this._linkedGroupSetting && this.allowEnabledFor?.includes("staff");
   }
 
   get staffGroupName() {
     return this.site.groupsById[AUTO_GROUPS.staff.id].name;
   }
 
-  get enabledForDisabled() {
-    return this.savingEnabledFor;
+  get lockedGroups() {
+    if (this.isLocked) {
+      return this.displayGroups;
+    }
+    if (this._linkedGroupSetting) {
+      return (this._linkedGroupSetting.mandatory_values || "")
+        .split("|")
+        .filter(Boolean)
+        .map((id) => this.site.groupsById[Number(id)]?.name)
+        .filter(Boolean);
+    }
+    return this.requiresStaff ? [this.staffGroupName] : [];
+  }
+
+  get disallowedGroups() {
+    return (this._linkedGroupSetting?.disallowed_groups || "")
+      .split("|")
+      .filter(Boolean)
+      .map(Number);
+  }
+
+  get emptySelectionMessage() {
+    if (this._linkedGroupSetting) {
+      return i18n("admin.upcoming_changes.toggle_instead_of_empty_groups");
+    }
+  }
+
+  get preventEmptyGroups() {
+    return Boolean(this._linkedGroupSetting || this.enableAfterSelection);
+  }
+
+  get includeEveryone() {
+    return Boolean(
+      this._linkedGroupSetting &&
+      !this.disallowedGroups.includes(AUTO_GROUPS.everyone.id)
+    );
+  }
+
+  get toggleLabel() {
+    return i18n("admin.upcoming_changes.toggle", {
+      name: this.args.change.humanized_name,
+    });
+  }
+
+  get groupsDescription() {
+    if (this.isLocked) {
+      return i18n("admin.upcoming_changes.audience_locked");
+    }
+    if (this.requiresStaff) {
+      return i18n("admin.upcoming_changes.staff_always_included");
+    }
+    if (this.enableAfterSelection || !this.displayGroups.length) {
+      return i18n("admin.upcoming_changes.add_groups_to_enable");
+    }
   }
 
   get showPermanentSoonNotice() {
@@ -100,6 +157,10 @@ export default class UpcomingChangeItem extends Component {
       this.args.change.upcoming_change.status === "stable" &&
       this.args.change.upcoming_change.permanent_warning !== false
     );
+  }
+
+  get showNotices() {
+    return this.showDependsOnNotice || this.showPermanentSoonNotice;
   }
 
   get showDependsOnNotice() {
@@ -141,177 +202,215 @@ export default class UpcomingChangeItem extends Component {
     );
   }
 
+  get hasLinks() {
+    return Boolean(
+      this.args.change.upcoming_change.image?.url ||
+      this.args.change.upcoming_change.learn_more_url ||
+      this.showDependentSettingsLink ||
+      this.showDefaultOverrideSettingLink
+    );
+  }
+
   get defaultOverrideSettingFilter() {
     return `upcoming_change_default_override:${this.args.change.setting}`;
   }
 
   @action
-  groupFinder(term) {
-    return Group.findAll({ term, ignore_automatic: false });
-  }
-
-  @action
-  async saveGroups(opts = {}) {
-    const silenceToast =
-      this.bufferedEnabledFor === "groups" || opts.silenceToast;
-    let newEnabledFor = this.bufferedEnabledFor;
-
-    // If all groups have been removed switch to "no one" on save
-    const isGroupsMode = newEnabledFor === "groups";
-    let groupNames;
-    let toggleValue;
-
-    if (!this.bufferedGroups.length && isGroupsMode) {
-      this.groupsChanged("");
-      groupNames = [];
-      newEnabledFor = "no_one";
-      toggleValue = false;
-    } else {
-      groupNames = this.bufferedGroups.length
-        ? this.bufferedGroups.split(",")
-        : [];
-      if (isGroupsMode) {
-        toggleValue = true;
-      }
+  async toggleEnabled() {
+    if (this.savingEnabledFor) {
+      return;
     }
-
-    try {
-      await ajax("/admin/config/upcoming-changes/groups", {
-        type: "PUT",
-        data: {
-          setting: this.args.change.setting,
-          group_names: groupNames,
-        },
-      });
-
-      this.bufferedGroups = groupNames.join(",");
-      this.bufferedGroupsDirty = false;
-
-      if (newEnabledFor !== this.bufferedEnabledFor) {
-        this.bufferedEnabledFor = newEnabledFor;
-      }
-
-      // We do this because in the case where the admin is selecting
-      // "staff", "everyone", or "no one", we don't want to show
-      // a toast for saving groups, we only want to show the enabled/disabled
-      // toast, groups in this case are "behind the scenes".
-      if (!silenceToast) {
-        this.toasts.success({
-          duration: "short",
-          data: {
-            message: i18n("admin.upcoming_changes.groups_updated"),
-          },
-        });
-      }
-
-      // If we are saving groups when the admin has selected "Specific groups",
-      // it means we also need to enable the change, since we do not automatically
-      // do this when the dropdown option changes to "groups" (groups need to be selected first).
-      if (toggleValue !== undefined) {
-        await this.toggleChange(toggleValue, newEnabledFor);
-      }
-    } catch (err) {
-      popupAjaxError(err);
-    }
-  }
-
-  @action
-  async toggleChange(enabled, enabledFor) {
-    await ajax("/admin/config/upcoming-changes/toggle", {
-      type: "PUT",
-      data: {
-        enabled,
-        setting_name: this.args.change.setting,
-      },
-    });
-
-    let enabledForLabel;
-    if (enabledFor === "no_one") {
-      enabledForLabel = i18n(
-        "admin.upcoming_changes.enabled_for_options.no_one"
-      );
-    } else if (enabledFor === "everyone") {
-      enabledForLabel = i18n(
-        "admin.upcoming_changes.enabled_for_options.everyone"
-      );
-    } else if (enabledFor === this.staffGroupName) {
-      enabledForLabel = i18n(
-        "admin.upcoming_changes.enabled_for_options.staff",
-        { staffGroupName: capitalize(this.staffGroupName) }
-      );
-    } else if (enabledFor === "groups") {
-      const groupNames = this.bufferedGroups.split(",");
-      enabledForLabel = i18n(
-        "admin.upcoming_changes.enabled_for_options.specific_groups_with_group_names",
-        {
-          groupNames: groupNames.join(", "),
-          count: groupNames.length,
-        }
-      );
-    }
-
-    this.toasts.success({
-      duration: "short",
-      data: {
-        message: enabled
-          ? i18n("admin.upcoming_changes.change_enabled_for_success", {
-              enabledFor: enabledForLabel.toLowerCase(),
-            })
-          : i18n("admin.upcoming_changes.change_disabled"),
-      },
-    });
-  }
-
-  @bind
-  onRegisterMenuForRow(menuApi) {
-    this.registeredMenu = menuApi;
-  }
-
-  @action
-  groupsChanged(newGroups) {
-    this.bufferedGroupsDirty = true;
-    this.bufferedGroups = newGroups;
-  }
-
-  @action
-  async enabledForChanged(newValue) {
-    const oldValue = this.args.change.upcoming_change.enabled_for;
-    this.bufferedEnabledFor = newValue;
-
-    // When enabling for specific groups, we need to toggle the change
-    // when the groups are selected and saved, otherwise it will get
-    // enabled with no groups selected.
-    if (newValue === "groups") {
+    if (this.isEnabled) {
+      await this.#save(false);
       return;
     }
 
+    if (this._linkedGroupSetting) {
+      await this.#save(true);
+      return;
+    }
+    if (this.isLocked) {
+      await this.#save(true, this.requiresStaff ? [this.staffGroupName] : []);
+      return;
+    }
+    const groups = this.displayGroups;
+    if (this.allowEnabledFor?.includes("specific_groups") && !groups.length) {
+      this.enableAfterSelection = true;
+      return;
+    }
+    await this.#save(true, groups);
+  }
+
+  @action
+  async saveGroups(groups) {
+    if (this._linkedGroupSetting) {
+      return this.#saveLinkedGroups(groups);
+    }
+    const enabled =
+      groups.length > 0 && (this.isEnabled || this.enableAfterSelection);
+    return this.#save(enabled, groups);
+  }
+
+  async #saveLinkedGroups(groups) {
+    if (!groups.length || this.savingEnabledFor) {
+      return false;
+    }
     this.savingEnabledFor = true;
-    const isEnabled = newValue !== "no_one";
+    try {
+      const setting = AdminSiteSetting.create(this._linkedGroupSetting);
+      if (
+        setting.requiresConfirmation &&
+        !(await this.siteSettingChangeTracker.confirmChanges(setting))
+      ) {
+        return false;
+      }
+      const result = await ajax("/admin/config/upcoming-changes/groups", {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+          setting: this.args.change.setting,
+          group_names: groups,
+        }),
+      });
+      this._linkedGroupSetting = result.group_setting;
+      this.bufferedGroups = result.groups?.split(",").filter(Boolean) || [];
+      this.args.change.groups = result.groups;
+      this.args.change.group_setting = result.group_setting;
+      this.bufferedEnabledFor = this.#enabledFor(
+        this.isEnabled,
+        this.bufferedGroups
+      );
+      this.args.enabledForChanged?.(
+        this.args.change.setting,
+        this.bufferedEnabledFor
+      );
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("admin.upcoming_changes.groups_updated") },
+      });
+      return true;
+    } catch (error) {
+      popupAjaxError(error);
+      return false;
+    } finally {
+      this.savingEnabledFor = false;
+    }
+  }
+
+  #enabledFor(enabled, groups) {
+    if (!enabled) {
+      return "no_one";
+    }
+    if (this._linkedGroupSetting) {
+      const everyone = [
+        AUTO_GROUPS.logged_in_users,
+        AUTO_GROUPS.anonymous_users,
+      ].map((group) => this.site.groupsById[group.id]?.name || group.name);
+      if (everyone.every((group) => groups.includes(group))) {
+        return "everyone";
+      }
+      if (!groups.length) {
+        return "groups";
+      }
+    } else if (!groups.length) {
+      return "everyone";
+    }
+    if (groups.length === 1 && groups[0] === this.staffGroupName) {
+      return this.staffGroupName;
+    }
+    return "groups";
+  }
+
+  // Mirrors UpcomingChanges.normalize_group_names: the default audience is
+  // stored as no restriction.
+  #persistedGroups(groups) {
+    if (!this.allowEnabledFor) {
+      const everyone = ROLE_GROUPS.all_members.map(
+        (group) => this.site.groupsById[group.id]?.name || group.name
+      );
+      const isRoleDefault =
+        groups.length === this.roleGroups.length &&
+        this.roleGroups.every((group) => groups.includes(group));
+      if (isRoleDefault || everyone.every((group) => groups.includes(group))) {
+        return [];
+      }
+    }
+    return groups;
+  }
+
+  async #save(enabled, groupNames) {
+    const previousEnabledFor = this.bufferedEnabledFor;
+    const persistedGroups =
+      groupNames === undefined
+        ? this.args.change.groups?.split(",").filter(Boolean) || []
+        : this.#persistedGroups(groupNames);
+    this.savingEnabledFor = true;
+    this.bufferedEnabledFor = this.#enabledFor(enabled, persistedGroups);
 
     try {
-      if (newValue === this.staffGroupName) {
-        this.groupsChanged(this.staffGroupName);
-        await this.saveGroups({ silenceToast: true });
-        await this.toggleChange(isEnabled, newValue);
-      } else {
-        await this.toggleChange(isEnabled, newValue);
-        this.groupsChanged("");
-        await this.saveGroups({ silenceToast: true });
-      }
+      await ajax("/admin/config/upcoming-changes/toggle", {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+          enabled,
+          setting_name: this.args.change.setting,
+          ...(groupNames === undefined ? {} : { group_names: persistedGroups }),
+        }),
+      });
 
-      this.args.enabledForChanged?.(this.args.change.setting, newValue);
+      this.enableAfterSelection = false;
+      if (groupNames !== undefined) {
+        this.bufferedGroups = persistedGroups;
+      }
+      this.args.change.groups = persistedGroups.join(",");
+      this.args.change.value = enabled;
+      this.args.enabledForChanged?.(
+        this.args.change.setting,
+        this.bufferedEnabledFor
+      );
+      this.#showSuccessToast(enabled, persistedGroups, previousEnabledFor);
+      return true;
     } catch (error) {
-      this.bufferedEnabledFor = oldValue;
+      this.bufferedEnabledFor = previousEnabledFor;
       popupAjaxError(error);
+      return false;
     } finally {
-      // We prevent rapid changes because on the server-side
-      // we may have on(:setting_name) events for the site
-      // setting changing, and we want to make sure we don't
-      // cause rapid unnecessary work.
-      this._savingEnabledForTimeout = discourseLater(() => {
-        this.savingEnabledFor = false;
-      }, 2000);
+      this.savingEnabledFor = false;
     }
+  }
+
+  #showSuccessToast(enabled, groups, previousEnabledFor) {
+    let message;
+    if (this._linkedGroupSetting && enabled) {
+      message = i18n("admin.upcoming_changes.change_enabled");
+    } else if (enabled === (previousEnabledFor !== "no_one")) {
+      message = i18n("admin.upcoming_changes.groups_updated");
+    } else if (!enabled) {
+      message = i18n("admin.upcoming_changes.change_disabled");
+    } else {
+      let enabledFor;
+      if (groups.length === 1 && groups[0] === this.staffGroupName) {
+        enabledFor = i18n("admin.upcoming_changes.enabled_for_options.staff", {
+          staffGroupName: this.staffGroupName,
+        });
+      } else if (groups.length) {
+        enabledFor = i18n(
+          "admin.upcoming_changes.enabled_for_options.specific_groups_with_group_names",
+          {
+            groupNames: groups.join(", "),
+            count: groups.length,
+          }
+        );
+      } else {
+        enabledFor = i18n(
+          "admin.upcoming_changes.enabled_for_options.eligible_users"
+        ).toLowerCase();
+      }
+      message = i18n("admin.upcoming_changes.change_enabled_for_success", {
+        enabledFor,
+      });
+    }
+    this.toasts.success({ duration: "short", data: { message } });
   }
 
   <template>
@@ -320,11 +419,22 @@ export default class UpcomingChangeItem extends Component {
       data-upcoming-change={{@change.setting}}
     >
       <td class="d-table__cell --overview">
-        {{#if @change.plugin}}
-          <span class="upcoming-change__plugin">
-            {{dIcon "plug"}}
-            {{@change.plugin}}
-          </span>
+        {{#if this.showNotices}}
+          <div class="upcoming-change__notices">
+            {{#if this.showDependsOnNotice}}
+              <div class="upcoming-change__depends-on-notice">
+                {{dIcon "triangle-exclamation"}}
+                {{this.dependsOnNoticeText}}
+              </div>
+            {{/if}}
+
+            {{#if this.showPermanentSoonNotice}}
+              <div class="upcoming-change__status-notice">
+                {{dIcon "triangle-exclamation"}}
+                {{i18n "admin.upcoming_changes.permanent_soon_notice"}}
+              </div>
+            {{/if}}
+          </div>
         {{/if}}
 
         <div class="d-table__overview-name">
@@ -337,12 +447,13 @@ export default class UpcomingChangeItem extends Component {
             {{linkifySettingLinks @change.description}}
           >
             {{trustHTML @change.description}}
+          </div>
+        {{/if}}
 
-            <div
-              class="upcoming-change__description-details"
-              {{this.applyLightbox}}
-            >
-              {{#if @change.upcoming_change.image.url}}
+        {{#if this.hasLinks}}
+          <div class="upcoming-change__links" {{this.applyLightbox}}>
+            {{#if @change.upcoming_change.image.url}}
+              <span class="upcoming-change__link">
                 <a
                   class="lightbox upcoming-change__image-preview"
                   data-large-src={{@change.upcoming_change.image.url}}
@@ -352,118 +463,84 @@ export default class UpcomingChangeItem extends Component {
                   rel="nofollow ugc noopener"
                 >{{dIcon "far-image"}}
                   {{i18n "admin.upcoming_changes.preview"}}</a>
-              {{/if}}
+              </span>
+            {{/if}}
 
-              {{#if @change.upcoming_change.learn_more_url}}
-                <span class="upcoming-change__learn-more">
-                  {{trustHTML
-                    (i18n
-                      "feedback_with_link"
-                      url=@change.upcoming_change.learn_more_url
-                    )
-                  }}
-                </span>
-              {{/if}}
-            </div>
-          </div>
-        {{/if}}
+            {{#if @change.upcoming_change.learn_more_url}}
+              <span class="upcoming-change__link upcoming-change__learn-more">
+                <a
+                  href={{@change.upcoming_change.learn_more_url}}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >{{dIcon "up-right-from-square"}}
+                  {{i18n "admin.upcoming_changes.feedback"}}</a>
+              </span>
+            {{/if}}
 
-        {{#if this.showDependsOnNotice}}
-          <div class="upcoming-change__depends-on-notice">
-            {{dIcon "triangle-exclamation"}}
-            {{this.dependsOnNoticeText}}
-          </div>
-        {{/if}}
+            {{#if this.showDependentSettingsLink}}
+              <span class="upcoming-change__link upcoming-change__dependents">
+                <LinkTo
+                  @query={{hash filter="all_results" dependsOn=@change.setting}}
+                  @route="adminSiteSettings"
+                >
+                  {{dIcon "gear"}}
+                  {{i18n "admin.upcoming_changes.settings"}}
+                </LinkTo>
+              </span>
+            {{/if}}
 
-        {{#if this.showPermanentSoonNotice}}
-          <div class="upcoming-change__status-notice">
-            {{dIcon "triangle-exclamation"}}
-            {{i18n "admin.upcoming_changes.permanent_soon_notice"}}
-          </div>
-        {{/if}}
-
-        <UpcomingChangeBadges @upcomingChange={{@change.upcoming_change}} />
-      </td>
-      <td class="d-table__cell --detail upcoming-change__toggle-cell">
-        <div class="d-table__mobile-label">
-          {{i18n "admin.upcoming_changes.enabled_for"}}
-        </div>
-
-        <DNativeSelect
-          class="upcoming-change__enabled-for"
-          disabled={{this.enabledForDisabled}}
-          @includeNone={{false}}
-          @onChange={{this.enabledForChanged}}
-          @value={{this.bufferedEnabledFor}}
-          as |select|
-        >
-          {{#each this.enabledForOptions as |option|}}
-            <select.Option @value={{option.value}}>
-              {{option.label}}
-            </select.Option>
-          {{/each}}
-        </DNativeSelect>
-
-        {{#if this.showDependentSettingsLink}}
-          <div class="upcoming-change__dependents">
-            <LinkTo
-              @query={{hash filter="all_results" dependsOn=@change.setting}}
-              @route="adminSiteSettings"
-            >
-              {{i18n "admin.upcoming_changes.show_related_settings"}}
-            </LinkTo>
-          </div>
-        {{/if}}
-
-        {{#if this.showDefaultOverrideSettingLink}}
-          <div class="upcoming-change__default-override-setting">
-            <LinkTo
-              @query={{hash filter=this.defaultOverrideSettingFilter}}
-              @route="adminSiteSettings"
-            >
-              {{i18n "admin.upcoming_changes.show_related_settings"}}
-            </LinkTo>
-          </div>
-        {{/if}}
-
-        {{#if (eq this.bufferedEnabledFor "groups")}}
-          <div class="upcoming-change__group-selection-wrapper">
-            <GroupSelector
-              @groupFinder={{this.groupFinder}}
-              @groupNames={{this.bufferedGroups}}
-              @onChange={{this.groupsChanged}}
-              @placeholderKey="admin.upcoming_changes.select_groups"
-            />
-
-            {{#if this.bufferedGroupsDirty}}
-              <DButton
-                class="upcoming-change__save-groups btn-primary"
-                @icon="check"
-                @size="small"
-                @title="admin.upcoming_changes.save_groups"
-                {{on "click" this.saveGroups}}
-              />
-            {{else}}
-              <DTooltip
-                @content={{if
-                  this.bufferedGroups
-                  (i18n "admin.upcoming_changes.no_changes_to_save")
-                  (i18n "admin.upcoming_changes.add_groups_to_enable")
-                }}
+            {{#if this.showDefaultOverrideSettingLink}}
+              <span
+                class="upcoming-change__link upcoming-change__default-override-setting"
               >
-                <:trigger>
-                  <DButton
-                    class="upcoming-change__save-groups btn-primary"
-                    @disabled={{true}}
-                    @icon="check"
-                    @size="small"
-                    {{on "click" this.saveGroups}}
-                  />
-                </:trigger>
-              </DTooltip>
+                <LinkTo
+                  @query={{hash filter=this.defaultOverrideSettingFilter}}
+                  @route="adminSiteSettings"
+                >
+                  {{dIcon "gear"}}
+                  {{i18n "admin.upcoming_changes.settings"}}
+                </LinkTo>
+              </span>
             {{/if}}
           </div>
         {{/if}}
+
+        <UpcomingChangeBadges
+          @plugin={{@change.plugin}}
+          @upcomingChange={{@change.upcoming_change}}
+        />
+      </td>
+      <td class="d-table__cell --detail upcoming-change__availability-cell">
+        <div class="d-table__mobile-label">
+          {{i18n "admin.upcoming_changes.availability"}}
+        </div>
+
+        <UpcomingChangeGroupControl
+          @description={{this.groupsDescription}}
+          @disabled={{this.savingEnabledFor}}
+          @disallowedGroups={{this.disallowedGroups}}
+          @emptySelectionMessage={{this.emptySelectionMessage}}
+          @groups={{this.displayGroups}}
+          @includeEveryone={{this.includeEveryone}}
+          @locked={{this.isLocked}}
+          @lockedGroups={{this.lockedGroups}}
+          @onSave={{this.saveGroups}}
+          @preventEmpty={{this.preventEmptyGroups}}
+        />
+
+      </td>
+      <td class="d-table__cell --detail upcoming-change__enabled-cell">
+        <div class="d-table__mobile-label">
+          {{i18n "admin.upcoming_changes.enabled"}}
+        </div>
+
+        <DToggleSwitch
+          aria-label={{this.toggleLabel}}
+          class="upcoming-change__enabled"
+          disabled={{this.savingEnabledFor}}
+          @state={{this.isEnabled}}
+          {{on "click" this.toggleEnabled}}
+        />
       </td>
     </tr>
   </template>

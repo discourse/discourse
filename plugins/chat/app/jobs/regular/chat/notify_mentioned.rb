@@ -146,6 +146,8 @@ module Jobs
         memberships = get_memberships(user_ids)
 
         memberships.each do |membership|
+          next unless membership.user.guardian.can_join_chat_channel?(@chat_channel)
+
           mention = find_mention(@chat_message, mention_type, membership.user.id)
           if mention.present?
             create_notification!(membership, mention, mention_type)

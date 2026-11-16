@@ -150,6 +150,10 @@ module DiscourseSolved
             "person_raising_hand"
           end
 
+          def svg_icon
+            "circle-question"
+          end
+
           private
 
           def default_theme_horizon?

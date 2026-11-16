@@ -47,7 +47,10 @@ export default class ChatableUser extends Component {
 
       {{#if this.showIndicator}}
         <div
-          class={{dConcatClass "unread-indicator" (if this.isUrgent "-urgent")}}
+          class={{dConcatClass
+            "unread-indicator d-new-indicator"
+            (if this.isUrgent "-urgent")
+          }}
         ></div>
       {{/if}}
 

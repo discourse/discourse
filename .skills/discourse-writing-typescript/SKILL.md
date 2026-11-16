@@ -22,7 +22,8 @@ off, so `.js`/`.gjs` files are not checked, but the `@discourse/types` declarati
 
 **Converting an existing `.js`/`.gjs` file?** Read
 [references/js-to-ts-conversion.md](references/js-to-ts-conversion.md) first (the faithful-port
-rules, rename mechanics, scope triage, and the runtime pitfall), and apply
+rules, the tests to add before renaming, rename mechanics, scope triage, and the runtime
+pitfall), and apply
 [references/conversion-completeness.md](references/conversion-completeness.md) before
 claiming any file or subsystem converted.
 
@@ -271,6 +272,41 @@ in type ...`, or a helper returning a loose or wrong type). Two fixes:
   `expect-type` test, a curried result asserts as `WithBoundArgs<typeof Comp, "arg">`, **not**
   the raw component type.
 
+## Model types follow the server
+
+Models in `frontend/discourse/app/models` and `frontend/discourse/admin/models` declare the
+fields the server sends in an exported `<Model>Fields` interface. The class merges it with
+`export default interface <Model> extends <Model>Fields {}` (with the
+`no-empty-object-type` and `no-unsafe-declaration-merging` lint rules disabled on the merge
+lines). Their type tests live in `frontend/discourse/type-tests/models/`.
+
+Type each field from what the server sends, not from how the client happens to use it:
+
+- **Trace the serializer** and everything it inherits. A field behind an `include_<name>?`
+  condition, or sent by only some of the endpoints that build the model, is optional (`?`).
+- **Add `| null`** when the serializer can return `nil`: a nullable column, a `&.` chain, a
+  `nil` default.
+- **Check the shape against a real response** when you can (a request spec, or the dev
+  server), and say in the PR which one you used.
+- **Keep plugin fields out of core.** Plugins augment the `Fields` interface themselves
+  (see `27-types.md`).
+- **Leave getters out.** A name backed by a getter or `@computed` is declared by the class,
+  not by the `Fields` interface.
+- **Add missing fields with `declare`.** A real class field changes runtime behavior: it
+  shadows forwarders and resets values that `create` assigned.
+
+**When a change alters what the server sends, update the model in the same change.** That
+covers a new, renamed or removed attribute, a changed `include_*?` condition, a value that
+can now be `nil`, and a new or removed endpoint that builds the model.
+
+- Update the `Fields` interface and the field's pin in the model's type test.
+- For a removed attribute or endpoint, also delete its loader method and pins. When the
+  removal is the point, pin it with `not.toHaveProperty`.
+- Response shapes a model method reads inline (the result of an `ajax` call) follow the
+  same rule.
+- Run `pnpm lint:types`. A TypeScript caller that stops compiling is the signal the change
+  was needed.
+
 ## Type tests (compile-time)
 
 When a module's *types* carry meaning a runtime test cannot capture (an argument-dependent
@@ -333,6 +369,11 @@ on template imports). Reword to plain prose. JS-body `//` and `/* */` are fine.
   `(element: El, args: PositionalTuple)`; the extra positionals arrive as **one tuple in the
   2nd param**. So `{{didInsert this.announce count}}` is `announce(el: HTMLElement, [count]:
   [number])` (destructure the tuple), not `announce(el, count)`.
+- **Defaulted destructuring of an optional tuple element:** in
+  `[fn, { a, b } = {}]: XSignature["Args"]["Positional"]`, `lint:types` can report `a` and
+  `b` as implicitly `any` (TS7031). Type the default with an erased assertion instead of
+  changing the code: `{ a, b } = {} as XOptions`. Seen on the TypeScript 7 build that
+  `lint:types` runs; not checked on older compilers.
 - **DOM element types:** `querySelector` returns `Element` (no `.focus()`/`.tabIndex`); use
   `el.querySelector<HTMLElement>(sel)`. Type element params as `HTMLElement` /
   `HTMLInputElement` where you call element methods, not `Element`.

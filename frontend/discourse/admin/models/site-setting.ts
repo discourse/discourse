@@ -183,11 +183,10 @@ export default class SiteSetting extends EmberObject {
   static async findAll(
     params: object = {}
   ): Promise<{ nameKey: string; name: string; siteSettings: SiteSetting[] }[]> {
-    // TODO(typescript-pending): ajax returns untyped JSON; remove the assertion when it accepts response types.
     // eslint-disable-next-line prefer-const
-    let settings = (await ajax("/admin/site_settings", { data: params })) as {
+    let settings = await ajax<{
       site_settings: SiteSettingWireRecord[];
-    };
+    }>("/admin/site_settings", { data: params });
     const categories: Record<string, SiteSetting[]> = {};
     settings.site_settings.forEach(function (s) {
       if (!categories[s.category]) {

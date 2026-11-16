@@ -5,7 +5,7 @@ RSpec.describe ReviewablePost do
     before do
       enable_current_plugin
       freeze_time
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
     end
 
     it "records automatic detection when a moderator deletes a post queued for review by AI triage" do

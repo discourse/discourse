@@ -23,8 +23,8 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::EMAIL_ON_FLAGG
     to_emails = to_emails.concat(recipients.select { |r| Email.is_valid?(r) })
     to_users = recipients - to_emails
 
-    if to_users.present?
-      primary_emails = User.includes(:primary_email).filter_by_username(to_users).map(&:email)
+    to_users.each_slice(User::MAX_FILTER_TERMS) do |usernames|
+      primary_emails = User.includes(:primary_email).filter_by_username(usernames).map(&:email)
       to_emails.concat(primary_emails)
     end
 

@@ -6,7 +6,6 @@ RSpec.describe TopicsController do
   before do
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    SiteSetting.enable_event_schema_for_topics = true
   end
 
   describe "#show" do
@@ -16,10 +15,11 @@ RSpec.describe TopicsController do
         [/event]
       RAW
 
-    it "does not publish event schema when disabled" do
-      SiteSetting.enable_event_schema_for_topics = false
+    it "does not publish event schema when post events are disabled" do
+      topic = post.topic
+      SiteSetting.discourse_post_event_enabled = false
 
-      get post.topic.url
+      get topic.url
 
       expect(response.status).to eq(200)
       expect(response.body).not_to include('"@type":"Event"')

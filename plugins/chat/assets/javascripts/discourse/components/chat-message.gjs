@@ -16,7 +16,10 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
 import DButton from "discourse/ui-kit/d-button";
@@ -36,16 +39,6 @@ import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-me
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
-
-let _chatMessageDecorators = [];
-
-export function addChatMessageDecorator(decorator) {
-  _chatMessageDecorators.push(decorator);
-}
-
-export function resetChatMessageDecorators() {
-  _chatMessageDecorators = [];
-}
 
 export const MENTION_KEYWORDS = ["here", "all"];
 export const MESSAGE_CONTEXT_THREAD = "thread";
@@ -389,10 +382,16 @@ export default class ChatMessage extends Component {
   decorateCookedMessage(element, helper) {
     this.messageContainer = element.closest(".chat-confirmation") || element;
     this.initMentionedUsers();
-    this.decorateMentions(element);
-    _chatMessageDecorators.forEach((decorator) => {
-      decorator(element, helper, this.args.message);
-    });
+    applyBehaviorTransformer(
+      "chat-message-decorate",
+      () => this.decorateMentions(element),
+      {
+        element,
+        helper,
+        message: this.args.message,
+        channel: this.args.message.channel,
+      }
+    );
   }
 
   @action

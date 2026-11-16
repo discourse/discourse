@@ -11,6 +11,11 @@ import { confirmMeshPrivacy } from "../../components/modal/live-mesh-privacy-war
 import { reportMicAcquisitionFailure } from "../../components/modal/live-mic-permission.gjs";
 import AudioMonitor from "../../lib/live/audio-monitor.js";
 import { RING_SECONDS } from "../../lib/live/call-constants.js";
+import {
+  collectLocalInfo,
+  collectPeers,
+  probeIceServers,
+} from "../../lib/live/connection-diagnostics.js";
 import HeartbeatManager from "../../lib/live/heartbeat-manager.js";
 import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker.js";
 import { consumePendingInviteRef } from "../../lib/live/invite-ref.js";
@@ -66,6 +71,18 @@ import { applyVoiceQuality } from "../../lib/live/video-quality.js";
 
 // Pre-rename key, kept so saved preferences survive.
 const CAMERA_ENABLED_KEY_PREFIX = "voice-camera-enabled";
+
+function offerSenderIds(signalPayloads) {
+  return new Set(
+    signalPayloads
+      .filter((payload) =>
+        (payload.events ?? [payload.data]).some(
+          (event) => event?.type === "offer"
+        )
+      )
+      .map((payload) => Number(payload.sender_id))
+  );
+}
 
 export default class LiveWebrtcService extends Service {
   @service currentUser;
@@ -739,6 +756,39 @@ export default class LiveWebrtcService extends Service {
     return this.#roomTransports.get(roomId) === "livekit";
   }
 
+  // Peer-level diagnostics only exist for mesh rooms; in SFU rooms the single
+  // server connection is owned by the SFU client library.
+  canDiagnoseConnection(roomId) {
+    return (
+      this.connectionStateFor(roomId) === "connected" &&
+      this.#isMeshRoom(roomId)
+    );
+  }
+
+  async connectionDiagnostics(roomId) {
+    const room = this.liveRooms.roomById(roomId);
+    return {
+      room,
+      transport: this.#roomTransports.get(roomId) ?? "mesh",
+      iceTransportPolicy: this.iceTransportPolicy,
+      local: collectLocalInfo(this.localStream),
+      peers: await collectPeers({
+        room,
+        currentUserId: this.currentUser?.id,
+        peerManager: this.#peerManager,
+        shouldMaintainPeer: (userId) =>
+          this.#meshSignals.shouldMaintainPeerConnection(roomId, userId),
+        playbackFor: (userId) =>
+          this.#participantAudio.playbackFor(roomId, userId),
+      }),
+      collectedAt: Date.now(),
+    };
+  }
+
+  probeIceServers() {
+    return probeIceServers(this.iceServers);
+  }
+
   async join(room) {
     if (!room?.id) {
       return;
@@ -918,14 +968,16 @@ export default class LiveWebrtcService extends Service {
       response?.room?.active_participants;
     this.#connectingParticipantSnapshots.delete(room.id);
 
-    if (latestParticipants) {
-      await this.#roster.handleParticipants(room.id, {
-        participants: latestParticipants,
-      });
-    }
-
     const queuedSignals = this.#connectingSignalQueue.get(room.id) || [];
     this.#connectingSignalQueue.delete(room.id);
+
+    if (latestParticipants) {
+      await this.#roster.handleParticipants(
+        room.id,
+        { participants: latestParticipants },
+        { offeringPeerIds: offerSenderIds(queuedSignals) }
+      );
+    }
 
     if (this.#isMeshRoom(room.id)) {
       for (const payload of queuedSignals) {

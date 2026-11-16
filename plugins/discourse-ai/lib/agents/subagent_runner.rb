@@ -52,7 +52,6 @@ module DiscourseAi
         state = @context.subagent_execution_state
         return error("cancelled", child_record) if @context.cancel_manager&.cancelled?
         return error("token_limit", child_record) if state.remaining_tokens <= 0
-        return error("call_limit", child_record) if !state.reserve_spawn
 
         yield(@prompt) if block_given?
 
@@ -97,8 +96,9 @@ module DiscourseAi
         parent_record = AiAgent.find_by(id: @parent_agent.id)
         return error("unavailable_parent") if !parent_record
         return error("agent_not_allowed") if !parent_record.subagent_ids.include?(@child_id)
-        return error("call_limit") if !@context.subagent_execution_state&.spawn_available?
-        return error("completion_limit") if !@context.subagent_execution_state.completion_available?
+        if !@context.subagent_execution_state&.completion_available?
+          return error("completion_limit")
+        end
         error("token_limit") if @context.subagent_execution_state.remaining_tokens <= 0
       end
 

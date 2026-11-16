@@ -33,10 +33,12 @@ export default interface Permalink extends PermalinkFields {}
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export default class Permalink extends RestModel {
   static async findAll(filter?: string | null): Promise<Permalink[]> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const data = (await ajax("/admin/permalinks.json", {
-      data: { filter },
-    })) as (PermalinkFields & RestPayload)[];
+    const data = await ajax<(PermalinkFields & RestPayload)[]>(
+      "/admin/permalinks.json",
+      {
+        data: { filter },
+      }
+    );
     return data.map((p) => Permalink.create(p));
   }
 

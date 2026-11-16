@@ -65,9 +65,11 @@ export function extractErrorInfo(
         errors: errors.map((e, i) => `${i + 1}) ${e}`).join(" "),
       });
     } else if (errors?.length > 0) {
-      parsedError = i18n("generic_error_with_reason", {
-        error: errors[0],
-      });
+      parsedError = parsedJSON.skip_error_prefix
+        ? errors[0]
+        : i18n("generic_error_with_reason", {
+            error: errors[0],
+          });
     } else if (parsedJSON.error) {
       parsedError = parsedJSON.error;
     } else if (parsedJSON.message) {

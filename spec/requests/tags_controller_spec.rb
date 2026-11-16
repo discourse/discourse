@@ -571,6 +571,17 @@ RSpec.describe TagsController do
       )
     end
 
+    it "doesn't use the description of a tag restricted to a category the user can't see" do
+      restricted = Fabricate(:tag, name: "restricted", description: "secret description")
+      Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [restricted])
+      Fabricate(:tag, name: "other")
+
+      get "/tags/intersection/restricted/other"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("secret description")
+    end
+
     it "returns tag info for an encoded period tag name" do
       Fabricate(:tag, name: "node.js")
 
@@ -831,6 +842,64 @@ RSpec.describe TagsController do
     end
   end
 
+  describe "category_noindex modifier" do
+    fab!(:tag) { Fabricate(:tag, name: "test") }
+    fab!(:topic_in_category) { Fabricate(:topic, category: category, tags: [tag]) }
+
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier_args) { [] }
+    let(:noindex_category_ids) { [] }
+    let(:modifier) do
+      Proc.new do |noindex, modifier_category|
+        modifier_args << [noindex, modifier_category]
+        noindex || noindex_category_ids.include?(modifier_category.id)
+      end
+    end
+
+    before { DiscoursePluginRegistry.register_modifier(plugin, :category_noindex, &modifier) }
+    after { DiscoursePluginRegistry.unregister_modifier(plugin, :category_noindex, &modifier) }
+
+    it "receives false and the category, and sends no noindex by default" do
+      get "/tags/c/#{category.slug}/#{category.id}/#{tag.slug_for_url}/#{tag.id}",
+          headers: {
+            "HTTP_USER_AGENT" => "Googlebot",
+          }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to eq([[false, category]])
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
+    end
+
+    it "lets a plugin send noindex on the tag pages within the category" do
+      noindex_category_ids << category.id
+      category_path = "/tags/c/#{category.slug}/#{category.id}"
+
+      [
+        "#{category_path}/#{tag.slug_for_url}/#{tag.id}",
+        "#{category_path}/none/#{tag.slug_for_url}/#{tag.id}",
+        "#{category_path}/#{tag.slug_for_url}/#{tag.id}/l/top",
+        "#{category_path}/#{tag.slug_for_url}/#{tag.id}.json",
+        "#{category_path}/#{tag.name}.json",
+        "/tag/#{tag.slug_for_url}/#{tag.id}.json?category=#{category.id}",
+      ].each do |path|
+        get path, headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200), path
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex"), path
+      end
+    end
+
+    it "is not consulted for tag pages outside a category" do
+      noindex_category_ids << category.id
+
+      get "/tag/#{tag.slug_for_url}/#{tag.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(modifier_args).to be_empty
+      expect(response.headers["X-Robots-Tag"]).to eq(nil)
+    end
+  end
+
   describe "#info" do
     fab!(:tag) { Fabricate(:tag, name: "test") }
     let(:synonym) { Fabricate(:tag, name: "synonym", target_tag: tag) }
@@ -927,6 +996,65 @@ RSpec.describe TagsController do
       )
       expect(response.parsed_body["categories"]).to be_present
       expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
+    end
+
+    context "when the tag is restricted to a category the user can't see" do
+      fab!(:group)
+      fab!(:member) { Fabricate(:user, groups: [group]) }
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+      before do
+        tag.update!(description: "secret description")
+        private_category.update!(tags: [tag])
+      end
+
+      it "returns 404 when looked up by ID" do
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+
+        sign_in(user)
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when looked up by ID and restricted through a tag group" do
+        private_category.update!(tags: [], tag_groups: [Fabricate(:tag_group, tags: [tag])])
+
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "omits the description when looked up by name" do
+        get "/tag/#{tag.name}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tag_info"]).to include(
+          "name" => tag.name,
+          "category_restricted" => true,
+        )
+        expect(response.parsed_body["tag_info"]).not_to include("description", "description_cooked")
+      end
+
+      it "doesn't translate the name or description" do
+        SiteSetting.content_localization_enabled = true
+        tag.update!(locale: "en")
+        Fabricate(:tag_localization, tag: tag, locale: "ja", name: "秘密", description: "秘密の説明")
+        sign_in(Fabricate(:user, locale: "ja"))
+
+        get "/tag/#{tag.name}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "name")).to eq(tag.name)
+        expect(response.body).not_to include("秘密")
+      end
+
+      it "returns the full tag to users who can see the category" do
+        sign_in(member)
+        get "/tag/#{tag.id}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "description")).to eq("secret description")
+      end
     end
 
     context "when tag belongs to a tag group" do
@@ -2178,6 +2306,37 @@ RSpec.describe TagsController do
         include_examples "invalid limit params",
                          "/tags/filter/search.json",
                          SiteSetting.max_tag_search_results
+      end
+
+      it "does not expose restricted required tag group details" do
+        otherwise_allowed_tag = Fabricate(:tag, name: "otherwise-allowed")
+        restricted_tag = Fabricate(:tag, name: "restricted-required-tag")
+        restricted_tag_group =
+          Fabricate(
+            :tag_group,
+            name: "Restricted Required Group",
+            permissions: {
+              "staff" => 1,
+            },
+            tags: [restricted_tag],
+          )
+        crtg = CategoryRequiredTagGroup.new(tag_group: restricted_tag_group, min_count: 1)
+        category = Fabricate(:category, category_required_tag_groups: [crtg])
+
+        response_bodies =
+          ["", otherwise_allowed_tag.name].map do |query|
+            get "/tags/filter/search.json",
+                params: {
+                  q: query,
+                  categoryId: category.id,
+                  filterForInput: true,
+                }
+            expect(response.status).to eq(200)
+            response.body
+          end
+
+        expect(JSON.parse(response_bodies.first)).not_to have_key("required_tag_group")
+        expect(response_bodies.join).not_to include(restricted_tag_group.name)
       end
 
       it "includes required tag group information" do

@@ -3,7 +3,6 @@ import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import ColorSchemeColor from "discourse/admin/models/color-scheme-color";
 import { ajax } from "discourse/lib/ajax";
-import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
@@ -59,10 +58,6 @@ export interface ColorSchemeSaveOptions {
   enabledOnly?: boolean;
 }
 
-class ColorSchemes extends LegacyArrayLikeObject<ColorScheme> {
-  @tracked loading = false;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
 export default interface ColorScheme extends ColorSchemeFields {}
 
@@ -75,35 +70,8 @@ export default class ColorScheme extends EmberObject {
     attrs?: ColorSchemeCreateAttrs<InstanceType<C>>
   ) => InstanceType<C>;
 
-  static async findAll(): Promise<ColorSchemes> {
-    const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const all = (await ajax("/admin/color_schemes")) as ColorSchemePayload[];
-
-    all.forEach((colorScheme) => {
-      // The proxy forwards array methods to `content`.
-      (colorSchemes as unknown as ColorScheme[]).push(
-        ColorScheme.create({
-          id: colorScheme.id,
-          name: colorScheme.name,
-          is_base: colorScheme.is_base,
-          theme_id: colorScheme.theme_id,
-          theme_name: colorScheme.theme_name,
-          base_scheme_id: colorScheme.base_scheme_id,
-          user_selectable: colorScheme.user_selectable,
-          colors: colorScheme.colors,
-        })
-      );
-    });
-
-    return colorSchemes;
-  }
-
   static async find(id: number | string): Promise<ColorScheme> {
-    // TODO(typescript-pending): ajax has no response generic; remove this assertion when it does.
-    const json = (await ajax(
-      `/admin/config/colors/${id}`
-    )) as ColorSchemePayload;
+    const json = await ajax<ColorSchemePayload>(`/admin/config/colors/${id}`);
     return ColorScheme.create({
       id: json.id,
       name: json.name,

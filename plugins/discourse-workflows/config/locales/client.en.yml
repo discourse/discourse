@@ -35,6 +35,8 @@ en:
         preview:
           label: "Workflow preview"
           exact_configuration: "Exact configuration"
+          shortened_configuration: "Shortened configuration"
+          shortened: "Some long settings are shortened here to fit in chat. Approving saves the full workflow unpublished, so you can review every setting before publishing it."
           read_only: "Read-only preview"
           script_validation_warning: "Some Code nodes failed syntax or mode checks. Review the errors in Exact configuration before approving."
           connects_to: "Connects to %{nodes}"
@@ -1697,7 +1699,6 @@ en:
         empty_title: "No output yet"
         no_data_yet: "No output yet. Add sample data to test this node manually."
         no_data_no_edit: "No output data."
-        loading_editor: "Loading editor…"
         invalid_json: "Invalid JSON"
         invalid_json_empty: "JSON cannot be empty."
         invalid_shape_not_array: "Pinned data must be an array of items."

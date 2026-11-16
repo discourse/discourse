@@ -80,6 +80,78 @@ RSpec.describe Sitemap do
 
       expect(unused_page.reload.enabled).to eq(false)
     end
+
+    context "with a sitemap_topics_query modifier" do
+      fab!(:excluded_topic, :topic)
+      fab!(:last_topic, :topic)
+
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) { Proc.new { |query| query.where.not(id: excluded_topic.id) } }
+
+      before do
+        SiteSetting.sitemap_page_size = 1
+        DiscoursePluginRegistry.register_modifier(plugin, :sitemap_topics_query, &modifier)
+      end
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(plugin, :sitemap_topics_query, &modifier)
+      end
+
+      it "counts pages from the topics the modifier keeps, so pages and their contents agree" do
+        described_class.regenerate_sitemaps
+
+        page_names =
+          Sitemap
+            .where(enabled: true)
+            .where.not(name: [Sitemap::NEWS_SITEMAP_NAME, Sitemap::RECENT_SITEMAP_NAME])
+            .pluck(:name)
+        expect(page_names).to contain_exactly("1", "2")
+
+        expect(Sitemap.find_by(name: "1").topics.map(&:first)).to eq([topic.id])
+        expect(Sitemap.find_by(name: "2").topics.map(&:first)).to eq([last_topic.id])
+        expect(Sitemap.find_by(name: "2").last_posted_at).to eq_time(last_topic.updated_at)
+      end
+    end
+
+    context "with a sitemap_topics_query modifier that joins several rows per topic" do
+      fab!(:other_topic, :topic)
+
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) do
+        Proc.new do |query|
+          query
+            .joins("INNER JOIN topic_custom_fields tcf ON tcf.topic_id = topics.id")
+            .where("tcf.name = 'sitemap_spec'")
+            .distinct
+        end
+      end
+
+      before do
+        SiteSetting.sitemap_page_size = 1
+        [topic, other_topic].each do |t|
+          %w[a b].each { |v| TopicCustomField.create!(topic: t, name: "sitemap_spec", value: v) }
+        end
+        DiscoursePluginRegistry.register_modifier(plugin, :sitemap_topics_query, &modifier)
+      end
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(plugin, :sitemap_topics_query, &modifier)
+      end
+
+      it "counts each topic once" do
+        described_class.regenerate_sitemaps
+
+        page_names =
+          Sitemap
+            .where(enabled: true)
+            .where.not(name: [Sitemap::NEWS_SITEMAP_NAME, Sitemap::RECENT_SITEMAP_NAME])
+            .pluck(:name)
+        expect(page_names).to contain_exactly("1", "2")
+
+        expect(Sitemap.find_by(name: "1").topics.map(&:first)).to eq([topic.id])
+        expect(Sitemap.find_by(name: "2").topics.map(&:first)).to eq([other_topic.id])
+      end
+    end
   end
 
   describe "#topics" do
@@ -99,6 +171,53 @@ RSpec.describe Sitemap do
         topics_data = sitemap.topics
 
         expect(topics_data).to be_empty
+      end
+    end
+
+    shared_examples "Applies the sitemap_topics_query modifier" do
+      fab!(:excluded_topic) { Fabricate(:topic, bumped_at: 1.minute.ago) }
+      fab!(:kept_topic) { Fabricate(:topic, bumped_at: 1.minute.ago) }
+
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) { Proc.new { |query| query.where.not(id: excluded_topic.id) } }
+
+      before { DiscoursePluginRegistry.register_modifier(plugin, :sitemap_topics_query, &modifier) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(plugin, :sitemap_topics_query, &modifier)
+      end
+
+      it "doesn't include topics the modifier drops" do
+        topic_ids = sitemap.topics.map(&:first)
+
+        expect(topic_ids).to contain_exactly(kept_topic.id)
+      end
+    end
+
+    shared_examples "Lists each topic once with a distinct modifier" do
+      fab!(:topic) { Fabricate(:topic, bumped_at: 1.minute.ago) }
+
+      let(:plugin) { Plugin::Instance.new }
+      let(:modifier) do
+        Proc.new do |query|
+          query
+            .joins("INNER JOIN topic_custom_fields tcf ON tcf.topic_id = topics.id")
+            .where("tcf.name = 'sitemap_spec'")
+            .distinct
+        end
+      end
+
+      before do
+        %w[a b].each { |v| TopicCustomField.create!(topic: topic, name: "sitemap_spec", value: v) }
+        DiscoursePluginRegistry.register_modifier(plugin, :sitemap_topics_query, &modifier)
+      end
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(plugin, :sitemap_topics_query, &modifier)
+      end
+
+      it "lists a topic the modifier's join repeats once" do
+        expect(sitemap.topics.map(&:first)).to eq([topic.id])
       end
     end
 
@@ -140,6 +259,8 @@ RSpec.describe Sitemap do
       end
 
       it_behaves_like "Excludes hidden and restricted topics"
+      it_behaves_like "Applies the sitemap_topics_query modifier"
+      it_behaves_like "Lists each topic once with a distinct modifier"
     end
 
     context "with sitemap for recent topics" do
@@ -167,6 +288,8 @@ RSpec.describe Sitemap do
       end
 
       it_behaves_like "Excludes hidden and restricted topics"
+      it_behaves_like "Applies the sitemap_topics_query modifier"
+      it_behaves_like "Lists each topic once with a distinct modifier"
     end
 
     context "with news sitemap" do
@@ -193,6 +316,8 @@ RSpec.describe Sitemap do
       end
 
       it_behaves_like "Excludes hidden and restricted topics"
+      it_behaves_like "Applies the sitemap_topics_query modifier"
+      it_behaves_like "Lists each topic once with a distinct modifier"
     end
   end
 end

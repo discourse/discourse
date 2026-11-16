@@ -1,0 +1,13 @@
+<%= blog_render_template("article") %>
+<% unless @preview %>
+  <% discussion_closed = @topic.closed? || @topic.archived? %>
+  <section id="discussion" class="blog-discussion">
+    <div class="blog-discussion__heading"><h2 id="comments"><%= t('blog.discussion') %></h2><a href="<%= @topic.url %>"><%= t('blog.open_discussion') %> ↗</a></div>
+    <p><%= discussion_closed ? t('blog.discussion_closed') : t('blog.discussion_description') %></p>
+    <% if !discussion_closed || @topic.posts_count > 1 %>
+    <p class="blog-discussion__load-error" role="status" hidden><%= t('blog.discussion_load_error') %></p>
+    <div id="discourse-comments" data-discourse-url="<%= Discourse.base_url %>/" data-topic-id="<%= @topic.id %>" data-title="<%= t('blog.discussion') %>"></div>
+    <% end %>
+    <noscript><p><a href="<%= @topic.url %>"><%= t('blog.open_discussion') %></a></p></noscript>
+  </section>
+<% end %>

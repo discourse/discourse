@@ -245,6 +245,18 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end
 
+  # Adds per-request data to PreloadStore under "<plugin name>:<key>".
+  # The block receives the request's guardian and returns a JSON-serializable
+  # value, or nil to omit the entry. Disabled plugins are skipped.
+  def register_preloaded_data(key, &block)
+    raise ArgumentError, "register_preloaded_data requires a block" if !block
+
+    DiscoursePluginRegistry.register_preloaded_data_callback(
+      { key: "#{name}:#{key}", callback: block },
+      self,
+    )
+  end
+
   # Register a handler for an action initiated by an anonymous user, to be
   # replayed against their account after they authenticate. See AnonymousAction.
   def register_anonymous_action(type, &block)
@@ -445,6 +457,14 @@ class Plugin::Instance
         plugin: plugin,
         callback: callback,
       }
+    end
+  end
+
+  # Accept a scalar bot[<param_name>] when admins create a bot. The callback receives the bot
+  # and the value inside the creation transaction; raising rolls the creation back.
+  def register_bot_creation_param(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.bot_creation_params[param_name] = { plugin:, callback: }
     end
   end
 
@@ -832,6 +852,26 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_svg_icon_source(block, self)
   end
 
+  # Registers a source of extra SVG symbols, such as icons stored in the
+  # database. Unlike the sprites in a plugin's `svg-icons` directory, a symbol
+  # is only added to the SVG sprite when one of the sprite's icons uses it.
+  #
+  # The source must respond to:
+  #
+  # - `symbols(icon_ids)`, returning a hash of the requested names it has to
+  #   their `<symbol>` markup.
+  # - `search_icon_ids(keyword, limit:)`, returning up to `limit` of its icon
+  #   names that contain `keyword`, ignoring case, sorted in byte order. The
+  #   keyword is blank when the icon picker lists every icon.
+  #
+  # Both are called while the sprite is built or searched, so they must not run
+  # at boot, and their results are scoped to the current site.
+  #
+  # Call `SvgSprite.expire_cache` when the underlying data changes.
+  def register_svg_symbol_source(source)
+    DiscoursePluginRegistry.register_svg_symbol_source(source, self)
+  end
+
   def extend_content_security_policy(extension)
     csp_extensions << extension
   end
@@ -987,6 +1027,10 @@ class Plugin::Instance
   #
   # This is a very rough initial implementation
   def gem(name, version, opts = {})
+    if metadata.gemfile
+      raise "Plugin #{directory_name} declares its gems in a Gemfile, `gem` can't be mixed with that"
+    end
+
     PluginGem.load(path, name, version, opts)
   end
 

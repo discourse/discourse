@@ -10,6 +10,7 @@ class User::CreateBot
     attribute :name, :string
     attribute :username, :string
     attribute :trust_level, :integer, default: -> { SiteSetting.default_trust_level }
+    attribute :plugin_params, default: -> { {} }
     attribute :api_key, :hash do
       attribute :description, :string
       attribute :scope_mode, :string
@@ -32,6 +33,7 @@ class User::CreateBot
   transaction do
     model :user, :create_bot
     step :log_creation
+    step :apply_plugin_params
     only_if(:api_key_requested) do
       model :api_key, :create_api_key
       step :log_api_key_creation
@@ -73,6 +75,14 @@ class User::CreateBot
 
   def log_creation(user:, guardian:)
     StaffActionLogger.new(guardian.user).log_bot_creation(user)
+  end
+
+  def apply_plugin_params(params:, user:)
+    params.plugin_params.each do |name, value|
+      registration = DiscoursePluginRegistry.bot_creation_params[name.to_sym]
+      next unless registration && registration[:plugin].enabled?
+      registration[:callback].call(user, value)
+    end
   end
 
   def api_key_requested(params:)

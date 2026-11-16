@@ -11,6 +11,7 @@ import {
   triggerKeyEvent,
   visit,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -250,6 +251,13 @@ acceptance(`Composer`, function (needs) {
   test("the grippie is an operable separator", async function (assert) {
     await visit("/");
     await click("#create-topic");
+
+    // The announced height follows a ResizeObserver, which `settled()` doesn't wait for.
+    await waitUntil(
+      () =>
+        find(".grippie").getAttribute("aria-valuenow") ===
+        `${find("#reply-control").offsetHeight}`
+    );
 
     const { currentHeight, minimumHeight, maximumHeight } =
       composerResizeMeasurements();

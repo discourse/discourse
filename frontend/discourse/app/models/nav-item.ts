@@ -3,7 +3,6 @@ import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import type RouterService from "@ember/routing/router-service";
 import { service } from "@ember/service";
-import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { deepMerge } from "discourse/lib/object";
@@ -230,25 +229,14 @@ export default class NavItem extends EmberObject {
 
   static buildList(
     category: Category | undefined,
-    args?: NavItemOptions
+    args: NavItemOptions & Required<Pick<NavItemOptions, "siteSettings">>
   ): NavItem[] {
-    args = args || {};
-
     if (category) {
       args.category = category;
     }
 
-    if (!args.siteSettings) {
-      deprecated("You must supply `buildList` with a `siteSettings` object", {
-        since: "2.6.0",
-        id: "discourse.nav-item.built-list-site-settings",
-      });
-      args.siteSettings = getOwnerWithFallback(this).lookup(
-        "service:site-settings"
-      );
-    }
     let items: (string | NavItem | null)[] =
-      args.siteSettings!.top_menu.split("|");
+      args.siteSettings.top_menu.split("|");
 
     const user = getOwnerWithFallback(this).lookup("service:current-user");
     if (user?.unified_new_enabled) {

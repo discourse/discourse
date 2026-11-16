@@ -138,6 +138,8 @@ export interface ThemeFields extends BasicTheme {
   disabled_at?: string | null;
   errors?: string[];
   translations?: (ThemeTranslation | ThemeSettings)[];
+  /** Locale of the loaded rows, independent of the current selection. */
+  translations_locale?: string;
   loadingTranslations?: boolean;
   locale?: string;
   markedToDelete?: boolean;
@@ -514,9 +516,10 @@ class Theme extends RestModel {
   }
 
   updateToLatest() {
-    return this.save({ remote_update: true }).then(() =>
-      this.set("changed", false)
-    );
+    return this.save({ remote_update: true }).then((result) => {
+      this.set("changed", false);
+      return result;
+    });
   }
 
   /** Saves the named properties; the implementation intentionally has zero formal parameters. */

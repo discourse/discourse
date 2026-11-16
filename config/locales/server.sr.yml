@@ -721,6 +721,12 @@ sr:
               private:
                 label: "Privatna"
   onebox:
+    discourse:
+      recurrence:
+        ordinals:
+          last: "poslednji"
+        weekdays:
+          monday: "Ponedeljak"
     github:
       pr_status:
         open: "Otvori"
@@ -735,6 +741,10 @@ sr:
       medium: "Srednje"
       high: "Visoko"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Da"
       delete:

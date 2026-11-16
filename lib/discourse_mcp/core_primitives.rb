@@ -66,13 +66,244 @@ module DiscourseMcp
       register_read_tools(registry)
       register_write_tools(registry)
       register_moderation_tools(registry)
+      register_report_tools(registry)
       register_site_setting_tools(registry)
       register_theme_tools(registry)
+      register_theme_management_tools(registry)
       register_group_tools(registry)
+      register_tag_group_tools(registry)
       register_category_tools(registry)
       register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    def register_report_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_reports",
+        title: "List reports",
+        description:
+          "Lists the caller's available Discourse reports, including enabled plugin reports. Requires staff access. Use the returned report types with discourse_get_report.",
+        implementation: Tools::ListReports,
+        input_schema: object_schema,
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+
+      scalar_filter = {
+        anyOf: [{ type: "string", maxLength: 250 }, { type: "number" }, { type: "boolean" }],
+      }
+      date = { type: "string", pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", maxLength: 10 }
+      register_tool(
+        registry,
+        "discourse_get_report",
+        title: "Get report",
+        description:
+          "Retrieves one report from the caller's current report catalog. Requires staff access; admin-only reports and related items retain their normal restrictions. Dates use YYYY-MM-DD and default to the last 30 days ending on end_date or today. Date ranges cannot exceed 366 days. Filters accept scalar values or arrays, as supported by each report. limit bounds rows only where the report supports it; omitting it preserves that report's default. cache opts into the existing report cache and requires administrator access; include_related_items defaults to false. This runs registered reports, not arbitrary SQL.",
+        implementation: Tools::GetReport,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              report_type: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+                pattern: "^[a-z0-9_-]+$",
+                not: {
+                  pattern: "[^a-z0-9_-]",
+                },
+              },
+              start_date: date,
+              end_date: date,
+              facets: {
+                type: "array",
+                maxItems: 20,
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 50,
+                },
+              },
+              filters: {
+                type: "object",
+                maxProperties: 20,
+                propertyNames: {
+                  minLength: 1,
+                  maxLength: 100,
+                },
+                additionalProperties: {
+                  anyOf: [scalar_filter, { type: "array", maxItems: 100, items: scalar_filter }],
+                },
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: Tools::GetReport::MAX_LIMIT,
+              },
+              cache: {
+                type: "boolean",
+              },
+              include_related_items: {
+                type: "boolean",
+              },
+            },
+            required: %w[report_type],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+    end
+
+    def register_tag_group_tools(registry)
+      id = { type: "integer", minimum: 1 }
+      name = { type: "string", minLength: 1, maxLength: 100 }
+      selector = {
+        oneOf: [
+          object_schema({ id: }, required: %w[id]),
+          object_schema({ name: }, required: %w[name]),
+        ],
+      }
+      attributes = {
+        name:,
+        tags: {
+          type: "array",
+          maxItems: 1000,
+          items: selector,
+        },
+        parent_tag: {
+          anyOf: [selector, { type: "null" }],
+        },
+        one_per_topic: {
+          type: "boolean",
+        },
+        permissions: {
+          type: "object",
+          minProperties: 1,
+          maxProperties: 1000,
+          propertyNames: {
+            pattern: "^(0|[1-9][0-9]*)$",
+            # $ can match before a trailing newline
+            not: {
+              pattern: "[^0-9]",
+            },
+          },
+          additionalProperties: {
+            type: "string",
+            enum: %w[full readonly],
+          },
+        },
+        allow_tag_creation: {
+          type: "boolean",
+        },
+      }
+      register_tool(
+        registry,
+        "discourse_search_tag_groups",
+        title: "Search tag groups",
+        description:
+          "Searches visible tag groups and visible member tags. Omits staff configuration. q and names combine; q supports SQL LIKE wildcards. truncated signals possible additional results.",
+        implementation: Tools::SearchTagGroups,
+        input_schema:
+          object_schema(
+            {
+              q: {
+                type: "string",
+                maxLength: 250,
+              },
+              names: {
+                type: "array",
+                minItems: 1,
+                maxItems: 100,
+                items: name,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 1000,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_list_tag_groups",
+        title: "List tag groups",
+        description:
+          "Lists staff tag-group inventory with permissions and parent tags, ordered by name and ID. Requires staff authority. Paginate with limit and offset; reads remain available when tagging is disabled.",
+        implementation: Tools::ListTagGroups,
+        input_schema:
+          object_schema(
+            {
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+                maximum: 1_000_000,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_get_tag_group",
+        title: "Get tag group",
+        description:
+          "Reads tag-group configuration, including tags, parent, one-per-topic policy and permissions. Requires staff authority.",
+        implementation: Tools::GetTagGroup,
+        input_schema: object_schema({ tag_group_id: id }, required: %w[tag_group_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_tag_group",
+        title: "Create tag group",
+        description:
+          "Creates a tag group. Requires staff authority and tagging enabled. Tags use ID or name selectors; synonyms resolve to original tags. Name selectors require allow_tag_creation=true and may create tags. permissions maps group IDs to full or readonly; group 0 means everyone. Omitted permissions default to everyone/full.",
+        implementation: Tools::CreateTagGroup,
+        input_schema: object_schema(attributes, required: %w[name]),
+        annotations: WRITE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_update_tag_group",
+        title: "Update tag group",
+        description:
+          "Updates supplied fields, preserving omitted fields. tags replaces all member tags; [] clears them. parent_tag=null clears the parent. permissions replaces the full permission map. Synonyms resolve to original tags. Name selectors require allow_tag_creation=true. Requires staff authority and tagging enabled.",
+        implementation: Tools::UpdateTagGroup,
+        input_schema: object_schema(attributes.merge(tag_group_id: id), required: %w[tag_group_id]),
+        annotations: WRITE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_delete_tag_group",
+        title: "Delete tag group",
+        description:
+          "Deletes a tag group and its membership, permission and category relationships, including required-tag rules. Tags and topic tags remain. Requires staff authority, tagging enabled, confirm=true and the exact current expected_name.",
+        implementation: Tools::DeleteTagGroup,
+        input_schema:
+          object_schema(
+            { tag_group_id: id, expected_name: name, confirm: { type: "boolean" } },
+            required: %w[tag_group_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
     end
 
     def register_category_tools(registry)
@@ -1787,6 +2018,204 @@ module DiscourseMcp
               },
             },
             required: %w[theme_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+    end
+
+    def register_theme_management_tools(registry)
+      theme_id = { type: "integer", minimum: 1 }
+      name = { type: "string", minLength: 1, maxLength: 255 }
+      filename = name.merge(not: { pattern: '[/\\\\\u0000\r\n]' })
+      confirmation = { type: "boolean" }
+      encoded_file = {
+        type: "string",
+        minLength: 1,
+        maxLength: Tools::ThemeManagementSupport::MAX_ENCODED_BYTES,
+      }
+
+      register_tool(
+        registry,
+        "discourse_list_themes",
+        title: "List themes",
+        description: "Lists installed themes and components. Requires administrator access.",
+        implementation: Tools::ListThemes,
+        input_schema:
+          object_schema(
+            {
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_theme",
+        title: "Delete theme",
+        description:
+          "Deletes a theme and its component links. Requires edit permission, the current name, and confirmation. Default and system themes cannot be deleted.",
+        implementation: Tools::DeleteTheme,
+        input_schema:
+          object_schema(
+            { theme_id:, expected_name: name, confirm: confirmation },
+            required: %w[theme_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_install_theme",
+        title: "Install theme",
+        description:
+          "Installs executable theme code from exactly one repository URL or base64 archive. Requires administrator access and confirmation. Repository installs always run migrations and require confirm_run_migrations. Archive migrations are opt-in. Archive component imports default to none; merge and sync require run_migrations and confirm_run_migrations. Only archives can replace an existing theme; confirm its current name before replacement. Returns a theme summary without source code and reports any archive components that could not be imported.",
+        implementation: Tools::InstallTheme,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              remote_url: {
+                type: "string",
+                minLength: 1,
+                maxLength: 10_000,
+              },
+              branch: name,
+              archive_data: encoded_file,
+              filename: filename,
+              replace_theme_id: theme_id,
+              expected_name: name,
+              confirm_replace: confirmation,
+              confirm_external_code: confirmation,
+              run_migrations: confirmation,
+              confirm_run_migrations: confirmation,
+              components: {
+                type: "string",
+                enum: %w[none merge sync],
+              },
+            },
+            required: %w[confirm_external_code],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT.merge(destructiveHint: true),
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_sync_remote_theme",
+        title: "Sync remote theme",
+        description:
+          "Checks a theme repository for updates or installs its latest code. Requires edit permission. Updating runs migrations and requires both code and migration confirmation. Checking also updates stored remote-version metadata. Returns a theme summary. When completing a pending installation, also reports skipped components with their errors.",
+        implementation: Tools::SyncRemoteTheme,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              theme_id:,
+              action: {
+                type: "string",
+                enum: %w[check update],
+              },
+              expected_remote_url: {
+                type: "string",
+                minLength: 1,
+                maxLength: 10_000,
+              },
+              confirm_external_code: confirmation,
+              confirm_run_migrations: confirmation,
+            },
+            required: %w[theme_id action],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT.merge(destructiveHint: true),
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_upload_theme_asset",
+        title: "Upload theme asset",
+        description:
+          "Uploads base64 asset data for use in a theme. Requires administrator access. Returns an unattached upload ID; use discourse_update_theme to attach it to a theme field. Site upload and MCP request-size limits apply.",
+        implementation: Tools::UploadThemeAsset,
+        defer: true,
+        input_schema:
+          object_schema({ filename:, file_data: encoded_file }, required: %w[filename file_data]),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme_setting",
+        title: "Update theme setting",
+        description:
+          "Sets a declared theme setting or restores its declared default. Requires edit permission. Use pipe-separated strings for list settings and arrays of objects for object settings. Reverting requires confirm and must omit value.",
+        implementation: Tools::UpdateThemeSetting,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              name:,
+              operation: {
+                type: "string",
+                enum: %w[set revert],
+              },
+              value: {
+                anyOf: [
+                  { type: "string", maxLength: 500_000 },
+                  { type: "number" },
+                  { type: "boolean" },
+                  { type: "array", maxItems: 100, items: { type: "object", maxProperties: 100 } },
+                ],
+              },
+              confirm: confirmation,
+            },
+            required: %w[theme_id name operation],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme_translations",
+        title: "Update theme translations",
+        description:
+          "Updates declared theme translations for one locale. Requires edit permission and the current theme name. Unknown keys reject the whole batch.",
+        implementation: Tools::UpdateThemeTranslations,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              expected_name: name,
+              locale: {
+                type: "string",
+                minLength: 1,
+                maxLength: 20,
+              },
+              translations: {
+                type: "object",
+                minProperties: 1,
+                maxProperties: 100,
+                propertyNames: {
+                  maxLength: 255,
+                },
+                additionalProperties: {
+                  type: "string",
+                  maxLength: 10_000,
+                },
+              },
+            },
+            required: %w[theme_id expected_name locale translations],
           ),
         annotations: WRITE,
         risk: :administration,

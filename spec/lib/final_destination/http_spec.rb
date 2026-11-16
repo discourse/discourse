@@ -267,6 +267,38 @@ describe FinalDestination::HTTP do
     end
   end
 
+  describe "#total_timeout" do
+    it "stops reading a response that trickles in past the deadline" do
+      server = TCPServer.new("127.0.0.1", 0)
+      trickler =
+        Thread.new do
+          client = server.accept
+          client.readpartial(4096)
+          client.write("HTTP/1.1 200 OK\r\n")
+          50.times do
+            client.write("X")
+            sleep 0.1
+          end
+        rescue IOError, SystemCallError
+        ensure
+          client&.close
+        end
+      FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).returns(%w[127.0.0.1])
+
+      http = FinalDestination::HTTP.new("test.invalid", server.addr[1])
+      http.read_timeout = 2
+      http.total_timeout = 0.5
+
+      duration =
+        elapsed { expect { http.start { |h| h.get("/") } }.to raise_error(Net::ReadTimeout) }
+
+      expect(duration).to be < 2
+    ensure
+      trickler&.kill
+      server&.close
+    end
+  end
+
   describe "argument validation" do
     it "rejects a nil address" do
       expect { FinalDestination::HTTP.start(nil) {} }.to raise_error(ArgumentError)

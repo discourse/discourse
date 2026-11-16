@@ -5,11 +5,18 @@ import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
+import { resetLocalCache, setLocalCache } from "pretty-text/oneboxer-cache";
 import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse/lib/object";
 import DiscourseMarkdownIt from "discourse-markdown-it";
-import { extractDataAttribute } from "discourse-markdown-it/engine";
-import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
+import {
+  extractDataAttribute,
+  unhoistForCooked,
+} from "discourse-markdown-it/engine";
+import {
+  parseBBCodeTag,
+  QUOTATION_MARKS,
+} from "discourse-markdown-it/features/bbcode-block";
 
 const rawOpts = {
   siteSettings: {
@@ -443,6 +450,45 @@ eviltrout</p>
       "handles nested quotes properly"
     );
 
+    assert.cooked(
+      `[b]hi[/b]\n[quote]\nx\n[/quote]\n\n> [quote]\n> y\n> [/quote]`,
+      `<p><span class="bbcode-b">hi</span></p>
+<aside class="quote no-group">
+<blockquote>
+<p>x</p>
+</blockquote>
+</aside>
+<blockquote>
+<aside class="quote no-group">
+<blockquote>
+<p>y</p>
+</blockquote>
+</aside>
+</blockquote>`,
+      "handles quotes nested inside blockquotes"
+    );
+
+    assert.cooked(
+      `- [quote]\n  y\n  [/quote]\n- [quote]\n  z\n  [/quote]`,
+      `<ul>
+<li>
+<aside class="quote no-group">
+<blockquote>
+<p>y</p>
+</blockquote>
+</aside>
+</li>
+<li>
+<aside class="quote no-group">
+<blockquote>
+<p>z</p>
+</blockquote>
+</aside>
+</li>
+</ul>`,
+      "handles quotes in separate list items"
+    );
+
     assert.cookedOptions(
       `[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`,
       { lookupPrimaryUserGroupByPostNumber: () => "aUserGroup" },
@@ -473,6 +519,12 @@ eviltrout</p>
       "[quote=,script='a'><script>alert('test');//':a]\n[/quote]",
       '<aside class="quote no-group">\n<blockquote></blockquote>\n</aside>',
       "will not create a script tag within an attribute"
+    );
+
+    assert.cooked(
+      `<aside class="quote group-a&#32;pswp">x</aside>`,
+      "<aside>x</aside>",
+      "does not allow a character reference to smuggle extra quote classes"
     );
   });
 
@@ -853,6 +905,12 @@ eviltrout</p>
     );
 
     assert.cooked(
+      `<code class="lang-js&#32;lazy-video-container">not a video</code>`,
+      "<p><code>not a video</code></p>",
+      "does not allow a character reference to smuggle extra code classes"
+    );
+
+    assert.cooked(
       "```text\ntext\n```",
       '<pre><code class="lang-plaintext">text\n</code></pre>',
       "handles text by adding plaintext"
@@ -1153,6 +1211,58 @@ eviltrout</p>
     );
   });
 
+  test("hoisted raw HTML is not restored inside an attribute value", function (assert) {
+    const onebox = document.createElement("aside");
+    onebox.className = "onebox";
+    onebox.title = "injected=1 y=";
+    setLocalCache("http://test.com", onebox);
+
+    try {
+      assert.true(
+        build().cook("http://test.com").includes('title="injected=1 y="'),
+        "restores a cached onebox that stands where text may stand"
+      );
+
+      assert.false(
+        build()
+          .cook("<div data-x='\n\nhttp://test.com\n\n</div '>hello</div>")
+          .includes("injected=1"),
+        "leaves the cached onebox out of the attribute value the post placed it in"
+      );
+    } finally {
+      resetLocalCache();
+    }
+  });
+
+  test("hoisted raw HTML is not restored inside a tag during nested substitution", function (assert) {
+    // A hoisted value may itself hold another key, which is how a nested block
+    // is restored. Where that inner key lands is decided by the outer value, so
+    // it has to be re-checked between substitutions rather than once up front.
+    const outer = "1b4e28ba-2fa1-4d9b-b3f8-2e1dd3f7a0c1";
+    const inner = "9f2c17e5-8b3d-4a62-91c4-6d0ab5e7f3d2";
+
+    assert.strictEqual(
+      unhoistForCooked(
+        {
+          [outer]: `<div class="wrap">${inner}</div>`,
+          [inner]: "<p>nested</p>",
+        },
+        outer
+      ),
+      '<div class="wrap"><p>nested</p></div>',
+      "restores a nested key that stands where text may stand"
+    );
+
+    assert.strictEqual(
+      unhoistForCooked(
+        { [outer]: `<div data-x="${inner}">`, [inner]: '" id="pwn" y="' },
+        outer
+      ),
+      '<div data-x="">',
+      "drops a nested key that the outer value put inside a tag"
+    );
+  });
+
   test("basic bbcode", function (assert) {
     assert.cookedPara(
       "[b]strong[/b]",
@@ -1198,6 +1308,26 @@ eviltrout</p>
       "[b]strong [b]stronger[/b][/b]",
       '<span class="bbcode-b">strong <span class="bbcode-b">stronger</span></span>',
       "accepts nested bbcode tags"
+    );
+  });
+
+  test("bbcode opening tags start at the supplied offset", function (assert) {
+    const input = "[]][[b]bold[/b]";
+
+    assert.strictEqual(
+      parseBBCodeTag(input, 0, input.length),
+      null,
+      "does not accept a later opening tag at an earlier offset"
+    );
+    assert.deepEqual(
+      parseBBCodeTag(input, 4, input.length),
+      { tag: "b", length: "[b]".length, attrs: {} },
+      "accepts the opening tag at its actual offset"
+    );
+    assert.cookedPara(
+      input,
+      '[]][<span class="bbcode-b">bold</span>',
+      "cooks the opening tag once the parser reaches its offset"
     );
   });
 

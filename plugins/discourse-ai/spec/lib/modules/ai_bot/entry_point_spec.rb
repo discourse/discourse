@@ -8,11 +8,9 @@ describe DiscourseAi::AiBot::EntryPoint do
         SiteSetting.ai_bot_enabled = false
       end
 
-      %i[discourse_ai_enabled ai_bot_enabled].each do |first_setting|
-        it "provisions users only after enabling both settings, starting with #{first_setting}" do
+      shared_examples "provisioning after both AI settings are enabled" do |first_setting:, second_setting:|
+        it "provisions a bot only after both settings and does not reprovision it" do
           agent = Fabricate(:ai_agent)
-          second_setting =
-            first_setting == :discourse_ai_enabled ? :ai_bot_enabled : :discourse_ai_enabled
 
           expect { SiteSetting.public_send("#{first_setting}=", true) }.not_to change(User, :count)
           expect(agent.reload.user_id).to be_nil
@@ -29,6 +27,18 @@ describe DiscourseAi::AiBot::EntryPoint do
           end.not_to change(User, :count)
           expect(agent.reload.user).to eq(user)
         end
+      end
+
+      context "when discourse_ai_enabled is enabled first" do
+        include_examples "provisioning after both AI settings are enabled",
+                         first_setting: :discourse_ai_enabled,
+                         second_setting: :ai_bot_enabled
+      end
+
+      context "when ai_bot_enabled is enabled first" do
+        include_examples "provisioning after both AI settings are enabled",
+                         first_setting: :ai_bot_enabled,
+                         second_setting: :discourse_ai_enabled
       end
 
       it "leaves users unprovisioned on unrelated changes and disablement" do

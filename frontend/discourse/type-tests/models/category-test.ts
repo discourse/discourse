@@ -87,6 +87,7 @@ expectTypeOf(typeMetadata.visible).toEqualTypeOf<boolean>();
 // The new-category route stores a projection without these two.
 expectTypeOf(typeMetadata.description).toEqualTypeOf<string | undefined>();
 expectTypeOf(typeMetadata.icon).toEqualTypeOf<string | null | undefined>();
+expectTypeOf(typeMetadata.svg_icon).toEqualTypeOf<string | null | undefined>();
 expectTypeOf(typeMetadata.configuration_schema).not.toBeAny();
 expectTypeOf(typeMetadata["type_specific_extra"]).toEqualTypeOf<unknown>();
 
@@ -143,6 +144,7 @@ interface ExpectedCategoryFields {
   category_types?: Record<string, CategoryTypeMetadata>;
   locale?: string | null;
   available_groups?: string[];
+  permission_groups?: { id: number; name: string }[];
   allowed_tags?: (ExpectedAllowedTag | string)[];
   allowed_tag_groups?: string[];
   auto_close_hours?: number | null;

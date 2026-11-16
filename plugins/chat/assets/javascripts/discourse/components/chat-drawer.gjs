@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -28,6 +29,8 @@ export default class ChatDrawer extends Component {
   loading = false;
   sizeTimer = null;
   rafTimer = null;
+  bodyResizeObserver = null;
+  bodyInlineSize = null;
   hasUnreadMessages = false;
   drawerStyle = null;
 
@@ -54,6 +57,7 @@ export default class ChatDrawer extends Component {
     this.appEvents.on("composer:resized", this, "_checkSize");
     this.appEvents.on("composer:div-resizing", this, "_dynamicCheckSize");
     window.addEventListener("resize", this._dynamicCheckSize);
+    this._observeBodyInlineSize();
     this.appEvents.on(
       "composer:resize-started",
       this,
@@ -72,6 +76,8 @@ export default class ChatDrawer extends Component {
     }
 
     window.removeEventListener("resize", this._dynamicCheckSize);
+    this.bodyResizeObserver?.disconnect();
+    this.bodyResizeObserver = null;
 
     if (this.appEvents) {
       this.appEvents.off("chat:open-url", this, "openURL");
@@ -155,6 +161,7 @@ export default class ChatDrawer extends Component {
 
   @bind
   _dynamicCheckSize() {
+    // skipped while closed; opening the drawer checks again
     if (!this.chatStateManager.isDrawerActive) {
       return;
     }
@@ -192,11 +199,26 @@ export default class ChatDrawer extends Component {
     this._checkSize();
   }
 
+  // a page inset pads the body without resizing the window, and moves the
+  // composer with it
+  _observeBodyInlineSize() {
+    this.bodyResizeObserver = new ResizeObserver(([entry]) => {
+      const inlineSize = entry.contentBoxSize[0].inlineSize;
+
+      if (inlineSize !== this.bodyInlineSize) {
+        this.bodyInlineSize = inlineSize;
+        this._dynamicCheckSize();
+      }
+    });
+    this.bodyResizeObserver.observe(document.body);
+  }
+
   @bind
   _checkSize() {
     this.sizeTimer = throttle(this, this._performCheckSize, 150);
   }
 
+  @bind
   _performCheckSize() {
     if (this.isDestroying) {
       return;
@@ -211,6 +233,15 @@ export default class ChatDrawer extends Component {
 
     const composer = document.getElementById("reply-control");
     const composerIsClosed = composer.classList.contains("closed");
+
+    // the stylesheet adds the page inset to --composer-right, so the drawer
+    // follows it as it changes; only a margin beyond it is measured here
+    const pageInset =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--d-page-inset-inline-end"
+        )
+      ) || 0;
     const minRightMargin = 15;
 
     const isPeekMode = document.body.classList.contains("peek-mode-active");
@@ -231,12 +262,14 @@ export default class ChatDrawer extends Component {
         composer.offsetLeft -
         composer.offsetWidth;
     const drawerWidth = this.chatDrawerSize.size.width || 400;
-    const aboveComposer = spaceToEnd < drawerWidth;
+    const spaceToInset = spaceToEnd - pageInset;
+    const aboveComposer = spaceToInset < drawerWidth;
 
     drawerContainer.style.setProperty(
       "--composer-right",
-      (aboveComposer ? Math.max(minRightMargin, spaceToEnd) : minRightMargin) +
-        "px"
+      (aboveComposer
+        ? Math.max(minRightMargin, spaceToInset)
+        : minRightMargin) + "px"
     );
     drawerContainer.classList.toggle("above-composer", aboveComposer);
   }
@@ -273,6 +306,7 @@ export default class ChatDrawer extends Component {
         data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
         data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
         style={{this.drawerStyle}}
+        {{didInsert this._performCheckSize}}
         {{chatResizableNode ".chat-drawer-resizer" this.didResize}}
       >
         <div class="chat-drawer-container">

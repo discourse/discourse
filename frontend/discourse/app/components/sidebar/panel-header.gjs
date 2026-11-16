@@ -6,11 +6,23 @@ import Filter from "./filter.gjs";
 import FilterNoResults from "./filter-no-results.gjs";
 import ToggleAllSections from "./toggle-all-sections.gjs";
 
+function visibleSections(sections) {
+  return sections.flatMap((section) =>
+    section.displaySection === false
+      ? []
+      : [section, ...visibleSections(section.childSections)]
+  );
+}
+
 export default class PanelHeader extends Component {
   @service sidebarState;
 
   get shouldDisplay() {
     return this.sidebarState.currentPanel.displayHeader;
+  }
+
+  get sections() {
+    return visibleSections(this.args.sections);
   }
 
   get showFilter() {
@@ -20,15 +32,13 @@ export default class PanelHeader extends Component {
       return true;
     }
 
-    const links = (this.args.sections ?? [])
-      .filter((section) => section.displaySection)
-      .reduce(
-        (total, section) =>
-          total +
-          (section.links?.length ?? 0) +
-          (section.moreLinks?.length ?? 0),
-        0
-      );
+    const links = this.sections.reduce(
+      (total, section) =>
+        total +
+        section.sidebarItems.filter((item) => item.type === "link").length +
+        (section.moreLinks?.length ?? 0),
+      0
+    );
 
     return links >= minimum;
   }
@@ -41,7 +51,7 @@ export default class PanelHeader extends Component {
             @href={{this.sidebarState.currentPanel.backLink.href}}
             @label={{this.sidebarState.currentPanel.backLink.label}}
           />
-          <ToggleAllSections @sections={{@sections}} />
+          <ToggleAllSections @sections={{this.sections}} />
         </div>
         <div class="sidebar-panel-header__row">
           <Search />
@@ -49,7 +59,7 @@ export default class PanelHeader extends Component {
             <Filter />
           {{/if}}
         </div>
-        <FilterNoResults @sections={{@sections}} />
+        <FilterNoResults @sections={{@filteredSections}} />
       </div>
     {{/if}}
   </template>

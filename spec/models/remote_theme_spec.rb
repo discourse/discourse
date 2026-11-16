@@ -108,6 +108,225 @@ RSpec.describe RemoteTheme do
 
     around(:each) { |group| MockGitImporter.with_mock { group.run } }
 
+    context "when adding translatable object fields" do
+      let(:old_settings) do
+        File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")) + <<~YAML
+          cards:
+            type: objects
+            default:
+              - title: Welcome
+            schema:
+              name: card
+              properties:
+                title:
+                  type: string
+        YAML
+      end
+      let(:updated_settings) do
+        settings = YAML.safe_load(old_settings)
+        cards = settings["cards"]
+        cards["default"][0]["translation_key"] = "welcome"
+        cards["schema"]["properties"]["translation_key"] = {
+          "type" => "string",
+          "required" => true,
+        }
+        cards["schema"]["properties"]["title"]["translatable"] = true
+        settings.to_yaml
+      end
+      let(:migration_path) { "migrations/settings/0002-add-translation-keys.js" }
+      let(:key) { "resource_sections.getting_started.links.guidelines.label" }
+
+      let(:theme) do
+        add_to_git_repo(initial_repo, "settings.yaml" => old_settings, "locales/en.yml" => "en: {}")
+        RemoteTheme.import_theme(initial_repo_url)
+      end
+      let(:original_version) { theme.remote_theme.local_version }
+
+      before do
+        theme.update_setting(:cards, [{ "title" => "My custom welcome" }])
+        I18n.with_locale(:ja) { theme.update_translation(key, "ガイドライン") }
+        original_version
+        add_to_git_repo(initial_repo, "settings.yaml" => updated_settings, migration_path => <<~JS)
+          export default function migrate(settings) {
+            settings.set("cards", settings.get("cards").map(card => ({ ...card, translation_key: "welcome" })));
+            return settings;
+          }
+        JS
+      end
+
+      it "migrates customized objects before validating and rebuilding translations" do
+        theme.remote_theme.update_from_remote
+
+        expect(theme.reload.get_setting(:cards)).to eq(
+          [{ "title" => "My custom welcome", "translation_key" => "welcome" }],
+        )
+        expect(theme.object_translation_defaults.dig("cards.welcome.title", :text)).to eq(
+          "My custom welcome",
+        )
+        expect(
+          theme.theme_translation_overrides.find_by!(locale: "ja", translation_key: key).value,
+        ).to eq("ガイドライン")
+        field = theme.theme_fields.find_by!(target_id: Theme.targets[:translations], name: "en")
+        expect(field.javascript_cache.content).to include("My custom welcome", "ガイドライン")
+        expect(theme.theme_settings_migrations.pluck(:version)).to contain_exactly(1, 2)
+      end
+
+      it "rolls back an update when the migration leaves invalid translation keys" do
+        add_to_git_repo(initial_repo, migration_path => <<~JS)
+          export default function migrate(settings) {
+            settings.set("cards", settings.get("cards").map(card => ({ ...card, translation_key: "Invalid key" })));
+            return settings;
+          }
+        JS
+
+        expect { theme.remote_theme.update_from_remote }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+
+        expect(theme.reload.get_setting(:cards)).to eq([{ "title" => "My custom welcome" }])
+        expect(theme.settings_field.value).to eq(old_settings)
+        expect(theme.remote_theme.local_version).to eq(original_version)
+        expect(theme.theme_settings_migrations.pluck(:version)).to eq([1])
+        expect(
+          theme.theme_translation_overrides.find_by!(locale: "ja", translation_key: key).value,
+        ).to eq("ガイドライン")
+
+        objects = theme.settings[:resource_sections].value
+        objects.first["translation_key"] = "Invalid key"
+        expect { theme.update_setting(:resource_sections, objects) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+
+      it "validates saved objects even when migrations are disabled" do
+        expect { theme.remote_theme.update_from_remote(run_migrations: false) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+
+        expect(theme.reload.settings_field.value).to eq(old_settings)
+        expect(theme.get_setting(:cards)).to eq([{ "title" => "My custom welcome" }])
+        expect(theme.remote_theme.local_version).to eq(original_version)
+      end
+
+      it "preserves removed object translations after migrations finish" do
+        add_to_git_repo(initial_repo, migration_path => <<~JS)
+          export default function migrate(settings) {
+            settings.set("cards", settings.get("cards").map(card => ({ ...card, translation_key: "welcome" })));
+            settings.set("resource_sections", []);
+            return settings;
+          }
+        JS
+
+        theme.remote_theme.update_from_remote
+
+        expect(theme.reload.object_translation_defaults.keys).to eq(["cards.welcome.title"])
+        override = theme.theme_translation_overrides.find_by!(translation_key: key)
+        expect(override.value).to eq("ガイドライン")
+        expect(override.status).to eq("deprecated")
+      end
+
+      it "rolls back an update when the migration raises" do
+        add_to_git_repo(
+          initial_repo,
+          migration_path =>
+            'export default function migrate() { throw new Error("migration failed"); }',
+        )
+
+        expect { theme.remote_theme.update_from_remote }.to raise_error(
+          Theme::SettingsMigrationError,
+        )
+
+        expect(theme.reload.get_setting(:cards)).to eq([{ "title" => "My custom welcome" }])
+        expect(theme.settings_field.value).to eq(old_settings)
+        expect(theme.remote_theme.local_version).to eq(original_version)
+        expect(
+          theme.theme_translation_overrides.find_by!(locale: "ja", translation_key: key).value,
+        ).to eq("ガイドライン")
+      end
+    end
+
+    it "preserves custom locale translations when updates remove and restore their source keys" do
+      locale_files = {
+        "locales/en.yml" => "en:\n  greeting: Hello\n",
+        "locales/fr.yml" => "fr:\n  greeting: Bonjour\n",
+      }
+      add_to_git_repo(initial_repo, locale_files)
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      I18n.with_locale(:fr) { theme.update_translation("greeting", "Salut") }
+      I18n.with_locale(:ja) { theme.update_translation("greeting", "こんにちは") }
+      saved_overrides =
+        theme
+          .theme_translation_overrides
+          .order(:id)
+          .pluck(:id, :locale, :value, :original_translation)
+      add_to_git_repo(initial_repo, "locales/en.yml" => "en: {}\n", "locales/fr.yml" => "fr: {}\n")
+
+      theme.remote_theme.update_from_remote
+
+      expect(
+        theme
+          .reload
+          .theme_translation_overrides
+          .order(:id)
+          .pluck(:id, :locale, :value, :original_translation),
+      ).to eq(saved_overrides)
+      expect(theme.theme_translation_overrides.map(&:status)).to contain_exactly(
+        "deprecated",
+        "deprecated",
+      )
+      add_to_git_repo(initial_repo, locale_files)
+
+      theme.remote_theme.update_from_remote
+
+      french_text =
+        ThemeTranslationManager.find_site_text(
+          "js.theme_translations.#{theme.id}.greeting",
+          locale: :fr,
+        )
+      expect(french_text.value).to eq("Salut")
+      expect(french_text.db_record.status).to eq("up_to_date")
+      expect(
+        ThemeTranslationManager.find_site_text(
+          "js.theme_translations.#{theme.id}.greeting",
+          locale: :ja,
+        ).value,
+      ).to eq("こんにちは")
+      french_text.revert!
+      expect(french_text.value).to eq("Bonjour")
+      expect(theme.reload.theme_translation_overrides.pluck(:locale)).to eq(["ja"])
+    end
+
+    it "removes an empty English locale file when the remote no longer declares it" do
+      add_to_git_repo(initial_repo, "locales/en.yml" => "en: {}\n")
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      File.delete("#{initial_repo}/locales/en.yml")
+      add_to_git_repo(initial_repo, "README.md" => "Removed locale file")
+
+      theme.remote_theme.update_from_remote
+
+      expect(
+        theme.reload.theme_fields.where(target_id: Theme.targets[:translations], name: "en"),
+      ).not_to exist
+    end
+
+    it "retains the generated English locale field across remote updates" do
+      File.delete("#{initial_repo}/locales/en.yml")
+      add_to_git_repo(
+        initial_repo,
+        "settings.yaml" =>
+          File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+      )
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      field = theme.theme_fields.find_by!(target_id: Theme.targets[:translations], name: "en")
+      field.invalidate_baked!
+      add_to_git_repo(initial_repo, "README.md" => "Updated documentation")
+      theme.remote_theme.update_from_remote
+      expect(
+        theme.reload.theme_fields.find_by!(target_id: Theme.targets[:translations], name: "en").id,
+      ).to eq(field.id)
+      expect(field.reload.javascript_cache.content).to include("Community guidelines")
+    end
+
     it "run pending theme settings migrations" do
       add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
         export default function migrate(settings) {
@@ -535,6 +754,30 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.first.data_type).to eq(SiteSetting.types[:bool])
       end
 
+      it "creates them while a plugin restricts theme edits" do
+        plugin = Plugin::Instance.new
+        modifier = proc { false }
+        plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "enable_welcome_banner" => false })
+              .to_json,
+        )
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+
+        expect(theme.theme_site_settings.pluck(:name, :value)).to eq([%w[enable_welcome_banner f]])
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+
       it "does not remove theme site settings that are no longer in about.json" do
         add_to_git_repo(
           initial_repo,
@@ -760,6 +1003,151 @@ RSpec.describe RemoteTheme do
     end
   end
 
+  describe "#update_from_remote" do
+    context "when the theme is a placeholder" do
+      let(:repo_url) { "git@github.com:discourse/private-component.git" }
+      let(:repo) do
+        setup_git_repo(
+          "about.json" => { name: "Private component", component: true }.to_json,
+          "common/header.html" => "HI",
+        )
+      end
+      let(:theme) do
+        Fabricate(
+          :theme,
+          name: "private-component",
+          remote_theme: RemoteTheme.create!(remote_url: repo_url, private_key: "private key"),
+        )
+      end
+      let(:remote_theme) { theme.remote_theme }
+
+      around(:each) { |example| MockGitImporter.with_mock { example.run } }
+
+      before { MockGitImporter.register(repo_url, repo) }
+      after { FileUtils.rm_rf(repo) }
+
+      it "uses the type from about.json even after the remote version has been checked" do
+        remote_theme.update_remote_version
+        expect(remote_theme.commits_behind).to eq(0)
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme).not_to be_placeholder
+        expect(theme.reload).to have_attributes(name: "Private component", component: true)
+      end
+
+      it "clears what a component can't have when switching to a component" do
+        child_component = Fabricate(:theme, component: true)
+        theme.update!(user_selectable: true, child_theme_ids: [child_component.id])
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload).to have_attributes(component: true, user_selectable: false)
+        expect(theme.child_themes).to be_empty
+      end
+
+      it "clears what a theme can't have when switching to a theme" do
+        add_to_git_repo(repo, "about.json" => { name: "Private theme" }.to_json)
+        parent_theme = Fabricate(:theme)
+        theme.update!(component: true)
+        parent_theme.update!(child_theme_ids: [theme.id])
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload.component).to eq(false)
+        expect(parent_theme.reload.child_themes).to be_empty
+      end
+
+      it "installs the child components listed in about.json" do
+        linked_url = "https://github.com/discourse/linked.git"
+        linked =
+          Fabricate(
+            :theme,
+            component: true,
+            remote_theme: Fabricate(:remote_theme, remote_url: linked_url),
+          )
+        new_repo = setup_git_repo("about.json" => { name: "New", component: true }.to_json)
+        new_url = MockGitImporter.register("https://github.com/discourse/new.git", new_repo)
+        theme.update!(child_theme_ids: [linked.id])
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [linked_url, new_url] }.to_json,
+        )
+
+        remote_theme.update_from_remote
+
+        expect(theme.reload.child_themes.map(&:name)).to contain_exactly(linked.name, "New")
+      ensure
+        FileUtils.rm_rf(new_repo)
+      end
+
+      it "applies the already installed child components to the site" do
+        linked_url = "https://github.com/discourse/linked.git"
+        linked =
+          Fabricate(
+            :theme,
+            component: true,
+            remote_theme: Fabricate(:remote_theme, remote_url: linked_url),
+          )
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [linked_url] }.to_json,
+        )
+
+        remote_theme.update_from_remote
+
+        expect(Theme.transform_ids(theme.id)).to contain_exactly(theme.id, linked.id)
+      end
+
+      it "finishes the installation without the child components that can't be installed" do
+        child_url = "https://github.com/discourse/private-child.git"
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [child_url] }.to_json,
+        )
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme.skipped_child_components).to contain_exactly(
+          url: child_url,
+          error: I18n.t("themes.import_error.git"),
+        )
+        expect(remote_theme.reload).not_to be_placeholder
+        expect(theme.reload.child_themes).to be_empty
+      end
+
+      it "finishes the installation when a child component fails unexpectedly" do
+        child_url = "https://github.com/discourse/child.git"
+        add_to_git_repo(
+          repo,
+          "about.json" => { name: "Private theme", components: [child_url] }.to_json,
+        )
+        RemoteTheme.stubs(:import_theme).raises(Theme::SettingsMigrationError, "boom")
+
+        remote_theme.update_from_remote
+
+        expect(remote_theme.skipped_child_components).to contain_exactly(
+          url: child_url,
+          error: "boom",
+        )
+        expect(remote_theme.reload).not_to be_placeholder
+      end
+
+      it "keeps everything when the theme can't become a component" do
+        child_component = Fabricate(:theme, component: true)
+        theme.update!(child_theme_ids: [child_component.id])
+        theme.set_default!
+
+        remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+
+        expect(theme.reload.component).to eq(false)
+        expect(theme).to be_default
+        expect(theme.child_themes).to contain_exactly(child_component)
+        expect(remote_theme.reload).to be_placeholder
+      end
+    end
+  end
+
   describe ".joined_remotes" do
     it "finds records that are associated with themes" do
       github_repo
@@ -807,6 +1195,81 @@ RSpec.describe RemoteTheme do
 
       remote.update!(last_error_text: nil)
       expect(described_class.unreachable_themes).to eq([])
+    end
+  end
+
+  describe ".update_zipped_theme" do
+    fab!(:theme)
+
+    let(:listed_url) { "https://github.com/discourse/listed.git" }
+    let(:unlisted_url) { "https://github.com/discourse/unlisted.git" }
+    let!(:listed_component) do
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme: Fabricate(:remote_theme, remote_url: listed_url),
+      )
+    end
+    let!(:unlisted_component) do
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme: Fabricate(:remote_theme, remote_url: unlisted_url),
+      )
+    end
+    let(:new_repo) { setup_git_repo("about.json" => { name: "New", component: true }.to_json) }
+    let(:new_url) { MockGitImporter.register("https://github.com/discourse/new.git", new_repo) }
+    let(:bundle_dir) { Dir.mktmpdir }
+
+    around(:each) { |example| MockGitImporter.with_mock { example.run } }
+
+    before { theme.update!(child_theme_ids: [listed_component.id, unlisted_component.id]) }
+
+    after { FileUtils.rm_rf([new_repo, bundle_dir]) }
+
+    def upload(update_components:)
+      FileUtils.mkdir_p("#{bundle_dir}/bundle")
+      File.write(
+        "#{bundle_dir}/bundle/about.json",
+        { name: theme.name, components: [listed_url, new_url] }.to_json,
+      )
+      zip = Compression::Zip.new.compress(bundle_dir, "bundle")
+
+      RemoteTheme.update_zipped_theme(zip, "bundle.zip", theme_id: theme.id, update_components:)
+    end
+
+    it "links the new components when adding without reimporting the linked ones" do
+      expect { upload(update_components: "add") }.to change { Theme.count }.by(1)
+
+      expect(theme.reload.child_themes.map(&:name)).to contain_exactly(
+        listed_component.name,
+        unlisted_component.name,
+        "New",
+      )
+    end
+
+    it "applies the already installed components it links to the site" do
+      new_component = RemoteTheme.import_theme(new_url)
+      Theme.transform_ids(theme.id)
+
+      upload(update_components: "add")
+
+      expect(Theme.transform_ids(theme.id)).to include(new_component.id)
+    end
+
+    it "unlinks the components that are no longer listed from this theme only when syncing" do
+      other_theme = Fabricate(:theme, child_theme_ids: [unlisted_component.id])
+
+      upload(update_components: "sync")
+
+      expect(theme.reload.child_themes.map(&:name)).to contain_exactly(listed_component.name, "New")
+      expect(other_theme.reload.child_themes).to contain_exactly(unlisted_component)
+    end
+
+    it "leaves the linked components untouched when components are set to none" do
+      expect { upload(update_components: "none") }.not_to change { Theme.count }
+
+      expect(theme.reload.child_themes).to contain_exactly(listed_component, unlisted_component)
     end
   end
 

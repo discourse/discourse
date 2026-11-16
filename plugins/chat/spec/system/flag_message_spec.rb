@@ -20,7 +20,7 @@ RSpec.describe "Flag message" do
     before { category_channel_1.add(current_user) }
 
     it "lets a user flag a message and then report illegal content" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
       SiteSetting.allow_all_users_to_flag_illegal_content = false
       current_user.activate
       chat.visit_channel(category_channel_1)

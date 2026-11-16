@@ -1055,6 +1055,15 @@ RSpec.describe ApplicationController do
       expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
     end
 
+    it "disallows a non-string public_key param without generating a keypair" do
+      args[:auth_redirect] = "discourse://auth_redirect"
+      args[:user_api_public_key] = 4_096
+
+      post "/posts", params: args.merge(raw: "hi", title: "test topic"), as: :json
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
+    end
+
     it "does not allow invalid auth_redirect" do
       args[:user_api_public_key] = public_key
       get "/latest", params: args
@@ -1786,16 +1795,14 @@ RSpec.describe ApplicationController do
 
   describe "vary header" do
     it "includes Vary:Accept on all requests where format is not explicit" do
-      # Rails default behaviour - include Vary:Accept when Accept is supplied
+      # Rails varies on both headers used for format negotiation
       get "/latest", headers: { "Accept" => "application/json" }
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
-      # Discourse additional behaviour (see lib/vary_header.rb)
-      # Include Vary:Accept even when Accept is not supplied
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
       # Not needed, because the path 'format' parameter overrides the Accept header
       get "/latest.json"

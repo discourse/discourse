@@ -9,7 +9,7 @@ class DiscourseEvents::Events::BuildSchemaMarkup
     validates :topic_id, presence: true
   end
 
-  policy :schema_markup_enabled
+  policy :post_events_enabled
   model :topic
   policy :can_see_topic
   model :first_post
@@ -18,8 +18,8 @@ class DiscourseEvents::Events::BuildSchemaMarkup
 
   private
 
-  def schema_markup_enabled
-    SiteSetting.enable_event_schema_for_topics && SiteSetting.discourse_post_event_enabled
+  def post_events_enabled
+    SiteSetting.discourse_post_event_enabled
   end
 
   def fetch_topic(params:)

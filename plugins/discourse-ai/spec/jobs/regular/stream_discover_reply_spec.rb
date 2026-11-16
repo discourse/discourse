@@ -725,6 +725,67 @@ describe Jobs::StreamDiscoverReply do
       )
     end
 
+    it "records what answered and how long the outcome took" do
+      freeze_time
+      ask_log.update!(asked_at: 3.seconds.ago)
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "answered",
+        ai_agent_id: SiteSetting.ai_ask_ai_agent.to_i,
+        llm_id: be_present,
+        time_to_outcome_ms: 3000,
+        no_answer_reason: nil,
+      )
+    end
+
+    it "times a requested answer from the request rather than the search" do
+      freeze_time
+      ask_log.update!(asked_at: 1.minute.ago, answer_requested_at: 2.seconds.ago)
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        time_to_first_answer_ms: 2000,
+        time_to_outcome_ms: 2000,
+      )
+    end
+
+    it "records why the model's reply gave no answer" do
+      allow(synthesis).to receive(:call) do |**_, &stream|
+        stream.call(answerable: false)
+        DiscourseAi::Discoveries::Synthesis::Result.new(
+          answerable: false,
+          source_refs: [],
+          answer: "",
+        )
+      end
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(
+        ask_outcome: "no_answer",
+        no_answer_reason: "abstained",
+      )
+    end
+
+    it "records when none of the model's sources resolve" do
+      allow(retrieval).to receive(:sources_for).and_return([])
+      allow(synthesis).to receive(:call) do |**_, &stream|
+        stream.call(answerable: true, source_refs: %w[source_9], answer: "An answer.")
+        DiscourseAi::Discoveries::Synthesis::Result.new(
+          answerable: true,
+          source_refs: %w[source_9],
+          answer: "An answer.",
+        )
+      end
+
+      job.execute(args)
+
+      expect(ask_log.reload).to have_attributes(no_answer_reason: "unresolved_sources")
+    end
+
     it "records an empty retrieval without inventing an answer latency" do
       allow(retrieval).to receive(:call).and_return(
         DiscourseAi::Discoveries::Retrieval::Result.new(candidates: []),
@@ -734,6 +795,7 @@ describe Jobs::StreamDiscoverReply do
 
       expect(ask_log.reload).to have_attributes(
         ask_outcome: "no_answer",
+        no_answer_reason: "no_candidates",
         candidate_post_ids: [],
         source_post_ids: [],
         answer: nil,

@@ -126,6 +126,12 @@ export default class AdminAssistantWorkflowPreview extends Component {
           </p>
         {{/if}}
 
+        {{#if this.preview.shortened}}
+          <p class="assistant-workflow-preview__notice">
+            {{i18n "discourse_workflows.admin_assistant.preview.shortened"}}
+          </p>
+        {{/if}}
+
         {{#if this.layout}}
           <div class="assistant-workflow-preview__scroller" tabindex="0">
             <div
@@ -222,9 +228,15 @@ export default class AdminAssistantWorkflowPreview extends Component {
             {{/if}}
             <span class="assistant-workflow-preview__details-label">
               {{dIcon "caret-right"}}
-              {{i18n
-                "discourse_workflows.admin_assistant.preview.exact_configuration"
-              }}
+              {{#if this.preview.shortened}}
+                {{i18n
+                  "discourse_workflows.admin_assistant.preview.shortened_configuration"
+                }}
+              {{else}}
+                {{i18n
+                  "discourse_workflows.admin_assistant.preview.exact_configuration"
+                }}
+              {{/if}}
             </span>
           </summary>
           <pre><code>{{this.exactConfiguration}}</code></pre>

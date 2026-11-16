@@ -16,7 +16,7 @@ RSpec.describe CopySentimentEnabledToEmotionEnabled do
 
   after { ActiveRecord::Migration.verbose = @original_verbose }
 
-  %w[t f].each do |value|
+  shared_examples "idempotently copying the stored sentiment setting" do |value:|
     it "copies the stored #{value} value and datatype idempotently" do
       DB.exec(<<~SQL, value: value)
         INSERT INTO site_settings (name, value, data_type, created_at, updated_at)
@@ -47,6 +47,14 @@ RSpec.describe CopySentimentEnabledToEmotionEnabled do
           SELECT value FROM site_settings WHERE name = 'ai_sentiment_emotion_enabled'
         SQL
     end
+  end
+
+  context "when the stored sentiment setting is enabled" do
+    include_examples "idempotently copying the stored sentiment setting", value: "t"
+  end
+
+  context "when the stored sentiment setting is disabled" do
+    include_examples "idempotently copying the stored sentiment setting", value: "f"
   end
 
   it "inserts nothing without a stored source setting" do

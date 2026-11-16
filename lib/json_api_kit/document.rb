@@ -7,14 +7,20 @@ module JsonApiKit
         case value
         when Document, Errors
           value
-        when Array, ActiveRecord::Relation
-          Collection.from(value, **yield)
         else
-          Individual.from(value, **yield)
+          from_resource(value, **yield)
         end
       end
 
       private
+
+      def from_resource(value, resource:, input:, client:)
+        if resource.adapter.collection?(value)
+          Collection.from(value, resource:, input:, client:)
+        else
+          Individual.from(value, resource:, input:, client:)
+        end
+      end
 
       def from_records(records, resource:, input:, client:)
         request = Request.new(input.to_h, guardian: client.guardian, edition: client.edition)
@@ -24,7 +30,13 @@ module JsonApiKit
       end
 
       def build(raw, resource:, client:)
-        resource = resource.new(guardian: client.guardian, edition: client.edition)
+        resource =
+          case resource
+          when Class
+            resource.new(guardian: client.guardian, edition: client.edition)
+          else
+            resource
+          end
         input = input_class.new(raw, resource:, edition: client.edition)
         return Errors.new(*input.refusals) if input.invalid?
         assemble(new(yield(input.to_h, resource), client:, fieldsets: input.fieldsets))

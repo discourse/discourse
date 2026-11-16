@@ -645,6 +645,33 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
     end
   end
 
+  describe "deadline" do
+    it "bounds SDK timeouts and disables SDK retries when the cancel manager has a deadline" do
+      stub_sdk_client(response: mock_converse_response)
+      cancel_manager = DiscourseAi::Completions::CancelManager.new(timeout: 20)
+
+      model.to_llm.generate("hello", user: user, cancel_manager: cancel_manager)
+
+      expect(Aws::BedrockRuntime::Client).to have_received(:new) do |params|
+        expect(params[:http_open_timeout]).to be_within(1).of(20)
+        expect(params[:http_read_timeout]).to be_within(1).of(20)
+        expect(params[:ssl_timeout]).to be_within(1).of(20)
+        expect(params).to include(retry_limit: 0, max_attempts: 1)
+      end
+    end
+
+    it "keeps SDK defaults without a deadline" do
+      stub_sdk_client(response: mock_converse_response)
+
+      model.to_llm.generate("hello", user: user)
+
+      expect(Aws::BedrockRuntime::Client).to have_received(:new) do |params|
+        expect(params[:http_read_timeout]).to eq(described_class::TIMEOUT)
+        expect(params).not_to include(:http_open_timeout, :retry_limit, :max_attempts)
+      end
+    end
+  end
+
   describe "credential resolution" do
     it "uses static credentials when access_key_id is provided" do
       stub_sdk_client(response: mock_converse_response)

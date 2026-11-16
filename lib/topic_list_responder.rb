@@ -4,6 +4,10 @@ module TopicListResponder
   def respond_with_list(list)
     discourse_expires_in 1.minute
 
+    if list.category && category_noindex?(list.category)
+      response.headers["X-Robots-Tag"] = noindex_header_value
+    end
+
     respond_to do |format|
       format.html do
         @list = list

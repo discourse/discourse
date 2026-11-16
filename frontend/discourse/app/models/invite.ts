@@ -26,8 +26,7 @@ export interface InviteFields {
   expired?: boolean;
   grants_admin?: boolean;
   grants_moderator?: boolean;
-  /** Server arrays do not supply firstObject; legacy client collections can. */
-  topics?: InviteTopic[] & { firstObject?: InviteTopic };
+  topics?: InviteTopic[];
   groups?: { id: number; name: string }[];
   redeemed_at?: string;
   invite_source?: "link" | "email";
@@ -90,13 +89,11 @@ export default class Invite extends EmberObject {
     }
     data.offset = offset || 0;
 
-    // TODO(typescript-pending): ajax has no endpoint response types; remove the assertion when generic.
-    const result = (await ajax(
-      userPath(`${user.username_lower}/invited.json`),
-      {
-        data,
-      }
-    )) as Omit<InvitedFields, "invites"> & { invites: InviteCreateAttrs[] };
+    const result = await ajax<
+      Omit<InvitedFields, "invites"> & { invites: InviteCreateAttrs[] }
+    >(userPath(`${user.username_lower}/invited.json`), {
+      data,
+    });
 
     result.invites = trackedArray(result.invites.map((i) => Invite.create(i)));
 
@@ -114,22 +111,22 @@ export default class Invite extends EmberObject {
     });
   }
 
-  @computed("topics.firstObject.id")
+  @computed("topics.@each.id")
   get topicId() {
-    return this.topics?.firstObject?.id;
+    return this.topics?.[0]?.id;
   }
 
   set topicId(value: number | undefined) {
-    set(this, "topics.firstObject.id", value);
+    set(this, "topics.0.id", value);
   }
 
-  @computed("topics.firstObject.title")
+  @computed("topics.@each.title")
   get topicTitle() {
-    return this.topics?.firstObject?.title;
+    return this.topics?.[0]?.title;
   }
 
   set topicTitle(value: string | undefined) {
-    set(this, "topics.firstObject.title", value);
+    set(this, "topics.0.title", value);
   }
 
   @computed("invite_key")
@@ -143,11 +140,9 @@ export default class Invite extends EmberObject {
     return this.groups ? this.groups.map((group) => group.id) : [];
   }
 
-  @computed("topics.firstObject")
+  @computed("topics.[]")
   get topic() {
-    return this.topics?.firstObject
-      ? Topic.create(this.topics?.firstObject)
-      : null;
+    return this.topics?.[0] ? Topic.create(this.topics[0]) : null;
   }
 
   @computed("email", "domain")
@@ -157,13 +152,13 @@ export default class Invite extends EmberObject {
 
   save(data: object) {
     const promise = this.id
-      ? ajax(`/invites/${this.id}`, { type: "PUT", data })
-      : ajax("/invites", { type: "POST", data });
+      ? ajax<Partial<InviteFields>>(`/invites/${this.id}`, {
+          type: "PUT",
+          data,
+        })
+      : ajax<Partial<InviteFields>>("/invites", { type: "POST", data });
 
-    // TODO(typescript-pending): ajax has no endpoint response types; remove the callback annotation when generic.
-    return promise.then((result: Partial<InviteFields>) =>
-      this.setProperties(result)
-    );
+    return promise.then((result) => this.setProperties(result));
   }
 
   /** Deletes the invite remotely rather than scheduling Ember destruction. */

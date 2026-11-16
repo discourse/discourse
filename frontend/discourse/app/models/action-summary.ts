@@ -78,25 +78,19 @@ export default class ActionSummary extends RestModel {
     });
 
     // Create our post action
-    // TODO(typescript-pending): ajax has no typed returnXHR response; remove when it does.
-    return (
-      ajax("/post_actions", {
-        type: "POST",
-        data: {
-          id: this.flagTopic ? this.get("flagTopic.id") : post.get("id"),
-          post_action_type_id: this.id,
-          message: opts.message,
-          is_warning: opts.isWarning,
-          take_action: opts.takeAction,
-          queue_for_review: opts.queue_for_review,
-          flag_topic: this.flagTopic ? true : false,
-        },
-        returnXHR: true,
-      }) as Promise<{
-        result: unknown;
-        xhr: Pick<XMLHttpRequest, "getResponseHeader">;
-      }>
-    )
+    return ajax<unknown>("/post_actions", {
+      type: "POST",
+      data: {
+        id: this.flagTopic ? this.get("flagTopic.id") : post.get("id"),
+        post_action_type_id: this.id,
+        message: opts.message,
+        is_warning: opts.isWarning,
+        take_action: opts.takeAction,
+        queue_for_review: opts.queue_for_review,
+        flag_topic: this.flagTopic ? true : false,
+      },
+      returnXHR: true,
+    })
       .then((data): { acted: true; remaining: number; max: number } => {
         if (!this.flagTopic) {
           // Topic flag actions skip this post-only refresh.

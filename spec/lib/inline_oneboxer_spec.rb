@@ -421,6 +421,22 @@ RSpec.describe InlineOneboxer do
     end
   end
 
+  describe "title truncation" do
+    it "truncates overly long remote titles" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      url = "https://eviltrout.com/long-title"
+
+      stub_request(:get, url).to_return(
+        status: 200,
+        body: "<html><head><title>#{"A" * 600}</title></head></html>",
+      )
+
+      onebox = InlineOneboxer.lookup(url, skip_cache: true)
+
+      expect(onebox[:title].length).to eq(InlineOneboxer::MAX_TITLE_LENGTH)
+    end
+  end
+
   describe ".register_local_handler" do
     it "calls registered local handler" do
       InlineOneboxer.register_local_handler("wizard") do |url, route|
@@ -506,6 +522,36 @@ RSpec.describe InlineOneboxer do
       subdomain_url = "https://api.example.com/foo"
       expect(InlineOneboxer.lookup(subdomain_url, skip_cache: true)).to be_nil
       expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+  end
+
+  describe "allowed_inline_onebox_domains matching" do
+    before do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for).and_return(nil)
+      RetrieveTitle.stubs(:crawl).returns("Example Title")
+    end
+
+    it "oneboxes an allowlisted host regardless of casing" do
+      onebox = InlineOneboxer.lookup("https://EXAMPLE.com/foo", skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:title]).to eq("Example Title")
+    end
+
+    it "oneboxes an allowlisted host requested as a trailing-dot FQDN" do
+      onebox = InlineOneboxer.lookup("https://example.com./foo", skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:title]).to eq("Example Title")
+    end
+
+    it "does not widen the exact allowlist to subdomains" do
+      expect(InlineOneboxer.lookup("https://dev.example.com/foo", skip_cache: true)).to be_nil
+    end
+
+    it "gives blocked_onebox_domains precedence over the allowlist" do
+      SiteSetting.blocked_onebox_domains = "example.com."
+      expect(InlineOneboxer.lookup("https://example.com/foo", skip_cache: true)).to be_nil
     end
   end
 

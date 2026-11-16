@@ -722,7 +722,11 @@ module DiscourseTagging
 
     if opts[:with_context]
       context = {}
-      if required_category_tag_group
+      if required_category_tag_group &&
+           (
+             !filter_for_non_admin ||
+               TagGroup.visible(guardian).exists?(id: required_category_tag_group.tag_group_id)
+           )
         context[:required_tag_group] = {
           name: required_category_tag_group.tag_group.name,
           min_count: required_category_tag_group.min_count,
@@ -938,8 +942,8 @@ module DiscourseTagging
     DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)
   end
 
-  def self.find_or_create_tags!(tag_names, guardian)
-    tag_names = tags_for_saving(tag_names, guardian) || []
+  def self.find_or_create_tags!(tag_names, guardian, **options)
+    tag_names = tags_for_saving(tag_names, guardian, options) || []
     return [] if tag_names.empty?
 
     existing_tag_names = Tag.where_name(tag_names).pluck(:name)
