@@ -4,7 +4,7 @@ import EmberObject, { action } from "@ember/object";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Badge from "discourse/models/badge";
-import UserBadge from "discourse/models/user-badge";
+import UserBadge, { USER_BADGES_PAGE_SIZE } from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
 
 export default class ShowController extends Controller {
@@ -90,10 +90,11 @@ export default class ShowController extends Controller {
       const result = await UserBadge.findByBadgeId(this.model.id, {
         offset: userBadges.length,
         username: this.username,
+        limit: USER_BADGES_PAGE_SIZE,
       });
 
       userBadges.push(...result);
-      if (userBadges.length === 0) {
+      if (result.length < USER_BADGES_PAGE_SIZE) {
         this.noMoreBadges = true;
       }
     } finally {

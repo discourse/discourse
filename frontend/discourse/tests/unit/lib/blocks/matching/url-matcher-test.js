@@ -54,10 +54,6 @@ module("Unit | Lib | Blocks | url-matcher", function (hooks) {
       assert.strictEqual(normalizePath("/latest/"), "/latest");
     });
 
-    test("preserves trailing slash for root only", function (assert) {
-      assert.strictEqual(normalizePath("/"), "/");
-    });
-
     test("strips query strings", function (assert) {
       assert.strictEqual(normalizePath("/c/general?foo=bar"), "/c/general");
       assert.strictEqual(

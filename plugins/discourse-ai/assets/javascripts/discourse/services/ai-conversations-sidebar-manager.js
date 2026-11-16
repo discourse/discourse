@@ -40,7 +40,6 @@ export default class AiConversationsSidebarManager extends Service {
   page = 0;
   hasMore = true;
   _registered = new Set();
-  _hasScrollListener = false;
   _scrollElement = null;
   _didInit = false;
 
@@ -78,7 +77,7 @@ export default class AiConversationsSidebarManager extends Service {
     this.appEvents.on(
       "discourse-ai:conversations-sidebar-updated",
       this,
-      this._attachScrollListener
+      this.#attachScrollListener
     );
 
     if (this.currentUser) {
@@ -88,6 +87,7 @@ export default class AiConversationsSidebarManager extends Service {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.#removeScrollListener();
     this.appEvents.off(
       "discourse-ai:bot-pm-created",
       this,
@@ -96,7 +96,7 @@ export default class AiConversationsSidebarManager extends Service {
     this.appEvents.off(
       "discourse-ai:conversations-sidebar-updated",
       this,
-      this._attachScrollListener
+      this.#attachScrollListener
     );
 
     this.messageBus.unsubscribe(TITLE_CHANNEL);
@@ -170,7 +170,7 @@ export default class AiConversationsSidebarManager extends Service {
       this.appEvents.trigger("discourse-ai:stop-forcing-conversations-sidebar");
     }
 
-    this._removeScrollListener();
+    this.#removeScrollListener();
   }
 
   async fetchMessages() {
@@ -248,30 +248,26 @@ export default class AiConversationsSidebarManager extends Service {
     }
   }
 
-  _attachScrollListener() {
+  #attachScrollListener() {
     const sections = document.querySelector(
       ".sidebar-sections.ai-conversations-panel"
     );
-    this._scrollElement = sections;
 
-    if (this._hasScrollListener || !this._scrollElement) {
+    if (sections === this._scrollElement) {
       return;
     }
 
-    sections.addEventListener("scroll", this._debouncedScrollHandler);
-
-    this._hasScrollListener = true;
+    this.#removeScrollListener();
+    this._scrollElement = sections;
+    sections?.addEventListener("scroll", this._debouncedScrollHandler);
   }
 
-  _removeScrollListener() {
-    if (this._hasScrollListener) {
-      this._scrollElement.removeEventListener(
-        "scroll",
-        this._debouncedScrollHandler
-      );
-      this._hasScrollListener = false;
-      this._scrollElement = null;
-    }
+  #removeScrollListener() {
+    this._scrollElement?.removeEventListener(
+      "scroll",
+      this._debouncedScrollHandler
+    );
+    this._scrollElement = null;
   }
 
   _captureLastKnownAppURL() {

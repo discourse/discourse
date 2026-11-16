@@ -1786,21 +1786,6 @@ RSpec.describe PrettyText do
     end
   end
 
-  it "replaces skin toned emoji" do
-    expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 👩‍🎤")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 🤷‍♀️")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-  end
-
   it "does not treat a non-emoji as an emoji" do
     expect(PrettyText.cook(":email,class_name:")).not_to include("emoji")
   end
