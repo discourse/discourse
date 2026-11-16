@@ -8546,6 +8546,7 @@ zh_CN:
               at_least:
                 other: "至少需要 %{count} 个标签"
             string:
+              invalid_translation_identifier: "最多使用80个字符，起始于小写字母，只包含小写字母、数字和下划线。"
               too_short:
                 other: "必须至少为 %{count} 个字符"
             number:
@@ -9570,16 +9571,20 @@ zh_CN:
         theme: "主题或组件"
         all_themes: "所有站点文本"
         theme_disabled: "已禁用"
+        usable_keys: "翻译键名"
+        manage_translations: "管理翻译"
         filters: "筛选器"
         filters_active:
           other: "筛选（%{count}）"
         edit_title: "编辑站点文本"
         default_text: "默认文本"
+        default_text_language: "默认文本 · %{language}"
         value_label: "您的文本 · %{language}"
         invalid_title: "无效的插值占位符"
         invalid_description: "此文本使用无法识别的占位符。使用下面可用的插值键。"
         status:
           customized: "定制"
+          unknown: "未知的基准"
           outdated: "过期"
           invalid: "无效"
         title: "网站文本"
@@ -9599,6 +9604,8 @@ zh_CN:
         interpolation_key_insert: "点击插入"
         interpolation_key_used: "已使用"
         interpolation_key_invalid: "未知密钥 – 将不会进行插值"
+        unknown:
+          title: "上一个默认值未被记录"
         outdated:
           title: "此翻译已过时"
           description: "自此替换创建以来，此键的默认翻译已更改。请在下面检查您的翻译是否与对原始意图所做的任何更改相符。"

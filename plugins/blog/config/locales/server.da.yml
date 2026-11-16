@@ -14,6 +14,7 @@ da:
     about: Om
     community: Fællesskab
     preview: Forhåndsvisning
+    author: Forfatter
     search: Søg
     replies:
       one: "%{count} svar"

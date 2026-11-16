@@ -206,6 +206,15 @@ zh_CN:
     ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总到每日统计之前要保留的天数。设为 0 表示不进行汇总。"
     ai_audit_logs_detailed_retention_days: "保留原始 AI 请求和响应有效负载的天数。设置为 0 则有效负载将保留至摘要日志被删除。原始有效负载可能包含私人或敏感内容。即使 AI 插件已禁用，清理工作仍将继续。"
     ai_audit_logs_purge_after_days: "保留 AI API 审计日志摘要若干天后，将删除整个日志。设置为 0 则永久保留摘要。AI 插件禁用期间，清理工作将继续进行。"
+    keywords:
+      ai_default_llm_model: "默认语言模型"
+      ai_discord_search_enabled: "discord 集成"
+      ai_helper_automatic_chat_thread_title: "聊天消息串标题"
+      ai_sentiment_backfill_post_max_age_days: "发布年龄限制（天数）"
+      ai_sentiment_emotion_classification_strategy: "后端"
+      ai_sentiment_sentiment_classification_strategy: "后端"
+      ai_summarization_enabled: "总结"
+      ai_summary_gists_enabled: "话题列表的简短总结"
   reviewables:
     reasons:
       flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了标记。

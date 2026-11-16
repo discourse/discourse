@@ -1346,6 +1346,11 @@ pt:
       reply_by_email_address_is_empty: "É necessário definir um email para 'resposta por endereço de email' antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
+    keywords:
+      company_url: "site"
+      large_icon: "ícone quadrado"
+      logo: "logótipo principal"
+      logo_small: "logótipo pequeno"
   search:
     within_post: "#%{post_number} por %{username}"
     types:
