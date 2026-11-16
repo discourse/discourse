@@ -219,6 +219,16 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_embed_media" do
+    fab!(:group)
+
+    it "is true for users in embedded_media_post_allowed_groups" do
+      SiteSetting.embedded_media_post_allowed_groups = group.id
+      group.add(user)
+      expect(serializer.as_json[:can_embed_media]).to eq(true)
+    end
+  end
+
   describe "#can_review" do
     let(:guardian) { user.guardian }
     let(:payload) { serializer.as_json }
