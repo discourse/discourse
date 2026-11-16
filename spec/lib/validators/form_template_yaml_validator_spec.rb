@@ -70,6 +70,58 @@ RSpec.describe FormTemplateYamlValidator, type: :validator do
     end
   end
 
+  describe "#check_field_options" do
+    context "when attributes or validations are not sets of options" do
+      let(:yaml_content) { <<~YAML }
+          - type: input
+            id: name
+            attributes: true
+          - type: input
+            id: other
+            validations: "required"
+        YAML
+
+      it "adds an error for each field" do
+        validator.validate(form_template)
+        expect(form_template.errors[:template].count).to eq(2)
+        expect(form_template.errors[:template]).to all(
+          eq(I18n.t("form_templates.errors.invalid_field_options")),
+        )
+      end
+    end
+
+    context "when a field is not a set of options" do
+      let(:yaml_content) { <<~YAML }
+          - name
+        YAML
+
+      it "adds an error" do
+        validator.validate(form_template)
+        expect(form_template.errors[:template]).to include(
+          I18n.t("form_templates.errors.invalid_field"),
+        )
+      end
+    end
+
+    context "when the same field has other problems" do
+      let(:yaml_content) { <<~YAML }
+          - type: input
+            id: name
+            attributes: true
+          - type: input
+            id: name
+        YAML
+
+      it "reports them together" do
+        validator.validate(form_template)
+        expect(form_template.errors[:template]).to include(
+          I18n.t("form_templates.errors.invalid_field_options"),
+          I18n.t("form_templates.errors.duplicate_ids"),
+        )
+      end
+    end
+  end
+
   describe "#check_allowed_types" do
     context "when YAML has invalid field types" do
       let(:yaml_content) { <<~YAML }
@@ -162,6 +214,22 @@ RSpec.describe FormTemplateYamlValidator, type: :validator do
             id: name
           - type: input
             id: name
+        YAML
+
+      it "adds an error for duplicate ids" do
+        validator.validate(form_template)
+        expect(form_template.errors[:template]).to include(
+          I18n.t("form_templates.errors.duplicate_ids"),
+        )
+      end
+    end
+
+    context "when ids only differ in type" do
+      let(:yaml_content) { <<~YAML }
+          - type: input
+            id: 1
+          - type: input
+            id: '1'
         YAML
 
       it "adds an error for duplicate ids" do

@@ -21,7 +21,18 @@ module FormTemplateSubmissions
       on_failed_policy(:answers_are_complete) do |policy|
         render_json_error(policy.reason, status: :unprocessable_entity)
       end
-      on_exceptions(Liquid::Error) do
+      on_exceptions(Liquid::Error) do |exception, form_template: nil|
+        # Previews render on every pause in typing, so only failed submissions are worth logging.
+        if !options[:allow_incomplete_answers]
+          Discourse.warn_exception(
+            exception,
+            message: "Form template output failed to render",
+            env: {
+              category_id:,
+              form_template_id: form_template&.id,
+            },
+          )
+        end
         render_json_error(
           I18n.t("form_templates.output_unavailable"),
           status: :unprocessable_entity,

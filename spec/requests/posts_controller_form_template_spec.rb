@@ -50,6 +50,30 @@ RSpec.describe PostsController do
       expect(created_post.cooked).to include("<strong>description</strong>")
     end
 
+    it "logs submissions the output template fails to render" do
+      form_template.update!(output_template: "{{ 1 | divided_by: 0 }}")
+      Discourse
+        .expects(:warn_exception)
+        .with do |_, env:, **|
+          env[:form_template_id] == form_template.id && env[:category_id].to_i == category.id
+        end
+        .once
+
+      post "/posts.json",
+           params: {
+             title: "A session the output template cannot render",
+             category: category.id,
+             form_template_data: {
+               id: form_template.id,
+               answers: {
+                 description: "A sufficiently long description.",
+               },
+             }.to_json,
+           }
+
+      expect(response.status).to eq(422)
+    end
+
     it "uses the configured output template" do
       form_template.update!(output_template: "## Session\n{{ answers.description }}")
       post "/posts.json",

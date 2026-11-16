@@ -291,6 +291,19 @@ RSpec.describe FormTemplatesController do
       expect(response.parsed_body["raw"]).to eq("## Invitation\n")
     end
 
+    it "does not log previews the output template fails to render" do
+      render_template.update!(output_template: "{{ 1 | divided_by: 0 }}")
+      Discourse.expects(:warn_exception).never
+
+      post "/form-templates/render.json",
+           params: {
+             category_id: category.id,
+             form_template_data: { id: render_template.id, answers: {} }.to_json,
+           }
+
+      expect(response.status).to eq(422)
+    end
+
     it "rejects output that exceeds the post length limit" do
       SiteSetting.max_post_length = 10
       render_template.update!(output_template: "{{ answers.description }}")

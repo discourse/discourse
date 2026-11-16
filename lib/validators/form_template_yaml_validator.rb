@@ -25,15 +25,25 @@ class FormTemplateYamlValidator < ActiveModel::Validator
 
     existing_ids = []
     yaml.each do |field|
+      if !field.is_a?(Hash)
+        record.errors.add(:template, I18n.t("form_templates.errors.invalid_field"))
+        next
+      end
+      check_field_options(record, field)
       check_missing_fields(record, field)
       check_allowed_types(record, field)
       check_ids(record, field, existing_ids)
       check_descriptions_html(record, field)
     end
 
-    check_tag_groups(record, yaml.map { |f| f["tag_group"] })
+    check_tag_groups(record, yaml.filter_map { |f| f["tag_group"] if f.is_a?(Hash) })
   rescue Psych::SyntaxError
     record.errors.add(:template, I18n.t("form_templates.errors.invalid_yaml"))
+  end
+
+  def check_field_options(record, field)
+    return if %w[attributes validations].all? { |key| field[key].nil? || field[key].is_a?(Hash) }
+    record.errors.add(:template, I18n.t("form_templates.errors.invalid_field_options"))
   end
 
   def check_allowed_types(record, field)
@@ -57,6 +67,7 @@ class FormTemplateYamlValidator < ActiveModel::Validator
   end
 
   def check_descriptions_html(record, field)
+    return if !field["attributes"].is_a?(Hash)
     description = field.dig("attributes", "description")
 
     return if description.blank?
@@ -75,11 +86,12 @@ class FormTemplateYamlValidator < ActiveModel::Validator
       record.errors.add(:template, I18n.t("form_templates.errors.reserved_id", id: field["id"]))
     end
 
-    if existing_ids.include?(field["id"])
+    # Answers are keyed by the id as a string, so `1` and `'1'` collide.
+    if existing_ids.include?(field["id"].to_s)
       record.errors.add(:template, I18n.t("form_templates.errors.duplicate_ids"))
     end
 
-    existing_ids << field["id"] if field["id"].present?
+    existing_ids << field["id"].to_s if field["id"].present?
   end
 
   def check_tag_groups(record, tag_group_names)

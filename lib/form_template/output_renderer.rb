@@ -15,10 +15,15 @@ class FormTemplate::OutputRenderer
     end
   end
 
+  # Lax parsing accepts templates that only fail once rendered.
+  def self.parse(source)
+    Liquid::Template.parse(source, error_mode: :strict, line_numbers: true)
+  end
+
   def self.render(field_values, source)
     return FormTemplate::DefaultRenderer.render(field_values) if source.blank?
 
-    template = Liquid::Template.parse(source)
+    template = parse(source)
     template.resource_limits.render_length_limit = SiteSetting.max_post_length * 4
     template.resource_limits.render_score_limit = RENDER_SCORE_LIMIT
     template.resource_limits.assign_score_limit = ASSIGN_SCORE_LIMIT
