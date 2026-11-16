@@ -19,6 +19,37 @@ module("Unit | Lib | codeblock-buttons", function (hooks) {
     this.buttons.cleanup();
   });
 
+  test("the AI badge shares the copy and expand controls' scrollbar offset", function (assert) {
+    this.buttons = new CodeblockButtons({ site: { desktopView: true } });
+    const container = fixture();
+    const pre = document.createElement("pre");
+    pre.dataset.codeAi = "true";
+    const badge = document.createElement("span");
+    badge.className = "ai-badge";
+    const code = document.createElement("code");
+    code.textContent = "const answer = 42;";
+    pre.append(badge, code);
+    container.appendChild(pre);
+
+    this.buttons.attachToGeneric(container);
+
+    const controls = pre.querySelector(".codeblock-button-wrapper");
+    assert.dom(".copy-cmd", controls).exists("the row has a copy control");
+    assert
+      .dom(".fullscreen-cmd", controls)
+      .exists("the row has an expand control");
+    assert.strictEqual(
+      controls.lastElementChild,
+      badge,
+      "the badge is at the end of the row"
+    );
+    assert.strictEqual(
+      controls.style.insetInlineEnd,
+      `${code.offsetWidth - code.clientWidth}px`,
+      "the full row is offset from the scrollbar"
+    );
+  });
+
   for (const attachment of ["post", "generic"]) {
     test(`copying a ${attachment} code block preserves whitespace`, async function (assert) {
       const text =

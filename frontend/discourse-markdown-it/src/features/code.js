@@ -1,8 +1,10 @@
+import { aiBadgeAllowList, renderAiBadge } from "../ai-badge.js";
+
 // we need a custom renderer for code blocks cause we have a slightly non compliant
 // format with special handling for text and so on
 const TEXT_CODE_CLASSES = ["text", "pre", "plain"];
 
-function extractTokenInfo(info, md) {
+export function extractTokenInfo(info, md) {
   if (!info) {
     return;
   }
@@ -67,7 +69,9 @@ function render(tokens, idx, options, env, slf, md) {
     })
     .join(" ");
 
-  return `<pre${dataAttributes ? ` ${dataAttributes}` : ""}><code${
+  const badge = attributes.ai === "true" ? renderAiBadge(md) : "";
+
+  return `<pre${dataAttributes ? ` ${dataAttributes}` : ""}>${badge}<code${
     className ? ` class="${className}"` : ""
   }>${escapedContent}</code></pre>\n`;
 }
@@ -77,7 +81,7 @@ export function setup(helper) {
     opts.defaultCodeLang = siteSettings.default_code_lang;
   });
 
-  helper.allowList(["pre[data-code-*]"]);
+  helper.allowList(["pre[data-code-*]", ...aiBadgeAllowList]);
 
   helper.allowList({
     custom(tag, name, value) {

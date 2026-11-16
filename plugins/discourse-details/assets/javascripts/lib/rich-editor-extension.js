@@ -8,23 +8,43 @@ const extension = {
       selectable: true,
       defining: true,
       isolating: true,
-      parseDOM: [{ tag: "details" }],
+      parseDOM: [
+        {
+          tag: "details",
+          getAttrs: (dom) => ({ ai: dom.classList.contains("ai-quote") }),
+        },
+      ],
       toDOM: (node) => [
         "details",
-        { open: node.attrs.open || undefined, ai: node.attrs.ai || undefined },
+        {
+          open: node.attrs.open || undefined,
+          class: node.attrs.ai ? "ai-quote" : undefined,
+        },
         0,
       ],
     },
     summary: {
       content: "inline*",
-      parseDOM: [{ tag: "summary" }],
+      parseDOM: [
+        {
+          tag: "details.ai-quote > summary",
+          contentElement: (dom) =>
+            dom.querySelector(":scope > .ai-details-label") &&
+            dom.firstElementChild?.matches("span")
+              ? dom.firstElementChild
+              : dom,
+        },
+        { tag: "summary" },
+      ],
       toDOM: () => ["summary", 0],
     },
   },
   parse: {
     bbcode_open(state, token) {
       if (token.tag === "details") {
-        state.openNode(state.schema.nodes.details);
+        state.openNode(state.schema.nodes.details, {
+          ai: token.attrGet("class") === "ai-quote",
+        });
         return true;
       }
 
@@ -45,25 +65,22 @@ const extension = {
       state.renderContent(node);
       state.write("[/details]\n\n");
     },
-    summary(state, node) {
-      let hasSummary = false;
-      // If the [details] tag has no summary.
-      if (node.content.childCount === 0) {
-        state.write("[details");
-      } else {
-        hasSummary = true;
+    summary(state, node, details) {
+      if (node.content.childCount > 0) {
         state.write('[details="');
         node.content.forEach(
           (child) =>
             child.text &&
             state.text(child.text.replace(/"/g, "“"), state.inAutolink)
         );
+        state.write('"');
+      } else {
+        state.write("[details");
       }
-      let finalState = "]\n";
-      if (hasSummary) {
-        finalState = `"${finalState}`;
+      if (details.attrs?.ai) {
+        state.write(" ai=true");
       }
-      state.write(finalState);
+      state.write("]\n");
     },
   },
   plugins: {
@@ -77,6 +94,7 @@ const extension = {
         const details = view.state.doc.nodeAt(nodePos - 1);
         view.dispatch(
           view.state.tr.setNodeMarkup(nodePos - 1, null, {
+            ...details.attrs,
             open: !details.attrs.open,
           })
         );

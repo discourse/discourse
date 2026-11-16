@@ -1,4 +1,4 @@
-import { click } from "@ember/test-helpers";
+import { click, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -40,19 +40,53 @@ module(
           `[details]\nThis text will be hidden\n\n[/details]\n\n`,
         ],
       ],
+      "details with an AI marker": [
+        [
+          `[details="Summary" ai=true]Hidden text[/details]`,
+          `<details open="true" class="ai-quote"><summary>Summary</summary><p>Hidden text</p></details>`,
+          `[details="Summary" ai=true]\nHidden text\n\n[/details]\n\n`,
+        ],
+      ],
+      "details with an AI marker and no summary": [
+        [
+          `[details ai=true]Hidden text[/details]`,
+          `<details open="true" class="ai-quote"><summary></summary><p>Hidden text</p></details>`,
+          `[details ai=true]\nHidden text\n\n[/details]\n\n`,
+        ],
+      ],
     };
 
     Object.entries(testCases).forEach(([name, tests]) => {
       tests.forEach(([markdown, expectedHtml, expectedMarkdown]) => {
         test(name, async function (assert) {
-          await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
+          await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown, {
+            multiToggle: true,
+          });
         });
       });
     });
 
+    test("pasting marked details preserves the marker and summary", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "");
+
+      editor.view.pasteHTML(
+        '<details class="ai-quote"><summary><span>Summary</span><span class="ai-details-label">AI</span></summary><p>Hidden text</p></details>'
+      );
+      await settled();
+
+      assert
+        .dom(".ProseMirror details summary")
+        .hasText("Summary", "the rendered badge stays out of the summary");
+      assert.strictEqual(
+        editor.value,
+        '[details="Summary" ai=true]\nHidden text\n\n[/details]\n\n',
+        "the pasted label is serialized as an AI marker"
+      );
+    });
+
     test("opens and closes details on click", async function (assert) {
-      const detailsMarkdown = `[details="Summary"]This text will be hidden[/details]`;
-      await setupRichEditor(assert, detailsMarkdown);
+      const detailsMarkdown = `[details="Summary" ai=true]\nThis text will be hidden\n\n[/details]\n\n`;
+      const [editor] = await setupRichEditor(assert, detailsMarkdown);
 
       const detailsCss = ".d-editor-input details";
       const summaryCss = `${detailsCss} summary`;
@@ -60,6 +94,11 @@ module(
 
       await click(summaryCss);
       assert.dom(detailsCss).doesNotHaveAttribute("open");
+      assert.strictEqual(
+        editor.value,
+        detailsMarkdown,
+        "closing keeps the AI marker"
+      );
 
       // click elsewhere first to avoid a double-click being detected
       await click(`${detailsCss} p`);
