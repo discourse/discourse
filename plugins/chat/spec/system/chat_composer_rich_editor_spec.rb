@@ -214,6 +214,64 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.composer).to have_value(":grimacing: @#{other_user.username} ")
   end
 
+  it "completes mentions before the online users are known" do
+    chat_page.visit_channel(channel_1)
+    page.execute_script(<<~JS)
+      Object.defineProperty(Discourse.lookup("service:chat").presenceChannel, "users", {
+        configurable: true,
+        get: () => undefined,
+      });
+    JS
+
+    channel_page.composer.input.send_keys("@#{other_user.username}")
+
+    expect(page).to have_css(".autocomplete.ac-user", text: other_user.username)
+  end
+
+  it "doesn't suggest hashtags inside a link" do
+    Fabricate(:category, name: "Gizmos", slug: "gizmos")
+    chat_page.visit_channel(channel_1)
+
+    place_caret_in = ->(linked) { page.execute_script(<<~JS, linked) }
+      const linked = arguments[0];
+      const editor = Discourse.lookup("service:chat-channel-composer").editor;
+      const view = editor.textManipulation?.view ?? editor.view;
+      const { schema } = view.state;
+      const marks = linked ? [schema.marks.link.create({ href: "https://example.com" })] : [];
+      const paragraph = schema.nodes.paragraph.create(null, [
+        schema.text("see "),
+        schema.text("docs here", marks),
+      ]);
+      let tr = view.state.tr.replaceWith(0, view.state.doc.content.size, paragraph);
+      tr = tr.setSelection(view.state.selection.constructor.near(tr.doc.resolve(9)));
+      view.dispatch(tr);
+      view.focus();
+    JS
+
+    place_caret_in.call(false)
+    channel_page.composer.input.send_keys(" #giz")
+    expect(page).to have_css(".hashtag-autocomplete")
+
+    channel_page.composer.input.send_keys(:escape)
+    expect(page).to have_no_css(".hashtag-autocomplete")
+    place_caret_in.call(true)
+    channel_page.composer.input.send_keys(" #giz")
+    expect(channel_page.composer).to have_value("see [docs #giz here](https://example.com)")
+
+    # a bounded wait, since absence alone passes before the search returns
+    shown_in_link = page.evaluate_async_script(<<~JS)
+      const done = arguments[0];
+      const started = Date.now();
+      const poll = () => {
+        if (document.querySelector(".hashtag-autocomplete")) return done(true);
+        if (Date.now() - started > 2000) return done(false);
+        setTimeout(poll, 50);
+      };
+      poll();
+    JS
+    expect(shown_in_link).to eq(false)
+  end
+
   it "replaces a partial emoji term picked from the full picker" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.input.send_keys("hey :gri")

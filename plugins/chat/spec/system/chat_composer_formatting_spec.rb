@@ -35,6 +35,36 @@ RSpec.describe "Chat composer formatting" do
       expect(channel_page.composer).to have_value("ship it **now**")
     end
 
+    it "leaves a selected image to its own toolbar" do
+      chat_page.visit_channel(channel_1)
+      expect(channel_page.composer).to have_rich_editor
+      page.execute_script(<<~JS)
+        const editor = Discourse.lookup("service:chat-channel-composer").editor;
+        const view = editor.textManipulation?.view ?? editor.view;
+        const { schema } = view.state;
+        const image = schema.nodes.image.create({ src: "/images/avatar.png", alt: "avatar" });
+        const paragraph = schema.nodes.paragraph.create(null, [schema.text("a "), image]);
+        view.dispatch(view.state.tr.replaceWith(0, view.state.doc.content.size, paragraph));
+      JS
+
+      find(".chat-composer__input img[alt='avatar']", match: :first).click
+
+      # a bounded wait, since absence alone passes before the menu would open
+      shown = page.evaluate_async_script(<<~JS)
+        const done = arguments[0];
+        const started = Date.now();
+        const poll = () => {
+          if (document.querySelector(".fk-d-menu[data-identifier='composer-selection-toolbar']")) {
+            return done(true);
+          }
+          if (Date.now() - started > 1500) return done(false);
+          setTimeout(poll, 50);
+        };
+        poll();
+      JS
+      expect(shown).to eq(false)
+    end
+
     it "leaves selections to the formatting bar while it is shown" do
       chat_page.visit_channel(channel_1)
       channel_page.composer.toggle_formatting_bar
