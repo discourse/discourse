@@ -35,6 +35,7 @@ pl_PL:
       resize: "Zmień rozmiar edytora kodu"
     code_editor:
       resize: "Zmień rozmiar edytora kodu"
+      load_failed: "Edytor kodu nie mógł się załadować. Odśwież stronę, aby spróbować ponownie."
       tab_hint: "Naciśnij Escape, a następnie Tab, aby przenieść fokus poza edytor."
       completions: "Uzupełnienia"
       search:
@@ -9654,6 +9655,7 @@ pl_PL:
                 many: "wymagane jest co najmniej %{count} tagów"
                 other: "wymagane jest co najmniej %{count} tagów"
             string:
+              invalid_translation_identifier: "Można użyć maksymalnie 80 znaków, zaczynając od małej litery i składając się wyłącznie z małych liter, cyfr i podkreśleń."
               too_short:
                 one: "musi zawierać co najmniej %{count} znak"
                 few: "musi zawierać co najmniej %{count} znaki"
@@ -10736,6 +10738,8 @@ pl_PL:
         theme: "Motyw lub komponent"
         all_themes: "Wszystkie teksty witryny"
         theme_disabled: "Wyłączone"
+        usable_keys: "Klucze tłumaczeniowe"
+        manage_translations: "Zarządzaj tłumaczeniami"
         filters: "Filtry"
         filters_active:
           one: "Filtry (%{count})"
@@ -10744,11 +10748,13 @@ pl_PL:
           other: "Filtry (%{count})"
         edit_title: "Edytuj tekst witryny"
         default_text: "Tekst domyślny"
+        default_text_language: "Tekst domyślny · %{language}"
         value_label: "Twój tekst · %{language}"
         invalid_title: "Nieprawidłowe symbole zastępcze interpolacji"
         invalid_description: "W tym tekście użyto nierozpoznanych symboli zastępczych. Użyj dostępnych poniżej kluczy interpolacji."
         status:
           customized: "Dostosowane"
+          unknown: "Nieznana linia bazowa"
           outdated: "Nieaktualne"
           invalid: "Nieprawidłowe"
         title: "Teksty witryny"
@@ -10768,6 +10774,10 @@ pl_PL:
         interpolation_key_insert: "Kliknij, aby wstawić"
         interpolation_key_used: "Już używane"
         interpolation_key_invalid: "Nieznany klucz — nie będzie interpolowany"
+        unknown:
+          title: "Poprzednia wartość domyślna nie została odnotowana"
+          description: "Ta personalizacja jest starsza niż domyślne śledzenie. Sprawdź aktualne ustawienia domyślne poniżej i potwierdź je, aby śledzić przyszłe zmiany."
+          acknowledge: "Potwierdź bieżące ustawienie domyślne"
         outdated:
           title: "To tłumaczenie jest nieaktualne"
           description: "Domyślne tłumaczenie tego klucza zmieniło się od czasu utworzenia tego zastąpienia. Sprawdź poniżej, czy Twoje tłumaczenie odpowiada wszelkim zmianom wprowadzonym w pierwotnej intencji."

@@ -378,6 +378,8 @@ th:
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
+    keywords:
+      company_url: "เว็บไซต์"
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:

@@ -14,6 +14,7 @@ ja:
     about: 情報
     community: コミュニティー
     preview: プレビュー
+    author: 作成者
     search: 検索
     replies:
       other: "返信: %{count} 件"

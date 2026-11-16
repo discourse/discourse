@@ -14,6 +14,7 @@ cs:
     about: O tomto webu
     community: Komunita
     preview: Náhled
+    author: Autor
     search: Vyhledat
     replies:
       one: "%{count} odpověď"

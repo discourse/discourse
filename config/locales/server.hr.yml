@@ -1547,6 +1547,19 @@ hr:
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."
       invalid_integer: "Vrijednost mora biti cijeli broj."
       regex_mismatch: "Vrijednost ne odgovara potrebnom formatu."
+    keywords:
+      about_banner_image: "slika bannera"
+      about_page_extra_groups_order: "redoslijed sortiranja"
+      company_url: "web stranica"
+      extended_site_description: "opis zajednice"
+      large_icon: "kvadratna ikona"
+      logo: "primarni logotip"
+      logo_dark: "primarni logotip taman"
+      logo_small: "mali logotip"
+      logo_small_dark: "mali tamni logotip"
+      short_site_description: "naslov zajednice"
+      site_description: "sažetak zajednice"
+      title: "naziv zajednice"
   search:
     within_post: "#%{post_number} od %{username}"
     types:

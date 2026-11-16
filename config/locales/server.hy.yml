@@ -1503,6 +1503,8 @@ hy:
       reply_by_email_disabled: "Դուք պետք է սկզբում միացնեք 'reply by email'' ՝ մինչև այս կարգավորումը միացնելը"
       enable_local_logins_disabled: "Դուք պետք է սկզբում միացնեք 'enable local logins' ՝ մինչև այս կարգավորումը միացնելը"
       invalid_hex_value: "Գույների արժեքները պետք է լինեն 6-նիշանոց տասնվեցերորդական կոդեր:"
+    keywords:
+      company_url: "վեբ կայք"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
