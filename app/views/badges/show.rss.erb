@@ -6,9 +6,9 @@
     <title><%= @rss_title %></title>
     <link><%= @rss_link %></link>
     <description><![CDATA[<%= rss_cdata(@rss_description) %>]]></description>
-    <% if @badge.user_badges.first.present? %>
+    <% if @user_badges.present? %>
       <atom:link href="<%= "#{@rss_link}.rss" %>" rel="self" type="application/rss+xml" />
-      <% @badge.user_badges.joins(:user).last(50).reverse_each do |user_badge| %>
+      <% @user_badges.each do |user_badge| %>
         <item>
           <title><![CDATA[<%= rss_cdata("@#{user_badge.user.username}#{" #{user_badge.user.name}" if (user_badge.user.name.present? && SiteSetting.enable_names?)}") -%>]]></title>
           <discourse:grantedAt><%= user_badge.granted_at.rfc2822 %></discourse:grantedAt>
