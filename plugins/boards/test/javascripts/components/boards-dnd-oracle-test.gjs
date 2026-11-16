@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { find, findAll, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -85,6 +86,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    let dragData;
+
     hooks.beforeEach(function () {
       const fabricators = new BoardsFabricators(getOwner(this));
       this.board = fabricators.board({ id: 1 });
@@ -100,8 +103,9 @@ module(
       });
       this.calls = [];
       this.handler = (...args) => this.calls.push(args);
-      this.onDragStart = (data) => this.set("dragData", data);
-      this.onDragEnd = () => this.set("dragData", null);
+      dragData = tracked(undefined);
+      this.onDragStart = (data) => (dragData.value = data);
+      this.onDragEnd = () => (dragData.value = null);
       this.noop = () => {};
       this.renderBoard = () =>
         render(
@@ -110,7 +114,7 @@ module(
               <BoardsColumn
                 @board={{this.board}}
                 @column={{this.sourceColumn}}
-                @dragData={{this.dragData}}
+                @dragData={{dragData.value}}
                 @onDragEnd={{this.onDragEnd}}
                 @onDragStart={{this.onDragStart}}
                 @onDrop={{this.handler}}
@@ -119,7 +123,7 @@ module(
               <BoardsColumn
                 @board={{this.board}}
                 @column={{this.column}}
-                @dragData={{this.dragData}}
+                @dragData={{dragData.value}}
                 @onDragEnd={{this.onDragEnd}}
                 @onDragStart={{this.onDragStart}}
                 @onDrop={{this.handler}}
@@ -302,7 +306,7 @@ module(
       assert.true(
         isSpacer
           ? Math.abs(
-              parseFloat(indicator.style.height) - this.dragData.cardHeight
+              parseFloat(indicator.style.height) - dragData.value.cardHeight
             ) < 0.01
           : true,
         "a spacer reserves the measured dragged height (CSS line indicators need no spacer)"
