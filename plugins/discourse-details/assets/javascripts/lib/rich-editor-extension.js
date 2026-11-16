@@ -2,14 +2,18 @@
 const extension = {
   nodeSpec: {
     details: {
-      attrs: { open: { default: true } },
+      attrs: { open: { default: true }, ai: { default: false } },
       content: "summary block+",
       group: "block",
       selectable: true,
       defining: true,
       isolating: true,
       parseDOM: [{ tag: "details" }],
-      toDOM: (node) => ["details", { open: node.attrs.open || undefined }, 0],
+      toDOM: (node) => [
+        "details",
+        { open: node.attrs.open || undefined, ai: node.attrs.ai || undefined },
+        0,
+      ],
     },
     summary: {
       content: "inline*",

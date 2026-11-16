@@ -23,6 +23,25 @@ details {
       background-color: rgb(var(--primary-rgb), 0.05);
     }
   }
+
+  &.ai-quote {
+    > summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      span:first-child {
+        margin-right: auto;
+      }
+
+      span:nth-child(2) {
+        font-size: var(--font-down-2);
+        background: var(--primary-medium);
+        padding: 2px 6px 0;
+        color: var(--secondary);
+      }
+    }
+  }
 }
 
 details.details__boxed {
