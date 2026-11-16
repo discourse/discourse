@@ -3226,6 +3226,11 @@ RSpec.describe Email::Receiver do
       MD
       end
 
+      it "indents nested lists by a single step per level" do
+        expect { process(:html_reply_with_nested_list) }.to change { topic.posts.count }
+        expect(topic.posts.last.raw).to eq("- Fruits\n  - Apples\n    - Granny Smith")
+      end
+
       it "keeps the lists and only elides the signature from word emails" do
         expect { process(:word_html_reply) }.to change { topic.posts.count }
         expect(topic.posts.last.raw).to eq <<~MD.strip
