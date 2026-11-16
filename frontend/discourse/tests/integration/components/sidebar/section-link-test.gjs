@@ -181,6 +181,52 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     );
   });
 
+  test("returning home reveals an active link above the visible area", async function (assert) {
+    const currentURL = tracked("/categories");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => currentURL.value);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <SectionLink
+            @currentWhen={{true}}
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{true}}
+          />
+          <div style="height: 1200px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    scroller.scrollTop = 500;
+    currentURL.value = "/";
+    await rerender();
+
+    assert.dom("a.active").exists("the homepage link stays highlighted");
+    assert.true(scroller.scrollTop < 500, "returning home scrolls upward");
+    assert.true(
+      find(".sidebar-section-link-wrapper").getBoundingClientRect().top >=
+        scroller.getBoundingClientRect().top - 1,
+      "the active link is visible below the top edge"
+    );
+
+    scroller.scrollTop = 100;
+    await rerender();
+
+    assert.strictEqual(
+      scroller.scrollTop,
+      100,
+      "manual scrolling is preserved"
+    );
+  });
+
   test("leaving the homepage reveals a link that stays active", async function (assert) {
     const currentURL = tracked("/");
     sinon

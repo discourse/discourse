@@ -12,7 +12,7 @@ module("Unit | Service | sidebar-state", function (hooks) {
     this.sidebarState = getOwner(this).lookup("service:sidebar-state");
   });
 
-  test("active links are not revealed on the homepage", function (assert) {
+  test("active links cannot scroll downward on the homepage", function (assert) {
     const currentURL = sinon.stub(this.sidebarState.router, "currentURL");
 
     for (const url of [
@@ -22,12 +22,12 @@ module("Unit | Service | sidebar-state", function (hooks) {
       "/?order=created#main",
     ]) {
       currentURL.get(() => url);
-      assert.false(this.sidebarState.canRevealActiveLink, url);
+      assert.false(this.sidebarState.canScrollDownToActiveLink, url);
     }
 
     for (const url of ["/categories", "/chat/c/general/1", "/latest"]) {
       currentURL.get(() => url);
-      assert.true(this.sidebarState.canRevealActiveLink, url);
+      assert.true(this.sidebarState.canScrollDownToActiveLink, url);
     }
   });
 

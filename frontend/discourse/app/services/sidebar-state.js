@@ -81,7 +81,7 @@ export default class SidebarState extends Service {
     return escapeRegExp(this.filter.toLowerCase().trim());
   }
 
-  get canRevealActiveLink() {
+  get canScrollDownToActiveLink() {
     return this.router.currentURL?.split(/[?#]/, 1)[0] !== "/";
   }
 

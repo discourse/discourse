@@ -204,8 +204,7 @@ export default class SectionLink extends Component {
       if (
         this.isDestroying ||
         !element.isConnected ||
-        !this.args.scrollIntoView ||
-        !this.sidebarState.canRevealActiveLink
+        !this.args.scrollIntoView
       ) {
         return;
       }
@@ -222,6 +221,11 @@ export default class SectionLink extends Component {
           linkRoute: this.args.route,
         })
       ) {
+        return;
+      }
+
+      if (!this.sidebarState.canScrollDownToActiveLink) {
+        scrollUpToReveal(element);
         return;
       }
 
@@ -246,7 +250,7 @@ export default class SectionLink extends Component {
         {{didUpdate
           this.revealActiveLink
           @scrollIntoView
-          this.sidebarState.canRevealActiveLink
+          this.sidebarState.canScrollDownToActiveLink
         }}
         {{on "mouseenter" this.hoveringSectionLink}}
         {{on "mouseleave" this.stopHoveringSectionLink}}
@@ -393,6 +397,25 @@ export default class SectionLink extends Component {
       </li>
     {{/if}}
   </template>
+}
+
+function scrollUpToReveal(element) {
+  let node = element.parentElement;
+
+  while (node && node !== document.body) {
+    const { overflowY } = getComputedStyle(node);
+
+    if (overflowY === "auto" || overflowY === "scroll") {
+      const offset =
+        element.getBoundingClientRect().top - node.getBoundingClientRect().top;
+
+      if (offset < 0) {
+        node.scrollTop += offset;
+      }
+    }
+
+    node = node.parentElement;
+  }
 }
 
 function isFullyScrolledIntoView(element) {
