@@ -28,8 +28,20 @@ after_initialize do
   require_relative "app/initializers/discourse_chat_integration"
 
   require_relative "app/services/problem_check/channel_errors"
+  require_relative "app/services/problem_check/telegram_webhook_secret_missing"
 
   register_problem_check ProblemCheck::ChannelErrors
+  register_problem_check ProblemCheck::TelegramWebhookSecretMissing
+
+  on(:site_setting_changed) do |name|
+    next if name != :chat_integration_telegram_access_token
+
+    SiteSetting.chat_integration_telegram_secret = ""
+  end
+
+  on_enabled_change do |_old_value, new_value|
+    SiteSetting.chat_integration_telegram_secret = "" if !new_value
+  end
 
   on(:post_created) do |post|
     # This will run for every post, even PMs. Don't worry, they're filtered out later.
