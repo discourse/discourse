@@ -27,14 +27,16 @@ details {
   &.ai-quote {
     > summary {
       display: flex;
-      justify-content: space-between;
       align-items: center;
 
-      span:first-child {
-        margin-right: auto;
+      > span:first-child {
+        min-inline-size: 0;
+        margin-inline-end: auto;
+        overflow-wrap: anywhere;
       }
 
-      span:nth-child(2) {
+      > span:nth-child(2) {
+        flex-shrink: 0;
         font-size: var(--font-down-2);
         background: var(--primary-medium);
         padding: 2px 6px 0;
@@ -69,7 +71,7 @@ summary:first-of-type {
 
 summary::before {
   content: "\25BA";
-  margin-right: 0.25em;
+  margin-inline-end: 0.25em;
 }
 
 details[open] > summary::before,

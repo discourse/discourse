@@ -1,5 +1,28 @@
+import { i18n } from "discourse-i18n";
+
+function createSummaryNodeView() {
+  return (_node, view, getPos) => {
+    const pos = getPos();
+    if (pos == null || !view.state.doc.resolve(pos).parent.attrs.ai) {
+      return null;
+    }
+
+    const dom = document.createElement("summary");
+    const contentDOM = document.createElement("span");
+    const badge = document.createElement("span");
+    badge.className = "ai-badge";
+    badge.dataset.aiLabel = i18n("post.ai_generated");
+    badge.title = i18n("post.ai_generated_title");
+    badge.contentEditable = false;
+    dom.append(contentDOM, badge);
+    return { dom, contentDOM };
+  };
+}
+
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeViews: { summary: createSummaryNodeView },
+
   nodeSpec: {
     details: {
       attrs: { open: { default: true }, ai: { default: false } },
