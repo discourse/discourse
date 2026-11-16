@@ -76,7 +76,8 @@ export default class ChatFormattingToolbar extends ToolbarBase {
         id: "link",
         group: "fontStyles",
         icon: "link",
-        shortcut: "K",
+        // chat binds Mod+K to the channel switcher
+        shortcut: "L",
         perform: () => openLinkModal(),
         active: ({ state }) => state.inLink,
       });
