@@ -293,6 +293,18 @@ RSpec.describe Email::Styles do
       expect(fragment.to_s.squish).to match(%r{^<blockquote.+</blockquote>$})
     end
 
+    it "sets an explicit text color on quotes and code so it doesn't inherit a client's dark-theme text color" do
+      fragment =
+        html_fragment(
+          '<aside class="quote"><div class="title">techAPJ:</div><blockquote><p>lorem</p></blockquote></aside><blockquote><p>plain</p></blockquote><p><code>inline</code></p><pre><code>block</code></pre>',
+        )
+
+      expect(fragment.css("blockquote").size).to eq(2)
+      fragment
+        .css("blockquote, code")
+        .each { |node| expect(node["style"]).to match(/(\A|;)\s*color:\s*#222222/) }
+    end
+
     it "styles user onebox avatar and layout for email" do
       user_onebox_html = <<~HTML
         <aside class="onebox">
