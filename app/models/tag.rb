@@ -224,7 +224,8 @@ class Tag < ActiveRecord::Base
         JOIN topics ON topics.id = topic_tags.topic_id
                    AND topics.deleted_at IS NULL
                    AND topics.archetype = 'private_message'
-       WHERE topic_tags.topic_id IN (
+       WHERE tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})
+         AND topic_tags.topic_id IN (
           SELECT topic_id
             FROM topic_allowed_users
            WHERE user_id = #{user_id.to_i}
