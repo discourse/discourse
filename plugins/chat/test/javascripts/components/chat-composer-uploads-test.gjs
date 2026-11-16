@@ -1,6 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   render,
+  rerender,
   triggerKeyEvent,
   waitFor,
   waitUntil,
@@ -210,6 +212,39 @@ module("Component | ChatComposerUploads", function (hooks) {
     );
 
     await waitFor(".chat-composer-upload");
+
+    assert.dom(".chat-composer-upload").exists({ count: 1 });
+  });
+
+  test("an in-progress upload survives the input element changing", async function (assert) {
+    setupUploadPretender();
+    const onUploadChanged = () => {};
+    const inputEl = tracked(document.createElement("textarea"));
+
+    await render(
+      <template>
+        <ChatComposerUploads
+          @composerInputEl={{inputEl.value}}
+          @fileUploadElementId="chat-widget-uploader"
+          @onUploadChanged={{onUploadChanged}}
+        />
+      </template>
+    );
+
+    const done = assert.async();
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("upload-mixin:chat-composer-uploader:upload-success", () => {
+      assert.dom(".chat-composer-upload").exists({ count: 1 });
+      done();
+    });
+    appEvents.trigger(
+      "upload-mixin:chat-composer-uploader:add-files",
+      createFile("avatar.png")
+    );
+
+    await waitFor(".chat-composer-upload");
+    inputEl.value = document.createElement("div");
+    await rerender();
 
     assert.dom(".chat-composer-upload").exists({ count: 1 });
   });

@@ -1,5 +1,13 @@
-import { findAll, render, settled, waitUntil } from "@ember/test-helpers";
+import { hash } from "@ember/helper";
+import {
+  findAll,
+  render,
+  settled,
+  triggerKeyEvent,
+  waitUntil,
+} from "@ember/test-helpers";
 import { cacheShortUploadUrl, resetCache } from "pretty-text/upload-short-url";
+import { TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import DMenus from "discourse/float-kit/components/d-menus";
 import {
@@ -8,8 +16,11 @@ import {
 } from "discourse/lib/composer/rich-editor-extensions";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirror-editor";
+import emoji from "discourse/static/prosemirror/extensions/emoji";
 import grid from "discourse/static/prosemirror/extensions/grid";
 import image from "discourse/static/prosemirror/extensions/image";
+import trailingInlineSpace from "discourse/static/prosemirror/extensions/trailing-inline-space";
+import trailingParagraph from "discourse/static/prosemirror/extensions/trailing-paragraph";
 import uploadPlaceholder from "discourse/static/prosemirror/extensions/upload-placeholder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
@@ -391,5 +402,126 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
     assert.true(state.plugin1, "plugin1's view fn was called");
     assert.true(state.plugin2, "plugin2's view fn was called");
     assert.true(state.plugin3, "plugin3's view fn was called");
+  });
+
+  test("applySurround keeps a markdown fallback inline", async function (assert) {
+    let textManipulation;
+    const handleSetup = (value) => {
+      textManipulation = value;
+    };
+
+    await render(
+      <template>
+        <ProsemirrorEditor @onSetup={{handleSetup}} @value="hello world" />
+      </template>
+    );
+
+    const { view } = textManipulation;
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, 7, 12))
+    );
+    textManipulation.applySurround(
+      textManipulation.getSelected(),
+      "`",
+      "`",
+      "code_text"
+    );
+
+    assert.strictEqual(view.state.doc.childCount, 1, "no paragraph is split");
+    assert.strictEqual(
+      textManipulation.convertToMarkdown(view.state.doc),
+      "hello `world`"
+    );
+  });
+
+  test("emojiSelected replaces a partial term followed by more text", async function (assert) {
+    withPluginApi((api) => api.registerRichEditorExtension(emoji));
+
+    let textManipulation;
+    const handleSetup = (value) => {
+      textManipulation = value;
+    };
+
+    await render(
+      <template>
+        <ProsemirrorEditor @onSetup={{handleSetup}} @value="hi :gri there" />
+      </template>
+    );
+
+    const { view } = textManipulation;
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, 8))
+    );
+    textManipulation.emojiSelected("grinning");
+
+    const markdown = textManipulation.convertToMarkdown(view.state.doc);
+    assert.false(markdown.includes(":gri "), "the partial term is replaced");
+    assert.true(markdown.startsWith("hi :grinning:"));
+  });
+
+  test("@trailingParagraph={{false}} keeps the document as written", async function (assert) {
+    withPluginApi((api) => api.registerRichEditorExtension(trailingParagraph));
+
+    let textManipulation;
+    const handleSetup = (value) => {
+      textManipulation = value;
+    };
+
+    await render(
+      <template>
+        <ProsemirrorEditor
+          @onSetup={{handleSetup}}
+          @trailingParagraph={{false}}
+          @value="> quoted"
+        />
+      </template>
+    );
+    textManipulation.view.dispatch(
+      textManipulation.view.state.tr.insertText("!")
+    );
+
+    assert.strictEqual(
+      textManipulation.view.state.doc.lastChild.type.name,
+      "blockquote"
+    );
+  });
+
+  test("Enter with a plain selection reaches the host keymap", async function (assert) {
+    withPluginApi((api) =>
+      api.registerRichEditorExtension(trailingInlineSpace)
+    );
+
+    let textManipulation;
+    let entered = false;
+    const handleSetup = (value) => {
+      textManipulation = value;
+    };
+    const onEnter = () => {
+      entered = true;
+      return false;
+    };
+
+    await render(
+      <template>
+        <ProsemirrorEditor
+          @keymap={{hash Enter=onEnter}}
+          @onSetup={{handleSetup}}
+          @value="hello world"
+        />
+      </template>
+    );
+
+    const { view } = textManipulation;
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, 1, 6))
+    );
+    await triggerKeyEvent(".ProseMirror", "keydown", "Enter");
+
+    assert.true(entered);
+    assert.strictEqual(
+      textManipulation.convertToMarkdown(view.state.doc),
+      "hello world",
+      "the host handler consumed the key"
+    );
   });
 });

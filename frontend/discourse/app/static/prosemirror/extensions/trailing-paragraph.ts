@@ -2,7 +2,11 @@ import type { EditorState, Transaction } from "prosemirror-state";
 import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
 const extension: RichEditorExtension = {
-  plugins({ pmState: { Plugin, PluginKey } }) {
+  plugins({ pmState: { Plugin, PluginKey }, getContext }) {
+    if (getContext().trailingParagraph === false) {
+      return [];
+    }
+
     const plugin = new PluginKey("trailing-paragraph");
 
     return new Plugin({

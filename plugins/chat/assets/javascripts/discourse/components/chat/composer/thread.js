@@ -69,7 +69,7 @@ export default class ChatComposerThread extends ChatComposer {
 
   handleEscape(event) {
     if (this.draft.editing) {
-      event.stopPropagation();
+      event?.stopPropagation();
       this.args.thread.draft = ChatMessage.createDraftMessage(
         this.args.thread.channel,
         { user: this.currentUser, thread: this.args.thread }

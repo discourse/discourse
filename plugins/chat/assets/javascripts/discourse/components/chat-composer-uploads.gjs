@@ -74,6 +74,8 @@ export default class ChatComposerUploads extends Component {
   uploadDropZone = null;
 
   #previews = new WeakMap();
+  _pasteTarget = null;
+  _receivedUploads = null;
 
   get inProgressUploads() {
     return this.uppyUpload.inProgressUploads;
@@ -85,6 +87,15 @@ export default class ChatComposerUploads extends Component {
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
+    this._listenForPaste(this.composerInputEl);
+
+    // switching editors swaps the input element; only a new draft resets uploads
+    const existingUploads = this.existingUploads ?? null;
+    if (this.uploads && this._receivedUploads === existingUploads) {
+      return;
+    }
+    this._receivedUploads = existingUploads;
+
     if (this.inProgressUploads?.length > 0) {
       this.uppyUpload.cancelAllUploads();
     }
@@ -94,17 +105,12 @@ export default class ChatComposerUploads extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-
-    this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
+    this.onSetup?.((files, opts) => this.uppyUpload.addFiles(files, opts));
   }
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
-
-    this.composerInputEl?.removeEventListener(
-      "paste",
-      this._pasteEventListener
-    );
+    this._listenForPaste(null);
   }
 
   @action
@@ -154,12 +160,19 @@ export default class ChatComposerUploads extends Component {
     };
   }
 
-  @bind
-  _pasteEventListener(event) {
-    if (document.activeElement !== this.composerInputEl) {
+  // The input element changes when the composer switches editors.
+  _listenForPaste(element) {
+    if (this._pasteTarget === element) {
       return;
     }
 
+    this._pasteTarget?.removeEventListener("paste", this._pasteEventListener);
+    element?.addEventListener("paste", this._pasteEventListener);
+    this._pasteTarget = element;
+  }
+
+  @bind
+  _pasteEventListener(event) {
     const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
       siteSettings: this.siteSettings,
       canUpload: true,
