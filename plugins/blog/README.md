@@ -40,6 +40,15 @@ a deferred, interactive Discourse discussion below each article.
   used for cards and social previews (otherwise the topic's first image upload).
 - Paginated homepage, searchable archive (titles/excerpts), public tag pages, and
   Markdown About page.
+- Standalone pages, such as Contact or Privacy, marked in the article settings. They're
+  served at their own path and listed in the sitemap, but left out of the homepage,
+  archive, search, tag and author pages, and the feed. They render with the `page`
+  template, which gets the same `article` variables as the article template; the
+  built-in and bundled versions leave out the byline, dates, reading time and tags, and
+  no discussion section is shown. Theme previews use the newest published page. Their
+  structured data is `WebPage` rather than
+  `BlogPosting`, and new pages get a `/<slug>` path whatever the path format. The About
+  page stays the `blog_about` setting.
 - Author pages at `/author/<username>`, as on Ghost and WordPress, listing an author's
   articles under their name, avatar and bio. Bylines link to them. The bio follows the
   user's profile visibility, and a user with no public article gets a 404, so the URLs
@@ -520,7 +529,7 @@ Exports use the same version-2 source layout as Git imports:
 
 - `blog-theme.json`: `version`, `name`, `accent_color`, `paper_color`, `ink_color`
 - `blog.css` and `blog.js`
-- `templates/{layout,index,article,about,not_found}.liquid`
+- `templates/{layout,index,article,page,about,not_found}.liquid`
 
 Empty template files retain the built-in fallback. Archives may contain these files
 at the root or inside one enclosing directory. Import applies the same per-file size

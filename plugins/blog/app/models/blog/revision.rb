@@ -62,6 +62,10 @@ module ::Blog
       data["title"]
     end
 
+    def page?
+      data["page"].present?
+    end
+
     def co_author_ids
       Array(data["co_authors"]).pluck("user_id")
     end

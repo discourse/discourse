@@ -51,6 +51,7 @@ en:
         retry_reference: Reload authoring reference
         working_preview_hint: Preview your unsaved changes without saving or activating them. Changing the page or sample article updates the preview.
         preview_article_unavailable: Article previews need a published article.
+        preview_page_unavailable: Page previews need a published standalone page.
         preview_page: Page to preview
         preview_home: Homepage
         preview_archive: Archive
@@ -62,6 +63,7 @@ en:
         template_layout: Site layout
         template_index: Homepage and archive
         template_article: Article
+        template_page: Standalone page
         template_about: About page
         template_not_found: Not found page
         code_warning:
@@ -208,13 +210,14 @@ en:
           cover: cover image
           co_authors: co-authors
           featured: featured flag
+          page: standalone page
           tags: tags
           published_at: publication date
         show_diff: Show diff
         hide_diff: Hide diff
         diff_error: The change is too large to show as a diff. Use Preview instead.
         settings: Article settings
-        settings_hint: Path, excerpt, cover, search, co-authors, date, featured
+        settings_hint: Path, excerpt, cover, search, co-authors, date, featured, page
         feedback:
           none: No private feedback yet
           show: Show feedback
@@ -331,6 +334,10 @@ en:
       cover_alt: Cover image alt text
       cover_alt_hint:
         Describes the cover image for people who can't see it.
+      page: Standalone page
+      page_hint:
+        For pages like About, Contact or Privacy. Left out of the article lists
+        and the feed, and shown without a byline, date, tags or discussion.
       co_authors: Co-authors
       co_authors_hint:
         Credited beside the author in the byline, and listed on their own
