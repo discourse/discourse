@@ -414,12 +414,15 @@ const extension = {
             return;
           }
 
-          const staff = getContext().currentUser?.staff;
+          const { currentUser, uploadFiles } = getContext();
           // stop earlier if image extensions aren't allowed, or nothing is
           // around to upload them
           if (
-            !authorizesOneOrMoreImageExtensions(staff, siteSettings) ||
-            !appEvents.has("composer:add-files")
+            !authorizesOneOrMoreImageExtensions(
+              currentUser?.staff,
+              siteSettings
+            ) ||
+            (!uploadFiles && !appEvents.has("composer:add-files"))
           ) {
             const tr = view.state.tr;
             const dataURIMap = dataImageUploader.getState(view.state);
@@ -453,6 +456,22 @@ const extension = {
           }
 
           const fileName = `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExtension}`;
+
+          // a host with its own uploader takes the image as an attachment
+          if (uploadFiles) {
+            const tr = view.state.tr;
+            [...dataImageUploader.getState(view.state).get(dataURI)]
+              .sort((a, b) => b - a)
+              .forEach((pos) =>
+                tr.delete(pos, pos + view.state.doc.nodeAt(pos).nodeSize)
+              );
+            view.dispatch(tr);
+
+            const blob = await (await fetch(dataURI)).blob();
+            processingDataURIs.delete(dataURI);
+            uploadFiles([new File([blob], fileName, { type: blob.type })]);
+            return;
+          }
 
           pendingUploads.add(fileName);
 

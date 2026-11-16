@@ -83,6 +83,8 @@ export interface PluginContext {
   markdownOptions?: MarkdownOptions;
   /** Whether an empty paragraph is kept after a trailing non-paragraph block. */
   trailingParagraph?: boolean;
+  /** Uploads files as attachments, for hosts that don't upload inline. */
+  uploadFiles?: (files: File[]) => void;
   /** Registers a rendered component-backed node view. */
   addGlimmerNodeView: (nodeView: GlimmerNodeView) => void;
   /** Unregisters a rendered component-backed node view. */

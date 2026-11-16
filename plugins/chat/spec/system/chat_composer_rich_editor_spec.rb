@@ -272,6 +272,27 @@ RSpec.describe "Chat composer rich editor" do
     expect(shown_in_link).to eq(false)
   end
 
+  it "uploads a pasted embedded image as an attachment" do
+    chat_page.visit_channel(channel_1)
+    expect(channel_page.composer).to have_rich_editor
+
+    page.execute_script(<<~JS)
+      const png =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+      const data = new DataTransfer();
+      data.setData("text/html", `<p>look <img src="${png}"> here</p>`);
+      data.setData("text/plain", "look here");
+      document
+        .querySelector(".chat-composer__input")
+        .dispatchEvent(
+          new ClipboardEvent("paste", { clipboardData: data, bubbles: true, cancelable: true })
+        );
+    JS
+
+    expect(page).to have_css(".chat-composer-upload--image")
+    expect(channel_page.composer).to have_value("look  here")
+  end
+
   it "replaces a partial emoji term picked from the full picker" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.input.send_keys("hey :gri")
