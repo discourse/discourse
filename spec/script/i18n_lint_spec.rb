@@ -16,6 +16,63 @@ RSpec.describe LocaleFileValidator do
     end
   end
 
+  def errors_for_file(filename, content, english: nil)
+    Dir.mktmpdir("i18n-lint") do |dir|
+      path = File.join(dir, filename)
+      File.write(path, content)
+
+      validator = described_class.new(path, english:)
+      validator.has_errors?
+      validator.instance_variable_get(:@errors)
+    end
+  end
+
+  it "flags duplicate keys" do
+    errors = errors_for_file("server.en.yml", "en:\n  a: one\n  a: two\n")
+    expect(errors[:duplicate_keys]).to eq(["a"])
+  end
+
+  it "flags a top-level key that is not the locale from the file name" do
+    errors = errors_for_file("server.de.yml", "fr:\n  a: un\n", english: { "a" => "one" })
+    expect(errors[:invalid_top_level_key]).to be_present
+  end
+
+  it "flags interpolation keys made only of digits or symbols" do
+    errors =
+      errors_for_file("server.de.yml", "de:\n  a: '%{1} {{0}}'\n", english: { "a" => "%{x}" })
+    expect(errors[:invalid_interpolation_keys]).to eq(["a: %{1}, {{0}}"])
+  end
+
+  it "flags translations whose structure differs from English" do
+    english = { "group" => { "one" => "one", "other" => "other" }, "text" => "text" }
+    errors = errors_for_file("server.de.yml", "de:\n  group: eins\n  text:\n    a: b\n", english:)
+    expect(errors[:incompatible_with_english]).to contain_exactly("group", "text")
+  end
+
+  it "accepts a translation with no keys, which falls back to English" do
+    errors = errors_for_file("server.de.yml", "de:\n", english: { "a" => "one" })
+    expect(errors.values.flatten).to be_empty
+  end
+
+  it "applies the English content rules only to English files" do
+    errors =
+      errors_for_file("server.de.yml", "de:\n  a: 'Hallo {{user}}'\n", english: { "a" => "x" })
+    expect(errors.values.flatten).to be_empty
+  end
+
+  it "flags core client files without their required sections" do
+    Dir.mktmpdir("i18n-lint") do |dir|
+      path = File.join(dir, "client.en.yml")
+      File.write(path, "en:\n  js:\n    a: b\n")
+      validator = described_class.new(path)
+
+      stub_const(described_class, :CORE_LOCALES_DIR, File.realpath(dir)) { validator.has_errors? }
+
+      errors = validator.instance_variable_get(:@errors)
+      expect(errors[:missing_client_sections]).to eq(["wizard_js"])
+    end
+  end
+
   describe "setting link markers" do
     VALID_MARKERS = [
       "{{setting:title}}",
@@ -85,5 +142,17 @@ RSpec.describe LocaleFileValidator do
       end
     end
     # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
+  end
+end
+
+RSpec.describe I18nLinter do
+  it "checks the translations next to each English file" do
+    Dir.mktmpdir("i18n-lint") do |dir|
+      File.write(File.join(dir, "server.en.yml"), "en:\n  a: one\n")
+      File.write(File.join(dir, "server.de.yml"), "de:\n  a: eins\n  a: zwei\n")
+
+      linter = described_class.new(["#{dir}/*.en.yml"])
+      expect { linter.run }.to raise_error(SystemExit).and output(/server\.de\.yml/).to_stdout
+    end
   end
 end
