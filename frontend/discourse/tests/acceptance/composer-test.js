@@ -2394,7 +2394,7 @@ acceptance("Composer - Insert AI content | Markdown editor", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        "Introduction\n\n```javascript ai=true\n// AI content\n```\n\n> [!AI]\n> AI content\n",
+        "Introduction\n\n```javascript ai\n// AI content\n```\n\n> [!AI]\n> AI content\n",
         "each choice adds a standalone block with its AI marker and placeholder"
       );
     assert

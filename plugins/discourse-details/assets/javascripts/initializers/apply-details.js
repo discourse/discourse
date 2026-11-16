@@ -26,7 +26,7 @@ function initializeDetails(api) {
         .lookup("service:app-events")
         .trigger(
           "composer:insert-block",
-          `[details="${summary}" ai=true]\n${placeholder}\n[/details]`
+          `[details="${summary}" ai]\n${placeholder}\n[/details]`
         );
     },
     condition: (composer) => composer.siteSettings.details_enabled,

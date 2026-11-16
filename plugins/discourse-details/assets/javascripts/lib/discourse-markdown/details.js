@@ -11,13 +11,10 @@ const rule = {
       details.attrs = [["open", ""]];
     }
 
-    if (attrs.ai === "true") {
-      details.attrSet("class", "ai-quote");
-    }
-
     const token = state.push("text", "", 0);
     token.content = attrs["_default"] || "";
-    if (attrs.ai === "true") {
+    if (attrs.ai === "") {
+      details.attrSet("class", "ai-quote");
       token.meta = { detailsAiSummary: true };
     }
 

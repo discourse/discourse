@@ -101,7 +101,7 @@ const extension = {
         state.write("[details");
       }
       if (details.attrs?.ai) {
-        state.write(" ai=true");
+        state.write(" ai");
       }
       state.write("]\n");
     },

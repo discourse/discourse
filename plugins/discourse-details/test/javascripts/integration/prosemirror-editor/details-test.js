@@ -45,16 +45,16 @@ module(
       ],
       "details with an AI marker": [
         [
-          `[details="Summary" ai=true]Hidden text[/details]`,
+          `[details="Summary" ai]Hidden text[/details]`,
           `<details open="true" class="ai-quote"><summary><span>Summary</span>${aiBadge}</summary><p>Hidden text</p></details>`,
-          `[details="Summary" ai=true]\nHidden text\n\n[/details]\n\n`,
+          `[details="Summary" ai]\nHidden text\n\n[/details]\n\n`,
         ],
       ],
       "details with an AI marker and no summary": [
         [
-          `[details ai=true]Hidden text[/details]`,
+          `[details ai]Hidden text[/details]`,
           `<details open="true" class="ai-quote"><summary><span></span>${aiBadge}</summary><p>Hidden text</p></details>`,
-          `[details ai=true]\nHidden text\n\n[/details]\n\n`,
+          `[details ai]\nHidden text\n\n[/details]\n\n`,
         ],
       ],
     };
@@ -82,7 +82,7 @@ module(
         .hasText("Summary", "the rendered badge stays out of the summary");
       assert.strictEqual(
         editor.value,
-        '[details="Summary" ai=true]\nHidden text\n\n[/details]\n\n',
+        '[details="Summary" ai]\nHidden text\n\n[/details]\n\n',
         "the pasted label is serialized as an AI marker"
       );
     });
@@ -90,7 +90,7 @@ module(
     test("editing a marked summary keeps its badge outside the editable text", async function (assert) {
       const [editor] = await setupRichEditor(
         assert,
-        '[details="Summary" ai=true]Hidden text[/details]'
+        '[details="Summary" ai]Hidden text[/details]'
       );
 
       editor.view.dispatch(editor.view.state.tr.insertText("Edited ", 2));
@@ -104,13 +104,13 @@ module(
         .exists("the badge remains next to the summary");
       assert.strictEqual(
         editor.value,
-        '[details="Edited Summary" ai=true]\nHidden text\n\n[/details]\n\n',
+        '[details="Edited Summary" ai]\nHidden text\n\n[/details]\n\n',
         "the badge stays out of the serialized summary"
       );
     });
 
     test("opens and closes details on click", async function (assert) {
-      const detailsMarkdown = `[details="Summary" ai=true]\nThis text will be hidden\n\n[/details]\n\n`;
+      const detailsMarkdown = `[details="Summary" ai]\nThis text will be hidden\n\n[/details]\n\n`;
       const [editor] = await setupRichEditor(assert, detailsMarkdown);
 
       const detailsCss = ".d-editor-input details";

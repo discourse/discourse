@@ -89,11 +89,15 @@ class CodeBlockWithLangSelectorNodeView {
   #select;
 
   #changeLanguage = (event) => {
-    const params = this.node.attrs.params.trim();
-    const language = event.target.value || (/\s/.test(params) ? "auto" : "");
+    const { params } = this.node.attrs;
+    const options =
+      getCodeFenceInfo(params)?.options ?? params.trim().replace(/^\S+\s*/, "");
+    const language =
+      event.target.value ||
+      (options && !isAiGenerated(` ${options}`) ? "auto" : "");
     this.view.dispatch(
       this.view.state.tr.setNodeMarkup(this.getPos(), null, {
-        params: params ? params.replace(/^\S+/, () => language) : language,
+        params: options ? `${language} ${options}` : language,
       })
     );
   };
@@ -177,7 +181,7 @@ class CodeBlockWithLangSelectorNodeView {
     }
 
     const { params } = this.node.attrs;
-    const language = getCodeFenceInfo(params)?.tag || params;
+    const language = getCodeFenceInfo(params)?.tag ?? params;
     this.#select.firstChild.textContent = "";
     this.#select.value = language;
     if (this.#select.selectedIndex === -1) {
@@ -328,8 +332,8 @@ const extension = {
               dom.getAttribute("data-code-ai") === "true" &&
               !isAiGenerated(params)
             ) {
-              params = params.trim() || "auto";
-              params += /\s/.test(params) ? ",ai=true" : " ai=true";
+              params = params.trim();
+              params += /\s/.test(params) ? ",ai" : " ai";
             }
             return { params };
           },
@@ -404,8 +408,7 @@ const extension = {
         ["code_block", "html_block", "preview_source"],
         (node) =>
           node.type.name === "code_block"
-            ? getCodeFenceInfo(node.attrs.params)?.tag ||
-              node.attrs.params ||
+            ? (getCodeFenceInfo(node.attrs.params)?.tag ?? node.attrs.params) ||
               defaultCodeLang
             : node.attrs.params || "text"
       );

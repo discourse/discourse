@@ -9,32 +9,35 @@ export function extractTokenInfo(info, md) {
     return;
   }
 
-  info = info.trim();
-
-  const matches = info.match(/(^\s*\S*)\s*(.*)/i);
-  if (!matches) {
-    return;
+  const trimmed = info.trim();
+  let [, language, options] = trimmed.match(/^(\S*)\s*(.*)/);
+  // Leading whitespace distinguishes the AI flag from a language named "ai".
+  if (/^\s+ai(?:[\s,]|$)/.test(info)) {
+    language = "";
+    options = trimmed;
   }
 
   // ensure the token has only valid chars
   // c++, strucuted-text and p91, are all valid
-  if (!/^[\w+-]*$/i.test(matches[1])) {
+  if (!/^[\w+-]*$/i.test(language)) {
     return;
   }
 
   const ASCII_REGEX = /[^\x00-\x7F]/;
-  const tag = md.utils.unescapeAll(matches[1].replace(ASCII_REGEX, ""));
-  const extractedData = { tag, attributes: {} };
+  const tag = md.utils.unescapeAll(language.replace(ASCII_REGEX, ""));
+  const extractedData = { tag, options, attributes: {} };
 
-  if (matches[2]?.length) {
+  if (options) {
     md.utils
-      .unescapeAll(matches[2].replace(ASCII_REGEX, ""))
+      .unescapeAll(options.replace(ASCII_REGEX, ""))
       .split(",")
       .forEach((potentialPair) => {
-        const [key, value] = potentialPair.trim().split(/\s+/g)[0].split("=");
+        const option = potentialPair.trim().split(/\s+/)[0];
+        const [key, value] = option.split("=");
 
-        // invalid pairs would get caught here and not used, eg `foo=`
-        if (key && value) {
+        if (option === "ai") {
+          extractedData.attributes.ai = "true";
+        } else if (key && key !== "ai" && value) {
           extractedData.attributes[key] = value;
         }
       });

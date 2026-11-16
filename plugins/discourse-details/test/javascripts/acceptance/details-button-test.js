@@ -30,7 +30,7 @@ acceptance("Details Button", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        '[details="AI content" ai=true]\nAI content\n[/details]\n',
+        '[details="AI content" ai]\nAI content\n[/details]\n',
         "the summary and body are prefilled and the block is marked"
       );
 

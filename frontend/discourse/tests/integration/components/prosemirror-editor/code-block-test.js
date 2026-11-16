@@ -74,7 +74,7 @@ module(
     });
 
     test("AI-generated code keeps its marker when the language changes", async function (assert) {
-      const markdown = "```javascript ai=true,example=yes\nconst a = 1;\n```";
+      const markdown = "```javascript ai,example=yes\nconst a = 1;\n```";
       const [editor] = await setupRichEditor(assert, markdown, {
         multiToggle: true,
       });
@@ -102,8 +102,45 @@ module(
       assert.dom(".ProseMirror pre").hasAttribute("data-code-ai", "true");
       assert.strictEqual(
         editor.value,
-        "```ruby ai=true,example=yes\nconst a = 1;\n```",
+        "```ruby ai,example=yes\nconst a = 1;\n```",
         "changing the language preserves the fence attributes"
+      );
+    });
+
+    test("a language-free AI fence keeps its marker through language selection", async function (assert) {
+      this.siteSettings.default_code_lang = "javascript";
+      const markdown = "``` ai\nconst a = 1;\n```";
+      const [editor] = await setupRichEditor(assert, markdown, {
+        multiToggle: true,
+      });
+
+      assert
+        .dom(".ProseMirror pre > .ai-badge")
+        .exists("the spaced flag displays the badge");
+      assert
+        .dom("code .hljs-keyword")
+        .hasText("const", "highlighting uses the default language");
+      assert
+        .dom(".code-language-select")
+        .hasValue("", "no language is selected");
+      assert.strictEqual(
+        editor.value,
+        markdown,
+        "the gap survives editor mode switches"
+      );
+
+      await selectOption(".code-language-select", "ruby");
+      assert.strictEqual(
+        editor.value,
+        "```ruby ai\nconst a = 1;\n```",
+        "selecting a language keeps the flag"
+      );
+
+      await selectOption(".code-language-select", "");
+      assert.strictEqual(
+        editor.value,
+        markdown,
+        "clearing the language restores the spaced flag"
       );
     });
 
@@ -117,7 +154,7 @@ module(
 
       assert.strictEqual(
         editor.value,
-        "```javascript ai=true\nconst a = 1;\n```",
+        "```javascript ai\nconst a = 1;\n```",
         "the label and language are serialized from the pasted HTML"
       );
     });

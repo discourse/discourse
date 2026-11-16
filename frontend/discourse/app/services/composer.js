@@ -566,7 +566,7 @@ export default class ComposerService extends Service {
                 const placeholder = i18n("composer.ai_content.placeholder");
                 this.appEvents.trigger(
                   "composer:insert-block",
-                  `\`\`\`javascript ai=true\n// ${placeholder}\n\`\`\``
+                  `\`\`\`javascript ai\n// ${placeholder}\n\`\`\``
                 );
               },
               icon: "code",
