@@ -10,7 +10,7 @@ class AiSummary < ActiveRecord::Base
 
   LEGACY_UNIQUE_INDEX_NAME = "idx_on_target_id_target_type_summary_type_3355609fbb"
 
-  def self.store!(strategy, llm_model, summary, og_content, human:)
+  def self.store!(strategy, llm_model, summary, og_content, human:, source_sha: nil)
     attributes = {
       target_id: strategy.target.id,
       target_type: strategy.target.class.name,
@@ -25,15 +25,43 @@ class AiSummary < ActiveRecord::Base
     attributes.merge!(new(attributes).cooked_attributes)
 
     strategy.target.with_lock do
+      if source_sha && source_changed?(strategy, og_content, source_sha)
+        next new(attributes.merge(updated_at: Time.zone.now)).tap(&:mark_as_outdated)
+      end
+
       stored_summary = upsert_summary!(attributes)
       remove_superseded_summaries!(strategy, stored_summary)
       stored_summary
     end
   end
 
+  def self.drop_for_post!(post_id)
+    topic_ids = Post.with_deleted.where(id: post_id).select(:topic_id)
+    where(target_type: "Topic", target_id: topic_ids).delete_all
+  end
+
+  def self.drop_since!(topic_id, time)
+    transaction do
+      Topic.with_deleted.where(id: topic_id).lock.pick(:id)
+
+      where(target_type: "Topic", target_id: topic_id).where("updated_at >= ?", time).delete_all
+    end
+  end
+
   def self.build_sha(joined_ids)
     Digest::SHA256.hexdigest(joined_ids)
   end
+
+  def self.build_source_sha(strategy, content)
+    build_sha(strategy.as_llm_messages(content).to_json)
+  end
+
+  def self.source_changed?(strategy, og_content, source_sha)
+    summarized_ids = og_content.map { it[:id] }
+    current_content = strategy.targets_data.filter { summarized_ids.include?(it[:id]) }
+    source_sha != build_source_sha(strategy, current_content)
+  end
+  private_class_method :source_changed?
 
   def self.upsert_summary!(attributes)
     upsert_summary(attributes)

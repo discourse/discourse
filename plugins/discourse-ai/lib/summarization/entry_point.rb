@@ -134,6 +134,23 @@ module DiscourseAi
           AiSummary.where(target_type: "Topic", target_id: post.topic_id).delete_all
         end
 
+        plugin.on(:post_revision_hidden) do |post_revision|
+          AiSummary.drop_for_post!(post_revision.post_id)
+        end
+
+        plugin.add_model_callback(PostRevision, :after_destroy) do
+          AiSummary.drop_for_post!(post_id)
+        end
+
+        plugin.on(:post_edited) do |post, _, revisor|
+          next if !revisor.post_changes.key?("raw")
+
+          revision = revisor.post_revision
+          next if revision && revision.modifications.dig("raw", 0) == post.raw_before_last_save
+
+          AiSummary.drop_since!(post.topic_id, revision ? post.created_at : post.last_version_at)
+        end
+
         plugin.on(:posts_moved) do |args|
           if SiteSetting.discourse_ai_enabled && SiteSetting.ai_summarization_enabled &&
                !SiteSetting.ai_summary_backfill_maximum_topics_per_hour.zero?
