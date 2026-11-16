@@ -109,8 +109,8 @@ interface ProsemirrorEditorSignature {
     markdownOptions?: MarkdownOptions;
     /** Set to false to stop padding the document with a trailing empty paragraph. */
     trailingParagraph?: boolean;
-    /** Uploads files as attachments, for hosts that don't upload inline. */
-    uploadFiles?: (files: File[]) => void;
+    /** Uploads files as attachments, for hosts that don't upload inline; returns false when it can't take them. */
+    uploadFiles?: (files: File[]) => boolean | void;
   };
 }
 

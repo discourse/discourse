@@ -18,6 +18,21 @@ RSpec.describe "Chat composer rich editor" do
     sign_in(current_user)
   end
 
+  def paste_embedded_image
+    page.execute_script(<<~JS)
+      const png =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+      const data = new DataTransfer();
+      data.setData("text/html", `<p>look <img src="${png}"> here</p>`);
+      data.setData("text/plain", "look here");
+      document
+        .querySelector(".chat-composer__input")
+        .dispatchEvent(
+          new ClipboardEvent("paste", { clipboardData: data, bubbles: true, cancelable: true })
+        );
+    JS
+  end
+
   it "keeps the markdown editor while the upcoming change is off" do
     SiteSetting.enable_composer_picker_and_rich_chat = false
     chat_page.visit_channel(channel_1)
@@ -253,21 +268,20 @@ RSpec.describe "Chat composer rich editor" do
     chat_page.visit_channel(channel_1)
     expect(channel_page.composer).to have_rich_editor
 
-    page.execute_script(<<~JS)
-      const png =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
-      const data = new DataTransfer();
-      data.setData("text/html", `<p>look <img src="${png}"> here</p>`);
-      data.setData("text/plain", "look here");
-      document
-        .querySelector(".chat-composer__input")
-        .dispatchEvent(
-          new ClipboardEvent("paste", { clipboardData: data, bubbles: true, cancelable: true })
-        );
-    JS
+    paste_embedded_image
 
     expect(page).to have_css(".chat-composer-upload--image")
     expect(channel_page.composer).to have_value("look  here")
+  end
+
+  it "keeps a pasted embedded image as text when chat uploads are off" do
+    SiteSetting.chat_allow_uploads = false
+    chat_page.visit_channel(channel_1)
+    expect(channel_page.composer).to have_rich_editor
+
+    paste_embedded_image
+
+    expect(channel_page.composer).to have_value("look image here")
   end
 
   it "replaces a partial emoji term picked from the full picker" do

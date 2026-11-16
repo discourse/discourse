@@ -312,7 +312,10 @@ export default class ChatComposer extends Component {
 
   @action
   uploadFiles(files) {
-    this.#addUploads?.(files, { pasted: true });
+    if (!this.canAttachUploads || !this.#addUploads) {
+      return false;
+    }
+    this.#addUploads(files, { pasted: true });
   }
 
   // the mode is a user preference shared with other open composers
@@ -1078,7 +1081,7 @@ export default class ChatComposer extends Component {
                     @placeholder={{this.placeholder}}
                     @toggleRichEditor={{this.toggleEditor}}
                     @trailingParagraph={{false}}
-                    @uploadFiles={{if this.canAttachUploads this.uploadFiles}}
+                    @uploadFiles={{this.uploadFiles}}
                     @value={{this.draft.message}}
                   />
                 {{/if}}
