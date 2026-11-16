@@ -103,7 +103,7 @@ export default class ChatComposer extends Component {
     super(...arguments);
 
     if (this.useRichEditor) {
-      this.composer.awaitEditor();
+      this.composer.awaitEditor(this);
       this.#loadRichEditor();
     }
   }
@@ -290,7 +290,7 @@ export default class ChatComposer extends Component {
       : USER_OPTION_COMPOSITION_MODES.rich;
 
     if (!this.useRichEditor) {
-      this.composer.awaitEditor();
+      this.composer.awaitEditor(this);
       await this.#loadRichEditor();
     }
 
@@ -381,7 +381,7 @@ export default class ChatComposer extends Component {
 
   @action
   teardown() {
-    this.composer.stopAwaitingEditor();
+    this.composer.stopAwaitingEditor(this);
     this.appEvents.off("chat:modify-selection", this, "modifySelection");
     this.appEvents.off(
       "chat:open-insert-link-modal",
