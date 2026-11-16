@@ -163,11 +163,11 @@ export default class EmbedModeComposer extends Component {
   }
 
   @action
-  async handleSubmit({ raw, typingTime, composerTime }) {
+  async handleSubmit({ raw, typingTime }) {
     if (this.editingPost) {
       return this.#submitEdit(raw);
     }
-    return this.#submitReply({ raw, typingTime, composerTime });
+    return this.#submitReply({ raw, typingTime });
   }
 
   async #submitEdit(raw) {
@@ -200,7 +200,7 @@ export default class EmbedModeComposer extends Component {
     }
   }
 
-  async #submitReply({ raw, typingTime, composerTime }) {
+  async #submitReply({ raw, typingTime }) {
     const topic = this.args.topic;
     const postStream = topic.postStream;
     const user = this.currentUser;
@@ -210,7 +210,6 @@ export default class EmbedModeComposer extends Component {
     const createdPost = this.store.createRecord("post", {
       raw,
       typing_duration_msecs: typingTime,
-      composer_open_duration_msecs: composerTime,
       topic_id: topic.id,
       reply_to_post_number: this.replyingToPost?.post_number,
       nested_post: true,

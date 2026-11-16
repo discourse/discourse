@@ -21,7 +21,7 @@ module("Integration | Component | DockedComposer", function (hooks) {
     pretender.get("/emojis/search-aliases.json", () => response([]));
   });
 
-  test("submits active typing time separately from time spent idle", async function (assert) {
+  test("submits typing time without counting time spent idle", async function (assert) {
     const clock = fakeTime("2026-11-16T00:00:00", null, true);
     let submission;
     const handleSubmit = (data) => {
@@ -51,10 +51,6 @@ module("Integration | Component | DockedComposer", function (hooks) {
         submission.typingTime,
         300,
         "idle time does not count as typing"
-      );
-      assert.true(
-        submission.composerTime >= 20_000,
-        "open time includes idle time"
       );
     } finally {
       clock.restore();
@@ -177,8 +173,7 @@ module("Integration | Component | DockedComposer", function (hooks) {
     );
   });
 
-  test("restores draft timing when the composer is recreated", async function (assert) {
-    const clock = fakeTime("2026-11-16T00:00:00", null, true);
+  test("restores typing time when the composer is recreated", async function (assert) {
     const submissions = [];
     const handleSubmit = (data) => {
       submissions.push(data);
@@ -192,190 +187,40 @@ module("Integration | Component | DockedComposer", function (hooks) {
       />
     </template>;
 
-    try {
-      await render(composer);
-      clock.tick(5_000);
-      await fillIn(".d-editor-input", "First");
-      await fillIn(".d-editor-input", "First draft");
-      await fillIn(".d-editor-input", "First draft ready");
-      await click(".docked-composer__submit-btn");
-      assert.strictEqual(
-        submissions[0].typingTime,
-        300,
-        "the draft has recorded typing time"
-      );
-
-      clock.tick(10_000);
-      await clearRender();
-      clock.tick(60_000);
-      await render(composer);
-      assert
-        .dom(".d-editor-input")
-        .hasValue("First draft ready", "the draft text is restored");
-      clock.tick(2_000);
-      await click(".docked-composer__submit-btn");
-
-      assert.strictEqual(
-        submissions[1].typingTime,
-        300,
-        "the restored draft retains its typing time"
-      );
-      assert.true(
-        submissions[1].composerTime >= 17_000,
-        "open time includes both editor sessions"
-      );
-      assert.true(
-        submissions[1].composerTime < 60_000,
-        "time with the editor closed is excluded"
-      );
-
-      await clearRender();
-      await render(composer);
-      assert
-        .dom(".d-editor-input")
-        .hasValue("", "successful submission clears the saved draft");
-      await fillIn(".d-editor-input", "A new comment");
-      await click(".docked-composer__submit-btn");
-      assert.strictEqual(
-        submissions[2].typingTime,
-        100,
-        "a new comment has fresh timing"
-      );
-    } finally {
-      clock.restore();
-    }
-  });
-
-  test("saves idle time when leaving the page and excludes time in the back forward cache", async function (assert) {
-    const clock = fakeTime("2026-11-16T00:00:00", null, true);
-    let submission;
-    const handleSubmit = (data) => {
-      submission = data;
-      return { ok: true };
-    };
-    const draftKey = "test-page-draft-timing";
-    const keyValueStore = this.owner.lookup("service:key-value-store");
-
-    try {
-      await render(
-        <template>
-          <DockedComposer
-            @composerEvents={{false}}
-            @draftKey={{draftKey}}
-            @onSubmit={{handleSubmit}}
-          />
-        </template>
-      );
-      await fillIn(".d-editor-input", "A draft before leaving");
-      clock.tick(10_000);
-      window.dispatchEvent(
-        new PageTransitionEvent("pagehide", { persisted: true })
-      );
-
-      assert.true(
-        keyValueStore.getObject(`${draftKey}-timing`).composerTime >= 10_000,
-        "leaving the page saves time since the last edit"
-      );
-      clock.tick(60_000);
-      window.dispatchEvent(
-        new PageTransitionEvent("pageshow", { persisted: true })
-      );
-      clock.tick(2_000);
-      await click(".docked-composer__submit-btn");
-
-      assert.strictEqual(submission.typingTime, 100);
-      assert.true(submission.composerTime >= 12_000);
-      assert.true(submission.composerTime < 60_000);
-      assert.strictEqual(keyValueStore.get(draftKey), undefined);
-      assert.strictEqual(
-        keyValueStore.getObject(`${draftKey}-timing`),
-        undefined
-      );
-
-      await fillIn(".d-editor-input", "A different unsent comment");
-      await clearRender();
-      const savedTiming = keyValueStore.getObject(`${draftKey}-timing`);
-      clock.tick(10_000);
-      window.dispatchEvent(new PageTransitionEvent("pagehide"));
-      assert.deepEqual(
-        keyValueStore.getObject(`${draftKey}-timing`),
-        savedTiming,
-        "leaving after destruction does not update the saved duration"
-      );
-    } finally {
-      clock.restore();
-    }
-  });
-
-  test("excludes time away when returning to an empty composer", async function (assert) {
-    const clock = fakeTime("2026-11-16T00:00:00", null, true);
-    let submission;
-    const handleSubmit = (data) => {
-      submission = data;
-      return { ok: true };
-    };
-
-    try {
-      await render(
-        <template>
-          <DockedComposer
-            @composerEvents={{false}}
-            @draftKey="test-empty-cached-composer"
-            @onSubmit={{handleSubmit}}
-          />
-        </template>
-      );
-      clock.tick(5_000);
-      window.dispatchEvent(
-        new PageTransitionEvent("pagehide", { persisted: true })
-      );
-      clock.tick(60_000);
-      window.dispatchEvent(
-        new PageTransitionEvent("pageshow", { persisted: true })
-      );
-      clock.tick(2_000);
-      await fillIn(".d-editor-input", "A comment after returning");
-      await click(".docked-composer__submit-btn");
-
-      assert.strictEqual(submission.typingTime, 100);
-      assert.true(
-        submission.composerTime >= 7_000,
-        "both open intervals count"
-      );
-      assert.true(
-        submission.composerTime < 60_000,
-        "the interval away is excluded"
-      );
-    } finally {
-      clock.restore();
-    }
-  });
-
-  test("leaving preserves drafts changed or submitted in another tab", async function (assert) {
-    const draftKey = "test-shared-draft";
-    const keyValueStore = this.owner.lookup("service:key-value-store");
-    const composer = <template>
-      <DockedComposer @composerEvents={{false}} @draftKey={{draftKey}} />
-    </template>;
-
     await render(composer);
-    await fillIn(".d-editor-input", "An older draft in this tab");
-    const newerDraft = "A newer draft from another tab";
-    keyValueStore.set({ key: draftKey, value: newerDraft });
-    window.dispatchEvent(new PageTransitionEvent("pagehide"));
-    await clearRender();
-    assert.strictEqual(keyValueStore.get(draftKey), newerDraft);
-
-    await render(composer);
-    assert.dom(".d-editor-input").hasValue(newerDraft);
-    keyValueStore.remove(draftKey);
-    keyValueStore.remove(`${draftKey}-timing`);
-    window.dispatchEvent(new PageTransitionEvent("pagehide"));
-    await clearRender();
-    assert.strictEqual(keyValueStore.get(draftKey), undefined);
+    await fillIn(".d-editor-input", "First");
+    await fillIn(".d-editor-input", "First draft");
+    await fillIn(".d-editor-input", "First draft ready");
+    await click(".docked-composer__submit-btn");
     assert.strictEqual(
-      keyValueStore.getObject(`${draftKey}-timing`),
-      undefined
+      submissions[0].typingTime,
+      300,
+      "the draft has recorded typing time"
+    );
+
+    await clearRender();
+    await render(composer);
+    assert
+      .dom(".d-editor-input")
+      .hasValue("First draft ready", "the draft text is restored");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[1].typingTime,
+      300,
+      "the restored draft retains its typing time"
+    );
+
+    await clearRender();
+    await render(composer);
+    assert
+      .dom(".d-editor-input")
+      .hasValue("", "successful submission clears the saved draft");
+    await fillIn(".d-editor-input", "A new comment");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[2].typingTime,
+      100,
+      "a new comment has fresh timing"
     );
   });
 

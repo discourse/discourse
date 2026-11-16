@@ -51,20 +51,8 @@ export default class DockedComposer extends Component {
   /** @type {HTMLInputElement | null} */
   fileInputEl = null;
   #rootElement = null;
-  #composerOpenedAt = Date.now();
   #typingTime = 0;
   #lastTypedValue = "";
-  #pageHiddenAt = null;
-  #onPageHide = () => {
-    this.#persistDraftTiming(this.reply);
-    this.#pageHiddenAt = Date.now();
-  };
-  #onPageShow = (event) => {
-    if (event.persisted && this.#pageHiddenAt !== null) {
-      this.#composerOpenedAt += Date.now() - this.#pageHiddenAt;
-      this.#pageHiddenAt = null;
-    }
-  };
 
   #handlePaste = (event) => {
     if (!this.inputElement || document.activeElement !== this.inputElement) {
@@ -214,11 +202,10 @@ export default class DockedComposer extends Component {
     const saved = this.keyValueStore.get(this.draftKey);
     if (saved) {
       this.reply = saved;
-      this.#resetTiming(saved);
+      this.#resetTypingTime(saved);
       const timing = this.keyValueStore.getObject(this.#draftTimingKey);
       if (timing?.reply === saved) {
         this.#typingTime = timing.typingTime ?? 0;
-        this.#composerOpenedAt = Date.now() - (timing.composerTime ?? 0);
       }
       this.syncAutoResizeHeight();
     }
@@ -228,7 +215,10 @@ export default class DockedComposer extends Component {
   persistDraft(value) {
     if (value?.length) {
       this.keyValueStore.set({ key: this.draftKey, value });
-      this.#persistDraftTiming(value);
+      this.keyValueStore.setObject({
+        key: this.#draftTimingKey,
+        value: { reply: value, typingTime: this.#typingTime },
+      });
     } else {
       this.keyValueStore.remove(this.draftKey);
       this.keyValueStore.remove(this.#draftTimingKey);
@@ -258,7 +248,7 @@ export default class DockedComposer extends Component {
   @action
   setReply(value) {
     this.reply = value ?? "";
-    this.#resetTiming(this.reply);
+    this.#resetTypingTime(this.reply);
     this.persistDraft(this.reply);
   }
 
@@ -268,8 +258,6 @@ export default class DockedComposer extends Component {
     this.updateMaxResizeOffset();
     this.args.onRegisterApi?.({ setReply: this.setReply, focus: this.focus });
     this.loadDraft();
-    window.addEventListener("pagehide", this.#onPageHide);
-    window.addEventListener("pageshow", this.#onPageShow);
 
     this.uppyUpload = new UppyUpload(this, {
       id: this.uploaderId,
@@ -297,9 +285,6 @@ export default class DockedComposer extends Component {
 
   @action
   teardown() {
-    this.#persistDraftTiming(this.reply);
-    window.removeEventListener("pagehide", this.#onPageHide);
-    window.removeEventListener("pageshow", this.#onPageShow);
     this.inputElement?.removeEventListener(
       "keydown",
       this.#handleKeyDown,
@@ -359,7 +344,6 @@ export default class DockedComposer extends Component {
       const result = await this.args.onSubmit({
         raw: this.reply,
         typingTime: this.#typingTime,
-        composerTime: Date.now() - this.#composerOpenedAt,
         uploads: this.uploads,
         inProgressUploadsCount: this.inProgressUploads.length,
       });
@@ -368,7 +352,7 @@ export default class DockedComposer extends Component {
       if (!result) {
         return;
       }
-      this.#resetTiming();
+      this.#resetTypingTime();
       this.reply = "";
       this.uploads = trackedArray();
       this.persistDraft("");
@@ -422,25 +406,9 @@ export default class DockedComposer extends Component {
     );
   }
 
-  #persistDraftTiming(value) {
-    if (!value?.length || this.keyValueStore.get(this.draftKey) !== value) {
-      return;
-    }
-    this.keyValueStore.setObject({
-      key: this.#draftTimingKey,
-      value: {
-        reply: value,
-        typingTime: this.#typingTime,
-        composerTime: Date.now() - this.#composerOpenedAt,
-      },
-    });
-  }
-
-  #resetTiming(value = "") {
+  #resetTypingTime(value = "") {
     this.#lastTypedValue = value;
     this.#typingTime = 0;
-    this.#composerOpenedAt = Date.now();
-    this.#pageHiddenAt = null;
   }
 
   <template>
