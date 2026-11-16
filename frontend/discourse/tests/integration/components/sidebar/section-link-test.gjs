@@ -142,6 +142,141 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
       .doesNotHaveClass("--hovering", "emulated hover does not set the state");
   });
 
+  test("the homepage preserves sidebar scrolling when active links render or reactivate", async function (assert) {
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => "/");
+    const active = tracked(true);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <div style="height: 600px"></div>
+          <SectionLink
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{active.value}}
+          />
+          <div style="height: 600px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    assert.strictEqual(scroller.scrollTop, 0, "a fresh load stays at the top");
+
+    active.value = false;
+    await rerender();
+    scroller.scrollTop = 100;
+    active.value = true;
+    await rerender();
+
+    assert.strictEqual(
+      scroller.scrollTop,
+      100,
+      "reactivation preserves the existing scroll position"
+    );
+  });
+
+  test("returning home reveals an active link above the visible area", async function (assert) {
+    const currentURL = tracked("/categories");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => currentURL.value);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <SectionLink
+            @currentWhen={{true}}
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{true}}
+          />
+          <div style="height: 1200px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    scroller.scrollTop = 500;
+    currentURL.value = "/";
+    await rerender();
+
+    assert.dom("a.active").exists("the homepage link stays highlighted");
+    assert.true(scroller.scrollTop < 500, "returning home scrolls upward");
+    assert.true(
+      find(".sidebar-section-link-wrapper").getBoundingClientRect().top >=
+        scroller.getBoundingClientRect().top - 1,
+      "the active link is visible below the top edge"
+    );
+
+    scroller.scrollTop = 100;
+    await rerender();
+
+    assert.strictEqual(
+      scroller.scrollTop,
+      100,
+      "manual scrolling is preserved"
+    );
+  });
+
+  test("leaving the homepage reveals a link that stays active", async function (assert) {
+    const currentURL = tracked("/");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => currentURL.value);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <div style="height: 600px"></div>
+          <SectionLink
+            @currentWhen={{true}}
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{true}}
+          />
+          <div style="height: 600px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    assert.dom("a.active").exists("the homepage link is active");
+    assert.strictEqual(scroller.scrollTop, 0, "home stays at the top");
+
+    currentURL.value = "/categories";
+    await rerender();
+
+    assert.dom("a.active").exists("the same link remains active");
+    assert.true(scroller.scrollTop > 0, "leaving home reveals the active link");
+
+    currentURL.value = "/";
+    await rerender();
+    scroller.scrollTop = 100;
+    await rerender();
+
+    assert.strictEqual(scroller.scrollTop, 100, "home allows manual scrolling");
+
+    currentURL.value = "/categories";
+    await rerender();
+
+    assert.true(
+      scroller.scrollTop > 100,
+      "leaving home reveals the link again"
+    );
+  });
+
   test("scrollIntoView measures against the scrolling ancestor, not the window", async function (assert) {
     // A scroller shorter than the window, with the link pushed below its
     // visible area but still well inside the viewport.
