@@ -22,6 +22,118 @@ RSpec.describe DiscourseAi::Mcp::Client do
     ).to_return(status: 401, body: "")
   end
 
+  describe "#list_tools" do
+    it "collects all pages while preserving the session" do
+      stub_request(:post, server.url)
+        .with do |request|
+          payload = JSON.parse(request.body)
+          payload["method"] == "tools/list" && payload["params"].blank?
+        end
+        .to_return(
+          status: 200,
+          body: {
+            jsonrpc: "2.0",
+            result: {
+              tools: [{ name: "first" }],
+              nextCursor: "page-2",
+            },
+          }.to_json,
+        )
+      stub_request(:post, server.url)
+        .with do |request|
+          payload = JSON.parse(request.body)
+          payload.dig("params", "cursor") == "page-2" &&
+            request.headers["Mcp-Session-Id"] == "session-1"
+        end
+        .to_return(
+          status: 200,
+          body: { jsonrpc: "2.0", result: { tools: [{ name: "last" }] } }.to_json,
+        )
+
+      expect(described_class.new(server).list_tools(session_id: "session-1").pluck("name")).to eq(
+        %w[first last],
+      )
+    end
+
+    it "bounds discovery even when every cursor is unique" do
+      stub_const(described_class, :MAX_TOOL_PAGES, 3) do
+        requests = 0
+        stub_request(:post, server.url).to_return do
+          requests += 1
+          { status: 200, body: { result: { tools: [], nextCursor: "page-#{requests}" } }.to_json }
+        end
+        expect { described_class.new(server).list_tools }.to raise_error(
+          described_class::Error,
+          I18n.t("discourse_ai.mcp_servers.errors.too_many_tool_pages", max: 3),
+        )
+        expect(requests).to eq(3)
+      end
+    end
+
+    it "rejects oversized tool catalogs" do
+      stub_const(described_class, :MAX_DISCOVERED_TOOLS, 1) do
+        stub_request(:post, server.url).to_return(
+          status: 200,
+          body: { result: { tools: [{ name: "first" }, { name: "second" }] } }.to_json,
+        )
+        expect { described_class.new(server).list_tools }.to raise_error(
+          described_class::Error,
+          I18n.t("discourse_ai.mcp_servers.errors.too_many_tools", max: 1),
+        )
+      end
+    end
+
+    it "stops when a server repeats a pagination cursor" do
+      stub_request(:post, server.url).to_return(
+        status: 200,
+        body: { jsonrpc: "2.0", result: { tools: [], nextCursor: "same-page" } }.to_json,
+      )
+
+      expect { described_class.new(server).list_tools }.to raise_error(
+        described_class::Error,
+        I18n.t("discourse_ai.mcp_servers.errors.repeated_tool_list_cursor"),
+      )
+    end
+  end
+
+  describe "network failures" do
+    it "reports disallowed addresses with an admin diagnostic" do
+      stub_request(:post, server.url).to_raise(FinalDestination::SSRFDetector::DisallowedIpError)
+
+      expect { described_class.new(server).list_tools }.to raise_error(
+        described_class::ConnectionBlockedError,
+        I18n.t("discourse_ai.mcp_servers.errors.connection_blocked"),
+      )
+    end
+
+    it "reports unresolvable hostnames with an admin diagnostic" do
+      stub_request(:post, server.url).to_raise(FinalDestination::SSRFDetector::LookupFailedError)
+
+      expect { described_class.new(server).list_tools }.to raise_error(
+        described_class::ConnectionBlockedError,
+        I18n.t("discourse_ai.mcp_servers.errors.dns_lookup_failed"),
+      )
+    end
+
+    it "reports write timeouts as timeouts" do
+      stub_request(:post, server.url).to_raise(Net::WriteTimeout)
+
+      expect { described_class.new(server).list_tools }.to raise_error(
+        described_class::Error,
+        I18n.t("discourse_ai.mcp_servers.errors.timeout"),
+      )
+    end
+
+    it "reports TLS failures as connection failures" do
+      stub_request(:post, server.url).to_raise(OpenSSL::SSL::SSLError)
+
+      expect { described_class.new(server).list_tools }.to raise_error(
+        described_class::Error,
+        I18n.t("discourse_ai.mcp_servers.errors.connection_failed"),
+      )
+    end
+  end
+
   describe "#initialize_classic_session" do
     it "initializes a session and notifies the server" do
       stub_request(:post, server.url).to_return(
@@ -712,6 +824,22 @@ RSpec.describe DiscourseAi::Mcp::Client do
   end
 
   describe "OAuth flows" do
+    it "classifies OAuth refresh failures as authorization errors with the original detail" do
+      server.update!(auth_type: "oauth", ai_secret_id: nil, oauth_status: "connected")
+      server.oauth_token_store.write!(access_token: "expired-token", refresh_token: "refresh-token")
+      server.update_columns(oauth_access_token_expires_at: 1.minute.ago)
+      detail = I18n.t("discourse_ai.mcp_servers.errors.oauth_token_exchange_failed", status: 400)
+      allow(DiscourseAi::Mcp::OAuthFlow).to receive(:refresh!).with(server).and_raise(
+        described_class::Error,
+        detail,
+      )
+
+      expect { described_class.new(server).list_tools }.to raise_error(
+        described_class::AuthorizationError,
+        detail,
+      )
+    end
+
     it "raises an authorization error when OAuth authorization is required" do
       server.update!(auth_type: "oauth", ai_secret_id: nil, oauth_status: "disconnected")
       discovery =
@@ -883,7 +1011,7 @@ RSpec.describe DiscourseAi::Mcp::Client do
       .raises(FinalDestination::SSRFError, "localhost is not allowed")
 
     expect { described_class.new(insecure_server).initialize_session }.to raise_error(
-      described_class::Error,
+      described_class::ConnectionBlockedError,
       I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable"),
     )
   end

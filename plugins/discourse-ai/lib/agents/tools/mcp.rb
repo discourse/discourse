@@ -152,11 +152,25 @@ module DiscourseAi
           return error_response(normalize_content(result)) if result["isError"]
 
           { result: normalize_content(result) }
-        rescue DiscourseAi::Mcp::HeaderMapper::InvalidArgumentError => error
+        rescue DiscourseAi::Mcp::Client::AuthorizationError => error
+          record_connection_failure(error)
+          error_response(I18n.t("discourse_ai.mcp_servers.errors.reconnect_required"))
+        rescue DiscourseAi::Mcp::Client::ConnectionBlockedError => error
+          record_connection_failure(error)
+          error_response(I18n.t("discourse_ai.mcp_servers.errors.connection_failed"))
+        rescue DiscourseAi::Mcp::Client::Error => error
           error_response(error.message)
         end
 
         private
+
+        def record_connection_failure(error)
+          return if !server.record_health_error!(error.message)
+
+          Rails.logger.warn(
+            "MCP server #{self.class.server_id} tool #{self.class.tool_name.inspect} failed: #{error.message}",
+          )
+        end
 
         def invoke_with_session(client, current_context)
           initialize_and_store(client, current_context) if client.protocol_version.blank?

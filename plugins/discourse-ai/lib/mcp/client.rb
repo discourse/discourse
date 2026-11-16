@@ -30,9 +30,30 @@ module DiscourseAi
       CAPABILITIES_META_KEY = "io.modelcontextprotocol/clientCapabilities"
       USER_AGENT = "Discourse AI MCP Client"
       MAX_RESPONSE_BODY_LENGTH = 5.megabytes
+      MAX_TOOL_PAGES = 100
+      MAX_DISCOVERED_TOOLS = 10_000
+      TIMEOUT_ERRORS = [
+        Net::ReadTimeout,
+        Net::OpenTimeout,
+        Net::WriteTimeout,
+        Faraday::TimeoutError,
+      ].freeze
+      # SocketError covers FinalDestination::SSRFError.
+      TRANSPORT_ERRORS = [
+        *TIMEOUT_ERRORS,
+        SocketError,
+        IOError,
+        SystemCallError,
+        OpenSSL::SSL::SSLError,
+        Faraday::ConnectionFailed,
+        Faraday::SSLError,
+      ].freeze
 
       Error = Class.new(StandardError)
-      AuthorizationRequiredError = Class.new(Error)
+      # Messages are admin-facing diagnostics; show end users generic wording instead.
+      AuthorizationError = Class.new(Error)
+      AuthorizationRequiredError = Class.new(AuthorizationError)
+      ConnectionBlockedError = Class.new(Error)
       SessionExpiredError = Class.new(Error)
       UnauthorizedError =
         Class.new(Error) do
@@ -149,9 +170,36 @@ module DiscourseAi
       end
 
       def list_tools(session_id: nil)
-        response = post_jsonrpc("tools/list", session_id: session_id)
-        result = extract_result!(response.payload)
-        Array(result["tools"]).reject do |tool|
+        tools = []
+        cursors = Set.new
+        cursor = nil
+        pages = 0
+        loop do
+          pages += 1
+          if pages > MAX_TOOL_PAGES
+            raise Error,
+                  I18n.t("discourse_ai.mcp_servers.errors.too_many_tool_pages", max: MAX_TOOL_PAGES)
+          end
+          params = cursor.present? ? { cursor: cursor } : nil
+          response = post_jsonrpc("tools/list", session_id: session_id, params: params)
+          result = extract_result!(response.payload)
+          tools.concat(Array(result["tools"]))
+          if tools.length > MAX_DISCOVERED_TOOLS
+            raise Error,
+                  I18n.t(
+                    "discourse_ai.mcp_servers.errors.too_many_tools",
+                    max: MAX_DISCOVERED_TOOLS,
+                  )
+          end
+          cursor = result["nextCursor"].presence
+          break if cursor.nil?
+
+          unless cursors.add?(cursor)
+            raise Error, I18n.t("discourse_ai.mcp_servers.errors.repeated_tool_list_cursor")
+          end
+        end
+
+        tools.reject do |tool|
           next false if protocol_version != MODERN_PROTOCOL_VERSION
           next true unless tool.is_a?(Hash)
 
@@ -246,13 +294,15 @@ module DiscourseAi
       rescue UnauthorizedError => e
         if server.oauth? && options.fetch(:allow_oauth_retry, true) &&
              server.oauth_token_store.refresh_token.present?
-          DiscourseAi::Mcp::OAuthFlow.refresh!(server)
+          refresh_oauth_token!
 
           return post_jsonrpc(method, **options.merge(allow_oauth_retry: false))
         end
 
         discovery =
-          DiscourseAi::Mcp::OAuthDiscovery.discover!(server, challenge_header: e.challenge_header)
+          as_authorization_error do
+            DiscourseAi::Mcp::OAuthDiscovery.discover!(server, challenge_header: e.challenge_header)
+          end
         server.store_oauth_discovery!(discovery) if server.persisted?
 
         raise AuthorizationRequiredError,
@@ -260,10 +310,10 @@ module DiscourseAi
                 "discourse_ai.mcp_servers.errors.oauth_authorization_required",
                 issuer: discovery.issuer,
               )
-      rescue AuthorizationRequiredError
+      rescue AuthorizationError
         raise
-      rescue Net::ReadTimeout, Net::OpenTimeout
-        raise Error, I18n.t("discourse_ai.mcp_servers.errors.timeout")
+      rescue *TRANSPORT_ERRORS => e
+        raise transport_error(e)
       rescue JSON::ParserError
         raise Error, I18n.t("discourse_ai.mcp_servers.errors.invalid_response")
       end
@@ -320,12 +370,14 @@ module DiscourseAi
               parse_json_body(raw_body)
             end
           rescue JSON::ParserError
-            unless tolerate_statuses == DISCOVERY_TOLERATED_STATUSES &&
-                     tolerate_statuses.include?(status)
+            if tolerate_statuses == DISCOVERY_TOLERATED_STATUSES &&
+                 tolerate_statuses.include?(status)
+              {}
+            elsif (status < 200 || status >= 300) && !tolerate_statuses.include?(status)
+              raise_response_error!({}, status: status)
+            else
               raise
             end
-
-            {}
           end
 
         return build_response(response, body, status) if tolerate_statuses.include?(status)
@@ -459,7 +511,24 @@ module DiscourseAi
         AiMcpServer.validate_hostname_public!(uri.hostname)
         uri
       rescue FinalDestination::SSRFError, SocketError, URI::InvalidURIError
-        raise Error, I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable")
+        raise ConnectionBlockedError, I18n.t("discourse_ai.mcp_servers.invalid_url_not_reachable")
+      end
+
+      def transport_error(error)
+        if error.is_a?(Faraday::Error) && error.wrapped_exception.is_a?(Exception)
+          error = error.wrapped_exception
+        end
+
+        case error
+        when FinalDestination::SSRFDetector::LookupFailedError
+          ConnectionBlockedError.new(I18n.t("discourse_ai.mcp_servers.errors.dns_lookup_failed"))
+        when FinalDestination::SSRFError
+          ConnectionBlockedError.new(I18n.t("discourse_ai.mcp_servers.errors.connection_blocked"))
+        when *TIMEOUT_ERRORS
+          Error.new(I18n.t("discourse_ai.mcp_servers.errors.timeout"))
+        else
+          Error.new(I18n.t("discourse_ai.mcp_servers.errors.connection_failed"))
+        end
       end
 
       def ensure_response_body_limit!(size)
@@ -471,7 +540,23 @@ module DiscourseAi
       def ensure_oauth_access_token!
         return if !server.oauth? || !server.oauth_needs_refresh?
 
-        DiscourseAi::Mcp::OAuthFlow.refresh!(server)
+        refresh_oauth_token!
+      end
+
+      def refresh_oauth_token!
+        as_authorization_error { DiscourseAi::Mcp::OAuthFlow.refresh!(server) }
+      end
+
+      # Runs inside post_jsonrpc's rescue clauses on the 401 path, where its sibling
+      # rescues can't catch what this raises, so transport failures are translated here.
+      def as_authorization_error
+        yield
+      rescue AuthorizationError, ConnectionBlockedError
+        raise
+      rescue *TRANSPORT_ERRORS => e
+        raise transport_error(e)
+      rescue Error => e
+        raise AuthorizationError, e.message
       end
 
       def sse_separator_end(buffer)
