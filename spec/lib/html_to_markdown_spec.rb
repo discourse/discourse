@@ -428,6 +428,25 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown("<ul><ol><li>🍏</li></ol><li>🍐</li></ul>")).to eq("1. 🍏\n- 🍐")
   end
 
+  it "indents each nesting level by a single step" do
+    expect(html_to_markdown("<ul><li>A<ul><li>B<ul><li>C</li></ul></li></ul></li></ul>")).to eq(
+      "- A\n  - B\n    - C",
+    )
+
+    expect(
+      html_to_markdown(
+        "<ul><li>A<ul><li>B<ul><li>C<ul><li>D</li></ul></li></ul></li></ul></li></ul>",
+      ),
+    ).to eq("- A\n  - B\n    - C\n      - D")
+  end
+
+  it "does not scale nested-list indentation by the total nesting depth" do
+    depth = 50
+    html = ("<ul><li>x" * depth) + ("</li></ul>" * depth)
+    deepest_indent = html_to_markdown(html).lines.last[/\A */].size
+    expect(deepest_indent).to eq(2 * (depth - 1))
+  end
+
   it "supports bare <li>" do
     expect(html_to_markdown("<li>I'm alone</li>")).to eq("- I'm alone")
   end
