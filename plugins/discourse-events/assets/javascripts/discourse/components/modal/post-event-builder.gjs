@@ -219,7 +219,10 @@ export default class PostEventBuilder extends Component {
   }
 
   get showScreenToggle() {
-    return this.args.model.initialScreen !== "advanced";
+    return (
+      this.siteSettings.events_allow_switching_editor &&
+      this.args.model.initialScreen !== "advanced"
+    );
   }
 
   get namePlaceholder() {

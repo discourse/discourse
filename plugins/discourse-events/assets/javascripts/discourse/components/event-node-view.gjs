@@ -64,6 +64,10 @@ export default class EventNodeView extends Component {
     };
   }
 
+  get hideAdvancedEditor() {
+    return !this.siteSettings.events_allow_switching_editor;
+  }
+
   @action
   onChange(state) {
     if (!this.args.getPos || !this.args.view) {
@@ -159,6 +163,7 @@ export default class EventNodeView extends Component {
 
   <template>
     <CompactEventEditor
+      @hideAdvanced={{this.hideAdvancedEditor}}
       @initialState={{this.initialState}}
       @onChange={{this.onChange}}
       @onDelete={{this.onDelete}}

@@ -37,6 +37,10 @@ export default class ComposerEventEditor extends Component {
     };
   }
 
+  get hideAdvancedEditor() {
+    return !this.siteSettings.events_allow_switching_editor;
+  }
+
   @action
   onChange(state) {
     this.#pendingState = state;
@@ -119,6 +123,7 @@ export default class ComposerEventEditor extends Component {
         @onChange={{this.onChange}}
         @onCommit={{this.flush}}
         @onDelete={{this.onDelete}}
+        @hideAdvanced={{this.hideAdvancedEditor}}
       />
     </div>
   </template>
