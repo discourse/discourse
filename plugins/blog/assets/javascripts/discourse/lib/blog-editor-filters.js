@@ -5,6 +5,7 @@ export const STATUS_OPTIONS = [
   { value: "drafts", label: i18n("blog.drafts") },
   { value: "published", label: i18n("blog.published") },
   { value: "unpublished", label: i18n("blog.not_published") },
+  { value: "pages", label: i18n("blog.pages") },
 ];
 
 // The server rejects longer queries.

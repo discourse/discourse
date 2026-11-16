@@ -289,24 +289,26 @@ en:
       editor_title: Blog editor
       editor_description: Drafts stay private until you publish them. Edit an article to publish, schedule, or correct it.
       editor_table:
-        article: Article
         edit: Edit
         status: Status
         published: Published
         replies: Replies
+        title: Title
         edits_pending: Edits pending
         edits_need_approval: Edits need approval
         more_actions: More actions
+        page: Page
         preview_changes: Preview changes
         view_on_blog: View on blog
       new_draft: New draft
       settings: Configure blog settings
-      all: All articles
+      all: All
       drafts: Drafts
       published: Published
       visit_blog: Visit blog
       public_discussion: Public discussion
       not_published: Not on the blog
+      pages: Pages
       preview: Preview
       load_more: Load more
       unpublish_confirm:
