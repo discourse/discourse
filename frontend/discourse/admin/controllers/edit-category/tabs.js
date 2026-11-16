@@ -133,6 +133,12 @@ export default class EditCategoryTabsController extends Controller {
     return this.siteSettings.available_locales;
   }
 
+  get dynamicCategoryTypeTabs() {
+    return Object.values(this.model.categoryTypes ?? {}).filter(
+      (type) => type.id !== "discussion" && type.visible
+    );
+  }
+
   get baseTitle() {
     if (this.model.id) {
       return i18n("category.edit_dialog_title", {
@@ -544,7 +550,10 @@ export default class EditCategoryTabsController extends Controller {
     const primaryTab = registeredEditCategoryTabs.find(
       (tab) => tab.id === this.selectedTab && tab.primary
     );
-    if (primaryTab) {
+    if (
+      primaryTab ||
+      this.dynamicCategoryTypeTabs.some((type) => type.id === this.selectedTab)
+    ) {
       return;
     }
 
