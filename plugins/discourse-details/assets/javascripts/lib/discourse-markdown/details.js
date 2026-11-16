@@ -36,6 +36,7 @@ export function setup(helper) {
     "details",
     "details[open]",
     "details.ai-quote",
+    "details[data-ai-generated=true]",
     "details.elided",
     "span.ai-details-label",
     "span[title]",
