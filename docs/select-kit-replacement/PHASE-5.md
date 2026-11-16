@@ -18,7 +18,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves* and *Promotion*. Re-sequenced 2026-10-14
 - ☐ **Ban lint rule** for `select-kit/*` imports and the old tags in core and bundled plugins, with
   named exceptions (the bridge's `select-kit/lib/plugin-api` import, compat-modules, retained
   styles).
-- ☐ **Third-party migration guide.**
+- ☐ **Third-party migration guide.** Published on Meta; written from the notes in
+  [`MIGRATION-GUIDE.md`](MIGRATION-GUIDE.md).
 
 ## Exit criteria (end state)
 

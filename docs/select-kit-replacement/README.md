@@ -33,6 +33,9 @@ Status legend: ☐ pending · ◐ in progress · ☑ done
   feedback on the sandbox (dev topic #188731), tracked within Phase 1. Read it before touching
   `DSelect` announcements: it carries the "express states, announce events" rule, the
   announcement inventory, and the diagnoses that turned out to be wrong.
+- [`MIGRATION-GUIDE.md`](MIGRATION-GUIDE.md): notes for the third-party migration guide published
+  on Meta (Phase 5). Add an entry whenever a change deprecates or reshapes something plugins and
+  themes use.
 
 ## Roadmap-numbering note
 

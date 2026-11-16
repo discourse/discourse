@@ -237,10 +237,46 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `DSelectTopic` takes `@exclude` for the current topic.
   - ☑ The profile's featured topic is a field saved with "Save changes" instead of a modal that
     saved on pick (2026-11-03); the profile update stores it under `can_feature_topic?`.
-- ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
-- ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
-  `d-future-date-input` with `FutureDateInputSelector`, `d-access-control` (its add box
-  joined with the user family on 2026-11-11).
+- ☐ **Long tail.** Inventoried 2026-11-12, counting production call sites only; none branch on
+  the flag yet.
+  - ☐ `ListSetting`, 15 sites. Core: the site setting lists (`site-settings/group-list`,
+    `named-list`, `host-list`, `compact-list`, `file-types-list`, `locale-list`),
+    `setting-field/group-list` and `compact-list`, and `groups-form-membership-fields`. Plugins:
+    data explorer's query tags, discourse-ai's attachment types, patreon's filters and the
+    workflows tags editor, plus two styleguide examples. Lists of strings that can take new
+    entries (`allowAny`), with `mandatoryValues`, `nameProperty` and `onChangeChoices`. Split the
+    sites by shape before porting: group lists toward `DSelectGroup`, string lists toward
+    `DSelect` with create, and mandatory values as `@lockedValues`.
+  - ☐ `TimezoneInput`, 5 sites: profile preferences, local dates, the workflows settings and
+    timezone control, and the events builder. A fixed list, so a typeahead `DSelect`, likely
+    through a small recipe.
+  - ☐ `FormTemplateChooser`, 2 sites: the composer and the category topic template editor.
+  - ☐ `FlairChooser`, 1 site: account preferences. Rows show the flair's icon or image.
+  - ☐ `ColorPalettePicker` (the theme page, the color scheme modal and interface preferences)
+    and `ColorPalettes` (the wizard). Rows show swatches.
+  - ☐ `FontSelector`: the font list setting and the wizard. Each font renders in its typeface.
+  - ☐ The wizard's dropdown field, which renders `ColorPalettes`, `FontSelector` or `ComboBox`
+    dynamically. It moves with the colors and fonts.
+- ☐ **ui-kit wrappers** as one family.
+  - ☑ `d-relative-time-picker` (2026-11-13): its unit select branches on the flag to a static
+    `DSelect` named "Unit".
+    - Deferred until the other recipes are migrated: a joined control, a number input with the
+      select inside the same frame, as one field. It isn't select-kit work. Core and the bundled
+      plugins have several number-and-choice pairs that could share it: this picker, the file size
+      site setting input, the automation recurring period, the event reminders, and the
+      subscriptions plan amount and coupon discount.
+  - `d-time-input` leaves the family: draft PR #46334 on `main` gives `DDateTimeInput` a native
+    time input, as core's other time fields have, and deprecates `DTimeInput`. It is cherry-picked
+    here as `0592a861ca8`. Merging `main` after it lands may conflict in the events builder's
+    integration test imports again: keep `pretender` and `dSelect`, drop `selectKit`. The
+    third-party migration notes are in [`MIGRATION-GUIDE.md`](MIGRATION-GUIDE.md).
+  - ☐ `d-future-date-input` with `FutureDateInputSelector`: 7 core sites (slow mode, ignoring a
+    user, pinning a topic, both invite modals, penalizing a user, bulk suspension), plus the
+    styleguide. The selector's `FORMAT` constant is imported by five files, two of them (the topic
+    timer modal and form) for nothing else. Its rows compute a date and one opens a date picker,
+    so decide between `DSelect` and `DMenu` first.
+  - ☑ `d-access-control`: the add box (2026-11-11) and the permission select both branch on the
+    flag. The legacy grantee chooser goes in the cleanup.
 
 ## Exit criteria
 
