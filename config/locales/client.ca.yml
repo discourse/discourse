@@ -326,9 +326,6 @@ ca:
       pill: "Missatges relacionats"
     suggested_topics:
       pm_title: "Missatges recomanats"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Enrere"
     design_wizard:
       back: "Enrere"
       next: "Següent"

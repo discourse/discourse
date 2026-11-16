@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import Editor from "discourse/admin/components/schema-setting/editor";
+import hasTranslatableFields from "discourse/admin/lib/has-translatable-fields";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -16,6 +17,14 @@ export default <template>
     <h2>
       {{i18n "admin.customize.schema.title" (hash name=@model.setting.setting)}}
     </h2>
+    {{#if (hasTranslatableFields @model.setting.objects_schema)}}
+      <LinkTo
+        @query={{hash theme_id=@model.theme.id}}
+        @route="adminSiteText.index"
+      >
+        {{i18n "admin.site_text.manage_translations"}}
+      </LinkTo>
+    {{/if}}
   </div>
 
   <Editor

@@ -1,4 +1,4 @@
-import { fillIn, render, triggerEvent } from "@ember/test-helpers";
+import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -54,6 +54,49 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
       "2019-01-02 14:45",
       "it preserves the original time when changing the date"
     );
+  });
+
+  test("the clear button calls @onChange with null", async function (assert) {
+    const changes = [];
+    const onChange = (date) => changes.push(date);
+
+    await render(
+      <template>
+        <DDateTimeInput
+          @clearable={{true}}
+          @date={{DEFAULT_DATE_TIME}}
+          @onChange={{onChange}}
+        />
+      </template>
+    );
+
+    await click(".clear-date-time");
+
+    assert.deepEqual(changes, [null], "it reports the cleared value");
+  });
+
+  test("the clear button does nothing without @onChange", async function (assert) {
+    await render(
+      <template>
+        <DDateTimeInput @clearable={{true}} @date={{DEFAULT_DATE_TIME}} />
+      </template>
+    );
+
+    await click(".clear-date-time");
+
+    assert
+      .dom(".date-picker")
+      .hasValue("2019-01-29", "it keeps showing the date");
+  });
+
+  test("emptying the date does nothing without @onChange", async function (assert) {
+    await render(
+      <template><DDateTimeInput @date={{DEFAULT_DATE_TIME}} /></template>
+    );
+
+    await fillIn(".date-picker", "");
+
+    assert.dom(".date-picker").hasValue("", "it accepts the empty input");
   });
 
   test("can hide time", async function (assert) {

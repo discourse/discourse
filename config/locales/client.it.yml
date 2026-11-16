@@ -447,9 +447,6 @@ it:
       title: "Argomenti nuovi e non letti"
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Indietro"
     design_wizard:
       back: "Indietro"
       next: "Avanti"
@@ -878,6 +875,7 @@ it:
         is_this_post: "Questo messaggio è %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "o"
         something_else_wrong: "C'è qualcosa che non va con questo %{reviewable_type}?"
+        something_wrong_with_post: "Cosa non va in questo messaggio?"
       types:
         reviewable_flagged_post:
           title: "Messaggio segnalato"
@@ -2065,6 +2063,7 @@ it:
         redeemed_tab_with_count: "Accettati (%{count})"
         invited_via: "Invito"
         invited_via_link: "Link %{key} (%{count} / %{max} accettati)"
+        invited_via_link_without_key: "Link (%{count} / %{max} riscattati)"
         groups: "Gruppi"
         topic: "Argomento"
         sent: "Creato/Ultimo Invio"

@@ -13,8 +13,6 @@ cs:
       presets:
         image_generation_custom:
           name: "Přizpůsobené"
-        image_generation_openai:
-          name: "OpenAI"
     ai_helper:
       prompts:
         translate: Přeložit do %{language}

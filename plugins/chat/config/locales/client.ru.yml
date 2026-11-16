@@ -47,12 +47,6 @@ ru:
           many: "%{formatted_number} сообщений чата"
           other: "%{formatted_number} сообщения чата"
     chat:
-      admin_onboarding:
-        start_posting:
-          title: "Начать чат"
-          description: "Отправьте своё первое сообщение в #%{channel}."
-          action: "Напишите сообщение"
-          completed: "Продолжайте общение"
       edit_category:
         tab_title: "Чат"
         channel: "Канал"

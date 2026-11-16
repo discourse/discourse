@@ -4313,7 +4313,7 @@ uncategorized:
     area: "posts_and_topics"
 
   concord_in_wizard:
-    default: false
+    default: true
     hidden: true
   enable_site_owner_onboarding:
     client: true
@@ -4853,6 +4853,15 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/414357"
+  review_queue_consistent_answers:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "other,moderators"
+      learn_more_url: "https://meta.discourse.org/t/-/417015"
   enable_composer_toolbar_customization:
     default: false
     client: true

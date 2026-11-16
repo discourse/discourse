@@ -15,6 +15,9 @@ it:
         preview_archive: Archiviati
         desktop: Desktop
         mobile: Mobile
+        save: Salva
+        path_formats:
+          custom: Personalizzato
         back_to_themes: Torna ai temi
         new_theme_short: Nuovo tema
         themes: Temi

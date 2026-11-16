@@ -4,12 +4,13 @@
     <h1>{{ article.title }}</h1>
     {% if article.standfirst %}<p class="broadsheet__standfirst">{{ article.standfirst }}</p>{% endif %}
     <div class="broadsheet__byline --article">
-      <span><strong>{{ article.author }}</strong></span>
+      {% if article.author %}<span><strong>{% for author in article.authors %}<a href="{{ author.url }}">{{ author.name }}</a>{{ author.separator }}{% endfor %}</strong></span>{% endif %}
       <time datetime="{{ article.published_at }}">{{ article.date }}</time>
       <span>{{ article.reading_time }}</span>
     </div>
     {% if article.updated_label %}<p class="blog__updated">{{ article.updated_label }}</p>{% endif %}
   </header>
+  {% if article.cover_url %}<figure class="broadsheet__article-cover"><img src="{{ article.cover_url }}" alt="{{ article.cover_alt }}"{% if article.cover_width %} width="{{ article.cover_width }}" height="{{ article.cover_height }}"{% endif %}></figure>{% endif %}
   <div class="blog-article__body cooked">{{ article.body_html }}</div>
   {% if article.tags.size > 0 %}
   <footer class="blog-article__footer broadsheet__article-footer">

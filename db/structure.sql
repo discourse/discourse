@@ -2275,7 +2275,15 @@ CREATE TABLE public.blog_publications (
     last_published_at timestamp(6) without time zone,
     schedule_token character varying,
     schedule_error text DEFAULT ''::text NOT NULL,
-    draft_metadata jsonb DEFAULT '{}'::jsonb NOT NULL
+    draft_metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    cooked text,
+    image_url text,
+    meta_description character varying DEFAULT ''::character varying NOT NULL,
+    canonical_url character varying DEFAULT ''::character varying NOT NULL,
+    cover_upload_id integer,
+    cover_alt character varying DEFAULT ''::character varying NOT NULL,
+    word_count integer,
+    co_author_ids integer[] DEFAULT '{}'::integer[] NOT NULL
 );
 
 
@@ -11689,7 +11697,8 @@ CREATE TABLE public.theme_translation_overrides (
     translation_key character varying NOT NULL,
     value character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    original_translation text
 );
 
 
@@ -26644,6 +26653,12 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261113130002'),
+('20261113090951'),
+('20261112162839'),
+('20261112150235'),
+('20261110093228'),
+('20261110093224'),
 ('20261109060019'),
 ('20261106020035'),
 ('20261105165644'),
@@ -26708,6 +26723,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260925155026'),
 ('20260925054715'),
 ('20260923174053'),
+('20260923151316'),
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),

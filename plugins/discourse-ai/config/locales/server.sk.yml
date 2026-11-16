@@ -175,8 +175,6 @@ sk:
           name: "Cena akcií (AlphaVantage)"
         image_generation_custom:
           name: "Vlastné"
-        image_generation_openai:
-          name: "OpenAI"
         empty_tool:
           name: "Začnite od prázdneho..."
       name:

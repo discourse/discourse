@@ -138,6 +138,8 @@ discourse_ai:
     secret: true
   ai_google_custom_search_cx:
     default: ""
+  ai_google_custom_search_url:
+    default: "https://www.googleapis.com/customsearch/v1"
   ai_cloudflare_workers_account_id:
     default: ""
     secret: true

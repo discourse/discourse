@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import {
-  logOnboardingEvent,
+  completeOnboardingStep,
   onboardingStepKey,
 } from "discourse/lib/admin-onboarding";
 import DButton from "discourse/ui-kit/d-button";
@@ -58,17 +58,11 @@ export default class OnboardingStep extends Component {
   // Awaits the audit write so callers that reload the page on completion can't
   // cancel it in flight.
   async markAsCompleted() {
-    // app events backing some steps can fire more than once, so only audit the
-    // first transition into the completed state
-    const alreadyCompleted = this.completed;
-
-    this.keyValueStore.set({ key: onboardingStepKey(this.name), value: true });
     this.completed = true;
-    this.appEvents.trigger(`onboarding-step:completed`, this.name);
-
-    if (!alreadyCompleted) {
-      await logOnboardingEvent("step_completed", this.name);
-    }
+    await completeOnboardingStep(
+      { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
+      this.name
+    );
 
     return this.args.onCompleted?.(this.name);
   }

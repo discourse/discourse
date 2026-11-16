@@ -479,7 +479,7 @@ en:
           enabled: "Enabled"
           not_enabled: "Not enabled"
         filters:
-          all: "All"
+          all: "Any status"
           text: "Search features, agents, models, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
@@ -1344,6 +1344,7 @@ en:
           cloudflare-clef: "Cloudflare's open-source multimodal decision model on Workers AI"
           cloudflare-clef-flash: "Smaller, faster version of Clef on Workers AI"
           gpt-6-luna: "OpenAI's decision model on the Decisions API, with image support"
+          gemini-decision-1: "Google's decision model on the Gemini Decisions API, with image support"
         display_name: "Name"
         model: "Model"
         provider: "Provider"
@@ -1367,6 +1368,7 @@ en:
           typesafe: "TypeSafe"
           open_ai: "OpenAI Decisions"
           CDCK: "CDCK"
+          gemini: "Gemini Decisions"
 
       mcp_servers:
         short_title: "MCP servers"

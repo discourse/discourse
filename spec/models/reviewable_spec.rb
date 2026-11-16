@@ -408,6 +408,14 @@ RSpec.describe Reviewable, type: :model do
             expect(Reviewable.list_for(user)).to contain_exactly(queued_post, queued_user)
           end
 
+          it "includes resolved queued posts and users when filtering by their status" do
+            queued_post.update!(status: :approved)
+            queued_user.update!(status: :rejected)
+
+            expect(Reviewable.list_for(user, status: :approved)).to contain_exactly(queued_post)
+            expect(Reviewable.list_for(user, status: :rejected)).to contain_exactly(queued_user)
+          end
+
           it "excludes pending queued posts when applying a different status filter" do
             expect(Reviewable.list_for(user, status: :deleted)).to be_empty
           end
@@ -1188,13 +1196,36 @@ RSpec.describe Reviewable, type: :model do
 
       expect(Reviewable.by_status(Reviewable.all, :reviewed)).to contain_exactly(reviewable)
     end
+
+    it "groups resolved reviewables by whether a problem was confirmed, whatever their type" do
+      agreed_flag = Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[:approved])
+      disagreed_flag = Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[:rejected])
+      approved_post = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
+      rejected_post = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
+      approved_user = Fabricate(:reviewable_user, status: Reviewable.statuses[:approved])
+      rejected_user = Fabricate(:reviewable_user, status: Reviewable.statuses[:rejected])
+      Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[:ignored])
+
+      expect(Reviewable.by_status(Reviewable.all, :problem_confirmed)).to contain_exactly(
+        agreed_flag,
+        rejected_post,
+        rejected_user,
+      )
+      expect(Reviewable.by_status(Reviewable.all, :no_problem_found)).to contain_exactly(
+        disagreed_flag,
+        approved_post,
+        approved_user,
+      )
+    end
   end
 
   describe "#actions_for" do
     fab!(:reviewable, :reviewable_queued_post)
     fab!(:user)
 
-    it "gets the bundles and actions for a reviewable" do
+    it "gets the bundles and actions for a reviewable without consistent answers" do
+      SiteSetting.review_queue_consistent_answers = false
+
       actions = reviewable.actions_for(user.guardian)
       expect(actions.bundles.map(&:id)).to eq(
         ["#{reviewable.id}-approve_post", "#{reviewable.id}-reject-post"],
@@ -1205,6 +1236,20 @@ RSpec.describe Reviewable, type: :model do
       expect(
         actions.bundles.find { |b| b.bundle_id == "reject-post" }.actions.map(&:action_name),
       ).to eq(%w[reject_post revise_and_reject_post])
+    end
+
+    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+
+      actions = reviewable.actions_for(user.guardian)
+
+      expect(actions.bundles.map(&:id)).to eq(
+        ["#{reviewable.id}-reject-post", "#{reviewable.id}-approve_post"],
+      )
+      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(actions.bundles.last.actions.map(&:label)).to eq(
+        ["reviewables.actions.answer_no.title"],
+      )
     end
 
     describe "handling empty bundles" do

@@ -14,6 +14,9 @@ sw:
         preview_archive: Nyaraka
         desktop: Eneo kazi la Kompyuta
         mobile: Kifaa cha kiganjani
+        save: Hifadhi
+        path_formats:
+          custom: Binafsi
         themes: Mandhari
         edit: Hariri
         preview: Kihakiki

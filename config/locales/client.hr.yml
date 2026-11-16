@@ -483,9 +483,6 @@ hr:
       title: "Nove i nepročitane teme"
       pill: "Predloženo"
       pm_title: "Predložene poruke"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Natrag"
     design_wizard:
       back: "Natrag"
       next: "Sljedeći"

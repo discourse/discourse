@@ -11,6 +11,9 @@ sq:
         overridden: Grupet e krijuara
         preview_archive: Arkivoni
         mobile: Mobile
+        save: Ruani
+        path_formats:
+          custom: Grupet e krijuara
         edit: Redaktoni
         activate: Aktivizoni
         preview: Parashikimi

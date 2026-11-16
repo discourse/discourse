@@ -171,7 +171,7 @@ RSpec.describe DiscourseWorkflows::Schemas::FormFields do
         { "field_label" => "Email", "field_type" => "email", "required" => true },
         { "field_label" => "Password", "field_type" => "password" },
         { "field_label" => "Start Date", "field_type" => "date" },
-        { "field_label" => "Plan", "field_type" => "radio" },
+        { "field_label" => "Plan", "field_type" => "radio", "options" => ["pro"] },
         {
           "field_label" => "Tracking ID",
           "field_type" => "hiddenField",
@@ -200,6 +200,36 @@ RSpec.describe DiscourseWorkflows::Schemas::FormFields do
         "plan" => "pro",
         "tracking_id" => "server-value",
       )
+    end
+
+    it "rejects values outside the configured choices" do
+      fields = [
+        { "field_label" => "Plan", "field_type" => "dropdown", "options" => ["pro"] },
+        { "field_label" => "Frequency", "field_type" => "radio", "options" => ["weekly"] },
+      ]
+
+      ["other", " ", [], {}, nil, false, 1].each do |value|
+        result =
+          described_class.validate_submission(fields, { "plan" => value, "frequency" => value })
+
+        expect(result.errors).to contain_exactly(
+          described_class::ValidationError.new(field_label: "Plan", code: :invalid_value),
+          described_class::ValidationError.new(field_label: "Frequency", code: :invalid_value),
+        )
+        expect(result.data).to be_empty
+      end
+    end
+
+    it "accepts omitted and empty optional choices" do
+      fields = [
+        { "field_label" => "Plan", "field_type" => "dropdown", "options" => ["pro"] },
+        { "field_label" => "Frequency", "field_type" => "radio", "options" => ["weekly"] },
+      ]
+
+      result = described_class.validate_submission(fields, { "frequency" => "" })
+
+      expect(result).to be_valid
+      expect(result.data).to eq("plan" => nil, "frequency" => "")
     end
 
     it "uses signed query parameters for hidden fields without configured values" do

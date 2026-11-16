@@ -4945,6 +4945,10 @@ sk:
       no_context:
         watched_word: "Tento príspevok obsahoval sledované slovo. Ďalšie informácie nájdete na %{link} ."
     actions:
+      answer_yes:
+        title: "Áno"
+      answer_no:
+        title: "Nie"
       agree:
         title: "Áno"
       agree_and_keep:

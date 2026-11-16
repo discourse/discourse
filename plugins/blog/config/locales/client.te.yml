@@ -12,6 +12,9 @@ te:
         preview_archive: ఆర్కైవ్ చెయ్యండి
         desktop: డెస్క్‌టాప్
         mobile: మొబైల్
+        save: సేవ్ చేయండి
+        path_formats:
+          custom: అనురూప
         themes: థీమ్స్
         theme_name: థీమ్ పేరు
         edit: సవరించండి

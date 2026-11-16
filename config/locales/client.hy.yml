@@ -323,9 +323,6 @@ hy:
       title: "Նոր և Չկարդացված Թեմաներ"
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Ետ"
     design_wizard:
       back: "Ետ"
       next: "Հաջորդը"

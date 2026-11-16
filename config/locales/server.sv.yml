@@ -3900,6 +3900,10 @@ sv:
       links:
         category: kategori inställningar
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nej"
       agree:
         title: "Ja"
       agree_and_keep:

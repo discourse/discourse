@@ -36,7 +36,7 @@ export default class DDateTimeInput extends Component {
 
   @action
   onClear() {
-    this.args.onChange(null);
+    this.args.onChange?.(null);
   }
 
   @action

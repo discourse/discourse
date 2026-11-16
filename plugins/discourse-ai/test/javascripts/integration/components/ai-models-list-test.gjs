@@ -217,7 +217,7 @@ module("Integration | Component | AiModelsList", function (hooks) {
     );
 
     assert
-      .dom(".ai-models-list__type-filter option[value='decision']")
+      .dom(".d-filter-controls__dropdown option[value='decision']")
       .exists("offers the decision type even without models");
   });
 

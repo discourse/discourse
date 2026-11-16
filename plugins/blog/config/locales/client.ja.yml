@@ -16,6 +16,9 @@ ja:
         preview_archive: アーカイブ
         desktop: デスクトップ
         mobile: モバイル
+        save: 保存
+        path_formats:
+          custom: カスタム
         back_to_themes: テーマに戻る
         new_theme_short: 新しいテーマ
         themes: テーマ

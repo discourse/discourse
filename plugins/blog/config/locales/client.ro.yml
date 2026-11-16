@@ -14,6 +14,9 @@ ro:
         preview_archive: Arhivă
         desktop: Desktop
         mobile: Mobil
+        save: Salvează
+        path_formats:
+          custom: Personalizat
         new_theme_short: Temă nouă
         themes: Teme
         edit: Editează

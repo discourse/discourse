@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import AiDefaultLlmSelector from "./ai-default-llm-selector.gjs";
 import AiFeaturesList from "./ai-features-list.gjs";
@@ -29,24 +29,18 @@ export default class AiFeatures extends Component {
   }
 
   get featureGroupOptions() {
-    const modules = this.features || [];
-    const enabledCount = modules.filter((m) => m.module_enabled).length;
-
     return [
       {
         value: ALL,
         label: i18n("discourse_ai.features.filters.all"),
-        count: modules.length,
       },
       {
         value: ENABLED,
         label: i18n("discourse_ai.features.nav.enabled"),
-        count: enabledCount,
       },
       {
         value: NOT_ENABLED,
         label: i18n("discourse_ai.features.nav.not_enabled"),
-        count: modules.length - enabledCount,
       },
     ];
   }
@@ -207,6 +201,8 @@ export default class AiFeatures extends Component {
         @titleLabel={{i18n "discourse_ai.features.short_title"}}
       />
 
+      <AiDefaultLlmSelector @onChange={{this.refreshFeatures}} />
+
       <div class="ai-features__controls">
         <DFilterInput
           class="admin-filter__input"
@@ -216,25 +212,15 @@ export default class AiFeatures extends Component {
           @value={{this.filterValue}}
         />
 
-        <div class="ai-features__status-filter" role="group">
-          {{#each this.featureGroupOptions as |option|}}
-            <DButton
-              class={{dConcatClass
-                "btn-default ai-features__status-option"
-                (if (eq option.value this.selectedFeatureGroup) "--active")
-              }}
-              data-status={{option.value}}
-              @action={{fn this.onFeatureGroupChange option.value}}
-              @ariaPressed={{eq option.value this.selectedFeatureGroup}}
-              @translatedLabel={{option.label}}
-            >
-              <span class="ai-features__status-count">{{option.count}}</span>
-            </DButton>
-          {{/each}}
-        </div>
+        <DFilterControls
+          @dropdownOptions={{this.featureGroupOptions}}
+          @dropdownValue={{this.selectedFeatureGroup}}
+          @onDropdownFilterChange={{this.onFeatureGroupChange}}
+          @showNoResults={{false}}
+          @showResetButton={{false}}
+          @showTextFilter={{false}}
+        />
       </div>
-
-      <AiDefaultLlmSelector @onChange={{this.refreshFeatures}} />
 
       {{#if this.filteredFeatures.length}}
         <AiFeaturesList

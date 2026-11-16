@@ -92,6 +92,10 @@ zh_CN:
       template_invalid: "请提供一个有效大小不超过 65,536 字节的 Liquid 模板。"
       template_parse_error: "无效的 Liquid 模板： %{error}"
       default: 默认
+      descriptions:
+        default: 博客内置了简洁、安静的阅读界面。
+        broadsheet: 报纸社论版面设计，采用衬线字体标题和编号文章网格。
+        discourse-blog: 柔和的淡紫色画布上印有圆形卡片，并配有重点故事。
       invalid: "提供一个名称(最多100个字符)，六位数六位颜色，以及最多65 536个字节的 CSS/JavaScript。"
       limit: 您最多可以保存 30 个博客主题。请先删除一个不使用的主题。
       stale: 主题已更改。请重新加载并查看最新版本后再继续。

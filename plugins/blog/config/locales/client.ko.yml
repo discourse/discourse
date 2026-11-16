@@ -14,6 +14,9 @@ ko:
         preview_archive: 보관
         desktop: 데스크톱
         mobile: 모바일
+        save: 저장
+        path_formats:
+          custom: 사용자 정의
         themes: 테마
         theme_name: 테마명
         edit: 편집

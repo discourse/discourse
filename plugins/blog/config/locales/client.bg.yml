@@ -12,6 +12,9 @@ bg:
         preview_home: Начална страница
         preview_archive: Архив
         mobile: Мобилен
+        save: Запази
+        path_formats:
+          custom: По избор
         edit: Редактирай
         preview: Преглед
         customize: Персонализация

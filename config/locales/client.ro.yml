@@ -502,9 +502,6 @@ ro:
       title: "Subiecte noi și necitite"
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Înapoi"
     design_wizard:
       back: "Înapoi"
       next: "Următorul"
@@ -892,6 +889,7 @@ ro:
           title: "Tot"
       context_question:
         delimiter: "sau"
+        something_wrong_with_post: "Este ceva în neregulă cu acest articol?"
       types:
         reviewable_flagged_post:
           title: "Articol semnalat"
@@ -2051,6 +2049,7 @@ ro:
       no_results: "Fără rezultate"
       search: "Caută…"
       label: "Selectează opțiuni"
+      remove_item: "Înlătură %{name}"
     d_otp:
       screen_reader:
         one: Introduceți un număr

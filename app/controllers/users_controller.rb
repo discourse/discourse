@@ -799,9 +799,12 @@ class UsersController < ApplicationController
       ReviewableUser.set_approved_fields!(user, current_user)
     end
 
-    if error = UserCreator.assign_signup_fields(user) { |field| clean_custom_field_values(field) }
-      return fail_with(error)
-    end
+    error =
+      UserCreator.assign_signup_fields(
+        user,
+        signup_only: !(current_user&.admin? && is_api?),
+      ) { |field| clean_custom_field_values(field) }
+    return fail_with(error) if error
 
     # Handle associated accounts
     associations = []

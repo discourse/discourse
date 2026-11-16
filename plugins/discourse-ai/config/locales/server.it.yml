@@ -174,8 +174,6 @@ it:
           name: "Quotazione azionaria (AlphaVantage)"
         image_generation_custom:
           name: "Personalizzato"
-        image_generation_openai:
-          name: "OpenAI"
         empty_tool:
           name: "Inizia da zero..."
       name:

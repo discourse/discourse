@@ -270,6 +270,10 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  rescue_from Discourse::ScopedApiKeyHtmlNotAllowed do
+    render_scoped_api_key_html_not_allowed
+  end
+
   rescue_from Discourse::ReadOnly do
     unless response_body
       respond_to do |format|
@@ -390,9 +394,21 @@ class ApplicationController < ActionController::Base
       end
 
       with_resolved_locale do
-        error_page_opts[:layout] = opts[:include_ember] && @_preloaded ? set_layout : "no_ember"
+        use_application_layout =
+          opts[:include_ember] && @_preloaded &&
+            !Auth::DefaultCurrentUserProvider.html_layout_disallowed?(request.env)
+        error_page_opts[:layout] = use_application_layout ? set_layout : "no_ember"
         render html: build_not_found_page(error_page_opts)
       end
+    end
+  rescue Discourse::ScopedApiKeyHtmlNotAllowed
+    render_scoped_api_key_html_not_allowed
+  end
+
+  def render_scoped_api_key_html_not_allowed
+    with_resolved_locale do
+      response.content_type = "application/json"
+      render_json_error I18n.t("scoped_api_key_html_not_allowed"), status: 406
     end
   end
 

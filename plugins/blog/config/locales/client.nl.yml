@@ -16,6 +16,9 @@ nl:
         preview_archive: Archief
         desktop: Desktop
         mobile: Mobiel
+        save: Opslaan
+        path_formats:
+          custom: Aangepast
         back_to_themes: Terug naar thema's
         new_theme_short: Nieuw thema
         themes: Thema's

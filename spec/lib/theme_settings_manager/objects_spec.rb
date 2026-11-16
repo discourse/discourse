@@ -204,6 +204,70 @@ RSpec.describe ThemeSettingsManager::Objects do
     end
   end
 
+  describe "generated tag objects" do
+    fab!(:tag)
+
+    before do
+      theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+        styles:
+          type: objects
+          default:
+            - tags: []
+              tag_objects: { stale: { id: 999 } }
+          schema:
+            properties:
+              tags:
+                type: tags
+              children:
+                type: objects
+                schema:
+                  properties:
+                    tags:
+                      type: tags
+              author_data:
+                type: objects
+                schema:
+                  properties:
+                    tags:
+                      type: tags
+                    tag_objects:
+                      type: string
+      YAML
+      theme.save!
+    end
+
+    it "does not expose generated objects in defaults or persist them from submitted payloads" do
+      setting = theme.settings[:styles]
+      expect(setting.default).to eq([{ "tags" => [] }])
+      input = [
+        {
+          tags: [tag.id],
+          tag_objects: {
+            tag.name => {
+              id: tag.id,
+              name: "forged",
+            },
+          },
+          children: [{ tags: [], tag_objects: { "unselected" => { id: tag.id } } }],
+          author_data: [{ tags: [], tag_objects: "author value" }],
+        },
+      ]
+      original = input.deep_dup
+      setting.value = input
+      expected = [
+        {
+          "tags" => [tag.name],
+          "children" => [{ "tags" => [] }],
+          "author_data" => [{ "tags" => [], "tag_objects" => "author value" }],
+        },
+      ]
+
+      expect(theme.theme_settings.find_by!(name: "styles").json_value).to eq(expected)
+      expect(theme.reload.settings[:styles].value).to eq(expected)
+      expect(input).to eq(original)
+    end
+  end
+
   describe "#categories" do
     fab!(:category_1, :category)
     fab!(:category_2, :category)

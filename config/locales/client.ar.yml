@@ -669,21 +669,11 @@ ar:
         title: "تخصيص موقعك"
         show_light_screenshot: "عرض لقطة شاشة للوضع الفاتح"
         show_dark_screenshot: "عرض لقطة شاشة للوضع الداكن"
+      create_category:
+        action: "إنشاء فئة"
       invite_collaborators:
         title: "دعوة المتعاونين"
         action: "إنشاء دعوة"
-      start_posting:
-        title: "بدء النشر"
-        action: "اطّلع على الأفكار"
-        choose_option: "كيف تود أن تبدأ؟"
-        predefined_topics: "قوالب لكسر حالة السكوت"
-        predefined_topics_description: "اختر من بين مجموعة من الموضوعات لبدء المحادثات"
-        use_predefined: "تصفح القوالب"
-        back: "رجوع"
-        icebreakers:
-          introduce_yourself:
-            title: "عرّف بنفسك"
-            body: "أهلاً بكم في هذا المجتمع! دعونا نبدأ بالتعرف على بعضنا بعضًا؛ يُرجى تقديم أنفسكم ومشاركتنا نبذة يسيرة عن اهتماماتكم. سأبدأ أنا أولاً: أنا شغوفٌ جدًا بعالم التكنولوجيا وأعشق تعليم الآخرين!"
     design_wizard:
       title: "تخصيص موقعك"
       back: "رجوع"
@@ -1301,6 +1291,7 @@ ar:
         suspect_user: "هل ينشر هذا المستخدم رسائل عشوائية؟"
         approve_post: "هل توافق على هذا المنشور؟"
         approve_topic: "هل توافق على هذا الموضوع؟"
+        something_wrong_with_post: "هل هناك خطأ في هذا المنشور؟"
       types:
         reviewable_flagged_post:
           title: "المنشورات المُبلَغ عنها"
@@ -3091,6 +3082,7 @@ ar:
       no_results: "لا توجد نتائج"
       search: "البحث…"
       label: "تحديد الخيارات"
+      remove_item: "إزالة %{name}"
     d_otp:
       screen_reader:
         zero: أدخل رقمًا

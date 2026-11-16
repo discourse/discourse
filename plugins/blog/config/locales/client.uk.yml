@@ -16,6 +16,9 @@ uk:
         preview_archive: Архів
         desktop: Десктоп
         mobile: Мобільний
+        save: Зберегти
+        path_formats:
+          custom: Користувацька
         back_to_themes: Назад до тем
         new_theme_short: Нова тема
         themes: Стилі

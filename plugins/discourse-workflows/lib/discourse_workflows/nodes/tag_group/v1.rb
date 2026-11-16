@@ -122,7 +122,7 @@ module DiscourseWorkflows
               tag_group.tag_ids = desired_tags.map(&:id)
               tag_group.save!
 
-              after_data = serialized_tag_group(tag_group)
+              after_data = serialized_tag_group(tag_group.reload)
               StaffActionLogger.new(actor).log_tag_group_change(
                 tag_group.name,
                 before_data,

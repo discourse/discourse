@@ -14,6 +14,9 @@ sk:
         preview_archive: Archivovať
         desktop: Desktop
         mobile: Mobil
+        save: Uložiť
+        path_formats:
+          custom: Vlastné
         back_to_themes: Späť na témy
         new_theme_short: Nová téma
         themes: Témy

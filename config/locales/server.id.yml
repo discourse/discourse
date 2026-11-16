@@ -1600,6 +1600,10 @@ id:
       fast_typer_time:
         other: "%{count} detik"
     actions:
+      answer_yes:
+        title: "Ya"
+      answer_no:
+        title: "Tidak"
       agree:
         title: "Ya"
       agree_and_keep:

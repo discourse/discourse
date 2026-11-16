@@ -14,6 +14,9 @@ hr:
         preview_archive: Arhiva
         desktop: Desktop
         mobile: Mobilni
+        save: Spremi
+        path_formats:
+          custom: Posebna
         back_to_themes: Natrag na teme
         new_theme_short: Nova tema
         themes: Teme

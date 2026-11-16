@@ -321,9 +321,6 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "กลับ"
     design_wizard:
       back: "กลับ"
       next: "ต่อไป"

@@ -120,6 +120,20 @@ RSpec.describe Chat::Api::ChannelsController do
                 )
               end
             end
+
+            context "when the only group with access is destroyed" do
+              before { group_1.destroy! }
+
+              it "returns nothing" do
+                expect(channel_1.chatable.reload.read_restricted).to eq(true)
+                expect(channel_1.chatable.category_groups).to be_empty
+
+                get "/chat/api/channels"
+
+                expect(response.status).to eq(200)
+                expect(response.parsed_body["channels"]).to be_blank
+              end
+            end
           end
         end
       end

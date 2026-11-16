@@ -14,6 +14,9 @@ sv:
         preview_archive: Arkiv
         desktop: Skrivbord
         mobile: Mobil
+        save: Spara
+        path_formats:
+          custom: Anpassad
         themes: Teman
         theme_name: Temanamn
         edit: Redigera

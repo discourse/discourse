@@ -9,9 +9,9 @@ import * as i18nShim from "./shims/i18n.js";
 // the server-side context.
 const ptModules = import.meta.glob(
   [
-    "../discourse/pretty-text/**/*.js",
-    "!../discourse/pretty-text/oneboxer.js",
-    "!../discourse/pretty-text/upload-short-url.js",
+    "../discourse/pretty-text/**/*.{js,ts}",
+    "!../discourse/pretty-text/oneboxer.ts",
+    "!../discourse/pretty-text/upload-short-url.ts",
   ],
   { eager: true }
 );
@@ -22,7 +22,7 @@ const mdModules = import.meta.glob("../discourse-markdown-it/src/**/*.js", {
 function defineMultiple(prefix, base, mods) {
   for (const [key, mod] of Object.entries(mods)) {
     define(
-      `${prefix}/${key.slice(base.length).replace(/\.js$/, "")}`,
+      `${prefix}/${key.slice(base.length).replace(/\.[jt]s$/, "")}`,
       () => mod
     );
   }

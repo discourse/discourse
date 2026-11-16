@@ -413,6 +413,30 @@ RSpec.describe UserNotifications do
         expect(email.html_part.body.to_s).not_to include(secret)
       end
 
+      it "does not excerpt a relisted topic whose first post is hidden" do
+        secret = "this is the secret hidden first post body"
+        topic =
+          Fabricate(
+            :topic,
+            user: coding_horror,
+            title: "Relisted topic with a hidden first post",
+            created_at: 1.hour.ago,
+          )
+        first_post = Fabricate(:post, topic: topic, raw: secret)
+
+        first_post.hide!(PostActionType.types[:inappropriate])
+        topic.reload
+        expect(topic.visible).to eq(false)
+        # moderators can relist a topic while its first post stays hidden
+        topic.update_status("visible", true, Discourse.system_user)
+
+        [email.html_part.body.to_s, email.text_part.body.to_s].each do |body|
+          expect(body).not_to include(secret)
+        end
+        expect(email.html_part.body.to_s).to include(post.raw)
+        expect(email.html_part.body.to_s).not_to include(I18n.t("system_messages.contents_hidden"))
+      end
+
       it "doesn't include new user count if digest_after_minutes is low" do
         user.user_option.digest_after_minutes = 60
         expect(email.html_part.body.to_s).to_not include("New Users")

@@ -424,9 +424,6 @@ be:
       pill: "Звязаныя паведамленні"
     suggested_topics:
       pm_title: "Прапанаваныя паведамленні"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Назад"
     design_wizard:
       back: "Назад"
       next: "Далей"
@@ -721,6 +718,7 @@ be:
           title: "Усё"
       context_question:
         delimiter: "або"
+        something_wrong_with_post: "Штосьці не так з гэтай публікацыяй?"
       types:
         reviewable_flagged_post:
           noun: "пост"

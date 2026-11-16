@@ -289,9 +289,6 @@ bs_BA:
       pill: "Povezane Poruke"
     suggested_topics:
       pm_title: "Preporučene Poruke"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Prethodno"
     design_wizard:
       back: "Prethodno"
       next: "Iduće"

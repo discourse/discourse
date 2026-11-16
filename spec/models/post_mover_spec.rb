@@ -2760,6 +2760,47 @@ RSpec.describe PostMover do
       end
     end
 
+    context "with a category group moderator moving chronologically" do
+      fab!(:category_moderator) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:group_user) { Fabricate(:group_user, user: category_moderator) }
+      fab!(:moderated_category, :category)
+      fab!(:source_topic) { Fabricate(:topic, category: moderated_category) }
+      fab!(:source_first_post) { Fabricate(:post, topic: source_topic, created_at: 3.hours.ago) }
+      fab!(:source_reply) do
+        Fabricate(
+          :post,
+          topic: source_topic,
+          post_number: 2,
+          created_at: 2.hours.ago,
+          raw: "Attacker controlled content",
+        )
+      end
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: moderated_category, group: group_user.group)
+      end
+
+      it "rejects moving posts before the posts of a topic the user cannot moderate" do
+        destination_topic = Fabricate(:topic)
+        destination_owner_id = destination_topic.user_id
+        destination_first_post = Fabricate(:post, topic: destination_topic, created_at: 1.hour.ago)
+
+        expect {
+          source_topic.move_posts(
+            category_moderator,
+            [source_reply.id],
+            destination_topic_id: destination_topic.id,
+            chronological_order: true,
+          )
+        }.to raise_error(Discourse::InvalidAccess)
+
+        expect(source_reply.reload.topic_id).to eq(source_topic.id)
+        expect(destination_topic.reload.ordered_posts.first).to eq(destination_first_post)
+        expect(destination_topic.user_id).to eq(destination_owner_id)
+      end
+    end
+
     context "with messages" do
       fab!(:user)
       fab!(:another_user, :user)

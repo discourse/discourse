@@ -10,6 +10,7 @@ RSpec.describe Blog::PathFormat do
         /news/{slug}
         /{year}/{id}
         /archives/{id}-{slug}
+        /%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9/{slug}
       ]
 
       expect(formats.reject { |format| described_class.new(format).valid? }).to be_empty
@@ -27,9 +28,25 @@ RSpec.describe Blog::PathFormat do
         "/news/../{slug}",
         "/./{slug}",
         "/#{"a" * 100}/{slug}",
+        "/%E6{slug}",
+        "/%E2%80%AE{slug}",
       ]
 
       expect(formats.select { |format| described_class.new(format).valid? }).to be_empty
+    end
+  end
+
+  describe "#render" do
+    it "never cuts an encoded slug partway through a character" do
+      format = described_class.new("/{slug}")
+      slug = "%E6%97%A5" * 20
+
+      (10..30).each do |max_length|
+        path = format.render(slug:, id: 1, date: Time.utc(2026, 1, 1), max_length:)
+
+        expect(path).to match(%r{\A/(?:%E6%97%A5)*\z})
+        expect(path.length).to be <= max_length
+      end
     end
   end
 

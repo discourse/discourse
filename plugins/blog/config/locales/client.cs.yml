@@ -16,6 +16,9 @@ cs:
         preview_archive: Archív
         desktop: Desktop
         mobile: Mobilní verze
+        save: Uložit
+        path_formats:
+          custom: Přizpůsobené
         back_to_themes: Zpět na motivy
         new_theme_short: Nový motiv
         themes: Motivy

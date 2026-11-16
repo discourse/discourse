@@ -15,6 +15,9 @@ fi:
         preview_archive: Arkistoi
         desktop: Työpöytä
         mobile: Mobiili
+        save: Tallenna
+        path_formats:
+          custom: Mukautettu
         back_to_themes: Takaisin teemoihin
         new_theme_short: Uusi teema
         themes: Teemat

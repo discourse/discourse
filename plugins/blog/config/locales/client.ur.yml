@@ -14,6 +14,9 @@ ur:
         preview_archive: محفوظ شدہ
         desktop: ڈیسک ٹاپ
         mobile: موبائل
+        save: محفوظ
+        path_formats:
+          custom: اپنی مرضی کا
         back_to_themes: تھیمز پر واپسی
         new_theme_short: نئی تھیم
         themes: تِھیمز

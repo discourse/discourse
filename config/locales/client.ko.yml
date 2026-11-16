@@ -310,9 +310,6 @@ ko:
       title: "새 글 또는 읽지 않은 글"
       pill: "추천"
       pm_title: "제안된 메시지"
-    admin_onboarding_banner:
-      start_posting:
-        back: "뒤로"
     design_wizard:
       back: "뒤로"
       next: "다음"

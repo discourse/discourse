@@ -16,7 +16,12 @@ pl_PL:
     blog_title: Nazwa bloga wyświetlana w nawigacji, tytułach stron i kanałach.
     blog_description: Krótki opis strony głównej, kanału informacyjnego i wyszukiwarek.
     blog_about: Treść w formacie Markdown dla strony „O mnie” na blogu.
+    blog_path_format: Szablon adresu dla nowych artykułów, np. /{year}/{month}/{slug}. Użyj {year}, {month}, {day}, {slug} i {id}, w tym {slug} lub {id}. Dopóki artykuł nie zostanie opublikowany po raz pierwszy, po jego tytule i dacie publikacji UTC będzie wyświetlany adres, którego nie wpisał redaktor. Opublikowane artykuły zachowują swoje adresy.
     blog_posts_per_page: Liczba artykułów wyświetlanych na każdej stronie głównej lub stronie archiwum.
+  activerecord:
+    attributes:
+      blog/publication:
+        canonical_url: Kanoniczny adres URL
   blog:
     home: Home
     continue_reading: Czytaj dalej
@@ -86,6 +91,8 @@ pl_PL:
       drafts_category: Wybierz osobną kategorię prywatnych szkiców, do której dostęp będą miały wyłącznie skonfigurowane grupy redakcyjne lub personel, odrębną od głównej kategorii współdzielonych szkiców.
       published_page: Usuń publikację tego tematu ze strony przed opublikowaniem go na blogu.
       path_taken: jest zarezerwowany lub należy już do innego artykułu
+      canonical_url_invalid: musi to być pełny adres http lub https
+      path_format: "Formatuj, zaczynając od / i dodaj {slug} lub {id}. Można używać tylko {year}, {month}, {day}, {slug} i {id} , a pierwszy segment nie może być zarezerwowanym adresem bloga, takim jak /tag."
       future_date: musi to być dzisiaj albo wcześniej. Skorzystaj z opcji planowania, żeby opublikować artykuł w przyszłości.
       color: "Użyj dokładnie sześciu cyfr szesnastkowych, bez prefiksu #."
     latest_stories: Najnowsze historie

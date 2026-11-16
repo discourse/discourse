@@ -4571,6 +4571,10 @@ it:
       no_context:
         watched_word: "Questo messaggio include una parola osservata. Controlla le %{link} per saperne di più."
     actions:
+      answer_yes:
+        title: "Sì"
+      answer_no:
+        title: "No"
       agree:
         title: "Sì"
       agree_and_keep:

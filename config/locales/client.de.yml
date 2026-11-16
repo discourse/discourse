@@ -546,21 +546,11 @@ de:
         completed: "Optionen ändern"
         show_light_screenshot: "Hellen Screenshot anzeigen"
         show_dark_screenshot: "Dunklen Screenshot anzeigen"
+      create_category:
+        action: "Kategorie erstellen"
       invite_collaborators:
         title: "Mitwirkende einladen"
         action: "Einladung erstellen"
-      start_posting:
-        title: "Beginne mit dem Erstellen von Beiträgen"
-        action: "Ideen ansehen"
-        choose_option: "Wie möchtest du anfangen?"
-        predefined_topics: "Vorlagen für Fragen zum Einstieg"
-        predefined_topics_description: "Wähle aus einer Sammlung von Gesprächsanregungen, um Diskussionen in Gang zu bringen"
-        use_predefined: "Vorlagen ansehen"
-        back: "Zurück"
-        icebreakers:
-          introduce_yourself:
-            title: "Stell dich vor"
-            body: "Willkommen in der Community! Lasst uns einander kennenlernen. Bitte stelle dich vor und erzähle ein wenig über deine Interessen. Ich fange an: Ich habe eine Leidenschaft für Technik und liebe es, mein Wissen weiterzugeben!"
     design_wizard:
       title: "Passe deine Website an"
       save: "Speichern und fertigstellen"
@@ -1058,6 +1048,7 @@ de:
         suspect_user: "Ist dieser Benutzer ein Spammer?"
         approve_post: "Diesen Beitrag genehmigen?"
         approve_topic: "Dieses Thema genehmigen?"
+        something_wrong_with_post: "Stimmt etwas mit diesem Beitrag nicht?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
@@ -2330,6 +2321,7 @@ de:
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
         invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
+        invited_via_link_without_key: "Link (%{count} / %{max} eingelöst)"
         generating_link: "Link wird generiert …"
         groups: "Gruppen"
         topic: "Thema"
@@ -2641,6 +2633,7 @@ de:
       no_results: "Keine Ergebnisse"
       search: "Suchen …"
       label: "Optionen auswählen"
+      remove_item: "%{name} entfernen"
     d_otp:
       screen_reader:
         one: Gib eine Zahl ein

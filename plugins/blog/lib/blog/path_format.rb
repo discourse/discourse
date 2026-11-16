@@ -23,8 +23,8 @@ module ::Blog
       return false if !tokens.intersect?(UNIQUE_TOKENS)
 
       sample = render(slug: "article", id: 1, date: Time.utc(2026, 1, 1))
-      sample.match?(Publication::PATH_PATTERN) && !Publication.reserved_path?(sample) &&
-        !Publication.traversal_path?(sample)
+      sample.match?(Publication::PATH_PATTERN) && Publication.decodable_path?(sample) &&
+        !Publication.reserved_path?(sample) && !Publication.traversal_path?(sample)
     end
 
     # A slug longer than max_length allows is shortened, sharing the room between
@@ -41,12 +41,25 @@ module ::Blog
       slugs = @template.scan(TOKEN).count(["slug"])
       if max_length && slugs > 0
         room = (max_length - expand(values.merge("slug" => "")).length) / slugs
-        slug = slug[0, room].sub(/-+\z/, "") if slug.length > room
+        slug = shorten(slug, room) if slug.length > room
       end
       expand(values.merge("slug" => slug))
     end
 
     private
+
+    # Percent-encoded slugs must not be cut partway through an escape or a UTF-8 character.
+    def shorten(slug, room)
+      slug = slug[0, room].sub(/%\h?\z/, "")
+      while (tail = slug[/(?:%[89a-fA-F]\h)+\z/]) && !utf8?(tail)
+        slug = slug.delete_suffix(tail[-3..])
+      end
+      slug.sub(/-+\z/, "")
+    end
+
+    def utf8?(encoded)
+      [encoded.delete("%")].pack("H*").force_encoding(Encoding::UTF_8).valid_encoding?
+    end
 
     def expand(values)
       @template.gsub(TOKEN) { values.fetch($1, $&) }

@@ -232,9 +232,6 @@ sw:
       other: "kiwango cha juu cha %{count}"
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Iliyopita"
     design_wizard:
       back: "Iliyopita"
       next: "Ijayo"

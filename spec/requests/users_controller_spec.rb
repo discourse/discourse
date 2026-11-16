@@ -949,6 +949,67 @@ RSpec.describe UsersController do
       expect(response.parsed_body["success"]).to eq(true)
     end
 
+    it "accepts only signup fields from anonymous registration" do
+      visible_field = Fabricate(:user_field, show_on_signup: true, editable: false)
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+
+      post_user(
+        user_fields: {
+          visible_field.id.to_s => "visible",
+          hidden_field.id.to_s => "hidden",
+        },
+      )
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(
+        visible_field.id.to_s => "visible",
+        hidden_field.id.to_s => nil,
+      )
+    end
+
+    it "skips hidden required fields during anonymous registration" do
+      Fabricate(:user_field, show_on_signup: false, requirement: "on_signup")
+
+      post_user
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+    end
+
+    it "accepts only signup fields from a regular user API key" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: true)
+      api_key = Fabricate(:api_key, user: user1)
+
+      post "/u.json",
+           params: post_user_params.merge(user_fields: { hidden_field.id.to_s => "hidden" }),
+           headers: {
+             HTTP_API_KEY: api_key.key,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(hidden_field.id.to_s => nil)
+    end
+
+    it "accepts hidden fields from an administrator API key" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+      api_key = Fabricate(:api_key, user: admin)
+
+      post "/u.json",
+           params: post_user_params.merge(user_fields: { hidden_field.id.to_s => "provisioned" }),
+           headers: {
+             HTTP_API_KEY: api_key.key,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(hidden_field.id.to_s => "provisioned")
+    end
+
     context "when email params is missing" do
       it "returns the missing-email error" do
         post "/u.json",
@@ -3149,7 +3210,7 @@ RSpec.describe UsersController do
 
             invites = response.parsed_body["invites"]
             expect(invites.size).to eq(1)
-            expect(invites.first).to include("id" => invite.id)
+            expect(invites.first).to include("id" => invite.id, "invite_key" => invite.invite_key)
             expect(response.parsed_body["can_see_invite_details"]).to eq(true)
           end
 
@@ -3191,6 +3252,105 @@ RSpec.describe UsersController do
 
             get "/u/#{inviter.username}/invited/pending.json"
             expect(response.status).to eq(403)
+          end
+        end
+
+        context "when viewing another user's pending invites as a moderator" do
+          fab!(:inviting_admin, :admin)
+
+          it "does not expose the invite key or link" do
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["can_see_invite_details"]).to eq(true)
+
+            invite_json = response.parsed_body["invites"].first
+            expect(invite_json).to include("id" => invite.id)
+            expect(invite_json).not_to include("invite_key", "link")
+          end
+
+          it "still shows the invite key and link to admins" do
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+
+            sign_in(Fabricate(:admin))
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+
+            expect(response.status).to eq(200)
+
+            invite_json = response.parsed_body["invites"].first
+            expect(invite_json).to include(
+              "id" => invite.id,
+              "invite_key" => invite.invite_key,
+              "link" => invite.link,
+            )
+          end
+
+          it "cannot mint a moderator account by redeeming a harvested staff invite" do
+            Fabricate(
+              :invite,
+              invited_by: inviting_admin,
+              email: nil,
+              max_redemptions_allowed: 1,
+              moderator: true,
+              expires_at: 1.month.from_now,
+              emailed_status: Invite.emailed_status_types[:not_required],
+            )
+            accomplice = Fabricate(:user)
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+            harvested_key = response.parsed_body["invites"].first["invite_key"]
+
+            sign_in(accomplice)
+            # A withheld key is unredeemable; use an unknown key so the request stays routable.
+            put "/invites/show/#{harvested_key.presence || "withheld"}.json"
+
+            expect(accomplice.reload.moderator?).to eq(false)
+          end
+
+          it "cannot join an owners-only group by redeeming a harvested group invite" do
+            group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+            category = Fabricate(:private_category, group: group)
+            topic = Fabricate(:topic, category: category)
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+            InvitedGroup.create!(invite: invite, group: group)
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+            harvested_key = response.parsed_body["invites"].first["invite_key"]
+
+            # A withheld key is unredeemable; use an unknown key so the request stays routable.
+            put "/invites/show/#{harvested_key.presence || "withheld"}.json"
+
+            expect(GroupUser.where(user: moderator, group: group)).to be_empty
+            expect(moderator.reload.guardian.can_see?(topic)).to eq(false)
           end
         end
       end

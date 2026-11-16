@@ -328,9 +328,6 @@ sl:
     suggested_topics:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Nazaj"
     design_wizard:
       back: "Nazaj"
       next: "Naprej"

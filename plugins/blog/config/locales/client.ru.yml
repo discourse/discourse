@@ -16,6 +16,9 @@ ru:
         preview_archive: Архивировать
         desktop: Настольная
         mobile: Мобильная
+        save: Сохранить
+        path_formats:
+          custom: Другое
         back_to_themes: Назад к темам
         new_theme_short: Новая тема
         themes: тем

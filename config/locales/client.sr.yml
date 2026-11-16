@@ -372,8 +372,6 @@ sr:
         title: "Prilagodite svoj sajt"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
-      start_posting:
-        back: "Nazad"
     design_wizard:
       title: "Prilagodite svoj sajt"
       back: "Nazad"

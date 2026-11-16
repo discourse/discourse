@@ -285,10 +285,6 @@ uk:
           name: "Генерація зображень..."
         image_generation_custom:
           name: "Користувацька"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
