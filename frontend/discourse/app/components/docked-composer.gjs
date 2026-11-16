@@ -171,6 +171,10 @@ export default class DockedComposer extends Component {
     return this.uploads?.length > 0 || this.inProgressUploads?.length > 0;
   }
 
+  get #draftTimingKey() {
+    return `${this.draftKey}-timing`;
+  }
+
   @action
   setupEditor(textManipulation) {
     this.inputElement?.removeEventListener(
@@ -199,7 +203,12 @@ export default class DockedComposer extends Component {
     const saved = this.keyValueStore.get(this.draftKey);
     if (saved) {
       this.reply = saved;
-      this.#lastTypedValue = saved;
+      this.#resetTiming(saved);
+      const timing = this.keyValueStore.getObject(this.#draftTimingKey);
+      if (timing?.reply === saved) {
+        this.#typingTime = timing.typingTime ?? 0;
+        this.#composerOpenedAt = Date.now() - (timing.composerTime ?? 0);
+      }
       this.syncAutoResizeHeight();
     }
   }
@@ -208,8 +217,17 @@ export default class DockedComposer extends Component {
   persistDraft(value) {
     if (value?.length) {
       this.keyValueStore.set({ key: this.draftKey, value });
+      this.keyValueStore.setObject({
+        key: this.#draftTimingKey,
+        value: {
+          reply: value,
+          typingTime: this.#typingTime,
+          composerTime: Date.now() - this.#composerOpenedAt,
+        },
+      });
     } else {
       this.keyValueStore.remove(this.draftKey);
+      this.keyValueStore.remove(this.#draftTimingKey);
     }
   }
 

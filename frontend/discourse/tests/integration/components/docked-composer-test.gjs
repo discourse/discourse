@@ -1,5 +1,6 @@
 import { getOwner } from "@ember/owner";
 import {
+  clearRender,
   click,
   fillIn,
   find,
@@ -173,6 +174,151 @@ module("Integration | Component | DockedComposer", function (hooks) {
       submission.typingTime,
       500,
       "each input counts like the regular composer"
+    );
+  });
+
+  test("restores draft timing when the composer is recreated", async function (assert) {
+    const clock = fakeTime("2026-11-16T00:00:00", null, true);
+    const submissions = [];
+    const handleSubmit = (data) => {
+      submissions.push(data);
+      return submissions.length > 1;
+    };
+    const composer = <template>
+      <DockedComposer
+        @composerEvents={{false}}
+        @draftKey="test-restored-draft-timing"
+        @onSubmit={{handleSubmit}}
+      />
+    </template>;
+
+    try {
+      await render(composer);
+      clock.tick(5_000);
+      await fillIn(".d-editor-input", "First");
+      await fillIn(".d-editor-input", "First draft");
+      await fillIn(".d-editor-input", "First draft ready");
+      await click(".docked-composer__submit-btn");
+      assert.strictEqual(
+        submissions[0].typingTime,
+        300,
+        "the draft has recorded typing time"
+      );
+
+      await clearRender();
+      clock.tick(60_000);
+      await render(composer);
+      assert
+        .dom(".d-editor-input")
+        .hasValue("First draft ready", "the draft text is restored");
+      clock.tick(2_000);
+      await click(".docked-composer__submit-btn");
+
+      assert.strictEqual(
+        submissions[1].typingTime,
+        300,
+        "the restored draft retains its typing time"
+      );
+      assert.true(
+        submissions[1].composerTime >= 7_000,
+        "open time includes both editor sessions"
+      );
+      assert.true(
+        submissions[1].composerTime < 60_000,
+        "time with the editor closed is excluded"
+      );
+
+      await clearRender();
+      await render(composer);
+      assert
+        .dom(".d-editor-input")
+        .hasValue("", "successful submission clears the saved draft");
+      await fillIn(".d-editor-input", "A new comment");
+      await click(".docked-composer__submit-btn");
+      assert.strictEqual(
+        submissions[2].typingTime,
+        100,
+        "a new comment has fresh timing"
+      );
+    } finally {
+      clock.restore();
+    }
+  });
+
+  test("ignores saved timing when an older client changes the draft text", async function (assert) {
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return false;
+    };
+    const composer = <template>
+      <DockedComposer
+        @composerEvents={{false}}
+        @draftKey="test-changed-legacy-draft"
+        @onSubmit={{handleSubmit}}
+      />
+    </template>;
+
+    await render(composer);
+    await fillIn(".d-editor-input", "First");
+    await fillIn(".d-editor-input", "First draft");
+    await fillIn(".d-editor-input", "First draft ready");
+    await clearRender();
+
+    const changedDraft = "A different draft from an older client";
+    this.owner.lookup("service:key-value-store").set({
+      key: "test-changed-legacy-draft",
+      value: changedDraft,
+    });
+    await render(composer);
+    await click(".docked-composer__submit-btn");
+
+    assert.strictEqual(
+      submission.raw,
+      changedDraft,
+      "the changed draft text is preserved"
+    );
+    assert.strictEqual(
+      submission.typingTime,
+      0,
+      "another draft's timing is not reused"
+    );
+  });
+
+  test("restores existing text only drafts without interpreting their contents", async function (assert) {
+    const legacyDraft = '{"reply":"legacy draft text","typingTime":9000}';
+    this.owner.lookup("service:key-value-store").set({
+      key: "test-legacy-draft-timing",
+      value: legacyDraft,
+    });
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return false;
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-legacy-draft-timing"
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(legacyDraft, "the original draft is preserved exactly");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submission.raw,
+      legacyDraft,
+      "JSON text remains comment content"
+    );
+    assert.strictEqual(
+      submission.typingTime,
+      0,
+      "missing historical timing is not fabricated"
     );
   });
 
