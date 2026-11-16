@@ -17,6 +17,11 @@ export function scanBBCodeTags(raw, tag) {
   const candidates = [];
   let position = raw.indexOf("[");
 
+  // Markdown's block BBCode parser cannot open a tag across lines.
+  // Walk line boundaries once, rather than repeatedly slicing suffixes.
+  const lineBreaks = /\r\n?|\n/g;
+  let nextLineBreak = lineBreaks.exec(raw);
+
   while (position !== -1) {
     // Skip impossible tag starts without copying the remaining post.
     // A valid opening begins with a BBCode name character.
@@ -24,7 +29,17 @@ export function scanBBCodeTags(raw, tag) {
       ? parseBBCodeTag(raw, position, raw.length)
       : null;
 
-    if (parsed && !parsed.closing && parsed.tag === tag) {
+    // An apparent tag spanning multiple lines is not a valid
+    // opening and must not hide tags on the following lines.
+    while (nextLineBreak && nextLineBreak.index < position) {
+      nextLineBreak = lineBreaks.exec(raw);
+    }
+
+    const validOpening =
+      parsed &&
+      (!nextLineBreak || position + parsed.length <= nextLineBreak.index);
+
+    if (validOpening && !parsed.closing && parsed.tag === tag) {
       candidates.push({
         index: candidates.length,
         start: position,
@@ -34,7 +49,9 @@ export function scanBBCodeTags(raw, tag) {
     }
 
     // A tag-looking value inside a valid opening tag is part of that tag.
-    position = raw.indexOf("[", position + (parsed?.length || 1));
+    // Only skip an entire opening when it is confined to one line.
+    const advance = validOpening ? parsed.length : 1;
+    position = raw.indexOf("[", position + advance);
   }
 
   return candidates;

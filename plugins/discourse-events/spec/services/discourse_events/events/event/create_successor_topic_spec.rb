@@ -105,6 +105,39 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect(event_date.reload.finished_at).to be_nil
   end
 
+  it "creates a successor when a fenced quoted decoy precedes the Event" do
+    starts_at = 7.days.after.change(sec: 0)
+    ends_at = starts_at + 1.hour
+    title = "Fenced decoy recurring event"
+
+    raw = <<~RAW
+      ```
+      [example text="
+      ```
+
+      [event start='#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}' end='#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}' status='public' timezone='UTC' recurrence='every_week']
+      Meeting notes.
+      [/event]
+
+      "]: ordinary text
+    RAW
+
+    post = PostCreator.create!(author, title:, category: category.id, raw:)
+    event_date = post.reload.event.event_dates.pending.first
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result).to run_successfully
+    end.to change(Topic, :count).by(1)
+
+    archived = post.reload.raw
+    expect(archived).to include('[example text="')
+    expect(archived).not_to include("recurrence='every_week'")
+
+    successor = Topic.where(title:).where.not(id: post.topic_id).sole
+    expect(successor.first_post.reload.event.recurrence).to eq("every_week")
+  end
+
   it "archives the occurrence and creates a successor" do
     starts_at = 7.days.after.change(sec: 0)
     ends_at = starts_at + 1.hour

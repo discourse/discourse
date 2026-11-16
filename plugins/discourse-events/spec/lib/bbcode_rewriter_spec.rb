@@ -35,6 +35,27 @@ RSpec.describe BbcodeRewriter do
     expect(archived).to end_with("Meeting notes.\r\n[/event]\r\n")
   end
 
+  it "rewrites the rendered Event after a cross-fence quoted decoy" do
+    live_opening = event_tag.tr('"', "'")
+
+    raw = <<~RAW
+      ```
+      [example text="
+      ```
+
+      #{live_opening}
+      Meeting notes.
+      [/event]
+
+      "]: ordinary text
+    RAW
+
+    archived = build_rewriter(raw).rewrite("recurrence" => nil)
+    expected_opening = live_opening.sub(" recurrence='every_week'", "")
+
+    expect(archived).to eq(raw.sub(live_opening, expected_opening))
+  end
+
   it "returns separate rewrites from the same original snapshot" do
     rewriter = build_rewriter("#{event_tag}\nNotes.\n[/event]")
     archive = rewriter.rewrite("recurrence" => nil)

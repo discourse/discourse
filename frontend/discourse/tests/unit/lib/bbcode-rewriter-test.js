@@ -5,6 +5,37 @@ import {
 } from "discourse-markdown-it/bbcode-rewriter";
 
 module("Unit | Utility | BBCode rewriter", function () {
+  test("does not skip a real Event after a cross-fence quoted decoy", function (assert) {
+    const opening =
+      "[event start='2027-03-29 12:00' timezone='UTC' recurrence='every_week']";
+
+    const raw = [
+      "```",
+      '[example text="',
+      "```",
+      "",
+      opening,
+      "Meeting notes.",
+      "[/event]",
+      "",
+      '"]: ordinary text',
+    ].join("\n");
+
+    const candidates = scanBBCodeTags(raw, "event");
+
+    assert.strictEqual(candidates.length, 1);
+    assert.strictEqual(candidates[0]?.opening, opening);
+
+    const marked = markBBCodeTags(raw, "event", "bbcoderewritertest", "marker");
+
+    const expected = raw.replace(
+      opening,
+      opening.slice(0, -1) + " bbcoderewritertest=marker-0]"
+    );
+
+    assert.strictEqual(marked, expected);
+  });
+
   test("does not repeatedly copy the remaining post for bracket decoys", function (assert) {
     const opening = '[event start="2026-11-07 12:00" timezone="UTC"]';
     const raw = `\`\`\`\n${"[".repeat(128)}\n\`\`\`\n${opening}\n[/event]`;
