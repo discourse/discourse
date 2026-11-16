@@ -10,7 +10,8 @@ class UserBadgesController < ApplicationController
     params.permit %i[granted_before offset username]
 
     badge = fetch_badge_from_params
-    user_badges = badge.user_badges.order("granted_at DESC, id DESC").limit(MAX_BADGES)
+    user_badges =
+      badge.user_badges.order("user_badges.granted_at DESC, user_badges.id DESC").limit(MAX_BADGES)
     user_badges =
       user_badges.includes(
         :user,
@@ -29,6 +30,8 @@ class UserBadgesController < ApplicationController
       user_id = user.id
       user_badges = user_badges.where(user_id: user_id)
       grant_count = badge.user_badges.where(user_id: user_id).count
+    else
+      user_badges = user_badges.with_visible_profiles(guardian)
     end
 
     offset = fetch_int_from_params(:offset, default: 0)
