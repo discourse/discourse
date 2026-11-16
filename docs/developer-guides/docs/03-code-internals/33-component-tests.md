@@ -92,7 +92,7 @@ test("follows @titleLabel", async function (assert) {
 });
 ```
 
-- Use one `tracked()` per argument, instead of `this.set(...)` on the test context or a test-only class with `@tracked` fields.
+- Use one `tracked()` per argument, instead of `this.set(...)` on the test context or a test-only class with `@tracked` fields. Values that don't change can be local constants, or native assignments to the test context (`this.title = "a"`) before render.
 - When the component writes a value back through a callback, such as `@onChange`, the callback assigns the tracked value: `const onChange = (newValue) => (value.value = newValue)`. A value a callback only records for the test to assert on is a plain local `let`.
 - When the test changes properties of an object it passes in, such as a model, make that object a `trackedObject` (from `@ember/reactive/collections`) and assign its properties instead.
 - `await rerender()` before the next assertion or interaction: unlike `this.set`, a tracked write does not re-render synchronously. Use `await settled()` instead when the change starts async work, such as a request.

@@ -126,6 +126,8 @@ module("Integration | Component | BookmarkIcon", function (hooks) {
   `{ stubRouter: true }` to stub `service:router`.
 - Interact with `@ember/test-helpers`: `click`, `fillIn`, `triggerKeyEvent`, `settled`; query
   the rendered DOM with `find` (first match) / `findAll` (all matches).
+- Don't use `this.set(...)` / `this.setProperties(...)` on the test context. Before render,
+  assign natively (`this.title = "a"`) or use a local constant.
 - To change an argument after render, hold it in a standalone `tracked()` (from
   `@glimmer/tracking`), not `this.set(...)` or a test-only class with `@tracked` fields:
   `const title = tracked("a")`, pass `@title={{title.value}}`, then `title.value = "b"` and
