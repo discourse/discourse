@@ -54,7 +54,7 @@ module("Component | chat message collapser", function (hooks) {
   setupRenderingTest(hooks);
 
   test("escapes uploads header", async function (assert) {
-    this.set("uploads", [{ original_filename: evilString }]);
+    this.uploads = [{ original_filename: evilString }];
     await render(
       <template><ChatMessageCollapser @uploads={{this.uploads}} /></template>
     );
@@ -69,12 +69,9 @@ module("Component | chat message collapser youtube", function (hooks) {
   setupRenderingTest(hooks);
 
   test("escapes youtube header", async function (assert) {
-    this.set(
-      "cooked",
-      youtubeCooked.replace(
-        "https://www.youtube.com/watch?v=ytId1",
-        `https://www.youtube.com/watch?v=${evilString}`
-      )
+    this.cooked = youtubeCooked.replace(
+      "https://www.youtube.com/watch?v=ytId1",
+      `https://www.youtube.com/watch?v=${evilString}`
     );
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -89,7 +86,7 @@ module("Component | chat message collapser youtube", function (hooks) {
   });
 
   test("shows youtube link in header", async function (assert) {
-    this.set("cooked", youtubeCooked);
+    this.cooked = youtubeCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -107,7 +104,7 @@ module("Component | chat message collapser youtube", function (hooks) {
   });
 
   test("shows all user written text", async function (assert) {
-    this.set("cooked", youtubeCooked);
+    this.cooked = youtubeCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -124,7 +121,7 @@ module("Component | chat message collapser youtube", function (hooks) {
   });
 
   test("collapses and expands cooked youtube", async function (assert) {
-    this.set("cooked", youtubeCooked);
+    this.cooked = youtubeCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -167,8 +164,8 @@ module("Component | chat message collapser images", function (hooks) {
   const imageTextCooked = "<p>A picture of Tomtom</p>";
 
   test("shows filename for one image", async function (assert) {
-    this.set("cooked", imageTextCooked);
-    this.set("uploads", [{ original_filename: "tomtom.jpeg" }]);
+    this.cooked = imageTextCooked;
+    this.uploads = [{ original_filename: "tomtom.jpeg" }];
 
     await render(
       <template>
@@ -185,8 +182,8 @@ module("Component | chat message collapser images", function (hooks) {
   });
 
   test("shows number of files for multiple images", async function (assert) {
-    this.set("cooked", imageTextCooked);
-    this.set("uploads", [{}, {}]);
+    this.cooked = imageTextCooked;
+    this.uploads = [{}, {}];
 
     await render(
       <template>
@@ -201,7 +198,7 @@ module("Component | chat message collapser images", function (hooks) {
   });
 
   test("labels a fallback youtube thumbnail without exposing its URL", async function (assert) {
-    this.set("cooked", youtubeFallbackCooked);
+    this.cooked = youtubeFallbackCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -213,15 +210,15 @@ module("Component | chat message collapser images", function (hooks) {
   });
 
   test("collapses and expands images", async function (assert) {
-    this.set("cooked", imageTextCooked);
-    this.set("uploads", [
+    this.cooked = imageTextCooked;
+    this.uploads = [
       {
         original_filename: "tomtom.png",
         url: "images/d-logo-sketch-small.png",
         width: 16,
         height: 16,
       },
-    ]);
+    ];
 
     await render(
       <template>
@@ -293,7 +290,7 @@ module("Component | chat message collapser animated image", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows links for animated image", async function (assert) {
-    this.set("cooked", animatedImageCooked);
+    this.cooked = animatedImageCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -311,7 +308,7 @@ module("Component | chat message collapser animated image", function (hooks) {
   });
 
   test("shows all user written text", async function (assert) {
-    this.set("cooked", animatedImageCooked);
+    this.cooked = animatedImageCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -326,7 +323,7 @@ module("Component | chat message collapser animated image", function (hooks) {
   });
 
   test("collapses and expands animated image onebox", async function (assert) {
-    this.set("cooked", animatedImageCooked);
+    this.cooked = animatedImageCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -370,7 +367,7 @@ module(
     setupRenderingTest(hooks);
 
     test("shows links for animated image", async function (assert) {
-      this.set("cooked", externalImageCooked);
+      this.cooked = externalImageCooked;
 
       await render(
         <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -386,7 +383,7 @@ module(
     });
 
     test("shows all user written text", async function (assert) {
-      this.set("cooked", externalImageCooked);
+      this.cooked = externalImageCooked;
 
       await render(
         <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -401,7 +398,7 @@ module(
     });
 
     test("collapses and expands image oneboxes", async function (assert) {
-      this.set("cooked", externalImageCooked);
+      this.cooked = externalImageCooked;
 
       await render(
         <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -444,7 +441,7 @@ module("Component | chat message collapser images", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows alt or links (if no alt) for linked image", async function (assert) {
-    this.set("cooked", imageCooked);
+    this.cooked = imageCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -462,7 +459,7 @@ module("Component | chat message collapser images", function (hooks) {
   });
 
   test("shows all user written text", async function (assert) {
-    this.set("cooked", imageCooked);
+    this.cooked = imageCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -477,7 +474,7 @@ module("Component | chat message collapser images", function (hooks) {
   });
 
   test("collapses and expands images", async function (assert) {
-    this.set("cooked", imageCooked);
+    this.cooked = imageCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -515,7 +512,7 @@ module("Component | chat message collapser images", function (hooks) {
   });
 
   test("does not show collapser for emoji images", async function (assert) {
-    this.set("cooked", imageCooked);
+    this.cooked = imageCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -535,12 +532,9 @@ module("Component | chat message collapser galleries", function (hooks) {
   setupRenderingTest(hooks);
 
   test("escapes title/link", async function (assert) {
-    this.set(
-      "cooked",
-      galleryCooked
-        .replace("https://imgur.com/gallery/yyVx5lJ", evilString)
-        .replace("Le tomtom album", evilString)
-    );
+    this.cooked = galleryCooked
+      .replace("https://imgur.com/gallery/yyVx5lJ", evilString)
+      .replace("Le tomtom album", evilString);
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
@@ -552,7 +546,7 @@ module("Component | chat message collapser galleries", function (hooks) {
   });
 
   test("removes album title overlay", async function (assert) {
-    this.set("cooked", galleryCooked);
+    this.cooked = galleryCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -562,7 +556,7 @@ module("Component | chat message collapser galleries", function (hooks) {
   });
 
   test("shows gallery link", async function (assert) {
-    this.set("cooked", galleryCooked);
+    this.cooked = galleryCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -574,7 +568,7 @@ module("Component | chat message collapser galleries", function (hooks) {
   });
 
   test("shows all user written text", async function (assert) {
-    this.set("cooked", galleryCooked);
+    this.cooked = galleryCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
@@ -588,7 +582,7 @@ module("Component | chat message collapser galleries", function (hooks) {
   });
 
   test("collapses and expands images", async function (assert) {
-    this.set("cooked", galleryCooked);
+    this.cooked = galleryCooked;
 
     await render(
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>

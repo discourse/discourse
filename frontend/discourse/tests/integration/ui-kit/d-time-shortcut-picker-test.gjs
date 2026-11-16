@@ -14,7 +14,7 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
       unbind: () => {},
     };
 
-    this.set("itsatrap", itsatrapStub);
+    this.itsatrap = itsatrapStub;
   });
 
   hooks.afterEach(function () {

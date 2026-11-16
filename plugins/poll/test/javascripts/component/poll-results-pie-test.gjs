@@ -15,10 +15,8 @@ module("Component | PollResultsPie", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the pie chart Component correctly", async function (assert) {
-    this.setProperties({
-      id: ID,
-      options: OPTIONS,
-    });
+    this.id = ID;
+    this.options = OPTIONS;
 
     await render(
       <template>

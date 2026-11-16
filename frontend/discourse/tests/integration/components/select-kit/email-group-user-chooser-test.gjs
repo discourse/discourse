@@ -14,17 +14,17 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("renders group results with group name and full name", async function (assert) {
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           name: "team_a",
           full_name: "Team A",
           isGroup: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -52,13 +52,13 @@ module(
     });
 
     test("prioritizeGroupFullNameOrdering renders the full name before the group name", async function (assert) {
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           name: "team_a",
           full_name: "Team A Full Name",
           isGroup: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -93,7 +93,7 @@ module(
     });
 
     test("excludeGroupNameWhenMatchingFullName hides a redundant group name", async function (assert) {
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           name: "team_a",
           full_name: "Team A",
@@ -104,7 +104,7 @@ module(
           full_name: null,
           isGroup: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -143,13 +143,13 @@ module(
 
     test("prioritizeUserNameOrdering can render the name before username", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = false;
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           username: "ada",
           name: "Ada Lovelace",
           isUser: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -182,13 +182,13 @@ module(
 
     test("prioritize_username_in_ux keeps username first", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = true;
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           username: "ada",
           name: "Ada Lovelace",
           isUser: true,
         },
-      ]);
+      ];
 
       await render(
         <template>

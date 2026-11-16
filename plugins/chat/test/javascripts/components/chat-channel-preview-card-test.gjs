@@ -9,12 +9,9 @@ module("Component | ChatChannelPreviewCard", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set(
-      "channel",
-      new ChatFabricators(getOwner(this)).channel({
-        chatable_type: "Category",
-      })
-    );
+    this.channel = new ChatFabricators(getOwner(this)).channel({
+      chatable_type: "Category",
+    });
 
     this.channel.description = "Important stuff is announced here.";
     this.channel.title = "announcements";

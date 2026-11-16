@@ -14,14 +14,14 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("displays tags", async function (assert) {
-      this.set("value", [
+      this.value = [
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
-      ]);
+      ];
 
       await render(
         <template><MiniTagChooser @value={{this.value}} /></template>
@@ -168,10 +168,10 @@ module(
     });
 
     test("max_tags_per_topic", async function (assert) {
-      this.set("value", [
+      this.value = [
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
-      ]);
+      ];
       this.siteSettings.max_tags_per_topic = 2;
 
       await render(
@@ -192,10 +192,10 @@ module(
     });
 
     test("disables search and shows limit when max_tags_per_topic is zero", async function (assert) {
-      this.set("value", [
+      this.value = [
         { id: "cat", name: "cat", slug: "cat" },
         { id: "kit", name: "kit", slug: "kit" },
-      ]);
+      ];
       this.siteSettings.max_tags_per_topic = 0;
 
       await render(
@@ -286,11 +286,11 @@ module(
     });
 
     test("values in hiddenFromPreview will not display in preview", async function (assert) {
-      this.set("value", [
+      this.value = [
         { id: 1, name: "foo", slug: "foo" },
         { id: 2, name: "bar", slug: "bar" },
-      ]);
-      this.set("hiddenValues", [{ id: 1, name: "foo", slug: "foo" }]);
+      ];
+      this.hiddenValues = [{ id: 1, name: "foo", slug: "foo" }];
 
       await render(
         <template>
@@ -319,7 +319,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("displays tags and filter in header", async function (assert) {

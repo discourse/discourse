@@ -107,7 +107,7 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
   });
 
   test("Input focus after clear", async function (assert) {
-    this.set("clearAction", () => {});
+    this.clearAction = () => {};
     await render(
       <template>
         <DFilterInput @onClearInput={{this.clearAction}} @value="test" />

@@ -11,7 +11,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
       pretender.get("/form-templates.json", () => {
         return response({
           form_templates: [
@@ -32,7 +32,7 @@ module(
     });
 
     test("displays selected value", async function (assert) {
-      this.set("value", [1]);
+      this.value = [1];
 
       await render(
         <template><FormTemplateChooser @value={{this.value}} /></template>

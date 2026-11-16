@@ -17,7 +17,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
       this.site = Site.current();
       this.originalCategories = this.site.categories;
     });

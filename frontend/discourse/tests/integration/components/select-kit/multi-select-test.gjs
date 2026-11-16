@@ -28,7 +28,7 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("content", async function (assert) {

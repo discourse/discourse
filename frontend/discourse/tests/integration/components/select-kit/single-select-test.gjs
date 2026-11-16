@@ -38,7 +38,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("suppresses hover during teardown", function (assert) {
@@ -226,7 +226,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("valueAttribute (deprecated)", async function (assert) {
-    this.set("value", "normal");
+    this.value = "normal";
 
     const content = [
       { name: "Smallest", value: "smallest" },
@@ -235,7 +235,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
       { name: "Larger", value: "larger" },
       { name: "Largest", value: "largest" },
     ];
-    this.set("content", content);
+    this.content = content;
 
     await render(
       <template>
@@ -418,10 +418,8 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("labelProperty", async function (assert) {
-    this.setProperties({
-      content: [{ id: 1, name: "john", foo: "JACKSON" }],
-      value: 1,
-    });
+    this.content = [{ id: 1, name: "john", foo: "JACKSON" }];
+    this.value = 1;
 
     await render(
       <template>
@@ -443,10 +441,8 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("titleProperty", async function (assert) {
-    this.setProperties({
-      content: [{ id: 1, name: "john", foo: "JACKSON" }],
-      value: 1,
-    });
+    this.content = [{ id: 1, name: "john", foo: "JACKSON" }];
+    this.value = 1;
 
     await render(
       <template>
@@ -532,13 +528,11 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("row index", async function (assert) {
-    this.setProperties({
-      content: [
-        { id: 1, name: "john" },
-        { id: 2, name: "jane" },
-      ],
-      value: null,
-    });
+    this.content = [
+      { id: 1, name: "john" },
+      { id: 2, name: "jane" },
+    ];
+    this.value = null;
 
     await render(
       <template>
@@ -630,10 +624,8 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("disabled", async function (assert) {
-    this.setProperties({
-      content: [{ id: 1, name: "john", disabled: true }],
-      value: null,
-    });
+    this.content = [{ id: 1, name: "john", disabled: true }];
+    this.value = null;
 
     await render(
       <template>

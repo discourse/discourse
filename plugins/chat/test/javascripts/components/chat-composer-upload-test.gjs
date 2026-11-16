@@ -13,11 +13,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("file - uploading in progress", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       progress: 50,
       extension: ".pdf",
       fileName: "test.pdf",
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -28,11 +28,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - uploading in progress", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".png",
       progress: 78,
       fileName: "test.png",
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -44,12 +44,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - uploading in progress with local file previews it", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".png",
       progress: 78,
       fileName: "test.png",
       data: createFile("test.png", "image/png", PNG_BYTES),
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -63,12 +63,12 @@ module("Component | ChatComposerUpload", function (hooks) {
 
   test("image - revokes the local preview url on teardown", async function (assert) {
     const revoke = sinon.spy(URL, "revokeObjectURL");
-    this.set("upload", {
+    this.upload = {
       extension: ".png",
       progress: 10,
       fileName: "test.png",
       data: createFile("test.png", "image/png", PNG_BYTES),
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -81,12 +81,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("video - uploading in progress with local file previews it", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".webm",
       progress: 20,
       fileName: "clip.webm",
       data: createFile("clip.webm", "video/webm", WEBM_BYTES),
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -101,11 +101,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("video - uploading in progress without local file", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".mp4",
       progress: 20,
       fileName: "clip.mp4",
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -116,11 +116,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("video - upload complete", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       original_filename: "clip.mp4",
       extension: "mp4",
       url: "/uploads/clip.mp4",
-    });
+    };
 
     await render(
       <template>
@@ -136,12 +136,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - falls back to the icon when the preview cannot be decoded", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".heic",
       progress: 10,
       fileName: "photo.heic",
       data: createFile("photo.heic", "image/heic"),
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -194,12 +194,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - preprocessing upload in progress", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".png",
       progress: 78,
       fileName: "test.png",
       processing: true,
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -209,11 +209,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("file - upload complete", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       type: ".pdf",
       original_filename: "some file.pdf",
       extension: "pdf",
-    });
+    };
 
     await render(
       <template>
@@ -227,12 +227,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - upload complete", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       type: ".png",
       original_filename: "bar_image.png",
       extension: "png",
       url: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
@@ -249,12 +249,12 @@ module("Component | ChatComposerUpload", function (hooks) {
         snapshot: true,
       });
 
-      this.set("upload", {
+      this.upload = {
         type: ".png",
         original_filename: "bar_image.png",
         extension: "png",
         url: "/images/avatar.png",
-      });
+      };
 
       await render(
         <template>

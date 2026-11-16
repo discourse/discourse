@@ -9,7 +9,7 @@ module("Integration | Component | ValueList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {
-    this.set("values", "vinkas\nosama");
+    this.values = "vinkas\nosama";
 
     await render(<template><ValueList @values={{this.values}} /></template>);
 
@@ -29,7 +29,7 @@ module("Integration | Component | ValueList", function (hooks) {
   });
 
   test("changing a value", async function (assert) {
-    this.set("values", "vinkas\nosama");
+    this.values = "vinkas\nosama";
 
     await render(<template><ValueList @values={{this.values}} /></template>);
 
@@ -41,7 +41,7 @@ module("Integration | Component | ValueList", function (hooks) {
   });
 
   test("removing a value", async function (assert) {
-    this.set("values", "vinkas\nosama");
+    this.values = "vinkas\nosama";
 
     await render(<template><ValueList @values={{this.values}} /></template>);
 
@@ -61,10 +61,8 @@ module("Integration | Component | ValueList", function (hooks) {
   });
 
   test("selecting a value", async function (assert) {
-    this.setProperties({
-      values: "vinkas\nosama",
-      choices: ["maja", "michael"],
-    });
+    this.values = "vinkas\nosama";
+    this.choices = ["maja", "michael"];
 
     await render(
       <template>
@@ -111,7 +109,7 @@ module("Integration | Component | ValueList", function (hooks) {
   });
 
   test("delimiter support", async function (assert) {
-    this.set("values", "vinkas|osama");
+    this.values = "vinkas|osama";
 
     await render(
       <template>

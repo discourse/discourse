@@ -9,11 +9,11 @@ module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("displays usernames", async function (assert) {
-    this.set("value", ["bob", "martin"]);
+    this.value = ["bob", "martin"];
 
     await render(<template><UserChooser @value={{this.value}} /></template>);
 
@@ -36,11 +36,11 @@ module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   });
 
   test("can display default search results", async function (assert) {
-    this.set("options", {
+    this.options = {
       customSearchOptions: {
         defaultSearchResults: [{ username: "foo" }, { username: "bar" }],
       },
-    });
+    };
 
     await render(
       <template><UserChooser @options={{this.options}} /></template>

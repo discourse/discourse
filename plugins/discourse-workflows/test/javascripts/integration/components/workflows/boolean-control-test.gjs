@@ -209,10 +209,8 @@ module("Integration | Component | workflows boolean control", function (hooks) {
   });
 
   test("renders in expression mode when value starts with =", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: "=true" },
-      schema: { type: "boolean", ui: { expression: true } },
-    });
+    this.configuration = { enabled: "=true" };
+    this.schema = { type: "boolean", ui: { expression: true } };
 
     await render(
       <template>

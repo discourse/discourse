@@ -14,9 +14,7 @@ module("Integration | Component | EmojiUploader", function (hooks) {
 
   hooks.beforeEach(function () {
     requestNumber = 0;
-    this.setProperties({
-      emojiGroups: ["default", "cool-emojis"],
-    });
+    this.emojiGroups = ["default", "cool-emojis"];
 
     pretender.post("/admin/config/emoji.json", () => {
       requestNumber++;

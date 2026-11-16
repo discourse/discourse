@@ -41,7 +41,7 @@ module("Component | ExplorerSchema", function (hooks) {
   setupRenderingTest(hooks);
 
   test("will automatically convert to lowercase", async function (assert) {
-    this.setProperties({ schema });
+    this.schema = schema;
 
     await render(
       <template><ExplorerSchema @schema={{this.schema}} /></template>

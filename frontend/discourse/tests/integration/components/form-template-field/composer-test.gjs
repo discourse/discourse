@@ -46,7 +46,7 @@ module(
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
-      this.set("uppy", uppy);
+      this.uppy = uppy;
 
       await render(
         <template>
@@ -66,7 +66,7 @@ module(
       stubAllowUpload(this, false);
 
       const uppy = fakeUppy();
-      this.set("uppy", uppy);
+      this.uppy = uppy;
 
       await render(
         <template>
@@ -85,7 +85,7 @@ module(
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
-      this.set("uppy", uppy);
+      this.uppy = uppy;
 
       await render(
         <template>
@@ -111,7 +111,7 @@ module(
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
-      this.set("uppy", uppy);
+      this.uppy = uppy;
 
       await render(
         <template>
@@ -137,7 +137,7 @@ module(
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
-      this.set("uppy", uppy);
+      this.uppy = uppy;
 
       await render(
         <template>
@@ -163,7 +163,7 @@ module(
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
-      this.set("uppy", uppy);
+      this.uppy = uppy;
 
       await render(
         <template>
@@ -226,7 +226,7 @@ module(
       stubAllowUpload(this, true);
 
       const uppy = fakeUppy();
-      this.set("uppy", uppy);
+      this.uppy = uppy;
 
       await render(
         <template>
@@ -266,8 +266,8 @@ module(
       stubAllowUpload(this, true);
 
       const onChange = sinon.spy();
-      this.set("onChange", onChange);
-      this.set("initialValue", "before ![image|10x10](upload://abc.png) after");
+      this.onChange = onChange;
+      this.initialValue = "before ![image|10x10](upload://abc.png) after";
 
       await render(
         <template>
@@ -297,10 +297,8 @@ module(
     test("composer:replace-text only replaces the first occurrence", async function (assert) {
       stubAllowUpload(this, true);
 
-      this.set(
-        "initialValue",
-        "![image|10x10](upload://abc.png) and ![image|10x10](upload://abc.png)"
-      );
+      this.initialValue =
+        "![image|10x10](upload://abc.png) and ![image|10x10](upload://abc.png)";
 
       await render(
         <template>
@@ -368,7 +366,7 @@ module(
       stubAllowUpload(this, true);
 
       const multiline = "## Heading\n\nParagraph one.\n\n- item a\n- item b";
-      this.set("initialValue", multiline);
+      this.initialValue = multiline;
 
       await render(
         <template>
@@ -464,8 +462,8 @@ module(
       stubAllowUpload(this, true);
 
       const onChange = sinon.spy();
-      this.set("onChange", onChange);
-      this.set("initialValue", "no images here");
+      this.onChange = onChange;
+      this.initialValue = "no images here";
 
       await render(
         <template>

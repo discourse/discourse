@@ -16,7 +16,7 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE });
+    this.date = DEFAULT_DATE;
 
     await render(<template><DDateInput @date={{this.date}} /></template>);
 
@@ -24,8 +24,8 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
   });
 
   test("prevents mutations", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE });
-    this.set("onChange", () => {});
+    this.date = DEFAULT_DATE;
+    this.onChange = () => {};
 
     await render(
       <template>

@@ -49,7 +49,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       });
     });
 
-    this.set("data", { topic: { id: 1 } });
+    this.data = { topic: { id: 1 } };
 
     const renderPromise = render(
       <template><BoardsAddFromTopicMenu @data={{this.data}} /></template>
@@ -85,7 +85,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       })
     );
 
-    this.set("data", { topic: { id: 1 } });
+    this.data = { topic: { id: 1 } };
 
     await render(
       <template><BoardsAddFromTopicMenu @data={{this.data}} /></template>
@@ -119,7 +119,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       })
     );
 
-    this.set("data", { topic: { id: 1 } });
+    this.data = { topic: { id: 1 } };
 
     await render(
       <template><BoardsAddFromTopicMenu @data={{this.data}} /></template>
@@ -223,12 +223,12 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       return response({});
     });
 
-    this.set("data", {
+    this.data = {
       board: Board.create(
         board(1, "Roadmap", [{ id: 11, title: "Next", icon: "clock" }])
       ),
       topic: { id: 1 },
-    });
+    };
 
     await render(
       <template>

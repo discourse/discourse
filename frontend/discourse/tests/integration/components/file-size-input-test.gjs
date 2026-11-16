@@ -8,10 +8,10 @@ module("Integration | Component | FileSizeInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("file size unit selector kb", async function (assert) {
-    this.set("value", 1023);
-    this.set("max", 4096);
-    this.set("onChangeSize", () => {});
-    this.set("setValidationMessage", () => {});
+    this.value = 1023;
+    this.max = 4096;
+    this.onChangeSize = () => {};
+    this.setValidationMessage = () => {};
 
     await render(
       <template>
@@ -34,9 +34,9 @@ module("Integration | Component | FileSizeInput", function (hooks) {
   });
 
   test("file size unit is mb when the starting value is 1mb or more", async function (assert) {
-    this.set("value", 1024);
-    this.set("onChangeSize", () => {});
-    this.set("setValidationMessage", () => {});
+    this.value = 1024;
+    this.onChangeSize = () => {};
+    this.setValidationMessage = () => {};
 
     await render(
       <template>
@@ -59,9 +59,9 @@ module("Integration | Component | FileSizeInput", function (hooks) {
   });
 
   test("file size unit is gb when the starting value is 1gb or more", async function (assert) {
-    this.set("value", 1024 * 1024);
-    this.set("onChangeSize", () => {});
-    this.set("setValidationMessage", () => {});
+    this.value = 1024 * 1024;
+    this.onChangeSize = () => {};
+    this.setValidationMessage = () => {};
 
     await render(
       <template>
@@ -84,10 +84,10 @@ module("Integration | Component | FileSizeInput", function (hooks) {
   });
 
   test("file size unit selector", async function (assert) {
-    this.set("value", 4096);
-    this.set("max", 8192);
-    this.set("onChangeSize", () => {});
-    this.set("setValidationMessage", () => {});
+    this.value = 4096;
+    this.max = 8192;
+    this.onChangeSize = () => {};
+    this.setValidationMessage = () => {};
 
     await render(
       <template>

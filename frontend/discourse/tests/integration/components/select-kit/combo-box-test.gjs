@@ -31,7 +31,7 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("selecting a row with a blank value", async function (assert) {

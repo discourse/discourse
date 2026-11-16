@@ -23,7 +23,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
+    this.date = DEFAULT_DATE_TIME;
 
     await render(<template><DDateTimeInput @date={{this.date}} /></template>);
 
@@ -34,7 +34,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   });
 
   test("prevents mutations", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
+    this.date = DEFAULT_DATE_TIME;
 
     await render(<template><DDateTimeInput @date={{this.date}} /></template>);
 
@@ -107,7 +107,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
   });
 
   test("can hide time", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
+    this.date = DEFAULT_DATE_TIME;
 
     await render(
       <template>
@@ -238,7 +238,7 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
           {{this.clearable}}</span>
       </template>
     }
-    this.setProperties({ date: DEFAULT_DATE_TIME });
+    this.date = DEFAULT_DATE_TIME;
 
     await render(<template><Subclass @date={{this.date}} /></template>);
 

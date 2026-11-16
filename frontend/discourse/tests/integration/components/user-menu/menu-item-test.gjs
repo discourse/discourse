@@ -54,9 +54,10 @@ module(
     setupRenderingTest(hooks);
 
     test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
-      this.set(
-        "item",
-        getNotification(this.currentUser, this.siteSettings, this.site)
+      this.item = getNotification(
+        this.currentUser,
+        this.siteSettings,
+        this.site
       );
       this.item.notification.read = false;
       await render(<template><MenuItem @item={{this.item}} /></template>);
