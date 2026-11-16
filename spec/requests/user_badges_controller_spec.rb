@@ -4,6 +4,7 @@ RSpec.describe UserBadgesController do
   fab!(:user)
   fab!(:admin)
   fab!(:badge)
+  fab!(:trusted_user, :trust_level_2)
 
   before { user.user_stat.update!(post_count: 1) }
 
@@ -57,7 +58,114 @@ RSpec.describe UserBadgesController do
       expect(response.body).not_to include(user.username)
     end
 
+    context "with hidden profiles" do
+      fab!(:visible_grant) do
+        Fabricate(:user_badge, badge: badge, user: trusted_user, granted_at: 1.hour.ago)
+      end
+
+      it "excludes grants for users who hid their profile from a badge's grants feed" do
+        hidden_user = Fabricate(:user)
+        hidden_user.user_stat.update!(post_count: 1)
+        hidden_user.user_option.update!(hide_profile: true)
+        Fabricate(:user_badge, badge: badge, user: hidden_user)
+
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to eq([visible_grant.id])
+        expect(response.body).not_to include(hidden_user.username)
+      end
+
+      it "pages past hidden grants without skipping or repeating visible ones" do
+        hidden_user = Fabricate(:trust_level_2)
+        hidden_user.user_option.update!(hide_profile: true)
+        Fabricate(:user_badge, badge: badge, user: hidden_user, granted_at: 90.minutes.ago)
+        oldest_grant =
+          Fabricate(
+            :user_badge,
+            badge: badge,
+            user: Fabricate(:trust_level_2),
+            granted_at: 2.hours.ago,
+          )
+
+        pages =
+          [0, 1, 2].map do |offset|
+            get "/user_badges.json", params: { badge_id: badge.id, offset: }
+            response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+          end
+
+        expect(pages).to eq([[visible_grant.id, oldest_grant.id], [oldest_grant.id], []])
+      end
+
+      it "excludes grants for hidden new user profiles from anonymous visitors" do
+        SiteSetting.hide_new_user_profiles = true
+
+        new_user = Fabricate(:user)
+        Fabricate(:user_badge, badge: badge, user: new_user)
+
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to eq([visible_grant.id])
+        expect(response.body).not_to include(new_user.username)
+      end
+
+      it "includes hidden new user grants for viewers at trust level 2" do
+        SiteSetting.hide_new_user_profiles = true
+
+        new_user = Fabricate(:user)
+        new_grant = Fabricate(:user_badge, badge: badge, user: new_user)
+
+        sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to include(new_grant.id)
+      end
+
+      it "includes grants for hidden profiles when requested by staff" do
+        hidden_user = Fabricate(:user)
+        hidden_user.user_option.update!(hide_profile: true)
+        hidden_grant = Fabricate(:user_badge, badge: badge, user: hidden_user)
+
+        sign_in(admin)
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to include(hidden_grant.id)
+      end
+
+      it "includes grants for staged users whose profiles the guardian can see" do
+        SiteSetting.hide_new_user_profiles = true
+
+        staged_user = Fabricate(:staged)
+        staged_grant = Fabricate(:user_badge, badge: badge, user: staged_user)
+
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to include(staged_grant.id)
+      end
+
+      it "does not disclose any grants when public profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_badge_info"]["user_badges"]).to eq([])
+        expect(response.body).not_to include(trusted_user.username)
+      end
+    end
+
     it "returns not found for hidden new user profiles" do
+      SiteSetting.hide_new_user_profiles = true
+
       hidden_user = Fabricate(:trust_level_0)
       hidden_user.user_stat.update!(post_count: 1)
       Fabricate(:user_badge, user: hidden_user, badge: badge)
@@ -100,8 +208,12 @@ RSpec.describe UserBadgesController do
     fab!(:restricted_post) { Fabricate(:post, topic: restricted_topic) }
     fab!(:badge) { Fabricate(:badge, show_posts: true) }
     fab!(:user_badge) { Fabricate(:user_badge, user: user, badge: badge, post: post) }
-    fab!(:user_badge_2) { Fabricate(:user_badge, badge: badge, post: private_message_post) }
-    fab!(:user_badge_3) { Fabricate(:user_badge, badge: badge, post: restricted_post) }
+    fab!(:user_badge_2) do
+      Fabricate(:user_badge, user: trusted_user, badge: badge, post: private_message_post)
+    end
+    fab!(:user_badge_3) do
+      Fabricate(:user_badge, user: Fabricate(:trust_level_2), badge: badge, post: restricted_post)
+    end
 
     it "returns user_badges for a user" do
       get "/user-badges/#{user.username}.json"
