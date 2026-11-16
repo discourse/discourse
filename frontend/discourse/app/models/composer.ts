@@ -96,6 +96,8 @@ export interface ComposerFields {
   hasTargetGroups?: boolean;
   warningsDisabled?: boolean;
   formTemplateId?: number;
+  /** JSON of the form template id and answers, sent when creating the post. */
+  formTemplateData?: string | null;
   composerHeight?: string | number;
   _hasTopicTemplates?: boolean;
 }
