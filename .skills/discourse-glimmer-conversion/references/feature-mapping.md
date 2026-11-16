@@ -5,8 +5,6 @@ are lifted or adapted from real conversions in this repo (`git show <sha>` for t
 diff); the rest are illustrative sketches, not landed diffs. Attribute, argument, and modifier order on the
 elements below follows `discourse-frontend-conventions` Step 4 (attributes, then
 `@arguments`, then modifiers).
-Frequency counts are from the 188 components still classic when this was written, so the
-top rows matter most.
 
 ## Imports
 
@@ -30,7 +28,7 @@ Autofixers that do part of this for you, so run `bin/lint --fix` on the file fir
 `discourse/migrate-tracked-built-ins-to-ember-collections`, `discourse/deprecated-imports`,
 `discourse/no-at-class`.
 
-## Wrapper element (163 files use `tagName`, 16 `classNames`, 17 `classNameBindings`, 10 `attributeBindings`, 4 `elementId`)
+## Wrapper element
 
 ```js
 // adapted from 9874801f946 (topic-post-badges; the commit used object syntax and left out
@@ -115,7 +113,7 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 
 Do not add `dElement` when the call sites all pass the same tag or none; fix the tag.
 
-## Element event methods (16 `click(`, 7 `keyDown(`, 6 `focusIn`, 4 `focusOut`)
+## Element event methods
 
 ```js
 // before (0c1a658f28c, html-with-links; now frontend/discourse/app/ui-kit/d-html-with-links.gjs)
@@ -180,7 +178,7 @@ get label() { return this.args.label ?? "topic.create"; }
 Positional params, `this.attrs`, `{{foo-bar x}}` curly invocation: none remain in this repo;
 if met, convert to named args and angle brackets first.
 
-## State (92 `@computed`, 63 `this.set(`, 21 `setProperties`, 19 `this.get(`, 5 `toggleProperty`)
+## State
 
 ```js
 // before
@@ -207,16 +205,12 @@ a plain accessor pair; the setter usually writes into an arg's object
 
 `this.get("a.b")` on own state → `this.a?.b` (the old `get` was null-safe on the path).
 `this.get("composer.titleLength")` → `this.args.composer?.titleLength` works because
-`titleLength` is a `@computed` getter on the model. Reads of a *plain* model field inside a
-getter, modifier, or `helperFn` are different: autotracking only sees reads that consume a
-tag, and `model.x` does so only when the model declares `x` as `@tracked`/`@trackedArray`
-or as a `@computed` getter. A plain field on an `EmberObject`, `RestModel`, or POJO is not
-tracked even though `set()` dirties it, so a getter over it goes stale; template paths
-(`{{@composer.title}}`) do track plain fields because they read through Ember's `getProp`.
-When `@computed("composer.title")` becomes a getter, declare `title` `@tracked` on the
-model (the `Reviewable` pattern in `3f7cf1139da`; classic `set()` writers keep working) or
-read with `get(this.args.composer, "title")` when the model cannot change. Check the model
-before assuming the getter updates. This is why `ember/no-get` stays off in the lint config.
+`titleLength` is a `@computed` getter on the model. `composer.title` is a plain field, so a
+getter reading it goes stale (SKILL.md Step 2.5): declare `title` `@tracked` on the model
+(the `Reviewable` pattern in `3f7cf1139da`; classic `set()` writers keep working) or read
+with `get(this.args.composer, "title")`. Template paths (`{{@composer.title}}`) do track
+plain fields, because they read through Ember's `getProp`. This is why `ember/no-get` stays
+off in the lint config.
 
 `notifyPropertyChange("x")` → nothing when `x` is tracked; when it existed to poke a
 classic consumer of a model, the model needs `@tracked`/`@trackedArray` (`tag-info.gjs`,
@@ -234,7 +228,7 @@ genuinely new array to a `@tracked` field. Do not re-assign the same array to it
 collections are created with factory calls, not `new`; `new TrackedArray` from
 `@ember-compat/tracked-built-ins` is retired and autofixed away.
 
-## Observers (13 files)
+## Observers
 
 Pick by intent:
 
@@ -276,7 +270,7 @@ state" case: `@resettableTracked`. A replacement that writes tracked or model st
 modifier, or `helperFn`, so the write must be deferred (`schedule("afterRender")`, `next`,
 or the debounce the observer already had) or it trips the backtracking-rerender assertion.
 
-## Lifecycle (26 `init`, 34 `didInsertElement`, 25 `this.element`, 24 `willDestroyElement`, 11 `didReceiveAttrs`, 3 `didUpdateAttrs`/`didUpdate`, 5 `@on(`)
+## Lifecycle
 
 ```js
 // init → constructor
@@ -391,7 +385,7 @@ Other things hooks commonly contain:
 | `this.elementId` / `guidFor(this)` used to build ids | `dUniqueId` from `discourse/ui-kit/helpers/d-unique-id`, or a literal id |
 | `htmlSafe(...)` | `trustHTML` from `@ember/template` (autofixed by `discourse/deprecated-imports`) |
 
-## Actions (2 `this.actions`, 1 `this.send`, 3 `sendAction`)
+## Actions
 
 ```js
 // actions hash → @action methods (41593a5d7d3)

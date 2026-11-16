@@ -1,28 +1,23 @@
 # Pitfalls: regressions past conversions caused
 
-Each entry is a real regression or surprise from this repo's history, with the commit that
-shows it. Check every item against your diff before reporting done. Add new ones at the
-end of the matching section with the commit sha.
+The evidence behind the rules: each entry is a real regression or surprise from this repo's
+history, with the commit that shows it. Where a step already states the rule, the entry is a
+one-line pointer to it. Check every item against your diff before reporting done; SKILL.md's
+"Improving this skill" says when to add one.
 
 ## Args and defaults
 
-- **A classic class field is silently overridable by an arg of the same name; a Glimmer
-  field is not.** `label = "topic.create"` on the classic `CreateTopicButton` accepted
-  `@label` from callers; after conversion every caller's label was ignored. Fix was
-  `this.args.label ?? "topic.create"` (`3a945f3663c` → `cddc96e9c01`). Check every class
-  field with a default against the call sites' arg names.
-- **`this.foo` left behind in `@outletArgs` / `lazyHash`.** `@outletArgs={{lazyHash
-  topic=this.topic}}` renders `undefined` on a Glimmer component without any error; it
-  must read `@topic` (`dd329d55a52` → `323013d9c79`).
-- **Implicit defaults created in a hook vanish.** `didInsertElement` doing
-  `if (!this.status) this.set("status", {})` has no equivalent; either reinstate as a
-  getter default or make callers (and tests) pass the value (`c96dce29348`).
+- **A classic class field is silently overridable by an arg of the same name** (SKILL.md
+  Step 2.4): `CreateTopicButton` ignored every caller's `@label` (`3a945f3663c` →
+  `cddc96e9c01`).
+- **`this.foo` left in `@outletArgs`/`lazyHash` renders `undefined`** (SKILL.md Step 6;
+  `dd329d55a52` → `323013d9c79`).
+- **Implicit defaults a hook created vanish** (SKILL.md Step 7; `c96dce29348`).
 - **Angle-bracket string coercion.** `@triggerAppEvent="true"` was a string; when the
   Glimmer version compares with `=== true` it must become `@triggerAppEvent={{true}}`
   (`d6d3fc86294`).
-- **Caller-side `@classNames`, `@class`, `@id`, `@tagName` stop doing anything.** Convert
-  them to plain attributes at every call site and make sure the wrapper has
-  `...attributes` (`4e417223e5d`, `d6d3fc86294`).
+- **Caller-side `@classNames`, `@class`, `@id`, `@tagName` stop doing anything** (SKILL.md
+  Step 3; `4e417223e5d`, `d6d3fc86294`).
 - **A child's default delimiter can be the stored format.** `url-list` gave `ValueList` no
   `@inputDelimiter`, so `ValueList` joined on its `"\n"` default, and the server splits
   `default_avatars` on `"\n"` (`User`). Every other list setting is `"|"`-joined. When a
@@ -50,13 +45,11 @@ end of the matching section with the commit sha.
   (`<PaymentOptions @plans={{false}} />`). The classic `if (this.plans)` skipped it;
   `this.args.plans?.toSorted(...)` throws, because `false` is not nullish. Keep the classic
   guard's truthiness when the arg can be a boolean.
-- **Field types are declarations.** Under `strict`, `x = null` declares `null`, `x = []`
-  declares `never[]`, and plugins and themes in TypeScript compile against those
-  declarations, so `#44656` gave such members a `/** @type */`. Keep the annotation on a
-  member that survives the conversion, even when its initializer changes (`newEmojiGroups`
-  lost it), drop it with a member that becomes an arg, and annotate new public members
-  initialized to `null` or `[]`. `pnpm lint:types` won't notice, because `.gjs` bodies aren't
-  type-checked.
+- **Keep the `/** @type */` on a member that survives the conversion**, even when its
+  initializer changes (`newEmojiGroups` lost it); drop it with a member that becomes an arg,
+  and annotate new public members initialized to `null` or `[]`. Why the declared types
+  matter is `discourse-writing-typescript` golden rule 3; `lint:types` cannot catch a
+  dropped one, because `.gjs` bodies are not type-checked (`#44656`).
 - **Seeding tracked state from an arg is a snapshot however it is written.**
   `ember/no-tracked-properties-from-args` flags `@tracked x = this.args.x` but not
   `@tracked period = periodString(this.args.model.leaderboard.default_period)`, nor the same
@@ -69,26 +62,12 @@ end of the matching section with the commit sha.
 - **A `.gjs` file that still extends `@ember/component` has non-tracked args.** Category
   title links went stale for theme users because the component was moved to `.gjs` without
   changing the base class; fixing the bug *was* the conversion (`92312eec7b1`).
-- **Half-converted reactivity chains fail silently.** A classic `@filter` macro on a model
-  reading a `@trackedArray`, or `@discourseComputed` reading a native getter, does not
-  update. Either convert the whole chain or bridge with `@dependentKeyCompat`
-  (`4acd9c67535`, `11fac4c6bca`).
-- **Dot-access reads of plain model fields do not track.** In a getter, modifier, or
-  `helperFn` body, `model.x` is tracked only when the model declares `x` as
-  `@tracked`/`@trackedArray` or as a `@computed` getter; a plain field on an `EmberObject`,
-  `RestModel`, or POJO is not, even though `set()` dirties it (only `get()` and template
-  paths consume the tag). A `@computed("model.x")` turned into
-  `get x() { return this.args.model.x; }` renders once and never again. Declare `x`
-  `@tracked` on the model (`3f7cf1139da`) or read with `get(model, "x")`, and check the
-  model before assuming the getter updates.
-- **Observers keep firing after you make things tracked.** This app runs observers
-  async, so an `@observes` on a still-classic class fires a runloop later for `@tracked`
-  changes too; a half-converted file gets stale double updates. Remove observers first.
-- **Backtracking rerender.** Writing tracked state from a getter or from a modifier body,
-  when the template already consumed that state, throws "You attempted to update `x` on
-  `y`, but it had already been used previously in the same computation". Common sources:
-  a `didInsertElement` that set a flag which the template also read, moved into a modifier
-  verbatim. Defer with `schedule("afterRender")`, or derive instead of writing.
+- **Half-converted reactivity chains fail silently** (golden rule 7; `4acd9c67535`,
+  `11fac4c6bca`).
+- **Dot-access reads of plain model fields do not track** (SKILL.md Step 2.5; `3f7cf1139da`).
+- **Observers keep firing after you make things tracked** (SKILL.md Step 2.1).
+- **Backtracking rerender** from writing already-read tracked state in a getter or
+  modifier body (SKILL.md Step 4).
 - **`@cached` getters returning a new tracked collection** must be keyed on the arg that
   should reset them, and the collection must be built inside the getter (`4e417223e5d`,
   `3f7cf1139da`).
@@ -117,38 +96,17 @@ end of the matching section with the commit sha.
   passed to the modifier itself (positional or named) change; the element's attributes and
   children do not count. A custom `modifier()` that reads the arg in its body avoids the
   trap; that is one reason the lint policy calls render-modifiers an anti-pattern.
-- **Modifier args are lazy.** A `modifier((el, [x]) => {...})` that never reads `x` does
-  not re-run when `x` changes.
-- **A mount-once hook moved into a modifier re-runs on every value it read.**
-  `didInsertElement` code moved verbatim into one `modifier()` re-runs, with cleanup,
-  whenever anything it read changes: composer-title reads `composer.titleLength` (dirtied
-  on every keystroke) and `focusTarget` (a service getter), so as one modifier it would
-  tear down its listeners and call `putCursorAtEnd` on each keystroke. One modifier per
-  concern; wrap one-shot reads in `untrack()` (`ui-kit/d-decorated-html.gjs`), guard them
-  with an instance flag (`ui-kit/modifiers/d-auto-focus.js`), or snapshot the value.
-- **Teardown order is modifier cleanups, then `willDestroy`, then `isDestroyed`.** Both run
-  after the element is detached, but only the modifier cleanup still holds the node:
-  `removeEventListener` and third-party `destroy()` go there, and layout reads or ancestor
-  lookups work in neither. `willDestroy` is for `appEvents.off`, MessageBus, timers.
-- **Classic element handlers caught bubbled events.** `click(e)` on the component fired
-  for clicks on any descendant. `{{on "click"}}` on a specific child changes the target
-  set; put it on the wrapper unless the handler already narrowed with `e.target.closest`
-  (`dd329d55a52`, `0c1a658f28c`).
-- **`{{on}}` does not `preventDefault` and ignores `return false`.** `{{action}}` and
-  classic `click() { ...; return false; }` did. Add `event.preventDefault()` where links
-  or forms depended on it (`41593a5d7d3`).
+- **Modifier args are lazy** (SKILL.md Step 4).
+- **A mount-once hook moved into one modifier re-runs on every value it read** (SKILL.md
+  Step 4; the composer-title case is in feature-mapping's Lifecycle section).
+- **Teardown order is modifier cleanups, then `willDestroy`** (SKILL.md Step 4's table).
+- **Classic handlers caught bubbled events and `return false` prevented the default;
+  `{{on}}` does neither** (SKILL.md Step 3; `dd329d55a52`, `0c1a658f28c`, `41593a5d7d3`).
 - **`@on("willDestroyElement")` decorators are easy to miss** in a long file; grep for
   `@on(` and `@ember-decorators/object` before declaring the lifecycle done
   (`8a09fd370a6`).
-- **Tests that do not fire observers.** IntersectionObserver / ResizeObserver based
-  replacements do not fire deterministically under test; `load-more` needed exported
-  test toggles (`7b062e24def`). Prefer `TrackedMediaQuery` / `dOnResize` and assert on the
-  state, not on timing.
-- **select-kit takes focus back after a selection.** It refocuses its header in a `next()`
-  tick, so focusing a field the selection just revealed loses, whether from a modifier or
-  the classic `@afterRender`. `AdminPenaltyPostAction`'s "focus the edit textarea" never
-  held. Run a focus assertion against the classic version before treating its failure as a
-  regression.
+- **IntersectionObserver/ResizeObserver replacements do not fire deterministically under
+  test** (consumers-and-tests, "Acceptance and system tests"; `7b062e24def`).
 
 ## The component as a receiver
 
@@ -220,11 +178,9 @@ end of the matching section with the commit sha.
   `d-editor`, `d-navigation`, `topic-title`, `topic-progress`, `topic-footer-buttons`,
   `search-result-entry`, `directory-item`, `composer-editor`, `composer-actions`, and more.
   Keep the file path, keep the name, and list each hit in the report.
-- **Renaming or moving the file changes the resolver name**, so `modifyClass` logs
-  `"component:x" was not found` and the patch is dropped. Never rename during a conversion.
-  Changing only the extension to `.gts` (SKILL.md Step 1) keeps the resolver name and the
-  absolute import path. Relative importers carry the extension, though, and a stale
-  `./x.gjs` breaks the whole bundle at runtime while both `lint:types` and `bin/lint` pass.
+- **Renaming or moving the file changes the resolver name**, so `modifyClass` patches are
+  dropped. Never rename; the `.gts` extension change and its importer trap are in SKILL.md
+  Step 1.
 - **External subclasses of the converted class** get a Glimmer base under a classic body.
   Select-kit bases (`ComboBoxComponent`, `DropdownSelectBoxComponent`,
   `SelectKitRowComponent`, `MultiSelectComponent`) and `UserCardContents` are subclassed
@@ -248,18 +204,6 @@ end of the matching section with the commit sha.
   classic backing class from `instance-initializers/component-templates.js`; converting a
   core component that such a theme template *overrides* changes what the theme gets
   (`8f52b81efa7`).
-
-## Choosing a target
-
-- **A component with no call sites is probably dead, not easy.** `group-member.gjs` looked
-  like the single easiest conversion in the whole inventory (30 lines, `@tagName("")`, one
-  action, no lifecycle) precisely because nothing rendered it. Seven non-connector classic
-  components in core are unreferenced. Check reachability first; deleting beats converting.
-- **Anchor resolver patterns when checking reachability.** `component:group-member` matches
-  `component:group-member-dropdown`, which is a different component; the unanchored grep
-  reported a dead component as live.
-- **Connectors legitimately have no call sites.** The plugin-outlet system renders them from
-  their directory path, so absence of invocations says nothing about them.
 
 ## Process
 

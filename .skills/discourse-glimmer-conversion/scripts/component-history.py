@@ -287,7 +287,14 @@ def classify(sha):
     def src_of(key):
         return next((blobs[p] for p in modules[key] if p in blobs), None)
 
-    memo, local_memo = {}, {}
+    memo, local_memo, parsed_memo = {}, {}, {}
+
+    def parsed(key):
+        """A module's imports, local definitions and templates, parsed once per snapshot."""
+        if key not in parsed_memo:
+            src = src_of(key)
+            parsed_memo[key] = None if src is None else (parse_imports(src, full=True), *definitions(src, modules[key][0]))
+        return parsed_memo[key]
 
     def kind(key, seen=()):
         """Kind of the module's default export."""
@@ -324,11 +331,9 @@ def classify(sha):
         if key in local_memo:
             return local_memo[key]
         local_memo[key] = out = {}
-        src = src_of(key)
-        if src is None:
+        if (p := parsed(key)) is None:
             return out
-        imports = parse_imports(src, full=True)
-        defs, _ = definitions(src, modules[key][0])
+        imports, defs, _ = p
         for _ in range(3):  # locals may extend locals defined later in the file
             for name, base, factory in defs:
                 if name and name not in out:
@@ -353,9 +358,8 @@ def classify(sha):
         if "/connectors/" in key and connector_template == "classic" and len(files) > 1:
             group["classic"] += 1
             continue
-        imports = parse_imports(src, full=True)
         named = local_kinds(key)
-        defs, templates = definitions(src, files[0])
+        imports, defs, templates = parsed(key)
         found = templates
         group["glimmer"] += templates
         for name, base, factory in defs:
@@ -441,7 +445,6 @@ def ticks(v):
     for step in (mag / 10, mag / 5, mag / 4, mag / 2, mag, 2 * mag):
         if step >= 1 and -(-v // step) <= 6:
             return step, int(-(-v // step))
-    return 2 * mag, int(-(-v // (2 * mag)))
 
 
 LABEL_MIN = 18  # px a segment needs to hold its count

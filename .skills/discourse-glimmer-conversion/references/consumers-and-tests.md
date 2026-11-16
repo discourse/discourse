@@ -18,30 +18,16 @@ what each result means and what you owe it.
 | External plugins and themes (`~/discourse/all-the/…`) | `all-the-plugins/{official,third-party}`, `all-the-themes/{official,third-party}`, `all-the-custom-{plugins,themes}` | never edit; list the file and the exact edit |
 | Tests (`-test.gjs`, system specs by CSS selector) | `frontend/discourse/tests`, `plugins/*/test/javascripts`, `spec/system`, `plugins/*/spec/system` | convert or update |
 
-## Discovery greps
+## Discovery
 
 The script derives the import path (`discourse/components/foo`,
 `discourse/admin/components/foo`, `discourse/plugins/<plugin>/discourse/components/foo`,
 `discourse/plugins/<plugin>/admin/components/foo`), the resolver name (`foo`, or `foo/bar`
 for nested), and the class name from the file. For a component in another repo it scans
-that repo and the core checkout (`CORE_DIR` overrides which one). Manual equivalents:
+that repo and the core checkout (`CORE_DIR` overrides which one). Use its output rather
+than hand-written greps: its resolver patterns are anchored, its imports allow the
+extension relative imports carry, and it covers every external checkout.
 
-```bash
-# invocations and imports in core + bundled plugins
-grep -rnE '<FooBar\b|from "discourse/components/foo-bar"' frontend plugins --include='*.gjs' --include='*.gts' --include='*.js' --include='*.ts' | grep -v node_modules
-# string lookups
-grep -rnE '"foo-bar"|component:foo-bar' frontend plugins --include='*.gjs' --include='*.js' | grep -v node_modules
-# subclasses
-grep -rnE 'extends FooBar\b|FooBar\.extend\(' frontend plugins | grep -v node_modules
-# modifyClass
-grep -rnE 'modifyClass\(\s*["'"'"'`]component:foo-bar' frontend plugins ~/discourse/all-the/all-the-plugins ~/discourse/all-the/all-the-themes ~/discourse/all-the/all-the-custom-plugins ~/discourse/all-the/all-the-custom-themes --exclude-dir=node_modules --exclude-dir=.git
-# external imports
-grep -rlF '"discourse/components/foo-bar"' ~/discourse/all-the/all-the-plugins ~/discourse/all-the/all-the-themes --exclude-dir=node_modules --exclude-dir=.git
-```
-
-In zsh, pass multiple directories through an array (`dirs=(a b c); grep ... "${dirs[@]}"`),
-not an unquoted scalar; zsh does not word-split scalars, so the grep silently searches a
-path that does not exist and returns nothing.
 
 Also grep for the component's CSS classes in `spec/system` and
 `frontend/discourse/tests/acceptance`: system specs find elements by class, and a changed
@@ -113,17 +99,10 @@ that quietly depends on async work passes with it by accident. These conversions
 for new tests, so keep `settled()` for steps that start async work on purpose, and prefer the
 interaction helpers (`click`, `fillIn`), which settle on their own.
 
-The box skips a write of the same value (`Object.is`). `tracked()` with no argument, or
-with an object whose only keys are `value`/`initializer`/`equals`/`description`, returns
-a decorator instead, so use `tracked(undefined)` for an empty box.
-
-`this.set("x", ...)` on the test context with `{{this.x}}` inside the `<template>` still
-works (the template is lexically bound to the test function's `this`); prefer the tracked
-box for new tests and leave existing `this.set` tests alone unless they break. Only a
-test that still uses an `hbs` string or lives in a `.js` file gets converted to `.gjs`
-with an inline `<template>` and a real import. A component with no integration test gets
-one covering the wrapper, each redesigned binding, and each lifecycle replacement, unless
-the report names the acceptance tests that already cover it.
+The box's semantics (`Object.is` dedupe, `tracked(undefined)` for an empty box) are in
+`discourse-writing-js-tests`. `this.set("x", ...)` on the test context still works (the
+template is lexically bound to the test function's `this`), which is why passing
+`this.set` tests are left alone.
 
 Objects the component mutates through an arg must be reactive and the test must assert
 the write reached the caller (adapted from `c96dce29348`, which used `new TrackedObject`
@@ -140,19 +119,13 @@ assert.strictEqual(status.emoji, "mega", "writes the picked emoji to the status 
 Callbacks added for a redesigned two-way binding get a test that passes a recording
 function and asserts it was called with the new value.
 
-Defaults the classic hook created (`if (!this.status) this.set("status", {})`) either come
-back as a getter default or are passed by the test explicitly; do not let the test paper
-over a dropped default the callers relied on.
-
-### What to add
+### Traps when writing them
 
 - One test per redesigned two-way binding (callback fires, arg is not mutated). Render the
   converted component directly with a recording callback. A test through the real parent
   cannot tell the callback from a classic child writing through a forwarded `@value` (see
   data-flow §5): the in-place enum test on the theme editor still passed with `@onChange`
   removed. Mutation-test against the direct test.
-- One test per arg that `didReceiveAttrs`/`didUpdateAttrs` used to react to (change the
-  arg, `rerender()`, assert the DOM or state followed).
 - A test for a `get()` read must change *only* the untracked field. If the same change also
   flips a tracked value the template reads around the getter (an `{{#if}}` block), the block
   renders fresh and the test passes without the fix. `ComposerActionTitle` reads
@@ -168,7 +141,6 @@ over a dropped default the callers relied on.
 - `discourseLater` runs as soon as the test settles, so a delayed side effect fires inside
   the `await click(...)` that scheduled it. Test a teardown path (`willDestroy`) on its own,
   starting from the state the delay would have produced.
-- One test per class-field default that callers override with an arg.
 
 ### Finding the test that actually exercises the component
 
@@ -180,46 +152,25 @@ page" section closes that gap — it matches test *filenames* against each call 
 not just the ones matching the component name; `AdminEditableField` shipped broken because
 `admin-user-index-test.js` was never run.
 
-### Plugin tests need `--target`
+### Running tests against `bin/dev`
 
-`bin/qunit plugins/<name>/...` now runs with `target=core` and `Load plugins: false`, and
-fails with `No tests matched with the filter: discourse/plugins/<name>/...` (check with
-`--dry-run`). Pass the plugin instead: `bin/qunit --target <name> --filter "/<module>/i"`.
-The target runs the plugin's whole suite, and a large one (discourse-ai: ~340) regularly
-dies on an unrelated browser timeout before reaching yours, so keep the `--filter`, and
-confirm your test's own `ok`/`not ok` line appears.
-
-### One test file per invocation
-
-Passing a dozen files to one `bin/qunit` run aborts at a random test with
-`Browser timeout exceeded: 30s` after 40-95 tests, on `origin/main` as well. The named test
-passes alone, and everything after it never runs. Loop over the files with one invocation
-each and collect the `# pass`/`# fail` lines.
-
-### Running a test file you just created
-
-A running `bin/dev` does not pick up a **newly created** test file: rolldown re-evaluates
-its inputs but not the test-entrypoint glob, so `bin/qunit path/to/new-test.gjs` fails with
-`No tests matched with the filter: ...` while `frontend/discourse/dist` keeps rebuilding
-happily. Restart `bin/dev` and wait for the new file to appear in the bundle
-(`grep -rl <basename> frontend/discourse/dist/assets/js/`) before believing the run. Editing
-an existing test file is picked up normally.
-
-### Wait for the rebuild before a mutation run
-
-A fixed `sleep` after editing a file is not enough: a module many others import (`d-user-info`
-rebuilt 89 files) can take longer, and the run then tests the old bundle, so a mutation
-"passes" and the test looks weak. Wait for `[ember] Rebuild complete ... <path>` for that file
-in the `bin/dev` log, both after the mutation and after restoring it.
-
-### After swapping files under a running `bin/dev`
-
-Copying `origin/main` versions over your files and back (to compare against the classic
-behavior, or to bisect) can leave the watcher serving a stale module: `bulk-user-suspend-
-confirmation.gjs` stayed at main's version in the admin bundle for an hour while the file on
-disk was correct, `touch` did not trigger a rebuild, and only the system spec that rendered
-it noticed (`this.args.onChangeReason is not a function`). Restart `bin/dev` after any such
-experiment and before system specs, which load the same `frontend/discourse/dist`.
+- **A dozen files in one `bin/qunit` run** has aborted at a random test with
+  `Browser timeout exceeded: 30s`, on `origin/main` as well, while the named test passes
+  alone. When that happens, loop over the files with one invocation each and collect the
+  `# pass`/`# fail` lines.
+- **A newly created test file** is not picked up by a running `bin/dev` (rolldown
+  re-evaluates its inputs but not the test-entrypoint glob), so `bin/qunit` reports
+  `No tests matched with the filter`. Restart `bin/dev` and wait for the file to appear in
+  `frontend/discourse/dist/assets/js/` before believing the run. Edits to existing files are
+  picked up normally.
+- **After editing a file for a mutation run**, wait for `[ember] Rebuild complete ... <path>`
+  in the `bin/dev` log, both after the mutation and after restoring it. A fixed `sleep` is not
+  enough for a widely imported module (`d-user-info` rebuilt 89 files), and the run then
+  tests the old bundle.
+- **After copying other versions over your files and back** (to compare against the
+  classic file), the watcher can keep serving a stale module (`bulk-user-suspend-confirmation`
+  stayed at `origin/main`'s version for an hour; `touch` did not help). Restart `bin/dev`
+  before system specs, which load the same `frontend/discourse/dist`.
 
 ### Components that mount a third-party editor
 

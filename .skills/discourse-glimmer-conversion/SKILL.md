@@ -57,7 +57,8 @@ Imports you will reach for: `modifier` from `ember-modifier`; `tracked`, `cached
    by case; the callback shape is chosen from the caller's needs, never mechanically.
 6. **Pre-existing bugs**: fix only when the fix is the same amount of code or less than
    preserving the bug. Otherwise preserve the behavior and flag it in the report. Either
-   way, list it.
+   way, list it. A claimed bug, like a claimed fix, needs a test that fails on the classic
+   file (or with the fix reverted); a claim no test has failed on is a guess.
 7. **Reactivity chains are converted whole.** A base class and its subclasses go together.
    A classic consumer whose dependent-key chain crosses a native getter you introduce (a
    model, a service, a yielded object) stops updating; convert that consumer too or bridge
@@ -87,15 +88,9 @@ Stop and flag, or widen the scope, when:
 
 Everything else (`app/components`, `admin/components`, `app/ui-kit`, plugin `components/`
 and `connectors/`, and the same directories in external plugins and themes) is in scope.
-Inventory of what is left in core and bundled plugins:
-
-```bash
-git grep --no-color -lE '^import (Component|ClassicComponent)(, \{[^}]*\})? from "@ember/component"' -- frontend/discourse plugins | grep -E '\.g?js$' | grep -vE 'node_modules|/dist/|/tests?/'
-```
-
-To pick what to convert next, `scripts/rank-targets.py` ranks that inventory by risk and
-leaves out components already in open PRs; [PLAN.md](PLAN.md) covers how to read it and
-how to batch.
+`scripts/rank-targets.py --list` prints what is left in core and bundled plugins; without
+`--list` it ranks that inventory by risk and leaves out components already in open PRs.
+[PLAN.md](PLAN.md) covers how to read the ranking; batching is Step 10.
 
 Subclasses in core or plugins of the component you convert are in scope too; subclasses
 in external checkouts are flagged.
@@ -108,15 +103,11 @@ Run the analysis script and read its output in full:
 .skills/discourse-glimmer-conversion/scripts/analyze.sh path/to/component.gjs
 ```
 
-It lists the classic features used, the declared class members, candidate args (reads of
-`this.x` never declared or assigned), own state assigned but never declared, writes
-(two-way binding candidates), template reads of `@args` and of `this.*`, call sites in
-core and bundled plugins, class fields that call sites also pass as args, subclasses,
-`modifyClass` hits, imports and patches in the external checkouts, and the tests and specs
-that reference the component's resolver name, class name, or selectors. For a component in another
-repo, pass its path; the script scans that repo plus core (set `CORE_DIR` when the core
-checkout is not the one holding this skill). Then read the component and every call site
-yourself; the script only greps.
+Each section header says what it lists: classic features, members, args, own state, writes,
+call sites, the file type, consumers in core, bundled plugins and the external checkouts, and
+the tests to run. For a component in another repo, pass its path; the script scans that repo
+plus core (set `CORE_DIR` when the core checkout is not the one holding this skill). Then
+read the component and every call site yourself; the script only greps.
 
 **If the script reports no call sites and the file is not a connector, stop and check for
 dead code before converting anything.** Connectors are rendered by the outlet system from
@@ -359,6 +350,8 @@ Full recipes in the data-flow reference, including `<Input>`/`<Textarea>`, selec
 - Add a reactivity test for every redesigned two-way binding, for every arg that a
   `didReceiveAttrs`/`didUpdateAttrs` used to watch, and for every class-field default
   that callers override with an arg.
+- Mutation-test every new test: break the fix (or run the test against the classic file)
+  and watch it fail, then restore. A test never seen failing proves nothing.
 - Acceptance and system tests that assert on the old wrapper's classes or on markup that
   changed need updating; the script lists them by selector.
 
@@ -368,22 +361,17 @@ Full recipes in the data-flow reference, including `<Input>`/`<Textarea>`, selec
 bin/lint --fix path/to/component.gjs path/to/changed/callsites... path/to/tests...
 pnpm lint:types                             # when the result is .gts
 .skills/discourse-glimmer-conversion/scripts/self-args.py path/to/component.gjs...
-bin/qunit path/to/component-test.gjs        # by PATH, one file per invocation
+bin/qunit path/to/component-test.gjs        # by PATH, plugin tests included
 bin/qunit frontend/discourse/tests/acceptance/<each file the script listed>.js
-bin/qunit --target <plugin-dir> --filter "/<module>|<module>/i"   # plugin tests
 bin/rspec spec/system/<each spec the script listed>
 ```
 
-Run each component's own test file **by path**, not through `--filter`: module names are
+Run every test file the script lists **by path**, not through `--filter`: module names are
 PascalCase (`Integration | Component | WatchedWordUploader`), so a word-spaced filter like
-`--filter "watched word"` silently matches nothing and the run looks green. The script lists
-the test files; run every one.
+`--filter "watched word"` silently matches nothing and the run looks green.
 
-Then read the pitfalls reference and check each item against your diff. Confirm no
-`ember/no-classic-components`, `ember/no-observers`, `ember/require-tagless-components`,
-`ember/no-actions-hash`, `ember/no-on-calls-in-components`,
-`ember/no-empty-glimmer-component-classes`, or `sort-class-members` errors remain, and
-that `discourse/no-unnecessary-tracked` did not warn. When the component is DOM-heavy
+Lint passes with the file's `eslint-disable` banner gone and no new disables. Then read the
+pitfalls reference and check each item against your diff. When the component is DOM-heavy
 (uploads, editors, drag, scroll), open the page in the running app and exercise it.
 
 ## Step 9: report
@@ -406,9 +394,10 @@ The standard flow for a conversion, once the report is written and the user has 
 **Ten components per PR.** Convert them one at a time — each gets its own pre-flight, plan,
 and verification — then ship the batch as a single commit and a single PR. A batch is only
 for components that are independent of each other; anything that changes a call site another
-batch member also touches goes in its own PR. Drop a component from the batch rather than
-rushing it: one that turns out to need a data-flow decision, a plugin-API change, or a test
-rewrite is worth its own PR, and the next candidate on the list takes its place.
+batch member also touches goes in its own PR (sharing an untouched call site is fine). Drop
+a component from the batch rather than rushing it: one that turns out to need a data-flow
+decision, a plugin-API change, or a test rewrite is worth its own PR, and the next candidate
+on the list takes its place.
 
 ```bash
 git checkout -b 0-glimmer-batch-<n> origin/main     # single component: 0-glimmer-<file-name>
@@ -484,8 +473,14 @@ preserve — goes in the reply to the user, not in the commit.
 
 ## Improving this skill
 
-This is a living skill. After each conversion, add anything the skill did not predict to
-the matching reference: a new classic pattern to `feature-mapping.md`, a new data-flow
-shape to `data-flow.md`, a regression or surprise to `pitfalls.md` with the commit that
-shows it. Keep `SKILL.md` procedural and short; details live in the references. Update
-`scripts/analyze.sh` when a grep misses a consumer category.
+This is a living skill. After each conversion, fix what it failed to predict at the right
+depth, in this order:
+
+1. A rule in a step was wrong or missing: amend that step (or the reference it points to).
+2. A script could have caught it: change the script, so every later run checks it.
+3. A tool or lint rule is at fault: fix it there, or file it, and keep at most a one-line
+   pointer here.
+
+Add a `pitfalls.md` entry only with the commit that shows it, and only as a one-line pointer
+when a step already states the rule. Each rule is stated once: `SKILL.md` keeps the
+procedure, the references keep the detail and the snippets.

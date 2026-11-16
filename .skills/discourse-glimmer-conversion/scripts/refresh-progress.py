@@ -7,26 +7,25 @@ Merged entries are final and not queried again. Run from anywhere; needs `gh`.
 import json
 import os
 import re
-import subprocess
+
+from common import run
 
 PATH = os.path.join(os.path.dirname(__file__), "..", "PROGRESS.md")
 MERGED, APPROVED = "☑️", "✅"
-# CLICOLOR_FORCE/FORCE_COLOR in the environment make gh color its JSON even when piped
-PLAIN_ENV = {k: v for k, v in os.environ.items() if k not in ("CLICOLOR_FORCE", "FORCE_COLOR")} | {"NO_COLOR": "1"}
 ENTRY = re.compile(r"^(- \[#(\d+)\]\([^)]*\))(?: (?:☑️|✅))?(.*)$")
+REPO = ["--repo", "discourse/discourse"]
+
+# one call for every labeled PR; an unlabeled entry falls back to its own lookup
+labeled = {str(pr["number"]): pr for pr in json.loads(run(
+    ["gh", "pr", "list", *REPO, "--state", "all", "--label", "glimmer-conversion", "--limit", "500",
+     "--json", "number,state,reviewDecision"]))}
 
 
 def status(number):
-    r = subprocess.run(
-        ["gh", "pr", "view", number, "--repo", "discourse/discourse", "--json", "state,reviewDecision"],
-        capture_output=True, text=True, env=PLAIN_ENV,
-    )
-    if r.returncode != 0:
-        raise SystemExit(f"gh pr view {number} failed: {r.stderr.strip()}")
-    data = json.loads(r.stdout)
-    if data["state"] == "MERGED":
+    pr = labeled.get(number) or json.loads(run(["gh", "pr", "view", number, *REPO, "--json", "state,reviewDecision"]))
+    if pr["state"] == "MERGED":
         return MERGED
-    return APPROVED if data["reviewDecision"] == "APPROVED" else None
+    return APPROVED if pr["reviewDecision"] == "APPROVED" else None
 
 
 lines = open(PATH).read().split("\n")
