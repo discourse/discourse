@@ -517,6 +517,7 @@ pl_PL:
         auto_generated_email_error: "Zdarza się, gdy \"pierwszeństwo\" nagłówka jest ustawione na: listę, śmieci, luzem lub auto odpowiedź lub gdy inny nagłówek zawiera: auto-składane, auto-odpowiadanie lub auto-generowane."
         no_body_detected_error: "Zdarza się, kiedy nie można rozpakować całości wiadomości, a zawarte są w niej załączniki."
         no_sender_detected_error: "Zdarza się, kiedy nie można znaleźć prawidłowego adresu e‐mail w nagłówku Od."
+        authentication_failed_error: "Dzieje się tak, gdy uwierzytelnienie przychodzącej wiadomości e-mail wymaga przeglądu, ale działanie jest realizowane natychmiast i nie można go umieścić w kolejce."
         from_reply_by_address_error: "Zdarza się, gdy nagłówek From pasuje do odpowiedzi według adresu e-mail."
         inactive_user_error: "Zdarza się kiedy nadawca jest nie aktywny."
         silenced_user_error: "Dzieje się, gdy wysyłający został uciszony."
