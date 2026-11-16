@@ -18,12 +18,18 @@ RSpec.describe "Chat composer rich editor" do
     sign_in(current_user)
   end
 
-  def paste_embedded_image
-    page.execute_script(<<~JS)
+  def paste_embedded_image(count: 1)
+    page.execute_script(<<~JS, count)
+      const count = arguments[0];
       const png =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+      // distinct sources, so each image is its own upload
+      const images = Array.from(
+        { length: count },
+        (_, i) => `<img src="data:image/png;name=image${i};base64,${png}">`
+      ).join(" ");
       const data = new DataTransfer();
-      data.setData("text/html", `<p>look <img src="${png}"> here</p>`);
+      data.setData("text/html", `<p>look ${images} here</p>`);
       data.setData("text/plain", "look here");
       document
         .querySelector(".chat-composer__input")
@@ -285,6 +291,18 @@ RSpec.describe "Chat composer rich editor" do
     paste_embedded_image
 
     expect(channel_page.composer).to have_value("look image here")
+  end
+
+  it "keeps pasted embedded images as text when they're more than chat uploads at once" do
+    SiteSetting.simultaneous_uploads = 2
+    chat_page.visit_channel(channel_1)
+    expect(channel_page.composer).to have_rich_editor
+
+    paste_embedded_image(count: 3)
+
+    expect(channel_page.composer).to have_value("look image image image here")
+    expect(page).to have_no_css(".dialog-container")
+    expect(page).to have_no_css(".chat-composer-upload")
   end
 
   it "keeps a pasted embedded image as text when chat uploads are off" do

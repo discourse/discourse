@@ -299,7 +299,12 @@ export default class ChatComposer extends Component {
 
   @action
   uploadFiles(files) {
-    if (!this.canAttachUploads || !this.#addUploads) {
+    // the uploader rejects, and cancels, a batch over the limit
+    const overLimit =
+      this.inProgressUploadsCount + files.length >
+      this.siteSettings.simultaneous_uploads;
+
+    if (!this.canAttachUploads || !this.#addUploads || overLimit) {
       return false;
     }
     this.#addUploads(files, { pasted: true });
