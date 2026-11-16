@@ -3517,11 +3517,14 @@ en:
 
     emoji_picker:
       filter_placeholder: Search for emoji
-      smileys_&_emotion: Smileys and Emotion
-      people_&_body: People and Body
-      animals_&_nature: Animals and Nature
-      food_&_drink: Food and Drink
-      travel_&_places: Travel and Places
+      search_placeholder: "Search by emoji name and alias..."
+      no_results: "No results"
+      favorites: "Frequently used"
+      smileys_&_emotion: Smileys and emotion
+      people_&_body: People and body
+      animals_&_nature: Animals and nature
+      food_&_drink: Food and drink
+      travel_&_places: Travel and places
       activities: Activities
       objects: Objects
       symbols: Symbols
