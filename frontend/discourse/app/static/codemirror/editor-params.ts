@@ -7,7 +7,6 @@ import * as lezerCommon from "@lezer/common";
 import * as lezerHighlight from "@lezer/highlight";
 import * as lezerLr from "@lezer/lr";
 import type { CodeEditorParams } from "discourse/lib/code-editor-languages";
-import { expressionUtils } from "./expression-utils.js";
 
 export function buildCodeEditorParams(): CodeEditorParams {
   return {
@@ -19,6 +18,5 @@ export function buildCodeEditorParams(): CodeEditorParams {
     lezerCommon,
     lezerHighlight,
     lezerLr,
-    utils: expressionUtils,
   };
 }

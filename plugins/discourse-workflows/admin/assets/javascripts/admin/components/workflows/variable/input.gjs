@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import loadCodemirrorEditor from "discourse/lib/load-codemirror";
+import { loadExpressionLanguage } from "../../../lib/workflows/expression-language/index.js";
 
 export default class VariableInput extends Component {
   @service workflowsNodeTypes;
@@ -14,6 +15,7 @@ export default class VariableInput extends Component {
   async loadEditor() {
     const [Editor] = await Promise.all([
       loadCodemirrorEditor(),
+      loadExpressionLanguage(),
       this.workflowsNodeTypes.loadWorkflowVars(),
     ]);
 

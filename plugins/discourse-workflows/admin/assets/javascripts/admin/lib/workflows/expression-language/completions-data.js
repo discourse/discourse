@@ -29,7 +29,7 @@ export function info(signature, description, example) {
 }
 
 // Builds method completions, deriving each description from the type and
-// label by convention: `codemirror.expression.methods.<type>.<label>`.
+// label by convention: `discourse_workflows.expression_language.methods.<type>.<label>`.
 // Signatures and examples stay literal — they are code, not translatable prose.
 function buildMethods(type, entries) {
   return entries.map((entry) => ({
@@ -38,20 +38,24 @@ function buildMethods(type, entries) {
     detail: entry.detail,
     info: info(
       entry.signature,
-      i18n(`codemirror.expression.methods.${type}.${entry.label}`),
+      i18n(
+        `discourse_workflows.expression_language.methods.${type}.${entry.label}`
+      ),
       entry.example
     ),
   }));
 }
 
 // Builds global completions, deriving each description by convention:
-// `codemirror.expression.globals.<label>`.
+// `discourse_workflows.expression_language.globals.<label>`.
 function buildGlobals(entries) {
   return entries.map((entry) => ({
     label: entry.label,
     type: entry.type,
     detail: entry.detail,
-    info: i18n(`codemirror.expression.globals.${entry.label}`),
+    info: i18n(
+      `discourse_workflows.expression_language.globals.${entry.label}`
+    ),
   }));
 }
 

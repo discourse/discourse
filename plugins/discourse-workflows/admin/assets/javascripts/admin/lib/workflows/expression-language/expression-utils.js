@@ -13,10 +13,9 @@ import {
   NUMBER_METHODS,
   STRING_METHODS,
 } from "./completions-data.js";
-import { expressionLanguage } from "./lang-expression/index.js";
+import { expressionLanguage } from "./language.js";
 import {
   analyzePropertyAccess,
-  isInsideExpression,
   isInsideExpressionAt,
   resolveNodeValue,
 } from "./tree-utils.js";
@@ -43,20 +42,24 @@ function methodsForType(value) {
   }
 }
 
-// Generic expression utilities for {{ }} editors. Domain-specific
-// analysis (like workflow $() node refs) should extend
-// analyzePropertyAccess in the consumer, not here.
-export const expressionUtils = {
-  expressionLanguage,
-  analyzePropertyAccess,
-  resolveNodeValue,
-  isInsideExpression,
-  isInsideExpressionAt,
-  lookupMethodDoc,
-  methodsForType,
-  section: completionSection,
-  globalDocs: GLOBAL_DOCS,
-  sections: standardCompletionSections(),
-  globalCompletions: GLOBAL_COMPLETIONS,
-  globalStaticMethods: GLOBAL_STATIC_METHODS,
-};
+export function buildExpressionUtils(cmParams, javascript) {
+  const { syntaxTree } = cmParams.cmLanguage;
+
+  return {
+    expressionLanguage: () => expressionLanguage(cmParams, javascript),
+    analyzePropertyAccess: (state, pos) =>
+      analyzePropertyAccess(syntaxTree(state), state, pos),
+    resolveNodeValue,
+    isInsideExpression: (context) =>
+      isInsideExpressionAt(syntaxTree(context.state), context.pos),
+    isInsideExpressionAt: (state, pos) =>
+      isInsideExpressionAt(syntaxTree(state), pos),
+    lookupMethodDoc,
+    methodsForType,
+    section: completionSection,
+    globalDocs: GLOBAL_DOCS,
+    sections: standardCompletionSections(),
+    globalCompletions: GLOBAL_COMPLETIONS,
+    globalStaticMethods: GLOBAL_STATIC_METHODS,
+  };
+}

@@ -27,12 +27,6 @@ export interface CodeEditorParams {
    * letting the generated file import it.
    */
   lezerLr: typeof import("@lezer/lr");
-  /**
-   * Helpers for expression editors whose grammar is compiled in core.
-   *
-   * @internal Moves behind a registered language; do not build on it.
-   */
-  utils: (typeof import("discourse/static/codemirror/expression-utils"))["expressionUtils"];
 }
 
 /** Builds the extensions an editor's `extensions` argument adds on top of the language. */
