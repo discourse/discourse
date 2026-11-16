@@ -12,6 +12,274 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
   it { is_expected.to validate_length_of(:type).is_at_most(100) }
   it { is_expected.to validate_length_of(:target_type).is_at_most(100) }
 
+  it "uses the channel title in reviewable note mention notifications" do
+    SiteSetting.enable_mentions = true
+    recipient = Fabricate(:admin)
+    chat_channel.update!(name: "Reviewable mention testing")
+
+    ReviewableNote.create!(
+      reviewable: reviewable,
+      user: moderator,
+      content: "@#{recipient.username}",
+    )
+
+    notification =
+      recipient.notifications.find_by!(notification_type: Notification.types[:mentioned])
+    expect(notification.data_hash["topic_title"]).to eq(chat_channel.name)
+    expect(notification.url).to eq("/review/#{reviewable.id}")
+  end
+
+  describe "#actions_for" do
+    it "requires classification for restrictive chat actions" do
+      reviewable.update!(target_created_by: user)
+
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_delete",
+        "delete_and_agree",
+        "agree_and_suspend",
+        "agree_and_silence",
+      )
+    end
+  end
+
+  describe "#perform" do
+    it "suspends the author and deletes the flagged message" do
+      reviewable.update!(target_created_by: user)
+
+      result =
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          reason: "spam",
+          suspend_until: 2.days.from_now,
+        )
+
+      expect(result).to be_success
+      expect(user.reload).to be_suspended
+      expect(chat_message.reload.deleted_at).to be_present
+      expect(reviewable.reload).to be_approved
+    end
+
+    it "keeps the content and reviewable unchanged when silence details are invalid" do
+      reviewable.update!(target_created_by: user)
+
+      result = reviewable.perform(moderator, :agree_and_silence, reason: "spam")
+
+      expect(result).not_to be_success
+      expect(user.reload).not_to be_silenced
+      expect(chat_message.reload.deleted_at).to be_nil
+      expect(reviewable.reload).to be_pending
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        reviewable.update!(target_created_by: chat_message.user)
+        freeze_time
+        enable_dsa_reporting
+      end
+
+      it "creates no statement when unsilence_user handles the chat message reviewable" do
+        UserSilencer.silence(user, moderator, silenced_till: 2.days.from_now, reason: "Spam")
+
+        expect {
+          expect(reviewable.perform(moderator, :unsilence_user)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when agree_and_keep_message handles the chat message reviewable" do
+        expect {
+          expect(reviewable.perform(moderator, :agree_and_keep_message)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "classifies the statement while deleting the flagged message" do
+        result =
+          reviewable.perform(
+            moderator,
+            :agree_and_delete,
+            dsa_classification: {
+              community_rule: {
+                "ground" => "Be respectful",
+                "explanation" => "Personal attacks are not allowed.",
+              },
+              category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+            },
+          )
+
+        expect(result).to be_success
+        expect(chat_message.reload.deleted_at).to be_present
+        expect(reviewable.reload).to be_approved
+
+        statement = reviewable.dsa_statement_of_records.sole
+        expect(statement).to be_ready
+        expect(statement.classified_by_id).to eq(moderator.id)
+        expect(statement.payload).to include("incompatible_content_ground" => "Be respectful")
+      end
+
+      it "records a statement when agree_and_delete handles the chat message reviewable" do
+        expect { reviewable.perform(moderator, :agree_and_delete) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged chat message was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => chat_message.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "records a statement when delete_and_agree handles the chat message reviewable" do
+        expect { reviewable.perform(moderator, :delete_and_agree) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged chat message was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => chat_message.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "records a statement when agree_and_keep_deleted handles the chat message reviewable" do
+        chat_message.trash!(moderator)
+
+        expect { reviewable.perform(moderator, :agree_and_keep_deleted) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged chat message was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => chat_message.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "creates no statement when agree_and_restore handles the chat message reviewable" do
+        chat_message.trash!(moderator)
+
+        expect {
+          expect(reviewable.perform(moderator, :agree_and_restore)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when disagree_and_restore handles the chat message reviewable" do
+        chat_message.trash!(moderator)
+
+        expect {
+          expect(reviewable.perform(moderator, :disagree_and_restore)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when disagree handles the chat message reviewable" do
+        expect { expect(reviewable.perform(moderator, :disagree)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when ignore handles the chat message reviewable" do
+        expect { expect(reviewable.perform(moderator, :ignore)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "records a statement when agree_and_suspend handles the chat message reviewable" do
+        expect {
+          reviewable.perform(
+            moderator,
+            :agree_and_suspend,
+            reason: "Spam",
+            suspend_until: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged chat message was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => chat_message.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when agree_and_silence handles the chat message reviewable" do
+        expect {
+          reviewable.perform(
+            moderator,
+            :agree_and_silence,
+            reason: "Spam",
+            silenced_till: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged chat message had their ability to participate restricted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => chat_message.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          "end_date_service_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+    end
+  end
+
   it "agree_and_keep agrees with the flag and doesn't delete the message" do
     reviewable.perform(moderator, :agree_and_keep_message)
 
@@ -166,6 +434,12 @@ RSpec.describe Chat::ReviewableMessage, type: :model do
         expect(action).to be_present
         expect(I18n.t(action.label)).to eq("Unsilence author")
         expect(I18n.t(action.completed_message)).to eq("Author unsilenced.")
+      end
+
+      it "is set apart from the actions that resolve the flag" do
+        secondary_bundles = reviewable.actions_for(moderator.guardian).bundles.select(&:secondary)
+
+        expect(secondary_bundles.flat_map(&:actions).map(&:server_action)).to eq(["unsilence_user"])
       end
 
       it "is not offered to a user who cannot unsilence the author" do

@@ -3,12 +3,12 @@ import { cached, tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import helperFn from "discourse/helpers/helper-fn";
 import Composer from "discourse/models/composer";
-import { gt } from "discourse/truth-helpers";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerPresenceDisplay extends Component {
+  @service capabilities;
   @service presence;
   @service composerPresenceManager;
   @service currentUser;
@@ -146,7 +146,7 @@ export default class ComposerPresenceDisplay extends Component {
       {{this.setupTranslateChannel}}
       {{this.notifyState}}
 
-      {{#if (gt this.users.length 0)}}
+      {{#if (and this.capabilities.viewport.sm (gt this.users.length 0))}}
         <div class="presence-users">
           <div class="presence-avatars">
             {{#each this.users as |user|}}

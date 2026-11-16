@@ -41,11 +41,17 @@ uk:
           load_error: "Ви покинули вебінар, або нам не вдається завантажити Zoom на цій сторінці."
           too_early: "Приєднатися до вебінару можна ближче до початку заходу"
           view_topic: "Переглянути тему заходу"
+          guest_prompt:
+            register: "Зареєструватись"
         chat:
           rsvp_to_event: "Підтвердіть свою участь у події, щоб розпочати спілкування"
           rsvp_to_event_with_link: "Підтвердіть свою присутність на <a href='%{url}'>події</a> , щоб розпочати чат"
           rsvp_body: "Спілкуйтеся з іншими учасниками до, під час та після заходу."
       preferences:
+        reminders:
+          preferences:
+            notification: "Сповіщення"
+            none: "Немає"
         all_events: "Події дискурсу — Усі події"
         all_events_description: "Усі події форуму"
         my_events: "Події Дискурсу - Мої події"
@@ -359,6 +365,8 @@ uk:
         topic_id_description: "Тригерувати лише для подій у цій темі. Залиште поле порожнім, щоб відповідати всім подіям."
     discourse_post_event:
       new_event: "Нова подія"
+      onebox:
+        all_day: "Цілий день"
       notifications:
         before_event_reminder: "Подія ось-ось розпочнеться"
         after_event_reminder: "Подія завершилася"
@@ -413,6 +421,7 @@ uk:
         filter_placeholder: "Фільтр користувачів"
         remove_invitee: "Видалити запрошення зі списку"
         add_invitee: "Додати запрошення до списку"
+        this_event: "Ця подія"
       bulk_invite_modal:
         confirm: "підтвердити"
         text: "Завантажити файл CSV"
@@ -481,7 +490,6 @@ uk:
               many: "%{count} запрошені користувачі"
               other: "%{count} запрошені користувачі"
         event:
-          expired: "Термін дії закінчився"
           closed: "Закриті"
           full: "Повний"
           status:
@@ -494,6 +502,8 @@ uk:
             private:
               title: "Приватні"
               description: "До закритої події можуть приєднатися лише запрошені користувачі."
+      recording_modal:
+        save: "Зберегти"
       composer:
         name_placeholder: "Назва події"
         end_date_placeholder: "Дата завершення"

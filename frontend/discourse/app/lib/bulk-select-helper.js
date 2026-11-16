@@ -16,6 +16,8 @@ export default class BulkSelectHelper {
   @tracked bulkSelectEnabled = false;
   @tracked autoAddTopicsToBulkSelect = false;
   @tracked autoAddBookmarksToBulkSelect = false;
+
+  /** @type {string | null | undefined} */
   @tracked lastCheckedElementId = null;
 
   @autoTrackedArray selected;

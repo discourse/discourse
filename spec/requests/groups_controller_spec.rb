@@ -15,6 +15,22 @@ RSpec.describe GroupsController do
       Fabricate(:group, name: "staff_group", visibility_level: Group.visibility_levels[:staff])
     end
 
+    it "prevents crawlers from indexing the group directory" do
+      get "/g", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/g", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
     it "ensures that groups can be paginated" do
       50.times { Fabricate(:group) }
 
@@ -568,6 +584,22 @@ RSpec.describe GroupsController do
       )
     end
 
+    it "uses the full name as entered for the HTML title" do
+      group.update!(full_name: "Utah - St. George")
+
+      get "/groups/#{group.name}.html"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag "title", text: "Utah - St. George - #{SiteSetting.title}"
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          property: "og:title",
+          content: "Utah - St. George",
+        },
+      )
+    end
+
     it "renders a single-escaped, tag-free meta description from the bio" do
       group.update!(bio_raw: "Tom & Jerry [blog](https://evil.example) win")
 
@@ -985,6 +1017,94 @@ RSpec.describe GroupsController do
       expect(visible_member).to include("last_seen_at", "last_posted_at")
     end
 
+    it "sorts members by activity timestamps only when their profiles are visible to the requester" do
+      hidden_user = Fabricate(:user, username: "aaa_hidden", last_seen_at: 1.minute.ago)
+      hidden_user.user_option.update!(hide_profile: true)
+      visible_user = Fabricate(:user, username: "aaa_visible", last_seen_at: 1.year.ago)
+      group.add(hidden_user)
+      group.add(visible_user)
+
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      hidden_member = members.find { |member| member["id"] == hidden_user.id }
+
+      expect(hidden_member).not_to include("last_seen_at")
+      expect(members.map { |member| member["id"] }).to eq(
+        [visible_user.id, user.id, hidden_user.id],
+      )
+
+      sign_in(admin)
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+
+      expect(members.map { |member| member["id"] }).to eq(
+        [hidden_user.id, visible_user.id, user.id],
+      )
+      expect(members.first).to include("last_seen_at")
+    end
+
+    it "does not sort members by activity timestamps of new users hidden from anonymous viewers" do
+      SiteSetting.hide_new_user_profiles = true
+
+      new_user = Fabricate(:user, username: "aaa_new", last_seen_at: 1.minute.ago)
+      established_user =
+        Fabricate(
+          :user,
+          username: "aaa_established",
+          trust_level: TrustLevel[2],
+          last_seen_at: 1.year.ago,
+        )
+      group.add(new_user)
+      group.add(established_user)
+
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      new_member = members.find { |member| member["id"] == new_user.id }
+      established_member = members.find { |member| member["id"] == established_user.id }
+
+      expect(new_member).not_to include("last_seen_at")
+      expect(established_member).to include("last_seen_at")
+      expect(members.map { |member| member["id"] }).to eq(
+        [established_user.id, user.id, new_user.id],
+      )
+    end
+
+    it "does not sort anonymous viewers' members by activity timestamps withheld from them" do
+      SiteSetting.hide_user_profiles_from_public = true
+
+      recent_user = Fabricate(:user, username: "aaa_recent", last_seen_at: 1.minute.ago)
+      older_user = Fabricate(:user, username: "bbb_older", last_seen_at: 1.year.ago)
+      group.add(recent_user)
+      group.add(older_user)
+
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at", asc: true }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      expect(members).to all(exclude("last_seen_at", "last_posted_at"))
+      expect(members.map { |member| member["username"] }.first(2)).to eq(%w[aaa_recent bbb_older])
+
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+      get "/groups/#{group.name}/members.json", params: { order: "last_seen_at", asc: true }
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      expect(members.map { |member| member["id"] }.first(2)).to eq([older_user.id, recent_user.id])
+      expect(members.first).to include("last_seen_at")
+    end
+
     it "ensures that membership can be paginated" do
       freeze_time
 
@@ -1056,6 +1176,45 @@ RSpec.describe GroupsController do
         expect(response.status).to eq(200)
         response_custom_fields = response.parsed_body["members"].first["custom_fields"]
         expect(response_custom_fields[user_field_name]).to eq("A custom field")
+      end
+
+      it "does not sort members by private custom fields for anonymous viewers" do
+        private_user_field = Fabricate(:user_field)
+        private_user_field_name = "user_field_#{private_user_field.id}"
+        first_member = Fabricate(:user, username: "alphabetical_first")
+        second_member = Fabricate(:user, username: "alphabetical_second")
+        group.add(first_member)
+        group.add(second_member)
+
+        UserCustomField.create!(
+          user_id: first_member.id,
+          name: private_user_field_name,
+          value: "second private value",
+        )
+        UserCustomField.create!(
+          user_id: second_member.id,
+          name: private_user_field_name,
+          value: "first private value",
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: private_user_field_name,
+              asc: true,
+            }
+
+        expect(response.status).to eq(200)
+
+        members = response.parsed_body["members"]
+        expect(members.flat_map { |member| member.fetch("custom_fields").values }).not_to include(
+          "first private value",
+          "second private value",
+        )
+        expect(members.map { |member| member["id"] }).to eq(
+          [first_member.id, second_member.id, user.id],
+        )
       end
 
       it "allows sorting by custom fields" do
@@ -1241,6 +1400,103 @@ RSpec.describe GroupsController do
     let(:category) { Fabricate(:category) }
     let(:tag) { Fabricate(:tag) }
 
+    it "keeps existing notification defaults during a profile-only update" do
+      group.add_owner(user)
+      group.update!(watching_category_ids: [category.id], tracking_tags: [tag.name])
+      CategoryUser.set_notification_level_for_category(
+        user,
+        NotificationLevels.all[:watching],
+        category.id,
+      )
+      TagUser.change(user.id, tag.id, NotificationLevels.all[:tracking])
+      sign_in(user)
+
+      put "/groups/#{group.id}.json",
+          params: {
+            group: {
+              bio_raw: "Updated profile 猫",
+            },
+            update_existing_users: "true",
+          }
+
+      expect(response.status).to eq(200)
+      expect(group.reload.bio_raw).to eq("Updated profile 猫")
+      expect(CategoryUser.find_by(user:, category:)&.notification_level).to eq(
+        NotificationLevels.all[:watching],
+      )
+      expect(TagUser.find_by(user:, tag:)&.notification_level).to eq(
+        NotificationLevels.all[:tracking],
+      )
+    end
+
+    it "ignores nonexistent category IDs when applying notification defaults to members" do
+      missing_id = Category.maximum(:id) + 1000
+      group.add_owner(user)
+      sign_in(user)
+
+      put "/groups/#{group.id}.json",
+          params: {
+            group: {
+              watching_category_ids: [category.id.to_s, missing_id.to_s],
+            },
+            update_existing_users: "true",
+          }
+
+      expect(response.status).to eq(200)
+      expect(group.reload.group_category_notification_defaults.pluck(:category_id)).to eq(
+        [category.id],
+      )
+      expect(CategoryUser.where(user:).pluck(:category_id)).to eq([category.id])
+    end
+
+    it "rejects conflicting tag defaults before saving profile changes or asking for confirmation" do
+      synonym = Fabricate(:tag, target_tag: tag)
+      group.add_owner(user)
+      original_bio = group.bio_raw
+      sign_in(user)
+
+      put "/groups/#{group.id}.json",
+          params: {
+            group: {
+              bio_raw: "Must not be saved",
+              watching_tags: [tag.name],
+              tracking_tags: [synonym.name],
+            },
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("groups.errors.conflicting_notification_defaults"),
+      )
+      expect(group.reload.bio_raw).to eq(original_bio)
+      expect(group.group_tag_notification_defaults).to be_empty
+      expect(TagUser.where(user:, tag:)).to be_empty
+    end
+
+    it "moves a synonym's tag default and member preference using a mixed-case name" do
+      synonym = Fabricate(:tag, target_tag: tag)
+      group.add_owner(user)
+      group.update!(tracking_tags: [tag.name])
+      TagUser.change(user.id, tag.id, NotificationLevels.all[:tracking])
+      sign_in(user)
+
+      put "/groups/#{group.id}.json",
+          params: {
+            group: {
+              watching_tags: [synonym.name.upcase],
+            },
+            update_existing_users: "true",
+          }
+
+      expect(response.status).to eq(200)
+      expect(
+        group.reload.group_tag_notification_defaults.pluck(:tag_id, :notification_level),
+      ).to eq([[tag.id, NotificationLevels.all[:watching]]])
+      expect(TagUser.where(user:).pluck(:tag_id, :notification_level)).to eq(
+        [[tag.id, NotificationLevels.all[:watching]]],
+      )
+    end
+
     context "with custom_fields" do
       before do
         user.update!(admin: true)
@@ -1382,6 +1638,36 @@ RSpec.describe GroupsController do
         expect(group.flair_bg_color).to eq("FFF")
       end
 
+      it "does not allow a group owner to set the flair to an upload they do not own" do
+        secret_upload = Fabricate(:secure_upload, user: admin)
+
+        put "/groups/#{group.id}.json", params: { group: { flair_upload_id: secret_upload.id } }
+
+        expect(response.status).to eq(422)
+        expect(group.reload.flair_upload_id).to be_nil
+        expect(group.flair_url).to be_nil
+        expect(UploadReference.exists?(upload: secret_upload, target: group)).to eq(false)
+      end
+
+      it "allows a group owner to set the flair to an upload they own" do
+        own_upload = Fabricate(:upload, user: user)
+
+        put "/groups/#{group.id}.json", params: { group: { flair_upload_id: own_upload.id } }
+
+        expect(response.status).to eq(200)
+        expect(group.reload.flair_upload_id).to eq(own_upload.id)
+      end
+
+      it "allows a group owner to set the flair to a deduplicated upload they uploaded" do
+        shared_upload = Fabricate(:upload, user: admin)
+        Fabricate(:user_upload, upload: shared_upload, user: user)
+
+        put "/groups/#{group.id}.json", params: { group: { flair_upload_id: shared_upload.id } }
+
+        expect(response.status).to eq(200)
+        expect(group.reload.flair_upload_id).to eq(shared_upload.id)
+      end
+
       it "does not allow a group owner to modify the title" do
         group.update!(title: "Original Title")
 
@@ -1431,6 +1717,73 @@ RSpec.describe GroupsController do
 
     context "when user is group admin" do
       before { sign_in(admin) }
+
+      context "with an automatic group" do
+        let(:group) { Group.find(Group::AUTO_GROUPS[:moderators]) }
+
+        it "updates incoming email and SMTP settings" do
+          SiteSetting.enable_smtp = true
+
+          put "/groups/#{group.id}.json",
+              params: {
+                group: {
+                  incoming_email: "moderators@example.com",
+                  smtp_server: "smtp.example.com",
+                  smtp_port: 587,
+                  smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
+                  smtp_enabled: true,
+                  email_username: "moderators@example.com",
+                  email_password: "password",
+                  email_from_alias: "moderators-alias@example.com",
+                  allow_unknown_sender_topic_replies: true,
+                  name: "renamed",
+                  public_admission: true,
+                },
+              }
+
+          expect(response.status).to eq(200)
+          group.reload
+          expect(group.incoming_email).to eq("moderators@example.com")
+          expect(group.smtp_server).to eq("smtp.example.com")
+          expect(group.smtp_port).to eq(587)
+          expect(group.smtp_ssl_mode).to eq(Group.smtp_ssl_modes[:starttls])
+          expect(group.smtp_enabled).to eq(true)
+          expect(group.email_username).to eq("moderators@example.com")
+          expect(group.email_password).to eq("password")
+          expect(group.email_from_alias).to eq("moderators-alias@example.com")
+          expect(group.allow_unknown_sender_topic_replies).to eq(true)
+          expect(group.smtp_updated_by).to eq(admin)
+          expect(group.name).to eq("moderators")
+          expect(group.public_admission).to eq(false)
+        end
+
+        it "rejects an invalid incoming email" do
+          put "/groups/#{group.id}.json", params: { group: { incoming_email: "invalid" } }
+
+          expect(response.status).to eq(422)
+          expect(group.reload.incoming_email).to be_nil
+        end
+
+        it "clears SMTP settings when SMTP is disabled" do
+          group.update!(
+            smtp_enabled: true,
+            smtp_server: "smtp.example.com",
+            smtp_port: 587,
+            email_username: "moderators@example.com",
+            email_password: "password",
+          )
+
+          put "/groups/#{group.id}.json", params: { group: { smtp_enabled: false } }
+
+          expect(response.status).to eq(200)
+          group.reload
+          expect(group.smtp_enabled).to eq(false)
+          expect(group.smtp_server).to be_nil
+          expect(group.smtp_port).to be_nil
+          expect(group.email_username).to be_nil
+          expect(group.email_password).to be_nil
+        end
+      end
 
       it "updates the group" do
         group.update!(visibility_level: 2, members_visibility_level: 2, grant_trust_level: 0)
@@ -1673,6 +2026,31 @@ RSpec.describe GroupsController do
         sign_in(moderator)
       end
 
+      it "can update an automatic group's incoming email but not its SMTP credentials" do
+        group = Group.find(Group::AUTO_GROUPS[:moderators])
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                incoming_email: "moderators@example.com",
+                smtp_server: "smtp.example.com",
+                smtp_port: 587,
+                email_username: "moderators@example.com",
+                email_password: "password",
+                allow_unknown_sender_topic_replies: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        group.reload
+        expect(group.incoming_email).to eq("moderators@example.com")
+        expect(group.smtp_server).to be_nil
+        expect(group.email_username).to be_nil
+        expect(group.email_password).to be_nil
+        expect(group.smtp_enabled).to eq(false)
+        expect(group.allow_unknown_sender_topic_replies).to eq(false)
+      end
+
       it "does not update the group when the site setting is disabled" do
         SiteSetting.moderators_manage_groups = false
 
@@ -1834,9 +2212,70 @@ RSpec.describe GroupsController do
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
 
     fab!(:bot)
-    let(:group) { Fabricate(:group, users: [user1, user2, user3, bot]) }
+    let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
+
+    it "prevents crawlers from indexing group member lists" do
+      get "/g/#{group.name}/members", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "preserves nofollow when site-wide indexing is disabled" do
+      SiteSetting.allow_index_in_robots_txt = false
+
+      get "/g/#{group.name}/members", headers: { "User-Agent" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
+    it "lists bot members of automatic groups not created by core" do
+      group.update_columns(automatic: true)
+      group.add(bot)
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["members"].map { |m| m["id"] }).to contain_exactly(
+        user1.id,
+        user2.id,
+        user3.id,
+        bot.id,
+      )
+      expect(response.parsed_body["meta"]["total"]).to eq(4)
+    end
+
+    it "does not list bot members of hand-managed groups" do
+      group.add(bot)
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["members"].map { |m| m["id"] }).to contain_exactly(
+        user1.id,
+        user2.id,
+        user3.id,
+      )
+      expect(response.parsed_body["meta"]["total"]).to eq(3)
+    end
+
+    it "does not list bot members of core automatic groups" do
+      sign_in(admin)
+      Group[:admins].add(bot)
+
+      get "/groups/admins/members.json"
+
+      expect(response.status).to eq(200)
+      member_ids = response.parsed_body["members"].map { |m| m["id"] }
+      expect(member_ids).to include(admin.id)
+      expect(member_ids).not_to include(bot.id)
+      expect(response.parsed_body["meta"]["total"]).to eq(Group[:admins].human_users.count)
+    end
 
     it "allows members to be sorted by supported columns" do
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+
       get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }
 
       expect(response.status).to eq(200)
@@ -1844,6 +2283,7 @@ RSpec.describe GroupsController do
       members = response.parsed_body["members"]
 
       expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
+      expect(members.first(2)).to all(include("last_seen_at"))
 
       get "/groups/#{group.name}/members.json", params: { order: "last_seen_at", asc: true }
 
@@ -1898,10 +2338,90 @@ RSpec.describe GroupsController do
           members = response.parsed_body["members"]
           expect(members).to eq([])
         end
+
+        it "treats comma separated filter terms literally instead of as a regular expression" do
+          user1.update!(username: "filter_term_a")
+          user2.update!(username: "filter_term_b")
+
+          get "/groups/#{group.name}/members.json", params: { filter: "filter_term_.,zzz" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"]).to eq([])
+        end
+
+        it "does not fail for filter terms with invalid regular expression syntax" do
+          user1.update!(username: "filter_term_a")
+
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: "filter_term_a,(filter_term_b",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"].map { |m| m["id"] }).to eq([user1.id])
+        end
+
+        it "rejects filters with more than 50 terms" do
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: Array.new(51) { |i| "filter_term_#{i}" }.join(","),
+              }
+
+          expect(response.status).to eq(400)
+        end
+
+        it "rejects filters with more than 50 terms passed as an array" do
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: Array.new(51) { |i| "filter_term_#{i}" },
+              }
+
+          expect(response.status).to eq(400)
+        end
+
+        it "allows filtering with 50 terms" do
+          user1.update!(username: "filter_term_a")
+
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: (["filter_term_a"] + Array.new(49) { |i| "filter_term_#{i}" }).join(","),
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"].map { |m| m["id"] }).to eq([user1.id])
+        end
       end
 
       describe "as an admin" do
         before { sign_in(admin) }
+
+        it "treats comma separated filter terms literally instead of as a regular expression" do
+          user1.update!(username: "filter_term_a")
+
+          get "/groups/#{group.name}/members.json", params: { filter: "filter_term_.,zzz" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["members"]).to eq([])
+        end
+
+        it "rejects filters with more than 50 terms" do
+          get "/groups/#{group.name}/members.json",
+              params: {
+                filter: Array.new(51) { |i| "filter_term_#{i}" }.join(","),
+              }
+
+          expect(response.status).to eq(400)
+        end
+
+        it "rejects filters with more than 50 terms when listing requesters" do
+          get "/groups/#{group.name}/members.json",
+              params: {
+                requesters: true,
+                filter: Array.new(51) { |i| "filter_term_#{i}" }.join(","),
+              }
+
+          expect(response.status).to eq(400)
+        end
 
         it "allows filtering members by username" do
           email = "uniquetest@discourse.org"
@@ -1989,8 +2509,44 @@ RSpec.describe GroupsController do
   end
 
   describe "membership edits" do
+    it "refuses the email selector from a group owner who may not view emails" do
+      group.add_owner(user)
+      sign_in(user)
+
+      [other_user.email, "missing@example.com"].each do |email|
+        put "/groups/#{group.id}/members.json", params: { user_emails: email }
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(email, other_user.username)
+
+        delete "/groups/#{group.id}/members.json", params: { user_emails: email }
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(email, other_user.username)
+      end
+
+      expect(group.users).to contain_exactly(user)
+    end
+
     describe "#add_members" do
       before { sign_in(admin) }
+
+      it "lets a TL2 owner add a username and invite an email without email visibility" do
+        owner = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+        group.add_owner(owner)
+        sign_in(owner)
+        expect(owner.guardian.can_invite_to_forum?([group])).to eq(true)
+        expect(owner.guardian.can_see_emails?).to eq(false)
+
+        put "/groups/#{group.id}/members.json",
+            params: {
+              usernames: other_user.username,
+              emails: "newcomer@example.com",
+            }
+
+        expect(response.status).to eq(200)
+        expect(group.reload.users).to include(other_user)
+        invite = Invite.find_by!(email: "newcomer@example.com", invited_by: owner)
+        expect(invite.groups).to eq([group])
+      end
 
       it "can make incremental adds" do
         expect do
@@ -2048,16 +2604,18 @@ RSpec.describe GroupsController do
         expect(response.status).to eq(200)
       end
 
-      it "returns a clear error when group owner without invite permission submits emails" do
+      it "refuses email invitations when the group owner cannot invite" do
+        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
         group.add_owner(user)
         sign_in(user)
 
         put "/groups/#{group.id}/members.json", params: { emails: "test@example.com" }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to include("Only usernames")
+        expect(response.parsed_body["errors"]).to eq([I18n.t("groups.errors.cannot_add_emails")])
       end
 
       it "rejects emails even when valid usernames are also submitted by owner without invite permission" do
+        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
         group.add_owner(user)
         sign_in(user)
 
@@ -2070,7 +2628,7 @@ RSpec.describe GroupsController do
         }.not_to change { group.users.count }
 
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to include("Only usernames")
+        expect(response.parsed_body["errors"]).to eq([I18n.t("groups.errors.cannot_add_emails")])
       end
 
       context "when is able to add several members to a group" do
@@ -2123,6 +2681,11 @@ RSpec.describe GroupsController do
           end.to change { group.users.count }.by(1)
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body["usernames"]).to contain_exactly(
+            user1.username,
+            user2.username,
+            user3.username,
+          )
         end
 
         it "sends invites to new users and ignores existing users" do
@@ -2206,7 +2769,7 @@ RSpec.describe GroupsController do
         end
 
         it "display error when try to add to many users at once" do
-          stub_const(GroupsController, "ADD_MEMBERS_LIMIT", 1) do
+          stub_const(GroupMemberAdder, "LIMIT", 1) do
             expect do
               put "/groups/#{group.id}/members.json",
                   params: {
@@ -2388,6 +2951,7 @@ RSpec.describe GroupsController do
         end
 
         it "notifies users when the param is present" do
+          Jobs.run_immediately!
           put "/groups/#{group.id}/owners.json",
               params: {
                 usernames: user.username,
@@ -2873,6 +3437,50 @@ RSpec.describe GroupsController do
   end
 
   describe "#histories" do
+    it "only exposes automatic group email history values to admins" do
+      SiteSetting.enable_smtp = true
+      SiteSetting.moderators_manage_groups = true
+      group = Group.find(moderator_group_id)
+      old_settings = {
+        email_password: "old-password",
+        email_username: "old@example.com",
+        smtp_server: "old.example.com",
+        smtp_port: 465,
+        smtp_ssl_mode: Group.smtp_ssl_modes[:ssl_tls],
+      }
+      new_settings = {
+        email_password: "new-password",
+        email_username: "new@example.com",
+        smtp_server: "new.example.com",
+        smtp_port: 587,
+        smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
+      }
+      group.update!(old_settings)
+      sign_in(admin)
+
+      put "/groups/#{group.id}.json", params: { group: new_settings }
+      expect(response.status).to eq(200)
+
+      get "/groups/#{group.name}/logs.json"
+      expect(response.status).to eq(200)
+      logs = response.parsed_body["logs"].index_by { |entry| entry["subject"] }
+      new_settings.each do |subject, value|
+        expect(logs.fetch(subject.to_s).values_at("prev_value", "new_value")).to eq(
+          [old_settings.fetch(subject).to_s, value.to_s],
+        )
+      end
+
+      sign_in(moderator)
+      get "/groups/#{group.name}/logs.json"
+      expect(response.status).to eq(200)
+      logs = response.parsed_body["logs"].index_by { |entry| entry["subject"] }
+      new_settings.each_key do |subject|
+        expect(logs.fetch(subject.to_s).values_at("prev_value", "new_value")).to eq(
+          [I18n.t("staff_action_logs.redacted")] * 2,
+        )
+      end
+    end
+
     context "when user is not signed in" do
       it "raises the expected error" do
         get "/groups/#{group.name}/logs.json"
@@ -3020,6 +3628,21 @@ RSpec.describe GroupsController do
 
       expect(response.status).to eq(403)
       expect(GroupRequest.where(group: group, user: user).exists?).to eq(false)
+    end
+
+    it "rejects membership requests from silenced users" do
+      owner = Fabricate(:user)
+      group.add_owner(owner)
+      new_user.update!(silenced_till: 1.year.from_now)
+      reason = "Attacker-controlled message to a non-staff owner"
+      sign_in(new_user)
+
+      post "/groups/#{group.name}/request_membership.json", params: { reason: }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      expect(GroupRequest.where(group:, user: new_user)).not_to exist
+      expect(Post.where(user: new_user, raw: reason)).not_to exist
     end
 
     it "requires a reason" do
@@ -3534,6 +4157,33 @@ RSpec.describe GroupsController do
 
         expect(response.status).to eq(200)
         expect(group_user.reload.notification_level).to eq(NotificationLevels.all[:muted])
+      end
+
+      it "does not reveal or update members hidden from a moderator" do
+        group.update!(members_visibility_level: Group.visibility_levels[:owners])
+        sign_in(moderator)
+        group_user = GroupUser.find_by(group:, user: target_user)
+        original_level = group_user.notification_level
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: target_user.id,
+             }
+
+        expect(response.status).to eq(403)
+        member_response = response.parsed_body
+        expect(member_response["errors"]).to be_present
+        expect(group_user.reload.notification_level).to eq(original_level)
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: non_member_user.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body).to eq(member_response)
       end
 
       it "does not allow a staff member to change notification level for a user who is not a member of the group" do

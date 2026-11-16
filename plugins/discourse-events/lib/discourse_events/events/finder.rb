@@ -23,7 +23,9 @@ module DiscourseEvents
         return if value.blank?
         return Time.current if value == "now"
 
-        value.to_datetime
+        time = value.to_datetime
+        raise Discourse::InvalidParameters.new(name) if name == :after && time > 10.years.from_now
+        time
       rescue ArgumentError, Date::Error
         raise Discourse::InvalidParameters.new(name)
       end
@@ -208,6 +210,10 @@ module DiscourseEvents
       end
 
       def self.filter_by_tags(events, params, guardian)
+        if ActiveModel::Type::Boolean.new.cast(params[:no_tags])
+          return events.where.not(topics: { id: TopicTag.select(:topic_id) })
+        end
+
         tag_names =
           Array(params[:tags])
             .flat_map { |tag| tag.to_s.split(",") }

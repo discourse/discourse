@@ -118,8 +118,11 @@ RSpec.describe Site do
       category.set_permissions(staff: :full)
       category.save!
 
-      sub_category = Fabricate(:category, parent_category_id: category.id)
-      expect(Site.new(guardian).categories).not_to include(sub_category)
+      sub_category =
+        Fabricate(:category, parent_category_id: category.id, permissions: { staff: :full })
+      expect(Site.new(guardian).categories.map { |entry| entry[:id] }).not_to include(
+        sub_category.id,
+      )
     end
 
     it "clears the cache when custom fields change" do
@@ -276,15 +279,33 @@ RSpec.describe Site do
   end
 
   it "includes all enabled authentication providers" do
+    SiteSetting.twitter_consumer_key = "twitter_consumer_key"
+    SiteSetting.twitter_consumer_secret = "twitter_consumer_secret"
     SiteSetting.enable_twitter_logins = true
+    SiteSetting.facebook_app_id = "432489234823984"
+    SiteSetting.facebook_app_secret = "adddcccdddd99922"
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
   end
 
+  it "excludes enabled authentication providers that are missing credentials" do
+    SiteSetting.twitter_consumer_key = "twitter_consumer_key"
+    SiteSetting.twitter_consumer_secret = "twitter_consumer_secret"
+    SiteSetting.enable_twitter_logins = true
+    SiteSetting.twitter_consumer_secret = ""
+
+    data = JSON.parse(Site.json_for(Guardian.new))
+    expect(data["auth_providers"].map { |a| a["name"] }).to be_empty
+  end
+
   it "includes all enabled authentication providers for anon when login_required" do
     SiteSetting.login_required = true
+    SiteSetting.twitter_consumer_key = "twitter_consumer_key"
+    SiteSetting.twitter_consumer_secret = "twitter_consumer_secret"
     SiteSetting.enable_twitter_logins = true
+    SiteSetting.facebook_app_id = "432489234823984"
+    SiteSetting.facebook_app_secret = "adddcccdddd99922"
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")

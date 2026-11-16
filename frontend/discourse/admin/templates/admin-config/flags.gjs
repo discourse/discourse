@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -12,9 +11,8 @@ class FlagsTemplate extends Component {
 
   get addFlagButtonDisabled() {
     return (
-      this.site.flagTypes.filter(
-        (flag) => !Object.values(SYSTEM_FLAG_IDS).includes(flag.id)
-      ).length >= this.siteSettings.custom_flags_limit
+      this.site.flagTypes.filter((flag) => !flag.system).length >=
+      this.siteSettings.custom_flags_limit
     );
   }
 

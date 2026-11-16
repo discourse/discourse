@@ -33,7 +33,15 @@ es:
               label: ID del tema
     discourse_events:
       title: "Eventos"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrarse"
       preferences:
+        reminders:
+          preferences:
+            notification: "Notificación"
+            none: "Ninguna"
         all_events_description: "Todos los eventos del foro"
         my_events_description: "Eventos a los que vas a asistir o que te interesan"
       on_holiday: "De vacaciones"
@@ -432,7 +440,6 @@ es:
               one: "%{count} usuario invitado"
               other: "%{count} usuarios invitados"
         event:
-          expired: "Caducado"
           closed: "Cerrado"
           full: "Completo"
           status:
@@ -445,6 +452,8 @@ es:
             private:
               title: "Privado"
               description: "Solo los usuarios invitados pueden unirse a un evento privado."
+      recording_modal:
+        save: "Guardar"
       composer:
         name_placeholder: "Nombre del evento"
         location_or_url_placeholder: "Añadir ubicación o URL"

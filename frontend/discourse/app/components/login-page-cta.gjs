@@ -12,10 +12,10 @@ const LoginPageCta = <template>
             form="login-form"
             id="login-button"
             tabindex={{unless @showSecondFactor "2"}}
-            @action={{@login}}
             @disabled={{@loginDisabled}}
             @isLoading={{@loggingIn}}
             @label={{@loginButtonLabel}}
+            @type="submit"
           />
         {{/unless}}
 

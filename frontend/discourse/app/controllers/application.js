@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import discourseDebounce from "discourse/lib/debounce";
-import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 
@@ -23,6 +22,8 @@ export default class ApplicationController extends Controller {
   showTop = true;
 
   sidebarDisabledRouteOverride = false;
+
+  /** @type {string | null} */
   navigationMenuQueryParamOverride = null;
   _showSiteHeader = true;
   @tracked _showSidebar;
@@ -50,14 +51,6 @@ export default class ApplicationController extends Controller {
 
   get showFooter() {
     return this.footer.showFooter;
-  }
-
-  set showFooter(value) {
-    deprecated(
-      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hideApplicationFooter}} helper to an Ember template.",
-      { id: "discourse.application-show-footer" }
-    );
-    this.footer.showFooter = value;
   }
 
   get isCurrentAdminRoute() {

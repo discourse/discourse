@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import Category from "discourse/models/category";
 import {
   CREATE_TOPIC,
   EDIT,
@@ -669,6 +670,33 @@ module("Unit | Model | composer", function (hooks) {
       composer.showCategoryChooser,
       "shows category chooser when lazy_load_categories is enabled even with no categories loaded"
     );
+  });
+
+  test("open loads the category when categories are lazy loaded", async function (assert) {
+    getOwner(this).lookup("service:site").set("lazy_load_categories", true);
+    const composer = createComposer.call(this);
+
+    await composer.open({
+      action: CREATE_TOPIC,
+      categoryId: 12345,
+      draftKey: "new_topic",
+    });
+
+    assert.true(Category.hasAsyncFoundAll([12345]));
+  });
+
+  test("open does not fail when the category cannot be loaded", async function (assert) {
+    getOwner(this).lookup("service:site").set("lazy_load_categories", true);
+    pretender.get("/categories/find", () => response(500, {}));
+    const composer = createComposer.call(this);
+
+    await composer.open({
+      action: CREATE_TOPIC,
+      categoryId: 12345,
+      draftKey: "new_topic",
+    });
+
+    assert.false(composer.loading);
   });
 
   test("editPost rolls back state on save failure", async function (assert) {

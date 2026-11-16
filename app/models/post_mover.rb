@@ -9,10 +9,18 @@ class PostMover
 
   # options:
   # freeze_original: :boolean  - if true, the original topic will be frozen but not deleted and posts will be "copied" to topic
-  def initialize(original_topic, user, post_ids, move_to_pm: false, options: {})
+  def initialize(
+    original_topic,
+    user,
+    post_ids,
+    guardian: user.guardian,
+    move_to_pm: false,
+    options: {}
+  )
     @original_topic = original_topic
     @original_topic_title = original_topic.title
     @user = user
+    @guardian = guardian
     @post_ids = post_ids
     # For now we store a copy of post_ids. If `freeze_original` is present, we will have new post_ids.
     # When we create the new posts, we will pluck out post_ids out of this and replace with updated ids.
@@ -22,11 +30,14 @@ class PostMover
   end
 
   def to_topic(id, participants: nil, chronological_order: false)
+    @guardian.ensure_can_move_posts!(original_topic)
+    topic = Topic.find_by_id(id)
+    @guardian.ensure_can_create_post_on_topic!(topic)
+
     @move_type = PostMover.move_types[:existing_topic]
     @creating_new_topic = false
     @chronological_order = chronological_order
 
-    topic = Topic.find_by_id(id)
     if topic.archetype != @original_topic.archetype &&
          [@original_topic.archetype, topic.archetype].include?(Archetype.private_message)
       raise Discourse::InvalidParameters
@@ -39,6 +50,9 @@ class PostMover
   end
 
   def to_new_topic(title, category_id = nil, tag_ids: nil, tags: nil)
+    @guardian.ensure_can_move_posts!(original_topic)
+    @guardian.ensure_can_create_topic_on_category!(category_id) if category_id.present?
+
     @move_type = PostMover.move_types[:new_topic]
     @creating_new_topic = true
 
@@ -68,6 +82,7 @@ class PostMover
         new_topic
       end
     enqueue_jobs(topic)
+    DiscourseEvent.trigger(:topic_created, topic, @options, user, continue_on_error: true)
     topic
   end
 
@@ -228,6 +243,11 @@ class PostMover
     # drops posts from destination_topic until it finds one that was created after posts.first
     min_created_at = posts.first.created_at
     moved_posts = destination_posts.drop_while { |post| post.created_at <= min_created_at }
+
+    # Inserting posts before existing destination posts renumbers them, which can
+    # displace the first post and change the topic owner. Reply rights on the
+    # destination do not cover that, so require move rights on it.
+    @guardian.ensure_can_move_posts!(destination_topic) if moved_posts.present?
 
     # if no post in destination_topic was created after posts.first it's equal to sequential
     if moved_posts.empty?
@@ -667,13 +687,6 @@ class PostMover
     move_type_str = PostMover.move_types[@move_type].to_s
     move_type_str.sub!("topic", "message") if @move_to_pm
 
-    topic_link =
-      if posts.first.is_first_post?
-        "[#{destination_topic.title}](#{destination_topic.relative_url})"
-      else
-        "[#{destination_topic.title}](#{posts.first.relative_url})"
-      end
-
     post_type = @move_to_pm ? Post.types[:whisper] : Post.types[:small_action]
 
     continue =
@@ -692,11 +705,22 @@ class PostMover
 
     message =
       I18n.with_locale(SiteSetting.default_locale) do
-        I18n.t(
-          "move_posts.#{move_type_str}_moderator_post",
-          count: posts.length,
-          topic_link: topic_link,
-        )
+        if original_topic_readers_can_see_destination?
+          topic_link =
+            if posts.first.is_first_post?
+              "[#{destination_topic.title}](#{destination_topic.relative_url})"
+            else
+              "[#{destination_topic.title}](#{posts.first.relative_url})"
+            end
+
+          I18n.t(
+            "move_posts.#{move_type_str}_moderator_post",
+            count: posts.length,
+            topic_link: topic_link,
+          )
+        else
+          I18n.t("move_posts.#{move_type_str}_moderator_post_no_link", count: posts.length)
+        end
       end
 
     original_topic.add_moderator_post(
@@ -706,6 +730,16 @@ class PostMover
       action_code: "split_topic",
       post_number: @first_post_number_moved,
     )
+  end
+
+  # Anyone able to read the original topic sees the move notice, so the
+  # destination is only named when all of those readers can also see it.
+  def original_topic_readers_can_see_destination?
+    return true if !destination_topic.read_restricted_category?
+    return false if !original_topic.read_restricted_category?
+    return true if original_topic.category_id == destination_topic.category_id
+
+    (original_topic.category.secure_group_ids - destination_topic.category.secure_group_ids).empty?
   end
 
   def posts

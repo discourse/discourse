@@ -5,8 +5,12 @@ class Auth::LoginWithAmazonAuthenticator < ::Auth::ManagedAuthenticator
     "amazon"
   end
 
-  def enabled?
-    SiteSetting.enable_login_with_amazon
+  def enable_setting
+    :enable_login_with_amazon
+  end
+
+  def required_settings
+    %i[login_with_amazon_client_id login_with_amazon_client_secret]
   end
 
   def register_middleware(omniauth)

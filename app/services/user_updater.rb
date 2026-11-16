@@ -65,6 +65,7 @@ class UserUpdater
     send_shortcut
     automatically_translate
     understood_languages
+    hidden_composer_toolbar_buttons
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do

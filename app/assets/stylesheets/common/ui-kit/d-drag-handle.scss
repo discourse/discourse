@@ -1,0 +1,8 @@
+/* The grab affordance on a draggable row. Colour and cursor only: where the
+   handle sits in the row is the consumer's business, since only it knows
+   whether the row is one line or many. */
+
+.d-drag-handle {
+  color: var(--primary-low-mid);
+  cursor: grab;
+}

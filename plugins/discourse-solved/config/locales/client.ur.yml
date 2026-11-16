@@ -67,6 +67,11 @@ ur:
                 slower: "%{duration} سے آہستہ"
                 tooltip: "جوابی وقت کا اوسط رجحان"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "ہٹا دیا"
+        tag_names: "ٹیگز"
+        tag_names_description: "صرف ان موضوعات کے لیے آگاہی دیں جن میں کم از کم ان میں سے ایک ٹیگ ہو۔"
     notifications:
       alt:
         solved:

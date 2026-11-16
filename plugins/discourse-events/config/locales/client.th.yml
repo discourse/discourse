@@ -13,6 +13,15 @@ th:
             topic_id:
               label: หมายเลขกระทู้
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "ลงทะเบียน"
+      preferences:
+        reminders:
+          preferences:
+            notification: "การแจ้งเตือน"
+            none: "ไม่มี"
       disable_holiday: "ปิดใช้งาน"
       enable_holiday: "เปิดใช้งาน"
       date: "วันที่"
@@ -44,6 +53,8 @@ th:
               title: "สาธารณะ"
             private:
               title: "ส่วนตัว"
+      recording_modal:
+        save: "บันทึก"
       composer:
         url_placeholder: "เพิ่ม URL"
         reminder:

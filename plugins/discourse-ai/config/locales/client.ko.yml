@@ -9,6 +9,8 @@ ko:
     admin:
       dashboard:
         ask_ai:
+          reports:
+            retry_questions: "재시도"
           date: "날짜"
           outcomes:
             failed: "실패"
@@ -47,6 +49,13 @@ ko:
         type: "형식"
         error: "에러"
         response: "응답"
+      discourse_workflows:
+        classify:
+          text: "텍스트"
+          upload_ids: "이미지"
+          name: "그룹명"
+          type: "형식"
+          type_score: "점수"
       ai_tool_approval:
         loading: "로드 중..."
         tool: "처리"
@@ -58,20 +67,28 @@ ko:
       llm_selector:
         none: "없음"
       features:
-        disabled: "(비활성)"
-        groups: "그룹:"
+        table:
+          status: "상태"
+          enabled: "활성화"
+          groups: "그룹"
+        status:
+          "on": "켜기"
+          "off": "끄기"
+        chatbot:
+          places:
+            personal_messages: "개인 메시지"
+            none: "사용할 수 없음"
         no_groups: "없음"
         edit: "설정"
-        expand_list:
-          other: "(%{count}개 더보기)"
         bot:
           setting_groups:
             settings: "기본 설정"
         nav:
           enabled: "활성화"
         filters:
-          all: "모두"
           reset: "리셋"
+        sentiment:
+          enabled: "활성화"
         summarization:
           setting_groups:
             settings: "기본 설정"
@@ -91,16 +108,24 @@ ko:
         image_caption:
           setting_groups:
             settings: "설정"
-        translation:
-          setting_groups:
-            settings: "기본 설정"
         spam:
           name: "스팸"
       modals:
         select_option: "옵션 선택..."
       translations:
         title: "번역"
-        category_scope: "카테고리"
+        settings:
+          ai_translation_category_scope:
+            label: "카테고리"
+          ai_translation_personal_messages:
+            label: "개인 메시지"
+            choices:
+              none: "없음"
+              all: "모두"
+          content_localization_language_switcher:
+            choices:
+              none: "0명"
+              all: "모두"
         model_progress:
           detail:
             retry: "재시도"
@@ -116,6 +141,8 @@ ko:
               title: "카테고리"
             tag:
               title: "태그"
+        admin_actions:
+          enabled: "활성화"
         stats:
           eta_minutes:
             other: "%{count}분"
@@ -128,6 +155,8 @@ ko:
             other: "글 %{count}개"
       spam:
         short_title: "스팸"
+        no_llm_selected: "없음"
+        no_decision_model_selected: "없음"
         last_seven_days: "지난 7일"
         enable: "활성화"
         test_modal:
@@ -218,6 +247,12 @@ ko:
         edit: "편집"
         delete: "삭제"
         embedding: "삽입(Embedding)"
+      decision_models:
+        no_preset: "없음"
+        display_name: "그룹명"
+        provider: "공급자"
+        edit: "편집"
+        delete: "삭제"
       mcp_servers:
         name: "그룹명"
         description: "내용"
@@ -231,6 +266,16 @@ ko:
         delete: "삭제"
         tools_modal:
           required: "필수"
+      models:
+        name: "그룹명"
+        type: "형식"
+        provider: "공급자"
+        edit: "편집"
+        select_type: "선택"
+        types:
+          embedding: "삽입(Embedding)"
+        filters:
+          all: "모든 유형"
       llms:
         display_name: "그룹명"
         provider: "공급자"
@@ -289,6 +334,17 @@ ko:
         providers:
           google: "구글"
           fake: "사용자 정의"
+      ai_artifact:
+        editor:
+          version: "버전"
+          default: "기본"
+          option_on: "켜기"
+          option_off: "끄기"
+          apply: "적용"
+        share: "공유하기"
+        create_link: "링크 만들기"
+        copy_link: "링크 복사"
+        filter_all: "모두"
       ai_bot:
         debug_ai_modal:
           duration_label: "기간:"
@@ -322,6 +378,12 @@ ko:
           summarize: "요약하기"
           since:
             other: "약 %{count}시간"
+      ai_search:
+        related_replies:
+          other: "%{count} 댓글"
+        tabs:
+          topics: "글"
+          messages: "메시지"
       discobot_discoveries:
         legacy:
           regular_results: "글"

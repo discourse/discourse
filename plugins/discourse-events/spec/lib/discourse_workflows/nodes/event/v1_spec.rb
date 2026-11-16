@@ -9,15 +9,16 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
 
   before { SiteSetting.discourse_post_event_enabled = true }
 
-  def create_event_post(closed: false)
+  def create_event_post(closed: false, location: nil)
     closed_attribute = closed ? ' closed="true"' : ""
+    location_attribute = location ? " location=\"#{location}\"" : ""
 
     post =
       PostCreator.create!(
         admin,
         title: "Workflow event topic",
         raw:
-          "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\" status=\"public\"#{closed_attribute}]\n" \
+          "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\" status=\"public\"#{location_attribute}#{closed_attribute}]\n" \
             "Event description\n" \
             "[/event]",
       )
@@ -106,7 +107,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     post.reload
     post.association(:event).reload
 
-    expect(post.raw).to include('closed="true"')
+    expect(post.raw).to include("closed=true")
     expect(post.event.closed?).to eq(true)
   end
 
@@ -127,31 +128,27 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
   end
 
   it "does not confuse closed= text inside another quoted attribute with the closed attribute" do
-    node = described_class.new(parameters: {})
+    post = create_event_post(location: "Room closed=true")
 
-    raw =
-      "[event start=\"2030-04-24 14:15\" location=\"Room closed=true\"]\n" \
-        "Description\n" \
-        "[/event]"
+    described_class.new(parameters: {}).execute(
+      execution_context(topic: post.topic, operation: "close"),
+    )
 
-    updated = node.send(:raw_with_closed_state, raw, closed: true)
-
-    expect(updated).to include('location="Room closed=true"')
-    expect(updated).to include(' closed="true"]')
+    expect(post.reload.raw).to include('location="Room closed=true"')
+    expect(post.raw).to include(" closed=true]")
+    expect(post.event).to be_closed
   end
 
   it "preserves another quoted attribute while opening an event" do
-    node = described_class.new(parameters: {})
+    post = create_event_post(closed: true, location: "Room closed=true")
+    expected_raw = post.raw.sub(' closed="true"', "")
 
-    raw =
-      "[event start=\"2030-04-24 14:15\" location=\"Room closed=true\" closed=\"true\"]\n" \
-        "Description\n" \
-        "[/event]"
+    described_class.new(parameters: {}).execute(
+      execution_context(topic: post.topic, operation: "open"),
+    )
 
-    updated = node.send(:raw_with_closed_state, raw, closed: false)
-
-    expect(updated).to include('location="Room closed=true"')
-    expect(updated).not_to match(/\sclosed\s*=\s*["']true["']/i)
+    expect(post.reload.raw).to eq(expected_raw)
+    expect(post.event).not_to be_closed
   end
 
   it "is idempotent when the event is already closed" do

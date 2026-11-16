@@ -1,29 +1,30 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { get } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-@tagName("")
 export default class CategoriesBoxesTopic extends Component {
-  @computed("topic.pinned", "topic.closed", "topic.archived")
+  // `pinned`, `closed` and `archived` are plain fields on the topic model, so they are
+  // only tracked when read through `get`.
   get topicStatusIcon() {
-    if (this.topic?.pinned) {
+    if (!this.args.topic) {
+      return "far-file-lines";
+    }
+    if (get(this.args.topic, "pinned")) {
       return "thumbtack";
     }
-    if (this.topic?.closed || this.topic?.archived) {
+    if (get(this.args.topic, "closed") || get(this.args.topic, "archived")) {
       return "category.restricted";
     }
     return "far-file-lines";
   }
 
   <template>
-    <li data-topic-id={{this.topic.id}} ...attributes>
+    <li data-topic-id={{@topic.id}} ...attributes>
       {{dIcon this.topicStatusIcon}}
 
-      <a class="title" href={{this.topic.lastUnreadUrl}}>
-        {{trustHTML this.topic.fancyTitle}}
+      <a class="title" href={{@topic.lastUnreadUrl}}>
+        {{trustHTML @topic.fancyTitle}}
       </a>
     </li>
   </template>

@@ -24,6 +24,8 @@ nl:
             title: "AI vragen"
         ask_ai:
           title: "AI vragen"
+          reports:
+            retry_questions: "Opnieuw proberen"
           date: "Datum"
           outcomes:
             failed: "Mislukt"
@@ -236,6 +238,8 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Voorstellen met AI"
       copied: "Gekopieerd"
       ai_decoded_transcript:
         thinking: "Denken"
@@ -248,6 +252,12 @@ nl:
         ai_agent:
           agent_id: "Agent"
           mode: "Modus"
+        classify:
+          text: "Tekst"
+          upload_ids: "Afbeeldingen"
+          name: "Naam"
+          type: "Type"
+          type_score: "Score"
       ai_tool_approval:
         loading: "Laden..."
         agent: "Agent"
@@ -258,32 +268,37 @@ nl:
         approved: "Goedgekeurd"
         rejected: "Geweigerd"
       default_llm:
-        title: "Standaard LLM-model"
-        description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of agent. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
+        title: "Standaard taalmodel"
       llm_selector:
         none: "Geen"
-        saved: "Standaard LLM-model bijgewerkt"
       features:
         short_title: "Functies"
-        description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke agenten en LLM's en de toegang kan per groep worden beheerd."
         back: "Terug naar AI-functies"
         settings_save_error: "Sommige instellingen kunnen niet worden opgeslagen."
-        disabled: "(uitgeschakeld)"
-        agent:
-          one: "Agent:"
-          other: "Agenten:"
-        groups: "Groepen:"
-        llm:
-          one: "LLM:"
-          other: "LLM's:"
+        table:
+          status: "Status"
+          enabled: "Ingeschakeld"
+          feature: "Functie"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Groepen"
+        who_can_use:
+          no_one: "Niemand"
+        status:
+          "on": "Aan"
+          "off": "Uit"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Nieuwe agent"
+          places:
+            personal_messages: "Persoonlijke berichten"
+            chat_direct_messages: "Chatberichten"
+            none: "Niet beschikbaar"
+        set_up: "Instellen"
         no_llm: "Geen LLM geselecteerd"
         no_agent: "Niet ingesteld"
         no_groups: "Geen"
         edit: "Instellingen"
-        expand_list:
-          one: "(Nog %{count})"
-          other: "(Nog %{count})"
-        collapse_list: "(minder weergeven)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -296,11 +311,17 @@ nl:
         nav:
           enabled: "Ingeschakeld"
         filters:
-          all: "Alles"
-          text: "Zoek naar functies, agenten, LLM's of groepen..."
           no_results: "Geen functies gevonden die aan je filters voldoen."
           reset: "Resetten"
         no_automations: "Er zijn nog geen automatiseringen"
+        sentiment:
+          sentiment: "Sentiment"
+          emotion: "Emotie"
+          enabled: "Ingeschakeld"
+          agent: "Agent"
+          setting_groups:
+            sentiment: "Sentiment"
+            emotion: "Emotie"
         summarization:
           name: "Samenvattingen"
           description: "Maakt een samenvattingsknop beschikbaar waarmee bezoekers topics kunnen samenvatten"
@@ -320,8 +341,7 @@ nl:
             access_control: "Toegangsbeheer"
         embeddings:
           name: "Insluitingen"
-          description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
-          hyde: "HyDE"
+          related_topics: "Gerelateerde topics"
           setting_groups:
             model_settings: "Modelinstellingen"
             related_topics: "Gerelateerde topics"
@@ -331,7 +351,6 @@ nl:
             settings: "Basisinstellingen"
         discord:
           name: "Discord-integratie"
-          description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"
           search: "Discord-zoeken"
           setting_groups:
             settings: "Basisinstellingen"
@@ -382,10 +401,6 @@ nl:
             one: "Geplande vertaling voor %{count} onvertaald bericht."
             other: "Geplande vertaling voor %{count} onvertaalde berichten."
           schedule_topic_error: "Vertalingen plannnen mislukt. Probeer het opnieuw."
-          setting_groups:
-            settings: "Basisinstellingen"
-            agents: "Agenten"
-            backfill_and_limits: "Aanvullen en limieten"
         spam:
           name: "Spam"
           description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
@@ -404,8 +419,20 @@ nl:
       translations:
         title: "Vertalingen"
         description: "Vertaal automatisch alle con tent op je forum naar de voorkeurstaal van de gebruiker"
-        supported_locales: "Ondersteunde talen"
-        category_scope: "Categorieën"
+        sections:
+          advanced: "Geavanceerd"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorieën"
+          ai_translation_personal_messages:
+            label: "Persoonlijke berichten"
+            choices:
+              none: "Geen"
+              all: "Alles"
+          content_localization_language_switcher:
+            choices:
+              none: "Niemand"
+              all: "Iedereen"
         cached_results_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."
         model_progress:
           detail:
@@ -424,7 +451,7 @@ nl:
             tag:
               title: "Tags"
         admin_actions:
-          enable_translations: "Automatische vertalingen inschakelen"
+          enabled: "Ingeschakeld"
         stats:
           title: "Vertaalstatistieken"
           backfill_disabled: "Aanvullen is uitgeschakeld, alleen nieuwe berichten worden vertaald."
@@ -462,6 +489,8 @@ nl:
         short_title: "Spam"
         title: "Spamafhandeling configureren"
         select_llm: "Selecteer LLM"
+        no_llm_selected: "Geen"
+        no_decision_model_selected: "Geen"
         select_agent: "Selecteer agent"
         custom_instructions: "Aangepaste instructies"
         custom_instructions_help: "Aangepaste instructies specifiek voor jouw site om de AI te helpen bij het identificeren van spam, bijvoorbeeld 'Wees agressiever bij het scannen van berichten die niet in het Engels zijn'."
@@ -805,7 +834,6 @@ nl:
           result: "Testresultaat"
       secrets:
         short_title: "Aanmeldgegevens"
-        description: "Beheer verificatieaanmeldingsgegevens die worden gedeeld door LLM's, insluitingen en tools."
         name: "Naam"
         secret: "Waarde"
         select_secret: "Selecteer aanmeldingsgegevens..."
@@ -830,6 +858,17 @@ nl:
         mcp_server_oauth_client_secret: "OAuth-clientgeheim MCP-server"
         modal:
           title: "Nieuwe aanmeldingsgegevens maken"
+      decision_models:
+        no_preset: "Geen"
+        display_name: "Naam"
+        model: "Model"
+        provider: "Provider"
+        api_key: "Aanmeldgegevens"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        test: "Test uitvoeren"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP-servers"
         new: "Nieuwe MCP-server"
@@ -911,6 +950,19 @@ nl:
         test_summary:
           one: "%{count} tool ontdekt met protocol %{version}."
           other: "%{count} tools ontdekt met protocol %{version}."
+      models:
+        new: "Nieuw model"
+        name: "Naam"
+        type: "Type"
+        provider: "Provider"
+        edit: "Bewerken"
+        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
+        select_type: "Selecteren"
+        types:
+          embedding: "Insluiting"
+        filters:
+          all: "Alle typen"
+          reset: "Filters resetten"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -1116,7 +1168,6 @@ nl:
         presets: "Selecteer een preset..."
         configure_manually: "Handmatig configureren"
         edit: "Bewerken"
-        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         tests:
           title: "Test uitvoeren"
           running: "Test uitvoeren..."
@@ -1148,6 +1199,7 @@ nl:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Aangepast"
         provider_fields:
@@ -1165,9 +1217,24 @@ nl:
         quick_search:
           suffix: "in alle topics en berichten met AI"
       ai_artifact:
+        editor:
+          version: "Versie"
+          default: "Standaard"
+          option_on: "Aan"
+          option_off: "Uit"
+          apply: "Toepassen"
         expand_view_label: "Weergave uitvouwen"
         collapse_view_label: "Volledig scherm verlaten (ESC of knop Terug)"
         click_to_run_label: "Artefact uitvoeren"
+        share: "Delen"
+        create_link: "Link maken"
+        copied: "Gekopieerd naar klembord"
+        copy_link: "Link kopiëren"
+        copy_embed: "Insluiting kopiëren"
+        new_tab: "Weergeven in nieuw tabblad"
+        filter_all: "Alles"
+        filter_standalone: "Losstaand"
+        filter_conversation: "Conversatie"
       ai_bot:
         title: "AI-bot"
         agent: "Agent:"
@@ -1252,10 +1319,7 @@ nl:
           scroll_to_bottom: "Naar beneden scrollen"
           editing_post: "Bericht bewerken "
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sidebar:
-          overview: "Sentimentoverzicht"
           analysis: "Sentimentanalyse"
         sentiment_analysis:
           share_chart: "Link naar grafiek kopiëren"
@@ -1297,6 +1361,15 @@ nl:
             compact: "Compact"
             expanded: "Uitgebreid"
             expanded_description: "met AI-samenvattingen"
+      ai_search:
+        related_topics: "Gerelateerde topics"
+        related_replies:
+          one: "%{count} antwoord"
+          other: "%{count} antwoorden"
+        tabs:
+          ask: "AI vragen"
+          topics: "Topics"
+          messages: "Berichten"
       discobot_discoveries:
         main_title: "AI vragen"
         loading_convo: "Conversatie laden"

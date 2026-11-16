@@ -43,7 +43,7 @@ module SecondFactorManager
 
       last_used = totp.last_used.to_i if totp.last_used
 
-      authenticated =
+      matched_step =
         token.present? &&
           totp.totp_object.verify(
             token,
@@ -52,8 +52,12 @@ module SecondFactorManager
             after: last_used,
           )
 
-      if authenticated
-        totp.update!(last_used: DateTime.now)
+      if matched_step
+        # Record the step ROTP matched instead of the current time, otherwise a
+        # code accepted through the drift_ahead allowance stays usable until the
+        # step it belongs to ends.
+        totp.update!(last_used: [Time.zone.now, Time.zone.at(matched_step)].max)
+        authenticated = true
         break
       end
     end

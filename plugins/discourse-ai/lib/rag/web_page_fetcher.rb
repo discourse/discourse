@@ -116,7 +116,12 @@ module DiscourseAi
         end
 
         body = response[:body]
-        text = content_type.in?(%w[text/plain text/markdown]) ? body : extract_html(body)
+        text =
+          if content_type.in?(%w[text/plain text/markdown])
+            body.force_encoding(Encoding::UTF_8).scrub
+          else
+            extract_html(body)
+          end
         raise FetchError, "The page did not contain readable text" if text.blank?
 
         {

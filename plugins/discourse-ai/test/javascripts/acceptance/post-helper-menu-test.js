@@ -9,7 +9,7 @@ import {
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import aiHelperPrompts from "../fixtures/ai-helper-prompts";
+import aiHelperPrompts from "../fixtures/ai-helper-prompts.js";
 
 let lastStreamRequest = null;
 

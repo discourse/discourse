@@ -3,7 +3,7 @@ import {
   bundleByRouteFor,
   deriveRoutes,
   parseRouteMap,
-} from "../route-map-parser";
+} from "../route-map-parser.js";
 
 // Added to the tree by `Plugin::JsManager`. These build routes in loops, so they are read
 // leniently and a plugin's `resource` can mount on them.

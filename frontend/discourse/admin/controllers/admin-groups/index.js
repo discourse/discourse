@@ -8,10 +8,18 @@ export default class AdminGroupsIndexController extends Controller {
   @service store;
 
   queryParams = ["order", "asc", "filter", "type"];
+
+  /** @type {string | null} */
   order = null;
+
+  /** @type {boolean | string | null} */
   asc = null;
   filter = "";
+
+  /** @type {string | null} */
   type = null;
+
+  /** @type {import("discourse/models/result-set").default | null} */
   groups = null;
 
   @action

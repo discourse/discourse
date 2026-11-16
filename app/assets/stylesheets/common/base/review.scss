@@ -418,11 +418,13 @@
     color: var(--primary-low);
   }
 
+  &.--problem-confirmed,
   &.--rejected {
     background-color: var(--danger);
     color: var(--secondary);
   }
 
+  &.--no-problem-found,
   &.--approved,
   &.--resolved {
     background-color: var(--success);
@@ -498,6 +500,14 @@
     justify-content: left;
     text-align: left;
   }
+}
+
+.review-item__secondary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--content-border-color);
 }
 
 .review-resources {
@@ -594,6 +604,9 @@
     }
 
     &__description {
+      &.--note {
+        white-space: pre-line;
+      }
       color: var(--primary-high);
       font-size: var(--font-down-1);
       overflow-wrap: anywhere;

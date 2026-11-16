@@ -67,6 +67,12 @@ fr:
                 slower: "%{duration} plus lent"
                 tooltip: "Évolution du délai moyen de réponse."
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Modifications"
+        changes_removed: "Supprimé"
+        tag_names: "Étiquettes"
+        tag_names_description: "Déclencher uniquement pour les sujets comportant au moins une de ces étiquettes."
     notifications:
       alt:
         solved:

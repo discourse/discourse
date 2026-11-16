@@ -13,6 +13,14 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
+    it "shows the preview type and repository in the header" do
+      header = Nokogiri::HTML5.fragment(html).at_css("aside > header")
+
+      expect(header.at_css(".github-onebox__label").text.strip).to eq("Repository")
+      expect(header.at_css("a").text.strip).to eq("discourse/discourse")
+      expect(header.at_css("a")["href"]).to eq(link)
+    end
+
     it "includes the description of the repo" do
       expect(html).to include("A platform for community discussion. Free, open, simple.")
     end
@@ -30,6 +38,51 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
 
     it "sets the data-github-private-repo attr to false" do
       expect(html).to include("data-github-private-repo=\"false\"")
+    end
+
+    it "respects a customized repository header label" do
+      TranslationOverride.upsert!(I18n.locale, "onebox.github.header.repository", "Project")
+
+      expect(Nokogiri::HTML5.fragment(html).at_css(".github-onebox__label").text.strip).to eq(
+        "Project",
+      )
+    end
+
+    context "when header labels are only partially translated" do
+      before do
+        I18n.backend.store_translations(
+          :de,
+          onebox: {
+            github: {
+              header: {
+                file: "Datei",
+                repository: nil,
+              },
+            },
+          },
+        )
+      end
+
+      after { I18n.backend.reload! }
+
+      it "falls back for the untranslated repository label" do
+        I18n.with_locale(:de) do
+          expect(Nokogiri::HTML5.fragment(html).at_css(".github-onebox__label").text.strip).to eq(
+            "Repository",
+          )
+        end
+      end
+    end
+
+    it "keeps query and fragment parameters out of the displayed repository name" do
+      repository_link = "https://github.com/discourse/discourse?tab=readme-ov-file#readme"
+      stub_request(:get, %r{\Ahttps://api.github.com/repos/discourse/discourse}).to_return(
+        body: response,
+      )
+
+      preview = Nokogiri::HTML5.fragment(Onebox::Preview.new(repository_link).to_s)
+
+      expect(preview.at_css(".github-onebox__repo").text.strip).to eq("discourse/discourse")
     end
 
     context "when the PR is in a private repo" do

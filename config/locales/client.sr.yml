@@ -6,6 +6,13 @@
 
 sr:
   js:
+    code_editor:
+      search:
+        next: "Dalje"
+        previous: "Prethodno"
+        close: "Zatvori"
+      fold:
+        to: "ka"
     user_api_key:
       deny: "Odustani"
       write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
@@ -21,6 +28,7 @@ sr:
     access_control:
       manage:
         access_permission_editor: "Urednik"
+        access_permission_owner: "Vlasnik"
         access_permission_remove: "Ukloni"
     number:
       format:
@@ -190,7 +198,6 @@ sr:
         last_3_months: "Poslednja 3 meseca"
         last_6_months: "Poslednja 6 meseca"
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} od @%{username}"
       close: "затвори"
       twitter: "Podelite na X"
@@ -237,6 +244,9 @@ sr:
     topic_admin_menu: "радње око теме"
     skip_to_main_content: "Predji na glavni sadržaj"
     skip_user_nav: "Preskoči do sadržaja profila"
+    reorder:
+      removed: "Уклања групу %{label}"
+      position: "%{position} od %{total}"
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     emails_are_disabled_non_staff: "Odlazni email je omogućen samo za osoblje."
     software_update_prompt:
@@ -347,10 +357,6 @@ sr:
       one: "maksimalno od %{count}"
       few: "maksimalno od %{count}"
       other: "maksimalno od %{count}"
-    character_count:
-      one: "%{count} karakter"
-      few: "%{count} karaktera"
-      other: "%{count} karaktera"
     period_chooser:
       aria_label: "Filtriraj po periodu"
     related_messages:
@@ -366,14 +372,13 @@ sr:
         title: "Prilagodite svoj sajt"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
-      start_posting:
-        back: "Nazad"
     design_wizard:
       title: "Prilagodite svoj sajt"
       back: "Nazad"
       next: "Dalje"
-      sections:
-        search: "Pretraži"
+      steps:
+        theme:
+          title: "Izaberite temu"
       homepage:
         topics: "Teme"
         categories: "Kategorije"
@@ -630,6 +635,8 @@ sr:
       title:
         search: "Potražite poruku"
         placeholder: "ovde unesite naslov poruke, link ili ID"
+    dsa_statements:
+      category: "Kategorija"
     review:
       show_more: "Pokaži više"
       show_less: "Pokaži manje"
@@ -1831,6 +1838,7 @@ sr:
       flags: Zastave
     filter_controls:
       reset: "Reset"
+      sort_label: "Sortiraj po"
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
@@ -1855,8 +1863,7 @@ sr:
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
-      title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
-      title_placeholder_redesign: "Naslov"
+      title_placeholder: "Naslov"
       edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
@@ -2317,6 +2324,9 @@ sr:
           inappropriate: "Označili ste ovo kao neprikladno"
           notify_moderators: "Označili ste ovo za moderatore"
       revisions:
+        visibility:
+          hidden:
+            title: "Sakriveno"
         reply_to:
           none: "Nema cilja za odgovor"
         controls:
@@ -2324,8 +2334,6 @@ sr:
           previous: "Prethodna revizija"
           next: "Sedeća revizija"
           last: "Poslednja revizija"
-          hide: "Sakrij reviziju"
-          show: "Prikaži reviziju"
         displays:
           inline:
             title: "Prikaži izvedeni ispis s dodavanjima i oduzimanjima u liniji."
@@ -2374,6 +2382,7 @@ sr:
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
+      latest_topics: "Poslednje teme"
       description_expand: "Pokaži više"
       description_collapse: "Pokaži manje"
       already_used: "Ova boja se koristi u drugoj kategoriji."
@@ -2493,6 +2502,7 @@ sr:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "resetuj"
         button:
           label: "Filter"
       latest:
@@ -2805,15 +2815,6 @@ sr:
         type_mismatch:
           default: "Molimo unesite validnu vrednost"
           email: "Molimo unesite validnu e-mail adresu."
-    table_builder:
-      edit:
-        modal:
-          cancel: "otkaži"
-          create: "Sačuvaj"
-          reason: "Zašto izmenjujete?"
-      spreadsheet:
-        show: "Pokaži"
-        about: "O nama"
     filter:
       description:
         yesterday: "Juče"
@@ -2851,9 +2852,9 @@ sr:
           title: "Dodaci"
       upcoming_changes:
         name: "Ime foruma"
-        enabled: "Omogućeno"
-        enabled_for_options:
-          everyone: "Svi"
+        enabled: "Omgućeno"
+        feedback: "Povratne informacije"
+        settings: "Podešavanje"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -2868,6 +2869,9 @@ sr:
           impact_role_admins: "Admini"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Osoblje"
+        sort:
+          status: "Status"
+          name: "Ime foruma"
       config:
         developer:
           title: "Programer"
@@ -2891,6 +2895,7 @@ sr:
             block: "Blokiraj"
             presets:
               custom: "Posebna"
+            automatic: "Automatska"
           authorizations:
             user: "Korisnik"
             status: "Status"
@@ -3036,22 +3041,11 @@ sr:
         version: "Verzija"
         up_to_date: "Imate trenutnu verziju!"
         updates_available: "Ažuriranje je dostupno."
-        no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
-        stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
-        installed_version: "Instalirano"
         dismiss_notice: "Ignoriši"
         new_features:
           learn_more: "Saznaj više..."
-        last_checked: "Zadnje provereno"
         refresh_problems: "Osveži"
-        no_problems: "Nisu pronađeni problemi."
-        moderators: "Moderatori:"
-        admins: "Admini:"
-        suspended: "Suspendovani:"
-        private_messages_title: "Poruke"
         backups: "Sigurnosne kopije"
-        general_tab: "Opšti"
-        security_tab: "Sigurnost"
         loading: "Učitavanje kontrolne table..."
         stable: "stabilan"
         sections:
@@ -3188,12 +3182,7 @@ sr:
             anonymous: "Anonimno"
             embedded: "Ugrađeni pregledi stranica"
             crawlers: "Pretraživači"
-        period:
-          last_7_days: "Последњих 7 дана"
-          last_30_days: "Последњих 30 дана"
-          last_3_months: "Poslednja 3 meseca"
-          custom: "Posebna"
-          custom_range: "%{start} — %{end}"
+          crawler_learn_more: "Saznaj više"
         reports:
           today: "Danas"
           yesterday: "Juče"
@@ -3388,7 +3377,6 @@ sr:
           size: "Veličina"
         upload:
           label: "Učitaj"
-          error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Podešavanja"
         operations:
           failed: "%{operation} neuspješna. Molimo proverite logove."
@@ -3660,6 +3648,10 @@ sr:
         activation_filter:
           activated: "Aktivirano"
         approved: "Potvrđenji?"
+        bots:
+          name: "Ime foruma"
+          username: "Korisničko Ime"
+          trust_level: "Nivo poverenja"
         titles:
           pending: "Korisnici koji čekaju reviziju"
           newuser: "Korisnici na nivou poverenja 0 (Novi Korisnik)"
@@ -3680,7 +3672,6 @@ sr:
         unsuspend_failed: "Nešto nije u redu, pri ukidanju suspenzije ovog korisnika %{error}"
         suspend_reason_label: "Zažto ga suspendiraš? Ovaj tekst <b>će biti vidljiv svima</b> na korisničkom profilu korisnika, i biće prikazan korisniku kad se pokuša prijaviti. Neka bude kratak."
         suspend_reason: "Razlog"
-        suspend_message_placeholder: "Opciono, pružite više informacija o suspenziji i one će biti poslate e-poštom korisniku."
         suspended_by: "Suspendovan od"
         silence_reason: "Razlog"
         moderator: "Moderator?"
@@ -3819,6 +3810,8 @@ sr:
         field_types:
           confirm: "Potvrda"
       site_text:
+        search_label: "Pretraži"
+        theme_disabled: "Isključeno"
         edit: "Izmeni"
         show_overriden: "Pokazuj samo promenjeno"
         outdated:

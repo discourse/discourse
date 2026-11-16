@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class AskAiQueryRewriter < Agent
+      def self.default_enabled
+        false
+      end
+
       def thinking_effort
         "none"
       end

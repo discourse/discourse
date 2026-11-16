@@ -13,9 +13,14 @@ module Service
         name = :default,
         default_values_from: nil,
         base_class: Service::ContractBase,
+        from_resource: nil,
+        only: nil,
+        except: nil,
         &block
       )
-        contract_class = Class.new(base_class).tap { it.class_eval(&block) if block }
+        contract_class = Class.new(base_class)
+        ResourceImport.new(from_resource, only:, except:).apply_to(contract_class)
+        contract_class.class_eval(&block) if block
         const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
         steps << ContractStep.new(name, class_name: contract_class, default_values_from:)
       end

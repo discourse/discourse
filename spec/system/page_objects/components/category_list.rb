@@ -9,6 +9,10 @@ module PageObjects
         page.has_css?("tr[data-category-id='#{category.id}']")
       end
 
+      def has_no_category?(category)
+        page.has_no_css?("tr[data-category-id='#{category.id}']")
+      end
+
       def has_topic?(topic)
         page.has_css?(topic_list_item_class(topic))
       end

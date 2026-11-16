@@ -1,12 +1,12 @@
 import {
   resolveVariableId,
   WORKFLOW_VARIABLE_MIME,
-} from "../expression-context";
-import { dragSource } from "./drag-source";
+} from "../expression-context.js";
+import { dragSource } from "./drag-source.js";
 import {
   listReferenceProperties,
   propertyAccessor,
-} from "./reference-properties";
+} from "./reference-properties.js";
 
 export function buildDragDrop(
   { cmLanguage, cmView },

@@ -21,7 +21,10 @@ export default class AdminWatchedWordsController extends Controller {
   @service messageBus;
   @service menu;
 
+  /** @type {string | null} */
   @tracked filter = null;
+
+  /** @type {HTMLElement | null} */
   menuTrigger = null;
 
   @autoTrackedArray allWatchedWords;

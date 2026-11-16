@@ -3,6 +3,13 @@
 module DiscourseTopicVoting
   module McpTools
     class SetVote
+      REQUIRED_SCOPES = %w[discourse-topic-voting:write].freeze
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          topic_id: DiscourseMcp::OutputSchema::INTEGER,
+          voted: DiscourseMcp::OutputSchema::BOOLEAN,
+        )
+
       def self.call(arguments:, request_context:)
         service =
           (

@@ -85,6 +85,31 @@ RSpec.describe UploadsController do
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
       end
 
+      it "logs unexpected upload errors and returns a generic message" do
+        error =
+          Discourse::Utils::CommandError.new(
+            "magick /private/tmp/upload.png /private/tmp/image.jpg\nImage conversion failed",
+          )
+        FileStore::LocalStore.any_instance.stubs(:store_upload).raises(error)
+
+        logger =
+          track_log_messages do
+            post "/uploads.json", params: { file: logo, upload_type: "composer" }
+          end
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body).to eq(
+          "failed" => "FAILED",
+          "message" => I18n.t("upload.failed"),
+        )
+        expect(logger.errors.join("\n")).to include(
+          "Failed to create upload",
+          error.class.name,
+          error.message,
+          error.backtrace.first,
+        )
+      end
+
       it 'returns "raw" url for site settings' do
         set_cdn_url "https://awesome.com"
 
@@ -264,6 +289,27 @@ RSpec.describe UploadsController do
 
         data = response.parsed_body
         expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ""))
+      end
+
+      it "rejects a GIF whose decoded canvas exceeds the megapixel limit with libvips" do
+        global_setting :enable_vips_image_processing, true
+        SiteSetting.max_image_megapixels = 5
+        filename = "gif_frame_larger_than_logical_screen.gif"
+        file =
+          Rack::Test::UploadedFile.new(file_from_fixtures(filename), original_filename: filename)
+
+        expect { post "/uploads.json", params: { file:, upload_type: "composer" } }.not_to change {
+          Upload.count
+        }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t(
+            "upload.images.larger_than_x_megapixels",
+            max_image_megapixels: 5,
+            original_filename: filename,
+          ),
+        )
       end
 
       it "returns an error when it could not determine the dimensions of an image" do
@@ -522,14 +568,8 @@ RSpec.describe UploadsController do
         expect(response.headers["X-Content-Type-Options"]).to eq("nosniff")
       end
 
-      {
-        "document.pdf" => "inline",
-        "clip.mp4" => "inline",
-        "page.html" => "attachment",
-        "data.xml" => "attachment",
-        "image.svg" => "attachment",
-      }.each do |filename, disposition|
-        it "serves #{filename} with #{disposition} disposition and the sandbox CSP" do
+      shared_examples "serving an upload with sandbox protection" do |filename:, expected_disposition:|
+        it "uses the expected disposition and sandbox CSP" do
           extension = File.extname(filename).delete_prefix(".")
           SiteSetting.authorized_extensions = "#{extension}|png"
           upload = upload_file("smallest.png")
@@ -538,9 +578,39 @@ RSpec.describe UploadsController do
           get upload.short_path
 
           expect(response.status).to eq(200)
-          expect(response.headers["Content-Disposition"]).to include(disposition)
+          expect(response.headers["Content-Disposition"]).to include(expected_disposition)
           expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
         end
+      end
+
+      context "with the document.pdf upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "document.pdf",
+                         expected_disposition: "inline"
+      end
+
+      context "with the clip.mp4 upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "clip.mp4",
+                         expected_disposition: "inline"
+      end
+
+      context "with the page.html upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "page.html",
+                         expected_disposition: "attachment"
+      end
+
+      context "with the data.xml upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "data.xml",
+                         expected_disposition: "attachment"
+      end
+
+      context "with the image.svg upload" do
+        include_examples "serving an upload with sandbox protection",
+                         filename: "image.svg",
+                         expected_disposition: "attachment"
       end
 
       it "forces an attachment download with a sandbox CSP when the dl param is given" do
@@ -631,6 +701,17 @@ RSpec.describe UploadsController do
   end
 
   describe "#show_secure" do
+    it "recognizes heavily dotted paths without superlinear cost" do
+      dotted_path = "/secure-uploads/#{"a." * 500}-x"
+
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      get dotted_path
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+
+      expect(response.status).to eq(404)
+      expect(elapsed).to be < 3.0
+    end
+
     describe "local store" do
       fab!(:image_upload) { upload_file("smallest.png") }
 
@@ -675,6 +756,22 @@ RSpec.describe UploadsController do
         expect(response.redirect_url).to match("Amz-Expires")
         expect(response.location).not_to include(".?")
         expect(response.redirect_url).to include("response-content-disposition=inline")
+      end
+
+      it "serves requests with a non-HTML Accept header" do
+        sign_in(user)
+        get secure_url, headers: { "Accept" => "image/avif,image/webp,*/*;q=0.8" }
+
+        expect(response.status).to eq(302)
+      end
+
+      it "keeps the full path when the extension contains an underscore" do
+        upload.update!(extension: "not_image", url: upload.url.sub(".png", ".not_image"))
+        sign_in(user)
+        get secure_url
+
+        expect(response.status).to eq(302)
+        expect(URI.parse(response.redirect_url).path).to end_with("#{upload.sha1}.not_image")
       end
 
       it "returns the secure-upload URL during lookup" do
@@ -1139,6 +1236,20 @@ RSpec.describe UploadsController do
 
     context "when the store is not external" do
       before { sign_in(user) }
+
+      it "returns 404 even when direct S3 uploads are enabled" do
+        SiteSetting.enable_s3_uploads = false
+        SiteSetting.enable_direct_s3_uploads = true
+
+        post "/uploads/generate-presigned-put.json",
+             params: {
+               file_name: "test.png",
+               type: "card_background",
+               file_size: 1024,
+             }
+
+        expect(response.status).to eq(404)
+      end
 
       it "returns 404" do
         post "/uploads/generate-presigned-put.json",
@@ -1965,6 +2076,17 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(404)
       end
 
+      it "returns 404 when the upload stub is not in the temporary upload folder" do
+        external_upload_stub.update!(key: "original/1X/logo.png")
+
+        post "/uploads/complete-external-upload.json",
+             params: {
+               unique_identifier: external_upload_stub.unique_identifier,
+             }
+
+        expect(response.status).to eq(404)
+      end
+
       it "handles ChecksumMismatchError" do
         ExternalUploadManager
           .any_instance
@@ -2061,6 +2183,54 @@ RSpec.describe UploadsController do
         expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
         expect(response.status).to eq(200)
         expect(response.parsed_body).to eq(UploadsController.serialize_upload(upload))
+      end
+
+      context "when the validated file is not modified during promotion" do
+        let(:logo_file) { file_from_fixtures("logo.png") }
+        let(:object_size) { 1.megabyte }
+
+        before do
+          SiteSetting.content_security_policy = false
+          get "/session/#{user.encoded_username}/become", params: { redirect: "false" }
+
+          external_upload_stub.update!(filesize: object_size)
+
+          @fake_s3 = FakeS3.create
+          @fake_s3.bucket(SiteSetting.s3_upload_bucket).put_object(
+            key: external_upload_stub.key,
+            size: object_size,
+            last_modified: Time.zone.now,
+            metadata: {
+            },
+          )
+
+          signed_url =
+            Discourse.store.signed_url_for_path(
+              external_upload_stub.key,
+              include_content_disposition: false,
+            )
+          uri = URI.parse(signed_url)
+          signed_url = uri.to_s.gsub(uri.query, "")
+          stub_request(:get, signed_url).with(query: hash_including({})).to_return(
+            status: 200,
+            body: logo_file.read,
+          )
+        end
+
+        it "stores the validated local bytes instead of moving the mutable external object" do
+          post "/uploads/complete-external-upload.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+               }
+
+          expect(response.status).to eq(200)
+
+          upload = Upload.find(response.parsed_body["id"])
+          expect(upload.sha1).to eq(Upload.generate_digest(file_from_fixtures("logo.png")))
+
+          expect(@fake_s3.operation_called?(:copy_object)).to eq(false)
+          expect(@fake_s3.operation_called?(:put_object)).to eq(true)
+        end
       end
 
       context "with site setting uploads" do

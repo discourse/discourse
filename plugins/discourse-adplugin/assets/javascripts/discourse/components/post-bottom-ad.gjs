@@ -1,4 +1,4 @@
-import AdSlot from "./ad-slot";
+import AdSlot from "./ad-slot.gjs";
 
 const PostBottomAd = <template>
   <AdSlot

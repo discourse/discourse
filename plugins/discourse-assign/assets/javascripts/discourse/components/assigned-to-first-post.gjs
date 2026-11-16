@@ -9,7 +9,7 @@ import {
   assignedToGroupPath,
   assignedToPostPath,
   assignedToUserPath,
-} from "../lib/url";
+} from "../lib/url.js";
 
 export default class AssignedToFirstPost extends Component {
   @service siteSettings;

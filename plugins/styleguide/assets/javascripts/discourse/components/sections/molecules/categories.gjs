@@ -1,5 +1,5 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import CategoryBadgeExample from "../../examples/molecules/category-badge";
+import CategoryBadgeExample from "../../examples/molecules/category-badge.gjs";
 import categoryBadgeSource from "../../examples/molecules/category-badge?source=file";
 
 export default <template>

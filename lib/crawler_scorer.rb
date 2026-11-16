@@ -117,7 +117,6 @@ class CrawlerScorer
         e.asn,
         e.url,
         e.created_at,
-        e.source,
         (se.session_id IS NOT NULL) AS engaged
       FROM browser_pageview_events e
       LEFT JOIN browser_pageview_session_engagements se
@@ -131,7 +130,6 @@ class CrawlerScorer
       SELECT
         e.ip_address,
         e.user_agent,
-        e.source,
         AVG(CASE WHEN se.session_id IS NOT NULL THEN 0.0 ELSE 1.0 END)
           AS no_engagement_ratio
       FROM browser_pageview_events e
@@ -145,19 +143,14 @@ class CrawlerScorer
           FROM events w
           WHERE w.ip_address = e.ip_address
             AND w.user_agent = e.user_agent
-            AND w.source = e.source
         )
-      GROUP BY e.ip_address, e.user_agent, e.source
+      GROUP BY e.ip_address, e.user_agent
     ),
 
-    -- Per-heuristic stats are partitioned by source as well as ip/ua so that
-    -- pageviews recorded through different transports (e.g. piggyback vs
-    -- beacon) never inflate one another's velocity, churn or navigation gaps.
     ipua_stats AS (
       SELECT
         ip_address,
         user_agent,
-        source,
         COUNT(*) AS pageviews,
         COUNT(DISTINCT session_id) AS distinct_sessions,
         AVG(
@@ -168,16 +161,15 @@ class CrawlerScorer
           END
         ) AS bad_referrer_ratio
       FROM events
-      GROUP BY ip_address, user_agent, source
+      GROUP BY ip_address, user_agent
     ),
 
     gaps AS (
       SELECT
         ip_address,
         user_agent,
-        source,
         EXTRACT(EPOCH FROM created_at - LAG(created_at) OVER (
-          PARTITION BY ip_address, user_agent, source ORDER BY created_at
+          PARTITION BY ip_address, user_agent ORDER BY created_at
         )) AS gap_seconds
       FROM events
     ),
@@ -186,23 +178,21 @@ class CrawlerScorer
       SELECT
         ip_address,
         user_agent,
-        source,
         percentile_cont(0.5) WITHIN GROUP (ORDER BY gap_seconds)
           AS median_gap_seconds,
         COUNT(*) AS gap_count
       FROM gaps
       WHERE gap_seconds IS NOT NULL
-      GROUP BY ip_address, user_agent, source
+      GROUP BY ip_address, user_agent
     ),
 
     session_stats AS (
       SELECT
         session_id,
-        source,
         COUNT(DISTINCT ip_address) AS distinct_ips,
         EXTRACT(EPOCH FROM MAX(created_at) - MIN(created_at)) AS span_seconds
       FROM events
-      GROUP BY session_id, source
+      GROUP BY session_id
     ),
 
     breakdown AS (
@@ -284,10 +274,10 @@ class CrawlerScorer
           ELSE 0
         END AS engagement_score
       FROM events e
-      LEFT JOIN ipua_stats iu USING (ip_address, user_agent, source)
-      LEFT JOIN ipua_engagement ie USING (ip_address, user_agent, source)
-      LEFT JOIN median_gap mg USING (ip_address, user_agent, source)
-      LEFT JOIN session_stats ss USING (session_id, source)
+      LEFT JOIN ipua_stats iu USING (ip_address, user_agent)
+      LEFT JOIN ipua_engagement ie USING (ip_address, user_agent)
+      LEFT JOIN median_gap mg USING (ip_address, user_agent)
+      LEFT JOIN session_stats ss USING (session_id)
     ),
 
     totals AS (

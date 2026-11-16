@@ -24,6 +24,38 @@ RSpec.describe "a refused request" do
       end
     end
 
+    context "when the sort is an empty array" do
+      let(:params) { { sort: [] } }
+
+      it "refuses the sort" do
+        expect(document).to eq(
+          errors: [
+            refusal(
+              title: "Invalid sort parameter",
+              detail: "sort must be a comma-separated list, as in sort=-createdAt.",
+              parameter: "sort",
+            ),
+          ],
+        )
+      end
+    end
+
+    context "when the sort is false" do
+      let(:params) { { sort: false } }
+
+      it "refuses the sort" do
+        expect(document).to eq(
+          errors: [
+            refusal(
+              title: "Invalid sort parameter",
+              detail: "sort must be a comma-separated list, as in sort=-createdAt.",
+              parameter: "sort",
+            ),
+          ],
+        )
+      end
+    end
+
     context "when the sort is a string the resource does not declare" do
       let(:params) { { sort: "secrets" } }
 
@@ -206,6 +238,22 @@ RSpec.describe "a refused request" do
       end
     end
 
+    context "when the filter value is an empty list" do
+      let(:params) { { filter: { title: [] } } }
+
+      it "refuses the filter value" do
+        expect(document).to eq(
+          errors: [
+            refusal(
+              title: "Invalid filter value",
+              detail: "filter[title] must be a value or a non-empty list of values.",
+              parameter: "filter[title]",
+            ),
+          ],
+        )
+      end
+    end
+
     context "when the filter value is an empty set" do
       let(:params) { { filter: { title: {} } } }
 
@@ -214,7 +262,7 @@ RSpec.describe "a refused request" do
           errors: [
             refusal(
               title: "Invalid filter value",
-              detail: "filter[title] must be a value or a list of values.",
+              detail: "filter[title] must be a value or a non-empty list of values.",
               parameter: "filter[title]",
             ),
           ],
@@ -230,7 +278,7 @@ RSpec.describe "a refused request" do
           errors: [
             refusal(
               title: "Invalid filter value",
-              detail: "filter[title] must be a value or a list of values.",
+              detail: "filter[title] must be a value or a non-empty list of values.",
               parameter: "filter[title]",
             ),
           ],
@@ -300,8 +348,8 @@ RSpec.describe "a refused request" do
           errors: [
             refusal(
               title: "No such parameter",
-              detail: "There is no parameter named sorts.",
-              parameter: "sorts",
+              detail: "There is no parameter named sorts[createdAt].",
+              parameter: "sorts[createdAt]",
             ),
           ],
         )
@@ -621,8 +669,8 @@ RSpec.describe "a refused request" do
         expect(document).to eq(
           errors: [
             refusal(
-              title: "No row for the anchor",
-              detail: "No record has id \"not a number\".",
+              title: "No record matches the anchor",
+              detail: "No record matches anchor id=\"not a number\".",
               parameter: "page[anchor][id]",
             ),
           ],
@@ -637,8 +685,8 @@ RSpec.describe "a refused request" do
         expect(document).to eq(
           errors: [
             refusal(
-              title: "No row for the anchor",
-              detail: "No record has id -1.",
+              title: "No record matches the anchor",
+              detail: "No record matches anchor id=-1.",
               parameter: "page[anchor][id]",
             ),
           ],
@@ -702,7 +750,7 @@ RSpec.describe "a refused request" do
 
       it "raises a split order error" do
         expect { document }.to raise_error(
-          JsonApiKit::Pagination::PagePerOwner::SplitOrder,
+          JsonApiKit::Adapters::ActiveRecord::Pagination::PagePerOwner::SplitOrder,
           /edited_at/,
         )
       end

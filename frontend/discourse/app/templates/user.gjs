@@ -4,21 +4,25 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserNav from "discourse/components/user-nav";
 import UserProfileAvatar from "discourse/components/user-profile-avatar";
+import bodyClass from "discourse/helpers/body-class";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import userStatus from "discourse/helpers/user-status";
 import UserNotificationsDropdown from "discourse/select-kit/components/user-notifications-dropdown";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHtmlWithLinks from "discourse/ui-kit/d-html-with-links";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import CollapsedInfo from "./user/collapsed-info";
+import CollapsedInfo from "./user/collapsed-info.gjs";
 
 export default <template>
+  {{#if @controller.userNavPanelActive}}
+    {{bodyClass "user-nav-panel-active"}}
+  {{/if}}
+
   <PluginOutlet
     @connectorTagName="div"
     @name="above-user-profile"
@@ -55,7 +59,11 @@ export default <template>
                   <LinkTo
                     @query={{hash
                       flagged_by=@controller.model.username
-                      status="approved"
+                      status=(if
+                        @controller.siteSettings.review_queue_consistent_answers
+                        "problem_confirmed"
+                        "approved"
+                      )
                     }}
                     @route="review"
                   >
@@ -93,7 +101,11 @@ export default <template>
                   <LinkTo
                     @query={{hash
                       username=@controller.model.username
-                      status="rejected"
+                      status=(if
+                        @controller.siteSettings.review_queue_consistent_answers
+                        "problem_confirmed"
+                        "rejected"
+                      )
                       type="ReviewableQueuedPost"
                     }}
                     @route="review"
@@ -201,17 +213,20 @@ export default <template>
                   {{userStatus
                     @controller.model
                     currentUser=@controller.currentUser
+                    showName=@controller.showName
                   }}
                   {{#if @controller.model.status}}
                     <DUserStatusMessage @status={{@controller.model.status}} />
                   {{/if}}
                 </div>
-                <div
-                  class="{{if @controller.nameFirst 'username' 'full-name'}}
-                    user-profile-names__secondary"
-                >{{#if
-                    @controller.nameFirst
-                  }}{{@controller.model.username}}{{else}}{{@controller.model.name}}{{/if}}</div>
+                {{#if @controller.showName}}
+                  <div
+                    class="{{if @controller.nameFirst 'username' 'full-name'}}
+                      user-profile-names__secondary"
+                  >{{#if
+                      @controller.nameFirst
+                    }}{{@controller.model.username}}{{else}}{{@controller.model.name}}{{/if}}</div>
+                {{/if}}
                 {{#if @controller.model.staged}}
                   <div class="staged user-profile-names__secondary">{{i18n
                       "user.staged"

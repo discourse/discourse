@@ -8,6 +8,11 @@ import { i18n } from "discourse-i18n";
 export default class AdminPluginsIndexController extends Controller {
   @service session;
 
+  queryParams = ["filter"];
+
+  /** @type {string | null} */
+  filter = null;
+
   get searchableProps() {
     return ["nameTitleized", "author", "about"];
   }

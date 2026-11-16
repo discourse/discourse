@@ -219,9 +219,6 @@ class AdminDashboardSiteTrafficExplorer
   end
 
   def query(start_date:, end_date:)
-    source_condition =
-      BrowserPageviewEvent.rollup_source_condition(table: "bpe", start_date:, end_date:)
-
     <<~SQL
       WITH population AS MATERIALIZED (
         SELECT
@@ -240,7 +237,6 @@ class AdminDashboardSiteTrafficExplorer
         FROM browser_pageview_events bpe
         WHERE bpe.created_at >= :start_date
           AND bpe.created_at < :end_date
-          AND #{source_condition}
         ORDER BY bpe.created_at DESC, bpe.id DESC
         LIMIT :cap
       ),
@@ -360,7 +356,6 @@ class AdminDashboardSiteTrafficExplorer
               FROM browser_pageview_events bpe
               WHERE bpe.created_at >= :start_date
                 AND bpe.created_at < :end_date
-                AND #{source_condition}
                 AND (bpe.created_at, bpe.id) < (
                   population_boundary.oldest_created_at,
                   population_boundary.oldest_id

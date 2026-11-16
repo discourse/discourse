@@ -79,6 +79,115 @@ RSpec.describe DiscourseWorkflows::Workflow do
     end
   end
 
+  describe "#restore_from_version!" do
+    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }
+
+    it "restores a variable's value from the target version" do
+      variable =
+        workflow.variables.create!(
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+          created_by: user,
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      variable.update!(value: "low")
+      workflow.snapshot!(user: user)
+
+      workflow.restore_from_version!(old_version, user: user)
+
+      expect(workflow.variables.find_by(key: "priority").value).to eq("urgent")
+    end
+
+    it "recreates a deleted variable with both its definition and value" do
+      variable =
+        workflow.variables.create!(
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+          created_by: user,
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      variable.destroy!
+      workflow.snapshot!(user: user)
+      workflow.reload
+
+      workflow.restore_from_version!(old_version, user: user)
+
+      restored = workflow.variables.find_by(key: "priority")
+      expect(restored).to be_present
+      expect(restored.label).to eq("Priority")
+      expect(restored.value).to eq("urgent")
+    end
+
+    it "sets created_by to the restoring user on a recreated variable" do
+      variable =
+        workflow.variables.create!(
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+          created_by: user,
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      variable.destroy!
+      workflow.snapshot!(user: user)
+      workflow.reload
+
+      restoring_user = Fabricate(:admin)
+      workflow.restore_from_version!(old_version, user: restoring_user)
+
+      expect(workflow.variables.find_by(key: "priority").created_by_id).to eq(restoring_user.id)
+    end
+
+    it "does not overwrite created_by on a variable that already exists" do
+      variable =
+        workflow.variables.create!(
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+          created_by: user,
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      variable.update!(value: "low")
+      workflow.snapshot!(user: user)
+
+      restoring_user = Fabricate(:admin)
+      workflow.restore_from_version!(old_version, user: restoring_user)
+
+      expect(workflow.variables.find_by(key: "priority").created_by_id).to eq(user.id)
+    end
+
+    it "deletes a variable that no longer exists in the target version" do
+      variable =
+        workflow.variables.create!(
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+          created_by: user,
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      other_variable =
+        workflow.variables.create!(
+          key: "extra",
+          variable_type: "string",
+          value: "keep-me",
+          created_by: user,
+        )
+      workflow.snapshot!(user: user)
+
+      workflow.restore_from_version!(old_version, user: user)
+
+      expect(workflow.variables.find_by(key: "priority")).to be_present
+      expect(workflow.variables.find_by(id: other_variable.id)).to be_nil
+      expect(variable.reload).to be_present
+    end
+  end
+
   describe "#node_static_data" do
     fab!(:workflow) do
       Fabricate(

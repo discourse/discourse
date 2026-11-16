@@ -5,8 +5,8 @@ import { buildBBCodeAttrs } from "discourse/lib/text";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import pollBounds from "discourse/plugins/poll/lib/poll-bounds";
-import PollUiBuilder from "./modal/poll-ui-builder";
-import PollInfo from "./poll-info";
+import PollUiBuilder from "./modal/poll-ui-builder.gjs";
+import PollInfo from "./poll-info.gjs";
 
 export default class PollNodeView extends Component {
   @service modal;
@@ -184,6 +184,7 @@ export default class PollNodeView extends Component {
         @action={{this.editPoll}}
         @icon="pencil"
         @label="poll.ui_builder.edit"
+        @preventFocus={{true}}
       />
     </div>
   </template>

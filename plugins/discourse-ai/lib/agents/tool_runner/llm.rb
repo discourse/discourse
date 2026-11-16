@@ -29,10 +29,13 @@ module DiscourseAi
                     convert_js_prompt_to_ruby(prompt),
                     user: llm_user,
                     feature_name: "custom_tool_#{tool.name}",
+                    execution_context: @context.execution_context,
+                    cancel_manager: @context.cancel_manager,
                     response_format: response_format,
                     temperature: options["temperature"],
                     top_p: options["top_p"],
                     max_tokens: options["max_tokens"],
+                    max_response_tokens: options["max_response_tokens"],
                     thinking_effort: options["thinking_effort"],
                     stop_sequences: options["stop_sequences"],
                   )

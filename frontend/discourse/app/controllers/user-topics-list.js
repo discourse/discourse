@@ -24,6 +24,8 @@ export default class UserTopicsListController extends Controller {
   hideCategory = false;
   showPosters = false;
   channel = null;
+
+  /** @type {string | null} */
   tagsForUser = null;
   queryParams = Object.keys(QUERY_PARAMS);
 

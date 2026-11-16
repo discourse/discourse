@@ -10,9 +10,9 @@ import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo, popupAjaxError } from "discourse/lib/ajax-error";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { PROVIDER_LEARN_MORE_URLS } from "../../lib/utilities";
-import SlackProviderSetupForm from "../provider-setup-form/slack";
-import TelegramProviderSetupForm from "../provider-setup-form/telegram";
+import { PROVIDER_LEARN_MORE_URLS } from "../../lib/utilities.js";
+import SlackProviderSetupForm from "../provider-setup-form/slack.gjs";
+import TelegramProviderSetupForm from "../provider-setup-form/telegram.gjs";
 
 const PROVIDER_CONFIG = {
   slack: {

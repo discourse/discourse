@@ -14,16 +14,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     DiscourseWorkflows::WorkflowDependency.clear_cache!
   end
 
-  def create_event_post(closed: false)
-    closed_attribute = closed ? ' closed="true"' : ""
-
+  def create_event_post(attributes: "", description: "Event description")
     post =
       PostCreator.create!(
         admin,
         title: "Workflow event integration",
         raw:
-          "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\" status=\"public\"#{closed_attribute}]\n" \
-            "Event description\n" \
+          "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\"#{attributes}]\n" \
+            "#{description}\n" \
             "[/event]",
       )
 
@@ -33,13 +31,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
   end
 
   def execute_event_action(post, operation)
-    execute_node(
-      configuration: {
-        "operation" => operation,
-        "topic_id" => post.topic_id.to_s,
-        "actor_username" => admin.username,
-      },
-    )
+    configuration = {
+      "operation" => operation,
+      "topic_id" => post.topic_id.to_s,
+      "actor_username" => admin.username,
+    }
+
+    result = execute_node(configuration:)
+    expect(result).to match_node_output_schema(described_class, configuration:)
+    result
   end
 
   def post_edited_workflow_job_count
@@ -161,6 +161,34 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     expect(post.event.invitees.find_by(user_id: attendee.id)).to be_nil
   end
 
+  it "sets attendance as the system user for another user" do
+    post = create_event_post(attributes: ' status="public"')
+
+    expect(post.event.invitees.find_by(user_id: attendee.id)).to be_nil
+
+    result =
+      execute_node(
+        configuration: {
+          "operation" => "set_attendance",
+          "topic_id" => post.topic_id.to_s,
+          "attendee_username" => attendee.username,
+          "attendance" => "going",
+          "actor_username" => "system",
+        },
+      )
+
+    invitee = post.event.invitees.find_by(user_id: attendee.id)
+
+    expect(invitee).to be_present
+    expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
+    expect(result).to match_node_output_schema(described_class)
+    expect(result["event"]).to include(
+      "id" => post.event.id,
+      "post_id" => post.id,
+      "topic_id" => post.topic_id,
+    )
+  end
+
   it "closes an event through the real workflow execution context" do
     post = create_event_post
 
@@ -172,7 +200,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     post.reload
     post.association(:event).reload
 
-    expect(post.raw).to include('closed="true"')
+    expect(post.raw).to include("closed=true")
     expect(post.event.closed?).to eq(true)
 
     expect(result["event"]).to include(
@@ -184,7 +212,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
   end
 
   it "opens an event through the real workflow execution context" do
-    post = create_event_post(closed: true)
+    post = create_event_post(attributes: ' closed="true"')
 
     expect(post.event).to be_present
     expect(post.event.closed?).to eq(true)
@@ -205,31 +233,85 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     )
   end
 
-  it "sets attendance as the system user for another user" do
+  it "closes an event when its post contains a hashtag" do
+    post = create_event_post(description: "Discuss in #general")
+
+    expect(post.event).not_to be_closed
+
+    execute_event_action(post, "close")
+
+    post.reload
+    post.association(:event).reload
+
+    expect(post.event).to be_closed
+    expect(post.raw).to include("Discuss in #general")
+    expect(post.raw).to include("closed=true")
+  end
+
+  it "opens an event when its post contains a hashtag" do
+    post = create_event_post(attributes: ' closed="true"', description: "Discuss in #general")
+
+    expect(post.event).to be_closed
+
+    execute_event_action(post, "open")
+
+    post.reload
+    post.association(:event).reload
+
+    expect(post.event).not_to be_closed
+    expect(post.raw).to include("Discuss in #general")
+    expect(post.raw).not_to match(/\sclosed\s*=/i)
+  end
+
+  it "preserves quoted attributes when closing an event" do
+    attributes = ' location="Room ] closed=true"'
+    post = create_event_post(attributes:)
+
+    execute_event_action(post, "close")
+
+    expect(post.reload.raw).to include(attributes, " closed=true]")
+    expect(post.event).to be_closed
+  end
+
+  it "preserves quoted attributes when opening an event" do
+    attributes = ' location="Room ] closed=true"'
+    post = create_event_post(attributes: attributes + ' closed="true"')
+    expected_raw = post.raw.sub(' closed="true"', "")
+
+    execute_event_action(post, "open")
+
+    expect(post.reload.raw).to eq(expected_raw)
+    expect(post.event).not_to be_closed
+  end
+
+  it "preserves Unicode-quoted attributes when closing an event" do
+    attributes = " location=«Room ] closed=true»"
+    post = create_event_post(attributes:)
+
+    execute_event_action(post, "close")
+
+    expect(post.reload.event).to be_closed
+    expect(post.event.location).to eq("Room ] closed=true")
+  end
+
+  it "edits the event after a fenced BBCode example" do
+    example = "```\n[event start=\"2030-04-24 14:15\"]\nExample\n[/event]\n```\n\n"
     post = create_event_post
+    PostRevisor.new(post).revise!(admin, { raw: example + post.raw })
 
-    expect(post.event.invitees.find_by(user_id: attendee.id)).to be_nil
+    execute_event_action(post, "close")
 
-    result =
-      execute_node(
-        configuration: {
-          "operation" => "set_attendance",
-          "topic_id" => post.topic_id.to_s,
-          "attendee_username" => attendee.username,
-          "attendance" => "going",
-          "actor_username" => "system",
-        },
-      )
+    expect(post.reload.raw).to start_with(example)
+    expect(post.event).to be_closed
+  end
 
-    invitee = post.event.invitees.find_by(user_id: attendee.id)
+  it "leaves an already closed event unchanged" do
+    post = create_event_post(attributes: ' closed="true"')
 
-    expect(invitee).to be_present
-    expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
-    expect(result["event"]).to include(
-      "id" => post.event.id,
-      "post_id" => post.id,
-      "topic_id" => post.topic_id,
-    )
+    expect { execute_event_action(post, "close") }.not_to change {
+      post.reload.attributes.slice("raw", "version")
+    }
+    expect(post.event).to be_closed
   end
 
   it "does not recursively trigger post edited workflows" do

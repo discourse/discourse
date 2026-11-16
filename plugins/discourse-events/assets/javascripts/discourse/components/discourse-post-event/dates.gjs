@@ -11,6 +11,7 @@ import discourseLater from "discourse/lib/later";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import eventCalendarDetails from "../../lib/event-calendar-details.js";
 
 export default class DiscoursePostEventDates extends Component {
   @service siteSettings;
@@ -112,9 +113,7 @@ export default class DiscoursePostEventDates extends Component {
       options.location = event.location;
     }
 
-    if (event.description) {
-      options.details = event.description;
-    }
+    options.details = eventCalendarDetails(event);
 
     return generateIcsData(title, dates, options);
   }
@@ -151,10 +150,6 @@ export default class DiscoursePostEventDates extends Component {
 
   @action
   async computeDates(element) {
-    if (this.args.expiredAndRecurring) {
-      return;
-    }
-
     if (this.args.event.allDay) {
       const start = moment(this.args.event.startsAt, "YYYY-MM-DD");
       const includeStartYear = !start.isSame(moment(), "year");
@@ -226,11 +221,7 @@ export default class DiscoursePostEventDates extends Component {
       {{didInsert this.computeDates}}
     >
       {{dIcon "clock"}}
-      {{#if @expiredAndRecurring}}
-        -
-      {{else}}
-        {{this.htmlDates}}
-      {{/if}}
+      {{this.htmlDates}}
     </section>
   </template>
 }

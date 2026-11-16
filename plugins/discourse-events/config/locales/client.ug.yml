@@ -19,6 +19,15 @@ ug:
               label: تېما كىملىكى
     discourse_events:
       title: "پائالىيەت"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "خەتلەت"
+      preferences:
+        reminders:
+          preferences:
+            notification: "ئۇقتۇرۇش"
+            none: "يوق"
       disable_holiday: "چەكلە"
       enable_holiday: "قوزغات"
       date: "چېسلا"
@@ -56,13 +65,14 @@ ug:
         status: "ھالەت"
       models:
         event:
-          expired: "ۋاقتى توشتى"
           closed: "تاقالدى"
           status:
             public:
               title: "ئاممىۋى"
             private:
               title: "شەخسىي"
+      recording_modal:
+        save: "ساقلا"
       composer:
         url_placeholder: "تور ئادرېسى قوش"
         reminder:

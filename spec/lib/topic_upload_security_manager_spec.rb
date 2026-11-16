@@ -39,6 +39,20 @@ RSpec.describe TopicUploadSecurityManager do
           expect_upload_status_not_to_change
         end
 
+        it "updates every stale upload owned by the same post" do
+          uploads =
+            2.times.map do
+              upload = Fabricate(:upload_s3, access_control_post: post1)
+              UploadReference.create!(upload: upload, target: post1)
+              stub_upload(upload)
+              upload
+            end
+
+          manager.run
+
+          expect(uploads.map { |upload| upload.reload.secure? }).to eq([true, true])
+        end
+
         context "when changing the topic to a non-private category" do
           before { topic.update(category: Fabricate(:category)) }
 
@@ -132,6 +146,20 @@ RSpec.describe TopicUploadSecurityManager do
           manager.run
           expect(upload3.reload.secure?).to eq(true)
           expect(upload3.reload.access_control_post).to eq(post4)
+        end
+
+        it "updates every unowned upload first referenced by the same post" do
+          another_upload = Fabricate(:upload_s3)
+          UploadReference.create!(upload: another_upload, target: post4)
+          stub_upload(another_upload)
+
+          manager.run
+
+          expect(
+            [upload3, another_upload].map do |upload|
+              [upload.reload.secure?, upload.access_control_post]
+            end,
+          ).to eq([[true, post4], [true, post4]])
         end
 
         context "when secure uploads is not enabled" do

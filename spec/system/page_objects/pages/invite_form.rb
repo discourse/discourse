@@ -70,7 +70,7 @@ module PageObjects
       end
 
       def has_account_ready_step?
-        has_css?(".code-login-form__complete-step")
+        has_css?(".code-login-form__signup-details-step")
       end
 
       def choose_code_signup_username(username)

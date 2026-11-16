@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import { CHANNEL_LIST_SECTION_OPTIONS } from "discourse/plugins/chat/discourse/lib/chat-channel-list-options";
-import ChatChannelListSidebarMenu from "./chat-channel-list-sidebar-menu";
+import ChatChannelListSidebarMenu from "./chat-channel-list-sidebar-menu.gjs";
 
 /**
  * Divider/section header action that opens the shared channel list menu
@@ -35,7 +35,7 @@ export default class ChatChannelListOptionsButton extends Component {
 
   <template>
     <DButton
-      class="chat-channel-list-options-button title-action"
+      class="btn-transparent chat-channel-list-options-button title-action"
       ...attributes
       @action={{this.openMenu}}
       @forwardEvent={{true}}

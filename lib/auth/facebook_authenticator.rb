@@ -15,8 +15,12 @@ class Auth::FacebookAuthenticator < Auth::ManagedAuthenticator
     "https://www.facebook.com"
   end
 
-  def enabled?
-    SiteSetting.enable_facebook_logins
+  def enable_setting
+    :enable_facebook_logins
+  end
+
+  def required_settings
+    %i[facebook_app_id facebook_app_secret]
   end
 
   def register_middleware(omniauth)

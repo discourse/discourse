@@ -9,6 +9,10 @@ export default class DAccessControlField extends Component {
   @service site;
   @service dialog;
 
+  get name() {
+    return this.args.name ?? "acl";
+  }
+
   @action
   async validateAccess(name, value, { addError, preventSubmit }) {
     const acl = value || [];
@@ -27,6 +31,20 @@ export default class DAccessControlField extends Component {
           }),
         });
       }
+    }
+
+    if (
+      this.args.aclTarget.id &&
+      !acl.some(
+        (entry) => entry.type === "user" && entry.permission === "owner"
+      )
+    ) {
+      addError(name, {
+        title: this.args.title,
+        message: i18n("access_control.manage.owner_required", {
+          typeName: this.args.aclTarget.name,
+        }),
+      });
     }
 
     let evaluation = {};
@@ -82,18 +100,23 @@ export default class DAccessControlField extends Component {
     <@form.Field
       @description={{@description}}
       @format="max"
-      @name="acl"
+      @name={{this.name}}
+      @onSet={{@onSet}}
+      @showOptional={{@showOptional}}
       @title={{@title}}
       @type="custom"
       @validate={{this.validateAccess}}
+      @validation={{@validation}}
       as |field|
     >
       <field.Control>
         <DAccessControl
           @acl={{field.value}}
           @aclTarget={{@aclTarget}}
+          @canManageOwners={{@canManageOwners}}
           @groups={{this.site.groups}}
-          @onChange={{@onChange}}
+          @isNew={{@isNew}}
+          @onChange={{or @onChange field.set}}
           @transformPermissionOptions={{@transformPermissionOptions}}
         />
       </field.Control>

@@ -44,6 +44,12 @@ zh_TW:
             delete: "刪除"
         multi_select:
           title: "多重選取"
+        reorderable_list:
+          policies_pinned: "已置頂"
+          policies_required: "必選"
+          table_field: "欄位"
+          table_type: "類型"
+          cross_list_primary: "主要"
         toasts:
           title: "提示訊息"
         font_scale:

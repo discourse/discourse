@@ -1,7 +1,7 @@
 import { hash } from "@ember/helper";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKFieldset from "discourse/form-kit/components/fk/fieldset";
-import FKControlRadioGroupRadio from "./radio-group/radio";
+import FKControlRadioGroupRadio from "./radio-group/radio.gjs";
 
 export default class FKControlRadioGroup extends FKBaseControl {
   static controlType = "radio-group";

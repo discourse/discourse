@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import SidebarNewTopicButton from "../../discourse/components/sidebar-new-topic-button";
+import SidebarNewTopicButton from "../../discourse/components/sidebar-new-topic-button.gjs";
 
 module(
   "Horizon | Integration | Component | SidebarNewTopicButton",

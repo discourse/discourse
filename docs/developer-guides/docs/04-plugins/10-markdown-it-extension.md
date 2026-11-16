@@ -46,12 +46,12 @@ export function setup(helper) {
     opts.features["your-extension"] = !!siteSettings.enable_my_plugin;
   });
 
-  // whitelist any attributes that you need to support,
+  // allow any attributes that you need to support,
   // otherwise our sanitizer will strip them
-  helper.whiteList(["div.amazingness"]);
+  helper.allowList(["div.amazingness"]);
 
   // you can also do fancy stuff like this
-  helper.whiteList({
+  helper.allowList({
     custom(tag, name, value) {
       if ((tag === "a" || tag === "li") && name === "id") {
         return !!value.match(/^fn(ref)?\d+$/);

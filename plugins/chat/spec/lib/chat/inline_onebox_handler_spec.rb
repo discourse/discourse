@@ -10,6 +10,11 @@ describe Chat::InlineOneboxHandler do
   fab!(:user_3) { Fabricate(:user, staged: true) }
   fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
 
+  before do
+    SiteSetting.chat_allowed_groups =
+      "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+  end
+
   let(:public_chat_url) { "#{Discourse.base_url}/chat/c/-/#{public_channel.id}" }
   let(:private_chat_url) { "#{Discourse.base_url}/chat/c/-/#{private_channel.id}" }
   let(:invalid_chat_url) { "#{Discourse.base_url}/chat/c/-/999" }
@@ -25,6 +30,14 @@ describe Chat::InlineOneboxHandler do
             title: I18n.t("chat.onebox.inline_to_channel", chat_channel: public_channel.name),
           },
         )
+      end
+
+      it "does not render an inline onebox when anonymous public chat access is disabled" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+
+        expect(
+          Chat::InlineOneboxHandler.handle(public_chat_url, { channel_id: public_channel.id }),
+        ).to be_nil
       end
 
       it "does not render an inline onebox for a channel which does not exist" do

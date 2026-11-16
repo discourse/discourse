@@ -22,14 +22,26 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class DFutureDateInput extends Component {
+  /** @type {string | null | undefined} */
   selection = null;
   includeDateTime = true;
 
+  /** @type {string | null} */
   displayLabel = null;
+
+  /** @type {string | null | undefined} */
   labelClasses = null;
+
+  /** @type {string | null | undefined} */
   userTimezone = null;
+
+  /** @type {((value: string | null) => void) | null | undefined} */
   onChangeInput = null;
+
+  /** @type {string | null} */
   _date = null;
+
+  /** @type {string | null} */
   _time = null;
 
   init() {

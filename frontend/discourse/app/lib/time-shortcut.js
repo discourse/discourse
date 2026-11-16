@@ -253,7 +253,7 @@ export function timeShortcuts(timezone) {
         icon: "arrow-rotate-left",
         id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
         label: "time_shortcut.last_custom",
-        time: null,
+        time: /** @type {import("moment").Moment | null} */ (null),
         hidden: true,
       };
     },

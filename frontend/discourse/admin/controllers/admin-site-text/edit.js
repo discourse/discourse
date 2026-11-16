@@ -10,10 +10,14 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminSiteTextEdit extends Controller {
   @service dialog;
+  @service siteSettings;
 
   @tracked siteText;
+
+  /** @type {number | string | null} */
+  @tracked themeId = null;
   saved = false;
-  queryParams = ["locale"];
+  queryParams = ["locale", { themeId: "theme_id" }];
 
   #activeTextarea = null;
   #lastCursorPos = null;
@@ -31,9 +35,51 @@ export default class AdminSiteTextEdit extends Controller {
     return this.siteText.value === this.get("buffered.value"); // TODO (devxp) we need a buffered proxy that works with tracked properties
   }
 
+  @computed("siteText.{default_text,new_default,value,overridden,can_revert}")
+  get defaultText() {
+    if (
+      this.siteText.default_text !== null &&
+      this.siteText.default_text !== undefined
+    ) {
+      return this.siteText.default_text;
+    }
+    if (
+      this.siteText.new_default !== null &&
+      this.siteText.new_default !== undefined
+    ) {
+      return this.siteText.new_default;
+    }
+    if (!this.siteText.overridden && !this.siteText.can_revert) {
+      return this.siteText.value;
+    }
+    return null;
+  }
+
+  get defaultTextLabel() {
+    const locale = this.siteText.default_locale;
+    if (!locale) {
+      return i18n("admin.site_text.default_text");
+    }
+    const language =
+      this.siteSettings.available_locales.find(
+        (entry) => entry.value === locale
+      )?.name ?? locale;
+    return i18n("admin.site_text.default_text_language", { language });
+  }
+
+  @computed("siteText.status")
+  get isInvalid() {
+    return this.siteText?.status === "invalid_interpolation_keys";
+  }
+
   @computed("siteText.status")
   get isOutdated() {
     return this.siteText?.status === "outdated";
+  }
+
+  @computed("siteText.status")
+  get isUnknown() {
+    return this.siteText?.status === "unknown";
   }
 
   @computed("buffered.value", "siteText.interpolation_keys")

@@ -43,10 +43,10 @@ RSpec.describe DiscourseCaptcha::RecaptchaProvider do
     before do
       SiteSetting.enable_local_logins = true
       SiteSetting.discourse_captcha_enabled = true
-      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA
+      SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V2
 
-      SiteSetting.recaptcha_site_key = "site-key"
-      SiteSetting.recaptcha_secret_key = "secret-key"
+      SiteSetting.recaptcha_v2_site_key = "site-key"
+      SiteSetting.recaptcha_v2_secret_key = "secret-key"
     end
 
     it "returns the response from reCAPTCHA" do

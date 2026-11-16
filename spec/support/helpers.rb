@@ -90,6 +90,56 @@ module Helpers
     fixture_file("emails/#{email_name}.eml")
   end
 
+  def nested_mime_email(
+    multipart_levels,
+    from: "two@foo.com",
+    to: "team@bar.com",
+    subject: "Nested",
+    date: "Fri, 15 Jan 2016 00:12:43 +0100"
+  )
+    body = +""
+    multipart_levels.times do |i|
+      body << "Content-Type: multipart/mixed; boundary=\"level#{i}\"\n\n--level#{i}\n"
+    end
+    body << "Content-Type: text/plain\n\nhello\n"
+
+    <<~EMAIL
+      Return-Path: <#{from}>
+      From: #{from}
+      To: #{to}
+      Subject: #{subject}
+      Date: #{date}
+      Message-ID: <nested@foo.bar.mail>
+      MIME-Version: 1.0
+      #{body}
+    EMAIL
+  end
+
+  def wide_mime_email(
+    parts,
+    from: "two@foo.com",
+    to: "team@bar.com",
+    subject: "Wide",
+    date: "Fri, 15 Jan 2016 00:12:43 +0100"
+  )
+    body = +""
+    parts.times { body << "--wide\nContent-Type: text/plain\n\nhello\n" }
+    body << "--wide--\n"
+
+    <<~EMAIL
+      Return-Path: <#{from}>
+      From: #{from}
+      To: #{to}
+      Subject: #{subject}
+      Date: #{date}
+      Message-ID: <wide@foo.bar.mail>
+      MIME-Version: 1.0
+      Content-Type: multipart/mixed; boundary="wide"
+
+      #{body}
+    EMAIL
+  end
+
   def create_staff_only_tags(tag_names)
     create_limited_tags("Staff Tags", Group::AUTO_GROUPS[:staff], tag_names)
   end
@@ -336,7 +386,22 @@ module Helpers
   def enable_current_plugin
     plugin = Discourse.plugins_by_name[directory_from_caller.split("/").last]
     return if plugin.enabled?
+    return if enable_auth_provider(plugin.enabled_site_setting)
     SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
+  end
+
+  # Only blank settings are filled, so a spec can set anything it reads first.
+  # Ten digits is the one placeholder every credential `regex:` accepts.
+  def enable_auth_provider(name)
+    authenticator =
+      Discourse.authenticators.find { it.enable_setting == name.to_sym || it.name == name.to_s }
+    return false if authenticator.nil?
+
+    authenticator.required_settings.each do |setting|
+      SiteSetting.set(setting, "1234567890") if SiteSetting.get(setting).blank?
+    end
+    SiteSetting.set(authenticator.enable_setting, true)
+    true
   end
 
   def mock_upcoming_change_metadata(metadata)

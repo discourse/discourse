@@ -23,7 +23,11 @@ class Admin::McpClientsController < Admin::AdminController
   def create
     client =
       McpOauthClient.create!(
-        client_params.merge(registration_type: "pre_registered", trust_state: "approved"),
+        client_params.merge(
+          registration_type: "pre_registered",
+          trust_state: "approved",
+          admin_managed: true,
+        ),
       )
     StaffActionLogger.new(current_user).log_custom("mcp_client_created", client_id: client.id)
     render json: { client: serialize(client) }, status: :created
@@ -42,6 +46,18 @@ class Admin::McpClientsController < Admin::AdminController
       client_id: client.id,
       trust_state: client.trust_state,
     )
+    render json: { client: serialize(client) }
+  end
+
+  def update
+    McpOauthClient.transaction do
+      client.update_registration!(params.require(:client).permit(:name, redirect_uris: []))
+      StaffActionLogger.new(current_user).log_custom(
+        "mcp_client_updated",
+        client_id: client.id,
+        changes: client.saved_changes.except("updated_at"),
+      )
+    end
     render json: { client: serialize(client) }
   end
 
@@ -76,6 +92,7 @@ class Admin::McpClientsController < Admin::AdminController
       trust_state: value.trust_state,
       blocked: value.blocked?,
       redirect_uris: value.redirect_uris,
+      admin_managed: value.admin_managed,
       redirect_hosts: value.redirect_uris.filter_map { |uri| uri_host(uri) }.uniq,
       metadata_uri: value.metadata_uri,
       first_seen_at: value.created_at,

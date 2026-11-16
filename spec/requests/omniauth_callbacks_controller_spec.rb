@@ -31,7 +31,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     it "finds an authenticator when enabled" do
-      SiteSetting.enable_twitter_logins = true
+      enable_auth_provider(:twitter)
 
       expect(Users::OmniauthCallbacksController.find_authenticator("twitter")).not_to eq(nil)
     end
@@ -78,7 +78,7 @@ RSpec.describe Users::OmniauthCallbacksController do
   end
 
   describe "Google Oauth2" do
-    before { SiteSetting.enable_google_oauth2_logins = true }
+    before { enable_auth_provider(:google_oauth2) }
 
     describe "#failure" do
       it "defaults to the provider when only one is enabled" do
@@ -96,7 +96,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it "uses the provider parameter when matching an enabled authenticator" do
-        SiteSetting.enable_facebook_logins = true
+        enable_auth_provider(:facebook)
 
         get "/auth/failure", params: { provider: "facebook" }
         expect(response.status).to eq(200)
@@ -106,7 +106,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it "uses the strategy parameter when matching an enabled authenticator" do
-        SiteSetting.enable_facebook_logins = true
+        enable_auth_provider(:facebook)
 
         get "/auth/failure", params: { strategy: "facebook" }
         expect(response.status).to eq(200)
@@ -116,13 +116,14 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it "shows a generic error message when there are more than one enabled providers" do
-        SiteSetting.enable_facebook_logins = true
+        enable_auth_provider(:facebook)
 
         get "/auth/failure"
         expect(response.status).to eq(200)
         expect(response.body).to include(I18n.t("login.omniauth_error.generic_without_provider"))
       end
 
+      # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
       Users::OmniauthCallbacksController::ALLOWED_FAILURE_ERRORS.each_key do |error|
         it "supports specific '#{error}' messages" do
           get "/auth/failure", params: { message: error }
@@ -130,6 +131,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(flash[:error]).to include(I18n.t("login.omniauth_error.#{error}"))
         end
       end
+      # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
       it "falls back to generic error when the specific error doesn't exist" do
         get "/auth/failure", params: { message: "foo_bar" }
@@ -219,6 +221,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           post "/auth/google_oauth2", params: { authenticity_token: token }
           expect(response.status).to eq(302)
+          expect(URI(response.location).path).to eq("/auth/google_oauth2/callback")
         end
 
         it "allows authentication without CSRF protection when it is the only method" do

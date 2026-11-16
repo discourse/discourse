@@ -18,13 +18,15 @@ import {
   dataExplorerStore,
   rememberMode,
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+import sqlLanguageOptions from "discourse/plugins/discourse-data-explorer/discourse/lib/sql-language-options";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const HIDE_SCHEMA_KEY = "hide_schema";
+const DASHBOARD_REPORT_SOURCE = "data_explorer_query";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
-  @service appEvents;
+  @service dialog;
   @service siteSettings;
   @service messageBus;
   @service toasts;
@@ -42,6 +44,9 @@ export default class PluginsExplorerController extends Controller {
   @tracked aiPrompt = "";
   @tracked aiGenerating = false;
   @tracked lastGeneratedPrompt = null;
+  @tracked dashboardBusy = false;
+  @tracked dashboardMounted = false;
+  @tracked dashboardMountable = false;
 
   queryParams = ["params"];
   order = null;
@@ -76,6 +81,10 @@ export default class PluginsExplorerController extends Controller {
   // is confusing otherwise.
   get actionsBusy() {
     return this.loading || this.aiGenerating;
+  }
+
+  get sqlLanguageOptions() {
+    return sqlLanguageOptions(this.schema);
   }
 
   get saveDisabled() {
@@ -141,6 +150,35 @@ export default class PluginsExplorerController extends Controller {
     );
   }
 
+  get showDashboardToggle() {
+    return !this.model.destroyed;
+  }
+
+  get dashboardToggleIcon() {
+    return this.dashboardMounted ? "thumbtack-slash" : "thumbtack";
+  }
+
+  get dashboardToggleLabel() {
+    return this.dashboardMounted
+      ? "explorer.dashboard.remove"
+      : "explorer.dashboard.add";
+  }
+
+  get dashboardToggleDisabled() {
+    return (
+      this.actionsBusy ||
+      this.dashboardBusy ||
+      (!this.dashboardMounted && !this.dashboardMountable)
+    );
+  }
+
+  get dashboardToggleTitle() {
+    if (this.dashboardMounted || this.dashboardMountable) {
+      return null;
+    }
+    return i18n("explorer.dashboard.unmountable");
+  }
+
   get viewItems() {
     const items = [
       { value: "chart", icon: "signal" },
@@ -166,6 +204,7 @@ export default class PluginsExplorerController extends Controller {
       description: this.model.description ?? "",
       sql: this.model.sql ?? "",
       group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+      tags: [...(this.model.tags ?? [])].sort().join(","),
     };
     this.dirty = false;
   }
@@ -180,12 +219,14 @@ export default class PluginsExplorerController extends Controller {
       description: this.model.description ?? "",
       sql: this.model.sql ?? "",
       group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+      tags: [...(this.model.tags ?? [])].sort().join(","),
     };
     this.dirty =
       current.name !== this._pristine.name ||
       current.description !== this._pristine.description ||
       current.sql !== this._pristine.sql ||
-      current.group_ids !== this._pristine.group_ids;
+      current.group_ids !== this._pristine.group_ids ||
+      current.tags !== this._pristine.tags;
   }
 
   initView() {
@@ -238,7 +279,6 @@ export default class PluginsExplorerController extends Controller {
     }
 
     panes.style.height = `${size}px`;
-    this.appEvents.trigger("ace:resize");
   }
 
   /** Lets go of the panes. Called by the route on exit. */
@@ -367,8 +407,46 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
+  async toggleDashboard() {
+    const mounted = this.dashboardMounted;
+    this.dashboardBusy = true;
+    try {
+      await ajax("/admin/dashboard/reports/mount", {
+        type: mounted ? "DELETE" : "POST",
+        data: {
+          source: DASHBOARD_REPORT_SOURCE,
+          identifier: String(this.model.id),
+        },
+      });
+      this.dashboardMounted = !mounted;
+      this.toasts.success({
+        data: {
+          message: i18n(
+            mounted ? "explorer.dashboard.removed" : "explorer.dashboard.added"
+          ),
+        },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.dashboardBusy = false;
+    }
+  }
+
+  @action
   updateGroupIds(value) {
     this.model.set("group_ids", value);
+    this.recomputeDirty();
+  }
+
+  @action
+  updateTags(value) {
+    const automaticTags = this.model.automatic_tags ?? [];
+    const tags = [
+      ...automaticTags,
+      ...value.filter((tag) => !automaticTags.includes(tag)),
+    ];
+    this.model.set("tags", tags);
     this.recomputeDirty();
   }
 
@@ -405,12 +483,21 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
+  confirmDestroyQuery() {
+    this.dialog.deleteConfirm({
+      message: i18n("explorer.delete_confirm"),
+      didConfirm: () => this.destroyQuery(),
+    });
+  }
+
+  @action
   async destroyQuery() {
     try {
       this.loading = true;
       this.showResults = false;
       await this.store.destroyRecord("query", this.model);
       this.model.set("destroyed", true);
+      this.dashboardMounted = false;
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -483,10 +570,11 @@ export default class PluginsExplorerController extends Controller {
         return;
       }
     }
+    const stringifiedParams = JSON.stringify(params);
     this.setProperties({
       loading: true,
       showResults: false,
-      params: JSON.stringify(params),
+      params: params === null ? null : stringifiedParams,
     });
 
     ajax(
@@ -496,7 +584,7 @@ export default class PluginsExplorerController extends Controller {
       {
         type: "POST",
         data: {
-          params: JSON.stringify(params),
+          params: stringifiedParams,
           explain,
         },
       }

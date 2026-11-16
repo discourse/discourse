@@ -7,6 +7,11 @@ RSpec.describe InvitesController do
   describe "#show" do
     fab!(:invite)
 
+    # These cover the legacy invite flow, which the email code flow replaces
+    # when enable_local_logins_via_code is on. Examples that exercise the code
+    # flow enable it for themselves.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     it "shows the accept invite page" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
@@ -66,11 +71,11 @@ RSpec.describe InvitesController do
       end
     end
 
-    %i[enable_local_logins enable_local_logins_via_email].each do |setting|
-      it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
+    shared_examples "redeeming a legacy email invitation token" do |disabled_setting:|
+      it "returns the invitation with its email verified by the link" do
         SiteSetting.enable_local_logins_via_code = true
-        SiteSetting.public_send("#{setting}=", false)
-        SiteSetting.enable_google_oauth2_logins = true
+        SiteSetting.public_send("#{disabled_setting}=", false)
+        enable_auth_provider(:google_oauth2)
 
         get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
@@ -81,6 +86,16 @@ RSpec.describe InvitesController do
           expect(invite_info["email_verified_by_link"]).to eq(true)
         end
       end
+    end
+
+    context "with enable_local_logins disabled" do
+      include_examples "redeeming a legacy email invitation token",
+                       disabled_setting: :enable_local_logins
+    end
+
+    context "with enable_local_logins_via_email disabled" do
+      include_examples "redeeming a legacy email invitation token",
+                       disabled_setting: :enable_local_logins_via_email
     end
 
     context "when email data is present in authentication data" do
@@ -392,10 +407,10 @@ RSpec.describe InvitesController do
       expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
     end
 
-    it "stores the invite key in the server session if invite exists" do
+    it "does not store the invite key in the server session" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(server_session["invite-key"]).to eq(invite.invite_key)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
     end
 
     it "returns error if invite has already been redeemed" do
@@ -426,6 +441,86 @@ RSpec.describe InvitesController do
           base_url: Discourse.base_url,
         ),
       )
+    end
+  end
+
+  describe "#sso" do
+    fab!(:invite)
+
+    before do
+      SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
+      SiteSetting.discourse_connect_secret = "shjkfdhsfkjh"
+      SiteSetting.enable_discourse_connect = true
+    end
+
+    it "stores the invite key in the server session and redirects to the SSO flow" do
+      post "/invites/#{invite.invite_key}/sso"
+
+      expect(response).to redirect_to("/session/sso")
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to eq(
+        invite.invite_key,
+      )
+    end
+
+    it "does not store the invite key when the invite is not redeemable" do
+      invite.update!(expires_at: 1.day.ago)
+
+      post "/invites/#{invite.invite_key}/sso"
+
+      expect(response).to redirect_to("/invites/#{invite.invite_key}")
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    it "does not store the invite key when the invite does not exist" do
+      post "/invites/missing/sso"
+
+      expect(response.status).to eq(404)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    it "is not available when DiscourseConnect is disabled" do
+      SiteSetting.enable_discourse_connect = false
+
+      post "/invites/#{invite.invite_key}/sso"
+
+      expect(response.status).to eq(404)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    it "does not store the invite key when new registrations are disabled" do
+      SiteSetting.allow_new_registrations = false
+
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag(:body, with: { class: "no-ember" })
+      expect(response.body).to include(I18n.t("login.new_registrations_disabled"))
+
+      post "/invites/#{invite.invite_key}/sso"
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag(:body, with: { class: "no-ember" })
+      expect(response.body).to include(I18n.t("login.new_registrations_disabled"))
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    it "is rate limited" do
+      RateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
+
+      post "/invites/#{invite.invite_key}/sso"
+
+      expect(response.status).to eq(429)
+      expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+    end
+
+    context "with forgery protection enabled" do
+      before { ActionController::Base.allow_forgery_protection = true }
+      after { ActionController::Base.allow_forgery_protection = false }
+
+      it "requires a CSRF token" do
+        post "/invites/#{invite.invite_key}/sso"
+
+        expect(response.status).to eq(403)
+        expect(server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY]).to be_nil
+      end
     end
   end
 
@@ -460,6 +555,39 @@ RSpec.describe InvitesController do
              }
         expect(response.status).to eq(200)
         expect(Jobs::InviteEmail.jobs.first["args"].first["invite_to_topic"]).to be_truthy
+      end
+
+      it "sends a forum invitation when topic access is revoked before delivery" do
+        sign_in(user)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               topic_id: topic.id,
+               invite_to_topic: true,
+             }
+
+        expect(response.status).to eq(200)
+        invite = Invite.find(response.parsed_body["id"])
+        expect(invite.topics).to contain_exactly(topic)
+
+        topic.update!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          title: "Restricted updated topic title",
+          excerpt: "Restricted updated topic excerpt",
+        )
+        expect(user.guardian.can_see?(topic.reload)).to eq(false)
+
+        job_args = Jobs::InviteEmail.jobs.last["args"].first.symbolize_keys
+        expect { Jobs::InviteEmail.new.execute(job_args) }.to change {
+          ActionMailer::Base.deliveries.size
+        }.by(1)
+
+        message = ActionMailer::Base.deliveries.last
+        expect(message.to).to eq([invite.email])
+        expect(message.subject).not_to include(topic.title)
+        expect(message.body.decoded).not_to include(topic.title, topic.excerpt)
+        expect(message.body.decoded).to include(invite.invite_key)
       end
 
       it "fails when topic_id is invalid" do
@@ -1351,6 +1479,11 @@ RSpec.describe InvitesController do
   end
 
   describe "#perform_accept_invitation" do
+    # These cover the legacy invite flow, which the email code flow replaces
+    # when enable_local_logins_via_code is on. Examples that exercise the code
+    # flow enable it for themselves.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     context "when anonymous invite acceptance uses email codes" do
       fab!(:invite)
 
@@ -1533,7 +1666,7 @@ RSpec.describe InvitesController do
           )
 
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
 
           get "/auth/google_oauth2/callback.json"
           expect(response.status).to eq(302)
@@ -1754,6 +1887,41 @@ RSpec.describe InvitesController do
         expect(User.count).to eq(user_count + 1)
       end
 
+      it "does not grant a bounded invite after another request has consumed its capacity" do
+        group = Fabricate(:group)
+        invite.update!(invited_by: admin)
+        InvitedGroup.create!(invite: invite, group: group)
+        stale_invite = Invite.find(invite.id)
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email: "first@example.com",
+              password: "verystrongpassword",
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
+
+        allow(Invite).to receive(:find_by).with(invite_key: invite.invite_key).and_return(
+          stale_invite,
+        )
+
+        expect {
+          put "/invites/show/#{invite.invite_key}.json",
+              params: {
+                email: "second@example.com",
+                password: "verystrongpassword",
+              }
+        }.not_to change { User.count }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_found_json"))
+        expect(invite.reload.redemption_count).to eq(1)
+        expect(invite.invited_users.count).to eq(1)
+        expect(
+          GroupUser.where(group: group, user_id: invite.invited_users.select(:user_id)).count,
+        ).to eq(1)
+      end
+
       it "sends an activation email and does not activate the user" do
         expect {
           put "/invites/show/#{invite.invite_key}.json",
@@ -1876,6 +2044,40 @@ RSpec.describe InvitesController do
         fab!(:user) { Fabricate(:user, email: "test@example.com") }
         fab!(:group)
 
+        it "does not grant access to a private topic from an expired email invite" do
+          expired_invite = Fabricate(:invite, email: "expired@example.com", expires_at: 1.day.ago)
+          valid_invite = Fabricate(:invite, email: nil, max_redemptions_allowed: 10)
+          redeeming_user = Fabricate(:user, email: expired_invite.email)
+          expired_invite.invited_by.change_trust_level!(TrustLevel[2])
+          Group.refresh_automatic_groups_for_user!(expired_invite.invited_by)
+          private_topic = Fabricate(:private_message_topic, user: expired_invite.invited_by)
+          private_post =
+            Fabricate(
+              :post,
+              topic: private_topic,
+              user: expired_invite.invited_by,
+              raw: "private message content",
+            )
+          TopicInvite.create!(invite: expired_invite, topic: private_topic)
+          expect(expired_invite).not_to be_redeemable
+          expect(TopicAllowedUser.exists?(user: redeeming_user, topic: private_topic)).to eq(false)
+          sign_in(redeeming_user)
+
+          put "/invites/show/#{valid_invite.invite_key}.json",
+              params: {
+                id: valid_invite.invite_key,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+
+          get "/t/#{private_topic.slug}/#{private_topic.id}.json"
+
+          expect(response.status).to be_in([403, 404])
+          expect(response.body).not_to include(private_post.raw)
+          expect(TopicAllowedUser.exists?(user: redeeming_user, topic: private_topic)).to eq(false)
+        end
+
         it "redeems the invitation and creates the invite accepted notification" do
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
           expect(response.status).to eq(200)
@@ -1906,7 +2108,8 @@ RSpec.describe InvitesController do
         end
 
         it "adds the user to the private topic" do
-          topic = Fabricate(:private_message_topic)
+          Group.refresh_automatic_groups_for_user!(invite.invited_by)
+          topic = Fabricate(:private_message_topic, user: invite.invited_by)
           TopicInvite.create!(invite: invite, topic: topic)
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
           expect(response.status).to eq(200)

@@ -5,7 +5,20 @@
 # https://translate.discourse.org/
 
 pt:
+  markdown_endpoints:
+    latest: "Mais Recente"
+    categories: "Categorias"
+    tags: "Etiquetas"
+    previous_page: "Página anterior"
+    next_page: "Próxima página"
+    replies: "Respostas"
+    last_updated: "Última atualização"
+    event:
+      location: "Localização"
+      link: "Hiperligação"
   mcp:
+    errors:
+      topic_not_found: "Tópico não encontrado"
     oauth:
       deny: "Rejeitar"
       approve: "Autorizar"
@@ -709,7 +722,7 @@ pt:
   unsubscribed:
     topic_description: "Para re-subscrever a %{link}, use o controle de notificação no fundo ou à direita do tópico."
   unsubscribe:
-    title: "Cancelar subscrição"
+    unsubscribe: "Cancelar a Subscrição"
     stop_watching_topic: "Parar de vigiar este tópico, %{link}"
     mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
     unwatch_category: "Deixar de seguir todos os tópicos em %{category}"
@@ -1275,7 +1288,6 @@ pt:
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
-    short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
     allowed_href_schemes: "Esquemas permitidos nos links além de http e https."
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
@@ -1334,6 +1346,11 @@ pt:
       reply_by_email_address_is_empty: "É necessário definir um email para 'resposta por endereço de email' antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
+    keywords:
+      company_url: "site"
+      large_icon: "ícone quadrado"
+      logo: "logótipo principal"
+      logo_small: "logótipo pequeno"
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1423,6 +1440,7 @@ pt:
     password_too_long: "As palavras-passe estão limitadas a 200 caracteres."
     email_too_long: "O email fornecido é demasiado longo. Nomes de caixas de email não devem ter mais que 254 caracteres, e nomes de domínio não devem ter mais que 253 caracteres."
     reserved_username: "Esse nome de utilizador não é permitido."
+    missing_username: "Por favor introduza um nome de utilizador"
     second_factor_title: "Autenticação em Dois Passos"
     second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
     second_factor_toggle:
@@ -2119,13 +2137,28 @@ pt:
               private:
                 label: "Privado"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Diariamente"
+        ordinals:
+          last: "último"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Segunda-feira"
+          tuesday: "Terça-feira"
+          wednesday: "Quarta-feira"
+          thursday: "Quinta-feira"
+          friday: "Sexta-feira"
+          saturday: "Sábado"
     google_meet:
       meeting_code: "Código:"
     github:
       closed: "fechado"
-      status_date:
-        approved: "aprovado"
-        closed: "fechado"
+      pr_status:
+        draft: "Rascunho"
+        open: "Abrir"
+        approved: "Aprovado"
+        closed: "Fechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
@@ -2159,6 +2192,10 @@ pt:
         other: "%{count} segundos"
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
+      answer_yes:
+        title: "Sim"
+      answer_no:
+        title: "Não"
       agree:
         title: "Sim"
       agree_and_silence:

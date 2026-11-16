@@ -27,6 +27,15 @@ hu:
               label: Témaazonosító
     discourse_events:
       title: "Események"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Regisztráció"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Értesítés"
+            none: "Egyik sem"
       on_holiday: "Szabadságon"
       disable_holiday: "Letiltás"
       enable_holiday: "Engedélyezés"
@@ -423,7 +432,6 @@ hu:
               one: "%{count} meghívott felhasználó"
               other: "%{count} meghívott felhasználó"
         event:
-          expired: "Lejárt"
           closed: "Lezárt"
           full: "Tele"
           status:
@@ -436,6 +444,8 @@ hu:
             private:
               title: "Privát"
               description: "Privát eseményhez csak a meghívott felhasználók csatlakozhatnak."
+      recording_modal:
+        save: "Mentés"
       composer:
         name_placeholder: "Esemény neve"
         location_or_url_placeholder: "Helyszín vagy URL hozzáadása"

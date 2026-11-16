@@ -266,7 +266,7 @@ describe "Content Localization" do
         expect(sidebar).to have_section_link("戦略")
 
         SiteSetting.set_locale_from_cookie = false
-        page.refresh
+        topic_page.visit_topic(topic)
         modal = topic_page.open_content_language_preferences
         expect(modal).to have_read_only_interface_language("English")
       end
@@ -492,6 +492,7 @@ describe "Content Localization" do
             Fabricate(
               :post,
               topic: topic,
+              user: admin,
               locale: "ja",
               raw: "Japanese content for post #{post_number}",
               cooked: "<p>日本語コンテンツ #{post_number}</p>",
@@ -540,12 +541,19 @@ describe "Content Localization" do
         Fabricate(
           :post,
           topic: late_localization_topic,
+          user: admin,
           locale: "en",
           raw: "English post #{index + 1}",
         )
       end
       late_post =
-        Fabricate(:post, topic: late_localization_topic, locale: "ja", raw: "最初のページより後の投稿")
+        Fabricate(
+          :post,
+          topic: late_localization_topic,
+          user: admin,
+          locale: "ja",
+          raw: "最初のページより後の投稿",
+        )
       Fabricate(
         :post_localization,
         post: late_post,
@@ -856,7 +864,7 @@ describe "Content Localization" do
 
   context "for site settings" do
     let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
-    let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+    let(:banner) { PageObjects::Components::DFloatingControlBar.new }
 
     it "does not allow more than the maximum number of locales" do
       SiteSetting.content_localization_supported_locales = "en|ja"

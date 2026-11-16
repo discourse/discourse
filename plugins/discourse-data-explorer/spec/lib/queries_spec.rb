@@ -8,6 +8,7 @@ describe DiscourseDataExplorer::Queries do
   before { SiteSetting.data_explorer_enabled = true }
 
   describe ".default" do
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     described_class.default.each do |id, attributes|
       it "runs #{attributes[:name]} with its declared parameters" do
         query =
@@ -16,6 +17,7 @@ describe DiscourseDataExplorer::Queries do
           "start_date" => 30.days.ago.to_date.iso8601,
           "end_date" => Date.current.iso8601,
           "group_name" => group.name,
+          "report_id" => "1",
           "poll_name" => "poll",
           "post_id" => post.id.to_s,
           "topic_id" => post.topic_id.to_s,
@@ -46,5 +48,6 @@ describe DiscourseDataExplorer::Queries do
         end
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 end

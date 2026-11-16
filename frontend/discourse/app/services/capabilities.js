@@ -72,15 +72,8 @@ class _Capabilities {
   isOpera = !!window.opera || ua.includes(" OPR/");
   isFirefox = ua.includes("Firefox");
   isChrome = !!window.chrome && !this.isOpera;
-  // In iframes, Safari-specific objects aren't accessible, so fall back to UA detection
   isSafari =
-    window.self !== window.top
-      ? ua.includes("Safari") &&
-        !ua.includes("Chrome") &&
-        !ua.includes("Chromium")
-      : /Constructor/.test(window.HTMLElement) ||
-        window.safari?.pushNotification?.toString() ===
-          "[object SafariRemoteNotification]";
+    ua.includes("Safari") && !ua.includes("Chrome") && !ua.includes("Chromium");
 
   hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
 
@@ -95,6 +88,11 @@ class _Capabilities {
   wasLaunchedFromDiscourseHub =
     window.location.search.includes("discourse_app=1");
   isAppWebview = window.ReactNativeWebView !== undefined;
+  // Set by the Discourse Hub app via `injectedJavaScriptBeforeContentLoaded`
+  // once it ships a WebView message handler for `{ type: "download" }`.
+  // Lets us feature-detect support instead of assuming every app webview
+  // build understands the bridge protocol (older installed builds won't).
+  hubDownloadBridgeSupported = window.__discourseHubDownloadBridge === true;
 
   /**
    * Defines the responsive viewport breakpoints and their media queries.

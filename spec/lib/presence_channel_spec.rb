@@ -24,6 +24,8 @@ RSpec.describe PresenceChannel do
         PresenceChannel::Config.new(allowed_user_ids: [user.id])
       when "/test/allowedgroup"
         PresenceChannel::Config.new(allowed_group_ids: [group.id])
+      when "/test/allowedgroupwithoutusers"
+        PresenceChannel::Config.new(allowed_user_ids: [], allowed_group_ids: [group.id])
       when "/test/everyonegroup"
         PresenceChannel::Config.new(allowed_group_ids: [Group::AUTO_GROUPS[:everyone]])
       when "/test/loggedingroup"
@@ -256,6 +258,18 @@ RSpec.describe PresenceChannel do
         channel.present(user_id: user.id, client_id: "a")
       end
     expect(messages.count).to eq(1)
+    expect(messages[0].group_ids).to eq([group.id])
+  end
+
+  it "publishes group-protected messages when allowed users is empty" do
+    channel = PresenceChannel.new("/test/allowedgroupwithoutusers")
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.present(user_id: user.id, client_id: "a")
+      end
+
+    expect(messages.count).to eq(1)
+    expect(messages[0].user_ids).to eq(nil)
     expect(messages[0].group_ids).to eq([group.id])
   end
 

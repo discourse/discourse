@@ -27,6 +27,15 @@ cs:
               label: ID tématu
     discourse_events:
       title: "Události"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrovat"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Upozornění"
+            none: "Žádný"
       on_holiday: "Na dovolené"
       disable_holiday: "Vypnout"
       enable_holiday: "Zapnout"
@@ -435,7 +444,6 @@ cs:
               many: "%{count} pozváno"
               other: "%{count} pozváno"
         event:
-          expired: "Platnost vypršela"
           closed: "Zavřené"
           full: "Obsazeno"
           status:
@@ -448,6 +456,8 @@ cs:
             private:
               title: "Soukromá"
               description: "Soukromé události se můžou účastnit jen pozvaní uživatelé."
+      recording_modal:
+        save: "Uložit"
       composer:
         name_placeholder: "Název události"
         location_or_url_placeholder: "Přidat polohu nebo adresu URL"

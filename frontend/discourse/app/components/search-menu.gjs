@@ -26,14 +26,17 @@ import {
   searchTermScopesToPMs,
   updateRecentSearches,
 } from "discourse/lib/search";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
+import { i18n } from "discourse-i18n";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -46,6 +49,7 @@ export default class SearchMenu extends Component {
   @service currentUser;
   @service siteSettings;
   @service appEvents;
+  @service a11y;
 
   @tracked loading = false;
   @tracked isPMInboxCleared = false;
@@ -57,7 +61,11 @@ export default class SearchMenu extends Component {
 
   searchInputId = this.args.searchInputId ?? "search-term";
   closeWhenHidden = modifier((_element, [hidden]) => hidden && this.close());
+
+  /** @type {import("@ember/runloop").Timer | null} */
   _debouncer = null;
+
+  /** @type {(Promise<unknown> & { abort: () => void }) | null} */
   _activeSearch = null;
 
   willDestroy() {
@@ -250,9 +258,15 @@ export default class SearchMenu extends Component {
   clearSearch(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.search.activeGlobalSearchTerm = "";
-    this.search.focusSearchInput();
-    this.triggerSearch();
+    applyBehaviorTransformer(
+      "search-menu-clear-search",
+      () => {
+        this.search.activeGlobalSearchTerm = "";
+        this.search.focusSearchInput();
+        this.triggerSearch();
+      },
+      { location: this.args.location }
+    );
   }
 
   @action
@@ -354,6 +368,7 @@ export default class SearchMenu extends Component {
     }
 
     this.suggestionKeyword = false;
+    const announceOutcome = this.typeFilter !== DEFAULT_TYPE_FILTER;
 
     if (!this.search.activeGlobalSearchTerm) {
       this.search.noResults = false;
@@ -367,6 +382,10 @@ export default class SearchMenu extends Component {
       this.search.results = {};
       this.loading = false;
       this.invalidTerm = true;
+
+      if (announceOutcome) {
+        this.a11y.announce(i18n("search.too_short"), "polite");
+      }
     } else {
       this.loading = true;
       this.invalidTerm = false;
@@ -387,6 +406,10 @@ export default class SearchMenu extends Component {
           ) {
             this.search.noResults = results.resultTypes.length === 0;
             this.search.results = results;
+
+            if (announceOutcome) {
+              this.#announceResults(results);
+            }
           }
         })
         .catch(popupAjaxError)
@@ -448,6 +471,20 @@ export default class SearchMenu extends Component {
         this._debouncer = discourseDebounce(this, this.perform, 400);
       }
     }
+  }
+
+  #announceResults(results) {
+    const count = results.resultTypes.reduce(
+      (total, type) => total + type.results.length,
+      0
+    );
+
+    this.a11y.announce(
+      count
+        ? i18n("search.results_announcement", { count })
+        : i18n("search.no_results"),
+      "polite"
+    );
   }
 
   <template>

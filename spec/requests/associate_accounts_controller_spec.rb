@@ -13,7 +13,7 @@ RSpec.describe Users::AssociateAccountsController do
 
   context "when attempting reconnect" do
     before do
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
         provider: "google_oauth2",
         uid: "12345",
@@ -68,6 +68,28 @@ RSpec.describe Users::AssociateAccountsController do
       # Token cannot be reused
       get "#{uri.path}.json"
       expect(response.status).to eq(404)
+    end
+
+    it "emails the user when an account is associated" do
+      sign_in(user)
+
+      post "/auth/google_oauth2?reconnect=true"
+      OmniAuth.config.mock_auth[:google_oauth2].uid = "123456"
+      get "/auth/google_oauth2/callback.json"
+
+      uri = URI.parse(response.redirect_url)
+      get "#{uri.path}.json"
+
+      expect_enqueued_with(
+        job: :critical_user_email,
+        args: {
+          type: "account_associated",
+          user_id: user.id,
+          provider_name: "Google",
+        },
+      ) { post "#{uri.path}.json" }
+
+      expect(response.status).to eq(200)
     end
 
     it "restricts association to the current session" do

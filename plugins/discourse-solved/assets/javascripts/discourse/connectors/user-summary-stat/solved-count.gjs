@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { and } from "discourse/truth-helpers";
 import DUserStat from "discourse/ui-kit/d-user-stat";
 
 export default class SolvedCount extends Component {

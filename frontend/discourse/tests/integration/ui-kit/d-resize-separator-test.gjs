@@ -481,9 +481,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
   });
 
   test("a plain value is announced as it changes, without waiting for a gesture", async function (assert) {
-    const state = new (class {
-      @tracked ceiling = 400;
-    })();
+    const ceiling = tracked(400);
 
     await render(
       <template>
@@ -491,7 +489,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
           class="my-handle"
           @axis="vertical"
           @label="Resize the thing"
-          @max={{state.ceiling}}
+          @max={{ceiling.value}}
           @min={{0}}
           @value={{120}}
         />
@@ -503,7 +501,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     // A number given directly is already reactive, so it is read straight through
     // rather than mirrored: snapshotting it would freeze it until something else
     // happened to trigger a re-read.
-    state.ceiling = 900;
+    ceiling.value = 900;
     await settled();
 
     assert.dom(".my-handle").hasAttribute("aria-valuemax", "900");
@@ -539,9 +537,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
   });
 
   test("starts observing a box that only exists after the first render", async function (assert) {
-    const state = new (class {
-      @tracked target = null;
-    })();
+    const target = tracked(null);
     const size = () => find(".late-box")?.clientHeight ?? null;
 
     await render(
@@ -552,7 +548,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
           @axis="vertical"
           @label="Resize the thing"
           @max={{500}}
-          @measure={{state.target}}
+          @measure={{target.value}}
           @min={{100}}
           @value={{size}}
         />
@@ -565,7 +561,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     assert.dom(".my-handle").hasAttribute("aria-valuenow", "200");
 
     // A consumer that builds its own box after render hands it over once it exists.
-    state.target = find(".late-box");
+    target.value = find(".late-box");
     await settled();
 
     find(".late-box").style.height = "340px";

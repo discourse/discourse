@@ -47,22 +47,22 @@ module DiscourseWorkflows
     private
 
     def node_registered?(node_class)
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.any? do |entry|
-        entry[:value] == (node_class.name || node_class)
-      end
+      Registry.plugin_for(node_class).present?
     end
 
     # `Plugin::Instance#on` gates the handler on the owning plugin being enabled,
     # so a node stops listening as soon as its plugin is turned off.
     def subscribe_node_event(node_class, plugin)
-      event_name = node_class.event_name if node_class.respond_to?(:event_name)
-      return if event_name.blank?
+      event_names = node_class.event_names if node_class.respond_to?(:event_names)
+      return if event_names.blank?
 
       # Event handlers outlive Zeitwerk reloads, so resolve named classes at dispatch.
       node_reference = node_class.name || node_class
-      plugin.on(event_name) do |*args|
-        current_class = node_reference.is_a?(String) ? node_reference.constantize : node_reference
-        EventListener.handle(current_class, *args)
+      event_names.each do |event_name|
+        plugin.on(event_name) do |*args|
+          current_class = node_reference.is_a?(String) ? node_reference.constantize : node_reference
+          EventListener.handle(current_class, *args, event_name:)
+        end
       end
     end
   end

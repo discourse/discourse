@@ -27,6 +27,15 @@ fi:
               label: Ketjun tunnus
     discourse_events:
       title: "Tapahtumat"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Rekisteröi"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Ilmoitus"
+            none: "Ei valittu"
       on_holiday: "Lomalla"
       disable_holiday: "Poista käytöstä"
       enable_holiday: "Ota käyttöön"
@@ -420,7 +429,6 @@ fi:
               one: "%{count} käyttäjä kutsuttu"
               other: "%{count} käyttäjää kutsuttu"
         event:
-          expired: "Vanhentunut"
           closed: "Suljettu"
           status:
             standalone:
@@ -432,6 +440,8 @@ fi:
             private:
               title: "Yksityinen"
               description: "Yksityiseen tapahtumaan voivat liittyä vain kutsutut käyttäjät."
+      recording_modal:
+        save: "Tallenna"
       composer:
         name_placeholder: "Tapahtuman nimi"
         url_placeholder: "Lisää URL"

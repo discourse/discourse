@@ -14,6 +14,24 @@ RSpec.describe Email::Sender do
     message.stubs(:deliver!).returns(Net::SMTP::Response.new("250", mock_smtp_transaction_response))
   end
 
+  it "renders recipient-visible tag hashtags as absolute links in HTML while retaining text hashtags" do
+    recipient = Fabricate(:admin)
+    tag = Fabricate(:tag)
+    Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+    body = "Tags: ##{tag.name}::tag"
+
+    [[nil, []], [recipient, [tag.full_url]]].each do |user, expected_urls|
+      message = Mail::Message.new(to: recipient.email, body:)
+      stub_deliver_response(message)
+
+      Email::Sender.new(message, :user_replied, user).send
+
+      links = Nokogiri::HTML5.parse(message.html_part.body.decoded).css("a.hashtag-cooked")
+      expect(links.map { |link| link["href"] }).to eq(expected_urls)
+      expect(message.text_part.body.decoded).to eq(body)
+    end
+  end
+
   context "when disable_emails is enabled" do
     fab!(:user)
     fab!(:moderator)
@@ -714,7 +732,7 @@ RSpec.describe Email::Sender do
             >   3. If you graph these numbers, patterns emerge.
             >
             > Therefore: There are patterns everywhere in nature.
-            
+
             IMAGE #2
             #{UploadMarkdown.new(@secure_image_2).image_markdown}
           MD
@@ -727,7 +745,7 @@ RSpec.describe Email::Sender do
           raw = <<~MD
             IMAGE #3
             #{UploadMarkdown.new(@secure_image_3).image_markdown}
-            
+
             ATTACHMENT
             #{UploadMarkdown.new(@secure_attachment).attachment_markdown}
 
@@ -762,7 +780,7 @@ RSpec.describe Email::Sender do
           SiteSetting.login_required = false
           @secure_image.update_secure_status(override: false)
           @secure_image.update!(access_control_post: Fabricate(:post))
-          pm_topic = Fabricate(:private_message_topic)
+          pm_topic = Fabricate(:private_message_topic, recipient: post.user)
           Fabricate(:post, topic: pm_topic)
           reply.update(topic: pm_topic)
           reply.rebake!
@@ -876,6 +894,91 @@ RSpec.describe Email::Sender do
       expect(message.html_part.body).not_to include("Itâ\u0080\u0099s")
       expect(message.html_part.body).to include("It’s")
       expect(message.html_part.charset.downcase).to eq("utf-8")
+    end
+  end
+
+  context "when a post references a secure upload the recipient cannot see" do
+    before { SiteSetting.email_total_attachment_size_limit_kb = 10_000 }
+
+    fab!(:secret_message, :private_message_post)
+
+    fab!(:secret_upload) do
+      SiteSetting.authorized_extensions = "pdf"
+      UploadCreator
+        .new(file_from_fixtures("small.pdf", "pdf"), "secret.pdf")
+        .create_for(secret_message.user.id)
+        .tap { |upload| upload.update!(secure: true, access_control_post_id: secret_message.id) }
+    end
+
+    fab!(:visible_upload) do
+      UploadCreator.new(file_from_fixtures("large.pdf", "pdf"), "visible.pdf").create_for(
+        Discourse.system_user.id,
+      )
+    end
+
+    fab!(:leaky_reply) do
+      reply =
+        Fabricate(
+          :post,
+          topic: post.topic,
+          user: Fabricate(:user, refresh_auto_groups: true),
+          raw: "Nothing to see here #{UploadMarkdown.new(secret_upload).attachment_markdown}",
+        )
+      reply.uploads << secret_upload << visible_upload
+      reply
+    end
+
+    fab!(:leaky_notification) do
+      Fabricate(:posted_notification, user: post.user, post: leaky_reply)
+    end
+
+    let(:leaky_message) do
+      UserNotifications.user_posted(
+        post.user,
+        post: leaky_reply,
+        notification_type: leaky_notification.notification_type,
+        notification_data_hash: leaky_notification.data_hash,
+      )
+    end
+
+    let(:insider_message) do
+      UserNotifications.user_posted(
+        secret_message.user,
+        post: leaky_reply,
+        notification_type: leaky_notification.notification_type,
+        notification_data_hash: leaky_notification.data_hash,
+      )
+    end
+
+    it "does not attach the secure upload the recipient cannot access" do
+      Email::Sender.new(leaky_message, :valid_type, post.user).send
+
+      expect(leaky_message.attachments.map(&:filename)).to contain_exactly("visible.pdf")
+    end
+
+    it "attaches the secure upload when the recipient can access it" do
+      Email::Sender.new(insider_message, :valid_type, secret_message.user).send
+
+      expect(insider_message.attachments.map(&:filename)).to contain_exactly(
+        "secret.pdf",
+        "visible.pdf",
+      )
+    end
+
+    it "does not attach the secure upload when a CC recipient cannot access it" do
+      insider_message.cc = [post.user.email]
+
+      Email::Sender.new(insider_message, :valid_type, secret_message.user).send
+
+      expect(insider_message.attachments.map(&:filename)).to contain_exactly("visible.pdf")
+    end
+
+    it "does not attach the secure upload when a BCC recipient cannot access it" do
+      insider_message.bcc = [post.user.email]
+
+      Email::Sender.new(insider_message, :valid_type, secret_message.user).send
+
+      expect(insider_message.attachments.map(&:filename)).to contain_exactly("visible.pdf")
     end
   end
 

@@ -1385,3 +1385,45 @@ acceptance("Sidebar - Plugin API", function (needs) {
       );
   });
 });
+
+acceptance("Sidebar - User nav panel - Plugin API", function (needs) {
+  needs.user({});
+
+  needs.settings({
+    navigation_menu: "sidebar",
+    sidebar_user_navigation: true,
+  });
+
+  test("adds links to a section of the user nav panel", async function (assert) {
+    withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-test",
+        route: "userActivity.index",
+        label: "user.filters.all",
+        icon: "bars-staggered",
+      });
+
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-hidden",
+        route: "userActivity.index",
+        label: "user.filters.all",
+        icon: "bars-staggered",
+        displayed: () => false,
+      });
+    });
+
+    await visit("/u/eviltrout/activity");
+
+    assert
+      .dom(
+        ".user-nav-panel .sidebar-section-link[data-link-name='user-nav-activity-test']"
+      )
+      .exists("a registered link renders in the section it named");
+
+    assert
+      .dom(
+        ".user-nav-panel .sidebar-section-link[data-link-name='user-nav-activity-hidden']"
+      )
+      .doesNotExist("a link whose `displayed` returns false is dropped");
+  });
+});

@@ -152,10 +152,9 @@ export interface TooltipOptions {
   hoverGracePeriod: number;
 
   /**
-   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
-   * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
-   * silently wins over the matched width and a trigger wider than the cap gets a narrower
-   * overlay.
+   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Ignored
+   * when `matchTriggerWidth` is set, since the trigger then decides the width; only the viewport
+   * bounds it.
    *
    * A number is additionally capped to the width the viewport leaves the float, so it can never
    * overflow the document; a string is applied verbatim and gets no such cap.
@@ -176,6 +175,9 @@ export interface TooltipOptions {
 
   /** The preferred placement of the float relative to its trigger. */
   placement: FloatUiPlacement;
+
+  /** Keep the initially resolved placement until the float closes. Defaults to false. */
+  preservePlacement?: boolean;
 
   /** Whether to shift the float into view before running the visibility optimizer, rather than after. */
   shiftBeforeVisibilityOptimizer: boolean;
@@ -333,20 +335,34 @@ export interface ToastData {
   [key: string]: unknown;
 }
 
+/**
+ * The progress-bar arguments a toast component receives. The registration
+ * callback is guaranteed whenever a progress bar is shown.
+ */
+type ToastProgressBarArgs =
+  | {
+      /** Whether to show a progress bar counting down to auto-close. */
+      showProgressBar?: false;
+
+      /** Registers the progress-bar element so the auto-close modifier can animate it. */
+      onRegisterProgressBar?: (element: HTMLElement) => void;
+    }
+  | {
+      /** Whether to show a progress bar counting down to auto-close. */
+      showProgressBar: true;
+
+      /** Registers the progress-bar element so the auto-close modifier can animate it. */
+      onRegisterProgressBar: (element: HTMLElement) => void;
+    };
+
 /** The arguments a toast component receives (the default is `DDefaultToast`). */
-export interface ToastComponentArgs {
+export type ToastComponentArgs = ToastProgressBarArgs & {
   /** The data to render in the toast. */
   data?: ToastData;
 
   /** Closes the toast. */
   close?: FloatCallback;
-
-  /** Whether to show a progress bar counting down to auto-close. */
-  showProgressBar?: boolean;
-
-  /** Registers the progress-bar element so the auto-close modifier can animate it. */
-  onRegisterProgressBar?: (element: HTMLElement) => void;
-}
+};
 
 /** The signature of a toast component (the default is `DDefaultToast`). */
 export type ToastComponent = ComponentLike<{
@@ -362,8 +378,12 @@ export interface ToastOptions {
   /** Whether to reposition automatically; an object passes floating-ui `autoUpdate` options. */
   autoUpdate: boolean | AutoUpdateOptions;
 
-  /** How long the toast stays open: a preset (`"short"`/`"long"`) or a number of milliseconds. */
-  duration: "short" | "long" | number;
+  /**
+   * How long the toast stays open: a preset, or a deprecated number of
+   * milliseconds. `"extra-long"` is for toasts that offer an action the reader
+   * needs time to take.
+   */
+  duration: "short" | "long" | "extra-long" | number;
 
   /** The component rendered as the toast body. */
   component: ToastComponent;
@@ -406,6 +426,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
     triggers: { mobile: ["click"], desktop: ["hover", "click"] },
     untriggers: { mobile: ["click"], desktop: ["hover", "click"] },
     placement: "top",
+    preservePlacement: false,
     shiftBeforeVisibilityOptimizer: false,
     visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
@@ -443,6 +464,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     triggers: ["click"],
     untriggers: ["click"],
     placement: "bottom-start",
+    preservePlacement: false,
     shiftBeforeVisibilityOptimizer: false,
     visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,

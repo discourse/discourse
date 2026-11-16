@@ -6,7 +6,19 @@
 
 et:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Pealkiri"
+        icon: "Ikoon"
+        color: "Värv"
+      create_board:
+        name: "Nimi"
+        tag_names: "Sildid"
+        category_ids: "Liigid"
     boards:
+      status:
+        all: "Kõik"
+        open: "Ava"
       board:
         remove_card: "Eemalda"
         title: "Pealkiri"
@@ -17,6 +29,9 @@ et:
           other: "%{count} vastust"
         assign: "Määra"
         unassign: "Eemalda määramine"
+        owners:
+          one: "Omanik"
+          other: "Omanikud"
       manage:
         name: "Nimi"
         constraint_categories: "Liigid"

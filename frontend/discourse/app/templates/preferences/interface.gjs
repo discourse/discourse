@@ -1,4 +1,5 @@
 import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -8,6 +9,10 @@ import MultiSelect from "discourse/select-kit/components/multi-select";
 import DButton from "discourse/ui-kit/d-button";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
+
+function updateTheme(controller, value) {
+  controller.set("themeId", value);
+}
 
 export default <template>
   <span>
@@ -24,6 +29,7 @@ export default <template>
       <div class="controls">
         <ComboBox
           @content={{@controller.userSelectableThemes}}
+          @onChange={{fn updateTheme @controller}}
           @value={{@controller.themeId}}
         />
       </div>
@@ -209,6 +215,35 @@ export default <template>
       />
     </div>
   </div>
+
+  {{#if @controller.siteSettings.enable_composer_toolbar_customization}}
+    <fieldset
+      class="control-group pref-composer-toolbar"
+      data-setting-name="user-composer-toolbar"
+    >
+      <legend class="control-label">{{i18n
+          "user.composer_toolbar.title"
+        }}</legend>
+      <div class="instructions">
+        {{i18n "user.composer_toolbar.instructions"}}
+      </div>
+      {{#each @controller.composerToolbarButtons key="id" as |button|}}
+        <div class="controls">
+          <label class="checkbox-label">
+            <input
+              checked={{button.shown}}
+              type="checkbox"
+              {{on
+                "change"
+                (fn @controller.toggleComposerToolbarButton button.id)
+              }}
+            />
+            {{i18n button.label}}
+          </label>
+        </div>
+      {{/each}}
+    </fieldset>
+  {{/if}}
 
   <fieldset class="control-group other" data-setting-name="user-other-settings">
     <legend class="control-label">{{i18n "user.other_settings"}}</legend>

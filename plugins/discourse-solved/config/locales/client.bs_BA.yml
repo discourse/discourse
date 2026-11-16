@@ -15,6 +15,9 @@ bs_BA:
               member: "Članovi"
               basic: "Osnovni"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Oznake"
     notifications:
       alt:
         solved:

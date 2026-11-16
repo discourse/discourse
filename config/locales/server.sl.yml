@@ -5,7 +5,20 @@
 # https://translate.discourse.org/
 
 sl:
+  markdown_endpoints:
+    latest: "Najnovejše"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Prejšnja stran"
+    next_page: "Naslednja stran"
+    replies: "Odgovori"
+    last_updated: "Zadnjič posodobljeno"
+    event:
+      location: "Lokacija"
+      link: "Povezava"
   mcp:
+    errors:
+      topic_not_found: "Ne najdemo temo."
     oauth:
       deny: "Zavrni"
   llms_txt:
@@ -572,7 +585,7 @@ sl:
   unsubscribed:
     title: "Nastavitve e-pošte spremenjene!"
   unsubscribe:
-    title: "Odjavi"
+    unsubscribe: "Odjavi"
     mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
     log_out: "Odjava"
     submit: "Shrani nastavitve"
@@ -780,6 +793,8 @@ sl:
     suppress_uncategorized_badge: "Ne prikaži značke za nerazvrščene teme na seznamih tem."
     skip_auto_delete_reply_likes: "Pri samodejnem brisanju starih odgovorov preskočite brisanje objav s tem ali večjim številom všečkov."
     default_other_skip_new_user_tips: "Preskoči namige in značke za nove uporabnike."
+    keywords:
+      company_url: "spletna stran"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -923,6 +938,7 @@ sl:
     password_too_long: "Geslo je omejeno na 200 znakov."
     email_too_long: "Vaš e-naslov je predolg. E-naslov je lahko dolg največ 254 znakov, od tega domena največ 253 znakov."
     reserved_username: "Uporabniško ime ni dovoljeno."
+    missing_username: "Vnesite uporabniško ime"
     auth_complete: "Avtentikacija je končana."
     click_to_continue: "Kliknite tukaj za nadaljevanje."
     second_factor_title: "Preverjanje v dveh korakih"
@@ -1671,7 +1687,7 @@ sl:
         Član osebja foruma je potrdil vaš račun pri %{site_name}.
 
         Do vašega računa lahko dostopate s prijavo na:
-        %{base_url}
+        %{login_url}
 
         Če zgornja povezava ne deluje, poskusite kopirati povezavo v naslov v vašem spletnem brskalniku.
 
@@ -1993,13 +2009,31 @@ sl:
               private:
                 label: "Zasebni"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Vsak dan"
+        every_weekday: "Vsak delavnik"
+        ordinals:
+          last: "zadnji"
+        weekdays:
+          sunday: "Nedelja"
+          monday: "Ponedeljek"
+          tuesday: "Torek"
+          wednesday: "Sreda"
+          thursday: "Četrtek"
+          friday: "Petek"
+          saturday: "Sobota"
     google_meet:
       meeting_code: "Koda:"
     github:
+      header:
+        success: "Uspeh"
       closed: "zaprto"
-      status_date:
-        approved: "potrjen"
-        closed: "zaprta"
+      pr_status:
+        draft: "Osnutek"
+        open: "Odpri"
+        approved: "Potrjeno"
+        closed: "Zaprta"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je omenil v "%{topic}" - %{site_title}'
@@ -2039,6 +2073,10 @@ sl:
         few: "%{count} sekunde"
         other: "%{count} sekund"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Ja"
       agree_and_suspend:

@@ -3,11 +3,11 @@ import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
-import SolvedAcceptedAnswers from "../components/solved-accepted-answers";
-import SolvedSharedIssueButton from "../components/solved-shared-issue-button";
-import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
-import setAcceptedSolutions from "../lib/set-accepted-solutions";
+import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button.gjs";
+import SolvedAcceptedAnswers from "../components/solved-accepted-answers.gjs";
+import SolvedSharedIssueButton from "../components/solved-shared-issue-button.gjs";
+import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button.gjs";
+import setAcceptedSolutions from "../lib/set-accepted-solutions.js";
 
 function topicHasSolvedEnabled(topic) {
   if (!topic) {
@@ -173,6 +173,14 @@ export default {
     withPluginApi(initializeWithApi);
 
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-solved",
+        route: "userActivity.solved",
+        label: "solved.title",
+        icon: "square-check",
+        displayed: ({ siteSettings }) => siteSettings.solved_enabled,
+      });
+
       api.replaceIcon(
         "notification.solved.accepted_notification",
         "square-check"

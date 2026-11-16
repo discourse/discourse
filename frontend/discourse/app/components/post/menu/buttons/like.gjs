@@ -6,7 +6,7 @@ import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import LikedUsersList from "../liked-users-list";
+import LikedUsersList from "../liked-users-list.gjs";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {

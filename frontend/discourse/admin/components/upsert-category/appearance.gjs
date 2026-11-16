@@ -128,6 +128,12 @@ export default class UpsertCategoryAppearance extends Component {
     ];
   }
 
+  /** Converts the native select's string value back to the boolean option value. */
+  @action
+  async onSortAscendingSet(value, { name, set }) {
+    await set(name, value === null ? null : value === "true");
+  }
+
   @action
   async onSortOrderSet(value, { name, set }) {
     await set(name, value);
@@ -269,6 +275,7 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Field
         @format="max"
         @name="sort_ascending"
+        @onSet={{this.onSortAscendingSet}}
         @title={{i18n "category.sort_direction"}}
         @type="select"
         as |field|

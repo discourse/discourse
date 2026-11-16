@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import PaymentOptions from "discourse/plugins/discourse-subscriptions/discourse/components/payment-options";
@@ -29,18 +29,11 @@ module("payment-options", function (hooks) {
       },
     ];
 
-    class State {
-      @tracked selectedPlan;
-    }
-
-    const testState = new State();
+    const selectedPlan = tracked(undefined);
 
     await render(
       <template>
-        <PaymentOptions
-          @plans={{plans}}
-          @selectedPlan={{testState.selectedPlan}}
-        />
+        <PaymentOptions @plans={{plans}} @selectedPlan={{selectedPlan.value}} />
       </template>
     );
 
@@ -50,6 +43,36 @@ module("payment-options", function (hooks) {
       this.selectedPlan,
       undefined,
       "No plans are selected by default"
+    );
+  });
+  test("selecting a plan reports it", async function (assert) {
+    const plans = [
+      { id: "plan_yearly", currency: "aud", unit_amount: 4499 },
+      { id: "plan_monthly", currency: "aud", unit_amount: 999 },
+    ];
+    const selectedPlan = tracked(undefined);
+    const selectPlan = (id) => (selectedPlan.value = id);
+
+    await render(
+      <template>
+        <PaymentOptions
+          @onSelectPlan={{selectPlan}}
+          @plans={{plans}}
+          @selectedPlan={{selectedPlan.value}}
+        />
+      </template>
+    );
+
+    await click(".btn-discourse-subscriptions-subscribe:last-child");
+
+    assert.strictEqual(selectedPlan.value, "plan_yearly");
+    assert
+      .dom(".btn-discourse-subscriptions-subscribe:last-child")
+      .hasClass("btn-primary", "highlights the selected plan");
+    assert.deepEqual(
+      plans.map((plan) => plan.id),
+      ["plan_yearly", "plan_monthly"],
+      "leaves the plans in their original order"
     );
   });
 });

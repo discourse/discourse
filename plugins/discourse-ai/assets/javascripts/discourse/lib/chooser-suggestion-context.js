@@ -4,7 +4,7 @@ import {
   MIN_CHARACTER_COUNT,
   tagNames,
   tagSuggestionParams,
-} from "./ai-helper-suggestions";
+} from "./ai-helper-suggestions.js";
 
 class ComposerSuggestionContext {
   constructor(composer) {

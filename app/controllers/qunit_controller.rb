@@ -28,6 +28,9 @@ class QunitController < ApplicationController
 
     target = params[:target] || "core"
 
+    # The toolbar's target dropdown offers theme tests too
+    return redirect_to path("/theme-qunit") if target == "theme-qunit"
+
     @required_plugins = []
     @testing_plugins = []
 

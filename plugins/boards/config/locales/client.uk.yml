@@ -6,9 +6,31 @@
 
 uk:
   js:
+    discourse_workflows:
+      create_board_column:
+        board_id: "Дошка"
+        title: "Назва"
+        icon: "Іконка"
+        color: "Колір"
+        tag_name: "Теґ"
+        default_sort: "Сортування за замовчуванням"
+        default_sort_priority: "Пріоритет"
+        default_sort_recency: "Останні"
+      create_board:
+        name: "Імʼя"
+        slug: "Мітка"
+        tag_names: "Теґи"
+        category_ids: "Розділи"
+      card_moved:
+        board_id: "Дошка"
+        board_id_placeholder: "Усі дошки"
     boards:
       filter_boards: "Фільтрувальні дошки"
       filter_boards_no_results: "Немає дощок, що відповідають вашому пошуку"
+      status:
+        all: "Всі"
+        open: "Відкрити"
+        archived: "Архівовано"
       topic_footer:
         add_to_board: "Додати до дошки"
         already_added: "Вже додано"
@@ -92,7 +114,11 @@ uk:
         constraint_fix_tags: "Додати тег дошки"
         constraint_fix_confirm: "Перемістити та оновити"
         constraint_tooltip: "На цьому форумі дозволені лише теми з цими категоріями та тегами."
-        created_by: "Створено"
+        owners:
+          one: "Власник"
+          few: "Власники"
+          many: "Власники"
+          other: "Власники"
         show_older_cards: "Показати %{count} старіших карток"
         errors:
           acl_update_failed: "Не вдалося оновити дозволи дошки."

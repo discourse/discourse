@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu-options";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -15,11 +14,9 @@ export default class ComposerToolbarButtons extends Component {
       return false;
     }
 
-    const { context } = this.args.data;
-
     return this.args.data.groups
       .flatMap((group) => group.buttons ?? [])
-      .find((button) => this.isActionable(button) && button.condition(context));
+      .find((button) => this.isActionable(button) && this.isVisible(button));
   }
 
   get rovingButtonBar() {
@@ -33,6 +30,11 @@ export default class ComposerToolbarButtons extends Component {
 
   isActionable(button) {
     return button.type !== "separator" && !button.disabled;
+  }
+
+  @action
+  isVisible(button) {
+    return !button.hiddenByUser && button.condition(this.args.data.context);
   }
 
   /** The title with the drawn shortcut appended, when one is shown. */
@@ -53,7 +55,7 @@ export default class ComposerToolbarButtons extends Component {
   <template>
     {{#each @data.groups key="group" as |group|}}
       {{#each group.buttons key="id" as |button|}}
-        {{#if (button.condition @data.context)}}
+        {{#if (this.isVisible button)}}
           {{#if (eq button.type "separator")}}
             <div class="toolbar-separator"></div>
           {{else if button.popupMenu}}

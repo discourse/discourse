@@ -313,4 +313,19 @@ RSpec.describe Boards::Card do
       expect(card.reload.recency_at.to_i).to eq(updated_at.to_i)
     end
   end
+
+  describe "#unicode_title" do
+    it "uses the card title for floater cards" do
+      card = Fabricate(:boards_card, board:, column:, title: "Launch :rocket:")
+
+      expect(card.unicode_title).to eq("Launch 🚀")
+    end
+
+    it "uses the resolved topic title for topic cards" do
+      topic.update!(title: "Launch :rocket:")
+      card = Fabricate(:boards_topic_card, board:, column:, topic:)
+
+      expect(card.unicode_title).to eq("Launch 🚀")
+    end
+  end
 end

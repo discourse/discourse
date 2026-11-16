@@ -1,6 +1,18 @@
 en:
   js:
     discourse_captcha:
+      title: "Captcha"
+      configuration_test:
+        tab_title: "Test"
+        title: "Configuration test"
+        description: "Test your saved CAPTCHA keys."
+        start: "Test configuration"
+        retry: "Test again"
+        complete_challenge: "Complete the challenge to verify your saved keys."
+        verifying: "Verifying with your CAPTCHA provider…"
+        not_configured: "Select a CAPTCHA provider and save both the site key and secret key in Settings before testing."
+        challenge_failed: "Could not load CAPTCHA. Check your keys and provider settings."
+        expired: "The challenge expired. Start a new test and complete it again."
       missing_token: "Please complete the captcha challenge."
       verification_failed: "Captcha verification failed. Please try again."
       placeholder: placeholder

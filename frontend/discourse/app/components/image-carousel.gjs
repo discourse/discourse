@@ -8,7 +8,6 @@ import { throttle } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import { isTesting } from "discourse/lib/environment";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -21,7 +20,6 @@ const getAspectRatio = helper(([width, height]) => {
 });
 
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;
-const SCROLL_THROTTLE_MS = 50;
 const MAX_DOTS = 10;
 
 export default class ImageCarousel extends Component {
@@ -38,6 +36,7 @@ export default class ImageCarousel extends Component {
     this.#trackDirection =
       getComputedStyle(element).direction === "rtl" ? -1 : 1;
 
+    // Reconcile after scrolling settles so intermediate positions cannot undo navigation.
     const updateIndex = () => {
       const newIndex = this.#calculateNearestIndex(element);
       if (newIndex !== this.currentIndex) {
@@ -49,11 +48,6 @@ export default class ImageCarousel extends Component {
     let scrollStopTimer;
 
     const onScroll = () => {
-      // Optimistic update while scrolling for real-time dot feedback
-      if (!isTesting()) {
-        throttle(this, updateIndex, SCROLL_THROTTLE_MS);
-      }
-
       // Fallback for browsers without scrollend support (Safari < 17.4)
       if (!supportsScrollEnd) {
         clearTimeout(scrollStopTimer);

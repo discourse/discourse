@@ -62,7 +62,7 @@ export default function quoteControls(element, context) {
       highlightTerm,
       id: `quote-id-${quotedTopicId}-${quotedPostNumber}-${index}`,
       ignoredUsers,
-      originalText: blockquote?.textContent?.trim(),
+      originalQuote: blockquote,
       post,
       quotedPostNotFound: aside.classList.contains("quote-post-not-found"),
       quotedPostNumber,

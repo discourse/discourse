@@ -41,6 +41,8 @@ uk:
         ```текст
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Нагадування про подію"
   site_settings:
     map_events_to_color: "Призначити колір для кожного тегу або категорії."
     map_events_title: "Перезаписує «Події» у заголовку бічної панелі «Майбутні події» для кожної категорії."
@@ -83,6 +85,17 @@ uk:
     livestream_embeddable_chat_allowed_paths: "Дозволені шляхи для вбудованого чату прямої трансляції."
     livestream_enable_modal_chat_on_mobile: "Показувати чат прямої трансляції в модальному вікні на мобільному пристрої."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} ось-ось розпочнеться"
+        ongoing: "%{title} триває"
+        after: "%{title} закінчилась"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  та %{count} інший"
+        few: "  та %{count} інші"
+        many: "  та %{count} інші"
+        other: "  та %{count} інші"
     category_type:
       default_calendar_view:
         label: "Стандартний вигляд календаря"
@@ -145,11 +158,9 @@ uk:
           raw_invitees_length: "Подія обмежена %{count} користувачами/групами."
           raw_invitees:
             only_group: "Подія приймає лише назви груп."
-          ends_at_before_starts_at: "Подія не може закінчитися до початку."
           max_attendees_reached: "Цей захід повний."
           start_must_be_present_and_a_valid_date: "Подія вимагає дійсної дати початку."
           end_must_be_a_valid_date: "Дата закінчення повинна бути дійсною датою."
-          invalid_recurrence: "Періодичність повинна бути однією з наступних: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Часовий пояс не розпізнано."
           invalid_url: "URL-адреса має бути дійсною веб-адресою."
           acting_user_not_allowed_to_create_event: "Поточний користувач не може створювати події."

@@ -7,11 +7,11 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
-import { and, not } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
@@ -28,24 +28,25 @@ import { checkMessageTopVisibility } from "discourse/plugins/chat/discourse/lib/
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
+  maintainScrollPosition,
   scrollListToBottom,
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatChannelEmptyState from "./chat/channel/empty-state";
-import ChatComposerChannel from "./chat/composer/channel";
-import ChatPinnedMessageBar from "./chat/pinned-message-bar";
-import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
-import ChatSelectionManager from "./chat/selection-manager";
-import ChatChannelFilter from "./chat-channel-filter";
-import ChatChannelPreviewCard from "./chat-channel-preview-card";
-import ChatMentionWarnings from "./chat-mention-warnings";
-import Message from "./chat-message";
-import ChatMessagesContainer from "./chat-messages-container";
-import ChatMessagesScroller from "./chat-messages-scroller";
-import ChatNotices from "./chat-notices";
-import ChatSkeleton from "./chat-skeleton";
-import ChatUploadDropZone from "./chat-upload-drop-zone";
+import ChatChannelEmptyState from "./chat/channel/empty-state.gjs";
+import ChatComposerChannel from "./chat/composer/channel.js";
+import ChatPinnedMessageBar from "./chat/pinned-message-bar.gjs";
+import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow.gjs";
+import ChatSelectionManager from "./chat/selection-manager.gjs";
+import ChatChannelFilter from "./chat-channel-filter.gjs";
+import ChatChannelPreviewCard from "./chat-channel-preview-card.gjs";
+import ChatMentionWarnings from "./chat-mention-warnings.gjs";
+import Message from "./chat-message.gjs";
+import ChatMessagesContainer from "./chat-messages-container.gjs";
+import ChatMessagesScroller from "./chat-messages-scroller.gjs";
+import ChatNotices from "./chat-notices.gjs";
+import ChatSkeleton from "./chat-skeleton.gjs";
+import ChatUploadDropZone from "./chat-upload-drop-zone.gjs";
 
 export default class ChatChannel extends Component {
   @service capabilities;
@@ -77,6 +78,48 @@ export default class ChatChannel extends Component {
   jumpToPinnedMessage = (messageId) => {
     this.highlightOrFetchMessage(messageId, { position: "center" });
   };
+  // the overlays only read as raised while list content runs beneath them
+  elevateOverlays = modifier((element) => {
+    const scroller = element.parentElement.querySelector(
+      ".chat-messages-scroller"
+    );
+    const content = scroller?.querySelector(".chat-messages-container");
+    if (!scroller || !content) {
+      return;
+    }
+
+    // the topmost message, so the loading skeleton and the empty state don't count
+    const update = () => {
+      const card = element.querySelector(".admin-onboarding-banner__wrap");
+      const firstMessage = content.querySelector(".chat-message-container");
+      const covered =
+        !!card &&
+        !!firstMessage &&
+        firstMessage.getBoundingClientRect().top <
+          card.getBoundingClientRect().bottom;
+      element.classList.toggle("--over-content", covered);
+    };
+
+    const resizeObserver = new ResizeObserver(update);
+    resizeObserver.observe(scroller);
+    resizeObserver.observe(content);
+    const observeChildren = () => {
+      for (const child of element.children) {
+        resizeObserver.observe(child);
+      }
+      update();
+    };
+    const mutationObserver = new MutationObserver(observeChildren);
+    mutationObserver.observe(element, { childList: true });
+    observeChildren();
+    scroller.addEventListener("scroll", update, { passive: true });
+
+    return () => {
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+      scroller.removeEventListener("scroll", update);
+    };
+  });
   // real user input flips this, so onScroll drops the pinned-bar tap override
   // only on a scroll the user drove — not the programmatic jump that set it
   #userScrolled = false;
@@ -211,7 +254,11 @@ export default class ChatChannel extends Component {
     this.subscriptionManager = new ChatChannelSubscriptionManager(
       this,
       this.args.channel,
-      { onNewMessage: this.onNewMessage }
+      {
+        onNewMessage: this.onNewMessage,
+        onRemoveMessage: (message) =>
+          this.messagesLoader.releaseMessage(message),
+      }
     );
 
     if (targetMessageId) {
@@ -227,7 +274,8 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
-    const isOwnMessage = message.user.id === this.currentUser.id;
+    const isOwnMessage = message.user.id === this.currentUser?.id;
+    this.messagesLoader.trackLiveMessage(message);
 
     if (!isOwnMessage) {
       this.chatNewMessageAnnouncer.notify(message, {
@@ -236,12 +284,21 @@ export default class ChatChannel extends Component {
       });
     }
 
+    // the load in flight, or the one that already ran, brings it in
+    if (
+      !this.messagesLoader.fetchedOnce ||
+      this.messagesManager.findMessage(message.id)
+    ) {
+      return;
+    }
+
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,
       shouldAutoScroll: this.paneState.shouldAutoScrollIncomingMessage({
         isAtLiveEdge: this.paneState.isAtLiveEdge,
         isOwnMessage,
       }),
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
       isOwnMessage,
@@ -283,7 +340,7 @@ export default class ChatChannel extends Component {
     this.maybeDebouncedUpdateLastReadMessage();
   }
 
-  async fetchMoreMessages({ direction }, opts = {}) {
+  async fetchMoreMessages({ direction }) {
     if (this.messagesLoader.loading) {
       return;
     }
@@ -293,19 +350,33 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    // messages held while newer history was unloaded are part of this page
+    if (direction === FUTURE && !this.messagesLoader.canLoadMoreFuture) {
+      this.paneState.clearPendingMessages();
+    }
+
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
+
+    // a request for newer messages made while this page loaded was dropped
+    if (direction === PAST && this.paneState.isAtLiveEdge) {
+      this.fetchMoreMessages({ direction: FUTURE });
+    }
+
     const messages = this.processMessages(this.args.channel, result);
     if (!messages.length) {
       return;
     }
 
-    const targetMessageId = this.messagesManager.messages.at(-1).id;
-    this.messagesManager.addMessages(messages);
-
-    if (direction === FUTURE && !opts.noScroll) {
-      this.scrollToMessageId(targetMessageId, {
-        position: "end",
-        forceAuto: true,
-      });
+    if (direction === FUTURE) {
+      maintainScrollPosition(this.scroller, () =>
+        this.messagesManager.addMessages(messages)
+      );
+    } else {
+      this.messagesManager.addMessages(messages);
     }
 
     this.debounceFillPaneAttempt();
@@ -341,7 +412,10 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const message = this.messagesManager.findFirstMessageOfDay(new Date(date));
+    const message = this.messagesManager.findFirstMessageOfDay(
+      new Date(date),
+      this.currentUser?.user_option?.timezone
+    );
     if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
       this.fetchMessages({ target_date: date, direction: FUTURE });
     } else {
@@ -619,6 +693,10 @@ export default class ChatChannel extends Component {
 
   @action
   async onSendMessage(message) {
+    if (this.pane.sending) {
+      return;
+    }
+
     if (
       message.message.length > this.siteSettings.chat_maximum_message_length
     ) {
@@ -630,11 +708,17 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    await message.cook();
-    if (message.editing) {
-      await this.#sendEditMessage(message);
-    } else {
-      await this.#sendNewMessage(message);
+    this.pane.sending = true;
+
+    try {
+      await message.cook();
+      if (message.editing) {
+        await this.#sendEditMessage(message);
+      } else {
+        await this.#sendNewMessage(message);
+      }
+    } finally {
+      this.pane.sending = false;
     }
   }
 
@@ -676,8 +760,6 @@ export default class ChatChannel extends Component {
   }
 
   async #sendEditMessage(message) {
-    this.pane.sending = true;
-
     const data = {
       message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
@@ -691,13 +773,10 @@ export default class ChatChannel extends Component {
       popupAjaxError(e);
     } finally {
       message.editing = false;
-      this.pane.sending = false;
     }
   }
 
   async #sendNewMessage(message) {
-    this.pane.sending = true;
-
     await this.args.channel.stageMessage(message);
 
     message.manager = this.args.channel.messagesManager;
@@ -713,15 +792,12 @@ export default class ChatChannel extends Component {
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-        client_created_at: message.createdAt.toISOString(),
         ...extractCurrentTopicInfo(this),
       });
 
       this.scrollToLatestMessage();
     } catch (error) {
       this._onSendError(message.id, error);
-    } finally {
-      this.pane.sending = false;
     }
   }
 
@@ -751,16 +827,7 @@ export default class ChatChannel extends Component {
   _onSendError(id, error) {
     const stagedMessage =
       this.args.channel.messagesManager.findStagedMessage(id);
-    if (stagedMessage) {
-      if (error.jqXHR?.responseJSON?.errors?.length) {
-        // only network errors are retryable
-        stagedMessage.message = "";
-        stagedMessage.cooked = "";
-        stagedMessage.error = error.jqXHR.responseJSON.errors[0];
-      } else {
-        stagedMessage.error = "network_error";
-      }
-    }
+    stagedMessage?.setSendError(error);
 
     this.resetComposerMessage();
   }
@@ -813,7 +880,6 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
     >
       <ChatChannelStatus @channel={{@channel}} />
-      <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
       <ChatChannelFilter
         @channel={{@channel}}
@@ -828,6 +894,11 @@ export default class ChatChannel extends Component {
         @onJumpToMessage={{this.jumpToPinnedMessage}}
         @viewportBottomMessageId={{this.lastVisibleMessageId}}
       />
+
+      <div class="chat-channel__overlays" {{this.elevateOverlays}}>
+        {{yield to="aboveMessages"}}
+        <ChatNotices @channel={{@channel}} />
+      </div>
 
       <ChatMessagesScroller
         @onRegisterScroller={{this.registerScroller}}

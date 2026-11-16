@@ -24,6 +24,10 @@ ug:
         remove: "بۇ ياقتۇرۇشنى چىقىرىۋەت"
         cant_remove: "ياقتۇرۇشىڭىزنى ئەمدى چىقىرىۋېتەلمەيسىز"
         unauthenticated: "بۇ يازمىنى ياقتۇرۇش ئۈچۈن تىزىملىتىڭ ياكى تىزىمغا كىرىڭ"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "قوشۇلدى"
+        changes_removed: "چىقىرىۋېتىلدى"
     notifications:
       reaction_1_user_multiple_posts:
         one: "%{count} يازمىڭىزغا ئىنكاس قايتۇردى"

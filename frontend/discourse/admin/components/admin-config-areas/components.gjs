@@ -113,7 +113,8 @@ export default class AdminConfigAreasComponents extends Component {
     return {
       selectedType: COMPONENTS,
       userId: null,
-      content: [],
+      content:
+        /** @type {import("discourse/admin/models/theme").default[]} */ ([]),
       installedThemes: this.components,
       addTheme: this.addComponent,
       updateSelectedType: () => {},

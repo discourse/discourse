@@ -663,6 +663,58 @@ describe Chat::Notifier do
         )
       end
 
+      context "when the mentioned group's member list is hidden from the message creator" do
+        fab!(:hidden_members_group) do
+          Fabricate(
+            :public_group,
+            mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            members_visibility_level: Group.visibility_levels[:staff],
+          )
+        end
+
+        before { hidden_members_group.add(user_3) }
+
+        it "does not publish an invitation notice revealing hidden group members" do
+          msg = build_cooked_msg("Hello @#{hidden_members_group.name}", user_1)
+
+          messages =
+            MessageBus.track_publish("/chat/#{channel.id}") do
+              described_class.new(msg, msg.created_at).notify_new
+            end
+
+          expect(messages).to be_empty
+        end
+
+        it "still invites members whose membership is visible through another mentioned group" do
+          visible_group =
+            Fabricate(
+              :public_group,
+              users: [user_3],
+              mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            )
+          msg =
+            build_cooked_msg("Hello @#{hidden_members_group.name} @#{visible_group.name}", user_1)
+
+          messages =
+            MessageBus.track_publish("/chat/#{channel.id}") do
+              described_class.new(msg, msg.created_at).notify_new
+            end
+
+          expect(messages.first.data[:data][:user_ids]).to eq([user_3.id])
+        end
+
+        it "still invites directly mentioned users" do
+          msg = build_cooked_msg("Hello @#{user_3.username} @#{hidden_members_group.name}", user_1)
+
+          messages =
+            MessageBus.track_publish("/chat/#{channel.id}") do
+              described_class.new(msg, msg.created_at).notify_new
+            end
+
+          expect(messages.first.data[:data][:user_ids]).to eq([user_3.id])
+        end
+      end
+
       it "cannot invite a member of a group who is ignoring the user who created the message" do
         group =
           Fabricate(

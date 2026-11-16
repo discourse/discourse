@@ -72,6 +72,7 @@ class Tag < ActiveRecord::Base
 
   before_save :cook_description
 
+  after_update :enqueue_tag_hashtag_remap, if: :saved_change_to_name?
   after_save :index_search
   after_save :update_synonym_associations
 
@@ -223,7 +224,8 @@ class Tag < ActiveRecord::Base
         JOIN topics ON topics.id = topic_tags.topic_id
                    AND topics.deleted_at IS NULL
                    AND topics.archetype = 'private_message'
-       WHERE topic_tags.topic_id IN (
+       WHERE tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})
+         AND topic_tags.topic_id IN (
           SELECT topic_id
             FROM topic_allowed_users
            WHERE user_id = #{user_id.to_i}
@@ -314,6 +316,10 @@ class Tag < ActiveRecord::Base
     categories
   end
 
+  def visible_in_accessible_categories?(guardian)
+    DiscourseTagging.filter_visible_in_accessible_categories(Tag.where(id: id), guardian).exists?
+  end
+
   %i[tag_created tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
@@ -348,6 +354,13 @@ class Tag < ActiveRecord::Base
 
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(name.strip.downcase)
+  end
+
+  def enqueue_tag_hashtag_remap
+    old_ref = name_before_last_save
+    return if old_ref.blank? || old_ref.casecmp?(name)
+
+    HashtagRemapper.enqueue([{ type: TagHashtagDataSource.type, id:, old_ref: }])
   end
 end
 

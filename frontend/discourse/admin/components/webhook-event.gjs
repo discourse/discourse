@@ -14,6 +14,8 @@ export default class WebhookEvent extends Component {
 
   @tracked body = "";
   @tracked bodyLabel = "";
+
+  /** @type {string | null} */
   @tracked expandDetails = null;
   @tracked headers = "";
   expandDetailsRequestKey = "request";

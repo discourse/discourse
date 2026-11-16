@@ -42,14 +42,21 @@
 #                            `stable` status admins are warned that it will become permanent and they will no
 #                            longer be able to opt out. Set to false when that warning does not apply, for
 #                            example a change that only alters the default value of another site setting.
-#                          - allow_enabled_for: (optional array) restricts which "Enabled for"
-#                            dropdown options the admin can pick for this upcoming change.
+#                          - group_setting: (optional setting name) use an existing group_list setting as
+#                            the audience instead of SiteSettingGroup. Must reference a core setting or one
+#                            from the change's own plugin. Cannot combine with allow_enabled_for.
+#                            The rollout boolean and audience are independent: toggling preserves the linked
+#                            setting, and audience edits update that setting using its normal validation,
+#                            mandatory_values, disallowed_groups, confirmation flow, and staff logging.
+#                            An empty list means no audience; anonymous access requires anonymous_users.
+#                            Linked audience restrictions still apply after auto-promotion and permanent status.
+#                          - allow_enabled_for: (optional array) restricts the audience admins can pick.
 #                            Valid values: everyone, staff, specific_groups.
 #
-#                            "No one" is always present and cannot be removed. If `everyone` is included it must be
-#                            the only value (it cannot combine with staff or specific_groups).
-#                            Omit the key to allow all four options (the default permissive
-#                            behavior).
+#                            `everyone` must be the only value and means the change can't be scoped to
+#                            groups; the admin UI then shows the impact role's groups as a locked audience,
+#                            so make the role match who the change affects. Omit the key to let admins
+#                            pick any groups, starting from the impact role's groups.
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
 #                         Use this when the parent setting is not boolean, for example an enum setting.
@@ -465,6 +472,9 @@ basic:
     refresh: true
     disallowed_groups: "0|4|5"
     area: "group_permissions"
+    upcoming_change_default_override:
+      upcoming_change: "update_whispers_allowed_groups_default"
+      new_default: "3"
   hidden_post_visible_groups:
     type: group_list
     list_type: compact
@@ -490,6 +500,15 @@ basic:
     default: 1
     min: 0
     area: "notifications"
+  push_notification_trusted_hosts:
+    default: "fcm.googleapis.com|updates.push.services.mozilla.com|push.apple.com|notify.windows.com"
+    type: host_list
+    list_type: simple
+    area: "notifications"
+  push_notification_localization_max_wait_mins:
+    default: 3
+    min: 0
+    hidden: true
   short_title:
     default: ""
     max: 12
@@ -550,7 +569,7 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
-    disallowed_groups: "4"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   about_page_extra_groups:
     client: true
@@ -607,14 +626,8 @@ basic:
     default: false
     hidden: true
     client: true
-  trigger_browser_pageview_events:
-    default: false
-    hidden: true
-  persist_browser_pageview_events:
-    default: true
-    hidden: true
   clean_up_browser_pageview_events:
-    default: false
+    default: true
     hidden: true
   browser_pageview_referrer_backfill_batch_size:
     default: 5000
@@ -694,7 +707,7 @@ login:
       - enable_local_logins
       - enable_local_logins_via_email
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/407068"
       permanent_warning: false
@@ -702,7 +715,7 @@ login:
         - everyone
   enable_random_usernames:
     client: true
-    default: true
+    default: false
     area: "login"
     depends_on:
       - enable_local_logins_via_code
@@ -757,6 +770,7 @@ login:
     hidden: true
   enable_google_oauth2_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   google_oauth2_client_id:
     default: ""
@@ -789,11 +803,18 @@ login:
     default: false
     validator: GoogleOauth2HdGroupsValidator
     area: "authenticators"
+  google_oauth2_hd_groups_allowed:
+    default: ""
+    type: list
+    list_type: simple
+    validator: GoogleOauth2HdGroupsAllowedValidator
+    area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
     area: "authenticators"
   enable_twitter_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   twitter_consumer_key:
     default: ""
@@ -806,6 +827,7 @@ login:
     area: "authenticators"
   enable_facebook_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   facebook_app_id:
     client: true
@@ -819,6 +841,7 @@ login:
     area: "authenticators"
   enable_github_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   github_client_id:
     default: ""
@@ -831,6 +854,7 @@ login:
     area: "authenticators"
   enable_discord_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   discord_client_id:
     default: ""
@@ -846,7 +870,7 @@ login:
     area: "authenticators"
   enable_linkedin_oidc_logins:
     default: false
-    validator: "LinkedinOidcCredentialsValidator"
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   linkedin_oidc_client_id:
     default: ""
@@ -1215,10 +1239,16 @@ users:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   hide_silencing_reasons:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   log_personal_messages_views:
     default: false
     area: "users"
@@ -1426,13 +1456,14 @@ posting:
     client: true
     default: false
     refresh: true
+    validator: "AllowUncategorizedTopicsValidator"
     area: "posts_and_topics"
   remove_and_replace_uncategorized:
     default: false
     client: true
     hidden: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
@@ -1665,11 +1696,6 @@ posting:
     default: 7
     max: 36500
     client: true
-    area: "posts_and_topics"
-  short_progress_text_threshold:
-    client: true
-    default: 10000
-    max: 99000
     area: "posts_and_topics"
   default_code_lang:
     client: true
@@ -2181,7 +2207,7 @@ nested_replies:
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
-    min: 1
+    min: 0
     max: 10000
     hidden: true
   nested_replies_stats_maintenance_enabled:
@@ -3158,7 +3184,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother|yeti"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother|yeti|perplexity-user|claude-user"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -3729,6 +3755,9 @@ legal:
     area: "legal"
 
 backups:
+  site_archived:
+    default: false
+    client: true
   enable_backups:
     default: true
     client: true
@@ -4057,6 +4086,7 @@ uncategorized:
   staff_category_id:
     default: -1
     hidden: true
+    client: true
     area: "categories"
   uncategorized_category_id:
     default: -1
@@ -4288,6 +4318,9 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
+  concord_in_wizard:
+    default: true
+    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4724,40 +4757,6 @@ tags:
     area: "categories_and_tags|categories"
 
 dashboard:
-  dashboard_hidden_reports:
-    client: true
-    type: list
-    list_type: compact
-    default: ""
-    allow_any: true
-    area: "reports"
-  dashboard_visible_tabs:
-    client: true
-    type: list
-    list_type: compact
-    default: "moderation|security|reports|features"
-    allow_any: false
-    choices:
-      - moderation
-      - security
-      - reports
-      - features
-    area: "reports"
-  dashboard_general_tab_activity_metrics:
-    client: true
-    type: list
-    list_type: compact
-    default: "page_view_total_reqs|visits|time_to_first_response|likes|flags|user_to_user_private_messages_with_replies"
-    allow_any: false
-    choices:
-      - page_view_total_reqs
-      - visits
-      - time_to_first_response
-      - likes
-      - flags
-      - user_to_user_private_messages_with_replies
-      - signups
-    area: "reports"
   site_traffic_explorer_event_limit:
     default: 200000
     type: integer
@@ -4779,6 +4778,25 @@ dashboard:
     client: true
 
 experimental:
+  enable_user_menu_mentions_tab:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415579"
+  enable_markdown_endpoints:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "stable"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413006"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
   enable_generated_llms_txt:
     default: false
     hidden: true
@@ -4812,25 +4830,62 @@ experimental:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
-  enable_new_post_reactions_menu:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      status: "permanent"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/389820"
-  enable_composer_redesign:
+  enable_new_reordering_controls:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
       status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/414613"
+  enable_composer_redesign:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_main_outlet_grid_layout_change:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "other,all_members"
+      body_class: true
+      learn_more_url: "https://meta.discourse.org/t/-/414357"
+  review_queue_consistent_answers:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "other,moderators"
+      learn_more_url: "https://meta.discourse.org/t/-/417015"
+  enable_composer_toolbar_customization:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/412749"
+  enable_category_hashtag_cards:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/412529"
   prioritize_recently_used_tags:
     default: false
     client: true
@@ -4851,6 +4906,38 @@ experimental:
   enable_form_templates:
     client: true
     default: true
+  dsa_reporting_enabled:
+    client: true
+    default: false
+    area: "experimental"
+  dsa_notice_group:
+    default: "1"
+    type: group
+    area: "experimental"
+  dsa_community_rules:
+    type: objects
+    default: []
+    area: "experimental"
+    schema:
+      name: Community rule
+      identifier: ground
+      properties:
+        ground:
+          type: string
+          textarea: true
+          required: true
+          validations:
+            max_length: 500
+        explanation:
+          type: string
+          textarea: true
+          required: true
+          validations:
+            max_length: 500
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    area: "experimental"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -4947,7 +5034,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   improved_crawler_detection:
@@ -4982,3 +5069,33 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/416547"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
+  update_whispers_allowed_groups_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/414354"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
+  sidebar_user_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/413150"

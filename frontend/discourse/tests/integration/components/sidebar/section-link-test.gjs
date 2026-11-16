@@ -1,4 +1,4 @@
-import { trackedObject } from "@ember/reactive/collections";
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   find,
@@ -264,7 +264,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     );
   });
   test("moving an active destination between sections preserves the current scroll position", async function (assert) {
-    this.state = trackedObject({ moved: false });
+    const moved = tracked(false);
 
     await render(
       <template>
@@ -273,7 +273,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
           style="height: 200px; overflow-y: auto; display: block"
         >
           <ul style="height: 600px; margin: 0">
-            {{#unless this.state.moved}}
+            {{#unless moved.value}}
               <SectionLink
                 @href="/latest"
                 @linkName="original"
@@ -282,7 +282,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
             {{/unless}}
           </ul>
           <ul style="height: 600px; margin: 0">
-            {{#if this.state.moved}}
+            {{#if moved.value}}
               <SectionLink
                 @href="/latest"
                 @linkName="moved"
@@ -296,7 +296,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     const scroller = find(".sidebar-sections");
     scroller.scrollTop = 100;
 
-    this.state.moved = true;
+    moved.value = true;
     await rerender();
 
     assert
@@ -309,7 +309,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     );
 
     scroller.scrollTop = 300;
-    this.state.moved = false;
+    moved.value = false;
     await rerender();
 
     assert.strictEqual(
@@ -320,7 +320,8 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
   });
 
   test("new destinations and reactivated links are still revealed", async function (assert) {
-    this.state = trackedObject({ destinations: ["/latest"], active: true });
+    const destinations = tracked(["/latest"]);
+    const active = tracked(true);
 
     await render(
       <template>
@@ -330,11 +331,11 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
         >
           <div style="height: 600px"></div>
           <ul>
-            {{#each this.state.destinations as |destination|}}
+            {{#each destinations.value as |destination|}}
               <SectionLink
                 @href={{destination}}
                 @linkName="destination"
-                @scrollIntoView={{this.state.active}}
+                @scrollIntoView={{active.value}}
               />
             {{/each}}
           </ul>
@@ -346,22 +347,22 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     assert.true(scroller.scrollTop > 0, "the initial active link is revealed");
 
     scroller.scrollTop = 0;
-    this.state.destinations = ["/top"];
+    destinations.value = ["/top"];
     await rerender();
     assert.true(scroller.scrollTop > 0, "a different destination is revealed");
 
     scroller.scrollTop = 0;
-    this.state.destinations = ["/latest"];
+    destinations.value = ["/latest"];
     await rerender();
     assert.true(
       scroller.scrollTop > 0,
       "returning to a previous destination reveals it again"
     );
 
-    this.state.active = false;
+    active.value = false;
     await rerender();
     scroller.scrollTop = 0;
-    this.state.active = true;
+    active.value = true;
     await rerender();
     assert.true(
       scroller.scrollTop > 0,

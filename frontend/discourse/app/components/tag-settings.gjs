@@ -13,13 +13,17 @@ import getURL from "discourse/lib/get-url";
 import { slugify } from "discourse/lib/utilities";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
-import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ id: number | string, name: string, isNew?: boolean }} TagSynonymChoice
+ * @typedef {{ id?: number, tag_id: number, locale: string, name: string, description: string | null, description_cooked?: string | null }} TagSettingsLocalization
+ * @typedef {{ name: string, locale: string | null | undefined, slug: string, description: string, synonyms: TagSynonymChoice[], new_synonyms: TagSynonymChoice[], removed_synonym_ids: number[], localizations: TagSettingsLocalization[] }} TagSettingsFormData
+ */
 export default class TagSettings extends Component {
   @service router;
   @service dialog;
@@ -28,6 +32,7 @@ export default class TagSettings extends Component {
   @service store;
   @service appEvents;
 
+  /** @type {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void> } | null} */
   @tracked form = null;
   @tracked tags = [];
 
@@ -40,6 +45,7 @@ export default class TagSettings extends Component {
     return this.tags.map((t) => t.name);
   }
 
+  /** @returns {TagSettingsFormData} */
   get formData() {
     return {
       name: this.args.tag.name,

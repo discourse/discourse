@@ -9,7 +9,6 @@ import { service } from "@ember/service";
 import CreateTopicButton from "discourse/components/create-topic-button";
 import bodyClass from "discourse/helpers/body-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { gt } from "discourse/truth-helpers";
 
 export default class SidebarNewTopicButton extends Component {
   @service composer;

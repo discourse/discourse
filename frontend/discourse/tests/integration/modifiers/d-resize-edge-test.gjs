@@ -837,13 +837,11 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
 
   test("a writing direction change between gestures is picked up", async function (assert) {
     const state = new Harness();
-    const container = new (class {
-      @tracked dir = "ltr";
-    })();
+    const dir = tracked("ltr");
 
     await render(
       <template>
-        <div dir={{container.dir}}>
+        <div dir={{dir.value}}>
           <div
             class="resize-edge"
             {{dResizeEdge
@@ -877,7 +875,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       "moving right grows a start-docked element under LTR"
     );
 
-    container.dir = "rtl";
+    dir.value = "rtl";
     await settled();
 
     // The direction is held for the length of a gesture, not for the length of

@@ -4,7 +4,7 @@ import {
   serializeAttributes,
 } from "discourse/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
-import WrapNodeView from "../components/wrap-node-view";
+import WrapNodeView from "../components/wrap-node-view.gjs";
 
 const toDataAttrs = (data) => {
   if (!data) {

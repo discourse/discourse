@@ -71,15 +71,18 @@ export interface ReplaceTextOptions {
 }
 
 export interface SurroundOptions {
-  /** Apply formatting independently across multiple lines. */
+  /** Apply the delimiters independently to each selected line. */
   multiline?: boolean;
-  /** Put multiline content on lines between the delimiters. */
+  /**
+   * Separate multiline content from the delimiters with newlines when wrapping
+   * the whole selection. This controls spacing; it does not force a block node.
+   */
   useBlockMode?: boolean;
   /** Apply formatting to empty lines. */
   applyEmptyLines?: boolean;
-  /** Leave the leading marker outside the restored selection. */
+  /** Leave the leading marker outside the restored selection (plain-text editor only). */
   excludeHeadInSelection?: boolean;
-  /** Expand the selection to whole lines before applying. */
+  /** Expand the selection to whole lines before applying (plain-text editor only). */
   wholeLine?: boolean;
 }
 
@@ -128,7 +131,10 @@ export interface TextManipulation {
   ): SelectedText;
   /** Selects a text range. */
   selectText(from: number, length: number, options?: SelectTextOptions): void;
-  /** Surrounds a supplied selection with formatting text. */
+  /**
+   * Applies delimiters to a selection. The rich editor parses the markup;
+   * use extension commands for node-specific toggling.
+   */
   applySurround(
     selected: SelectedText,
     head: string | ((previous?: string) => string),

@@ -40,18 +40,6 @@ const UserMessage = <template>
 </template>;
 
 export default class ChatUsage extends Component {
-  get favoriteChannels() {
-    return this.args.report.data.favorite_channels ?? [];
-  }
-
-  get minimumDataThresholdMet() {
-    return (
-      this.args.report.data.total_messages >= 20 &&
-      this.args.report.data.unique_dm_channels >= 2 &&
-      this.args.report.data.favorite_channels.length >= 1
-    );
-  }
-
   get authorText() {
     return i18nForOwner(
       "discourse_rewind.reports.chat_usage.author",
@@ -88,106 +76,104 @@ export default class ChatUsage extends Component {
     });
   }
 
-  get message5Text() {
-    return i18n("discourse_rewind.reports.chat_usage.message_5");
-  }
-
   <template>
-    {{#if this.minimumDataThresholdMet}}
-      <div class="rewind-report-page --chat-usage">
-        <h2 class="rewind-report-title">{{i18n
-            "discourse_rewind.reports.chat_usage.title"
-          }}</h2>
+    <div class="rewind-report-page --chat-usage">
+      <h2 class="rewind-report-title">{{i18n
+          "discourse_rewind.reports.chat_usage.title"
+        }}</h2>
 
-        <div class="chat-window">
-          <div class="chat-window__header">
-            <span class="chat-window__title">
-              {{i18n "discourse_rewind.reports.chat_usage.channel_title"}}
-            </span>
-            <span class="chat-window__status">
-              {{i18n "discourse_rewind.reports.chat_usage.status_online"}}
-            </span>
+      <div class="chat-window">
+        <div class="chat-window__header">
+          <span class="chat-window__title">
+            {{i18n "discourse_rewind.reports.chat_usage.channel_title"}}
+          </span>
+          <span class="chat-window__status">
+            {{i18n "discourse_rewind.reports.chat_usage.status_online"}}
+          </span>
+        </div>
+
+        <div class="chat-window__messages">
+          <div class="chat-message --left">
+            <BotMessage @message={{this.message1Text}} />
           </div>
 
-          <div class="chat-window__messages">
-            <div class="chat-message --left">
-              <BotMessage @message={{trustHTML this.message1Text}} />
-            </div>
+          <div class="chat-message --right">
+            <UserMessage
+              @authorText={{this.authorText}}
+              @replyKey="reply_1"
+              @user={{@user}}
+            />
+          </div>
 
-            <div class="chat-message --right">
-              <UserMessage
-                @authorText={{this.authorText}}
-                @replyKey="reply_1"
-                @user={{@user}}
+          <div class="chat-message --left">
+            <BotMessage @message={{this.message2Text}} />
+          </div>
+
+          <div class="chat-message --right">
+            <UserMessage
+              @authorText={{this.authorText}}
+              @replyKey="reply_2"
+              @user={{@user}}
+            />
+          </div>
+
+          <div class="chat-message --left">
+            <BotMessage @message={{this.message3Text}} />
+          </div>
+
+          <div class="chat-message --right">
+            <UserMessage
+              @authorText={{this.authorText}}
+              @replyKey="reply_3"
+              @user={{@user}}
+            />
+          </div>
+
+          <div class="chat-message --left">
+            <BotMessage @message={{this.message4Text}} />
+          </div>
+
+          {{#if @report.data.favorite_channels.length}}
+            <div class="chat-message --left">
+              <BotMessage
+                @message={{i18n
+                  "discourse_rewind.reports.chat_usage.message_5"
+                }}
+              >
+                <div class="chat-message__channels">
+                  {{#each @report.data.favorite_channels as |channel|}}
+                    <a
+                      class="chat-channel-link"
+                      href={{getURL (concat "/chat/c/-/" channel.channel_id)}}
+                    >
+                      <span
+                        class="chat-channel-link__name"
+                      >#{{channel.channel_slug}}</span>
+                      <span class="chat-channel-link__count">
+                        {{dNumber channel.message_count}}
+                      </span>
+                    </a>
+                  {{/each}}
+                </div>
+              </BotMessage>
+            </div>
+          {{/if}}
+
+          <div class="chat-message --right">
+            <UserMessage @authorText={{this.authorText}} @user={{@user}}>
+              <img
+                alt={{i18n
+                  "discourse_rewind.reports.chat_usage.dancing_baby_alt"
+                }}
+                class="chat-message__gif"
+                src={{getURL
+                  "/plugins/discourse-rewind/images/dancing_baby.gif"
+                }}
               />
-            </div>
-
-            <div class="chat-message --left">
-              <BotMessage @message={{trustHTML this.message2Text}} />
-            </div>
-
-            <div class="chat-message --right">
-              <UserMessage
-                @authorText={{this.authorText}}
-                @replyKey="reply_2"
-                @user={{@user}}
-              />
-            </div>
-
-            <div class="chat-message --left">
-              <BotMessage @message={{trustHTML this.message3Text}} />
-            </div>
-
-            <div class="chat-message --right">
-              <UserMessage
-                @authorText={{this.authorText}}
-                @replyKey="reply_3"
-                @user={{@user}}
-              />
-            </div>
-
-            <div class="chat-message --left">
-              <BotMessage @message={{trustHTML this.message4Text}} />
-            </div>
-
-            {{#if this.favoriteChannels.length}}
-              <div class="chat-message --left">
-                <BotMessage @message={{this.message5Text}}>
-                  <div class="chat-message__channels">
-                    {{#each this.favoriteChannels as |channel|}}
-                      <a
-                        class="chat-channel-link"
-                        href={{getURL (concat "/chat/c/-/" channel.channel_id)}}
-                      >
-                        <span
-                          class="chat-channel-link__name"
-                        >#{{channel.channel_slug}}</span>
-                        <span class="chat-channel-link__count">
-                          {{dNumber channel.message_count}}
-                        </span>
-                      </a>
-                    {{/each}}
-                  </div>
-                </BotMessage>
-              </div>
-            {{/if}}
-
-            <div class="chat-message --right">
-              <UserMessage @authorText={{this.authorText}} @user={{@user}}>
-                <img
-                  alt={{i18n
-                    "discourse_rewind.reports.chat_usage.dancing_baby_alt"
-                  }}
-                  class="chat-message__gif"
-                  src={{getURL
-                    "/plugins/discourse-rewind/images/dancing_baby.gif"
-                  }}
-                />
-              </UserMessage>
-            </div>
+            </UserMessage>
           </div>
         </div>
       </div>
-    {{/if}}
+    </div>
   </template>
 }

@@ -45,6 +45,9 @@ export default class UserTip extends Component {
       instance = new DTooltipInstance(getOwner(this), {
         identifier: "user-tip",
         interactive: true,
+        // tips appear unprompted, so taking focus would pull keyboard and
+        // screen reader users away from where they are
+        autofocus: false,
         closeOnScroll: false,
         closeOnClickOutside: true,
         placement: this.args.placement,

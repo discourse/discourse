@@ -14,6 +14,12 @@
     margin: 0 0 -1px 0;
   }
 
+  .invitees-recurrence-filter {
+    display: flex;
+    flex-wrap: wrap;
+    margin: var(--space-2) 0 0;
+  }
+
   .filter {
     width: calc(100% - 2em);
     margin-bottom: 1em;

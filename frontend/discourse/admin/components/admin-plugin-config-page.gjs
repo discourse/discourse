@@ -5,7 +5,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminPluginConfigArea from "./admin-plugin-config-area";
+import AdminPluginConfigArea from "./admin-plugin-config-area.gjs";
 
 export default class AdminPluginConfigPage extends Component {
   @service adminPluginNavManager;
@@ -18,8 +18,14 @@ export default class AdminPluginConfigPage extends Component {
     return headerActionComponentForPlugin(this.args.plugin.dasherizedName);
   }
 
+  // Derived from @plugin rather than the service's currentPlugin, which
+  // switches mid-transition while this page still renders the previous plugin.
+  get configNavLinks() {
+    return this.adminPluginNavManager.configNavFor(this.args.plugin).links;
+  }
+
   get hideTabs() {
-    return this.adminPluginNavManager.currentConfigNav.links.length <= 1;
+    return this.configNavLinks.length <= 1;
   }
 
   linkText(navLink) {
@@ -51,16 +57,14 @@ export default class AdminPluginConfigPage extends Component {
           />
         </:breadcrumbs>
         <:tabs>
-          {{#each
-            this.adminPluginNavManager.currentConfigNav.links
-            as |navLink|
-          }}
+          {{#each this.configNavLinks as |navLink|}}
             <DNavItem
               class="admin-plugin-config-page__top-nav-item"
               title={{this.linkText navLink}}
               @currentWhen={{navLink.currentWhen}}
               @i18nLabel={{this.linkText navLink}}
               @route={{navLink.route}}
+              @routeParam={{@plugin.id}}
             >
               {{this.linkText navLink}}
             </DNavItem>

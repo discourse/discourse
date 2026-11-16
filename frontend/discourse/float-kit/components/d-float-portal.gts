@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
 import { isTesting } from "discourse/lib/environment";
 
 interface DFloatPortalSignature {
@@ -27,11 +28,18 @@ export default class DFloatPortal extends Component<DFloatPortalSignature> {
     return this.args.inline ?? isTesting();
   }
 
+  /** The outlet to teleport into. A missing one means the portal container is not on the page. */
+  get portalOutlet(): HTMLElement {
+    const outlet = this.args.portalOutletElement;
+    assert("DFloatPortal: the portal outlet is missing from the page", outlet);
+    return outlet;
+  }
+
   <template>
     {{~#if this.inline}}
       {{yield}}
     {{else}}
-      {{#in-element @portalOutletElement insertBefore=null}}
+      {{#in-element this.portalOutlet insertBefore=null}}
         {{yield}}
       {{/in-element}}
     {{/if~}}

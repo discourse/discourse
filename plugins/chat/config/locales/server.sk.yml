@@ -9,7 +9,6 @@ sk:
     chat_separate_sidebar_mode: "Zobraziť samostatné režimy bočného panela pre fórum a chat."
     chat_enabled: "Povoliť chat."
     enable_public_channels: "Povoliť verejné kanály na základe kategórií."
-    chat_channel_retention_days: "Chatové správy v bežných kanáloch sa budú uchovávať toľko dní. Ak chcete správy uchovať navždy, nastavte na „0“."
     chat_dm_retention_days: "Chatové správy v osobných chatovacích kanáloch sa budú uchovávať toľko dní. Ak chcete správy uchovať navždy, nastavte na „0“."
     chat_auto_silence_duration: "Počet minút, na ktoré budú používatelia stíšení, keď prekročia limit rýchlosti vytvárania četových správ. Ak chcete vypnúť automatické stíšenie, nastavte na „0“."
     chat_allowed_messages_for_trust_level_0: "Počet správ, ktoré môžu používatelia úrovne 0 dôveryhodne odoslať za 30 sekúnd. Ak chcete limit deaktivovať, nastavte na „0“."
@@ -56,7 +55,21 @@ sk:
 
         Navštívte kanál na %{channel_url} a skúste to znova.
   chat:
+    design_wizard_homepage_name: "Chat"
     deleted_chat_username: vymazané
+    crawler:
+      directory_title: "Chatové kanály"
+      nav_title: "Chat"
+      members_count:
+        one: "%{count}/ člen"
+        few: "%{count} členovia"
+        many: "%{count} členov"
+        other: "%{count}/ členov"
+      thread_replies:
+        one: "%{count} odpoveď"
+        few: "%{count} odpovede"
+        many: "%{count} odpovedí"
+        other: "%{count} odpovedí"
     errors:
       users_cant_be_added_to_channel: "Do tohto kanála nie je možné pridať používateľov."
       user_cant_be_removed_from_channel: "Používateľ nemôže byť odstránený z tohto kanála"

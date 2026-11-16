@@ -132,38 +132,6 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
       .exists();
   });
 
-  test("keeps asking the approve question once a user reviewable is resolved but still approvable", async function (assert) {
-    const resolved = userReviewable(this, {
-      status: REJECTED,
-      bundled_actions: [actionBundle("approve_user", "Yes")],
-    });
-
-    await render(
-      <template><ReviewableItem @reviewable={{resolved}} /></template>
-    );
-
-    assert.dom(".review-item__aside-title").hasText("Approve this user?");
-  });
-
-  test("does not reuse the spam question once a user reviewable is resolved", async function (assert) {
-    const resolved = userReviewable(this, {
-      status: REJECTED,
-      reviewable_scores: [
-        {
-          reason_type: "suspect_user",
-          score_type: { type: "needs_approval", title: "Needs approval" },
-        },
-      ],
-      bundled_actions: [actionBundle("approve_user", "Yes")],
-    });
-
-    await render(
-      <template><ReviewableItem @reviewable={{resolved}} /></template>
-    );
-
-    assert.dom(".review-item__aside-title").hasText("Approve this user?");
-  });
-
   test("falls back to the generic heading when a resolved user reviewable can only be scrubbed", async function (assert) {
     const resolved = userReviewable(this, {
       status: REJECTED,
@@ -175,6 +143,31 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
     );
 
     assert.dom(".review-item__aside-title").hasText("Moderator actions");
+  });
+
+  test("lists secondary actions below the answers to the context question", async function (assert) {
+    const pending = userReviewable(this, {
+      bundled_actions: [
+        actionBundle("delete_user", "Yes"),
+        { ...actionBundle("remove_avatar", "Remove avatar"), secondary: true },
+        actionBundle("approve_user", "No"),
+      ],
+    });
+
+    await render(
+      <template><ReviewableItem @reviewable={{pending}} /></template>
+    );
+
+    const answers = [
+      ...document.querySelectorAll(
+        ".review-item__moderator-actions > .reviewable-action"
+      ),
+    ].map((button) => button.textContent.trim());
+
+    assert.deepEqual(answers, ["Yes", "No"], "the answers stay together");
+    assert
+      .dom(".review-item__secondary-actions .reviewable-action")
+      .hasText("Remove avatar", "the secondary action is set apart");
   });
 
   test("does not render help resources when not required", async function (assert) {
@@ -362,17 +355,17 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
   });
 
   test("leaves edit mode when a different reviewable is passed in", async function (assert) {
-    const state = new (class {
-      @tracked reviewable = editableReviewable(1);
-    })();
+    const currentReviewable = tracked(editableReviewable(1));
 
     await render(
-      <template><ReviewableItem @reviewable={{state.reviewable}} /></template>
+      <template>
+        <ReviewableItem @reviewable={{currentReviewable.value}} />
+      </template>
     );
 
     await click(".reviewable-action.edit");
 
-    state.reviewable = editableReviewable(2);
+    currentReviewable.value = editableReviewable(2);
     await settled();
 
     assert
@@ -406,12 +399,14 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
   });
 
   test("goes back to the timeline tab when a different reviewable is passed in", async function (assert) {
-    const state = new (class {
-      @tracked reviewable = plainReviewable({ id: 1, type: "ReviewableUser" });
-    })();
+    const currentReviewable = tracked(
+      plainReviewable({ id: 1, type: "ReviewableUser" })
+    );
 
     await render(
-      <template><ReviewableItem @reviewable={{state.reviewable}} /></template>
+      <template>
+        <ReviewableItem @reviewable={{currentReviewable.value}} />
+      </template>
     );
 
     await click(".d-nav-submenu__tabs .insights a");
@@ -421,7 +416,10 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
       .hasClass("active", "the insights tab is selected");
     assert.dom(".review-insight").exists("the insights tab is mounted");
 
-    state.reviewable = plainReviewable({ id: 2, type: "ReviewableUser" });
+    currentReviewable.value = plainReviewable({
+      id: 2,
+      type: "ReviewableUser",
+    });
     await settled();
 
     assert

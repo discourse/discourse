@@ -10,6 +10,7 @@
 register_asset "stylesheets/common/topic-voting.scss"
 
 register_svg_icon "check-to-slot"
+register_svg_icon "lightbulb"
 register_svg_icon "vote-up"
 register_svg_icon "vote-up-filled"
 
@@ -35,7 +36,12 @@ after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-topic-voting/db/fixtures").to_s
 
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node { DiscourseWorkflows::Nodes::TopicReceivedVote::V1 }
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::TopicReceivedVote::V1,
+        DiscourseWorkflows::Nodes::TopicReceivedVote::V2,
+      ]
+    end
   end
 
   reloadable_patch do
@@ -275,7 +281,8 @@ after_initialize do
       required: %w[topic_id voted],
       additionalProperties: false,
     },
-    required_scopes: %w[discourse-topic-voting:write],
+    output_schema: DiscourseTopicVoting::McpTools::SetVote::OUTPUT_SCHEMA,
+    required_scopes: DiscourseTopicVoting::McpTools::SetVote::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,

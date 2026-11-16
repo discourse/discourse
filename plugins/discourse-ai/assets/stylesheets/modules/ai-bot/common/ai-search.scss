@@ -1,0 +1,323 @@
+// The answer has its own tab, so it grows as it streams; a minimum height
+// keeps the placeholder and the no-answer message in a steady box. Nothing may
+// shrink: the search menu is a height-limited flex column.
+.ai-search-answer {
+  --ai-search-answer-height: 12rem;
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  &__body {
+    position: relative;
+    flex-shrink: 0;
+    min-height: var(--ai-search-answer-height);
+    padding: var(--space-2) var(--space-4);
+
+    .cooked > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__more {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0 var(--space-4) var(--space-2);
+  }
+
+  &__scope-note {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__title {
+    margin: 0 0 var(--space-2);
+    font-size: var(--font-up-1);
+  }
+
+  &__title-skeleton {
+    margin-bottom: var(--space-3);
+    font-size: var(--font-up-1);
+  }
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin: 0;
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  // the message fills the box to sit in its middle
+  &.--no-answer &__body,
+  &.--no-answer &__content {
+    display: flex;
+  }
+
+  &.--no-answer &__content,
+  &.--no-answer &__empty {
+    flex: 1;
+  }
+
+  &__related-heading {
+    margin: 0 0 var(--space-1);
+    font-size: var(--font-down-1);
+    font-weight: normal;
+    color: var(--primary-high);
+  }
+
+  &__related-list {
+    margin: 0;
+    list-style: none;
+  }
+
+  &__related-item + &__related-item {
+    border-top: 1px solid var(--content-border-color);
+  }
+
+  &__follow-up {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__follow-up-input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+  }
+
+  &.--compact {
+    --ai-search-answer-height: 7.5rem;
+
+    .ai-search-answer__title {
+      font-size: var(--font-0);
+    }
+  }
+}
+
+// laid out like a row of a topic list
+.ai-search-topic-row {
+  display: grid;
+  grid-template:
+    "title date" auto
+    "category replies" auto / minmax(0, 1fr) auto;
+  column-gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-2);
+  margin-inline: calc(-1 * var(--space-2));
+  line-height: var(--line-height-medium);
+
+  &:hover {
+    background: var(--d-hover);
+  }
+
+  &__title {
+    grid-area: title;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--tertiary);
+  }
+
+  &__category {
+    grid-area: category;
+    min-width: 0;
+    line-height: var(--line-height-medium);
+  }
+
+  &__source {
+    grid-area: category;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  // the category badge sets its own size, which these match
+  &__date,
+  &__replies {
+    justify-self: end;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__date {
+    grid-area: date;
+  }
+
+  &__replies {
+    grid-area: replies;
+    display: inline-flex;
+    gap: var(--space-1);
+    align-items: center;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      transform: scaleX(-1);
+    }
+  }
+}
+
+.ai-search-menu-answer {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--content-border-color);
+}
+
+// Results sit beside an answer that summarises them, so each one is held to a
+// line per part: more of them fit in the menu.
+.search-menu:has(.ai-search-tabs) .search-result-topic {
+  .first-line,
+  .blurb {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// A conversation continued from a combined search lists its references where
+// the timeline would be; the timeline's own controls are hidden in bot
+// conversations already.
+.topic-navigation:has(.ai-search-references) .timeline-container {
+  display: none;
+}
+
+// at the far right of the topic map, where nothing else sits in these
+// conversations
+.topic-map__stats:has(.ai-search-references-button) {
+  .ai-search-references-button {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .topic-map__buttons {
+    margin-left: 0;
+  }
+}
+
+.ai-search-references {
+  box-sizing: border-box;
+  width: clamp(12rem, 20vw, 18rem);
+  max-height: calc(100vh - var(--header-offset, 0px) - var(--space-8));
+  overflow-y: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius-large);
+
+  &__title {
+    margin: 0 0 var(--space-3);
+    font-size: var(--font-0);
+  }
+
+  &__list {
+    margin: 0;
+    list-style: none;
+  }
+
+  &__item {
+    transition: background-color 1s;
+
+    &.--new,
+    &.--up {
+      animation: ai-search-highlight 1.6s ease-out;
+    }
+  }
+
+  &__item + &__item {
+    border-top: 1px solid var(--content-border-color);
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+  }
+
+  // The modal has its own title and frame. Rows reach into the padding to
+  // highlight, so some is kept to hold them inside the modal.
+  &.--in-modal {
+    width: auto;
+    max-height: none;
+    padding: 0 var(--space-2);
+    border: 0;
+  }
+
+  &.--in-modal &__title {
+    display: none;
+  }
+}
+
+@keyframes ai-search-highlight {
+  from {
+    background: var(--highlight-low);
+  }
+}
+
+// the classic search options' pills, as tabs over results already fetched
+.ai-search-tabs {
+  .ai-discoveries-search-options__option {
+    position: relative;
+    overflow: visible;
+
+    &.--ask,
+    &.--topics {
+      flex: 0 0 auto;
+    }
+
+    &.is-active {
+      &:hover {
+        .d-icon {
+          color: currentcolor;
+        }
+      }
+    }
+
+    // an empty tab stays offered, but reads as having nothing in it
+    &.--empty:not(.is-active) {
+      opacity: 0.6;
+    }
+  }
+
+  // Pinned over the pill's corner like a notification badge, so a count
+  // arriving does not resize the pill. The row's own padding gives it room.
+  &__count,
+  &__empty {
+    position: absolute;
+    top: -0.5em;
+    right: -0.5em;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 1.5em;
+    height: 1.5em;
+    padding: 0 0.35em;
+    border-radius: var(--d-border-radius-pill);
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    line-height: 1;
+    color: var(--secondary);
+    background: var(--tertiary);
+    pointer-events: none;
+
+    .d-icon {
+      margin: 0;
+    }
+  }
+
+  .--empty &__count,
+  &__empty {
+    color: var(--primary-high);
+    background: var(--primary-low-mid);
+  }
+}
+
+.ai-search-menu-loading {
+  padding: var(--space-2) var(--space-4);
+}

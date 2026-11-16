@@ -21,6 +21,8 @@ export default class UsernamePreference extends Component {
 
   @tracked editing = false;
   @tracked newUsername = this.args.user.username;
+
+  /** @type {string | null} */
   @tracked errorMessage = null;
   @tracked saving = false;
   @tracked taken = false;

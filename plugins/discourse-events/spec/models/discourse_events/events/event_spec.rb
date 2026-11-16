@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseEvents::Events::Event do
+RSpec.describe DiscourseEvents::Events::Event do
   before do
     freeze_time DateTime.parse("2020-04-24 14:10")
     Jobs.run_immediately!
@@ -100,6 +100,42 @@ describe DiscourseEvents::Events::Event do
     end
   end
 
+  describe "#warm_recording_onebox" do
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before { Jobs.run_later! }
+
+    it "enqueues onebox warming when a recording is added" do
+      event = Fabricate(:event, post: post)
+
+      expect_enqueued_with(
+        job: :warm_recording_onebox,
+        args: {
+          event_id: event.id,
+          url: "https://youtu.be/abc",
+        },
+      ) { event.update!(recording_url: "youtu.be/abc") }
+    end
+
+    it "skips onebox warming when the onebox is cached" do
+      Discourse.cache.write(
+        Oneboxer.onebox_cache_key("https://youtu.be/abc"),
+        { onebox: "<aside>cached</aside>" },
+      )
+
+      expect_not_enqueued_with(job: :warm_recording_onebox) do
+        Fabricate(:event, post: post, recording_url: "https://youtu.be/abc")
+      end
+    end
+
+    it "does not warm the onebox when an unrelated attribute changes" do
+      event = Fabricate(:event, post: post, recording_url: "https://youtu.be/abc")
+
+      expect_not_enqueued_with(job: :warm_recording_onebox) { event.update!(name: "Renamed") }
+    end
+  end
+
   describe "#livestream_url" do
     fab!(:topic) { Fabricate(:topic, category: nil) }
     fab!(:post) { Fabricate(:post, topic: topic) }
@@ -178,6 +214,79 @@ describe DiscourseEvents::Events::Event do
       SiteSetting.livestream_zoom_enabled = false
 
       expect(event_for("https://zoom.us/j/123456789")).not_to be_is_zoom_livestream
+    end
+  end
+
+  describe "#reopen_livestream_chat_channel" do
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, category:) }
+    fab!(:post) { Fabricate(:post, topic:) }
+
+    before do
+      SiteSetting.chat_enabled = true
+      Jobs.run_later!
+    end
+
+    let!(:event) do
+      Fabricate(
+        :event,
+        post:,
+        livestream: true,
+        location: "https://www.youtube.com/live/abc123",
+        original_starts_at: 2.days.ago,
+        original_ends_at: 2.days.ago + 1.hour,
+      )
+    end
+    let(:topic_chat_channel) { DiscourseEvents::Livestream::TopicChatChannel.find_by(topic:) }
+    let(:chat_channel) { topic_chat_channel.chat_channel }
+
+    before do
+      chat_channel.closed!(Discourse.system_user)
+      topic_chat_channel.update!(closed_on_event_end: true)
+    end
+
+    it "reopens the chat the event closed once it is moved into the future" do
+      event.update!(original_starts_at: 1.day.from_now, original_ends_at: 1.day.from_now + 1.hour)
+
+      expect(chat_channel.reload).to be_open
+      expect(topic_chat_channel.reload.closed_on_event_end).to eq(false)
+    end
+
+    it "reopens the chat once the event is made recurring" do
+      event.update!(recurrence: "every_week")
+
+      expect(chat_channel.reload).to be_open
+    end
+
+    it "reopens the chat once a finished recurring series is extended" do
+      event.update_columns(recurrence: "every_week", recurrence_until: 1.day.ago)
+
+      event.update!(recurrence_until: 1.month.from_now)
+
+      expect(chat_channel.reload).to be_open
+    end
+
+    it "keeps the chat closed when the series cutoff falls after its last occurrence" do
+      event.update_columns(recurrence: "every_week", recurrence_until: 2.days.from_now)
+
+      event.update!(name: "Renamed event")
+
+      expect(chat_channel.reload).to be_closed
+    end
+
+    it "keeps the chat closed while the event is still over" do
+      event.update!(name: "Renamed event")
+
+      expect(chat_channel.reload).to be_closed
+    end
+
+    it "keeps a status moderators set since the event closed the chat" do
+      chat_channel.open!(Discourse.system_user)
+      chat_channel.closed!(Discourse.system_user)
+
+      event.update!(original_starts_at: 1.day.from_now, original_ends_at: 1.day.from_now + 1.hour)
+
+      expect(chat_channel.reload).to be_closed
     end
   end
 
@@ -554,6 +663,48 @@ describe DiscourseEvents::Events::Event do
             expect(post_event.starts_at).to eq_time(alt_starts_at)
             expect(post_event.ends_at).to eq_time(alt_ends_at)
           end
+
+          it "preserves going invitees and resets other responses when the date changes" do
+            going_user = Fabricate(:user)
+            interested_user = Fabricate(:user)
+            invitee_klass = DiscourseEvents::Events::Invitee
+
+            post_event.create_invitees(
+              [
+                {
+                  user_id: going_user.id,
+                  status: invitee_klass.statuses[:going],
+                  notified: true,
+                  recurring: false,
+                },
+                {
+                  user_id: interested_user.id,
+                  status: invitee_klass.statuses[:interested],
+                  notified: true,
+                  recurring: false,
+                },
+              ],
+            )
+
+            post_event.update_with_params!(
+              original_starts_at: alt_starts_at,
+              original_ends_at: alt_ends_at,
+            )
+
+            going_invitee = post_event.invitees.find_by(user_id: going_user.id)
+            interested_invitee = post_event.invitees.find_by(user_id: interested_user.id)
+
+            expect(going_invitee).to have_attributes(
+              status: invitee_klass.statuses[:going],
+              notified: true,
+              recurring: false,
+            )
+            expect(interested_invitee).to have_attributes(
+              status: nil,
+              notified: true,
+              recurring: false,
+            )
+          end
         end
 
         context "when the associated post is not the OP" do
@@ -750,6 +901,46 @@ describe DiscourseEvents::Events::Event do
           expect(post_event.ongoing?).to be(false)
         end
       end
+    end
+  end
+
+  describe "#livestream_chat_active?" do
+    before { Jobs.run_later! }
+
+    # Not `fab!`: the dates must be relative to the time frozen for this file.
+    let!(:event) do
+      Fabricate(
+        :event,
+        livestream: true,
+        location: "https://www.youtube.com/live/abc123",
+        original_starts_at: 1.hour.from_now,
+        original_ends_at: 2.hours.from_now,
+      )
+    end
+
+    it "is true for an upcoming livestream" do
+      expect(event.livestream_chat_active?).to eq(true)
+    end
+
+    it "is false once the livestream has ended" do
+      freeze_time 3.hours.from_now
+
+      expect(event.livestream_chat_active?).to eq(false)
+    end
+
+    it "is false for events that aren't livestreams" do
+      event.update_columns(livestream: false)
+
+      expect(event.livestream_chat_active?).to eq(false)
+    end
+
+    it "is only true around each occurrence of a recurring livestream" do
+      event.update_columns(recurrence: "every_week")
+
+      expect(event.livestream_chat_active?).to eq(false)
+
+      freeze_time 50.minutes.from_now
+      expect(event.livestream_chat_active?).to eq(true)
     end
   end
 
@@ -1047,6 +1238,14 @@ describe DiscourseEvents::Events::Event do
   end
 
   describe ".valid_reminder?" do
+    it "accepts singular units with explicit and legacy reminder types" do
+      %w[minute hour day week].each do |unit|
+        expect(described_class.valid_reminder?("notification.1.#{unit}")).to eq(true)
+        expect(described_class.valid_reminder?("bumpTopic.-1.#{unit}")).to eq(true)
+        expect(described_class.valid_reminder?("1.#{unit}")).to eq(true)
+      end
+    end
+
     it "accepts known types, legacy type-less reminders, padding and signed values" do
       expect(described_class.valid_reminder?("notification.15.minutes")).to eq(true)
       expect(described_class.valid_reminder?("bumpTopic.1.days")).to eq(true)
@@ -1117,6 +1316,84 @@ describe DiscourseEvents::Events::Event do
     end
 
     before { freeze_time }
+
+    context "when changing recurring event dates" do
+      subject(:update_dates) do
+        event.update_with_params!(
+          original_starts_at: 2.days.ago,
+          original_ends_at: 2.days.ago + 1.hour,
+        )
+      end
+
+      fab!(:user, :user)
+
+      let(:event) do
+        Fabricate(
+          :event,
+          recurrence: "every_week",
+          original_starts_at: 1.day.ago,
+          original_ends_at: 1.day.ago + 1.hour,
+        )
+      end
+      let(:status) { DiscourseEvents::Events::Invitee.statuses[:going] }
+      let(:recurring) { true }
+      let!(:invitee) { Fabricate(:invitee, event:, user:, status:, notified: true) }
+      let(:reset_attendance) { { "status" => nil, "notified" => false, "recurring" => false } }
+
+      before do
+        # Preserve stored combinations that the invitee save callback would normalize.
+        invitee.update_columns(recurring:)
+      end
+
+      context "with a going recurring invitee" do
+        it "preserves attendance and notification state" do
+          expect { update_dates }.not_to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }
+        end
+      end
+
+      context "with a going invitee without recurring attendance" do
+        let(:recurring) { false }
+
+        it "resets attendance and notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+
+      context "with a declined recurring invitee" do
+        let(:status) { DiscourseEvents::Events::Invitee.statuses[:not_going] }
+
+        it "resets attendance and notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+
+      context "with a NULL status and recurring attendance" do
+        let(:status) { nil }
+
+        it "preserves attendance and notification state" do
+          expect { update_dates }.not_to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }
+        end
+      end
+
+      context "with a NULL status without recurring attendance" do
+        let(:status) { nil }
+        let(:recurring) { false }
+
+        it "resets notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+    end
 
     context "with a private event" do
       let!(:event_1) do
@@ -1296,38 +1573,11 @@ describe DiscourseEvents::Events::Event do
         )
       end
 
-      it "returns nil for starts_at since no future dates can be computed" do
-        expect(expired_recurring_event.starts_at).to be_nil
-      end
-
-      it "returns nil for ends_at since no future dates can be computed" do
-        expect(expired_recurring_event.ends_at).to be_nil
-      end
-
-      it "serializer handles nil starts_at correctly" do
-        serializer =
-          DiscourseEvents::Events::EventSerializer.new(
-            expired_recurring_event,
-            scope: Guardian.new,
-            root: false,
-          )
-        json = JSON.parse(serializer.to_json)
-
-        expect(json["starts_at"]).to be_nil
-        expect(json["ends_at"]).to be_nil
-      end
-
-      it "basic serializer handles expired recurring events correctly" do
-        serializer =
-          DiscourseEvents::Events::BasicEventSerializer.new(
-            expired_recurring_event,
-            root: false,
-            scope: Guardian.new,
-          )
-        json = JSON.parse(serializer.to_json)
-
-        expect(json["starts_at"]).to be_nil
-        expect(json["ends_at"]).to be_nil
+      it "keeps the last known dates" do
+        expect(expired_recurring_event.starts_at).to eq_time(
+          expired_recurring_event.original_starts_at,
+        )
+        expect(expired_recurring_event.ends_at).to eq_time(expired_recurring_event.original_ends_at)
       end
     end
 

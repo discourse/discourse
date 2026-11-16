@@ -7,6 +7,7 @@ import {
   buildEventBlock,
   buildParams,
   defaultReminderFor,
+  eventDateInTimezone,
   isLivestreamUrl,
   parseEventAttrs,
   parseEventBlock,
@@ -15,6 +16,7 @@ import {
   reminderToBBCode,
   removeEvent,
   replaceRaw,
+  setEventAttribute,
   stateToEventInput,
 } from "discourse/plugins/discourse-events/discourse/lib/raw-event-helper";
 
@@ -43,6 +45,44 @@ const LONG_DEFAULT = {
 
 module("Unit | Lib | raw-event-helper", function (hooks) {
   setupTest(hooks);
+
+  test("eventDateInTimezone preserves floating wall-clock times", function (assert) {
+    const date = eventDateInTimezone("2026-09-30T20:15:00", "Europe/Madrid");
+
+    assert.strictEqual(
+      date.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "an offset-free event date is parsed in the event timezone"
+    );
+  });
+
+  test("eventDateInTimezone preserves the instant of offset dates", function (assert) {
+    const date = eventDateInTimezone(
+      "2026-09-30T11:15:00-07:00",
+      "Europe/Madrid"
+    );
+
+    assert.strictEqual(
+      date.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "an offset-bearing event date is converted to the event timezone"
+    );
+  });
+
+  test("buildParams preserves floating event times", function (assert) {
+    const params = buildParams(
+      "2026-09-30T20:15:00",
+      "2026-09-30T22:15:00",
+      { timezone: "Europe/Madrid", showLocalTime: true },
+      { discourse_post_event_allowed_custom_fields: "" }
+    );
+
+    assert.deepEqual(
+      { start: params.start, end: params.end },
+      { start: "2026-09-30 20:15", end: "2026-09-30 22:15" },
+      "direct BBCode rewrites keep the event's wall-clock range"
+    );
+  });
 
   test("removeEvent", function (assert) {
     assert.strictEqual(
@@ -224,6 +264,23 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
         { type: "bumpTopic", value: 1, unit: "hours", period: "after" },
       ]
     );
+  });
+
+  test("parseReminders normalizes singular units for display and serialization", function (assert) {
+    for (const unit of ["minute", "hour", "day", "week"]) {
+      const [reminder] = parseReminders(`notification.1.${unit}`);
+
+      assert.strictEqual(
+        reminder.unit,
+        `${unit}s`,
+        "uses the translation key's plural unit"
+      );
+      assert.strictEqual(
+        reminderToBBCode(reminder),
+        `notification.1.${unit}s`,
+        "serializes the canonical unit"
+      );
+    }
   });
 
   test("parseReminders defaults the type for legacy reminders without one", function (assert) {
@@ -606,6 +663,50 @@ module("Unit | Lib | raw-event-helper", function (hooks) {
       parseEventAttrs({}).livestream,
       "parseEventAttrs defaults livestream to false"
     );
+  });
+
+  test("recording round-trips through state, params and parsing", function (assert) {
+    const startsAt = "2024-06-15T10:00:00Z";
+    const siteSettings = { discourse_post_event_allowed_custom_fields: "" };
+    const url = "https://youtu.be/abc";
+
+    assert.strictEqual(
+      buildParams(startsAt, null, { recordingUrl: ` ${url} ` }, siteSettings)
+        .recording,
+      url,
+      "buildParams emits a trimmed recording"
+    );
+    assert.strictEqual(
+      buildParams(startsAt, null, { recordingUrl: "  " }, siteSettings)
+        .recording,
+      undefined,
+      "buildParams omits a blank recording"
+    );
+    assert.strictEqual(
+      stateToEventInput({ recording: url }).recordingUrl,
+      url,
+      "stateToEventInput maps recording to recordingUrl"
+    );
+    assert.strictEqual(
+      parseEventAttrs({ recording: url }).recording,
+      url,
+      "parseEventAttrs reads recording"
+    );
+  });
+
+  test("setEventAttribute changes one attribute and keeps the rest", function (assert) {
+    const raw =
+      '[event start="2024-06-15 10:00" status="public"]\nHello\n[/event]\n\nAfter';
+
+    const added = setEventAttribute(raw, "recording", " https://youtu.be/a ");
+    assert.true(added.includes("recording=https://youtu.be/a"));
+    assert.true(added.includes('start="2024-06-15 10:00"'));
+    assert.true(added.endsWith("Hello\n[/event]\n\nAfter"));
+
+    const removed = setEventAttribute(added, "recording", "");
+    assert.false(removed.includes("recording="));
+
+    assert.false(setEventAttribute("No event here", "recording", "x"));
   });
 
   test("isLivestreamUrl only accepts https URLs for major livestreaming platforms", function (assert) {

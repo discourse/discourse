@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { action, computed, get } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import EmailPreview from "discourse/admin/models/email-preview";
@@ -8,8 +8,13 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default class AdminEmailPreviewDigestController extends Controller {
   @service dialog;
 
+  /** @type {string | null | undefined} */
   username = null;
+
+  /** @type {string | null} */
   lastSeen = null;
+
+  /** @type {string | null} */
   email = null;
 
   @computed("email")
@@ -40,7 +45,7 @@ export default class AdminEmailPreviewDigestController extends Controller {
 
   @action
   updateUsername(selected) {
-    this.set("username", get(selected, "firstObject"));
+    this.set("username", selected[0]);
   }
 
   @action

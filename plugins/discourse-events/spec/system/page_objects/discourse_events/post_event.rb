@@ -25,6 +25,26 @@ module PageObjects
           self
         end
 
+        def has_calendar_prompt?
+          has_css?(
+            ".event-calendar-prompt",
+            text: I18n.t("js.discourse_events.calendar_prompt.title"),
+          ) &&
+            has_css?(
+              ".event-calendar-prompt__actions button",
+              text: I18n.t("js.discourse_post_event.add_to_calendar"),
+            )
+        end
+
+        def has_no_calendar_prompt?
+          has_no_css?(".event-calendar-prompt")
+        end
+
+        def dismiss_calendar_prompt
+          find(".event-calendar-prompt__dismiss").click
+          self
+        end
+
         def not_going
           locator(".not-going-button").click
           self
@@ -47,11 +67,11 @@ module PageObjects
         end
 
         def has_selected_status?(status)
-          has_css?(status_button_selector(status, ".btn-primary"))
+          has_css?(status_button_selector(status, selected_status_class(status)))
         end
 
         def has_no_selected_status?(status)
-          has_no_css?(status_button_selector(status, ".btn-primary"))
+          has_no_css?(status_button_selector(status, selected_status_class(status)))
         end
 
         def has_pressed_status?(status, pressed: true)
@@ -60,6 +80,11 @@ module PageObjects
 
         def has_going_count?(count)
           has_css?(".event-invitees-icon .going", text: count.to_s)
+        end
+
+        def open_invitees_modal
+          find(".event-invitees-icon").click
+          self
         end
 
         def has_invitee_avatar?(username)
@@ -196,6 +221,10 @@ module PageObjects
         end
 
         private
+
+        def selected_status_class(status)
+          status.to_sym == :going ? ".btn-success" : ".btn-primary"
+        end
 
         def status_button_selector(status, state)
           button = ".event-status #{STATUS_BUTTONS.fetch(status)}"

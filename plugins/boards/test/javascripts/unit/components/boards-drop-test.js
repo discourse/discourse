@@ -6,7 +6,6 @@ import {
   recencyDropIndicatorInsertBefore,
   shouldAnimateDropIndicatorPlacement,
 } from "discourse/plugins/boards/discourse/components/boards-column";
-import { autoScrollSpeedForPointer } from "discourse/plugins/boards/discourse/lib/boards-auto-scroll";
 
 function createDropTarget() {
   const column = document.createElement("div");
@@ -102,34 +101,6 @@ module("Boards | Unit | Components | boards drop", function (hooks) {
       recencyDropIndicatorInsertBefore(cardsContainer, [], 101),
       showAllButton,
       "the show older button is used as the insertion point"
-    );
-  });
-
-  test("column drag auto-scroll speed follows pointer edge proximity", function (assert) {
-    const verticalRect = { top: 100, bottom: 500 };
-    const horizontalRect = { left: 100, right: 500 };
-
-    assert.strictEqual(
-      autoScrollSpeedForPointer(300, verticalRect),
-      0,
-      "it does not scroll away from the column edges"
-    );
-    assert.true(
-      autoScrollSpeedForPointer(110, verticalRect) < 0,
-      "it scrolls up near the top edge"
-    );
-    assert.true(
-      autoScrollSpeedForPointer(490, verticalRect) > 0,
-      "it scrolls down near the bottom edge"
-    );
-    assert.true(
-      Math.abs(autoScrollSpeedForPointer(100, verticalRect)) >
-        Math.abs(autoScrollSpeedForPointer(150, verticalRect)),
-      "it scrolls faster closer to the edge"
-    );
-    assert.true(
-      autoScrollSpeedForPointer(490, horizontalRect, "x") > 0,
-      "it supports horizontal scrolling near the right edge"
     );
   });
 

@@ -3,8 +3,6 @@
 describe "Admin Dashboard Redesign | Site Advice section" do
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
 
-  before { SiteSetting.dashboard_improvements = true }
-
   context "when signed in as an admin" do
     fab!(:current_user, :admin)
 

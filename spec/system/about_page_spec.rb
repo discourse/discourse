@@ -105,6 +105,7 @@ describe "About page" do
           about_page.visit
 
           expect(about_page.site_activities).to have_no_activity_item("visitors")
+          expect(about_page).to have_no_traffic_info_footer
         end
       end
 
@@ -118,6 +119,7 @@ describe "About page" do
           expect(about_page.site_activities.visitors).to have_text(
             "0 visitors, about 0 from the EU",
           )
+          expect(about_page).to have_traffic_info_footer
         end
       end
     end
@@ -172,24 +174,6 @@ describe "About page" do
         expect(about_page.site_activities.likes).to have_all_time_period
       end
     end
-
-    describe "traffic info footer" do
-      it "is displayed when the display_eu_visitor_stats setting is true" do
-        SiteSetting.display_eu_visitor_stats = true
-
-        about_page.visit
-
-        expect(about_page).to have_traffic_info_footer
-      end
-
-      it "is not displayed when the display_eu_visitor_stats setting is false" do
-        SiteSetting.display_eu_visitor_stats = false
-
-        about_page.visit
-
-        expect(about_page).to have_no_traffic_info_footer
-      end
-    end
   end
 
   describe "our admins section" do
@@ -197,7 +181,7 @@ describe "About page" do
 
     fab!(:admins) { Fabricate.times(8, :admin) }
 
-    it "displays only the 6 most recently seen admins when there are more than 6 admins" do
+    it "orders the admins list, expands and collapses it, and opens a user card" do
       admins[0].update!(last_seen_at: 4.minutes.ago)
       admins[1].update!(last_seen_at: 1.minute.ago)
       admins[2].update!(last_seen_at: 10.minutes.ago)
@@ -210,10 +194,6 @@ describe "About page" do
       expect(displayed_admins.map { |u| u[:username] }.first(3)).to eq(
         [admins[1].username, admins[0].username, admins[2].username],
       )
-    end
-
-    it "allows expanding and collapsing the list of admins" do
-      about_page.visit
 
       displayed_admins = about_page.admins_list.users
       expect(displayed_admins.size).to eq(6)
@@ -233,6 +213,9 @@ describe "About page" do
 
       displayed_admins = about_page.admins_list.users
       expect(displayed_admins.size).to eq(6)
+
+      about_page.admins_list.users.first[:node].click
+      expect(about_page).to have_css("#user-card")
     end
 
     it "doesn't show an expand/collapse button when there are fewer than 6 admins" do
@@ -274,13 +257,6 @@ describe "About page" do
         *admins.pluck(:name),
       )
     end
-
-    it "opens the user card when a user is clicked" do
-      about_page.visit
-
-      about_page.admins_list.users.first[:node].click
-      expect(about_page).to have_css("#user-card")
-    end
   end
 
   describe "our moderators section" do
@@ -288,7 +264,7 @@ describe "About page" do
 
     fab!(:moderators) { Fabricate.times(9, :moderator) }
 
-    it "displays only the 6 most recently seen moderators when there are more than 6 moderators" do
+    it "orders the moderators list, expands and collapses it, and opens a user card" do
       moderators[5].update!(last_seen_at: 5.hours.ago)
       moderators[4].update!(last_seen_at: 2.hours.ago)
       moderators[1].update!(last_seen_at: 13.hours.ago)
@@ -301,10 +277,6 @@ describe "About page" do
       expect(displayed_mods.map { |u| u[:username] }.first(3)).to eq(
         [moderators[4].username, moderators[5].username, moderators[1].username],
       )
-    end
-
-    it "allows expanding and collapsing the list of moderators" do
-      about_page.visit
 
       displayed_mods = about_page.moderators_list.users
       expect(displayed_mods.size).to eq(6)
@@ -324,6 +296,9 @@ describe "About page" do
 
       displayed_mods = about_page.moderators_list.users
       expect(displayed_mods.size).to eq(6)
+
+      about_page.moderators_list.users.last[:node].click
+      expect(about_page).to have_css("#user-card")
     end
 
     it "doesn't show an expand/collapse button when there are fewer than 6 moderators" do
@@ -364,13 +339,6 @@ describe "About page" do
       expect(displayed_mods.map { |u| u[:displayed_name] }).to contain_exactly(
         *moderators.pluck(:name),
       )
-    end
-
-    it "opens the user card when a user is clicked" do
-      about_page.visit
-
-      about_page.moderators_list.users.last[:node].click
-      expect(about_page).to have_css("#user-card")
     end
   end
 

@@ -1,7 +1,5 @@
-import jQuery from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL, { samePrefix } from "discourse/lib/get-url";
@@ -11,15 +9,6 @@ import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export function isValidLink(link) {
-  if (link instanceof jQuery) {
-    link = link[0];
-
-    deprecated("isValidLink now expects an Element, not a jQuery object", {
-      since: "2.9.0.beta7",
-      id: "discourse.click-track.is-valid-link-jquery",
-    });
-  }
-
   // .hashtag/.hashtag-cooked == category/tag link
   // .back == quote back ^ button
   if (
@@ -60,7 +49,11 @@ export function shouldOpenInNewTab(href) {
 }
 
 export function openLinkInNewTab(event, link) {
-  let href = (link.href || link.dataset.href || "").trim();
+  let href = (
+    (link.href?.baseVal ?? link.href) ||
+    link.dataset.href ||
+    ""
+  ).trim();
   if (href === "") {
     return;
   }
@@ -88,11 +81,14 @@ export default {
 
     const tracking = isValidLink(link);
 
-    // Return early for mentions and group mentions. This is not in
-    // isValidLink because returning true here allows the group card
-    // to pop up. If we returned false it would not.
+    // Card triggers must reach their delegated listeners without navigating.
     if (
-      ["mention", "mention-group"].some((name) => link.classList.contains(name))
+      ["mention", "mention-group"].some((name) =>
+        link.classList.contains(name)
+      ) ||
+      link.matches("[data-user-card], [data-group-card]") ||
+      (link.matches('a.hashtag-cooked[data-type="category"][data-id]') &&
+        owner?.lookup("service:site-settings")?.enable_category_hashtag_cards)
     ) {
       return true;
     }

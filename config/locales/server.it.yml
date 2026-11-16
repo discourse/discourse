@@ -5,7 +5,22 @@
 # https://translate.discourse.org/
 
 it:
+  markdown_endpoints:
+    latest: "Più recenti"
+    categories: "Categorie"
+    tags: "Etichette"
+    previous_page: "Pagina precedente"
+    next_page: "Pagina seguente"
+    replies: "Risposte"
+    last_updated: "Ultimo aggiornamento"
+    event:
+      location: "Località"
+      link: "Link"
   mcp:
+    errors:
+      category_not_found: "Categoria non trovata"
+      draft_too_long: "La bozza è troppo lunga"
+      topic_not_found: "Argomento non trovato"
     oauth:
       deny: "Nega"
       approve: "Autorizza"
@@ -1134,7 +1149,7 @@ it:
   uploads:
     marked_insecure_from_theme_component_reason: "caricamento utilizzato nel componente del tema"
   unsubscribe:
-    title: "Annulla iscrizione"
+    unsubscribe: "Annulla iscrizione"
     stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
@@ -1638,12 +1653,6 @@ it:
       host_names: "Il tuo file config/database.yml usa l'hostname predefinito: localhost. Aggiornalo con l'hostname del tuo sito."
       queue_size: "Il numero di job in coda è %{queue_size}, molto elevato. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq."
       ram: "Il tuo server sta funzionando con meno di 1 GB di memoria. Si consiglia almeno 1 GB di memoria."
-      google_oauth2_config: 'Il server è configurato per permettere la registrazione e l''accesso con Google OAuth2 (enable_google_oauth2_logins), ma i valori ID client e segreto client non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> per aggiornare le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Per ulteriori informazioni, consulta questa guida</a>.'
-      facebook_config: 'Il server è configurato per consentire la registrazione e l''accesso con Facebook (enable_facebook_logins), ma i valori ID app e segreto app non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Per ulteriori informazioni, consulta questa guida</a> .'
-      twitter_config: 'Il server è configurato per consentire la registrazione e l''accesso con Twitter (enable_twitter_logins), ma i valori chiave e segreto non sono impostati. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Per ulteriori informazioni, consulta questa guida</a>.'
-      github_config: 'Il server è configurato per consentire la registrazione e l''accesso con GitHub (enable_github_logins), ma i valori ID client e segreto non sono impostati. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Per ulteriori informazioni, consulta questa guida</a>.'
-      s3_upload_config: 'Il server è configurato per caricare file su S3, ma almeno una delle seguenti impostazioni non è definita: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta "Come configurare caricamenti di immagini su S3?" per approfondimenti</a>.'
-      s3_backup_config: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è definita: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta "Come configurare caricamenti di immagini su S3?" per approfondimenti</a>.'
       s3_cdn: 'Il server è configurato per caricare file su S3, ma non è configurato nessun CDN S3. Questo può portare a costi S3 onerosi e a prestazioni del sito più lente. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consulta la sezione "Uso di un archivio oggetti per i caricamenti" per approfondimenti</a>.'
       image_magick: 'Il server è configurato per creare miniature di immagini di grandi dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando un''utilità di gestione pacchetti a tua scelta o <a href="https://www.imagemagick.org/script/download.php" target="_blank">scarica l''ultima versione</a>.'
       failing_emails: 'Sono presenti %{num_failed_jobs} processi di posta elettronica non riusciti. Controlla che le impostazioni del server di posta sul tuo app.yml siano corrette. <a href="%{base_path}/sidekiq/retries" target="_blank">Visualizza i processi non riusciti in Sidekiq</a>.'
@@ -2230,7 +2239,6 @@ it:
     enable_names: "Mostra il nome completo dell'utente su profilo, scheda utente e email. Disabilita per nascondere il nome completo ovunque."
     display_name_on_posts: "Mostra il nome completo dell'utente sui messaggi oltre allo @username."
     show_time_gap_days: "Se due messaggi vengono creati dopo tale numero di giorni, mostrare l'intervallo di tempo nell'argomento."
-    short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero di messaggi attuale. Se modifichi l'ampiezza della barra di avanzamento, potresti dover cambiare questo valore."
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> per una demo"
     show_copy_button_on_codeblocks: "Aggiungi un pulsante ai blocchi di codice per copiare il contenuto del blocco negli appunti dell'utente."
     embed_any_origin: "Consenti contenuti incorporabili indipendentemente dall'origine. Questa impostazione è richiesta dalle app mobili con HTML statico."
@@ -2345,7 +2353,7 @@ it:
     force_lowercase_tags: "Forza tutte le nuove Etichette interamente in minuscolo."
     create_post_for_category_and_tag_changes: "Crea un sussurro quando la categoria o i tag di un argomento cambiano. Richiede che i sussurri siano abilitati."
     automatically_clean_unused_tags: "Elimina automaticamente quotidianamente le etichette che non vengono utilizzate su argomenti o messaggi personali."
-    company_name: "Nome della tua azienda o organizzazione. Se lasciato vuoto, non verranno forniti Termini di servizio o Informativa sulla privacy."
+    company_name: "Nome della tua azienda o organizzazione."
     governing_law: "Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività."
     city_for_disputes: "Specifica la città della giurisdizione a cui fare riferimento per la risoluzione di eventuali dispute in relazione all'uso del forum. Queste informazioni vengono solitamente incluse nella documentazione legale come i Termini di servizio del forum."
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
@@ -2360,9 +2368,6 @@ it:
     sitemap_page_size: "Numero di URL da includere in ciascuna pagina della mappa del sito. Massimo 50.000"
     enable_user_status: "Consenti agli utenti di impostare un messaggio di stato personalizzato (emoji + descrizione)."
     enable_user_tips: "Abilita i nuovi suggerimenti per utenti che descrivono le funzionalità chiave per gli utenti"
-    dashboard_hidden_reports: "Consenti di nascondere i report specificati dal dashboard."
-    dashboard_visible_tabs: "Scegli quali schede del dashboard sono visibili."
-    dashboard_general_tab_activity_metrics: "Scegli i report da visualizzare come metriche di attività nella scheda generale."
     gravatar_name: "Specifica il nome del fornitore di servizi Gravatar. Questo nome serve generalmente a identificare la sorgente che fornisce al sito gli avatar Gravatar."
     gravatar_base_url: "Definisci l'URL di accesso all'API del provider di Gravatar. Questa impostazione è necessaria per convertire gli indirizzi email negli URL di Gravatar presso cui verranno archiviate le immagini degli avatar."
     share_quote_buttons: "Determina quali elementi appaiono nel widget di condivisione citazioni e in quale ordine."
@@ -2383,7 +2388,6 @@ it:
     enable_auto_grid_images: "Inserisce automaticamente le immagini nell'etichetta [grid] quando vengono caricate 3 o più immagini nel compositore."
     page_loading_indicator: "Configura l'indicatore di caricamento che appare durante la navigazione delle pagine all'interno di Discourse. 'Spinner' come un indicatore a pagina intera. 'Slider' mostra una barra stretta nella parte superiore dello schermo."
     show_user_menu_avatars: "Mostra gli avatar utente nel menu utente"
-    about_page_hidden_groups: "Non mostrare i membri di gruppi specifici nella pagina /about."
     about_page_extra_groups: "Gruppi da mostrare nella pagina Informazioni sotto i moderatori."
     about_page_extra_groups_initial_members: "Numero di membri da espandere per ciascun gruppo nella pagina Informazioni."
     about_page_extra_groups_show_description: "Se includere o meno le descrizioni dei gruppi nella pagina di presentazione."
@@ -2447,7 +2451,6 @@ it:
         other: "L'elenco deve contenere esattamente %{count} valori."
       markdown_linkify_tlds: "Non è possibile includere il valore '*'."
       google_oauth2_hd_groups: "Prima di attivare questa impostazione, devi configurare le opzioni 'google oauth2 hd'."
-      linkedin_oidc_credentials: "Per abilitare questa impostazione, configura prima le credenziali OIDC di LinkedIn (\"linkedin_oidc_client_id\" e \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Non è possibile abilitare DiscourseConnect se è stata forzata l'autenticazione a due fattori 2FA."
@@ -2458,10 +2461,27 @@ it:
       mediaconvert_role_arn_required: "Quando si utilizza AWS MediaConvert per la conversione video, è necessario l'ARN del ruolo AWS IAM."
       s3_credentials_required_for_video_conversion: "Per la conversione video sono necessarie le credenziali S3. Configura le chiavi di accesso S3 o abilita il profilo IAM."
     keywords:
+      about_banner_image: "immagine banner"
+      about_page_extra_groups: "elenco gruppi"
+      about_page_extra_groups_initial_members: "membri ampliati"
+      about_page_extra_groups_order: "ordinamento"
+      about_page_extra_groups_show_description: "includi descrizione"
       clean_up_inactive_users_after_days: "disattivato|inattivo|non attivato"
+      company_url: "sito web"
+      default_composition_mode: "rte|rich text|compositore|markdown|rich editor"
+      extended_site_description: "descrizione della comunità"
+      large_icon: "icona quadrata"
+      logo: "logo principale"
+      logo_dark: "logo principale scuro"
+      logo_small: "logo piccolo"
+      logo_small_dark: "logo piccolo scuro"
       navigation_menu: "barra laterale|menu a discesa dell'intestazione"
       purge_unactivated_users_grace_period_days: "disattivato|inattivo|non attivato"
-      default_composition_mode: "rte|rich text|compositore|markdown|rich editor"
+      short_site_description: "titolo della community"
+      site_contact_group_name: "gruppo contatto del sito"
+      site_contact_username: "nome contatto del sito"
+      site_description: "riepilogo della comunità"
+      title: "nome community"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2493,8 +2513,6 @@ it:
       tags_any: "Mostra gli argomenti con una qualsiasi delle etichette specificate (separate da una virgola)"
       tags_all: "Mostra gli argomenti di tutte le etichette specificate (separate dal segno più)"
       exclude_tag: "Escludi argomenti con un'etichetta specifica"
-      exclude_tags_any: "Escludi gli argomenti con una qualsiasi delle etichette specificate (separate da una virgola)"
-      exclude_tags_all: "Escludi gli argomenti di tutte le etichette specificate (separate dal segno più)"
       tag_group: "Mostra argomenti con etichetta da un gruppo di etichette specifico"
       exclude_tag_group: "Escludi argomenti con etichetta da un gruppo di etichette specifico"
       activity_before: "Mostra argomenti con ultima attività prima di una data (AAAA-MM-GG o giorni fa)"
@@ -2689,6 +2707,7 @@ it:
     wrong_invite_code: "Il codice di invito che hai inserito non era corretto."
     reserved_username: "Questo nome utente non è consentito."
     missing_user_field: "Non hai inserito tutti i campi utente obbligatori"
+    missing_username: "Inserisci un nome utente"
     auth_complete: "L'autenticazione è completa"
     click_to_continue: "Clicca qui per continuare."
     already_logged_in: "Spiacenti! Questo invito è destinato ai nuovi utenti, che non dispongono di un account già esistente."
@@ -3681,31 +3700,15 @@ it:
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
-      text_body_template: |
-        Sei stato sospeso dal forum fino a %{suspended_till}.
-
-        Motivo: %{reason}
     account_suspended_forever:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
-      text_body_template: |
-        Sei stato sospeso/a dal forum.
-
-        Motivo: %{reason}
     account_silenced:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
-      text_body_template: |
-        Sei stato silenziato nel forum fino a %{silenced_till}.
-
-        Motivo: %{reason}
     account_silenced_forever:
       title: "Account Silenziato"
       subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
-      text_body_template: |
-        Ti abbiamo silenziato/a sul forum.
-
-        Motivo: %{reason}.
     account_deleted:
       title: "Account eliminato"
       subject_template: "[%{email_prefix}] Il tuo account è stato eliminato"
@@ -3862,7 +3865,7 @@ it:
         Un membro dello staff ha approvato il tuo account su %{site_name}.
 
         Ora puoi accedere al tuo nuovo account a questo indirizzo:
-        %{base_url}
+        %{login_url}
 
         Se il link qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
 
@@ -4420,7 +4423,13 @@ it:
   design_wizard:
     palette_pairs:
       default: "Predefinito"
+      neutral: "Neutrale"
+      shades_of_blue: "Sfumature di blu"
+      summer: "Estate"
       dracula: "Dracula"
+      grey_amber: "Ambra grigia"
+      latte: "Color latte"
+      dark_rose: "Rosa scuro"
   wizard:
     title: "Configurazione Discourse"
     step:
@@ -4458,6 +4467,19 @@ it:
     graph_title: "Conteggio Ricerche"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Ogni giorno"
+        every_weekday: "Ogni giorno feriale"
+        ordinals:
+          last: "ultimo"
+        weekdays:
+          sunday: "domenica"
+          monday: "lunedi"
+          tuesday: "martedì"
+          wednesday: "mercoledì"
+          thursday: "giovedi"
+          friday: "venerdì"
+          saturday: "sabato"
       user_joined_community: "Iscrizione: %{date}"
     google_meet:
       meeting_code: "Codice:"
@@ -4465,6 +4487,8 @@ it:
       truncated_file: "Questo file è stato troncato."
       show_original: "mostra originale"
     github:
+      header:
+        success: "Operazione riuscita"
       binary_file: "Questo file è binario."
       truncated_file: "Questo file è stato troncato."
       show_original: "mostra originale"
@@ -4478,10 +4502,11 @@ it:
       review_by: "Revisione di"
       pr_summary: "%{commits} commit, %{changed_files} file modificati con %{additions} aggiunte e %{deletions} eliminazioni"
       no_description: "Contribuisci allo sviluppo di %{repo} creando un account su GitHub."
-      status_date:
-        open: "aperto"
-        approved: "approvato"
-        closed: "chiuso"
+      pr_status:
+        draft: "Bozza"
+        open: "Aperta"
+        approved: "Approvato"
+        closed: "Chiuso"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'
@@ -4563,6 +4588,10 @@ it:
       no_context:
         watched_word: "Questo messaggio include una parola osservata. Controlla le %{link} per saperne di più."
     actions:
+      answer_yes:
+        title: "Sì"
+      answer_no:
+        title: "No"
       agree:
         title: "Sì"
       agree_and_keep:
@@ -4611,6 +4640,8 @@ it:
       disagree_and_restore:
         title: "Ripristina messaggio"
         complete: "Messaggio ripristinato."
+      disagree_and_keep_deleted:
+        title: "Mantieni il messaggio cancellato"
       disagree_bundle:
         title: "No"
       disagree:

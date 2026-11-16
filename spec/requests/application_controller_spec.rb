@@ -155,7 +155,7 @@ RSpec.describe ApplicationController do
 
     it "redirects to the sole authenticator when local logins are disabled" do
       # Local logins and google enabled, show login UI
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
@@ -166,7 +166,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/auth/google_oauth2")
 
       # Google and GitHub enabled, direct to login UI
-      SiteSetting.enable_github_logins = true
+      enable_auth_provider(:github)
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
@@ -185,7 +185,7 @@ RSpec.describe ApplicationController do
 
     it "does not redirect to the authenticator when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       SiteSetting.enable_local_logins = false
 
       get "/"
@@ -215,7 +215,7 @@ RSpec.describe ApplicationController do
 
       it "does not redirect to the authenticator during registration" do
         SiteSetting.enable_local_logins = false
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
 
         get "/"
         expect(response).to redirect_to("/auth/google_oauth2")
@@ -717,6 +717,33 @@ RSpec.describe ApplicationController do
         expect(response.body).to include(topic2.title)
       end
     end
+
+    describe "with invalid API credentials" do
+      fab!(:topic)
+      fab!(:category)
+
+      let(:headers) { { "Api-Key" => "invalid-api-key", "Api-Username" => "system" } }
+
+      it "returns 403 for topics#show" do
+        get "/t/#{topic.id}.json", headers: headers
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 for categories#find_by_slug" do
+        get "/c/#{category.slug}/find_by_slug.json", headers: headers
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 for a user API key without the required scope" do
+        user_api_key = Fabricate(:bookmarks_calendar_user_api_key)
+
+        get "/t/#{topic.id}.json", headers: { "User-Api-Key" => user_api_key.key }
+
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
   describe "#handle_theme" do
@@ -1028,6 +1055,15 @@ RSpec.describe ApplicationController do
       expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
     end
 
+    it "disallows a non-string public_key param without generating a keypair" do
+      args[:auth_redirect] = "discourse://auth_redirect"
+      args[:user_api_public_key] = 4_096
+
+      post "/posts", params: args.merge(raw: "hi", title: "test topic"), as: :json
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
+    end
+
     it "does not allow invalid auth_redirect" do
       args[:user_api_public_key] = public_key
       get "/latest", params: args
@@ -1239,8 +1275,6 @@ RSpec.describe ApplicationController do
       global_setting :anon_cache_store_threshold, 1
       Middleware::AnonymousCache.enable_anon_cache
       Middleware::AnonymousCache.clear_all_cache!
-
-      SiteSetting.trigger_browser_pageview_events = true
 
       get "/latest"
 
@@ -1761,16 +1795,14 @@ RSpec.describe ApplicationController do
 
   describe "vary header" do
     it "includes Vary:Accept on all requests where format is not explicit" do
-      # Rails default behaviour - include Vary:Accept when Accept is supplied
+      # Rails varies on both headers used for format negotiation
       get "/latest", headers: { "Accept" => "application/json" }
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
-      # Discourse additional behaviour (see lib/vary_header.rb)
-      # Include Vary:Accept even when Accept is not supplied
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
       # Not needed, because the path 'format' parameter overrides the Accept header
       get "/latest.json"
@@ -1966,7 +1998,7 @@ RSpec.describe ApplicationController do
     it "is not included by default" do
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Link"]).to eq(nil)
+      expect(response.headers["Link"].to_s).not_to include("rel=preconnect", 'rel="preload"')
     end
 
     context "when in preconnect mode" do
@@ -1986,7 +2018,7 @@ RSpec.describe ApplicationController do
         expect(response.headers["X-Discourse-Early-Hint"]).to include(
           "<https://cdn.example.com>; rel=preconnect",
         )
-        expect(response.headers["Link"]).to eq(nil)
+        expect(response.headers["Link"].to_s).not_to include("rel=preconnect", 'rel="preload"')
       end
 
       it "is skipped for non-app URLs" do

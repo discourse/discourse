@@ -10,12 +10,14 @@ export default class SelectedChoiceCategory extends SelectedChoiceComponent {
 
   @computed("item")
   get badge() {
-    return trustHTML(
-      categoryBadgeHTML(this.item, {
-        allowUncategorized: true,
-        link: false,
-      })
-    );
+    const options = { allowUncategorized: true, link: false };
+
+    if (this.selectKit.options.showAncestorsInSelectedChoice) {
+      options.ancestors = this.item.predecessors;
+      options.hideParent = true;
+    }
+
+    return trustHTML(categoryBadgeHTML(this.item, options));
   }
 
   <template>

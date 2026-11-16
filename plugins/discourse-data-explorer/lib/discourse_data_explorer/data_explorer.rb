@@ -56,6 +56,8 @@ module DiscourseDataExplorer
     # skipping the declared-parameter casting `run_query` does. Callers with
     # undeclared parameters, such as a workflow's raw SQL node, use this directly.
     def self.run_query_with_values(query, values = {}, opts = {})
+      opts = opts.merge(explain: false) if opts[:explain] && !opts[:current_user]&.admin?
+
       # Safety checks
       # see test 'doesn't allow you to modify the database #2'
       if query.sql =~ /;/
@@ -226,10 +228,16 @@ module DiscourseDataExplorer
     private_class_method :bind_oid_hints
 
     def self.placeholders_for(value, binds, oid_hint)
+      # A fixed NULL token preserves the old literal's contextual type inference
+      # without interpolating any user-provided text into the SQL.
+      return "NULL" if value.nil?
+
       if value.is_a?(Array)
         return "NULL" if value.empty?
         value
           .map do |element|
+            next "NULL" if element.nil?
+
             binds << bind_for(element, oid_hint)
             "$#{binds.length}"
           end
@@ -253,8 +261,6 @@ module DiscourseDataExplorer
         { value: value.to_s, type: 701 }
       when true, false
         { value: value.to_s, type: 16 }
-      when nil
-        { value: nil, type: oid_hint || 0 }
       when Time
         { value: value.utc.iso8601, type: oid_hint || 0 }
       else
@@ -328,6 +334,10 @@ module DiscourseDataExplorer
         },
         category: {
           class: Category,
+          ignore: true,
+        },
+        reviewable: {
+          class: Reviewable,
           ignore: true,
         },
         reltime: {

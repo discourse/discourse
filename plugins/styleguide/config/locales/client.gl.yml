@@ -25,6 +25,11 @@ gl:
         context_menu:
           actions:
             delete: "Eliminar"
+        reorderable_list:
+          policies_pinned: "Fixado"
+          policies_required: "Obrigatorio"
+          table_type: "Tipo"
+          cross_list_primary: "Primario"
         font_scale:
           title: "Sistema de tipos de letra"
         colors:

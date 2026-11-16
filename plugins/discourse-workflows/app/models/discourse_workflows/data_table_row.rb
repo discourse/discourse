@@ -6,10 +6,7 @@ module DiscourseWorkflows
 
     class << self
       def column_map(data_table)
-        data_table
-          .columns
-          .index_by { |column| DataTable.column_name(column) }
-          .except(*DataTables::Types::SYSTEM_COLUMN_NAMES)
+        data_table.user_columns.index_by { |column| DataTable.column_name(column) }
       end
 
       def normalize_row_data(data_table, data, fill_missing:)

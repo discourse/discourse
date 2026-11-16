@@ -72,6 +72,38 @@ export function livestreamSource(location, url) {
   return location?.trim() ? location : url;
 }
 
+// Mirrors `Event#expired?` on the server.
+export function hasEventEnded({
+  startsAt,
+  endsAt,
+  recurrence,
+  recurrenceUntil,
+}) {
+  if (recurrence) {
+    return !!recurrenceUntil && moment().isAfter(moment(recurrenceUntil));
+  }
+
+  const end = endsAt || (startsAt && moment(startsAt).endOf("day"));
+  return !!end && moment().isAfter(end);
+}
+
+// The recording only becomes relevant once there is something to record, but
+// an existing link stays editable even if the dates move forward.
+export function showRecordingField({ recording, livestream, ...dates }) {
+  return !!recording || (!!livestream && hasEventEnded(dates));
+}
+
+export function eventDateInTimezone(value, timezone) {
+  if (!value) {
+    return null;
+  }
+
+  const eventTimezone = timezone || "UTC";
+  return moment.isMoment(value)
+    ? value.clone().tz(eventTimezone)
+    : moment.tz(value, eventTimezone);
+}
+
 export function allDayTransition({ startsAt, endsAt, timezone, allDay }) {
   if (allDay) {
     const startDate = (startsAt ?? moment.tz(timezone)).format("YYYY-MM-DD");
@@ -212,7 +244,7 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
   params.start = event.allDay
     ? moment(startsAt).format("YYYY-MM-DD")
-    : moment(startsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
+    : eventDateInTimezone(startsAt, eventTz).format("YYYY-MM-DD HH:mm");
 
   if (event.isClosed) {
     params.closed = "true";
@@ -236,6 +268,10 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
   if (event.url && event.url.trim()) {
     params.url = event.url;
+  }
+
+  if (event.recordingUrl && event.recordingUrl.trim()) {
+    params.recording = event.recordingUrl.trim();
   }
 
   if (event.timezone) {
@@ -266,6 +302,9 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
 
   if (event.livestream) {
     params.livestream = "true";
+    if (event.allowAnonymousLivestream) {
+      params.allowAnonymousLivestream = "true";
+    }
   }
 
   if (event.maxAttendees) {
@@ -279,7 +318,7 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
   if (endsAt) {
     params.end = event.allDay
       ? moment(endsAt).format("YYYY-MM-DD")
-      : moment(endsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
+      : eventDateInTimezone(endsAt, eventTz).format("YYYY-MM-DD HH:mm");
   }
 
   if (event.status === "private") {
@@ -370,6 +409,26 @@ export function buildEventBlock(params, description) {
   return `[event ${buildBBCodeAttrs(attrs)}]\n${desc}[/event]`;
 }
 
+// Changes a single attribute of the event block, leaving everything else in
+// the raw as written. A blank value removes the attribute.
+export function setEventAttribute(raw, name, value) {
+  const parsed = parseEventBlock(raw);
+  if (!parsed) {
+    return false;
+  }
+
+  const attrs = { ...parsed.attrs };
+  if (value?.trim()) {
+    attrs[name] = value.trim();
+  } else {
+    delete attrs[name];
+  }
+
+  return raw.replace(parsed.full, () =>
+    buildEventBlock(attrs, parsed.description)
+  );
+}
+
 export function getCustomFieldNames(siteSettings) {
   return siteSettings.discourse_post_event_allowed_custom_fields
     .split("|")
@@ -398,8 +457,10 @@ export function defaultEventState() {
     showLocalTime: false,
     chatEnabled: false,
     livestream: false,
+    allowAnonymousLivestream: false,
     minimal: false,
     url: null,
+    recording: null,
     image: null,
     allowedGroups: null,
     closed: false,
@@ -437,8 +498,11 @@ export function parseEventAttrs(
     showLocalTime: attrs.showLocalTime === "true",
     chatEnabled: attrs.chatEnabled === "true",
     livestream: attrs.livestream === "true",
+    allowAnonymousLivestream:
+      attrs.livestream === "true" && attrs.allowAnonymousLivestream === "true",
     minimal: attrs.minimal === "true",
     url: attrs.url || null,
+    recording: attrs.recording || null,
     image: attrs.image || null,
     allowedGroups: attrs.allowedGroups || null,
     closed: attrs.closed === "true",
@@ -456,12 +520,14 @@ export function stateToEventInput(state) {
     name: state.name,
     location: state.location,
     url: state.url,
+    recordingUrl: state.recording,
     recurrence: state.recurrence,
     recurrenceUntil: state.recurrenceUntil,
     showLocalTime: state.showLocalTime,
     minimal: state.minimal,
     chatEnabled: state.chatEnabled,
     livestream: state.livestream,
+    allowAnonymousLivestream: state.allowAnonymousLivestream,
     maxAttendees: state.maxAttendees,
     rawInvitees: state.allowedGroups ? state.allowedGroups.split(",") : [],
     reminders: state.reminders,
@@ -486,7 +552,9 @@ export function parseReminders(reminders) {
       return {
         type: type || "notification",
         value: Math.abs(numericValue),
-        unit,
+        unit: ["minute", "hour", "day", "week"].includes(unit)
+          ? `${unit}s`
+          : unit,
         period: numericValue < 0 ? "after" : "before",
       };
     })

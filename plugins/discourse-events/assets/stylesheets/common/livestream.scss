@@ -21,12 +21,6 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
   }
 }
 
-.livestream-rsvp__going-button {
-  @container (width < 40rem) {
-    width: 100%;
-  }
-}
-
 .discourse-calendar-livestream-zoom-entry {
   display: flex;
   flex-direction: column;
@@ -157,6 +151,10 @@ body.discourse-calendar-livestream-zoom-full {
     overflow: hidden;
   }
 
+  &__chat-signup {
+    margin: auto;
+  }
+
   &.--with-chat {
     --livestream-zoom-view-height: calc(
       var(--livestream-zoom-resting-height) * 0.55
@@ -270,5 +268,19 @@ body.discourse-calendar-livestream-zoom-full {
 #zmmtg-root {
   #sdk-footer-sortable-list #chat {
     display: none;
+  }
+}
+
+.cooked .d-wrap[data-wrap="livestream-chat-transcript"] {
+  max-height: min(30rem, 60vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  > .chat-transcript:first-child {
+    margin-top: 0;
+  }
+
+  > .chat-transcript:last-child {
+    margin-bottom: 0;
   }
 }

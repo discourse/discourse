@@ -118,6 +118,22 @@ module Chat
       )
     end
 
+    def self.user_channel_mute_message_bus_channel(user_id)
+      "/chat/user-channel-mute/#{user_id}"
+    end
+
+    def self.publish_user_channel_mute!(membership)
+      MessageBus.publish(
+        user_channel_mute_message_bus_channel(membership.user_id),
+        {
+          channel_id: membership.chat_channel_id,
+          muted: membership.muted,
+          muted_until: membership.muted_until,
+        },
+        user_ids: [membership.user_id],
+      )
+    end
+
     def self.publish_processed!(chat_message)
       chat_channel = chat_message.chat_channel
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
@@ -509,26 +525,22 @@ module Chat
     private
 
     def self.permissions(channel)
+      if channel.category_channel? && channel.read_restricted?
+        group_ids =
+          channel.allowed_group_ids.map do |group_id|
+            Chat.restricted_category_message_bus_audience_id(group_id)
+          end
+        return { group_ids: }
+      end
+
       group_ids = channel.allowed_group_ids.presence
       if group_ids.blank? && channel.category_channel? && !channel.read_restricted?
         return {} if Chat.anonymous_public_channel_access_allowed?
 
-        group_ids = chat_allowed_group_ids
+        group_ids = Chat.message_bus_allowed_group_ids
       end
 
       { user_ids: channel.allowed_user_ids.presence, group_ids: group_ids }.compact
-    end
-
-    def self.chat_allowed_group_ids
-      pseudo_everyone_ids = [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]]
-      excluded_group_ids = [Group::AUTO_GROUPS[:anonymous_users]]
-      Chat
-        .allowed_group_ids
-        .reject { |group_id| excluded_group_ids.include?(group_id) }
-        .map do |group_id|
-          pseudo_everyone_ids.include?(group_id) ? Group::AUTO_GROUPS[:trust_level_0] : group_id
-        end
-        .uniq
     end
 
     def self.anonymous_guardian

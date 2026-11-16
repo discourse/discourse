@@ -1,5 +1,25 @@
 # frozen_string_literal: true
 RSpec.describe Onebox::Engine::ThreadsStatusOnebox do
+  it "renders the thread text as text and links mentions" do
+    link = "https://www.threads.net/t/abc"
+    stub_request(:get, link).to_return(body: <<~HTML)
+      <link rel="canonical" href="#{link}">
+      <link rel="icon" href="https://www.threads.net/favicon.ico">
+      <meta property="og:title" content="Someone (@someone) on Threads">
+      <meta property="og:image" content="https://www.threads.net/image.png">
+      <meta property="og:description" content="3 likes, 1 reply. &lt;b&gt;hi&lt;/b&gt; @friend">
+    HTML
+    stub_request(:get, "https://www.threads.net/@someone").to_return(
+      body: '<meta property="og:image" content="https://www.threads.net/avatar.png">',
+    )
+
+    description =
+      Nokogiri::HTML5.fragment(described_class.new(link).to_html).at_css(".thread-description")
+
+    expect(description.text).to eq("<b>hi</b> @friend")
+    expect(description.at_css("a")["href"]).to eq("https://www.threads.net/@friend")
+  end
+
   context "with a thread with only text" do
     let(:link) { "https://www.threads.net/t/CuVvRcttG57" }
     let(:html) { described_class.new(link).to_html }

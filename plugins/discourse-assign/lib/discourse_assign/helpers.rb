@@ -4,7 +4,9 @@ module DiscourseAssign
   module Helpers
     def self.build_assigned_to_user(user, topic)
       return if !user
-      { username: user.username, name: user.name, avatar_template: user.avatar_template }
+      result = { username: user.username, avatar_template: user.avatar_template }
+      result[:name] = user.name if SiteSetting.enable_names?
+      result
     end
 
     def self.build_assigned_to_group(group, topic)

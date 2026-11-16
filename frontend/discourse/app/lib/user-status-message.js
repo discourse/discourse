@@ -8,7 +8,10 @@ import User from "discourse/models/user";
 export class UserStatusMessage {
   @service tooltip;
 
+  /** @type {HTMLSpanElement | null} */
   html = null;
+
+  /** @type {HTMLDivElement | null} */
   content = null;
 
   constructor(owner, status, opts) {

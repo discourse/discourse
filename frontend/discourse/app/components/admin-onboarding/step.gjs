@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
+import {
+  completeOnboardingStep,
+  onboardingStepKey,
+} from "discourse/lib/admin-onboarding";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -19,7 +21,7 @@ export default class OnboardingStep extends Component {
   @service appEvents;
 
   @tracked
-  completed = this.keyValueStore.get(`onboarding_step_${this.name}`) || false;
+  completed = this.keyValueStore.get(onboardingStepKey(this.name)) || false;
 
   i18nKey = "admin_onboarding_banner.";
 
@@ -31,10 +33,16 @@ export default class OnboardingStep extends Component {
     return this.completed ? "circle-check" : "far-circle";
   }
 
+  get title() {
+    return i18n(`${this.i18nKey}${this.name}.title`);
+  }
+
+  get description() {
+    return i18n(`${this.i18nKey}${this.name}.description`);
+  }
+
   get buttonLabel() {
-    return this.completed
-      ? `admin_onboarding_banner.${this.name}.completed`
-      : `admin_onboarding_banner.${this.name}.action`;
+    return `${this.i18nKey}${this.name}.${this.completed ? "completed" : "action"}`;
   }
 
   @action
@@ -50,20 +58,11 @@ export default class OnboardingStep extends Component {
   // Awaits the audit write so callers that reload the page on completion can't
   // cancel it in flight.
   async markAsCompleted() {
-    // app events backing some steps can fire more than once, so only audit the
-    // first transition into the completed state
-    const alreadyCompleted = this.completed;
-
-    this.keyValueStore.set({
-      key: `onboarding_step_${this.name}`,
-      value: true,
-    });
     this.completed = true;
-    this.appEvents.trigger(`onboarding-step:completed`, this.name);
-
-    if (!alreadyCompleted) {
-      await logOnboardingEvent("step_completed", this.name);
-    }
+    await completeOnboardingStep(
+      { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
+      this.name
+    );
 
     return this.args.onCompleted?.(this.name);
   }
@@ -77,14 +76,12 @@ export default class OnboardingStep extends Component {
             "onboarding-step__checkbox-icon" (if this.completed "--completed")
           )
         }}
-        <span class="onboarding-step__title">{{i18n
-            (concat this.i18nKey this.name ".title")
-          }}</span>
+        <span class="onboarding-step__title">{{this.title}}</span>
 
       </div>
 
       <div class="onboarding-step__description">
-        {{i18n (concat this.i18nKey this.name ".description")}}
+        {{this.description}}
       </div>
       <div class="onboarding-step__action">
         <DButton

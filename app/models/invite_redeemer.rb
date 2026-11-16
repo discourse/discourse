@@ -97,8 +97,12 @@ class InviteRedeemer
     email_token: nil,
     email_verified: false
   )
-    if username && UsernameValidator.new(username).valid_format? &&
-         User.username_available?(username, email)
+    raise Discourse::SiteArchived if SiteSetting.site_archived
+
+    if email_verified && username.present?
+      available_username = username
+    elsif username && UsernameValidator.new(username).valid_format? &&
+          User.username_available?(username, email)
       available_username = username
     elsif email_verified
       available_username =
@@ -127,7 +131,7 @@ class InviteRedeemer
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
-    user_fields = UserField.all
+    user_fields = UserField.where(show_on_signup: true)
     if user_custom_fields.present? && user_fields.present?
       field_params = user_custom_fields || {}
       fields = user.custom_fields
@@ -268,8 +272,13 @@ class InviteRedeemer
   # existing users redeeming the invite.
   def grant_moderator_from_invite
     return if !invite.moderator? || !invite.invited_by&.staff?
+    # The API can set both admin and moderator on one invite. Those are granted
+    # and logged in create_admin_grant_confirmation, so skip them here to avoid
+    # logging the same grant twice.
+    return if InviteRedeemer.admin_invite_grantable?(invite)
 
     invited_user.grant_moderation! if !invited_user.moderator?
+    StaffActionLogger.new(invite.invited_by).log_grant_moderation(invited_user)
   end
 
   # Admin invites grant moderator right away; full admin requires the inviter
@@ -287,15 +296,15 @@ class InviteRedeemer
   end
 
   def mark_invite_redeemed
-    @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
+    invite.with_lock("FOR UPDATE NOWAIT") do
+      return false if !can_redeem_invite?
 
-    if @invited_user_record.present?
-      invite.with_lock("FOR UPDATE NOWAIT") do
-        Invite.increment_counter(:redemption_count, invite.id)
-        invite.save!
-      end
-      delete_duplicate_invites
+      @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
+      Invite.increment_counter(:redemption_count, invite.id)
+      invite.save!
     end
+
+    delete_duplicate_invites if @invited_user_record.present?
 
     @invited_user_record.present?
   end
@@ -304,18 +313,23 @@ class InviteRedeemer
     # Should not happen because of ensure_email_is_present!, but better to cover bases.
     return if email.blank?
 
-    topic_ids =
-      TopicInvite
-        .joins(:invite)
-        .joins(:topic)
-        .where("topics.archetype = ?", Archetype.private_message)
-        .where("invites.email = ?", email)
-        .pluck(:topic_id)
-    topic_ids.each do |id|
-      if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
-        TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id)
+    TopicInvite
+      .includes(:topic, invite: :invited_by)
+      .joins(:invite)
+      .joins(:topic)
+      .where("topics.archetype = ?", Archetype.private_message)
+      .where("invites.email = ?", email)
+      .find_each do |topic_invite|
+        next if topic_invite.invite_id != invite.id && !topic_invite.invite.redeemable?
+
+        topic = topic_invite.topic
+        inviter = topic_invite.invite.invited_by
+        next if inviter.blank? || !inviter.guardian.can_invite_to?(topic)
+
+        if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: topic.id)
+          TopicAllowedUser.create!(user_id: invited_user.id, topic_id: topic.id)
+        end
       end
-    end
   end
 
   def add_user_to_groups

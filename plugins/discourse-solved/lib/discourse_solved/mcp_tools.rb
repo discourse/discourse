@@ -3,6 +3,13 @@
 module DiscourseSolved
   module McpTools
     class SetSolution
+      REQUIRED_SCOPES = %w[discourse-solved:write].freeze
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          post_id: DiscourseMcp::OutputSchema::INTEGER,
+          accepted: DiscourseMcp::OutputSchema::BOOLEAN,
+        )
+
       def self.call(arguments:, request_context:)
         service =
           (

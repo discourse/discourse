@@ -54,8 +54,12 @@ class LiveDevelopmentInit {
       } else if (me === "development-mode-theme-changed") {
         if (
           window.location.pathname.startsWith("/admin/customize/themes") ||
+          window.location.pathname.startsWith("/admin/customize/components") ||
           window.location.pathname.startsWith(
             "/admin/config/customize/themes"
+          ) ||
+          window.location.pathname.startsWith(
+            "/admin/config/customize/components"
           ) ||
           window.location.pathname.startsWith("/admin/config/look-and-feel")
         ) {

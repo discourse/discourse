@@ -1,15 +1,17 @@
-import { ArchetypeSchema } from "./archetype";
-import { BadgeSchema } from "./badge";
-import { BadgeGroupingSchema } from "./badge-grouping";
-import { BadgeTypeSchema } from "./badge-type";
-import { BookmarkSchema } from "./bookmark";
-import { TagSchema } from "./tag";
-import { TagGroupSchema } from "./tag-group";
-import { TagInfoSchema } from "./tag-info";
-import { TagNotificationSchema } from "./tag-notification";
-import { TagSettingsSchema } from "./tag-settings";
-import { TopicDetailsSchema } from "./topic-details";
-import { UserBadgeSchema } from "./user-badge";
+import { ArchetypeSchema } from "./archetype.js";
+import { BadgeSchema } from "./badge.js";
+import { BadgeGroupingSchema } from "./badge-grouping.js";
+import { BadgeTypeSchema } from "./badge-type.js";
+import { BookmarkSchema } from "./bookmark.js";
+import { GroupsSchema } from "./json-api/groups.ts";
+import { UsersSchema } from "./json-api/users.ts";
+import { TagSchema } from "./tag.js";
+import { TagGroupSchema } from "./tag-group.js";
+import { TagInfoSchema } from "./tag-info.js";
+import { TagNotificationSchema } from "./tag-notification.js";
+import { TagSettingsSchema } from "./tag-settings.js";
+import { TopicDetailsSchema } from "./topic-details.js";
+import { UserBadgeSchema } from "./user-badge.js";
 
 /** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema[]} */
 export const schemas = [
@@ -18,6 +20,7 @@ export const schemas = [
   BadgeTypeSchema,
   BadgeGroupingSchema,
   BookmarkSchema,
+  GroupsSchema,
   TagSchema,
   TagGroupSchema,
   TagInfoSchema,
@@ -25,4 +28,5 @@ export const schemas = [
   TagSettingsSchema,
   TopicDetailsSchema,
   UserBadgeSchema,
+  UsersSchema,
 ];

@@ -2,8 +2,8 @@
 
 RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
   let!(:user) { Fabricate(:user) }
-  let!(:post) { Fabricate(:post, like_count: 1) }
-  let!(:post_2) { Fabricate(:post, like_count: 0) }
+  let!(:post) { Fabricate(:post) }
+  let!(:post_2) { Fabricate(:post) }
 
   before do
     SiteSetting.discourse_reactions_like_sync_enabled = true
@@ -20,8 +20,7 @@ RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
   # records are created, rather than building this all manually.
   let!(:reaction_user) do
     DiscourseReactions::ReactionManager.new(reaction_value: "+1", user: user, post: post).toggle!
-    @reaction_plus_one = DiscourseReactions::Reaction.find_by(reaction_value: "+1", post: post)
-    DiscourseReactions::ReactionUser.find_by(user: user, post: post, reaction: @reaction_plus_one)
+    DiscourseReactions::ReactionUser.find_by(user: user, post: post)
   end
 
   let!(:reaction_user_2) do
@@ -30,13 +29,13 @@ RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
       user: user,
       post: post_2,
     ).toggle!
-    @reaction_clap = DiscourseReactions::Reaction.find_by(reaction_value: "clap", post: post_2)
-    DiscourseReactions::ReactionUser.find_by(user: user, post: post_2, reaction: @reaction_clap)
+    DiscourseReactions::ReactionUser.find_by(user: user, post: post_2)
   end
 
   it "does nothing if discourse_reactions_like_sync_enabled is false" do
-    DB.expects(:exec).never
     SiteSetting.discourse_reactions_like_sync_enabled = false
+    SiteSetting.discourse_reactions_excluded_from_like = ""
+
     expect { described_class.sync! }.not_to change { PostAction.count }
   end
 
@@ -45,164 +44,160 @@ RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
       SiteSetting.discourse_reactions_excluded_from_like += "|+1" # +1 added
     end
 
-    it "trashes PostAction records" do
-      post_action_id = reaction_user.post_action_like.id
-      expect(reaction_user.post_action_like).to be_present
-      expect { described_class.sync! }.to change { PostAction.count }.by(-1)
-      expect(reaction_user.reload.post_action_like).to be_nil
-      expect(PostAction.with_deleted.find_by(id: post_action_id).deleted_at).to be_present
-    end
+    it "trashes the likes and recalculates derived data" do
+      post_action = reaction_user.post_action_like
 
-    it "removes UserAction records for LIKED and WAS_LIKED" do
       expect { described_class.sync! }.to change { UserAction.count }.by(-2)
-    end
 
-    it "updates the like_count on the associated Post records" do
-      expect(post.reload.like_count).to eq(1)
-      expect(post_2.reload.like_count).to eq(0)
-      described_class.sync!
-      expect(post.reload.like_count).to eq(0)
-      expect(post_2.reload.like_count).to eq(0)
-    end
-
-    it "updates the like_count on the associated Topic records" do
-      expect(post.topic.reload.like_count).to eq(1)
-      expect(post_2.topic.reload.like_count).to eq(0)
-      described_class.sync!
+      expect(post_action.reload.trashed?).to eq(true)
+      expect(post.reload).to have_attributes(like_count: 0, like_score: 0)
       expect(post.topic.reload.like_count).to eq(0)
-      expect(post_2.topic.reload.like_count).to eq(0)
-    end
-
-    it "updates the liked column on TopicUser for associated topic and users" do
-      expect(post.topic.topic_users.find_by(user: user).liked).to eq(true)
-      expect(post_2.topic.topic_users.find_by(user: user).liked).to eq(false)
-      described_class.sync!
-      expect(post.topic.topic_users.find_by(user: user).liked).to eq(false)
-      expect(post_2.topic.topic_users.find_by(user: user).liked).to eq(false)
-    end
-
-    it "updates the UserStat likes_given and likes_received columns" do
-      expect(user.user_stat.reload.likes_given).to eq(1)
-      expect(post.user.user_stat.reload.likes_received).to eq(1)
-      described_class.sync!
+      expect(topic_user.reload.liked).to eq(false)
       expect(user.user_stat.reload.likes_given).to eq(0)
       expect(post.user.user_stat.reload.likes_received).to eq(0)
+      expect(GivenDailyLike.exists?(user:)).to eq(false)
     end
 
-    it "updates/recalculates the GivenDailyLike table likes_given on all given_date days and deletes records where likes_given would be 0" do
-      expect(
-        GivenDailyLike.exists?(user: user, given_date: Time.now.to_date, likes_given: 1),
-      ).to eq(true)
+    it "does not re-trash already trashed likes" do
+      post_action = reaction_user.post_action_like
       described_class.sync!
-      expect(GivenDailyLike.exists?(user: user, given_date: Time.now.to_date)).to eq(false)
+      post_action.update_columns(deleted_at: 1.day.ago)
+
+      expect { described_class.sync! }.not_to change { post_action.reload.deleted_at }
     end
   end
 
   describe "when reactions are removed from the exclusion list" do
-    it "creates PostAction records" do
+    before do
       SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      expect(reaction_user_2.post_action_like).to be_nil
-      expect { described_class.sync! }.to change { PostAction.count }.by(1)
+    end
+
+    it "creates the likes and recalculates derived data" do
+      SiteSetting.max_likes_per_day = 2
+
+      stub_const(described_class, :BATCH_SIZE, 1) { described_class.sync! }
+
       expect(reaction_user_2.reload.post_action_like).to be_present
-    end
-
-    it "updates existing trashed PostUpdate records to recover them" do
-      trashed_post_action =
-        Fabricate(
-          :post_action,
-          post: reaction_user_2.post,
-          user: reaction_user_2.user,
-          post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
-        )
-      trashed_post_action.trash!(Fabricate(:user))
-      SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      expect { described_class.sync! }.to change { PostAction.count }.by(1)
-      expect(trashed_post_action.reload.trashed?).to eq(false)
-    end
-
-    it "creates UserAction records for LIKED and WAS_LIKED" do
-      SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      expect { described_class.sync! }.to change { UserAction.count }.by(2)
       expect(
-        UserAction.exists?(
-          action_type: UserAction::LIKE,
-          user_id: reaction_user_2.post_action_like.user_id,
-          acting_user_id: reaction_user_2.post_action_like.user_id,
-          target_post_id: reaction_user_2.post_action_like.post_id,
-          target_topic_id: reaction_user_2.post.topic_id,
+        UserAction.where(target_post_id: post_2.id, target_topic_id: post_2.topic_id).pluck(
+          :action_type,
+          :user_id,
+          :acting_user_id,
         ),
-      ).to eq(true)
-      expect(
-        UserAction.exists?(
-          action_type: UserAction::WAS_LIKED,
-          user_id: reaction_user_2.post.user_id,
-          acting_user_id: reaction_user_2.post_action_like.user_id,
-          target_post_id: reaction_user_2.post_action_like.post_id,
-          target_topic_id: reaction_user_2.post.topic_id,
-        ),
-      ).to eq(true)
-    end
-
-    it "skips UserAction records where the post has a null user" do
-      reaction_user_2.post.update_columns(user_id: nil)
-      SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      expect { described_class.sync! }.not_to change { UserAction.count }
-    end
-
-    it "if no reactions are excluded from like it adds post actions for ones previously excluded" do
-      SiteSetting.discourse_reactions_excluded_from_like = ""
-      expect(reaction_user_2.post_action_like).to be_nil
-      expect { described_class.sync! }.to change { PostAction.count }.by(1)
-      expect(reaction_user_2.reload.post_action_like).to be_present
-    end
-
-    it "updates the like_count on the associated Post records" do
-      expect(post.reload.like_count).to eq(1)
-      expect(post_2.reload.like_count).to eq(0)
-
-      SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      described_class.sync!
-      expect(post.reload.like_count).to eq(1)
-      expect(post_2.reload.like_count).to eq(1)
-    end
-
-    it "updates the like_count on the associated Topic records" do
-      expect(post.topic.reload.like_count).to eq(1)
-      expect(post_2.topic.reload.like_count).to eq(0)
-
-      SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      described_class.sync!
-      expect(post.topic.reload.like_count).to eq(1)
+      ).to contain_exactly(
+        [UserAction::LIKE, user.id, user.id],
+        [UserAction::WAS_LIKED, post_2.user_id, user.id],
+      )
+      expect(post_2.reload).to have_attributes(like_count: 1, like_score: 1)
       expect(post_2.topic.reload.like_count).to eq(1)
-    end
-
-    it "updates the liked column on TopicUser for associated topic and users" do
-      expect(post.topic.topic_users.find_by(user: user).liked).to eq(true)
-      expect(post_2.topic.topic_users.find_by(user: user).liked).to eq(false)
-
-      SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      described_class.sync!
-      expect(post.topic.topic_users.find_by(user: user).liked).to eq(true)
-      expect(post_2.topic.topic_users.find_by(user: user).liked).to eq(true)
-    end
-
-    it "updates the UserStat likes_given and likes_received columns" do
-      expect(user.user_stat.reload.likes_given).to eq(1)
-      expect(post.user.user_stat.reload.likes_received).to eq(1)
-      expect(post_2.user.user_stat.reload.likes_received).to eq(0)
-
-      SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      described_class.sync!
+      expect(topic_user_2.reload.liked).to eq(true)
       expect(user.user_stat.reload.likes_given).to eq(2)
-      expect(post.user.user_stat.reload.likes_received).to eq(1)
+      expect(post_2.user.user_stat.reload.likes_received).to eq(1)
+      expect(GivenDailyLike.find_by(user:, given_date: Time.zone.today)).to have_attributes(
+        likes_given: 2,
+        limit_reached: true,
+      )
+    end
+
+    it "creates the likes when the user has another post action on the post" do
+      Fabricate(
+        :post_action,
+        user:,
+        post: post_2,
+        post_action_type_id: PostActionType.types[:off_topic],
+      )
+
+      described_class.sync!
+
+      expect(reaction_user_2.reload.post_action_like).to be_present
+    end
+
+    it "recovers likes it trashed and recalculates derived data" do
+      SiteSetting.discourse_reactions_excluded_from_like = "-1|+1"
+      described_class.sync!
+      SiteSetting.discourse_reactions_excluded_from_like = "-1"
+
+      expect { described_class.sync! }.to change { UserAction.count }.by(2)
+
+      expect(reaction_user.reload.post_action_like).to be_present
+      expect(post.reload.like_count).to eq(1)
+    end
+
+    it "recovers likes the user trashed by switching to an excluded reaction" do
+      DiscourseReactions::ReactionManager.new(reaction_value: "-1", user:, post:).toggle!
+      SiteSetting.discourse_reactions_excluded_from_like = ""
+
+      described_class.sync!
+
+      expect(PostAction.where(user:, post:).count).to eq(1)
+    end
+
+    it "ignores deleted posts" do
+      admin = Fabricate(:admin)
+      PostDestroyer.new(admin, post).destroy
+      PostDestroyer.new(admin, post_2).destroy
+
+      described_class.sync!
+
+      expect(
+        PostAction.where(user:, post_action_type_id: PostActionType::LIKE_POST_ACTION_ID),
+      ).to be_empty
+    end
+
+    it "never violates the uniqueness of likes" do
+      [post, post_2, post_2].each do |liked_post|
+        PostAction.new(
+          user:,
+          post: liked_post,
+          post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+          deleted_at: 1.day.ago,
+        ).save!(validate: false)
+      end
+
+      expect { described_class.sync! }.not_to raise_error
+      expect(PostAction.where(user:, post: [post, post_2]).group(:post_id).count).to eq(
+        post.id => 1,
+        post_2.id => 1,
+      )
+    end
+
+    it "never creates or recovers self-likes" do
+      SiteSetting.discourse_reactions_excluded_from_like = "-1|+1|clap"
+      described_class.sync!
+      Post.where(id: [post.id, post_2.id]).update_all(user_id: user.id)
+      SiteSetting.discourse_reactions_excluded_from_like = "-1"
+
+      described_class.sync!
+
+      expect(
+        PostAction.where(user:, post_action_type_id: PostActionType::LIKE_POST_ACTION_ID),
+      ).to be_empty
+    end
+
+    it "ignores private message likes in user stats" do
+      pm_post = Fabricate(:private_message_post, user: post_2.user, recipient: user)
+      PostActionCreator.like(user, pm_post)
+
+      described_class.sync!
+
+      expect(user.user_stat.reload.likes_given).to eq(2)
       expect(post_2.user.user_stat.reload.likes_received).to eq(1)
     end
 
-    it "updates/recalculates the GivenDailyLike table likes_given on all given_date days and deletes records where likes_given would be 0" do
-      SiteSetting.discourse_reactions_excluded_from_like = "-1" # clap removed
-      expect { described_class.sync! }.to change {
-        GivenDailyLike.find_by(user: user, given_date: Time.now.to_date).likes_given
-      }.to 2
+    it "excludes whispers and deleted posts from topic like counts" do
+      post_2.update_columns(post_type: Post.types[:whisper])
+      Fabricate(:post, topic: post_2.topic, like_count: 1, deleted_at: Time.zone.now)
+
+      described_class.sync!
+
+      expect(post_2.topic.reload.like_count).to eq(0)
+    end
+
+    it "ignores posts without an author" do
+      post_2.update_columns(user_id: nil)
+
+      expect { described_class.sync! }.not_to change { UserAction.count }
+      expect(reaction_user_2.reload.post_action_like).to be_nil
     end
   end
 end

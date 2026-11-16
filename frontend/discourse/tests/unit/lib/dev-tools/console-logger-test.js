@@ -52,10 +52,6 @@ module("Unit | Lib | dev-tools/console-logger", function (hooks) {
   });
 
   module("getNextArgNumber", function () {
-    test("returns current counter value", function (assert) {
-      assert.strictEqual(getNextArgNumber(), 1);
-    });
-
     test("does not increment counter", function (assert) {
       assert.strictEqual(getNextArgNumber(), 1);
       assert.strictEqual(getNextArgNumber(), 1);

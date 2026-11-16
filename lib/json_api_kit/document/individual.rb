@@ -4,11 +4,18 @@ module JsonApiKit
   class Document
     class Individual < Document
       class << self
-        def contract_class = Request::Contract::Individual
+        def input_class = Request::Input::Individual
 
         def for(id, parameters, resource:, client:)
-          build(parameters, resource:, client:) { resource.find(id, it, guardian: client.guardian) }
+          build(parameters, resource:, client:) { |params, instance| instance.find(id, params) }
         end
+
+        def from(record, **context) = from_records([record], **context)
+      end
+
+      def headers(status: self.status)
+        return {} unless Rack::Utils.status_code(status) == 201
+        { "Location" => urls.for(query.record).to_s }
       end
 
       private

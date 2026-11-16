@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "net/http"
+
 module Migrations
   module Importer
     module Uploads
@@ -14,7 +16,12 @@ module Migrations
         def configure!
           configure_basic_uploads
           configure_multisite if @options[:multisite]
-          configure_s3 if @options[:enable_s3_uploads]
+
+          if @options[:enable_s3_uploads]
+            configure_s3
+          elsif @options[:s3_upload_bucket].present?
+            warn(I18n.t("importer.uploads.s3_uploads_disabled"))
+          end
         end
 
         def self.configure!(options)
@@ -28,6 +35,9 @@ module Migrations
           SiteSetting.authorized_extensions = @options[:authorized_extensions]
           SiteSetting.max_attachment_size_kb = @options[:max_attachment_size_kb]
           SiteSetting.max_image_size_kb = @options[:max_image_size_kb]
+          SiteSetting.max_image_megapixels = @options[:max_image_megapixels]
+          SiteSetting.secure_uploads = @options[:secure_uploads]
+          SiteSetting.s3_enable_access_control_tags = @options[:s3_enable_access_control_tags]
         end
 
         def configure_multisite
@@ -66,18 +76,38 @@ module Migrations
             tmpfile.write("test")
             tmpfile.rewind
 
-            upload =
-              UploadCreator.new(tmpfile, "discourse-s3-test.txt").create_for(
-                Discourse::SYSTEM_USER_ID,
-              )
+            upload = nil
+            begin
+              upload =
+                UploadCreator.new(tmpfile, "discourse-s3-test.txt").create_for(
+                  Discourse::SYSTEM_USER_ID,
+                )
 
-            unless upload.present? && upload.persisted? && upload.errors.blank? &&
-                     upload.url.start_with?("//")
-              raise S3UploadsConfigurationError, "Failed to upload to S3"
+              if upload.blank? || !upload.persisted? || upload.errors.present? ||
+                   !upload.url.start_with?("//")
+                raise S3UploadsConfigurationError, "Failed to upload to S3"
+              end
+
+              verify_public_access!(upload) if !@options[:secure_uploads]
+            ensure
+              upload&.destroy
             end
-
-            upload.destroy
           end
+        end
+
+        # An S3-compatible store configured through `s3_endpoint` may speak plain
+        # HTTP; AWS itself is always HTTPS.
+        def store_scheme
+          endpoint = SiteSetting.s3_endpoint.presence
+          endpoint ? URI(endpoint).scheme : "https"
+        end
+
+        def verify_public_access!(upload)
+          response = Net::HTTP.get_response(URI("#{store_scheme}:#{upload.url}"))
+          return if response.is_a?(Net::HTTPSuccess)
+
+          raise S3UploadsConfigurationError,
+                I18n.t("importer.uploads.s3_public_access_failed", status: response.code)
         end
       end
     end

@@ -34,8 +34,29 @@ RSpec.describe JsLocaleHelper do
         "wizard_js",
       )
     end
+
+    shared_examples "formatting dates with ASCII digits" do |locale:, moment_locale:|
+      it "configures the expected Moment locale and ASCII date digits" do
+        v8_ctx.eval(File.read(VendoredAssets.path("moment/moment.js")))
+        v8_ctx.eval("moment.tz = {};")
+        v8_ctx.eval(JsLocaleHelper.output_locale(locale))
+        v8_ctx.eval("window._discourse_locale_data.configureMoment();")
+
+        expect(v8_ctx.eval("moment.locale()")).to eq(moment_locale)
+        expect(v8_ctx.eval('moment("2026-05-01").format("YYYY-MM-DD")')).to eq("2026-05-01")
+      end
+    end
+
+    context "with the ar locale" do
+      include_examples "formatting dates with ASCII digits", locale: "ar", moment_locale: "ar"
+    end
+
+    context "with the fa_IR locale" do
+      include_examples "formatting dates with ASCII digits", locale: "fa_IR", moment_locale: "fa"
+    end
   end
 
+  # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
   LocaleSiteSetting.values.each do |locale|
     it "generates valid JS for #{locale[:value]} locale" do
       js = JsLocaleHelper.output_locale(locale[:value])
@@ -56,6 +77,7 @@ RSpec.describe JsLocaleHelper do
       expect(described_class.output_MF(locale[:value])).not_to match(/Failed to compile/)
     end
   end
+  # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
   describe ".output_client_overrides" do
     subject(:client_overrides) { described_class.output_client_overrides("en") }

@@ -250,12 +250,28 @@ RSpec.describe Discourse do
 
   describe "enabled_authenticators" do
     it "only returns enabled authenticators" do
+      SiteSetting.twitter_consumer_key = "consumer_key"
+      SiteSetting.twitter_consumer_secret = "consumer_secret"
+
       expect(Discourse.enabled_authenticators.length).to be(0)
       expect { SiteSetting.enable_twitter_logins = true }.to change {
         Discourse.enabled_authenticators.length
       }.by(1)
       expect(Discourse.enabled_authenticators.length).to be(1)
       expect(Discourse.enabled_authenticators.first).to be_instance_of(Auth::TwitterAuthenticator)
+    end
+
+    it "does not return an enabled authenticator once its credentials are removed" do
+      SiteSetting.twitter_consumer_key = "consumer_key"
+      SiteSetting.twitter_consumer_secret = "consumer_secret"
+      SiteSetting.enable_twitter_logins = true
+
+      expect { SiteSetting.twitter_consumer_secret = "" }.to change {
+        Discourse.enabled_authenticators.length
+      }.by(-1)
+
+      expect(SiteSetting.enable_twitter_logins).to eq(true)
+      expect(Discourse.enabled_authenticators).to be_empty
     end
   end
 
@@ -815,9 +831,12 @@ RSpec.describe Discourse do
   end
 
   describe ".anonymous_locale" do
-    def locale_for(cookie: nil, path: "/")
-      env = cookie ? { "HTTP_COOKIE" => "locale=#{cookie}" } : {}
-      Discourse.anonymous_locale(ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)))
+    def locale_for(cookie: nil, path: "/", env: {}, include_param: true)
+      env = env.merge("HTTP_COOKIE" => "locale=#{cookie}") if cookie
+      Discourse.anonymous_locale(
+        ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)),
+        include_param:,
+      )
     end
 
     before do
@@ -880,6 +899,29 @@ RSpec.describe Discourse do
       it "still prefers the locale param over the cookie" do
         SiteSetting.set_locale_from_param = true
 
+        expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
+      end
+    end
+
+    context "without the locale param" do
+      before do
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.set_locale_from_accept_language_header = true
+      end
+
+      it "resolves the locale the plain URL would serve" do
+        expect(locale_for(cookie: "es", path: "/?tl=fr", include_param: false)).to eq("es")
+        expect(
+          locale_for(
+            path: "/?tl=fr",
+            env: {
+              "HTTP_ACCEPT_LANGUAGE" => "ja",
+            },
+            include_param: false,
+          ),
+        ).to eq("ja")
+        expect(locale_for(path: "/?tl=fr", include_param: false)).to eq("en")
         expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
       end
     end

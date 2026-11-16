@@ -16,6 +16,62 @@ describe PostLocalizationsController do
     sign_in(user)
   end
 
+  shared_examples "a route that hides inaccessible posts" do
+    before { SiteSetting.detailed_404 = false }
+
+    it "returns the same not found response for inaccessible and nonexistent posts" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_post = Fabricate(:post, topic: Fabricate(:topic, category: private_category))
+      private_message_post = Fabricate(:private_message_post)
+      nonexistent_post_id = Post.maximum(:id) + 10_000
+
+      Fabricate(:post_localization, post: private_post, locale:)
+      Fabricate(:post_localization, post: private_message_post, locale:)
+
+      make_request.call(nonexistent_post_id)
+
+      expect(response.status).to eq(404)
+      nonexistent_post_response = response.parsed_body
+
+      [private_post, private_message_post].each do |inaccessible_post|
+        expect { make_request.call(inaccessible_post.id) }.not_to change {
+          [PostLocalization.count, inaccessible_post.reload.locale]
+        }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body).to eq(nonexistent_post_response)
+      end
+    end
+
+    it "hides inaccessible posts even when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      private_post =
+        Fabricate(
+          :post,
+          topic:
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
+        )
+
+      make_request.call(private_post.id)
+
+      expect(response.status).to eq(404)
+    end
+
+    it "keeps the forbidden response for inaccessible posts when detailed_404 is enabled" do
+      SiteSetting.detailed_404 = true
+      private_post =
+        Fabricate(
+          :post,
+          topic:
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
+        )
+
+      make_request.call(private_post.id)
+
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe "#show" do
     it "allows users in allowed groups to view localizations" do
       Fabricate(:post_localization, post: post_record, locale:)
@@ -33,6 +89,10 @@ describe PostLocalizationsController do
       get "/post_localizations/#{post_record.id}.json"
 
       expect(response.status).to eq(403)
+    end
+
+    it_behaves_like "a route that hides inaccessible posts" do
+      let(:make_request) { ->(post_id) { get "/post_localizations/#{post_id}.json" } }
     end
 
     context "with author localization enabled" do
@@ -130,6 +190,14 @@ describe PostLocalizationsController do
 
       expect(response.status).to eq(404)
     end
+
+    it_behaves_like "a route that hides inaccessible posts" do
+      let(:make_request) do
+        ->(post_id) do
+          post "/post_localizations/create_or_update.json", params: { post_id:, locale:, raw: }
+        end
+      end
+    end
   end
 
   describe "#update_locale" do
@@ -180,6 +248,12 @@ describe PostLocalizationsController do
       expect(response.parsed_body["locale"]).to be_nil
       expect(post_record.reload.locale).to be_nil
     end
+
+    it_behaves_like "a route that hides inaccessible posts" do
+      let(:make_request) do
+        ->(post_id) { put "/post_localizations/#{post_id}/locale.json", params: { locale: "de" } }
+      end
+    end
   end
 
   describe "#destroy" do
@@ -197,6 +271,12 @@ describe PostLocalizationsController do
       delete "/post_localizations/destroy.json", params: { post_id: post_record.id, locale: "nope" }
 
       expect(response.status).to eq(404)
+    end
+
+    it_behaves_like "a route that hides inaccessible posts" do
+      let(:make_request) do
+        ->(post_id) { delete "/post_localizations/destroy.json", params: { post_id:, locale: } }
+      end
     end
   end
 

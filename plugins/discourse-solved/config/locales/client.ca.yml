@@ -19,6 +19,9 @@ ca:
               member: "Membres"
               basic: "Bàsic"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Etiquetes"
     notifications:
       alt:
         solved:

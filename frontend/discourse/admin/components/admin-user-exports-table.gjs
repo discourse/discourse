@@ -18,6 +18,7 @@ export default class extends Component {
   @service messageBus;
   @service toasts;
 
+  /** @type {import("discourse/admin/models/user-export").default | null} */
   @tracked userExport = null;
   @tracked userExportReloading = false;
 

@@ -217,6 +217,8 @@ class Topic < ActiveRecord::Base
                   !SiteSetting.allow_uncategorized_topics && (t.archetype.nil? || t.regular?)
               }
 
+  validate :ensure_archetype_is_registered, if: :will_save_change_to_archetype?
+
   validates :featured_link, allow_nil: true, url: true
   validate if: :featured_link do
     if featured_link_changed? && !Guardian.new(user).can_edit_featured_link?(category_id)
@@ -352,6 +354,20 @@ class Topic < ActiveRecord::Base
           )
         end
 
+  scope :allowed_to_user, ->(user) { where(<<~SQL, user_id: user.id) }
+    EXISTS (
+      SELECT 1
+      FROM topic_allowed_users tau
+      WHERE tau.topic_id = topics.id AND tau.user_id = :user_id
+    )
+    OR EXISTS (
+      SELECT 1
+      FROM topic_allowed_groups tg
+      JOIN group_users gu ON gu.group_id = tg.group_id AND gu.user_id = :user_id
+      WHERE tg.topic_id = topics.id
+    )
+  SQL
+
   scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
 
   scope :by_newest, -> { order("topics.created_at desc, topics.id desc") }
@@ -481,6 +497,37 @@ class Topic < ActiveRecord::Base
     )
   end
 
+  def self.recalculate_like_counts!(topic_ids)
+    counts = DB.query(<<~SQL, topic_ids:, whisper: Post.types[:whisper])
+      WITH previous AS (SELECT id, like_count FROM topics WHERE id IN (:topic_ids))
+      UPDATE topics
+      SET like_count = (
+        SELECT COALESCE(SUM(posts.like_count), 0)
+        FROM posts
+        WHERE posts.topic_id = topics.id
+          AND posts.post_type <> :whisper
+          AND posts.deleted_at IS NULL
+      )
+      FROM previous
+      WHERE topics.id = previous.id
+      RETURNING topics.id, previous.like_count AS previous_count, topics.like_count AS current_count
+    SQL
+
+    crossed =
+      counts.select do |count|
+        og_image_counter_regeneration_needed?(count.previous_count, count.current_count)
+      end
+    topics = where(id: crossed.map(&:id)).index_by(&:id)
+    crossed.each do |count|
+      topics[count.id]&.enqueue_og_image_regeneration_after_counter_change(
+        previous_count: count.previous_count,
+        current_count: count.current_count,
+      )
+    end
+
+    counts
+  end
+
   def self.og_image_counter_regeneration_needed?(previous_count, current_count)
     previous_count = previous_count.to_i
     current_count = current_count.to_i
@@ -544,7 +591,7 @@ class Topic < ActiveRecord::Base
 
   def best_post
     posts
-      .where(post_type: Post.types[:regular], user_deleted: false)
+      .where(post_type: Post.types[:regular], user_deleted: false, hidden: false)
       .order("score desc nulls last")
       .limit(1)
       .first
@@ -939,7 +986,6 @@ class Topic < ActiveRecord::Base
 
   def update_status(status, enabled, user, opts = {})
     TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
-    DiscourseEvent.trigger(:topic_status_updated, self, status, enabled)
 
     if status == "closed"
       StaffActionLogger.new(user).log_topic_closed(self, closed: enabled)
@@ -1409,6 +1455,7 @@ class Topic < ActiveRecord::Base
         self,
         moved_by,
         post_ids,
+        guardian: opts.fetch(:guardian) { moved_by.guardian },
         move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
         options: {
           freeze_original: opts[:freeze_original],
@@ -1445,15 +1492,9 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    old_like_count = like_count
-    new_like_count =
-      Post.where.not(post_type: Post.types[:whisper]).where(topic_id: id).sum(:like_count)
-
-    update_column(:like_count, new_like_count)
-    enqueue_og_image_regeneration_after_counter_change(
-      previous_count: old_like_count,
-      current_count: new_like_count,
-    )
+    count = Topic.recalculate_like_counts!([id]).first
+    self.like_count = count.current_count
+    clear_attribute_changes(%i[like_count])
   end
 
   def posters_summary(options = {}) # avatar lookup in options
@@ -1699,10 +1740,10 @@ class Topic < ActiveRecord::Base
     @slow_mode_topic_timer ||= topic_timers.find_by(status_type: TopicTimer.types[:clear_slow_mode])
   end
 
-  def delete_topic_timer(status_type, by_user: Discourse.system_user)
+  def delete_topic_timer(status_type, by_user: Discourse.system_user, reason: :cancelled)
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
-    topic_timers.find_by(options)&.trash!(by_user)
+    topic_timers.find_by(options)&.finish!(reason, by_user: by_user)
     @public_topic_timer = nil
     nil
   end
@@ -2058,6 +2099,10 @@ class Topic < ActiveRecord::Base
     errors.add(:featured_link, :invalid)
   end
 
+  def ensure_archetype_is_registered
+    errors.add(:archetype, :inclusion) if !Archetype.exists?(archetype)
+  end
+
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
     private_messages
       .with_subtype(topic_subtype)
@@ -2181,8 +2226,8 @@ class Topic < ActiveRecord::Base
       data: {
         topic_title: title,
         display_username: invited_by.username,
-        original_user_id: user.id,
-        original_username: user.username,
+        original_user_id: invited_by.id,
+        original_username: invited_by.username,
       }.to_json,
     )
   end
@@ -2228,9 +2273,8 @@ class Topic < ActiveRecord::Base
     target_audience = {}
 
     if private_message?
-      target_audience[:user_ids] = User.human_users.where("admin OR moderator").pluck(:id)
-      target_audience[:user_ids] |= allowed_users.pluck(:id)
-      target_audience[:user_ids] |= allowed_group_users.pluck(:id)
+      target_audience[:user_ids] = User.human_users.where(admin: true).pluck(:id)
+      target_audience[:user_ids] |= all_allowed_users.pluck(:id)
     else
       target_audience[:group_ids] = secure_group_ids
     end
@@ -2425,7 +2469,7 @@ end
 #  index_topics_on_pinned_globally                  (pinned_globally) WHERE pinned_globally
 #  index_topics_on_pinned_until                     (pinned_until) WHERE (pinned_until IS NOT NULL)
 #  index_topics_on_timestamps_private               (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
-#  index_topics_on_updated_at_for_locale_detection  (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
-#  index_topics_on_updated_at_for_localization      (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
+#  index_topics_on_updated_at_for_locale_detection  (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_topics_on_updated_at_for_localization      (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
 #  index_topics_on_updated_at_public                (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

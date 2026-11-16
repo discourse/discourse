@@ -9,7 +9,6 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
@@ -21,53 +20,25 @@ import {
   PRESET_COLUMN_COLORS,
   STATUS_OPTIONS,
   tagToArray,
-} from "../../lib/boards-column-helpers";
-import BoardsEditableTitle from "../boards-editable-title";
+} from "../../lib/boards-column-helpers.js";
+import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 export default class BoardsColumnSettings extends Component {
   @tracked showAdvanced = false;
 
-  get isNew() {
-    return !this.args.model.column;
-  }
-
   @cached
   get formData() {
     const column = this.args.model.column;
-    if (column) {
-      return {
-        title: column.title || "",
-        icon: column.icon || null,
-        color: column.color || null,
-        default_sort: column.default_sort || "priority",
-        tag_name: column.tag_name || "",
-        move_to_category_id: column.move_to_category_id || null,
-        move_to_assigned: column.move_to_assigned || "",
-        move_to_status: column.move_to_status || "",
-      };
-    }
     return {
-      title: "",
-      icon: null,
-      color: null,
-      default_sort: "priority",
-      tag_name: "",
-      move_to_category_id: null,
-      move_to_assigned: "",
-      move_to_status: "",
+      title: column?.title || "",
+      icon: column?.icon || null,
+      color: column?.color || null,
+      default_sort: column?.default_sort || "priority",
+      tag_name: column?.tag_name || "",
+      move_to_category_id: column?.move_to_category_id || null,
+      move_to_assigned: column?.move_to_assigned || "",
+      move_to_status: column?.move_to_status || "",
     };
-  }
-
-  get statusOptions() {
-    return STATUS_OPTIONS;
-  }
-
-  get sortOptions() {
-    return COLUMN_SORT_OPTIONS;
-  }
-
-  get assignedOptions() {
-    return ASSIGNED_OPTIONS;
   }
 
   // NOTE: We are aware this is not ideal because a board
@@ -201,7 +172,7 @@ export default class BoardsColumnSettings extends Component {
               >
                 <field.Control>
                   <ComboBox
-                    @content={{this.sortOptions}}
+                    @content={{COLUMN_SORT_OPTIONS}}
                     @onChange={{fn this.onDefaultSortChange field}}
                     @value={{data.default_sort}}
                   />
@@ -240,7 +211,7 @@ export default class BoardsColumnSettings extends Component {
               >
                 <field.Control>
                   <ComboBox
-                    @content={{this.statusOptions}}
+                    @content={{STATUS_OPTIONS}}
                     @onChange={{fn this.onStatusChange field}}
                     @options={{hash
                       clearable=true
@@ -264,7 +235,7 @@ export default class BoardsColumnSettings extends Component {
                       <CategoryChooser
                         @onChange={{fn this.onCategoryChange field}}
                         @options={{hash clearable=true}}
-                        @value={{data.move_to_category_id}}
+                        @value={{readonly data.move_to_category_id}}
                       />
                     </field.Control>
                   </form.Field>
@@ -279,7 +250,7 @@ export default class BoardsColumnSettings extends Component {
                 >
                   <field.Control>
                     <ComboBox
-                      @content={{this.assignedOptions}}
+                      @content={{ASSIGNED_OPTIONS}}
                       @onChange={{fn this.onAssignedModeChange field}}
                       @options={{hash
                         clearable=true

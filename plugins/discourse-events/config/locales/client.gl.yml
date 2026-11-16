@@ -13,6 +13,15 @@ gl:
             topic_id:
               label: ID do tema
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Rexistrarse"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificación"
+            none: "Ningunha"
       disable_holiday: "Desactivar"
       enable_holiday: "Activar"
       date: "Data"
@@ -45,13 +54,14 @@ gl:
         status: "Estado"
       models:
         event:
-          expired: "Caducou"
           closed: "Pechado"
           status:
             public:
               title: "Pública"
             private:
               title: "Privada"
+      recording_modal:
+        save: "Gardar"
       composer:
         url_placeholder: "Engadir URL"
         reminder:

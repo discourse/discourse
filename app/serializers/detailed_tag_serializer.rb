@@ -13,8 +13,20 @@ class DetailedTagSerializer < TagSerializer
     object.all_categories(scope)
   end
 
+  def name
+    restricted_from_scope? ? object.name : super
+  end
+
   def category_restricted
     object.all_category_ids.present?
+  end
+
+  def include_description?
+    !restricted_from_scope?
+  end
+
+  def include_description_cooked?
+    !restricted_from_scope?
   end
 
   def include_tag_group_names?
@@ -26,5 +38,12 @@ class DetailedTagSerializer < TagSerializer
       .visible(scope)
       .where(id: object.tag_group_memberships.select(:tag_group_id))
       .pluck(:name)
+  end
+
+  private
+
+  def restricted_from_scope?
+    return @restricted_from_scope if defined?(@restricted_from_scope)
+    @restricted_from_scope = !object.visible_in_accessible_categories?(scope)
   end
 end

@@ -1,7 +1,7 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import LazyVideo from "../discourse/components/lazy-video";
+import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
 
 module("Component | LazyVideo", function (hooks) {
   setupRenderingTest(hooks);

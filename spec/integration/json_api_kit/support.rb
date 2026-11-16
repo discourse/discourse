@@ -98,9 +98,9 @@ RSpec.shared_context "with a listing of topics" do
   let(:current) { "https://example.com/api/topics" }
   let(:query) { {} }
   let(:scoped_to) { nil }
-  let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:edition) { JsonApiKit::Edition.current }
   let(:urls) { JsonApiKit::Urls.new(base:, current:, parameters: query) }
-  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:document) do
     JsonApiKit::Document::Collection.for(params, resource:, client:, scoped_to:).to_h
   end
@@ -114,7 +114,7 @@ RSpec.shared_context "with a listing of topics" do
       parameters,
       resource:,
       client:
-        JsonApiKit::Client.new(guardian:, glossary:, urls: JsonApiKit::Urls.new(base:, current:)),
+        JsonApiKit::Client.new(guardian:, edition:, urls: JsonApiKit::Urls.new(base:, current:)),
       scoped_to:,
     ).to_h
   end
@@ -205,7 +205,7 @@ RSpec.shared_context "with a listing of topics" do
 
   def parameters_of(url) = Rack::Utils.parse_nested_query(URI.parse(url).query)
 
-  def cursor_of_record(record, of: resource, sort: {})
+  def cursor_of_record(record, of: resource, sort: of.default_ordering)
     order = of.order(sort.transform_keys(&:to_s))
     order.locate(of.model.where(id: record.id)).cursor.to_s
   end

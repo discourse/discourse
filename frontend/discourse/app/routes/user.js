@@ -11,6 +11,7 @@ export default class UserRoute extends DiscourseRoute {
   @service("search") searchService;
   @service appEvents;
   @service messageBus;
+  @service userNavSidebarStateManager;
 
   beforeModel() {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
@@ -67,6 +68,8 @@ export default class UserRoute extends DiscourseRoute {
       `/u/${user.username_lower}/counters`,
       this.onUserCountersMessage
     );
+
+    this.userNavSidebarStateManager.forceUserNavSidebar();
   }
 
   deactivate() {
@@ -85,6 +88,8 @@ export default class UserRoute extends DiscourseRoute {
 
     // Remove the search context
     this.searchService.searchContext = null;
+
+    this.userNavSidebarStateManager.stopForcingUserNavSidebar();
   }
 
   @bind

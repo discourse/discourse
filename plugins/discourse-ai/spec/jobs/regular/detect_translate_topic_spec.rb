@@ -348,6 +348,9 @@ describe Jobs::DetectTranslateTopic do
       expect(message.count).to eq(1)
       expect(message.first.channel).to eq("/topic/#{group_pm_topic.id}")
       expect(message.first.data).to eq(reload_topic: true)
+      expect(message.first.user_ids).to contain_exactly(
+        *group_pm_topic.secure_audience_publish_messages[:user_ids],
+      )
     end
   end
 end

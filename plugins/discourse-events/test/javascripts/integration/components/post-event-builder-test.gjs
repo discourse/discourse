@@ -2,9 +2,10 @@ import { getOwner } from "@ember/owner";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import PostEventBuilder from "../../discourse/components/modal/post-event-builder";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 function eventWith(attrs = {}) {
   return DiscoursePostEventEvent.create({
@@ -56,6 +57,61 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     getOwner(this).register("service:current-user", this.user, {
       instantiate: false,
     });
+  });
+
+  test("reminder edits persist in advanced settings and the saved event", async function (assert) {
+    const event = eventWith({
+      reminders: [
+        { type: "notification", value: 15, unit: "minutes", period: "before" },
+        { type: "notification", value: 30, unit: "minutes", period: "before" },
+      ],
+    });
+    let savedEvent;
+    await renderAdvanced(event, {
+      onUpdate: (startsAt, endsAt, updatedEvent) => {
+        savedEvent = updatedEvent;
+      },
+    });
+
+    await fillIn('[data-name="reminders.1.value"] input', "2");
+    assert
+      .dom('[data-name="reminders.1.value"] input')
+      .hasValue("2", "the number does not reset");
+
+    await formKit().field("reminders.1.unit").select("hours");
+    assert
+      .dom('[data-name="reminders.1.unit"] select')
+      .hasValue("hours", "the unit does not reset");
+
+    await fillIn('[data-name="location"] input', "Sydney");
+    assert
+      .dom('[data-name="reminders.1.value"] input')
+      .hasValue("2", "the number survives another field edit");
+    assert
+      .dom('[data-name="reminders.1.unit"] select')
+      .hasValue("hours", "the unit survives another field edit");
+
+    await click(".btn-primary");
+    assert.strictEqual(
+      Number(savedEvent.reminders[1].value),
+      2,
+      "saves the edited number"
+    );
+    assert.strictEqual(
+      savedEvent.reminders[1].unit,
+      "hours",
+      "saves the edited unit"
+    );
+    assert.strictEqual(
+      Number(savedEvent.reminders[0].value),
+      15,
+      "leaves the other reminder unchanged"
+    );
+    assert.strictEqual(
+      savedEvent.reminders[0].unit,
+      "minutes",
+      "leaves the other unit unchanged"
+    );
   });
 
   test("advanced screen renders an existing image upload as its URL", async function (assert) {
@@ -144,6 +200,36 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     );
   });
 
+  test("editing a local-time event preserves its wall-clock time", async function (assert) {
+    const event = eventWith({
+      starts_at: "2026-09-30T20:15:00",
+      ends_at: "2026-09-30T22:15:00",
+      timezone: "Europe/Madrid",
+      show_local_time: true,
+    });
+
+    let savedDates;
+    await renderAdvanced(event, {
+      onUpdate: (startsAt, endsAt) => {
+        savedDates = { startsAt, endsAt };
+      },
+    });
+
+    await fillIn(`[data-name="description"] textarea`, "Updated description");
+    await click(".btn-primary");
+
+    assert.strictEqual(
+      savedDates.startsAt.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 20:15 +02:00",
+      "the start remains anchored to the event timezone"
+    );
+    assert.strictEqual(
+      savedDates.endsAt.format("YYYY-MM-DD HH:mm Z"),
+      "2026-09-30 22:15 +02:00",
+      "the end remains anchored to the event timezone"
+    );
+  });
+
   test("typed custom field survives a compact-screen edit in between", async function (assert) {
     this.siteSettings.discourse_post_event_allowed_custom_fields = "test1";
 
@@ -197,6 +283,26 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
       null,
       "clearing the field clears the event url, so buildParams drops it"
     );
+  });
+
+  test("advanced screen offers a recording field once a livestream has ended", async function (assert) {
+    const event = eventWith({ livestream: true });
+    await renderAdvanced(event);
+
+    await fillIn(`[data-name="recordingUrl"] input`, "https://youtu.be/abc");
+
+    assert.strictEqual(event.recordingUrl, "https://youtu.be/abc");
+  });
+
+  test("advanced screen hides the recording field before a livestream ends", async function (assert) {
+    const event = eventWith({
+      livestream: true,
+      starts_at: "2099-07-01T10:00:00Z",
+      ends_at: "2099-07-01T11:00:00Z",
+    });
+    await renderAdvanced(event);
+
+    assert.dom(`[data-name="recordingUrl"]`).doesNotExist();
   });
 
   test("offers livestream when the url field carries the livestream link", async function (assert) {

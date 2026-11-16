@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class SettingsExplorer < Agent
+      def thinking_effort
+        "low"
+      end
+
       def tools
         [
           Tools::SettingContext,

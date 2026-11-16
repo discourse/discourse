@@ -113,7 +113,7 @@ class MetadataController < ApplicationController
     }
 
     logo = SiteSetting.site_manifest_icon_url
-    if logo
+    if logo.present?
       icon_entry = {
         src: UrlHelper.absolute(logo),
         sizes: "512x512",

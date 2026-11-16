@@ -30,7 +30,7 @@ class ProblemCheck::AiCreditSoftLimit < ProblemCheck
       model_name: model.display_name,
       percentage_remaining: allocation.percentage_remaining.round,
       reset_date: format_reset_date(allocation.next_reset_at),
-      url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms",
+      url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-models?type=llm",
     }
 
     problem(model, override_data:)

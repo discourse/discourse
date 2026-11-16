@@ -23,6 +23,14 @@ class McpOauthClient < ActiveRecord::Base
     trust_state == "blocked"
   end
 
+  def update_registration!(attributes)
+    with_lock do
+      assign_attributes(attributes)
+      self.admin_managed = true if name_changed? || redirect_uris_changed?
+      save!
+    end
+  end
+
   def allows_redirect_uri?(value)
     return true if redirect_uris.include?(value)
 
@@ -76,6 +84,7 @@ end
 # Table name: mcp_oauth_clients
 #
 #  id                  :bigint           not null, primary key
+#  admin_managed       :boolean          default(FALSE), not null
 #  last_seen_at        :datetime
 #  metadata            :jsonb            not null
 #  metadata_expires_at :datetime

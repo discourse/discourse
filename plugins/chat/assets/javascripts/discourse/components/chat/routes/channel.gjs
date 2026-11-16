@@ -2,6 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatSidePanel from "discourse/plugins/chat/discourse/components/chat-side-panel";
 import FullPageChat from "discourse/plugins/chat/discourse/components/full-page-chat";
@@ -89,6 +92,10 @@ export default class ChatRoutesChannel extends Component {
           <a.OpenDrawerButton />
           <a.PinnedMessagesButton @channel={{@channel}} />
           <a.ThreadsListButton @channel={{@channel}} />
+          <PluginOutlet
+            @name="chat-channel-navbar-actions"
+            @outletArgs={{lazyHash channel=@channel}}
+          />
         </navbar.Actions>
       </Navbar>
 
@@ -97,7 +104,13 @@ export default class ChatRoutesChannel extends Component {
         @isFiltering={{this.isFiltering}}
         @onToggleFilter={{this.toggleIsFiltering}}
         @targetMessageId={{@targetMessageId}}
-      />
+      >
+        <:aboveMessages>
+          {{#if this.siteSettings.enable_site_owner_onboarding}}
+            <AdminOnboardingBanner @location="chat_channel" />
+          {{/if}}
+        </:aboveMessages>
+      </FullPageChat>
     </div>
 
     <ChatSidePanel>

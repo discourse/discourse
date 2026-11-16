@@ -4,12 +4,11 @@ class ReviewableQueuedPost < Reviewable
   include ReviewableActionBuilder
 
   def self.action_aliases
-    {
-      discard_post: :reject_post,
-      reject_and_silence: :reject_post,
-      reject_and_suspend: :reject_post,
-      delete_user_block: :delete_and_block_user,
-    }
+    { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
+  end
+
+  def self.approval_style?
+    true
   end
 
   after_create do
@@ -27,34 +26,44 @@ class ReviewableQueuedPost < Reviewable
   after_commit :compute_user_stats, only: %i[create update]
 
   def self.additional_args(params)
-    return {} if params[:revise_reason].blank?
+    args = ReviewableActionBuilder.penalty_args(params)
+    return args if params[:revise_reason].blank?
 
-    {
+    args.merge(
       revise_reason: params[:revise_reason],
       revise_feedback: params[:revise_feedback],
       revise_custom_reason: params[:revise_custom_reason],
-    }
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
-    unless approved?
-      if topic&.closed?
-        build_action(actions, :approve_post_closed, icon: "check", confirm: true)
-      else
-        build_action(actions, :approve_post, icon: "check") if target_created_by.present?
-      end
-    end
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
+    build_approve_action(actions, consistent_answers:) if !consistent_answers
 
     if pending?
-      reject_bundle =
-        actions.add_bundle(
-          "#{id}-reject-post",
-          label: "reviewables.actions.reject_post_bundle.title",
-        )
+      reject_label =
+        if consistent_answers
+          "reviewables.actions.answer_yes.title"
+        else
+          "reviewables.actions.reject_post_bundle.title"
+        end
+      reject_bundle = actions.add_bundle("#{id}-reject-post", label: reject_label)
 
-      build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
+      build_action(
+        actions,
+        :reject_post,
+        bundle: reject_bundle,
+        icon: "xmark",
+        dsa_classification_required: true,
+      )
       if target_created_by.present?
-        build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+        build_action(
+          actions,
+          :revise_and_reject_post,
+          bundle: reject_bundle,
+          icon: "envelope",
+          dsa_classification_required: true,
+        )
       end
 
       build_penalty_actions(
@@ -62,10 +71,16 @@ class ReviewableQueuedPost < Reviewable
         bundle: reject_bundle,
         silence: :reject_and_silence,
         suspend: :reject_and_suspend,
+        dsa_classification_required: true,
       )
 
-      delete_user_actions(actions, reject_bundle) if guardian.can_delete_user?(target_created_by)
+      if guardian.can_delete_user?(target_created_by)
+        delete_user_actions(actions, reject_bundle, dsa_classification_required: true)
+      end
     end
+
+    # "Yes, there's a problem" comes first, so approval follows as "No".
+    build_approve_action(actions, consistent_answers:) if consistent_answers
 
     build_action(actions, :delete) if guardian.can_delete?(self)
   end
@@ -92,6 +107,9 @@ class ReviewableQueuedPost < Reviewable
     result[:cooking_options].symbolize_keys! if result[:cooking_options]
     result[:topic_id] = topic_id if topic_id
     result[:category] = category_id if category_id
+    if result[:tags].present? && !result[:tags].is_a?(Array)
+      raise Discourse::InvalidParameters.new(:tags)
+    end
     if result[:tags].is_a?(Array)
       result[:tags] = result[:tags].map { |t| t.is_a?(Hash) ? t["name"] : t }
     end
@@ -121,7 +139,11 @@ class ReviewableQueuedPost < Reviewable
     self.topic_id = created_post.topic_id if topic_id.nil?
     save
 
-    if target_created_by.silenced?
+    if target_created_by.silenced? &&
+         (
+           performed_by.guardian.can_unsilence_user?(target_created_by) ||
+             auto_silenced_for_this_reviewable?
+         )
       UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: id)
     end
 
@@ -155,6 +177,20 @@ class ReviewableQueuedPost < Reviewable
     perform_approve_post(performed_by, args)
   end
 
+  def perform_reject_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_reject_post(performed_by, args)
+  end
+
+  def perform_reject_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_reject_post(performed_by, args)
+  end
+
   def perform_reject_post(performed_by, args)
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:rejected_post, self)
@@ -180,6 +216,7 @@ class ReviewableQueuedPost < Reviewable
       end
 
     pm_translation_args = {
+      **Dsa::AppealInstructions.message_options,
       topic_title: topic&.title || payload["title"],
       topic_url: topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
@@ -209,20 +246,109 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    user = target_created_by
+    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
+
+    result =
+      super do |result|
+        result.deleted_user = user
+        result.remove_reviewable_ids += reviewable_ids
+      end
+
     update_column(:target_created_by_id, nil)
     result
   end
 
   def perform_delete_and_block_user(performed_by, args)
-    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    user = target_created_by
+    reviewable_ids = Reviewable.created_solely_by(user).pluck(:id)
+
+    result =
+      super do |result|
+        result.deleted_user = user
+        result.remove_reviewable_ids += reviewable_ids
+      end
+
     update_column(:target_created_by_id, nil)
     result
   end
 
   private
+
+  def build_approve_action(actions, consistent_answers:)
+    return if approved?
+
+    label =
+      if !consistent_answers
+        nil
+      elsif pending?
+        "reviewables.actions.answer_no.title"
+      else
+        # Resolved items have no question to answer, so approval is named outright.
+        "reviewables.actions.approve_post.action_title"
+      end
+
+    if topic&.closed?
+      build_action(actions, :approve_post_closed, icon: "check", label:, confirm: true)
+    elsif target_created_by.present?
+      build_action(actions, :approve_post, icon: "check", label:)
+    end
+  end
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :reject_post, :revise_and_reject_post, :discard_post
+      {
+        decision_facts: "The post was held for approval and rejected before publication.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :reject_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_facts: "The author of a post held for approval was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :reject_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_facts:
+          "The author of a post held for approval had their ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :delete_user, :delete_and_block_user, :delete_user_block
+      user = result.deleted_user
+
+      {
+        decision_facts: "The author of a post held for approval had their account deleted.",
+        decision_account: "DECISION_ACCOUNT_TERMINATED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    end
+  end
 
   def delete_opts
     {
@@ -240,6 +366,14 @@ class ReviewableQueuedPost < Reviewable
 
   def status_changed_from_or_to_pending?
     saved_change_to_id?(from: nil) && pending? || saved_change_to_status?(from: "pending")
+  end
+
+  # Approving content may lift the auto-silence it triggered, but not a staff-imposed silence
+  def auto_silenced_for_this_reviewable?
+    UserHistory
+      .where(action: UserHistory.actions[:silence_user], target_user_id: target_created_by_id)
+      .order(id: :desc)
+      .pick(:reviewable_id, :acting_user_id) == [id, Discourse::SYSTEM_USER_ID]
   end
 end
 
@@ -271,7 +405,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

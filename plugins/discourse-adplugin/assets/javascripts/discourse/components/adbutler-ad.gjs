@@ -3,7 +3,7 @@ import { scheduleOnce } from "@ember/runloop";
 import RSVP from "rsvp";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
-import AdComponent from "./ad-component";
+import AdComponent from "./ad-component.js";
 
 let _loaded = false,
   _promise = null,

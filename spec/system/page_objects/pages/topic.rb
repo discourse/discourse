@@ -84,6 +84,22 @@ module PageObjects
         within_post(post) { has_no_css?(".embedded-posts") }
       end
 
+      def expand_quote(post)
+        within_post(post) { find("aside.quote .quote-toggle", match: :first).click }
+      end
+
+      def follow_quote(post)
+        within_post(post) { find("aside.quote .quote-controls .back").click }
+      end
+
+      def has_highlighted_text?(post, text, inside: nil)
+        selector = [inside, ".quote-highlight"].compact.join(" ")
+        within_post(post) do
+          has_css?(selector, obscured: false) &&
+            text.split.all? { |word| has_css?(selector, text: word) }
+        end
+      end
+
       def post_by_number(post_or_number, wait: Capybara.default_max_wait_time)
         post_or_number = post_or_number.is_a?(Post) ? post_or_number.post_number : post_or_number
         find(".topic-post:not(.staged) #post_#{post_or_number}", wait: wait)
@@ -99,6 +115,10 @@ module PageObjects
 
       def has_post_more_actions?(post)
         within_post(post) { has_css?(".show-more-actions") }
+      end
+
+      def has_post_flagged?(post:, type:)
+        within_post(post) { has_text?(I18n.t("js.post.actions.by_you.#{type}")) }
       end
 
       def has_post_bookmarked?(post, with_reminder: false)

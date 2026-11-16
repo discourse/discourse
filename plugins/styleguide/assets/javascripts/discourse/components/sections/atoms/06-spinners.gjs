@@ -1,7 +1,7 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import SpinnerRegularExample from "../../examples/atoms/spinners/regular";
+import SpinnerRegularExample from "../../examples/atoms/spinners/regular.gjs";
 import spinnerRegularSource from "../../examples/atoms/spinners/regular?source=template";
-import SpinnerSmallExample from "../../examples/atoms/spinners/small";
+import SpinnerSmallExample from "../../examples/atoms/spinners/small.gjs";
 import spinnerSmallSource from "../../examples/atoms/spinners/small?source=template";
 
 export default <template>

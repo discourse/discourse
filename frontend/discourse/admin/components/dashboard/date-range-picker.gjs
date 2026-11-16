@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -21,10 +20,19 @@ function formatDate(value, pattern) {
 export default class DashboardDateRangePicker extends Component {
   @service site;
 
+  /** @type {import("moment").Moment | null} */
   @tracked pendingStart = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked pendingEnd = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked hoveredDay = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked focusedDay = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked viewStartMonthOverride = null;
 
   focusDay = modifier((element, [shouldFocus]) => {
@@ -117,6 +125,7 @@ export default class DashboardDateRangePicker extends Component {
     return moment.weekdaysMin(true);
   }
 
+  /** @returns {import("moment").Moment | null} */
   get hoverRangeEnd() {
     if (
       this.committed ||
@@ -129,6 +138,7 @@ export default class DashboardDateRangePicker extends Component {
     return this.hoveredDay;
   }
 
+  /** @returns {import("moment").Moment | null} */
   get hoverRangeStart() {
     return this.hoverRangeEnd ? this.pendingStart : null;
   }
@@ -210,6 +220,10 @@ export default class DashboardDateRangePicker extends Component {
     );
   }
 
+  /**
+   * @param {import("moment").Moment} day
+   * @returns {boolean | null}
+   */
   @action
   isHoverEndDay(day) {
     return (

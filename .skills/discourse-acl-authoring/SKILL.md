@@ -1,6 +1,6 @@
 ---
 name: discourse-acl-authoring
-description: Use when creating, editing, or reviewing Discourse access-control-list features built on AccessControlList, AclTarget, Guardian ACL helpers, AccessControlListManager, mandatory_acl, banned_acl, loss_warning_permissions, ACL modification evaluation, Site access_control metadata, plugin ACL target registration, DAccessControl, or DAccessControlField.
+description: Use when creating, editing, or reviewing Discourse access-control-list features built on AccessControlList, AclTarget, Guardian ACL helpers, AccessControlList::Apply, mandatory_acl, banned_acl, loss_warning_permissions, ACL modification evaluation, Site access_control metadata, plugin ACL target registration, DAccessControl, or DAccessControlField.
 ---
 
 # Discourse ACL Authoring
@@ -18,18 +18,20 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 
 ## Non-Negotiables
 
-- Define or inherit `ACL_PERMISSIONS = Acl::Permissions.new(...)` on every ACL target. Use its named readers in permission declarations; the manager validates final grants against its values before replacing rows.
+- Define or inherit `ACL_PERMISSIONS = Acl::Permissions.new(...)` on every ACL target. Use its named readers in permission declarations; the replacement service validates final grants against its values before replacing rows.
 - Every permission option added by `transformPermissionOptions(options)` must have an ID matching the target's server-side `ACL_PERMISSIONS`. Adding a UI option does not declare a server permission.
-- Put authorization at the caller boundary before `AccessControlListManager.call`; the manager is a destructive replacement service and currently assumes the caller already authorized the actor.
-- Always call `AccessControlListManager` for writes, including empty submitted ACL arrays, so mandatory ACLs are injected and old rows are replaced intentionally.
+- Treat `owner` as a reserved, user-only permission supplied through the replacement service's dedicated owner-user argument. Never accept owner grants from the ordinary flattened ACL argument.
+- Preserve owner grants during destructive ACL replacement. An owner implicitly satisfies every other permission check for the target, including target-id scopes.
+- Put ordinary ACL authorization at the caller boundary before `AccessControlList::Apply.call`. When `owner_user_ids` is supplied, the service separately requires the actor to be a current owner or admin.
+- Always call `AccessControlList::Apply` for submitted ACL writes, including empty arrays, so mandatory ACLs are injected and old rows are replaced intentionally. User-deletion ownership handoffs use `AccessControlList::ReassignDeletedUserOwnership` instead: it preserves stored ACL provenance and works without loading target classes.
 - Treat `AccessControlList.flattened_list` as the API shape for UI/client payloads and `AccessControlList.expand_list_for_bulk_insert` as the DB insert shape.
 - Use Guardian ACL helpers or `AclTarget` visibility scopes for checks and target scopes instead of hand-querying ACL tables in controllers.
 - Register plugin ACL targets with `DiscoursePluginRegistry.register_acl_target_class` so `Site#access_control` exposes mandatory and banned ACL metadata to the frontend.
-- Treat `banned_acl` as a server-enforced restriction. `DAccessControl` hides banned permission choices for UX, but `AccessControlListManager` must still reject submitted banned entries.
+- Treat `banned_acl` as a server-enforced restriction. `DAccessControl` hides banned permission choices for UX, but `AccessControlList::Apply` must still reject submitted banned entries.
 - Define `loss_warning_permissions` as permission strings whose loss by the current actor requires confirmation. Provide the target-specific server translation used by `AccessControlList::EvaluateModification`.
 - Prefer `DAccessControlField` inside FormKit. It owns required-permission validation, evaluates the proposed ACL, and uses FormKit's `preventSubmit` to cancel a submission without manufacturing a validation error.
 - Keep the default class-name `acl_target_key` when using `DAccessControlField`; its `@aclTarget.type` currently serves as both the Ruby class identifier and frontend metadata key.
-- User grants are supported by backend storage/lookups and the frontend user/group search picker. Mandatory user ACL display still needs explicit UI support; the component's mandatory injection remains group-first.
+- User grants are supported by backend storage/lookups and the frontend user/group search picker. Owner rows are distinct from mandatory ACL rows and render after them. Authorized owner managers can add user owners or remove an owner while at least one remains, except that `DAccessControl` does not offer new owners while `@isNew` is true; groups can never own a target. Other mandatory user ACL display still needs explicit UI support; the component's class-level mandatory injection remains group-first.
 
 ## Local Anchors
 
@@ -39,10 +41,10 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 - Permission lookup objects: `lib/acl/target.rb`, `lib/acl/user.rb`
 - Guardian helpers: `lib/guardian.rb`
 - User ACL cache: `app/models/user.rb`
-- Write manager: `app/services/access_control_list_manager.rb`
+- Write service: `app/services/access_control_list/apply.rb`
 - Modification evaluation: `app/services/access_control_list/evaluate_modification.rb`, `app/controllers/access_control_lists_controller.rb`
-- Deleted grantee cleanup: `app/jobs/regular/cleanup_acls_for_deleted.rb`, `app/models/group.rb`, `app/models/user.rb`
+- Deleted grantee cleanup: `app/services/access_control_list/reassign_deleted_user_ownership.rb`, `app/jobs/regular/cleanup_acls_for_deleted.rb`, `app/models/group.rb`, `app/models/user.rb`
 - Site metadata: `app/models/site.rb`, `app/serializers/site_serializer.rb`
 - Frontend components: `frontend/discourse/app/ui-kit/d-access-control.gjs`, `frontend/discourse/app/ui-kit/d-access-control-field.gjs`
-- Core specs: `spec/models/access_control_list_spec.rb`, `spec/models/concerns/acl_target_spec.rb`, `spec/lib/acl/target_spec.rb`, `spec/jobs/regular/cleanup_acls_for_deleted_spec.rb`, `spec/services/access_control_list_manager_spec.rb`, `spec/services/access_control_list/evaluate_modification_spec.rb`, `spec/serializers/site_serializer_spec.rb`, `frontend/discourse/tests/integration/components/d-access-control-test.gjs`, `frontend/discourse/tests/integration/components/form-kit/field-test.gjs`
+- Core specs: `spec/models/access_control_list_spec.rb`, `spec/models/concerns/acl_target_spec.rb`, `spec/lib/acl/target_spec.rb`, `spec/jobs/regular/cleanup_acls_for_deleted_spec.rb`, `spec/services/access_control_list/apply_spec.rb`, `spec/services/access_control_list/evaluate_modification_spec.rb`, `spec/serializers/site_serializer_spec.rb`, `frontend/discourse/tests/integration/components/d-access-control-test.gjs`, `frontend/discourse/tests/integration/components/form-kit/field-test.gjs`
 - Plugin consumer example: `plugins/boards`, especially `app/models/boards/board.rb` and its create/update services and request specs.

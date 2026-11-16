@@ -17,6 +17,8 @@ export default class ProfileController extends Controller {
 
   calendarOptions = [
     { name: i18n("download_calendar.google"), value: "google" },
+    { name: i18n("download_calendar.outlook"), value: "outlook" },
+    { name: i18n("download_calendar.apple"), value: "apple" },
     { name: i18n("download_calendar.ics"), value: "ics" },
   ];
 

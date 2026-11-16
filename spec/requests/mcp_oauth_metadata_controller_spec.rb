@@ -3,11 +3,45 @@
 describe McpOauthMetadataController do
   before { SiteSetting.mcp_server_enabled = true }
 
-  it "advertises the initial scope in protected resource metadata" do
+  shared_examples "public OAuth metadata when login is required" do |endpoint:|
+    before { SiteSetting.login_required = true }
+
+    it "returns discovery metadata without a browser session" do
+      get endpoint, headers: { "Accept" => "application/json" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["scopes_supported"]).to eq(DiscourseMcp.registry.scopes)
+    end
+
+    it "returns not found when MCP is disabled" do
+      SiteSetting.mcp_server_enabled = false
+
+      get endpoint, headers: { "Accept" => "application/json" }
+
+      expect(response.status).to eq(404)
+    end
+  end
+
+  context "for OAuth protected resource metadata" do
+    include_examples "public OAuth metadata when login is required",
+                     endpoint: "/.well-known/oauth-protected-resource/mcp"
+  end
+
+  context "for OAuth authorization server metadata" do
+    include_examples "public OAuth metadata when login is required",
+                     endpoint: "/.well-known/oauth-authorization-server"
+  end
+
+  context "for OpenID configuration metadata" do
+    include_examples "public OAuth metadata when login is required",
+                     endpoint: "/.well-known/openid-configuration"
+  end
+
+  it "advertises every registered scope in protected resource metadata" do
     get "/.well-known/oauth-protected-resource/mcp"
 
     expect(response.status).to eq(200)
-    expect(response.parsed_body["scopes_supported"]).to eq(["mcp:profile:read"])
+    expect(response.parsed_body["scopes_supported"]).to eq(DiscourseMcp.registry.scopes)
   end
 
   it "advertises every registered scope in authorization server metadata" do

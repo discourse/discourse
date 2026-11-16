@@ -1,0 +1,28 @@
+.workflows-variables {
+  &__field-values {
+    margin-top: var(--space-6);
+
+    > .setting:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  &__manage {
+    margin-top: var(--space-6);
+  }
+}
+
+.workflows-variable-form {
+  --form-kit-large-input: 32em;
+  margin-top: var(--space-4);
+}
+
+.workflows-variable-key {
+  display: inline-block;
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+}
+
+.workflows-variables-table {
+  margin-bottom: var(--space-4);
+}

@@ -298,6 +298,15 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
         expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
       end
 
+      it "records already imported items as updated on subsequent polls" do
+        job.execute(feed_url:, user_id: author.id, rss_feed_id: rss_feed.id)
+        job.execute(feed_url:, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.imported_count).to eq(0)
+        expect(attempt.updated_count).to eq(1)
+      end
+
       it "does not poll a disabled feed on a scheduled (non-forced) run" do
         rss_feed.update!(enabled: false)
 

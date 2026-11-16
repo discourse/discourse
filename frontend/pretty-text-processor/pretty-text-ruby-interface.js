@@ -9,6 +9,10 @@ import * as avatarUtils from "discourse/lib/avatar-utils";
 import loadPluginFeatures from "discourse/static/markdown-it/features";
 import DiscourseMarkdownIt from "discourse-markdown-it";
 import { resetTranslationTree } from "discourse-markdown-it/features/emoji";
+import {
+  scanHashtags,
+  spliceHashtags,
+} from "discourse-markdown-it/features/hashtag-autocomplete";
 import { runtime } from "./runtime-state.js";
 
 // Passed to the markdown pipeline as plain callbacks, so functions not methods.
@@ -61,55 +65,32 @@ let emojiUnicodeReplacer = null;
 function buildEmojiUnicodeReplacer(replacements) {
   const regexp = new RegExp(emojiReplacementRegex, "g");
   return function (text) {
-    regexp.lastIndex = 0;
-    let m;
-    while ((m = regexp.exec(text)) !== null) {
-      let match = m[0];
-      let replacement = replacements[match];
-      if (!replacement) {
-        match = match.replace(/️$/g, "");
-        replacement = replacements[match];
-      }
-      if (!replacement) {
-        continue;
-      }
-      replacement = ":" + replacement + ":";
-      const before = text.charAt(m.index - 1);
-      if (!/\B/.test(before)) {
-        replacement = "​" + replacement;
-      }
-      text = text.replace(match, replacement);
-    }
-    text = text.replace(/️/g, "");
-    return text;
+    return text
+      .replace(regexp, (match, index) => {
+        const replacement =
+          replacements[match] || replacements[match.replace(/\uFE0F$/, "")];
+        if (!replacement) {
+          return match;
+        }
+
+        const prefix = /\B/.test(text.charAt(index - 1)) ? "" : "\u200B";
+        return `${prefix}:${replacement}:`;
+      })
+      .replace(/\uFE0F/g, "");
   };
 }
 
 export class PrettyTextRubyInterface {
   static cook(text, optInput) {
-    runtime.paths = optInput.paths || {};
-    runtime.avatarSizes = optInput.avatar_sizes;
+    return this.#processor(optInput).cook(text);
+  }
 
-    optInput.getURL = getURL;
-    optInput.getCurrentUser = getCurrentUser;
-    optInput.lookupAvatar = lookupAvatar;
-    optInput.lookupPrimaryUserGroup = lookupPrimaryUserGroup;
-    optInput.formatUsername = formatUsername;
-    optInput.getTopicInfo = getTopicInfo;
-    optInput.hashtagLookup = hashtagLookup;
-    optInput.lookupUploadUrls = lookupUploadUrls;
-    optInput.emojiUnicodeReplacer = emojiUnicodeReplacer;
-
-    const pt =
-      DiscourseMarkdownIt.withCustomFeatures(loadPluginFeatures()).withOptions(
-        optInput
-      );
-
-    if (optInput.disableSanitizer) {
-      pt.disableSanitizer();
-    }
-
-    return pt.cook(text);
+  static updateBBCodeAttributes(raw, tagName, attributes, optInput) {
+    return this.#processor(optInput).updateBBCodeAttributes(
+      raw,
+      tagName,
+      attributes
+    );
   }
 
   static sanitize(html, allowListOptions) {
@@ -138,5 +119,39 @@ export class PrettyTextRubyInterface {
 
   static performEmojiEscape(text, options) {
     return performEmojiEscape(text, options);
+  }
+
+  static scanHashtags(raw) {
+    return scanHashtags(raw).map((candidate) => candidate.ref);
+  }
+
+  static spliceHashtags(raw, replacements) {
+    return spliceHashtags(raw, replacements);
+  }
+
+  static #processor(optInput) {
+    runtime.paths = optInput.paths || {};
+    runtime.avatarSizes = optInput.avatar_sizes;
+
+    optInput.getURL = getURL;
+    optInput.getCurrentUser = getCurrentUser;
+    optInput.lookupAvatar = lookupAvatar;
+    optInput.lookupPrimaryUserGroup = lookupPrimaryUserGroup;
+    optInput.formatUsername = formatUsername;
+    optInput.getTopicInfo = getTopicInfo;
+    optInput.hashtagLookup = hashtagLookup;
+    optInput.lookupUploadUrls = lookupUploadUrls;
+    optInput.emojiUnicodeReplacer = emojiUnicodeReplacer;
+
+    const pt =
+      DiscourseMarkdownIt.withCustomFeatures(loadPluginFeatures()).withOptions(
+        optInput
+      );
+
+    if (optInput.disableSanitizer) {
+      pt.disableSanitizer();
+    }
+
+    return pt;
   }
 }

@@ -49,9 +49,28 @@ module MigrationsSpecSetup
   # boot the host harness with the cwd at the application root — the same way the
   # `disco` binary does before loading the Rails environment.
   def self.boot_rails(spec_dir)
+    # A dev container may default RAILS_ENV to development, and `rails_helper`
+    # only fills it in when unset. Booting anything but test leaves the test
+    # gem group unrequired, which surfaces much later as a missing constant
+    # from a support file rather than as a wrong-environment error.
+    ENV["RAILS_ENV"] = "test"
+
     rails_root = File.expand_path("../../..", spec_dir)
     RSpec.configuration.files_to_run
-    Dir.chdir(rails_root) { require File.join(rails_root, "spec", "rails_helper") }
+    Dir.chdir(rails_root) do
+      require File.join(rails_root, "spec", "rails_helper")
+      warm_asset_processor
+    end
+  end
+
+  # `AssetProcessor` locates its inputs with a relative glob, so it only builds
+  # while the cwd is the application root — and it builds lazily, at the first
+  # `PrettyText.cook`, which happens deep inside an example with the cwd back at
+  # the gem. Building it here, where the cwd is still right, leaves the memoized
+  # context for those examples to use. Cheap after the first run: the built
+  # processor is cached on disk.
+  def self.warm_asset_processor
+    PrettyText.cook("warm up the markdown pipeline")
   end
 
   def self.load_support(dir)

@@ -4,7 +4,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SettingContext,
                if: system("which rg", out: File::NULL) do
   fab!(:llm_model)
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
   before do

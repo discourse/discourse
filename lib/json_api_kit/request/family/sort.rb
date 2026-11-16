@@ -20,9 +20,7 @@ module JsonApiKit
         end
 
         def declared_value(value, path)
-          Keys
-            .parse(value, path)
-            .try { it.declare { |key| declared_name(sort_name(key.name), key.path) } } || value
+          Keys.parse(value, path).declare { |key| declared_name(sort_name(key.name), key.path) }
         end
 
         private

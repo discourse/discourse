@@ -76,6 +76,11 @@ export default class LatestTopicListItem extends Component {
             {{~#if @topic.featured_link}}
               &nbsp;{{topicFeaturedLink @topic}}
             {{/if~}}
+            <PluginOutlet
+              @name="topic-list-after-title"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
+            {{~! no whitespace ~}}
             <TopicPostBadges
               @unreadPosts={{@topic.unread_posts}}
               @unseen={{@topic.unseen}}
@@ -99,7 +104,12 @@ export default class LatestTopicListItem extends Component {
             @outletArgs={{lazyHash topic=@topic}}
           >
             {{dCategoryLink @topic.category~}}
-            {{~dDiscourseTags @topic mode="list"}}
+            <PluginOutlet
+              @name="latest-topic-list-item-tags-wrapper"
+              @outletArgs={{lazyHash topic=@topic tags=@topic.visibleListTags}}
+            >
+              {{~dDiscourseTags @topic mode="list"~}}
+            </PluginOutlet>
           </PluginOutlet>
         </div>
       </div>

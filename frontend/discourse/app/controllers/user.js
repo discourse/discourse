@@ -11,6 +11,7 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 export default class UserController extends Controller {
   @service currentUser;
   @service router;
+  @service userNavSidebarStateManager;
   @optionalService adminTools;
 
   @computed("currentUser.ignored_ids", "model.ignored", "model.muted")
@@ -235,9 +236,16 @@ export default class UserController extends Controller {
     return this.viewingSelf || this.currentUser?.admin;
   }
 
-  @computed("model.name")
+  @computed("model.name", "siteSettings.enable_names")
+  get showName() {
+    return (
+      this.siteSettings.enable_names && this.model?.name?.trim().length > 0
+    );
+  }
+
+  @computed("showName")
   get nameFirst() {
-    return prioritizeNameInUx(this.model?.name);
+    return this.showName && prioritizeNameInUx(this.model.name);
   }
 
   @computed("model.badge_count")
@@ -293,7 +301,18 @@ export default class UserController extends Controller {
       return false;
     }
 
+    if (this.siteSettings.sidebar_user_navigation) {
+      return false;
+    }
+
     return this.site.desktopView;
+  }
+
+  // Drives the body class the panel's stylesheet keys on. The panel is not
+  // always in the DOM to be matched — collapsed, narrow and mobile all serve it
+  // from the menu button instead — so the navs it replaces cannot key on it.
+  get userNavPanelActive() {
+    return this.userNavSidebarStateManager.enabled;
   }
 
   get silencingsRouteQuery() {

@@ -25,6 +25,54 @@ lt:
         context_menu:
           actions:
             delete: "Pašalinti"
+        reorderable_list:
+          title: "Pertvarkomas sąrašas"
+          groups:
+            aria_label: "Pertvarkomo sąrašo pavyzdžių grupės"
+            start:
+              title: "Pradėti čia"
+              description: "Numatytoji komponento struktūra: kiekvienoje eilutėje pateikiama po vieną valdiklį, kurį galima vilkti, kuris atidaro perkėlimo meniu ir kuris įjungia klaviatūros valdymą."
+            policies:
+              title: "Eilučių politikos"
+              description: "Kokios eilutės gali judėti, o kokios – ne: „prikabintos“ eilutės, kurios išlaiko savo vietą, ir „apsaugotos“ eilutės, kurių negalima pašalinti."
+            content:
+              title: "Interaktyvus eilutės turinys"
+              description: "Eilutės su savo tiesioginio valdymo elementais – perjungikliais ir įvesties elementais. Jie išlaiko įprastą fokusą ir spustelėjimus; sąrašas užsitikrina tik valdiklius."
+            layouts:
+              title: "Langelių išdėstymas"
+              description: "Rankinis lentelės formos eilučių išdėstymas: sąrašas pateikia eilutes, o iš anksto įdiegti valdikliai patenka ten, kur langelyje jų reikia."
+            groups:
+              title: "Keli sąrašai"
+              description: "Vienoje grupėje užregistruoti sąrašai priima vieni kitų eilutes – jas perkėlus pelės žymekliu arba pasinaudojus meniu punktu „Perkelti“."
+          description: "Interaktyvūs DReorderableList pavyzdžiai: vilkimas, perkėlimo meniu už kiekvieno valdiklio, klavišų kombinacijos, prisegtos eilutės, kelis sąrašus apimančios grupės, šalinimas ir kūrimas eilutėje."
+          basic_example: "Numatytasis sąrašas"
+          basic_description: "Numatytoji komponento struktūra be papildomos konfigūracijos. Kiekvienoje eilutėje yra vienas valdiklis – rankenėlė, skirta vilkti ir perkėlimo meniu atidaryti. Klavišu Tab galima pasiekti kiekvieną rankenėlę, judant dokumento tvarka kartu su kitais eilutėse esančiais valdikliais, o rodyklių klavišais galima greitai pereiti nuo vienos rankenėlės prie kitos. Po kiekvieno sėkmingo perkėlimo ekrano skaitymo programa balsu praneša naują elemento vietą. Jei perkelti neleidžiama, nes eilutė jau yra sąrašo pradžioje arba pabaigoje, apie tai taip pat pranešama balsu, užuot perkėlimą tiesiog ignoravus."
+          basic_try_this: "Pereikite klavišu „Tab“ prie valdiklioir paspauskite „Enter“, kad atidarytumėte perkėlimo meniu, arba naudokite rodyklių klavišus, kad pereitumėte sąrašą. Kartu su rodyklių klavišais paspaudus „Alt“ perkeliamas pats eilutės elementas; kartu su „Home“ arba „End“ paspaudus „Alt“, jis perkeliamas į pabaigą."
+          policies_example: "Prisegtos ir privalomos eilutės"
+          policies_description: "Du predikatai, dvi taisyklės – abi riboja galimus veiksmus. Eilutė, kurios neatitinka perkėlimo predikatas, atvaizduojama be perkėlimo valdiklio ir lieka tiksliai savo vietoje, kad ir kurioje sąrašo vietoje ji būtų. Šiame sąraše užfiksuotos pirmoji ir paskutinė eilutės, o kitos eilutės perrikiuojamos likusiose vietose. Eilutė, kurios neatitinka šalinimo predikatas, atvaizduojama be šalinimo valdiklio, todėl apsaugotoje eilutėje apskritai nėra valdiklio, kuriuo būtų galima inicijuoti šalinimą."
+          policies_try_this: "Pirmą perkeliamą eilutę iš meniu siųsti į apačią: nei viena prisegta eilutė nepasislenka. Reikalinga eilutė neturi jokio pašalinimo valdiklio."
+          policies_pinned: "Prisegta"
+          policies_required: "Privaloma"
+          toggles_example: "Eilutės su perjungimo mygtukais"
+          toggles_description: "Administravimo skydeliams būdingas šablonas: kiekviena eilutė turi savo interaktyvius valdiklius, kurie išlaiko įprastą fokusavimo ir paspaudimų elgseną. Išjungtos eilutės lieka sąraše, bet jų nebegalima perkelti – jos išsaugo savo vietą, tačiau nebeturi perkėlimo rankenėlės, užuot perkeltos į atskirą išjungtų eilučių bloką."
+          toggles_try_this: "Išjunkite perjungiklį – eilutė išliks toje pačioje vietoje, tačiau jos nebebus galima perkelti. Pakeiskite aplink ją esančių eilučių tvarką ir pamatysite, kad ji lieka savo vietoje."
+          editable_example: "Redaguojamos eilutės"
+          editable_description: "Nustatymų reikšmių sąrašo šablonas su stabiliu elementų identitetu: kiekvienoje eilutėje yra įvesties laukas, pradžioje – perkėlimo rankenėlė, o pabaigoje – paties sąrašo pateikiamas šalinimo valdiklis. Rašant tekstą, įvesties laukas išlaiko fokusą, o klavišu Tab per eilutės valdiklius pereinama įprasta tvarka, kaip ir bet kurioje kitoje sąsajos vietoje."
+          editable_try_this: "Redaguokite reikšmę, tada pašalinkite eilutę – pranešama apie pašalinimą ir fokusas perkeliamas į eilutę, kuri užėmė jos vietą."
+          table_example: "Vietinės lentelės eilutės, rankinis išdėstymas"
+          table_description: "Rankinis langelių išdėstymas: sąraše pateikiamas lentelės tekstas ir eilutės, taip pat pateikiami iš anksto nustatyti eilutės išdėstymo valdikliai – čia valdiklis užima pirmąjį stulpelį."
+          table_try_this: "Vilkite valdiklį arba paspauskite „Enter“ ant vieno iš jų: pertvarkymo valdiklis yra pirmame langelyje ir visa eilutė perkeliama."
+          table_field: "Laukas"
+          table_type: "Tipas"
+          cross_list_example: "Perkėlimai tarp sąrašų"
+          cross_list_description: "Vienoje grupėje užregistruoti sąrašai priima vienas kito eilutes. Vilkimas perkelia eilutę, o kiekvieno valdiklio meniu pateikia giminingų sąrašų pavadinimus, todėl perkėlimas pasiekiamas be rodyklės. Ištuštintas sąrašas ir toliau priima eilutes."
+          cross_list_try_this: "Nuvilkite eilutę iš sąrašo „Pagrindinis“ į „Antrinis“ arba atidarykite eilutės meniu ir pasirinkite kitą sąrašą pagal pavadinimą."
+          cross_list_empty: "Įterpti eilutę čia"
+          cross_list_primary: "Pagrindinė"
+          cross_list_secondary: "Antrinis"
+          create_example: "Pridėjimo galimybė"
+          create_description: "Kai įjungta funkcija „kurti“, sąraše po eilutėmis rodomas įvesties laukas, todėl eilutės pridėjimas priklauso tam pačiam komponentui, kuris keičia eiliškumą."
+          create_try_this: "Įveskite vaisiaus pavadinimą ir paspauskite „Enter“."
         font_scale:
           title: "Šriftų sistema"
         colors:

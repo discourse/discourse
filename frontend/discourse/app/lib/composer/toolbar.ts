@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import type Site from "discourse/models/site";
@@ -8,7 +9,7 @@ import type {
   SelectedText,
   SurroundOptions,
   ToolbarState,
-} from "./text-manipulation";
+} from "./text-manipulation.ts";
 
 type ToolbarCommand = (...args: unknown[]) => unknown;
 type ListHead = string | ((previous?: string) => string);
@@ -132,6 +133,8 @@ export interface ToolbarButton {
   shortcutAction?: (event: ToolbarEvent) => void;
   /** Whether the button is disabled. */
   disabled?: boolean;
+  /** Whether the user's preferences exclude the button from the toolbar. */
+  hiddenByUser?: boolean;
 }
 
 type ToolbarButtonAttrs = Omit<
@@ -171,12 +174,38 @@ export interface ToolbarOptions {
   site?: Partial<Site>;
   /** Whether the link button is included. */
   showLink?: boolean;
+  /** Ids of the buttons the user has chosen to hide. Only honoured for ids in `HIDEABLE_BUTTONS`. */
+  hiddenButtons?: string[];
 }
 
 function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
   // use the Font Awesome icon if the label matches the default
   return i18n(labelKey) === defaultLabel ? null : labelKey;
 }
+
+/**
+ * Core buttons a user may remove from the composer toolbar, with the translation
+ * key naming each one. Buttons outside this list — including every button
+ * contributed by a plugin — are always shown.
+ */
+export const HIDEABLE_BUTTONS = [
+  { id: "bold", label: "composer.bold_title" },
+  { id: "italic", label: "composer.italic_title" },
+  { id: "heading", label: "composer.text_size_title" },
+  { id: "link", label: "composer.link_title" },
+  { id: "blockquote", label: "composer.blockquote_title" },
+  { id: "code", label: "composer.code_title" },
+  { id: "list", label: "composer.list_title" },
+  { id: "toggle-direction", label: "composer.toggle_direction" },
+  { id: "emoji", label: "composer.emoji" },
+  { id: "gifs", label: "gifs.composer_title" },
+  {
+    id: "post-language-selector",
+    label: "post.localizations.post_language_selector.title",
+  },
+];
+
+const HIDEABLE_BUTTON_IDS = new Set(HIDEABLE_BUTTONS.map(({ id }) => id));
 
 const DEFAULT_GROUP = "main";
 
@@ -199,6 +228,9 @@ export class ToolbarBase {
   /** Site state used to configure toolbar behavior. */
   site: Partial<Site>;
 
+  /** Ids of the buttons the user has chosen to hide, read once when the toolbar is built. */
+  hiddenButtons: string[];
+
   constructor(opts: ToolbarOptions = {}) {
     this.shortcuts = {};
     this.context = {};
@@ -206,6 +238,7 @@ export class ToolbarBase {
     this.siteSettings = opts.siteSettings || {};
     this.capabilities = opts.capabilities || {};
     this.site = opts.site || {};
+    this.hiddenButtons = opts.hiddenButtons || [];
   }
 
   /** Adds a button to its configured toolbar group. */
@@ -225,6 +258,10 @@ export class ToolbarBase {
     createdButton.tabindex ??= "-1";
     createdButton.className ||= buttonAttrs.id;
     createdButton.condition ||= () => true;
+    createdButton.hiddenByUser =
+      buttonAttrs.id !== undefined &&
+      HIDEABLE_BUTTON_IDS.has(buttonAttrs.id) &&
+      this.hiddenButtons.includes(buttonAttrs.id);
 
     createdButton.action = async () => {
       if (buttonAttrs.popupMenu) {
@@ -237,7 +274,9 @@ export class ToolbarBase {
 
       const actionFn =
         buttonAttrs.action ?? buttonAttrs.sendAction ?? buttonAttrs.perform;
-      actionFn?.(toolbarEvent);
+      // Undefined only on a toolbar without a context, such as the rich editor's
+      // floating toolbars, whose actions take no arguments.
+      actionFn?.(toolbarEvent as ToolbarEvent);
 
       // appEvents is only available on the main toolbar
       // only custom plugins listen to this event
@@ -268,8 +307,13 @@ export class ToolbarBase {
     // Popup menu option item shortcut bindings and title text.
     if (buttonAttrs.popupMenu) {
       // Default action passes toolbarEvent to option.action
-      buttonAttrs.popupMenu.action ??= (option) =>
+      buttonAttrs.popupMenu.action ??= (option) => {
+        assert(
+          "A popup menu needs a toolbar with a context",
+          this.context.newToolbarEvent
+        );
         option.action(this.context.newToolbarEvent());
+      };
 
       buttonAttrs.popupMenu.options()?.forEach((option) => {
         if (option.shortcut) {
@@ -316,6 +360,10 @@ export class ToolbarBase {
  * Standard editor toolbar with default buttons
  */
 export default class Toolbar extends ToolbarBase {
+  /** Always complete: the editor that creates this toolbar installs itself as the context. */
+  declare context: ToolbarContext &
+    Required<Pick<ToolbarContext, "newToolbarEvent" | "send">>;
+
   #listOptions?: PopupMenuOption[];
 
   constructor(opts: ToolbarOptions) {
@@ -365,7 +413,10 @@ export default class Toolbar extends ToolbarBase {
           return true;
         }
 
-        if (!state.inHeading || state.inHeadingLevel > 4) {
+        if (
+          !state.inHeading ||
+          (state.inHeadingLevel !== undefined && state.inHeadingLevel > 4)
+        ) {
           return false;
         }
 
@@ -376,7 +427,7 @@ export default class Toolbar extends ToolbarBase {
           return "discourse-text";
         }
 
-        if (state.inHeadingLevel > 4) {
+        if (state.inHeadingLevel !== undefined && state.inHeadingLevel > 4) {
           return "discourse-text";
         }
 
@@ -385,7 +436,7 @@ export default class Toolbar extends ToolbarBase {
       title: "composer.text_size_title",
       popupMenu: {
         options: () => {
-          const headingOptions = [];
+          const headingOptions: PopupMenuOption[] = [];
           for (let headingLevel = 1; headingLevel <= 4; headingLevel++) {
             headingOptions.push({
               name: `heading-${headingLevel}`,

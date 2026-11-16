@@ -7,19 +7,14 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import BoardsEditableTitle from "../boards-editable-title";
+import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 export default class BoardsCardDetail extends Component {
   @service siteSettings;
   @service currentUser;
-
-  get canWrite() {
-    return this.args.model.canWrite;
-  }
 
   get formData() {
     const card = this.args.model.card;
@@ -97,13 +92,14 @@ export default class BoardsCardDetail extends Component {
       class="discourse-boards-card-detail-modal"
       @closeModal={{@closeModal}}
       @hideHeader={{true}}
+      @inline={{@inline}}
       @submitOnEnter={{false}}
       {{didInsert this.viewCard}}
     >
       <:body>
         <Form @data={{this.formData}} @onSubmit={{this.save}} as |form data|>
           <BoardsEditableTitle
-            @disabled={{not this.canWrite}}
+            @disabled={{not @model.board.canWrite}}
             @form={{form}}
             @name="title"
             @placeholder={{i18n "boards.board.title_placeholder"}}
@@ -112,7 +108,7 @@ export default class BoardsCardDetail extends Component {
           />
           <form.Section>
             <form.Field
-              @disabled={{not this.canWrite}}
+              @disabled={{not @model.board.canWrite}}
               @format="max"
               @name="notes"
               @title={{i18n "boards.board.notes"}}
@@ -125,7 +121,7 @@ export default class BoardsCardDetail extends Component {
               />
             </form.Field>
             <form.Field
-              @disabled={{not this.canWrite}}
+              @disabled={{not @model.board.canWrite}}
               @format="max"
               @name="tags"
               @title={{i18n "boards.board.tags"}}
@@ -140,7 +136,7 @@ export default class BoardsCardDetail extends Component {
 
             {{#if this.siteSettings.assign_enabled}}
               <form.Field
-                @disabled={{not this.canWrite}}
+                @disabled={{not @model.board.canWrite}}
                 @format="max"
                 @name="assigned_to"
                 @title={{i18n "boards.board.assigned_to"}}
@@ -149,9 +145,12 @@ export default class BoardsCardDetail extends Component {
               >
                 <field.Control>
                   <EmailGroupUserChooser
-                    @disabled={{not this.canWrite}}
                     @onChange={{fn this.onAssignedChanged field}}
-                    @options={{hash maximum=1 excludeCurrentUser=false}}
+                    @options={{hash
+                      disabled=(not @model.board.canWrite)
+                      maximum=1
+                      excludeCurrentUser=false
+                    }}
                     @value={{data.assigned_to}}
                   />
                 </field.Control>
@@ -160,7 +159,7 @@ export default class BoardsCardDetail extends Component {
           </form.Section>
 
           <form.Actions>
-            {{#if this.canWrite}}
+            {{#if @model.board.canWrite}}
               <form.Submit />
             {{/if}}
             <form.Button

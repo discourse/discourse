@@ -4,21 +4,21 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiTool from "../admin/models/ai-tool";
-import AiMcpServerToolsModal from "./modal/ai-mcp-server-tools-modal";
+import AiTool from "discourse/plugins/discourse-ai/discourse/admin/models/ai-tool";
+import AiMcpServerToolsModal from "discourse/plugins/discourse-ai/discourse/components/modal/ai-mcp-server-tools-modal";
 
 export default class AiToolListEditor extends Component {
   @service adminPluginNavManager;
@@ -92,6 +92,25 @@ export default class AiToolListEditor extends Component {
   @action
   collapseCategory() {
     this.expandedCategory = null;
+  }
+
+  /**
+   * Opens the new tool menu on a preset category when another page links here
+   * to create a specific kind of tool.
+   */
+  @action
+  registerNewToolMenu(menu) {
+    const category = this.router.currentRoute?.queryParams?.presetCategory;
+    if (!category) {
+      return;
+    }
+
+    schedule("afterRender", async () => {
+      // Route changes close menus, so open it once the param is cleared.
+      await this.router.replaceWith({ queryParams: { presetCategory: null } });
+      this.expandedCategory = category;
+      menu.show();
+    });
   }
 
   @action
@@ -245,6 +264,7 @@ export default class AiToolListEditor extends Component {
               @icon="plus"
               @label={{i18n "discourse_ai.tools.new"}}
               @onClose={{this.resetMenuState}}
+              @onRegisterApi={{this.registerNewToolMenu}}
               @placement="bottom-end"
               @triggerClass="btn-default btn-small ai-tool-list-editor__new-button"
             >

@@ -4,6 +4,205 @@ RSpec.describe PostMover do
   fab!(:admin)
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
 
+  describe "#to_topic" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+    fab!(:destination_topic, :topic)
+    fab!(:user)
+
+    it "rejects the move when the user cannot move posts from the source topic" do
+      mover = described_class.new(topic, user, [reply.id])
+
+      expect do
+        expect { mover.to_topic(destination_topic.id) }.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
+    end
+
+    it "rejects the move when the destination category is read-only for the user" do
+      mover_user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :readonly)
+      category.save!
+      destination_topic.update!(category: category)
+      mover = described_class.new(topic, mover_user, [reply.id])
+
+      expect do
+        expect { mover.to_topic(destination_topic.id) }.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
+    end
+
+    it "does not emit topic_created when moving to an existing topic" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      events = DiscourseEvent.track_events(:topic_created) { mover.to_topic(destination_topic.id) }
+
+      expect(events).to be_empty
+      expect(reply.reload.topic_id).to eq(destination_topic.id)
+    end
+
+    it "rejects the move when no destination is given" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      expect { mover.to_topic(nil) }.to raise_error(Discourse::InvalidAccess)
+      expect(reply.reload.topic_id).to eq(topic.id)
+    end
+  end
+
+  describe "#to_new_topic" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "emits topic_created once for the completed split" do
+      mover = described_class.new(topic, admin, [reply.id])
+      destination = nil
+
+      events =
+        DiscourseEvent.track_events(:topic_created) do
+          destination = mover.to_new_topic("A separate discussion")
+        end
+
+      expect(events.size).to eq(1)
+      expect(events.first[:params]).to eq([destination, {}, admin, { continue_on_error: true }])
+      expect(destination.first_post).to eq(reply.reload)
+      expect(destination.excerpt).to be_present
+    end
+
+    it "does not emit topic_created when creating the destination fails" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      events =
+        DiscourseEvent.track_events(:topic_created) do
+          expect { mover.to_new_topic("") }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+
+      expect(events).to be_empty
+      expect(reply.reload.topic_id).to eq(topic.id)
+    end
+
+    it "does not create a topic when the user cannot move posts from the source topic" do
+      mover = described_class.new(topic, Fabricate(:user), [reply.id])
+
+      expect do
+        expect { mover.to_new_topic("A separate discussion") }.to raise_error(
+          Discourse::InvalidAccess,
+        )
+      end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
+    end
+
+    it "does not create a topic when the user can only reply in the destination category" do
+      user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :reply)
+      category.save!
+      mover = described_class.new(topic, user, [reply.id])
+
+      expect do
+        expect { mover.to_new_topic("A separate discussion", category.id) }.to raise_error(
+          Discourse::InvalidAccess,
+        )
+      end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
+    end
+
+    it "allows an admin to split posts on behalf of a user with reply-only access" do
+      user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :reply)
+      category.save!
+      mover = described_class.new(topic, user, [reply.id], guardian: admin.guardian)
+
+      destination = mover.to_new_topic("A separate discussion", category.id)
+
+      expect(destination.category_id).to eq(category.id)
+      expect(reply.reload.topic_id).to eq(destination.id)
+    end
+  end
+
+  describe "move notice in the original topic" do
+    fab!(:group)
+    fab!(:other_group, :group)
+    fab!(:public_category, :category)
+    fab!(:private_category) { Fabricate(:private_category, group: group) }
+    fab!(:topic) { Fabricate(:topic, category: public_category) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    def move_notice(source)
+      source.posts.find_by(action_code: "split_topic")
+    end
+
+    def expect_destination_named(source, destination)
+      expect(move_notice(source).raw).to include(destination.title)
+    end
+
+    def expect_destination_hidden(source, destination, move_type: "existing_topic")
+      raw = move_notice(source).raw
+
+      expect(raw).to eq(I18n.t("move_posts.#{move_type}_moderator_post_no_link", count: 1))
+      expect(raw).not_to include(destination.title)
+      expect(raw).not_to include(destination.relative_url)
+    end
+
+    it "names a destination in a public category" do
+      destination = Fabricate(:topic, category: public_category)
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_named(topic, destination)
+    end
+
+    it "hides an existing destination in a private category" do
+      destination = Fabricate(:topic, category: private_category, title: "Hidden destination title")
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_hidden(topic, destination)
+    end
+
+    it "hides a new destination created in a private category" do
+      destination =
+        topic.move_posts(
+          admin,
+          [reply.id],
+          title: "Hidden destination title",
+          category_id: private_category.id,
+        )
+
+      expect_destination_hidden(topic, destination, move_type: "new_topic")
+    end
+
+    it "names the destination when both topics are in the same private category" do
+      topic.update!(category: private_category)
+      destination = Fabricate(:topic, category: private_category)
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_named(topic, destination)
+    end
+
+    it "names the destination when its readers include every reader of the original topic" do
+      topic.update!(category: private_category)
+      wider_category = Fabricate(:private_category, group: group)
+      wider_category.set_permissions(group => :full, other_group => :full)
+      wider_category.save!
+      destination = Fabricate(:topic, category: wider_category)
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_named(topic, destination)
+    end
+
+    it "hides the destination when some readers of the original topic cannot see it" do
+      topic.update!(category: Fabricate(:private_category, group: other_group))
+      destination = Fabricate(:topic, category: private_category, title: "Hidden destination title")
+
+      topic.move_posts(admin, [reply.id], destination_topic_id: destination.id)
+
+      expect_destination_hidden(topic, destination)
+    end
+  end
+
   describe "#move_types" do
     context "when verifying enum sequence" do
       it "'new_topic' should be at 1st position" do
@@ -2561,6 +2760,47 @@ RSpec.describe PostMover do
       end
     end
 
+    context "with a category group moderator moving chronologically" do
+      fab!(:category_moderator) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:group_user) { Fabricate(:group_user, user: category_moderator) }
+      fab!(:moderated_category, :category)
+      fab!(:source_topic) { Fabricate(:topic, category: moderated_category) }
+      fab!(:source_first_post) { Fabricate(:post, topic: source_topic, created_at: 3.hours.ago) }
+      fab!(:source_reply) do
+        Fabricate(
+          :post,
+          topic: source_topic,
+          post_number: 2,
+          created_at: 2.hours.ago,
+          raw: "Attacker controlled content",
+        )
+      end
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: moderated_category, group: group_user.group)
+      end
+
+      it "rejects moving posts before the posts of a topic the user cannot moderate" do
+        destination_topic = Fabricate(:topic)
+        destination_owner_id = destination_topic.user_id
+        destination_first_post = Fabricate(:post, topic: destination_topic, created_at: 1.hour.ago)
+
+        expect {
+          source_topic.move_posts(
+            category_moderator,
+            [source_reply.id],
+            destination_topic_id: destination_topic.id,
+            chronological_order: true,
+          )
+        }.to raise_error(Discourse::InvalidAccess)
+
+        expect(source_reply.reload.topic_id).to eq(source_topic.id)
+        expect(destination_topic.reload.ordered_posts.first).to eq(destination_first_post)
+        expect(destination_topic.user_id).to eq(destination_owner_id)
+      end
+    end
+
     context "with messages" do
       fab!(:user)
       fab!(:another_user, :user)
@@ -2995,7 +3235,7 @@ RSpec.describe PostMover do
       fab!(:topic_1, :topic)
       fab!(:topic_2, :topic)
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
-      fab!(:user)
+      fab!(:user, :trust_level_4)
 
       before { SiteSetting.delete_merged_stub_topics_after_days = 0 }
 
@@ -3023,7 +3263,7 @@ RSpec.describe PostMover do
       end
 
       it "allows specific user to merge topics" do
-        special_user = Fabricate(:user)
+        special_user = Fabricate(:trust_level_4)
         plugin_instance = Plugin::Instance.new
 
         plugin_instance.register_modifier(:is_allowed_to_delete_after_merge, &modifier_block)

@@ -8,7 +8,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { trustHTML } from "@ember/template";
-import { eq } from "discourse/truth-helpers";
 import dScrollIntoView from "discourse/ui-kit/modifiers/d-scroll-into-view";
 
 /**
@@ -30,6 +29,11 @@ export default class RichHashtagAutocompleteResults extends Component {
 
   @tracked isInitialRender = true;
 
+  /**
+   * @param {RichHashtagAutocompleteResult} result
+   * @param {number} index
+   * @param {Event} event
+   */
   @action
   handleResultClick(result, index, event) {
     event.preventDefault();
@@ -48,6 +52,7 @@ export default class RichHashtagAutocompleteResults extends Component {
     this.args.onRender?.(this.args.results);
   }
 
+  /** @param {number} index */
   @action
   shouldScroll(index) {
     return index === this.args.selectedIndex && !this.isInitialRender;

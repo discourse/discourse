@@ -1,6 +1,5 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
-import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
@@ -19,7 +18,6 @@ import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
-import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { STREAM_HTML_DECORATOR } from "discourse/components/post/cooked-html";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
@@ -60,8 +58,10 @@ import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
+import { registerCodeEditorLanguage } from "discourse/lib/code-editor-languages";
 import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { addImageWrapperButton } from "discourse/lib/composer/image-controls";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import {
   _INTERNAL_SOURCE_KEY,
@@ -124,6 +124,7 @@ import {
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
+import { addUserNavSidebarLink } from "discourse/lib/sidebar/user-nav-sidebar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import {
   _addTransformerName,
@@ -163,9 +164,6 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/ui-kit/helpers/d-category-link";
 import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
-import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-
-const blockedModifications = ["component:topic-list"];
 
 const appliedModificationIds = new WeakMap();
 
@@ -426,7 +424,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addBehaviorTransformerName(name) {
@@ -478,12 +476,12 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [R=unknown] - The expected behavior result; middleware may also return void.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({next, context})} behaviorCallback callback to be used to transform or override the behavior.
-   * @param {*} behaviorCallback.next callback that executes the remaining transformer queue producing the expected
-   * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
-   * the default behavior will be completely overridden
-   * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @param {import("discourse/lib/transformer").BehaviorTransformer<R, C>} behaviorCallback
+   * Middleware which can call next() to run the remaining queue, including the default behavior. If the callback
+   * doesn't call next(), the default behavior is completely overridden.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
@@ -515,7 +513,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addValueTransformerName(name) {
@@ -546,12 +544,14 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [T=unknown] - The value passed to the callback.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({value, context})} valueCallback callback to be used to transform the value. To avoid potential
-   * errors or unexpected behavior the callback must be a pure function, i.e. return the transform value instead of
-   * mutating the input value, return the same output for the same input and not have any side effects.
-   * @param {*} valueCallback.value the value to be transformed
-   * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @param {import("discourse/lib/transformer").AnyValueTransformer<T, C>} valueCallback
+   * Receives the current value and context. To avoid potential errors or unexpected behavior the callback must be a
+   * pure function, i.e. return the transformed value instead of mutating the input value, return the same output for
+   * the same input and not have any side effects. Only hooks applied with `applyMutableValueTransformer` expect the
+   * callback to mutate the value instead; their return value is ignored.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {
@@ -819,6 +819,10 @@ class _PluginApi {
    * You'll need to do this if you've added properties to a Topic and need them to be
    * automatically updated in the UI when there are changes in the model.
    *
+   * To type the properties for TypeScript, augment `TopicFields` from
+   * `discourse/models/topic`, as described in the "JS type hinting &
+   * validation" developer guide.
+   *
    * @param {...string} names - The names of the properties to be tracked.
    */
   addTrackedTopicProperties(...names) {
@@ -830,6 +834,10 @@ class _PluginApi {
    * (e.g. one included in the server payload) is reactive in the UI.
    *
    * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * To type the field for TypeScript, augment the model's fields interface,
+   * such as `TopicFields` from `discourse/models/topic`, as described in the
+   * "JS type hinting & validation" developer guide.
    *
    * @param {string} modelName - The model's resolver name, e.g. "bookmark".
    * @param {string} name - The name of the field to add.
@@ -1131,7 +1139,7 @@ class _PluginApi {
    * @param {function} toolbarEvent.addText - Append the given text to the selected text in the composer.
    *
    * @callback condition
-   * @param {Object} composer - The composer service object.
+   * @param {import("discourse/services/composer").default} composer - The composer service object.
    * @returns {boolean} - Whether the button should be displayed.
    *
    * @param {Object} opts - An Object.
@@ -1170,18 +1178,6 @@ class _PluginApi {
    **/
   addComposerToolbarPopupMenuOption(opts) {
     addPopupMenuOption(opts);
-  }
-
-  addToolbarPopupMenuOptionsCallback(opts) {
-    deprecated(
-      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addComposerToolbarPopupMenuOption`",
-      {
-        id: "discourse.add-toolbar-popup-menu-options-callback",
-        since: "3.2",
-      }
-    );
-
-    this.addComposerToolbarPopupMenuOption(opts);
   }
 
   /**
@@ -1583,28 +1579,6 @@ class _PluginApi {
   }
 
   /**
-   * Adds a glyph to the legacy user menu after bookmarks
-   * WARNING: there is limited space there
-   *
-   * example:
-   *
-   * api.addUserMenuGlyph({
-   *    title: 'awesome.label',
-   *    className: 'my-class',
-   *    icon: 'my-icon',
-   *    data: { url: `/some/path` },
-   * });
-   *
-   * To customize the new user menu, see api.registerUserMenuTab
-   */
-  addUserMenuGlyph() {
-    deprecated(
-      "addUserMenuGlyph has been removed. Use api.registerUserMenuTab instead.",
-      { id: "discourse.add-user-menu-glyph" }
-    );
-  }
-
-  /**
    * Adds a callback to be called before rendering any post that
    * that returns custom classes to add to the post
    *
@@ -1691,6 +1665,8 @@ class _PluginApi {
    *   before: "top",
    *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
+   *
+   * @param {import("discourse/models/nav-item").NavigationBarItem} item
    */
   addNavigationBarItem(item) {
     if (!item["name"]) {
@@ -2103,35 +2079,6 @@ class _PluginApi {
   }
 
   /**
-   *
-   * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
-   *
-   * `callback` will be called when it is time to decorate it.
-   *
-   * For example, to add a yellow background to a connector:
-   *
-   * ```
-   * api.decoratePluginOutlet(
-   *   "discovery-list-container-top",
-   *   (elem, args) => {
-   *     if (elem.classList.contains("foo")) {
-   *       elem.style.backgroundColor = "yellow";
-   *     }
-   *   }
-   * );
-   * ```
-   *
-   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead
-   **/
-  decoratePluginOutlet(outletName, callback, opts) {
-    deprecated(
-      "decoratePluginOutlet is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead",
-      { id: "discourse.decorate-plugin-outlet" }
-    );
-    addPluginOutletDecorator(outletName, callback, opts || {});
-  }
-
-  /**
    * Used to set the min and max height for the topic timeline scroll area on desktop. Pass object with min/max key value pairs.
    * Example:
    * api.setDesktopTopicTimelineScrollAreaHeight({ min: 50, max: 100 });
@@ -2335,21 +2282,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated Use `addSaveableUserOption` instead
-   */
-  addSaveableUserOptionField(fieldName, options = {}) {
-    deprecated(
-      "`addSaveableUserOptionField` has been renamed to `addSaveableUserOption`",
-      {
-        id: "discourse.add-saveable-user-option-field",
-        since: "2026.3",
-      }
-    );
-
-    this.addSaveableUserOption(fieldName, options);
-  }
-
-  /**
    * Ensures custom_fields are saved on a specific preferences page.
    * Custom fields are stored in the user_custom_fields table.
    *
@@ -2463,7 +2395,7 @@ class _PluginApi {
 
   /**
    * Register custom status names for a reviewable type, used in the
-   * review queue status badge (e.g. "Tool approved" instead of "Flag approved").
+   * review queue status badge (e.g. "Tool approved" instead of "No problem found").
    *
    * The names are i18n key suffixes looked up as `review.statuses.{name}.title`.
    *
@@ -2590,7 +2522,7 @@ class _PluginApi {
   }
 
   /**
-   * Download calendar modal which allow to pick between ICS and Google Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
+   * Add an event to an ICS-compatible app, Google Calendar, Microsoft Outlook, or Apple Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
    *
    * ```javascript
    * api.downloadCalendar("title of the event",
@@ -2763,7 +2695,7 @@ class _PluginApi {
    * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
    * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
    *
-   * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {(addCommunitySectionLinkCallback|{name: string, title: string, text: string, route?: string, href?: string, icon?: string})} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
@@ -2821,7 +2753,7 @@ class _PluginApi {
    * @param {Object} arg - An object
    * @param {string} arg.badgeTextFunction - Function used to generate the text for the badge displayed in the section link.
    * @param {string} arg.route - The Ember route name to generate the href attribute for the link.
-   * @param {Object} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
+   * @param {Record<string, unknown>} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
    * @param {shouldRegister} arg.shouldRegister - Function used to determine if the countable should be registered for the category.
    * @param {refreshCountFunction} arg.refreshCountFunction - Function used to calculate the value used to set the property for the count whenever the sidebar section link refreshes.
    * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
@@ -2990,6 +2922,40 @@ class _PluginApi {
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a link to a section of the user nav sidebar panel.
+   *
+   * The panel replaces the horizontal user navs, and the outlets a plugin adds
+   * its tabs through (`user-main-nav`, `user-activity-bottom`,
+   * `user-notifications-bottom`, `user-preferences-nav`) render markup the
+   * panel cannot read. A plugin with a tab in any of them registers it here as
+   * well to stay reachable once those navs are hidden.
+   *
+   * ```javascript
+   * api.addUserNavSidebarLink("activity", {
+   *   name: "activity-solved",
+   *   route: "userActivity.solved",
+   *   label: "solved.title",
+   *   icon: "square-check",
+   *   displayed: ({ siteSettings }) => siteSettings.solved_enabled,
+   * });
+   * ```
+   *
+   * @param {String} sectionName - The panel section to add the link to: profile,
+   *   activity, notifications, messages, invites or preferences.
+   * @param {Object} link - A link object representing a section link.
+   * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} link.route - The Ember route name the link points at.
+   * @param {string} link.label - The i18n key for the link's text.
+   * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+   * @param {Array} [link.routeParams] - Extra route models, after the username.
+   * @param {Function} [link.displayed] - Predicate deciding whether to show the link.
+   */
+  addUserNavSidebarLink(sectionName, link) {
+    addUserNavSidebarLink(sectionName, link);
   }
 
   /**
@@ -3211,13 +3177,16 @@ class _PluginApi {
    * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
    */
   registerAdminDashboardReportRenderer(source, componentClass) {
-    registerAdminDashboardReportRenderer(source, componentClass);
+    this.registerValueTransformer(
+      "admin-dashboard-report-renderer",
+      ({ value, context }) =>
+        context.source === source ? componentClass : value
+    );
   }
 
   /**
-   * Registers a component to render a whole section in the redesigned admin
-   * dashboard (gated by the `dashboard_improvements` upcoming change). Pair it
-   * with the server-side `register_admin_dashboard_section`: the `id` here must
+   * Registers a component to render a whole section in the admin dashboard.
+   * Pair it with the server-side `register_admin_dashboard_section`: the `id` here must
    * match the one registered there, and the loader block registered there
    * produces the `@data` this component receives.
    *
@@ -3297,10 +3266,7 @@ class _PluginApi {
    * ```
    * api.registerModelTransformer("topic", async (topics) => {
    *   for (const topic of topics) {
-   *     const decryptedTitle = await decryptTitle(topic.encrypted_title);
-   *     if (decryptedTitle) {
-   *       topic.fancy_title = decryptedTitle;
-   *     }
+   *     topic.fancy_title = await translateTitle(topic.fancy_title);
    *   }
    * });
    * ```
@@ -3365,6 +3331,27 @@ class _PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * Registers a language shortcut for code editors, so a field can ask for it
+   * by name through the `language` argument.
+   *
+   * The loader is called the first time something asks for the language, and
+   * its module's default export receives the editor's modules and returns the
+   * extensions to apply.
+   *
+   * ```
+   * api.registerCodeEditorLanguage("toml", () =>
+   *   import("discourse/plugins/my-plugin/discourse/lib/toml-language")
+   * );
+   * ```
+   *
+   * @param {string} name - The name a field refers to the language by.
+   * @param {import("discourse/lib/code-editor-languages").CodeEditorLanguageLoader} loader - Returns a promise for the module.
+   */
+  registerCodeEditorLanguage(name, loader) {
+    registerCodeEditorLanguage(name, loader);
   }
 
   /**
@@ -3530,8 +3517,8 @@ class _PluginApi {
    * ```
    *
    * @callback activityItemConfig
-   * @param {Object} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
-   * @returns {Object} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
+   * @param {Record<string, number>} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
+   * @returns {{icon: string, class: string, activityText: string, period: string}} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
    *
    * @param {string} name - a string that matches the string given to the `register_stat` server-side API.
    * @param {activityItemConfig} func - a callback that returns an object containing properties for the custom site activity item.
@@ -3696,7 +3683,7 @@ class _PluginApi {
    * - `previousTypes` - selection before this change
    * - `category`, `form`, and optionally `transientData`
    *
-   * @param {function(Object): (boolean|undefined|Promise<boolean|undefined>)} fn
+   * @param {(context: import("discourse/lib/on-before-category-types-change").OnBeforeCategoryTypesChangeContext) => (boolean|undefined|Promise<boolean|undefined>)} fn
    */
   registerOnBeforeCategoryTypesChange(fn) {
     registerOnBeforeCategoryTypesChange(fn);
@@ -3942,12 +3929,7 @@ class _PluginApi {
       return;
     }
 
-    let klass;
-    if (!blockedModifications.includes(normalized)) {
-      klass = this.container.factoryFor(normalized) || lazyClassFor(normalized);
-    }
-
-    return klass;
+    return this.container.factoryFor(normalized) || lazyClassFor(normalized);
   }
 
   // Resolves the `model:<name>` class; `stamp` marks it so instances can

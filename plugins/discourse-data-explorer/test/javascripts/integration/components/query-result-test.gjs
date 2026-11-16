@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import QueryResult from "../../discourse/components/query-result";
+import QueryResult from "discourse/plugins/discourse-data-explorer/discourse/components/query-result";
 
 function cell(row, col) {
   return `table tbody tr:nth-child(${row}) td:nth-child(${col})`;
@@ -57,6 +57,24 @@ module("Integration | Component | QueryResult", function (hooks) {
     assert.dom(cell(1, 2)).hasText("10");
     assert.dom(cell(2, 1)).hasText("user2");
     assert.dom(cell(2, 2)).hasText("20");
+  });
+
+  test("links reviewable IDs", async function (assert) {
+    const content = {
+      colrender: { 0: "reviewable" },
+      result_count: 1,
+      columns: ["reviewable_id"],
+      rows: [[15318]],
+    };
+
+    await render(
+      <template><QueryResult @content={{content}} @view="table" /></template>
+    );
+
+    assert
+      .dom(`${cell(1, 1)} a`)
+      .hasAttribute("href", "/review/15318", "links a numeric reviewable ID")
+      .hasText("15318", "keeps the numeric ID as the link label");
   });
 
   test("renders JSON columns as escaped text with a viewer action", async function (assert) {

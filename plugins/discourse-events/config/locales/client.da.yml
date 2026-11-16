@@ -20,6 +20,15 @@ da:
               label: Emne ID
     discourse_events:
       title: "Hændelser"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrer"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifikation"
+            none: "Ingen"
       on_holiday: "På Ferie"
       disable_holiday: "Deaktiver"
       enable_holiday: "Aktiver"
@@ -354,7 +363,6 @@ da:
             going: "Deltager"
             interested: "Interesseret"
         event:
-          expired: "Udløbet"
           closed: "Lukket"
           status:
             standalone:
@@ -366,6 +374,8 @@ da:
             private:
               title: "Privat"
               description: "En privat begivenhed kan kun tilmeldes af inviterede brugere."
+      recording_modal:
+        save: "Gem"
       composer:
         name_placeholder: "Navn på begivenhed"
         url_placeholder: "Tilføj URL"

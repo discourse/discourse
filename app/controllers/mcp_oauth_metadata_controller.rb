@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class McpOauthMetadataController < ApplicationController
-  skip_before_action :check_xhr, :preload_json
+  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
   before_action :ensure_mcp_enabled
 
   def protected_resource
     render json: {
              resource: DiscourseMcp.resource_url,
              authorization_servers: [DiscourseMcp.issuer],
-             scopes_supported: [DiscourseMcp::INITIAL_SCOPE],
+             scopes_supported: DiscourseMcp.registry.scopes,
              bearer_methods_supported: ["header"],
            }
   end

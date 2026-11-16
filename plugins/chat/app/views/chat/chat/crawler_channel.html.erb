@@ -1,0 +1,86 @@
+<% view = @crawler_view %>
+<% category = view.channel.chatable %>
+
+<div class="chat-crawler">
+  <h1><%= view.title %></h1>
+
+  <div class="chat-crawler__context">
+    <% if view.thread %>
+      <a href="<%= view.channel.url %>"><%= view.channel.title %></a>
+    <% else %>
+      <a href="<%= category.url %>"><%= category.name %></a>
+    <% end %>
+  </div>
+
+  <%= render "chat/chat/crawler_retention_notice" %>
+  <% if include_crawler_content? %>
+    <% original_message = view.original_message %>
+    <% original_author = original_message&.user %>
+    <div class="chat-crawler__messages" <%= tag.attributes(itemscope: true, itemtype: "http://schema.org/DiscussionForumPosting") if original_message %>>
+      <% if original_message %>
+        <meta itemprop="headline" content="<%= view.title %>">
+        <link itemprop="url" href="<%= view.url %>">
+        <meta itemprop="datePublished" content="<%= original_message.created_at.to_formatted_s(:iso8601) %>">
+        <meta itemprop="commentCount" content="<%= view.thread.replies_count %>">
+        <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+          <meta itemprop="interactionType" content="http://schema.org/LikeAction">
+          <meta itemprop="userInteractionCount" content="<%= view.like_count(original_message) %>">
+        </div>
+        <% if original_author %>
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <meta itemprop="name" content="<%= original_author.username %>">
+            <link itemprop="url" href="<%= Discourse.base_url %>/u/<%= original_author.username %>">
+          </span>
+        <% end %>
+      <% end %>
+
+      <% view.messages.each do |message| %>
+        <% next if message.user.blank? || message.cooked.blank? %>
+        <%
+          schema =
+            if !original_message
+              :posting
+            elsif message.id == original_message.id
+              :original
+            else
+              :comment
+            end
+        %>
+        <%= render "chat/chat/crawler_message", message:, view:, schema: %>
+      <% end %>
+    </div>
+
+    <% if view.prev_page_url || view.next_page_url %>
+      <div role="navigation" class="chat-crawler__pagination crawler-post">
+        <% if view.prev_page_url %>
+          <span><%= link_to t(:prev_page), view.prev_page_url, rel: "prev" %></span>
+        <% end %>
+        <% if view.next_page_url %>
+          <span><b><%= link_to t(:next_page), view.next_page_url, rel: "next" %></b></span>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <%= t(:crawler_content_hidden) %>
+  <% end %>
+</div>
+
+<% content_for :head do %>
+  <% if (unavailable_after = view.unavailable_after) %>
+    <meta name="robots" content="unavailable_after: <%= unavailable_after.iso8601 %>">
+  <% end %>
+  <%= raw crawlable_meta_data(
+    title: view.title,
+    description: view.description,
+    url: view.canonical_url,
+    ignore_canonical: true,
+  ) %>
+  <% if view.prev_page_url %>
+    <link rel="prev" href="<%= view.prev_page_url %>">
+  <% end %>
+  <% if view.next_page_url %>
+    <link rel="next" href="<%= view.next_page_url %>">
+  <% end %>
+<% end %>
+
+<% content_for(:title) { "#{gsub_emoji_to_unicode(view.title)} - #{SiteSetting.title}" } %>

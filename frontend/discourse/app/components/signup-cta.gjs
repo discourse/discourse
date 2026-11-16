@@ -1,17 +1,25 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
-import { on } from "@ember-decorators/object";
 import routeAction from "discourse/helpers/route-action";
 import discourseLater from "discourse/lib/later";
 import DButton from "discourse/ui-kit/d-button";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class SignupCta extends Component {
+  @service keyValueStore;
+  @service session;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (this.session.get("hideSignupCta")) {
+      this.session.set("showSignupCta", false);
+    }
+  }
+
   @action
   hideForSession() {
     this.session.set("hideSignupCta", true);
@@ -23,13 +31,6 @@ export default class SignupCta extends Component {
   hideForever() {
     this.session.set("showSignupCta", false);
     this.keyValueStore.setItem("anon-cta-never", "t");
-  }
-
-  @on("willDestroyElement")
-  _turnOffIfHidden() {
-    if (this.session.get("hideSignupCta")) {
-      this.session.set("showSignupCta", false);
-    }
   }
 
   <template>

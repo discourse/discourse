@@ -1,20 +1,16 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { action } from "@ember/object";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
 
-@tagName("")
 export default class TagGroupList extends Component {
-  @computed("value")
   get selectedTagGroups() {
-    return this.value.split("|").filter(Boolean);
+    return this.args.value.split("|").filter(Boolean);
   }
 
   @action
   onTagGroupChange(tagGroups) {
-    this.set("value", tagGroups.join("|"));
+    this.args.changeValueCallback(tagGroups.join("|"));
   }
 
   <template>

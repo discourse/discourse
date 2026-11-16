@@ -287,11 +287,124 @@ RSpec.describe Category do
   end
 
   describe "resolve_permissions" do
+    shared_examples "resolving logged in category restrictions" do |granular_permissions_enabled:|
+      it "keeps logged in access restricted and resolves its grant" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
+
+        read_restricted, resolved = Category.resolve_permissions(logged_in_users: :full)
+
+        expect(read_restricted).to eq(true)
+        expect(resolved).to eq(
+          [[Group::AUTO_GROUPS[:logged_in_users], CategoryGroup.permission_types[:full]]],
+        )
+      end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "resolving logged in category restrictions",
+                       granular_permissions_enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "resolving logged in category restrictions",
+                       granular_permissions_enabled: true
+    end
+
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(everyone: :full)
 
       expect(read_restricted).to be false
       expect(resolved).to be_blank
+    end
+  end
+
+  describe "pseudogroup permission validation" do
+    fab!(:category)
+
+    shared_examples "rejecting anonymous category grants" do |enabled:|
+      it "rejects anonymous grants on creation and updates with granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+        permissions = { anonymous_users: :readonly, logged_in_users: :full }
+        new_category = Fabricate.build(:category, permissions: permissions)
+
+        expect(new_category.save).to eq(false)
+        expect(new_category.errors[:base]).to include(
+          I18n.t("category.errors.anonymous_permissions_not_supported"),
+        )
+        expect(category.update(permissions: permissions)).to eq(false)
+        expect(category.errors[:base]).to include(
+          I18n.t("category.errors.anonymous_permissions_not_supported"),
+        )
+        expect(category.reload.category_groups).to be_empty
+      end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "rejecting anonymous category grants", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "rejecting anonymous category grants", enabled: true
+    end
+  end
+
+  describe "logged-in parent permission compatibility" do
+    fab!(:group)
+    fab!(:parent) { Fabricate(:category, permissions: { logged_in_users: :readonly }) }
+
+    it "allows a child restricted to a custom group" do
+      child = Fabricate(:category, parent_category: parent, permissions: { group.name => :full })
+
+      expect(child).to be_persisted
+    end
+
+    it "allows an existing public parent to become logged-in-only with a private child" do
+      parent.update!(permissions: { everyone: :readonly })
+      Fabricate(:category, parent_category: parent, permissions: { group.name => :full })
+
+      expect(parent.update(permissions: { logged_in_users: :readonly })).to eq(true)
+    end
+
+    it "rejects a public child beneath a logged-in-only parent" do
+      child =
+        Fabricate.build(:category, parent_category: parent, permissions: { everyone: :readonly })
+
+      expect(child.save).to eq(false)
+      expect(child.errors[:base]).to include(
+        I18n.t("category.errors.permission_conflict", group_names: Group[:everyone].name),
+      )
+    end
+  end
+
+  describe "logged-in pseudogroup posting permissions" do
+    fab!(:user)
+    fab!(:category)
+
+    shared_examples "enforcing logged in posting permissions" do |enabled:|
+      it "honors permission levels with granular permissions #{enabled}" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+
+        %i[readonly create_post full].each do |permission|
+          category.update!(permissions: { logged_in_users: permission })
+
+          expect(Category.topic_create_allowed(user.guardian).exists?(id: category.id)).to eq(
+            permission == :full,
+          )
+          expect(Category.post_create_allowed(user.guardian).exists?(id: category.id)).to eq(
+            permission != :readonly,
+          )
+          expect(Category.post_create_allowed(Guardian.new).exists?(id: category.id)).to eq(false)
+        end
+      end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "enforcing logged in posting permissions", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "enforcing logged in posting permissions", enabled: true
     end
   end
 
@@ -409,6 +522,29 @@ RSpec.describe Category do
 
       # anonymous has permission to create no topics
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
+    end
+
+    it "excludes restricted categories that no longer have any access groups" do
+      restricted_category = Fabricate(:category_with_definition)
+      access_group = Fabricate(:group)
+      restricted_category.set_permissions(access_group => :full)
+      restricted_category.save!
+      access_group.destroy!
+
+      expect(restricted_category.reload.read_restricted).to eq(true)
+      expect(restricted_category.category_groups).to be_empty
+      expect(Category.secured(user_guardian)).not_to include(restricted_category)
+      expect(Category.post_create_allowed(user_guardian)).not_to include(restricted_category)
+      expect(Category.topic_create_allowed(user_guardian)).not_to include(restricted_category)
+    end
+
+    it "still allows posting in a public category without any access group records" do
+      public_category = Fabricate(:category_with_definition)
+
+      expect(public_category.read_restricted).to eq(false)
+      expect(public_category.category_groups).to be_empty
+      expect(Category.post_create_allowed(user_guardian)).to include(public_category)
+      expect(Category.topic_create_allowed(user_guardian)).to include(public_category)
     end
   end
 
@@ -803,9 +939,13 @@ RSpec.describe Category do
     before { SiteSetting.shared_drafts_category = category.id.to_s }
 
     it "is deleted correctly" do
+      Fabricate(:post, topic: category.topic)
       category.destroy
       expect(Category.exists?(id: category_id)).to be false
-      expect(Topic.with_deleted.where.not(deleted_at: nil).exists?(id: topic_id)).to be true
+      topic = Topic.with_deleted.find(topic_id)
+      expect(topic).to be_trashed
+      expect(Post.only_deleted.where(topic_id:)).to contain_exactly(topic.first_post_with_deleted)
+      expect(topic.posts_count).to eq(1)
       expect(SiteSetting.shared_drafts_category).to be_blank
     end
 
@@ -1250,6 +1390,52 @@ RSpec.describe Category do
       Fabricate(:category_with_definition, name: "child1", parent_category_id: parent_category.id)
     end
 
+    it "preserves compatible persisted permissions when moving a private category" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, group:)
+      permissions = child.category_groups.pluck(:group_id, :permission_type)
+
+      expect(child.update(parent_category_id: private_parent.id)).to eq(true)
+      expect(child.reload.category_groups.pluck(:group_id, :permission_type)).to eq(permissions)
+      expect(Guardian.new.can_see?(child)).to eq(false)
+    end
+
+    it "validates permissions built with a new private subcategory" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, parent_category: private_parent, group:)
+
+      expect(child).to be_persisted
+      expect(child.category_groups.pluck(:group_id)).to contain_exactly(group.id)
+      expect(Guardian.new.can_see?(child)).to eq(false)
+    end
+
+    it "rejects moving a private category with a different audience" do
+      private_parent = Fabricate(:private_category, group:)
+      child = Fabricate(:private_category, group: group2)
+
+      expect(child.update(parent_category_id: private_parent.id)).to eq(false)
+      expect(child.errors.full_messages).to include(
+        I18n.t("category.errors.permission_conflict", group_names: group2.name),
+      )
+      expect(child.reload.parent_category_id).to be_nil
+    end
+
+    it "allows compatible permissions supplied when creating a private subcategory" do
+      private_parent = Fabricate(:private_category, group:)
+      child =
+        Category.new(
+          name: "Private child",
+          user: admin,
+          parent_category_id: private_parent.id,
+          permissions: {
+            group.name => :full,
+          },
+        )
+
+      expect(child.save).to eq(true)
+      expect(Guardian.new.can_see?(child.reload)).to eq(false)
+    end
+
     context "when changing subcategory permissions" do
       it "is invalid when permissions are less restrictive" do
         subcategory.set_permissions(group => :readonly)
@@ -1331,6 +1517,43 @@ RSpec.describe Category do
 
         expect(parent_category.valid?).to eq(true)
       end
+    end
+  end
+
+  describe "validate special category permissions" do
+    fab!(:group)
+    fab!(:staff_category) do
+      Fabricate(:category).tap do |category|
+        category.set_permissions(staff: :full)
+        category.save!
+      end
+    end
+
+    before { SiteSetting.staff_category_id = staff_category.id }
+
+    it "is invalid when a special category's permissions change" do
+      staff_category.set_permissions(everyone: :full)
+
+      expect(staff_category.valid?).to eq(false)
+      expect(staff_category.errors.full_messages).to contain_exactly(
+        I18n.t("category.errors.special_category_permissions"),
+      )
+    end
+
+    it "is valid when a special category's current permissions are resubmitted" do
+      staff_category.set_permissions(staff: :full)
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+      uncategorized.set_permissions(everyone: :full)
+
+      expect(staff_category.valid?).to eq(true)
+      expect(uncategorized.valid?).to eq(true)
+    end
+
+    it "is valid when a regular category's permissions change" do
+      category = Fabricate(:category)
+      category.set_permissions(group => :full)
+
+      expect(category.valid?).to eq(true)
     end
   end
 
@@ -1723,16 +1946,42 @@ RSpec.describe Category do
     end
   end
 
+  describe "upload security updates" do
+    it "enqueues an update whenever read restrictions change" do
+      category = Fabricate(:category)
+
+      expect_enqueued_with(
+        job: :update_category_upload_security,
+        args: {
+          category_id: category.id,
+        },
+      ) { category.update!(permissions: { admins: :full }) }
+
+      expect_enqueued_with(
+        job: :update_category_upload_security,
+        args: {
+          category_id: category.id,
+        },
+      ) { category.update!(permissions: { everyone: :full }) }
+    end
+
+    it "does not enqueue an update when read restrictions stay unchanged" do
+      category = Fabricate(:category)
+
+      expect_not_enqueued_with(job: :update_category_upload_security) do
+        category.update!(permissions: { everyone: :readonly })
+      end
+    end
+  end
+
   describe "category hashtag remapping" do
     it "enqueues a remap job when the slug changes" do
       category = Fabricate(:category, slug: "support")
 
       expect_enqueued_with(
-        job: :remap_category_hashtag,
+        job: :remap_hashtag,
         args: {
-          category_id: category.id,
-          old_ref: "support",
-          new_ref: "help",
+          remaps: [{ type: "category", id: category.id, old_ref: "support" }],
         },
       ) { category.update!(slug: "help") }
     end
@@ -1742,25 +1991,24 @@ RSpec.describe Category do
       parent_category = Fabricate(:category, slug: "support")
 
       expect_enqueued_with(
-        job: :remap_category_hashtag,
+        job: :remap_hashtag,
         args: {
-          category_id: category.id,
-          old_ref: "bucks",
-          new_ref: "support:bucks",
+          remaps: [{ type: "category", id: category.id, old_ref: "bucks" }],
         },
       ) { category.update!(parent_category: parent_category) }
     end
 
-    it "enqueues child remap jobs when the slug changes" do
+    it "enqueues subcategories in the same job when the slug changes" do
       parent_category = Fabricate(:category, slug: "support")
       category = Fabricate(:category, slug: "bucks", parent_category: parent_category)
 
       expect_enqueued_with(
-        job: :remap_category_hashtag,
+        job: :remap_hashtag,
         args: {
-          category_id: category.id,
-          old_ref: "support:bucks",
-          new_ref: "help:bucks",
+          remaps: [
+            { type: "category", id: parent_category.id, old_ref: "support" },
+            { type: "category", id: category.id, old_ref: "support:bucks" },
+          ],
         },
       ) { parent_category.update!(slug: "help") }
     end
@@ -1768,7 +2016,7 @@ RSpec.describe Category do
     it "does not enqueue a remap job for unrelated changes" do
       category = Fabricate(:category, slug: "support")
 
-      expect_not_enqueued_with(job: :remap_category_hashtag) { category.update!(color: "ABCDEF") }
+      expect_not_enqueued_with(job: :remap_hashtag) { category.update!(color: "ABCDEF") }
     end
   end
 

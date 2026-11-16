@@ -382,6 +382,25 @@ RSpec.describe Admin::UsersController do
     before { SiteSetting.must_approve_users = true }
 
     shared_examples "user approval possible" do
+      it "approves without a reviewable when signup approval is disabled" do
+        SiteSetting.must_approve_users = false
+        SiteSetting.invite_only = false
+        evil_trout.update!(active: true, approved: false)
+        expect(ReviewableUser.find_by(target: evil_trout)).to be_nil
+
+        put "/admin/users/#{evil_trout.id}/approve.json"
+
+        expect(response.status).to eq(200)
+        expect(evil_trout.reload).to be_approved
+        expect(ReviewableUser.find_by(target: evil_trout)).to be_approved
+        expect(
+          UserHistory.where(
+            action: UserHistory.actions[:approve_user],
+            target_user_id: evil_trout.id,
+          ).count,
+        ).to eq(1)
+      end
+
       it "creates a reviewable if one does not exist" do
         evil_trout.update!(active: true)
         expect(ReviewableUser.find_by(target: evil_trout)).to be_blank
@@ -471,6 +490,18 @@ RSpec.describe Admin::UsersController do
         evil_trout.reload
         expect(evil_trout.approved).to eq(true)
       end
+
+      it "approves a user whose previous reviewable was rejected" do
+        evil_trout.update!(active: true)
+        reviewable =
+          Fabricate(:reviewable_user, target: evil_trout, status: Reviewable.statuses[:rejected])
+
+        put "/admin/users/approve-bulk.json", params: { users: [evil_trout.id] }
+
+        expect(response.status).to eq(200)
+        expect(evil_trout.reload).to be_approved
+        expect(reviewable.reload).to be_approved
+      end
     end
 
     context "when logged in as an admin" do
@@ -500,7 +531,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#suspend" do
-    fab!(:created_post, :post)
+    fab!(:created_post) { Fabricate(:post, user:) }
     fab!(:other_user, :user)
     let(:suspend_params) do
       { suspend_until: 5.hours.from_now, reason: "because of this post", post_id: created_post.id }
@@ -680,7 +711,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "preserves category topics" do
-          c = Fabricate(:category_with_definition)
+          c = Fabricate(:category_with_definition, user:)
           cat_post = c.topic.posts.first
           put(
             "/admin/users/#{user.id}/suspend.json",
@@ -692,7 +723,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "preserves category topics when deleting replies" do
-          c = Fabricate(:category_with_definition)
+          c = Fabricate(:category_with_definition, user:)
           cat_post = c.topic.posts.first
           put(
             "/admin/users/#{user.id}/suspend.json",
@@ -808,8 +839,8 @@ RSpec.describe Admin::UsersController do
       include_examples "suspension of active user possible"
       include_examples "suspension of staff users"
 
-      it "cannot edit an arbitrary static doc post unrelated to the suspended user" do
-        static_doc_post = Fabricate(:post)
+      it "cannot edit a static doc post" do
+        static_doc_post = Fabricate(:post, user:)
         SiteSetting.tos_topic_id = static_doc_post.topic_id
 
         put "/admin/users/#{user.id}/suspend.json",
@@ -1508,14 +1539,24 @@ RSpec.describe Admin::UsersController do
         expect(another_user.primary_group_id).to eq(nil)
       end
 
-      it "remove user's primary group" do
+      it "removes the user's primary group and matching title" do
+        group.update!(primary_group: true, title: "Group title")
         group.add(another_user)
+        expect(another_user.reload.primary_group_id).to eq(group.id)
 
         put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
 
         expect(response.status).to eq(200)
         another_user.reload
         expect(another_user.primary_group_id).to eq(nil)
+        expect(another_user.title).to eq(nil)
+      end
+
+      it "allows clearing an already empty primary group" do
+        put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+        expect(response.status).to eq(200)
+        expect(another_user.reload.primary_group_id).to eq(nil)
       end
 
       it "updates user's title when it matches the previous primary group title" do
@@ -1573,6 +1614,31 @@ RSpec.describe Admin::UsersController do
 
       context "when moderators_manage_groups site setting is disabled" do
         before { SiteSetting.moderators_manage_groups = false }
+
+        it "preserves the primary group and title when the moderator cannot manage the group" do
+          group.update!(primary_group: true, title: "Group title")
+          group.add(another_user)
+          expect(another_user.reload.primary_group_id).to eq(group.id)
+          expect(another_user.title).to eq(group.title)
+
+          put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+          expect(another_user.reload.primary_group_id).to eq(group.id)
+          expect(another_user.title).to eq(group.title)
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+
+        it "allows a moderator who owns the group to remove it as primary group" do
+          group.update!(primary_group: true)
+          group.add(another_user)
+          group.add_owner(moderator)
+
+          put "/admin/users/#{another_user.id}/primary_group.json", params: { primary_group_id: "" }
+
+          expect(response.status).to eq(200)
+          expect(another_user.reload.primary_group_id).to eq(nil)
+        end
 
         it "prevents setting primary group with a 403 response" do
           group.add(another_user)
@@ -2074,6 +2140,39 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
         expect(reg_user.active).to eq(false)
+      end
+    end
+
+    context "when the user has a configured developer email" do
+      fab!(:developer_user) do
+        Fabricate(:inactive_user, username: "dev_account", email: "dev@example.com")
+      end
+      fab!(:email_domain_group) do
+        Fabricate(:group, automatic_membership_email_domains: "example.com")
+      end
+
+      before { Rails.configuration.stubs(:developer_emails).returns(["dev@example.com"]) }
+
+      it "prevents a moderator from activating the account" do
+        sign_in(moderator)
+
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
+      end
+
+      it "prevents an admin from activating the account" do
+        sign_in(admin)
+
+        put "/admin/users/#{developer_user.id}/activate.json"
+
+        expect(response.status).to eq(403)
+        expect(developer_user.reload).not_to be_active
+        expect(developer_user.email_tokens.where(confirmed: true)).to be_empty
+        expect(email_domain_group.users.reload).not_to include(developer_user)
       end
     end
   end
@@ -3192,6 +3291,14 @@ RSpec.describe Admin::UsersController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
+      it "rejects self-merges without enqueueing a job" do
+        expect do
+          post "/admin/users/#{user.id}/merge.json", params: { target_username: user.username }
+        end.not_to change { Jobs::MergeUser.jobs.size }
+
+        expect(response.status).to eq(403)
+      end
+
       it "merges the source user into the target user" do
         Jobs.run_immediately!
         post "/admin/users/#{user.id}/merge.json", params: { target_username: target_user.username }
@@ -3299,10 +3406,16 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       it "deletes the record and logs the deletion" do
+        upload = Fabricate(:upload)
+        user_associated_accounts.update!(avatar_upload_id: upload.id)
+        user.user_avatar.update!(selected_user_associated_account_id: user_associated_accounts.id)
+
         put "/admin/users/#{user.id}/delete_associated_accounts.json"
 
         expect(response.status).to eq(200)
         expect(user.user_associated_accounts).to eq([])
+        expect(user.user_avatar.reload.selected_user_associated_account_id).to be_nil
+        expect(UploadReference.where(target: user_associated_accounts)).not_to exist
         expect(UserHistory.last).to have_attributes(
           acting_user_id: admin.id,
           target_user_id: user.id,

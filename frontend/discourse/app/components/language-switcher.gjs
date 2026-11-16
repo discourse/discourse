@@ -20,6 +20,7 @@ export default class LanguageSwitcher extends Component {
   @service languageNameLookup;
   @service currentUser;
 
+  /** @returns {string | null} */
   get currentLocale() {
     return I18n.locale;
   }

@@ -212,12 +212,19 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
 
   get style() {
     const { maxWidth } = this.options;
+    const viewportWidth = `calc(100dvw - ${horizontalViewportInset(this.options)}px)`;
+
+    // A float that matches its trigger's width takes that width, so only the viewport bounds
+    // it: a `maxWidth` narrower than the trigger would give a wide field a narrow menu.
+    if ("matchTriggerWidth" in this.options && this.options.matchTriggerWidth) {
+      return trustHTML(`max-width: ${viewportWidth}`);
+    }
 
     // Only a number is clamped: a keyword like `none` or `unset` is invalid inside `min()`,
     // which would drop the declaration and hand the float to whatever CSS sets `max-width`.
     const value =
       typeof maxWidth === "number"
-        ? `min(${maxWidth}px, calc(100dvw - ${horizontalViewportInset(this.options)}px))`
+        ? `min(${maxWidth}px, ${viewportWidth})`
         : maxWidth;
 
     return trustHTML(`max-width: ${value}`);

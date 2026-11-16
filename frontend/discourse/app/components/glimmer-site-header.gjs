@@ -18,8 +18,8 @@ import {
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
-import Header from "./header";
-import ImpersonationNotice from "./impersonation-notice";
+import Header from "./header.gjs";
+import ImpersonationNotice from "./impersonation-notice.gjs";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;

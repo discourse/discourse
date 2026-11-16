@@ -13,6 +13,15 @@ te:
             topic_id:
               label: విషయపు ఐడీ
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "నమోదు చేసుకోండి"
+      preferences:
+        reminders:
+          preferences:
+            notification: "నోటిఫికేషన్"
+            none: "ఏదీ లేదు"
       disable_holiday: "నిలిపివేయండి"
       enable_holiday: "ప్రారంభించండి"
       date: "తేదీ"
@@ -45,13 +54,14 @@ te:
         status: "స్థితి"
       models:
         event:
-          expired: "గడువు ముగిసింది"
           closed: "మూసివేయబడినవి"
           status:
             public:
               title: "బహిరంగం"
             private:
               title: "అంతరంగికం"
+      recording_modal:
+        save: "సేవ్ చేయండి"
       composer:
         url_placeholder: "URLని జోడించండి"
         reminder:

@@ -15,7 +15,6 @@ import { buildBBCodeAttrs } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DInputTip from "discourse/ui-kit/d-input-tip";
@@ -60,6 +59,8 @@ export default class PollUiBuilderModal extends Component {
 
   @tracked chartType = BAR_CHART_TYPE;
   @tracked dynamic = false;
+
+  /** @type {import("moment").Moment | null | undefined} */
   @tracked pollAutoClose;
   @tracked pollGroups;
   @tracked pollMax = 2;

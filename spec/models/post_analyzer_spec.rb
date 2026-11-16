@@ -66,7 +66,7 @@ RSpec.describe PostAnalyzer do
 
     it "respects SiteSetting.max_oneboxes_per_post" do
       SiteSetting.max_oneboxes_per_post = 2
-      Oneboxer.expects(:cached_onebox).with(url).returns("something").twice
+      Oneboxer.stubs(:cached_onebox).with(url).returns("something")
 
       cooked = post_analyzer.cook(<<~RAW)
         #{url}
@@ -79,8 +79,20 @@ RSpec.describe PostAnalyzer do
       expect(cooked).to match_html(<<~HTML)
         <p>something</p>
         <p>something</p>
-        <p><a href="#{url}" class="onebox" target="_blank" rel="noopener nofollow ugc">#{url}</a></p>
+        <p><a href="#{url}" rel="noopener nofollow ugc">#{url}</a></p>
       HTML
+    end
+
+    it "only renders max_oneboxes_per_post oneboxes for repeats of a cached URL" do
+      SiteSetting.max_oneboxes_per_post = 2
+      Oneboxer.stubs(:cached_onebox).with(url).returns("<div>something</div>")
+
+      raw = Array.new(3, "<a class=\"onebox\" href=\"#{url}\">#{url}</a>").join("\n\n")
+
+      cooked = post_analyzer.cook(raw)
+
+      expect(cooked).to have_tag("div", text: "something", count: 2)
+      expect(cooked).to have_tag("a", with: { href: url }, count: 1)
     end
   end
 
@@ -212,6 +224,58 @@ RSpec.describe PostAnalyzer do
       Post.stubs(:allowed_image_classes).returns(["classy"])
       PrettyText.stubs(:cook).returns(raw_post_with_two_classy_images)
       post_analyzer = PostAnalyzer.new(raw_post_with_two_classy_images, default_topic_id)
+      expect(post_analyzer.embedded_media_count).to eq(0)
+    end
+
+    it "ignores onebox links without a URL" do
+      post_analyzer = PostAnalyzer.new("<a class='onebox'>click</a>", default_topic_id)
+      expect(post_analyzer.embedded_media_count).to eq(0)
+    end
+
+    it "counts video uploads" do
+      post_analyzer = PostAnalyzer.new("![clip|video](upload://abc.mp4)", default_topic_id)
+      expect(post_analyzer.embedded_media_count).to eq(1)
+    end
+
+    it "counts cached image oneboxes" do
+      url = "https://example.com/cat.png"
+      Oneboxer.stubs(:cached_onebox).with(url).returns(Onebox::Engine::ImageOnebox.new(url).to_html)
+      post_analyzer = PostAnalyzer.new(url, default_topic_id)
+      expect(post_analyzer.embedded_media_count).to eq(1)
+    end
+
+    it "counts uncached external media oneboxes" do
+      raw =
+        "https://example.com/cat.png\n\nhttps://example.com/clip.mp4\n\nhttps://example.com/song.mp3"
+      post_analyzer = PostAnalyzer.new(raw, default_topic_id)
+      expect(post_analyzer.embedded_media_count).to eq(3)
+    end
+
+    it "counts local video uploads oneboxes" do
+      raw = "#{Discourse.base_url}/uploads/default/original/1X/#{"a" * 40}.mp4"
+      post_analyzer = PostAnalyzer.new(raw, default_topic_id)
+      expect(post_analyzer.embedded_media_count).to eq(1)
+    end
+
+    it "doesn't count local image uploads oneboxes" do
+      raw = "#{Discourse.base_url}/uploads/default/original/1X/#{"a" * 40}.png"
+      post_analyzer = PostAnalyzer.new(raw, default_topic_id)
+      expect(post_analyzer.embedded_media_count).to eq(0)
+    end
+
+    it "doesn't count links to media" do
+      raw = "[a](upload://abc.png) [b](https://example.com/cat.png)"
+      post_analyzer = PostAnalyzer.new(raw, default_topic_id)
+      expect(post_analyzer.embedded_media_count).to eq(0)
+    end
+
+    it "doesn't count images in rich oneboxes" do
+      url = "https://example.com/article"
+      Oneboxer
+        .stubs(:cached_onebox)
+        .with(url)
+        .returns("<aside class='onebox'><img src='https://example.com/thumb.png'></aside>")
+      post_analyzer = PostAnalyzer.new(url, default_topic_id)
       expect(post_analyzer.embedded_media_count).to eq(0)
     end
   end

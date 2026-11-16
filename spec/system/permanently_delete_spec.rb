@@ -106,7 +106,7 @@ describe "Permanently delete" do
       topic_page.open_post_history(post_with_revisions)
       expect(post_history_modal).to be_open
 
-      post_history_modal.hide_revision
+      post_history_modal.open_visibility_menu
       expect(post_history_modal).to have_destroy_revisions_button
       post_history_modal.destroy_revisions
 

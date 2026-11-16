@@ -17,7 +17,6 @@ import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
-import { and, not } from "discourse/truth-helpers";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import DPasswordField from "discourse/ui-kit/d-password-field";
@@ -81,6 +80,7 @@ export default <template>
             @context="signup"
             @initialEmail={{@controller.accountEmail}}
             @onStepChange={{@controller.updateCodeSignupStep}}
+            @signupContext={{@controller.signupContext}}
           />
           {{#if
             (and @controller.codeSignupOnEmailStep @controller.disclaimerHtml)

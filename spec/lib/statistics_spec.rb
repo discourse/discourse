@@ -212,6 +212,23 @@ RSpec.describe Statistics do
 
     after { ApplicationRequest.disable }
 
+    it "estimates visitors from beacon counters once beacons record traffic" do
+      ApplicationRequest.create!(
+        date: date.to_date,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+      ApplicationRequest.create!(
+        date: date.to_date,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 2,
+      )
+
+      freeze_time(date) do
+        expect(described_class.visitors).to eq(last_day: 5, "7_days": 8, "30_days": 11)
+      end
+    end
+
     it "estimates the number of visitors for each of the previous 1 day, 7 days and 30 days periods" do
       freeze_time(date) do
         visitors = described_class.visitors
@@ -283,6 +300,23 @@ RSpec.describe Statistics do
     end
 
     after { ApplicationRequest.disable }
+
+    it "estimates EU visitors from beacon counters once beacons record traffic" do
+      ApplicationRequest.create!(
+        date: date.to_date,
+        req_type: :page_view_anon_browser_beacon,
+        count: 8,
+      )
+      ApplicationRequest.create!(
+        date: date.to_date,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 2,
+      )
+
+      freeze_time(date) do
+        expect(described_class.eu_visitors).to eq(last_day: 5, "7_days": 4, "30_days": 6)
+      end
+    end
 
     it "estimates the number of EU visitors for each of the previous 1 day, 7 days and 30 days periods" do
       freeze_time(date) do
@@ -409,13 +443,13 @@ RSpec.describe Statistics do
       it "measures each step from the first admin signing up, across several days" do
         complete_step("select_theme", at: first_admin.created_at + 30.minutes)
         complete_step("invite_collaborators", at: first_admin.created_at + 2.days)
-        complete_step("start_posting", at: first_admin.created_at + 4.days)
+        complete_step("create_category", at: first_admin.created_at + 4.days)
         log_event(:admin_onboarding_completed, at: first_admin.created_at + 4.days + 1.minute)
 
         expect(described_class.onboarding_minutes_to).to eq(
           select_theme: 30,
           invite_collaborators: 2880,
-          start_posting: 5760,
+          create_category: 5760,
           completed: 5761,
         )
       end
@@ -433,7 +467,7 @@ RSpec.describe Statistics do
         expect(described_class.onboarding_minutes_to).to eq(
           select_theme: 30,
           invite_collaborators: nil,
-          start_posting: nil,
+          create_category: nil,
           completed: nil,
         )
       end
@@ -459,7 +493,7 @@ RSpec.describe Statistics do
         expect(described_class.onboarding_minutes_to).to eq(
           select_theme: nil,
           invite_collaborators: nil,
-          start_posting: nil,
+          create_category: nil,
           completed: nil,
         )
       end

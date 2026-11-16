@@ -226,4 +226,58 @@ RSpec.describe PrivateMessageTopicTrackingState do
       expect(data["payload"]["notification_level"]).to eq(nil)
     end
   end
+
+  describe "private_message_topic_tracking_state_filters modifier" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier_block) { ->(filters) { filters + [<<~SQL] } }
+          NOT EXISTS (
+            SELECT 1 FROM topic_custom_fields tcf
+            WHERE tcf.topic_id = topics.id
+            AND tcf.name = 'untracked'
+            AND tcf.value = 't'
+          )
+        SQL
+
+    before do
+      private_message.custom_fields["untracked"] = "t"
+      private_message.save_custom_fields
+
+      DiscoursePluginRegistry.register_modifier(
+        plugin,
+        :private_message_topic_tracking_state_filters,
+        &modifier_block
+      )
+    end
+
+    after do
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :private_message_topic_tracking_state_filters,
+        &modifier_block
+      )
+    end
+
+    it "excludes filtered topics from .report" do
+      expect(described_class.report(user_2).map(&:topic_id)).to contain_exactly(group_message.id)
+    end
+
+    it "does not publish new messages for filtered topics" do
+      messages = MessageBus.track_publish { described_class.publish_new(private_message) }
+
+      expect(messages).to be_empty
+    end
+
+    it "does not publish unread messages for filtered topics" do
+      messages =
+        MessageBus.track_publish { described_class.publish_unread(private_message.first_post) }
+
+      expect(messages).to be_empty
+    end
+
+    it "still publishes messages for other topics" do
+      messages = MessageBus.track_publish { described_class.publish_new(group_message) }
+
+      expect(messages.map(&:channel)).to contain_exactly(described_class.group_channel(group.id))
+    end
+  end
 end

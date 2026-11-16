@@ -132,6 +132,63 @@ module DiscourseEvents::Events
         expect(response.parsed_body["events"]).not_to be_empty
       end
 
+      it "preserves interval recurrence dates and durations in a normal listing" do
+        freeze_time Time.utc(2026, 11, 5)
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 11, 6, 14),
+          original_ends_at: Time.utc(2026, 11, 6, 15),
+          recurrence: "every_two_weeks",
+        )
+
+        get "/discourse-post-event/events.json",
+            params: {
+              after: "2026-11-05",
+              before: "2026-12-01",
+              limit: 2,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"].first["occurrences"]).to eq(
+          [
+            { "starts_at" => "2026-11-06T14:00:00.000Z", "ends_at" => "2026-11-06T15:00:00.000Z" },
+            { "starts_at" => "2026-11-20T14:00:00.000Z", "ends_at" => "2026-11-20T15:00:00.000Z" },
+          ],
+        )
+      end
+
+      it "returns the full occurrence limit for a monthly recurrence" do
+        freeze_time Time.utc(2026, 11, 5)
+        Fabricate(:event, original_starts_at: Time.utc(2026, 11, 6, 14), recurrence: "every_month")
+
+        get "/discourse-post-event/events.json", params: { after: "2026-11-05", limit: 200 }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"].first["occurrences"].size).to eq(200)
+      end
+
+      it "rejects JSON listings more than ten years ahead" do
+        freeze_time Time.utc(2026, 11, 5)
+        Fabricate(:event, original_starts_at: 1.day.from_now, recurrence: "every_two_weeks")
+
+        get "/discourse-post-event/events.json", params: { after: "2200-01-01", limit: 200 }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects ICS listings more than ten years ahead" do
+        freeze_time Time.utc(2026, 11, 5)
+        Fabricate(:event, original_starts_at: 1.day.from_now, recurrence: "every_two_weeks")
+
+        get "/discourse-post-event/events.ics",
+            params: {
+              after: "2200-01-01",
+              before: "2201-01-01",
+            }
+
+        expect(response.status).to eq(400)
+      end
+
       it "filters by tags, text, and status" do
         tag = Fabricate(:tag, name: "launch")
         tagged_event =
@@ -158,6 +215,36 @@ module DiscourseEvents::Events
 
         get "/discourse-post-event/events.json", params: { status: "private" }
         expect(response.parsed_body["events"].pluck("id")).to contain_exactly(private_event.id)
+      end
+
+      it "filters untagged events within the selected category" do
+        category = Fabricate(:category)
+        untagged =
+          Fabricate(:event, post: Fabricate(:post, topic: Fabricate(:topic, category: category)))
+        tagged =
+          Fabricate(
+            :event,
+            post:
+              Fabricate(
+                :post,
+                topic: Fabricate(:topic, category: category, tags: [Fabricate(:tag)]),
+              ),
+          )
+        Fabricate(:event)
+
+        get "/discourse-post-event/events.json", params: { category_id: category.id, no_tags: true }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"].pluck("id")).to contain_exactly(untagged.id)
+
+        get "/discourse-post-event/events.json",
+            params: {
+              category_id: category.id,
+              no_tags: false,
+            }
+        expect(response.parsed_body["events"].pluck("id")).to contain_exactly(
+          untagged.id,
+          tagged.id,
+        )
       end
 
       it "returns events in ICS format" do
@@ -610,12 +697,14 @@ module DiscourseEvents::Events
                         { "identifier" => "sam", "attendance" => "interested" },
                         { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
                       ],
+                      "recurring" => true,
                       "current_user_id" => user.id,
                     },
                   ) do
                     post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
                          params: {
                            file: fixture_file_upload(valid_file),
+                           recurring: true,
                          }
                   end
 
@@ -668,6 +757,7 @@ module DiscourseEvents::Events
                         { "identifier" => "sam", "attendance" => "interested" },
                         { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
                       ],
+                      "recurring" => true,
                       "current_user_id" => user.id,
                     },
                   ) do
@@ -678,7 +768,9 @@ module DiscourseEvents::Events
                              { "identifier" => "sam", "attendance" => "interested" },
                              { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
                            ],
-                         }
+                           recurring: true,
+                         },
+                         as: :json
                   end
 
                   expect(response.status).to eq(200)
@@ -1002,6 +1094,7 @@ module DiscourseEvents::Events
             { "identifier" => user1.username, "attendance" => "going" },
             { "identifier" => user2.username, "attendance" => "going" },
           ],
+          "recurring" => false,
           "current_user_id" => user.id,
         },
       ) do

@@ -1,3 +1,4 @@
+import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -8,6 +9,10 @@ import { i18n } from "discourse-i18n";
 
 const META_URL =
   "https://meta.discourse.org/t/configure-patreon-integration-with-discourse/62380";
+
+function updateFilter(rule, property, value) {
+  rule.set(property, value);
+}
 
 export default <template>
   <section id="patreon">
@@ -55,12 +60,14 @@ export default <template>
                 @content={{@controller.groups}}
                 @nameProperty="name"
                 @none="patreon.select_group"
+                @onChange={{fn updateFilter @controller.editing "group_id"}}
                 @value={{@controller.editing.group_id}}
                 @valueProperty="id"
               /></td>
             <td><ListSetting
                 class="rewards"
                 @choices={{@controller.rewardsNames}}
+                @onChange={{fn updateFilter @controller.editing "reward_list"}}
                 @value={{@controller.editing.reward_list}}
               /></td>
             <td>

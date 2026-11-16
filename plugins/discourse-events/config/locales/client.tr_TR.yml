@@ -33,7 +33,15 @@ tr_TR:
               label: Konu kimliği
     discourse_events:
       title: "Olaylar"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Kaydol"
       preferences:
+        reminders:
+          preferences:
+            notification: "Bildirim"
+            none: "Hiçbiri"
         all_events_description: "Tüm forum etkinlikleri"
         my_events_description: "Katılacağınız veya ilgilendiğiniz etkinlikler"
       on_holiday: "Tatilde"
@@ -432,7 +440,6 @@ tr_TR:
               one: "%{count} kullanıcı davet edildi"
               other: "%{count} kullanıcı davet edildi"
         event:
-          expired: "Süresi doldu"
           closed: "Kapalı"
           full: "Tam dolu"
           status:
@@ -445,6 +452,8 @@ tr_TR:
             private:
               title: "Özel"
               description: "Özel bir etkinliğe yalnızca davet edilen kullanıcılar katılabilir."
+      recording_modal:
+        save: "Kaydet"
       composer:
         name_placeholder: "Etkinlik adı"
         location_or_url_placeholder: "Konum veya URL ekle"

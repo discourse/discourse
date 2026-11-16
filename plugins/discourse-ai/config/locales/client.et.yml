@@ -43,6 +43,13 @@ et:
         type: "Tüüp"
         error: "Viga"
         response: "Vastus"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Pildid"
+          name: "Nimi"
+          type: "Tüüp"
+          type_score: "Skoor"
       ai_tool_approval:
         loading: "Laadimine..."
         tool: "Tegevus"
@@ -54,18 +61,21 @@ et:
       llm_selector:
         none: "Pole"
       features:
-        disabled: "(välja lülitatud)"
-        groups: "Rühmad:"
+        table:
+          status: "Staatus"
+          enabled: "Sisse lülitatud"
+          groups: "Rühmad"
+        chatbot:
+          places:
+            none: "Pole saadaval"
         no_groups: "Pole"
         edit: "Seaded"
-        expand_list:
-          one: "(veel %{count})"
-          other: "(veel %{count})"
         nav:
           enabled: "Sisse lülitatud"
         filters:
-          all: "Kõik"
           reset: "Nulli"
+        sentiment:
+          enabled: "Sisse lülitatud"
         search:
           name: "Otsi"
         image_caption:
@@ -76,7 +86,17 @@ et:
       modals:
         select_option: "Vali võimalus..."
       translations:
-        category_scope: "Liigid"
+        settings:
+          ai_translation_category_scope:
+            label: "Liigid"
+          ai_translation_personal_messages:
+            choices:
+              none: "Pole"
+              all: "Kõik"
+          content_localization_language_switcher:
+            choices:
+              none: "Mitte keegi"
+              all: "Kõik"
         model_progress:
           detail:
             columns:
@@ -91,6 +111,8 @@ et:
               title: "Kategooriad"
             tag:
               title: "Sildid"
+        admin_actions:
+          enabled: "Sisse lülitatud"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -107,6 +129,8 @@ et:
             other: "%{count} postitust"
       spam:
         short_title: "Spämm"
+        no_llm_selected: "Pole"
+        no_decision_model_selected: "Pole"
         enable: "Luba"
         test_modal:
           spam: "Spämm"
@@ -183,6 +207,12 @@ et:
         edit: "Muuda"
         delete: "Kustuta"
         embedding: "Sängitamine"
+      decision_models:
+        no_preset: "Pole"
+        display_name: "Nimi"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        delete: "Kustuta"
       mcp_servers:
         name: "Nimi"
         description: "Kirjeldus"
@@ -194,6 +224,13 @@ et:
         delete: "Kustuta"
         tools_modal:
           required: "Nõutud"
+      models:
+        name: "Nimi"
+        type: "Tüüp"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        types:
+          embedding: "Sängitamine"
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"
@@ -240,6 +277,13 @@ et:
         providers:
           google: "Google"
           fake: "Individuaalne"
+      ai_artifact:
+        editor:
+          version: "Versioon"
+          default: "Vaikimisi"
+          apply: "Rakenda"
+        share: "Jaga"
+        filter_all: "Kõik"
       ai_bot:
         debug_ai_modal:
           request: "Taotle"
@@ -261,6 +305,13 @@ et:
             category: "Kategooriad"
           table:
             total_count: "Kokku"
+      ai_search:
+        related_replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        tabs:
+          topics: "Teemasid"
+          messages: "Sõnumid"
       discobot_discoveries:
         legacy:
           regular_results: "Teemasid"

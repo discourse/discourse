@@ -5,7 +5,20 @@
 # https://translate.discourse.org/
 
 he:
+  markdown_endpoints:
+    latest: "אחרונות"
+    categories: "קטגוריות"
+    tags: "תגיות"
+    replies: "תשובות"
+    last_updated: "עדכון אחרון"
+    event:
+      location: "מיקום"
+      link: "קישור"
   mcp:
+    errors:
+      category_not_found: "לא נמצאה קטגוריה"
+      draft_too_long: "הטיוטה ארוכה מדי"
+      topic_not_found: "הנושא לא נמצא"
     oauth:
       deny: "דחייה"
       approve: "אישור"
@@ -1216,7 +1229,7 @@ he:
   uploads:
     marked_insecure_from_theme_component_reason: "ההעלאה בה נעשה שימוש ברכיב ערכת עיצוב"
   unsubscribe:
-    title: "בטלו את המנוי"
+    unsubscribe: "ביטול מנוי"
     stop_watching_topic: "הפסיקו לצפות בנושא זה, %{link}"
     mute_topic: "השתיקו את כל ההתראות של נושא זה, %{link}"
     unwatch_category: "הפסיקו לצפות בכל הנושאים בקטגוריה %{category}"
@@ -1744,12 +1757,6 @@ he:
       host_names: "הקובץ config/database.yml אצלך משתמש בכתובת ברירת המחדל - localhost. נא לעדכן אותה להשתמש בכתובת השרת שלך."
       queue_size: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
       ram: "בשרת שלך יש פחות מגיגה זיכרון בסך הכול. מומלץ לפחות גיגה של זיכרון."
-      google_oauth2_config: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-      facebook_config: 'השרת מוגדר לאפשר הרשמה דרך פייסבוק (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-      twitter_config: 'השרת מוגדר לאפשר הרשמה דרך טוויטר (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-      github_config: 'השרת מוגדר לאפשר הרשמה דרך GitHub‏ (enable_github_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-      s3_upload_config: 'השרת מוגדר להעלות קבצים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_upload_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
-      s3_backup_config: 'השרת מוגדר להעלות גיבויים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_backup_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
       s3_cdn: 'השרת מוגדר להעלות קבצים ל־S3, אך לא מוגדר CDN של S3. זה יכול להוביל לעלויות S3 גבוהות ולביצועים ירודים של האתר. <a href="https://meta.discourse.org/t/-/148916" target="_blank">ניתן לעיין בעמוד „שימוש באחסון אובייקטים להעלאות” למידע נוסף</a>.'
       image_magick: 'השרת שלך מוגדר ליצור תמונות מוקטנות של תמונות גדולות אך אין התקנה של ImageMagick. יש להתקין את ImageMagick בעזרת מנהל החבילות החביב עליך או <a href="https://www.imagemagick.org/script/download.php" target="_blank">להוריד את הגרסה העדכנית ביותר</a>.'
       failing_emails: 'ישנן %{num_failed_jobs} משימות דוא״ל שנכשלו. נא לבדוק את ה־app.yml שלך ולוודא שהגדרות כתובת שרת הדוא״ל נכונות. <a href="%{base_path}/sidekiq/retries" target="_blank">ניתן לעיין במשימות שנכשלו ב־Sidekiq</a>.'
@@ -2353,7 +2360,6 @@ he:
     enable_names: "הצגת השם המלא של המשתמש בפרופיל, כרטיס המשתמש והודעות הדוא״ל של המשתמש. ניתן להשבית כדי להסתיר את השם המלא בכל מקום."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפוסטים שלהם, בנוסף ל@שם_המשתמש שלהם."
     show_time_gap_days: "אם שני פוסטים נוצרים בהפרש כזה של ימים זה מזה, להציג את הפרש הזמן בנושא."
-    short_progress_text_threshold: "לאחר שמספר הפוסטים בנושא עוברים את המספר הזה, מד ההתקדמות יציג רק את המספר של הפוסט הנוכחי. אם תשנו את רוחב מד ההתקדמות, ייתכן שתצטרכו לשנות ערך זה."
     highlighted_languages: "כללי הדגשת תחביר להכללה. (אזהרה: הכללה של שפות רבות מדי פוגעת בביצועים) להדגמה: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a>"
     show_copy_button_on_codeblocks: "הוספת כפתור למקטעי קוד כדי להעתיק את תוכני המקטע ללוח הגזירים של המשתמש."
     embed_any_origin: "לאפשר תוכן עם יכולת הטמעה ללא תלות במקור. נחוץ ליישומונים לנייד עם HTML סטטי."
@@ -2470,7 +2476,7 @@ he:
     create_post_for_category_and_tag_changes: "יצירת פוסט לחישה כשקטגוריה או תגיות משתנים, דורש הפעלת פוסטים של לחישה."
     automatically_clean_unused_tags: "למחוק אוטומטית תגיות שאין בהן שימוש באף נושא או הודעה פרטית על בסיס יומי."
     default_watched_precedence_over_muted: "להודיע למשתמשים על נושאים בקטגוריות או תגיות שהם עוקבים אחריהם שגם שייכים לכאלה שהשתיקו"
-    company_name: "שם החברה או הארגון שלך. בהעדר תוכן לא יסופקו תבניות תנאי שירות או הצהרת פרטיות."
+    company_name: "שם החברה או הארגון שלך."
     governing_law: "ציון תחום השיפוט שאחראי על ההיבטים המשפטיים של האתר, לרבות תנאי השירות ומדיניות הפרטיות. בדרך כלל מדובר במדינה או המחוז שבהם רשומה החברה שמפעילה את האתר או המקום העיקרי ממנו היא עושה עסקים."
     city_for_disputes: "ציון העיר שתשמש כתחום השיפוט ליישוב מחלוקות שקשורות בשימוש בפורום הזה. המידע הזה בדרך כלל מופיע במסמכים הרשמיים כגון תנאי השירות של הפורום."
     shared_drafts_category: "הפעלת תכונת הטיוטות המשותפות על ידי הקצאת קטגוריה שתשמש לטובת טיוטות לנושאים. נושאים בקטגוריה זו יוסתרו מרשימות הנושאים לחברי הסגל."
@@ -2486,9 +2492,6 @@ he:
     enable_user_status: "לאפשר למשתמשים להגדיר הודעת מצב מותאמת אישית (אמוג׳י + תיאור)."
     enable_user_tips: "לאפשר עצות למשתמשים חדשים שמתארים יכולות מפתח למשתמשים"
     short_title: "הכותרת הקצרה תופיע במסך הבית של המשתמש, המשגר או במקומות אחרים שבהם המקום מוגבל. היא אמורה להיות מוגבלת ל־12 תווים. כדאי לשים לב ששינוי הכותרת הזאת עלול לשלוח בקשה למשתמשי ה־PWA (יישום דפדפני) שמבקש מהם לעדכן או להסיר את היישום."
-    dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
-    dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
-    dashboard_general_tab_activity_metrics: "נא לבחור דיווחים שיופיעו בתור מדדי פעילות בלשונית הכללית."
     gravatar_name: "נא לציין את שם ספק שירות Gravatar. השם הזה בדרך כלל ישמש לזיהוי ספק מקור תמונות ה־Gravatar הייצוגיות באתר."
     gravatar_base_url: "נא לציין את כתובת הגישה ל־API של ספק Gravatar. ההגדרה הזאת הכרחית להמרת כתובות דוא״ל לכתובות Gravatar בה מאוחסנות התמונות הייצוגיות."
     share_quote_buttons: "קביעת הפריטים שיופיעו בווידג׳ט שיתוף הציטוטים ובאיזה סדר."
@@ -2511,7 +2514,6 @@ he:
     experimental_impersonation_time_limit_minutes: "כמה זמן עד שהפעלת התחזות מסתיימת אוטומטית."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
-    about_page_hidden_groups: "לא להציג חברים מקבוצות מסוימות בדף ‎/about."
     about_page_extra_groups: "קבוצות להצגה בעמוד ‚על אודות’ מתחת למפקחים."
     about_page_extra_groups_initial_members: "מספר חברים להרחבה על כל קבוצה בעמוד ‚על אודות’."
     about_page_extra_groups_show_description: "האם לכלול את תיאורי הקבוצות בעמוד ‚על אודות’."
@@ -2519,6 +2521,7 @@ he:
     adobe_analytics_tags_url: "כתובת תגיות Adobe Analytics‏ (`https://assets.adobedtm.com/...‎`)"
     view_raw_email_allowed_groups: "קבוצות שיכולות לצפות בתוכן הגולמי של הודעות הדוא״ל של פוסט אם הוא נוצר מהודעת דוא״ל נכנסת. כולל כותרות דוא״ל ופירוט טכני נוסף."
     reviewable_ui_refresh: "קבוצות שיכולות להשתמש בממשק המשתמש הניסיוני החדש בתור הסקירה."
+    update_whispers_allowed_groups_default: "אנחנו מעדכנים את ברירת המחדל של ההגדרה {{setting:whispers_allowed_groups}} כדי לאפשר לסגל לפרסם לחישות כברירת מחדל. אם שינית את ההגדרה הזאת בעבר, ההגדרות שלך לא ישתנו אלא אם כן הן תתאפסנה."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2578,7 +2581,6 @@ he:
         other: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
-      linkedin_oidc_credentials: "יש להגדיר פרטי גישה ל־LinkedIn מסוג OIDC‏ (‚linkedin_oidc_client_id’ ואת ‚linkedin_oidc_client_secret’) בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
@@ -2588,9 +2590,27 @@ he:
       content_localization_locale_limit: "מספר השפות הנתמכות לא יכול לחרוג מעבר ל־%{max}."
       s3_credentials_required_for_video_conversion: "יש לספק פרטי גישה ל־S3 להמרת וידאו. נא להגדיר מפתחות גישה ל־S3 ולהפעיל פרופיל IAM."
     keywords:
+      about_banner_image: "תמונת כרזה"
+      about_page_extra_groups: "רשימת קבוצות"
+      about_page_extra_groups_initial_members: "חברים בהרחבה"
+      about_page_extra_groups_order: "סדר מיון"
+      about_page_extra_groups_show_description: "כולל התיאור"
       clean_up_inactive_users_after_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
+      company_url: "אתר"
+      extended_site_description: "תיאור קהילה"
+      large_icon: "סמל מרובע"
+      logo: "לוגו עיקרי"
+      logo_dark: "לוגו עיקרי כהה"
+      logo_small: "לוגו קטן"
+      logo_small_dark: "לוגו קטן כהה"
       navigation_menu: "סרגל צד|כותרת נפתחת|כותרת מתרחבת"
       purge_unactivated_users_grace_period_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
+      short_site_description: "כותרת הקהילה"
+      site_contact_group_name: "קבוצת הקשר באתר"
+      site_contact_username: "שם איש או אשת הקשר באתר"
+      site_description: "תקציר קהילה"
+      title: "שם הקהילה"
+      welcome_banner_image: "תמונת רקע"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2623,8 +2643,6 @@ he:
       tags_any: "הצגת נושאים עם לפחות אחת מבין התגיות שצוינו (מופרדות בפסיקים)"
       tags_all: "הצגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
       exclude_tag: "החרגת נושאים עם תגית מסוימת"
-      exclude_tags_any: "החרגת נושאים עם לפחות אחת מבין התגיות שצוינו (מופרדות בפסיקים)"
-      exclude_tags_all: "החרגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
       tag_group: "הצגת נושאים עם תגיות מקבוצת תגיות מסוימת"
       exclude_tag_group: "החרגת נושאים עם תגיות מקבוצת תגיות מסוימת"
       activity_before: "הצגת נושאים עם פעילות אחרונה לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
@@ -2632,7 +2650,6 @@ he:
       created_before: "הצגת נושאים שנוצרו לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
       created_after: "הצגת נושאים שנוצרו אחרי תאריך (YYYY-MM-DD או כמות ימים)"
       created_by: "הצגת נושאים שנוצרו על ידי משתמש/ת או קבוצה מסוימים"
-      created_by_user: "הצגת נושאים שנוצרו על ידי שם משתמש או קבוצה (ללא @)"
       created_by_multiple: "הצגת נושאים שנוצרו על ידי אחד או אחת מבין המשתמשים או הקבוצות שצוינו (מופרדים בפסיקים)"
       latest_post_before: "הצגת נושאים עם פוסט אחרון לפני תאריך (YYYY-MM-DD או כמות ימים לפני)"
       latest_post_after: "הצגת נושאים עם פוסט אחרון אחרי תאריך (YYYY-MM-DD או כמות ימים לפני)"
@@ -2853,6 +2870,7 @@ he:
     wrong_invite_code: "קוד ההזמנה שהקלדת שגוי."
     reserved_username: "שם משתמש זה אינו מורשה."
     missing_user_field: "לא מילאת את כל שדות המשתמש/ת הנחוצים"
+    missing_username: "נא למלא שם משתמש"
     auth_complete: "אימות הושלם."
     click_to_continue: "יש ללחוץ כאן כדי להמשיך."
     already_logged_in: "מחילה! ההזמנה הזו מיועדת למשתמשים חדשים, שעוד אין להם חשבון."
@@ -4002,34 +4020,18 @@ he:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
       subject_template_improved: "חשבונך הושעה"
-      text_body_template: |
-        הושעית מהפורום עד %{suspended_till}.
-
-        סיבה - %{reason}
     account_suspended_forever:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
       subject_template_improved: "חשבונך הושעה"
-      text_body_template: |
-        הושעית מהפורום.
-
-        הסיבה - %{reason}
     account_silenced:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
       subject_template_improved: "חשבונך הושתק"
-      text_body_template: |
-        הושתקת בפורום עד %{silenced_till}.
-
-        סיבה - %{reason}
     account_silenced_forever:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
       subject_template_improved: "חשבונך הושתק"
-      text_body_template: |
-        הושתקת בפורום.
-
-        הסיבה - %{reason}
     account_deleted:
       title: "החשבון נמחק"
       subject_template: "[%{email_prefix}] החשבון שלך נמחק"
@@ -4213,7 +4215,7 @@ he:
         חבר סגל אישר את החשבון שלך אצל %{site_name}.
 
         מעתה יתאפשר לך לגשת לחשבון החדש שלך על ידי כניסה אליו בכתובת:
-        %{base_url}
+        %{login_url}
 
         אם אין אפשרות ללחוץ על הקישור שלהלן, כדאי לנסות להעתיק ולהדביק אותו לסרגל הכתובות של הדפדפן.
 
@@ -4820,7 +4822,13 @@ he:
   design_wizard:
     palette_pairs:
       default: "ברירת מחדל"
+      neutral: "נייטרלי"
+      shades_of_blue: "גווני כחול"
+      summer: "קיץ"
       dracula: "דרקולה"
+      grey_amber: "ענבר אפור"
+      latte: "לאטה"
+      dark_rose: "ורד כהה"
   wizard:
     title: "הקמת Discourse"
     step:
@@ -4859,6 +4867,19 @@ he:
     graph_title: "מניין חיפושים"
   onebox:
     discourse:
+      recurrence:
+        every_day: "כל יום"
+        every_weekday: "כל יום חול"
+        ordinals:
+          last: "האחרון"
+        weekdays:
+          sunday: "יום ראשון"
+          monday: "יום שני"
+          tuesday: "יום שלישי"
+          wednesday: "יום רביעי"
+          thursday: "יום חמישי"
+          friday: "יום שישי"
+          saturday: "שבת"
       user_joined_community: "מועד הצטרפות: %{date}"
     google_meet:
       meeting_code: "קוד:"
@@ -4866,6 +4887,8 @@ he:
       truncated_file: "הקובץ הזה נקטע."
       show_original: "הצגת המקורי"
     github:
+      header:
+        success: "הצלחה"
       binary_file: "זה קובץ בינרי."
       truncated_file: "הקובץ הזה נקטע."
       show_original: "הצגת המקורי"
@@ -4879,17 +4902,10 @@ he:
       review_by: "סקירה של"
       pr_summary: "%{commits} הגשות שינו %{changed_files} קבצים עם %{additions} תוספים ו־%{deletions} מחיקות"
       no_description: "אפשר לתרום לפיתוח של %{repo} דרך יצירת חשבון ב־GitHub."
-      pr_title:
-        default: "בקשת משיכה"
-        draft: "טיוטת בקשת משיכה"
-        open: "בקשת משיכה פתוחה"
-        approved: "בקשת משיכה שאושרה"
-        changes_requested: "התבקשו שינויים"
-        merged: "בקשת משיכה ממוזגת"
-        closed: "בקשת משיכה סגורה"
-      status_date:
-        open: "נפתח"
-        approved: "מאושר"
+      pr_status:
+        draft: "טיוטה"
+        open: "פתוח"
+        approved: "אושר"
         closed: "סגור"
   discourse_push_notifications:
     popup:
@@ -4978,6 +4994,10 @@ he:
       no_context:
         watched_word: "הפוסט הזה כלל מילים במעקב. נא לפנות אל %{link} לפרטים נוספים."
     actions:
+      answer_yes:
+        title: "כן"
+      answer_no:
+        title: "לא"
       agree:
         title: "כן"
       agree_and_keep:
@@ -5028,6 +5048,8 @@ he:
       disagree_and_restore:
         title: "שחזור פוסט"
         complete: "הפוסט שוחזר."
+      disagree_and_keep_deleted:
+        title: "להשאיר את הפוסט מחוק"
       disagree_bundle:
         title: "לא"
       disagree:

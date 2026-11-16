@@ -18,6 +18,10 @@ gl:
               buckets:
                 lt_1h: "< 1 hora"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "Retirado"
+        tag_names: "Etiquetas"
     notifications:
       alt:
         solved:

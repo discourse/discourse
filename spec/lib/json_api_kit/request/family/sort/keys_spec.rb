@@ -27,8 +27,32 @@ RSpec.describe JsonApiKit::Request::Family::Sort::Keys do
     context "when the sort is an array" do
       let(:value) { %w[postedDate] }
 
-      it "returns nothing" do
-        expect(keys).to be_nil
+      it "preserves the value for validation" do
+        expect(declared_sort).to eq(value)
+      end
+    end
+
+    context "when the sort is an empty array" do
+      let(:value) { [] }
+
+      it "preserves the value for validation" do
+        expect(declared_sort).to eq(value)
+      end
+    end
+
+    context "when the sort is false" do
+      let(:value) { false }
+
+      it "preserves the value for validation" do
+        expect(declared_sort).to be(false)
+      end
+    end
+
+    context "when the sort is absent" do
+      let(:value) { nil }
+
+      it "preserves the absence of a sort" do
+        expect(declared_sort).to be_nil
       end
     end
   end
@@ -38,6 +62,22 @@ RSpec.describe JsonApiKit::Request::Family::Sort::Keys do
 
     it "returns the declared names with their directions" do
       expect(declared_sort).to eq("posted_at" => :asc, "title" => :desc)
+    end
+
+    context "when the sort is an empty string" do
+      let(:value) { "" }
+
+      it "returns no explicit ordering" do
+        expect(declared_sort).to be_nil
+      end
+    end
+
+    context "when the sort is an empty hash" do
+      let(:value) { {} }
+
+      it "returns no explicit ordering" do
+        expect(declared_sort).to be_nil
+      end
     end
 
     context "when two keys declare one name" do

@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
@@ -22,7 +21,7 @@ export default class FormTemplateFieldUpload extends Component {
   @autoTrackedArray uploadedFiles = [];
   fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: this.args.id,
     type: "composer",
     uploadDone: this.uploadDone,

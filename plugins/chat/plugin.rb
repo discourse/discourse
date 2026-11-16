@@ -47,6 +47,24 @@ end
 
 require_relative "lib/chat/engine"
 after_initialize do
+  register_bot_creation_param(:chat_discoverable) do |bot, value|
+    Chat::DiscoverableBot.create!(user: bot) if ActiveModel::Type::Boolean.new.cast(value)
+  end
+
+  add_to_serializer(
+    :admin_detailed_user,
+    :chat_discoverable,
+    include_condition: -> { scope.is_admin? && object.bot? && !object.is_system_user? },
+  ) { object.chat_discoverable_bot.present? }
+
+  original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
+  MessageBus.group_ids_lookup do |env|
+    host = RailsMultisite::ConnectionManagement.host(env)
+    RailsMultisite::ConnectionManagement.with_hostname(host) do
+      Chat.message_bus_group_ids_for(original_message_bus_group_ids_lookup&.call(env))
+    end
+  end
+
   register_seedfu_fixtures(Rails.root.join("plugins/chat/db/fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
@@ -434,6 +452,51 @@ after_initialize do
     Chat::AutoLeaveChannels.call(params: { group_id: group.id, event: :group_destroyed })
   end
 
+  homepage_channel = -> { Chat::Channel.find_by(id: SiteSetting.chat_homepage_channel.presence) }
+
+  register_modifier(:design_wizard_homepages) do |options|
+    next options if !SiteSetting.enable_public_channels
+
+    channel = Chat::CategoryChannel.find_by(chatable_id: SiteSetting.general_category_id)
+    next options if !channel || channel.archived? || channel.read_restricted?
+
+    options +
+      [
+        {
+          id: "chat",
+          name: I18n.t("chat.design_wizard_homepage_name"),
+          description: I18n.t("chat.design_wizard_homepage_description", channel: channel.title),
+          icon: "comments",
+          illustration: "conversation",
+          path: channel.relative_url.delete_prefix(Discourse.base_path),
+          settings: {
+            chat_homepage_channel: channel.id.to_s,
+          },
+        },
+      ]
+  end
+
+  register_homepage(
+    "chat",
+    name: "chat.homepage_option",
+    path: -> { homepage_channel.call&.relative_url&.delete_prefix(Discourse.base_path) || "/chat" },
+    route: "chat/chat#respond",
+    anonymous: true,
+    enabled: -> { SiteSetting.enable_public_channels },
+    available: ->(guardian:, request:) do
+      channel = homepage_channel.call
+      next false if channel.nil? || channel.archived? || !channel.public_channel?
+      next false if CrawlerDetection.crawler_layout_request?(request)
+
+      if guardian.anonymous?
+        guardian.can_preview_anonymous_public_chat_channel?(channel)
+      else
+        guardian.can_chat? && guardian.user.user_option&.chat_enabled &&
+          guardian.can_preview_chat_channel?(channel)
+      end
+    end,
+  )
+
   register_presence_channel_prefix("chat") do |channel_name|
     next if channel_name != "/chat/online"
     PresenceChannel::Config.new.tap { |config| config.allowed_group_ids = Chat.allowed_group_ids }
@@ -587,7 +650,7 @@ after_initialize do
     {
       create_message: {
         actions: %w[chat/api/channel_messages#create],
-        params: %i[chat_channel_id],
+        path_params: %i[chat_channel_id],
       },
     },
   )
@@ -613,18 +676,38 @@ after_initialize do
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)
+  register_hashtag_content_store(Chat::MessageHashtagStore)
   register_hashtag_type_priority_for_context("channel", "chat-composer", 200)
   register_hashtag_type_priority_for_context("category", "chat-composer", 100)
   register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
   register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
 
   register_post_stripper do |nokogiri_fragment|
-    nokogiri_fragment.css(".chat-transcript .mention").remove
+    # A descendant selector rescans every nested transcript's subtree. Carry
+    # transcript state through a single walk instead.
+    removals = []
+    stack = nokogiri_fragment.element_children.map { |child| [child, false] }
+
+    until stack.empty?
+      node, in_transcript = stack.pop
+      classes = node["class"].to_s.split
+
+      if in_transcript && classes.include?("mention")
+        removals << node
+        next
+      end
+
+      below_transcript = in_transcript || classes.include?("chat-transcript")
+      node.element_children.each { |child| stack << [child, below_transcript] }
+    end
+
+    removals.each(&:remove)
   end
 
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: Chat::Message::MARKDOWN_FEATURES,
     limited_pretty_text_markdown_rules: Chat::Message::MARKDOWN_IT_RULES,
+    onebox_limit: PrettyText::NO_ONEBOX_LIMIT,
     hashtag_configurations: HashtagAutocompleteService.contexts_with_ordered_types,
   }
 
@@ -656,7 +739,8 @@ after_initialize do
     description:
       "Lists chat channels followed by the authenticated user, including direct-message channels.",
     implementation: Chat::McpTools::ListChannels,
-    required_scopes: %w[chat:read],
+    output_schema: Chat::McpTools::ListChannels::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListChannels::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -664,8 +748,8 @@ after_initialize do
     availability: -> { SiteSetting.chat_enabled },
   )
   register_mcp_tool(
-    "chat_message_list",
-    title: "List chat messages",
+    "discourse_get_chat_messages",
+    title: "Get chat messages",
     description: "Reads a bounded page of messages from a visible chat channel.",
     implementation: Chat::McpTools::ListMessages,
     input_schema: {
@@ -675,16 +759,30 @@ after_initialize do
           type: "integer",
           minimum: 1,
         },
-        limit: {
+        page_size: {
           type: "integer",
           minimum: 1,
-          maximum: 100,
+          maximum: 50,
+          default: 50,
+        },
+        target_message_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        direction: {
+          type: "string",
+          enum: %w[past future],
+        },
+        target_date: {
+          type: "string",
+          format: "date-time",
         },
       },
       required: ["channel_id"],
       additionalProperties: false,
     },
-    required_scopes: %w[chat:read],
+    output_schema: Chat::McpTools::ListMessages::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListMessages::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -717,7 +815,8 @@ after_initialize do
       required: %w[channel_id message],
       additionalProperties: false,
     },
-    required_scopes: %w[chat:write],
+    output_schema: Chat::McpTools::CreateMessage::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::CreateMessage::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,
