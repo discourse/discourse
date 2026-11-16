@@ -83,6 +83,39 @@ RSpec.describe DiscourseAi::Mcp::Client do
       end
     end
 
+    it "rejects once cumulative catalog bytes exceed the limit" do
+      payload = {
+        result: {
+          tools: [{ name: "large", description: "犬" * 100 }],
+          nextCursor: "page-1",
+        },
+      }
+      page_bytes = payload.to_json.bytesize
+      requests = 0
+      stub_request(:post, server.url).to_return do
+        requests += 1
+        payload[:result][:nextCursor] = "page-#{requests}"
+        { status: 200, body: payload.to_json }
+      end
+
+      stub_const(described_class, :MAX_TOOL_CATALOG_BYTES, page_bytes) do
+        expect { described_class.new(server).list_tools }.to raise_error(
+          described_class::Error,
+          I18n.t("discourse_ai.mcp_servers.errors.tool_catalog_too_large", max: page_bytes),
+        )
+      end
+      expect(requests).to eq(2)
+    end
+
+    it "accepts a catalog exactly at the byte limit" do
+      payload = { result: { tools: [{ name: "small" }] } }
+      stub_request(:post, server.url).to_return(status: 200, body: payload.to_json)
+
+      stub_const(described_class, :MAX_TOOL_CATALOG_BYTES, payload.to_json.bytesize) do
+        expect(described_class.new(server).list_tools).to eq([{ "name" => "small" }])
+      end
+    end
+
     it "stops when a server repeats a pagination cursor" do
       stub_request(:post, server.url).to_return(
         status: 200,

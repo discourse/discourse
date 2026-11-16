@@ -32,6 +32,7 @@ module DiscourseAi
       MAX_RESPONSE_BODY_LENGTH = 5.megabytes
       MAX_TOOL_PAGES = 100
       MAX_DISCOVERED_TOOLS = 10_000
+      MAX_TOOL_CATALOG_BYTES = 10.megabytes
       TIMEOUT_ERRORS = [
         Net::ReadTimeout,
         Net::OpenTimeout,
@@ -174,6 +175,7 @@ module DiscourseAi
         cursors = Set.new
         cursor = nil
         pages = 0
+        catalog_bytes = 0
         loop do
           pages += 1
           if pages > MAX_TOOL_PAGES
@@ -183,14 +185,23 @@ module DiscourseAi
           params = cursor.present? ? { cursor: cursor } : nil
           response = post_jsonrpc("tools/list", session_id: session_id, params: params)
           result = extract_result!(response.payload)
-          tools.concat(Array(result["tools"]))
-          if tools.length > MAX_DISCOVERED_TOOLS
+          catalog_bytes += response.payload.to_json.bytesize
+          if catalog_bytes > MAX_TOOL_CATALOG_BYTES
+            raise Error,
+                  I18n.t(
+                    "discourse_ai.mcp_servers.errors.tool_catalog_too_large",
+                    max: MAX_TOOL_CATALOG_BYTES,
+                  )
+          end
+          page_tools = Array(result["tools"])
+          if tools.length + page_tools.length > MAX_DISCOVERED_TOOLS
             raise Error,
                   I18n.t(
                     "discourse_ai.mcp_servers.errors.too_many_tools",
                     max: MAX_DISCOVERED_TOOLS,
                   )
           end
+          tools.concat(page_tools)
           cursor = result["nextCursor"].presence
           break if cursor.nil?
 
