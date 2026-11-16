@@ -43,7 +43,27 @@ module DiscourseAi
         end
 
         def supports_bot_user?
-          agents_supporting_bot_user.any? { |klass| self <= klass }
+          # Resolved from the top level: agent classes registered by other plugins outlive a
+          # development code reload, and their stale lexical scope cannot find the new agents.
+          ::DiscourseAi::Agents::Agent.agents_supporting_bot_user.any? { |klass| self <= klass }
+        end
+
+        def agents_supporting_bot_user
+          @agents_supporting_bot_user ||= [
+            General,
+            SqlHelper,
+            Artist,
+            SettingsExplorer,
+            Researcher,
+            Creative,
+            DiscourseHelper,
+            GithubHelper,
+            WebArtifactCreator,
+            Designer,
+            ForumResearcher,
+            Discover,
+            DiscourseAdminAssistant,
+          ].freeze
         end
 
         def allow_chat_channel_mentions
@@ -140,7 +160,15 @@ module DiscourseAi
             Tools::SearchDiscourseNavigation,
             Tools::SettingContext,
             Tools::ReadSiteSetting,
+            Tools::ListUpcomingChanges,
             Tools::ChangeSiteSetting,
+            Tools::GenerateAppearanceChange,
+            Tools::SaveAppearanceChange,
+            Tools::ActivateAppearanceChange,
+            Tools::RevertAppearanceChange,
+            Tools::ListAppearanceChanges,
+            Tools::ThemeAppHandoff,
+            Tools::EnableMcpThemeAccess,
             Tools::RandomPicker,
             Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
@@ -248,24 +276,6 @@ module DiscourseAi
             .each do |config|
               config[:agent_id] ||= external_agent_id(config[:agent_klass]) if config[:agent_klass]
             end
-        end
-
-        def agents_supporting_bot_user
-          @agents_supporting_bot_user ||= [
-            General,
-            SqlHelper,
-            Artist,
-            SettingsExplorer,
-            Researcher,
-            Creative,
-            DiscourseHelper,
-            GithubHelper,
-            WebArtifactCreator,
-            Designer,
-            ForumResearcher,
-            Discover,
-            DiscourseAdminAssistant,
-          ].freeze
         end
 
         def builtin_system_agents
@@ -413,9 +423,7 @@ module DiscourseAi
         return if context.subagent_depth.to_i >= SubagentRunner::MAX_SUBAGENT_DEPTH
 
         state = context.subagent_execution_state
-        if !state&.spawn_available? || !state.completion_available? || state.remaining_tokens <= 0
-          return
-        end
+        return if !state&.completion_available? || state.remaining_tokens <= 0
 
         records_by_id = AiAgent.where(id: self.class.subagent_ids, enabled: true).index_by(&:id)
         models_by_agent_id = SubagentRunner.resolve_models(records_by_id.values)

@@ -1422,7 +1422,7 @@ export default class TopicController extends Controller {
 
     // optimistic update
     topic.setProperties({
-      pinned_at: value ? moment() : null,
+      pinned_at: value ? moment().toISOString() : null,
       pinned_globally: false,
       pinned_until: value ? until : null,
     });
@@ -1437,7 +1437,7 @@ export default class TopicController extends Controller {
 
     // optimistic update
     topic.setProperties({
-      pinned_at: moment(),
+      pinned_at: moment().toISOString(),
       pinned_globally: true,
       pinned_until: until,
     });
@@ -2175,31 +2175,16 @@ export default class TopicController extends Controller {
 
     postStream
       .loadNearestPostToDate(date)
-      .then((post) => {
-        DiscourseURL.routeTo(
-          this.model.urlForPostNumber(post.get("post_number"))
-        );
-      })
+      .then((post) => this._jumpToPostNumber(post.post_number))
       .catch(() => {
         this._jumpToIndex(postStream.get("topic.highest_post_number"));
       });
   }
 
   _jumpToPostNumber(postNumber) {
-    const postStream = this.get("model.postStream");
-    const post = postStream
-      .get("posts")
-      .find((item) => item.post_number === postNumber);
-
-    if (post) {
-      DiscourseURL.routeTo(
-        this.model.urlForPostNumber(post.get("post_number"))
-      );
-    } else {
-      postStream.loadPostByPostNumber(postNumber).then((p) => {
-        DiscourseURL.routeTo(this.model.urlForPostNumber(p.get("post_number")));
-      });
-    }
+    DiscourseURL.routeTo(this.model.urlForPostNumber(postNumber), {
+      keepFilter: true,
+    });
   }
 
   async _jumpToPostId(postId) {
@@ -2225,9 +2210,7 @@ export default class TopicController extends Controller {
       }
     }
 
-    DiscourseURL.routeTo(this.model.urlForPostNumber(post.post_number), {
-      keepFilter: true,
-    });
+    this._jumpToPostNumber(post.post_number);
   }
 
   _modifyTopicBookmark(bookmark) {

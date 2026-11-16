@@ -13,6 +13,10 @@ et:
             topic_id:
               label: Teema ID
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registreeru"
       preferences:
         reminders:
           preferences:
@@ -52,6 +56,8 @@ et:
               title: "Avalik"
             private:
               title: "Privaatne"
+      recording_modal:
+        save: "Salvesta"
       composer:
         url_placeholder: "Lisa URL"
         reminder:

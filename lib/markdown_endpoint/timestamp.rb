@@ -8,11 +8,13 @@ module MarkdownEndpoint
 
     def render(time, url:)
       local = time.in_time_zone(@timezone)
-      label =
-        "#{I18n.l(local, format: :long)} #{local.strftime("%Z")}"
-          .squish
-          .gsub(/[\\`*_\[\]<>]/) { |character| "\\#{character}" }
+      label = text(local).gsub(/[\\`*_\[\]<>]/) { |character| "\\#{character}" }
       %([#{label}](#{url} "#{local.iso8601}"))
+    end
+
+    def text(time)
+      local = time.in_time_zone(@timezone)
+      "#{I18n.l(local, format: :long)} #{local.strftime("%Z")}".squish
     end
   end
 end

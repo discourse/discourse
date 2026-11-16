@@ -29,7 +29,7 @@ after_initialize do
       .css(".lazy-video-container")
       .each do |video|
         link = fragment.document.create_element("a")
-        link["href"] = video.at_css("a")["href"].to_s
+        link["href"] = video.at_css("a")&.[]("href").to_s
         link.add_child(fragment.document.create_text_node(video["data-video-title"].to_s))
 
         paragraph = fragment.document.create_element("p")

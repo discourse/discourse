@@ -30,13 +30,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
   end
 
   def execute_event_action(post, operation)
-    execute_node(
-      configuration: {
-        "operation" => operation,
-        "topic_id" => post.topic_id.to_s,
-        "actor_username" => admin.username,
-      },
-    )
+    configuration = {
+      "operation" => operation,
+      "topic_id" => post.topic_id.to_s,
+      "actor_username" => admin.username,
+    }
+
+    result = execute_node(configuration:)
+    expect(result).to match_node_output_schema(described_class, configuration:)
+    result
   end
 
   def post_edited_workflow_job_count

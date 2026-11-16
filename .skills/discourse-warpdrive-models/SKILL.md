@@ -11,8 +11,8 @@ description: Use when creating a new WarpDrive-backed frontend model, or when re
 - `normalize.js` + `jsonapi-utils.js` — Discourse REST payloads → JSON:API documents
 - `builders/` — request objects, one file per resource
 - `handlers/discourse-rest.js` — the sole network handler; routes through `ajax()`
-- `warp-rest-model.js` — `WarpRestModel` wrapper base, plus `warpStore()`, `requestMany`/`requestOne`, `defineFieldForwarders`
-- `rest-compat.js` — `RestCompatModel`, temporary legacy `RestModel` surface (`get`/`set`/`setProperties`, drafts, legacy adapter save path)
+- `warp-rest-model.ts` — `WarpRestModel` wrapper base, plus `warpStore()`, `requestMany`/`requestOne`, `defineFieldForwarders`
+- `rest-compat.ts` — `RestCompatModel`, temporary legacy `RestModel` surface (`get`/`set`/`setProperties`, drafts, legacy adapter save path)
 - `extra-attributes.js` — retains payload keys no schema declares (migration safety net)
 
 A model is converted if its class in `app/models/` extends `RestCompatModel` (or `WarpRestModel` directly) and its schema is listed in `schemas/index.js`.
@@ -55,7 +55,7 @@ A record is a proxy over the cache; reading a field the schema doesn't declare *
 
 5. Run the model's qunit tests plus acceptance tests for its screens.
 
-Relations to **unmigrated** models (User, Topic, …) are not relationships: store the raw embedded object as a plain attribute (see `bookmark.js` `user`, or `userBadgeResource` inlining sideloads), optionally wrapping it in the legacy model class in a getter or `create`.
+Relations to **unmigrated** models (User, Topic, …) are not relationships: store the raw embedded object as a plain attribute (see `bookmark.ts` `user`, or `userBadgeResource` inlining sideloads), optionally wrapping it in the legacy model class in a getter or `create`.
 
 ## Working with a converted model
 

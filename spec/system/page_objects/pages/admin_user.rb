@@ -19,6 +19,10 @@ module PageObjects
         has_css?(".btn-danger.unsuspend-user")
       end
 
+      def has_suspension_reason?(reason)
+        has_css?(".suspension-info .full-reason", text: reason)
+      end
+
       def has_no_suspend_button?
         has_no_css?(".btn-danger.suspend-user")
       end
@@ -58,6 +62,10 @@ module PageObjects
 
       def click_unsilence_button
         find(".btn-danger.unsilence-user").click
+      end
+
+      def click_grant_moderation_button
+        find(".btn.grant-moderation").click
       end
 
       def click_approve_button

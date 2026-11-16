@@ -5,6 +5,21 @@ module DiscourseWorkflows
     module DataTable
       class V1 < NodeType
         OPERATIONS = %w[insert get update delete upsert row_exists row_not_exists].freeze
+        PASSTHROUGH_OPERATIONS = %w[row_exists row_not_exists].freeze
+        COLUMN_SCHEMAS = {
+          "string" => {
+            "type" => %w[string null],
+          },
+          "number" => {
+            "type" => %w[number null],
+          },
+          "boolean" => {
+            "type" => %w[boolean null],
+          },
+          "date" => {
+            "type" => %w[string null],
+          },
+        }.freeze
         MAPPING_MODES = %w[manual auto].freeze
         DEFAULT_LIMIT = DiscourseWorkflows::DataTables::Facade::MAX_LIMIT
         CONDITION_OVERRIDES =
@@ -47,6 +62,20 @@ module DiscourseWorkflows
           },
           group: "data",
           i18n_scope: "data_table_node",
+          output_contracts: [
+            {
+              variants: [
+                {
+                  mode: :passthrough,
+                  display_options: {
+                    show: {
+                      operation: PASSTHROUGH_OPERATIONS,
+                    },
+                  },
+                },
+              ],
+            },
+          ],
           capabilities: {
             run_scope: "per_item",
           },
@@ -177,6 +206,19 @@ module DiscourseWorkflows
             },
           },
         )
+
+        def self.output_schemas(configuration = {}, input_schemas: [])
+          config = (configuration || {}).deep_stringify_keys
+          return super if PASSTHROUGH_OPERATIONS.include?(config["operation"])
+
+          columns = DiscourseWorkflows::DataTable.find_by(id: config["data_table_id"])&.columns.to_a
+          types =
+            DataTables::Types::SYSTEM_COLUMN_TYPE_MAP.merge(
+              columns.to_h { |column| [column["name"], column["type"]] },
+            )
+
+          [Schema.document(types.transform_values { |type| COLUMN_SCHEMAS.fetch(type) })]
+        end
 
         def self.load_options_context(context)
           case context.method_name

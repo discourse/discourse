@@ -19,7 +19,7 @@ export default function buildExpressionExtensions(cmParams, domainOpts = {}) {
   );
   const sections = { ...cmParams.utils.sections, nodes: SECTION_NODES };
 
-  const scope = buildScope(domainOpts);
+  const scope = domainOpts.scope ?? buildScope(domainOpts);
   const ancestorNodes = domainOpts.ancestorNodes || [];
   const completionOpts = { scope, ancestorNodes, sections };
   const onOpenReferencePicker = domainOpts.onOpenReferencePicker;

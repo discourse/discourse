@@ -1582,7 +1582,6 @@ da:
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
-    short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
@@ -1647,6 +1646,13 @@ da:
       reply_by_email_address_is_empty: "Du skal angive en 'svar via email-adresse', før du aktiverer svar via e-mail."
       invalid_hex_value: "Farveværdier skal være 6-cifrede hexadecimale koder."
       empty_selectable_avatars: "Du skal først overføre mindst to valgbare avatarer før du aktiverer denne indstilling."
+    keywords:
+      about_banner_image: "bannerbillede"
+      company_url: "hjemmeside"
+      logo: "primært logo"
+      logo_dark: "primært logo mørkt"
+      logo_small_dark: "lille, mørkt logo"
+      site_contact_username: "navn på websteds kontaktperson"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.eksempel.dk"
@@ -3148,6 +3154,10 @@ da:
   design_wizard:
     palette_pairs:
       default: "Standard"
+      neutral: "Neutral"
+      shades_of_blue: "Blå nuancer"
+      summer: "Sommer"
+      latte: "Latte"
   wizard:
     title: "Discourse Opsætning"
     step:
@@ -3166,13 +3176,31 @@ da:
   search_logs:
     graph_title: "Antal søgninger"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Hver dag"
+        every_weekday: "Hver ugedag"
+        ordinals:
+          last: "sidste"
+        weekdays:
+          sunday: "Søndag"
+          monday: "Mandag"
+          tuesday: "Tirsdag"
+          wednesday: "Onsdag"
+          thursday: "Torsdag"
+          friday: "Fredag"
+          saturday: "Lørdag"
     google_meet:
       meeting_code: "Kode:"
     github:
+      header:
+        success: "Succes"
       closed: "lukket"
-      status_date:
-        approved: "godkendt"
-        closed: "lukket"
+      pr_status:
+        draft: "Kladde"
+        open: "Åbn"
+        approved: "Godkendt"
+        closed: "Lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
@@ -3222,6 +3250,10 @@ da:
       email_auth_res_enqueue: "Denne e-mail fejlede et DMARC tjek, den er højst sandsynligt ikke fra hvem den ser ud til at være fra. Tjek de rå e-mail-headere for mere information."
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nej"
       agree:
         title: "Ja"
       agree_and_restore:

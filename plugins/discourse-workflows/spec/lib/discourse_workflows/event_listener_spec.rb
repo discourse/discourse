@@ -639,10 +639,75 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).to contain_exactly("user-search-trigger")
   end
 
-  def create_published_workflow(trigger_node_id, trigger_type, configuration: {})
+  describe "versioned triggers" do
+    let(:event_name) { :event_listener_versioned_trigger_test }
+    let(:plugin) { Plugin::Instance.new }
+
+    let(:v1) do
+      Class.new(DiscourseWorkflows::NodeType) do
+        description(
+          name: "trigger:event_listener_versioned_test",
+          version: "1.0",
+          event: :event_listener_versioned_trigger_test,
+        )
+
+        def initialize(payload, *)
+          super(parameters: {})
+          @payload = payload
+        end
+
+        def output
+          { "editor" => @payload }
+        end
+      end
+    end
+
+    let(:v2) do
+      Class.new(v1) do
+        description(superclass.description.merge(version: "2.0"))
+
+        def output
+          { "actor" => @payload }
+        end
+      end
+    end
+
+    before do
+      DiscourseWorkflows.node_registration_ready = true
+      plugin.register_discourse_workflows_node(v1)
+      plugin.register_discourse_workflows_node(v2)
+    end
+
+    after do
+      DiscourseEvent.all_off(event_name)
+      unregister_workflow_nodes(v1, v2)
+    end
+
+    it "dispatches each saved trigger with the output of its own version" do
+      create_published_workflow("v1-trigger", "trigger:event_listener_versioned_test")
+      create_published_workflow(
+        "v2-trigger",
+        "trigger:event_listener_versioned_test",
+        type_version: "2.0",
+      )
+
+      DiscourseEvent.trigger(event_name, "alice")
+
+      expect(enqueued_trigger_node_ids).to contain_exactly("v1-trigger", "v2-trigger")
+      expect(trigger_data_for("v1-trigger")).to eq("editor" => "alice")
+      expect(trigger_data_for("v2-trigger")).to eq("actor" => "alice")
+    end
+  end
+
+  def create_published_workflow(
+    trigger_node_id,
+    trigger_type,
+    configuration: {},
+    type_version: "1.0"
+  )
     graph =
       build_workflow_graph do |g|
-        g.node trigger_node_id, trigger_type, configuration: configuration
+        g.node trigger_node_id, trigger_type, configuration:, type_version:
       end
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
     DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)

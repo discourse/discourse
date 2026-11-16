@@ -60,6 +60,7 @@ class TopicLink < ActiveRecord::Base
     apply_source_post_visibility_filters(builder, guardian, source_post: "source_posts")
     apply_link_visibility_filters(
       builder,
+      guardian,
       link: "ftl",
       target_topic: "ft",
       target_posts: "target_posts",
@@ -105,6 +106,7 @@ class TopicLink < ActiveRecord::Base
 
     apply_link_visibility_filters(
       builder,
+      guardian,
       link: "l",
       target_topic: "t",
       target_posts: "target_posts",
@@ -225,13 +227,22 @@ class TopicLink < ActiveRecord::Base
   end
   private_class_method :visible_source_post_ids
 
-  def self.apply_link_visibility_filters(builder, link:, target_topic:, target_posts:)
+  def self.apply_link_visibility_filters(builder, guardian, link:, target_topic:, target_posts:)
     builder.where(<<~SQL)
       #{target_topic}.deleted_at IS NULL
       AND (#{target_topic}.id IS NULL OR #{target_topic}.visible = true)
       AND (#{link}.internal = false OR #{target_topic}.id IS NOT NULL)
       AND (#{link}.link_post_id IS NULL OR (#{target_posts}.id IS NOT NULL AND #{target_posts}.deleted_at IS NULL))
     SQL
+
+    builder.where(
+      "#{link}.link_post_id IS NULL OR #{target_posts}.post_type IN (:link_visible_post_types)",
+      link_visible_post_types: Topic.visible_post_types(guardian.user),
+    )
+
+    unless guardian.is_staff?
+      builder.where("#{link}.link_post_id IS NULL OR #{target_posts}.hidden = false")
+    end
   end
   private_class_method :apply_link_visibility_filters
 

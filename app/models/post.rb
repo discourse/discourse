@@ -279,7 +279,13 @@ class Post < ActiveRecord::Base
     if Topic.visible_post_types.include?(post_type)
       opts.merge!(topic.secure_audience_publish_messages)
     else
-      opts[:user_ids] = User.human_users.where("admin OR moderator OR id = ?", user_id).pluck(:id)
+      user_ids = User.human_users.where("admin OR moderator OR id = ?", user_id).pluck(:id)
+
+      # Hidden post types are staff-only, but a private message's audience still
+      # bounds who may learn the topic exists.
+      user_ids &= topic.secure_audience_publish_messages[:user_ids] if topic.private_message?
+
+      opts[:user_ids] = user_ids
     end
 
     MessageBus.publish(channel, message, opts) if opts[:user_ids] != [] && opts[:group_ids] != []
@@ -356,11 +362,9 @@ class Post < ActiveRecord::Base
 
     # A rule in our Markdown pipeline may have Guardian checks that require a
     # user to be present. The last editing user of the post will be more
-    # generally up to date than the creating user. For example, we use
-    # this when cooking #hashtags to determine whether we should render
-    # the found hashtag based on whether the user can access the category it
-    # is referencing.
+    # generally up to date than the creating user.
     options[:user_id] = last_editor_id
+    options[:hashtag_user_ids] = [user_id, last_editor_id, *post_revisions.pluck(:user_id)].compact
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
     options
@@ -391,7 +395,8 @@ class Post < ActiveRecord::Base
       end
     end
 
-    cooked = post_analyzer.cook(raw, options)
+    cooked =
+      post_analyzer.cook(raw, options) { |url, onebox, doc| onebox_allowed?(url, onebox, doc) }
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
@@ -404,6 +409,13 @@ class Post < ActiveRecord::Base
     end
 
     new_cooked
+  end
+
+  def onebox_allowed?(url, onebox, doc)
+    return true if !PostAnalyzer.unvalidated_media?(onebox, url)
+
+    limit = unvalidated_media_limit
+    limit.nil? || PostAnalyzer.embedded_media_count(doc) < limit
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
@@ -1261,6 +1273,20 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def unvalidated_media_limit
+    writer_ids = [user_id, last_editor_id, *post_revisions.pluck(:user_id)]
+
+    User.where(id: writer_ids).filter_map { |writer| embedded_media_limit(writer) }.min
+  end
+
+  def embedded_media_limit(writer)
+    return if writer.staff?
+    return 0 if !writer.guardian.can_embed_media?
+    return 0 if !writer.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+
+    SiteSetting.newuser_max_embedded_media if writer.trust_level == TrustLevel[0]
+  end
 
   def ensure_edit_reason_length
     return if edit_reason.blank? || edit_reason.length <= MAX_EDIT_REASON_LENGTH

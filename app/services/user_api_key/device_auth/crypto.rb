@@ -2,6 +2,10 @@
 
 class UserApiKey::DeviceAuth::Crypto
   def self.parse_public_key!(value)
+    # OpenSSL::PKey::RSA.new(Integer) generates a keypair of that bit length
+    # instead of parsing one, so only strings may reach it.
+    raise Discourse::InvalidParameters.new(:public_key) if !value.is_a?(String)
+
     OpenSSL::PKey::RSA.new(value)
   rescue OpenSSL::PKey::RSAError, TypeError
     raise Discourse::InvalidParameters.new(:public_key)

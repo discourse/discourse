@@ -170,6 +170,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Classify::V1 do
         custom_headers: [{ name: "X-Image-Input", value: "true" }],
       )
       upload = Fabricate(:image_upload)
+      # The node reloads uploads, so persist the URL assigned when the file was stored.
+      upload.save!
       request =
         stub_request(:post, decision_model.url)
           .with(headers: { "X-Image-Input" => "true" }) do |req|

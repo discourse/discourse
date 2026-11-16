@@ -7,6 +7,30 @@ if defined?(DiscourseWorkflows)
         class V1 < NodeType
           OPERATIONS = %w[close open].freeze
 
+          OUTPUT_SCHEMA =
+            Schema.merge(
+              Schema.entity(
+                "event",
+                {
+                  "id" => {
+                    "type" => "integer",
+                  },
+                  "topic_id" => {
+                    "type" => "integer",
+                  },
+                  "post_id" => {
+                    "type" => "integer",
+                  },
+                  "closed" => {
+                    "type" => "boolean",
+                  },
+                },
+                "Event affected by the workflow action",
+              ),
+              Schema::TOPIC_LIST_ITEM_SCHEMA,
+              Schema::POST_SCHEMA,
+            ).freeze
+
           description(
             name: "action:event",
             version: "1.0",
@@ -15,6 +39,7 @@ if defined?(DiscourseWorkflows)
               color: "purple",
             },
             group: "discourse_actions",
+            output_contracts: [{ schema: OUTPUT_SCHEMA }],
             capabilities: {
               run_scope: "per_item",
             },
@@ -96,13 +121,13 @@ if defined?(DiscourseWorkflows)
             end
 
             {
-              event: event_data(event),
-              topic: exec_ctx.serialize_topic(topic, guardian: actor.guardian),
-              post: exec_ctx.serialize_post(event.post, guardian: actor.guardian),
+              event: serialize_event(event),
+              topic: serialize_topic(topic, guardian: actor.guardian),
+              post: serialize_post(event.post, guardian: actor.guardian),
             }
           end
 
-          def event_data(event)
+          def serialize_event(event)
             {
               id: event.id,
               topic_id: event.post.topic_id,

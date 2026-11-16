@@ -58,6 +58,8 @@ en:
         Visit the channel at %{channel_url} to retry.
 
   chat:
+    design_wizard_homepage_name: "Chat"
+    design_wizard_homepage_description: "Open the %{channel} channel when members visit your homepage."
     deleted_chat_username: deleted
     crawler:
       directory_title: "Chat channels"

@@ -51,16 +51,21 @@ module Acl
 
     def user_has_permission?(user_or_id, permission)
       user_permissions = @user_lookup[user_or_id.is_a?(Numeric) ? user_or_id : user_or_id&.id]
-      (user_permissions || []).include?(permission)
+      (user_permissions || []).intersect?([permission, Acl::Permissions::OWNER])
     end
 
     def user_has_any_permission?(user_or_id, permissions)
       user_permissions = @user_lookup[user_or_id.is_a?(Numeric) ? user_or_id : user_or_id&.id]
-      (user_permissions || []).any? { |permission| permissions.include?(permission) }
+      (user_permissions || []).include?(Acl::Permissions::OWNER) ||
+        (user_permissions || []).any? { |permission| permissions.include?(permission) }
     end
 
     def permission_user_ids(permission)
-      ((@permission_lookup[permission] || {}).dig(:user_ids) || []).dup
+      permission_user_ids = (@permission_lookup[permission] || {}).dig(:user_ids) || []
+      return permission_user_ids.dup if permission == Acl::Permissions::OWNER
+
+      owner_user_ids = (@permission_lookup[Acl::Permissions::OWNER] || {}).dig(:user_ids) || []
+      (permission_user_ids + owner_user_ids).uniq
     end
 
     def user_ids_with_any_permission(permissions)

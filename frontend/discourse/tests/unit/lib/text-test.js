@@ -1,12 +1,23 @@
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
+import { getURLWithCDN } from "discourse/lib/get-url";
 import {
+  animatedEmojiUrlFor,
   buildBBCodeAttrs,
   cook,
+  emojiOptions,
+  emojiUrlFor,
   excerpt,
+  generateCookFunction,
+  generateLinkifyFunction,
+  humanizeList,
   parseAsync,
+  parseBBCodeTag,
   parseMentions,
+  sanitize,
+  sanitizeAsync,
   serializeBBCodeAttr,
 } from "discourse/lib/text";
 import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
@@ -201,5 +212,119 @@ module("Unit | Utility | text | buildBBCodeAttrs", function () {
       buildBBCodeAttrs(attrs),
       "channel='Design \"Gems\" :tada:'"
     );
+  });
+});
+
+module("Unit | Utility | text | engine", function (hooks) {
+  setupTest(hooks);
+
+  test("generateCookFunction returns a function that cooks", async function (assert) {
+    const cookFn = await generateCookFunction({});
+
+    assert.strictEqual(cookFn("**gadget**"), "<p><strong>gadget</strong></p>");
+  });
+
+  test("generateLinkifyFunction returns a link matcher", async function (assert) {
+    const linkify = await generateLinkifyFunction({});
+
+    assert.true(linkify.test("see https://example.com"));
+    assert.false(linkify.test("no links here"));
+  });
+
+  test("sanitize removes what the allow list doesn't allow", function (assert) {
+    assert.strictEqual(
+      sanitize("<b>gadget</b><script>alert(1)</script>"),
+      "<b>gadget</b>"
+    );
+  });
+
+  test("sanitizeAsync removes what the allow list doesn't allow", async function (assert) {
+    assert.strictEqual(
+      await sanitizeAsync("<b>gadget</b><script>alert(1)</script>"),
+      "<b>gadget</b>"
+    );
+  });
+
+  test("parseBBCodeTag parses a closing tag", function (assert) {
+    assert.deepEqual(parseBBCodeTag("[/quote]", 0, 8), {
+      tag: "quote",
+      closing: true,
+      length: 8,
+    });
+  });
+});
+
+module("Unit | Utility | text | emoji", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+    this.originalEnableEmoji = this.siteSettings.enable_emoji;
+  });
+
+  hooks.afterEach(function () {
+    this.siteSettings.enable_emoji = this.originalEnableEmoji;
+  });
+
+  test("emojiOptions reads the emoji settings", function (assert) {
+    this.siteSettings.enable_emoji = true;
+    const options = emojiOptions();
+
+    assert.strictEqual(options.emojiSet, this.siteSettings.emoji_set);
+    assert.strictEqual(
+      options.enableEmojiShortcuts,
+      this.siteSettings.enable_emoji_shortcuts
+    );
+    assert.strictEqual(
+      options.inlineEmoji,
+      this.siteSettings.enable_inline_emoji_translation
+    );
+    assert.strictEqual(
+      options.emojiCDNUrl,
+      this.siteSettings.external_emoji_url
+    );
+    assert.strictEqual(
+      options.getURL("/gadget.png"),
+      getURLWithCDN("/gadget.png")
+    );
+  });
+
+  test("emojiOptions returns nothing while emoji are disabled", function (assert) {
+    this.siteSettings.enable_emoji = false;
+
+    assert.strictEqual(emojiOptions(), undefined);
+  });
+
+  test("emojiUrlFor builds the emoji URL", function (assert) {
+    this.siteSettings.enable_emoji = true;
+    assert.strictEqual(
+      emojiUrlFor("smile"),
+      `/images/emoji/${this.siteSettings.emoji_set}/smile.png?v=${v}`
+    );
+
+    this.siteSettings.enable_emoji = false;
+    assert.strictEqual(emojiUrlFor("smile"), undefined);
+  });
+
+  test("animatedEmojiUrlFor builds the animated emoji URL", function (assert) {
+    this.siteSettings.enable_emoji = true;
+    assert.strictEqual(
+      animatedEmojiUrlFor("smile"),
+      `/images/emoji/noto_animated/smile.avif?v=${v}`
+    );
+
+    this.siteSettings.enable_emoji = false;
+    assert.strictEqual(animatedEmojiUrlFor("smile"), undefined);
+  });
+});
+
+module("Unit | Utility | text | humanizeList", function () {
+  test("joins the items with the last one after 'and'", function (assert) {
+    assert.strictEqual(humanizeList(["a", "b", "c"]), "a, b and c");
+    assert.strictEqual(humanizeList(new Set(["a", "b"])), "a and b");
+  });
+
+  test("returns a single item as is", function (assert) {
+    assert.strictEqual(humanizeList(["a"]), "a");
   });
 });

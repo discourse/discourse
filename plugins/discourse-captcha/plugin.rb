@@ -26,6 +26,7 @@ require_relative "lib/discourse_captcha/session_controller_patch"
 require_relative "lib/discourse_captcha/hcaptcha_provider"
 require_relative "lib/discourse_captcha/recaptcha_provider"
 require_relative "lib/discourse_captcha/recaptcha_v3_provider"
+require_relative "lib/discourse_captcha/signup_score"
 
 after_initialize do
   add_admin_route("discourse_captcha.title", "discourse-captcha", use_new_show_route: true)
@@ -39,4 +40,8 @@ after_initialize do
   register_problem_check ProblemCheck::HcaptchaConfiguration
   register_problem_check ProblemCheck::RecaptchaConfiguration
   register_problem_check ProblemCheck::RecaptchaV3Configuration
+
+  on(:user_created) { |user| DiscourseCaptcha::SignupScore.persist_for(user) }
+  # Signing up with the email of a staged user converts that record instead of creating one.
+  on(:user_unstaged) { |user| DiscourseCaptcha::SignupScore.assign_to(user) }
 end

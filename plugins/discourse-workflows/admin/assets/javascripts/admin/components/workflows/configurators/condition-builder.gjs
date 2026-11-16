@@ -21,7 +21,6 @@ import {
 import {
   inputConnectionsForNode,
   previousNodeForConnection,
-  resolveDeclaredOutputSchemas,
 } from "../../../lib/workflows/schema-graph.js";
 import Collection from "./collection.gjs";
 import Field from "./field.gjs";
@@ -169,10 +168,9 @@ export default class ConditionBuilder extends Component {
     const graph = {
       nodes: this.args.nodes || [],
       connections: this.args.connections || [],
-      nodeTypes: this.args.nodeTypes || [],
     };
     const runData = this.args.session?.lastExecutionRunData || {};
-    const declaredOutputSchemas = resolveDeclaredOutputSchemas(graph);
+    const declaredOutputSchemas = this.args.session?.outputSchemas;
     const inputConnections = inputConnectionsForNode(this.args.node, graph);
     const primaryConnection = inputConnections[0] || null;
 
@@ -197,7 +195,6 @@ export default class ConditionBuilder extends Component {
         sourceNode: previousNode,
         outputIndex,
         prefix,
-        graph,
         pinnedItems,
         declaredOutputSchemas,
       });

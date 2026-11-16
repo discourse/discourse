@@ -434,6 +434,8 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
       expect(result.dig("user", "bio_raw")).to eq("Updated bio")
       expect(result.dig("user", "title")).to eq("Updated title")
       expect(result.dig("user", "website")).to eq("https://example.com")
+      expect(result.dig("user", "location")).to eq("Paris")
+      expect(result).to match_node_output_schema(described_class)
     end
 
     it "only changes fields included in updates", :aggregate_failures do

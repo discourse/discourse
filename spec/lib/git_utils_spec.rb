@@ -41,6 +41,16 @@ RSpec.describe GitUtils do
     end
   end
 
+  it "ignores working tree changes in full_version" do
+    within_temp_git_repo do
+      create_commit
+      run("git tag -a v1.0.0 -m 'Version 1.0.0'")
+      File.write("test.txt", "changed")
+
+      expect(GitUtils.full_version).to eq("v1.0.0")
+    end
+  end
+
   it "returns fallback values when missing data" do
     within_temp_git_repo do
       create_commit

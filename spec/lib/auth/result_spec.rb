@@ -72,6 +72,67 @@ RSpec.describe Auth::Result do
     expect(user.email).to eq(new_email)
   end
 
+  describe "#apply_user_attributes!" do
+    before { result.overrides_username = true }
+
+    it "assigns an initial username without persisting the user or enqueueing a rename" do
+      result.user = Fabricate.build(:user, username: initial_username)
+
+      expect { result.apply_user_attributes! }.not_to change { Jobs::UpdateUsername.jobs.size }
+
+      expect(result.user.username).to eq(new_username)
+      expect(result.user).to be_new_record
+    end
+
+    it "suggests an available alternative when a new user's submitted and provider usernames are taken" do
+      result.user = Fabricate.build(:user, username: user.username)
+      result.username = user.username
+
+      expect { result.apply_user_attributes! }.not_to change { Jobs::UpdateUsername.jobs.size }
+
+      expect(result.user.username).to eq("#{user.username}1")
+      expect(result.user).to be_new_record
+    end
+
+    it "renames a persisted user from the stored username when there is a pending edit" do
+      user.username = "pendingusername"
+
+      result.apply_user_attributes!
+
+      expect(user.reload.username).to eq(new_username)
+      expect(Jobs::UpdateUsername.jobs.last["args"].first).to include(
+        "user_id" => user.id,
+        "old_username" => initial_username,
+        "new_username" => new_username,
+      )
+    end
+
+    it "renames a converted staged user from the stored username" do
+      user.update!(staged: true)
+      user.unstage!
+      user.username = "pendingusername"
+
+      result.apply_user_attributes!
+
+      expect(user.reload.username).to eq(new_username)
+      expect(Jobs::UpdateUsername.jobs.last["args"].first).to include(
+        "user_id" => user.id,
+        "old_username" => initial_username,
+        "new_username" => new_username,
+      )
+    end
+
+    it "keeps the stored username when the provider returns it during a pending edit" do
+      user.username = "pendingusername"
+      result.username = initial_username
+
+      expect { result.apply_user_attributes! }.not_to change { Jobs::UpdateUsername.jobs.size }
+
+      expect(user.username).to eq(initial_username)
+      expect(user.reload.username).to eq(initial_username)
+    end
+  end
+
   describe "#apply_associated_attributes!" do
     fab!(:user_field)
 

@@ -16,6 +16,10 @@ RSpec.describe MigrateDiscourseKanbanToBoards do
   before do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    connection = ActiveRecord::Base.connection
+    if connection.column_exists?(:access_control_lists, :source)
+      connection.remove_column(:access_control_lists, :source)
+    end
   end
 
   after do
@@ -36,13 +40,26 @@ RSpec.describe MigrateDiscourseKanbanToBoards do
   end
 
   def insert_acl(target_type:, permission:, owner:)
-    AccessControlList.create!(
+    DB.query_single(
+      <<~SQL,
+      INSERT INTO access_control_lists (
+        target_id,
+        target_type,
+        permission,
+        owner,
+        allowed_group_ids,
+        created_at,
+        updated_at
+      )
+      VALUES (:target_id, :target_type, :permission, :owner, ARRAY[:id]::bigint[], NOW(), NOW())
+      RETURNING id
+      SQL
       target_id: board.id,
       target_type:,
       permission:,
       owner:,
-      allowed_group_ids: [group.id],
-    )
+      id: group.id,
+    ).first
   end
 
   it "copies legacy settings on existing sites without removing or overwriting values" do
@@ -96,12 +113,13 @@ RSpec.describe MigrateDiscourseKanbanToBoards do
     2.times { migrate }
 
     expect(
-      AccessControlList.where(target_id: board.id).pluck(
-        :target_type,
-        :owner,
-        :permission,
-        :allowed_group_ids,
-      ),
+      DB
+        .query(<<~SQL, target_id: board.id)
+        SELECT target_type, owner, permission, allowed_group_ids
+        FROM access_control_lists
+        WHERE target_id = :target_id
+      SQL
+        .map { |acl| [acl.target_type, acl.owner, acl.permission, acl.allowed_group_ids] },
     ).to contain_exactly(
       ["DiscourseKanban::Board", "discourse-kanban", "view", [group.id]],
       ["DiscourseKanban::Board", "discourse-kanban", "edit", [group.id]],
@@ -119,30 +137,44 @@ RSpec.describe MigrateDiscourseKanbanToBoards do
     2.times { migrate }
 
     expect(
-      AccessControlList.where(
-        target_id: board.id,
-        target_type: "Boards::Board",
-        permission: "view",
-      ).pluck(:owner, :allowed_group_ids),
+      DB.query(<<~SQL, target_id: board.id).map { |acl| [acl.owner, acl.allowed_group_ids] },
+        SELECT owner, allowed_group_ids
+        FROM access_control_lists
+        WHERE target_id = :target_id
+          AND target_type = 'Boards::Board'
+          AND permission = 'view'
+      SQL
     ).to eq([["boards", [group.id]]])
   end
 
   it "does not overwrite an existing Boards ACL when copying a legacy row" do
-    legacy =
+    legacy_id =
       insert_acl(
         target_type: "DiscourseKanban::Board",
         permission: "view",
         owner: "discourse-kanban",
       )
-    existing = insert_acl(target_type: "Boards::Board", permission: "view", owner: "core")
+    existing_id = insert_acl(target_type: "Boards::Board", permission: "view", owner: "core")
 
     migrate
 
-    expect(legacy.reload).to have_attributes(
-      target_type: "DiscourseKanban::Board",
-      owner: "discourse-kanban",
-    )
-    expect(existing.reload).to have_attributes(target_type: "Boards::Board", owner: "core")
-    expect(AccessControlList.where(target_id: board.id, permission: "view").count).to eq(2)
+    expect(
+      DB.query_single(
+        "SELECT target_type, owner FROM access_control_lists WHERE id = :id",
+        id: legacy_id,
+      ),
+    ).to eq(%w[DiscourseKanban::Board discourse-kanban])
+    expect(
+      DB.query_single(
+        "SELECT target_type, owner FROM access_control_lists WHERE id = :id",
+        id: existing_id,
+      ),
+    ).to eq(%w[Boards::Board core])
+    expect(
+      DB.query_single(
+        "SELECT COUNT(*) FROM access_control_lists WHERE target_id = :target_id AND permission = 'view'",
+        target_id: board.id,
+      ).first,
+    ).to eq(2)
   end
 end

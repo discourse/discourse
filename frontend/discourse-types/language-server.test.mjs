@@ -23,10 +23,10 @@ const IMPORTS = [
     source: "frontend/discourse/app/lib/later.ts",
   },
   {
-    specifier: "discourse/lib/ajax",
-    binding: "{ ajax }",
-    name: "ajax",
-    source: "frontend/discourse/app/lib/ajax.js",
+    specifier: "discourse/lib/escape",
+    binding: "escapeHTML",
+    name: "escapeHTML",
+    source: "frontend/discourse/app/lib/escape.js",
   },
   {
     specifier: "discourse/ui-kit/d-button",

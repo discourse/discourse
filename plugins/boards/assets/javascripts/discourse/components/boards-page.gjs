@@ -3,6 +3,8 @@ import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
@@ -85,12 +87,17 @@ export default class BoardsPage extends Component {
       >
         <:actions as |actions|>
           {{#if @canManageBoards}}
-            <actions.Primary
-              class="btn-primary discourse-boards-manage__new-board"
-              @action={{this.openNewBoardModal}}
-              @icon="plus"
-              @label="boards.manage.new"
-            />
+            <PluginOutlet
+              @name="board-new-button"
+              @outletArgs={{lazyHash actions=actions}}
+            >
+              <actions.Primary
+                class="btn-primary discourse-boards-manage__new-board"
+                @action={{this.openNewBoardModal}}
+                @icon="plus"
+                @label="boards.manage.new"
+              />
+            </PluginOutlet>
           {{/if}}
         </:actions>
       </DPageHeader>
@@ -161,13 +168,23 @@ export default class BoardsPage extends Component {
                 </div>
 
                 <div class="discourse-boards-board-card__footer">
-                  <DUserLink
-                    class="discourse-boards-board-card__creator discourse-boards-badge"
-                    @user={{board.created_by}}
+                  <div
+                    class="discourse-boards-board-card__owners discourse-boards-badge"
                   >
-                    {{i18n "boards.board.created_by"}}
-                    {{dAvatar board.created_by imageSize="micro"}}
-                  </DUserLink>
+                    <span>
+                      {{i18n "boards.board.owners" count=board.owners.length}}
+                    </span>
+                    <span class="discourse-boards-board-card__owner-avatars">
+                      {{#each board.owners as |owner|}}
+                        <DUserLink
+                          class="discourse-boards-board-card__owner"
+                          @user={{owner}}
+                        >
+                          {{dAvatar owner imageSize="micro"}}
+                        </DUserLink>
+                      {{/each}}
+                    </span>
+                  </div>
 
                   <span class="discourse-boards-badge">
                     {{i18n

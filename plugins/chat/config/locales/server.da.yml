@@ -9,6 +9,7 @@ da:
     chat_separate_sidebar_mode: "Vis separate sidebjælke-tilstande for forum og chat."
     chat_enabled: "Aktiver chat."
   chat:
+    design_wizard_homepage_name: "Chat"
     deleted_chat_username: slettet
     crawler:
       nav_title: "Chat"

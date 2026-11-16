@@ -152,7 +152,6 @@ en:
         one: "Showing top %{count} result."
         other: "Showing top %{count} results."
       name: "Name"
-      query_name: "Query"
       query_groups: "Groups"
       query_tags: "Tags"
       automatic_tag_mandatory: "This tag is added automatically and cannot be removed."

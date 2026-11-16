@@ -32,6 +32,11 @@ class ApplicationLayoutPreloader
       preload_current_user_data
     end
 
+    DiscoursePluginRegistry.preloaded_data_callbacks.each do |registration|
+      value = registration[:callback].call(@guardian)
+      store_preloaded(registration[:key], MultiJson.dump(value)) unless value.nil?
+    end
+
     @preloaded
   end
 
@@ -141,11 +146,16 @@ class ApplicationLayoutPreloader
     id = @theme_id
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
-    Theme
-      .where(id: ids)
+    themes = Theme.where(id: ids).to_a
+    settings_by_theme =
+      themes.to_h do |theme|
+        [theme.id, theme.resolve_group_settings_for_user(theme.cached_settings, @guardian)]
+      end
+    settings_by_theme = ThemeSettingsTagResolver.resolve(settings_by_theme:, guardian: @guardian)
+
+    themes
       .each_with_object({}) do |theme, hash|
-        settings = theme.cached_settings
-        settings = theme.resolve_group_settings_for_user(settings, @guardian)
+        settings = settings_by_theme.fetch(theme.id)
         hash[theme.id] = { name: theme.name, settings: settings.except("theme_setting_type_info") }
       end
       .to_json

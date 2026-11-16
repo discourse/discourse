@@ -32,7 +32,9 @@ ug:
         topic_reply_count:
           one: "%{count} جاۋاب"
           other: "%{count} جاۋاب"
-        created_by: "قۇرغۇچى"
+        owners:
+          one: "ئىگىسى"
+          other: "ئىگىسى"
       manage:
         name: "ئىسمى"
         slug: "قىسقارتما"

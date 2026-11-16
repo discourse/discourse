@@ -152,7 +152,7 @@ module DiscourseWorkflows
 
         def get_user(user, guardian, extensions:)
           guardian.ensure_can_see_profile!(user)
-          { user: user_data(user, guardian, extensions:) }
+          { user: serialize_user_details(user, guardian, extensions:) }
         end
 
         def edit_user(exec_ctx, user, actor, item_index, extensions:)
@@ -169,7 +169,7 @@ module DiscourseWorkflows
             update_trust_level_lock(user, actor, guardian, trust_level_locked)
           end
 
-          { user: user_data(user.reload, guardian, extensions:) }
+          { user: serialize_user_details(user.reload, guardian, extensions:) }
         end
 
         def update_parameters(exec_ctx, item_index)
@@ -263,19 +263,20 @@ module DiscourseWorkflows
           )
         end
 
-        def user_data(user, guardian, extensions:)
+        def serialize_user_details(user, guardian, extensions:)
           profile = user.user_profile if include_profile_details?(user, guardian)
 
           serialize_user(user, guardian: guardian).merge(
             title: user.title,
             bio_raw: profile&.bio_raw,
             website: profile&.website,
+            location: profile&.location,
             profile_background_upload_id: profile&.profile_background_upload_id,
             card_background_upload_id: profile&.card_background_upload_id,
             manual_locked_trust_level: user.manual_locked_trust_level,
             trust_level_locked: !user.manual_locked_trust_level.nil?,
             user_fields: profile ? user.user_fields(guardian.allowed_user_field_ids(user)) : {},
-            groups: groups_data(user, guardian),
+            groups: serialize_groups(user, guardian),
           ).merge(extensions_data(user, guardian, extensions))
         end
 
@@ -360,20 +361,11 @@ module DiscourseWorkflows
           guardian.public_can_see_profiles? && !guardian.restrict_user_fields?(user)
         end
 
-        def groups_data(user, guardian)
+        def serialize_groups(user, guardian)
           groups = user.groups.visible_groups(guardian.user)
           groups = groups.members_visible_groups(guardian.user) if guardian.user != user
 
-          groups
-            .order(:name)
-            .map do |group|
-              {
-                id: group.id,
-                name: group.name,
-                full_name: group.full_name,
-                automatic: group.automatic,
-              }
-            end
+          groups.order(:name).map { |group| serialize_basic_group(group) }
         end
 
         def validation_errors_for(user)

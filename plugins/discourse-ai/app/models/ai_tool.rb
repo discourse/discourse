@@ -351,6 +351,86 @@ class AiTool < ActiveRecord::Base
     end
   end
 
+  def self.image_urls_parameter
+    {
+      name: "image_urls",
+      type: "array",
+      item_type: "string",
+      required: false,
+      description:
+        "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
+    }
+  end
+
+  def self.openai_image_preset(preset_id:, tool_name:, model:, model_name:, strength:)
+    {
+      preset_id:,
+      name: model_name,
+      provider: "OpenAI",
+      model_name:,
+      tool_name:,
+      description: "Generate and edit images using OpenAI's #{model_name}, best for #{strength}",
+      parameters: [
+        {
+          name: "prompt",
+          type: "string",
+          required: true,
+          description: "The text prompt for image generation",
+        },
+        {
+          name: "size",
+          type: "string",
+          required: false,
+          description:
+            "Image size: 1024x1024 (square), 1536x1024 (landscape) or 1024x1536 (portrait)",
+        },
+        {
+          name: "quality",
+          type: "string",
+          required: false,
+          description: "Image quality: low, medium, high or auto (default)",
+        },
+        image_urls_parameter,
+      ],
+      secret_contracts: [{ alias: "openai_api_key" }],
+      script:
+        "#{preamble}\nconst model = #{model.to_json};\n#{load_script("presets/image_generation/openai.js")}",
+      summary: "Generate images with OpenAI #{model_name}",
+      category: "image_generation",
+    }
+  end
+
+  def self.gemini_image_preset(preset_id:, tool_name:, model:, name:, strength:)
+    {
+      preset_id:,
+      name:,
+      provider: "Google",
+      model_name: name,
+      tool_name:,
+      description: "Generate and edit images using Google's #{name}, best for #{strength}",
+      parameters: [
+        {
+          name: "prompt",
+          type: "string",
+          required: true,
+          description: "The text prompt for image generation",
+        },
+        {
+          name: "aspect_ratio",
+          type: "string",
+          required: false,
+          description: "Aspect ratio such as 1:1 (default), 16:9, 9:16, 4:3, 3:4 or 21:9",
+        },
+        image_urls_parameter,
+      ],
+      secret_contracts: [{ alias: "google_api_key" }],
+      script:
+        "#{preamble}\nconst model = #{model.to_json};\n#{load_script("presets/image_generation/gemini.js")}",
+      summary: "Generate images with Google #{name}",
+      category: "image_generation",
+    }
+  end
+
   def self.image_generation_presets
     [
       { preset_id: "image_generation_category", is_category: true, category: "image_generation" },
@@ -371,68 +451,34 @@ class AiTool < ActiveRecord::Base
         summary: "Custom image generation",
         category: "image_generation",
       },
-      {
+      openai_image_preset(
         preset_id: "image_generation_openai",
-        name: "GPT Image",
-        provider: "OpenAI",
-        model_name: "GPT Image 1",
         tool_name: "image_generation_openai",
-        description: "Generate images using OpenAI's GPT Image 1 model",
-        parameters: [
-          {
-            name: "prompt",
-            type: "string",
-            required: true,
-            description: "The text prompt for image generation",
-          },
-          {
-            name: "size",
-            type: "string",
-            required: false,
-            description: "Image size (1024x1024, 1792x1024, or 1024x1792)",
-          },
-          {
-            name: "image_urls",
-            type: "array",
-            item_type: "string",
-            required: false,
-            description:
-              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
-          },
-        ],
-        secret_contracts: [{ alias: "openai_api_key" }],
-        script: "#{preamble}\n#{load_script("presets/image_generation/openai.js")}",
-        summary: "Generate images with OpenAI GPT Image 1 model",
-        category: "image_generation",
-      },
-      {
+        model: "gpt-image-2.6-flare",
+        model_name: "GPT Image 2.6 Flare",
+        strength: "fast, high quality everyday images",
+      ),
+      openai_image_preset(
+        preset_id: "image_generation_openai_sunburst",
+        tool_name: "image_generation_openai_sunburst",
+        model: "gpt-image-2.6-sunburst",
+        model_name: "GPT Image 2.6 Sunburst",
+        strength: "detailed images and precise edits",
+      ),
+      gemini_image_preset(
         preset_id: "image_generation_gemini",
-        name: "Nano Banana",
-        provider: "Google Nano Banana",
-        model_name: "Gemini 2.5 Flash Image",
         tool_name: "image_generation_gemini",
-        description: "Generate images using Gemini 2.5 Flash Image (Nano Banana)",
-        parameters: [
-          {
-            name: "prompt",
-            type: "string",
-            required: true,
-            description: "The text prompt for image generation",
-          },
-          {
-            name: "image_urls",
-            type: "array",
-            item_type: "string",
-            required: false,
-            description:
-              "Optional array of image upload short URLs for image editing mode (e.g. upload://abc123def456.jpeg)",
-          },
-        ],
-        secret_contracts: [{ alias: "google_api_key" }],
-        script: "#{preamble}\n#{load_script("presets/image_generation/gemini.js")}",
-        summary: "Generate images with Gemini 2.5 Flash Image",
-        category: "image_generation",
-      },
+        model: "gemini-nano-banana-2.1",
+        name: "Nano Banana 2.1",
+        strength: "fast, efficient image generation and editing",
+      ),
+      gemini_image_preset(
+        preset_id: "image_generation_gemini_pro",
+        tool_name: "image_generation_gemini_pro",
+        model: "gemini-3-pro-image",
+        name: "Nano Banana Pro",
+        strength: "complex compositions and accurate text in images",
+      ),
       {
         preset_id: "image_generation_flux",
         name: "FLUX 1.1 Pro",

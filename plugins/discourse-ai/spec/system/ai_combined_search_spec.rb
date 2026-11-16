@@ -350,6 +350,46 @@ describe "AI combined search" do
       end
     end
 
+    it "records the first result the reader opens" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask(query)
+
+      expect_tab("topics")
+      find(".search-menu .search-result-topic a.search-link", text: topic_1.title).click
+
+      try_until_success do
+        expect(AskAiLog.last).to have_attributes(
+          ask_tab_opened_after_ms: be >= 0,
+          ask_result_clicked_tab: "topics",
+          ask_result_clicked_after_ms: be > 0,
+        )
+      end
+    end
+
+    it "leaves the answer to a search using operators until the reader opens it" do
+      term = "password status:open"
+      visit "/"
+      wait_for_discoveries_channel
+      find("#welcome-banner-search-input").fill_in(with: term)
+      find("#welcome-banner-search-input").send_keys(:enter)
+
+      expect_tab("topics")
+      try_until_success do
+        expect(AskAiLog.find_by(query: term)).to have_attributes(
+          ask_outcome: "skipped",
+          ask_tab_opened: "topics",
+          ask_tab_opened_reason: "syntax",
+        )
+      end
+      expect(request_ids).to be_empty
+
+      select_tab("ask")
+
+      expect(page).to have_css(".ai-search-answer")
+      try_until_success { expect(request_ids.size).to eq(1) }
+    end
+
     context "with a decision model judging intent" do
       fab!(:decision_model)
 
@@ -418,22 +458,24 @@ describe "AI combined search" do
       end
 
       it "leaves a reader on the answer they chose, even when it finds nothing" do
-        visit "/"
-        wait_for_discoveries_channel
-        ask(query)
-        expect_tab("topics")
-        select_tab("ask")
+        DiscourseAi::Decisions.with_canned_answers(intent: "lookup") do
+          visit "/"
+          wait_for_discoveries_channel
+          ask(query)
+          expect_tab("topics")
+          select_tab("ask")
 
-        publish(
-          done: true,
-          phase: "complete",
-          answerable: false,
-          ai_discover_reply: "",
-          sources: [],
-        )
+          publish(
+            done: true,
+            phase: "complete",
+            answerable: false,
+            ai_discover_reply: "",
+            sources: [],
+          )
 
-        expect(page).to have_css(".ai-search-answer__empty")
-        expect_tab("ask")
+          expect(page).to have_css(".ai-search-answer__empty")
+          expect_tab("ask")
+        end
       end
 
       it "keeps rewritten keyword results that arrive while the menu waits for the model" do
@@ -717,6 +759,7 @@ describe "AI combined search" do
       wait_for_discoveries_channel
       open_header_search
       ask(query, input: "#icon-search-input")
+      expect_tab("context")
       expect(page).to have_css(".search-menu .search-result-topic", text: inside.title)
 
       find(".search-menu .search-result-topic a", text: inside.title).click
@@ -865,7 +908,8 @@ describe "AI combined search" do
     it "opens a query in search syntax on its topics" do
       visit "/"
       wait_for_discoveries_channel
-      ask('"small spaces"')
+      find("#welcome-banner-search-input").fill_in(with: '"small spaces"')
+      find("#welcome-banner-search-input").send_keys(:enter)
 
       expect_tab("topics")
       expect(page).to have_css(

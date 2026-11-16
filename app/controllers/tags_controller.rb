@@ -201,11 +201,17 @@ class TagsController < ::ApplicationController
       @rss_link = "#{@tag.full_url}.rss" if @tag
 
       @title = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
-      @description_meta = Tag.where(name: @tag_name).pick(:description) || @title
+      description = @tag.description if @tag&.visible_in_accessible_categories?(guardian)
+      @description_meta = description || @title
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_slug, :tag_id)
       canonical_method = url_method(canonical_params)
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *canonical_params.values.map { |t| t.force_encoding("UTF-8") })}"
+      canonical_list_url(
+        public_send(
+          canonical_method,
+          *canonical_params.values.map { |t| t.force_encoding("UTF-8") },
+        ),
+      )
 
       if @list.topics.size == 0 && @tag_name != "none" && !Tag.where_name(@tag_name).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
@@ -520,6 +526,7 @@ class TagsController < ::ApplicationController
     if params[:tag_id].present?
       # Try finding by ID first
       @tag = Tag.find_by(id: params[:tag_id])
+      @tag = nil if @tag && !@tag.visible_in_accessible_categories?(guardian)
 
       # For numeric tag names on legacy routes, fallback to finding by name
       if !@tag

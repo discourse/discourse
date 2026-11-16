@@ -78,6 +78,109 @@ describe "MCP transport" do
     McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: true)
   end
 
+  def defer_current_user_tool
+    registry = DiscourseMcp::Registry.new
+    registry.register_tool(
+      "discourse_current_user_get",
+      title: "Deferred current user",
+      description: "An opt-in deferred tool",
+      required_scopes: [DiscourseMcp::Scopes::PROFILE_READ],
+      implementation: DiscourseMcp::Tools::CurrentUser,
+      defer: true,
+    )
+    allow(DiscourseMcp).to receive(:registry).and_return(registry)
+  end
+
+  it "runs fast tools without waiting for deferred work" do
+    io = StringIO.new
+    Scheduler::Defer.capture_later do
+      post "/mcp", params: payload.to_json, headers:, env: { "rack.hijack" => -> { io } }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "structuredContent", "username")).to eq(
+        admin.username,
+      )
+      expect(io.string).to be_empty
+      expect(McpAuditLog.last.outcome).to eq("success")
+    end
+  end
+
+  it "runs opt-in tools after releasing the request worker and records their results" do
+    defer_current_user_tool
+    io = StringIO.new
+    Scheduler::Defer.capture_later do
+      post "/mcp", params: payload.to_json, headers:, env: { "rack.hijack" => -> { io } }
+      expect(response.status).to eq(418)
+      expect(io.string).to be_empty
+      expect(McpAuditLog.count).to eq(0)
+    end
+    expect(io.string).to start_with("HTTP/1.1 200")
+    result = JSON.parse(io.string.split("\r\n\r\n", 2).last)
+    expect(result.dig("result", "isError")).to eq(false)
+    expect(McpAuditLog.last).to have_attributes(
+      tool: "discourse_current_user_get",
+      outcome: "success",
+    )
+  end
+
+  it "rejects a token revoked while a tool call waits to run" do
+    defer_current_user_tool
+    io = StringIO.new
+    Scheduler::Defer.capture_later do
+      post "/mcp", params: payload.to_json, headers:, env: { "rack.hijack" => -> { io } }
+      McpOauthAccessToken.where(mcp_oauth_authorization_id: authorization.id).update_all(
+        revoked_at: Time.current,
+      )
+    end
+    expect(io.string).to start_with("HTTP/1.1 401")
+    expect(io.string.downcase).to include("www-authenticate:")
+    expect(McpAuditLog.count).to eq(0)
+  end
+
+  it "preserves rate-limit responses raised by deferred tools" do
+    RateLimiter.enable
+    registry = DiscourseMcp::Registry.new
+    registry.register_tool(
+      "limited_tool",
+      title: "Limited tool",
+      description: "A tool with its own rate limit",
+      defer: true,
+      required_scopes: [DiscourseMcp::Scopes::PROFILE_READ],
+      implementation: ->(arguments:, request_context:) do
+        RateLimiter.new(
+          request_context.user,
+          "mcp-deferred-tool",
+          1,
+          1.minute,
+          apply_limit_to_staff: true,
+        ).performed!
+        DiscourseMcp::ToolHelpers.text_and_structured(allowed: true)
+      end,
+    )
+    allow(DiscourseMcp).to receive(:registry).and_return(registry)
+    McpPrimitive.create!(kind: "tool", identifier: "limited_tool", enabled: true)
+    request_payload = payload.deep_merge(params: { name: "limited_tool" })
+    request_headers = headers.merge("HTTP_MCP_NAME" => "limited_tool")
+    post "/mcp", params: request_payload.to_json, headers: request_headers
+    expect(response.status).to eq(200)
+
+    io = StringIO.new
+    Scheduler::Defer.capture_later do
+      post "/mcp",
+           params: request_payload.to_json,
+           headers: request_headers,
+           env: {
+             "rack.hijack" => -> { io },
+           }
+      expect(response.status).to eq(418)
+    end
+    expect(io.string).to start_with("HTTP/1.1 429")
+    expect(io.string.downcase).to include("retry-after:")
+    expect(JSON.parse(io.string.split("\r\n\r\n", 2).last).dig("error", "message")).to eq(
+      "Rate limit exceeded",
+    )
+    expect(McpAuditLog.last.outcome).to eq("rate_limited")
+  end
+
   it "filters hidden private-message content before paginating for MCP participants" do
     participant = Fabricate(:user)
     author = Fabricate(:user)

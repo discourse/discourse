@@ -89,6 +89,7 @@
       gap: 0.25em 0.5em;
 
       > label,
+      > .code-login-form__field-instructions,
       > .code-login-form__error {
         grid-column: 1 / -1;
       }
@@ -120,7 +121,9 @@
     gap: 0.25em;
   }
 
-  &__name {
+  // Outweigh the base input[type="text"] margin-bottom so the name field's
+  // instructions sit as close to the input as the username field's do.
+  &__name[type="text"] {
     width: 100%;
     margin: 0;
   }
@@ -258,6 +261,12 @@
   &__instructions {
     margin: 0;
     color: var(--primary-high);
+  }
+
+  &__field-instructions {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    overflow-wrap: anywhere;
   }
 
   &__error {

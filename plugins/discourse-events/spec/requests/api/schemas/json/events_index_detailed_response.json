@@ -273,6 +273,9 @@
           "livestream": {
             "type": "boolean"
           },
+          "allow_anonymous_livestream": {
+            "type": "boolean"
+          },
           "livestream_onebox": {
             "type": [
               "string",
@@ -281,6 +284,15 @@
           },
           "is_zoom_livestream": {
             "type": "boolean"
+          },
+          "recording_url": {
+            "type": "string"
+          },
+          "recording_onebox": {
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "max_attendees": {
             "type": [
@@ -396,6 +408,7 @@
           "is_standalone",
           "should_display_invitees",
           "status",
+          "allow_anonymous_livestream",
           "at_capacity",
           "post",
           "occurrences"

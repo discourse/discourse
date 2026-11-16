@@ -5,7 +5,9 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { usageRoute } from "discourse/plugins/discourse-ai/discourse/components/ai-llm-usages";
-import AiModelsList from "discourse/plugins/discourse-ai/discourse/components/ai-models-list";
+import AiModelsList, {
+  modelTypes,
+} from "discourse/plugins/discourse-ai/discourse/components/ai-models-list";
 
 class FilterState {
   @tracked type = null;
@@ -155,7 +157,7 @@ module("Integration | Component | AiModelsList", function (hooks) {
         {
           id: -1,
           display_name: "Seeded decision",
-          provider: "system_one",
+          provider: "CDCK",
           seeded: true,
         },
       ],
@@ -183,6 +185,12 @@ module("Integration | Component | AiModelsList", function (hooks) {
       .dom("[data-model-id='-1'] .ai-models-list__edit-button")
       .doesNotExist("seeded decision models are read-only");
     assert
+      .dom("[data-model-id='-1'] .btn.disabled")
+      .exists("seeded decision models show a disabled edit button");
+    assert
+      .dom("[data-model-id='-1']")
+      .includesText("CDCK", "seeded decision models show the hosted provider");
+    assert
       .dom(
         ".ai-models-list__row[data-model-type='embedding'] .ai-models-list__type"
       )
@@ -195,7 +203,7 @@ module("Integration | Component | AiModelsList", function (hooks) {
     assert.dom(".ai-models-list__row[data-model-type='embedding']").exists();
   });
 
-  test("hides decision models when none are passed", async function (assert) {
+  test("offers decision models when none are passed", async function (assert) {
     this.llms = { content: [], resultSetMeta: { presets: [] } };
     this.embeddings = {
       content: [{ id: 2, display_name: "Test embedding", provider: "open_ai" }],
@@ -209,8 +217,8 @@ module("Integration | Component | AiModelsList", function (hooks) {
     );
 
     assert
-      .dom(".ai-models-list__type-filter option[value='decision']")
-      .doesNotExist();
+      .dom(".d-filter-controls__dropdown option[value='decision']")
+      .exists("offers the decision type even without models");
   });
 
   test("shows the default LLM setting only when filtered to LLMs", async function (assert) {
@@ -260,5 +268,32 @@ module("Integration | Component | AiModelsList", function (hooks) {
     await settled();
 
     assert.dom(".ai-configure-default-llm").exists();
+  });
+  test("model types are unconditional", function (assert) {
+    assert.deepEqual(
+      modelTypes(),
+      ["llm", "embedding", "decision"],
+      "all types are discoverable without workflow availability"
+    );
+  });
+
+  test("offers model creation when every list is empty and workflows are disabled", async function (assert) {
+    this.siteSettings.enable_discourse_workflows = false;
+    const empty = { content: [], resultSetMeta: { presets: [] } };
+    await render(
+      <template>
+        <AiModelsList
+          @decisionModels={{empty}}
+          @embeddings={{empty}}
+          @llms={{empty}}
+        />
+      </template>
+    );
+    assert
+      .dom(".ai-models-list__new-button")
+      .exists("keeps the header creation action");
+    assert
+      .dom(".ai-models-list__empty-new-button")
+      .exists("offers creation from the empty state");
   });
 });

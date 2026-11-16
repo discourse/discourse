@@ -218,7 +218,20 @@ export default class BoardsBoardSettings extends Component {
 
   async _performSave(data) {
     try {
-      await this.args.model.onSave(data);
+      const aclEntries = data.acl || [];
+      const ownerUserIds = aclEntries
+        .filter(
+          (entry) => entry.type === "user" && entry.permission === "owner"
+        )
+        .map((entry) => entry.id);
+      const acl = aclEntries.filter((entry) => entry.permission !== "owner");
+      const boardData = { ...data, acl };
+
+      if (!this.isNew && this.args.model.board.can_manage_acl_owner) {
+        boardData.owner_user_ids = ownerUserIds;
+      }
+
+      await this.args.model.onSave(boardData);
       this.args.closeModal({ reloadAfterSave: this.reloadAfterSave });
     } catch (error) {
       popupAjaxError(error);
@@ -265,8 +278,13 @@ export default class BoardsBoardSettings extends Component {
             <form.Section>
               <BoardsAccessControlField
                 @boardId={{@model.board.id}}
+                @canManageOwners={{or
+                  this.isNew
+                  @model.board.can_manage_acl_owner
+                }}
                 @description={{i18n "boards.manage.board_access_description"}}
                 @form={{form}}
+                @isNew={{this.isNew}}
                 @onAccessLossConfirmed={{this.accessLossConfirmed}}
                 @onChange={{this.aclChanged}}
                 @title={{i18n "boards.manage.board_access"}}

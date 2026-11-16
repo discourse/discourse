@@ -5,6 +5,7 @@ RSpec.describe Acl::Target do
 
   fab!(:group)
   fab!(:user)
+  fab!(:owner, :user)
 
   let(:flattened_acl_list) do
     [
@@ -13,6 +14,7 @@ RSpec.describe Acl::Target do
       { type: "group", id: 22, permission: "view", target_type: "Category", target_id: 5 },
       { type: :user, id: user.id, permission: "manage", target_type: "Category", target_id: 5 },
       { type: "user", id: 99, permission: "view", target_type: "Category", target_id: 5 },
+      { type: :user, id: owner.id, permission: "owner", target_type: "Category", target_id: 5 },
     ]
   end
 
@@ -106,6 +108,11 @@ RSpec.describe Acl::Target do
     it "does not grant user permissions from non-user entries" do
       expect(target_acl.user_has_permission?(group.id, "edit")).to eq(false)
     end
+
+    it "grants every permission to an owner" do
+      expect(target_acl.user_has_permission?(owner, "view")).to eq(true)
+      expect(target_acl.user_has_permission?(owner, "manage")).to eq(true)
+    end
   end
 
   describe "#user_has_any_permission?" do
@@ -120,23 +127,31 @@ RSpec.describe Acl::Target do
     it "returns false for a user not present in the list" do
       expect(target_acl.user_has_any_permission?(123_456, %w[view manage])).to eq(false)
     end
+
+    it "grants any requested permission to an owner" do
+      expect(target_acl.user_has_any_permission?(owner, %w[edit manage])).to eq(true)
+    end
   end
 
   describe "#permission_user_ids" do
     it "returns all user ids holding the permission" do
-      expect(target_acl.permission_user_ids("view")).to contain_exactly(99)
+      expect(target_acl.permission_user_ids("view")).to contain_exactly(99, owner.id)
     end
 
     it "returns only the matching users for a more restrictive permission" do
-      expect(target_acl.permission_user_ids("manage")).to contain_exactly(user.id)
+      expect(target_acl.permission_user_ids("manage")).to contain_exactly(user.id, owner.id)
     end
 
-    it "returns an empty array when only non-user entries hold the permission" do
-      expect(target_acl.permission_user_ids("edit")).to eq([])
+    it "includes owners when only non-user entries hold the permission" do
+      expect(target_acl.permission_user_ids("edit")).to contain_exactly(owner.id)
     end
 
-    it "returns an empty array for a permission that is not present" do
-      expect(target_acl.permission_user_ids("own")).to eq([])
+    it "includes owners for a permission that is not present" do
+      expect(target_acl.permission_user_ids("own")).to contain_exactly(owner.id)
+    end
+
+    it "returns only explicit owners for the owner permission" do
+      expect(target_acl.permission_user_ids("owner")).to contain_exactly(owner.id)
     end
   end
 
@@ -145,11 +160,12 @@ RSpec.describe Acl::Target do
       expect(target_acl.user_ids_with_any_permission(%w[view manage])).to contain_exactly(
         user.id,
         99,
+        owner.id,
       )
     end
 
     it "ignores permissions that are not present" do
-      expect(target_acl.user_ids_with_any_permission(%w[view own])).to contain_exactly(99)
+      expect(target_acl.user_ids_with_any_permission(%w[view own])).to contain_exactly(99, owner.id)
     end
   end
 end

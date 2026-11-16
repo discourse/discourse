@@ -245,6 +245,15 @@ describe Chat::Message do
         %(<p><em class="chat-message-action">#{message.user.username} waves</em></p>),
       )
     end
+
+    it "does not resolve a hashtag the author cannot see when the last editor can" do
+      category = Fabricate(:private_category, group: Fabricate(:group), name: "Secret Plans")
+      message.message = "##{category.slug}"
+      message.last_editor = Fabricate(:admin)
+      message.cook
+
+      expect(message.cooked).not_to include(category.name)
+    end
   end
 
   describe ".cook" do
@@ -606,6 +615,16 @@ describe Chat::Message do
     end
 
     it "supports onebox markdown plugin" do
+      cooked = described_class.cook("https://www.example.com")
+
+      expect(cooked).to eq(
+        "<p><a href=\"https://www.example.com\" class=\"onebox\" target=\"_blank\" rel=\"noopener nofollow ugc\">https://www.example.com</a></p>",
+      )
+    end
+
+    it "ignores max_oneboxes_per_post" do
+      SiteSetting.max_oneboxes_per_post = 0
+
       cooked = described_class.cook("https://www.example.com")
 
       expect(cooked).to eq(

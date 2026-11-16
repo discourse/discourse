@@ -33,6 +33,7 @@ after_initialize do
       [
         DiscourseWorkflows::Nodes::PostReaction::V1,
         DiscourseWorkflows::Nodes::PostReactionChanged::V1,
+        DiscourseWorkflows::Nodes::PostReactionChanged::V2,
       ]
     end
   end

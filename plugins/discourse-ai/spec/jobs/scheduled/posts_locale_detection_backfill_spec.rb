@@ -60,6 +60,24 @@ describe Jobs::PostsLocaleDetectionBackfill do
     job.execute({})
   end
 
+  it "detects with a decision model until its credits are used up" do
+    decision_model = Fabricate(:decision_model, id: -1)
+    SiteSetting.ai_translation_locale_detector_decision_model = decision_model.id
+    allocation = Fabricate(:decision_model_credit_allocation, decision_model:)
+
+    DiscourseAi::Decisions.with_canned_answers(
+      language: DiscourseAi::Translation::DecisionLocaleDetector::OTHER_CHOICE,
+    ) do |canned|
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en"]) { job.execute({}) }
+      expect(post.reload.locale).to eq("en")
+
+      post.update!(locale: nil)
+      DecisionModelCreditDailyUsage.increment_usage!(decision_model, allocation.daily_credits)
+      job.execute({})
+      expect([post.reload.locale, canned.calls.size]).to eq([nil, 1])
+    end
+  end
+
   it "skips bot posts" do
     post.update!(user: Discourse.system_user)
     DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(post).never

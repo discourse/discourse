@@ -29,6 +29,7 @@
   }
 
   .avatar-flair.--threads {
+    --avatar-flair-size: auto;
     position: absolute;
     top: -4px;
     right: -3px;
@@ -38,6 +39,12 @@
     line-height: var(--line-height-small);
     border: 2px solid var(--secondary-very-high);
     color: var(--primary-high);
+
+    // sized by its padding rather than a fixed box
+    .d-icon {
+      width: 1em;
+      height: 1em;
+    }
   }
 
   .chat__thread-title-container {

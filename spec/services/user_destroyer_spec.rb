@@ -15,6 +15,21 @@ RSpec.describe UserDestroyer do
   end
 
   describe "#destroy" do
+    it "transfers ownership and records the assumption during quiet deletion" do
+      freeze_time
+      owner_acl = Fabricate(:access_control_list_with_users, permission: "owner", users: [user])
+
+      expect { UserDestroyer.new(admin).destroy(user, quiet: true) }.to change {
+        UserHistory.where(action: UserHistory.actions[:assume_access_control_ownership]).count
+      }.by(1)
+
+      expect(user).to be_destroyed
+      expect(owner_acl.reload.allowed_user_ids).to eq([admin.id])
+      expect(UserHistory.last.context).to eq(
+        "deleted_user_id: #{user.id}\ndeleted_username: #{user.username}\ndeleted_at: #{Time.current.iso8601}",
+      )
+    end
+
     it "raises an error when user is nil" do
       expect { UserDestroyer.new(admin).destroy(nil) }.to raise_error(Discourse::InvalidParameters)
     end
@@ -146,6 +161,44 @@ RSpec.describe UserDestroyer do
         UserDestroyer.new(admin).destroy(user)
         expect(Reviewable.where(created_by_id: user.id).count).to eq(0)
         expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
+      end
+    end
+
+    context "when the user flagged a post first" do
+      fab!(:other_flagger, :user)
+      fab!(:reviewable) do
+        Fabricate(
+          :reviewable_flagged_post,
+          created_by: user,
+          reviewable_scores: [
+            Fabricate.build(:reviewable_score, user: user, status: :pending),
+            Fabricate.build(:reviewable_score, user: other_flagger, status: :pending),
+          ],
+        )
+      end
+
+      it "keeps the reviewable with the other flags and notes" do
+        Fabricate(:reviewable_note, reviewable: reviewable)
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.reviewable_scores.pluck(:user_id)).to contain_exactly(other_flagger.id)
+        expect(reviewable.reviewable_notes.count).to eq(1)
+      end
+
+      it "deletes flags that no one else raised" do
+        solo =
+          Fabricate(
+            :reviewable_flagged_post,
+            created_by: user,
+            reviewable_scores: [Fabricate.build(:reviewable_score, user: user, status: :pending)],
+          )
+
+        UserDestroyer.new(admin).destroy(user)
+
+        expect(Reviewable.exists?(solo.id)).to eq(false)
+        expect(reviewable.reload).to be_pending
       end
     end
 
