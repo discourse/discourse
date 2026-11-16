@@ -7,6 +7,7 @@ RSpec.describe Chat::MessageProcessor do
     Chat::Message.expects(:cook).with(
       message.message,
       user_id: message.last_editor_id,
+      hashtag_user_ids: message.hashtag_user_ids,
       author_username: message.user.username,
     )
     described_class.new(message)
@@ -16,6 +17,7 @@ RSpec.describe Chat::MessageProcessor do
     Chat::Message.expects(:cook).with(
       message.message,
       user_id: message.last_editor_id,
+      hashtag_user_ids: message.hashtag_user_ids,
       author_username: message.user.username,
       invalidate_oneboxes: true,
     )
