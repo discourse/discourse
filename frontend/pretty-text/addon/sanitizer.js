@@ -5,6 +5,8 @@ import escape from "discourse/lib/escape";
 const IFRAME_REGEXP =
   /<iframe(?![^>]*\s+src\s*=)[^>]*>[\s\S]*?(<\/iframe\s*>|$)/gi;
 
+const UNSAFE_IFRAME_SRC_REGEXP = /[\t\n\r]|&(?:#|(?!amp;)\w+;)/;
+
 function attr(name, value) {
   if (value) {
     return `${name}="${xss.escapeAttrValue(value)}"`;
@@ -141,7 +143,8 @@ export function sanitize(text, allowLister) {
               const iframeUrls = [decoded];
               iframeUrls.push(value);
               return (
-                !decoded.match(/\/\.+(?:[\/\\?#]|$)/) &&
+                !UNSAFE_IFRAME_SRC_REGEXP.test(value) &&
+                !decoded.match(/[\/\\]\.+(?:[\/\\?#]|$)/) &&
                 allowedIframes.some((i) => {
                   const regex = i
                     // escape regex, keeping *
