@@ -13,6 +13,8 @@ Discourse::Application.routes.draw do
   def patch(*)
   end # Disable PATCH requests
 
+  draw :dotted_username
+
   constraints MarkdownEndpoint::RequestConstraint.new do
     get "/",
         to: "list#latest",
@@ -68,16 +70,16 @@ Discourse::Application.routes.draw do
   get "secure-media-uploads/*path" => "uploads#_show_secure_deprecated", :format => false
   get "secure-uploads/*path" => "uploads#show_secure", :format => false
 
-  scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
-    relative_url_root =
-      (
-        if defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root
-          Rails.configuration.relative_url_root + "/"
-        else
-          "/"
-        end
-      )
+  relative_url_root =
+    (
+      if defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root
+        Rails.configuration.relative_url_root + "/"
+      else
+        "/"
+      end
+    )
 
+  scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
@@ -714,8 +716,10 @@ Discourse::Application.routes.draw do
     put "edit-directory-columns" => "edit_directory_columns#update", :format => :json
     get "access-control/grantees/search" => "access_control_lists#search_grantees"
     post "access-control/evaluate" => "access_control_lists#evaluate"
+  end
 
-    %w[users u].each_with_index do |root_path, index|
+  %w[users u].each_with_index do |root_path, index|
+    scope constraints: { format: %r{(json|html|\*/\*)} } do
       get "#{root_path}" => "users#index", :constraints => { format: "html" }
 
       resources :users, only: %i[create], path: root_path do
@@ -814,258 +818,512 @@ Discourse::Application.routes.draw do
            :constraints => {
              token: /[0-9a-f]+/,
            }
-      get "#{root_path}/:username/private-messages" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/private-messages/:filter" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/messages" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/messages/:filter" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/messages/group/:group_name" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-            group_name: RouteFormat.username,
-          }
-      get "#{root_path}/:username/messages/group/:group_name/:filter" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-            group_name: RouteFormat.username,
-          }
-      get "#{root_path}/:username/messages/tags/:tag_name" => "list#private_messages_tag",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username.json" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/private-messages",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/private-messages/:filter",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/messages",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/messages/:filter",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/messages/group/:group_name",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+                 group_name: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/messages/group/:group_name/:filter",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+                 group_name: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/messages/tags/:tag_name",
+               to: "list#private_messages_tag",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+    end
+
+    %w[json html */*].each do |format|
+      suffix = format == "*/*" ? ":wildcard_format" : format
+      format_constraint = format == "*/*" ? { wildcard_format: [%r{\*/\*}] } : {}
+      get "#{root_path}/:username.json.#{suffix}",
+          to: "users#show",
+          format: false,
+          defaults: {
+            format: format,
           },
-          :defaults => {
-            format: :json,
+          constraints: {
+            username: [RouteFormat.username],
+            **format_constraint,
           }
-      get(
-        **{
-          "#{root_path}/:username" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
+      get "#{root_path}/:username.#{suffix}",
+          to: "users#show",
+          format: false,
+          defaults: {
+            format: format == "json" ? :json : format,
           },
-        }.merge(index == 1 ? { as: "user" } : {}),
-      )
-      put "#{root_path}/:username" => "users#update",
-          :constraints => {
-            username: RouteFormat.username,
+          constraints: {
+            username: [RouteFormat.username],
+            **format_constraint,
+          }
+      put "#{root_path}/:username.#{suffix}",
+          to: "users#update",
+          format: false,
+          defaults: {
+            format: format,
           },
-          :defaults => {
-            format: :json,
+          constraints: {
+            username: [RouteFormat.username],
+            **format_constraint,
           }
-      get "#{root_path}/:username/emails" => "users#check_emails",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/sso-email" => "users#check_sso_email",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/sso-payload" => "users#check_sso_payload",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/email" => "users_email#index",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/account" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/security" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/profile" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/emails" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      put "#{root_path}/:username/preferences/primary-email" => "users#update_primary_email",
-          :format => :json,
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      delete "#{root_path}/:username/preferences/email" => "users#destroy_email",
-             :constraints => {
-               username: RouteFormat.username,
-             }
-      get "#{root_path}/:username/preferences/notifications" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/tracking" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/users" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/tags" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/interface" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/navigation-menu" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/apps" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/calendar-subscriptions" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      post "#{root_path}/:username/preferences/email" => "users_email#create",
-           :constraints => {
-             username: RouteFormat.username,
-           }
-      put "#{root_path}/:username/preferences/email" => "users_email#update",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/badge_title" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      put "#{root_path}/:username/preferences/badge_title" => "users#badge_title",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/username" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      put "#{root_path}/:username/preferences/username" => "users#username",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/second-factor" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image",
-             :constraints => {
-               username: RouteFormat.username,
-             }
-      put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      put "#{root_path}/:username/preferences/avatar/select" => "users#select_avatar",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      post "#{root_path}/:username/preferences/revoke-account" => "users#revoke_account",
-           :constraints => {
-             username: RouteFormat.username,
-           }
-      post "#{root_path}/:username/preferences/revoke-auth-token" => "users#revoke_auth_token",
-           :constraints => {
-             username: RouteFormat.username,
-           }
-      get "#{root_path}/:username/staff-info" => "users#staff_info",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/summary" => "users#summary",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      put "#{root_path}/:username/notification_level" => "users#notification_level",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/invited" => "users#invited",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/invited/:filter" => "users#invited",
-          :constraints => {
-            username: RouteFormat.username,
-          }
+    end
+
+    get "#{root_path}/:username",
+        to: "users#show",
+        format: false,
+        constraints: {
+          username: [RouteFormat.username],
+        }
+    put "#{root_path}/:username",
+        to: "users#update",
+        format: false,
+        defaults: {
+          format: :json,
+        },
+        constraints: {
+          username: [RouteFormat.username],
+        }
+
+    constraints ->(_request) { false } do
+      scope constraints: { format: %r{(json|html|\*/\*)} } do
+        get "#{root_path}/:username.json",
+            to: "users#show",
+            anchor: false,
+            defaults: {
+              format: :json,
+            },
+            constraints: {
+              username: RouteFormat.username,
+            }
+        get "#{root_path}/:username",
+            to: "users#show",
+            anchor: false,
+            as: (index == 1 ? :user : nil),
+            constraints: {
+              username: RouteFormat.username,
+            }
+        put "#{root_path}/:username",
+            to: "users#update",
+            anchor: false,
+            defaults: {
+              format: :json,
+            },
+            constraints: {
+              username: RouteFormat.username,
+            }
+      end
+    end
+
+    scope constraints: { format: %r{(json|html|\*/\*)} } do
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/emails",
+               to: "users#check_emails",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/sso-email",
+               to: "users#check_sso_email",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/sso-payload",
+               to: "users#check_sso_payload",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/email",
+               to: "users_email#index",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/account",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/security",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/profile",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/emails",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/preferences/primary-email",
+               to: "users#update_primary_email",
+               format: :json,
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :delete,
+               path: "#{root_path}/:username/preferences/email",
+               to: "users#destroy_email",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/notifications",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/tracking",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/users",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/tags",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/interface",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/navigation-menu",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/apps",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/calendar-subscriptions",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :post,
+               path: "#{root_path}/:username/preferences/email",
+               to: "users_email#create",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/preferences/email",
+               to: "users_email#update",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/badge_title",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/preferences/badge_title",
+               to: "users#badge_title",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/username",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/preferences/username",
+               to: "users#username",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/preferences/second-factor",
+               to: "users#preferences",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :delete,
+               path: "#{root_path}/:username/preferences/user_image",
+               to: "users#destroy_user_image",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/preferences/avatar/pick",
+               to: "users#pick_avatar",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/preferences/avatar/select",
+               to: "users#select_avatar",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :post,
+               path: "#{root_path}/:username/preferences/revoke-account",
+               to: "users#revoke_account",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :post,
+               path: "#{root_path}/:username/preferences/revoke-auth-token",
+               to: "users#revoke_auth_token",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/staff-info",
+               to: "users#staff_info",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/summary",
+               to: "users#summary",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/notification_level",
+               to: "users#notification_level",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/invited",
+               to: "users#invited",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/invited/:filter",
+               to: "users#invited",
+               constraints: {
+                 username: RouteFormat.username,
+               }
       post "#{root_path}/action/send_activation_email" => "users#send_activation_email"
-      get "#{root_path}/:username/activity/topics.rss" => "list#user_topics_feed",
-          :format => :rss,
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/activity.rss" => "posts#user_posts_feed",
-          :format => :rss,
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/activity.json" => "posts#user_posts_feed",
-          :format => :json,
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/activity" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/activity/:filter" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/badges" => "users#badges",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/bookmarks" => "users#bookmarks",
-          :constraints => {
-            username: RouteFormat.username,
-            format: /(json|ics)/,
-          }
-      get "#{root_path}/:username/user-menu-bookmarks" => "users#user_menu_bookmarks",
-          :constraints => {
-            username: RouteFormat.username,
-            format: :json,
-          }
-      get "#{root_path}/:username/user-menu-private-messages" => "users#user_menu_messages",
-          :constraints => {
-            username: RouteFormat.username,
-            format: :json,
-          }
-      get "#{root_path}/:username/notifications" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/notifications/:filter" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      delete "#{root_path}/:username" => "users#destroy",
-             :constraints => {
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/activity/topics.rss",
+               to: "list#user_topics_feed",
+               format: :rss,
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/activity.rss",
+               to: "posts#user_posts_feed",
+               format: :rss,
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/activity.json",
+               to: "posts#user_posts_feed",
+               format: :json,
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/activity",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/activity/:filter",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/badges",
+               to: "users#badges",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/bookmarks",
+               to: "users#bookmarks",
+               constraints: {
+                 username: RouteFormat.username,
+                 format: /(json|ics)/,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/user-menu-bookmarks",
+               to: "users#user_menu_bookmarks",
+               constraints: {
+                 username: RouteFormat.username,
+                 format: :json,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/user-menu-private-messages",
+               to: "users#user_menu_messages",
+               constraints: {
+                 username: RouteFormat.username,
+                 format: :json,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/notifications",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/notifications/:filter",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+    end
+
+    %w[json html */*].each do |format|
+      suffix = format == "*/*" ? ":wildcard_format" : format
+      format_constraint = format == "*/*" ? { wildcard_format: [%r{\*/\*}] } : {}
+      delete "#{root_path}/:username.#{suffix}",
+             to: "users#destroy",
+             format: false,
+             defaults: {
+               format: format,
+             },
+             constraints: {
+               username: [RouteFormat.username],
+               **format_constraint,
+             }
+    end
+    delete "#{root_path}/:username",
+           to: "users#destroy",
+           format: false,
+           constraints: {
+             username: [RouteFormat.username],
+           }
+
+    constraints ->(_request) { false } do
+      delete "#{root_path}/:username",
+             to: "users#destroy",
+             anchor: false,
+             format: %r{(json|html|\*/\*)},
+             constraints: {
                username: RouteFormat.username,
              }
+    end
+
+    scope constraints: { format: %r{(json|html|\*/\*)} } do
       get "#{root_path}/by-external/:external_id" => "users#show",
           :constraints => {
             external_id: %r{[^/]+},
@@ -1074,40 +1332,65 @@ Discourse::Application.routes.draw do
           :constraints => {
             external_id: %r{[^/]+},
           }
-      get "#{root_path}/:username/deleted-posts" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/topic-tracking-state" => "users#topic_tracking_state",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/private-message-topic-tracking-state" =>
-            "users#private_message_topic_tracking_state",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/profile-hidden" => "users#profile_hidden"
-      put "#{root_path}/:username/feature-topic" => "users#feature_topic",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      put "#{root_path}/:username/clear-featured-topic" => "users#clear_featured_topic",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/card.json" => "users#show_card",
-          :format => :json,
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      put "#{root_path}/:username/remove-password" => "users#remove_password",
-          :format => :json,
-          :constraints => {
-            username: RouteFormat.username,
-          }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/deleted-posts",
+               to: "users#show",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/topic-tracking-state",
+               to: "users#topic_tracking_state",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/private-message-topic-tracking-state",
+               to: "users#private_message_topic_tracking_state",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/profile-hidden",
+               to: "users#profile_hidden"
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/feature-topic",
+               to: "users#feature_topic",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/clear-featured-topic",
+               to: "users#clear_featured_topic",
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :get,
+               path: "#{root_path}/:username/card.json",
+               to: "users#show_card",
+               format: :json,
+               constraints: {
+                 username: RouteFormat.username,
+               }
+      concerns :dotted_username,
+               verb: :put,
+               path: "#{root_path}/:username/remove-password",
+               to: "users#remove_password",
+               format: :json,
+               constraints: {
+                 username: RouteFormat.username,
+               }
     end
+  end
 
+  scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
     get "user-badges/:username.json" => "user_badges#username",
         :constraints => {
           username: RouteFormat.username,
@@ -2027,14 +2310,20 @@ Discourse::Application.routes.draw do
       get "/activity" => "admin/mcp_activity#index"
     end
 
-    get "/u/:username/preferences/mcp-authorizations" => "mcp_user_authorizations#index",
-        :constraints => {
-          username: RouteFormat.username,
-        }
-    delete "/u/:username/preferences/mcp-authorizations/:id" => "mcp_user_authorizations#destroy",
-           :constraints => {
-             username: RouteFormat.username,
-           }
+    concerns :dotted_username,
+             verb: :get,
+             path: "/u/:username/preferences/mcp-authorizations",
+             to: "mcp_user_authorizations#index",
+             constraints: {
+               username: RouteFormat.username,
+             }
+    concerns :dotted_username,
+             verb: :delete,
+             path: "/u/:username/preferences/mcp-authorizations/:id",
+             to: "mcp_user_authorizations#destroy",
+             constraints: {
+               username: RouteFormat.username,
+             }
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
@@ -2119,6 +2408,23 @@ Discourse::Application.routes.draw do
     end
 
     # This catch-all route should always be last
-    get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end
+
+  constraints PermalinkConstraint.new do
+    %w[json html */*].each do |format|
+      get "*url.:permalink_format",
+          to: "permalinks#show",
+          format: false,
+          defaults: {
+            format: format,
+          },
+          constraints: {
+            permalink_format: [Regexp.new(Regexp.escape(format))],
+          }
+    end
+  end
+  constraints ->(_request) { false } do
+    get "*url", to: "permalinks#show", anchor: false, format: %r{(json|html|\*/\*)}
+  end
+  get "*url", to: "permalinks#show", format: false, constraints: PermalinkConstraint.new
 end

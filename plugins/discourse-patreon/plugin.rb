@@ -46,14 +46,19 @@ after_initialize do
   add_admin_route "patreon.title", "discourse-patreon", use_new_show_route: true
 
   Discourse::Application.routes.append do
+    draw :dotted_username
+
     get "/admin/plugins/discourse-patreon/filters" => "admin/plugins#index",
         :constraints => AdminConstraint.new
     get "/admin/plugins/patreon/list" => "patreon/patreon_admin#list",
         :constraints => AdminConstraint.new
-    get "/u/:username/patreon_email" => "patreon/patreon_admin#email",
-        :constraints => {
-          username: RouteFormat.username,
-        }
+    concerns :dotted_username,
+             verb: :get,
+             path: "/u/:username/patreon_email",
+             to: "patreon/patreon_admin#email",
+             constraints: {
+               username: RouteFormat.username,
+             }
   end
 
   on(:user_created) do |user|
