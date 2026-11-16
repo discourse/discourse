@@ -12,6 +12,10 @@ class FakeRTCPeerConnection {
 
   constructor() {}
 
+  createDataChannel(label, options) {
+    return { label, ...options };
+  }
+
   addTrack(track) {
     const sender = { track };
     this.#senders.push(sender);
@@ -66,6 +70,35 @@ module("Live | Unit | Lib | peer-manager", function (hooks) {
   hooks.afterEach(function () {
     this.manager?.destroyAll();
     globalThis.RTCPeerConnection = this.originalRTCPeerConnection;
+  });
+
+  test("pre-negotiates a reliable ordered file channel during initial setup", async function (assert) {
+    let channel;
+    this.manager = new PeerManager({
+      getIceServers: () => [],
+      getLocalStream: () => null,
+      sendSignal: async () => {},
+      flushQueuedSignals: async () => {},
+      onTrack: () => {},
+      clearSignalQueue: () => {},
+      onPeerDestroyed: () => {},
+      onFileChannel: (roomId, userId, value) => {
+        assert.strictEqual(roomId, 1);
+        assert.strictEqual(userId, 2);
+        channel = value;
+      },
+    });
+    await this.manager.create(1, 2);
+    assert.deepEqual(
+      channel,
+      {
+        label: "live-file-transfer",
+        negotiated: true,
+        id: 0,
+        ordered: true,
+      },
+      "no maxRetransmits or maxPacketLifeTime: reliable delivery"
+    );
   });
 
   test("does not keep a restarted peer when the room becomes ineligible mid-restart", async function (assert) {
