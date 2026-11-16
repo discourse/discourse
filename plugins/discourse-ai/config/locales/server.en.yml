@@ -216,6 +216,28 @@ en:
     ai_audit_logs_detailed_retention_days: "Keep raw AI request and response payloads for this many days. Set to 0 to keep payloads until the summary log is deleted. Raw payloads can contain private or sensitive content. Cleanup continues while the AI plugin is disabled."
     ai_audit_logs_purge_after_days: "Keep AI API audit log summaries for this many days before deleting the entire log. Set to 0 to keep summaries forever. Cleanup continues while the AI plugin is disabled."
 
+    keywords:
+      ai_default_llm_model: "default language model"
+      ai_discord_search_enabled: "discord integration"
+      ai_embeddings_semantic_quick_search_enabled: "ai results in quick search"
+      ai_embeddings_semantic_search_enabled: "ai search results"
+      ai_embeddings_semantic_search_use_hyde: "better search queries (hyde)"
+      ai_helper_automatic_chat_thread_title: "chat thread titles"
+      ai_sentiment_backfill_post_max_age_days: "post age limit (days)"
+      ai_sentiment_emotion_classification_strategy: "backend"
+      ai_sentiment_sentiment_classification_strategy: "backend"
+      ai_summarization_enabled: "summaries"
+      ai_summary_gists_enabled: "topic list's short summaries"
+      ai_translation_backfill_hourly_rate: "existing content per hour"
+      ai_translation_backfill_start_date: "translate existing content since"
+      ai_translation_categories: "selected categories"
+      ai_translation_include_bot_content: "translate content written by bots"
+      ai_translation_locale_detector_agent: "language detection agent"
+      ai_translation_locale_detector_decision_model: "language detection decision model"
+      ai_translation_post_raw_translator_agent: "post translation agent"
+      ai_translation_short_text_translator_agent: "short text translation agent"
+      ai_translation_topic_title_translator_agent: "topic title translation agent"
+
   reviewables:
     reasons:
       flagged_by_toxicity: The AI plugin flagged this after classifying it as toxic.
