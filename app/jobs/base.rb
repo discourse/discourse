@@ -286,6 +286,8 @@ module Jobs
 
       Sidekiq.redis { |r| r.set("last_job_perform_at", Time.now.to_i) } if ::Jobs.run_later?
 
+      RailsMultisite::ConnectionManagement.reload_if_changed
+
       dbs =
         if opts[:current_site_id]
           [opts[:current_site_id]]
