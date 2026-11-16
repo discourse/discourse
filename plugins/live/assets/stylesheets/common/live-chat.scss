@@ -58,6 +58,10 @@
     min-height: 0;
   }
 
+  .chat-composer__wrapper {
+    padding-bottom: var(--space-2);
+  }
+
   .empty-state__container {
     margin: auto;
   }

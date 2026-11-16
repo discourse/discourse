@@ -3,11 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -30,6 +27,7 @@ import ChatSkeleton from "discourse/plugins/chat/discourse/components/chat-skele
 import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread" with {
   discourseImport: "optional",
 };
+import LiveChatPanelStateSync from "../../lib/live/chat-panel-state-sync.js";
 
 export default class LiveChatPanel extends Component {
   @service chat;
@@ -45,24 +43,20 @@ export default class LiveChatPanel extends Component {
   @tracked channel = null;
   @tracked thread = null;
   @tracked draft = null;
-  @tracked activationError = false;
   @tracked initialDraft = null;
   @tracked uploadDropZone = null;
 
-  pane = trackedObject({ sending: false });
-
-  #queuedState = null;
-  #requestVersion = 0;
-  #sessionPath = null;
-  #stateVersion = 0;
-  #uploadCount = 0;
+  sessionSync = new LiveChatPanelStateSync({
+    roomId: this.args.room.id,
+    channelManager: this.chatChannelsManager,
+    messageBus: this.messageBus,
+    onChannel: (channel) => this.#setChannel(channel),
+    onThread: (channel, thread) => this.#showThread(channel, thread),
+  });
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.#stateVersion++;
-    if (this.#sessionPath) {
-      this.messageBus.unsubscribe(this.#sessionPath, this.onSessionMessage);
-    }
+    this.sessionSync.dispose();
     if (this.channel && this.chat.activeChannel === this.channel) {
       this.chat.activeChannel = null;
     }
@@ -78,16 +72,8 @@ export default class LiveChatPanel extends Component {
 
   @action
   async loadSession() {
-    this.#sessionPath = `/live/rooms/${this.room.id}/chat`;
-    this.messageBus.subscribe(this.#sessionPath, this.onSessionMessage);
-    const requestVersion = ++this.#requestVersion;
     try {
-      const data = await ajax(`/live/rooms/${this.room.id}/chat_session`, {
-        type: "POST",
-      });
-      if (requestVersion === this.#requestVersion) {
-        await this.#applyState(data);
-      }
+      await this.sessionSync.start();
     } catch (error) {
       if (!this.isDestroying) {
         this.unavailable = true;
@@ -97,19 +83,6 @@ export default class LiveChatPanel extends Component {
       if (!this.isDestroying) {
         this.loading = false;
       }
-    }
-  }
-
-  @action
-  async onSessionMessage() {
-    const requestVersion = ++this.#requestVersion;
-    try {
-      const data = await ajax(`/live/rooms/${this.room.id}/chat_session`);
-      if (requestVersion === this.#requestVersion) {
-        await this.#applyState(data);
-      }
-    } catch {
-      // Reopening or the next session signal retries a failed refresh.
     }
   }
 
@@ -137,10 +110,7 @@ export default class LiveChatPanel extends Component {
 
   @action
   onUploadActivity(count) {
-    this.#uploadCount = count;
-    if (!count) {
-      next(this, this.retryActivation);
-    }
+    this.sessionSync.updateUploadCount(count);
   }
 
   @action
@@ -151,93 +121,36 @@ export default class LiveChatPanel extends Component {
 
   @action
   async sendFirstMessage(message) {
-    if (this.pane.sending || this.activationError || this.#uploadCount) {
-      return;
-    }
-    this.pane.sending = true;
-    this.#requestVersion++;
-    let accepted = false;
     try {
-      const data = await ajax(`/live/rooms/${this.room.id}/chat_message`, {
-        type: "POST",
-        data: {
-          message: message.message,
-          upload_ids: message.uploads.map((upload) => upload.id),
-        },
+      await this.sessionSync.sendFirstMessage(message, () => {
+        if (message === this.draft) {
+          this.liveChatDrafts.clear(this.room.id, message.channel.id);
+        }
+        if (!this.isDestroying) {
+          this.draft = this.liveChatDrafts.get(this.room.id, this.channel);
+        }
       });
-      accepted = true;
-      this.#requestVersion++;
-      this.#stateVersion++;
-      if (message === this.draft) {
-        this.liveChatDrafts.clear(this.room.id, message.channel.id);
-      }
-      if (!this.isDestroying) {
-        this.draft = this.liveChatDrafts.get(this.room.id, this.channel);
-        this.#queuedState = data;
-      }
     } catch (error) {
       if (!this.isDestroying) {
         popupAjaxError(error);
-      }
-    } finally {
-      if (!this.isDestroying) {
-        this.pane.sending = false;
-        // A rejected send stays editable even if a remote thread appeared.
-        if (accepted || this.#queuedState) {
-          await this.retryActivation();
-        }
       }
     }
   }
 
   @action
-  async retryActivation() {
-    if (!this.#queuedState || this.pane.sending || this.#uploadCount) {
-      return;
-    }
-    try {
-      await this.#applyState(this.#queuedState);
-    } catch (error) {
-      if (!this.isDestroying) {
-        this.activationError = true;
-        popupAjaxError(error);
-      }
-    }
+  retryLoadingThread() {
+    return this.sessionSync.retryLoadingThread();
   }
 
-  async #applyState(data) {
-    if (this.isDestroying || !data?.channel_id) {
-      return;
-    }
-    this.#queuedState = data;
-    const version = ++this.#stateVersion;
-    const channel = await this.chatChannelsManager.find(data.channel_id);
-    if (!channel.isFollowing) {
-      await this.chatChannelsManager.follow(channel);
-    }
-    if (!this.#isCurrent(version)) {
-      return;
-    }
+  #setChannel(channel) {
     this.channel = channel;
     if (this.chat.activeChannel !== channel) {
       this.chat.activeChannel = channel;
     }
     this.draft ||= this.liveChatDrafts.get(this.room.id, channel);
-    if (!data.thread_id || this.thread?.id === data.thread_id) {
-      this.#queuedState = null;
-      return;
-    }
-    if (this.pane.sending || this.#uploadCount) {
-      return;
-    }
-    const thread = await channel.threadsManager.find(
-      channel.id,
-      data.thread_id
-    );
-    if (!this.#isCurrent(version) || this.pane.sending || this.#uploadCount) {
-      return;
-    }
+  }
 
+  #showThread(channel, thread) {
     this.initialDraft = null;
     const saved = this.chatDraftsManager.get(channel.id, thread.id);
     const pending = this.draft;
@@ -271,12 +184,6 @@ export default class LiveChatPanel extends Component {
     channel.activeThread = thread;
     this.thread = thread;
     this.draft = null;
-    this.activationError = false;
-    this.#queuedState = null;
-  }
-
-  #isCurrent(version) {
-    return !this.isDestroying && version === this.#stateVersion;
   }
 
   <template>
@@ -362,20 +269,20 @@ export default class LiveChatPanel extends Component {
                 </div>
               </:tip>
             </DEmptyState>
-            {{#if this.activationError}}
+            {{#if this.sessionSync.threadLoadError}}
               <DButton
-                @action={{this.retryActivation}}
+                @action={{this.retryLoadingThread}}
                 @label="live.chat.retry"
               />
             {{/if}}
             <ChatPendingThreadComposer
               @channel={{this.channel}}
-              @disabled={{this.activationError}}
+              @disabled={{this.sessionSync.threadLoadError}}
               @draft={{this.draft}}
               @onResetDraft={{this.resetDraft}}
               @onSendMessage={{this.sendFirstMessage}}
               @onUploadActivity={{this.onUploadActivity}}
-              @pane={{this.pane}}
+              @pane={{this.sessionSync.pane}}
               @placeholder={{i18n "live.chat.composer_placeholder"}}
               @uploadDropZone={{this.uploadDropZone}}
             />

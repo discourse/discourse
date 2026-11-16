@@ -196,7 +196,7 @@ module("Live | Integration | Component | Live | ChatPanel", function (hooks) {
     await refresh;
     assert
       .dom(".live-chat .chat-thread")
-      .exists("the thread is activated after uploading");
+      .exists("the panel shows the thread after uploading");
     assert
       .dom(".live-chat textarea")
       .hasValue("with a photo", "the text survives the transition");
