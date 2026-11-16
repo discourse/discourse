@@ -8263,7 +8263,8 @@ CREATE TABLE public.llm_models (
     cache_write_cost double precision DEFAULT 0.0,
     allowed_attachment_types text[] DEFAULT '{}'::text[] NOT NULL,
     ai_secret_id bigint,
-    vision_llm_model_id bigint
+    vision_llm_model_id bigint,
+    compression_thinking_effort character varying
 );
 
 
@@ -26654,6 +26655,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261116222321'),
 ('20261113163304'),
 ('20261113130002'),
 ('20261113090951'),
