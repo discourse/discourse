@@ -109,6 +109,8 @@ interface ProsemirrorEditorSignature {
     markdownOptions?: MarkdownOptions;
     /** Set to false to stop padding the document with a trailing empty paragraph. */
     trailingParagraph?: boolean;
+    /** Uploads files as attachments, for hosts that don't upload inline. */
+    uploadFiles?: (files: File[]) => void;
   };
 }
 
@@ -200,6 +202,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         replaceToolbar: this.args.replaceToolbar,
         markdownOptions: this.args.markdownOptions,
         trailingParagraph: this.args.trailingParagraph,
+        uploadFiles: this.args.uploadFiles,
         // TODO(devxp-typescript-pending): remove the cast once GlimmerNodeView's
         // component field has a typed invocation signature.
         addGlimmerNodeView: (nodeView) =>

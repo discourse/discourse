@@ -103,6 +103,11 @@ export default class ChatComposerUploads extends Component {
     this.uploads = this.existingUploads ? cloneJSON(this.existingUploads) : [];
   }
 
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.onSetup?.((files, opts) => this.uppyUpload.addFiles(files, opts));
+  }
+
   willDestroyElement() {
     super.willDestroyElement(...arguments);
     this._listenForPaste(null);

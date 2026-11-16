@@ -449,6 +449,23 @@ const extension = {
 
           const fileName = `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExtension}`;
 
+          // a host with its own uploader takes the image as an attachment
+          const { uploadFiles } = getContext();
+          if (uploadFiles) {
+            const tr = view.state.tr;
+            [...dataImageUploader.getState(view.state).get(dataURI)]
+              .sort((a, b) => b - a)
+              .forEach((pos) =>
+                tr.delete(pos, pos + view.state.doc.nodeAt(pos).nodeSize)
+              );
+            view.dispatch(tr);
+
+            const blob = await (await fetch(dataURI)).blob();
+            processingDataURIs.delete(dataURI);
+            uploadFiles([new File([blob], fileName, { type: blob.type })]);
+            return;
+          }
+
           pendingUploads.add(fileName);
 
           const res = await fetch(dataURI);
