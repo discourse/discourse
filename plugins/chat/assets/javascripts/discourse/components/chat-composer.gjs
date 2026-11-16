@@ -808,9 +808,10 @@ export default class ChatComposer extends Component {
         destroyUserStatuses();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
-            const presentUserNames = this.chat.presenceChannel.users?.map(
-              (item) => item.username
-            );
+            // users is unset until the presence channel has synced
+            const presentUserNames =
+              this.chat.presenceChannel.users?.map((item) => item.username) ??
+              [];
             result.users.forEach((user) => {
               if (presentUserNames.includes(user.username)) {
                 user.cssClasses = "is-online";
