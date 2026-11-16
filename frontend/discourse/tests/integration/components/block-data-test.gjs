@@ -257,15 +257,13 @@ module("Integration | Blocks | block data", function (hooks) {
   test("a descriptor arg change refetches and shows the skeleton instead of the stale data", async function (assert) {
     // Drive the descriptor off a tracked value the test controls, so changing
     // it mimics editing a data-affecting arg (a new key, hence a refetch).
-    const state = new (class {
-      @tracked count = 1;
-    })();
+    const count = tracked(1);
     let resolveCalls = 0;
     const pendingResolvers = [];
 
     @block("data-refetch-block", {
       data: {
-        request: () => ({ kind: "refetch", count: state.count }),
+        request: () => ({ kind: "refetch", count: count.value }),
         source: defineBlockDataSource({
           resolve: () => {
             resolveCalls++;
@@ -301,7 +299,7 @@ module("Integration | Blocks | block data", function (hooks) {
       .hasText("first", "the initial data is rendered");
 
     // Change the data-affecting arg: a new descriptor key, so a refetch starts.
-    state.count = 2;
+    count.value = 2;
     await waitFor(".d-skeleton");
 
     assert.dom(".d-skeleton").exists("the skeleton shows during the refetch");

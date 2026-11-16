@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -13,14 +14,14 @@ module(
     setupRenderingTest(hooks);
 
     test("DTabs adoption follows proxies mounted after the initial render without a version change", async function (assert) {
-      this.set("showProxy", false);
+      const showProxy = tracked(false);
       await render(
         <template>
           <div
             class="wireframe-block-chrome"
             {{proxyDragSources outletName="hero" version=1}}
           >
-            {{#if this.showProxy}}
+            {{#if showProxy.value}}
               <button
                 data-wf-drop-child-key="layout:late"
                 id="late-proxy"
@@ -30,7 +31,7 @@ module(
           </div>
         </template>
       );
-      this.set("showProxy", true);
+      showProxy.value = true;
       await settled();
       const proxy = find("#late-proxy");
       const dataTransfer = new DataTransfer();
@@ -47,7 +48,7 @@ module(
         dataTransfer,
         ...centerOf("#late-proxy"),
       });
-      this.set("showProxy", false);
+      showProxy.value = false;
       await settled();
       assert
         .dom(proxy)

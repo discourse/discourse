@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
 import {
   clearRender,
@@ -1507,11 +1508,13 @@ module("Integration | Blocks | Card layout", function (hooks) {
       storyCard("two", { scale: "compact" }),
       storyCard("three", { body: "A short body" }),
     ];
-    this.set("widthStyle", trustHTML("width: 1080px"));
+    const widthStyle = tracked(trustHTML("width: 1080px"));
     await setCardLayout({ mode: "row", autoCollapse: "never" }, children);
     await render(
       <template>
-        <div style={{this.widthStyle}}><BlockOutlet @name="hero-blocks" /></div>
+        <div style={{widthStyle.value}}><BlockOutlet
+            @name="hero-blocks"
+          /></div>
       </template>
     );
     await settleCardLayout();
@@ -1525,7 +1528,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
       1,
       "first peers share a seam"
     );
-    this.set("widthStyle", trustHTML("width: 888px"));
+    widthStyle.value = trustHTML("width: 888px");
     await settleCardLayout();
     assert.closeTo(
       cardRegion("one", "media").getBoundingClientRect().top,
@@ -1541,7 +1544,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
       1,
       "the cards use the available row instead of leaving an empty gutter"
     );
-    this.set("widthStyle", trustHTML("width: 720px"));
+    widthStyle.value = trustHTML("width: 720px");
     await settleCardLayout();
     assert
       .dom("[data-block-id='one'] .d-block-card")
@@ -1554,7 +1557,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
         cardRegion("one", "content").offsetHeight,
       "long first row does not inflate singleton"
     );
-    this.set("widthStyle", trustHTML("width: 320px"));
+    widthStyle.value = trustHTML("width: 320px");
     await settleCardLayout();
     assert
       .dom("[data-card-aligned]")
