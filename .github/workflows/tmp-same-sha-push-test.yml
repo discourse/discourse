@@ -1,0 +1,15 @@
+name: Temporary same-SHA push test
+
+on:
+  push:
+    branches:
+      - dev/tmp-same-sha-push-test
+
+permissions: {}
+
+jobs:
+  timestamp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: date -u
