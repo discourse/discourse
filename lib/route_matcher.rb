@@ -170,7 +170,7 @@ class RouteMatcher
     return request.path_parameters if request.path_parameters.present?
 
     request.env[PATH_PARAMETERS] ||= begin
-      Rails.application.routes.recognize_path(request.path_info, method: request.request_method)
+      RouteRecognizer.recognize_path(request.path_info, method: request.request_method)
     rescue ActionController::RoutingError
       {}
     end

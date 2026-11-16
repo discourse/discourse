@@ -179,6 +179,9 @@ module Discourse
     require "middleware/default_headers"
     config.middleware.insert_before ActionDispatch::ShowExceptions, Middleware::DefaultHeaders
 
+    require "middleware/request_path_limit"
+    config.middleware.insert_before ActionDispatch::Callbacks, Middleware::RequestPathLimit
+
     require "middleware/crawler_hooks"
     config.middleware.use Middleware::CrawlerHooks
 

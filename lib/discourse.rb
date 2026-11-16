@@ -724,7 +724,7 @@ module Discourse
     if !uri.host ||
          (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_path))
       path.slice!(Discourse.base_path)
-      return Rails.application.routes.recognize_path(path)
+      return RouteRecognizer.recognize_path(path)
     end
 
     nil
@@ -1324,7 +1324,7 @@ module Discourse
       Thread.new do
         # router warm up
 
-        Rails.application.routes.recognize_path("abc")
+        RouteRecognizer.recognize_path("abc")
       rescue StandardError
         nil
       end,
