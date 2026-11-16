@@ -121,6 +121,15 @@ RSpec.describe UpcomingChangesFileValidator do
     )
   end
 
+  it "rejects an empty status" do
+    setting = change
+    setting["upcoming_change"]["status"] = nil
+
+    expect(core_errors(setting)).to contain_exactly(
+      a_string_starting_with("my_change has invalid upcoming_change status nil."),
+    )
+  end
+
   it "validates the impact type and role" do
     expect(core_errors(change(impact: "feature"))).to eq(
       ["my_change must set upcoming_change.impact as `type,role`, got \"feature\""],

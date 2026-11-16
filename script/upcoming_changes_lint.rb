@@ -103,7 +103,7 @@ class UpcomingChangesFileValidator
 
     status = metadata[:status]&.to_s&.to_sym
     valid_statuses = UpcomingChanges.statuses.keys
-    if status && !valid_statuses.include?(status)
+    if metadata.key?(:status) && !valid_statuses.include?(status)
       error[
         "has invalid upcoming_change status #{status.inspect}. Valid statuses: #{valid_statuses.join(", ")}"
       ]
