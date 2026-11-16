@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
+/* eslint-disable discourse/no-test-context-set -- tests classic decorators */
 import Component from "@ember/component";
 import EmberObject, { computed } from "@ember/object";
 import { clearRender, render, settled } from "@ember/test-helpers";

@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components */
+/* eslint-disable discourse/no-test-context-set -- classic connectors read the test context */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";

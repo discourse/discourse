@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-classes, ember/no-classic-components */
+/* eslint-disable discourse/no-test-context-set -- tests classic event handling */
 
 import GlimmerComponent from "@glimmer/component";
 import ClassicComponent, { setComponentTemplate } from "@ember/component";

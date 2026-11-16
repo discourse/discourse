@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components */
+/* eslint-disable discourse/no-test-context-set -- tests the classic `action` modifier */
 import { setComponentTemplate } from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import { click, doubleClick, render } from "@ember/test-helpers";
