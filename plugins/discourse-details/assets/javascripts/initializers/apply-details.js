@@ -18,6 +18,24 @@ function initializeDetails(api) {
     shortcut: "Shift+D",
   });
 
+  api.addComposerToolbarPopupMenuOption({
+    action() {
+      const placeholder = i18n("composer.ai_content.placeholder");
+      const summary = placeholder.replace(/"/g, "“");
+      api.container
+        .lookup("service:app-events")
+        .trigger(
+          "composer:insert-block",
+          `[details="${summary}" ai=true]\n${placeholder}\n[/details]`
+        );
+    },
+    condition: (composer) => composer.siteSettings.details_enabled,
+    icon: "angle-right",
+    label: "composer.ai_content.details",
+    menu: "ai-content",
+    name: "ai-content-details",
+  });
+
   api.registerRichEditorExtension(richEditorExtension);
 }
 

@@ -3656,6 +3656,12 @@ en:
       emoji: "Emoji :)"
       more_emoji: "more…"
       options: "Options"
+      ai_content:
+        menu: "Add AI content..."
+        code: "Code"
+        quote: "Quote"
+        details: "Details"
+        placeholder: "AI content"
       whisper: "whisper"
       unlist: "unlisted"
 
