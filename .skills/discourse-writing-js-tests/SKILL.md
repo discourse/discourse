@@ -129,8 +129,13 @@ module("Integration | Component | BookmarkIcon", function (hooks) {
 - To change an argument after render, hold it in a standalone `tracked()` (from
   `@glimmer/tracking`) instead of a test-only class with `@tracked` fields:
   `const title = tracked("a")`, pass `@title={{title.value}}`, then `title.value = "b"` and
-  `await settled()`. Start empty values as `tracked(undefined)`, since a bare `tracked()`
+  `await rerender()`. Start empty values as `tracked(undefined)`, since a bare `tracked()`
   returns a decorator. Writing an equal value (`Object.is`) does not re-render.
+- After changing tracked state, `await rerender()`, not `settled()`. `rerender()` waits only
+  for the change to reach the DOM; `settled()` also waits for test waiters, pending requests
+  and run loop timers, so a test that quietly depends on async work passes by accident. Keep
+  `settled()` for steps that start async work on purpose; interaction helpers (`click`,
+  `fillIn`) settle on their own.
 - For select-kit and FormKit widgets, use `discourse/tests/helpers/select-kit-helper` and
   `discourse/tests/helpers/form-kit-helper` rather than poking the DOM directly.
 
