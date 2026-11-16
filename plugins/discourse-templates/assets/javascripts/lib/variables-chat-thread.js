@@ -1,4 +1,4 @@
-import extractVariablesFromChatChannel from "./variables-chat-channel";
+import extractVariablesFromChatChannel from "./variables-chat-channel.js";
 
 export default function extractVariablesFromChatThread(
   thread,

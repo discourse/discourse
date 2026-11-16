@@ -62,4 +62,54 @@ module("Integration | Component | BoardsPage", function (hooks) {
       .dom(".discourse-boards-board-card__name")
       .hasText("Past work", "the archived board is reachable");
   });
+
+  test("shows board owners as pluralized avatar groups", async function (assert) {
+    this.boards = [
+      new BoardsFabricators(getOwner(this)).board({
+        id: 1,
+        name: "Personal board",
+        owners: [
+          {
+            username: "alice",
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/a/13edae/{size}.png",
+          },
+        ],
+      }),
+      new BoardsFabricators(getOwner(this)).board({
+        id: 2,
+        name: "Shared board",
+        owners: [
+          {
+            username: "alice",
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/a/13edae/{size}.png",
+          },
+          {
+            username: "bob",
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
+          },
+        ],
+      }),
+    ];
+
+    await render(<template><BoardsPage @boards={{this.boards}} /></template>);
+
+    assert
+      .dom(
+        ".discourse-boards-board-card:nth-child(1) .discourse-boards-board-card__owners"
+      )
+      .includesText("Owner", "one owner uses the singular label");
+    assert
+      .dom(
+        ".discourse-boards-board-card:nth-child(2) .discourse-boards-board-card__owners"
+      )
+      .includesText("Owners", "multiple owners use the plural label");
+    assert
+      .dom(".discourse-boards-board-card__owner")
+      .exists({ count: 3 }, "each owner has a profile link");
+    assert.dom(".discourse-boards-board-card__owner[href='/u/alice']").exists();
+    assert.dom(".discourse-boards-board-card__owner[href='/u/bob']").exists();
+  });
 });

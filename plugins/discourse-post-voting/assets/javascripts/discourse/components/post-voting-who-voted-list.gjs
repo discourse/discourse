@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, get } from "@ember/object";
 import { bind } from "discourse/lib/decorators";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DSmallUserList, {
   smallUserAttrs,
@@ -10,7 +9,7 @@ import DSmallUserList, {
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { whoVoted } from "../lib/post-voting-utilities";
+import { whoVoted } from "../lib/post-voting-utilities.js";
 
 export default class PostVotingWhoVotedList extends Component {
   @tracked totalVotersCount = 0;

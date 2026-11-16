@@ -28,6 +28,17 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
   });
 
+  test("enables autocorrect on the editable element", async function (assert) {
+    await render(<template><ProsemirrorEditor /></template>);
+    assert
+      .dom(".ProseMirror")
+      .hasAttribute(
+        "autocorrect",
+        "on",
+        "enables autocorrect suggestions on mobile"
+      );
+  });
+
   test("renders the editor with a null initial value", async function (assert) {
     await render(<template><ProsemirrorEditor @value={{null}} /></template>);
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");

@@ -3,7 +3,6 @@ import {
   MAX_RATE_LIMIT_RETRY_SECONDS,
   rateLimitWaitSeconds,
 } from "discourse/lib/ajax-error";
-import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { humanizeList } from "discourse/lib/text";
 import { capabilities } from "discourse/services/capabilities";
@@ -127,9 +126,17 @@ export function validateUploadedFile(file, opts) {
     }
   }
 
-  if (!opts.bypassNewUserRestriction) {
+  if (!opts.bypassNewUserRestriction && user) {
+    if (
+      !user.can_embed_media &&
+      (isImage(name) || isVideo(name) || isAudio(name))
+    ) {
+      dialog.alert(i18n("post.errors.media_upload_not_allowed"));
+      return false;
+    }
+
     // ensures that new users can upload a file
-    if (user && !user.isAllowedToUploadAFile(opts.type)) {
+    if (!user.isAllowedToUploadAFile(opts.type)) {
       dialog.alert(
         i18n(`post.errors.${opts.type}_upload_not_allowed_for_new_user`)
       );
@@ -350,14 +357,6 @@ export function displayErrorForBulkUpload(errors) {
 }
 
 export function displayErrorForUpload(data, siteSettings, fileName) {
-  if (!fileName) {
-    deprecated(
-      "Calling displayErrorForUpload without a fileName is deprecated and will be removed in a future version.",
-      { id: "discourse.uploads.display-error-for-upload" }
-    );
-    fileName = data.files[0].name;
-  }
-
   if (isRateLimitError(data)) {
     displayRateLimitError(data);
     return;

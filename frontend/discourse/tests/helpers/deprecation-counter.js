@@ -201,7 +201,7 @@ export default class DeprecationCounter {
    * Hands over entries whose count has grown since they were first reported, so
    * the reporter can correct the totals it already holds.
    *
-   * @returns {Object[]}
+   * @returns {Array<{ key: string, count: number }>}
    */
   takeUpdatedCounts() {
     const updated = Array.from(this.#countsChanged, (key) =>

@@ -6,6 +6,7 @@ import {
   waitFor,
   waitUntil,
 } from "@ember/test-helpers";
+import { GapCursor } from "prosemirror-gapcursor";
 import { undo } from "prosemirror-history";
 import { TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
@@ -242,6 +243,32 @@ module(
           expectedMarkdown
         );
       });
+    });
+
+    test("tables without text keep their emoji and images", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `before\n\n| :smile: | |\n| --- | --- |\n| | ![alt](/images/avatar.png) |\n\nafter`
+      );
+
+      assert.strictEqual(
+        editor.value,
+        `before\n\n| :smile: |  |\n|----|----|\n|  | ![alt](/images/avatar.png) |\n\nafter`,
+        "the table is serialized"
+      );
+    });
+
+    test("tables with no content are dropped", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `before\n\n| | |\n| --- | --- |\n| <br> | |\n\nafter`
+      );
+
+      assert.strictEqual(
+        editor.value,
+        `before\n\nafter`,
+        "a table holding only blank cells and line breaks is omitted"
+      );
     });
 
     test("table within quotes", async function (assert) {
@@ -1328,6 +1355,124 @@ module(
         .doesNotExist("no spreadsheet-style selection is introduced");
     });
 
+    test("Enter consumes the two-space line break syntax inside a cell", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, cellPos(view, 1, 0) + 3)
+        )
+      );
+      view.dispatch(view.state.tr.insertText("  "));
+
+      await pressKey(view, "Enter");
+
+      assert.strictEqual(
+        editor.value,
+        `| h1 | h2 | h3 |\n|----|----|----|\n| a1<br> | a2 | a3 |\n| b1 | b2 | b3 |\n\n`,
+        "the trailing spaces become the break"
+      );
+    });
+
+    test("arrow keys move between cells without a gap cursor", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      const endOfCell = cellPos(view, 1, 0) + 3;
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, endOfCell)
+        )
+      );
+      view.focus();
+      await settled();
+
+      assert.false(
+        GapCursor.valid(view.state.doc.resolve(endOfCell + 1)),
+        "the position between two cells is not a gap cursor"
+      );
+      assert.false(
+        GapCursor.valid(view.state.doc.resolve(cellPos(view, 1, 0))),
+        "the position at the start of a row is not a gap cursor"
+      );
+
+      const event = await pressKey(view, "ArrowRight", { keyCode: 39 });
+
+      assert.false(
+        event.defaultPrevented,
+        "the browser moves the caret into the next cell"
+      );
+      assert.true(
+        view.state.selection instanceof TextSelection,
+        "no gap cursor is created"
+      );
+    });
+
+    test("Enter inserts a line break that survives Markdown round-tripping", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, cellPos(view, 1, 1) + 2)
+        )
+      );
+
+      await pressKey(view, "Enter");
+
+      assert.strictEqual(
+        editor.value,
+        `| h1 | h2 | h3 |\n|----|----|----|\n| a1 | a<br>2 | a3 |\n| b1 | b2 | b3 |\n\n`,
+        "the break serializes inside its cell"
+      );
+      await click(".composer-toggle-switch");
+      await click(".composer-toggle-switch");
+      assert
+        .dom(".ProseMirror tbody tr:first-child td:nth-child(2) br")
+        .exists("the break survives parsing Markdown");
+      assert.strictEqual(
+        locateTable(editor.view).grid.width,
+        3,
+        "the column count survives the round trip"
+      );
+    });
+
+    test("Backspace and Delete at cell edges keep cells apart", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `| h1 | | h3 |\n| --- | --- | --- |\n| a1 | | a3 |\n| | | |`
+      );
+      const { view } = editor;
+      const original = view.state.doc;
+
+      for (const key of ["Backspace", "Delete"]) {
+        for (const row of [0, 1, 2]) {
+          for (const col of [0, 1, 2]) {
+            const { start, grid } = locateTable(view);
+            const cell = grid.rows[row].cells[col];
+            const pos =
+              start +
+              cell.offset +
+              1 +
+              (key === "Delete" ? cell.node.content.size : 0);
+            view.dispatch(
+              view.state.tr.setSelection(
+                TextSelection.create(view.state.doc, pos)
+              )
+            );
+            await pressKey(view, key, {
+              keyCode: key === "Backspace" ? 8 : 46,
+            });
+            await pressKey(view, key, {
+              keyCode: key === "Backspace" ? 8 : 46,
+            });
+            assert.true(
+              view.state.doc.eq(original),
+              `${key} at cell ${row}, ${col} keeps the table intact`
+            );
+          }
+        }
+      }
+    });
+
     test("Delete across cells preserves their boundaries", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
@@ -1396,51 +1541,53 @@ module(
     });
 
     for (const backwards of [false, true]) {
-      test(`Shift+Enter across rows preserves cells (${backwards ? "backward" : "forward"})`, async function (assert) {
-        const [editor] = await setupRichEditor(assert, TABLE);
-        const { view } = editor;
-        const from = cellPos(view, 1, 0) + 2;
-        const to = cellPos(view, 2, 0) + 2;
-        view.dispatch(
-          view.state.tr.setSelection(
-            TextSelection.create(
-              view.state.doc,
-              backwards ? to : from,
-              backwards ? from : to
+      for (const shiftKey of [false, true]) {
+        test(`${shiftKey ? "Shift+Enter" : "Enter"} across rows preserves cells (${backwards ? "backward" : "forward"})`, async function (assert) {
+          const [editor] = await setupRichEditor(assert, TABLE);
+          const { view } = editor;
+          const from = cellPos(view, 1, 0) + 2;
+          const to = cellPos(view, 2, 0) + 2;
+          view.dispatch(
+            view.state.tr.setSelection(
+              TextSelection.create(
+                view.state.doc,
+                backwards ? to : from,
+                backwards ? from : to
+              )
             )
-          )
-        );
-        await pressKey(view, "Enter", { shiftKey: true });
-        const { grid } = locateTable(view);
-        assert.strictEqual(grid.height, 3, "all rows survive");
-        assert.deepEqual(
-          grid.rows.map((row) => row.cells.length),
-          [3, 3, 3],
-          "all cells survive"
-        );
-        assert.strictEqual(
-          grid.rows[1].cells[0].node.lastChild.type.name,
-          "hard_break",
-          "the break lands in the first selected cell"
-        );
-        assert.strictEqual(
-          grid.rows[2].cells[0].node.textContent,
-          "1",
-          "the unselected suffix survives"
-        );
-        await apply(view, undo);
-        assert.strictEqual(
-          locateTable(view).grid.rows[1].cells[0].node.textContent,
-          "a1",
-          "undo restores the selected content"
-        );
-        view.dispatch(view.state.tr.insertText("X"));
-        assert.strictEqual(
-          locateTable(view).grid.height,
-          3,
-          "the restored selection remains safe to replace"
-        );
-      });
+          );
+          await pressKey(view, "Enter", { shiftKey });
+          const { grid } = locateTable(view);
+          assert.strictEqual(grid.height, 3, "all rows survive");
+          assert.deepEqual(
+            grid.rows.map((row) => row.cells.length),
+            [3, 3, 3],
+            "all cells survive"
+          );
+          assert.strictEqual(
+            grid.rows[1].cells[0].node.lastChild.type.name,
+            "hard_break",
+            "the break lands in the first selected cell"
+          );
+          assert.strictEqual(
+            grid.rows[2].cells[0].node.textContent,
+            "1",
+            "the unselected suffix survives"
+          );
+          await apply(view, undo);
+          assert.strictEqual(
+            locateTable(view).grid.rows[1].cells[0].node.textContent,
+            "a1",
+            "undo restores the selected content"
+          );
+          view.dispatch(view.state.tr.insertText("X"));
+          assert.strictEqual(
+            locateTable(view).grid.height,
+            3,
+            "the restored selection remains safe to replace"
+          );
+        });
+      }
     }
 
     test("editing a trailing cell cancels an append-removal drag", async function (assert) {

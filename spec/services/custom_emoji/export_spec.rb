@@ -67,6 +67,21 @@ RSpec.describe CustomEmoji::Export do
         end
       end
 
+      context "when an emoji name contains slashes" do
+        before do
+          Fabricate(:custom_emoji, name: "a/b", upload: png_upload)
+          Fabricate(:custom_emoji, name: "b", upload: png_upload)
+        end
+
+        let(:names) { %w[a/b b] }
+
+        it "uses a distinct image file name per emoji" do
+          with_archive do |zip|
+            expect(zip.entries.map(&:name)).to contain_exactly("emojis.csv", "a%2Fb.png", "b.png")
+          end
+        end
+      end
+
       def with_archive
         Tempfile.create(%w[emoji_export_ .zip]) do |file|
           file.binmode

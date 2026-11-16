@@ -2,6 +2,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import WelcomeBanner from "discourse/components/welcome-banner";
+import { setupS3CDN } from "discourse/lib/get-url";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
@@ -101,6 +102,24 @@ module(
           .includes('no render point for location "nowhere-in-particular"'),
         "warns that the location is unclaimed"
       );
+    });
+
+    test("serves welcome_banner_image through the S3 CDN", async function (assert) {
+      setupS3CDN(
+        "//test.s3-us-west-1.amazonaws.com/site",
+        "https://s3-cdn.example.com/site"
+      );
+      this.siteSettings.welcome_banner_image =
+        "//test.s3-us-west-1.amazonaws.com/site/original/1X/banner.png";
+
+      await render(<template><WelcomeBanner /></template>);
+
+      assert
+        .dom(".welcome-banner__wrap")
+        .hasAttribute(
+          "style",
+          "background-image:url(https://s3-cdn.example.com/site/original/1X/banner.png);"
+        );
     });
 
     test("shows the logged in user message with the user's username", async function (assert) {

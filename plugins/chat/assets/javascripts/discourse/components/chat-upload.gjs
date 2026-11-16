@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
-import { eq } from "discourse/truth-helpers";
 
 export default class ChatUpload extends Component {
   @service siteSettings;

@@ -8,17 +8,29 @@ module DiscourseAi
 
       def index
         AskAiReport.expire_stale!
-        reports = AskAiReport.order(created_at: :desc).limit(3).preload(:subjects, :topic)
+        reports =
+          AskAiReport
+            .select(:id, :start_date, :end_date, :report_status)
+            .order(created_at: :desc, id: :desc)
+            .limit(20)
         render json: {
-                 reports: reports.map { |report| serialize_report(report) },
+                 reports: reports.map { |report| serialize_report_entry(report) },
                  data_explorer_query_id:
                    defined?(DiscourseDataExplorer) && SiteSetting.data_explorer_enabled ? -47 : nil,
+                 period_query_id:
+                   defined?(DiscourseDataExplorer) && SiteSetting.data_explorer_enabled ? -48 : nil,
                  recipient_groups:
                    Group
                      .where(id: SiteSetting.ai_ask_ai_report_recipient_groups.split("|"))
                      .order(:name)
                      .pluck(:name),
                }
+      end
+
+      def show
+        AskAiReport.where(id: params[:id]).expire_stale!
+        report = AskAiReport.find(params[:id])
+        render json: { report: serialize_report(report) }
       end
 
       def asks
@@ -95,6 +107,10 @@ module DiscourseAi
               }
             end,
         }
+      end
+
+      def serialize_report_entry(report)
+        report.slice(:id, :start_date, :end_date, :report_status)
       end
     end
   end

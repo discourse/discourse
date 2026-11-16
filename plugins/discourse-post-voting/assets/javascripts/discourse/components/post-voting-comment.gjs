@@ -10,9 +10,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
-import PostVotingButton from "./post-voting-button";
-import PostVotingCommentActions from "./post-voting-comment-actions";
-import PostVotingCommentEditor from "./post-voting-comment-editor";
+import PostVotingButton from "./post-voting-button.gjs";
+import PostVotingCommentActions from "./post-voting-comment-actions.gjs";
+import PostVotingCommentEditor from "./post-voting-comment-editor.gjs";
 
 export function buildAnchorId(commentId) {
   return `post-voting-comment-${commentId}`;

@@ -5,8 +5,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { fetchTitleSuggestions } from "../../lib/ai-helper-suggestions";
-import AiTitleSuggestionsList from "./ai-title-suggestions-list";
+import { fetchTitleSuggestions } from "../../lib/ai-helper-suggestions.js";
+import AiTitleSuggestionsList from "./ai-title-suggestions-list.gjs";
 
 export default class AiTitleSuggestionsMenu extends Component {
   @tracked loading = true;

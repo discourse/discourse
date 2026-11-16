@@ -1,5 +1,5 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import TopicListItemExample from "../../examples/molecules/topic-list-item";
+import TopicListItemExample from "../../examples/molecules/topic-list-item.gjs";
 import topicListItemSource from "../../examples/molecules/topic-list-item?source=file";
 
 export default <template>

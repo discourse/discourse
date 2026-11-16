@@ -305,7 +305,7 @@ RSpec.describe JsonApiKit::Resource do
             sort :created_at
             default_sort created_at: :sideways
           end
-        }.to raise_error(ArgumentError, /unknown direction: sideways/)
+        }.to raise_error(ArgumentError, /Unknown sort direction: :sideways/)
       end
     end
   end
@@ -354,7 +354,7 @@ RSpec.describe JsonApiKit::Resource do
       let(:historical_ordering) { { created_at: :sideways } }
 
       it "rejects the ordering" do
-        expect { ordering }.to raise_error(ArgumentError, /unknown direction: sideways/)
+        expect { ordering }.to raise_error(ArgumentError, /Unknown sort direction: :sideways/)
       end
     end
   end
@@ -376,6 +376,27 @@ RSpec.describe JsonApiKit::Resource do
       )
     end
 
+    context "when the attribute declares a type" do
+      before { topic_resource.attribute(:views, :string, writable: true) }
+
+      it "preserves the record's value" do
+        expect(attribute_values).to include(
+          JsonApiKit::Name::Field.new(value: "views", type: topic_resource.type) => topic.views,
+        )
+      end
+    end
+
+    context "when a typed attribute declares a reader" do
+      before { topic_resource.attribute(:view_count, :integer, writable: true) { it.views.to_s } }
+
+      it "preserves the reader's value" do
+        expect(attribute_values).to include(
+          JsonApiKit::Name::Field.new(value: "view_count", type: topic_resource.type) =>
+            topic.views.to_s,
+        )
+      end
+    end
+
     context "when the resource declares one more after a reading" do
       before do
         topic_resource.fields(guardian:).attributes
@@ -386,6 +407,64 @@ RSpec.describe JsonApiKit::Resource do
         expect(attribute_values).to include(
           JsonApiKit::Name::Field.new(value: "closed", type: topic_resource.type),
         )
+      end
+    end
+  end
+
+  describe ".writable_attributes" do
+    subject(:writable_attributes) { resource.writable_attributes }
+
+    let(:resource) do
+      Class.new(described_class) do
+        attribute :title, :string, writable: true
+        attribute :tags, :array, writable: true
+        attribute :created_at, :datetime
+        attribute :views, :integer, writable: false
+        attribute :closed
+      end
+    end
+
+    it "returns the names and types of writable declarations" do
+      expect(writable_attributes.map { [it.name, it.type] }).to contain_exactly(
+        ["title", an_instance_of(ActiveModel::Type::String)],
+        ["tags", an_instance_of(ActiveSupportTypeExtensions::Array)],
+      )
+    end
+
+    context "when an attribute is unreadable" do
+      before { resource.attribute(:password, :string, writable: true, readable: ->(_) { false }) }
+
+      it "includes the writable declaration" do
+        expect(writable_attributes.map(&:name)).to include("password")
+      end
+    end
+
+    context "when a declaration follows an earlier lookup" do
+      before do
+        resource.writable_attributes
+        resource.attribute(:excerpt, :string, writable: true)
+      end
+
+      it "includes the new declaration" do
+        expect(writable_attributes.map(&:name)).to include("excerpt")
+      end
+    end
+
+    context "when a subclass adds a writable attribute" do
+      let(:child_resource) { Class.new(resource) }
+
+      before { child_resource.attribute(:excerpt, :string, writable: true) }
+
+      it "includes inherited declarations in the subclass" do
+        expect(child_resource.writable_attributes.map(&:name)).to contain_exactly(
+          "title",
+          "tags",
+          "excerpt",
+        )
+      end
+
+      it "preserves the parent's declarations" do
+        expect(writable_attributes.map(&:name)).to contain_exactly("title", "tags")
       end
     end
   end
@@ -605,13 +684,18 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".all" do
-    before { allow(JsonApiKit::Query::Collection).to receive(:new) }
+    let(:instance) { topic_resource.new(guardian:) }
+    let(:adapter) { instance.adapter }
+
+    before do
+      allow(topic_resource).to receive(:new).and_return(instance)
+      allow(adapter).to receive(:all)
+    end
 
     it "builds a listing for the request a caller sends" do
       topic_resource.all({ sort: { created_at: :asc } }, guardian:)
 
-      expect(JsonApiKit::Query::Collection).to have_received(:new).with(
-        an_instance_of(topic_resource),
+      expect(adapter).to have_received(:all).with(
         an_object_having_attributes(ordering: { "created_at" => :asc }, guardian:),
         scoped_to: nil,
       )
@@ -622,7 +706,7 @@ RSpec.describe JsonApiKit::Resource do
       fab!(:second_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 2)) }
 
       before do
-        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        allow(topic_resource).to receive(:new).and_call_original
         topic_resource.default_sort created_at: :asc
       end
 
@@ -635,14 +719,19 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".find" do
-    before { allow(JsonApiKit::Query::Individual).to receive(:new) }
+    let(:instance) { topic_resource.new(guardian:) }
+    let(:adapter) { instance.adapter }
+
+    before do
+      allow(topic_resource).to receive(:new).and_return(instance)
+      allow(adapter).to receive(:find)
+    end
 
     it "resolves the default ordering before constructing the request" do
       topic_resource.find(12, guardian:)
 
-      expect(JsonApiKit::Query::Individual).to have_received(:new).with(
-        an_instance_of(topic_resource),
-        an_object_having_attributes(ordering: { "ran_at" => :desc }, guardian:),
+      expect(adapter).to have_received(:find).with(
+        an_object_having_attributes(id: 12, ordering: { "ran_at" => :desc }, guardian:),
       )
     end
   end
@@ -667,5 +756,67 @@ RSpec.describe JsonApiKit::Resource do
         expect(topic_resource.order("created_at" => :desc).segments.size).to eq(1)
       end
     end
+  end
+
+  describe ".related_resource" do
+    subject(:related_resource) { topic_resource.related_resource(name) }
+
+    let(:name) { :user }
+
+    it "returns the declared resource class" do
+      expect(related_resource).to eq(user_resource)
+    end
+
+    context "when the relationship is not declared" do
+      let(:name) { :missing }
+
+      it "raises a missing lookup error" do
+        expect { related_resource }.to raise_error(KeyError, /missing/)
+      end
+    end
+  end
+
+  describe "#related_resource" do
+    subject(:related_resource) { instance.related_resource(:user) }
+
+    let(:instance) { topic_resource.new(guardian:) }
+
+    it "reuses the resource from the request" do
+      expect(related_resource).to equal(instance.resource_for(user_resource))
+    end
+  end
+
+  describe "#resource_for" do
+    subject(:instance) { topic_resource.new(guardian:, edition:) }
+
+    let(:edition) { JsonApiKit::Edition.new([]) }
+    let(:related_resource) { instance.resource_for(user_resource) }
+
+    it "builds the requested resource in the request context", :aggregate_failures do
+      expect(related_resource).to be_a(user_resource)
+      expect(related_resource).to have_attributes(guardian:, edition:)
+    end
+
+    it "reuses the requested resource" do
+      expect(instance.resource_for(user_resource)).to equal(related_resource)
+    end
+
+    it "reuses the owner through related resources" do
+      expect(related_resource.resource_for(topic_resource)).to equal(instance)
+    end
+
+    context "when another request builds its resources" do
+      let(:other_instance) { topic_resource.new(guardian:, edition:) }
+
+      it "creates an independent resource" do
+        expect(other_instance.resource_for(user_resource)).not_to equal(related_resource)
+      end
+    end
+  end
+
+  describe "#writable_attributes" do
+    subject(:resource) { topic_resource.new(guardian:) }
+
+    it { is_expected.to delegate_method(:writable_attributes).to(:class) }
   end
 end

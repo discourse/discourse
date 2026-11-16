@@ -1,5 +1,5 @@
-import { lookupWorkflowMethodDoc, walkScope } from "../expression-context";
-import { buildDollarVars } from "./dollar-vars";
+import { lookupWorkflowMethodDoc, walkScope } from "../expression-context.js";
+import { buildDollarVars } from "./dollar-vars.js";
 
 // Extends core's generic analyzePropertyAccess with workflow-specific
 // patterns: $('Node Name') references and $-prefixed variables.

@@ -8,27 +8,17 @@ module DiscourseGithubPlugin
     has_many :commits, foreign_key: :repo_id, class_name: :GithubCommit, dependent: :destroy
 
     def self.repos
-      repos = []
+      names.map { |name| find_or_create_by!(name:) }
+    end
+
+    def self.names
       SiteSetting
         .github_badges_repos
         .split("|")
-        .each do |link|
-          name = match_name_from_setting(link)
-          next if name.blank?
-          name.gsub!(/\.git$/, "")
-          name.gsub!(%r{/$}, "") # Remove trailing '/'
-          repos << find_or_create_by!(name: name)
+        .filter_map do |link|
+          name = link[VALID_URL_BASED_REPO_REGEX, 1] || link[VALID_USER_BASED_REPO_REGEX]
+          name&.delete_suffix(".git")&.delete_suffix("/").presence
         end
-      repos
-    end
-
-    def self.match_name_from_setting(repo)
-      if repo =~ VALID_URL_BASED_REPO_REGEX
-        Regexp.last_match[1]
-      elsif repo =~ VALID_USER_BASED_REPO_REGEX
-        repo_name = Regexp.last_match[0]
-        repo.match(/https?:/).blank? ? repo_name : nil
-      end
     end
   end
 end

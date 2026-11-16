@@ -35,6 +35,17 @@ export const SORT_OPTIONS = [
 export default class ChatChannelListSortChoice extends Component {
   @service chatChannelListPreferences;
 
+  get descriptionKey() {
+    if (
+      this.args.section === "dms" &&
+      this.args.choice.value === CHAT_CHANNEL_LIST_SORTS.PRIORITY
+    ) {
+      return "chat.channel_list.sort.priority_description_dms";
+    }
+
+    return this.args.choice.descriptionKey;
+  }
+
   get isCurrentSort() {
     return (
       this.chatChannelListPreferences.sortFor(this.args.section) ===
@@ -73,9 +84,9 @@ export default class ChatChannelListSortChoice extends Component {
           <span class="chat-channel-list-sort-menu__label-title">
             {{i18n @choice.labelKey}}
           </span>
-          {{#if @choice.descriptionKey}}
+          {{#if this.descriptionKey}}
             <span class="chat-channel-list-sort-menu__label-description">
-              {{i18n @choice.descriptionKey}}
+              {{i18n this.descriptionKey}}
             </span>
           {{/if}}
         </span>

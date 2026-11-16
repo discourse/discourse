@@ -10,7 +10,7 @@ RSpec.describe "escaping of noscript content" do
     post = Fabricate(:post, raw: 'This is a post with an image <img alt="<Look at this!>">')
     get post.url
 
-    expect(noscript_content).to include('<img alt="<Look at this!>">')
+    expect(noscript_content).to include('<img alt="&lt;Look at this!&gt;">')
   end
 
   it "escapes noscript in attribute" do
@@ -21,7 +21,7 @@ RSpec.describe "escaping of noscript content" do
       )
     get post.url
 
-    expect(noscript_content).to include('<img alt="&lt;/noscript>">')
+    expect(noscript_content).to include('<img alt="&lt;/noscript&gt;">')
   end
 
   it "escapes noscript with trailing whitespace" do
@@ -32,7 +32,7 @@ RSpec.describe "escaping of noscript content" do
       )
     get post.url
 
-    expect(noscript_content).to include('<img alt="&lt;/noscript  >">')
+    expect(noscript_content).to include('<img alt="&lt;/noscript  &gt;">')
   end
 
   it "escapes noscript with leading whitespace" do
@@ -44,6 +44,6 @@ RSpec.describe "escaping of noscript content" do
       )
     get post.url
 
-    expect(noscript_content).to include('<img alt="&lt;/  noscript>">')
+    expect(noscript_content).to include('<img alt="&lt;/  noscript&gt;">')
   end
 end

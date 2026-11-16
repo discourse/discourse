@@ -22,8 +22,6 @@ uk:
     errors:
       invalid_badge_repo: "Ви повинні вказати URL GitHub або назву репозиторію у форматі github_user/repository_name"
       invalid_badge_repo_value: "«%{repo}» не є дійсною URL-адресою GitHub або назвою репозиторію. Використовуйте формат github_user/repository_name."
-      invalid_github_linkback_access_token: "Ви повинні надати дійсний токен зворотного зв'язку GitHub, який має доступ до вказаних вами сховищ бейджів."
-      invalid_github_linkback_access_token_for_repo: "Токен доступу для зворотного посилання GitHub не зміг отримати доступ до репозиторію '%{repo}'. Переконайтеся, що токен дійсний, а назва репозиторію правильна та доступна."
   github_linkback:
     commit_template: |
       Цей коміт згадувався на **%{title}**. Там можуть бути відповідні деталі:
@@ -37,31 +35,3 @@ uk:
       Цю проблему згадували на **%{title}**. Там можуть бути відповідні деталі:
 
       %{post_url}
-  github_commits_populator:
-    errors:
-      repository_identifier_invalid_pm_title: "Дія, необхідна для плагіна discourse-github"
-      repository_identifier_invalid_pm: |
-        Репозиторій, зазначений у плагіні discurse-github, є недійсним:
-        %{repo_name}
-
-        Його слід вказати як `user/repo`.
-
-        Значки не будуть надані, доки ім'я не буде виправлено в
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discurse-github Налаштування сайту</a>
-        та знову не буде ввімкнено "github_badges_enabled".
-      repository_not_found_pm_title: "Дія, необхідна для плагіна discourse-github"
-      repository_not_found_pm: |
-        Репозиторій, вказаний у плагіні discourse-github, повернув помилку "Не знайдено"
-        : %{repo_name}
-
-        Значки не будуть присвоєні, доки не буде виправлено назву в
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github Site Settings</a>
-        і не буде знову увімкнено "github_badges_enabled".
-      invalid_octokit_credentials_pm_title: "Дія, необхідна для плагіна discourse-github"
-      invalid_octokit_credentials_pm: |
-        Облікові дані GitHub, надані плагіну Discourse-github, недійсні. Налаштування «github значків увімкнено\ site
-        було вимкнено, і коміти більше не будуть заповнені, доки проблема не буде вирішена.
-
-        Перевірте налаштування сайту «маркер доступу зворотного зв'язку github», щоб переконатися, що токен правильний і має дозвіл на всі
-        сховища через
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">розмови-github Налаштування сайту</a>.

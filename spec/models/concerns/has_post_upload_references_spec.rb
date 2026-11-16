@@ -41,14 +41,17 @@ RSpec.describe HasPostUploadReferences do
         expect(upload_ref.target_id).to eq(subject.id)
       end
 
-      it "cleans up the reverse index for the current target" do
+      it "preserves surviving references and cleans up stale ones for the current target" do
         subject.link_post_uploads
         original_ids = subject.upload_references.pluck(:id)
 
+        stale_upload = Fabricate(:upload)
+        UploadReference.create!(target: subject, upload: stale_upload)
+
         subject.link_post_uploads
 
-        expect(subject.reload.upload_references.pluck(:id)).to_not eq(original_ids)
-        expect(UploadReference.where(id: original_ids).exists?).to eq(false)
+        expect(subject.reload.upload_references.pluck(:id)).to match_array(original_ids)
+        expect(UploadReference.exists?(target: subject, upload: stale_upload)).to eq(false)
       end
 
       it "works with fragments" do

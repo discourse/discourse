@@ -28,9 +28,7 @@ nb_NO:
       close: "Lukk"
       delete: "Slett"
       edit: "Rediger"
-      back: "Forrige"
       save: "Lagre"
-      apply: "Bruk"
       update_range:
         last_10_days: "Siste 10 dager"
         last_30_days: "Siste 30 dager"
@@ -44,3 +42,4 @@ nb_NO:
         username: "Bruker"
         date: "Dato"
         description: "Beskrivelse"
+        category_id: "Kategori"

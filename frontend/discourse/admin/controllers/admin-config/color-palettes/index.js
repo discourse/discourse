@@ -16,6 +16,7 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
   @service session;
   @service interfaceColor;
 
+  /** @type {import("discourse/admin/models/theme").default | null} */
   @tracked defaultTheme = null;
 
   isDefaultThemeLightColorScheme = (scheme) => {
@@ -26,9 +27,16 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
     return this.defaultTheme?.dark_color_scheme_id === scheme.id;
   };
 
+  /** @type {number | undefined} */
   _initialUserLightColorSchemeId = undefined;
+
+  /** @type {number | undefined} */
   _initialUserDarkColorSchemeId = undefined;
+
+  /** @type {number | null | undefined} */
   _initialDefaultThemeLightColorSchemeId = null;
+
+  /** @type {number | null | undefined} */
   _initialDefaultThemeDarkColorSchemeId = null;
 
   get allBaseColorSchemes() {

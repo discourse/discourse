@@ -6,7 +6,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:assignment_id) if args[:assignment_id].nil?
       return if SilencedAssignment.exists?(assignment_id: args[:assignment_id])
 
-      Assignment.find(args[:assignment_id]).create_missing_notifications!
+      Assignment.find(args[:assignment_id]).create_missing_notifications!(user_id: args[:user_id])
     end
   end
 end

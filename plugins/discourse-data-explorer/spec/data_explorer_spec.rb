@@ -170,11 +170,11 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result][0]["is_null"]).to eq(false)
     end
 
-    %w[text date datetime time boolean user_id int_list string_list].each do |type|
-      it "uses an untyped NULL for a missing #{type} parameter" do
+    shared_examples "querying a missing nullable parameter" do |parameter_type:|
+      it "uses an untyped NULL without a query error" do
         query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
               -- [params]
-              -- null #{type} :value
+              -- null #{parameter_type} :value
               SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
             SQL
 
@@ -183,6 +183,38 @@ describe DiscourseDataExplorer::DataExplorer do
         expect(result[:error]).to eq(nil)
         expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
       end
+    end
+
+    context "with a missing text parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "text"
+    end
+
+    context "with a missing date parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "date"
+    end
+
+    context "with a missing datetime parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "datetime"
+    end
+
+    context "with a missing time parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "time"
+    end
+
+    context "with a missing boolean parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "boolean"
+    end
+
+    context "with a missing user_id parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "user_id"
+    end
+
+    context "with a missing int_list parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "int_list"
+    end
+
+    context "with a missing string_list parameter" do
+      include_examples "querying a missing nullable parameter", parameter_type: "string_list"
     end
 
     it "lets each occurrence of a null parameter infer its own type" do
@@ -535,7 +567,10 @@ describe DiscourseDataExplorer::DataExplorer do
             1 AS last_editor_id,
             1 AS group_id,
             1 AS category_id,
-            1 AS "author$user_id"
+            1 AS "author$user_id",
+            1 AS reviewable_id,
+            1 AS related_reviewable_id,
+            1 AS "reviewable$item"
         SQL
 
         relations, colrender =
@@ -558,9 +593,12 @@ describe DiscourseDataExplorer::DataExplorer do
             17 => :group,
             18 => :category,
             19 => :user,
+            20 => :reviewable,
+            21 => :reviewable,
+            22 => :reviewable,
           },
         )
-        expect(relations.keys).not_to include(:group, :category)
+        expect(relations.keys).not_to include(:group, :category, :reviewable)
       end
 
       it "reports relations hidden by the guardian" do

@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -16,6 +15,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;
 
+  /** @type {HTMLElement | null} */
   menuTrigger = null;
 
   @action

@@ -1,4 +1,4 @@
-import AiToolListEditor from "../../../../components/ai-tool-list-editor";
+import AiToolListEditor from "../../../../components/ai-tool-list-editor.gjs";
 
 export default <template>
   <AiToolListEditor

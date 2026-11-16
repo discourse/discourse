@@ -37,19 +37,32 @@ export default class CardContentsBase extends Component {
   @service siteSettings;
 
   canShowWhenUserProfilesHidden = false;
+
+  /** @type {string | null} */
   elementId = null; //click detection added for data-{elementId}
   eventPrefix = "user-card";
   menuIdentifier = "usercard";
   showCardBeforeLoad = true;
+
+  /** @type {string | null} */
   triggeringLinkSelector = null;
 
   visible = false;
+
+  /** @type {string | null} */
   username = null;
+
+  /** @type {string | boolean | null} */
   loading = null;
+
+  /** @type {HTMLElement | null} */
   cardTarget = null;
+
+  /** @type {import("discourse/models/post").default | null | undefined} */
   post = null;
   isDocked = false;
 
+  /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null | undefined} */
   _menuInstance = null;
 
   @computed("topic.postStream")

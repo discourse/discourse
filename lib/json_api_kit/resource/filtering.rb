@@ -25,7 +25,7 @@ module JsonApiKit
 
       delegate :names, to: :filters, prefix: :filter
 
-      def apply_filters(rows, filtering = {}) = filters.apply(rows, filtering)
+      def apply_filters(rows, filtering = {}) = filters.apply(rows, filtering, adapter:)
 
       def filters = @filters ||= self.class.filters.with(edition.removed_filters.for(type))
     end

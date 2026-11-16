@@ -129,17 +129,27 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # Bytes that decode to no valid UTF-8 name no record, and a `%2F` would
     # invent path structure the author never wrote — both refuse rather than
     # rewrite a coordinate-shaped path onto the destination.
-    {
-      "invalid UTF-8 bytes" => "/u/%FF%FE",
-      "an encoded slash" => "/u/a%2Fb",
-      "an encoded newline" => "/g/te%0Aam",
-    }.each do |label, path|
-      it "refuses a name holding #{label}" do
-        raw = "see https://forum.example.com#{path} there"
+    context "when an encoded name would change path structure" do
+      shared_examples "refusing unsafe encoded link names" do |path:|
+        it "preserves the source and records an invalid route refusal" do
+          raw = "see https://forum.example.com#{path} there"
 
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
-        expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+          expect(extract(raw)).to eq(raw)
+          expect(buffer.links).to be_empty
+          expect(extractor.engine_refusals).to eq(invalid_internal_route: 1)
+        end
+      end
+
+      context "with invalid UTF-8 bytes" do
+        include_examples "refusing unsafe encoded link names", path: "/u/%FF%FE"
+      end
+
+      context "with an encoded slash" do
+        include_examples "refusing unsafe encoded link names", path: "/u/a%2Fb"
+      end
+
+      context "with an encoded newline" do
+        include_examples "refusing unsafe encoded link names", path: "/g/te%0Aam"
       end
     end
 

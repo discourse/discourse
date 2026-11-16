@@ -17,5 +17,11 @@ sl:
         chat_usage:
           author: Vi
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} minuto"
+            two: "%{count} minuti"
+            few: "%{count} minute"
+            other: "%{count} minut"
         writing_analysis:
           menu_other: Drugo

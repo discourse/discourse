@@ -20,7 +20,11 @@ export default class AdminBadgesAward extends Component {
   @tracked replaceBadgeOwners = false;
   @tracked grantExistingHolders = false;
   @tracked fileSelected = false;
+
+  /** @type {string[] | null} */
   @tracked unmatchedEntries = null;
+
+  /** @type {string | null} */
   @tracked resultsMessage = null;
   @tracked success = false;
   @tracked unmatchedEntriesCount = 0;

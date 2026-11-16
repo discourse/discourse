@@ -43,6 +43,7 @@ module DiscourseRewind
       Action::TimeOfDayActivity,
       Action::NewUserInteractions,
       Action::ChatUsage,
+      Action::LiveUsage,
       Action::AiUsage,
       Action::Assignments,
       Action::Invites,

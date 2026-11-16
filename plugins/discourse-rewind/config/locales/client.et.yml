@@ -17,5 +17,9 @@ et:
         chat_usage:
           author: Sina
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} min"
+            other: "%{count} minutit"
         writing_analysis:
           menu_other: Muu

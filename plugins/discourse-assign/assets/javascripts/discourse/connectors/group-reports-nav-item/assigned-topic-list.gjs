@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import GroupAssignedMenuItem from "../../components/group-assigned-menu-item";
+import GroupAssignedMenuItem from "../../components/group-assigned-menu-item.gjs";
 
 export default class AssignedTopicList extends Component {
   static shouldRender(args, context) {

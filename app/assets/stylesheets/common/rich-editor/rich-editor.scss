@@ -310,6 +310,12 @@
     }
   }
 
+  .composer-html-inline-node {
+    outline: 1px dashed var(--primary-low-mid);
+    padding-inline: 1px;
+    border-radius: 2px;
+  }
+
   .composer-wrap-node {
     position: relative;
     white-space: normal;

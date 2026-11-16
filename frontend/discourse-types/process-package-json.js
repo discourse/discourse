@@ -1,6 +1,22 @@
 import { compareVersions } from "compare-versions";
 import { existsSync, globSync } from "node:fs";
 
+function selectTypesVersions(packageJson) {
+  const typesVersions = packageJson["typesVersions"];
+  if (!typesVersions) {
+    return;
+  }
+
+  if (typesVersions["*"]) {
+    return typesVersions["*"];
+  }
+
+  const highestVersion = Object.keys(typesVersions)
+    .sort(compareVersions)
+    .at(-1);
+  return typesVersions[highestVersion];
+}
+
 export default function processPackageJson(packageJson, packagePath) {
   const paths = new Set();
   const importPathPrefixes = new Map();
@@ -27,25 +43,22 @@ export default function processPackageJson(packageJson, packagePath) {
     }
   }
 
-  if (paths.size === 0 && packageJson["types"]) {
-    paths.add(packageJson["types"]);
+  const typesVersionsConfig = selectTypesVersions(packageJson);
+  const typesEntry = packageJson["types"] || packageJson["typings"];
+
+  if (paths.size === 0 && typesEntry) {
+    // TypeScript redirects the `types` entry through `typesVersions`, so the
+    // declarations come from the file it would pick.
+    const redirect = typesVersionsConfig?.["*"]?.[0];
+    paths.add(
+      redirect
+        ? redirect.replace("*", typesEntry.replace(/^\.\//, ""))
+        : typesEntry
+    );
   }
 
-  if (paths.size === 0 && packageJson["typings"]) {
-    paths.add(packageJson["typings"]);
-  }
-
-  if (paths.size === 0 && packageJson["typesVersions"]) {
-    let config = packageJson["typesVersions"]["*"];
-
-    if (!config) {
-      const highestVersion = Object.keys(packageJson["typesVersions"])
-        .sort(compareVersions)
-        .at(-1);
-      config = packageJson["typesVersions"][highestVersion];
-    }
-
-    for (const entry of Object.values(config)) {
+  if (paths.size === 0 && typesVersionsConfig) {
+    for (const entry of Object.values(typesVersionsConfig)) {
       let path = entry[0];
       if (!path.endsWith("/*") && !/\.d\.[cm]?ts$/.test(path)) {
         path = `${path}/*`;

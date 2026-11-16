@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import SiteTrafficExplorerBreakdownModal from "discourse/admin/components/site-traffic-explorer-breakdown-modal";
 import SiteTrafficExplorerBreakdownRow from "discourse/admin/components/site-traffic-explorer-breakdown-row";
 import getURL from "discourse/lib/get-url";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 

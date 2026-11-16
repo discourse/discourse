@@ -531,6 +531,19 @@ RSpec.describe EmbedController do
         expect(response.body).not_to match(I18n.t("embed.error"))
       end
 
+      it "does not cache the loading page" do
+        global_setting :anon_cache_store_threshold, 1
+        Middleware::AnonymousCache.enable_anon_cache
+        Middleware::AnonymousCache.clear_all_cache!
+
+        get "/embed/comments", params: { embed_url: embed_url }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("data-embed-state='loading'")
+        expect(response.headers["X-Discourse-Cached"]).to be_nil
+        expect(response.headers["Cache-Control"]).to include("no-cache")
+      end
+
       it "includes CSS from embedded_scss field" do
         theme = Fabricate(:theme)
         theme.set_default!
@@ -764,6 +777,61 @@ RSpec.describe EmbedController do
           )
         end
       end
+    end
+  end
+
+  describe "#status" do
+    fab!(:embeddable_host)
+
+    it "raises an error with an unallowed embed url" do
+      get "/embed/status", params: { embed_url: "http://nope.com/article" }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns no topic id before the embed has been imported" do
+      get "/embed/status", params: { embed_url: embed_url }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_id"]).to be_nil
+    end
+
+    it "serves a short-lived shared cache to concurrent pollers" do
+      global_setting :anon_cache_store_threshold, 1
+      Middleware::AnonymousCache.enable_anon_cache
+      Middleware::AnonymousCache.clear_all_cache!
+
+      get "/embed/status", params: { embed_url: embed_url }
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Cached"]).to eq("store")
+    end
+
+    it "returns the topic id once the embed has been imported" do
+      topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
+
+      get "/embed/status", params: { embed_url: embed_url }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_id"]).to eq(topic_embed.topic.id)
+    end
+
+    it "hides topics the user cannot see" do
+      restricted_category = Fabricate(:category)
+      restricted_category.set_permissions(staff: :full)
+      restricted_category.save!
+      restricted_topic = Fabricate(:topic, category: restricted_category)
+      Fabricate(
+        :topic_embed,
+        post: Fabricate(:post, topic: restricted_topic),
+        topic: restricted_topic,
+        embed_url: embed_url,
+      )
+
+      get "/embed/status", params: { embed_url: embed_url }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_id"]).to be_nil
     end
   end
 

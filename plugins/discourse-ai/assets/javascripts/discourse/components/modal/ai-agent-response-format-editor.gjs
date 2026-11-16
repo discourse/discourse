@@ -4,7 +4,6 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
 import { prettyJSON } from "discourse/lib/formatter";
-import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AiAgentResponseFormatEditor extends Component {

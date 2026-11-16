@@ -120,6 +120,8 @@ class AdminUserIndexQuery
       @query.not_suspended.where(approved: false, active: true)
     when "staged"
       @query.where(staged: true)
+    when "bots"
+      @query.bot_users
     end
   end
 
@@ -243,6 +245,33 @@ class AdminUserIndexQuery
       .order(:target_user_id, id: :desc)
       .select(Arel.sql("DISTINCT ON (target_user_id) target_user_id, details"))
       .each_with_object({}) { |record, hash| hash[record.target_user_id] = record.details }
+  end
+
+  def bot_creators(user_ids)
+    return {} if user_ids.empty? || !guardian&.is_admin?
+
+    UserHistory
+      .where(action: UserHistory.actions[:create_bot], target_user_id: user_ids)
+      .joins("LEFT JOIN users AS creators ON creators.id = user_histories.acting_user_id")
+      .order(:target_user_id, :id)
+      .select(
+        "DISTINCT ON (user_histories.target_user_id) user_histories.target_user_id, " \
+          "creators.id AS creator_id, creators.username AS creator_username, " \
+          "creators.uploaded_avatar_id AS creator_uploaded_avatar_id",
+      )
+      .filter_map do |history|
+        next unless history.creator_id
+
+        [
+          history.target_user_id,
+          {
+            id: history.creator_id,
+            username: history.creator_username,
+            uploaded_avatar_id: history.creator_uploaded_avatar_id,
+          },
+        ]
+      end
+      .to_h
   end
 
   def normalized_order

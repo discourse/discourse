@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Topic from "discourse/models/topic";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import TopicActivityColumn from "../../discourse/components/card/topic-activity-column";
+import TopicActivityColumn from "../../discourse/components/card/topic-activity-column.gjs";
 
 module(
   "Horizon | Integration | Component | Card | TopicActivityColumn",

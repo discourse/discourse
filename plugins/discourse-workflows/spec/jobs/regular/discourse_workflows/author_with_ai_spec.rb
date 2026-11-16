@@ -147,24 +147,21 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
       "trigger:post_created exposes the created post under post.*",
       "user.trust_level",
       "do not assume post.trust_level",
-      "Full graph and node catalog are intentionally not preloaded",
       "Do not ask whether trust level is available",
+      "Workflow outline:\nThe workflow has no nodes yet.",
     )
-    payload_json = captured_custom_instructions.split("tools for details:\n", 2).last
+    payload_json = captured_custom_instructions.split("Workflow authoring context:\n", 2).last
     payload = JSON.parse(payload_json)
-    expect(payload).not_to have_key("node_catalog")
-    expect(payload).not_to have_key("workflow_graph")
-    expect(payload.dig("context_tools", "workflow_node_catalog")).to include("node parameters")
-    expect(payload.dig("context_tools", "workflow_graph_context")).to include("current graph")
+    expect(payload.dig("context_tools", "workflow_node_catalog")).to include("exact node types")
+    expect(payload.dig("context_tools", "workflow_node_details")).to include("recorded output")
     expect(payload.dig("context_tools", "search_chat_channels")).to include("never invent")
     expect(payload.dig("context_tools", "search_chat_integration_channels")).to include(
       "never invent",
     )
-    expect(payload.dig("context_tools", "workflow_validate_script")).to include("exact Code node")
-    expect(payload.dig("context_tools", "workflow_authoring_result")).to include("final response")
-    expect(payload["trigger_author_field_facts"]).to include(
-      a_string_including("trigger:post_created"),
+    expect(payload.dig("context_tools", "workflow_validate_script")).to include(
+      "recorded workflow data",
     )
+    expect(payload.dig("context_tools", "workflow_authoring_result")).to include("final response")
   end
 
   it "uses authoring result tool calls for patch proposals", :aggregate_failures do
@@ -409,7 +406,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     expect(session.proposed_patch.dig("patch_validation", "valid")).to eq(true)
   end
 
-  it "stores Code node validation errors in the response", :aggregate_failures do
+  it "keeps proposals with failing Code node validation reviewable", :aggregate_failures do
     session =
       Fabricate(
         :discourse_workflows_ai_authoring_session,
@@ -452,10 +449,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
       generation_id: SecureRandom.hex,
     )
 
-    expect(session.reload).to have_attributes(status: "error")
-    expect(session.latest_response["message"]).to include(
-      "Merge post data with result: $input.all is only available in runOnceForAllItems mode",
-    )
+    expect(session.reload).to have_attributes(status: "proposal_ready")
     expect(session.proposed_patch["script_validations"]).to contain_exactly(
       include(
         "node_name" => "Merge post data with result",
@@ -465,7 +459,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     )
   end
 
-  it "requires a tool call for the final authoring result" do
+  it "asks the admin how to proceed when authoring fails", :aggregate_failures do
     session =
       Fabricate(
         :discourse_workflows_ai_authoring_session,
@@ -491,6 +485,131 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
       generation_id: SecureRandom.hex,
     )
 
-    expect(session.reload).to have_attributes(status: "error")
+    expect(session.reload).to have_attributes(status: "needs_clarification")
+    expect(session.latest_response["questions"]).to contain_exactly(
+      include(
+        "id" => "how_to_proceed",
+        "options" => [{ "label" => I18n.t("discourse_workflows.ai.how_to_proceed.fix") }],
+      ),
+    )
+    expect(session.messages.last).to include("type" => "model")
+    expect(JSON.parse(session.messages.last["content"])).to include(
+      "status" => "needs_clarification",
+    )
+  end
+
+  it "still reports an error when the question cannot be recorded" do
+    session = Fabricate(:discourse_workflows_ai_authoring_session, user: admin)
+    fake_bot = double
+    job = described_class.new
+
+    allow(fake_bot).to receive(:reply).and_raise(StandardError, "Provider timed out.")
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+    allow(Discourse).to receive(:warn_exception)
+    allow(job).to receive(:persist_response).and_raise(ActiveRecord::RecordInvalid)
+
+    job.execute(session_id: session.id, user_id: admin.id, generation_id: SecureRandom.hex)
+
+    expect(session.reload.latest_response).to eq(
+      "status" => "error",
+      "message" => "Provider timed out.",
+    )
+  end
+
+  it "logs generations that take longer than expected" do
+    stub_const(described_class, :SLOW_GENERATION_SECONDS, 0) do
+      session =
+        Fabricate(
+          :discourse_workflows_ai_authoring_session,
+          user: admin,
+          messages: [{ "type" => "user", "content" => "Create a manual log workflow" }],
+        )
+      response = { status: "explanation", message: "No changes needed", questions: [] }
+      fake_bot = double
+      allow(fake_bot).to receive(:reply).and_return(authoring_result_raw_context(response))
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+
+      logger =
+        track_log_messages do
+          described_class.new.execute(
+            session_id: session.id,
+            user_id: admin.id,
+            generation_id: SecureRandom.hex,
+          )
+        end
+
+      expect(logger.warnings).to contain_exactly(
+        a_string_matching(
+          /AI authoring took \d+s \(status: drafting, user_id: #{admin.id}, session_id: #{session.id}\)/,
+        ),
+      )
+    end
+  end
+
+  it "asks the admin how to proceed when authoring raises", :aggregate_failures do
+    session =
+      Fabricate(
+        :discourse_workflows_ai_authoring_session,
+        user: admin,
+        messages: [{ "type" => "user", "content" => "Create a manual log workflow" }],
+      )
+    fake_bot = double
+
+    allow(fake_bot).to receive(:reply).and_raise(StandardError, "Provider timed out.")
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+    allow(Discourse).to receive(:warn_exception)
+
+    described_class.new.execute(
+      session_id: session.id,
+      user_id: admin.id,
+      generation_id: SecureRandom.hex,
+    )
+
+    expect(session.reload).to have_attributes(status: "needs_clarification")
+    expect(session.latest_response["questions"]).to contain_exactly(
+      include(
+        "id" => "how_to_proceed",
+        "question" =>
+          I18n.t("discourse_workflows.ai.how_to_proceed.question", problem: "Provider timed out."),
+      ),
+    )
+  end
+
+  it "reports the credit limit instead of asking how to proceed when AI credits run out",
+     :aggregate_failures do
+    session =
+      Fabricate(
+        :discourse_workflows_ai_authoring_session,
+        user: admin,
+        messages: [{ "type" => "user", "content" => "Create a manual log workflow" }],
+      )
+    generation_id = SecureRandom.hex
+    allocation = Fabricate(:llm_credit_allocation, daily_credits: 100, daily_used: 100)
+    credit_limit_error =
+      LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+    fake_bot = double
+    allow(fake_bot).to receive(:reply).and_raise(credit_limit_error)
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+    job = described_class.new
+
+    messages =
+      MessageBus.track_publish("/discourse-workflows/ai-authoring/#{generation_id}") do
+        job.execute(session_id: session.id, user_id: admin.id, generation_id:)
+      end
+
+    expected_message =
+      I18n.t(
+        "discourse_workflows.ai.error_credit_limit_exceeded",
+        reset_time: allocation.formatted_reset_time,
+      )
+    expect(job.credit_limit_error).to eq(credit_limit_error)
+    expect(session.reload).to have_attributes(
+      status: "error",
+      latest_response: {
+        "status" => "error",
+        "message" => expected_message,
+      },
+    )
+    expect(messages.map(&:data).last).to include(status: "error", error: expected_message)
   end
 end

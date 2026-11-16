@@ -22,7 +22,6 @@ import discourseLater from "discourse/lib/later";
 import DiscourseURL from "discourse/lib/url";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import { or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -31,23 +30,23 @@ import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import { i18n } from "discourse-i18n";
-import { dragToScroll } from "../lib/boards-auto-scroll";
+import { dragToScroll } from "../lib/boards-auto-scroll.js";
 import {
   isRecencyColumn,
   sortCardsForColumn,
-} from "../lib/boards-card-ordering";
-import { loadCategories } from "../lib/boards-categories";
-import { boardsBoardConfigureUrl, boardsBoardUrl } from "../lib/boards-urls";
-import Board from "../models/board";
-import Card from "../models/card";
-import Column from "../models/column";
-import BoardsColumn from "./boards-column";
-import BoardsArchive from "./modal/boards-archive";
-import BoardsBoardSettings from "./modal/boards-board-settings";
-import BoardsCardDetailModal from "./modal/boards-card-detail";
-import BoardsColumnSettings from "./modal/boards-column-settings";
-import BoardsConstraintFix from "./modal/boards-constraint-fix";
-import BoardsTopicCardDetailModal from "./modal/boards-topic-card-detail";
+} from "../lib/boards-card-ordering.js";
+import { loadCategories } from "../lib/boards-categories.js";
+import { boardsBoardConfigureUrl, boardsBoardUrl } from "../lib/boards-urls.js";
+import Board from "../models/board.js";
+import Card from "../models/card.js";
+import Column from "../models/column.js";
+import BoardsColumn from "./boards-column.gjs";
+import BoardsArchive from "./modal/boards-archive.gjs";
+import BoardsBoardSettings from "./modal/boards-board-settings.gjs";
+import BoardsCardDetailModal from "./modal/boards-card-detail.gjs";
+import BoardsColumnSettings from "./modal/boards-column-settings.gjs";
+import BoardsConstraintFix from "./modal/boards-constraint-fix.gjs";
+import BoardsTopicCardDetailModal from "./modal/boards-topic-card-detail.gjs";
 
 const onWindowResize = modifier((element, [callback]) => {
   const wrappedCallback = () => callback(element);

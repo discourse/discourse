@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { notEq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
@@ -66,7 +65,7 @@ export default class ProblemCheckItem extends Component {
         <div class="d-table__mobile-label">{{i18n
             "admin.config.problem_checks.target"
           }}</div>
-        {{#if (notEq @tracker.target "__NULL__")}}
+        {{#if (neq @tracker.target "__NULL__")}}
           {{@tracker.target}}
         {{/if}}
       </td>

@@ -17,6 +17,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 export default class DPopupInputTip extends Component {
   @service composer;
 
+  /** @type {import("@ember/template").TrustedHTML | null} */
   tipReason = null;
   tabindex = "0";
 

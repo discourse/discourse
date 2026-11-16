@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -13,9 +14,9 @@ import {
   ExecutionProgressStream,
   formatDuration,
   isRunning,
-} from "../../../lib/workflows/execution-progress";
-import AdminTable from "../admin-table";
-import EmptyState from "../empty-state";
+} from "../../../lib/workflows/execution-progress.js";
+import AdminTable from "../admin-table.gjs";
+import EmptyState from "../empty-state.gjs";
 
 const EXECUTIONS_CHANNEL = "/discourse-workflows/executions";
 
@@ -30,11 +31,25 @@ function statusIcon(status) {
   return STATUS_ICONS[status] || "circle";
 }
 
+function hasModeBadge(execution) {
+  return execution.execution_mode && execution.execution_mode !== "normal";
+}
+
 function formatTime(timestamp) {
   if (!timestamp) {
     return "—";
   }
-  return new Date(timestamp).toLocaleString();
+
+  const date = new Date(timestamp);
+  return date.toLocaleString(undefined, {
+    year:
+      date.getFullYear() === new Date().getFullYear() ? undefined : "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 }
 
 function runTime(execution, currentTime) {
@@ -55,12 +70,20 @@ export default class ExecutionsManager extends Component {
   @service currentUser;
   @service dialog;
   @service messageBus;
-  @service router;
+  @service workflowsNodeTypes;
 
   @tracked executions = null;
   @tracked loadMoreUrl = null;
   @tracked loadingMore = false;
   @tracked bulkMode = false;
+
+  triggerIcon = (trigger) => {
+    if (!this.workflowsNodeTypes.nodeTypes) {
+      return "bolt";
+    }
+
+    return this.workflowsNodeTypes.findNodeType(trigger.type)?.icon || "bolt";
+  };
 
   #loadMoreToken = 0;
   #loading = false;
@@ -74,6 +97,7 @@ export default class ExecutionsManager extends Component {
       onRetry: () => this.loadExecutions(),
     });
     this.loadExecutions();
+    this.workflowsNodeTypes.load();
   }
 
   willDestroy() {
@@ -174,15 +198,6 @@ export default class ExecutionsManager extends Component {
   }
 
   @action
-  showExecution(execution) {
-    this.router.transitionTo(
-      "adminPlugins.show.discourse-workflows.show.executions.show",
-      execution.workflow_id,
-      execution.id
-    );
-  }
-
-  @action
   async deleteSelected(selectedIds, clearSelection) {
     const count = selectedIds.size;
     this.dialog.yesNoConfirm({
@@ -254,6 +269,7 @@ export default class ExecutionsManager extends Component {
       @items={{this.executions}}
       @loadingMore={{this.loadingMore}}
       @loadMore={{this.loadMore}}
+      @rowClass="workflows-executions-manager__row"
       @selectable={{this.bulkMode}}
     >
       <:empty>
@@ -297,85 +313,106 @@ export default class ExecutionsManager extends Component {
         {{/if}}
       </:toolbar>
       <:head>
-        {{#if @workflowId}}
-          <th class="d-table__header-cell">{{i18n
-              "discourse_workflows.executions.started_at"
-            }}</th>
-          <th class="d-table__header-cell">{{i18n
-              "discourse_workflows.executions.status"
-            }}</th>
-        {{else}}
-          <th class="d-table__header-cell">{{i18n
+        <th class="d-table__header-cell">{{i18n
+            (if
+              @workflowId
+              "discourse_workflows.executions.execution"
               "discourse_workflows.executions.workflow"
-            }}</th>
-          <th class="d-table__header-cell">{{i18n
-              "discourse_workflows.executions.status"
-            }}</th>
-          <th class="d-table__header-cell">{{i18n
-              "discourse_workflows.executions.started_at"
-            }}</th>
-        {{/if}}
+            )
+          }}</th>
+        <th class="d-table__header-cell">{{i18n
+            "discourse_workflows.executions.status"
+          }}</th>
+        <th class="d-table__header-cell">{{i18n
+            "discourse_workflows.executions.started_at"
+          }}</th>
         <th class="d-table__header-cell">{{i18n
             "discourse_workflows.executions.run_time"
           }}</th>
         <th class="d-table__header-cell"></th>
       </:head>
       <:row as |execution|>
-        {{#if @workflowId}}
-          <td class="d-table__cell --overview">
-            {{formatTime execution.started_at}}
-          </td>
-          <td class="d-table__cell --detail">
-            <div class="d-table__mobile-label">
-              {{i18n "discourse_workflows.executions.status"}}
-            </div>
-            <span
-              class="workflows-executions-manager__status --{{execution.status}}"
+        <td class="d-table__cell --overview">
+          {{#if @workflowId}}
+            <LinkTo
+              class="d-table__overview-link workflows-executions-manager__execution-link"
+              @models={{array execution.workflow_id execution.id}}
+              @route="adminPlugins.show.discourse-workflows.show.executions.show"
             >
-              {{#if (isRunning execution)}}
-                {{dLoadingSpinner size="small"}}
-              {{else}}
-                {{dIcon (statusIcon execution.status)}}
-              {{/if}}
-              {{i18n
-                (concat
-                  "discourse_workflows.executions.statuses." execution.status
-                )
-              }}
-            </span>
-          </td>
-        {{else}}
-          <td class="d-table__cell --overview">
-            <strong
-              class="d-table__overview-name"
-            >{{execution.workflow_name}}</strong>
-          </td>
-          <td class="d-table__cell --detail">
-            <div class="d-table__mobile-label">
-              {{i18n "discourse_workflows.executions.status"}}
-            </div>
-            <span
-              class="workflows-executions-manager__status --{{execution.status}}"
+              <strong class="d-table__overview-name">#{{execution.id}}</strong>
+            </LinkTo>
+          {{else}}
+            <LinkTo
+              class="d-table__overview-link workflows-executions-manager__workflow-link"
+              @model={{execution.workflow_id}}
+              @route="adminPlugins.show.discourse-workflows.show"
             >
-              {{#if (isRunning execution)}}
-                {{dLoadingSpinner size="small"}}
-              {{else}}
-                {{dIcon (statusIcon execution.status)}}
-              {{/if}}
-              {{i18n
-                (concat
-                  "discourse_workflows.executions.statuses." execution.status
-                )
-              }}
-            </span>
-          </td>
-          <td class="d-table__cell --detail">
-            <div class="d-table__mobile-label">
-              {{i18n "discourse_workflows.executions.started_at"}}
-            </div>
-            {{formatTime execution.started_at}}
-          </td>
-        {{/if}}
+              <strong
+                class="d-table__overview-name"
+              >{{execution.workflow_name}}</strong>
+            </LinkTo>
+          {{/if}}
+          <div class="workflows-executions-manager__meta">
+            {{#unless @workflowId}}
+              <LinkTo
+                class="workflows-executions-manager__id workflows-executions-manager__execution-link"
+                @models={{array execution.workflow_id execution.id}}
+                @route="adminPlugins.show.discourse-workflows.show.executions.show"
+              >#{{execution.id}}</LinkTo>
+            {{/unless}}
+            {{#if execution.trigger}}
+              <span class="workflows-executions-manager__trigger">
+                {{dIcon (this.triggerIcon execution.trigger)}}
+                <span
+                  class="workflows-executions-manager__trigger-name"
+                >{{execution.trigger.name}}</span>
+              </span>
+            {{/if}}
+            {{#if (hasModeBadge execution)}}
+              <span
+                class="workflows-executions-manager__mode --{{execution.execution_mode}}"
+              >{{i18n
+                  (concat
+                    "discourse_workflows.executions.modes."
+                    execution.execution_mode
+                  )
+                }}</span>
+            {{/if}}
+          </div>
+          {{#if execution.error}}
+            <div
+              class="workflows-executions-manager__error"
+              title={{execution.error}}
+            >{{execution.error}}</div>
+          {{/if}}
+        </td>
+        <td class="d-table__cell --detail">
+          <div class="d-table__mobile-label">
+            {{i18n "discourse_workflows.executions.status"}}
+          </div>
+          <span
+            class="workflows-executions-manager__status --{{execution.status}}"
+          >
+            {{#if (isRunning execution)}}
+              {{dLoadingSpinner size="small"}}
+            {{else}}
+              {{dIcon (statusIcon execution.status)}}
+            {{/if}}
+            {{i18n
+              (concat
+                "discourse_workflows.executions.statuses." execution.status
+              )
+            }}
+          </span>
+        </td>
+        <td
+          class="d-table__cell --detail workflows-executions-manager__started"
+        >
+          <div class="d-table__mobile-label">
+            {{i18n "discourse_workflows.executions.started_at"}}
+          </div>
+          {{formatTime execution.started_at}}
+        </td>
         <td
           class="d-table__cell --detail workflows-executions-manager__run-time"
         >
@@ -384,14 +421,10 @@ export default class ExecutionsManager extends Component {
           </div>
           {{runTime execution this.currentTime}}
         </td>
-        <td class="d-table__cell --controls">
-          <div class="d-table__cell-actions">
-            <DButton
-              class="btn-default btn-small"
-              @action={{fn this.showExecution execution}}
-              @label="discourse_workflows.executions.show"
-            />
-          </div>
+        <td
+          class="d-table__cell --controls workflows-executions-manager__chevron"
+        >
+          {{dIcon "chevron-right"}}
         </td>
       </:row>
     </AdminTable>

@@ -1,21 +1,26 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class CsvUploader extends Component {
   @service dialog;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     type: "csv",
     id: "discourse-post-event-csv-uploader",
     autoStartUploads: false,
     uploadUrl: this.args.uploadUrl,
     preventDirectS3Uploads: true,
+    perFileData: () => {
+      if (typeof this.args.additionalParams === "function") {
+        return this.args.additionalParams() || {};
+      }
+
+      return this.args.additionalParams || {};
+    },
     uppyReady: () => {
       this.uppyUpload.uppyWrapper.uppyInstance.on("file-added", () => {
         this.dialog.confirm({

@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { computed } from "@ember/object";
 
 export default class GroupManageTagsController extends Controller {
+  /** @returns {Array<{ id: number, name: string, slug?: string }>} */
   @computed(
     "model.watching_tags.[]",
     "model.watching_first_post_tags.[]",

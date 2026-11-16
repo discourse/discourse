@@ -6,7 +6,7 @@ import {
   displayColumnNames,
   relationLabel,
   VIEW_COMPONENTS,
-} from "../../discourse/lib/result-columns";
+} from "discourse/plugins/discourse-data-explorer/discourse/lib/result-columns";
 
 module("Unit | Lib | result-columns", function (hooks) {
   setupTest(hooks);

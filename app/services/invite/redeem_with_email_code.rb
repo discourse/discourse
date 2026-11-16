@@ -151,8 +151,8 @@ class Invite::RedeemWithEmailCode
     !user.active?
   end
 
-  def activate_user(user:)
-    user.activate
+  def activate_user(user:, params:)
+    user.activate(params.email)
   end
 
   def welcome_message_pending?(user:)

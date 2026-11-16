@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import type User from "discourse/models/user";
-import { BlockCondition, type ConditionContext } from "./condition";
-import { blockCondition } from "./decorator";
+import { BlockCondition, type ConditionContext } from "./condition.ts";
+import { blockCondition } from "./decorator.ts";
 
 /** Args accepted by the `user` condition. */
 interface UserConditionArgs {
@@ -40,7 +40,7 @@ interface UserLike {
   admin?: boolean;
   moderator?: boolean;
   staff?: boolean;
-  trust_level?: number;
+  trust_level?: number | null;
   groups?: Array<{ name?: string }>;
 }
 
@@ -276,11 +276,18 @@ export default class BlockUserCondition extends BlockCondition {
       return false;
     }
 
-    // Check trust level range
-    if (minTrustLevel !== undefined && user.trust_level < minTrustLevel) {
+    // Check trust level range. An unknown level satisfies no bound, like a missing user.
+    const trustLevel = user.trust_level;
+    if (
+      minTrustLevel !== undefined &&
+      (trustLevel == null || trustLevel < minTrustLevel)
+    ) {
       return false;
     }
-    if (maxTrustLevel !== undefined && user.trust_level > maxTrustLevel) {
+    if (
+      maxTrustLevel !== undefined &&
+      (trustLevel == null || trustLevel > maxTrustLevel)
+    ) {
       return false;
     }
 

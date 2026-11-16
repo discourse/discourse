@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
   MAX_SIMILAR_USERS = 10
+  MAX_FILTER_TERMS = 50
   STAFF_REASON_SANITIZER = Rails::Html::SafeListSanitizer.new
   STAFF_REASON_ALLOWED_TAGS = %w[a br].freeze
   STAFF_REASON_ALLOWED_ATTRIBUTES = %w[href rel target].freeze
@@ -196,7 +197,19 @@ class User < ActiveRecord::Base
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
 
+  after_destroy :reassign_acl_ownership, unless: :new_record?
   after_destroy :clear_acls
+
+  def reassign_acl_ownership
+    AccessControlList::ReassignDeletedUserOwnership.call!(
+      guardian: Discourse.system_user.guardian,
+      params: {
+        user_id: id,
+        username: username,
+        deleted_at: Time.current,
+      },
+    )
+  end
 
   def clear_acls
     Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
@@ -254,6 +267,9 @@ class User < ActiveRecord::Base
   # Skip validating email, for example from a particular auth provider plugin
   attr_accessor :skip_email_validation
   attr_accessor :enforce_username_restrictions
+
+  # DiscourseConnect is authoritative for usernames, so watched words must not block SSO users.
+  attr_accessor :skip_username_watched_words_validation
 
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
@@ -323,7 +339,12 @@ class User < ActiveRecord::Base
   scope :filter_by_username,
         ->(filter) do
           if filter.is_a?(Array)
-            where("username_lower ~* ?", "(#{filter.join("|")})")
+            terms = filter.map(&:to_s).reject(&:blank?)
+            raise Discourse::InvalidParameters.new(:filter) if terms.size > MAX_FILTER_TERMS
+
+            patterns = terms.map { |term| "%#{ActiveRecord::Base.sanitize_sql_like(term)}%" }
+
+            patterns.empty? ? all : where("username_lower ILIKE ANY (ARRAY[:patterns])", patterns:)
           else
             where("username_lower ILIKE ?", "%#{filter}%")
           end
@@ -341,9 +362,16 @@ class User < ActiveRecord::Base
           users = joins(:primary_email)
 
           if filter.is_a?(Array)
+            terms = filter.map(&:to_s).reject(&:blank?)
+            raise Discourse::InvalidParameters.new(:filter) if terms.size > MAX_FILTER_TERMS
+            return users if terms.empty?
+
+            patterns = terms.map { |term| "%#{ActiveRecord::Base.sanitize_sql_like(term)}%" }
+
             users.where(
-              "username_lower ~* :filter OR lower(user_emails.email) SIMILAR TO :filter",
-              filter: "(#{filter.join("|")})",
+              "username_lower ILIKE ANY (ARRAY[:patterns]) OR lower(user_emails.email) IN (:emails)",
+              patterns:,
+              emails: terms.map(&:downcase),
             )
           else
             users.where(
@@ -734,6 +762,10 @@ class User < ActiveRecord::Base
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
   end
 
+  def available_notification_types
+    notifications.visible.distinct.pluck(:notification_type)
+  end
+
   MAX_UNREAD_BACKLOG = 400
   def grouped_unread_notifications
     results = DB.query(<<~SQL, user_id: id, limit: MAX_UNREAD_BACKLOG)
@@ -931,6 +963,7 @@ class User < ActiveRecord::Base
 
     payload[:all_unread_notifications_count] = all_unread_notifications_count
     payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:available_notification_types] = available_notification_types
     payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
@@ -1309,13 +1342,20 @@ class User < ActiveRecord::Base
     end
   end
 
-  def remove_avatar!(actor)
-    return if uploaded_avatar_id.blank?
+  def custom_avatar_template
+    user_avatar&.custom_avatar_template
+  end
 
-    self.class.transaction do
-      update!(uploaded_avatar_id: nil)
-      user_avatar&.update!(custom_upload_id: nil, gravatar_upload_id: nil)
-    end
+  def find_avatar_upload(upload_id)
+    UserAvatar.find_upload_for_user(self, upload_id)
+  end
+
+  def pick_avatar!(upload_id, type: :current)
+    UserAvatar.pick_for_user!(self, upload_id, type: type)
+  end
+
+  def remove_avatar!(actor)
+    return unless UserAvatar.remove_for_user!(self)
 
     StaffActionLogger.new(actor).log_removed_avatar(self)
   end
@@ -1388,9 +1428,9 @@ class User < ActiveRecord::Base
   def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
-    reviewable_ids = Reviewable.where(created_by_id: id).select(:id)
+    reviewable_ids = Reviewable.created_solely_by(self).pluck(:id)
     ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
-    Reviewable.where(created_by_id: id).delete_all
+    Reviewable.where(id: reviewable_ids).delete_all
 
     posts
       .order("post_number desc")
@@ -1508,7 +1548,11 @@ class User < ActiveRecord::Base
   end
 
   def username_format_validator
-    UsernameValidator.perform_validation(self, "username")
+    UsernameValidator.perform_validation(
+      self,
+      "username",
+      skip_watched_words: skip_username_watched_words_validation,
+    )
   end
 
   def email_confirmed?
@@ -1516,8 +1560,8 @@ class User < ActiveRecord::Base
       single_sign_on_record&.external_email&.downcase == email
   end
 
-  def activate
-    email_token = email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
+  def activate(activation_email = email)
+    email_token = email_tokens.create!(email: activation_email, scope: EmailToken.scopes[:signup])
     EmailToken.confirm(email_token.token, scope: EmailToken.scopes[:signup])
     reload
   end
@@ -1593,7 +1637,14 @@ class User < ActiveRecord::Base
       if admin? && !SiteSetting.suppress_secured_categories_from_admin
         Category.unscoped.where(read_restricted: true)
       else
-        secure_categories.references(:categories)
+        Category.where(id: secure_categories.select(:id)).or(
+          Category.where(
+            id:
+              CategoryGroup.where(group_id: Group::AUTO_GROUPS[:logged_in_users]).select(
+                :category_id,
+              ),
+          ),
+        )
       end
 
     cats.pluck("categories.id").sort
@@ -1656,17 +1707,7 @@ class User < ActiveRecord::Base
   def refresh_avatar
     return if @import_mode
 
-    avatar = user_avatar || create_user_avatar
-
-    if primary_email.present? && SiteSetting.automatically_download_gravatars? &&
-         !avatar.last_gravatar_download_attempt
-      Jobs.cancel_scheduled_job(:update_gravatar, user_id: id, avatar_id: avatar.id)
-      Jobs.enqueue_in(1.second, :update_gravatar, user_id: id, avatar_id: avatar.id)
-    end
-
-    # mark all the user's quoted posts as "needing a rebake"
-    # use background job to avoid blocking on large datasets
-    Jobs.enqueue(:rebake_quoted_posts_for_user, user_id: id) if saved_change_to_uploaded_avatar_id?
+    UserAvatar.refresh_for_user(self)
   end
 
   def first_post_created_at
@@ -1781,13 +1822,7 @@ class User < ActiveRecord::Base
   end
 
   def set_random_avatar
-    if SiteSetting.selectable_avatars_random_on_signup &&
-         SiteSetting.selectable_avatars_mode != "disabled"
-      if upload = SiteSetting.selectable_avatars.sample
-        update_column(:uploaded_avatar_id, upload.id)
-        UserAvatar.create!(user_id: id, custom_upload_id: upload.id)
-      end
-    end
+    UserAvatar.assign_random_to_user(self)
   end
 
   def anonymous?
@@ -2009,7 +2044,7 @@ class User < ActiveRecord::Base
   end
 
   def display_name
-    if SiteSetting.prioritize_username_in_ux?
+    if !SiteSetting.enable_names? || SiteSetting.prioritize_username_in_ux?
       username
     else
       name.presence || username
@@ -2115,6 +2150,7 @@ class User < ActiveRecord::Base
     if @raw_password
       # Association in model may be out-of-sync
       UserAuthToken.where(user_id: id).destroy_all
+      PushNotificationPusher.clear_subscriptions(self)
 
       email_tokens.where("not expired").update_all(expired: true) if !saved_change_to_id?
 

@@ -14,6 +14,43 @@ class UserStat < ActiveRecord::Base
   UPDATE_UNREAD_MINUTES_AGO = 10
   UPDATE_UNREAD_USERS_LIMIT = 10_000
 
+  COUNTABLE_POST_CONDITIONS = <<~SQL
+    p.deleted_at IS NULL
+    AND p.post_type = :regular_post_type
+    AND NOT p.hidden
+    AND t.deleted_at IS NULL
+    AND t.visible
+    AND t.archetype = 'regular'
+  SQL
+
+  def self.recalculate_likes!(user_ids)
+    DB.exec(
+      <<~SQL,
+        UPDATE user_stats
+        SET likes_given = (#{countable_user_actions_count_sql(:like_type)}),
+            likes_received = (#{countable_user_actions_count_sql(:was_liked_type)})
+        WHERE user_id IN (:user_ids)
+      SQL
+      user_ids:,
+      like_type: UserAction::LIKE,
+      was_liked_type: UserAction::WAS_LIKED,
+      regular_post_type: Post.types[:regular],
+    )
+  end
+
+  def self.countable_user_actions_count_sql(action_type)
+    <<~SQL
+      SELECT COUNT(*)
+      FROM user_actions ua
+      INNER JOIN posts p ON p.id = ua.target_post_id
+      INNER JOIN topics t ON t.id = p.topic_id
+      WHERE ua.user_id = user_stats.user_id
+        AND ua.action_type = :#{action_type}
+        AND #{COUNTABLE_POST_CONDITIONS}
+    SQL
+  end
+  private_class_method :countable_user_actions_count_sql
+
   def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
     DB.exec(
       <<~SQL,
@@ -71,7 +108,8 @@ class UserStat < ActiveRecord::Base
   end
 
   def self.update_first_unread(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
-    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+    DB.exec(
+      <<~SQL,
       UPDATE user_stats us
       SET first_unread_at = COALESCE(Y.min_date, :now)
       FROM (
@@ -114,9 +152,10 @@ class UserStat < ActiveRecord::Base
                     (SELECT c2.id
                      FROM categories c2
                      JOIN category_groups cg ON cg.category_id = c2.id
-                     JOIN group_users gu ON gu.user_id = u.id
-                     AND cg.group_id = gu.group_id
-                     WHERE c2.read_restricted ))
+                     WHERE c2.read_restricted AND (
+                       cg.group_id IN (SELECT group_id FROM group_users WHERE user_id = u.id)
+                       OR cg.group_id = :logged_in_users
+                     )))
              AND NOT EXISTS
                (SELECT 1
                 FROM category_users cu
@@ -138,6 +177,11 @@ class UserStat < ActiveRecord::Base
       ) Y
       WHERE Y.user_id = us.user_id
     SQL
+      min_date: last_seen,
+      limit: limit,
+      now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
+      logged_in_users: Group::AUTO_GROUPS[:logged_in_users],
+    )
   end
 
   def self.reset_bounce_scores
@@ -314,6 +358,11 @@ class UserStat < ActiveRecord::Base
   protected
 
   def trigger_badges
+    # the user row can already be gone when a save happens mid-deletion
+    # (e.g. a stale user_stat created or touched while rendering review
+    # queues), and queueing a grant for a missing user raises through
+    # after_save and takes the request down
+    return if user.nil?
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: user)
   end
 end

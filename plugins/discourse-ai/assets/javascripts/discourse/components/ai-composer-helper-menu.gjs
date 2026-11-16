@@ -7,11 +7,11 @@ import { service } from "@ember/service";
 import DToast from "discourse/float-kit/components/d-toast";
 import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 import { i18n } from "discourse-i18n";
-import AiHelperOptionsList from "../components/ai-helper-options-list";
-import ModalDiffModal from "../components/modal/diff-modal";
-import ThumbnailSuggestion from "../components/modal/thumbnail-suggestions";
-import AiTitleSuggestionsMenu from "../components/suggestion-menus/ai-title-suggestions-menu";
-import { MIN_CHARACTER_COUNT } from "../lib/ai-helper-suggestions";
+import AiHelperOptionsList from "../components/ai-helper-options-list.gjs";
+import ModalDiffModal from "../components/modal/diff-modal.gjs";
+import ThumbnailSuggestion from "../components/modal/thumbnail-suggestions.gjs";
+import AiTitleSuggestionsMenu from "../components/suggestion-menus/ai-title-suggestions-menu.gjs";
+import { MIN_CHARACTER_COUNT } from "../lib/ai-helper-suggestions.js";
 
 export default class AiComposerHelperMenu extends Component {
   @service modal;

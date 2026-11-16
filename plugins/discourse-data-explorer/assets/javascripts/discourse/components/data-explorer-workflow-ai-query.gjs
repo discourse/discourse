@@ -8,7 +8,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
 import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
-import QueryAiPrompt from "./query-ai-prompt";
+import QueryAiPrompt from "./query-ai-prompt.gjs";
 
 export default class DataExplorerWorkflowAiQuery extends Component {
   @service messageBus;

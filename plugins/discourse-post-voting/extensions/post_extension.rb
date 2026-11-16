@@ -11,7 +11,7 @@ module PostVoting
     end
 
     def is_post_voting_topic?
-      topic.is_post_voting?
+      topic&.is_post_voting?
     end
 
     def post_voting_last_voted(user_id)

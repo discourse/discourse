@@ -4,8 +4,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { propertySelectNoneKey } from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+import { propertySelectNoneKey } from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class DataTableColumnSelect extends Component {
   @service workflowsNodeTypes;

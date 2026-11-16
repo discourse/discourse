@@ -1,21 +1,11 @@
 # frozen_string_literal: true
 
-require "json"
 require "pg"
 
 module Migrations
   module Importer
     module PgEncoderCache
       @encoders = {}
-
-      # PG::TextEncoder::JSON passes the `quirks_mode` keyword, which the json gem
-      # dropped in 3.0; fixed in pg upstream but unreleased as of 1.6.3 — drop
-      # this once a fixed pg version is required
-      class JsonEncoder < PG::SimpleEncoder
-        def encode(value)
-          ::JSON.generate(value)
-        end
-      end
 
       ENCODER_MAP = {
         "bool" => -> { PG::TextEncoder::Boolean.new },
@@ -24,8 +14,8 @@ module Migrations
         "inet" => -> { PG::TextEncoder::Inet.new },
         "int4" => -> { PG::TextEncoder::Integer.new },
         "int8" => -> { PG::TextEncoder::Integer.new },
-        "json" => -> { JsonEncoder.new },
-        "jsonb" => -> { JsonEncoder.new },
+        "json" => -> { PG::TextEncoder::JSON.new },
+        "jsonb" => -> { PG::TextEncoder::JSON.new },
         "text" => -> { PG::TextEncoder::String.new },
         "timestamp" => -> { PG::TextEncoder::String.new },
         "uuid" => -> { PG::TextEncoder::String.new },

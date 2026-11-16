@@ -173,8 +173,11 @@ export class Field {
     });
   }
 
+  /** @type {string | null} */
   @tracked _value = null;
   @tracked _validState = ValidStates.UNCHECKED;
+
+  /** @type {string | null | undefined} */
   @tracked _errorDescription = null;
 
   _listeners = [];
@@ -195,6 +198,7 @@ export class Field {
     ]);
   }
 
+  /** @returns {string | null} */
   get value() {
     return this._value;
   }
@@ -216,6 +220,7 @@ export class Field {
     this._errorDescription = null;
   }
 
+  /** @returns {string | null | undefined} */
   get errorDescription() {
     return this._errorDescription;
   }

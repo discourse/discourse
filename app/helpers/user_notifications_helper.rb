@@ -76,9 +76,29 @@ module UserNotificationsHelper
       normalize_name(post.user.name) != normalize_name(post.user.username)
   end
 
-  def format_for_email(post, use_excerpt)
-    html = use_excerpt ? post.excerpt : post.cooked
+  def format_for_email(post, use_excerpt, localization: nil)
+    cooked = localization&.cooked.presence || post.cooked
+    html = use_excerpt ? Post.excerpt(cooked, nil, post: post) : cooked
     PrettyText.format_for_email(html, post).html_safe
+  end
+
+  def digest_topic_title(topic)
+    @localized_topic_titles[topic.id] || topic.title
+  end
+
+  def digest_post_cooked(post)
+    @localized_posts[post.id]&.cooked.presence || post.cooked
+  end
+
+  def digest_post_excerpt(post)
+    Post.excerpt(
+      digest_post_cooked(post),
+      1000,
+      strip_links: true,
+      text_entities: true,
+      markdown_images: true,
+      post: post,
+    )
   end
 
   def digest_custom_html(position_key)

@@ -1,4 +1,4 @@
-import { NODE_DIRECT_SETTING_KEYS } from "../../models/workflow-node";
+import { NODE_DIRECT_SETTING_KEYS } from "../../models/workflow-node.js";
 
 export function workflowFromTemplate(template) {
   return {

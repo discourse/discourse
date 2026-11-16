@@ -7,6 +7,27 @@ class GivenDailyLike < ActiveRecord::Base
     where(user_id: user_id, given_date: date)
   end
 
+  def self.recalculate!(user_ids)
+    transaction do
+      where(user_id: user_ids).delete_all
+
+      DB.exec(
+        <<~SQL,
+          INSERT INTO given_daily_likes (user_id, given_date, likes_given, limit_reached)
+          SELECT user_id, created_at::DATE, COUNT(*), COUNT(*) >= :max_likes_per_day
+          FROM post_actions
+          WHERE user_id IN (:user_ids)
+            AND post_action_type_id = :like
+            AND deleted_at IS NULL
+          GROUP BY user_id, created_at::DATE
+        SQL
+        user_ids:,
+        like: PostActionType::LIKE_POST_ACTION_ID,
+        max_likes_per_day: SiteSetting.max_likes_per_day,
+      )
+    end
+  end
+
   def self.increment_for(user_id)
     return unless user_id
     given_date = Date.today

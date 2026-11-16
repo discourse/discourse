@@ -19,6 +19,7 @@ module DiscourseWorkflows
             duration,
             Jobs::DiscourseWorkflows::ResumeWaitingExecution,
             execution_id: execution.id,
+            resume_token: execution.resume_token,
           )
         end
     end

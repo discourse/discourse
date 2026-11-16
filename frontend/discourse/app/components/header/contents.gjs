@@ -5,11 +5,11 @@ import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argume
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
-import PluginOutlet from "../plugin-outlet";
-import HeaderSearch from "./header-search";
-import HomeLogo from "./home-logo";
-import SidebarToggle from "./sidebar-toggle";
-import TopicInfo from "./topic/info";
+import PluginOutlet from "../plugin-outlet.gjs";
+import HeaderSearch from "./header-search.gjs";
+import HomeLogo from "./home-logo.gjs";
+import SidebarToggle from "./sidebar-toggle.gjs";
+import TopicInfo from "./topic/info.gjs";
 
 export default class Contents extends Component {
   @service site;
@@ -36,6 +36,10 @@ export default class Contents extends Component {
         showSidebar: this.args.showSidebar,
       }
     );
+  }
+
+  get visibleTopic() {
+    return this.header.topicInfoVisible ? this.header.topicInfo : null;
   }
 
   get showHeaderSearch() {
@@ -66,11 +70,10 @@ export default class Contents extends Component {
       <PluginOutlet
         @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
-            value=this.header.topic
+            value=this.visibleTopic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
             since="3.3.0.beta4-dev"
-            silence="discourse.header-service-topic"
           )
         }}
         @name="header-contents__before"
@@ -110,11 +113,10 @@ export default class Contents extends Component {
         <PluginOutlet
           @deprecatedArgs={{lazyHash
             topic=(deprecatedOutletArgument
-              value=this.header.topic
+              value=this.visibleTopic
               message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
               since="3.3.0.beta4-dev"
-              silence="discourse.header-service-topic"
             )
           }}
           @name="before-header-panel"
@@ -133,11 +135,10 @@ export default class Contents extends Component {
         <PluginOutlet
           @deprecatedArgs={{lazyHash
             topic=(deprecatedOutletArgument
-              value=this.header.topic
+              value=this.visibleTopic
               message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
               since="3.3.0.beta4-dev"
-              silence="discourse.header-service-topic"
             )
           }}
           @name="after-header-panel"
@@ -150,11 +151,10 @@ export default class Contents extends Component {
       <PluginOutlet
         @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
-            value=this.header.topic
+            value=this.visibleTopic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
             since="3.3.0.beta4-dev"
-            silence="discourse.header-service-topic"
           )
         }}
         @name="header-contents__after"

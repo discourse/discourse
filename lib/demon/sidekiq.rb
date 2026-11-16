@@ -33,6 +33,9 @@ class Demon::Sidekiq < ::Demon::Base
 
       running_sidekiq_process = sidekiq_processes_for_current_hostname[daemon.pid]
 
+      # A newly forked process may not have registered its first heartbeat yet.
+      next if !running_sidekiq_process && daemon.starting?
+
       if !running_sidekiq_process ||
            (Time.now.to_i - running_sidekiq_process["beat"]) >
              SIDEKIQ_HEARTBEAT_CHECK_MISS_THRESHOLD_SECONDS
@@ -75,6 +78,18 @@ class Demon::Sidekiq < ::Demon::Base
 
   def self.max_allowed_sidekiq_rss_bytes
     [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES].max.megabytes
+  end
+
+  def run
+    super
+    @started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  end
+
+  def starting?
+    return false unless @started_at
+
+    Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at <
+      SIDEKIQ_HEARTBEAT_CHECK_MISS_THRESHOLD_SECONDS
   end
 
   def stop_signal

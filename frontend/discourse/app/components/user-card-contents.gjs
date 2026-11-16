@@ -3,6 +3,7 @@ import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { compare, isEmpty } from "@ember/utils";
@@ -13,6 +14,7 @@ import {
 } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
+import UserStatusModal from "discourse/components/modal/user-status";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserBadge from "discourse/components/user-badge";
 import formatUsername from "discourse/helpers/format-username";
@@ -47,15 +49,20 @@ import { i18n } from "discourse-i18n";
 )
 @attributeBindings("ariaLabel:aria-label")
 export default class UserCardContents extends CardContentsBase {
+  @service modal;
+  @service userStatus;
+
   elementId = "user-card";
   avatarSelector = "[data-user-card]";
   avatarDataAttrKey = "userCard";
   mentionSelector = "a.mention";
   ariaLabel = i18n("user.card");
 
+  /** @type {import("discourse/models/user").default | null} */
   user = null;
 
   // If inside a topic
+  /** @type {number | null | undefined} */
   topicPostCount = null;
 
   @computed("topic.postStream")
@@ -151,9 +158,13 @@ export default class UserCardContents extends CardContentsBase {
     );
   }
 
-  @computed("user.name", "user.username")
+  @computed("siteSettings.enable_names", "user.name", "user.username")
   get showName() {
-    return this.user.name !== this.user.username;
+    return (
+      this.siteSettings.enable_names &&
+      this.user.name &&
+      this.user.name !== this.user.username
+    );
   }
 
   @computed("user.id", "currentUser.id")
@@ -183,11 +194,6 @@ export default class UserCardContents extends CardContentsBase {
     return this.user.location || this.user.website_name || this.userTimezone;
   }
 
-  @computed("user.status")
-  get hasStatus() {
-    return this.siteSettings.enable_user_status && this.user.status;
-  }
-
   @computed("user.status.emoji")
   get userStatusEmoji() {
     return emojiUnescape(escapeExpression(`:${this.user?.status?.emoji}:`));
@@ -203,9 +209,9 @@ export default class UserCardContents extends CardContentsBase {
     return this.user?.trust_level === 0 ? "new-user" : "";
   }
 
-  @computed("user.name")
+  @computed("showName")
   get nameFirst() {
-    return prioritizeNameInUx(this.user?.name);
+    return this.showName && prioritizeNameInUx(this.user.name);
   }
 
   @computed("user")
@@ -367,6 +373,23 @@ export default class UserCardContents extends CardContentsBase {
     user.checkEmail();
   }
 
+  @action
+  editUserStatus() {
+    const user = this.user;
+    this._close();
+
+    this.modal.show(UserStatusModal, {
+      model: {
+        user,
+        status: this.currentUser.status,
+        pauseNotifications: this.currentUser.isInDoNotDisturb(),
+        saveAction: (status, pauseNotifications) =>
+          this.userStatus.set(status, pauseNotifications),
+        deleteAction: () => this.userStatus.clear(),
+      },
+    });
+  }
+
   @onEvent("didInsertElement")
   _inserted() {
     this.appEvents.on("dom:clean", this, this.cleanUp);
@@ -455,38 +478,80 @@ export default class UserCardContents extends CardContentsBase {
                 handleShowUser=this.handleShowUser
               }}
             >
-              <div aria-hidden="true" class="user-card-avatar">
-                {{#if this.contentHidden}}
-                  <span class="card-huge-avatar">{{dBoundAvatar
-                      this.user
-                      "huge"
-                    }}</span>
-                {{else}}
-                  <a
-                    class="card-huge-avatar"
-                    href={{this.avatarUrl}}
-                    tabindex="-1"
-                  >
-                    {{dBoundAvatar this.user "huge"}}
-                    {{#if this.isOwnCard}}
-                      <span class="own-avatar-pencil">
-                        <span class="own-avatar-pencil--icon">
-                          {{dIcon "pencil"}}
+              <div class="user-card-avatar-wrapper">
+                <div class="user-card-avatar">
+                  {{#if this.contentHidden}}
+                    <span
+                      aria-hidden="true"
+                      class="card-huge-avatar"
+                    >{{dBoundAvatar this.user "huge"}}</span>
+                  {{else}}
+                    <a
+                      aria-hidden="true"
+                      class="card-huge-avatar"
+                      href={{this.avatarUrl}}
+                      tabindex="-1"
+                    >
+                      {{dBoundAvatar this.user "huge"}}
+                      {{#if this.isOwnCard}}
+                        <span class="own-avatar-pencil">
+                          <span class="own-avatar-pencil--icon">
+                            {{dIcon "pencil"}}
+                          </span>
                         </span>
-                      </span>
-                    {{/if}}
-                  </a>
-                {{/if}}
+                      {{/if}}
+                    </a>
+                  {{/if}}
 
-                <DUserAvatarFlair @user={{this.user}} />
+                  <DUserAvatarFlair @user={{this.user}} />
 
-                <div>
-                  <PluginOutlet
-                    @connectorTagName="div"
-                    @name="user-card-avatar-flair"
-                    @outletArgs={{lazyHash user=this.user}}
-                  />
+                  <div>
+                    <PluginOutlet
+                      @connectorTagName="div"
+                      @name="user-card-avatar-flair"
+                      @outletArgs={{lazyHash user=this.user}}
+                    />
+                  </div>
                 </div>
+
+                {{#if this.siteSettings.enable_user_status}}
+                  {{#if this.user.status}}
+                    {{#if this.isOwnCard}}
+                      <button
+                        class="user-status --editable"
+                        title={{i18n "user_status.edit_status"}}
+                        type="button"
+                        {{on "click" this.editUserStatus}}
+                      >
+                        {{trustHTML this.userStatusEmoji}}
+                        <span class="user-status__description">
+                          {{this.user.status.description}}
+                        </span>
+                        {{dFormatDate this.user.status.ends_at format="tiny"}}
+                      </button>
+                    {{else}}
+                      <div class="user-status">
+                        {{trustHTML this.userStatusEmoji}}
+                        <span class="user-status__description">
+                          {{this.user.status.description}}
+                        </span>
+                        {{dFormatDate this.user.status.ends_at format="tiny"}}
+                      </div>
+                    {{/if}}
+                  {{else if this.isOwnCard}}
+                    <button
+                      class="user-status --empty"
+                      title={{i18n "user_status.set_custom_status"}}
+                      type="button"
+                      {{on "click" this.editUserStatus}}
+                    >
+                      {{dIcon "circle-plus"}}
+                      <span class="user-status__description">
+                        {{i18n "user_status.what_are_you_doing"}}
+                      </span>
+                    </button>
+                  {{/if}}
+                {{/if}}
               </div>
               <div class="names">
                 <div
@@ -520,7 +585,11 @@ export default class UserCardContents extends CardContentsBase {
                           (formatUsername this.user.username)
                         }}
                       </span>
-                      {{userStatus this.user currentUser=this.currentUser}}
+                      {{userStatus
+                        this.user
+                        currentUser=this.currentUser
+                        showName=this.showName
+                      }}
                     </a>
                   {{/if}}
                 </div>
@@ -537,7 +606,7 @@ export default class UserCardContents extends CardContentsBase {
                     class="names__secondary username"
                   >{{this.user.username}}</div>
                 {{else}}
-                  {{#if this.user.name}}
+                  {{#if this.showName}}
                     <div
                       class="names__secondary full-name"
                     >{{this.user.name}}</div>
@@ -550,15 +619,6 @@ export default class UserCardContents extends CardContentsBase {
                   <div class="names__secondary staged">{{i18n
                       "user.staged"
                     }}</div>
-                {{/if}}
-                {{#if this.hasStatus}}
-                  <div class="user-status">
-                    {{trustHTML this.userStatusEmoji}}
-                    <span class="user-status__description">
-                      {{this.user.status.description}}
-                    </span>
-                    {{dFormatDate this.user.status.ends_at format="tiny"}}
-                  </div>
                 {{/if}}
                 <div>
                   <PluginOutlet

@@ -17,6 +17,14 @@ import userPresent, {
 } from "discourse/lib/user-presence";
 import User from "discourse/models/user";
 
+/**
+ * @typedef {{
+ *   count: number,
+ *   last_message_id: number,
+ *   users?: Record<string, unknown>[],
+ * }} PresenceChannelStateData
+ */
+
 const PRESENCE_INTERVAL_S = 30;
 const DEFAULT_PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
 const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 1000;
@@ -105,6 +113,7 @@ class PresenceChannel extends EmberObject.extend(Evented) {
     }
   }
 
+  /** @param {PresenceChannelStateData | null} [initialData] */
   async subscribe(initialData = null) {
     if (this.subscribed) {
       return;
@@ -450,6 +459,7 @@ export default class PresenceService extends Service {
     await promiseProxy.promise;
   }
 
+  /** @param {PresenceChannelStateData | null} [initialData] */
   async _subscribe(channelProxy, initialData = null) {
     if (this.siteSettings.login_required && !this.currentUser) {
       throw "Presence is only available to authenticated users on login-required sites";

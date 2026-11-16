@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import EditBadgeGroupingsModal from "discourse/admin/components/modal/edit-badge-groupings";
+import EditBadgeGroupingsModalReorderable from "discourse/admin/components/modal/edit-badge-groupings-reorderable";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -10,6 +11,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminBadges extends Component {
   @service adminBadges;
   @service modal;
+  @service siteSettings;
 
   get badges() {
     return this.adminBadges.badges;
@@ -17,7 +19,13 @@ export default class AdminBadges extends Component {
 
   @action
   editGroupings() {
-    this.modal.show(EditBadgeGroupingsModal, {
+    // TODO (ui-kit-reorderable-list-cleanup) drop the branch and the legacy
+    // component once the change ships.
+    const Modal = this.siteSettings.enable_new_reordering_controls
+      ? EditBadgeGroupingsModalReorderable
+      : EditBadgeGroupingsModal;
+
+    this.modal.show(Modal, {
       model: {
         badgeGroupings: this.adminBadges.badgeGroupings,
         updateGroupings: (groupings) => {

@@ -150,4 +150,27 @@ describe "Admin Badges Page" do
       expect(page).to have_current_path("/admin/badges")
     end
   end
+
+  context "when enable_new_reordering_controls is enabled" do
+    fab!(:custom_grouping) { BadgeGrouping.create!(name: "Custom grouping", position: 10) }
+
+    before { SiteSetting.enable_new_reordering_controls = true }
+
+    it "draws edit and remove only on the groupings that accept them" do
+      badges_page.visit_page(Badge::Autobiographer).edit_groupings
+
+      expect(page).to have_css(".badge-grouping-item", minimum: 6)
+
+      system_row = find(".badge-grouping-item", text: "Getting Started")
+      custom_row = find(".badge-grouping-item", text: "Custom grouping")
+
+      # A system grouping can be neither renamed nor removed, so it draws neither
+      # control rather than drawing them disabled.
+      expect(system_row).to have_no_css(".btn .d-icon-pencil")
+      expect(system_row).to have_no_css(".d-reorderable-list__remove")
+
+      expect(custom_row).to have_css(".btn .d-icon-pencil")
+      expect(custom_row).to have_css(".d-reorderable-list__remove")
+    end
+  end
 end

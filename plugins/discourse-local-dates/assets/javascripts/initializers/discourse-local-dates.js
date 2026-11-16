@@ -9,10 +9,10 @@ import { iconHTML, renderIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { slugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
-import generateCurrentDateMarkup from "../lib/generate-current-date-markup";
-import LocalDateBuilder from "../lib/local-date-builder";
-import richEditorExtension from "../lib/rich-editor-extension";
+import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create.gjs";
+import generateCurrentDateMarkup from "../lib/generate-current-date-markup.js";
+import LocalDateBuilder from "../lib/local-date-builder.js";
+import richEditorExtension from "../lib/rich-editor-extension.js";
 
 // Wired into core via the "apply-local-dates" behavior transformer.
 // Call applyLocalDates from discourse/lib/local-dates instead of importing this directly.

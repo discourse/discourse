@@ -1,4 +1,4 @@
-import { attrs, belongsTo, withDefaults } from "./helpers";
+import { attrs, belongsTo, withDefaults } from "./helpers.js";
 
 // `user` / `granted_by` / `topic` are opaque attributes rather than relations
 // — those models aren't migrated yet; LegacyMode would throw on every unknown

@@ -7,13 +7,12 @@ import { service } from "@ember/service";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import { bind } from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { and, eq, not } from "discourse/truth-helpers";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
-import formatChatDate from "../../../helpers/format-chat-date";
+import formatChatDate from "../../../helpers/format-chat-date.js";
 
 export default class ChatMessageInfo extends Component {
   @service site;
@@ -169,15 +168,10 @@ export default class ChatMessageInfo extends Component {
           </span>
         {{/if}}
 
-        {{#if this.siteSettings.chat_pinned_messages}}
-          {{#if (and @message.pinned (not (eq @context "pinned")))}}
-            <span
-              class="chat-message-info__pinned"
-              title={{i18n "chat.pinned"}}
-            >
-              {{dIcon "thumbtack"}}
-            </span>
-          {{/if}}
+        {{#if (and @message.pinned (not (eq @context "pinned")))}}
+          <span class="chat-message-info__pinned" title={{i18n "chat.pinned"}}>
+            {{dIcon "thumbtack"}}
+          </span>
         {{/if}}
 
         {{#if this.isFlagged}}

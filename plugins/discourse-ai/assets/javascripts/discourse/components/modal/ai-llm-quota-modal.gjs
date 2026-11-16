@@ -8,7 +8,7 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import DurationSelector from "../ai-quota-duration-selector";
+import DurationSelector from "../ai-quota-duration-selector.gjs";
 
 export default class AiLlmQuotaModal extends Component {
   @service site;

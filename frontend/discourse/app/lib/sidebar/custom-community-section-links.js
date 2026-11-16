@@ -10,7 +10,7 @@ export let secondaryCustomSectionLinks = [];
  * @param {BaseCommunitySectionLink} baseCommunitySectionLink Factory class to inherit from.
  * @returns {BaseCommunitySectionLink} A class that extends BaseCommunitySectionLink.
  *
- * @param {(addSectionLinkCallback|Object)} args - A callback function or an Object.
+ * @param {((baseCommunitySectionLink: typeof BaseCommunitySectionLink) => typeof BaseCommunitySectionLink) | { name: string, text: string, route?: string, href?: string, title?: string, icon?: string, models?: Array<string | number | object> }} args - A callback function or an Object.
  * @param {string} args.name - The name of the link. Needs to be dasherized and lowercase.
  * @param {string} args.text - The text to display for the link.
  * @param {string} [args.route] - The Ember route name to generate the href attribute for the link.

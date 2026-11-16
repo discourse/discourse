@@ -10,17 +10,13 @@ import { isEmpty } from "@ember/utils";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { bind } from "discourse/lib/decorators";
-import {
-  getCollapsedSidebarSectionKey,
-  getSidebarSectionContentId,
-} from "discourse/lib/sidebar/helpers";
+import { getSidebarSectionContentId } from "discourse/lib/sidebar/helpers";
 import {
   linkDropEffectFor,
   WEB_LINK_ADOPTION,
   WEB_LINK_KINDS,
   webLinkPayload,
 } from "discourse/lib/sidebar/link-drop";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -29,21 +25,15 @@ import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-dr
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import dDragDwell from "discourse/ui-kit/modifiers/d-drag-dwell";
 import { i18n } from "discourse-i18n";
-import SectionHeader from "./section-header";
+import SectionHeader from "./section-header.gjs";
 
 export default class SidebarSection extends Component {
-  @service keyValueStore;
   @service router;
   @service sidebarState;
 
   @tracked linkDropActive = false;
   @tracked linkDropIndex;
   @tracked linkDropLinkCount = 0;
-
-  sidebarSectionContentId = getSidebarSectionContentId(this.args.sectionName);
-  collapsedSidebarSectionKey = getCollapsedSidebarSectionKey(
-    this.args.sectionName
-  );
 
   /** Whether this section is only open because a drag asked it to be. */
   #openedForDrag = false;
@@ -75,20 +65,8 @@ export default class SidebarSection extends Component {
     }
   }
 
-  get isCollapsed() {
-    if (!this.args.collapsable) {
-      return false;
-    }
-
-    if (
-      this.keyValueStore.getItem(this.collapsedSidebarSectionKey) === undefined
-    ) {
-      return this.args.collapsedByDefault;
-    }
-
-    return (
-      this.keyValueStore.getItem(this.collapsedSidebarSectionKey) === "true"
-    );
+  get sidebarSectionContentId() {
+    return getSidebarSectionContentId(this.args.sectionName);
   }
 
   get isActive() {
@@ -96,7 +74,11 @@ export default class SidebarSection extends Component {
   }
 
   get displaySectionContent() {
-    if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
+    if (
+      !this.args.collapsable ||
+      this.args.hideSectionHeader ||
+      !isEmpty(this.sidebarState.filter)
+    ) {
       return true;
     }
 
@@ -104,8 +86,9 @@ export default class SidebarSection extends Component {
       return true;
     }
 
-    return !this.sidebarState.collapsedSections.has(
-      this.collapsedSidebarSectionKey
+    return !this.sidebarState.isSectionCollapsed(
+      this.args.sectionName,
+      this.args.collapsedByDefault
     );
   }
 
@@ -138,20 +121,10 @@ export default class SidebarSection extends Component {
   }
 
   @bind
-  setExpandedState() {
-    if (!isEmpty(this.sidebarState.filter)) {
-      return;
+  expandIfActiveOnInsert() {
+    if (isEmpty(this.sidebarState.filter)) {
+      this.expandIfActive();
     }
-
-    // initialize the collapsed/expanded state of the section
-    if (this.isCollapsed) {
-      this.sidebarState.collapseSection(this.args.sectionName);
-    } else {
-      this.sidebarState.expandSection(this.args.sectionName);
-    }
-
-    // override the expanded state if the section is active
-    this.expandIfActive();
   }
 
   @bind
@@ -349,7 +322,7 @@ export default class SidebarSection extends Component {
         }}
         data-section-name={{@sectionName}}
         ...attributes
-        {{didInsert this.setExpandedState}}
+        {{didInsert this.expandIfActiveOnInsert}}
         {{dDragAndDropExternalTarget
           accepts=WEB_LINK_KINDS
           canDrop=this.canDropLink

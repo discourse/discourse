@@ -28,10 +28,16 @@ RSpec.describe Boards::CreateBoard do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when user cannot manage boards" do
+    context "when user cannot create boards" do
       let(:dependencies) { { guardian: outsider.guardian } }
 
-      it { is_expected.to fail_a_policy(:can_manage) }
+      it "fails the creation policy without creating a board" do
+        expect { result }.not_to change { Boards::Board.count }
+        expect(result).to fail_a_policy(:can_create_board)
+        expect(result["result.policy.can_create_board"].reason).to eq(
+          I18n.t("boards.errors.board_create_forbidden"),
+        )
+      end
     end
 
     context "when everything is valid" do
@@ -50,6 +56,29 @@ RSpec.describe Boards::CreateBoard do
 
         manage_acl = AccessControlList.find_by!(target: result[:board], permission: "manage")
         expect(manage_acl.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
+      end
+
+      it "makes the creator the board owner" do
+        board = result[:board]
+
+        owner_acl = AccessControlList.find_by!(target: board, permission: "owner")
+        expect(owner_acl.allowed_user_ids).to contain_exactly(manager.id)
+        expect(owner_acl.allowed_group_ids).to be_empty
+      end
+
+      context "with co-owners" do
+        let(:raw) do
+          {
+            "name" => "Co-owned board",
+            "slug" => "co-owned-board",
+            "owner_user_ids" => [outsider.id],
+          }
+        end
+
+        it "rejects the initial owner set from a non-admin" do
+          expect { result }.not_to change { Boards::Board.count }
+          expect(result).to fail_a_step(:create_acl)
+        end
       end
 
       it "creates mandatory ACLs when ACL params are empty" do

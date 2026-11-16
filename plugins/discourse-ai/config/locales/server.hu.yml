@@ -16,6 +16,8 @@ hu:
         image_generation_custom:
           name: "Egyéni"
     ai_bot:
+      sources:
+        spam_detection: "Kéretlen tartalom észlelése"
       navigation:
         settings:
           title: "Webhely beállítások"
@@ -37,6 +39,29 @@ hu:
           title: "Biztonsági mentések"
       read_post:
         unknown_post: "bejegyzéssel"
+      chat_tool_approval:
+        topic_states:
+          open: "Megnyitás"
+          closed: "Lezárva"
+          active: "Aktív"
+          deleted: "Törölve"
+        solution_post: "Bejegyzés #%{number}"
+        duration_label: "Időtartam:"
+        user_duration:
+          one: "%{count} nap"
+          other: "%{count} nap"
+        post_states:
+          locked: "Zárva"
+        posts_label: "Bejegyzések:"
+        category_label: "Kategória"
+        category_fields:
+          name: "név"
+          description: "leírás"
+          color: "szín"
+          text_color: "szöveg színe"
+        approve_label: "Igen"
+        reject_label: "Nem"
+        empty_value: "Üres"
       tool_summary:
         suspend_user: "Felhasználó felfüggesztése"
         silence_user: "Felhasználó némítása"
@@ -78,6 +103,20 @@ hu:
       assign:
         errors:
           not_found: "A téma nem található."
+    appearance_authoring:
+      default_theme: "Alapértelmezett téma"
+      colors:
+        light:
+          header_background: "Fejléc"
+      fonts:
+        base_font: "Törzs betűtípus"
+        heading_font: "Fejléc betűkészlet"
+    mcp_theme_access:
+      "on": "Be"
+      "off": "Ki"
+      none: "egy sem"
+    mcp_app_setup:
+      none: "egy sem"
     reviewables:
       ai_tool_action:
         approve:

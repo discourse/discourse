@@ -9,10 +9,17 @@ import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ id: string, name: string, selected: boolean }} ReseedOption
+ */
 export default class Reseed extends Component {
   @tracked loading = true;
   @tracked reseeding = false;
+
+  /** @type {ReseedOption[] | null} */
   @tracked categories = null;
+
+  /** @type {ReseedOption[] | null} */
   @tracked topics = null;
   @tracked flash;
 

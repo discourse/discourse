@@ -7,5 +7,15 @@
 lt:
   js:
     discourse_captcha:
+      title: "Captcha"
       configuration_test:
         tab_title: "Bandymas"
+        title: "Konfigūracijos testas"
+        description: "Išbandykite išsaugotus CAPTCHA raktus."
+        start: "Testavimo konfigūracija"
+        retry: "Bandykite dar kartą"
+        complete_challenge: "Įveikite užduotį, kad patvirtintumėte išsaugotus raktus."
+        verifying: "Tikrinama su jūsų „CAPTCHA“ paslaugų teikėju..."
+        not_configured: "Prieš atlikdami testavimą, pasirinkite „CAPTCHA“ paslaugų teikėją ir „Nustatymuose“ išsaugokite tiek svetainės raktą, tiek slaptąjį raktą."
+        challenge_failed: "Nepavyko įkelti „CAPTCHA“. Patikrinkite raktus ir teikėjo nustatymus."
+        expired: "Iššūkio laikas baigėsi. Pradėkite naują testą ir atlikite jį dar kartą."

@@ -75,6 +75,21 @@
 .ask-ai-report-subject {
   border-block-start: 1px solid var(--primary-low);
 
+  &__empty {
+    padding-block: var(--space-4);
+    font-size: var(--font-down-1);
+    overflow-wrap: anywhere;
+
+    .ask-ai-report-subject__count {
+      margin-inline-start: var(--space-3);
+    }
+  }
+
+  &__no-valid-questions {
+    margin-block: var(--space-2) 0;
+    color: var(--primary-high);
+  }
+
   &__toggle.btn {
     --d-button-flat-bg-color--hover: transparent;
     display: flex;

@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable/note-form";
+import { reviewableOutcome } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
@@ -13,8 +14,17 @@ import {
   penaltyPastTense,
 } from "discourse/lib/reviewable-penalty";
 import { sanitize } from "discourse/lib/text";
-import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
-import { and, eq } from "discourse/truth-helpers";
+import {
+  APPROVED,
+  DELETED,
+  IGNORED,
+  REJECTED,
+} from "discourse/models/reviewable";
+import {
+  CLAIMED,
+  TRANSITIONED,
+  UNCLAIMED,
+} from "discourse/models/reviewable-history";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
@@ -24,6 +34,11 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ id: number, username: string, avatar_template: string, name?: string | null }} ReviewableTimelineUser
+ * @typedef {{ id: number, content: string, cooked?: string | null, created_at: string, updated_at: string, user?: ReviewableTimelineUser | null }} ReviewableNoteData
+ * @typedef {{ type: string, date: string, user: ReviewableTimelineUser | null | undefined, icon: string, titleKey?: string, description?: import("@ember/template").TrustedHTML | null, score?: { count: number, type: string, title: string }, noteId?: number, canDelete?: boolean | null }} ReviewableTimelineEvent
+ */
 /**
  * Timeline component for reviewable items that displays chronological events
  * including flags, reviews, notes, and target post creation.
@@ -37,7 +52,7 @@ export default class ReviewableTimeline extends Component {
    * Combines all timeline events from reviewable scores, histories, and the reviewable itself
    * and sorts them chronologically.
    *
-   * @returns {Array<Object>} Array of timeline event objects sorted by date (newest first)
+   * @returns {ReviewableTimelineEvent[]} Array of timeline event objects sorted by date (newest first)
    */
   get timelineEvents() {
     const events = [];
@@ -111,19 +126,24 @@ export default class ReviewableTimeline extends Component {
           const reviewedKey = `${score.reviewed_by.id}-${score.reviewed_at}`;
 
           if (!reviewedEvents.has(reviewedKey)) {
-            // Determine icon based on score status
+            // Score statuses (agreed, disagreed, ignored) share their values
+            // with the reviewable statuses they resolve to.
             let reviewIcon;
             let titleKey;
             switch (score.status) {
-              case 1: // approved
-                reviewIcon = "check";
-                titleKey = "review.timeline.approved_by";
+              case APPROVED:
+              case REJECTED: {
+                const outcome = reviewableOutcome(
+                  score.status,
+                  this.args.reviewable.type,
+                  this.args.reviewable.approval_style,
+                  this.args.reviewable.answersProblem
+                );
+                reviewIcon = outcome.icon;
+                titleKey = outcome.timelineKey;
                 break;
-              case 2: // rejected
-                reviewIcon = "xmark";
-                titleKey = "review.timeline.rejected_by";
-                break;
-              case 3: // ignored
+              }
+              case IGNORED:
                 reviewIcon = "far-eye-slash";
                 titleKey = "review.timeline.ignored_by";
                 break;
@@ -174,7 +194,7 @@ export default class ReviewableTimeline extends Component {
         user: note.user,
         icon: "far-pen-to-square",
         titleKey: "review.timeline.note_added_by",
-        description: trustHTML(`<p>${escape(note.content)}</p>`),
+        description: trustHTML(note.cooked ?? `<p>${escape(note.content)}</p>`),
         noteId: note.id,
         canDelete:
           this.currentUser &&
@@ -184,7 +204,19 @@ export default class ReviewableTimeline extends Component {
     });
 
     this.args.historyEvents?.forEach((history) => {
-      if (history.reviewable_history_type === CLAIMED) {
+      if (
+        this.args.reviewable.type === "ReviewableQueuedPost" &&
+        history.reviewable_history_type === TRANSITIONED &&
+        history.status === DELETED
+      ) {
+        events.push({
+          type: "queued_post_deleted",
+          date: history.created_at,
+          user: history.created_by,
+          icon: "trash-can",
+          titleKey: "review.timeline.queued_post_deleted_by",
+        });
+      } else if (history.reviewable_history_type === CLAIMED) {
         events.push({
           type: "claimed",
           date: history.created_at,
@@ -209,7 +241,7 @@ export default class ReviewableTimeline extends Component {
   /**
    * Handles creation of a new note.
    *
-   * @param {Object} noteData - The created note data from the server
+   * @param {ReviewableNoteData} noteData - The created note data from the server
    */
   @action
   onNoteCreated(noteData) {
@@ -279,7 +311,11 @@ export default class ReviewableTimeline extends Component {
                     </div>
                     {{#if event.description}}
                       <DDecoratedHtml
-                        @className="timeline-event__description"
+                        @className={{if
+                          (eq event.type "note")
+                          "timeline-event__description --note"
+                          "timeline-event__description"
+                        }}
                         @html={{event.description}}
                       />
                     {{/if}}

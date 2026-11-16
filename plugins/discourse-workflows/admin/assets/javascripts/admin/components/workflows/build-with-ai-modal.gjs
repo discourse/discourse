@@ -226,8 +226,18 @@ export default class BuildWithAiModal extends Component {
       .filter(Boolean);
   }
 
+  get aiProposalHasFailedScripts() {
+    return (this.aiProposal?.script_validations || []).some(
+      (validation) => !validation.valid
+    );
+  }
+
   get aiShowingProgress() {
     return this.aiGenerating && this.aiProgressEvents.length > 0;
+  }
+
+  get aiLatestProgressEvent() {
+    return this.aiProgressEvents.at(-1);
   }
 
   @action
@@ -387,6 +397,11 @@ export default class BuildWithAiModal extends Component {
     }
 
     await this.#submitAiMessage(this.#aiClarificationMessage());
+  }
+
+  @action
+  async fixAiProposal() {
+    await this.#submitAiMessage(i18n("discourse_workflows.ai.fix_message"));
   }
 
   @action
@@ -638,22 +653,18 @@ export default class BuildWithAiModal extends Component {
           role="dialog"
         >
           <div class="workflows-canvas__ai-panel-header">
-            <div class="workflows-canvas__ai-title-row">
-              <div class="workflows-canvas__ai-title">
-                <h3 id="workflow-ai-panel-title">
-                  {{i18n "discourse_workflows.ai.title"}}
-                </h3>
-                <span
-                  class={{dConcatClass
-                    "workflows-canvas__ai-status"
-                    this.aiStatusClass
-                  }}
-                >
-                  {{this.aiStatusLabel}}
-                </span>
-
-              </div>
-              <p>{{i18n "discourse_workflows.ai.subtitle"}}</p>
+            <div class="workflows-canvas__ai-title">
+              <h3 id="workflow-ai-panel-title">
+                {{i18n "discourse_workflows.ai.title"}}
+              </h3>
+              <span
+                class={{dConcatClass
+                  "workflows-canvas__ai-status"
+                  this.aiStatusClass
+                }}
+              >
+                {{this.aiStatusLabel}}
+              </span>
             </div>
             <DButton
               class="btn-transparent workflows-canvas__ai-close"
@@ -881,6 +892,13 @@ export default class BuildWithAiModal extends Component {
               </div>
 
               <div class="workflows-canvas__ai-review-footer">
+                {{#if this.aiProposalHasFailedScripts}}
+                  <DButton
+                    class="btn-default"
+                    @action={{this.fixAiProposal}}
+                    @translatedLabel={{i18n "discourse_workflows.ai.fix"}}
+                  />
+                {{/if}}
                 <DButton
                   class="btn-primary"
                   @action={{this.applyAiProposal}}
@@ -921,6 +939,12 @@ export default class BuildWithAiModal extends Component {
                 @translatedLabel={{i18n "discourse_workflows.ai.generate"}}
               />
             </div>
+          {{/if}}
+
+          {{#if this.aiShowingProgress}}
+            <p aria-live="polite" class="workflows-canvas__ai-progress-current">
+              {{this.aiProgressMessage this.aiLatestProgressEvent}}
+            </p>
           {{/if}}
 
           {{#if this.aiResponseError}}

@@ -5,12 +5,28 @@ import { registeredTabs } from "discourse/components/more-topics";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
+/**
+ * @typedef {{
+ *   id: string,
+ *   name: string,
+ *   icon?: string,
+ *   component: import("@glint/template").ComponentLike,
+ *   condition?: (opts: {
+ *     topic: import("discourse/models/topic").default,
+ *     context: "topic" | "pm",
+ *   }) => boolean,
+ * }} MoreTopicsTab
+ */
+
 @disableImplicitInjections
 export default class MoreTopicsTabsService extends Service {
   @service currentUser;
   @service keyValueStore;
 
+  /** @type {import("discourse/models/topic").default | null} */
   @tracked topic = null;
+
+  /** @type {MoreTopicsTab | null} */
   @tracked preferredTab = null;
 
   get context() {

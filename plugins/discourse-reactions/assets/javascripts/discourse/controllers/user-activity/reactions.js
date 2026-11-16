@@ -3,7 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
-import CustomReaction from "../../models/discourse-reactions-custom-reaction";
+import CustomReaction from "../../models/discourse-reactions-custom-reaction.js";
 
 export default class UserActivityReactions extends Controller {
   @service siteSettings;

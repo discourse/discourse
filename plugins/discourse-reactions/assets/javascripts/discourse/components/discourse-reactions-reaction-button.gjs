@@ -40,6 +40,14 @@ export default class ReactionsReactionButton extends Component {
     return icon;
   }
 
+  // Without emoji rendering, any reaction is shown as a like.
+  get showLikedIcon() {
+    return (
+      this.args.post.current_user_used_main_reaction ||
+      (this.args.post.current_user_reaction && !this.siteSettings.enable_emoji)
+    );
+  }
+
   get title() {
     if (!this.currentUser) {
       return i18n("discourse_reactions.main_reaction.unauthenticated");
@@ -154,7 +162,7 @@ export default class ReactionsReactionButton extends Component {
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}
     >
-      {{#if @post.current_user_used_main_reaction}}
+      {{#if this.showLikedIcon}}
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
           @icon={{this.likedIcon}}

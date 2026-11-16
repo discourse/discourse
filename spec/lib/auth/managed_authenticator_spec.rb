@@ -219,40 +219,42 @@ RSpec.describe Auth::ManagedAuthenticator do
         UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
       end
 
-      it "schedules the job upon update correctly" do
-        # No image supplied, do not schedule
+      it "downloads provided images without changing the selected source" do
         expect { authenticator.after_authenticate(hash) }.not_to change {
           Jobs::DownloadAvatarFromUrl.jobs.count
         }
 
-        # Image supplied, schedule
         expect {
           authenticator.after_authenticate(
             hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
           )
         }.to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
 
-        # User already has profile picture, don't schedule
-        user.user_avatar = Fabricate(:user_avatar, custom_upload: Fabricate(:upload))
-        user.save!
+        user.user_avatar.update!(custom_upload: Fabricate(:upload))
+
         expect {
           authenticator.after_authenticate(
             hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
           )
-        }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
+        }.to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
+
+        expect(Jobs::DownloadAvatarFromUrl.jobs.last["args"].first["associated_account_id"]).to eq(
+          associated.id,
+        )
+        expect(user.user_avatar.reload.selected_user_associated_account_id).to be_nil
       end
 
-      it "ensures avatar is overriden when using auth_overrides_avatar" do
-        # User already has profile picture and settings dictate we must override it, schedule
+      it "selects the provider when auth_overrides_avatar is enabled" do
         SiteSetting.auth_overrides_avatar = true
+        user.user_avatar.update!(custom_upload: Fabricate(:upload))
 
-        user.user_avatar = Fabricate(:user_avatar, custom_upload: Fabricate(:upload))
-        user.save!
         expect {
           authenticator.after_authenticate(
             hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
           )
         }.to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
+
+        expect(user.user_avatar.reload.selected_user_associated_account_id).to eq(associated.id)
       end
     end
 
@@ -297,28 +299,24 @@ RSpec.describe Auth::ManagedAuthenticator do
         UserAssociatedAccount.create!(provider_name: "myauth", provider_uid: "1234")
       end
 
-      it "doesn't schedule with no image" do
-        expect {
-          result =
-            authenticator.after_create_account(user, create_auth_result(extra_data: create_hash))
-        }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
-      end
+      it "does not schedule without an image" do
+        [nil, ""].each do |image|
+          association.update!(info: { image: image })
 
-      it "does not schedule if image is empty" do
-        association.info["image"] = ""
-        association.save!
-        expect {
-          authenticator.after_create_account(user, create_auth_result(extra_data: create_hash))
-        }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
+          expect {
+            authenticator.after_create_account(user, create_auth_result(extra_data: create_hash))
+          }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
+        end
       end
 
       it "schedules with image" do
-        association.info["image"] = "https://some.domain/image.jpg"
-        association.save!
+        association.update!(info: { image: "https://some.domain/image.jpg" })
+
         expect {
-          result =
-            authenticator.after_create_account(user, create_auth_result(extra_data: create_hash))
+          authenticator.after_create_account(user, create_auth_result(extra_data: create_hash))
         }.to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
+
+        expect(user.user_avatar.reload.selected_user_associated_account_id).to eq(association.id)
       end
     end
 

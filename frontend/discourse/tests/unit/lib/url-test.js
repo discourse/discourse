@@ -451,6 +451,43 @@ module("Unit | Utility | url", function (hooks) {
     );
   });
 
+  test("handleURL restores the anchor after the transition", async function (assert) {
+    let redirected = false;
+    sinon.stub(DiscourseURL, "routerService").get(() => ({
+      transitionTo: () => ({
+        promise: Promise.resolve(),
+        followRedirects: () =>
+          new Promise((resolve) =>
+            setTimeout(() => {
+              redirected = true;
+              resolve();
+            }, 0)
+          ),
+      }),
+    }));
+    sinon.stub(DiscourseURL, "jumpToElement");
+    sinon.stub(DiscourseURL, "replaceState");
+
+    await DiscourseURL.handleURL("/t/some-topic/123#heading1");
+
+    assert.true(redirected, "waits for redirects before restoring");
+    assert.true(
+      DiscourseURL.replaceState.calledWith("#heading1"),
+      "the anchor is put back on the URL once the route has settled"
+    );
+    assert.true(
+      DiscourseURL.jumpToElement.calledWith("heading1"),
+      "the anchor is scrolled to"
+    );
+
+    DiscourseURL.replaceState.resetHistory();
+    await DiscourseURL.handleURL("/t/some-topic/123");
+    assert.false(
+      DiscourseURL.replaceState.called,
+      "no replaceState without an anchor"
+    );
+  });
+
   test("getCanonicalUrl", function (assert) {
     assert.strictEqual(
       getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/1/"),

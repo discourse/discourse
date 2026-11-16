@@ -1,4 +1,10 @@
-import { fillIn, findAll, render, triggerEvent } from "@ember/test-helpers";
+import {
+  fillIn,
+  findAll,
+  render,
+  triggerEvent,
+  typeIn,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import CompactEventEditor from "discourse/plugins/discourse-events/discourse/components/compact-event-editor";
@@ -39,6 +45,46 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
         "https://meet.example.com/legacy",
         "a defined url is reachable on the compact screen, not just in advanced"
       );
+  });
+
+  test("offers a recording field once a livestream has ended", async function (assert) {
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2020-07-01T10:00:00Z"),
+        endsAt: moment("2020-07-01T11:00:00Z"),
+      })
+    );
+
+    assert.dom(".composer-event__recording-input").exists();
+  });
+
+  test("offers no recording field before a livestream has ended", async function (assert) {
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2099-07-01T10:00:00Z"),
+        endsAt: moment("2099-07-01T11:00:00Z"),
+      })
+    );
+
+    assert.dom(".composer-event__recording-input").doesNotExist();
+  });
+
+  test("emits the recording as it is typed", async function (assert) {
+    let state;
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2020-07-01T10:00:00Z"),
+        endsAt: moment("2020-07-01T11:00:00Z"),
+      }),
+      (newState) => (state = newState)
+    );
+
+    await fillIn(".composer-event__recording-input", "https://youtu.be/abc");
+
+    assert.strictEqual(state.recording, "https://youtu.be/abc");
   });
 
   test("offers no url row for an event that has none", async function (assert) {
@@ -254,5 +300,23 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
     assert
       .dom(findAll(".composer-event__date-input")[1])
       .hasValue("2026-07-01", "the picked day stays in the field");
+  });
+
+  test("typing a multi-digit reminder value keeps every digit", async function (assert) {
+    const initialState = stateWith({
+      reminders: [
+        { type: "notification", value: 1, unit: "minutes", period: "before" },
+      ],
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await typeIn(".composer-event__reminder-value", "55");
+
+    assert.strictEqual(
+      lastState.reminders[0].value,
+      155,
+      "each keystroke lands in the reminder value"
+    );
   });
 });

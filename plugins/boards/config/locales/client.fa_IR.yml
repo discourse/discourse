@@ -28,7 +28,9 @@ fa_IR:
         topic_reply_count:
           one: "%{count} پاسخ"
           other: "%{count} پاسخ"
-        created_by: "ایجاد شده توسط"
+        owners:
+          one: "مالک"
+          other: "مالکین"
       manage:
         name: "نام"
         slug: "نشانک (slug)"

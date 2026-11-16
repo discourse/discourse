@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import RegionInput from "../../components/region-input";
-import { TIME_ZONE_TO_REGION } from "../../lib/regions";
+import RegionInput from "../../components/region-input.js";
+import { TIME_ZONE_TO_REGION } from "../../lib/regions.js";
 
 export default class Region extends Component {
   static shouldRender(args, { siteSettings }) {

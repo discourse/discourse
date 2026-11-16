@@ -50,6 +50,39 @@ RSpec.describe Onebox::Helpers do
         )
       end
     end
+
+    it "rejects an unapproved port on an allowlisted internal host" do
+      SiteSetting.s3_endpoint = "http://minio.local:9000"
+      SiteSetting.allowed_internal_hosts = "minio.local"
+      internal_url = "http://minio.local:9200/oembed.json"
+      stub_request(:get, internal_url).to_return(status: 200, body: "internal")
+
+      expect { described_class.fetch_response(internal_url) }.to raise_error(
+        FinalDestination::SSRFError,
+      )
+      expect(WebMock).not_to have_requested(:get, internal_url)
+    end
+
+    it "fetches an allowlisted internal host on its configured S3 port" do
+      SiteSetting.s3_endpoint = "http://minio.local:9000"
+      SiteSetting.allowed_internal_hosts = "minio.local"
+      url = "http://minio.local:9000/oembed.json"
+      stub_request(:get, url).to_return(status: 200, body: "oembed")
+
+      expect(described_class.fetch_response(url)).to eq("oembed")
+    end
+
+    it "rejects redirects to an unapproved port on an allowlisted internal host" do
+      SiteSetting.s3_endpoint = "http://minio.local:9000"
+      SiteSetting.allowed_internal_hosts = "minio.local"
+      url = "https://example.com/oembed"
+      internal_url = "http://minio.local:9200/oembed.json"
+      stub_request(:get, url).to_return(status: 302, headers: { location: internal_url })
+      stub_request(:get, internal_url).to_return(status: 200, body: "internal")
+
+      expect { described_class.fetch_response(url) }.to raise_error(FinalDestination::SSRFError)
+      expect(WebMock).not_to have_requested(:get, internal_url)
+    end
   end
 
   describe "fetch_html_doc" do

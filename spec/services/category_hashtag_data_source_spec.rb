@@ -73,6 +73,15 @@ RSpec.describe CategoryHashtagDataSource do
       expect(result.text).to eq("Silly Land > Random")
     end
 
+    it "uses only the category name when category hashtag cards are enabled" do
+      SiteSetting.enable_category_hashtag_cards = true
+
+      result = described_class.lookup(guardian, ["fun:random"]).first
+
+      expect(result.text).to eq("Random")
+      expect(result.ref).to eq("fun:random")
+    end
+
     context "with sub-sub-categories" do
       before { SiteSetting.max_category_nesting = 3 }
 

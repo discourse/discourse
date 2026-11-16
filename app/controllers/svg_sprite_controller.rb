@@ -57,8 +57,11 @@ class SvgSpriteController < ApplicationController
     filter = permitted[:filter].to_s
     page = fetch_page_from_params(max: MAX_PAGE)
 
-    etag = [Discourse.git_version, SvgSprite.version(@theme_id), filter, only_available, page]
-    return if !stale?(etag:)
+    # A symbol source's icons can change without changing the sprite version
+    if only_available || DiscoursePluginRegistry.svg_symbol_sources.empty?
+      etag = [Discourse.git_version, SvgSprite.version(@theme_id), filter, only_available, page]
+      return if !stale?(etag:)
+    end
 
     render json:
              SvgSprite.icon_picker_search(

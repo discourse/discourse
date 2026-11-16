@@ -1,6 +1,5 @@
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const Dropdown = <template>

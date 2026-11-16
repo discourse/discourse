@@ -2,26 +2,15 @@ import {
   inputPreviewPort,
   latestRunWithOutput,
   outputForRun,
-} from "./run-data";
-import { fieldsForSchema, schemaFieldsForItems } from "./schema-fields";
-import { outputSchemaForNode } from "./schema-graph";
+} from "./run-data.js";
+import { fieldsForSchema, schemaFieldsForItems } from "./schema-fields.js";
 
 function declaredFieldsForNodeOutput(
   node,
-  graph,
-  {
-    outputIndex = 0,
-    prefix = "$json",
-    configuration,
-    declaredOutputSchemas,
-  } = {}
+  { outputIndex = 0, prefix = "$json", declaredOutputSchemas = {} } = {}
 ) {
   return fieldsForSchema(
-    outputSchemaForNode(node, graph, {
-      configuration,
-      outputIndex,
-      outputSchemas: declaredOutputSchemas,
-    }),
+    declaredOutputSchemas[node?.clientId]?.[outputIndex] || {},
     { prefix }
   );
 }
@@ -37,31 +26,14 @@ function portWasFullyCompacted(port) {
 export function schemaFieldsForNodeOutput(
   runData,
   nodeName,
-  {
-    outputIndex = 0,
-    prefix = "$json",
-    node,
-    graph,
-    configuration,
-    declaredOutputSchemas,
-  } = {}
+  { outputIndex = 0, prefix = "$json", node, declaredOutputSchemas } = {}
 ) {
   const run = latestRunWithOutput(runData, nodeName, { node });
-  if (!run) {
-    return declaredFieldsForNodeOutput(node, graph, {
+  const output = run && outputForRun(run, outputIndex);
+  if (!run || portWasFullyCompacted(output)) {
+    return declaredFieldsForNodeOutput(node, {
       outputIndex,
       prefix,
-      configuration,
-      declaredOutputSchemas,
-    });
-  }
-
-  const output = outputForRun(run, outputIndex);
-  if (portWasFullyCompacted(output)) {
-    return declaredFieldsForNodeOutput(node, graph, {
-      outputIndex,
-      prefix,
-      configuration,
       declaredOutputSchemas,
     });
   }
@@ -78,7 +50,6 @@ export function schemaFieldsForNodeInput(
     node,
     sourceNode,
     outputIndex = 0,
-    graph,
     pinnedItems,
     declaredOutputSchemas,
   } = {}
@@ -90,27 +61,19 @@ export function schemaFieldsForNodeInput(
     outputIndex,
     pinnedItems,
   });
-  if (!port) {
-    if (latestRunWithOutput(runData, nodeName, { node })) {
-      return [];
-    }
+  if (!port && latestRunWithOutput(runData, nodeName, { node })) {
+    return [];
+  }
 
-    return declaredFieldsForNodeOutput(sourceNode, graph, {
+  if (!port || portWasFullyCompacted(port)) {
+    return declaredFieldsForNodeOutput(sourceNode, {
       outputIndex,
       prefix,
       declaredOutputSchemas,
     });
   }
 
-  if (portWasFullyCompacted(port)) {
-    return declaredFieldsForNodeOutput(sourceNode, graph, {
-      outputIndex,
-      prefix,
-      declaredOutputSchemas,
-    });
-  }
-
-  return schemaFieldsForItems(port?.items || [], { prefix });
+  return schemaFieldsForItems(port.items || [], { prefix });
 }
 
 function portSummary(port, indexKey) {
@@ -187,7 +150,7 @@ function outputPreviewItemCount(outputs, items) {
 export function outputPreviewForNode(
   runData,
   nodeName,
-  { pinnedItems, node, graph, configuration, declaredOutputSchemas } = {}
+  { pinnedItems, node, declaredOutputSchemas } = {}
 ) {
   if (Array.isArray(pinnedItems) && pinnedItems.length > 0) {
     return {
@@ -204,8 +167,7 @@ export function outputPreviewForNode(
   if (!run) {
     return {
       summary: null,
-      fields: declaredFieldsForNodeOutput(node, graph, {
-        configuration,
+      fields: declaredFieldsForNodeOutput(node, {
         declaredOutputSchemas,
       }),
     };
@@ -215,8 +177,7 @@ export function outputPreviewForNode(
   const items = outputPreviewItems(outputs);
   const fields =
     items.length === 0 && outputs.some(portWasFullyCompacted)
-      ? declaredFieldsForNodeOutput(node, graph, {
-          configuration,
+      ? declaredFieldsForNodeOutput(node, {
           declaredOutputSchemas,
         })
       : schemaFieldsForItems(items, { prefix: "$json" });

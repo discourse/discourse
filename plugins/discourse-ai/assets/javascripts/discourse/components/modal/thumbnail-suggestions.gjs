@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
@@ -11,10 +12,12 @@ import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../../lib/ai-errors";
-import ThumbnailSuggestionItem from "../thumbnail-suggestion-item";
+} from "../../lib/ai-errors.js";
+import ThumbnailSuggestionItem from "../thumbnail-suggestion-item.gjs";
 
 export default class ThumbnailSuggestions extends Component {
+  @service composer;
+
   @tracked loading = false;
   @tracked selectedImages = [];
   @tracked thumbnails = null;
@@ -73,15 +76,9 @@ export default class ThumbnailSuggestions extends Component {
 
   @action
   appendSelectedImages() {
-    const imageMarkdown = "\n\n" + this.selectedImages.join("\n");
-
-    const dEditorInput = document.querySelector(".d-editor-input");
-    dEditorInput.setSelectionRange(
-      dEditorInput.value.length,
-      dEditorInput.value.length
-    );
-    dEditorInput.focus();
-    document.execCommand("insertText", false, imageMarkdown);
+    this.composer.model.appendText(this.selectedImages.join("\n"), null, {
+      new_line: true,
+    });
     this.args.closeModal();
   }
 

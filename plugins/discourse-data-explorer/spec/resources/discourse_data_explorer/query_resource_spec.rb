@@ -8,8 +8,14 @@ RSpec.describe DiscourseDataExplorer::QueryResource, type: :resource do
   it { is_expected.to declare_namespace("data-explorer") }
 
   it { is_expected.to expose(:name, :description, :created_at, :last_run_at, :tags) }
-  it { is_expected.to expose(:param_info, :is_default) }
+  it { is_expected.to expose(:param_info, :is_default, :automatic_tags) }
   it { is_expected.to expose(:sql).readable_by(admin.guardian).hidden_from(Guardian.new) }
+
+  it do
+    is_expected.to expose(:dashboard_mountable, :dashboard_mounted).readable_by(
+      admin.guardian,
+    ).hidden_from(Guardian.new)
+  end
 
   it { is_expected.to have_one(:user) }
   it { is_expected.to have_many(:groups) }

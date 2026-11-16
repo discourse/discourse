@@ -1,5 +1,4 @@
 import { fn, get } from "@ember/helper";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import {

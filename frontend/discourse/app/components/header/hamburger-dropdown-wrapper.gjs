@@ -10,7 +10,7 @@ import { isDocumentRTL } from "discourse/lib/text-direction";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
-import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
+import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown.gjs";
 
 const CLOSE_ON_CLICK_SELECTORS =
   "a[href], .sidebar-section-header-button, .sidebar-section-link:not(.--link-button)";

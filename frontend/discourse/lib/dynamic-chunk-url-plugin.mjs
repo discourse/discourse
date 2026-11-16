@@ -1,7 +1,7 @@
 import { relative } from "path";
 
 const PREFIX = "virtual:dynamic-chunk-url:";
-const RESOLVED_PREFIX = "\0" + PREFIX;
+export const RESOLVED_PREFIX = "\0" + PREFIX;
 
 /*
  * Importing `virtual:dynamic-chunk-url:<specifier>` emits <specifier> as its own
@@ -40,7 +40,7 @@ export default function dynamicChunkUrlPlugin() {
           preserveSignature: "strict",
         });
         return {
-          code: `export default import.meta.ROLLUP_FILE_URL_${refId};`,
+          code: `export default import.meta.resolve(import.meta.ROLLUP_FILE_URL_${refId});`,
           moduleType: "js",
         };
       },

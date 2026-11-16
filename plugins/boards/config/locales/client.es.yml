@@ -39,7 +39,9 @@ es:
         unassign_from_topic: "Anular asignación de @%{username} del tema"
         unassign_from_post: "Anular asignación de @%{username} de #%{post_number}"
         edit_assignments: "Editar asignaciones..."
-        created_by: "Creado por"
+        owners:
+          one: "Propietario"
+          other: "Propietarios"
       manage:
         name: "Nombre"
         slug: "Slug"

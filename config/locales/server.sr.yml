@@ -556,6 +556,8 @@ sr:
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
     enable_new_defaults_for_trust_level_3_requirements: "Ažurirali smo podrazumevane zahteve za TL3 kako bi bili razumniji za članove velikih, aktivnih zajednica. Ako ste prethodno poništili ova podešavanja, ova predstojeća promena neće imati efekta."
     enable_horizon_high_context_topic_cards: "Prikaži bogatije kartice tema u Horizon temi, uključujući izvode tema, oznake i informacije iz dodataka."
+    keywords:
+      company_url: "website"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -721,9 +723,16 @@ sr:
               private:
                 label: "Privatna"
   onebox:
+    discourse:
+      recurrence:
+        ordinals:
+          last: "poslednji"
+        weekdays:
+          monday: "Ponedeljak"
     github:
-      status_date:
-        approved: "potvrđenji"
+      pr_status:
+        open: "Otvori"
+        approved: "Potvrđenji"
   staff_action_logs:
     unknown: "nepoznato"
   reviewables:
@@ -734,6 +743,10 @@ sr:
       medium: "Srednje"
       high: "Visoko"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Da"
       delete:

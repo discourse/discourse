@@ -4,8 +4,8 @@ import {
   BlockCondition,
   type ConditionContext,
   type ConditionResolvedValue,
-} from "./condition";
-import { blockCondition } from "./decorator";
+} from "./condition.ts";
+import { blockCondition } from "./decorator.ts";
 
 /** Args accepted by the `setting` condition. */
 interface SettingConditionArgs {

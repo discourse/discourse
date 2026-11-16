@@ -155,6 +155,12 @@ RSpec.describe EmailController do
         )
       end
 
+      it "leaves the topic out of the redirect URL" do
+        post "/email/unsubscribe/#{key}.json", params: { unwatch_topic: "1" }
+
+        expect(response.location).not_to include("topic_id")
+      end
+
       it "can mute topic" do
         TopicUser.change(
           user.id,
@@ -208,13 +214,49 @@ RSpec.describe EmailController do
       end
     end
 
+    context "when the confirmation comes from a topic unsubscribe" do
+      fab!(:a_post, :post)
+      fab!(:other_topic, :topic)
+
+      let(:unsubscribe_key) do
+        UnsubscribeKey.create_key_for(user, UnsubscribeKey::TOPIC_TYPE, post: a_post)
+      end
+      let(:confirmation_key) { Rack::Utils.parse_query(URI(response.location).query)["key"] }
+
+      before do
+        post "/email/unsubscribe/#{unsubscribe_key}.json", params: { unwatch_topic: "1" }
+        get "/email/unsubscribed", params: { key: confirmation_key, topic_id: other_topic.id }
+      end
+
+      it "shows the topic of the unsubscribe key" do
+        expect(response.body).to include(a_post.topic.title)
+      end
+
+      it "does not show another topic" do
+        expect(response.body).not_to include(other_topic.title)
+      end
+    end
+
+    context "when the cache entry holds only an email" do
+      let(:key) { SecureRandom.hex }
+
+      before do
+        Discourse.cache.write(key, user.email)
+        get "/email/unsubscribed", params: { key: }
+      end
+
+      it "shows the confirmation" do
+        expect(response.body).to include(user.email)
+      end
+    end
+
     describe "when topic is public" do
       fab!(:topic)
 
       it "returns the public topic details" do
         key = SecureRandom.hex
-        Discourse.cache.write(key, user.email)
-        get "/email/unsubscribed", params: { key: key, topic_id: topic.id }
+        Discourse.cache.write(key, { email: user.email, topic_id: topic.id })
+        get "/email/unsubscribed", params: { key: key }
         expect(response.status).to eq(200)
         expect(response.body).to include(topic.title)
       end
@@ -225,8 +267,8 @@ RSpec.describe EmailController do
 
       it "does not expose the private topic" do
         key = SecureRandom.hex
-        Discourse.cache.write(key, user.email)
-        get "/email/unsubscribed", params: { key: key, topic_id: private_topic.id }
+        Discourse.cache.write(key, { email: user.email, topic_id: private_topic.id })
+        get "/email/unsubscribed", params: { key: key }
         expect(response.status).to eq(200)
         expect(response.body).to_not include(private_topic.title)
       end

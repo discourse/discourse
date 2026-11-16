@@ -1,5 +1,5 @@
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
-import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
+import { load } from "pretty-text/oneboxer";
 
 export function loadOneboxes(
   container,
@@ -8,7 +8,8 @@ export function loadOneboxes(
   categoryId,
   maxOneboxes,
   refresh,
-  offline
+  offline,
+  onLoad
 ) {
   const oneboxes = {};
   const inlineOneboxes = {};
@@ -16,9 +17,7 @@ export function loadOneboxes(
   // Oneboxes = `a.onebox` -> `a.onebox-loading` -> `aside.onebox`
   // Inline Oneboxes = `a.inline-onebox-loading` -> `a.inline-onebox`
 
-  let loadedOneboxes = container.querySelectorAll(
-    `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.inline-onebox`
-  ).length;
+  let loadedOneboxes = 0;
 
   container
     .querySelectorAll("a.onebox, a.inline-onebox-loading")
@@ -51,21 +50,19 @@ export function loadOneboxes(
       categoryId,
       refresh,
       offline,
+      onLoad,
     });
   }
 
   if (Object.keys(inlineOneboxes).length > 0) {
-    _loadInlineOneboxes(inlineOneboxes, ajax, topicId, categoryId);
+    _loadInlineOneboxes(inlineOneboxes, ajax, topicId, categoryId, onLoad);
   }
 
   return Object.keys(oneboxes).length + Object.keys(inlineOneboxes).length;
 }
 
-function _loadInlineOneboxes(inline, ajax, topicId, categoryId) {
-  applyInlineOneboxes(inline, ajax, {
-    categoryId: topicId,
-    topicId: categoryId,
-  });
+function _loadInlineOneboxes(inline, ajax, topicId, categoryId, onLoad) {
+  applyInlineOneboxes(inline, ajax, { categoryId, topicId, onLoad });
 }
 
 function _loadOneboxes({
@@ -75,6 +72,7 @@ function _loadOneboxes({
   categoryId,
   refresh,
   offline,
+  onLoad,
 }) {
   Object.values(oneboxes).forEach((onebox) => {
     onebox.forEach((elem) => {
@@ -85,6 +83,7 @@ function _loadOneboxes({
         topicId,
         refresh,
         offline,
+        onResolve: onLoad,
       });
     });
   });

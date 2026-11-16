@@ -15,12 +15,19 @@ export default class GroupIndexController extends Controller {
   @service currentUser;
   @service dialog;
 
+  /** @type {import("discourse/models/user").default[] | null} */
   @autoTrackedArray bulkSelection = null;
 
   queryParams = ["order", "asc", "filter"];
+
+  /** @type {string | null} */
   order = null;
   asc = true;
+
+  /** @type {string | null} */
   filter = null;
+
+  /** @type {string | null} */
   filterInput = null;
   loading = false;
   isBulk = false;

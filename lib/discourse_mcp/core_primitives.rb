@@ -66,11 +66,389 @@ module DiscourseMcp
       register_read_tools(registry)
       register_write_tools(registry)
       register_moderation_tools(registry)
+      register_report_tools(registry)
       register_site_setting_tools(registry)
       register_theme_tools(registry)
+      register_theme_management_tools(registry)
       register_group_tools(registry)
+      register_tag_group_tools(registry)
+      register_category_tools(registry)
+      register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    def register_report_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_reports",
+        title: "List reports",
+        description:
+          "Lists the caller's available Discourse reports, including enabled plugin reports. Requires staff access. Use the returned report types with discourse_get_report.",
+        implementation: Tools::ListReports,
+        input_schema: object_schema,
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+
+      scalar_filter = {
+        anyOf: [{ type: "string", maxLength: 250 }, { type: "number" }, { type: "boolean" }],
+      }
+      date = { type: "string", pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", maxLength: 10 }
+      register_tool(
+        registry,
+        "discourse_get_report",
+        title: "Get report",
+        description:
+          "Retrieves one report from the caller's current report catalog. Requires staff access; admin-only reports and related items retain their normal restrictions. Dates use YYYY-MM-DD and default to the last 30 days ending on end_date or today. Date ranges cannot exceed 366 days. Filters accept scalar values or arrays, as supported by each report. limit bounds rows only where the report supports it; omitting it preserves that report's default. cache opts into the existing report cache and requires administrator access; include_related_items defaults to false. This runs registered reports, not arbitrary SQL.",
+        implementation: Tools::GetReport,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              report_type: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+                pattern: "^[a-z0-9_-]+$",
+                not: {
+                  pattern: "[^a-z0-9_-]",
+                },
+              },
+              start_date: date,
+              end_date: date,
+              facets: {
+                type: "array",
+                maxItems: 20,
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 50,
+                },
+              },
+              filters: {
+                type: "object",
+                maxProperties: 20,
+                propertyNames: {
+                  minLength: 1,
+                  maxLength: 100,
+                },
+                additionalProperties: {
+                  anyOf: [scalar_filter, { type: "array", maxItems: 100, items: scalar_filter }],
+                },
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: Tools::GetReport::MAX_LIMIT,
+              },
+              cache: {
+                type: "boolean",
+              },
+              include_related_items: {
+                type: "boolean",
+              },
+            },
+            required: %w[report_type],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+    end
+
+    def register_tag_group_tools(registry)
+      id = { type: "integer", minimum: 1 }
+      name = { type: "string", minLength: 1, maxLength: 100 }
+      selector = {
+        oneOf: [
+          object_schema({ id: }, required: %w[id]),
+          object_schema({ name: }, required: %w[name]),
+        ],
+      }
+      attributes = {
+        name:,
+        tags: {
+          type: "array",
+          maxItems: 1000,
+          items: selector,
+        },
+        parent_tag: {
+          anyOf: [selector, { type: "null" }],
+        },
+        one_per_topic: {
+          type: "boolean",
+        },
+        permissions: {
+          type: "object",
+          minProperties: 1,
+          maxProperties: 1000,
+          propertyNames: {
+            pattern: "^(0|[1-9][0-9]*)$",
+            # $ can match before a trailing newline
+            not: {
+              pattern: "[^0-9]",
+            },
+          },
+          additionalProperties: {
+            type: "string",
+            enum: %w[full readonly],
+          },
+        },
+        allow_tag_creation: {
+          type: "boolean",
+        },
+      }
+      register_tool(
+        registry,
+        "discourse_search_tag_groups",
+        title: "Search tag groups",
+        description:
+          "Searches visible tag groups and visible member tags. Omits staff configuration. q and names combine; q supports SQL LIKE wildcards. truncated signals possible additional results.",
+        implementation: Tools::SearchTagGroups,
+        input_schema:
+          object_schema(
+            {
+              q: {
+                type: "string",
+                maxLength: 250,
+              },
+              names: {
+                type: "array",
+                minItems: 1,
+                maxItems: 100,
+                items: name,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 1000,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_list_tag_groups",
+        title: "List tag groups",
+        description:
+          "Lists staff tag-group inventory with permissions and parent tags, ordered by name and ID. Requires staff authority. Paginate with limit and offset; reads remain available when tagging is disabled.",
+        implementation: Tools::ListTagGroups,
+        input_schema:
+          object_schema(
+            {
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+                maximum: 1_000_000,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_get_tag_group",
+        title: "Get tag group",
+        description:
+          "Reads tag-group configuration, including tags, parent, one-per-topic policy and permissions. Requires staff authority.",
+        implementation: Tools::GetTagGroup,
+        input_schema: object_schema({ tag_group_id: id }, required: %w[tag_group_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_tag_group",
+        title: "Create tag group",
+        description:
+          "Creates a tag group. Requires staff authority and tagging enabled. Tags use ID or name selectors; synonyms resolve to original tags. Name selectors require allow_tag_creation=true and may create tags. permissions maps group IDs to full or readonly; group 0 means everyone. Omitted permissions default to everyone/full.",
+        implementation: Tools::CreateTagGroup,
+        input_schema: object_schema(attributes, required: %w[name]),
+        annotations: WRITE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_update_tag_group",
+        title: "Update tag group",
+        description:
+          "Updates supplied fields, preserving omitted fields. tags replaces all member tags; [] clears them. parent_tag=null clears the parent. permissions replaces the full permission map. Synonyms resolve to original tags. Name selectors require allow_tag_creation=true. Requires staff authority and tagging enabled.",
+        implementation: Tools::UpdateTagGroup,
+        input_schema: object_schema(attributes.merge(tag_group_id: id), required: %w[tag_group_id]),
+        annotations: WRITE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_delete_tag_group",
+        title: "Delete tag group",
+        description:
+          "Deletes a tag group and its membership, permission and category relationships, including required-tag rules. Tags and topic tags remain. Requires staff authority, tagging enabled, confirm=true and the exact current expected_name.",
+        implementation: Tools::DeleteTagGroup,
+        input_schema:
+          object_schema(
+            { tag_group_id: id, expected_name: name, confirm: { type: "boolean" } },
+            required: %w[tag_group_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+    end
+
+    def register_category_tools(registry)
+      register_tool(
+        registry,
+        "discourse_get_category",
+        title: "Get category",
+        description: "Reads category details needed for category management.",
+        implementation: Tools::GetCategory,
+        input_schema:
+          object_schema(
+            { category_id: { type: "integer", minimum: 1 } },
+            required: %w[category_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_category",
+        title: "Create category",
+        description: "Creates a category and returns its ID, slug, and name.",
+        implementation: Tools::CreateCategory,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_NAME_LENGTH,
+              },
+              color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              text_color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              emoji: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              icon: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              parent_category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              description: {
+                type: "string",
+                maxLength: Tools::CreateCategory::MAX_DESCRIPTION_LENGTH,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_category",
+        title: "Update category",
+        description: "Updates basic details for a category.",
+        implementation: Tools::UpdateCategory,
+        input_schema:
+          object_schema(
+            {
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_NAME_LENGTH,
+              },
+              slug: {
+                type: "string",
+                minLength: 1,
+                maxLength: 255,
+              },
+              color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              text_color: {
+                type: "string",
+                pattern: "^(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+              },
+              emoji: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              icon: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+              },
+              parent_category_id: {
+                type: %w[integer null],
+                minimum: 1,
+              },
+              description: {
+                type: "string",
+                maxLength: Tools::UpdateCategory::MAX_DESCRIPTION_LENGTH,
+              },
+            },
+            required: %w[category_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_category",
+        title: "Delete category",
+        description: "Deletes an empty category after confirming its current name.",
+        implementation: Tools::DeleteCategory,
+        input_schema:
+          object_schema(
+            {
+              category_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              expected_name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateCategory::MAX_NAME_LENGTH,
+              },
+              confirm: {
+                type: "boolean",
+              },
+            },
+            required: %w[category_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :destructive,
+      )
     end
 
     def register_read_tools(registry)
@@ -1646,6 +2024,204 @@ module DiscourseMcp
       )
     end
 
+    def register_theme_management_tools(registry)
+      theme_id = { type: "integer", minimum: 1 }
+      name = { type: "string", minLength: 1, maxLength: 255 }
+      filename = name.merge(not: { pattern: '[/\\\\\u0000\r\n]' })
+      confirmation = { type: "boolean" }
+      encoded_file = {
+        type: "string",
+        minLength: 1,
+        maxLength: Tools::ThemeManagementSupport::MAX_ENCODED_BYTES,
+      }
+
+      register_tool(
+        registry,
+        "discourse_list_themes",
+        title: "List themes",
+        description: "Lists installed themes and components. Requires administrator access.",
+        implementation: Tools::ListThemes,
+        input_schema:
+          object_schema(
+            {
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_theme",
+        title: "Delete theme",
+        description:
+          "Deletes a theme and its component links. Requires edit permission, the current name, and confirmation. Default and system themes cannot be deleted.",
+        implementation: Tools::DeleteTheme,
+        input_schema:
+          object_schema(
+            { theme_id:, expected_name: name, confirm: confirmation },
+            required: %w[theme_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_install_theme",
+        title: "Install theme",
+        description:
+          "Installs executable theme code from exactly one repository URL or base64 archive. Requires administrator access and confirmation. Repository installs always run migrations and require confirm_run_migrations. Archive migrations are opt-in. Archive component imports default to none; merge and sync require run_migrations and confirm_run_migrations. Only archives can replace an existing theme; confirm its current name before replacement. Returns a theme summary without source code and reports any archive components that could not be imported.",
+        implementation: Tools::InstallTheme,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              remote_url: {
+                type: "string",
+                minLength: 1,
+                maxLength: 10_000,
+              },
+              branch: name,
+              archive_data: encoded_file,
+              filename: filename,
+              replace_theme_id: theme_id,
+              expected_name: name,
+              confirm_replace: confirmation,
+              confirm_external_code: confirmation,
+              run_migrations: confirmation,
+              confirm_run_migrations: confirmation,
+              components: {
+                type: "string",
+                enum: %w[none merge sync],
+              },
+            },
+            required: %w[confirm_external_code],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT.merge(destructiveHint: true),
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_sync_remote_theme",
+        title: "Sync remote theme",
+        description:
+          "Checks a theme repository for updates or installs its latest code. Requires edit permission. Updating runs migrations and requires both code and migration confirmation. Checking also updates stored remote-version metadata. Returns a theme summary. When completing a pending installation, also reports skipped components with their errors.",
+        implementation: Tools::SyncRemoteTheme,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              theme_id:,
+              action: {
+                type: "string",
+                enum: %w[check update],
+              },
+              expected_remote_url: {
+                type: "string",
+                minLength: 1,
+                maxLength: 10_000,
+              },
+              confirm_external_code: confirmation,
+              confirm_run_migrations: confirmation,
+            },
+            required: %w[theme_id action],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT.merge(destructiveHint: true),
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_upload_theme_asset",
+        title: "Upload theme asset",
+        description:
+          "Uploads base64 asset data for use in a theme. Requires administrator access. Returns an unattached upload ID; use discourse_update_theme to attach it to a theme field. Site upload and MCP request-size limits apply.",
+        implementation: Tools::UploadThemeAsset,
+        defer: true,
+        input_schema:
+          object_schema({ filename:, file_data: encoded_file }, required: %w[filename file_data]),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme_setting",
+        title: "Update theme setting",
+        description:
+          "Sets a declared theme setting or restores its declared default. Requires edit permission. Use pipe-separated strings for list settings and arrays of objects for object settings. Reverting requires confirm and must omit value.",
+        implementation: Tools::UpdateThemeSetting,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              name:,
+              operation: {
+                type: "string",
+                enum: %w[set revert],
+              },
+              value: {
+                anyOf: [
+                  { type: "string", maxLength: 500_000 },
+                  { type: "number" },
+                  { type: "boolean" },
+                  { type: "array", maxItems: 100, items: { type: "object", maxProperties: 100 } },
+                ],
+              },
+              confirm: confirmation,
+            },
+            required: %w[theme_id name operation],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_theme_translations",
+        title: "Update theme translations",
+        description:
+          "Updates declared theme translations for one locale. Requires edit permission and the current theme name. Unknown keys reject the whole batch.",
+        implementation: Tools::UpdateThemeTranslations,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              expected_name: name,
+              locale: {
+                type: "string",
+                minLength: 1,
+                maxLength: 20,
+              },
+              translations: {
+                type: "object",
+                minProperties: 1,
+                maxProperties: 100,
+                propertyNames: {
+                  maxLength: 255,
+                },
+                additionalProperties: {
+                  type: "string",
+                  maxLength: 10_000,
+                },
+              },
+            },
+            required: %w[theme_id expected_name locale translations],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+    end
+
     def register_group_tools(registry)
       group_name = { type: "string", minLength: 1, maxLength: 100 }
       pagination = {
@@ -1759,6 +2335,366 @@ module DiscourseMcp
           ),
         annotations: READ_ONLY,
       )
+      group_id = { type: "integer", minimum: 1 }
+      user_selectors = {
+        usernames: {
+          type: "array",
+          items: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+        user_ids: {
+          type: "array",
+          items: {
+            type: "integer",
+            minimum: 1,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+        user_emails: {
+          type: "array",
+          items: {
+            type: "string",
+            format: "email",
+            minLength: 3,
+            maxLength: 513,
+          },
+          minItems: 1,
+          maxItems: Tools::ManageGroupMembers::MAX_SELECTED_USERS,
+        },
+      }
+      group_settings = {
+        full_name: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+        },
+        title: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+        },
+        bio_raw: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_BIO_LENGTH,
+        },
+        visibility_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::VISIBILITY_LEVELS,
+        },
+        members_visibility_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::VISIBILITY_LEVELS,
+        },
+        mentionable_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::ALIAS_LEVELS,
+        },
+        messageable_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::ALIAS_LEVELS,
+        },
+        default_notification_level: {
+          type: "integer",
+          enum: Tools::CreateGroup::NOTIFICATION_LEVELS,
+        },
+        public_admission: {
+          type: "boolean",
+        },
+        public_exit: {
+          type: "boolean",
+        },
+        allow_membership_requests: {
+          type: "boolean",
+        },
+        membership_request_template: {
+          type: %w[string null],
+          maxLength: Tools::CreateGroup::MAX_TEMPLATE_LENGTH,
+        },
+        primary_group: {
+          type: "boolean",
+        },
+        publish_read_state: {
+          type: "boolean",
+        },
+        grant_trust_level: {
+          type: %w[integer null],
+          minimum: 0,
+          maximum: 4,
+        },
+        automatic_membership_email_domains: {
+          type: %w[string null],
+          maxLength: 1_000,
+        },
+        flair_icon: {
+          type: %w[string null],
+          maxLength: 100,
+        },
+        flair_bg_color: {
+          type: %w[string null],
+          maxLength: 20,
+        },
+        flair_color: {
+          type: %w[string null],
+          maxLength: 20,
+        },
+      }
+      notification_defaults =
+        GroupUpdater::NOTIFICATION_DEFAULT_LEVELS.each_with_object({}) do |level, schema|
+          schema[:"#{level}_category_ids"] = {
+            type: "array",
+            items: {
+              type: "integer",
+              minimum: 1,
+            },
+            maxItems: 100,
+          }
+          schema[:"#{level}_tags"] = {
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            maxItems: 100,
+          }
+        end
+
+      register_tool(
+        registry,
+        "discourse_create_group",
+        title: "Create group",
+        description: "Creates a group and returns its ID and name. Requires group creation rights.",
+        implementation: Tools::CreateGroup,
+        input_schema:
+          object_schema(
+            {
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::CreateGroup::MAX_NAME_LENGTH,
+              },
+              **group_settings,
+              owner_usernames: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 60,
+                },
+                maxItems: Tools::CreateGroup::MAX_INITIAL_USERNAMES,
+              },
+              usernames: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 60,
+                },
+                maxItems: Tools::CreateGroup::MAX_INITIAL_USERNAMES,
+              },
+            },
+            required: %w[name],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_group",
+        title: "Update group",
+        description:
+          "Updates the group settings the authenticated user may change. " \
+            "Fields the user cannot change are ignored.",
+        implementation: Tools::UpdateGroup,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateGroup::MAX_NAME_LENGTH,
+              },
+              **group_settings,
+              **notification_defaults,
+              update_existing_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_group",
+        title: "Delete group",
+        description:
+          "Deletes a group after confirming its current name. Administrators only. " \
+            "Automatic groups cannot be deleted.",
+        implementation: Tools::DeleteGroup,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              expected_name: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::UpdateGroup::MAX_NAME_LENGTH,
+              },
+              confirm: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :destructive,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_members",
+        title: "Manage group members",
+        description:
+          "Adds or removes members of a group the authenticated user may manage. " \
+            "Provide exactly one of usernames, user_ids, or user_emails. " \
+            "The user_emails selector requires permission to view email addresses.",
+        implementation: Tools::ManageGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupMembers::ACTIONS,
+              },
+              **user_selectors,
+              notify_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_invite_group_members",
+        title: "Invite group members by email",
+        description:
+          "Adds existing accounts that match an address and invites the rest to the forum " \
+            "with the group preassigned. Requires permission to view email addresses.",
+        implementation: Tools::InviteGroupMembers,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              emails: {
+                type: "array",
+                items: {
+                  type: "string",
+                  format: "email",
+                  minLength: 3,
+                  maxLength: 513,
+                },
+                minItems: 1,
+                maxItems: Tools::InviteGroupMembers::MAX_EMAILS,
+              },
+              skip_email: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id emails],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :external_side_effect,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_owners",
+        title: "Manage group owners",
+        description:
+          "Grants or revokes group ownership. Adding an owner also adds them as a member. " \
+            "Automatic groups cannot be changed.",
+        implementation: Tools::ManageGroupOwners,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupOwners::ACTIONS,
+              },
+              **user_selectors,
+              notify_users: {
+                type: "boolean",
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_group_membership",
+        title: "Manage own group membership",
+        description:
+          "Joins a group that allows public admission, leaves a group that allows public exit, " \
+            "or requests membership with a reason.",
+        implementation: Tools::ManageGroupMembership,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              action: {
+                type: "string",
+                enum: Tools::ManageGroupMembership::ACTIONS,
+              },
+              reason: {
+                type: "string",
+                minLength: 1,
+                maxLength: Tools::ManageGroupMembership::MAX_REASON_LENGTH,
+              },
+            },
+            required: %w[group_id action],
+          ),
+        annotations: WRITE,
+        risk: :write,
+      )
+      register_tool(
+        registry,
+        "discourse_handle_group_membership_request",
+        title: "Handle group membership request",
+        description:
+          "Approves or denies one pending membership request for a group the authenticated " \
+            "user may manage. Approving adds the requester to the group.",
+        implementation: Tools::HandleGroupMembershipRequest,
+        input_schema:
+          object_schema(
+            {
+              group_id:,
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              action: {
+                type: "string",
+                enum: Tools::HandleGroupMembershipRequest::ACTIONS,
+              },
+            },
+            required: %w[group_id username action],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
       register_tool(
         registry,
         "discourse_list_group_posts",
@@ -1790,6 +2726,153 @@ module DiscourseMcp
             required: %w[name],
           ),
         annotations: READ_ONLY,
+      )
+    end
+
+    def register_user_administration_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_users",
+        title: "List users",
+        description: "Lists and filters users visible through Discourse's staff user directory.",
+        implementation: Tools::ListUsers,
+        input_schema:
+          object_schema(
+            {
+              query: {
+                type: "string",
+                enum: Tools::ListUsers::QUERIES,
+                default: "active",
+              },
+              filter: {
+                type: "string",
+                minLength: 1,
+                maxLength: 500,
+              },
+              order: {
+                type: "string",
+                enum: Tools::ListUsers::ORDERS,
+              },
+              ascending: {
+                type: "boolean",
+                default: false,
+              },
+              include_emails: {
+                type: "boolean",
+                default: false,
+              },
+              page: {
+                type: "integer",
+                minimum: 0,
+                default: 0,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+                default: 100,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_user",
+        title: "Create user",
+        description:
+          "Creates a user as an administrator. Registrations must be open. Supply the site's invite code if required and required user fields keyed by field ID. Missing-field errors identify the field name and ID.",
+        implementation: Tools::CreateUser,
+        input_schema:
+          object_schema(
+            {
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              email: {
+                type: "string",
+                format: "email",
+                maxLength: 508,
+              },
+              name: {
+                type: "string",
+                minLength: 1,
+                maxLength: 255,
+              },
+              password: {
+                type: "string",
+                minLength: 1,
+                maxLength: 200,
+              },
+              invite_code: {
+                type: "string",
+                maxLength: 1000,
+              },
+              user_fields: {
+                type: "object",
+                additionalProperties: false,
+                patternProperties: {
+                  "^[1-9][0-9]*$" => {
+                    oneOf: [
+                      { type: "string", maxLength: 2048 },
+                      { type: "array", maxItems: 2048, items: { type: "string", maxLength: 2048 } },
+                    ],
+                  },
+                },
+              },
+              active: {
+                type: "boolean",
+                default: true,
+              },
+              approved: {
+                type: "boolean",
+                default: true,
+              },
+              upload_id: {
+                type: "integer",
+                minimum: 1,
+              },
+            },
+            required: %w[username email name password],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_manage_user_activation",
+        title: "Manage user activation",
+        description:
+          "Activates, approves, activates and approves, or deactivates an eligible user.",
+        implementation: Tools::ManageUserActivation,
+        input_schema:
+          object_schema(
+            {
+              username: {
+                type: "string",
+                minLength: 1,
+                maxLength: 60,
+              },
+              action: {
+                type: "string",
+                enum: Tools::ManageUserActivation::ACTIONS,
+              },
+              confirm: {
+                const: true,
+              },
+            },
+            required: %w[username action confirm],
+          ),
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: true,
+          openWorldHint: true,
+        },
+        risk: :administration,
       )
     end
 

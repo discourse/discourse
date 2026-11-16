@@ -3,7 +3,7 @@ import { camelCaseToDash } from "discourse/lib/case-converter";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import PolicyBuilder from "../components/modal/policy-builder";
+import PolicyBuilder from "../components/modal/policy-builder.gjs";
 
 const POLICY_ATTRIBUTES = {
   group: { default: null },

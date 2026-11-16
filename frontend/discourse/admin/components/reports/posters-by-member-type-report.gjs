@@ -5,13 +5,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import AdminReport from "discourse/admin/components/admin-report";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class PostersByMemberTypeReport extends Component {
   @tracked selectedGroupKey = this.args.model?.data?.[0]?.type ?? null;
+
+  /** @type {number | null} */
   @tracked memberCount = null;
 
   get rows() {

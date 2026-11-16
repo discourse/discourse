@@ -17,7 +17,7 @@ import { i18n } from "discourse-i18n";
 export default class ReviewableInsights extends Component {
   /**
    * Returns array of review insight objects to display
-   * @returns {Array<Object>} Array of insight configuration objects
+   * @returns {{ icon?: string, label: string, description: string | import("@ember/template").TrustedHTML }[]} Array of insight configuration objects
    */
   get reviewInsights() {
     const insights = [];

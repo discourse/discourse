@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatComposer from "../../chat-composer";
+import ChatComposer from "../../chat-composer.gjs";
 
 export default class ChatComposerThread extends ChatComposer {
   @service("chat-channel-composer") channelComposer;

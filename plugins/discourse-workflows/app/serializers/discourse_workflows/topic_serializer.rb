@@ -8,6 +8,7 @@ module DiscourseWorkflows
     attributes :id,
                :title,
                :slug,
+               :url,
                :posts_count,
                :reply_count,
                :highest_post_number,
@@ -25,6 +26,7 @@ module DiscourseWorkflows
                :like_count,
                :category_id,
                :user_id,
+               :username,
                :last_post_user_id,
                :last_poster_username,
                :first_post_id,
@@ -68,6 +70,10 @@ module DiscourseWorkflows
         object.last_poster&.username
     end
 
+    def username
+      object.user&.username
+    end
+
     def first_post_id
       object.first_post&.id
     end
@@ -94,6 +100,14 @@ module DiscourseWorkflows
 
     def include_participants?
       object.private_message?
+    end
+
+    def include_fancy_title_localized?
+      true
+    end
+
+    def include_locale?
+      true
     end
 
     def include_visibility_reason_id?

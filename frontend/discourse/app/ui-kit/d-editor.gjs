@@ -25,7 +25,6 @@ import UserAutocompleteResults from "discourse/components/user-autocomplete-resu
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
-import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
@@ -40,7 +39,6 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -60,13 +58,6 @@ export function addToolbarCallback(func) {
 }
 export function clearToolbarCallbacks() {
   _createCallbacks = [];
-}
-
-export function onToolbarCreate(func) {
-  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.", {
-    id: "discourse.d-editor.on-toolbar-create",
-  });
-  addToolbarCallback(func);
 }
 
 @classNames("d-editor")
@@ -251,8 +242,8 @@ export default class DEditor extends Component {
    * @property {function} addText - Adds text
    * @property {function} applyList - Applies a list format
    * @property {*} selected - The current selection
-   * @property {Object} commands - Available commands
-   * @property {Object} state - Current editor state (inWrap, inBold, etc.)
+   * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["commands"]} commands - Available commands
+   * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["state"]} state - Current editor state (inWrap, inBold, etc.)
    */
 
   /**
@@ -439,10 +430,16 @@ export default class DEditor extends Component {
 
       this.appEvents.on("composer:replace-toolbar", replaceToolbar);
       this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
+      this.appEvents.on("composer:refresh-preview", this, "_watchForChanges");
 
       return () => {
         this.appEvents.off("composer:replace-toolbar", replaceToolbar);
         this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
+        this.appEvents.off(
+          "composer:refresh-preview",
+          this,
+          "_watchForChanges"
+        );
 
         this.appEvents.off(
           "composer:insert-block",
@@ -719,6 +716,7 @@ export default class DEditor extends Component {
         destroyUserStatuses();
         return userSearch({
           term,
+          searchContext: "mention",
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,

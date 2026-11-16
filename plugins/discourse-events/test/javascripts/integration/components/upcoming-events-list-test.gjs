@@ -13,7 +13,7 @@ import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import UpcomingEventsList, {
   DEFAULT_TIME_FORMAT,
-} from "../../discourse/components/upcoming-events-list";
+} from "discourse/plugins/discourse-events/discourse/components/upcoming-events-list";
 
 const today = "2100-02-01T08:00:00";
 const tomorrowAllDay = "2100-02-02T00:00:00";

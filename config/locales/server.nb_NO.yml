@@ -17,6 +17,7 @@ nb_NO:
       location: "Sted"
   mcp:
     errors:
+      category_not_found: "Kategorien finnes ikke"
       topic_not_found: "Fant ikke emnet"
     oauth:
       deny: "Avslå"
@@ -1090,6 +1091,8 @@ nb_NO:
       invalid_integer_min_max: "Verdien må være mellom %{min} og %{max}."
       invalid_integer: "Verdien må være et heltall."
       invalid_string: "Ugyldig verdi"
+    keywords:
+      company_url: "nettside"
   search:
     within_post: "#%{post_number} av %{username}"
     types:
@@ -1388,13 +1391,28 @@ nb_NO:
               private:
                 label: "Privat"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Hver dag"
+        weekdays:
+          sunday: "Søndag"
+          monday: "Mandag"
+          tuesday: "Tirsdag"
+          wednesday: "Onsdag"
+          thursday: "Torsdag"
+          friday: "Fredag"
+          saturday: "Lørdag"
     google_meet:
       meeting_code: "Kode:"
     github:
+      header:
+        success: "Suksess"
       closed: "lukket"
-      status_date:
-        approved: "godkjent"
-        closed: "lukket"
+      pr_status:
+        draft: "Utkast"
+        open: "Åpne"
+        approved: "Godkjent"
+        closed: "Lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
@@ -1425,6 +1443,10 @@ nb_NO:
         one: "%{count} sekund"
         other: "%{count} sekunder"
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nei"
       agree:
         title: "Ja"
       agree_and_suspend:

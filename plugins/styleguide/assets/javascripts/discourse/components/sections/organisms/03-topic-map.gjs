@@ -1,5 +1,5 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import TopicMapExample from "../../examples/organisms/topic-map";
+import TopicMapExample from "../../examples/organisms/topic-map.gjs";
 import topicMapSource from "../../examples/organisms/topic-map?source=file";
 
 export default <template>

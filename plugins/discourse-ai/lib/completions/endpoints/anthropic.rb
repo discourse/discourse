@@ -12,36 +12,10 @@ module DiscourseAi
         end
 
         def default_options(dialect)
-          mapped_model =
-            case llm_model.name
-            when "claude-2"
-              "claude-2.1"
-            when "claude-instant-1"
-              "claude-instant-1.2"
-            when "claude-3-haiku"
-              "claude-3-haiku-20240307"
-            when "claude-3-sonnet"
-              "claude-3-sonnet-20240229"
-            when "claude-3-opus"
-              "claude-3-opus-20240229"
-            when "claude-3-5-sonnet"
-              "claude-3-5-sonnet-latest"
-            when "claude-3-7-sonnet"
-              "claude-3-7-sonnet-latest"
-            when "claude-4-opus"
-              "claude-4-opus-20250514"
-            when "claude-4-sonnet"
-              "claude-4-sonnet-20250514"
-            else
-              llm_model.name
-            end
+          mapped_model = canonical_claude_model_name
 
           # Note: Anthropic requires this param
-          max_tokens = 4096
-          # 3.5 and 3.7 models have a higher token limit
-          max_tokens = 8192 if mapped_model.match?(/3.[57]/)
-
-          options = { model: mapped_model, max_tokens: max_tokens }
+          options = { model: mapped_model, max_tokens: effective_max_output_tokens }
           apply_anthropic_thinking_config!(options)
           apply_anthropic_effort_config!(options)
 

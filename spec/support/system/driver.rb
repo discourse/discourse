@@ -2,7 +2,8 @@
 
 # Playwright/Chrome driver setup for system specs: the remote-debugging endpoint,
 # the Chrome launch args, and driver registration.
-CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
+CHROME_REMOTE_DEBUGGING_PORT =
+  ((ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_i + ENV["TEST_ENV_NUMBER"].to_i).to_s
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
 
 module SystemDrivers
@@ -50,7 +51,8 @@ module SystemDrivers
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
-      playwright_cli_executable_path: "./node_modules/.bin/playwright",
+      playwright_cli_executable_path:
+        ENV["PLAYWRIGHT_CLI_EXECUTABLE_PATH"].presence || "./node_modules/.bin/playwright",
       logger: Logger.new(IO::NULL),
       # NOTE: timezoneId is NOT set here because the driver is cached and reused,
       # so only the first test's timezone would be applied. Instead, we use CDP
@@ -98,7 +100,8 @@ module SystemDrivers
           viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 390, height: 664 },
         }
       else
-        { viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 } }
+        viewport = ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 }
+        { viewport: viewport, **hidpi_options(viewport) }
       end
 
     Capybara.register_driver(name) do |app|
@@ -106,14 +109,71 @@ module SystemDrivers
     end
   end
 
+  # Set CHROME_DEVICE_SCALE_FACTOR=2 to capture screenshots and video at twice
+  # the viewport's resolution, for a screenshot someone will look at closely.
+  def self.device_scale_factor
+    factor = ENV["CHROME_DEVICE_SCALE_FACTOR"].to_i
+    factor > 1 ? factor : 1
+  end
+
+  # Chromium composes video frames at the recording size, not the viewport, so
+  # the recording has to be scaled too or the extra pixels are thrown away.
+  def self.hidpi_options(viewport)
+    return {} if device_scale_factor == 1
+
+    options = { deviceScaleFactor: device_scale_factor }
+    return options if viewport.nil?
+
+    options.merge(
+      record_video_size: {
+        width: viewport[:width] * device_scale_factor,
+        height: viewport[:height] * device_scale_factor,
+      },
+    )
+  end
+
   def self.apply_base_chrome_args(args = [], allow_network: [])
-    base_args = %w[
+    # A custom --disable-features replaces the generated list. Keep the browser
+    # safeguards relevant to Chromium in our Linux test image alongside our flags.
+    disabled_features = [
+      # Avoid Google AI Mode eligibility requests during browser startup.
+      "AimEnabled",
+      # Avoid headed about:blank navigation hangs.
+      # https://github.com/microsoft/playwright/issues/14047
+      "AvoidUnnecessaryBeforeUnloadCheckSync",
+      # Keep the profile alive when examples close and replace the last browser window.
+      "DestroyProfileOnBrowserClose",
+      # Keep HTTP test URLs on HTTP instead of attempting automatic HTTPS upgrades.
+      "HttpsUpgrades",
+      # Avoid casting device discovery and its local network traffic in the test container.
+      "MediaRouter",
+      # Avoid startup requests to Google network time servers.
+      "NetworkTimeServiceQuerying",
+      # Avoid downloading remote navigation optimization hints during startup.
+      "OptimizationHints",
+      # Avoid lost iframe clicks and file chooser events while painting is deferred.
+      # https://github.com/microsoft/playwright/issues/28023
+      "PaintHolding",
+      # Preserve browser context storage state when an origin is loaded in an iframe.
+      # https://github.com/microsoft/playwright/issues/32230
+      "ThirdPartyStoragePartitioning",
+      # Prevent browser translation prompts from interrupting tests in other locales.
+      "Translate",
+      # Avoid creating the internal address bar popup page when tests replace pages.
+      "WebUIOmniboxPopup",
+      # Avoid creating the companion AI Mode popup page when tests replace pages.
+      "WebUIOmniboxAimPopup",
+    ]
+
+    base_args = %W[
       --disable-search-engine-choice-screen
+      --disable-features=#{disabled_features.join(",")}
       --no-sandbox
       --disable-dev-shm-usage
       --mute-audio
       --remote-allow-origins=*
       --disable-smooth-scrolling
+      --js-flags=--no-enable-lazy-source-positions
     ]
 
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
@@ -166,12 +226,16 @@ module SystemDrivers
     end
 
     if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
-      base_args << "--force-device-scale-factor=1"
+      base_args << "--force-device-scale-factor=#{device_scale_factor}"
     end
 
     base_args + args
   end
-  private_class_method :apply_base_chrome_args, :register_chrome, :allow_network_hosts
+  private_class_method :apply_base_chrome_args,
+                       :register_chrome,
+                       :allow_network_hosts,
+                       :device_scale_factor,
+                       :hidpi_options
 end
 
 RSpec.configure do |config|

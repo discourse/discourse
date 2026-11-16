@@ -6,9 +6,9 @@ import CreateInviteWithRoles from "discourse/components/modal/create-invite-with
  * Opens the invite creation modal, selecting the redesigned role-based
  * variant when the `enable_invite_modal_with_roles` upcoming change is enabled.
  *
- * @param {Object} context - any owned object (component, route, controller)
- * @param {Object} opts - options forwarded to `modal.show`, e.g. `{ model }`
- * @returns {Promise} the modal promise from `modal.show`
+ * @param {object} context - any owned object (component, route, controller)
+ * @param {{ model?: { invites?: import("discourse/models/invite").default[], editing?: boolean, invite?: import("discourse/models/invite").default, groupIds?: number[], inviteToTopic?: boolean, topics?: import("discourse/models/topic").default[], topicId?: number, topicTitle?: string, defaultRole?: string } }} [opts] - options forwarded to `modal.show`, e.g. `{ model }`
+ * @returns {Promise<unknown>} the modal promise from `modal.show`
  */
 export function showCreateInviteModal(context, opts = {}) {
   const owner = getOwner(context);

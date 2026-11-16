@@ -2,8 +2,8 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { LIVESTREAM_CHAT_CONTEXT } from "../../components/livestream/embeddable-chat-channel";
-import LivestreamRsvp from "../../lib/livestream-rsvp";
+import { LIVESTREAM_CHAT_CONTEXT } from "../../components/livestream/embeddable-chat-channel.gjs";
+import LivestreamRsvp from "../../lib/livestream-rsvp.js";
 
 export default class LivestreamRsvpPreviewCard extends LivestreamRsvp {
   get isOnTopic() {

@@ -34,7 +34,7 @@ class NotificationSerializer < ApplicationSerializer
   def data
     return object.data_hash if SiteSetting.enable_names?
 
-    object.data_hash.except(:display_name)
+    object.data_hash.except(:display_name, :name, :name2, :original_name)
   end
 
   def external_id

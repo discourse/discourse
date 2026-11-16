@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { modifier } from "ember-modifier";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -9,33 +7,32 @@ import { i18n } from "discourse-i18n";
 import ToggleColorMode from "discourse/plugins/styleguide/discourse/components/toggle-color-mode";
 import sectionTitle from "discourse/plugins/styleguide/discourse/helpers/section-title";
 
-@tagName("")
 export default class StyleguideSection extends Component {
-  @computed("section")
+  scrollToTop = modifier((element, [section, title]) => {
+    if (section || title) {
+      window.scrollTo(0, 0);
+    }
+  });
+
   get sectionClass() {
-    if (this.section) {
-      return `${this.section.id}-examples`;
+    if (this.args.section) {
+      return `${this.args.section.id}-examples`;
     }
   }
 
   // Built by hand rather than with a route, because a breadcrumb item can only link to a route
   // without dynamic segments and this one needs the category and section.
-  @computed("section")
   get sectionPath() {
-    if (this.section) {
-      return `/styleguide/${this.section.category}/${this.section.id}`;
+    if (this.args.section) {
+      return `/styleguide/${this.args.section.category}/${this.args.section.id}`;
     }
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-    window.scrollTo(0, 0);
   }
 
   <template>
     <section
       class={{dConcatClass "styleguide-section" this.sectionClass}}
       ...attributes
+      {{this.scrollToTop @section @title}}
     >
       <DPageHeader @hideTabs={{true}}>
         <:breadcrumbs>
@@ -44,9 +41,9 @@ export default class StyleguideSection extends Component {
             @path="/styleguide"
           />
 
-          {{#if this.section}}
+          {{#if @section}}
             <DBreadcrumbsItem
-              @label={{sectionTitle this.section.id}}
+              @label={{sectionTitle @section.id}}
               @path={{this.sectionPath}}
             />
           {{/if}}
@@ -57,10 +54,10 @@ export default class StyleguideSection extends Component {
         </:breadcrumbs>
 
         <:title>
-          {{#if this.section}}
-            {{sectionTitle this.section.id}}
-          {{else if this.title}}
-            {{i18n this.title}}
+          {{#if @section}}
+            {{sectionTitle @section.id}}
+          {{else if @title}}
+            {{i18n @title}}
           {{/if}}
         </:title>
       </DPageHeader>

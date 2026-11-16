@@ -238,6 +238,8 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Sugerir con IA"
       ai_decoded_transcript:
         thinking: "Pensando"
         tool: "Herramienta"
@@ -249,6 +251,12 @@ es:
         ai_agent:
           agent_id: "Agente"
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imágenes"
+          name: "Nombre"
+          type: "Tipo"
+          type_score: "Puntuación"
       ai_tool_approval:
         loading: "Cargando..."
         agent: "Agente"
@@ -259,32 +267,37 @@ es:
         approved: "Aprobado"
         rejected: "Rechazados"
       default_llm:
-        title: "Modelo LLM por defecto"
-        description: "El modelo LLM por defecto que se utilizará para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en el agente. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
+        title: "Modelo lingüístico por defecto"
       llm_selector:
         none: "Ninguna"
-        saved: "El modelo LLM por defecto se ha actualizado correctamente"
       features:
         short_title: "Características"
-        description: "Estas son las características de IA disponibles para los visitantes de tu sitio. Se pueden configurar para usar agentes y LLM específicos, y los grupos pueden controlar su acceso."
         back: "Volver a las características de IA"
         settings_save_error: "Algunos ajustes no se han podido guardar."
-        disabled: "(desactivado)"
-        agent:
-          one: "Agente:"
-          other: "Agentes:"
-        groups: "Grupos:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Estado"
+          enabled: "Activado"
+          feature: "Característica"
+          agent: "Agente"
+          llm: "LLM"
+          groups: "Grupos"
+        who_can_use:
+          no_one: "Nadie"
+        status:
+          "on": "Activado"
+          "off": "Desactivado"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Nuevo agente"
+          places:
+            personal_messages: "Mensajes personales"
+            chat_direct_messages: "Mensajes de chat"
+            none: "No disponible"
+        set_up: "Configurar"
         no_llm: "No hay LLM seleccionados"
         no_agent: "No establecido"
         no_groups: "Ninguna"
         edit: "Ajustes"
-        expand_list:
-          one: "(%{count} más)"
-          other: "(%{count} más)"
-        collapse_list: "(mostrar menos)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -297,11 +310,17 @@ es:
         nav:
           enabled: "Activado"
         filters:
-          all: "Todo"
-          text: "Buscar características, agentes, LLM o grupos..."
           no_results: "No se han encontrado características que coincidan con tus filtros."
           reset: "Restablecer"
         no_automations: "Aún no hay automatizaciones"
+        sentiment:
+          sentiment: "Sentimiento"
+          emotion: "Emoción"
+          enabled: "Activado"
+          agent: "Agente"
+          setting_groups:
+            sentiment: "Sentimiento"
+            emotion: "Emoción"
         summarization:
           name: "Resúmenes"
           description: "Pone a disposición un botón de resumen que permite que los visitantes puedan resumir temas"
@@ -321,8 +340,7 @@ es:
             access_control: "Control de acceso"
         embeddings:
           name: "Incrustaciones"
-          description: "Impulsa características como Temas relacionados y Búsqueda de IA al generar representaciones semánticas de texto"
-          hyde: "HyDE"
+          related_topics: "Temas relacionados"
           setting_groups:
             model_settings: "Ajustes del modelo"
             related_topics: "Temas relacionados"
@@ -332,7 +350,6 @@ es:
             settings: "Ajustes básicos"
         discord:
           name: "Integración de Discord"
-          description: "Añade la posibilidad de buscar canales de Discord"
           search: "Búsqueda de Discord"
           setting_groups:
             settings: "Ajustes básicos"
@@ -383,10 +400,6 @@ es:
             one: "Traducción programada para %{count} publicación no traducida."
             other: "Traducción programada para %{count} publicaciones no traducidas."
           schedule_topic_error: "Error al programar las traducciones. Inténtalo de nuevo."
-          setting_groups:
-            settings: "Ajustes básicos"
-            agents: "Agentes"
-            backfill_and_limits: "Relleno y límites"
         spam:
           name: "Spam"
           description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
@@ -405,8 +418,20 @@ es:
       translations:
         title: "Traducciones"
         description: "Traduce automáticamente todo el contenido de tu foro al idioma preferido del usuario"
-        supported_locales: "Idiomas compatibles"
-        category_scope: "Categorías"
+        sections:
+          advanced: "Avanzado"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorías"
+          ai_translation_personal_messages:
+            label: "Mensajes personales"
+            choices:
+              none: "Ninguna"
+              all: "Todo"
+          content_localization_language_switcher:
+            choices:
+              none: "Nadie"
+              all: "Todos"
         cached_results_notice: "Mostrando resultados en caché de %{relative_time}."
         model_progress:
           detail:
@@ -425,7 +450,7 @@ es:
             tag:
               title: "Etiquetas"
         admin_actions:
-          enable_translations: "Activar traducciones automáticas"
+          enabled: "Activado"
         stats:
           title: "Estadísticas de traducción"
           backfill_disabled: "El relleno está desactivado, solo se traducirán las publicaciones nuevas."
@@ -460,6 +485,8 @@ es:
         short_title: "Spam"
         title: "Configurar el manejo de spam"
         select_llm: "Seleccionar LLM"
+        no_llm_selected: "Ninguna"
+        no_decision_model_selected: "Ninguna"
         select_agent: "Seleccionar agente"
         custom_instructions: "Instrucciones personalizadas"
         custom_instructions_help: "Instrucciones personalizadas específicas de tu sitio para ayudar a guiar a la IA en la identificación de spam, por ejemplo: «Sé más agresivo a la hora de escanear las publicaciones que no estén en inglés»."
@@ -803,7 +830,6 @@ es:
           result: "Resultado de la prueba"
       secrets:
         short_title: "Credenciales"
-        description: "Gestionar las credenciales de autenticación compartidas entre LLM, integraciones y herramientas."
         name: "Nombre"
         secret: "Valor"
         select_secret: "Selecciona una credencial..."
@@ -828,6 +854,17 @@ es:
         mcp_server_oauth_client_secret: "Secreto del cliente OAuth del servidor MCP"
         modal:
           title: "Crear nueva credencial"
+      decision_models:
+        no_preset: "Ninguna"
+        display_name: "Nombre"
+        model: "Modelo"
+        provider: "Proveedor"
+        api_key: "Credencial"
+        edit: "Editar"
+        delete: "Eliminar"
+        test: "Ejecutar prueba"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Servidores MCP"
         new: "Nuevo servidor MCP"
@@ -909,6 +946,19 @@ es:
         test_summary:
           one: "Se ha descubierto %{count} herramienta usando el protocolo %{version}."
           other: "Se han descubierto %{count} herramientas usando el protocolo %{version}."
+      models:
+        new: "Nuevo modelo"
+        name: "Nombre"
+        type: "Tipo"
+        provider: "Proveedor"
+        edit: "Editar"
+        seeded_warning: "Esto está preconfigurado en tu web y no se puede editar."
+        select_type: "Seleccionar"
+        types:
+          embedding: "Incrustado"
+        filters:
+          all: "Todos los tipos"
+          reset: "Restablecer filtros"
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"
@@ -1114,7 +1164,6 @@ es:
         presets: "Selecciona un preajuste..."
         configure_manually: "Configurar manualmente"
         edit: "Editar"
-        seeded_warning: "Esto está preconfigurado en tu web y no se puede editar."
         tests:
           title: "Ejecutar prueba"
           running: "Ejecutando prueba..."
@@ -1146,6 +1195,7 @@ es:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizado"
         provider_fields:
@@ -1163,9 +1213,23 @@ es:
         quick_search:
           suffix: "en todos los temas y publicaciones con IA"
       ai_artifact:
+        editor:
+          version: "Versión"
+          default: "Por defecto"
+          option_on: "Activado"
+          option_off: "Desactivado"
+          apply: "Aplicar"
         expand_view_label: "Ampliar vista"
         collapse_view_label: "Salir de la pantalla completa (ESC o botón Atrás)"
         click_to_run_label: "Ejecutar Artefacto"
+        share: "Compartir"
+        create_link: "Crear enlace"
+        copied: "Copiado al portapapeles"
+        copy_link: "Copiar enlace"
+        copy_embed: "Copiar incrustación"
+        new_tab: "Mostrar en una pestaña nueva"
+        filter_all: "Todo"
+        filter_standalone: "Independiente"
       ai_bot:
         title: "Bot de IA"
         agent: "Agente:"
@@ -1244,10 +1308,7 @@ es:
           scroll_to_bottom: "Desplazar hacia abajo"
           editing_post: "Editando publicación"
       sentiments:
-        dashboard:
-          title: "Sentimiento"
         sidebar:
-          overview: "Visión general de sentimiento"
           analysis: "Análisis de sentimiento"
         sentiment_analysis:
           share_chart: "Copiar enlace al gráfico"
@@ -1289,6 +1350,15 @@ es:
             compact: "Compacto"
             expanded: "Ampliado"
             expanded_description: "con resúmenes de IA"
+      ai_search:
+        related_topics: "Temas relacionados"
+        related_replies:
+          one: "%{count} respuesta"
+          other: "%{count} respuestas"
+        tabs:
+          ask: "Preguntar a la IA"
+          topics: "Temas"
+          messages: "Mensajes"
       discobot_discoveries:
         main_title: "Preguntar a la IA"
         loading_convo: "Cargando conversación"

@@ -1,21 +1,21 @@
 import { hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 import FilterComponent from "discourse/admin/components/report-filters/filter";
 import ComboBox from "discourse/select-kit/components/combo-box";
 
-@tagName("")
 export default class Group extends FilterComponent {
-  @computed
+  @service site;
+
   get groupOptions() {
     return (this.site.groups || []).map((group) => {
       return { name: group["name"], value: group["id"] };
     });
   }
 
-  @computed("filter.default")
   get groupId() {
-    return this.filter.default ? parseInt(this.filter.default, 10) : null;
+    return this.args.filter.default
+      ? parseInt(this.args.filter.default, 10)
+      : null;
   }
 
   <template>
@@ -24,8 +24,8 @@ export default class Group extends FilterComponent {
         @content={{this.groupOptions}}
         @onChange={{this.onChange}}
         @options={{hash
-          allowAny=this.filter.allow_any
-          autoInsertNoneItem=this.filter.auto_insert_none_item
+          allowAny=@filter.allow_any
+          autoInsertNoneItem=@filter.auto_insert_none_item
           filterable=true
           none="admin.dashboard.reports.groups"
         }}

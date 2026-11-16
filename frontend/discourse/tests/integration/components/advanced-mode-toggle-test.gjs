@@ -9,14 +9,12 @@ module("Integration | Component | AdvancedModeToggle", function (hooks) {
   setupRenderingTest(hooks);
 
   test("label reflects @active and flips on toggle", async function (assert) {
-    const state = new (class {
-      @tracked active = false;
-    })();
-    const onToggle = () => (state.active = !state.active);
+    const active = tracked(false);
+    const onToggle = () => (active.value = !active.value);
 
     await render(
       <template>
-        <AdvancedModeToggle @active={{state.active}} @onToggle={{onToggle}} />
+        <AdvancedModeToggle @active={{active.value}} @onToggle={{onToggle}} />
       </template>
     );
 

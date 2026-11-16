@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::PgEncoderCache do
-  describe "JsonEncoder" do
-    subject(:encoder) { described_class::JsonEncoder.new }
+  describe "the JSON encoder" do
+    subject(:encoder) { described_class.get_encoder("json") }
 
     it "encodes hashes, arrays and scalars as JSON" do
       expect(encoder.encode({ "a" => 1 })).to eq('{"a":1}')
@@ -18,8 +18,8 @@ RSpec.describe Migrations::Importer::PgEncoderCache do
 
   describe ".get_encoder" do
     it "returns the JSON encoder for json and jsonb" do
-      expect(described_class.get_encoder("json")).to be_a(described_class::JsonEncoder)
-      expect(described_class.get_encoder("jsonb")).to be_a(described_class::JsonEncoder)
+      expect(described_class.get_encoder("json")).to be_a(PG::TextEncoder::JSON)
+      expect(described_class.get_encoder("jsonb")).to be_a(PG::TextEncoder::JSON)
     end
 
     it "normalizes PG's internal array type names" do
@@ -32,18 +32,5 @@ RSpec.describe Migrations::Importer::PgEncoderCache do
         /Unsupported PG type tsvector/,
       )
     end
-  end
-
-  it "still needs JsonEncoder instead of PG::TextEncoder::JSON" do
-    # whether PG::TextEncoder::JSON raises depends on the loaded json version,
-    # so check what pg ships instead of calling it
-    encode_source_path = PG::TextEncoder::JSON.instance_method(:encode).source_location&.first
-
-    expect(encode_source_path).not_to be_nil,
-    "PG::TextEncoder::JSON#encode is no longer plain Ruby — " \
-      "check whether JsonEncoder is still needed"
-    expect(File.read(encode_source_path)).to include("quirks_mode"),
-    "the installed pg no longer passes quirks_mode — " \
-      "replace JsonEncoder with PG::TextEncoder::JSON and delete this example"
   end
 end

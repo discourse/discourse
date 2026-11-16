@@ -17,6 +17,10 @@ module DiscourseEvents
       MAX_RAW_INVITEES = 10
       MAX_ATTENDEES_LIMIT = 2_147_483_647
       DEFAULT_DURATION_SECONDS = 3600
+      # An event with no end has nothing to pause notifications until, and leaving
+      # the webinar is what normally ends the pause, so this only bounds a tab
+      # left open.
+      OPEN_ENDED_NOTIFICATION_PAUSE = 3.hours
       DEFAULT_TIMEZONE = "UTC"
       NOTIFICATION_REMINDER = "notification"
       BUMP_TOPIC_REMINDER = "bumpTopic"
@@ -45,8 +49,10 @@ module DiscourseEvents
       after_save :sync_hosts
       after_commit :create_livestream_chat_channel, on: %i[create update]
       after_commit :enqueue_warm_livestream_onebox, on: %i[create update]
+      after_commit :enqueue_warm_recording_onebox, on: %i[create update]
       after_commit :destroy_topic_custom_field, on: %i[destroy]
       after_commit :create_or_update_event_date, on: %i[create update]
+      after_commit :reopen_livestream_chat_channel, on: :update
       after_save do
         if saved_change_to_image_upload_id?
           UploadReference.ensure_exist!(upload_ids: [image_upload_id], target: self)
@@ -63,6 +69,7 @@ module DiscourseEvents
       validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
       validates :location, length: { maximum: MAX_LOCATION_LENGTH }
       validates :url, length: { maximum: MAX_URL_LENGTH }
+      validates :recording_url, length: { maximum: MAX_URL_LENGTH }
       validates :max_attendees,
                 numericality: {
                   only_integer: true,
@@ -92,9 +99,8 @@ module DiscourseEvents
       end
 
       def reset_invalid_livestream
-        return unless livestream?
-
-        self.livestream = false unless allowed_livestream_url? && post&.is_first_post?
+        self.livestream = false if livestream? && !(allowed_livestream_url? && post&.is_first_post?)
+        self.allow_anonymous_livestream = false unless livestream?
       end
 
       def allowed_livestream_url?
@@ -107,6 +113,22 @@ module DiscourseEvents
         return if post.topic.blank?
 
         DiscourseEvents::Livestream.handle_topic_chat_channel_creation(post.topic)
+      end
+
+      # The chat closes once the event ends, so an event moved back into the
+      # future, or made recurring, needs it open again.
+      def reopen_livestream_chat_channel
+        return unless livestream? && SiteSetting.chat_enabled
+        return if !occurrences_remaining?
+
+        topic_chat_channel =
+          DiscourseEvents::Livestream::TopicChatChannel.includes(:chat_channel).find_by(
+            topic_id: post&.topic_id,
+            closed_on_event_end: true,
+          )
+        return if !topic_chat_channel&.chat_channel&.closed?
+
+        topic_chat_channel.chat_channel.open!(Discourse.system_user)
       end
 
       def has_cached_livestream_onebox?
@@ -123,11 +145,27 @@ module DiscourseEvents
         Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: livestream_url)
       end
 
+      # The raw allows a recording without a scheme; oneboxing needs one.
+      def recording_link
+        return if recording_url.blank?
+        recording_url.match?(%r{\Ahttps?://}i) ? recording_url : "https://#{recording_url}"
+      end
+
+      def has_cached_recording_onebox?
+        recording_link.present? && Oneboxer.cached_onebox(recording_link).present?
+      end
+
+      def enqueue_warm_recording_onebox
+        return if recording_link.blank? || !saved_change_to_recording_url?
+        return if has_cached_recording_onebox?
+        Jobs.enqueue(:warm_recording_onebox, event_id: id, url: recording_link)
+      end
+
       # Fetches the onebox and tells clients to re-render the post with it. Only
-      # ever called from the background job, never during a request.
-      def warm_livestream_onebox!
-        return if has_cached_livestream_onebox?
-        Oneboxer.onebox(livestream_url)
+      # ever called from a background job, never during a request.
+      def warm_onebox!(url)
+        return if Oneboxer.cached_onebox(url).present?
+        Oneboxer.onebox(url)
         post&.publish_change_to_clients!(:revised)
       end
 
@@ -154,8 +192,10 @@ module DiscourseEvents
         return unless sync_event_date
 
         reset_invitees_for_next_occurrence
-        notify_if_new_event
-        publish_update!
+        DB.after_commit do
+          notify_if_new_event
+          publish_update!
+        end
       end
 
       def set_topic_bump
@@ -182,7 +222,11 @@ module DiscourseEvents
 
       def self.split_reminder(reminder)
         parts = reminder.strip.split(".")
-        parts.reverse if parts.size.between?(2, 3)
+        return if !parts.size.between?(2, 3)
+
+        unit, value, type = parts.reverse
+        unit = "#{unit}s" if %w[minute hour day week].include?(unit)
+        [unit, value, type]
       end
 
       def self.reminder_offset(reminder)
@@ -224,6 +268,19 @@ module DiscourseEvents
 
       def starts_at
         current_event_date&.starts_at || original_starts_at
+      end
+
+      def notification_pause_ends_at
+        return (ends_at || starts_at).end_of_day if all_day
+
+        ends_at || OPEN_ENDED_NOTIFICATION_PAUSE.from_now
+      end
+
+      # Between occurrences of a recurring livestream there is nothing to chat
+      # alongside, so the chat only docks around each one.
+      def livestream_chat_active?
+        return false if !livestream? || expired?
+        !recurring? || currently_within_event_timeframe?
       end
 
       def ends_at
@@ -419,6 +476,14 @@ module DiscourseEvents
         recurrence.present?
       end
 
+      # Unlike `expired?`, also false for a series whose cutoff falls after its
+      # last occurrence.
+      def occurrences_remaining?(after: Time.current)
+        return false if expired?
+        return true if !recurring?
+        calculate_next_occurrence_from(after).present?
+      end
+
       def most_likely_going(limit = SiteSetting.displayed_invitees_limit)
         going = invitees.order(%i[status created_at user_id]).limit(limit).to_a
 
@@ -607,6 +672,36 @@ module DiscourseEvents
         { starts_at: next_starts_at, ends_at: derive_next_ends_at(next_starts_at) }
       end
 
+      def recurring_occurrences(after:, limit:, before: nil)
+        return [] if recurrence.blank? || limit <= 0
+
+        occurrences = []
+        if original_starts_at > after
+          return [] if before && original_starts_at >= before
+
+          occurrences << { starts_at: original_starts_at, ends_at: original_ends_at }
+          return occurrences if limit == 1
+
+          after = original_starts_at + 1.second
+        end
+
+        after_in_tz = after.in_time_zone(timezone)
+        before_in_tz = before&.in_time_zone(timezone)
+
+        dates =
+          recurrence_rule
+            .each(floor_date: after_in_tz)
+            .lazy
+            .drop_while { |starts_at| starts_at < after_in_tz }
+            .take_while { |starts_at| before_in_tz.nil? || starts_at < before_in_tz }
+
+        occurrences.concat(
+          dates
+            .first(limit - occurrences.size)
+            .map { |starts_at| { starts_at:, ends_at: derive_next_ends_at(starts_at) } },
+        )
+      end
+
       def duration
         return nil unless original_starts_at
 
@@ -793,22 +888,26 @@ module DiscourseEvents
       end
 
       def calculate_next_recurring_date_from(from_time)
-        timezone_starts_at = original_starts_at.in_time_zone(timezone)
-        timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
         from_time_in_tz = from_time.in_time_zone(timezone)
 
-        RRule::Rule
-          .new(
-            DiscourseEvents::Events::RRuleConfigurator.rule(
-              recurrence_until: timezone_recurrence_until,
-              recurrence: recurrence,
-              starts_at: timezone_starts_at,
-            ),
-            dtstart: timezone_starts_at,
-            tzid: rrule_timezone,
-          )
+        recurrence_rule
           .between(from_time_in_tz - 1.hour, from_time_in_tz + 1.year)
           .find { |date| date >= from_time_in_tz }
+      end
+
+      def recurrence_rule
+        timezone_starts_at = original_starts_at.in_time_zone(timezone)
+        timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
+
+        RRule::Rule.new(
+          DiscourseEvents::Events::RRuleConfigurator.rule(
+            recurrence_until: timezone_recurrence_until,
+            recurrence: recurrence,
+            starts_at: timezone_starts_at,
+          ),
+          dtstart: timezone_starts_at,
+          tzid: rrule_timezone,
+        )
       end
     end
   end
@@ -818,30 +917,32 @@ end
 #
 # Table name: discourse_post_event_events
 #
-#  id                 :bigint           not null, primary key
-#  all_day            :boolean          default(FALSE), not null
-#  chat_enabled       :boolean          default(FALSE), not null
-#  closed             :boolean          default(FALSE), not null
-#  custom_fields      :jsonb            not null
-#  deleted_at         :datetime
-#  description        :string(1000)
-#  livestream         :boolean          default(FALSE), not null
-#  location           :string(1000)
-#  max_attendees      :integer
-#  minimal            :boolean
-#  name               :string
-#  original_ends_at   :datetime
-#  original_starts_at :datetime         not null
-#  raw_invitees       :string           is an Array
-#  recurrence         :string
-#  recurrence_until   :datetime
-#  reminders          :string
-#  show_local_time    :boolean          default(FALSE), not null
-#  status             :integer          default(0), not null
-#  timezone           :string
-#  url                :string(1000)
-#  chat_channel_id    :bigint
-#  image_upload_id    :bigint
+#  id                         :bigint           not null, primary key
+#  all_day                    :boolean          default(FALSE), not null
+#  allow_anonymous_livestream :boolean          default(FALSE), not null
+#  chat_enabled               :boolean          default(FALSE), not null
+#  closed                     :boolean          default(FALSE), not null
+#  custom_fields              :jsonb            not null
+#  deleted_at                 :datetime
+#  description                :string(1000)
+#  livestream                 :boolean          default(FALSE), not null
+#  location                   :string(1000)
+#  max_attendees              :integer
+#  minimal                    :boolean
+#  name                       :string
+#  original_ends_at           :datetime
+#  original_starts_at         :datetime         not null
+#  raw_invitees               :string           is an Array
+#  recording_url              :string(1000)
+#  recurrence                 :string
+#  recurrence_until           :datetime
+#  reminders                  :string
+#  show_local_time            :boolean          default(FALSE), not null
+#  status                     :integer          default(0), not null
+#  timezone                   :string
+#  url                        :string(1000)
+#  chat_channel_id            :bigint
+#  image_upload_id            :bigint
 #
 # Indexes
 #

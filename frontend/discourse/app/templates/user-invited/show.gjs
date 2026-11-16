@@ -242,6 +242,12 @@ export default <template>
                               count=invite.redemption_count
                               max=invite.max_redemptions_allowed
                             }}
+                          {{else if invite.id}}
+                            {{i18n
+                              "user.invited.invited_via_link_without_key"
+                              count=invite.redemption_count
+                              max=invite.max_redemptions_allowed
+                            }}
                           {{else}}
                             <em>{{i18n "user.invited.generating_link"}}</em>
                           {{/if}}

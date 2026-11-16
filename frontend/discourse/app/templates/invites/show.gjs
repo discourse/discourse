@@ -14,7 +14,6 @@ import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import DPasswordField from "discourse/ui-kit/d-password-field";
@@ -89,12 +88,11 @@ export default <template>
             {{/if}}
 
             {{#if @controller.discourseConnectEnabled}}
-              <a
-                class="btn btn-primary discourse-connect raw-link"
-                href={{@controller.ssoPath}}
-              >
-                {{i18n "continue"}}
-              </a>
+              <DButton
+                class="btn-primary discourse-connect"
+                @action={{@controller.continueWithDiscourseConnect}}
+                @label="continue"
+              />
             {{/if}}
 
             {{#if @controller.shouldDisplayForm}}

@@ -21,8 +21,14 @@ import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
 import processNode, {
   registerPostInTopicPostStream,
-} from "../lib/process-node";
+} from "../lib/process-node.js";
 
+/**
+ * @typedef {Object} NestedContextNode
+ * @property {import("discourse/models/post").default} post
+ * @property {NestedContextNode[]} children
+ * @property {number | string} _renderKey
+ */
 export default class NestedController extends Controller {
   @service appEvents;
   @service composer;
@@ -46,13 +52,21 @@ export default class NestedController extends Controller {
   @tracked effectiveSort;
   @tracked messageBusLastId;
   @tracked postNumber;
+
+  /** @type {string | number | null} */
   @tracked context = null;
   @tracked contextMode = false;
+
+  /** @type {NestedContextNode | null} */
   @tracked contextChain = null;
   @tracked initialFocusedPath = [];
+
+  /** @type {number | null} */
   @tracked targetPostNumber = null;
   @tracked contextNoAncestors = false;
   @tracked ancestorsTruncated = false;
+
+  /** @type {number | null} */
   @tracked topAncestorPostNumber = null;
   @tracked newRootPostIds = [];
   @tracked editingTopic = false;
@@ -74,6 +88,7 @@ export default class NestedController extends Controller {
   fetchedChildrenCache = new Map();
 
   // Scroll anchor for cache restoration: { postNumber, offsetFromTop, scrollY? }
+  /** @type {{ postNumber: number, offsetFromTop: number, scrollY?: number } | null} */
   scrollAnchor = null;
 
   quoteState = new QuoteState();

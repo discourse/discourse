@@ -12,7 +12,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
@@ -20,6 +19,10 @@ import DUserLink from "discourse/ui-kit/d-user-link";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+function updateColorScheme(controller, field, value) {
+  controller.set(field, value);
+}
 
 export default <template>
   <div class="metadata control-unit">
@@ -164,6 +167,7 @@ export default <template>
               <ColorPalettePicker
                 @content={{@controller.filteredColorSchemes}}
                 @icon="paintbrush"
+                @onChange={{fn updateColorScheme @controller "colorSchemeId"}}
                 @options={{hash
                   filterable=true
                   translatedNone=(unless
@@ -219,6 +223,11 @@ export default <template>
               <ColorPalettePicker
                 @content={{@controller.filteredColorSchemes}}
                 @icon="paintbrush"
+                @onChange={{fn
+                  updateColorScheme
+                  @controller
+                  "darkColorSchemeId"
+                }}
                 @options={{hash
                   filterable=true
                   translatedNone=(unless
@@ -270,6 +279,7 @@ export default <template>
         <ThemeSettingRelativesSelector
           class="theme-setting"
           @model={{@controller.model}}
+          @onSave={{@controller.markParentThemesSaved}}
           @setting={{@controller.relativesSelectorSettingsForComponent}}
         />
       </div>

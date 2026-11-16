@@ -5,7 +5,7 @@ import DTextField from "discourse/ui-kit/d-text-field";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
-import PluginOutlet from "./plugin-outlet";
+import PluginOutlet from "./plugin-outlet.gjs";
 
 export default class TopicTitleEditor extends Component {
   @service languageNameLookup;

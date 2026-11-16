@@ -10,7 +10,9 @@ module Jobs
       group = Group.find_by(id: group_id)
       return if group.nil?
 
-      User.where(id: user_ids).find_each { |user| group.notify_added_to_group(user) }
+      User
+        .where(id: user_ids)
+        .find_each { |user| group.notify_added_to_group(user, owner: args[:owner] == true) }
     end
   end
 end

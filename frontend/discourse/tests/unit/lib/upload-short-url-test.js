@@ -1,9 +1,13 @@
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import {
+  cacheShortUploadUrl,
   lookupCachedUploadUrl,
+  lookupUncachedUploadUrls,
+  MISSING,
   resetCache,
   resolveAllShortUrls,
+  resolveCachedShortUrls,
 } from "pretty-text/upload-short-url";
 import { module, test } from "qunit";
 import { ajax } from "discourse/lib/ajax";
@@ -224,5 +228,107 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
 
     lookup = lookupCachedUploadUrl("upload://a.jpeg");
     assert.deepEqual(lookup, {});
+  });
+
+  test("cacheShortUploadUrl stores a lookup", function (assert) {
+    assert.deepEqual(lookupCachedUploadUrl("upload://a.jpeg"), {});
+
+    cacheShortUploadUrl("upload://a.jpeg", {
+      url: "/a.png",
+      short_path: "/s/a",
+    });
+
+    assert.deepEqual(lookupCachedUploadUrl("upload://a.jpeg"), {
+      url: "/a.png",
+      short_path: "/s/a",
+    });
+  });
+
+  test("lookupUncachedUploadUrls skips an empty list", function (assert) {
+    let requests = 0;
+
+    const result = lookupUncachedUploadUrls([null, ""], () => requests++);
+
+    assert.strictEqual(result, undefined);
+    assert.strictEqual(requests, 0);
+  });
+
+  test("lookupUncachedUploadUrls caches what the server finds", async function (assert) {
+    const found = {
+      short_url: "upload://a.jpeg",
+      url: "/a.png",
+      short_path: "/s/a",
+    };
+    pretender.post("/uploads/lookup-urls", () => response([found]));
+
+    const uploads = await lookupUncachedUploadUrls(
+      ["upload://a.jpeg", null, "upload://gone.jpeg"],
+      ajax
+    );
+
+    assert.deepEqual(uploads, [found]);
+    assert.deepEqual(lookupCachedUploadUrl("upload://a.jpeg"), {
+      url: "/a.png",
+      short_path: "/s/a",
+    });
+    assert.deepEqual(
+      lookupCachedUploadUrl("upload://gone.jpeg"),
+      { url: MISSING, short_path: MISSING },
+      "marks the urls it didn't find as missing"
+    );
+  });
+
+  test("resolveCachedShortUrls uses only the cache", function (assert) {
+    cacheShortUploadUrl("upload://a.jpeg", {
+      url: "/a.png",
+      short_path: "/s/a",
+    });
+    fixture().innerHTML =
+      '<img data-orig-src="upload://a.jpeg"><img data-orig-src="upload://b.jpeg">';
+
+    resolveCachedShortUrls({}, fixture());
+
+    const [cached, uncached] = fixture().querySelectorAll("img");
+    assert.dom(cached).hasAttribute("src", "/a.png");
+    assert.dom(cached).doesNotHaveAttribute("data-orig-src");
+    assert.dom(uncached).doesNotHaveAttribute("src");
+    assert.dom(uncached).hasAttribute("data-orig-src", "upload://b.jpeg");
+  });
+
+  test("resolveCachedShortUrls leaves a missing upload alone", function (assert) {
+    cacheShortUploadUrl("upload://gone.jpeg", { url: MISSING });
+    fixture().innerHTML = '<img data-orig-src="upload://gone.jpeg">';
+
+    resolveCachedShortUrls({}, fixture());
+
+    assert.dom("img", fixture()).doesNotHaveAttribute("src");
+    assert.dom("img", fixture()).doesNotHaveAttribute("data-orig-src");
+  });
+
+  test("resolveCachedShortUrls replaces a missing upload when asked", function (assert) {
+    cacheShortUploadUrl("upload://gone.jpeg", { url: MISSING });
+    fixture().innerHTML =
+      '<img data-orig-src="upload://gone.jpeg" width="40" height="30">';
+
+    resolveCachedShortUrls({}, fixture(), { removeMissing: true });
+
+    assert.dom("img", fixture()).doesNotExist();
+    assert.dom("canvas", fixture()).hasAttribute("width", "40");
+    assert.dom("canvas", fixture()).hasAttribute("height", "30");
+  });
+
+  test("resolveCachedShortUrls sets a video placeholder's background", function (assert) {
+    cacheShortUploadUrl("upload://d.mp4", { url: "/d.png" });
+    fixture().innerHTML =
+      '<div data-orig-src-id="upload://d.mp4"><span class="placeholder-icon video"></span></div>';
+
+    resolveCachedShortUrls({}, fixture());
+
+    const placeholder = fixture().querySelector("div");
+    assert.strictEqual(placeholder.style.backgroundImage, 'url("/d.png")');
+    assert.strictEqual(
+      placeholder.querySelector(".placeholder-icon").style.backgroundColor,
+      "rgba(0, 0, 0, 0.3)"
+    );
   });
 });

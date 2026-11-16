@@ -12,7 +12,6 @@ import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { gt } from "discourse/truth-helpers";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 import { i18n } from "discourse-i18n";

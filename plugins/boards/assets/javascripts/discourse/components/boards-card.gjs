@@ -13,7 +13,6 @@ import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import { not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -24,12 +23,12 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { i18n } from "discourse-i18n";
-import { loadCategory } from "../lib/boards-categories";
-import { boardsBoardUrl, boardsCardUrl } from "../lib/boards-urls";
-import AutoLinkedText from "./auto-linked-text";
-import BoardsCardDetailModal from "./modal/boards-card-detail";
-import BoardsFloaterAssignModal from "./modal/boards-floater-assign";
-import BoardsTopicCardDetailModal from "./modal/boards-topic-card-detail";
+import { loadCategory } from "../lib/boards-categories.js";
+import { boardsBoardUrl, boardsCardUrl } from "../lib/boards-urls.js";
+import AutoLinkedText from "./auto-linked-text.gjs";
+import BoardsCardDetailModal from "./modal/boards-card-detail.gjs";
+import BoardsFloaterAssignModal from "./modal/boards-floater-assign.gjs";
+import BoardsTopicCardDetailModal from "./modal/boards-topic-card-detail.gjs";
 
 export function shouldInsertSourceDropIndicator(root = document) {
   return !root.querySelector(

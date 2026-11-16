@@ -6,6 +6,8 @@ import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 
 const INDENT = "  ";
 
+const PLAIN_TEXT_LANGS = ["auto", "text", "pre", "plain"];
+
 // cached hljs instance with custom plugins/languages
 let hljs;
 
@@ -326,19 +328,21 @@ const extension = {
         },
       }),
     async ({ getContext }) => {
-      return highlightPlugin(
-        (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
-        ["code_block", "html_block", "preview_source"],
+      const { session, siteSettings } = getContext();
 
-        // NOTE: If the language has not been set with the code block, we default to plain
-        // text rather than autodetecting. This is to work around an infinite loop issue
-        // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
-        // for > 10 seconds, for example:
-        //
-        // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
-        //
-        // We can remove this if we find some other workaround.
-        (node) => node.attrs.params || "text"
+      // Autodetection can hang the browser (https://github.com/b-kelly/prosemirror-highlightjs/issues/21)
+      const { default_code_lang } = siteSettings;
+      const defaultCodeLang =
+        !default_code_lang || PLAIN_TEXT_LANGS.includes(default_code_lang)
+          ? "text"
+          : default_code_lang;
+
+      return highlightPlugin(
+        (hljs = await ensureHighlightJs(session.highlightJsPath)),
+        ["code_block", "html_block", "preview_source"],
+        (node) =>
+          node.attrs.params ||
+          (node.type.name === "code_block" ? defaultCodeLang : "text")
       );
     },
   ],

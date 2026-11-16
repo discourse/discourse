@@ -6,8 +6,8 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
-import EmptyState from "./empty-state";
-import Item from "./item";
+import EmptyState from "./empty-state.gjs";
+import Item from "./item.gjs";
 
 export default class List extends Component {
   loadMore = modifier((element) => {

@@ -373,12 +373,14 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
       before { RateLimiter.enable }
 
       it "rate limits non-cached queries" do
-        61.times do |i|
-          query = "test#{i}"
-          stub_embedding(query)
-          get "/discourse-ai/embeddings/quick-search.json?q=#{query}"
-        end
+        limiter = RateLimiter.new(user, "semantic-search", 60, 1.minute)
+        59.times { limiter.performed! }
 
+        stub_embedding("last_allowed_query")
+        get "/discourse-ai/embeddings/quick-search.json?q=last_allowed_query"
+        expect(response.status).to eq(200)
+
+        get "/discourse-ai/embeddings/quick-search.json?q=over_limit_query"
         expect(response.status).to eq(429)
       end
 
@@ -393,9 +395,13 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
           hyde: false,
         ).and_return([])
 
-        100.times { get "/discourse-ai/embeddings/quick-search.json?q=#{query}" }
+        limiter = RateLimiter.new(user, "semantic-search", 60, 1.minute)
+        60.times { limiter.performed! }
 
-        expect(response.status).to eq(200)
+        2.times do
+          get "/discourse-ai/embeddings/quick-search.json?q=#{query}"
+          expect(response.status).to eq(200)
+        end
       end
     end
   end
