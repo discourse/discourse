@@ -66,7 +66,10 @@ module Chat
 
     def groups_with_too_many_members
       @groups_with_too_many_members ||=
-        mentionable_groups.where("user_count > ?", SiteSetting.max_users_notified_per_group_mention)
+        mentionable_groups.members_visible_groups(@message.user).where(
+          "user_count > ?",
+          SiteSetting.max_users_notified_per_group_mention,
+        )
     end
 
     def visible_groups
