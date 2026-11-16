@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import RichEditorInteractor from "discourse/plugins/chat/discourse/lib/rich-editor-interactor";
 
 module(
   "Integration | Component | chat composer - rich editor focus requests",
@@ -22,9 +21,8 @@ module(
 
       const onChange = (event) => (value = event.target.value);
       const onSetup = (textManipulation) => {
-        const interactor = new RichEditorInteractor(owner, textManipulation);
-        composer.registerEditor(interactor);
-        return () => composer.unregisterEditor(interactor);
+        composer.registerEditor(textManipulation);
+        return () => composer.unregisterEditor(textManipulation);
       };
 
       await render(

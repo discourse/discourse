@@ -1,5 +1,6 @@
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownItRules: ["html_block"],
   nodeSpec: {
     html_block: {
       attrs: { params: { default: "html" } },

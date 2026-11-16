@@ -1,5 +1,6 @@
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["checklist"],
   nodeSpec: {
     check: {
       attrs: { checked: { default: false } },

@@ -211,6 +211,14 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     });
   }
 
+  get element(): HTMLElement {
+    return this.view.dom;
+  }
+
+  get value(): string {
+    return this.convertToMarkdown(this.view.state.doc);
+  }
+
   getSelected(trimLeading?: boolean | null | ""): SelectedText {
     const { state } = this.view;
     const { to } = state.selection;
@@ -425,7 +433,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     let command;
     if (level === 0) {
       command = setBlockType(this.schema.nodes.paragraph);
-    } else {
+    } else if (this.schema.nodes.heading) {
       command = setBlockType(this.schema.nodes.heading, { level });
     }
     command?.(this.view.state, this.view.dispatch);
@@ -452,15 +460,15 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       index = value.length - match.index;
     }
 
-    this.view.dispatch(
-      this.view.state.tr
-        .replaceRangeWith(
-          from - index,
-          to,
-          this.schema.nodes.emoji.create({ code })
-        )
-        .insertText(" ")
+    const tr = this.view.state.tr.replaceRangeWith(
+      from - index,
+      to,
+      this.schema.nodes.emoji.create({ code })
     );
+    if (!/^\s/.test(tr.selection.$to.nodeAfter?.text ?? "")) {
+      tr.insertText(" ");
+    }
+    this.view.dispatch(tr);
 
     next(() => this.focus());
   }
@@ -507,6 +515,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       command(this.view.state, this.view.dispatch);
       return true;
     }
+  }
+
+  insertTypedText(text: string): void {
+    this.view.dispatch(this.view.state.tr.insertText(text).scrollIntoView());
   }
 
   insertText(text: string): void {
@@ -666,21 +678,23 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     }
   }
 
-  /**
-   * Updates the toolbar state object based on the current editor active states
-   */
   updateState(): void {
-    const activeHeadingLevel = [1, 2, 3, 4, 5, 6].find((headingLevel) =>
-      isNodeActive(this.view.state, this.schema.nodes.heading, {
-        level: headingLevel,
-      })
-    );
+    const activeHeadingLevel =
+      this.schema.nodes.heading &&
+      [1, 2, 3, 4, 5, 6].find((headingLevel) =>
+        isNodeActive(this.view.state, this.schema.nodes.heading!, {
+          level: headingLevel,
+        })
+      );
 
     Object.assign(this.state, {
       inBold: hasMark(this.view.state, this.schema.marks.strong),
       inItalic: hasMark(this.view.state, this.schema.marks.em),
       inLink: hasMark(this.view.state, this.schema.marks.link),
       inCode: hasMark(this.view.state, this.schema.marks.code),
+      inStrikethrough:
+        !!this.schema.marks.strikethrough &&
+        hasMark(this.view.state, this.schema.marks.strikethrough),
       inBulletList: inNode(this.view.state, this.schema.nodes.bullet_list),
       inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
       inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),
@@ -688,6 +702,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       inHeading: !!activeHeadingLevel,
       inHeadingLevel: activeHeadingLevel,
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
+      inOnebox: this.#selectionHasOnebox(),
       ...this.customState(this.view.state),
     });
   }
@@ -1126,6 +1141,21 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     return empty
       ? i18n(`composer.${exampleKey}`)
       : this.convertToMarkdown(this.view.state.doc.slice(from, to));
+  }
+
+  #selectionHasOnebox(): boolean {
+    const { onebox_inline } = this.schema.nodes;
+    if (!onebox_inline) {
+      return false;
+    }
+
+    const { from, to } = this.view.state.selection;
+    let found = false;
+    this.view.state.doc.nodesBetween(from, to, (node) => {
+      found ||= node.type === onebox_inline;
+      return !found;
+    });
+    return found;
   }
 }
 

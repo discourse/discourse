@@ -35,7 +35,22 @@ export default class Parser {
   }
 
   convert(schema, text) {
-    const parser = new MarkdownParser(schema, { parse }, this.parseTokens);
+    const markdownOptions = this.params.getContext?.().markdownOptions;
+    // default tokens for nodes the schema left out, like heading
+    const parseTokens = Object.fromEntries(
+      Object.entries(this.parseTokens).filter(([, spec]) => {
+        const node = spec.block ?? spec.node;
+        return (
+          (!node || schema.nodes[node]) &&
+          (!spec.mark || schema.marks[spec.mark])
+        );
+      })
+    );
+    const parser = new MarkdownParser(
+      schema,
+      { parse: (markdown) => parse(markdown, markdownOptions) },
+      parseTokens
+    );
 
     // Adding function parse handlers directly
     Object.assign(parser.tokenHandlers, this.postParseTokens);

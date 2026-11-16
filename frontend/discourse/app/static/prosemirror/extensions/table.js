@@ -11,6 +11,8 @@ import { buildTableNodeView, TableCellView } from "../lib/table/node-view.js";
 
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["table"],
+  markdownItRules: ["table"],
   nodeViews: {
     table: buildTableNodeView,
     table_cell: TableCellView,

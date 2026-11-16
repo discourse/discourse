@@ -3,6 +3,7 @@ import { isListTight } from "discourse/lib/list-utils";
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownItRules: ["list"],
   nodeSpec: {
     ordered_list: {
       ...schema.nodes.ordered_list.spec,

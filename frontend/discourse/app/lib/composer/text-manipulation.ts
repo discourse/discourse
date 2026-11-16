@@ -16,6 +16,8 @@ export interface ToolbarState {
   inBulletList?: boolean;
   /** Whether the selection is inside an ordered list. */
   inOrderedList?: boolean;
+  /** Whether the selection has strikethrough formatting. */
+  inStrikethrough?: boolean;
   /** Whether the selection has inline code formatting. */
   inCode?: boolean;
   /** Whether the selection is inside a code block. */
@@ -28,6 +30,8 @@ export interface ToolbarState {
   inHeadingLevel?: number;
   /** Whether the selection is inside a paragraph. */
   inParagraph?: boolean;
+  /** Whether the selection includes an inline onebox. */
+  inOnebox?: boolean;
   /** Whether the selection has small text formatting. */
   inSmall?: boolean;
 }
@@ -104,6 +108,10 @@ export type UppyFile = MinimalRequiredUppyFile<Meta, Body> & {
  * Text operations shared by the plain-text and rich composer editors.
  */
 export interface TextManipulation {
+  /** The element the user types into. */
+  readonly element: HTMLElement;
+  /** The editor content as markdown. */
+  readonly value: string;
   /** Current toolbar-active state. */
   readonly state: ToolbarState & Record<string, unknown>;
   /** Whether this editor supports a rendered preview. */
@@ -175,6 +183,8 @@ export interface TextManipulation {
   insertBlock(block: string): void;
   /** Inserts text at the current selection. */
   insertText(text: string, options?: AddTextOptions): void;
+  /** Inserts text at the current selection as if typed, without parsing markdown. */
+  insertTypedText(text: string): void;
   /** Surrounds the current selection with formatting text. */
   applySurroundSelection(
     head: string | ((previous?: string) => string),

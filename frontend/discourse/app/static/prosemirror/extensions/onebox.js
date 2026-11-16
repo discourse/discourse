@@ -35,6 +35,7 @@ export function oneboxTypeAtPos(doc, pos) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["onebox"],
   nodeSpec: {
     onebox: {
       attrs: { url: {}, html: {} },
@@ -66,6 +67,7 @@ const extension = {
     onebox_inline: {
       attrs: { url: {}, title: {} },
       inline: true,
+      leafText: (node) => node.attrs.url,
       group: "inline",
       selectable: true,
       draggable: true,
@@ -478,6 +480,15 @@ const extension = {
 
         const tr = state.tr;
         const inspected = new Set();
+
+        // a marked-up url no longer oneboxes, and the preview can't show it
+        if (docChanged) {
+          state.doc.descendants((node, nodePos) => {
+            if (node.type.name === "onebox_inline" && node.marks.length) {
+              tr.setNodeMarkup(nodePos, null, node.attrs, []);
+            }
+          });
+        }
 
         for (const position of [state.selection.from, leftPos]) {
           const { from, to } = topBlockRange(state.doc, position);

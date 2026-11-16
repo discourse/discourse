@@ -9,8 +9,10 @@ const INVALID_HASHTAGS = new Set();
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["hashtag-autocomplete"],
   nodeSpec: {
     hashtag: {
+      leafText: (node) => `#${node.attrs.name}`,
       attrs: {
         name: {},
         processed: { default: false },
@@ -235,7 +237,10 @@ async function fetchHashtags(hashtags, context) {
     return;
   }
 
-  const order = context.site.hashtag_configurations["topic-composer"];
+  const order =
+    context.site.hashtag_configurations[
+      context.hashtagContext ?? "topic-composer"
+    ];
   const response = await ajax("/hashtags", { data: { slugs, order } });
 
   const validTags = Object.values(response || {})

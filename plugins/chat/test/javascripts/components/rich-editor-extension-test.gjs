@@ -62,6 +62,30 @@ haha **ok** _cool_
       assert.strictEqual(value, singleMessageSingleUserMarkdown);
     });
 
+    test("loads chat's inline HTML and transcripts with chat's markdown limits", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const markdownOptions = {
+        featuresOverride: chat.limited_pretty_text_features,
+        markdownItRules: chat.limited_pretty_text_markdown_rules,
+      };
+      const markdown = `press <kbd>Ctrl</kbd> to <mark>continue</mark> now
+
+[chat quote="hunter;29856;2025-03-20T07:13:04Z" channel="design gems" channelId=95]
+haha **ok**
+[/chat]
+`;
+
+      const [{ value }] = await setupRichEditor(assert, markdown, {
+        markdownOptions,
+      });
+
+      assert.dom(".ProseMirror kbd").hasText("Ctrl");
+      assert.dom(".ProseMirror mark").hasText("continue");
+      assert.dom(".ProseMirror .chat-transcript").exists();
+      assert.strictEqual(value, markdown);
+    });
+
     test("escapes HTML in transcript usernames", async function (assert) {
       const transcriptWithHtmlUsername = `[chat quote="<b>marker</b>;29856;2025-03-20T07:13:04Z"]
 haha

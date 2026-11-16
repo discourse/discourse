@@ -30,7 +30,8 @@
   }
 
   .chat-composer-button,
-  .chat-composer-separator {
+  .chat-composer-separator,
+  .chat-composer-dropdown__trigger-btn {
     align-self: flex-end;
   }
 
@@ -48,14 +49,12 @@
 
   &__inner-container {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     box-sizing: border-box;
     width: 100%;
-    flex-direction: row;
     border: 1px solid var(--d-chat-input-border-color);
     border-radius: var(--d-border-radius-large);
     background: var(--d-chat-input-bg-color);
-    min-height: 50px;
     overflow: hidden;
 
     .chat-composer.is-focused & {
@@ -69,6 +68,13 @@
         cursor: not-allowed;
       }
     }
+  }
+
+  &__input-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 50px;
   }
 
   &__input-container {
@@ -180,8 +186,23 @@
 
 .chat-composer__formatting-bar {
   display: flex;
+  align-items: center;
   gap: var(--space-1);
-  padding: 0 1rem var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--d-chat-input-border-color);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  > * {
+    flex: none;
+  }
+
+  .toolbar-separator {
+    width: 1px;
+    height: 1.25em;
+    margin-inline: var(--space-1);
+    background: var(--d-chat-input-border-color);
+  }
 
   .toolbar__button {
     background: transparent;
@@ -201,47 +222,5 @@
       background: var(--d-selected);
       color: var(--d-selected-text-color);
     }
-  }
-}
-
-.fk-d-menu[data-identifier="chat-selection-toolbar"] {
-  user-select: none;
-  z-index: z("composer", "dropdown");
-
-  .fk-d-menu__inner-content {
-    display: flex;
-    gap: var(--space-1);
-    padding: var(--space-1);
-    background: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-dropdown);
-  }
-
-  .toolbar__button {
-    background: transparent;
-    color: var(--primary-high);
-
-    .d-icon {
-      color: currentcolor;
-    }
-
-    &:hover {
-      background: var(--d-hover);
-      color: var(--primary);
-    }
-
-    &.--active {
-      background: var(--d-selected);
-      color: var(--d-selected-text-color);
-    }
-  }
-}
-
-.chat-composer-button.--active {
-  color: var(--tertiary);
-
-  .d-icon {
-    color: currentcolor;
   }
 }

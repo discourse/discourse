@@ -13,7 +13,7 @@ export default class ChatThreadComposer extends ChatComposerService {
     message.thread.draft = message;
 
     if (this.site.desktopView) {
-      this.focus({ refreshHeight: true, ensureAtEnd: true });
+      this.focus({ ensureAtEnd: true });
     }
   }
 

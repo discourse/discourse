@@ -17,6 +17,16 @@ export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
 
 /**
+ * Whether autocomplete results are showing, so editors can leave navigation
+ * and confirm keys to them.
+ *
+ * @returns {boolean}
+ */
+export function isAutocompleteOpen() {
+  return !!document.querySelector(".autocomplete");
+}
+
+/**
  * Regex for characters that can precede an emoji autocomplete trigger.
  * This matches the same characters allowed in emoji autocomplete's onKeyUp regex.
  * Used to ensure consistency between trigger detection and completion position calculation.

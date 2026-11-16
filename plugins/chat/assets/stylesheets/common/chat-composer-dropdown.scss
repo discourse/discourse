@@ -1,6 +1,9 @@
 .chat-composer-dropdown__trigger-btn {
   margin-left: 0.2rem;
 
+  // same height as the composer buttons, so the icons line up
+  height: 50px;
+
   .d-icon {
     padding: 5px;
     background: var(--primary-low);
@@ -27,4 +30,31 @@
 .chat-composer-dropdown__action-btn {
   width: 100%;
   justify-content: flex-start;
+}
+
+.chat-composer-dropdown__item.--toggle:not(.--toggle + .--toggle) {
+  border-top: 1px solid var(--content-border-color);
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+}
+
+.chat-composer-dropdown__toggle {
+  width: 100%;
+  justify-content: flex-start;
+  cursor: pointer;
+
+  .d-toggle-switch {
+    --toggle-switch-width: 1.75em;
+    --toggle-switch-height: 1em;
+    margin-right: 0.5em;
+  }
+
+  .d-toggle-switch__checkbox-slider .d-icon {
+    display: none;
+  }
+}
+
+.chat-composer-dropdown__shortcut {
+  margin-left: auto;
+  padding-left: var(--space-4);
 }

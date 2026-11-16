@@ -16,6 +16,7 @@ function isTextNode(node: Node): node is Node & { text: string } {
 }
 
 const extension: RichEditorExtension = {
+  markdownItRules: ["link"],
   markSpec: {
     link: {
       attrs: {
