@@ -571,6 +571,17 @@ RSpec.describe TagsController do
       )
     end
 
+    it "doesn't use the description of a tag restricted to a category the user can't see" do
+      restricted = Fabricate(:tag, name: "restricted", description: "secret description")
+      Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [restricted])
+      Fabricate(:tag, name: "other")
+
+      get "/tags/intersection/restricted/other"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("secret description")
+    end
+
     it "returns tag info for an encoded period tag name" do
       Fabricate(:tag, name: "node.js")
 
@@ -911,6 +922,65 @@ RSpec.describe TagsController do
       )
       expect(response.parsed_body["categories"]).to be_present
       expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
+    end
+
+    context "when the tag is restricted to a category the user can't see" do
+      fab!(:group)
+      fab!(:member) { Fabricate(:user, groups: [group]) }
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+      before do
+        tag.update!(description: "secret description")
+        private_category.update!(tags: [tag])
+      end
+
+      it "returns 404 when looked up by ID" do
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+
+        sign_in(user)
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when looked up by ID and restricted through a tag group" do
+        private_category.update!(tags: [], tag_groups: [Fabricate(:tag_group, tags: [tag])])
+
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "omits the description when looked up by name" do
+        get "/tag/#{tag.name}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tag_info"]).to include(
+          "name" => tag.name,
+          "category_restricted" => true,
+        )
+        expect(response.parsed_body["tag_info"]).not_to include("description", "description_cooked")
+      end
+
+      it "doesn't translate the name or description" do
+        SiteSetting.content_localization_enabled = true
+        tag.update!(locale: "en")
+        Fabricate(:tag_localization, tag: tag, locale: "ja", name: "秘密", description: "秘密の説明")
+        sign_in(Fabricate(:user, locale: "ja"))
+
+        get "/tag/#{tag.name}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "name")).to eq(tag.name)
+        expect(response.body).not_to include("秘密")
+      end
+
+      it "returns the full tag to users who can see the category" do
+        sign_in(member)
+        get "/tag/#{tag.id}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "description")).to eq("secret description")
+      end
     end
 
     context "when tag belongs to a tag group" do
