@@ -225,10 +225,10 @@ en:
         layout:
           variants:
             stack:
-              name: "Stack"
+              name: "Rows"
               description: "Arrange blocks vertically."
             row:
-              name: "Row"
+              name: "Columns"
               description: "Arrange blocks horizontally."
             grid:
               name: "Grid"
