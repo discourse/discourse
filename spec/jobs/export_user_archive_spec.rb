@@ -608,6 +608,39 @@ RSpec.describe Jobs::ExportUserArchive do
     end
   end
 
+  describe "queued form posts" do
+    let(:component) { "queued_posts" }
+
+    it "exports only the template id and answers of a queued form" do
+      form_data = {
+        "format_version" => 1,
+        "template_id" => 7,
+        "definition" => {
+          "fields" => [],
+          "output_template" => "Admin-only template",
+        },
+        "answers" => {
+          "note" => "An answer",
+        },
+      }
+      Fabricate(
+        :reviewable_queued_post_topic,
+        category:,
+        target_created_by: user,
+        payload: {
+          raw: "A queued form.",
+          title: "A queued form topic",
+          form_data:,
+        },
+      )
+
+      data, = make_component_csv
+
+      exported = JSON.parse(data.first["other_json"])["form_data"]
+      expect(exported).to eq("template_id" => 7, "answers" => { "note" => "An answer" })
+    end
+  end
+
   describe "visits" do
     let(:component) { "visits" }
 

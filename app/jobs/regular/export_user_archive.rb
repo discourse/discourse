@@ -483,6 +483,8 @@ module Jobs
         .where(target_created_by_id: @archive_for_user.id)
         .order(:created_at)
         .each do |rev|
+          payload = rev.payload.slice(*queued_posts_payload_permitted_keys)
+          payload["form_data"] = exported_form_data(payload["form_data"]) if payload["form_data"]
           yield(
             [
               rev.id,
@@ -490,7 +492,7 @@ module Jobs
               rev.category_id,
               rev.topic_id,
               rev.payload["raw"],
-              MultiJson.dump(rev.payload.slice(*queued_posts_payload_permitted_keys)),
+              MultiJson.dump(payload),
             ]
           )
         end
@@ -567,7 +569,7 @@ module Jobs
         "is_pm" => is_pm,
         "url" => url,
         "post_id" => user_archive["id"],
-        "form_data" => user_archive["form_data"]&.slice("template_id", "answers")&.to_json,
+        "form_data" => exported_form_data(user_archive["form_data"])&.to_json,
       }
 
       user_archive.merge!(topic_hash)
@@ -592,6 +594,11 @@ module Jobs
       end
 
       user_archive_profile
+    end
+
+    # The stored definition includes the admin-only output template.
+    def exported_form_data(form_data)
+      form_data&.slice("template_id", "answers")
     end
 
     def queued_posts_payload_permitted_keys
