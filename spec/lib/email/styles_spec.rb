@@ -267,6 +267,14 @@ RSpec.describe Email::Styles do
       expect(style.to_html).to match_html("cry_cry")
     end
 
+    it "inserts emoji title as text" do
+      emoji =
+        "<img title='&lt;span data-injected&gt;x&lt;/span&gt;' src='/images/emoji/twitter/smile.png'>"
+      style = Email::Styles.new(emoji)
+      style.strip_avatars_and_emojis
+      expect(style.to_html).to match_html("&lt;span data-injected&gt;x&lt;/span&gt;")
+    end
+
     it "works if img tag has no attrs" do
       cooked =
         "Create a method for click on image and use ng-click in <img> in your slide box...it is simple"
