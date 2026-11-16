@@ -257,6 +257,10 @@ module PrettyText
 
       buffer << "__optInput.userId = #{opts[:user_id].to_i};\n" if opts[:user_id]
 
+      if opts[:hashtag_user_ids].present?
+        buffer << "__optInput.hashtagUserIds = #{opts[:hashtag_user_ids].to_json};\n"
+      end
+
       opts[:hashtag_context] = opts[:hashtag_context] || "topic-composer"
       hashtag_types_as_js =
         HashtagAutocompleteService

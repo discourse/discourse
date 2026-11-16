@@ -201,6 +201,17 @@ describe Chat::Message do
     end
   end
 
+  describe "#cook" do
+    it "does not resolve a hashtag the author cannot see when the last editor can" do
+      category = Fabricate(:private_category, group: Fabricate(:group), name: "Secret Plans")
+      message.message = "##{category.slug}"
+      message.last_editor = Fabricate(:admin)
+      message.cook
+
+      expect(message.cooked).not_to include(category.name)
+    end
+  end
+
   describe ".cook" do
     context "with enable_emoji_shortcuts site setting" do
       context "when enabled" do
