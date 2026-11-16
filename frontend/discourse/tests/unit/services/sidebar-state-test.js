@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 
@@ -9,6 +10,25 @@ module("Unit | Service | sidebar-state", function (hooks) {
 
   hooks.beforeEach(function () {
     this.sidebarState = getOwner(this).lookup("service:sidebar-state");
+  });
+
+  test("active links are not revealed on the homepage", function (assert) {
+    const currentURL = sinon.stub(this.sidebarState.router, "currentURL");
+
+    for (const url of [
+      "/",
+      "/?order=created",
+      "/#main",
+      "/?order=created#main",
+    ]) {
+      currentURL.get(() => url);
+      assert.false(this.sidebarState.canRevealActiveLink, url);
+    }
+
+    for (const url of ["/categories", "/chat/c/general/1", "/latest"]) {
+      currentURL.get(() => url);
+      assert.true(this.sidebarState.canRevealActiveLink, url);
+    }
   });
 
   test("shows the panel that was asked for", function (assert) {

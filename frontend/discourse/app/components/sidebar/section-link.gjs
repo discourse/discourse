@@ -204,7 +204,8 @@ export default class SectionLink extends Component {
       if (
         this.isDestroying ||
         !element.isConnected ||
-        !this.args.scrollIntoView
+        !this.args.scrollIntoView ||
+        !this.sidebarState.canRevealActiveLink
       ) {
         return;
       }
@@ -242,7 +243,11 @@ export default class SectionLink extends Component {
         data-list-item-name={{@linkName}}
         ...attributes
         {{didInsert this.maybeScrollIntoView}}
-        {{didUpdate this.revealActiveLink @scrollIntoView}}
+        {{didUpdate
+          this.revealActiveLink
+          @scrollIntoView
+          this.sidebarState.canRevealActiveLink
+        }}
         {{on "mouseenter" this.hoveringSectionLink}}
         {{on "mouseleave" this.stopHoveringSectionLink}}
       >
