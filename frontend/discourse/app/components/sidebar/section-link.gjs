@@ -406,8 +406,11 @@ function scrollUpToReveal(element) {
     const { overflowY } = getComputedStyle(node);
 
     if (overflowY === "auto" || overflowY === "scroll") {
+      const bounds = node.getBoundingClientRect();
+      const scale = bounds.height / node.offsetHeight || 1;
       const offset =
-        element.getBoundingClientRect().top - node.getBoundingClientRect().top;
+        (element.getBoundingClientRect().top - bounds.top) / scale -
+        node.clientTop;
 
       if (offset < 0) {
         node.scrollTop += offset;
