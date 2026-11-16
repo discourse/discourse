@@ -205,6 +205,7 @@ module("Integration | Component | DockedComposer", function (hooks) {
         "the draft has recorded typing time"
       );
 
+      clock.tick(10_000);
       await clearRender();
       clock.tick(60_000);
       await render(composer);
@@ -220,7 +221,7 @@ module("Integration | Component | DockedComposer", function (hooks) {
         "the restored draft retains its typing time"
       );
       assert.true(
-        submissions[1].composerTime >= 7_000,
+        submissions[1].composerTime >= 17_000,
         "open time includes both editor sessions"
       );
       assert.true(
@@ -239,6 +240,58 @@ module("Integration | Component | DockedComposer", function (hooks) {
         submissions[2].typingTime,
         100,
         "a new comment has fresh timing"
+      );
+    } finally {
+      clock.restore();
+    }
+  });
+
+  test("saves idle time when leaving the page and excludes time in the back forward cache", async function (assert) {
+    const clock = fakeTime("2026-11-16T00:00:00", null, true);
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return { ok: true };
+    };
+    const draftKey = "test-page-draft-timing";
+    const keyValueStore = this.owner.lookup("service:key-value-store");
+
+    try {
+      await render(
+        <template>
+          <DockedComposer
+            @composerEvents={{false}}
+            @draftKey={{draftKey}}
+            @onSubmit={{handleSubmit}}
+          />
+        </template>
+      );
+      await fillIn(".d-editor-input", "A draft before leaving");
+      clock.tick(10_000);
+      window.dispatchEvent(
+        new PageTransitionEvent("pagehide", { persisted: true })
+      );
+
+      assert.true(
+        keyValueStore.getObject(`${draftKey}-timing`).composerTime >= 10_000,
+        "leaving the page saves time since the last edit"
+      );
+      clock.tick(60_000);
+      window.dispatchEvent(
+        new PageTransitionEvent("pageshow", { persisted: true })
+      );
+      clock.tick(2_000);
+      await click(".docked-composer__submit-btn");
+
+      assert.strictEqual(submission.typingTime, 100);
+      assert.true(submission.composerTime >= 12_000);
+      assert.true(submission.composerTime < 60_000);
+      await clearRender();
+      window.dispatchEvent(new PageTransitionEvent("pagehide"));
+      assert.strictEqual(keyValueStore.get(draftKey), undefined);
+      assert.strictEqual(
+        keyValueStore.getObject(`${draftKey}-timing`),
+        undefined
       );
     } finally {
       clock.restore();

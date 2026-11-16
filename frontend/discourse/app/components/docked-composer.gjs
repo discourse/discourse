@@ -54,6 +54,12 @@ export default class DockedComposer extends Component {
   #composerOpenedAt = Date.now();
   #typingTime = 0;
   #lastTypedValue = "";
+  #onPageHide = () => this.persistDraft(this.reply);
+  #onPageShow = (event) => {
+    if (event.persisted) {
+      this.loadDraft();
+    }
+  };
 
   #handlePaste = (event) => {
     if (!this.inputElement || document.activeElement !== this.inputElement) {
@@ -264,6 +270,8 @@ export default class DockedComposer extends Component {
     this.updateMaxResizeOffset();
     this.args.onRegisterApi?.({ setReply: this.setReply, focus: this.focus });
     this.loadDraft();
+    window.addEventListener("pagehide", this.#onPageHide);
+    window.addEventListener("pageshow", this.#onPageShow);
 
     this.uppyUpload = new UppyUpload(this, {
       id: this.uploaderId,
@@ -291,6 +299,9 @@ export default class DockedComposer extends Component {
 
   @action
   teardown() {
+    this.persistDraft(this.reply);
+    window.removeEventListener("pagehide", this.#onPageHide);
+    window.removeEventListener("pageshow", this.#onPageShow);
     this.inputElement?.removeEventListener(
       "keydown",
       this.#handleKeyDown,
