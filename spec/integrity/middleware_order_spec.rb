@@ -22,7 +22,6 @@ RSpec.describe "Middleware order" do
       Middleware::DefaultHeaders,
       ActionDispatch::ShowExceptions,
       ActionDispatch::DebugExceptions,
-      Middleware::RequestPathLimit,
       ActionDispatch::Callbacks,
       ActionDispatch::Cookies,
       ActionDispatch::Session::DiscourseCookieStore,

@@ -33,8 +33,6 @@ add_admin_route "discourse_subscriptions.admin_navigation",
                 use_new_show_route: true
 
 Discourse::Application.routes.append do
-  draw :dotted_username
-
   get "/admin/plugins/discourse-subscriptions/products" => "admin/plugins#index",
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/products/:product_id" => "admin/plugins#index",
@@ -48,27 +46,18 @@ Discourse::Application.routes.append do
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/coupons" => "admin/plugins#index",
       :constraints => AdminConstraint.new
-  concerns :dotted_username,
-           verb: :get,
-           path: "u/:username/billing",
-           to: "users#show",
-           constraints: {
-             username: RouteFormat.username,
-           }
-  concerns :dotted_username,
-           verb: :get,
-           path: "u/:username/billing/:id",
-           to: "users#show",
-           constraints: {
-             username: RouteFormat.username,
-           }
-  concerns :dotted_username,
-           verb: :get,
-           path: "u/:username/billing/subscriptions/card/:subscription_id",
-           to: "users#show",
-           constraints: {
-             username: RouteFormat.username,
-           }
+  get "u/:username/billing" => "users#show",
+      :constraints => {
+        username: DottedRouteConstraint.new(RouteFormat.username),
+      }
+  get "u/:username/billing/:id" => "users#show",
+      :constraints => {
+        username: DottedRouteConstraint.new(RouteFormat.username),
+      }
+  get "u/:username/billing/subscriptions/card/:subscription_id" => "users#show",
+      :constraints => {
+        username: DottedRouteConstraint.new(RouteFormat.username),
+      }
 end
 
 module ::DiscourseSubscriptions

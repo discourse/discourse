@@ -547,18 +547,12 @@ RSpec.describe Admin::ApiController do
 
         expect(scopes["users"].find { it["key"] == "update" }["urls"]).to contain_exactly(
           "/users/:username (PUT)",
-          "/users/:username.json (PUT)",
-          "/users/:username.html (PUT)",
-          "/users/:username.:wildcard_format (PUT)",
           "/users/:username/preferences/badge_title (PUT)",
           "/users/:username/preferences/avatar/pick (PUT)",
           "/users/:username/preferences/avatar/select (PUT)",
           "/users/:username/feature-topic (PUT)",
           "/users/:username/clear-featured-topic (PUT)",
           "/u/:username (PUT)",
-          "/u/:username.json (PUT)",
-          "/u/:username.html (PUT)",
-          "/u/:username.:wildcard_format (PUT)",
           "/u/:username/preferences/badge_title (PUT)",
           "/u/:username/preferences/avatar/pick (PUT)",
           "/u/:username/preferences/avatar/select (PUT)",

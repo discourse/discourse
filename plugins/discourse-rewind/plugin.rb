@@ -61,14 +61,9 @@ after_initialize do
   end
 
   Discourse::Application.routes.append do
-    draw :dotted_username
-
-    concerns :dotted_username,
-             verb: :get,
-             path: "u/:username/preferences/rewind",
-             to: "users#preferences",
-             constraints: {
-               username: RouteFormat.username,
-             }
+    get "u/:username/preferences/rewind" => "users#preferences",
+        :constraints => {
+          username: DottedRouteConstraint.new(RouteFormat.username),
+        }
   end
 end

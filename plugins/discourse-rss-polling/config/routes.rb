@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../../config/routes/dotted_route_constraint"
+
 DiscourseRssPolling::Engine.routes.draw do
   post "feed_settings/test" => "feed_settings#test", :constraints => StaffConstraint.new
   get "feed_settings/category_requirements" => "feed_settings#category_requirements",
@@ -15,6 +17,9 @@ end
 
 Discourse::Application.routes.draw do
   scope "/admin/plugins/discourse-rss-polling", constraints: StaffConstraint.new do
-    get "/feeds(/*path)" => "discourse_rss_polling/feed_settings#index"
+    get "/feeds(/*path)" => "discourse_rss_polling/feed_settings#index",
+        :constraints => {
+          path: DottedRouteConstraint.new(/.+?/m),
+        }
   end
 end

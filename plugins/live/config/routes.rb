@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../../config/routes/dotted_route_constraint"
+
 Live::Engine.routes.draw do
   resources :rooms do
     member do
@@ -45,7 +47,7 @@ Live::Engine.routes.draw do
   get "r/:slug/invited-by/:username" => "page#show",
       :format => false,
       :constraints => {
-        username: RouteFormat.username,
+        username: DottedRouteConstraint.new(RouteFormat.username),
       }
 end
 

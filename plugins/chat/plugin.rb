@@ -588,8 +588,6 @@ after_initialize do
   end
 
   Discourse::Application.routes.append do
-    draw :dotted_username
-
     mount ::Chat::Engine, at: "/chat"
 
     get "/admin/plugins/chat/hooks" => "chat/admin/incoming_webhooks#index",
@@ -607,13 +605,10 @@ after_initialize do
     delete "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
              "chat/admin/incoming_webhooks#destroy",
            :constraints => StaffConstraint.new
-    concerns :dotted_username,
-             verb: :get,
-             path: "u/:username/preferences/chat",
-             to: "users#preferences",
-             constraints: {
-               username: RouteFormat.username,
-             }
+    get "u/:username/preferences/chat" => "users#preferences",
+        :constraints => {
+          username: DottedRouteConstraint.new(RouteFormat.username),
+        }
   end
 
   add_automation_scriptable("send_chat_message") do

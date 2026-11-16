@@ -120,7 +120,7 @@ class UrlHelper
 
   def self.rails_route_from_url(url)
     path = URI.parse(encode(url)).path
-    RouteRecognizer.recognize_path(path)
+    Rails.application.routes.recognize_path(path)
   rescue Addressable::URI::InvalidURIError, URI::InvalidComponentError
     nil
   end
