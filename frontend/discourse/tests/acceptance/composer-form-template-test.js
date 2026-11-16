@@ -9,6 +9,7 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
+import FormTemplate from "discourse/models/form-template";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import pretender, {
   parsePostData,
@@ -271,6 +272,34 @@ acceptance("Composer Form Template", function (needs) {
       "",
       "the draft matches the displayed controls"
     );
+  });
+
+  test("does not submit while the form template has no fields to answer", async function (assert) {
+    let posted = false;
+    pretender.post("/form-templates/render.json", () =>
+      response({ raw: "## A heading from the output template" })
+    );
+    pretender.post("/posts", () => {
+      posted = true;
+      return response(200, {
+        success: true,
+        action: "create_post",
+        post: { id: 42, topic_id: 960, topic_slug: "x" },
+      });
+    });
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await fillIn(".form-template-field__input[name='full-name']", "John Smith");
+    await click(".toggle-minimize");
+
+    sinon.stub(FormTemplate, "findById").returns(new Promise(() => {}));
+    await click("#reply-control");
+    await click("#reply-control button.create");
+
+    assert.dom(".form-template-field").doesNotExist("the form has no fields");
+    assert.false(posted, "does not create a topic without the answers");
   });
 
   test("Composer opens with the specified form template selected", async function (assert) {

@@ -9,7 +9,7 @@ export function initializeFormTemplateAnswers(form, fields, values) {
   if (values) {
     initialValues.set(form, {
       saved: cloneJSON(values),
-      displayed: collectFormTemplateAnswers(form, fields, false),
+      displayed: collectFormTemplateAnswers(form, fields, false) ?? {},
     });
   }
 }
@@ -20,6 +20,10 @@ export function collectFormTemplateAnswers(
   checkFormValidity = true
 ) {
   if (!form || !fields) {
+    return null;
+  }
+  // The form has no fields while its template is loading or failed to load
+  if (fields.length && !form.querySelector("[name]")) {
     return null;
   }
   if (checkFormValidity) {

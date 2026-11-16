@@ -109,6 +109,21 @@ module("Unit | Lib | form-template-validation", function () {
     );
   });
 
+  test("collects nothing until the form shows the template's fields", function (assert) {
+    const form = document.createElement("form");
+
+    assert.strictEqual(
+      collectFormTemplateAnswers(form, [{ id: "name", type: "input" }]),
+      null,
+      "a template whose fields are not rendered yet is not submitted"
+    );
+    assert.notStrictEqual(
+      collectFormTemplateAnswers(form, []),
+      null,
+      "a template without fields can still be submitted"
+    );
+  });
+
   test("blocks invalid required fields before submission", function (assert) {
     const form = document.createElement("form");
     const control = document.createElement("input");

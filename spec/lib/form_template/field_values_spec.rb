@@ -46,7 +46,7 @@ RSpec.describe FormTemplate::FieldValues do
 
       expect(values.template_answers).to eq(
         "seats" => 7,
-        "price" => BigDecimal("-5"),
+        "price" => -5,
         "blank" => nil,
         "code" => "42",
       )
