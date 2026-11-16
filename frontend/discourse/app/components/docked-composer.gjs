@@ -8,7 +8,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -51,6 +51,9 @@ export default class DockedComposer extends Component {
   /** @type {HTMLInputElement | null} */
   fileInputEl = null;
   #rootElement = null;
+  #composerOpenedAt = Date.now();
+  #typingTime = 0;
+  #typingTimer = null;
 
   #handlePaste = (event) => {
     if (!this.inputElement || document.activeElement !== this.inputElement) {
@@ -213,6 +216,7 @@ export default class DockedComposer extends Component {
   onReplyChange(event) {
     const value = event?.target?.value ?? "";
     this.reply = value;
+    this.#typingTimer = throttle(this, this.#recordTyping, 100, false);
     this.persistDraft(value);
     this.syncAutoResizeHeight();
   }
@@ -227,6 +231,7 @@ export default class DockedComposer extends Component {
 
   @action
   setReply(value) {
+    this.#resetTiming();
     this.reply = value ?? "";
     this.persistDraft(this.reply);
   }
@@ -264,6 +269,7 @@ export default class DockedComposer extends Component {
 
   @action
   teardown() {
+    cancel(this.#typingTimer);
     this.inputElement?.removeEventListener(
       "keydown",
       this.#handleKeyDown,
@@ -322,6 +328,8 @@ export default class DockedComposer extends Component {
     try {
       const result = await this.args.onSubmit({
         raw: this.reply,
+        typingTime: this.#typingTime,
+        composerTime: Date.now() - this.#composerOpenedAt,
         uploads: this.uploads,
         inProgressUploadsCount: this.inProgressUploads.length,
       });
@@ -330,6 +338,7 @@ export default class DockedComposer extends Component {
       if (!result) {
         return;
       }
+      this.#resetTiming();
       this.reply = "";
       this.uploads = trackedArray();
       this.persistDraft("");
@@ -381,6 +390,17 @@ export default class DockedComposer extends Component {
       "--docked-composer-drag-offset",
       `${offset}px`
     );
+  }
+
+  #recordTyping() {
+    this.#typingTime += 100;
+  }
+
+  #resetTiming() {
+    cancel(this.#typingTimer);
+    this.#typingTimer = null;
+    this.#typingTime = 0;
+    this.#composerOpenedAt = Date.now();
   }
 
   <template>

@@ -306,6 +306,22 @@ module PageObjects
         has_no_css?(".embed-mode-composer .docked-composer")
       end
 
+      def type_docked_reply(text)
+        find(".embed-mode-composer .d-editor-input").click
+        page.driver.with_playwright_page do |browser_page|
+          browser_page.locator(".embed-mode-composer .d-editor-input").press_sequentially(
+            text,
+            delay: 110,
+          )
+        end
+        self
+      end
+
+      def submit_docked_reply
+        find(".embed-mode-composer .docked-composer__submit-btn").click
+        self
+      end
+
       def click_embed_reply_button
         within_topic_footer_buttons { find(".create").click }
         self

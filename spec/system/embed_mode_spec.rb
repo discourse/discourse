@@ -74,6 +74,23 @@ describe "Embed mode" do
 
     before { sign_in(user) }
 
+    it "publishes a first comment typed over the fast typing threshold" do
+      user.change_trust_level!(TrustLevel[0])
+      user.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
+      SiteSetting.fast_typing_threshold = "standard"
+      SiteSetting.auto_silence_fast_typers_on_first_post = true
+      SiteSetting.auto_silence_fast_typers_max_trust_level = 0
+      comment = "This first comment takes enough time to type"
+
+      visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+      expect(topic_page).to have_docked_composer
+      topic_page.type_docked_reply(comment).submit_docked_reply
+
+      expect(topic_page).to have_post_content(post_number: 2, content: comment)
+      page.refresh
+      expect(topic_page).to have_post_content(post_number: 2, content: comment)
+    end
+
     context "with a topic that has no replies" do
       fab!(:no_reply_topic, :topic)
       fab!(:no_reply_post) { Fabricate(:post, topic: no_reply_topic) }

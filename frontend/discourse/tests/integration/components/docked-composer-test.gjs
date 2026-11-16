@@ -1,15 +1,95 @@
 import { getOwner } from "@ember/owner";
-import { fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DockedComposer from "discourse/components/docked-composer";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | DockedComposer", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     pretender.get("/emojis/search-aliases.json", () => response([]));
+  });
+
+  test("submits active typing time separately from time spent idle", async function (assert) {
+    const clock = fakeTime("2026-11-16T00:00:00", null, true);
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return { ok: true };
+    };
+
+    try {
+      await render(
+        <template>
+          <DockedComposer
+            @composerEvents={{false}}
+            @draftKey="test-typing-time"
+            @onSubmit={{handleSubmit}}
+          />
+        </template>
+      );
+
+      clock.tick(10_000);
+      await fillIn(".d-editor-input", "First");
+      await fillIn(".d-editor-input", "First comment");
+      await fillIn(".d-editor-input", "First comment complete");
+      clock.tick(10_000);
+      await click(".docked-composer__submit-btn");
+
+      assert.strictEqual(
+        submission.typingTime,
+        300,
+        "idle time does not count as typing"
+      );
+      assert.true(
+        submission.composerTime >= 20_000,
+        "open time includes idle time"
+      );
+    } finally {
+      clock.restore();
+    }
+  });
+
+  test("retains timing after a rejected submission and resets it after success", async function (assert) {
+    const submissions = [];
+    const handleSubmit = (data) => {
+      submissions.push(data);
+      return submissions.length > 1;
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-typing-retry"
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+
+    await fillIn(".d-editor-input", "First comment");
+    await click(".docked-composer__submit-btn");
+    assert
+      .dom(".d-editor-input")
+      .hasValue("First comment", "rejected submission keeps the comment");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[1].typingTime,
+      submissions[0].typingTime,
+      "retry keeps the recorded typing time"
+    );
+
+    await fillIn(".d-editor-input", "Second");
+    await fillIn(".d-editor-input", "Second comment");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[2].typingTime,
+      200,
+      "the next comment starts with fresh timing"
+    );
   });
 
   test("submits on bare Enter by default", async function (assert) {
