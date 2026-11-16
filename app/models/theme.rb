@@ -1214,6 +1214,14 @@ class Theme < ActiveRecord::Base
       end
 
       results.each do |res|
+        res[:translations].each do |translation|
+          ThemeTranslationOverride.find_or_create_by!(
+            theme: self,
+            locale: "en",
+            translation_key: translation["key"],
+          ) { |override| override.value = translation["value"] }
+        end
+
         record =
           ThemeSettingsMigration.new(
             theme_id: id,
