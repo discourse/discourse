@@ -1,8 +1,7 @@
 export default {
-  resource: "admin.adminPlugins.show",
-  path: "/plugins",
+  resource: "admin.adminConfig.customize",
 
   map() {
-    this.route("wireframe-designs", { path: "wireframe-templates" });
+    this.route("templates");
   },
 };

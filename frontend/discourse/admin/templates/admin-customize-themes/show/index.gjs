@@ -295,6 +295,10 @@ export default <template>
         </PluginOutlet>
       </div>
     </section>
+    <PluginOutlet
+      @name="admin-customize-theme-after-included-components"
+      @outletArgs={{lazyHash theme=@controller.model}}
+    />
   {{/if}}
 
   {{#unless

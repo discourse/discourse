@@ -9,7 +9,7 @@ plugins:
     allow_any: false
     refresh: true
     client: true
-  wireframe_custom_homepage:
-    default: false
+  custom_homepage:
+    default: true
     client: true
     themeable: true

@@ -5,7 +5,7 @@ module DiscourseWireframe
     # Opts the resolved theme's homepage into the blocks layout. Core consults
     # the `custom_homepage_enabled` modifier from `HomepageHelper.resolve` on
     # every `/` request; the answer here comes from the `themeable`
-    # `wireframe_custom_homepage` site setting, so it is a per-parent-theme
+    # `custom_homepage` site setting, so it is a per-parent-theme
     # decision made by an admin (via the editor's publish flow or the theme
     # site settings admin UI) rather than site-wide state.
     module Homepage
@@ -22,7 +22,7 @@ module DiscourseWireframe
             # disallows every theme. A themeable read without a theme raises,
             # so fall back to the upstream answer instead.
             theme_id = (opts || {})[:request]&.env&.[](:resolved_theme_id)
-            theme_id ? SiteSetting.wireframe_custom_homepage(theme_id: theme_id) : enabled
+            theme_id ? SiteSetting.custom_homepage(theme_id: theme_id) : enabled
           end
         end
       end

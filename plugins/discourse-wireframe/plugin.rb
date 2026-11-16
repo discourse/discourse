@@ -30,8 +30,10 @@ require_relative "lib/discourse_wireframe/plugin_setup/icons"
 require_relative "lib/discourse_wireframe/plugin_setup/draft_cleanup"
 require_relative "lib/discourse_wireframe/plugin_setup/homepage"
 require_relative "lib/discourse_wireframe/plugin_setup/access"
+require_relative "lib/discourse_wireframe/plugin_setup/theme_components"
 
 DiscourseWireframe::PluginSetup::Icons.apply(self)
 DiscourseWireframe::PluginSetup::DraftCleanup.apply(self)
 DiscourseWireframe::PluginSetup::Homepage.apply(self)
 DiscourseWireframe::PluginSetup::Access.apply(self)
+DiscourseWireframe::PluginSetup::ThemeComponents.apply(self)

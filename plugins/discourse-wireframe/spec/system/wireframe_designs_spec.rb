@@ -11,7 +11,7 @@ describe "Wireframe designs" do
     Fabricate(
       :theme_site_setting_with_service,
       theme: Theme.find_default,
-      name: "wireframe_custom_homepage",
+      name: "custom_homepage",
       value: true,
     )
     sign_in(admin)
@@ -72,7 +72,7 @@ describe "Wireframe designs" do
       )
     end
 
-    visit("/admin/plugins/discourse-wireframe/wireframe-templates")
+    visit("/admin/config/customize/templates")
     expect(page).to have_css(".wireframe-designs__row", count: 2)
     expect(page).to have_css(".wireframe-designs__row", text: "Autumn")
     expect(page).to have_css(".wireframe-designs__status.--active", count: 1)
@@ -95,18 +95,23 @@ describe "Wireframe designs" do
     expect(designs.map { _1[:name] }).to eq(["Autumn"])
   end
 
-  it "highlights only the open tab and keeps the editor pill off admin pages" do
+  it "keeps the editor pill off admin pages" do
     visit("/admin/plugins/discourse-wireframe/settings")
-
-    expect(page).to have_css(".admin-plugin-config-page__top-nav-item.active", count: 1)
-    expect(page).to have_css(
-      ".admin-plugin-config-page__top-nav-item.active",
-      text: I18n.t("admin_js.admin.plugins.change_settings_short"),
-    )
     expect(page).to have_no_css(".wireframe-pill")
 
     visit("/")
     expect(page).to have_css(".wireframe-pill")
+  end
+
+  it "lists templates as a tab with breadcrumbs on the themes and components page" do
+    visit("/admin/config/customize/themes")
+    click_link(I18n.t("js.wireframe.admin.designs.tab"))
+
+    expect(page).to have_current_path("/admin/config/customize/templates")
+    expect(page).to have_css(
+      ".d-breadcrumbs__item",
+      text: I18n.t("js.wireframe.admin.designs.title"),
+    )
   end
 
   it "opens the designs list from the editor's design menu" do
@@ -115,7 +120,7 @@ describe "Wireframe designs" do
     find(".wireframe-design-title__menu").click
     find(".wireframe-design-switcher__manage").click
 
-    expect(page).to have_current_path("/admin/plugins/discourse-wireframe/wireframe-templates")
+    expect(page).to have_current_path("/admin/config/customize/templates")
     expect(page).to have_css(".wireframe-designs")
     expect(page).to have_no_css(".wireframe-shell")
   end
@@ -148,7 +153,7 @@ describe "Wireframe designs" do
 
     def edit_autumn
       autumn = Theme.find_by(name: "Autumn")
-      visit("/admin/plugins/discourse-wireframe/wireframe-templates")
+      visit("/admin/config/customize/templates")
       within(".wireframe-designs__row[data-design-id='#{autumn.id}']") do
         find(".wireframe-designs__menu").click
       end

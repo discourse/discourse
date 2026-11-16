@@ -96,7 +96,11 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
 
   @computed("model.childThemes.@each.name")
   get childThemesNames() {
-    return this.model?.childThemes?.map?.((item) => item.name) ?? [];
+    return (
+      this.model?.childThemes
+        ?.filter?.((item) => !item.managed_component)
+        .map?.((item) => item.name) ?? []
+    );
   }
 
   @computed("settings.length")
@@ -269,7 +273,10 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     if (!this.get("model.component")) {
       const themeId = this.get("model.id");
       return this.allThemes.filter(
-        (theme) => theme.get("id") !== themeId && theme.get("component")
+        (theme) =>
+          theme.get("id") !== themeId &&
+          theme.get("component") &&
+          !theme.get("managed_component")
       );
     }
   }

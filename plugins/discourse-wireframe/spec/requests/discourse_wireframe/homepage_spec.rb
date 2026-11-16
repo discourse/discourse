@@ -11,7 +11,7 @@ RSpec.describe "Wireframe custom homepage routing" do
     Fabricate(
       :theme_site_setting_with_service,
       theme: Theme.find_default,
-      name: "wireframe_custom_homepage",
+      name: "custom_homepage",
       value: true,
     )
   end

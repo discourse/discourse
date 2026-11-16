@@ -52,12 +52,15 @@ module DiscourseWireframe
              }
     end
 
-    # Installs one of the parent's designs, unlinking the others.
+    # Installs one of the parent's designs, unlinking the others. A blank
+    # `design_id` unlinks every design, leaving the theme with no selected layout.
     def update
       parent = Theme.find_by(id: params.require(:theme_id))
       raise Discourse::NotFound if parent.nil?
 
-      if !DiscourseWireframe::BlockLayoutCompanion.install(parent, params.require(:design_id).to_i)
+      if params[:design_id].blank?
+        DiscourseWireframe::BlockLayoutCompanion.uninstall_all(parent)
+      elsif !DiscourseWireframe::BlockLayoutCompanion.install(parent, params[:design_id].to_i)
         raise Discourse::NotFound
       end
 

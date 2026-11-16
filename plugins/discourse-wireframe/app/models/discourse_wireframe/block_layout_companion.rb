@@ -3,10 +3,10 @@
 module DiscourseWireframe
   # Records that a local theme component is a block-layout "design" of a parent
   # theme. The editor always publishes to a design rather than to the parent
-  # itself, so the parent stays untouched. A parent can have several designs but
-  # only one is installed (a live child of the parent) at a time; the mapping lets
-  # the editor list the others and switch between them, even after a component is
-  # renamed or while it is still empty.
+  # itself, so the parent stays untouched. A design can be installed on any number
+  # of themes, but a theme has only one installed (a live child of it) at a time;
+  # the mapping lets the editor list every design and switch between them, even
+  # after a component is renamed or while it is still empty.
   #
   # The mapping is editor metadata, so it lives here in the plugin rather than on
   # the core `themes` table.
@@ -19,14 +19,13 @@ module DiscourseWireframe
     validates :parent_theme_id, presence: true
     validates :component_theme_id, presence: true, uniqueness: true
 
-    # The parent's designs, newest first, with whether each is the installed one.
+    # Every design, newest first, with whether each is installed on the given theme.
     #
     # @param parent_theme_id [Integer]
     # @return [Array<Hash>] `{ id:, name:, active: }` per design.
     def self.designs_for(parent_theme_id)
       installed_id = companion_id_for(parent_theme_id)
-      where(parent_theme_id: parent_theme_id)
-        .includes(:component_theme)
+      includes(:component_theme)
         .order(id: :desc)
         .filter_map do |mapping|
           component = mapping.component_theme
@@ -37,17 +36,20 @@ module DiscourseWireframe
 
     # Every design across all themes, newest first, for the admin designs list.
     #
-    # @return [Array<Hash>] `{ id:, name:, theme_id:, theme_name:, active:, updated_at: }`.
+    # `themes` lists every theme the design is installed on, which can be more
+    # than the theme it was created from.
+    #
+    # @return [Array<Hash>] `{ id:, name:, theme_id:, theme_name:, themes:, active:, updated_at: }`.
     def self.all_designs
       mappings = includes(:parent_theme, :component_theme).order(id: :desc).to_a
-      installed =
+      installed_on =
         ChildTheme
-          .where(
-            parent_theme_id: mappings.map(&:parent_theme_id),
-            child_theme_id: mappings.map(&:component_theme_id),
-          )
-          .pluck(:parent_theme_id, :child_theme_id)
-          .to_set
+          .where(child_theme_id: mappings.map(&:component_theme_id))
+          .joins(:parent_theme)
+          .order("themes.name")
+          .pluck(:child_theme_id, :parent_theme_id, "themes.name")
+          .group_by(&:first)
+          .transform_values { |rows| rows.map { |_, id, name| { id:, name: } } }
 
       mappings.filter_map do |mapping|
         design = mapping.component_theme
@@ -58,7 +60,8 @@ module DiscourseWireframe
           name: design.name,
           theme_id: theme.id,
           theme_name: theme.name,
-          active: installed.include?([theme.id, design.id]),
+          themes: installed_on.fetch(design.id, []),
+          active: installed_on.key?(design.id),
           updated_at: design.updated_at,
         }
       end
@@ -102,24 +105,24 @@ module DiscourseWireframe
       }
     end
 
-    # Unlinks every mapped design from the parent, leaving the components intact.
+    # Unlinks every design from the parent, leaving the components intact.
     #
     # @param parent [Theme]
     def self.uninstall_all(parent)
-      ids = where(parent_theme_id: parent.id).pluck(:component_theme_id)
+      ids = where(component_theme_id: parent.child_theme_ids).pluck(:component_theme_id)
       return if ids.empty?
       ChildTheme.where(parent_theme_id: parent.id, child_theme_id: ids).destroy_all
       parent.child_themes.reload
       Theme.clear_cache!
     end
 
-    # Installs one of the parent's designs and unlinks the others.
+    # Installs a design on the parent and unlinks the others.
     #
     # @param parent [Theme]
     # @param component_theme_id [Integer]
-    # @return [Boolean] false when the component is not a design of the parent.
+    # @return [Boolean] false when the component is not a design.
     def self.install(parent, component_theme_id)
-      return false if !exists?(parent_theme_id: parent.id, component_theme_id: component_theme_id)
+      return false if !exists?(component_theme_id: component_theme_id)
 
       transaction do
         uninstall_all(parent)
@@ -142,9 +145,7 @@ module DiscourseWireframe
       parent = Theme.find_by(id: parent_theme_id)
       return nil if parent.nil?
 
-      mapped_ids =
-        where(parent_theme_id: parent_theme_id).order(id: :desc).pluck(:component_theme_id)
-      (mapped_ids & parent.child_theme_ids).first
+      where(component_theme_id: parent.child_theme_ids).order(id: :desc).pick(:component_theme_id)
     end
   end
 end

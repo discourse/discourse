@@ -198,7 +198,10 @@ class Admin::ThemesController < Admin::AdminController
       @theme.public_send("#{field}=", theme_params[field]) if theme_params.key?(field)
     end
 
-    @theme.child_theme_ids = theme_params[:child_theme_ids] if theme_params.key?(:child_theme_ids)
+    if theme_params.key?(:child_theme_ids)
+      managed_ids = @theme.child_themes.select(&:managed_component?).map(&:id)
+      @theme.child_theme_ids = Array(theme_params[:child_theme_ids]).map(&:to_i) | managed_ids
+    end
 
     @theme.parent_theme_ids = theme_params[:parent_theme_ids] if theme_params.key?(
       :parent_theme_ids,

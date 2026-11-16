@@ -29,6 +29,7 @@ export default <template>
         @label="admin.config.theme_site_settings.title"
         @route="adminConfig.customize.themeSiteSettings"
       />
+      <PluginOutlet @name="admin-config-customize-tabs" />
     </:tabs>
   </DPageHeader>
 

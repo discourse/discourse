@@ -193,10 +193,7 @@ export default class DesignTitle extends Component {
     this.#confirmDiscard(
       () => {
         this.wireframeWorkspace.exit();
-        this.router.transitionTo(
-          "adminPlugins.show.wireframe-designs",
-          "discourse-wireframe"
-        );
+        this.router.transitionTo("adminConfig.customize.templates");
       },
       {
         message: "wireframe.design.leave_discard_confirm",

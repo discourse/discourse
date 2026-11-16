@@ -28,7 +28,9 @@ export type AdminDesign = {
   theme_id: number;
   /** Name of the theme the design belongs to. */
   theme_name: string;
-  /** Whether the design is the one the theme uses. */
+  /** Every theme the design is installed on; empty when it isn't in use. */
+  themes: { id: number; name: string }[];
+  /** Whether the design is installed on at least one theme. */
   active: boolean;
   /** When the design last changed. */
   updated_at: string;
@@ -150,7 +152,10 @@ export default class DesignsList extends Component<DesignsListSignature> {
                   <div class="d-table__mobile-label">
                     {{i18n "wireframe.admin.designs.theme"}}
                   </div>
-                  {{design.theme_name}}
+                  {{#each design.themes as |theme index|}}{{if
+                      index
+                      ", "
+                    }}{{theme.name}}{{/each}}
                 </td>
                 <td class="d-table__cell --detail">
                   <div class="d-table__mobile-label">

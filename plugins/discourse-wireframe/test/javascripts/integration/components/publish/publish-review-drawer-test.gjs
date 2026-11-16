@@ -305,8 +305,7 @@ module(
 
     test("publishing a design the theme doesn't use asks whether to use it", async function (assert) {
       stubHomepagePublish(this.owner, { designInUse: false });
-      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
-        true;
+      this.owner.lookup("service:site-settings").custom_homepage = true;
       let prompt;
       this.owner.unregister("service:dialog");
       this.owner.register(
@@ -346,7 +345,7 @@ module(
     test("publish switches the custom homepage on for the theme in use", async function (assert) {
       stubHomepagePublish(this.owner);
       const siteSettings = this.owner.lookup("service:site-settings");
-      siteSettings.wireframe_custom_homepage = false;
+      siteSettings.custom_homepage = false;
 
       const putBodies = [];
       pretender.put("/admin/themes/:id/site-setting", (request) => {
@@ -359,11 +358,11 @@ module(
 
       assert.deepEqual(
         putBodies,
-        [["42", "name=wireframe_custom_homepage&value=true"]],
+        [["42", "name=custom_homepage&value=true"]],
         "the setting write targets the theme in use with an explicit boolean"
       );
       assert.true(
-        siteSettings.wireframe_custom_homepage,
+        siteSettings.custom_homepage,
         "the applied value is mirrored locally"
       );
     });
@@ -375,14 +374,12 @@ module(
       });
 
       stubHomepagePublish(this.owner);
-      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
-        true;
+      this.owner.lookup("service:site-settings").custom_homepage = true;
       await render(<template><PublishReviewDrawer /></template>);
       await click(".wireframe-review__publish");
 
       stubHomepagePublish(this.owner, { renderableOutlets: [] });
-      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
-        false;
+      this.owner.lookup("service:site-settings").custom_homepage = false;
       await render(<template><PublishReviewDrawer /></template>);
       await click(".wireframe-review__publish");
 
@@ -391,8 +388,7 @@ module(
 
     test("a failed homepage write keeps the drawer open", async function (assert) {
       stubHomepagePublish(this.owner);
-      this.owner.lookup("service:site-settings").wireframe_custom_homepage =
-        false;
+      this.owner.lookup("service:site-settings").custom_homepage = false;
 
       pretender.put("/admin/themes/:id/site-setting", () =>
         response(500, { errors: ["boom"] })

@@ -738,6 +738,24 @@ class Theme < ActiveRecord::Base
     field
   end
 
+  # Per-request memo so serializing many themes doesn't query once per theme.
+  class ManagedComponentIds < ActiveSupport::CurrentAttributes
+    attribute :ids
+  end
+
+  def self.managed_component_ids
+    ManagedComponentIds.ids ||=
+      DiscoursePluginRegistry
+        .managed_theme_component_sources
+        .select { |source| source[:plugin].enabled? }
+        .flat_map { |source| source[:block].call.to_a }
+        .to_set
+  end
+
+  def managed_component?
+    component? && Theme.managed_component_ids.include?(id)
+  end
+
   def child_theme_ids=(theme_ids)
     super(theme_ids)
     Theme.clear_cache!

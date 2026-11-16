@@ -241,6 +241,14 @@ class Plugin::Instance
     end
   end
 
+  # Marks components as managed by the plugin. The block returns the ids of the
+  # plugin-managed components. Managed components are hidden from the admin
+  # components list and "included components" input, and stay attached when that
+  # input is saved; the plugin owns how they are attached and detached.
+  def register_managed_theme_components(&block)
+    DiscoursePluginRegistry.managed_theme_component_sources << { plugin: self, block: block }
+  end
+
   def register_modifier(modifier_name, &blk)
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end

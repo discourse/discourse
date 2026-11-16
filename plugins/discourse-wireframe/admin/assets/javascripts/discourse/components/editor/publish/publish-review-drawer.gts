@@ -60,7 +60,7 @@ const dCloseOnClickOutside =
 interface WireframeSiteSettings extends SiteSettingsService {
   /** Whether the rendered theme uses the blocks homepage. Absent (undefined)
    * when the rendered theme has no entry in the themeable-settings map. */
-  wireframe_custom_homepage?: boolean;
+  custom_homepage?: boolean;
 }
 
 /**
@@ -335,7 +335,7 @@ export default class PublishReviewDrawer extends Component {
     if (
       themeId == null ||
       !this.wireframePublishTarget.homepageToggleAvailable ||
-      this.siteSettings.wireframe_custom_homepage === true ||
+      this.siteSettings.custom_homepage === true ||
       this.wireframeMutationEngine
         .editedOutletNames()
         .includes(HOMEPAGE_OUTLET) ||
@@ -346,14 +346,14 @@ export default class PublishReviewDrawer extends Component {
     try {
       await ajax(`/admin/themes/${themeId}/site-setting`, {
         type: "PUT",
-        data: { name: "wireframe_custom_homepage", value: true },
+        data: { name: "custom_homepage", value: true },
       });
     } catch (error) {
       return extractError(error, i18n("generic_error"));
     }
     // Mirror what the MessageBus subscriber would apply, so the session doesn't
     // depend on the echo arriving before teardown.
-    this.siteSettings.wireframe_custom_homepage = true;
+    this.siteSettings.custom_homepage = true;
     return null;
   }
 

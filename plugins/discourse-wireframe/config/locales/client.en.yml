@@ -5,7 +5,7 @@ en:
         title: "Wireframe"
         designs:
           title: "Templates"
-          short_title: "Templates"
+          tab: "Templates"
           description: "Each template is a saved arrangement of blocks for a theme. A theme uses one template at a time; the others stay saved so you can switch back."
           name: "Name"
           theme: "Theme"
@@ -535,15 +535,9 @@ en:
           image_edit: "Edit image"
           more: "More actions"
       theme_admin:
-        open_button: "Wireframe"
-        open_button_title: "Open the wireframe for this theme"
-      page_picker:
-        title: "Open wireframe"
-        description: "Pick a page to edit with %{theme}."
-        pages:
-          homepage: "Homepage"
-          categories: "Categories"
-          latest: "Latest"
+        selected_layout: "Selected layout"
+        selected_layout_none: "None"
+        selected_layout_help: "The layout design applied to this theme. Only one can be selected."
       outlet:
         state:
           locked: "Read-only"

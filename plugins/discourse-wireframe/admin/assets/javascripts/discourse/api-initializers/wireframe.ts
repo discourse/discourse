@@ -224,11 +224,9 @@ function installEditPresentationWhileEditing(
 
 /**
  * Reads the `wf_theme` query parameter from the current URL and, when
- * present, auto-enters the editor bound to that theme id. The
- * "Wireframe" admin button (Phase 3f) navigates here with
- * `?wf_theme=<id>` after the page-picker modal — so the destination
- * page lands with the
- * editor already open against the right theme.
+ * present, auto-enters the editor bound to that theme id, so a link with
+ * `?wf_theme=<id>` lands with the editor already open against the right
+ * theme.
  *
  * Hooks into `api.onPageChange` so navigation between routes (with the
  * param preserved) keeps the editor active. We rerun the read on every
