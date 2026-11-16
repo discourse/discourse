@@ -114,7 +114,7 @@ module(
     test("shows an error when the template fails to load", async function (assert) {
       pretender.get("/form-templates/1.json", () => response(504, {}));
 
-      this.set("formTemplateId", [1]);
+      this.formTemplateId = [1];
       await render(
         <template>
           <Wrapper @id={{this.formTemplateId}} @onChange={{noop}} />
@@ -142,7 +142,7 @@ module(
         });
       });
 
-      this.set("formTemplateId", [1]);
+      this.formTemplateId = [1];
       await render(
         <template>
           <Wrapper @id={{this.formTemplateId}} @onChange={{noop}} />
