@@ -528,7 +528,12 @@ const extension = {
       state.write(`</${node.attrs.tag}>`);
     },
   },
-  plugins({ pmState: { Plugin }, pmView: { Decoration, DecorationSet } }) {
+  plugins({
+    pmState: { Plugin },
+    pmModel: { Slice },
+    pmView: { Decoration, DecorationSet },
+    getContext,
+  }) {
     function outlineDecorations(doc) {
       const decorations = [];
       doc.descendants((node, pos) => {
@@ -550,17 +555,53 @@ const extension = {
       return DecorationSet.create(doc, decorations);
     }
 
-    return new Plugin({
-      state: {
-        init: (_, state) => outlineDecorations(state.doc),
-        apply: (tr, set) => (tr.docChanged ? outlineDecorations(tr.doc) : set),
-      },
-      props: {
-        decorations(state) {
-          return this.getState(state);
+    function unwrapInlineHtml(fragment) {
+      const children = [];
+      fragment.forEach((node) => {
+        if (node.type.name === "html_inline") {
+          unwrapInlineHtml(node.content).forEach((child) =>
+            children.push(child)
+          );
+        } else {
+          children.push(
+            node.isLeaf ? node : node.copy(unwrapInlineHtml(node.content))
+          );
+        }
+      });
+      return Fragment.fromArray(children);
+    }
+
+    return [
+      new Plugin({
+        state: {
+          init: (_, state) => outlineDecorations(state.doc),
+          apply: (tr, set) =>
+            tr.docChanged ? outlineDecorations(tr.doc) : set,
         },
-      },
-    });
+        props: {
+          decorations(state) {
+            return this.getState(state);
+          },
+        },
+      }),
+      // a host that doesn't cook raw inline HTML would show pasted tags as text
+      new Plugin({
+        props: {
+          transformPasted(slice) {
+            const rules = getContext().markdownOptions?.markdownItRules;
+            if (!rules || rules.includes("html_inline")) {
+              return slice;
+            }
+
+            return new Slice(
+              unwrapInlineHtml(slice.content),
+              slice.openStart,
+              slice.openEnd
+            );
+          },
+        },
+      }),
+    ];
   },
   commands: ({ schema }) => ({
     toggleSmall: () => (state, dispatch) => {
