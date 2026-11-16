@@ -154,6 +154,8 @@ module SystemDrivers
       # Avoid lost iframe clicks and file chooser events while painting is deferred.
       # https://github.com/microsoft/playwright/issues/28023
       "PaintHolding",
+      # Compile module scripts from the profile's code cache instead of streaming them from source.
+      "ScriptStreaming",
       # Preserve browser context storage state when an origin is loaded in an iframe.
       # https://github.com/microsoft/playwright/issues/32230
       "ThirdPartyStoragePartitioning",
