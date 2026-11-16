@@ -584,6 +584,7 @@ class PostCreator
       cook_method
       via_email
       raw_email
+      form_data
       action_code
       locale
     ].each { |a| post.public_send("#{a}=", @opts[a]) if @opts[a].present? }

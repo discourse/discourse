@@ -200,6 +200,12 @@ export default class Revisions extends Component {
           </span>
         </div>
       {{/if}}
+      {{#if @model.hidden_form_answers_changed}}
+        <div class="row revision__hidden-form-answers">
+          {{dIcon "list-check"}}
+          <span>{{i18n "post.revisions.hidden_form_answers_changed"}}</span>
+        </div>
+      {{/if}}
       {{#if @model.featured_link_changes}}
         <div class="row">
           {{@model.featured_link_changes.previous}}

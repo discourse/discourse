@@ -59,6 +59,14 @@ export type PostNotice =
   | { type: "new_user" }
   | { type: "returning_user"; last_posted_at: string };
 
+/** A saved form submission, sent only to users who can edit the post. */
+export interface PostFormSubmission {
+  template_id: number;
+  /** YAML definition of the form as it was submitted. */
+  template: string;
+  answers: Record<string, unknown>;
+}
+
 /** Server payloads and client state. Identity follows the primary server/staged paths; other fields may be absent on partial posts. */
 export interface PostFields {
   id: number;
@@ -97,6 +105,7 @@ export interface PostFields {
   category?: Category | number | null;
   cooked?: string;
   raw?: string;
+  form_submission?: PostFormSubmission;
   updated_at?: string;
   post_url?: string;
   userPath?: string;

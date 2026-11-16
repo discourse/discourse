@@ -59,6 +59,22 @@ RSpec.describe WebHookPostSerializer do
     )
   end
 
+  it "excludes saved form answers even for the system user" do
+    template =
+      Fabricate(
+        :form_template,
+        template: [{ id: "note", type: "textarea" }].as_json.to_yaml,
+        output_template: "A public invitation with an omitted answer.",
+      )
+    submission =
+      FormTemplate::Submission.from_template(template, answers: { "note" => "Editor-only notes" })
+    post.update_columns(raw: submission.render, form_data: submission.to_h)
+
+    serialized = serialized_for_user(Discourse.system_user)
+    expect(serialized[:raw]).to eq(submission.render)
+    expect(serialized).not_to have_key(:form_submission)
+  end
+
   it "includes category_id" do
     expect(serialized_for_user(admin)[:category_id]).to eq(post.topic.category_id)
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewableQueuedPostSerializer < ReviewableSerializer
-  attributes :reply_to_post_number, :fancy_title, :cooked
+  attributes :reply_to_post_number, :fancy_title, :cooked, :form_managed
 
   payload_attributes(
     :raw,
@@ -24,6 +24,10 @@ class ReviewableQueuedPostSerializer < ReviewableSerializer
     data = super
     data[:payload]&.delete("raw_email") unless scope&.can_view_raw_emails?
     data
+  end
+
+  def form_managed
+    object.payload&.[]("form_data").present?
   end
 
   def fancy_title

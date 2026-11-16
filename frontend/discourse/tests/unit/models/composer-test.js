@@ -418,6 +418,67 @@ module("Unit | Model | composer", function (hooks) {
     assert.strictEqual(draft.reply_to_user.username, "alice");
   });
 
+  test("original form answers are sent with form edits", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const answers = { description: "A description.", confirmed: false };
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      topic: store.createRecord("topic", { id: 1 }),
+      post: store.createRecord("post", { id: 1, post_number: 1 }),
+      formSubmission: { template_id: 3, template: "", answers },
+      originalFormTemplateDraft: { id: 3, answers },
+    });
+
+    assert.strictEqual(composer.originalFormAnswers, JSON.stringify(answers));
+  });
+
+  test("a form draft is ignored once the category no longer offers its form", function (assert) {
+    const [formCategory, plainCategory] =
+      getOwner(this).lookup("service:site").categories;
+    formCategory.set("form_template_ids", [3]);
+    plainCategory.set("form_template_ids", []);
+    const composer = createComposer.call(this, {
+      action: CREATE_TOPIC,
+      categoryId: formCategory.id,
+      formTemplateDraft: { id: 3, answers: { description: "Typed." } },
+      originalFormTemplateDraft: { id: 3, answers: {} },
+    });
+
+    assert.true(composer.replyDirty, "the form draft counts in its category");
+    assert.true(composer.canSaveDraft, "the form draft can be saved");
+
+    composer.set("categoryId", plainCategory.id);
+
+    assert.false(composer.replyDirty, "the stale form draft is not a change");
+    assert.false(composer.canSaveDraft, "an empty reply is not saved");
+
+    formCategory.set("form_template_ids", undefined);
+    plainCategory.set("form_template_ids", undefined);
+  });
+
+  test("editing a post that left form mode opens the markdown editor", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 123,
+      post_number: 1,
+      form_submission: { template_id: 3, template: "", answers: {} },
+    });
+    const topic = store.createRecord("topic", {
+      id: 456,
+      title: "a title",
+      details: { can_edit: true },
+    });
+    pretender.get("/posts/123", () =>
+      response({ id: 123, post_number: 1, raw: "Edited in markdown." })
+    );
+
+    const composer = createComposer.call(this, {});
+    await composer.open({ action: EDIT, post, topic, draftKey: "topic_456" });
+
+    assert.strictEqual(composer.reply, "Edited in markdown.");
+    assert.strictEqual(composer.formSubmission, null);
+  });
+
   test("initial category when uncategorized is allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
     const composer = openComposer.call(this, {

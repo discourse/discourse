@@ -66,6 +66,11 @@ export default class ReviewableQueuedPost extends Component {
 
     <div class="review-item__post">
       <div class="review-item__post-content">
+        {{#if @reviewable.form_managed}}
+          <p class="review-item__form-notice">{{i18n
+              "review.form_managed_notice"
+            }}</p>
+        {{/if}}
         <div class="post-body">
           {{highlightWatchedWords @reviewable.cooked @reviewable}}
         </div>

@@ -274,6 +274,51 @@ RSpec.describe PostRevisionSerializer do
     end
   end
 
+  describe "form answer edits" do
+    fab!(:form_template) do
+      Fabricate(
+        :form_template,
+        template: [
+          { id: "description", type: "input" },
+          { id: "secret", type: "input" },
+        ].as_json.to_yaml,
+        output_template: "{{ answers.description }}",
+      )
+    end
+
+    def form_post_revised_to(**changes)
+      before =
+        FormTemplate::Submission.from_template(
+          form_template,
+          answers: {
+            "description" => "A description.",
+            "secret" => "First secret.",
+          },
+        )
+      after = before.with_answers(before.answers.merge(changes.stringify_keys))
+      post.update!(raw: before.render, form_data: before.to_h)
+      post.revise(post.user, { raw: after.render, form_data: after.to_h }, force_new_version: true)
+      PostRevisionSerializer.new(
+        post.revisions.last,
+        scope: Guardian.new(Fabricate(:user)),
+        root: false,
+      ).as_json
+    end
+
+    it "flags a change to answers kept out of the post without exposing them" do
+      json = form_post_revised_to(secret: "Second secret.")
+
+      expect(json[:hidden_form_answers_changed]).to eq(true)
+      expect(json.to_json).not_to include("secret.")
+    end
+
+    it "does not flag a change that shows in the post" do
+      json = form_post_revised_to(description: "Another description.")
+
+      expect(json).not_to have_key(:hidden_form_answers_changed)
+    end
+  end
+
   describe "post locale edits" do
     it "returns the locale changes when set to nothing" do
       post_revision =

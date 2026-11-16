@@ -7,7 +7,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 export default class FormTemplateFieldMultiSelect extends Component {
   @action
   isSelected(option) {
-    return this.args.value?.includes(option);
+    return this.args.value?.map(String).includes(String(option));
   }
 
   <template>

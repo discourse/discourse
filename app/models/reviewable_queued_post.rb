@@ -98,7 +98,7 @@ class ReviewableQueuedPost < Reviewable
         fields.add("payload.tags", :tags)
       end
 
-      fields.add("payload.raw", :editor)
+      fields.add("payload.raw", :editor) unless payload&.[]("form_data")
     end
   end
 
