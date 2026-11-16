@@ -90,5 +90,8 @@ Discourse::Application.routes.draw do
             request.query_string.presence,
           ].compact.join("?")
         },
-      format: false
+      format: false,
+      constraints: {
+        path: DottedRouteConstraint.new(/.+/),
+      }
 end
