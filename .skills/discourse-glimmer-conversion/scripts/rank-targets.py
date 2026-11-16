@@ -17,21 +17,16 @@ import json
 import os
 import re
 
-from common import CLASSIC_IMPORT, external_dirs, module_roots, neighborhood, read_blobs, resolve, run, search_matches, tsconfig_paths
+from common import Modules, default_export_name, external_dirs, module_key, module_roots, neighborhood, read_blobs, resolve, run, search_matches, tsconfig_paths
 
 REF = "origin/main"
 ROOTS = ["frontend/discourse", "plugins"]
-INFRA = {
-    "frontend/discourse/app/lib/ember-events.js",
-    "frontend/discourse/app/lib/implicit-injections.js",
-    "frontend/discourse/app/instance-initializers/component-templates.js",
-    "frontend/discourse/app/ui-kit/helpers/d-element.gts",
-}
 # Known not-a-batch-member cases; each needs its own PR or a decision first.
 BLOCKED = {
     "frontend/discourse/app/components/anonymous-topic-footer-buttons.gjs": "passes `this` to getTopicFooterButtons, which calls context.get(); needs the plugin API reworked",
     "frontend/discourse/app/components/discourse-root.js": "root element owning event dispatch; glimmerified once and reverted (27408c7e14b)",
-    "frontend/discourse/admin/components/edit-category-panel.gjs": "buildCategoryPanel() factory; convert together with the edit-category-* tabs built from it",
+    "frontend/discourse/admin/components/edit-category-localizations.gjs": "built by buildCategoryPanel() in edit-category-panel.gjs; convert the factory and every tab built from it together",
+    "frontend/discourse/admin/components/edit-category-topic-template.gjs": "built by buildCategoryPanel() in edit-category-panel.gjs; convert the factory and every tab built from it together",
     "frontend/discourse/app/components/avatar-uploader.gjs": "writes uploadedAvatarId/uploadedAvatarTemplate back into callers, three external plugins included; needs @done(upload) and coordinated external updates",
     "frontend/discourse/app/components/second-factor-form.gjs": "secondFactorMethod/Token flow back through four callers, one via LoginModal -> LocalLoginForm; needs callbacks threaded through",
     "plugins/styleguide/assets/javascripts/discourse/components/styleguide-markdown.js": "cooks its own rendered block via innerHTML; needs a markdown arg instead",
@@ -78,7 +73,7 @@ def resolver_name(path):
 def score(path, src, ext_blob, refs, importers, listdir):
     body, tpl = (src.split("<template>", 1) + [""])[:2]
     n = lambda p, s=body: len(re.findall(p, s))
-    cls = (re.search(r"export default class (\w+)", src) or [None, None])[1]
+    cls = default_export_name(src)
     base = os.path.basename(path.rsplit(".", 1)[0])
     res = resolver_name(path)
 
@@ -132,19 +127,24 @@ def main():
     opts = ap.parse_args()
 
     tree = run(["git", "ls-tree", "-r", "--name-only", REF, "--", *ROOTS]).split()
-    classic = [f.split(":", 1)[1] for f in run(["git", "grep", "-lE", CLASSIC_IMPORT, REF, "--", *ROOTS], ok=(0, 1)).split()]
-    classic = [f for f in classic if re.search(r"\.(js|gjs)$", f) and not re.search(r"node_modules|/dist/|/tests?/", f)]
+    modules = Modules(REF)
+    classic = modules.classic(tuple(f"{r}/" for r in ROOTS))
     if not classic:
-        raise SystemExit(f"no classic components found on {REF}; the grep is more likely broken than the job done")
+        raise SystemExit(f"no classic components found on {REF}; the classifier is more likely broken than the job done")
     if opts.list:
-        print("\n".join(f for f in classic if f not in INFRA))
+        print("\n".join(classic))
         return
 
     dirs = collections.defaultdict(list)
     for f in tree:
         dirs[os.path.dirname(f)].append(os.path.basename(f))
     skip = in_flight()
-    candidates = [f for f in classic if f not in INFRA and "/select-kit/" not in f and f not in skip]
+    bases = {f: list(modules.bases(module_key(f))) for f in classic}
+    select_kit = {f for f in classic if "/select-kit/" in f or any("/select-kit/" in b for b in bases[f])}
+    # a subclass converts with its base (SKILL.md Step 0), whose score counts it
+    listed = {module_key(f) for f in classic}
+    subclasses = {f for f in classic if bases[f] and bases[f][0] in listed}
+    candidates = [f for f in classic if f not in select_kit and f not in subclasses and f not in skip]
     refs, importers = reference_index(set(tree))
     ext_blob = "\n".join(search_matches(REF_TOKENS, external_dirs()))
     blobs = read_blobs(REF, candidates)
@@ -154,7 +154,7 @@ def main():
     blocked = [r for r in rows if r["file"] in BLOCKED and r["reachable"]]
     ranked = sorted((r for r in rows if r["reachable"] and r["file"] not in BLOCKED), key=lambda r: (r["score"], r["lines"]))
 
-    print(f"{len(classic)} classic on {REF}; {len(classic) - len(candidates)} excluded (in flight, select-kit, infra)")
+    print(f"{len(classic)} classic on {REF}; {len(classic) - len(candidates)} excluded (in flight, select-kit and its subclasses, subclasses of a listed base)")
     print(f"{len(ranked)} ranked, {len(blocked)} blocked, {len(dead)} unreachable\n")
     for r in dead:
         print(f"  DEAD? {r['file']}  (delete, don't convert; confirm per SKILL.md Step 1)")

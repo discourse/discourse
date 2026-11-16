@@ -74,22 +74,24 @@ change at a time, leaves first, and report per component.
 
 Stop and flag, or widen the scope, when:
 
-- the file is under `select-kit/`: select-kit is a framework with a dozen external
-  subclasses; it needs its own migration, not this skill. Stop.
+- the file is under `select-kit/`, or extends a select-kit component: select-kit is a
+  framework with a dozen external subclasses; it needs its own migration, not this skill. Stop.
 - the component is a **base class** (`export default class X extends Component` that other
   components `extends`): a scope decision, not a stop. Convert the whole hierarchy in one
   change or none of it; a Glimmer base under a classic subclass does not work.
-- the file is one of the infrastructure users of `@ember/component` (`lib/ember-events.js`,
-  `lib/implicit-injections.js`, `instance-initializers/component-templates.js`,
-  `ui-kit/helpers/d-element.gts`): not components, leave them.
-- the file only imports `{ Input }`, `{ Textarea }`, or `{ setComponentTemplate }` from
-  `@ember/component`: not a classic component. Two-way `<Input @value>` inside a Glimmer
-  component is a data-flow question (Step 5), not a conversion.
+- the file imports `@ember/component` but its default export is not a component built on it:
+  runtime infrastructure (`lib/ember-events.js`, `instance-initializers/component-templates.js`),
+  or a Glimmer component importing `{ Input }`, `{ Textarea }`, or `ClassicComponent` for an
+  `instanceof` check. Not a conversion. Two-way `<Input @value>` inside a Glimmer component is
+  a data-flow question (Step 5).
 
 Everything else (`app/components`, `admin/components`, `app/ui-kit`, plugin `components/`
 and `connectors/`, and the same directories in external plugins and themes) is in scope.
-`scripts/rank-targets.py --list` prints what is left in core and bundled plugins; without
-`--list` it ranks that inventory by risk and leaves out components already in open PRs.
+`scripts/rank-targets.py --list` prints what is left in core and bundled plugins: every module
+whose default export is a classic component, through any chain of superclasses
+(`extends DTextField` counts). Without `--list` it ranks that inventory by risk, leaving out
+components already in open PRs, select-kit and its subclasses, and subclasses of a listed
+base, which convert with it.
 [PLAN.md](PLAN.md) covers how to read the ranking; batching is Step 10.
 
 Subclasses in core or plugins of the component you convert are in scope too; subclasses

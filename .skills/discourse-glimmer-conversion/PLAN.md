@@ -16,14 +16,17 @@ components that come out as `.gts`.
 
 - `scripts/rank-targets.py`: ranks `origin/main`'s classic components by risk. It reads git
   directly, so it works from any checkout state. It leaves out files in open
-  `glimmer-conversion` PRs and prints unreachable components separately; `--list` prints
-  the inventory only. It takes a few seconds. Run `git fetch origin main` first.
+  `glimmer-conversion` PRs, select-kit and its subclasses, and subclasses of a listed base
+  (the base's score counts them), and prints unreachable components separately; `--list`
+  prints the inventory only. It takes a few seconds. Run `git fetch origin main` first.
 - `scripts/analyze.sh <file>`: the per-component pre-flight (SKILL.md Step 1).
 - `scripts/self-args.py`: template `@name` reads that shadow a member (SKILL.md Step 8).
 - `scripts/refresh-progress.py`: the merged/approved marks in PROGRESS.md (SKILL.md Step 10).
 - `scripts/component-history.py`: an HTML chart of classic vs Glimmer counts over time.
 - `scripts/common.py`: what the Python scripts share (git and gh calls, module resolution
-  from the tsconfig `paths`, the `.gts` rule).
+  from the tsconfig `paths`, the `.gts` rule, and `Modules`, which classifies a module as a
+  classic or Glimmer component by following its superclass through imports, aliases and
+  class factories).
 
 ## Picking targets
 

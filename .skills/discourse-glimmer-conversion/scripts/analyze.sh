@@ -51,7 +51,8 @@ case "$rel" in
 esac
 resolver_name="${rel#*/components/}"
 [[ "$resolver_name" == "$rel" ]] && resolver_name="${rel##*/}"
-class_name="$(grep -oE 'export default class [A-Za-z0-9_]+' "$file" | awk '{print $4}' || true)"
+# `export default class X`, or `export default X;` for a classic `const X = Component.extend(...)`
+class_name="$(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); from common import default_export_name; print(default_export_name(open(sys.argv[2]).read()) or "")' "$script_dir" "$file")"
 base_name="$(basename "$rel")"
 
 # Split at <template> so class-level greps ignore the template and vice versa.
