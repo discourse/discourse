@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { click, find, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -830,16 +831,20 @@ module("Integration | Component | AiTranslations", function (hooks) {
   });
 
   test("resyncs the switch and progress when a refresh replaces the model", async function (assert) {
-    await render(<template><AiTranslations @model={{this.model}} /></template>);
+    const model = tracked(this.model);
+
+    await render(
+      <template><AiTranslations @model={{model.value}} /></template>
+    );
     assert
       .dom("[role='switch']")
       .hasAttribute("aria-checked", "true", "starts enabled");
 
-    this.set("model", {
-      ...this.model,
+    model.value = {
+      ...model.value,
       translation_enabled: false,
       enabled: false,
-    });
+    };
     await settled();
 
     assert
@@ -849,11 +854,11 @@ module("Integration | Component | AiTranslations", function (hooks) {
       .dom(".ai-translations__overview")
       .doesNotExist("the progress panel follows the replaced model");
 
-    this.set("model", {
-      ...this.model,
+    model.value = {
+      ...model.value,
       translation_enabled: true,
       enabled: true,
-    });
+    };
     await settled();
 
     assert

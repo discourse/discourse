@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import {
   click,
@@ -96,13 +95,11 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("highlights by the language shortcut, following changes to it", async function (assert) {
-    const state = new (class {
-      @tracked language = "sql";
-    })();
+    const language = tracked("sql");
 
     await render(
       <template>
-        <CodeEditor @language={{state.language}} @value="select 1" />
+        <CodeEditor @language={{language.value}} @value="select 1" />
       </template>
     );
     await waitFor(".cm-content span[class]");
@@ -110,7 +107,7 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.true(highlightedTokens().includes("select"));
     const before = highlightedTokens();
 
-    state.language = "yaml";
+    language.value = "yaml";
     await settled();
     await waitUntil(
       () => JSON.stringify(highlightedTokens()) !== JSON.stringify(before)
@@ -375,16 +372,14 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("wires the field's accessibility attributes", async function (assert) {
-    const state = new (class {
-      @tracked invalid = true;
-    })();
+    const invalid = tracked(true);
 
     await render(
       <template>
         <CodeEditor
           @describedBy="help"
           @inputId="field"
-          @invalid={{state.invalid}}
+          @invalid={{invalid.value}}
           @value=""
         />
       </template>
@@ -395,7 +390,7 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.dom(".cm-content").hasAttribute("aria-describedby", "help");
     assert.dom(".cm-content").hasAttribute("aria-invalid", "true");
 
-    state.invalid = false;
+    invalid.value = false;
     await settled();
 
     assert.dom(".cm-content").doesNotHaveAttribute("aria-invalid");
@@ -474,19 +469,17 @@ module("Integration | Component | code-editor", function (hooks) {
   ].forEach(([description, loader]) => {
     test(`stays a plain text editor when its language ${description}`, async function (assert) {
       registerCodeEditorLanguage("broken", loader);
-      const state = new (class {
-        @tracked language = "sql";
-      })();
+      const language = tracked("sql");
       const consoleError = sinon.stub(console, "error");
 
       await render(
         <template>
-          <CodeEditor @language={{state.language}} @value="select 1" />
+          <CodeEditor @language={{language.value}} @value="select 1" />
         </template>
       );
       await waitFor(".cm-content span[class]");
 
-      state.language = "broken";
+      language.value = "broken";
       await waitUntil(() => consoleError.called);
       await settled();
 
@@ -508,22 +501,20 @@ module("Integration | Component | code-editor", function (hooks) {
         default: builder,
       }));
     });
-    const state = new (class {
-      @tracked options = {};
-    })();
+    const options = tracked({}, {});
     const consoleError = sinon.stub(console, "error");
 
     const rendered = render(
       <template>
         <CodeEditor
           @language="flaky"
-          @languageOptions={{state.options}}
+          @languageOptions={{options.value}}
           @value="select 1"
         />
       </template>
     );
     await waitFor(".cm-content");
-    state.options = { schema: {} };
+    options.value = { schema: {} };
     await rendered;
 
     assert.true(consoleError.called, "the stale load failed");
@@ -531,13 +522,11 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("disabled rejects edits but keeps the document focusable", async function (assert) {
-    const state = new (class {
-      @tracked disabled = true;
-    })();
+    const disabled = tracked(true);
 
     await render(
       <template>
-        <CodeEditor @disabled={{state.disabled}} @value="fixed" />
+        <CodeEditor @disabled={{disabled.value}} @value="fixed" />
       </template>
     );
     const view = codeEditorView();
@@ -546,7 +535,7 @@ module("Integration | Component | code-editor", function (hooks) {
     view.focus();
     assert.true(view.hasFocus, "it can still be read and copied");
 
-    state.disabled = false;
+    disabled.value = false;
     await settled();
 
     assert.false(view.state.readOnly);
@@ -608,45 +597,42 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("a value replaced from outside cannot be undone into the old document", async function (assert) {
-    const state = new (class {
-      @tracked value = "one";
-    })();
+    const editorValue = tracked("one");
+    const onChange = (newValue) => (editorValue.value = newValue);
 
     await render(
       <template>
-        <CodeEditor @onChange={{fn (mut state.value)}} @value={{state.value}} />
+        <CodeEditor @onChange={{onChange}} @value={{editorValue.value}} />
       </template>
     );
     const view = codeEditorView();
     view.dispatch({ changes: { from: 3, insert: " typed" } });
     await settled();
 
-    state.value = "two";
+    editorValue.value = "two";
     await settled();
     undo(view);
     await settled();
 
     assert.strictEqual(view.state.doc.toString(), "two");
-    assert.strictEqual(state.value, "two");
+    assert.strictEqual(editorValue.value, "two");
   });
 
   test("picks up language options that change after the editor is built", async function (assert) {
-    const state = new (class {
-      @tracked languageOptions = { schema: {} };
-    })();
+    const languageOptions = tracked({ schema: {} });
 
     await render(
       <template>
         <CodeEditor
           @language="sql"
-          @languageOptions={{state.languageOptions}}
+          @languageOptions={{languageOptions.value}}
           @value="SELECT badges."
         />
       </template>
     );
     await waitFor(".cm-content span[class]");
 
-    state.languageOptions = { schema: { badges: ["allow_title"] } };
+    languageOptions.value = { schema: { badges: ["allow_title"] } };
     await settled();
     await openCompletions(codeEditorView());
 
@@ -692,14 +678,12 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("marks the lines a caller reports as warnings", async function (assert) {
-    const state = new (class {
-      @tracked warnings = [{ line: 2, message: "Avoid this" }];
-    })();
+    const warnings = tracked([{ line: 2, message: "Avoid this" }]);
     const value = ["fine", "suspect", "fine"].join("\n");
 
     await render(
       <template>
-        <CodeEditor @lineWarnings={{state.warnings}} @value={{value}} />
+        <CodeEditor @lineWarnings={{warnings.value}} @value={{value}} />
       </template>
     );
     await waitFor(".cm-lintRange");
@@ -707,7 +691,7 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.dom(".cm-lintRange").exists({ count: 1 }).hasText("suspect");
     assert.dom(".cm-lint-marker").exists({ count: 1 }, "with a gutter icon");
 
-    state.warnings = [];
+    warnings.value = [];
     await settled();
     await waitUntil(() => !document.querySelector(".cm-lintRange"));
 
@@ -715,19 +699,17 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("keeps line warnings when the value is swapped", async function (assert) {
-    const state = new (class {
-      @tracked value = "one\ntwo";
-    })();
+    const editorValue = tracked("one\ntwo");
     const warnings = [{ line: 1, message: "Avoid this" }];
 
     await render(
       <template>
-        <CodeEditor @lineWarnings={{warnings}} @value={{state.value}} />
+        <CodeEditor @lineWarnings={{warnings}} @value={{editorValue.value}} />
       </template>
     );
     await waitFor(".cm-lintRange");
 
-    state.value = "uno\ndos";
+    editorValue.value = "uno\ndos";
     await settled();
 
     assert.dom(".cm-lintRange").exists({ count: 1 }).hasText("uno");
@@ -776,26 +758,24 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("shows a placeholder that arrives after the editor is built", async function (assert) {
-    const state = new (class {
-      @tracked placeholder = "";
-    })();
+    const placeholder = tracked("");
 
     await render(
       <template>
-        <CodeEditor @placeholder={{state.placeholder}} @value="" />
+        <CodeEditor @placeholder={{placeholder.value}} @value="" />
       </template>
     );
     await waitFor(".cm-editor");
 
     assert.dom(".cm-placeholder").doesNotExist();
 
-    state.placeholder = "Write something";
+    placeholder.value = "Write something";
     await settled();
     await waitFor(".cm-placeholder");
 
     assert.dom(".cm-placeholder").hasText("Write something");
 
-    state.placeholder = "";
+    placeholder.value = "";
     await settled();
     await waitUntil(() => !document.querySelector(".cm-placeholder"));
 
