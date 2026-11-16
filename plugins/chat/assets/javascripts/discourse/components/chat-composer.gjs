@@ -89,7 +89,7 @@ export default class ChatComposer extends Component {
     super(...arguments);
 
     if (this.useRichEditor) {
-      this.composer.awaitEditor();
+      this.composer.awaitEditor(this);
       this.#loadRichEditor();
     }
   }
@@ -263,7 +263,7 @@ export default class ChatComposer extends Component {
     const preference = toggledCompositionMode(this.currentUser);
 
     if (!this.useRichEditor) {
-      this.composer.awaitEditor();
+      this.composer.awaitEditor(this);
       await this.#loadRichEditor();
     }
 
@@ -346,7 +346,7 @@ export default class ChatComposer extends Component {
 
   @action
   teardown() {
-    this.composer.stopAwaitingEditor();
+    this.composer.stopAwaitingEditor(this);
     this.pane.sending = false;
   }
 

@@ -78,6 +78,13 @@ RSpec.describe "Chat composer formatting" do
         expect(page).to have_css("#{checkbox}[aria-checked='false']", visible: :all)
       end
 
+      it "advertises chat's own link shortcut" do
+        chat_page.visit_channel(channel_1)
+        channel_page.composer.toggle_formatting_bar
+
+        expect(find(".chat-composer__formatting-bar .link")["aria-keyshortcuts"]).to end_with("+L")
+      end
+
       it "toggles a formatting bar that applies formatting" do
         chat_page.visit_channel(channel_1)
         expect(page).to have_no_css(".chat-composer__formatting-bar")

@@ -91,6 +91,19 @@ RSpec.describe "Chat composer rich editor" do
     expect(thread_page.composer).to have_rich_editor
   end
 
+  it "focuses the composer after switching channels" do
+    channel_2 = Fabricate(:chat_channel)
+    channel_2.add(current_user)
+    chat_page.visit_channel(channel_1)
+    expect(channel_page.composer).to have_rich_editor
+
+    find(".sidebar-section-link.channel-#{channel_2.id}").click
+
+    expect(page).to have_current_path(%r{/chat/c/#{channel_2.slug}/})
+    expect(channel_page.composer).to have_rich_editor
+    expect(page).to have_css(".chat-composer__input.ProseMirror:focus")
+  end
+
   it "keeps Enter structural inside a list and sends from a plain paragraph" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.input.send_keys("- first")

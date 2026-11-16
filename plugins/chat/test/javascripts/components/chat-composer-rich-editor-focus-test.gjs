@@ -9,14 +9,15 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("a key typed while the editor loads is added to the draft", async function (assert) {
+    test("keys typed while the editor loads are added to the draft", async function (assert) {
       const ProsemirrorEditor = await loadRichEditor();
       const owner = getOwner(this);
       const composer = owner.lookup("service:chat-channel-composer");
       let value = "saved draft";
 
-      composer.awaitEditor();
+      composer.awaitEditor(this);
       composer.focus({ addText: "x" });
+      composer.focus({ addText: "y" });
 
       const onChange = (event) => (value = event.target.value);
       const onSetup = (textManipulation) => {
@@ -34,7 +35,7 @@ module(
         </template>
       );
 
-      assert.strictEqual(value, "saved draftx", "the key follows the draft");
+      assert.strictEqual(value, "saved draftxy", "the keys follow the draft");
     });
   }
 );
