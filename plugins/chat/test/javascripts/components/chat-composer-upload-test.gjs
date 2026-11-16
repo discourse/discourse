@@ -271,53 +271,53 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("removing completed upload", async function (assert) {
-    this.set("uploadRemoved", false);
-    this.set("removeUpload", () => {
-      this.set("uploadRemoved", true);
-    });
-    this.set("upload", {
+    let uploadRemoved = false;
+    const removeUpload = () => {
+      uploadRemoved = true;
+    };
+    const upload = {
       type: ".png",
       original_filename: "bar_image.png",
       extension: "png",
       short_path: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
         <ChatComposerUpload
           @isDone={{true}}
-          @onCancel={{fn this.removeUpload this.upload}}
-          @upload={{this.upload}}
+          @onCancel={{fn removeUpload upload}}
+          @upload={{upload}}
         />
       </template>
     );
 
     await click(".chat-composer-upload__remove-btn");
-    assert.true(this.uploadRemoved);
+    assert.true(uploadRemoved);
   });
 
   test("cancelling in progress upload", async function (assert) {
-    this.set("uploadRemoved", false);
-    this.set("removeUpload", () => {
-      this.set("uploadRemoved", true);
-    });
-    this.set("upload", {
+    let uploadRemoved = false;
+    const removeUpload = () => {
+      uploadRemoved = true;
+    };
+    const upload = {
       type: ".png",
       original_filename: "bar_image.png",
       extension: "png",
       short_path: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
         <ChatComposerUpload
-          @onCancel={{fn this.removeUpload this.upload}}
-          @upload={{this.upload}}
+          @onCancel={{fn removeUpload upload}}
+          @upload={{upload}}
         />
       </template>
     );
 
     await click(".chat-composer-upload__remove-btn");
-    assert.true(this.uploadRemoved);
+    assert.true(uploadRemoved);
   });
 });

@@ -60,18 +60,17 @@ module("Integration | Component | SecretValueList", function (hooks) {
   });
 
   test("adding an invalid value", async function (assert) {
-    let setValidationMessage = (message) => {
-      this.set("message", message);
-    };
-    this.set("setValidationMessage", setValidationMessage);
-    this.set("changeValueCallback", (values) => this.set("values", values));
+    const values = tracked(undefined);
+    let message;
+    const setValidationMessage = (newMessage) => (message = newMessage);
+    const changeValueCallback = (newValues) => (values.value = newValues);
 
     await render(
       <template>
         <SecretValueList
-          @changeValueCallback={{this.changeValueCallback}}
-          @setValidationMessage={{this.setValidationMessage}}
-          @values={{this.values}}
+          @changeValueCallback={{changeValueCallback}}
+          @setValidationMessage={{setValidationMessage}}
+          @values={{values.value}}
         />
       </template>
     );
@@ -85,13 +84,13 @@ module("Integration | Component | SecretValueList", function (hooks) {
       .doesNotExist("it doesn't add the value to the list of values");
 
     assert.deepEqual(
-      this.values,
+      values.value,
       undefined,
       "it doesn't add the value to the list of values"
     );
 
     assert.strictEqual(
-      this.message,
+      message,
       i18n("admin.site_settings.secret_list.invalid_input"),
       "it shows validation error"
     );

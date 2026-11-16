@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -219,12 +220,14 @@ module(
     });
 
     test("pasting", async function (assert) {
-      this.set("onChange", (value) => this.set("value", value));
+      const value = tracked(undefined);
+      const onChange = (newValue) => (value.value = newValue);
+
       await render(
         <template>
           <EmailGroupUserChooser
-            @onChange={{this.onChange}}
-            @value={{this.value}}
+            @onChange={{onChange}}
+            @value={{value.value}}
           />
         </template>
       );

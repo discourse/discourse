@@ -40,19 +40,19 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
   });
 
   test("allows mutations through actions", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE });
-    this.set("onChange", (date) => this.set("date", date));
+    const date = tracked(DEFAULT_DATE);
+    const onChange = (newDate) => (date.value = newDate);
 
     await render(
       <template>
-        <DDateInput @date={{this.date}} @onChange={{this.onChange}} />
+        <DDateInput @date={{date.value}} @onChange={{onChange}} />
       </template>
     );
 
     await fillIn(".date-picker", "2019-02-02");
     await triggerEvent(".date-picker", "change");
 
-    assert.true(this.date.isSame(moment("2019-02-02")));
+    assert.true(date.value.isSame(moment("2019-02-02")));
   });
 
   test("bounds the picker to the relative date and follows its changes", async function (assert) {

@@ -247,17 +247,17 @@ module("Component | ChatMessageReaction", function (hooks) {
   });
 
   test("click action", async function (assert) {
-    this.set("count", 0);
-    this.set("react", () => {
-      this.set("count", 1);
-    });
+    const count = tracked(0);
+    const react = () => {
+      count.value = 1;
+    };
 
     await render(
       <template>
         <ChatMessageReaction
           class="show"
-          @onReaction={{this.react}}
-          @reaction={{hash emoji="heart" count=this.count}}
+          @onReaction={{react}}
+          @reaction={{hash emoji="heart" count=count.value}}
         />
       </template>
     );

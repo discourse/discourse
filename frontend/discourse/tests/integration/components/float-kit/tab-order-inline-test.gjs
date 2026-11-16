@@ -30,7 +30,7 @@ import dElement from "discourse/ui-kit/helpers/d-element";
  * the next stop after the trigger, and so the only one that can pin that the search for that stop
  * excludes the panel.
  *
- * Each menu waits on `{{#if this.outlet}}`: the outlet element only exists after its own insert
+ * Each menu waits on `{{#if outlet.value}}`: the outlet element only exists after its own insert
  * hook runs, and `{{#in-element}}` rejects a nullish destination. The menu still renders in its
  * template position.
  *
@@ -52,19 +52,22 @@ module(
       document.activeElement?.className ||
       "<none>";
 
+    let outlet;
+    const setOutlet = (element) => (outlet.value = element);
+
     hooks.beforeEach(function () {
-      this.setOutlet = (element) => this.set("outlet", element);
+      outlet = tracked(undefined);
     });
 
     test("Tab enters the float's own controls, then leaves for the trigger's neighbour", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
                 <button class="in-panel" id="in-panel" type="button">panel
@@ -77,7 +80,7 @@ module(
             id="after-trigger"
             type="button"
           >after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -110,12 +113,12 @@ module(
     test("the option alone is enough, without turning containment off by hand", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
                 <button id="in-panel" type="button">panel action</button>
@@ -123,7 +126,7 @@ module(
             </DMenu>
           {{/if}}
           <button id="after-trigger" type="button">after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -147,12 +150,12 @@ module(
     test("Tab visits every panel control before the float is left", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
                 <input aria-label="filter" id="panel-filter" />
@@ -161,7 +164,7 @@ module(
             </DMenu>
           {{/if}}
           <button id="after-trigger" type="button">after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -197,12 +200,12 @@ module(
     test("the forward exit steps over the panel to reach the trigger's neighbour", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
                 <button id="in-panel" type="button">panel action</button>
@@ -213,7 +216,7 @@ module(
               the next stop in document order. Searching the page for the stop after the trigger
               has to exclude the panel, or the forward exit lands back inside the float it is
               dismissing. }}
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
           <button id="after-trigger" type="button">after</button>
         </template>
       );
@@ -236,11 +239,11 @@ module(
     test("a non-focusable trigger wrapper resumes from its last stop", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
               @triggerComponent={{dElement "div"}}
             >
               <:trigger>
@@ -252,7 +255,7 @@ module(
             </DMenu>
           {{/if}}
           <button id="after-trigger" type="button">after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -272,11 +275,11 @@ module(
       await render(
         <template>
           <button id="before-trigger" type="button">before</button>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
               @triggerComponent={{dElement "div"}}
             >
               <:trigger>
@@ -289,7 +292,7 @@ module(
             </DMenu>
           {{/if}}
           <button id="after-trigger" type="button">after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -323,12 +326,12 @@ module(
     test("Shift+Tab out of the float returns to the trigger", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
                 <button class="in-panel" id="in-panel" type="button">panel
@@ -336,7 +339,7 @@ module(
               </:content>
             </DMenu>
           {{/if}}
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -355,12 +358,12 @@ module(
     test("a float with nothing focusable is passed over", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
                 <p class="in-panel">nothing to focus here</p>
@@ -372,7 +375,7 @@ module(
             id="after-trigger"
             type="button"
           >after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -399,12 +402,12 @@ module(
 
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
               @trapTab={{true}}
             >
               <:content>
@@ -412,7 +415,7 @@ module(
               </:content>
             </DMenu>
           {{/if}}
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -426,11 +429,11 @@ module(
     test("without the option, Tab out of the float does not come back to the trigger", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
               @trapTab={{false}}
             >
               <:content>
@@ -444,7 +447,7 @@ module(
             id="after-trigger"
             type="button"
           >after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 

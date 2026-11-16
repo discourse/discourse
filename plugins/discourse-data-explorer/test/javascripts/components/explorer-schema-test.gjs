@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -56,18 +57,15 @@ module("Component | ExplorerSchema", function (hooks) {
   });
 
   test("can be hidden and shown again", async function (assert) {
-    this.setProperties({
-      schema,
-      hideSchema: false,
-      updateHideSchema: (value) => this.set("hideSchema", value),
-    });
+    const hideSchema = tracked(false);
+    const updateHideSchema = (value) => (hideSchema.value = value);
 
     await render(
       <template>
         <ExplorerSchema
-          @hideSchema={{this.hideSchema}}
-          @schema={{this.schema}}
-          @updateHideSchema={{this.updateHideSchema}}
+          @hideSchema={{hideSchema.value}}
+          @schema={{schema}}
+          @updateHideSchema={{updateHideSchema}}
         />
       </template>
     );

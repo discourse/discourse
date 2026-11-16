@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   fillIn,
@@ -20,19 +21,22 @@ import I18n, { i18n } from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
 
-function renderEngine(context) {
-  return render(
+async function renderEngine(context, { withFormApi = false } = {}) {
+  const formApi = tracked(undefined);
+  const registerApi = withFormApi ? (api) => (formApi.value = api) : undefined;
+
+  await render(
     <template>
       <Form
         @data={{context.configuration}}
-        @onRegisterApi={{context.registerApi}}
+        @onRegisterApi={{registerApi}}
         as |form transientData|
       >
         <PropertyEngineConfigurator
           @configuration={{transientData}}
           @connections={{context.connections}}
           @form={{form}}
-          @formApi={{context.formApi}}
+          @formApi={{formApi.value}}
           @node={{context.node}}
           @nodes={{context.nodes}}
           @nodeType={{context.nodeType}}
@@ -44,6 +48,8 @@ function renderEngine(context) {
       </Form>
     </template>
   );
+
+  return formApi.value;
 }
 
 module("Integration | Component | workflows property engine", function (hooks) {
@@ -102,7 +108,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     this.setProperties({
       configuration: { reaction: null },
-      formApi: null,
       nodeType: "action:topic",
       schema: {
         reaction: {
@@ -110,23 +115,19 @@ module("Integration | Component | workflows property engine", function (hooks) {
           no_data_expression: true,
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(".btn-emoji");
     await emojiPicker(".emoji-picker").select("grinning");
 
-    assert.strictEqual(this.formApi.get("reaction"), "grinning");
+    assert.strictEqual(formApi.get("reaction"), "grinning");
   });
 
   test("validates optional integer fields that do not support expressions", async function (assert) {
     this.setProperties({
       configuration: { post_number: "" },
-      formApi: null,
       nodeType: "trigger:post_button",
       schema: {
         post_number: {
@@ -136,21 +137,18 @@ module("Integration | Component | workflows property engine", function (hooks) {
           no_data_expression: true,
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
-    await this.formApi.submit();
+    await formApi.submit();
     assert
       .form()
       .field("post_number")
       .hasNoErrors("the optional field is valid while blank");
 
     await fillIn("input[name='post_number']", "1.5");
-    await this.formApi.submit();
+    await formApi.submit();
     assert
       .form()
       .field("post_number")
@@ -160,7 +158,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       );
 
     await fillIn("input[name='post_number']", "2");
-    await this.formApi.submit();
+    await formApi.submit();
     assert
       .form()
       .field("post_number")
@@ -170,7 +168,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
   test("expression-enabled integer fields accept expressions", async function (assert) {
     this.setProperties({
       configuration: { post_number: "={{ $json.post_number }}" },
-      formApi: null,
       nodeType: "trigger:post_button",
       schema: {
         post_number: {
@@ -178,16 +175,13 @@ module("Integration | Component | workflows property engine", function (hooks) {
           min: 1,
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom(".workflows-variable-input").includesText("post_number");
 
-    await this.formApi.submit();
+    await formApi.submit();
     assert
       .form()
       .field("post_number")
@@ -259,7 +253,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
         category_ids: [1],
         include_subcategories: true,
       },
-      formApi: null,
       nodeType: "trigger:topic_created",
       schema: {
         category_ids: {
@@ -281,18 +274,15 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom("input[type='checkbox']").isChecked();
 
     await click("input[type='checkbox']");
 
-    assert.false(this.formApi.get("include_subcategories"));
+    assert.false(formApi.get("include_subcategories"));
   });
 
   test("hides fields conditioned on a category list when it is empty", async function (assert) {
@@ -339,7 +329,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
         not_seen_for_amount: 30,
         not_seen_for_unit: "days",
       },
-      formApi: null,
       nodeType: "trigger:user_seen",
       nodeTypes: [
         {
@@ -404,12 +393,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await waitFor("input[name='trigger_on_first_seen']:checked");
 
@@ -438,7 +424,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await groupSelector.selectRowByValue("2");
 
     assert.deepEqual(
-      this.formApi.get("group_ids").map(String),
+      formApi.get("group_ids").map(String),
       ["2"],
       "selected group IDs are saved"
     );
@@ -446,9 +432,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click("input[name='trigger_on_not_seen_for_more_than']");
     await waitFor("input[name='not_seen_for_amount']");
 
-    assert.true(this.formApi.get("trigger_on_not_seen_for_more_than"));
-    assert.strictEqual(this.formApi.get("not_seen_for_amount"), 30);
-    assert.strictEqual(this.formApi.get("not_seen_for_unit"), "days");
+    assert.true(formApi.get("trigger_on_not_seen_for_more_than"));
+    assert.strictEqual(formApi.get("not_seen_for_amount"), 30);
+    assert.strictEqual(formApi.get("not_seen_for_unit"), "days");
     assert.dom(".form-kit__container.workflows-user-seen-duration").exists();
     assert.dom("input[name='not_seen_for_amount']").hasValue("30");
     assert.dom("select[name='not_seen_for_unit']").hasValue("days");
@@ -456,8 +442,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await fillIn("input[name='not_seen_for_amount']", "45");
     await select("select[name='not_seen_for_unit']", "weeks");
 
-    assert.strictEqual(String(this.formApi.get("not_seen_for_amount")), "45");
-    assert.strictEqual(this.formApi.get("not_seen_for_unit"), "weeks");
+    assert.strictEqual(String(formApi.get("not_seen_for_amount")), "45");
+    assert.strictEqual(formApi.get("not_seen_for_unit"), "weeks");
   });
 
   test("can clear optional category controls", async function (assert) {
@@ -467,7 +453,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
       configuration: {
         category_id: 2,
       },
-      formApi: null,
       nodeType: "trigger:topic_created",
       schema: {
         category_id: {
@@ -478,12 +463,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const categoryChooser = selectKit(".category-chooser");
     const header = categoryChooser.header();
@@ -493,7 +475,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     await click(header.el().querySelector(".btn-clear"));
 
-    assert.strictEqual(this.formApi.get("category_id"), "");
+    assert.strictEqual(formApi.get("category_id"), "");
   });
 
   test("hides the clear button on category controls when uncategorized topics are disallowed", async function (assert) {
@@ -503,7 +485,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
       configuration: {
         category_id: 2,
       },
-      formApi: null,
       nodeType: "trigger:topic_created",
       schema: {
         category_id: {
@@ -514,12 +495,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    await renderEngine(this, { withFormApi: true });
 
     const categoryChooser = selectKit(".category-chooser");
     const header = categoryChooser.header();
@@ -535,7 +513,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
       configuration: {
         group_inbox_id: 2,
       },
-      formApi: null,
       nodeType: "trigger:topic_created",
       nodeTypes: [
         {
@@ -565,12 +542,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const groupSelector = selectKit(".combo-box");
     const header = groupSelector.header();
@@ -580,7 +554,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     await click(header.el().querySelector(".btn-clear"));
 
-    assert.strictEqual(this.formApi.get("group_inbox_id"), null);
+    assert.strictEqual(formApi.get("group_inbox_id"), null);
   });
 
   test("renders preloaded automatic group option by name", async function (assert) {
@@ -589,7 +563,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
         operation: "check_membership",
         group_id: 14,
       },
-      formApi: null,
       node: {
         clientId: "node-1",
         type: "action:group",
@@ -626,12 +599,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    await renderEngine(this, { withFormApi: true });
 
     const groupSelector = selectKit(".combo-box");
 
@@ -689,7 +659,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
   test("renders collection options as addable fields", async function (assert) {
     this.setProperties({
       configuration: { updates: {} },
-      formApi: null,
       nodeType: "action:user",
       schema: {
         updates: {
@@ -707,12 +676,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ],
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom(".workflows-property-engine__collection-row").doesNotExist();
     assert
@@ -731,17 +697,16 @@ module("Integration | Component | workflows property engine", function (hooks) {
       "Updated title"
     );
 
-    assert.deepEqual(this.formApi.get("updates"), { title: "Updated title" });
+    assert.deepEqual(formApi.get("updates"), { title: "Updated title" });
 
     await click(".workflows-property-engine__collection-delete");
 
-    assert.deepEqual(this.formApi.get("updates"), {});
+    assert.deepEqual(formApi.get("updates"), {});
   });
 
   test("renders collection boolean options inline", async function (assert) {
     this.setProperties({
       configuration: { updates: {} },
-      formApi: null,
       nodeType: "action:user",
       schema: {
         updates: {
@@ -755,12 +720,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ],
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(".workflows-property-engine__add-attrs-btn");
     await waitFor(".dropdown-menu__item .btn-transparent");
@@ -774,7 +736,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
         ".workflows-property-engine__collection-row .d-toggle-switch__checkbox"
       )
       .hasAttribute("aria-checked", "false");
-    assert.deepEqual(this.formApi.get("updates"), {
+    assert.deepEqual(formApi.get("updates"), {
       trust_level_locked: false,
     });
 
@@ -782,7 +744,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       ".workflows-property-engine__collection-row .d-toggle-switch__checkbox"
     );
 
-    assert.deepEqual(this.formApi.get("updates"), {
+    assert.deepEqual(formApi.get("updates"), {
       trust_level_locked: true,
     });
   });
@@ -790,7 +752,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
   test("renders fixed collections with missing group data", async function (assert) {
     this.setProperties({
       configuration: { entries: {} },
-      formApi: null,
       nodeType: "action:log",
       schema: {
         entries: {
@@ -816,19 +777,16 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ],
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom(".workflows-property-engine__collection-row").doesNotExist();
 
     await click(".btn-default");
 
     assert.dom(".workflows-property-engine__collection-row").exists();
-    assert.strictEqual(this.formApi.get("entries.values").length, 1);
+    assert.strictEqual(formApi.get("entries.values").length, 1);
   });
 
   test("edits optional fixed collection styles and icons without expressions", async function (assert) {
@@ -838,7 +796,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
           values: [{ label: "Approve", value: "approve" }],
         },
       },
-      formApi: null,
       nodeType: "action:chat_approval",
       schema: {
         buttons: {
@@ -886,12 +843,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const row = ".workflows-property-engine__collection-row";
     const styleField = '[data-name="buttons.values.0.style"]';
@@ -906,7 +860,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await select(`${styleField} select`, "primary");
 
     assert.strictEqual(
-      this.formApi.get("buttons.values.0.style"),
+      formApi.get("buttons.values.0.style"),
       "primary",
       "the nested style is selected"
     );
@@ -922,7 +876,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click("[data-icon-id='gear']");
 
     assert.strictEqual(
-      this.formApi.get("buttons.values.0.icon"),
+      formApi.get("buttons.values.0.icon"),
       "gear",
       "the nested icon is selected"
     );
@@ -934,12 +888,12 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(`${iconField} .d-icon-grid-picker__clear`);
 
     assert.strictEqual(
-      this.formApi.get("buttons.values.0.style"),
+      formApi.get("buttons.values.0.style"),
       null,
       "the nested style is cleared"
     );
     assert.strictEqual(
-      this.formApi.get("buttons.values.0.icon"),
+      formApi.get("buttons.values.0.icon"),
       null,
       "the nested icon is cleared"
     );
@@ -955,7 +909,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ],
         },
       },
-      formApi: null,
       nodeType: "action:chat_approval",
       onChange: sinon.spy(),
       schema: {
@@ -984,12 +937,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ],
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const moveItemSelector = (direction, position) =>
       `[aria-label="${i18n(
@@ -1012,7 +962,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(moveUpButtons[1]);
 
     assert.deepEqual(
-      this.formApi.get("buttons.values"),
+      formApi.get("buttons.values"),
       [
         { label: "Deny", value: "deny" },
         { label: "Approve", value: "approve" },
@@ -1028,7 +978,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(moveDownButtons[0]);
 
     assert.deepEqual(
-      this.formApi.get("buttons.values"),
+      formApi.get("buttons.values"),
       [
         { label: "Approve", value: "approve" },
         { label: "Deny", value: "deny" },
@@ -1211,7 +1161,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
       configuration: {
         conditions: [],
       },
-      formApi: null,
       node: {
         clientId: "branch",
         type: "condition:if",
@@ -1254,9 +1203,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
             control: "condition_builder",
           },
         },
-      },
-      registerApi: (api) => {
-        this.set("formApi", api);
       },
     });
     this.session.lastExecutionRunData = {
@@ -1309,11 +1255,11 @@ module("Integration | Component | workflows property engine", function (hooks) {
       ],
     };
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(".workflows-empty-state .btn-primary");
 
-    const conditions = this.formApi.get("conditions");
+    const conditions = formApi.get("conditions");
     assert.strictEqual(conditions.length, 1);
     assert.dom(".workflows-property-engine__collection-row").exists();
     assert
@@ -1338,7 +1284,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.strictEqual(
-      this.formApi.get("conditions.0.leftValue"),
+      formApi.get("conditions.0.leftValue"),
       '={{ $json["topic title"]["post-count"] }}'
     );
   });
@@ -1363,7 +1309,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
     };
     this.setProperties({
       configuration: { conditions: [] },
-      formApi: null,
       node: {
         clientId: "branch",
         type: "condition:if",
@@ -1395,12 +1340,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ui: { control: "condition_builder" },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(".workflows-empty-state .btn-primary");
 
@@ -1420,7 +1362,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.deepEqual(
-      this.formApi.get("conditions.0.operator"),
+      formApi.get("conditions.0.operator"),
       {
         operation: "equals",
         type: "number",
@@ -1630,19 +1572,15 @@ module("Integration | Component | workflows property engine", function (hooks) {
   test("renders icon fields with the form-kit icon control", async function (assert) {
     this.setProperties({
       configuration: { icon: "gear" },
-      formApi: null,
       nodeType: "trigger:topic_admin_button",
       schema: {
         icon: {
           type: "icon",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom(".form-kit__control-icon").exists();
     assert.dom(".form-kit__control-icon").hasAttribute("data-value", "gear");
@@ -1657,14 +1595,13 @@ module("Integration | Component | workflows property engine", function (hooks) {
       '.workflows-property-engine__mode-control input[value="dynamic"]'
     );
 
-    assert.strictEqual(this.formApi.get("icon"), "=bolt");
+    assert.strictEqual(formApi.get("icon"), "=bolt");
     assert.dom(".workflows-variable-input").exists();
   });
 
   test("shows expected value hints in dynamic mode", async function (assert) {
     this.setProperties({
       configuration: { channel_id: "2" },
-      formApi: null,
       nodeType: "action:send_chat_message",
       schema: {
         channel_id: {
@@ -1674,12 +1611,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    await renderEngine(this, { withFormApi: true });
 
     assert.dom(".workflows-property-engine__dynamic-hint").doesNotExist();
 
@@ -1719,7 +1653,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
         agent_name: "",
         llm_model_id: 99,
       },
-      formApi: null,
       nodeType: "action:ai_agent",
       nodeTypes: [
         {
@@ -1757,12 +1690,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const selector = selectKit(".combo-box");
     assert.strictEqual(selector.header().value(), "2");
@@ -1771,10 +1701,10 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await selector.expand();
     await selector.selectRowByValue("1");
 
-    assert.strictEqual(String(this.formApi.get("agent_id")), "1");
-    assert.false(this.formApi.get("agent_force_default_llm"));
-    assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
-    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+    assert.strictEqual(String(formApi.get("agent_id")), "1");
+    assert.false(formApi.get("agent_force_default_llm"));
+    assert.strictEqual(formApi.get("agent_name"), "Support Bot");
+    assert.strictEqual(formApi.get("llm_model_id"), null);
   });
 
   test("renders combo box actions with the selected field value as a route model", async function (assert) {
@@ -1869,7 +1799,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
         agent_resolved_llm_name: "",
         llm_model_id: 99,
       },
-      formApi: null,
       node: {
         clientId: "node-1",
         type: "action:ai_agent",
@@ -1919,26 +1848,20 @@ module("Integration | Component | workflows property engine", function (hooks) {
           type: "integer",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const selector = selectKit(".combo-box");
     await selector.expand();
     await waitFor(".combo-box .select-kit-row[data-value='1']");
     await selector.selectRowByValue("1");
 
-    assert.strictEqual(String(this.formApi.get("agent_id")), "1");
-    assert.false(this.formApi.get("agent_force_default_llm"));
-    assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
-    assert.strictEqual(
-      this.formApi.get("agent_resolved_llm_name"),
-      "Default LLM"
-    );
-    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+    assert.strictEqual(String(formApi.get("agent_id")), "1");
+    assert.false(formApi.get("agent_force_default_llm"));
+    assert.strictEqual(formApi.get("agent_name"), "Support Bot");
+    assert.strictEqual(formApi.get("agent_resolved_llm_name"), "Default LLM");
+    assert.strictEqual(formApi.get("llm_model_id"), null);
     assert.true(requests.length >= 1);
     assert.strictEqual(requests[0].methodName, "agents");
   });
@@ -2009,7 +1932,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
         topic_id: "21",
         custom_field_names: [],
       },
-      formApi: null,
       node: {
         clientId: "node-1",
         type: "action:topic",
@@ -2041,19 +1963,16 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const selector = selectKit(".multi-select");
     await selector.expand();
     await waitFor(".multi-select .select-kit-row[data-value='foo']");
     await selector.selectRowByValue("foo");
 
-    assert.deepEqual(this.formApi.get("custom_field_names"), ["foo"]);
+    assert.deepEqual(formApi.get("custom_field_names"), ["foo"]);
     assert.strictEqual(selector.header().label(), "foo");
     assert.true(requests.length >= 1);
     assert.strictEqual(requests[0].methodName, "topic_custom_fields");
@@ -2067,7 +1986,6 @@ module("Integration | Component | workflows property engine", function (hooks) {
   test("multi_input fields accept arbitrary ids and convert between fixed and dynamic", async function (assert) {
     this.setProperties({
       configuration: { upload_ids: [] },
-      formApi: null,
       nodeType: "action:ai_agent",
       schema: {
         upload_ids: {
@@ -2079,12 +1997,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const selector = selectKit(".multi-select");
 
@@ -2095,7 +2010,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await selector.selectRowByValue("34");
 
     assert.deepEqual(
-      this.formApi.get("upload_ids"),
+      formApi.get("upload_ids"),
       ["12", "34"],
       "stores entered ids"
     );
@@ -2105,7 +2020,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.strictEqual(
-      this.formApi.get("upload_ids"),
+      formApi.get("upload_ids"),
       '={{ ["12","34"] }}',
       "converts the fixed list into a dynamic expression"
     );
@@ -2115,7 +2030,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.deepEqual(
-      this.formApi.get("upload_ids"),
+      formApi.get("upload_ids"),
       ["12", "34"],
       "converts the dynamic expression back into a fixed list"
     );
@@ -2128,19 +2043,15 @@ module("Integration | Component | workflows property engine", function (hooks) {
           assignments: [{ name: "active", type: "boolean", value: false }],
         },
       },
-      formApi: null,
       nodeType: "action:workflow_call",
       schema: {
         fields: {
           type: "assignment_collection",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const row = ".workflows-property-engine__collection-row";
 
@@ -2159,7 +2070,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       .dom(`${row} .workflows-variable-input`)
       .exists("swaps the toggle for an expression input");
     assert.strictEqual(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "=false",
       "seeds the expression with the previous fixed value"
     );
@@ -2169,7 +2080,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.false(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "converts the expression back into a fixed boolean, not the string 'false'"
     );
   });
@@ -2206,19 +2117,15 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ],
         },
       },
-      formApi: null,
       nodeType: "action:workflow_call",
       schema: {
         fields: {
           type: "assignment_collection",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await select(
       ".workflows-property-engine__collection-row select",
@@ -2226,7 +2133,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.strictEqual(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "={{ $json.enabled }}",
       "keeps the expression when the type changes"
     );
@@ -2243,33 +2150,29 @@ module("Integration | Component | workflows property engine", function (hooks) {
           assignments: [{ name: "active", type: "string", value: "hello" }],
         },
       },
-      formApi: null,
       nodeType: "action:workflow_call",
       schema: {
         fields: {
           type: "assignment_collection",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const typeSelect = ".workflows-property-engine__collection-row select";
 
     await select(typeSelect, "boolean");
 
     assert.false(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "a string is not carried into the toggle as truthy"
     );
 
     await select(typeSelect, "array");
 
     assert.strictEqual(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "",
       "a boolean is not carried into the JSON editor"
     );
@@ -2286,24 +2189,20 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ],
         },
       },
-      formApi: null,
       nodeType: "action:workflow_call",
       schema: {
         fields: {
           type: "assignment_collection",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
     });
 
-    await renderEngine(this);
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(findAll(".workflows-property-engine__collection-delete")[0]);
 
     assert.strictEqual(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "={{ $json.enabled }}",
       "leaves the surviving expression untouched"
     );

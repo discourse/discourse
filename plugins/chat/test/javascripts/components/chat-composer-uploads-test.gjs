@@ -241,16 +241,13 @@ module("Component | ChatComposerUploads", function (hooks) {
     silenceConsoleErrorsMatching("[Uppy]");
     setupUploadPretender();
 
-    this.set("changedUploads", null);
-    this.set("onUploadChanged", (uploads) => {
-      this.set("changedUploads", uploads);
-    });
+    const onUploadChanged = () => {};
 
     await render(
       <template>
         <ChatComposerUploads
           @fileUploadElementId="chat-widget-uploader"
-          @onUploadChanged={{this.onUploadChanged}}
+          @onUploadChanged={{onUploadChanged}}
         />
       </template>
     );

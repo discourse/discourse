@@ -118,19 +118,16 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("can hide the text filter without affecting other controls", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
-      category: SAMPLE_DROPDOWN_OPTIONS,
-    });
-    this.set("resetCount", 0);
-    this.set("onReset", () => this.set("resetCount", this.resetCount + 1));
+    const dropdownOptions = { category: SAMPLE_DROPDOWN_OPTIONS };
+    let resetCount = 0;
+    const onReset = () => resetCount++;
 
     await render(
       <template>
         <DFilterControls
-          @array={{this.data}}
-          @dropdownOptions={{this.dropdownOptions}}
-          @onResetFilters={{this.onReset}}
+          @array={{SAMPLE_DATA}}
+          @dropdownOptions={{dropdownOptions}}
+          @onResetFilters={{onReset}}
           @showTextFilter={{false}}
         >
           <:actions>
@@ -155,7 +152,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     await select(".d-filter-controls__dropdown--category", "feature");
     await click(".d-filter-controls__reset");
 
-    assert.strictEqual(this.resetCount, 1, "calls the reset callback once");
+    assert.strictEqual(resetCount, 1, "calls the reset callback once");
     assert
       .dom(".d-filter-controls__dropdown--category")
       .hasValue("all", "resets dropdown filters");

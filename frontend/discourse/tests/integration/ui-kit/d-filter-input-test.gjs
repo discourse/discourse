@@ -46,16 +46,16 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
   });
 
   test("Filter action", async function (assert) {
-    this.set("value", null);
-    this.set("action", (event) => {
-      this.set("value", event.target.value);
-    });
+    let value = null;
+    const onAction = (event) => {
+      value = event.target.value;
+    };
     await render(
-      <template><DFilterInput @filterAction={{this.action}} /></template>
+      <template><DFilterInput @filterAction={{onAction}} /></template>
     );
     await fillIn(".filter-input", "foo");
 
-    assert.strictEqual(this.value, "foo");
+    assert.strictEqual(value, "foo");
   });
 
   test("Focused state", async function (assert) {
@@ -92,18 +92,18 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
   });
 
   test("onClearInput callback", async function (assert) {
-    this.set("called", false);
-    this.set("clearAction", () => {
-      this.set("called", true);
-    });
+    let called = false;
+    const clearAction = () => {
+      called = true;
+    };
     await render(
       <template>
-        <DFilterInput @onClearInput={{this.clearAction}} @value="test" />
+        <DFilterInput @onClearInput={{clearAction}} @value="test" />
       </template>
     );
     await click(".filter-input-clear-btn");
 
-    assert.true(this.called);
+    assert.true(called);
   });
 
   test("Input focus after clear", async function (assert) {

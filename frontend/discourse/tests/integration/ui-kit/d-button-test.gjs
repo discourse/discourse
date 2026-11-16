@@ -218,53 +218,53 @@ module("Integration | ui-kit | DButton", function (hooks) {
   });
 
   test("onKeyDown callback", async function (assert) {
-    this.set("foo", null);
-    this.set("onKeyDown", () => {
-      this.set("foo", "bar");
-    });
-    this.set("action", () => {
-      this.set("foo", "baz");
-    });
+    let foo = null;
+    const onKeyDown = () => {
+      foo = "bar";
+    };
+    const onAction = () => {
+      foo = "baz";
+    };
 
     await render(
       <template>
-        <DButton @action={{this.action}} @onKeyDown={{this.onKeyDown}} />
+        <DButton @action={{onAction}} @onKeyDown={{onKeyDown}} />
       </template>
     );
 
     await triggerKeyEvent(".btn", "keydown", "Space");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
 
     await triggerKeyEvent(".btn", "keydown", "Enter");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
   });
 
   test("press Enter", async function (assert) {
-    this.set("foo", null);
-    this.set("action", () => {
-      this.set("foo", "bar");
-    });
+    let foo = null;
+    const onAction = () => {
+      foo = "bar";
+    };
 
-    await render(<template><DButton @action={{this.action}} /></template>);
+    await render(<template><DButton @action={{onAction}} /></template>);
 
     await triggerKeyEvent(".btn", "keydown", "Space");
-    assert.strictEqual(this.foo, null);
+    assert.strictEqual(foo, null);
 
     await triggerKeyEvent(".btn", "keydown", "Enter");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
   });
 
   test("@action function is triggered on click", async function (assert) {
-    this.set("foo", null);
-    this.set("action", () => {
-      this.set("foo", "bar");
-    });
+    let foo = null;
+    const onAction = () => {
+      foo = "bar";
+    };
 
-    await render(<template><DButton @action={{this.action}} /></template>);
+    await render(<template><DButton @action={{onAction}} /></template>);
 
     await click(".btn");
 
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
   });
 
   module("action dispatch", function (nestedHooks) {

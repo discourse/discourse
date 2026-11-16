@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { click, findAll, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -105,15 +106,15 @@ module(
     });
 
     test("create a tag", async function (assert) {
-      this.set("onChange", (value) => this.set("value", value));
-      this.set("value", [
+      const value = tracked([
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
       ]);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
         <template>
-          <MiniTagChooser @onChange={{this.onChange}} @value={{this.value}} />
+          <MiniTagChooser @onChange={{onChange}} @value={{value.value}} />
         </template>
       );
 
@@ -216,18 +217,18 @@ module(
     });
 
     test("required_tag_group", async function (assert) {
-      this.set("onChange", (value) => this.set("value", value));
-      this.set("value", [
+      const value = tracked([
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
       ]);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
         <template>
           <MiniTagChooser
-            @onChange={{this.onChange}}
+            @onChange={{onChange}}
             @options={{hash categoryId=1}}
-            @value={{this.value}}
+            @value={{value.value}}
           />
         </template>
       );
@@ -322,19 +323,19 @@ module(
     });
 
     test("displays tags and filter in header", async function (assert) {
-      this.set("onChange", (value) => this.set("value", value));
-      this.set("value", [
+      const value = tracked([
         { id: 10, name: "apple", slug: "apple" },
         { id: 11, name: "orange", slug: "orange" },
         { id: 12, name: "potato", slug: "potato" },
       ]);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
         <template>
           <MiniTagChooser
-            @onChange={{this.onChange}}
+            @onChange={{onChange}}
             @options={{hash filterable=true useHeaderFilter=true}}
-            @value={{this.value}}
+            @value={{value.value}}
           />
         </template>
       );
@@ -372,19 +373,19 @@ module(
     });
 
     test("removing a tag does not display the dropdown", async function (assert) {
-      this.set("onChange", (value) => this.set("value", value));
-      this.set("value", [
+      const value = tracked([
         { id: 10, name: "apple", slug: "apple" },
         { id: 11, name: "orange", slug: "orange" },
         { id: 12, name: "potato", slug: "potato" },
       ]);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
         <template>
           <MiniTagChooser
-            @onChange={{this.onChange}}
+            @onChange={{onChange}}
             @options={{hash filterable=true useHeaderFilter=true}}
-            @value={{this.value}}
+            @value={{value.value}}
           />
         </template>
       );

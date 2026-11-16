@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UserChooser from "discourse/select-kit/components/user-chooser";
@@ -20,12 +21,12 @@ module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   });
 
   test("can remove a username", async function (assert) {
-    this.set("onChange", (value) => this.set("value", value));
-    this.set("value", ["bob", "martin"]);
+    const value = tracked(["bob", "martin"]);
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
-        <UserChooser @onChange={{this.onChange}} @value={{this.value}} />
+        <UserChooser @onChange={{onChange}} @value={{value.value}} />
       </template>
     );
 
