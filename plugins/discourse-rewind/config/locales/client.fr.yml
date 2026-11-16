@@ -132,6 +132,10 @@ fr:
           message_4: "La longueur moyenne de vos messages était de <strong>%{length}</strong> caractères"
           message_5: "Vos canaux préférés :"
           dancing_baby_alt: "Bébé dansant"
+        live_usage:
+          minutes:
+            one: "%{count} minute"
+            other: "%{count} minutes"
         invites:
           guest_book_title: Livre d'or
           guest_book_subtitle: Invitations de votre communauté

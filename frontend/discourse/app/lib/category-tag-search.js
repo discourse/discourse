@@ -13,6 +13,12 @@ let cache = {};
 let cacheTime;
 let oldSearch;
 
+export function resetCategoryTagSearchCache() {
+  cache = {};
+  cacheTime = null;
+  oldSearch = null;
+}
+
 function updateCache(term, results) {
   cache[term] = results;
   cacheTime = new Date();

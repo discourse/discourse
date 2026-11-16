@@ -51,6 +51,10 @@ module("Unit | lib | discourse-workflows | parseReference", function () {
   test("parses the remaining dollar roots", function (assert) {
     assert.strictEqual(parseReference("$vars.api_key").source.type, "variable");
     assert.strictEqual(
+      parseReference("$workflow_vars.priority").source.type,
+      "workflow_variable"
+    );
+    assert.strictEqual(
       parseReference("$current_user.username").source.type,
       "current_user"
     );
@@ -116,6 +120,19 @@ module("Unit | lib | discourse-workflows | referenceLabel", function () {
     const itemIndex = referenceLabel(parseReference("$itemIndex"));
     assert.strictEqual(itemIndex.sourceType, "item_index");
     assert.strictEqual(itemIndex.icon, "hashtag");
+  });
+
+  test("labels $workflow_vars distinctly from $vars", function (assert) {
+    const globalVar = referenceLabel(parseReference("$vars.api_key"));
+    assert.strictEqual(globalVar.sourceType, "variable");
+    assert.strictEqual(globalVar.badge, "Variable");
+
+    const workflowVar = referenceLabel(
+      parseReference("$workflow_vars.priority")
+    );
+    assert.strictEqual(workflowVar.sourceType, "workflow_variable");
+    assert.strictEqual(workflowVar.badge, "Workflow variable");
+    assert.strictEqual(workflowVar.icon, "dollar-sign");
   });
 
   test("returns null for unparseable expressions", function (assert) {

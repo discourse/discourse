@@ -12,9 +12,16 @@ import { i18n } from "discourse-i18n";
 @tagName("")
 @selectKitPropUtils
 export default class SelectedChoice extends Component {
+  /** @type {unknown} */
   item = null;
+
+  /** @type {import("discourse/select-kit/components/select-kit").SelectKitState | null} */
   selectKit = null;
+
+  /** @type {string | null | undefined} */
   extraClass = null;
+
+  /** @type {string | null} */
   id = null;
 
   init() {

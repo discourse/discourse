@@ -4,17 +4,19 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 
 export default class List extends FilterComponent {
   <template>
-    <ComboBox
-      @content={{this.filter.choices}}
-      @onChange={{this.onChange}}
-      @options={{hash
-        allowAny=this.filter.allow_any
-        autoInsertNoneItem=this.filter.auto_insert_none_item
-        filterable=true
-        none="admin.dashboard.report_filter_any"
-        disabled=this.filter.disabled
-      }}
-      @value={{this.filter.default}}
-    />
+    <div ...attributes>
+      <ComboBox
+        @content={{@filter.choices}}
+        @onChange={{this.onChange}}
+        @options={{hash
+          allowAny=@filter.allow_any
+          autoInsertNoneItem=@filter.auto_insert_none_item
+          filterable=true
+          none="admin.dashboard.report_filter_any"
+          disabled=@filter.disabled
+        }}
+        @value={{@filter.default}}
+      />
+    </div>
   </template>
 }

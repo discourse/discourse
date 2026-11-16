@@ -23,10 +23,10 @@ RSpec.describe JsonApiKit::Record do
       attribute :username
     end
   end
-  let(:row) { JsonApiKit::Pagination::Row.new(record: topic, segment: nil) }
+  let(:row) { JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: topic, segment: nil) }
   let(:author_record) do
     described_class.new(
-      JsonApiKit::Pagination::Row.new(record: author, segment: nil),
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: author, segment: nil),
       users_resource.fields(guardian:),
       type: "users",
     )

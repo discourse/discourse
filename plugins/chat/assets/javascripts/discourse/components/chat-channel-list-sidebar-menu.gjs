@@ -14,8 +14,8 @@ import {
   CHAT_CHANNEL_LIST_FILTERS,
   CHAT_CHANNEL_LIST_SORTS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import ChatChannelListFilterMenu from "./chat-channel-list-filter-menu";
-import ChatChannelListSortMenu from "./chat-channel-list-sort-menu";
+import ChatChannelListFilterMenu from "./chat-channel-list-filter-menu.gjs";
+import ChatChannelListSortMenu from "./chat-channel-list-sort-menu.gjs";
 
 const FILTER_LABEL_KEYS = {
   [CHAT_CHANNEL_LIST_FILTERS.ALL]: "chat.channel_list.filter.all",

@@ -18,5 +18,10 @@ ro:
           author: Tu
           author_others: "%{username}"
           status_online: "● conectat"
+        live_usage:
+          minutes:
+            one: "%{count} minut"
+            few: "%{count} minute"
+            other: "%{count} de minute"
         writing_analysis:
           menu_other: Altele

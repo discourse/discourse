@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import AdminPluginsListItem from "./admin-plugins-list-item";
+import AdminPluginsListItem from "./admin-plugins-list-item.gjs";
 
 const AdminPluginsList = <template>
   <table class="d-table admin-plugins-list">

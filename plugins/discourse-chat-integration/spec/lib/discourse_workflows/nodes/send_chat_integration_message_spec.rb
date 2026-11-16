@@ -43,7 +43,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
     it "preserves the selected channel label for dynamic values", :aggregate_failures do
       schema = described_class.property_schema
 
-      expect(schema.dig(:channel_id, :ui, :dynamic_value)).to eq(:chat_channel_id)
+      expect(schema.dig(:channel_id, :ui, :dynamic_value)).to eq(:chat_integration_channel_id)
       expect(schema.dig(:channel_id, :control_options, :set_from_option)).to eq(
         channel_name: "name",
       )

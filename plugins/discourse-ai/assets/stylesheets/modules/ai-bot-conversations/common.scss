@@ -151,6 +151,17 @@ body.ai-bot-conversations-page {
     flex-direction: column;
     height: calc(100dvh - var(--header-offset) - 5em);
 
+    // Past conversations follow the input on the page, so it can't fill the
+    // screen
+    html.mobile-tab-bar-visible & {
+      height: auto;
+      padding-top: var(--space-6);
+
+      .ai-bot-conversations__title {
+        margin-top: 0;
+      }
+    }
+
     .agent-llm-selector {
       display: flex;
       gap: var(--space-4);
@@ -597,5 +608,106 @@ body.has-ai-conversations-sidebar {
 .user-navigation .user-nav__messages-ai-bot-chats {
   .d-icon.d-icon-discobot {
     font-size: var(--font-0);
+  }
+}
+
+// The history fills the screen between the input and the tab bar
+html.mobile-tab-bar-visible .ai-bot-conversations-index {
+  display: flex;
+  flex-direction: column;
+  height: calc(
+    100dvh - var(--header-offset) - var(--main-outlet-padding-top) - var(
+        --footer-nav-height
+      ) - env(safe-area-inset-bottom)
+  );
+  padding-bottom: var(--space-2);
+  box-sizing: border-box;
+}
+
+// As tall as its conversations, up to the room left above the tab bar
+.ai-bot-mobile-conversation-list {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: var(--space-4);
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius-large);
+  overflow: hidden;
+
+  // Nothing to list yet, and the input above already says what to do
+  &:has(.ai-bot-sidebar-empty-state):not(:has(.ai-conversation-sidebar__link)) {
+    display: none;
+  }
+
+  .sidebar-section:has(.ai-bot-sidebar-empty-state) {
+    display: none;
+  }
+
+  // Scrolls on its own, which is also what loads older conversations
+  .sidebar-panel-page {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0 0 var(--space-1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .sidebar-section-wrapper {
+    padding: 0;
+    border: 0;
+  }
+
+  // Dates label the conversations under them, quietly
+  .sidebar-section-header-wrapper {
+    height: auto;
+    padding: var(--space-3) var(--space-4) var(--space-1);
+  }
+
+  // The caret goes to the end, so the dates line up with the conversations
+  .sidebar-section-header {
+    width: 100%;
+    padding: 0;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  .sidebar-section-header-caret {
+    order: 1;
+    width: auto;
+    margin: 0 0 0 auto;
+
+    .d-icon {
+      color: var(--primary-low-mid);
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .sidebar-section-content {
+    margin: 0;
+  }
+
+  // Rows big enough to tap, set apart from each other
+  .sidebar-section-link-wrapper
+    + .sidebar-section-link-wrapper
+    .sidebar-section-link {
+    border-top: 1px solid var(--content-border-color);
+  }
+
+  // Lets long titles trim to the row rather than widen it
+  .sidebar-section-link {
+    min-width: 0;
+    height: auto;
+    min-height: 2.75rem;
+    margin: 0 var(--space-4);
+    padding: var(--space-2) 0;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: var(--primary);
+    font-size: var(--font-0);
+
+    &:active {
+      background: var(--d-hover);
+    }
   }
 }

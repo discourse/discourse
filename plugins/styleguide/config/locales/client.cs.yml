@@ -38,6 +38,12 @@ cs:
             delete: "Smazat"
         multi_select:
           title: "Vícenásobný výběr"
+        reorderable_list:
+          policies_pinned: "Připnuto"
+          policies_required: "Povinné"
+          table_field: "Pole"
+          table_type: "Typ"
+          cross_list_primary: "Primární"
         toasts:
           title: "Toasty"
         font_scale:

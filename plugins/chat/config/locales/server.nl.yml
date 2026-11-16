@@ -10,7 +10,6 @@ nl:
     chat_enabled: "Chat inschakelen."
     chat_pinned_messages: "Schakel vastgemaakte berichten in chatkanalen in."
     enable_public_channels: "Openbare kanalen inschakelen op basis van categorieën"
-    chat_channel_retention_days: "Chatberichten in reguliere kanalen worden dit aantal dagen bewaard. Stel dit in op '0' om berichten voor altijd te bewaren."
     chat_dm_retention_days: "Chatberichten in privéchatkanalen worden dit aantal dagen bewaard. Stel dit in op '0' om berichten voor altijd te bewaren."
     chat_auto_silence_duration: "Het aantal minuten dat gebruikers worden gedempt wanneer ze de limiet voor het maken van chatberichten overschrijden. Stel dit in op '0' om automatisch dempen uit te schakelen."
     chat_allowed_messages_for_trust_level_0: "Aantal berichten dat gebruikers met vertrouwensniveau 0 binnen 30 seconden mogen sturen. Stel dit in op '0' om de limiet uit te schakelen."
@@ -60,7 +59,17 @@ nl:
 
         Ga naar het kanaal op %{channel_url} om het opnieuw te proberen.
   chat:
+    design_wizard_homepage_name: "Chat"
     deleted_chat_username: verwijderd
+    crawler:
+      directory_title: "Chatkanalen"
+      nav_title: "Chat"
+      members_count:
+        one: "%{count} lid"
+        other: "%{count} leden"
+      thread_replies:
+        one: "%{count} antwoord"
+        other: "%{count} antwoorden"
     errors:
       users_cant_be_added_to_channel: "Gebruikers kunnen niet worden toegevoegd aan dit kanaal."
       user_cant_be_removed_from_channel: "Gebruiker kan niet uit dit kanaal worden verwijderd"

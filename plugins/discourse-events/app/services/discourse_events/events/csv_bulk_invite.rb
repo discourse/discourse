@@ -7,6 +7,7 @@ module DiscourseEvents
 
       params do
         attribute :event_id, :integer
+        attribute :recurring, :boolean, default: false
         # Declared only so the steps can read it; the contract drops any
         # undeclared parameter.
         attribute :file
@@ -44,11 +45,12 @@ module DiscourseEvents
         Action::ParseInviteesCsv.call(file: params.file)
       end
 
-      def enqueue_bulk_invite(event:, invitees:, guardian:)
+      def enqueue_bulk_invite(event:, invitees:, guardian:, params:)
         Jobs.enqueue(
           :discourse_post_event_bulk_invite,
           event_id: event.id,
           invitees: invitees,
+          recurring: params.recurring,
           current_user_id: guardian.user.id,
         )
       end

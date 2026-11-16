@@ -42,6 +42,8 @@ sr:
           status:
             private:
               title: "Privatna"
+      recording_modal:
+        save: "Sačuvaj"
       composer:
         reminder:
           units:

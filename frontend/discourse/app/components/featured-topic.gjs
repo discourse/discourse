@@ -1,30 +1,24 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
-import Component from "@ember/component";
 import { trustHTML } from "@ember/template";
-import {
-  attributeBindings,
-  classNameBindings,
-} from "@ember-decorators/component";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
-import TopicStatus from "./topic-status";
+import TopicStatus from "./topic-status.gjs";
 
-@classNameBindings(":featured-topic")
-@attributeBindings("topic.id:data-topic-id")
-export default class FeaturedTopic extends Component {
-  <template>
-    <TopicStatus @disableActions={{true}} @topic={{this.topic}} />
-    <a class="title" href={{this.topic.lastUnreadUrl}}>{{trustHTML
-        this.topic.fancyTitle
+const FeaturedTopic = <template>
+  <div class="featured-topic" ...attributes data-topic-id={{@topic.id}}>
+    <TopicStatus @disableActions={{true}} @topic={{@topic}} />
+    <a class="title" href={{@topic.lastUnreadUrl}}>{{trustHTML
+        @topic.fancyTitle
       }}</a>
     <TopicPostBadges
-      @unreadPosts={{this.topic.unread_posts}}
-      @unseen={{this.topic.unseen}}
-      @url={{this.topic.lastUnreadUrl}}
+      @unreadPosts={{@topic.unread_posts}}
+      @unseen={{@topic.unseen}}
+      @url={{@topic.lastUnreadUrl}}
     />
 
-    <a class="last-posted-at" href={{this.topic.lastPostUrl}}>{{dAgeWithTooltip
-        this.topic.last_posted_at
+    <a class="last-posted-at" href={{@topic.lastPostUrl}}>{{dAgeWithTooltip
+        @topic.last_posted_at
       }}</a>
-  </template>
-}
+  </div>
+</template>;
+
+export default FeaturedTopic;

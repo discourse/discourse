@@ -24,14 +24,6 @@ async function scrollTo(top) {
   await triggerEvent(element, "scroll");
 }
 
-class Config {
-  @tracked threshold;
-
-  constructor(threshold) {
-    this.threshold = threshold;
-  }
-}
-
 // Supplemental regression coverage for a review finding NOT pinned by the
 // decorrelated oracle (edges-test.gjs): a runtime change to
 // @edgeThreshold must re-arm the edge latches. Kept in a separate file so the
@@ -55,7 +47,7 @@ module(
       const onReachEnd = (range) => calls.push(range);
       // A wide threshold makes the top of the list already sit in the end band
       // (endBand = 99 - 90 = 9), so mount fires once and latches the end edge.
-      const config = new Config(90);
+      const threshold = tracked(90);
 
       await render(
         <template>
@@ -67,7 +59,7 @@ module(
             }
           </style>
           <DVirtualList
-            @edgeThreshold={{config.threshold}}
+            @edgeThreshold={{threshold.value}}
             @estimateSize={{estimate}}
             @items={{items}}
             @onReachEnd={{onReachEnd}}
@@ -87,7 +79,7 @@ module(
       // The visible range does not move, but the end band narrows to the last
       // eight rows. The narrowed threshold must re-arm the latch even though no
       // scroll (and so no rendering-signature change) accompanies it.
-      config.threshold = 8;
+      threshold.value = 8;
       await settled();
 
       // Jump straight to the true end, past any range that would have re-armed
@@ -109,7 +101,7 @@ module(
       const items = buildRows(100);
       const calls = [];
       const onReachEnd = (range) => calls.push(range);
-      const config = new Config(NaN);
+      const threshold = tracked(NaN);
 
       await render(
         <template>
@@ -121,7 +113,7 @@ module(
             }
           </style>
           <DVirtualList
-            @edgeThreshold={{config.threshold}}
+            @edgeThreshold={{threshold.value}}
             @estimateSize={{estimate}}
             @items={{items}}
             @onReachEnd={{onReachEnd}}
@@ -151,7 +143,7 @@ module(
       const items = buildRows(100);
       const calls = [];
       const onReachEnd = (range) => calls.push(range);
-      const config = new Config(-5);
+      const threshold = tracked(-5);
 
       await render(
         <template>
@@ -163,7 +155,7 @@ module(
             }
           </style>
           <DVirtualList
-            @edgeThreshold={{config.threshold}}
+            @edgeThreshold={{threshold.value}}
             @estimateSize={{estimate}}
             @items={{items}}
             @onReachEnd={{onReachEnd}}

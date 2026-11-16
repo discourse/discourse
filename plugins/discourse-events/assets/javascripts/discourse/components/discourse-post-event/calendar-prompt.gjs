@@ -7,7 +7,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import addEventToCalendar from "../../lib/add-event-to-calendar";
+import addEventToCalendar from "../../lib/add-event-to-calendar.js";
 
 export default class CalendarPrompt extends Component {
   @service currentUser;

@@ -19,11 +19,11 @@ import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { clipboardCopy } from "discourse/lib/utilities";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq, not, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -132,6 +132,7 @@ export default class AdminMcp extends Component {
     primitiveRisk: "all",
     primitiveState: "all",
   };
+  primitiveFormData;
   clientFilterFormData = { clientFilter: "" };
   authorizationFilterFormData = { authorizationFilter: "" };
   activityFilterFormData = {
@@ -158,6 +159,10 @@ export default class AdminMcp extends Component {
       };
     }
     this.primitiveRecords = model.primitives;
+    this.primitiveFormData = this.primitives.reduce((data, primitive) => {
+      data[this.primitiveFieldName(primitive)] = Boolean(primitive.enabled);
+      return data;
+    }, {});
     this.primitiveEnabledStates = new Map(
       (model.primitives || []).map((primitive) => [
         primitive.id,
@@ -189,10 +194,16 @@ export default class AdminMcp extends Component {
   }
 
   get groupOptions() {
-    return (this.site.groups || []).map((group) => ({
-      id: group.id.toString(),
-      name: group.name,
-    }));
+    return (this.site.groups || [])
+      .filter(
+        (group) =>
+          group.id !== AUTO_GROUPS.anonymous_users.id &&
+          group.id !== AUTO_GROUPS.everyone.id
+      )
+      .map((group) => ({
+        id: group.id.toString(),
+        name: group.name,
+      }));
   }
 
   get primitives() {
@@ -385,13 +396,6 @@ export default class AdminMcp extends Component {
 
   get newClientFormData() {
     return { ...CLIENT_PRESETS[this.selectedClientPresetId] };
-  }
-
-  get primitiveFormData() {
-    return this.primitives.reduce((data, primitive) => {
-      data[this.primitiveFieldName(primitive)] = Boolean(primitive.enabled);
-      return data;
-    }, {});
   }
 
   get hasPrimitiveChanges() {
@@ -2026,7 +2030,7 @@ export default class AdminMcp extends Component {
                       authorization.status
                     }}</span></td>
                 <td class="d-table__cell --controls">{{#if
-                    (notEq authorization.status "revoked")
+                    (neq authorization.status "revoked")
                   }}<DButton
                       class="btn-small btn-danger"
                       @action={{fn this.revokeAuthorization authorization}}

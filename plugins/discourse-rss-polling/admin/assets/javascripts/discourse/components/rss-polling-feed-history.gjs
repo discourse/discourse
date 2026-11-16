@@ -4,7 +4,6 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";

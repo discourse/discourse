@@ -1,4 +1,4 @@
-import { attrs, withDefaults } from "./helpers";
+import { attrs, withDefaults } from "./helpers.js";
 
 // Sub-resource owned by a Topic; identity = parent topic's id. Ships embedded
 // in the topic-view payload, not fetched standalone.

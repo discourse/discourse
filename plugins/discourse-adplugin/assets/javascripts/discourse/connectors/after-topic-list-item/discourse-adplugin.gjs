@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { slotContenders } from "discourse/plugins/discourse-adplugin/discourse/components/ad-slot";
-import AdSlot from "../../components/ad-slot";
+import AdSlot from "../../components/ad-slot.gjs";
 
 export default class DiscourseAdplugin extends Component {
   static shouldRender(args, context) {

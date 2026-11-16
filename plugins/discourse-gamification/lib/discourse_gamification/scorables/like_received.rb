@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 module DiscourseGamification
   class LikeReceived < Scorable
+    def self.supports_category_scoping?
+      true
+    end
+
     def self.category_filter(leaderboard: nil)
       return "" if scorable_category_list(leaderboard:).empty?
 

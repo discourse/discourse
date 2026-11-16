@@ -33,6 +33,10 @@ de:
         remove: "Entferne dieses „Gefällt mir“"
         cant_remove: "Du kannst dein „Gefällt mir“ nicht mehr entfernen"
         unauthenticated: "Bitte registriere dich oder melde dich an, um diesem Beitrag ein „Gefällt mir“ zu geben"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Hinzugefügt"
+        changes_removed: "Entfernt"
     notifications:
       reaction_1_user_multiple_posts:
         one: "reagierte auf %{count} deiner Beiträge"

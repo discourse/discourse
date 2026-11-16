@@ -33,6 +33,10 @@ tr_TR:
         remove: "Bu beğeniyi kaldır"
         cant_remove: "Artık beğeninizi kaldıramazsınız"
         unauthenticated: "Bu gönderiyi beğenmek için lütfen kaydolun veya giriş yapın"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Eklendi"
+        changes_removed: "Kaldırıldı"
     notifications:
       reaction_1_user_multiple_posts:
         one: "%{count} gönderinize tepki verdi"

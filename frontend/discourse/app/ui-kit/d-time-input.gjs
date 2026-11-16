@@ -54,8 +54,13 @@ function convertMinutesToDurationString(n) {
 
 @tagName("")
 export default class DTimeInput extends Component {
+  /** @type {number | string | null | undefined} */
   hours = null;
+
+  /** @type {number | string | null | undefined} */
   minutes = null;
+
+  /** @type {import("moment").Moment | null | undefined} */
   relativeDate = null;
 
   @computed("relativeDate", "date")

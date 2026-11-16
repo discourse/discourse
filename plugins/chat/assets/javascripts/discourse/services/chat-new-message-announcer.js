@@ -2,8 +2,12 @@ import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
 import { i18n } from "discourse-i18n";
+import {
+  chatAlertPlayed,
+  confirmChatAlert,
+} from "discourse/plugins/chat/discourse/lib/chat-alert-dedup";
 import { messageAnnouncementText } from "discourse/plugins/chat/discourse/lib/chat-message-announcement";
-import { DEFAULT_SOUND_NAME } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
+import { defaultChatSoundName } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
 // a burst is summarized rather than overwriting the shared live region message by message
 const ANNOUNCEMENT_INTERVAL_MS = 1000;
@@ -35,7 +39,7 @@ export default class ChatNewMessageAnnouncer extends Service {
     }
 
     this.#maybeAnnounce(message, visible);
-    this.#maybePlaySound(active);
+    this.#maybePlaySound(message, active);
   }
 
   #maybeAnnounce(message, visible) {
@@ -72,7 +76,7 @@ export default class ChatNewMessageAnnouncer extends Service {
     this.a11y.announce(announcement, "polite");
   }
 
-  #maybePlaySound(active) {
+  async #maybePlaySound(message, active) {
     if (
       !active ||
       !this.currentUser?.user_option?.chat_new_message_sound ||
@@ -85,11 +89,24 @@ export default class ChatNewMessageAnnouncer extends Service {
     if (now - this.#lastMessageSoundAt < NEW_MESSAGE_SOUND_INTERVAL_MS) {
       return;
     }
+
+    // opening a channel replays messages that arrived while it was closed,
+    // which may already have played as a background alert
+    if (chatAlertPlayed(message.id)) {
+      return;
+    }
+
     this.#lastMessageSoundAt = now;
 
     // fall back to the default when no sound is selected.
-    const sound = this.currentUser.chat_sound || DEFAULT_SOUND_NAME;
+    const sound = this.currentUser.chat_sound || defaultChatSoundName();
     // throttle false so this doesn't consume the shared chat-audio throttle
-    this.chatAudioManager.play(sound, { throttle: false });
+    const handled = await this.chatAudioManager.play(sound, {
+      throttle: false,
+    });
+
+    if (handled) {
+      confirmChatAlert(message.id);
+    }
   }
 }

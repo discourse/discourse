@@ -31,11 +31,23 @@ export default class MediaOptimizationWorkerService extends Service {
   @service currentUser;
   @service siteSettings;
 
+  /** @type {Worker | null} */
   worker = null;
+
+  /** @type {import("@uppy/core").UppyFile<import("@uppy/core").Meta, import("@uppy/core").Body> | null} */
   currentComposerUploadData = null;
+
+  /** @type {Record<string, (file?: File) => void> | null} */
   promiseResolvers = null;
   workerDoneCount = 0;
   workerPendingCount = 0;
+
+  #stopOnComposerClose = false;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.stopWorker();
+  }
 
   async optimizeImage(data, opts = {}) {
     this.promiseResolvers = this.promiseResolvers || {};
@@ -97,6 +109,7 @@ export default class MediaOptimizationWorkerService extends Service {
 
       this.currentComposerUploadData = data;
       this.promiseResolvers[file.id] = resolve;
+      this.workerPendingCount++;
 
       const settings = {
         resize_threshold:
@@ -122,8 +135,18 @@ export default class MediaOptimizationWorkerService extends Service {
       try {
         arrayBuffer = await file.data.arrayBuffer();
       } catch (error) {
+        if (this.promiseResolvers[file.id] !== resolve) {
+          return;
+        }
+
         this.logIfDebug(error);
-        return resolve();
+        this.workerPendingCount--;
+        return this.#settle(file.id);
+      }
+
+      // The worker may have been stopped, or this file cancelled, while reading it
+      if (this.promiseResolvers[file.id] !== resolve) {
+        return;
       }
 
       if (isConvertFormat || isOptimizable) {
@@ -152,8 +175,6 @@ export default class MediaOptimizationWorkerService extends Service {
           [arrayBuffer]
         );
       }
-
-      this.workerPendingCount++;
     });
   }
 
@@ -184,18 +205,37 @@ export default class MediaOptimizationWorkerService extends Service {
     }
     this.registerMessageHandler();
     this.worker.onerror = (err) => this.handleWorkerError(err);
-    this.appEvents.on("composer:closed", this, "stopWorker");
+
+    if (!this.#stopOnComposerClose) {
+      this.#stopOnComposerClose = true;
+      this.appEvents.on("composer:closed", this, "stopWorker");
+    }
   }
 
   handleWorkerError(err) {
     this.logIfDebug("media-optimization-worker error", err);
     this.stopWorker();
-    // Resolve any in-flight optimizations so their uploads continue unoptimized.
-    Object.values(this.promiseResolvers ?? {}).forEach((resolve) =>
-      resolve?.()
-    );
   }
 
+  /**
+   * Stops waiting on a file, e.g. because its upload was cancelled. With nothing
+   * else pending the worker is replaced, so a retry doesn't queue behind a job
+   * that may be stuck.
+   */
+  cancel(fileId) {
+    if (!this.promiseResolvers?.[fileId]) {
+      return;
+    }
+
+    this.#settle(fileId);
+    this.workerPendingCount = Math.max(this.workerPendingCount - 1, 0);
+
+    if (this.workerPendingCount === 0) {
+      this.stopWorker();
+    }
+  }
+
+  // Also settles any in-flight optimizations, so their uploads continue unoptimized.
   stopWorker() {
     if (this.worker) {
       this.logIfDebug("Stopping media-optimization-worker...");
@@ -204,10 +244,18 @@ export default class MediaOptimizationWorkerService extends Service {
       this.workerDoneCount = 0;
     }
     this.workerPendingCount = 0;
+
+    Object.keys(this.promiseResolvers ?? {}).forEach((fileId) =>
+      this.#settle(fileId)
+    );
   }
 
   registerMessageHandler() {
     this.worker.onmessage = (workerMessage) => {
+      if (!this.promiseResolvers?.[workerMessage.data.fileId]) {
+        return;
+      }
+
       switch (workerMessage.data.type) {
         case "file":
           const outputType = workerMessage.data.outputType;
@@ -228,13 +276,13 @@ export default class MediaOptimizationWorkerService extends Service {
               `Finished optimization of ${optimizedFile.name}, new size is ${optimizedFile.size} bytes`
             );
 
-            this.promiseResolvers[workerMessage.data.fileId](optimizedFile);
+            this.#settle(workerMessage.data.fileId, optimizedFile);
           } else {
             this.logIfDebug(
               `Optimizing ${workerMessage.data.fileName} would produce ${outputFileName}, which is not an authorized extension here; keeping the original`
             );
 
-            this.promiseResolvers[workerMessage.data.fileId]();
+            this.#settle(workerMessage.data.fileId);
           }
 
           this.workerDoneCount++;
@@ -250,19 +298,18 @@ export default class MediaOptimizationWorkerService extends Service {
             `Handling error message from image optimization for ${workerMessage.data.fileName}`
           );
 
+          this.workerPendingCount--;
+          this.#settle(workerMessage.data.fileId);
           if (this.stopWorkerOnError) {
             this.stopWorker();
           }
-
-          this.promiseResolvers[workerMessage.data.fileId]();
-          this.workerPendingCount--;
           break;
         case "skipped":
           this.logIfDebug(
             `Conversion skipped for ${workerMessage.data.fileName}, keeping the original`
           );
 
-          this.promiseResolvers[workerMessage.data.fileId]();
+          this.#settle(workerMessage.data.fileId);
           this.workerDoneCount++;
           this.workerPendingCount--;
           break;
@@ -277,6 +324,11 @@ export default class MediaOptimizationWorkerService extends Service {
       // eslint-disable-next-line no-console
       console.log("[media-optimization-worker]", ...messages);
     }
+  }
+
+  #settle(fileId, optimizedFile) {
+    this.promiseResolvers?.[fileId]?.(optimizedFile);
+    delete this.promiseResolvers?.[fileId];
   }
 
   _renameForOutputType(fileName, outputType) {

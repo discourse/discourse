@@ -104,6 +104,52 @@ RSpec.describe Reviewable, type: :model do
       expect(r1.pending?).to eq(true)
     end
 
+    it "triggers one transition to pending once the re-opening score is added" do
+      ReviewableUser.needs_review!(target: user, created_by: admin).transition_to(:approved, admin)
+
+      events =
+        DiscourseEvent.track_events do
+          2.times do
+            ReviewableUser.needs_review!(target: user, created_by: admin).add_score(
+              admin,
+              ReviewableScore.types[:needs_approval],
+            )
+          end
+        end
+
+      expect(events.map { |event| event[:event_name] }).to eq(
+        %i[reviewable_transitioned_to reviewable_score_updated],
+      )
+      expect(events.first[:params]).to eq([:pending, Reviewable.find_by(target: user)])
+    end
+
+    it "does not trigger a transition to pending when the re-opening score takes action" do
+      ReviewableUser.needs_review!(target: user, created_by: admin).transition_to(:approved, admin)
+
+      events =
+        DiscourseEvent.track_events(:reviewable_transitioned_to) do
+          ReviewableUser.needs_review!(target: user, created_by: admin).add_score(
+            admin,
+            ReviewableScore.types[:needs_approval],
+            take_action: true,
+          )
+        end
+
+      expect(events).to be_empty
+    end
+
+    it "saves the score added after re-opening an ignored reviewable" do
+      post = Fabricate(:post)
+      reviewable = ReviewableFlaggedPost.needs_review!(target: post, created_by: admin)
+      reviewable.add_score(user, PostActionType.types[:off_topic])
+      reviewable.transition_to(:ignored, admin)
+
+      reopened = ReviewableFlaggedPost.needs_review!(target: post, created_by: admin)
+      reviewable_score = reopened.add_score(user, PostActionType.types[:off_topic])
+
+      expect(reopened.reload.score).to eq(reviewable_score.score)
+    end
+
     it "preserves an approved queued reviewable when reusing the target's flagged reviewable" do
       r0 = Fabricate(:reviewable_queued_post)
       r0.perform(admin, :approve_post)
@@ -142,28 +188,30 @@ RSpec.describe Reviewable, type: :model do
       expect(described_class.viewable_by(admin)).to exist(id: reviewable.id)
     end
 
-    it "includes flagged private messages for moderators outside the conversation" do
+    it "includes every reviewable on a flagged private message for moderators outside the conversation" do
       flagged_reviewable =
         Fabricate(:reviewable_flagged_post, target: pm_post, topic: pm_topic, category: nil)
 
       expect(described_class.viewable_by(outsider_moderator)).to exist(id: flagged_reviewable.id)
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: reviewable.id)
     end
 
-    it "includes private-message reviewables for participating moderators" do
-      participant_moderator = Fabricate(:moderator)
-      participant_topic =
-        Fabricate(:private_message_topic, user: pm_author, recipient: participant_moderator)
-      participant_post = Fabricate(:post, topic: participant_topic, user: pm_author)
-      participant_reviewable =
-        ReviewablePost.needs_review!(
-          target: participant_post,
-          created_by: Discourse.system_user,
-          reviewable_by_moderator: true,
-        )
+    it "includes private-message reviewables for moderators allowed in the conversation" do
+      pm_topic.topic_allowed_users.create!(user: outsider_moderator)
 
-      expect(described_class.viewable_by(participant_moderator)).to exist(
-        id: participant_reviewable.id,
-      )
+      expect(described_class.viewable_by(outsider_moderator)).to exist(id: reviewable.id)
+    end
+
+    it "excludes queued replies to private messages from moderators outside the conversation" do
+      queued_reply = Fabricate(:reviewable_queued_post, topic: pm_topic, category: nil)
+
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: queued_reply.id)
+    end
+
+    it "excludes hidden private-message targets when the reviewable has no topic" do
+      reviewable.update_columns(topic_id: nil)
+
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: reviewable.id)
     end
   end
 
@@ -358,6 +406,14 @@ RSpec.describe Reviewable, type: :model do
 
           it "includes queued posts when searching for pending reviewables" do
             expect(Reviewable.list_for(user)).to contain_exactly(queued_post, queued_user)
+          end
+
+          it "includes resolved queued posts and users when filtering by their status" do
+            queued_post.update!(status: :approved)
+            queued_user.update!(status: :rejected)
+
+            expect(Reviewable.list_for(user, status: :approved)).to contain_exactly(queued_post)
+            expect(Reviewable.list_for(user, status: :rejected)).to contain_exactly(queued_user)
           end
 
           it "excludes pending queued posts when applying a different status filter" do
@@ -592,6 +648,7 @@ RSpec.describe Reviewable, type: :model do
       expect(event).to be_present
       expect(event[:params][0]).to eq(:approved)
       expect(event[:params][1]).to eq(reviewable)
+      expect(event[:params][2]).to eq(acting_user: moderator)
     end
   end
 
@@ -613,6 +670,70 @@ RSpec.describe Reviewable, type: :model do
   describe "#perform" do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
+
+    context "with DSA classification" do
+      fab!(:admin)
+      fab!(:post)
+
+      fab!(:reviewable) do
+        Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user)
+      end
+
+      let(:classification) do
+        {
+          community_rule: {
+            "ground" => "Be respectful",
+            "explanation" => "Personal attacks are not allowed.",
+          },
+          category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+        }
+      end
+
+      before { enable_dsa_reporting }
+
+      it "classifies the moderation decision and records the acting staff member in its note" do
+        result = reviewable.perform(admin, :delete_and_agree, dsa_classification: classification)
+
+        expect(result).to be_success
+        expect(reviewable.reload).to be_approved
+        expect(post.reload).to be_trashed
+        expect(reviewable.dsa_statement_of_records.sole).to have_attributes(
+          status: "ready",
+          classified_by_id: admin.id,
+          payload:
+            include(
+              "incompatible_content_ground" => classification[:community_rule]["ground"],
+              "incompatible_content_explanation" => classification[:community_rule]["explanation"],
+              "category" => classification[:category],
+            ),
+        )
+        expect(reviewable.reviewable_notes.sole).to have_attributes(
+          user: admin,
+          content: <<~TEXT.chomp,
+            Classified this moderation decision for DSA reporting.
+            Community rule: Be respectful
+            Category: Other violation of terms and conditions
+          TEXT
+        )
+      end
+
+      it "rolls back moderation and classification when the classification note cannot be saved" do
+        TranslationOverride.upsert!(
+          "en",
+          "dsa_statements.classification_note",
+          "x" * (ReviewableNote::MAX_CONTENT_LENGTH + 1),
+        )
+
+        expect {
+          reviewable.perform(admin, :delete_and_agree, dsa_classification: classification)
+        }.to raise_error(ActiveRecord::RecordInvalid)
+
+        expect(reviewable.reload).to be_pending
+        expect(post.reload).not_to be_trashed
+        expect(reviewable.dsa_statement_of_records).to be_empty
+        expect(reviewable.reviewable_notes).to be_empty
+      end
+    end
 
     it "hides actions and denies execution for an inaccessible target" do
       reviewable = Fabricate(:reviewable_flagged_post)
@@ -1075,13 +1196,36 @@ RSpec.describe Reviewable, type: :model do
 
       expect(Reviewable.by_status(Reviewable.all, :reviewed)).to contain_exactly(reviewable)
     end
+
+    it "groups resolved reviewables by whether a problem was confirmed, whatever their type" do
+      agreed_flag = Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[:approved])
+      disagreed_flag = Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[:rejected])
+      approved_post = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
+      rejected_post = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
+      approved_user = Fabricate(:reviewable_user, status: Reviewable.statuses[:approved])
+      rejected_user = Fabricate(:reviewable_user, status: Reviewable.statuses[:rejected])
+      Fabricate(:reviewable_flagged_post, status: Reviewable.statuses[:ignored])
+
+      expect(Reviewable.by_status(Reviewable.all, :problem_confirmed)).to contain_exactly(
+        agreed_flag,
+        rejected_post,
+        rejected_user,
+      )
+      expect(Reviewable.by_status(Reviewable.all, :no_problem_found)).to contain_exactly(
+        disagreed_flag,
+        approved_post,
+        approved_user,
+      )
+    end
   end
 
   describe "#actions_for" do
     fab!(:reviewable, :reviewable_queued_post)
     fab!(:user)
 
-    it "gets the bundles and actions for a reviewable" do
+    it "gets the bundles and actions for a reviewable without consistent answers" do
+      SiteSetting.review_queue_consistent_answers = false
+
       actions = reviewable.actions_for(user.guardian)
       expect(actions.bundles.map(&:id)).to eq(
         ["#{reviewable.id}-approve_post", "#{reviewable.id}-reject-post"],
@@ -1092,6 +1236,20 @@ RSpec.describe Reviewable, type: :model do
       expect(
         actions.bundles.find { |b| b.bundle_id == "reject-post" }.actions.map(&:action_name),
       ).to eq(%w[reject_post revise_and_reject_post])
+    end
+
+    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+
+      actions = reviewable.actions_for(user.guardian)
+
+      expect(actions.bundles.map(&:id)).to eq(
+        ["#{reviewable.id}-reject-post", "#{reviewable.id}-approve_post"],
+      )
+      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(actions.bundles.last.actions.map(&:label)).to eq(
+        ["reviewables.actions.answer_no.title"],
+      )
     end
 
     describe "handling empty bundles" do

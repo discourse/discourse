@@ -23,6 +23,24 @@ describe AdPlugin::HouseAdsController do
     context "when used by admins" do
       before { sign_in(admin) }
 
+      it "creates an ad targeted to a route" do
+        post "/admin/plugins/pluginad/house_creatives.json",
+             params: {
+               name: "Latest ad",
+               html: "<p>Latest discussions</p>",
+               visible_to_anons: "true",
+               visible_to_logged_in_users: "true",
+               routes: ["discovery.latest"],
+             }
+
+        expect(response.status).to eq(200)
+        house_ad_response = response.parsed_body["house_ad"]
+        expect(house_ad_response["routes"]).to eq(["discovery.latest"])
+        expect(AdPlugin::HouseAd.find(house_ad_response["id"]).route_names).to eq(
+          ["discovery.latest"],
+        )
+      end
+
       it "strips script tags from html on create" do
         post "/admin/plugins/pluginad/house_creatives.json",
              params: {

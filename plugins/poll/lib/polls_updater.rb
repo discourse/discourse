@@ -174,15 +174,7 @@ module DiscoursePoll
     end
 
     def self.publish_changes(post)
-      polls = ::Poll.includes(:closed_by, poll_options: :poll_votes).where(post: post)
-      polls =
-        ActiveModel::ArraySerializer.new(
-          polls,
-          each_serializer: PollSerializer,
-          root: false,
-          scope: Guardian.new(nil),
-        ).as_json
-      post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
+      post.publish_poll_message!
     end
 
     def self.is_different?(old_poll, new_poll, new_options)

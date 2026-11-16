@@ -1,5 +1,4 @@
 import { on } from "@ember/modifier";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 module SiteSettingsHelpers
+  def enable_dsa_reporting(
+    community_rules: [
+      { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+    ]
+  )
+    SiteSetting.dsa_community_rules = community_rules.to_json
+    SiteSetting.dsa_reporting_enabled = true
+  end
+
   def new_settings(provider)
     Class.new do
       extend SiteSettingExtension

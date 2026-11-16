@@ -8,12 +8,8 @@ gl:
   js:
     explorer:
       or: "ou"
-      create: "Crear"
       ai:
         generate: "Xerar"
-        optional: "opcional"
-      import:
-        label: "Importar"
       help:
         label: "Axuda"
       schema:
@@ -27,12 +23,12 @@ gl:
         form:
           label: "Tipo de gráfica"
           bar: "Barra"
+      name: "Nome"
       query_groups: "Grupos"
       query_tags: "Etiquetas"
       query_description: "Descrición"
       query_user: "Creado por"
       reset_params: "Restabelecer"
-      search_placeholder: "Buscar..."
     group:
       reports: "Informes"
     discourse_workflows:

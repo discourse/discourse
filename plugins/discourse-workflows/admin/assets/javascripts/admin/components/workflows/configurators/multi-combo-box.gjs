@@ -10,8 +10,8 @@ import {
   normalizeOptions,
   propertyOptionLabel,
   propertySelectNoneKey,
-} from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+} from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export class DynamicOptionsMultiSelect extends MultiSelect {
   search(filter) {

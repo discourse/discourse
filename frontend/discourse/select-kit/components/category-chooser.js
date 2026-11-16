@@ -9,7 +9,7 @@ import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import SelectKitRow from "discourse/select-kit/components/select-kit/select-kit-row";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
 
 @classNames("category-chooser")
 @selectKitOptions({

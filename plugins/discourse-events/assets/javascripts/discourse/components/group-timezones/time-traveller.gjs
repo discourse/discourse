@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import roundTime from "../../lib/round-time";
+import roundTime from "../../lib/round-time.js";
 
 export default class TimeTraveller extends Component {
   get localTimeWithOffset() {

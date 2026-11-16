@@ -8,8 +8,8 @@ import {
   isExpression,
   propertyDescription,
   propertyLabel,
-} from "../../../lib/workflows/property-engine";
-import Field from "./field";
+} from "../../../lib/workflows/property-engine.js";
+import Field from "./field.gjs";
 
 const ASSIGNMENT_TYPE_LABEL_KEY_PREFIX =
   "discourse_workflows.property_engine.assignment_types";

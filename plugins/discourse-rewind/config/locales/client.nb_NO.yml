@@ -17,5 +17,9 @@ nb_NO:
         chat_usage:
           author: Du
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} minutt"
+            other: "%{count} minutter"
         writing_analysis:
           menu_other: Annet

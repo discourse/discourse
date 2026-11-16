@@ -70,7 +70,11 @@ module DiscourseWorkflows
                        root: false,
                      ),
                    meta: {
-                     message_bus_last_id: message_bus_last_id,
+                     message_bus_last_id:
+                       DiscourseWorkflows::ExecutionProgressPublisher.subscription_start_id(
+                         execution,
+                         message_bus_last_id,
+                       ),
                    },
                  }
         end

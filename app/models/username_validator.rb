@@ -28,9 +28,12 @@ class UsernameValidator
     end
   end
 
-  def initialize(username, skip_length_validation: false, object: nil)
+  WATCHED_WORD_ACTIONS = %i[block censor require_approval flag silence].freeze
+
+  def initialize(username, skip_length_validation: false, skip_watched_words: false, object: nil)
     @username = username&.unicode_normalize
     @skip_length_validation = skip_length_validation
+    @skip_watched_words = skip_watched_words
     @object = object
     @errors = []
   end
@@ -39,6 +42,7 @@ class UsernameValidator
   attr_reader :username
   attr_reader :object
   attr_reader :skip_length_validation
+  attr_reader :skip_watched_words
 
   def valid_format?
     username_present?
@@ -50,6 +54,7 @@ class UsernameValidator
     username_last_char_valid?
     username_no_double_special?
     username_does_not_end_with_confusing_suffix?
+    username_not_watched_word? if !skip_watched_words
     username_plugin_validation
     errors.empty?
   end
@@ -162,6 +167,19 @@ class UsernameValidator
     if CONFUSING_EXTENSIONS.match?(username)
       errors << I18n.t(:"user.username.must_not_end_with_confusing_suffix")
     end
+  end
+
+  def username_not_watched_word?
+    return unless errors.empty?
+
+    matches = WordWatcher.new(username).word_matches_across_actions(WATCHED_WORD_ACTIONS)
+    return if matches.blank?
+
+    errors << I18n.t(
+      :"user.username.contains_blocked_words",
+      count: matches.size,
+      words: matches.join(", "),
+    )
   end
 
   def username_plugin_validation

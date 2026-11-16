@@ -19,6 +19,7 @@ try {
 }
 
 export default class KeyValueStore {
+  /** @type {string | null | undefined} */
   context = null;
 
   constructor(ctx) {

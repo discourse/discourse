@@ -18,7 +18,5 @@ zh_TW:
     discourse_captcha_provider: "選擇 CAPTCHA 服務供應商。你必須擁有所選服務供應商的帳戶。"
     hcaptcha_site_key: "來自你的 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帳戶的 hCaptcha 網站金鑰"
     hcaptcha_secret_key: "來自你的 <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> 帳戶的 hCaptcha 密鑰"
-    recaptcha_site_key: "來自你的 <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帳戶的 reCAPTCHA 網站金鑰"
-    recaptcha_secret_key: "來自你的 <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> 帳戶的 reCAPTCHA 密鑰"
   captcha_verification_failed: "CAPTCHA 驗證失敗"
   captcha_not_configured: "CAPTCHA 已啟用，但未正確設定。請聯絡網站管理員。"

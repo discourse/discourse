@@ -21,6 +21,7 @@ import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 )
 @selectKitPropUtils
 export default class SelectKitHeader extends Component {
+  /** @type {import("discourse/select-kit/components/select-kit").SelectKitState | null} */
   selectKit = null;
   tabindex = 0;
 
@@ -99,7 +100,7 @@ export default class SelectKitHeader extends Component {
     if (
       this.selectKit.isDisabled ||
       this.selectKit.options.disabled ||
-      this.selectKit.options.useHeaderFilter
+      (this.selectKit.options.useHeaderFilter && event.target !== this.element)
     ) {
       return;
     }

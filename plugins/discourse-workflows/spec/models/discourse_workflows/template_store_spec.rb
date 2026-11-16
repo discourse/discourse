@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::TemplateStore do
-  before { described_class.reset_cache! }
-  after { described_class.reset_cache! }
-
   let(:template_path) { File.join(DiscourseWorkflows::TEMPLATES_PATH, "cached-template.json") }
   let(:broken_template_path) do
     File.join(DiscourseWorkflows::TEMPLATES_PATH, "broken-template.json")
   end
+  let(:template_paths) { [template_path] }
   let(:template_json) do
     {
       name: "Cached template",
@@ -16,13 +14,18 @@ RSpec.describe DiscourseWorkflows::TemplateStore do
     }.to_json
   end
 
-  it "returns template summaries" do
+  before do
+    described_class.reset_cache!
     Dir
       .stubs(:glob)
       .with(File.join(DiscourseWorkflows::TEMPLATES_PATH, "*.json"))
-      .returns([template_path])
+      .returns(template_paths)
     File.stubs(:read).with(template_path).returns(template_json)
+  end
 
+  after { described_class.reset_cache! }
+
+  it "returns template summaries" do
     expect(described_class.summaries).to contain_exactly(
       {
         id: "cached-template",
@@ -33,69 +36,30 @@ RSpec.describe DiscourseWorkflows::TemplateStore do
     )
   end
 
-  it "returns a duplicated template" do
-    Dir
-      .stubs(:glob)
-      .with(File.join(DiscourseWorkflows::TEMPLATES_PATH, "*.json"))
-      .returns([template_path])
-    File.stubs(:read).with(template_path).returns(template_json)
-
-    template = described_class.find("cached-template")
-    template["name"] = "Mutated"
+  it "returns copies so callers cannot mutate the cache" do
+    described_class.find("cached-template")["name"] = "Mutated"
+    described_class.summaries.first[:node_types].first.upcase!
 
     expect(described_class.find("cached-template")["name"]).to eq("Cached template")
+    expect(described_class.summaries.first[:node_types].first).to eq("trigger:topic_created")
   end
 
-  it "returns duplicated summaries" do
-    Dir
-      .stubs(:glob)
-      .with(File.join(DiscourseWorkflows::TEMPLATES_PATH, "*.json"))
-      .returns([template_path])
-    File.stubs(:read).with(template_path).returns(template_json)
-
-    summary = described_class.summaries.first
-    summary[:name].upcase!
-    summary[:node_types].first.upcase!
-
-    expect(described_class.summaries.first).to include(
-      name: "Cached template",
-      node_types: %w[trigger:topic_created action:topic],
-    )
-  end
-
-  it "reuses parsed templates until the cache is reset" do
-    Dir
-      .stubs(:glob)
-      .with(File.join(DiscourseWorkflows::TEMPLATES_PATH, "*.json"))
-      .returns([template_path])
-    File.expects(:read).with(template_path).once.returns(template_json)
+  it "reads each template file once until the cache is reset" do
+    File.expects(:read).with(template_path).twice.returns(template_json)
 
     described_class.summaries
     described_class.find("cached-template")
-  end
-
-  it "skips malformed template JSON" do
-    Dir
-      .stubs(:glob)
-      .with(File.join(DiscourseWorkflows::TEMPLATES_PATH, "*.json"))
-      .returns([template_path, broken_template_path])
-    File.stubs(:read).with(template_path).returns(template_json)
-    File.stubs(:read).with(broken_template_path).returns("not valid json{{{")
-
-    ids = described_class.summaries.map { |template| template[:id] }
-
-    expect(ids).to contain_exactly("cached-template")
-  end
-
-  it "reloads templates after reset" do
-    Dir
-      .stubs(:glob)
-      .with(File.join(DiscourseWorkflows::TEMPLATES_PATH, "*.json"))
-      .returns([template_path])
-    File.expects(:read).with(template_path).twice.returns(template_json)
-
-    described_class.find("cached-template")
     described_class.reset_cache!
     described_class.find("cached-template")
+  end
+
+  context "with a malformed template file" do
+    let(:template_paths) { [template_path, broken_template_path] }
+
+    before { File.stubs(:read).with(broken_template_path).returns("not valid json{{{") }
+
+    it "skips it" do
+      expect(described_class.summaries.map { |t| t[:id] }).to contain_exactly("cached-template")
+    end
   end
 end

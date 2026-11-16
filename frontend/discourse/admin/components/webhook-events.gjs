@@ -13,7 +13,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";

@@ -5,13 +5,6 @@ describe DiscourseAi::Embeddings::SemanticRelated do
 
   fab!(:target, :topic)
   fab!(:normal_topic_1, :topic)
-  fab!(:normal_topic_2, :topic)
-  fab!(:normal_topic_3, :topic)
-  fab!(:unlisted_topic) { Fabricate(:topic, visible: false) }
-  fab!(:private_topic, :private_message_topic)
-  fab!(:secured_category) { Fabricate(:category, read_restricted: true) }
-  fab!(:secured_category_topic) { Fabricate(:topic, category: secured_category) }
-  fab!(:closed_topic) { Fabricate(:topic, closed: true) }
 
   fab!(:vector_def, :embedding_definition)
 

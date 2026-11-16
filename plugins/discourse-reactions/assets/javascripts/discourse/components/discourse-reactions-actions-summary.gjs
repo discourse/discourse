@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { reactionsHiddenForUser } from "../lib/hidden-post";
-import DiscourseReactionsActions from "./discourse-reactions-actions";
+import { reactionsHiddenForUser } from "../lib/hidden-post.js";
+import DiscourseReactionsActions from "./discourse-reactions-actions.gjs";
 
 export default class ReactionsActionSummary extends Component {
   static extraControls = true;

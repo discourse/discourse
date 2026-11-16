@@ -14,6 +14,11 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   # SOURCE_BASE_URL: base url of the site being merged. e.g. https://meta.discourse.org
   # SOURCE_CDN: (optional) base url of the CDN of the site being merged.
   #             e.g. https://discourse-cdn-sjc1.com/business4
+  # IGNORE_GLOBAL_PINS: (optional) set to 1 to unpin globally pinned topics of the
+  #                     site being merged. Category pins are kept.
+  # SEPARATE_SAME_NAMED_GROUPS: (optional) set to 1 to copy groups and tag groups whose
+  #                             name already exists under a new name instead of merging
+  #                             them into the existing ones.
 
   def initialize
     db_password = ENV["DB_PASS"] || "import_password"
@@ -41,6 +46,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @uploader = ImportScripts::Uploader.new
 
     @source_cdn = ENV["SOURCE_CDN"] if ENV["SOURCE_CDN"]
+    @ignore_global_pins = ENV["IGNORE_GLOBAL_PINS"] == "1"
+    @separate_same_named_groups = ENV["SEPARATE_SAME_NAMED_GROUPS"] == "1"
 
     local_version = @raw_connection.exec("select max(version) from schema_migrations")
     local_version = local_version.first["max"]
@@ -54,6 +61,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @encoder = PG::TextEncoder::CopyRow.new
 
     @merged_user_ids = []
+
+    # Keyed by integer source id, like the user/topic/post maps inherited from Base.
     @tags = {}
     @tag_groups = {}
     @uploads = {}
@@ -185,9 +194,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       DoNotDisturbTiming,
     ].each { |c| copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true) }
 
-    [MutedUser, IgnoredUser].each do |c|
-      copy_model(c, is_a_user_model: true, skip_processing: true)
-    end
+    [MutedUser, IgnoredUser].each { |c| copy_model(c, is_a_user_model: true) }
 
     [
       UserAssociatedAccount,
@@ -217,10 +224,75 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       mapping: @groups,
       skip_processing: true,
       select_sql:
-        "SELECT #{Group.columns.map { |c| "\"#{c.name}\"" }.join(", ")} FROM groups WHERE automatic = false",
+        merge_same_named_rows(
+          Group,
+          @groups,
+          where: "automatic = false",
+          max_name_length: SiteSetting.max_username_length,
+        ),
     )
 
     copy_model(GroupUser, skip_if_merged: true)
+  end
+
+  # Source rows whose case-insensitive name already exists in the destination
+  # would violate the unique name index. Merging them hands their members
+  # whatever the destination row grants, so merges are reported and can be
+  # turned off with SEPARATE_SAME_NAMED_GROUPS, which copies them under a free
+  # name instead. Returns the SQL that selects the source rows to copy.
+  def merge_same_named_rows(klass, mapping, where: "TRUE", max_name_length:)
+    existing_ids = klass.unscoped.pluck(:name, :id).to_h { |name, id| [name.downcase, id] }
+    source_rows =
+      source_raw_connection.exec("SELECT id, name FROM #{klass.table_name} WHERE #{where}").to_a
+    taken_names = Set.new(existing_ids.keys) + source_rows.map { |row| row["name"].downcase }
+    merged_names = {}
+    new_names = {}
+
+    source_rows.each do |row|
+      next unless existing_id = existing_ids[row["name"].downcase]
+
+      if @separate_same_named_groups
+        new_names[row["id"].to_i] = free_name(row["name"], taken_names, max_name_length)
+      else
+        mapping[row["id"].to_i] = existing_id
+        merged_names[row["id"].to_i] = row["name"]
+      end
+    end
+
+    warn_about_merged_rows(klass, merged_names.values) if merged_names.any?
+
+    columns =
+      klass.columns.map do |c|
+        next "\"#{c.name}\"" if c.name != "name" || new_names.empty?
+        whens =
+          new_names.map do |id, name|
+            "WHEN #{id} THEN #{ActiveRecord::Base.connection.quote(name)}"
+          end
+        "CASE id #{whens.join(" ")} ELSE name END AS name"
+      end
+
+    sql = +"SELECT #{columns.join(", ")} FROM #{klass.table_name}"
+    sql << " WHERE #{where}"
+    sql << " AND id NOT IN (#{merged_names.keys.join(", ")})" if merged_names.any?
+    sql
+  end
+
+  def free_name(name, taken_names, max_length)
+    (1..).each do |n|
+      suffix = "_#{n}"
+      candidate = "#{name[0, max_length - suffix.length]}#{suffix}"
+      next if taken_names.include?(candidate.downcase)
+
+      taken_names << candidate.downcase
+      return candidate
+    end
+  end
+
+  def warn_about_merged_rows(klass, names)
+    puts "",
+         "WARNING: merged #{names.size} #{klass.table_name.humanize(capitalize: false)} into existing ones with the same name: #{names.join(", ")}",
+         "Their members and permissions are added to the existing ones. Set SEPARATE_SAME_NAMED_GROUPS=1 to copy them under a new name instead.",
+         ""
   end
 
   def category_exists(cat_row)
@@ -347,12 +419,15 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def fix_category_descriptions
     puts "updating category description topic ids..."
 
-    @categories.each do |new_id|
+    @categories.each_value do |new_id|
       next if !CategoryCustomField.where(category_id: new_id, name: "import_id").exists?
-      category = Category.find(new_id) if new_id.present?
-      if description_topic_id = topic_id_from_imported_id(category&.topic_id)
-        category.topic_id = description_topic_id
-        category.save!
+      category = Category.find_by(id: new_id)
+      next if category&.topic_id.nil?
+
+      # Rows are copied verbatim from the source site and may not pass current
+      # validations, so only the remapped column is written.
+      if description_topic_id = topic_id_from_imported_id(category.topic_id)
+        category.update_columns(topic_id: description_topic_id)
       end
     end
   end
@@ -409,13 +484,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         .exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(", ")} FROM tags")
         .each do |row|
           if existing = Tag.where_name(row["name"]).first
-            @tags[row["id"]] = existing.id
+            @tags[row["id"].to_i] = existing.id
             next
           end
 
-          old_id = row["id"]
+          old_id = row["id"].to_i
           row["id"] = (last_id += 1)
-          @tags[old_id.to_s] = row["id"]
+          @tags[old_id] = row["id"]
           row["target_tag_id"] = row["id"]
 
           @raw_connection.put_copy_data(row.values)
@@ -425,15 +500,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @sequences[Tag.sequence_name] = last_id + 1
 
     [TagUser, TopicTag, CategoryTag, CategoryTagStat].each { |k| copy_model(k) }
-    copy_model(TagGroup, mapping: @tag_groups)
-    [TagGroupMembership, CategoryTagGroup, CategoryRequiredTagGroup].each do |k|
-      copy_model(k, skip_processing: true)
-    end
+    copy_model(
+      TagGroup,
+      mapping: @tag_groups,
+      select_sql: merge_same_named_rows(TagGroup, @tag_groups, max_name_length: 100),
+    )
+    [TagGroupMembership, CategoryTagGroup, CategoryRequiredTagGroup].each { |k| copy_model(k) }
 
     col_list = TagGroupPermission.columns.map { |c| "\"#{c.name}\"" }.join(", ")
     copy_model(
       TagGroupPermission,
-      skip_processing: true,
       select_sql:
         "SELECT #{col_list} FROM tag_group_permissions WHERE group_id NOT IN (#{@auto_group_ids.join(", ")})",
     )
@@ -448,12 +524,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     columns = Upload.columns.map(&:name)
     last_id = Upload.unscoped.maximum(:id) || 1
     sql = "COPY uploads (#{columns.map { |c| "\"#{c}\"" }.join(", ")}) FROM STDIN"
+    existing_ids_by_sha1 = Upload.unscoped.where.not(sha1: nil).pluck(:sha1, :id).to_h
 
     @raw_connection.copy_data(sql, @encoder) do
       source_raw_connection
         .exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(", ")} FROM uploads")
         .each do |row|
-          next if Upload.where(sha1: row["sha1"]).exists?
+          if existing_id = existing_ids_by_sha1[row["sha1"]]
+            @uploads[row["id"].to_i] = existing_id
+            next
+          end
 
           # make sure to get a backup with uploads then convert them to local.
           # when the backup is restored to a site with s3 uploads, it will upload the items
@@ -467,7 +547,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
           old_id = row["id"]
           if old_id && last_id
             row["id"] = (last_id += 1)
-            @uploads[old_id.to_s] = row["id"]
+            @uploads[old_id.to_i] = row["id"]
           end
 
           old_user_id = row["user_id"].to_i
@@ -491,17 +571,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_everything_else
-    [
-      PostTiming,
-      UserArchivedMessage,
-      UnsubscribeKey,
-      GroupMention,
-      Bookmark,
-      CategoryUser,
-      UserUpload,
-    ].each { |k| copy_model(k, skip_processing: true) }
+    [PostTiming, UserArchivedMessage, UnsubscribeKey, GroupMention, Bookmark].each do |k|
+      copy_model(k, skip_processing: true)
+    end
 
-    [UserHistory, UserWarning, GroupArchivedMessage].each { |k| copy_model(k) }
+    [UserHistory, UserWarning, GroupArchivedMessage, CategoryUser, UserUpload].each do |k|
+      copy_model(k)
+    end
 
     copy_model(Notification, mapping: @notifications)
 
@@ -551,17 +627,17 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         .exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(", ")} FROM badges")
         .each do |row|
           if existing = Badge.where(name: row["name"]).first
-            @badges[row["id"]] = existing.id
+            @badges[row["id"].to_i] = existing.id
             next
           end
 
-          old_id = row["id"]
+          old_id = row["id"].to_i
           row["id"] = (last_id += 1)
-          @badges[old_id.to_s] = row["id"]
+          @badges[old_id] = row["id"]
 
-          row["badge_grouping_id"] = @badge_groupings[row["badge_grouping_id"]] if row[
-            "badge_grouping_id"
-          ]
+          row["badge_grouping_id"] = badge_grouping_id_from_imported_id(
+            row["badge_grouping_id"],
+          ) if row["badge_grouping_id"]
 
           row["image_upload_id"] = upload_id_from_imported_id(row["image_upload_id"])
 
@@ -636,6 +712,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     has_custom_fields = CUSTOM_FIELDS.include?(klass.name.downcase)
     imported_ids = []
     last_id = columns.include?("id") ? (klass.unscoped.maximum(:id) || 1) : nil
+    processor = merger_processor_for(klass) unless skip_processing
 
     sql = "COPY #{klass.table_name} (#{columns.map { |c| "\"#{c}\"" }.join(", ")}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
@@ -767,43 +844,28 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
           if klass.table_name == "upload_references"
             next unless row["upload_id"]
-            if row["target_type"] == "UserProfile"
-              row["target_id"] = user_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "UserAvatar"
-              row["target_id"] = avatar_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "User"
-              row["target_id"] = user_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "Post"
-              row["target_id"] = post_id_from_imported_id(row["target_id"])
-              # TO-DO: add other target types
-            else
-              next
-            end
-            next unless row["target_id"]
+            next unless remap_upload_reference_target(row)
           end
 
-          old_id = row["id"].to_i
-          if old_id && last_id
+          if last_id
+            old_id = row["id"].to_i
+            # Rows the processor skips below still consume an id; the gaps are harmless.
             row["id"] = (last_id += 1)
-            imported_ids << old_id if has_custom_fields
-            mapping[old_id] = row["id"] if mapping
           end
 
           if skip_processing
             @raw_connection.put_copy_data(row.values)
           else
-            process_method_name = "process_#{klass.name.underscore}"
-
             processed =
-              (
-                if respond_to?(process_method_name)
-                  send(process_method_name, ActiveSupport::HashWithIndifferentAccess.new(row))
-                else
-                  row
-                end
-              )
+              processor ? processor.call(ActiveSupport::HashWithIndifferentAccess.new(row)) : row
+            next unless processed
 
-            @raw_connection.put_copy_data columns.map { |c| processed[c] } if processed
+            @raw_connection.put_copy_data columns.map { |c| processed[c] }
+          end
+
+          if last_id
+            imported_ids << old_id if has_custom_fields
+            mapping[old_id] = row["id"] if mapping
           end
         end
     end
@@ -817,6 +879,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
       end
     end
+  end
+
+  # Base's process_* methods belong to the converter pipeline: they expect rows and state
+  # (original_id columns, @imported_records, ...) that a merge never has.
+  def merger_processor_for(klass)
+    name = "process_#{klass.name.underscore}"
+    return unless respond_to?(name)
+
+    processor = method(name)
+    processor if BulkImport::Base.ancestors.exclude?(processor.owner)
   end
 
   def copy_model_user_search_data(
@@ -883,6 +955,14 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     topic["featured_user2_id"] = user_id_from_imported_id(topic["featured_user2_id"]) || -1
     topic["featured_user3_id"] = user_id_from_imported_id(topic["featured_user3_id"]) || -1
     topic["featured_user4_id"] = user_id_from_imported_id(topic["featured_user4_id"]) || -1
+
+    # COPY rows hold raw PG text, so booleans arrive as "t"/"f"
+    if @ignore_global_pins && topic["pinned_globally"] == "t"
+      topic["pinned_globally"] = "f"
+      topic["pinned_at"] = nil
+      topic["pinned_until"] = nil
+    end
+
     topic
   end
 
@@ -1083,6 +1163,95 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     x
   end
 
+  def process_tag_group_membership(x)
+    if TagGroupMembership.where(tag_group_id: x["tag_group_id"], tag_id: x["tag_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_tag_group(x)
+    if CategoryTagGroup.where(
+         category_id: x["category_id"],
+         tag_group_id: x["tag_group_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_required_tag_group(x)
+    if CategoryRequiredTagGroup.where(
+         category_id: x["category_id"],
+         tag_group_id: x["tag_group_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_tag_group_permission(x)
+    if TagGroupPermission.where(tag_group_id: x["tag_group_id"], group_id: x["group_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_group_tag_notification_default(x)
+    if GroupTagNotificationDefault.where(group_id: x["group_id"], tag_id: x["tag_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_group_category_notification_default(x)
+    if GroupCategoryNotificationDefault.where(
+         group_id: x["group_id"],
+         category_id: x["category_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_muted_user(x)
+    return nil if MutedUser.where(user_id: x["user_id"], muted_user_id: x["muted_user_id"]).exists?
+    x
+  end
+
+  def process_ignored_user(x)
+    if IgnoredUser.where(user_id: x["user_id"], ignored_user_id: x["ignored_user_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_user_upload(x)
+    return nil if UserUpload.where(upload_id: x["upload_id"], user_id: x["user_id"]).exists?
+    x
+  end
+
+  def process_category_user(x)
+    return nil if CategoryUser.where(category_id: x["category_id"], user_id: x["user_id"]).exists?
+    x
+  end
+
+  def process_upload_reference(x)
+    if UploadReference.where(
+         upload_id: x["upload_id"],
+         target_type: x["target_type"],
+         target_id: x["target_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_search_data(x)
+    return nil if CategorySearchData.where(category_id: x["category_id"]).exists?
+    x
+  end
+
   def process_raw(raw, topic_id)
     new_raw = raw.dup
 
@@ -1114,50 +1283,73 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def tag_id_from_imported_id(id)
-    @tags[id.to_s]
+    @tags[id.to_i]
   end
 
   def tag_group_id_from_imported_id(id)
-    @tag_groups[id.to_s]
+    @tag_groups[id.to_i]
   end
 
   def upload_id_from_imported_id(id)
-    @uploads[id.to_s]
+    @uploads[id.to_i]
   end
 
   def post_action_id_from_imported_id(id)
-    @post_actions[id.to_s]
+    @post_actions[id.to_i]
   end
 
   def badge_id_from_imported_id(id)
-    @badges[id.to_s]
+    @badges[id.to_i]
+  end
+
+  def badge_grouping_id_from_imported_id(id)
+    @badge_groupings[id.to_i]
   end
 
   def notification_id_from_imported_id(id)
-    @notifications[id.to_s]
+    @notifications[id.to_i]
   end
 
   def email_token_id_from_imported_id(id)
-    @email_tokens[id.to_s]
+    @email_tokens[id.to_i]
   end
 
   def poll_id_from_imported_id(id)
-    @polls[id.to_s]
+    @polls[id.to_i]
   end
 
   def poll_option_id_from_imported_id(id)
-    @poll_options[id.to_s]
+    @poll_options[id.to_i]
   end
 
   def avatar_id_from_imported_id(id)
-    @avatars[id.to_s]
+    @avatars[id.to_i]
   end
 
   def fix_primary_keys
+    # Later stages insert through ActiveRecord after a table's counter was
+    # captured, so a sequence must never be set below the table's current ids.
+    # Seeded system rows have negative ids and are ignored.
     @sequences.each do |sequence_name, val|
-      sql = "SELECT setval('#{sequence_name}', #{val})"
-      @raw_connection.exec(sql)
+      table_name = sequence_table_name(sequence_name)
+      @raw_connection.exec(<<~SQL)
+        SELECT setval('#{sequence_name}', GREATEST(
+          #{val.to_i},
+          COALESCE((SELECT MAX(id) FROM #{table_name} WHERE id > 0), 0) + 1
+        ))
+      SQL
     end
+  end
+
+  def sequence_table_name(sequence_name)
+    @raw_connection.exec_params(<<~SQL, [sequence_name]).getvalue(0, 0)
+      SELECT refobjid::regclass::text
+      FROM pg_depend
+      WHERE classid = 'pg_class'::regclass
+        AND objid = $1::regclass
+        AND refclassid = 'pg_class'::regclass
+        AND deptype IN ('a', 'i')
+    SQL
   end
 
   def fix_user_columns
@@ -1191,9 +1383,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def fix_polls
     puts "Adding polls custom fields..."
 
-    @polls.each do |old_poll_id, new_poll_id|
-      post_id = Poll.find_by_id(new_poll_id).post_id
-      post = Post.find_by_id(post_id)
+    @polls.each_value do |new_poll_id|
+      post_id = Poll.find_by_id(new_poll_id)&.post_id
+      # Polls on deleted posts are valid, see Poll's post association.
+      post = Post.with_deleted.find_by_id(post_id) if post_id
+      next if post.nil?
+
       post.custom_fields[DiscoursePoll::HAS_POLLS] = true
       post.save_custom_fields(true)
     end
@@ -1201,13 +1396,15 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def fix_featured_topic
     puts "Updating featured topic ids..."
-    User
-      .where("id >= ?", @first_new_user_id)
-      .find_each do |u|
-        profile = UserProfile.find_by(user_id: u.id)
-        next if profile.nil?
-        profile.featured_topic_id = topic_id_from_imported_id(profile.featured_topic_id)
-        profile.save!
+    # Fixups write only the remapped column because rows are copied verbatim
+    # from the source site and may not pass current validations.
+    UserProfile
+      .where("user_id >= ?", @first_new_user_id)
+      .where.not(featured_topic_id: nil)
+      .find_each do |profile|
+        profile.update_columns(
+          featured_topic_id: topic_id_from_imported_id(profile.featured_topic_id),
+        )
       end
   end
 
@@ -1217,13 +1414,29 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     # Users have a column "uploaded_avatar_id" which needs to be mapped now.
     User
       .where("id >= ?", @first_new_user_id)
+      .where.not(uploaded_avatar_id: nil)
       .find_each do |u|
-        if u.uploaded_avatar_id
-          u.uploaded_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
-          u.save! unless u.uploaded_avatar_id.nil?
-        end
+        new_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
+        u.update_columns(uploaded_avatar_id: new_avatar_id) if new_avatar_id
       end
+  end
+
+  private
+
+  # Returns nil when the target cannot be remapped and the reference should be skipped.
+  def remap_upload_reference_target(row)
+    # TO-DO: add other target types
+    row["target_id"] = case row["target_type"]
+    when "UserProfile", "User"
+      user_id_from_imported_id(row["target_id"])
+    when "UserAvatar"
+      avatar_id_from_imported_id(row["target_id"])
+    when "Post"
+      post_id_from_imported_id(row["target_id"])
+    end
+
+    row if row["target_id"]
   end
 end
 
-BulkImport::DiscourseMerger.new.start
+BulkImport::DiscourseMerger.new.start if $PROGRAM_NAME == __FILE__

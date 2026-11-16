@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import { generateGraph } from "../lib/render-graphviz";
+import { generateGraph } from "../lib/render-graphviz.js";
 
 export default class GraphvizDiagram extends Component {
   @tracked zoomed = false;

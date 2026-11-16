@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
-import { showPostAIHelper } from "../../lib/show-ai-helper";
+import { showPostAIHelper } from "../../lib/show-ai-helper.js";
 
 export default class AiEditSuggestionButton extends Component {
   static shouldRender(args, context) {

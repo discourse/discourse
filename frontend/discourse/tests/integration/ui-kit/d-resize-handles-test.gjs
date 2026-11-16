@@ -777,10 +777,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("replacing a held descriptor ends its gesture rather than rebinding it", async function (assert) {
-    const state = new (class {
-      @tracked
-      handles = [{ payload: "first", key: "first", class: "handle-x" }];
-    })();
+    const handles = tracked([
+      { payload: "first", key: "first", class: "handle-x" },
+    ]);
     const events = [];
     const onResize = (payload) => events.push(`resize:${payload}`);
     const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
@@ -788,7 +787,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     await render(
       <template>
         <DResizeHandles
-          @handles={{state.handles}}
+          @handles={{handles.value}}
           @onResize={{onResize}}
           @onResizeCancel={{onResizeCancel}}
         />
@@ -808,7 +807,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 50,
     });
 
-    state.handles = [{ payload: "second", key: "second", class: "handle-x" }];
+    handles.value = [{ payload: "second", key: "second", class: "handle-x" }];
     await settled();
 
     await triggerEvent(".handle-x", "pointermove", {
@@ -840,14 +839,11 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("removing the held handle ends its gesture and leaves its neighbours in place", async function (assert) {
-    const state = new (class {
-      @tracked
-      handles = [
-        { payload: "a", key: "a", class: "handle-a" },
-        { payload: "b", key: "b", class: "handle-b" },
-        { payload: "c", key: "c", class: "handle-c" },
-      ];
-    })();
+    const handles = tracked([
+      { payload: "a", key: "a", class: "handle-a" },
+      { payload: "b", key: "b", class: "handle-b" },
+      { payload: "c", key: "c", class: "handle-c" },
+    ]);
     const events = [];
     const onResize = (payload) => events.push(`resize:${payload}`);
     const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
@@ -855,7 +851,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     await render(
       <template>
         <DResizeHandles
-          @handles={{state.handles}}
+          @handles={{handles.value}}
           @onResize={{onResize}}
           @onResizeCancel={{onResizeCancel}}
         />
@@ -876,7 +872,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 50,
     });
 
-    state.handles = [
+    handles.value = [
       { payload: "a", key: "a", class: "handle-a" },
       { payload: "c", key: "c", class: "handle-c" },
     ];
@@ -900,9 +896,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("@directions shrinking mid-gesture ends the gesture on the handle it removed", async function (assert) {
-    const state = new (class {
-      @tracked directions = ["n", "e", "s"];
-    })();
+    const directions = tracked(["n", "e", "s"]);
     const events = [];
     const onResize = (payload) => events.push(`resize:${payload}`);
     const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
@@ -910,7 +904,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     await render(
       <template>
         <DResizeHandles
-          @directions={{state.directions}}
+          @directions={{directions.value}}
           @handleClass="my-block__handle"
           @onResize={{onResize}}
           @onResizeCancel={{onResizeCancel}}
@@ -931,7 +925,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 50,
     });
 
-    state.directions = ["n", "s"];
+    directions.value = ["n", "s"];
     await settled();
 
     assert.deepEqual(
@@ -942,13 +936,10 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("@cancelCommits routes a removed handle's gesture to the commit callback", async function (assert) {
-    const state = new (class {
-      @tracked
-      handles = [
-        { payload: "a", key: "a", class: "handle-a" },
-        { payload: "b", key: "b", class: "handle-b" },
-      ];
-    })();
+    const handles = tracked([
+      { payload: "a", key: "a", class: "handle-a" },
+      { payload: "b", key: "b", class: "handle-b" },
+    ]);
     const ends = [];
     const cancels = [];
     const onResizeEnd = (payload, info) =>
@@ -959,7 +950,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       <template>
         <DResizeHandles
           @cancelCommits={{true}}
-          @handles={{state.handles}}
+          @handles={{handles.value}}
           @onResizeCancel={{onResizeCancel}}
           @onResizeEnd={{onResizeEnd}}
         />
@@ -979,7 +970,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 50,
     });
 
-    state.handles = [{ payload: "a", key: "a", class: "handle-a" }];
+    handles.value = [{ payload: "a", key: "a", class: "handle-a" }];
     await settled();
 
     // `moved` has to survive. A handle destroyed before the first move must not
@@ -1060,21 +1051,18 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("handles sharing a payload are told apart", async function (assert) {
-    const state = new (class {
-      @tracked
-      handles = [
-        { payload: 0, key: "run-a", class: "handle-run-a" },
-        { payload: 0, key: "run-b", class: "handle-run-b" },
-        { payload: 1, key: "other", class: "handle-other" },
-      ];
-    })();
+    const handles = tracked([
+      { payload: 0, key: "run-a", class: "handle-run-a" },
+      { payload: 0, key: "run-b", class: "handle-run-b" },
+      { payload: 1, key: "other", class: "handle-other" },
+    ]);
     const events = [];
     const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
 
     await render(
       <template>
         <DResizeHandles
-          @handles={{state.handles}}
+          @handles={{handles.value}}
           @onResizeCancel={{onResizeCancel}}
         />
       </template>
@@ -1096,7 +1084,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     // One run of a gridline disappears while another run of the same line is
     // being dragged. Both carry the same payload, so the key has to tell them
     // apart.
-    state.handles = [
+    handles.value = [
       { payload: 0, key: "run-a", class: "handle-run-a" },
       { payload: 1, key: "other", class: "handle-other" },
     ];
@@ -1115,20 +1103,17 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("removing an earlier twin leaves a gesture on the later one alone", async function (assert) {
-    const state = new (class {
-      @tracked
-      handles = [
-        { payload: 0, key: "run-a", class: "handle-run-a" },
-        { payload: 0, key: "run-b", class: "handle-run-b" },
-      ];
-    })();
+    const handles = tracked([
+      { payload: 0, key: "run-a", class: "handle-run-a" },
+      { payload: 0, key: "run-b", class: "handle-run-b" },
+    ]);
     const events = [];
     const onResizeCancel = (payload) => events.push(`cancel:${payload}`);
 
     await render(
       <template>
         <DResizeHandles
-          @handles={{state.handles}}
+          @handles={{handles.value}}
           @onResizeCancel={{onResizeCancel}}
         />
       </template>
@@ -1145,7 +1130,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
 
     // The dragged run survives and the one before it goes. Anything positional
     // would shift here and cancel a live gesture; the key does not move.
-    state.handles = [{ payload: 0, key: "run-b", class: "handle-run-b" }];
+    handles.value = [{ payload: 0, key: "run-b", class: "handle-run-b" }];
     await settled();
 
     assert.deepEqual(events, [], "the surviving run keeps its gesture");
@@ -1157,13 +1142,10 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
   });
 
   test("removing a measured handle mid-gesture releases the reflow listeners", async function (assert) {
-    const state = new (class {
-      @tracked
-      handles = [
-        { payload: "a", key: "a", class: "handle-a" },
-        { payload: "b", key: "b", class: "handle-b" },
-      ];
-    })();
+    const handles = tracked([
+      { payload: "a", key: "a", class: "handle-a" },
+      { payload: "b", key: "b", class: "handle-b" },
+    ]);
     const findBox = (handle) =>
       handle.closest(".fixture")?.querySelector(".box");
 
@@ -1171,7 +1153,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       <template>
         <div class="fixture">
           <div class="box" style="width: 220px; height: 90px"></div>
-          <DResizeHandles @handles={{state.handles}} @measure={{findBox}} />
+          <DResizeHandles @handles={{handles.value}} @measure={{findBox}} />
         </div>
       </template>
     );
@@ -1185,7 +1167,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     });
 
     const removeSpy = sinon.spy(window, "removeEventListener");
-    state.handles = [{ payload: "a", key: "a", class: "handle-a" }];
+    handles.value = [{ payload: "a", key: "a", class: "handle-a" }];
     await settled();
 
     // A stranded gesture used to leave this document-wide scroll listener

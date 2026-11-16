@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
-import { trackedSet } from "@ember/reactive/collections";
+import { trackedMap, trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -14,25 +14,52 @@ import {
   MAIN_PANEL,
   SEPARATED_MODE,
 } from "discourse/lib/sidebar/panels";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
   @service keyValueStore;
   @service router;
 
-  @tracked currentPanelKey = currentPanelKey;
   @tracked mode = COMBINED_MODE;
-  @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
   @tracked isForcingSidebar = false;
+
+  /** @type {string | null} */
   @tracked forcingSidebarPanel = null;
 
   panels = panels;
   activeExpandedSections = trackedSet();
-  collapsedSections = trackedSet();
   previousState = {};
+  #collapsedSections = trackedMap();
   #hiders = trackedSet();
   #revealedLinks = new WeakMap();
+  @tracked _requestedPanelKey = currentPanelKey;
+  @tracked _displaySwitchPanelButtons = false;
+
+  /**
+   * The panel the sidebar shows. Routes and plugins ask for a panel, and the
+   * `sidebar-panel` value transformer can show a different one instead.
+   */
+  get currentPanelKey() {
+    return applyValueTransformer("sidebar-panel", this._requestedPanelKey, {
+      requestedPanelKey: this._requestedPanelKey,
+    });
+  }
+
+  set currentPanelKey(key) {
+    this._requestedPanelKey = key;
+  }
+
+  // Combined mode and panel switching are both about the panel that was asked
+  // for, so neither applies once a transformer shows another one.
+  get #panelTransformed() {
+    return this.currentPanelKey !== this._requestedPanelKey;
+  }
+
+  get displaySwitchPanelButtons() {
+    return this._displaySwitchPanelButtons && !this.#panelTransformed;
+  }
 
   get sidebarHidden() {
     return this.#hiders.size > 0;
@@ -43,7 +70,7 @@ export default class SidebarState extends Service {
   }
 
   get combinedMode() {
-    return this.mode === COMBINED_MODE;
+    return this.mode === COMBINED_MODE && !this.#panelTransformed;
   }
 
   get showMainPanel() {
@@ -52,6 +79,10 @@ export default class SidebarState extends Service {
 
   get sanitizedFilter() {
     return escapeRegExp(this.filter.toLowerCase().trim());
+  }
+
+  get canScrollDownToActiveLink() {
+    return this.router.currentURL?.split(/[?#]/, 1)[0] !== "/";
   }
 
   resetLinkReveal(container) {
@@ -94,10 +125,10 @@ export default class SidebarState extends Service {
   }
 
   setPanel(name) {
-    if (this.currentPanelKey) {
+    if (this._requestedPanelKey) {
       this.setPreviousState();
     }
-    this.currentPanelKey = name;
+    this._requestedPanelKey = name;
     this.restorePreviousState();
   }
 
@@ -108,30 +139,42 @@ export default class SidebarState extends Service {
 
   setCombinedMode() {
     this.mode = COMBINED_MODE;
-    this.currentPanelKey = MAIN_PANEL;
+    this._requestedPanelKey = MAIN_PANEL;
     this.hideSwitchPanelButtons();
   }
 
   showSwitchPanelButtons() {
-    this.displaySwitchPanelButtons = true;
+    this._displaySwitchPanelButtons = true;
   }
 
   hideSwitchPanelButtons() {
-    this.displaySwitchPanelButtons = false;
+    this._displaySwitchPanelButtons = false;
   }
 
   setPreviousState() {
-    this.previousState[this.currentPanelKey] = {
+    this.previousState[this._requestedPanelKey] = {
       mode: this.mode,
-      displaySwitchPanelButtons: this.displaySwitchPanelButtons,
+      displaySwitchPanelButtons: this._displaySwitchPanelButtons,
     };
+  }
+
+  isSectionCollapsed(sectionKey, collapsedByDefault = false) {
+    const collapsed = this.#collapsedSections.get(sectionKey);
+    if (collapsed !== undefined) {
+      return collapsed;
+    }
+
+    const stored = this.keyValueStore.getItem(
+      getCollapsedSidebarSectionKey(sectionKey)
+    );
+    return stored == null ? collapsedByDefault : stored === "true";
   }
 
   collapseSection(sectionKey) {
     const collapsedSidebarSectionKey =
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
-    this.collapsedSections.add(collapsedSidebarSectionKey);
+    this.#collapsedSections.set(sectionKey, true);
     // remove the section from the active expanded list if collapsed later
     this.activeExpandedSections.delete(sectionKey);
   }
@@ -140,7 +183,7 @@ export default class SidebarState extends Service {
     const collapsedSidebarSectionKey =
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
-    this.collapsedSections.delete(collapsedSidebarSectionKey);
+    this.#collapsedSections.set(sectionKey, false);
     // remove the section from the active expanded list if expanded later
     this.activeExpandedSections.delete(sectionKey);
   }
@@ -150,7 +193,7 @@ export default class SidebarState extends Service {
   }
 
   restorePreviousState() {
-    const state = this.previousState[this.currentPanelKey];
+    const state = this.previousState[this._requestedPanelKey];
     if (!state) {
       return;
     }

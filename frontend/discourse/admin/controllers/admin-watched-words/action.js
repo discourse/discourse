@@ -15,6 +15,7 @@ export default class AdminWatchedWordsActionController extends Controller {
   @service modal;
   @controller adminWatchedWords;
 
+  /** @type {string | null} */
   @tracked actionNameKey = null;
 
   @dependentKeyCompat

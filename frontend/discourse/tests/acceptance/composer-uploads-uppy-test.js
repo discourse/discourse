@@ -10,12 +10,14 @@ import {
   triggerKeyEvent,
   visit,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { authorizedExtensions, dialog } from "discourse/lib/uploads";
+import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import {
   acceptance,
   chromeTest,
@@ -655,6 +657,253 @@ acceptance("Uppy Composer Attachment - Rich Editor", function (needs) {
       .doesNotExist("the cancelled upload is not inserted");
   });
 });
+
+let optimizeFn;
+let runParallel = true;
+
+class TestMediaOptimization extends UppyMediaOptimization {
+  static pluginId = "test-media-optimization";
+}
+
+function registerTestOptimizer() {
+  withPluginApi((api) => {
+    api.addComposerUploadPreProcessor(TestMediaOptimization, () => ({
+      optimizeFn: (file) => optimizeFn(file),
+      runParallel,
+    }));
+  });
+}
+
+acceptance(
+  "Uppy Composer Attachment - Cancelling during processing",
+  function (needs) {
+    async function cancelOneOfTwoFiles(owner, assert) {
+      let stuckFileId;
+      optimizeFn = (file) => {
+        if (file.name === "stuck.png") {
+          stuckFileId = file.id;
+          return new Promise(() => {});
+        }
+        return Promise.resolve();
+      };
+
+      await visit("/");
+      await click("#create-topic");
+      await fillIn(".d-editor-input", "A long post\n");
+
+      const appEvents = owner.lookup("service:app-events");
+      const composer = owner.lookup("service:composer");
+      const uploadsComplete = new Promise((resolve) =>
+        appEvents.one("composer:all-uploads-complete", resolve)
+      );
+
+      appEvents.trigger("composer:add-files", [
+        createFile("stuck.png"),
+        createFile("avatar.png"),
+      ]);
+
+      await waitUntil(() => stuckFileId);
+      appEvents.trigger("composer:cancel-upload", { fileId: stuckFileId });
+      await uploadsComplete;
+      await settled();
+
+      assert
+        .dom(".d-editor-input")
+        .hasValue(
+          "A long post\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n",
+          "the cancelled file is removed and the other one is uploaded"
+        );
+      assert.false(
+        composer.isProcessingUpload,
+        "the composer is no longer processing"
+      );
+    }
+
+    needs.user();
+    needs.pretender(pretender);
+    needs.settings({ allow_uncategorized_topics: true });
+    needs.hooks.beforeEach(() => {
+      runParallel = true;
+      registerTestOptimizer();
+    });
+    needs.hooks.afterEach(() => {
+      uploadNumber = 1;
+    });
+
+    test("cancels a stuck upload without touching the rest of the post", async function (assert) {
+      optimizeFn = () => new Promise(() => {});
+
+      await visit("/");
+      await click("#create-topic");
+      await fillIn(".d-editor-input", "A long post\n");
+
+      const appEvents = getOwner(this).lookup("service:app-events");
+      const composer = getOwner(this).lookup("service:composer");
+      appEvents.trigger("composer:add-files", createFile("avatar.png"));
+
+      await waitUntil(() =>
+        find(".d-editor-input").value.includes("[Processing: avatar.png…]()")
+      );
+      assert
+        .dom("#cancel-file-upload")
+        .exists("the upload can be cancelled while it is processing");
+
+      await click("#cancel-file-upload");
+
+      assert
+        .dom(".d-editor-input")
+        .hasValue("A long post\n", "only the upload placeholder is removed");
+      assert
+        .dom("#file-uploading")
+        .doesNotExist("the upload indicator is cleared");
+      assert.false(composer.isUploading, "the composer is no longer uploading");
+      assert.false(
+        composer.isProcessingUpload,
+        "the composer is no longer processing"
+      );
+      assert.dom("#reply-control.open").exists("the composer stays open");
+    });
+
+    test("cancelling one file mid-processing lets the others finish", async function (assert) {
+      await cancelOneOfTwoFiles(getOwner(this), assert);
+    });
+
+    test("cancelling one file mid-processing lets the others finish when processing serially", async function (assert) {
+      runParallel = false;
+      await cancelOneOfTwoFiles(getOwner(this), assert);
+    });
+
+    test("cancelling while the uploaded markdown is resolved keeps the post intact", async function (assert) {
+      optimizeFn = () => Promise.resolve();
+      let markdownRequested = false;
+      let resolveMarkdown;
+      const markdown = new Promise((resolve) => (resolveMarkdown = resolve));
+      withPluginApi((api) => {
+        api.addComposerUploadMarkdownResolver(() => {
+          markdownRequested = true;
+          return markdown;
+        });
+      });
+
+      await visit("/");
+      await click("#create-topic");
+      await fillIn(".d-editor-input", "A long post\n");
+
+      const appEvents = getOwner(this).lookup("service:app-events");
+      let uploadFinished = false;
+      appEvents.one("composer:upload-success", () => (uploadFinished = true));
+      appEvents.trigger("composer:add-files", createFile("avatar.png"));
+
+      await waitUntil(() => markdownRequested);
+      await click("#cancel-file-upload");
+      resolveMarkdown("![avatar](upload://avatar.png)");
+      await waitUntil(() => uploadFinished);
+
+      assert
+        .dom(".d-editor-input")
+        .hasValue(
+          "A long post\n",
+          "the cancelled upload isn't inserted into the post"
+        );
+    });
+
+    test("cancelling a later batch does not wait on files already uploading", async function (assert) {
+      let stuckFileId;
+      optimizeFn = (file) => {
+        if (file.name === "stuck.png") {
+          stuckFileId = file.id;
+          return new Promise(() => {});
+        }
+        return Promise.resolve();
+      };
+
+      await visit("/");
+      await click("#create-topic");
+      await fillIn(".d-editor-input", "A long post\n");
+
+      const appEvents = getOwner(this).lookup("service:app-events");
+      const composer = getOwner(this).lookup("service:composer");
+      const uploadsComplete = new Promise((resolve) =>
+        appEvents.one("composer:all-uploads-complete", resolve)
+      );
+      let preprocessedBatches = 0;
+      appEvents.on("composer:uploads-preprocessing-complete", () => {
+        preprocessedBatches++;
+      });
+
+      appEvents.trigger("composer:add-files", createFile("avatar.png"));
+      await waitUntil(() => preprocessedBatches === 1);
+      appEvents.trigger("composer:add-files", createFile("stuck.png"));
+      await waitUntil(() => stuckFileId);
+      assert.true(
+        composer.isProcessingUpload,
+        "the second batch is processing"
+      );
+
+      appEvents.trigger("composer:cancel-upload", { fileId: stuckFileId });
+
+      assert.false(
+        composer.isProcessingUpload,
+        "cancelling the stuck file ends processing while the first batch uploads"
+      );
+      assert.true(composer.isUploading, "the first batch is still uploading");
+
+      await uploadsComplete;
+      await settled();
+
+      assert
+        .dom(".d-editor-input")
+        .hasValue(
+          "A long post\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n",
+          "the first batch is inserted and the cancelled file is not"
+        );
+    });
+  }
+);
+
+acceptance(
+  "Uppy Composer Attachment - Cancelling during processing - Rich Editor",
+  function (needs) {
+    needs.user({ "user_option.composition_mode": 1 });
+    needs.pretender(pretender);
+    needs.settings({ allow_uncategorized_topics: true });
+    needs.hooks.beforeEach(() => {
+      runParallel = true;
+      registerTestOptimizer();
+    });
+    needs.hooks.afterEach(() => {
+      uploadNumber = 1;
+    });
+
+    test("cancels a stuck upload and keeps the composer open", async function (assert) {
+      optimizeFn = () => new Promise(() => {});
+
+      await visit("/new-topic");
+
+      const appEvents = getOwner(this).lookup("service:app-events");
+      const composer = getOwner(this).lookup("service:composer");
+      appEvents.trigger("composer:add-files", createFile("avatar.png"));
+
+      await waitFor(".upload-placeholder.--image img");
+      await waitUntil(() => composer.isProcessingUpload);
+      assert
+        .dom("#cancel-file-upload")
+        .exists("the upload can be cancelled while it is processing");
+
+      await click("#cancel-file-upload");
+
+      assert
+        .dom(".upload-placeholder")
+        .doesNotExist("the placeholder is removed");
+      assert.false(composer.isUploading, "the composer is no longer uploading");
+      assert.false(
+        composer.isProcessingUpload,
+        "the composer is no longer processing"
+      );
+      assert.dom("#reply-control.open").exists("the composer stays open");
+    });
+  }
+);
 
 acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
   needs.user();

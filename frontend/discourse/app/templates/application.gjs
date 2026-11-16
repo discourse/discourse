@@ -14,6 +14,7 @@ import FooterNav from "discourse/components/footer-nav";
 import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
 import GlobalNotice from "discourse/components/global-notice";
 import LoadingSliderFallbackSpinner from "discourse/components/loading-slider-fallback-spinner";
+import MobileTabBar from "discourse/components/mobile-tab-bar";
 import ModalContainer from "discourse/components/modal-container";
 import NotificationConsentBanner from "discourse/components/notification-consent-banner";
 import OfflineIndicator from "discourse/components/offline-indicator";
@@ -104,7 +105,7 @@ export default <template>
           {{/unless}}
 
           {{#if @controller.siteSettings.enable_site_owner_onboarding}}
-            <AdminOnboardingBanner />
+            <AdminOnboardingBanner @location="above_main_container" />
           {{/if}}
 
           <WelcomeBanner @location="above_topic_content" />
@@ -142,6 +143,15 @@ export default <template>
       {{#if @controller.showPoweredBy}}
         <PoweredByDiscourse />
       {{/if}}
+
+      {{! Composer lives inside the grid so themes can place it in a grid
+      column (e.g. Horizon peek mode). It is position:fixed in its default
+      state, so its DOM location here does not affect normal positioning —
+      however this relies on #main-outlet-wrapper never establishing a containing
+      block (no transform/filter/contain/will-change/perspective). }}
+      {{#if @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+        <ComposerContainer />
+      {{/if}}
     </div>
 
     <PluginOutlet
@@ -165,13 +175,17 @@ export default <template>
     <ModalContainer />
     <DesignWizardPanel />
     <DialogHolder />
-    <ComposerContainer />
+    {{#unless @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+      <ComposerContainer />
+    {{/unless}}
     <RenderGlimmerContainer />
 
     {{#if @controller.showFooterNav}}
       <PluginOutlet @name="footer-nav">
         <FooterNav />
       </PluginOutlet>
+    {{else}}
+      <MobileTabBar />
     {{/if}}
   </DiscourseRoot>
 

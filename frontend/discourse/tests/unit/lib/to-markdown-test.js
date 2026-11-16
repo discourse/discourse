@@ -238,6 +238,19 @@ module("Unit | Utility | to-markdown", function (hooks) {
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
+  test("keeps tables whose cells hold only images", async function (assert) {
+    const html = `<table><tr><th><img src="http://example.com/a.png" alt="a"></th><th></th></tr><tr><td></td><td><img src="http://example.com/b.png" alt="b"></td></tr></table>`;
+    assert.strictEqual(
+      await toMarkdown(html),
+      `| ![a](http://example.com/a.png) |  |\n|----|----|\n|  | ![b](http://example.com/b.png) |`
+    );
+  });
+
+  test("skips tables without content", async function (assert) {
+    const html = `<p>before</p><table><tr><td><br></td><td> </td></tr></table><p>after</p>`;
+    assert.strictEqual(await toMarkdown(html), `before\n\nafter`);
+  });
+
   test("converts single-column tables", async function (assert) {
     let html = `<table>
       <thead> <tr><th>Heading 1</th></tr> </thead>

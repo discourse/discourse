@@ -7,6 +7,8 @@
 pl_PL:
   discourse_captcha:
     configuration_test:
+      v3_success: "Twoje klucze reCAPTCHA v3 działają. Wynik tego testu to %{score}, co oznacza osiągnięcie progu rejestracji %{threshold}."
+      v3_low_score: "Twoje klucze reCAPTCHA v3 działają, ale wynik tego testu to %{score}, poniżej progu rejestracji wynoszącego %{threshold}."
       success: "Weryfikacja powiodła się. Twoje zapisane klucze CAPTCHA działają na tej stronie."
       errors:
         not_configured: "Przed testowaniem wybierz dostawcę CAPTCHA i zapisz oba klucze w Ustawieniach."
@@ -21,6 +23,7 @@ pl_PL:
     problem:
       hcaptcha_configuration: "Wystąpił problem z konfiguracją `site_key` lub `secret_key` hCaptcha"
       recaptcha_configuration: "Wystąpił problem z konfiguracją `site_key` lub `secret_key` ReCaptcha"
+      recaptcha_v3_configuration: "Wystąpił problem z konfiguracją `site_key` lub `secret_key` ReCaptcha v3"
   admin:
     site_settings:
       categories:
@@ -30,7 +33,10 @@ pl_PL:
     discourse_captcha_provider: "Wybierz dostawcę CAPTCHA. Wymaga konta u wybranego dostawcy."
     hcaptcha_site_key: "Klucz witryny hCaptcha z Twojego konta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
     hcaptcha_secret_key: "Klucz tajny hCaptcha z Twojego konta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
-    recaptcha_site_key: "Klucz witryny ReCaptcha z Twojego konta <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
-    recaptcha_secret_key: "Klucz tajny ReCaptcha z Twojego konta <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+    recaptcha_v2_site_key: "Klucz witryny ReCaptcha v2 z Twojego konta <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> . Używany tylko wtedy, gdy dostawca CAPTCHA jest ustawiony na reCaptcha v2."
+    recaptcha_v2_secret_key: "Klucz tajny ReCaptcha v2 z Twojego konta <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> . Używany tylko wtedy, gdy dostawca CAPTCHA jest ustawiony na reCaptcha v2."
+    recaptcha_v3_site_key: "Klucz witryny ReCaptcha v3 z Twojego konta <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+    recaptcha_v3_secret_key: "Klucz tajny ReCaptcha v3 z Twojego konta <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+    recaptcha_v3_score_threshold: "Minimalny wynik, jaki musi osiągnąć wyzwanie reCaptcha v3, aby rejestracja została zaakceptowana. Niższe wartości oznaczają większą swobodę, wyższe zapewniają silniejszą ochronę przed botami."
   captcha_verification_failed: "Weryfikacja CAPTCHA nie powiodła się"
   captcha_not_configured: "CAPTCHA jest włączona, ale niepoprawnie skonfigurowana. Prosimy o kontakt z administratorem witryny."

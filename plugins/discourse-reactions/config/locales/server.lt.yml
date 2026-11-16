@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 lt:
+  discourse_reactions:
+    discourse_workflows:
+      post_reaction:
+        cannot_react: "%{username} negali reaguoti į šį įrašą."
   reports:
     reactions:
       labels:

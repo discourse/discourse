@@ -9,7 +9,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";

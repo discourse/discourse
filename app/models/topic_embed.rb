@@ -192,16 +192,26 @@ class TopicEmbed < ActiveRecord::Base
     return if uri.blank?
 
     begin
-      html = FinalDestination::HTTP.get(uri)
+      response = FinalDestination::HTTP.get_response(uri)
     rescue OpenURI::HTTPError, Net::OpenTimeout, FinalDestination::SSRFDetector::DisallowedIpError
       return
     end
 
-    parse_html(html, uri.to_s)
+    parse_html(response.body, uri.to_s, content_type: response["content-type"])
   end
 
-  def self.parse_html(html, url)
+  def self.parse_html(html, url, content_type: nil)
     require "ruby-readability"
+
+    encoding = Encodings.charset_from_content_type(content_type)
+
+    # A transport-level charset can misrepresent the document. When the response
+    # header declares a non-Unicode charset but the page itself declares UTF-8
+    # and the bytes are valid UTF-8, the page's declaration wins.
+    if encoding.present? && !Encodings.unicode_encoding?(encoding) &&
+         Encodings.charset_from_document(html) == "utf-8" && Encodings.valid_utf8?(html)
+      encoding = "utf-8"
+    end
 
     opts = {
       tags: %w[
@@ -237,12 +247,19 @@ class TopicEmbed < ActiveRecord::Base
     opts[
       :blacklist
     ] = SiteSetting.blocked_embed_selectors if SiteSetting.blocked_embed_selectors.present?
+    opts[:encoding] = encoding if encoding.present?
     allowed_embed_classnames =
       SiteSetting.allowed_embed_classnames if SiteSetting.allowed_embed_classnames.present?
 
     response = FetchResponse.new
 
-    raw_doc = Nokogiri.HTML5(html)
+    raw_doc =
+      begin
+        Nokogiri.HTML5(html, encoding: encoding)
+      rescue ArgumentError, EncodingError
+        opts.delete(:encoding)
+        Nokogiri.HTML5(html)
+      end
 
     response.url = url
 

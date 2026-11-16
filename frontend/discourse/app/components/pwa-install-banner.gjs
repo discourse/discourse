@@ -19,6 +19,7 @@ export default class PwaInstallBanner extends Component {
   bannerDismissed =
     this.keyValueStore.get(USER_DISMISSED_PROMPT_KEY) === "true";
 
+  /** @type {(Event & { prompt: () => unknown }) | null} */
   @tracked deferredInstallPromptEvent = null;
 
   registerInstallPromptListener = modifierFn(() => {

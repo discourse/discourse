@@ -1,10 +1,10 @@
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import DominatingTopicComposerMessage from "./composer-messages/dominating-topic";
-import EducationComposerMessage from "./composer-messages/education";
-import GetARoomComposerMessage from "./composer-messages/get-a-room";
-import GroupMentionedComposerMessage from "./composer-messages/group-mentioned";
-import SimilarTopicsComposerMessage from "./composer-messages/similar-topics";
+import DominatingTopicComposerMessage from "./composer-messages/dominating-topic.gjs";
+import EducationComposerMessage from "./composer-messages/education.gjs";
+import GetARoomComposerMessage from "./composer-messages/get-a-room.gjs";
+import GroupMentionedComposerMessage from "./composer-messages/group-mentioned.gjs";
+import SimilarTopicsComposerMessage from "./composer-messages/similar-topics.gjs";
 
 const COMPOSER_MESSAGES = {
   "dominating-topic": DominatingTopicComposerMessage,

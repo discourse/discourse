@@ -51,15 +51,13 @@ module("Integration | Component | DCopyButton", function (hooks) {
   });
 
   test("@isCopied shows the confirmation for a copy made by the caller", async function (assert) {
-    const state = new (class {
-      @tracked isCopied = false;
-    })();
+    const isCopied = tracked(false);
 
     await render(
       <template>
         <input class="test-input" readonly value="hello" />
         <DCopyButton
-          @isCopied={{state.isCopied}}
+          @isCopied={{isCopied.value}}
           @selector="input.test-input"
           @translatedLabel="Copy"
           @translatedLabelAfterCopy="Copied!"
@@ -70,7 +68,7 @@ module("Integration | Component | DCopyButton", function (hooks) {
     assert.dom(".copy-button").hasText("Copy");
     assert.dom(".copy-button").doesNotHaveClass("ok");
 
-    state.isCopied = true;
+    isCopied.value = true;
 
     await rerender();
 

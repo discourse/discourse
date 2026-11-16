@@ -40,14 +40,6 @@ module DiscourseWorkflows
 
     private
 
-    def column_exists(data_table:, params:)
-      data_table.columns.any? { |c| c["name"] == params.column_name }
-    end
-
-    def not_reserved_column(params:)
-      DataTables::Types::SYSTEM_COLUMN_NAMES.exclude?(params.column_name)
-    end
-
     def name_available(data_table:, params:)
       data_table.columns.none? { |c| c["name"] == params.name }
     end

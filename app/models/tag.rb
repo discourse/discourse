@@ -224,7 +224,8 @@ class Tag < ActiveRecord::Base
         JOIN topics ON topics.id = topic_tags.topic_id
                    AND topics.deleted_at IS NULL
                    AND topics.archetype = 'private_message'
-       WHERE topic_tags.topic_id IN (
+       WHERE tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})
+         AND topic_tags.topic_id IN (
           SELECT topic_id
             FROM topic_allowed_users
            WHERE user_id = #{user_id.to_i}
@@ -313,6 +314,10 @@ class Tag < ActiveRecord::Base
     categories = Category.secured(guardian).where(id: all_category_ids)
     Category.preload_user_fields!(guardian, categories)
     categories
+  end
+
+  def visible_in_accessible_categories?(guardian)
+    DiscourseTagging.filter_visible_in_accessible_categories(Tag.where(id: id), guardian).exists?
   end
 
   %i[tag_created tag_updated tag_destroyed].each do |event|

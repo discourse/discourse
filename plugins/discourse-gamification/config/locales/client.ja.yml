@@ -64,9 +64,7 @@ ja:
       close: "閉じる"
       delete: "削除"
       edit: "編集"
-      back: "戻る"
       save: "保存"
-      apply: "適用"
       recalculate: "スコアを再計算"
       recalculating: "スコアを再計算中..."
       completed: "完了！スコアが正常に再計算されました。"
@@ -84,9 +82,11 @@ ja:
       admin:
         title: "ゲーミフィケーション"
         name: "名前"
+        created_by: "作成者"
         period: "期間"
     discourse_workflows:
       gamification_score:
         username: "ユーザー"
         date: "日付"
         description: "説明"
+        category_id: "カテゴリ"

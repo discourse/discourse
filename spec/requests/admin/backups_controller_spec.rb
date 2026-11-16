@@ -239,6 +239,26 @@ RSpec.describe Admin::BackupsController do
         expect(response.status).to eq(422)
       end
 
+      it "rejects a malformed Range header when using a resume grant" do
+        SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::SIX_HOURS
+
+        token = EmailBackupToken.set(admin.id)
+        create_backup_files(backup_filename)
+
+        get "/admin/backups/#{backup_filename}.json", params: { token: token }
+        expect(response.status).to eq(200)
+
+        get "/admin/backups/#{backup_filename}.json",
+            params: {
+              token: token,
+            },
+            headers: {
+              "Range" => "not-a-byte-range",
+            }
+
+        expect(response.status).to eq(422)
+      end
+
       it "does not allow reusing a token for another full backup download" do
         SiteSetting.backup_download_resume_window = BackupDownloadResumeWindowSiteSetting::SIX_HOURS
 

@@ -1,8 +1,8 @@
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
-import { replaceVariables } from "../../lib/replace-variables";
-import extractVariablesFromComposerModel from "../../lib/variables-composer";
+import { replaceVariables } from "../../lib/replace-variables.js";
+import extractVariablesFromComposerModel from "../../lib/variables-composer.js";
 
 export default class DTemplatesService extends Service {
   @service appEvents;

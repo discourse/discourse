@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import optionalService from "discourse/lib/optional-service";
-import { isPastEventTimeframe } from "../models/discourse-post-event-event";
+import { isPastEventTimeframe } from "../models/discourse-post-event-event.js";
 
 export default class EmbeddableChat extends Service {
   @service siteSettings;
@@ -58,9 +58,16 @@ export default class EmbeddableChat extends Service {
   get showLivestreamHeaderChatIcon() {
     return (
       this.isMobileViewport &&
+      this.livestreamChatActive &&
       !!this.chatChannelId &&
+      !this.isZoomRoute &&
       !this.hasActiveZoomLivestream
     );
+  }
+
+  // The zoom page always renders the chat inline beside the meeting.
+  get isZoomRoute() {
+    return this.router.currentRouteName === "topic-zoom";
   }
 
   get hasActiveZoomLivestream() {
@@ -90,14 +97,14 @@ export default class EmbeddableChat extends Service {
     return this.topic?.chat_channel_id;
   }
 
-  get topicHasLivestream() {
-    return this.topic?.has_livestream;
+  get livestreamChatActive() {
+    return !!this.topic?.livestream_chat_active;
   }
 
   get useLivestreamLayout() {
     return (
       this.router.currentRouteName?.startsWith("topic.") &&
-      this.topicHasLivestream &&
+      this.livestreamChatActive &&
       !!this.chatChannelId &&
       !this.isChannelOpenInDrawer
     );
@@ -117,7 +124,11 @@ export default class EmbeddableChat extends Service {
       this.currentUser &&
       this.userCanChat
     ) {
-      if (this.isPathAllowed && this.chatChannelId) {
+      if (
+        this.isPathAllowed &&
+        this.chatChannelId &&
+        this.livestreamChatActive
+      ) {
         return !this.isChannelOpenInDrawer;
       }
     }

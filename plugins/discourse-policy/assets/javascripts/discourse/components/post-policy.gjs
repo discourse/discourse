@@ -7,12 +7,11 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PolicyBuilder from "./modal/policy-builder";
+import PolicyBuilder from "./modal/policy-builder.gjs";
 
 export default class PostPolicy extends Component {
   @service appEvents;

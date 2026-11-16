@@ -11,18 +11,17 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import AiHelperLoading from "../components/ai-helper-loading";
-import AiHelperOptionsList from "../components/ai-helper-options-list";
+import AiHelperLoading from "../components/ai-helper-loading.gjs";
+import AiHelperOptionsList from "../components/ai-helper-options-list.gjs";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../lib/ai-errors";
-import SmoothStreamer from "../lib/smooth-streamer";
+} from "../lib/ai-errors.js";
+import SmoothStreamer from "../lib/smooth-streamer.gjs";
 
 export default class AiPostHelperMenu extends Component {
   @service messageBus;

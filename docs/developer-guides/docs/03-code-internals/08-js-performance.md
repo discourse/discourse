@@ -41,11 +41,17 @@ http://localhost:3000?flag=before
 http://localhost:3000?flag=after
 ```
 
-If the change is too large for that, then you could clone Discourse into a second directory and launch a **second copy of rails**.
+If the change is too large for that, then you could create a git worktree and launch a **second copy of rails** from it on another port:
 
 ```sh
+git worktree add ../discourse-after my-branch
+cd ../discourse-after
+bundle install
+pnpm install
 EMBER_ENV=production UNICORN_PORT=3001 bin/dev
 ```
+
+Both copies share the same database and Redis, so make sure neither branch has migrations the other doesn't.
 
 And then your two URLs would be
 
@@ -90,7 +96,7 @@ This is my `bench.json` file, which will take 300 samples of each target:
 To reduce noise, stop any unrelated activities on your workstation, and then start the benchmark with a command like:
 
 ```sh
-npx tachometer@latest --config ./bench.json
+pnpx tachometer --config ./bench.json
 ```
 
 When complete, you should see a comparison of the before/after performance.
@@ -103,6 +109,6 @@ As with any experiments like this, it's worth considering the limitations. For e
 
 - Performance differences on your development workstation may not map directly onto other browsers/devices
 
-- The boot process of Discourse through the Ember-CLI proxy is not exactly the same as it is in production. When making structural changes (e.g. framework updates) this may be important
+- The boot process of Discourse in development mode is not exactly the same as it is in production. When making structural changes (e.g. framework updates) this may be important
 
 - Performance often varies based on application state (e.g. the number of topics being rendered), so your results may not be exactly reproducible in other environments

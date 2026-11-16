@@ -1,6 +1,6 @@
 import rollupVirtualImports, {
   privateVirtualImports,
-} from "../rollup-virtual-imports";
+} from "../rollup-virtual-imports.js";
 
 // Core modules that plugin and theme code reaches through a generated wrapper,
 // so registrations carry the plugin or theme they came from.

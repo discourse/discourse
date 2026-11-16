@@ -2,7 +2,7 @@ import {
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
   portIndexFromKey,
-} from "../lib/workflows/graph-constants";
+} from "../lib/workflows/graph-constants.js";
 
 export default class WorkflowConnection {
   static create(args = {}) {

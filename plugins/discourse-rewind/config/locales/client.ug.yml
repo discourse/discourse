@@ -86,6 +86,10 @@ ug:
           message_4: "سىزنىڭ ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقىڭىز <strong>%{length}</strong> ھەرپ"
           message_5: "ياقتۇرىدىغان قانىلىڭىز:"
           dancing_baby_alt: "ئۇسسۇل ئويناۋاتقان بوۋاق"
+        live_usage:
+          minutes:
+            one: "%{count} مىنۇت"
+            other: "%{count} مىنۇت"
         invites:
           guest_book_title: سۆز قالدۇرۇش دەپتىرى
           guest_book_subtitle: جامائەت تەكلىپىڭىز

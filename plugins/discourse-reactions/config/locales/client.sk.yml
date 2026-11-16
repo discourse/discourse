@@ -24,6 +24,10 @@ sk:
         remove: "Odstrániť toto páči sa mi to"
         cant_remove: "Už nemôžete odstrániť svoj like"
         unauthenticated: "Pre označenie „Páči sa mi to“ sa prosím zaregistrujte alebo prihláste."
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Pridané"
+        changes_removed: "Odstránené"
     notifications:
       reaction_1_user_multiple_posts:
         one: "reagoval na %{count} váš príspevok"

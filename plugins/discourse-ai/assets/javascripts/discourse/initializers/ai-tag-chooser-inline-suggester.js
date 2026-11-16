@@ -3,8 +3,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import { chooserSuggestionContext } from "../lib/chooser-suggestion-context";
-import { showComposerAiHelper } from "../lib/show-ai-helper";
+import { chooserSuggestionContext } from "../lib/chooser-suggestion-context.js";
+import { showComposerAiHelper } from "../lib/show-ai-helper.js";
 
 const SUGGEST_ID = "ai-tag-suggest";
 const EXIT_ID = "ai-tag-exit";

@@ -13,7 +13,6 @@ RSpec.describe DiscourseSolved::SharedIssueController do
 
   before do
     SiteSetting.solved_enabled = true
-    SiteSetting.enable_solved_shared_issues = true
     DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
   end
 
@@ -44,7 +43,7 @@ RSpec.describe DiscourseSolved::SharedIssueController do
         expect(response.parsed_body["user_created_shared_issue"]).to eq(false)
       end
 
-      it "rejects when the policy fails" do
+      it "rejects when shared issues are disabled" do
         SiteSetting.enable_solved_shared_issues = false
         post "/solution/shared_issue.json", params: { topic_id: topic.id }
         expect(response.status).to eq(403)

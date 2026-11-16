@@ -30,6 +30,8 @@ export default class BookmarkMenu extends Component {
 
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
+
+  /** @type {Promise<void> | null} */
   bookmarkCreatePromise = null;
 
   get bookmarkManager() {

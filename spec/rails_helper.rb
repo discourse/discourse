@@ -134,7 +134,7 @@ RSpec.configure do |config|
   config.include UploadsHelpers
   config.include BackupsHelpers
   config.include OneboxHelpers
-  config.include FastImageHelpers
+  config.include RemoteImageHelpers
   config.include ServiceMatchers
   config.include JsonApiKitMatchers, type: :resource
   config.include I18nHelpers
@@ -255,6 +255,7 @@ RSpec.configure do |config|
     if example.metadata[:type] != :system
       EmberAssets.stubs(:read_manifest!).returns(nil)
       EmberAssets.stubs(:script_chunks).returns({})
+      EmberAssets.stubs(:import_map).returns({})
     end
   end
 

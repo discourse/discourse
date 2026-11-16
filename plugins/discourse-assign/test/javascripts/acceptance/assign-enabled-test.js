@@ -39,8 +39,7 @@ acceptance("Assign mobile", function (needs) {
     server.get("/assign/suggestions", () => {
       return helper.response({
         success: true,
-        assign_allowed_groups: false,
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions: [
           {
             id: 19,
@@ -80,8 +79,7 @@ acceptance("Assign desktop", function (needs) {
     server.get("/assign/suggestions", () => {
       return helper.response({
         success: true,
-        assign_allowed_groups: false,
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions: [
           {
             id: 19,
@@ -157,8 +155,7 @@ acceptance("Assign Status enabled", function (needs) {
     server.get("/assign/suggestions", () => {
       return helper.response({
         success: true,
-        assign_allowed_groups: false,
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions: [
           {
             id: 19,
@@ -218,8 +215,7 @@ acceptance("Assign Status disabled", function (needs) {
     server.get("/assign/suggestions", () => {
       return helper.response({
         success: true,
-        assign_allowed_groups: false,
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions: [
           {
             id: 19,

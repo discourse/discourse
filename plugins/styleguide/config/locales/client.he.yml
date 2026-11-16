@@ -38,6 +38,12 @@ he:
             delete: "מחיקה"
         multi_select:
           title: "בחירה במרוכז"
+        reorderable_list:
+          policies_pinned: "נעוץ"
+          policies_required: "נדרש"
+          table_field: "שדה"
+          table_type: "סוג"
+          cross_list_primary: "ראשית"
         toasts:
           title: "חלוניות מידע"
         font_scale:

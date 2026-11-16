@@ -66,6 +66,7 @@ RSpec.describe DiscourseAi::Admin::AiSecretsController do
       expect(json["ai_secret"]["secret"]).to eq("********")
       expect(AiSecret.last.secret).to eq("sk-new-key")
       expect(AiSecret.last.created_by_id).to eq(admin.id)
+      expect(request.filtered_parameters.to_s).not_to include("sk-new-key")
     end
 
     it "returns errors for invalid params" do

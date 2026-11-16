@@ -7,11 +7,11 @@ import Form from "discourse/components/form";
 import Category from "discourse/models/category";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
-import BooleanThree from "./param-input/boolean-three";
-import CategoryIdInput from "./param-input/category-id-input";
-import GroupInput from "./param-input/group-input";
-import UserIdInput from "./param-input/user-id-input";
-import UserListInput from "./param-input/user-list-input";
+import BooleanThree from "./param-input/boolean-three.gjs";
+import CategoryIdInput from "./param-input/category-id-input.gjs";
+import GroupInput from "./param-input/group-input.gjs";
+import UserIdInput from "./param-input/user-id-input.gjs";
+import UserListInput from "./param-input/user-list-input.gjs";
 
 export class ParamValidationError extends Error {}
 

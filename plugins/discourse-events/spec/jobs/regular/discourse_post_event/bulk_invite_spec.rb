@@ -226,6 +226,38 @@ describe Jobs::DiscoursePostEventBulkInvite do
               invitee_klass.statuses[:interested],
             )
           end
+
+          it "updates recurrence scope when a going attendee is bulk invited again at capacity" do
+            post_event_1.update!(max_attendees: 1)
+            invitee_klass = DiscourseEvents::Events::Invitee
+            invitee_klass.create_attendance!(invitee_4.id, post_event_1.id, :going)
+
+            job_args = {
+              event_id: post_event_1.id,
+              invitees: [{ "identifier" => invitee_4.username, "attendance" => "going" }],
+              recurring: true,
+              current_user_id: user_1.id,
+            }
+
+            Jobs::DiscoursePostEventBulkInvite.new.execute(job_args)
+            expect(invitee_klass.find_by(user_id: invitee_4.id)).to be_recurring
+
+            Jobs::DiscoursePostEventBulkInvite.new.execute(job_args.merge(recurring: false))
+            expect(invitee_klass.find_by(user_id: invitee_4.id)).not_to be_recurring
+          end
+
+          it "does not mark non-going attendees as recurring" do
+            Jobs::DiscoursePostEventBulkInvite.new.execute(
+              event_id: post_event_1.id,
+              invitees: [{ "identifier" => invitee_3.username, "attendance" => "interested" }],
+              recurring: true,
+              current_user_id: user_1.id,
+            )
+
+            expect(
+              DiscourseEvents::Events::Invitee.find_by(user_id: invitee_3.id),
+            ).not_to be_recurring
+          end
         end
       end
     end

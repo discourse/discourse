@@ -9,22 +9,27 @@ import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { recurrenceContext, recurrenceRef } from "../../lib/event-recurrence";
-import ChatChannel from "./chat-channel";
-import Creator from "./creator";
-import Dates from "./dates";
-import Description from "./description";
-import EventStatus from "./event-status";
-import Image from "./image";
-import Invitees from "./invitees";
-import Livestream from "./livestream";
-import DiscoursePostEventLocation from "./location";
-import MoreMenu from "./more-menu";
-import Status from "./status";
-import Url from "./url";
+import {
+  recurrenceContext,
+  recurrenceRef,
+} from "../../lib/event-recurrence.js";
+import ChatChannel from "./chat-channel.gjs";
+import Creator from "./creator.gjs";
+import Dates from "./dates.gjs";
+import Description from "./description.gjs";
+import EventStatus from "./event-status.gjs";
+import Image from "./image.gjs";
+import Invitees from "./invitees.gjs";
+import Livestream from "./livestream.gjs";
+import DiscoursePostEventLocation from "./location.gjs";
+import MoreMenu from "./more-menu.gjs";
+import Recording from "./recording.gjs";
+import Status from "./status.gjs";
+import Url from "./url.gjs";
 
 const StatusSeparator = <template>
   <span class="separator">·</span>
@@ -90,7 +95,7 @@ export default class DiscoursePostEvent extends Component {
 
   setupMessageBus = modifier(() => {
     const topicId = this.event?.post?.topic?.id;
-    if (!topicId) {
+    if (this.readOnly || !topicId) {
       return;
     }
 
@@ -98,6 +103,9 @@ export default class DiscoursePostEvent extends Component {
     this.messageBus.subscribe(path, async (msg) => {
       const eventData = await this.discoursePostEventApi.event(msg.id);
       this.event.updateFromEvent(eventData);
+      if (this.event.isFutureOccurrence) {
+        this.event.filterForFutureOccurrence();
+      }
     });
 
     return () => this.messageBus.unsubscribe(path);
@@ -105,7 +113,7 @@ export default class DiscoursePostEvent extends Component {
 
   constructor() {
     super(...arguments);
-    if (this.isPartialEvent) {
+    if (this.isPartialEvent && !this.readOnly) {
       this.loadEvent();
     }
   }
@@ -116,6 +124,23 @@ export default class DiscoursePostEvent extends Component {
 
   get isPartialEvent() {
     return !this.args.event?.creator;
+  }
+
+  // Once the event is over and a recording exists, the stream link is stale.
+  get livestreamSuperseded() {
+    return !!(
+      this.event?.livestream &&
+      this.event.isExpired &&
+      this.event.recordingUrl
+    );
+  }
+
+  get locationSuperseded() {
+    return this.livestreamSuperseded && !!this.event.location?.trim();
+  }
+
+  get urlSuperseded() {
+    return this.livestreamSuperseded && !this.locationSuperseded;
   }
 
   get displayUrl() {
@@ -140,6 +165,10 @@ export default class DiscoursePostEvent extends Component {
 
   get withDescription() {
     return this.args.withDescription ?? true;
+  }
+
+  get readOnly() {
+    return this.args.readOnly ?? false;
   }
 
   get startsAtMonth() {
@@ -226,7 +255,7 @@ export default class DiscoursePostEvent extends Component {
         displayedStartsAt &&
         displayedStartsAt !== fetched.startsAt
       ) {
-        this.#filterForFutureOccurrence(fetched);
+        fetched.filterForFutureOccurrence();
       }
 
       fetched.startsAt = displayedStartsAt;
@@ -239,30 +268,15 @@ export default class DiscoursePostEvent extends Component {
     }
   }
 
-  #filterForFutureOccurrence(event) {
-    event.sampleInvitees = event.sampleInvitees.filter(
-      (invitee) => invitee.status !== "going" || invitee.recurring
-    );
-
-    const recurringCount = event.stats?.goingRecurring ?? 0;
-    if (event.stats) {
-      event.stats.going = recurringCount;
-    }
-    event.atCapacity =
-      event.maxAttendees != null && recurringCount >= event.maxAttendees;
-
-    if (
-      event.watchingInvitee?.status === "going" &&
-      !event.watchingInvitee?.recurring
-    ) {
-      event.watchingInvitee = null;
-    }
-  }
-
   <template>
     {{#let this.event as |event|}}
-      <div class="discourse-post-event">
-        <div class="discourse-post-event-widget">
+      <div class="discourse-post-event" ...attributes>
+        <div
+          class={{dConcatClass
+            "discourse-post-event-widget"
+            (if event.isExpired "is-ended")
+          }}
+        >
           {{#if event}}
             <Image
               @alt={{this.eventName}}
@@ -292,6 +306,7 @@ export default class DiscoursePostEvent extends Component {
                     @name="discourse-post-event-status-and-creators"
                     @outletArgs={{lazyHash
                       event=event
+                      readOnly=this.readOnly
                       Separator=StatusSeparator
                       Status=(component EventStatus event=event)
                       Creator=(component
@@ -311,15 +326,17 @@ export default class DiscoursePostEvent extends Component {
               </div>
 
               <div class="event-header__controls">
-                {{#if event.creator}}
-                  <MoreMenu
-                    @composePrivateMessage={{routeAction
-                      "composePrivateMessage"
-                    }}
-                    @event={{event}}
-                    @isStandaloneEvent={{this.isStandaloneEvent}}
-                  />
-                {{/if}}
+                {{#unless this.readOnly}}
+                  {{#if event.creator}}
+                    <MoreMenu
+                      @composePrivateMessage={{routeAction
+                        "composePrivateMessage"
+                      }}
+                      @event={{event}}
+                      @isStandaloneEvent={{this.isStandaloneEvent}}
+                    />
+                  {{/if}}
+                {{/unless}}
 
                 {{#if @onClose}}
                   <DButton
@@ -335,14 +352,21 @@ export default class DiscoursePostEvent extends Component {
               @name="discourse-post-event-info"
               @outletArgs={{lazyHash
                 event=event
+                readOnly=this.readOnly
                 Section=(component InfoSection event=event)
-                Url=(component Url url=this.displayUrl)
+                Url=(component
+                  Url url=this.displayUrl superseded=this.urlSuperseded
+                )
                 Description=(component
                   Description
                   descriptionHtml=event.descriptionHtml
                   clamp=this.clampDescription
                 )
-                Location=(component DiscoursePostEventLocation event=event)
+                Location=(component
+                  DiscoursePostEventLocation
+                  event=event
+                  superseded=this.locationSuperseded
+                )
                 Dates=(component Dates event=event)
                 Recurrence=(component
                   InfoSection icon="arrows-rotate" class="event-recurrence"
@@ -351,6 +375,7 @@ export default class DiscoursePostEvent extends Component {
                 Invitees=(component Invitees event=event)
                 Status=(component Status event=event)
                 ChatChannel=(component ChatChannel event=event)
+                Recording=(component Recording event=event post=@post)
                 Image=(component
                   Image
                   imageUpload=event.imageUpload
@@ -367,15 +392,23 @@ export default class DiscoursePostEvent extends Component {
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
-              <DiscoursePostEventLocation @event={{event}} />
-              <Url @url={{this.displayUrl}} />
+              <DiscoursePostEventLocation
+                @event={{event}}
+                @superseded={{this.locationSuperseded}}
+              />
+              <Url
+                @superseded={{this.urlSuperseded}}
+                @url={{this.displayUrl}}
+              />
               <ChatChannel @event={{event}} />
 
-              {{#if event.stats}}
-                <Invitees @event={{event}} />
-              {{else if this.loadingDetails}}
-                <InviteesPlaceholder />
-              {{/if}}
+              {{#unless this.readOnly}}
+                {{#if event.stats}}
+                  <Invitees @event={{event}} />
+                {{else if this.loadingDetails}}
+                  <InviteesPlaceholder />
+                {{/if}}
+              {{/unless}}
 
               {{#if this.withDescription}}
                 <Description
@@ -384,14 +417,17 @@ export default class DiscoursePostEvent extends Component {
                 />
               {{/if}}
 
-              {{#if this.showStatus}}
-                <Status @event={{event}} />
-              {{else if this.loadingDetails}}
-                <StatusPlaceholder />
-              {{/if}}
+              {{#unless this.readOnly}}
+                {{#if this.showStatus}}
+                  <Status @event={{event}} />
+                {{else if this.loadingDetails}}
+                  <StatusPlaceholder />
+                {{/if}}
 
-              {{#unless @hideLivestreamVideo}}
-                <Livestream @event={{event}} @post={{@post}} />
+                {{#unless @hideLivestreamVideo}}
+                  <Livestream @event={{event}} @post={{@post}} />
+                  <Recording @event={{event}} @post={{@post}} />
+                {{/unless}}
               {{/unless}}
             </PluginOutlet>
           {{/if}}

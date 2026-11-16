@@ -9,6 +9,7 @@ import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class FeatureTopicOnProfile extends Component {
+  /** @type {import("discourse/models/topic").default | null} */
   @tracked newFeaturedTopic = null;
   @tracked saving = false;
 

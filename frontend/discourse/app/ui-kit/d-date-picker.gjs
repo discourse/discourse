@@ -11,9 +11,16 @@ const DATE_FORMAT = "YYYY-MM-DD";
 
 @classNames("date-picker-wrapper")
 export default class DDatePicker extends Component {
+  /** @type {import("moment").Moment | Date | string | null | undefined} */
   value = null;
+
+  /** @type {Date | null | undefined} */
   minDate = null;
+
+  /** @type {Date | null | undefined} */
   maxDate = null;
+
+  /** @type {{ setDate: (date: Date | string | null, preventOnSelect?: boolean) => void, destroy: () => void } | (HTMLInputElement & { hide: () => void, destroy: () => void }) | null} */
   _picker = null;
 
   @computed("_placeholder")
@@ -104,6 +111,7 @@ export default class DDatePicker extends Component {
     }
   }
 
+  /** @returns {{ defaultDate?: Date | string | null, setDefaultDate?: boolean, minDate?: Date | null, maxDate?: Date | null } | null} */
   _opts() {
     return null;
   }

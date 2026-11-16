@@ -106,14 +106,15 @@ Keys matching field `@name`s are prepopulated automatically, including nested ob
 
 > :information_source: `@data` is treated as immutable. Edits do not mutate the original object you pass in. If you need to keep some external state in sync while editing, do that explicitly in `@onSet`.
 
-When deriving a form object from a model, prefer a cached getter:
+> :warning: A new `@data` object rebuilds the whole form, discarding focus and unsaved edits. Keep its identity stable while the form is open.
+
+When deriving a form object from a model, build it once in a class field or constructor:
 
 ```js
-@cached
-get formData() {
-  return getProperties(this.model, "foo", "bar", "baz");
-}
+formData = getProperties(this.args.model, "foo", "bar", "baz");
 ```
+
+Avoid getters or `(hash ...)` that recompute while the form is open, e.g. after writing back to the model in `@onSet` or `@onSubmit`. If the model itself can change, re-create the owning component per model, e.g. `{{#each (array @model) as |model|}}`.
 
 **Parameter**
 
@@ -619,7 +620,11 @@ Displays date picker expanded on desktop. Defaults to true.
 
 ## Code
 
-Renders an `<AceEditor />` component.
+Renders a `<CodeEditor />` component.
+
+Tab indents and Shift-Tab outdents. To move keyboard focus out of the editor,
+press Escape and then Tab (or Shift-Tab). If a completion or search panel is
+open, close it with Escape first.
 
 ### @height
 
@@ -627,7 +632,8 @@ Sets the height of the editor in pixels.
 
 ### @lang
 
-Sets the editor mode.
+Sets the language shortcut: one of `css`, `html`, `javascript`, `json`, `scss`,
+`sql`, `text`, `yaml`, or a name registered with `api.registerCodeEditorLanguage`.
 
 **Example**
 
@@ -737,7 +743,7 @@ Passes the picker context through to `<EmojiPicker />`.
 
 ## Icon
 
-Renders an `<IconPicker />` component.
+Renders a `<DIconGridPicker />` component.
 
 **Example**
 
@@ -871,6 +877,17 @@ Renders text after the input
 ## Menu
 
 Renders a `<DMenu />` trigger with yielded menu content.
+
+### @preservePlacement
+
+Pass `@preservePlacement={{true}}` to `<field.Control>` to keep the menu's initially
+resolved placement until it closes. This prevents filtered results from making an
+open menu flip between above and below its trigger. Scrolling and viewport resizing
+still update its position. Each opening chooses its placement again. Defaults to `false`.
+
+The menu will not switch sides if its content grows or the available space on the
+chosen side decreases. Enabled shifting and viewport height constraints still apply;
+use a constrained, scrollable content area for results that may grow.
 
 ### @selection
 

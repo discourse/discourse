@@ -86,6 +86,16 @@ RSpec.describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "rejects oversized search text in full-page and header searches" do
+      term = (1..51).map { |number| "word#{number}" }.join(" ")
+
+      get "/search.json", params: { q: term }
+      expect(response.status).to eq(400)
+
+      get "/search/query.json", params: { term: term }
+      expect(response.status).to eq(400)
+    end
+
     it "can search correctly" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
@@ -801,6 +811,18 @@ RSpec.describe SearchController do
   end
 
   context "with search context" do
+    it "returns a 400 for a string search context on full-page search" do
+      get "/search.json", params: { q: "test", search_context: "user" }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns a 400 for a string search context on search queries" do
+      get "/search/query.json", params: { term: "test", search_context: "user" }
+
+      expect(response.status).to eq(400)
+    end
+
     it "raises an error with an invalid context type" do
       get "/search/query.json",
           params: {

@@ -8,7 +8,6 @@ import GroupDefaultNotificationsModal from "discourse/components/modal/group-def
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_VISIBILITY_LEVELS } from "discourse/lib/constants";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -20,6 +19,7 @@ export default class GroupManageSaveButton extends Component {
   @service router;
   @service groupAutomaticMembersDialog;
 
+  /** @type {boolean | null} */
   saving = null;
   disabled = false;
 

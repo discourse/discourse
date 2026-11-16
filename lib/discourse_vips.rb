@@ -47,6 +47,16 @@ module DiscourseVips
     )
   end
 
+  def self.gif_dimensions(input_path:, timeout:)
+    Client.call(
+      ["gif-dimensions", input_path],
+      operation: :upload_gif_dimensions,
+      timeout:,
+      read: [input_path],
+      write: [],
+    )
+  end
+
   # Uses GIF/WebP frame counts and HEIF/AVIF image collections.
   # APNG and timed HEIF/AVIF sequences are unsupported.
   def self.animated?(input_path:, timeout:)
@@ -132,7 +142,8 @@ module DiscourseVips
     gravity: nil,
     sharpen: false,
     quality: nil,
-    strip_metadata: false
+    strip_metadata: false,
+    animated: false
   )
     if [scale, width || height, max_pixels].compact.length != 1 || width.nil? != height.nil?
       raise ArgumentError,
@@ -157,6 +168,7 @@ module DiscourseVips
           gravity,
           input_format,
           output_format,
+          animated,
         ],
         operation:,
         read: [input_path],

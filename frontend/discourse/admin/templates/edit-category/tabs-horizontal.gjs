@@ -5,7 +5,6 @@ import EditCategoryTab from "discourse/admin/components/edit-category-tab";
 import BackButton from "discourse/components/back-button";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
-import { and } from "discourse/truth-helpers";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 

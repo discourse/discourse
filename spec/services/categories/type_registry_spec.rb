@@ -181,6 +181,12 @@ RSpec.describe Categories::TypeRegistry do
     end
   end
 
+  describe ".configured_counts" do
+    it "leaves out the implicit discussion type" do
+      expect(described_class.configured_counts).to eq(described_class.counts.except(:discussion))
+    end
+  end
+
   describe ".register" do
     let(:test_type) do
       Class.new(Categories::Types::Base).tap { |t| t.type_id(:test_registry_type) }

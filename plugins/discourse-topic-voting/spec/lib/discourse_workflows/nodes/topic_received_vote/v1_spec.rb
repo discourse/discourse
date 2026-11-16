@@ -45,6 +45,12 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicReceivedVote::V1 do
       expect(described_class.new(vote).matches?(trigger_context({}))).to eq(true)
     end
 
+    it "matches only votes on the selected topics" do
+      expect(
+        described_class.new(vote).matches?(trigger_context("topic_ids" => [topic.id + 1])),
+      ).to eq(false)
+    end
+
     it "matches only votes on topics in the selected categories" do
       other_category = Fabricate(:category)
 
@@ -78,9 +84,5 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicReceivedVote::V1 do
         false,
       )
     end
-  end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

@@ -117,7 +117,7 @@ class Admin::BackupsController < Admin::AdminController
     resume_token_valid =
       !email_token_valid &&
         SiteSetting.backup_download_resume_window !=
-          BackupDownloadResumeWindowSiteSetting::DISABLED && request.headers["Range"].present? &&
+          BackupDownloadResumeWindowSiteSetting::DISABLED && valid_backup_resume_range? &&
         BackupDownloadResumeToken.compare(current_user.id, backup_id, token)
 
     if !email_token_valid && !resume_token_valid
@@ -273,29 +273,14 @@ class Admin::BackupsController < Admin::AdminController
     render body: nil
   end
 
-  def create_upload_url
-    params.require(:filename)
-    filename = params.fetch(:filename)
-
-    unless valid_extension?(filename)
-      return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz"))
-    end
-    return render_json_error(I18n.t("backup.invalid_filename")) unless valid_filename?(filename)
-
-    store = BackupRestore::BackupStore.create
-
-    begin
-      upload_url = store.generate_upload_url(filename)
-    rescue BackupRestore::BackupStore::BackupFileExists
-      return render_json_error(I18n.t("backup.file_exists"))
-    rescue BackupRestore::BackupStore::StorageError => e
-      return render_json_error(e)
-    end
-
-    render json: success_json.merge(url: upload_url)
-  end
-
   private
+
+  def valid_backup_resume_range?
+    range = request.headers["Range"]&.match(/\Abytes=([1-9]\d*)-(\d*)\z/i)
+    return false unless range
+
+    range[2].empty? || range[2].to_i >= range[1].to_i
+  end
 
   def has_enough_space_on_disk?(size)
     DiskSpace.free("#{Rails.public_path.join("backups")}") > size

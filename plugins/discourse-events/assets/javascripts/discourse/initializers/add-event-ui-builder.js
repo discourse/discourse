@@ -1,7 +1,10 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
-import PostEventBuilder from "../components/modal/post-event-builder";
-import { defaultReminderFor, reminderToBBCode } from "../lib/raw-event-helper";
+import PostEventBuilder from "../components/modal/post-event-builder.gjs";
+import {
+  defaultReminderFor,
+  reminderToBBCode,
+} from "../lib/raw-event-helper.js";
 
 function initializeEventBuilder(api) {
   const currentUser = api.getCurrentUser();

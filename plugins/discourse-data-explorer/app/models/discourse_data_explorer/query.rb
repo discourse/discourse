@@ -17,6 +17,8 @@ module DiscourseDataExplorer
     self.table_name = "data_explorer_queries"
 
     DEFAULT_TAG = "default"
+    CUSTOM_TAG = "custom"
+    RESERVED_TAGS = [DEFAULT_TAG, CUSTOM_TAG].freeze
 
     has_many :query_groups
     has_many :groups, through: :query_groups
@@ -28,6 +30,10 @@ module DiscourseDataExplorer
              class_name: "DiscourseDataExplorer::QueryTag",
              through: :query_tag_mappings,
              source: :query_tag
+    has_one :dashboard_report,
+            -> { where(source: AdminDashboardReportProvider.source_name) },
+            class_name: "::AdminDashboardReport",
+            foreign_key: :identifier
     belongs_to :user
     validates :name, presence: true
 
@@ -46,23 +52,48 @@ module DiscourseDataExplorer
             Array
               .wrap(tag_names)
               .reduce(all) do |scope, tag_name|
-                default_query_condition =
-                  tag_name == DEFAULT_TAG ? "data_explorer_queries.id < 0 OR" : ""
-                scope.where(<<~SQL, tag_name)
-                (#{default_query_condition} EXISTS (
+                automatic_condition =
+                  case tag_name
+                  when DEFAULT_TAG
+                    "data_explorer_queries.id < 0"
+                  when CUSTOM_TAG
+                    "data_explorer_queries.id > 0"
+                  else
+                    "data_explorer_queries.id IN (:default_query_ids)"
+                  end
+                scope.where(
+                  <<~SQL,
+                (#{automatic_condition} OR EXISTS (
                   SELECT 1
                   FROM data_explorer_query_tags query_tag_mappings
                   JOIN data_explorer_tags query_tags
                     ON query_tags.id = query_tag_mappings.query_tag_id
                   WHERE query_tag_mappings.query_id = data_explorer_queries.id
-                    AND query_tags.name = ?
+                    AND query_tags.name = :tag_name
                 ))
               SQL
+                  tag_name:,
+                  default_query_ids: default_query_ids_tagged(tag_name),
+                )
               end
           end
 
     def self.is_default_query?(id)
       id.to_i < 0
+    end
+
+    def self.automatic_tag_names(id)
+      if is_default_query?(id)
+        [DEFAULT_TAG, *Queries.tags[id.to_i]]
+      elsif id.to_i > 0
+        [CUSTOM_TAG]
+      else
+        []
+      end
+    end
+
+    def self.default_query_ids_tagged(tag_name)
+      Queries.tags.filter_map { |id, names| id if names.include?(tag_name) }
     end
 
     def params
@@ -98,18 +129,17 @@ module DiscourseDataExplorer
           .where(data_explorer_queries: { hidden: false })
           .distinct
           .pluck(:name)
-      (tag_names << DEFAULT_TAG).uniq.sort_by(&:downcase)
+      (tag_names + RESERVED_TAGS + Queries.tags.values.flatten).uniq.sort_by(&:downcase)
     end
 
     def self.unpersisted_defaults(search: nil, tags: nil, tag: nil)
       selected_tags = QueryTag.normalize_all(tags || tag)
-      return [] if selected_tags.any? { |name| name != DEFAULT_TAG }
-
-      persisted_ids = where(hidden: false).where("id < 0").pluck(:id).to_set
+      persisted_ids = where("id < 0").pluck(:id).to_set
       query_text = search&.downcase
 
       Queries.default.filter_map do |_, attributes|
         next if persisted_ids.include?(attributes["id"])
+        next if (selected_tags - automatic_tag_names(attributes["id"])).any?
 
         if query_text
           name_match = attributes["name"]&.downcase&.include?(query_text)
@@ -124,9 +154,7 @@ module DiscourseDataExplorer
     end
 
     def tag_names
-      names = tags.map(&:name)
-      names.unshift(DEFAULT_TAG) if self.class.is_default_query?(id)
-      names.uniq
+      (self.class.automatic_tag_names(id) + tags.map(&:name)).uniq
     end
 
     private

@@ -1172,6 +1172,7 @@ RSpec.describe Post do
           {
             cook_method: Post.cook_methods[:regular],
             user_id: post.last_editor_id,
+            hashtag_user_ids: [post.user_id, post.last_editor_id],
             post_id: post.id,
           },
         )
@@ -1183,9 +1184,25 @@ RSpec.describe Post do
         .expects(:cook)
         .with(
           post.raw,
-          { cook_method: Post.cook_methods[:regular], user_id: user_editor.id, post_id: post.id },
+          {
+            cook_method: Post.cook_methods[:regular],
+            user_id: user_editor.id,
+            hashtag_user_ids: [post.user_id, user_editor.id],
+            post_id: post.id,
+          },
         )
       post.cook(post.raw)
+    end
+
+    it "does not resolve a hashtag that one of the post's writers cannot see" do
+      category = Fabricate(:private_category, group: Fabricate(:group), slug: "secret-plans")
+      admin = Fabricate(:admin)
+      authored_post = Fabricate(:post, user:, last_editor_id: admin.id)
+      revised_post = Fabricate(:post, user: admin, last_editor_id: admin.id)
+      Fabricate(:post_revision, post: revised_post, user:)
+
+      expect(authored_post.cook("#secret-plans")).not_to include(category.name)
+      expect(revised_post.cook("#secret-plans")).not_to include(category.name)
     end
 
     describe "mentions" do
@@ -1621,6 +1638,25 @@ RSpec.describe Post do
       expect(Post.last.raw).to match("custom flag")
 
       custom_flag.destroy!
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        enable_dsa_reporting
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the hidden post notice" do
+        custom_flag = Fabricate(:flag, name: "custom flag")
+        post.hide!(PostActionType.types[:custom_custom_flag])
+
+        jobs = Jobs::SendSystemMessage.jobs
+
+        Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+
+        custom_flag.destroy!
+      end
     end
 
     it "decreases user_stat topic_count for the first post" do
@@ -2433,6 +2469,42 @@ RSpec.describe Post do
       other_message = messages.select { |msg| msg.data[:type] == :anything }.first
       expect(other_message).to be_present
       expect(other_message.data.key?(:skip_topic_stats)).to be_falsey
+    end
+
+    it "includes moderators only when they can see the private message" do
+      moderator = Fabricate(:moderator)
+      original_subtype = topic.subtype
+      expect(created_audience).not_to include(moderator.id)
+
+      topic.update!(subtype: TopicSubtype.moderator_warning)
+      expect(created_audience).to include(moderator.id)
+
+      topic.update!(subtype: original_subtype)
+      expect(created_audience).not_to include(moderator.id)
+
+      PostActionCreator.create(user1, post, :off_topic)
+      expect(created_audience).to include(moderator.id)
+    end
+
+    it "excludes staff who cannot see the private message from whisper audiences" do
+      moderator = Fabricate(:moderator)
+      admin = Fabricate(:admin)
+      whisper = Fabricate(:whisper, topic: topic, user: admin)
+
+      audience = created_audience(whisper)
+
+      expect(audience).to include(admin.id)
+      expect(audience).not_to include(moderator.id)
+    end
+
+    def created_audience(target = post)
+      target.reload # the topic association memoizes attributes this audience depends on
+      messages =
+        MessageBus.track_publish("/topic/#{topic.id}") do
+          target.publish_change_to_clients!(:created)
+        end
+
+      messages.find { |message| message.data[:type] == :created }.user_ids
     end
   end
 

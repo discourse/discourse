@@ -16,6 +16,10 @@ ca:
         context_menu:
           actions:
             delete: "Suprimeix"
+        reorderable_list:
+          policies_pinned: "Afixat"
+          policies_required: "Necessari"
+          table_type: "Tipus"
         colors:
           title: "Colors"
         icons:

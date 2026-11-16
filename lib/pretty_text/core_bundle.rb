@@ -25,11 +25,11 @@ module PrettyText
         filename_prefix: "pretty-text",
         dependency_globs:
           %w[
-            node_modules/.pnpm/lock.yaml
+            pnpm-lock.yaml
             frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
-            frontend/pretty-text/addon/**/*.js
+            frontend/discourse/pretty-text/**/*.{js,ts}
             frontend/discourse-markdown-it/src/**/*.js
-          ] + DISCOURSE_MODULES.map { "frontend/discourse/app/#{it}.js" },
+          ] + DISCOURSE_MODULES.map { "frontend/discourse/app/#{it}.{js,ts}" },
       ) do
         Discourse::Utils.execute_command(
           "pnpm",

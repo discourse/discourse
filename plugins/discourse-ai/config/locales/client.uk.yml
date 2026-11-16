@@ -32,7 +32,6 @@ uk:
             failed: "Помилка"
         emotion:
           title: "Емоція"
-          description: "У таблиці наведено кількість публікацій, класифікованих за певною емоцією. Залежно від вибраного методу класифікації емоцій, публікації класифікуються або за допомогою налаштованої моделі класифікації емоцій ('SamLowe/roberta-base-go_emotions'), або за допомогою налаштованого агента класифікації емоцій."
         reports:
           filters:
             group_by:
@@ -250,6 +249,8 @@ uk:
               description: "Дозволити тегування повідомлень, створених системним користувачем."
     discourse_ai:
       title: "ШІ"
+      dsa_classification:
+        suggest: "Підказки від ШІ"
       copied: "Скопійовано"
       view_raw: "Переглянути необроблені дані"
       view_decoded: "Переглянути розшифроване"
@@ -287,6 +288,12 @@ uk:
           upload_ids: "Ідентифікатори завантажень"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Виберіть агента..."
+        classify:
+          text: "Текст"
+          upload_ids: "Зображення"
+          name: "Імʼя"
+          type: "Тип"
+          type_score: "Оцінка"
       bot_chats:
         tab_label: "Чати ботів"
       ai_tool_approval:
@@ -301,38 +308,39 @@ uk:
         rejected: "Відхилено"
         awaiting_staff: "Очікується схвалення персоналу"
       default_llm:
-        title: "Модель LLM за замовчуванням"
-        description: "Модель LLM за замовчуванням, яка використовуватиметься для всіх функцій штучного інтелекту. Вона використовуватиметься, якщо в конфігурації функції або агента не вказано LLM. Якщо LLM за замовчуванням не вказано, буде використано останню створену LLM."
+        title: "Мовна модель за замовчуванням"
       llm_selector:
         none: "Немає"
-        saved: "Модель LLM за замовчуванням успішно оновлено"
       features:
         short_title: "Особливості"
-        description: "Це функції штучного інтелекту, доступні відвідувачам вашого сайту. Їх можна налаштувати для використання певних агентів та LLM, а також контролювати доступ за групами."
         back: "Повернутися до можливостей ШІ"
         settings_save_error: "Деякі налаштування не вдалося зберегти."
-        disabled: "(вимкнено)"
-        agent:
-          one: "Агент:"
-          few: "Агенти:"
-          many: "Агенти:"
-          other: "Агенти:"
-        groups: "Групи:"
-        llm:
-          one: "LLM:"
-          few: "LLMs:"
-          many: "LLMs:"
-          other: "LLMs:"
+        table:
+          status: "Статус"
+          enabled: "Включено"
+          feature: "Особливість"
+          agent: "Агент"
+          llm: "LLM"
+          groups: "Групи"
+        who_can_use:
+          no_one: "Ніхто"
+        status:
+          "on": "Увімк"
+          "off": "Вимк."
+        chatbot:
+          column: "Чат-бот"
+          new_agent: "Новий агент"
+          manage_agents: "Керування агентами"
+          places:
+            personal_messages: "Особисті повідомлення"
+            chat_direct_messages: "Повідомлення чату"
+            none: "Не доступно"
+        toggle: "Увімкнути %{name}"
+        set_up: "Налаштувати"
         no_llm: "Не вибрано LLM"
         no_agent: "Не встановлено"
         no_groups: "Немає"
         edit: "Налаштування"
-        expand_list:
-          one: "(ще %{count})"
-          few: "(ще %{count})"
-          many: "(ще %{count})"
-          other: "(ще %{count})"
-        collapse_list: "(показати менше)"
         bot:
           bot: "Чат-бот"
           name: "Бот"
@@ -346,11 +354,17 @@ uk:
           enabled: "Включено"
           not_enabled: "Не увімкнено"
         filters:
-          all: "Всі"
-          text: "Функції пошуку, агенти, LLM або групи..."
           no_results: "Не знайдено об'єктів, що відповідають вашим фільтрам."
           reset: "Скинути"
         no_automations: "Автоматизації поки що немає"
+        sentiment:
+          sentiment: "Почуття"
+          emotion: "Емоція"
+          enabled: "Включено"
+          agent: "Агент"
+          setting_groups:
+            sentiment: "Почуття"
+            emotion: "Емоція"
         summarization:
           name: "Підсумки"
           description: "Надає можливість відвідувачам підсумувати теми за допомогою кнопки підсумовування"
@@ -371,8 +385,7 @@ uk:
             access_control: "Контроль доступу"
         embeddings:
           name: "Вбудовування"
-          description: "Посилює такі функції, як \"Пов'язані теми\" та пошук зі штучним інтелектом, створюючи семантичне представлення тексту"
-          hyde: "HyDE"
+          related_topics: "Пов'язані теми"
           setting_groups:
             model_settings: "Налаштування моделі"
             related_topics: "Пов’язані теми"
@@ -385,7 +398,6 @@ uk:
             settings: "Основні налаштування"
         discord:
           name: "Інтеграція з Discord"
-          description: "Додано можливість пошуку каналів Discord"
           search: "Пошук у Discord"
           setting_groups:
             settings: "Основні налаштування"
@@ -442,10 +454,6 @@ uk:
             many: "Заплановано переклад для неперекладених %{count} дописів."
             other: "Заплановано переклад для неперекладених %{count} дописів."
           schedule_topic_error: "Не вдалося запланувати переклади. Спробуйте ще раз."
-          setting_groups:
-            settings: "Основні налаштування"
-            agents: "Агенти"
-            backfill_and_limits: "Засипка та обмеження"
         spam:
           name: "Спам"
           description: "Визначає потенційний спам за допомогою вибраного LLM і відзначити його для модераторів для перегляду в черзі відгуків"
@@ -464,11 +472,23 @@ uk:
       translations:
         title: "Переклади"
         description: "Автоматично перекладати весь вміст на вашому форумі на бажану мову користувача"
-        supported_locales: "Підтримувані мови"
+        sections:
+          languages: "Мови"
+          advanced: "Розширений"
+        settings:
+          ai_translation_category_scope:
+            label: "Розділи"
+          ai_translation_personal_messages:
+            label: "Особисті повідомлення"
+            choices:
+              none: "Немає"
+              all: "Всі"
+          content_localization_language_switcher:
+            choices:
+              none: "Ніхто"
+              all: "Усі"
         max_locales_reached: "Ви можете вибрати не більше ніж %{max} мов."
         locale_count: "%{count}/%{max} вибрано"
-        category_scope: "Розділи"
-        category_scope_description: "Виберіть, чи застосовуватимуться автоматичні переклади до контенту у всіх категоріях, загальнодоступних категоріях чи вибраних категоріях."
         cached_results_notice: "Показ кешованих результатів з %{relative_time}."
         model_progress:
           loading: "Завантаження прогресу перекладу"
@@ -578,12 +598,8 @@ uk:
                 many: "%{count} тегів повністю перекладено."
                 other: "%{count} тегів повністю перекладено."
         admin_actions:
-          translation_settings: "Налаштування штучного інтелекту"
-          localization_settings: "Налаштування мови програми"
-          enable_translations: "Увімкнути автоматичний переклад"
+          enabled: "Включено"
           enable_translations_disabled: "Щоб увімкнути переклади, потрібно додати підтримувану мову"
-          show_language_switcher: "Показувати перемикач мов у заголовку"
-          show_language_switcher_description: "Дозволяє кожному вибрати мову та переглядати ваш сайт нею."
         stats:
           title: "Статистика перекладів"
           backfill_disabled: "Автозаповнення вимкнено, перекладатимуться лише нові публікації."
@@ -630,6 +646,8 @@ uk:
         short_title: "Спам"
         title: "Налаштування обробки спаму"
         select_llm: "Виберіть LLM"
+        no_llm_selected: "Немає"
+        no_decision_model_selected: "Немає"
         select_agent: "Виберіть агента"
         custom_instructions: "Користувацькі інструкції"
         custom_instructions_help: "Спеціальні інструкції, адаптовані до вашого сайту, які допоможуть штучному інтелекту виявляти спам, наприклад, «Будьте більш агресивними у скануванні публікацій не англійською мовою»."
@@ -870,8 +888,6 @@ uk:
         description: "Опис"
         no_llm_selected: "Мовну модель не вибрано"
         use_parent_llm: "Використовувати мовну модель агента"
-        max_turn_tokens: "Максимальна кількість токенів кроку"
-        max_turn_tokens_help: "Максимальна загальна кількість токенів (вхід + вихід), що використовуються всіма викликами LLM під час однієї відповіді бота. Залиште поле порожнім, щоб за замовчуванням використовувати половину контекстного вікна моделі."
         compression_threshold: "Поріг стиснення"
         compression_threshold_help: "Відсоток використання контексту (20—99), при якому починається автоматичне стиснення. Низькі значення запускають стиснення раніше, зберігаючи більше простору для голови."
         vision_enabled: Включити завантаження зображень
@@ -1101,7 +1117,6 @@ uk:
           result: "Результат тесту"
       secrets:
         short_title: "Дані доступу"
-        description: "Керуйте обліковими даними автентифікації, що спільно використовуються в LLM, вбудованих системах та інструментах."
         name: "Імʼя"
         secret: "Значення"
         select_secret: "Виберіть обліковий запис..."
@@ -1126,6 +1141,18 @@ uk:
         mcp_server_oauth_client_secret: "Секрет клієнта OAuth сервера MCP"
         modal:
           title: "Створити нові облікові дані"
+      decision_models:
+        no_preset: "Немає"
+        display_name: "Імʼя"
+        model: "Модель"
+        provider: "Провайдер"
+        api_key: "Облікові дані"
+        vision_enabled: "Підтримує введення зображень"
+        edit: "Редагувати"
+        delete: "Видалити"
+        test: "Запустити тест"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Сервери MCP"
         new: "Новий MCP-сервер"
@@ -1213,6 +1240,19 @@ uk:
           few: "Виявлено %{count} інструменти, що використовують протокол %{version}."
           many: "Виявлено %{count} інструментів, що використовують протокол %{version}."
           other: "Виявлено %{count} інструментів, що використовують протокол %{version}."
+      models:
+        new: "Нова модель"
+        name: "Імʼя"
+        type: "Тип"
+        provider: "Провайдер"
+        edit: "Редагувати"
+        seeded_warning: "Це попередньо налаштовано на вашому сайті та не може бути змінено."
+        select_type: "Вибрати"
+        types:
+          embedding: "Взаємодія"
+        filters:
+          all: "Усі типи"
+          reset: "Скинути фільтри"
       llms:
         short_title: "LLMs"
         no_llms: "Ще немає LLM"
@@ -1478,7 +1518,6 @@ uk:
         presets: "Виберіть попереднє налаштування..."
         configure_manually: "Налаштувати вручну"
         edit: "Редагувати"
-        seeded_warning: "Це попередньо налаштовано на вашому сайті та не може бути змінено."
         tests:
           title: "Запустити тест"
           running: "Виконується тест..."
@@ -1510,6 +1549,7 @@ uk:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Користувацька"
         provider_fields:
@@ -1536,9 +1576,74 @@ uk:
         quick_search:
           suffix: "у всіх темах і повідомленнях з ШІ"
       ai_artifact:
+        editor:
+          title: "Артефакт ШІ"
+          edit_options: "Параметри редагування"
+          reference: "Довідка"
+          share_reference_description: "Поділіться ключем або спільним посиланням на артефакт з цього сайту."
+          source_reference_description: "Ідентифікатор вихідного артефакту."
+          version: "Версія"
+          version_description: "Залиште порожнім для базового артефакту."
+          autorun: "Запускати автоматично"
+          autorun_default_description: "Застосовується лише тоді, коли для захисту артефактів встановлено гібридний режим."
+          autorun_strict: "Для запуску цього сайту необхідно натиснути кнопку."
+          autorun_lax: "Цей сайт автоматично запускає артефакти."
+          height: "Висота (px)"
+          height_description: "1–2000 пікселів. Залиште поле порожнім, щоб встановити висоту за замовчуванням."
+          seamless: "Безшовний дисплей"
+          seamless_description: "Приховати нижній колонтитул під час запуску артефакту."
+          summary_autorun: "Запустити автоматично: %{value}"
+          summary_height: "Висота: %{value}"
+          summary_height_value: "%{height} px"
+          summary_seamless: "Безшовний: %{value}"
+          default: "Стандартна"
+          option_on: "Увімк"
+          option_off: "Вимк."
+          apply: "Застосувати"
+          invalid_share: "Введіть дійсний ключ доступу або посилання на артефакт, доступ до якого відкрито на цьому сайті."
+          invalid_source: "Введіть позитивний ідентифікатор артефакту джерела (до 19 цифр)."
+          invalid_version: "Введіть позитивний номер версії (до 19 цифр) або залиште порожнім."
+          invalid_height: "Введіть висоту від 1 до 2000 пікселів або залиште порожнім."
         expand_view_label: "Розгорнути перегляд"
         collapse_view_label: "Вийти з повноекранного режиму (ESC або кнопка «Назад»)"
         click_to_run_label: "Запустити Артефакт"
+        share: "Поширити"
+        privacy_notice: "Будь-хто з цим посиланням може переглядати цю версію. Ваша розмова залишається приватною."
+        privacy_notice_login_required: "Користувачі, які увійшли в систему за цим посиланням, можуть переглянути цю версію. Ваша розмова залишається приватною."
+        create_link: "Створити посилання"
+        version_label: "Версія %{version}"
+        copied: "Скопійовано в буфер обміну"
+        copy_link: "Скопіювати посилання"
+        copy_embed: "Скопіювати вставку"
+        embed_post: "Вбудувати у допис"
+        embed_post_title: "Скопіюйте код, щоб вбудовувати цей артефакт у публікацію"
+        embed_website: "Вбудувати на вебсайт"
+        embed_website_title: "Скопіюйте HTML-код, щоб вбудувати цей артефакт на веб-сайт"
+        new_tab: "Показати в новій вкладці"
+        update_pin: "Оновити закріплену версію"
+        pin_updated: "Спільна версія оновлена"
+        revoke: "Відкликати посилання"
+        revoke_conversation: "Відкликати спільний доступ до розмови"
+        confirm_revoke_standalone_title: "Відкликати посилання?"
+        confirm_revoke_standalone_message: "Це посилання та його вбудовані версії перестануть працювати. Цю дію неможливо скасувати."
+        confirm_revoke_conversation_title: "Скасувати спільний доступ до розмови?"
+        confirm_revoke_conversation_message: "Це назавжди зупиняє спільну розмову та вбудовані в неї артефакти. Окремі посилання не скасовуються."
+        shared_artifacts: "Спільні артефакти AI"
+        filter_shares: "Фільтрувати спільні ресурси"
+        filter_all: "Всі"
+        filter_standalone: "Автономна"
+        filter_conversation: "Розмова"
+        standalone: "Автономне поширення"
+        conversation: "Опубліковано в рамках розмови"
+        empty_shares: "Поки немає спільних артефактів AI."
+        unavailable: "Це посилання більше не доступне. Ви все ще можете його скасувати."
+        retry_loading: "Спробувати завантажити ще раз"
+        newest_first: "Спочатку найновіші"
+        oldest_first: "Спочатку найстаріші"
+      shared_ai_conversations:
+        title: "Спільні розмови ШІ"
+        empty: "Ще немає спільних бесід."
+        unavailable: "Це посилання на бесіду більше недоступне. Ви все ще можете відкликати її."
       ai_bot:
         title: "ШІ-бот"
         agent: "Агент:"
@@ -1635,10 +1740,7 @@ uk:
           streaming_below: "Новий контент нижче"
           editing_post: "Редагування допису"
       sentiments:
-        dashboard:
-          title: "Почуття"
         sidebar:
-          overview: "Огляд настроїв"
           analysis: "Аналіз настроїв"
         sentiment_analysis:
           share_chart: "Копіювати посилання на діаграму"
@@ -1688,6 +1790,21 @@ uk:
             compact: "Компактний"
             expanded: "Розгорнуто"
             expanded_description: "з резюме ШІ"
+      ai_search:
+        related_topics: "Пов'язані теми"
+        related_replies:
+          one: "%{count} відповідь"
+          few: "%{count} відповіді"
+          many: "%{count} відповідей"
+          other: "%{count} відповідь"
+        ask: "Запитайте"
+        tabs:
+          ask: "Запитайте ШІ"
+          topics: "Теми"
+          this_topic: "Ця тема"
+          messages: "Повідомлення"
+        scope:
+          this_topic: "ця тема"
       discobot_discoveries:
         main_title: "Запитайте ШІ"
         loading_convo: "Завантаження розмови"

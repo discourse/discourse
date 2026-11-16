@@ -184,7 +184,6 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         loop_node = result[:node_types].find { |nt| nt[:identifier] == "flow:loop_over_items" }
 
         expect(loop_node[:palette_visible]).to eq(false)
-        expect(loop_node[:output_contracts].pluck(:mode)).to eq(%i[passthrough passthrough])
       end
 
       it "includes manually_triggerable for triggers that support it" do

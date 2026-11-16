@@ -26,9 +26,7 @@ sr:
       close: "Zatvori"
       delete: "Obriši"
       edit: "Izmeni"
-      back: "Nazad"
       save: "Sačuvaj"
-      apply: "Primeni"
       update_range:
         last_10_days: "Последњих 10 дана"
         last_30_days: "Последњих 30 дана"
@@ -40,3 +38,4 @@ sr:
       gamification_score:
         username: "Korisnik"
         description: "Opis"
+        category_id: "Kategorija"

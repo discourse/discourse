@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import { relativeAge } from "discourse/lib/formatter";
-import { and } from "discourse/truth-helpers";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";

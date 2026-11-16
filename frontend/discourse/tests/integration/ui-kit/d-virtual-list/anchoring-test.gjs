@@ -17,14 +17,6 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
 const ROW_PX = 40;
 const estimate = () => ROW_PX;
 
-class State {
-  @tracked items;
-
-  constructor(items) {
-    this.items = items;
-  }
-}
-
 function buildRows(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
@@ -138,7 +130,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
   }
 
   test("initial positioning runs only once", async function (assert) {
-    const state = new State(buildRows(1000));
+    const items = tracked(buildRows(1000));
 
     await render(
       <template>
@@ -152,7 +144,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
         <DVirtualList
           @estimateSize={{estimate}}
           @initialIndex={{500}}
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           @overscan={{0}}
           as |item|
@@ -169,7 +161,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
     );
 
     await scrollTo(0);
-    state.items = buildRows(1000);
+    items.value = buildRows(1000);
     await settled();
 
     assert

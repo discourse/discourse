@@ -6,7 +6,7 @@ import {
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
-import { HOLIDAY_REGIONS } from "../lib/regions";
+import { HOLIDAY_REGIONS } from "../lib/regions.js";
 
 @selectKitOptions({
   filterable: true,

@@ -38,6 +38,12 @@ fi:
             delete: "Poista"
         multi_select:
           title: "Monivalinta"
+        reorderable_list:
+          policies_pinned: "Kiinnitetty"
+          policies_required: "Pakollinen"
+          table_field: "Kenttä"
+          table_type: "Tyyppi"
+          cross_list_primary: "Ensisijainen"
         toasts:
           title: "Ilmoitusruudut"
         font_scale:

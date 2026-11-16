@@ -44,6 +44,12 @@ ur:
             delete: "مٹائیں"
         multi_select:
           title: "ملٹی سلیکٹ"
+        reorderable_list:
+          policies_pinned: "پن کیا ہوا"
+          policies_required: "درکار"
+          table_field: "حلقہ"
+          table_type: "قِسم"
+          cross_list_primary: "بنیادی"
         toasts:
           title: "ٹکیاں"
         font_scale:

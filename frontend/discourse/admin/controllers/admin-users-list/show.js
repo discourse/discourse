@@ -27,21 +27,34 @@ export default class AdminUsersListShowController extends Controller {
   @tracked bulkSelectedUsersMap = {};
 
   @tracked accountType = USER_ACCOUNT_TYPES.HUMAN;
+
+  /** @type {string | null | undefined} */
   @tracked activation = null;
   @tracked refreshing = false;
+
+  /** @type {string | null | undefined} */
   @tracked listFilter = null;
+
+  /** @type {string | null | undefined} */
   @tracked initialFilter = null;
 
+  /** @type {string | null} */
   @tracked query = null;
-  @tracked order = null;
-  @tracked asc = null;
-  @tracked showEmails = false;
 
+  /** @type {string | null | undefined} */
+  @tracked order = null;
+
+  /** @type {boolean | string | null | undefined} */
+  @tracked asc = null;
+
+  /** @type {HTMLInputElement | null} */
   lastSelected = null;
 
   #page = 1;
+
   #results = trackedArray();
   #canLoadMore = true;
+  @tracked _showEmails = false;
 
   get users() {
     return this.#results.flat();
@@ -53,6 +66,22 @@ export default class AdminUsersListShowController extends Controller {
 
   get columnCount() {
     let colCount = 7; // note that the first column is hardcoded in the template
+
+    if (this.showSource) {
+      colCount += 1;
+    }
+
+    if (this.showPostCount) {
+      colCount += 1;
+    }
+
+    if (!this.showLastEmailed) {
+      colCount -= 1;
+    }
+
+    if (!this.showReadTime) {
+      colCount -= 1;
+    }
 
     if (this.showEmails) {
       colCount += 1;
@@ -66,6 +95,10 @@ export default class AdminUsersListShowController extends Controller {
   }
 
   get canCheckEmails() {
+    if (this.query === "bots") {
+      return false;
+    }
+
     return new CanCheckEmailsHelper(
       this.model?.id,
       this.siteSettings.moderators_view_emails,
@@ -73,8 +106,28 @@ export default class AdminUsersListShowController extends Controller {
     ).canCheckEmails;
   }
 
+  get showEmails() {
+    return this.canCheckEmails && this._showEmails;
+  }
+
+  get showLastEmailed() {
+    return this.query !== "bots";
+  }
+
+  get showPostCount() {
+    return this.query === "bots";
+  }
+
+  get showReadTime() {
+    return this.query !== "bots";
+  }
+
   get showSilenceReason() {
     return this.query === "silenced";
+  }
+
+  get showSource() {
+    return this.query === "bots" && this.currentUser.admin;
   }
 
   get showSuspendReason() {
@@ -152,7 +205,7 @@ export default class AdminUsersListShowController extends Controller {
 
   @action
   toggleEmailVisibility() {
-    this.showEmails = !this.showEmails;
+    this._showEmails = !this._showEmails;
     this.resetFilters();
   }
 

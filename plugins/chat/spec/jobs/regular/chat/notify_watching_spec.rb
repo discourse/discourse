@@ -203,7 +203,9 @@ RSpec.describe Jobs::Chat::NotifyWatching do
     end
 
     context "with push_notification_filter registered to block push notifications" do
-      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+      let!(:original_filters) { DiscoursePluginRegistry._raw_push_notification_filters.dup }
+
+      after { DiscoursePluginRegistry._raw_push_notification_filters.replace(original_filters) }
 
       it "doesn't send notification alert via MessageBus" do
         Plugin::Instance.new.register_push_notification_filter { |user, payload| false }
@@ -301,6 +303,61 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
       it "does not send a desktop notification" do
         expect(notification_messages.count).to be_zero
+      end
+    end
+
+    context "when the target user is ignoring the message creator" do
+      before { Fabricate(:ignored_user, user: user2, ignored_user: user1) }
+
+      it "does not send a desktop or mobile notification" do
+        PostAlerter.expects(:push_notification).never
+        expect(notification_messages).to be_empty
+      end
+
+      it "does not create a watched thread notification" do
+        channel.update!(threading_enabled: true)
+        thread = Fabricate(:chat_thread, channel: channel, original_message: message)
+        thread_message =
+          Fabricate(:chat_message, chat_channel: channel, thread: thread, user: user1)
+        thread.add(user2)
+        thread.membership_for(user2).update!(
+          notification_level: Chat::NotificationLevels.all[:watching],
+        )
+
+        expect { described_class.new.execute(chat_message_id: thread_message.id) }.not_to change {
+          Notification.where(
+            user: user2,
+            notification_type: Notification.types[:chat_watched_thread],
+          ).count
+        }
+      end
+    end
+
+    context "when the target user is muting the message creator" do
+      before { Fabricate(:muted_user, user: user2, muted_user: user1) }
+
+      it "does not send a desktop or mobile notification" do
+        PostAlerter.expects(:push_notification).never
+        expect(notification_messages).to be_empty
+      end
+    end
+
+    context "when the target user is ignoring a staff message creator" do
+      before do
+        user1.update!(admin: true)
+        Fabricate(:ignored_user, user: user2, ignored_user: user1)
+      end
+
+      it "still sends a desktop notification" do
+        expect(notification_messages.count).to eq(1)
+      end
+    end
+
+    context "when the target user disallows PMs" do
+      before { user2.user_option.update!(allow_private_messages: false) }
+
+      it "still sends a desktop notification" do
+        expect(notification_messages.count).to eq(1)
       end
     end
   end

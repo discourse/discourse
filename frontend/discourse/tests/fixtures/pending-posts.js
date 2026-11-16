@@ -1,3 +1,8 @@
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
 const pendingPostsFixtures = {
   "/posts/eviltrout/pending.json": {
     pending_posts: [

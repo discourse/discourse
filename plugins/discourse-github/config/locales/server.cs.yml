@@ -21,7 +21,6 @@ cs:
     github_gold_badge_min_commits: "Minimální počet commitů pro zlatý odznak"
     errors:
       invalid_badge_repo: "Musíte zadat adresu URL GitHubu nebo název úložiště ve formátu github_user/repository_name"
-      invalid_github_linkback_access_token: "Musíte poskytnout platný přístupový token pro zpětné odkazy GitHub, který má přístup k repozitářům odznaků, které jste poskytli."
   github_linkback:
     commit_template: |
       Tento commit byl zmíněn na **%{title}**. Mohou tam být relevantní podrobnosti:
@@ -35,25 +34,3 @@ cs:
       Tento problém byl zmíněn na **%{title}**. Tam mohou být relevantní podrobnosti:
 
       %{post_url}
-  github_commits_populator:
-    errors:
-      repository_identifier_invalid_pm_title: "Pro plugin discourse-github je vyžadována akce"
-      repository_identifier_invalid_pm: |
-        Repozitář zadaný v pluginu discourse-github je neplatný:
-        %{repo_name}
-
-        Měl by být zadán jako `user/repo`.
-
-        Odznaky nebudou uděleny, dokud nebude název opraven v
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">nastavení webu discourse-github</a>
-        a nebude znovu zapnuto „github_badges_enabled“.
-      repository_not_found_pm_title: "Pro plugin discourse-github je vyžadována akce"
-      repository_not_found_pm: |
-        Repozitář uvedený v pluginu discourse-github vrátil chybu "Not Found"
-        : %{repo_name}
-
-        odznaky nebudou uděleny, dokud nebude název opraven v
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">nastavení webu discourse-github</a>
-        a nebude znovu zapnuto "github_badges_enabled".
-      invalid_octokit_credentials_pm_title: "Pro plugin discourse-github je vyžadována akce"
-      invalid_octokit_credentials_pm: "Pověření GitHub poskytnutá pluginu discourse-github jsou neplatná. Nastavení \"github badges enabled\" \nbylo deaktivováno a commity již nebudou interpretovány, dokud nebude problém vyřešen.\n\nZkontrolujte nastavení webu „github linkback access token“, abyste se ujistili, že token je správný a má oprávnění ke všem úložištím\nprostřednictvím\n<a href=\"%{base_path}/admin/site_settings/category/plugins?filter=GitHub\">nastavení webu discourse-github</a>.\n"

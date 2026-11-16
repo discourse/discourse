@@ -23,6 +23,7 @@ export default class EmptyTopicFilter extends Component {
     }
   }
 
+  /** @returns {{ action: (() => void) | null, label: string }} */
   get ctaLabelWithAction() {
     if (this.currentUser.unified_new_enabled) {
       if (this.args.newListSubset === "topics") {

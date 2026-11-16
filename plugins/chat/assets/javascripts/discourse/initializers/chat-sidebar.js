@@ -7,10 +7,14 @@ import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import noop from "discourse/helpers/noop";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { bind } from "discourse/lib/decorators";
+import { helperContext } from "discourse/lib/helpers";
+import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
@@ -134,7 +138,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
 
     get prefixType() {
       if (this.isDM) {
-        if (this.channel.emoji) {
+        if (displayedEmoji(this.channel)) {
           return "emoji";
         } else if (this.channel.chatable.group) {
           if (this.channel.chatable.users.length === 1) {
@@ -146,14 +150,14 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
           return "image";
         }
       } else {
-        return this.channel.emoji ? "emoji" : "icon";
+        return displayedEmoji(this.channel) ? "emoji" : "icon";
       }
     }
 
     get prefixValue() {
       if (this.isDM) {
-        if (this.channel.emoji) {
-          return this.channel.emoji;
+        if (displayedEmoji(this.channel)) {
+          return displayedEmoji(this.channel);
         } else if (this.channel.chatable.group) {
           if (this.channel.chatable.users.length === 1) {
             return avatarUrl(
@@ -170,7 +174,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
           );
         }
       } else {
-        return this.channel.emoji ?? "d-chat";
+        return displayedEmoji(this.channel) ?? "d-chat";
       }
     }
 
@@ -278,6 +282,12 @@ function channelListOptionsAction(section, menuService) {
   };
 }
 
+// Emoji are skipped while disabled so the prefix falls back to the channel's
+// icon, avatar, or member count instead of rendering the raw `:code:`.
+function displayedEmoji(channel) {
+  return helperContext().siteSettings.enable_emoji ? channel.emoji : null;
+}
+
 export default {
   name: "chat-sidebar",
   initialize(container) {
@@ -293,6 +303,7 @@ export default {
     }
 
     withPluginApi((api) => {
+      const chatService = this.chatService;
       const chatStateManager = container.lookup("service:chat-state-manager");
 
       api.addSidebarPanel(
@@ -305,6 +316,31 @@ export default {
 
             get switchButtonDefaultUrl() {
               return chatStateManager.lastKnownChatURL || "/chat";
+            }
+
+            get mobileTab() {
+              return {
+                label: this.switchButtonLabel,
+                icon: this.switchButtonIcon,
+                badgeComponent: ChatHeaderIconUnreadIndicator,
+                url: "/chat",
+                primary: true,
+                ownsRoute: (routeInfo) => routeWithin(routeInfo, "chat"),
+                isNestedRoute: (routeInfo) =>
+                  routeWithin(routeInfo, "chat.channel"),
+                createActions: chatService.userCanChat
+                  ? [
+                      {
+                        label: i18n("chat.new_chat"),
+                        icon: "d-chat",
+                        action: () =>
+                          container
+                            .lookup("service:modal")
+                            .show(ChatModalNewMessage),
+                      },
+                    ]
+                  : [],
+              };
             }
           }
       );
@@ -621,11 +657,11 @@ export default {
               }
 
               get prefixType() {
-                return this.channel.emoji ? "emoji" : "icon";
+                return displayedEmoji(this.channel) ? "emoji" : "icon";
               }
 
               get prefixValue() {
-                return this.channel.emoji ?? "d-chat";
+                return displayedEmoji(this.channel) ?? "d-chat";
               }
 
               get prefixColor() {
@@ -914,7 +950,7 @@ export default {
               }
 
               get prefixType() {
-                if (this.channel.emoji) {
+                if (displayedEmoji(this.channel)) {
                   return "emoji";
                 } else if (this.channel.chatable.group) {
                   if (this.channel.chatable.users.length === 1) {
@@ -928,8 +964,8 @@ export default {
               }
 
               get prefixValue() {
-                if (this.channel.emoji) {
-                  return this.channel.emoji;
+                if (displayedEmoji(this.channel)) {
+                  return displayedEmoji(this.channel);
                 } else if (this.channel.chatable.group) {
                   if (this.channel.chatable.users.length === 1) {
                     return avatarUrl(

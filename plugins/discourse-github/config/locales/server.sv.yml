@@ -19,7 +19,6 @@ sv:
     github_gold_badge_min_commits: "Minsta antal åtaganden för guldmärke"
     errors:
       invalid_badge_repo: "Du måste ange en GitHub-URL eller databasnamnet i formatet github_user/repository_name"
-      invalid_github_linkback_access_token: "Du måste ange en giltig GitHub återkopplingsbehörighetstoken som har åtkomst till de märkesdatabaser som du har angett."
   github_linkback:
     commit_template: |
       Detta åtagande har nämnts i **%{title}**. Det kan finnas relevanta detaljer där:
@@ -33,8 +32,3 @@ sv:
       Detta ärende har nämnts i **%{title}**. Det kan finnas relevanta detaljer där:
 
       %{post_url}
-  github_commits_populator:
-    errors:
-      repository_identifier_invalid_pm_title: "Åtgärd krävs för insticksprogrammet discourse-github"
-      repository_not_found_pm_title: "Åtgärd krävs för insticksprogrammet discourse-github"
-      invalid_octokit_credentials_pm_title: "Åtgärd krävs för insticksprogrammet discourse-github"

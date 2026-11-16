@@ -7,8 +7,7 @@ class PostLocalizationsController < ApplicationController
     post_id = params[:id] || params[:post_id]
     raise ActionController::ParameterMissing.new(:id) if post_id.blank?
 
-    post = Post.find_by(id: post_id)
-    return render_json_error(I18n.t("not_found"), status: :not_found) if post.blank?
+    post = find_visible_post!(post_id)
 
     guardian.ensure_can_localize_post!(post)
 
@@ -39,8 +38,7 @@ class PostLocalizationsController < ApplicationController
   def create_or_update
     post_id, locale, raw = params.require(%i[post_id locale raw])
 
-    post = Post.find_by(id: post_id)
-    raise Discourse::NotFound unless post
+    post = find_visible_post!(post_id)
 
     guardian.ensure_can_localize_post!(post)
 
@@ -55,8 +53,7 @@ class PostLocalizationsController < ApplicationController
   end
 
   def update_locale
-    post = Post.find_by(id: params[:post_id])
-    raise Discourse::NotFound unless post
+    post = find_visible_post!(params.require(:post_id))
 
     updated_post =
       PostLocaleUpdater.update(post:, locale: params.fetch(:locale).presence, user: current_user)
@@ -66,12 +63,28 @@ class PostLocalizationsController < ApplicationController
   def destroy
     post_id, locale = params.require(%i[post_id locale])
 
-    post = Post.find_by(id: post_id)
-    raise Discourse::NotFound unless post
+    post = find_visible_post!(post_id)
 
     guardian.ensure_can_localize_post!(post)
 
     PostLocalizationDestroyer.destroy(post:, locale:, acting_user: current_user)
     head :no_content
+  end
+
+  private
+
+  def find_visible_post!(post_id)
+    post = Post.find_by(id: post_id)
+    raise Discourse::NotFound unless post
+
+    begin
+      guardian.ensure_can_see!(post)
+    rescue Discourse::InvalidAccess
+      raise if SiteSetting.detailed_404
+
+      raise Discourse::NotFound
+    end
+
+    post
   end
 end

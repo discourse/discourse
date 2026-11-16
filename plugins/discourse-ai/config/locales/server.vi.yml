@@ -25,6 +25,9 @@ vi:
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Phát hiện rác rưởi"
       navigation:
         settings:
           title: "Cài đặt trang web"
@@ -44,6 +47,27 @@ vi:
           title: "Bản sao lưu"
       read_post:
         unknown_post: "tút"
+      chat_tool_approval:
+        topic_states:
+          open: "Mở"
+          closed: "Đã đóng"
+          active: "Hoạt động"
+          deleted: "Đã xóa"
+        solution_post: "Bài #%{number}"
+        duration_label: "Thời hạn:"
+        user_duration:
+          other: "%{count} ngày"
+        post_states:
+          locked: "Đã khóa"
+        posts_label: "Số lượng tút"
+        category_label: "Chuyên mục"
+        category_fields:
+          name: "Tên"
+          description: "mô tả"
+          color: "màu sắc"
+          text_color: "màu chữ"
+        approve_label: "Đồng ý"
+        reject_label: "Không"
       agents:
         smart_dates:
           name: "Ngày thông minh"
@@ -93,6 +117,18 @@ vi:
       assign:
         errors:
           not_found: "Không tìm thấy chủ đề."
+    appearance_authoring:
+      default_theme: "Theme mặc định"
+      colors:
+        light:
+          header_background: "Header"
+      fonts:
+        base_font: "Phông chữ"
+        heading_font: "Phông chữ tiêu đề"
+    mcp_theme_access:
+      none: "không có gì"
+    mcp_app_setup:
+      none: "không có gì"
     reviewables:
       ai_tool_action:
         approve:

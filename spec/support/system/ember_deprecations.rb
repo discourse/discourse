@@ -36,14 +36,12 @@ module EmberDeprecations
 
   # Formatted error for the first fatal JS deprecation in the logs, or nil.
   def self.fatal_error(logs)
-    logs
-      &.filter_map do |log|
-        if log[:level] == "trace"
-          error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
-          "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
-        end
-      end
-      &.first
+    log = logs&.find { |entry| entry[:level] == "trace" }
+    return if log.nil?
+
+    error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
+    error = BrowserErrorStack.resolve([error]).first
+    "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
   end
 
   # Count non-fatal deprecation_id counts into the example metadata, excluding

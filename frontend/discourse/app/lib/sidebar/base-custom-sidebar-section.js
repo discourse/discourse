@@ -41,6 +41,15 @@ export default class BaseCustomSidebarSection {
   get links() {}
 
   /**
+   * Ordered contents of the section. When provided, this takes precedence
+   * over links. Child sections are supplied as classes, like panel sections.
+   * Section names must be unique among siblings.
+   *
+   * @returns {Array<{ type: "link", link: BaseCustomSidebarSectionLink } | { type: "section", section: typeof BaseCustomSidebarSection }>}
+   */
+  get items() {}
+
+  /**
    * Links rendered behind a "more" drawer instead of directly in the section,
    * matching the drawer the community section uses.
    *

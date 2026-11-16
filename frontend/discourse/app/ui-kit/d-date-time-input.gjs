@@ -1,58 +1,61 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
 import DTimeInput from "discourse/ui-kit/d-time-input";
 
-@tagName("")
 export default class DDateTimeInput extends Component {
-  date = null;
-  relativeDate = null;
-  showTime = true;
-  clearable = false;
+  // Subclasses read the inputs by name (`this.date`), so they stay getters.
+  get date() {
+    return this.args.date;
+  }
 
-  @computed("date", "showTime")
+  get relativeDate() {
+    return this.args.relativeDate;
+  }
+
+  get showTime() {
+    return this.args.showTime ?? true;
+  }
+
+  get clearable() {
+    return this.args.clearable ?? false;
+  }
+
   get hours() {
-    return this.date && this.get("showTime") ? this.date.hours() : null;
+    return this.date && this.showTime ? this.date.hours() : null;
   }
 
-  @computed("date", "showTime")
   get minutes() {
-    return this.date && this.get("showTime") ? this.date.minutes() : null;
+    return this.date && this.showTime ? this.date.minutes() : null;
   }
 
-  @computed("timezone")
   get resolvedTimezone() {
-    return this.timezone || moment.tz.guess();
+    return this.args.timezone || moment.tz.guess();
   }
 
   @action
   onClear() {
-    this.onChange(null);
+    this.args.onChange?.(null);
   }
 
   @action
   onChangeTime(time) {
-    if (this.onChange) {
+    if (this.args.onChange) {
       const date = this.date
         ? this.date
         : this.relativeDate
           ? this.relativeDate
           : moment.tz(this.resolvedTimezone);
 
-      this.onChange(
-        moment.tz(
-          {
-            year: date.year(),
-            month: date.month(),
-            day: date.date(),
-            hours: time.hours,
-            minutes: time.minutes,
-          },
-          this.resolvedTimezone
-        )
+      this.args.onChange(
+        this.#atWallTime({
+          year: date.year(),
+          month: date.month(),
+          day: date.date(),
+          hours: time.hours,
+          minutes: time.minutes,
+        })
       );
     }
   }
@@ -64,29 +67,36 @@ export default class DDateTimeInput extends Component {
       return;
     }
 
-    this.onChange?.(
-      moment.tz(
-        {
-          year: date.year(),
-          month: date.month(),
-          day: date.date(),
-          hours: this.hours || 0,
-          minutes: this.minutes || 0,
-        },
-        this.resolvedTimezone
-      )
+    this.args.onChange?.(
+      this.#atWallTime({
+        year: date.year(),
+        month: date.month(),
+        day: date.date(),
+        hours: this.hours || 0,
+        minutes: this.minutes || 0,
+      })
     );
+  }
+
+  /**
+   * Without an explicit zone, use the browser's own rules. The bundled tz data
+   * only covers years near the present and gets DST offsets wrong outside them.
+   */
+  #atWallTime(fields) {
+    return this.args.timezone
+      ? moment.tz(fields, this.args.timezone)
+      : moment(fields);
   }
 
   <template>
     <div class="d-date-time-input" ...attributes>
-      {{#unless this.timeFirst}}
+      {{#unless @timeFirst}}
         <DDateInput
           @date={{this.date}}
           @onChange={{this.onChangeDate}}
-          @placeholder={{this.placeholder}}
+          @placeholder={{@placeholder}}
           @relativeDate={{this.relativeDate}}
-          @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
+          @useGlobalPickerContainer={{@useGlobalPickerContainer}}
         />
       {{/unless}}
 
@@ -98,13 +108,13 @@ export default class DDateTimeInput extends Component {
         />
       {{/if}}
 
-      {{#if this.timeFirst}}
+      {{#if @timeFirst}}
         <DDateInput
           @date={{this.date}}
           @onChange={{this.onChangeDate}}
-          @placeholder={{this.placeholder}}
+          @placeholder={{@placeholder}}
           @relativeDate={{this.relativeDate}}
-          @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
+          @useGlobalPickerContainer={{@useGlobalPickerContainer}}
         />
       {{/if}}
 

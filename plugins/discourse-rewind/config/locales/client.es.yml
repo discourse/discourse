@@ -132,6 +132,10 @@ es:
           message_4: "La longitud media de tus mensajes fue de <strong>%{length}</strong> caracteres"
           message_5: "Tus canales favoritos:"
           dancing_baby_alt: "Bebé bailarín"
+        live_usage:
+          minutes:
+            one: "%{count} minuto"
+            other: "%{count} minutos"
         invites:
           guest_book_title: Libro de visitas
           guest_book_subtitle: Tus invitaciones a la comunidad

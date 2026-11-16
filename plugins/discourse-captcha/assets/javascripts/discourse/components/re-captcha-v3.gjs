@@ -2,7 +2,7 @@ import { modifier as modifierFn } from "ember-modifier";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
-import BaseCaptcha from "./base-captcha";
+import BaseCaptcha from "./base-captcha.gjs";
 
 export default class ReCaptchaV3 extends BaseCaptcha {
   registerCaptcha = modifierFn((_element, _args, { captchaApi }) => {

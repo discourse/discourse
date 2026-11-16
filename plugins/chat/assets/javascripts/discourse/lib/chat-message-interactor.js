@@ -4,12 +4,15 @@ import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isSkinTonableEmoji } from "pretty-text/emoji";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
+import AnonymousFlagModal from "discourse/components/modal/anonymous-flag";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
+import ReportIllegalContentModal from "discourse/components/modal/report-illegal-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { bind } from "discourse/lib/decorators";
-import getURL from "discourse/lib/get-url";
+import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
 import { DEFAULT_DIVERSITY } from "discourse/services/emoji-store";
@@ -20,16 +23,6 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageReactionModel, {
   REACTIONS,
 } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-
-const removedSecondaryActions = new Set();
-
-export function removeChatComposerSecondaryActions(actionIds) {
-  actionIds.forEach((id) => removedSecondaryActions.add(id));
-}
-
-export function resetRemovedChatComposerSecondaryActions() {
-  removedSecondaryActions.clear();
-}
 
 export default class ChatMessageInteractor {
   @service appEvents;
@@ -95,6 +88,7 @@ export default class ChatMessageInteractor {
 
   get canInteractWithMessage() {
     return (
+      this.#canParticipate &&
       !this.message?.deletedAt &&
       this.message?.channel?.canModifyMessages(this.currentUser) &&
       this.message?.channel?.isFollowing
@@ -113,7 +107,10 @@ export default class ChatMessageInteractor {
   }
 
   get canBookmark() {
-    return this.message?.channel?.canModifyMessages?.(this.currentUser);
+    return (
+      this.#canParticipate &&
+      this.message?.channel?.canModifyMessages?.(this.currentUser)
+    );
   }
 
   get canReply() {
@@ -123,10 +120,28 @@ export default class ChatMessageInteractor {
   }
 
   get canReact() {
-    return this.canInteractWithMessage;
+    // Reactions are emoji, so there's nothing to react with while they're disabled.
+    return this.canInteractWithMessage && this.siteSettings.enable_emoji;
+  }
+
+  get canReportMessage() {
+    return (
+      this.canFlagMessage ||
+      (this.siteSettings.dsa_reporting_enabled &&
+        !this.message?.chatWebhookEvent &&
+        !this.message?.deletedAt)
+    );
   }
 
   get canFlagMessage() {
+    if (!this.currentUser) {
+      return (
+        this.siteSettings.allow_all_users_to_flag_illegal_content &&
+        !this.message?.chatWebhookEvent &&
+        !this.message?.deletedAt
+      );
+    }
+
     return (
       this.currentUser.id !== this.message?.user?.id &&
       this.message?.userFlagStatus === undefined &&
@@ -137,9 +152,6 @@ export default class ChatMessageInteractor {
   }
 
   get canPinMessage() {
-    if (!this.siteSettings.chat_pinned_messages) {
-      return false;
-    }
     return this.message.channel?.canManagePins;
   }
 
@@ -171,6 +183,10 @@ export default class ChatMessageInteractor {
   }
 
   get secondaryActions() {
+    if (!this.#canParticipate) {
+      return this.#readOnlySecondaryActions;
+    }
+
     const buttons = [];
 
     buttons.push({
@@ -219,7 +235,7 @@ export default class ChatMessageInteractor {
       });
     }
 
-    if (this.canFlagMessage) {
+    if (this.canReportMessage) {
       buttons.push({
         id: "flag",
         name: i18n("chat.flag"),
@@ -251,7 +267,38 @@ export default class ChatMessageInteractor {
       });
     }
 
-    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
+    return applyValueTransformer("chat-message-secondary-actions", buttons, {
+      message: this.message,
+      context: this.context,
+    });
+  }
+
+  // Visitors and silenced users can't post, but can still link to and report messages.
+  get #canParticipate() {
+    return this.currentUser && this.chat.userCanInteractWithChat;
+  }
+
+  get #readOnlySecondaryActions() {
+    const buttons = [
+      { id: "copyLink", name: i18n("chat.copy_link"), icon: "link" },
+    ];
+
+    if (this.site.mobileView) {
+      buttons.push({
+        id: "copyText",
+        name: i18n("chat.copy_text"),
+        icon: "clipboard",
+      });
+    }
+
+    if (this.canReportMessage) {
+      buttons.push({ id: "flag", name: i18n("chat.flag"), icon: "flag" });
+    }
+
+    return applyValueTransformer("chat-message-secondary-actions", buttons, {
+      message: this.message,
+      context: this.context,
+    });
   }
 
   select(checked = true) {
@@ -390,11 +437,22 @@ export default class ChatMessageInteractor {
 
   @action
   flag() {
+    if (!this.currentUser && this.siteSettings.dsa_reporting_enabled) {
+      this.modal.show(ReportIllegalContentModal, {
+        model: { contentUrl: getAbsoluteURL(this.message.url) },
+      });
+      return;
+    }
+
     const model = new ChatMessage(this.message.channel, this.message);
+    if (!this.canFlagMessage) {
+      model.availableFlags = [];
+    }
     model.username = this.message.user?.username;
     model.user_id = this.message.user?.id;
-    this.modal.show(FlagModal, {
+    this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
       model: {
+        allowIllegalContentReport: true,
         flagTarget: new ChatMessageFlag(getOwner(this)),
         flagModel: model,
         setHidden: () => model.set("hidden", true),

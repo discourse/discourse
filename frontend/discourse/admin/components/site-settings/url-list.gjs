@@ -1,16 +1,20 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import ValueList from "discourse/admin/components/value-list";
 
-@tagName("")
 export default class UrlList extends Component {
+  @action
+  onChange(values) {
+    this.args.changeValueCallback(values.join("\n"));
+  }
+
   <template>
     <div ...attributes>
       <ValueList
         @addKey="admin.site_settings.add_url"
         @disabled={{@disabled}}
-        @values={{this.value}}
+        @onChange={{this.onChange}}
+        @values={{@value}}
       />
     </div>
   </template>

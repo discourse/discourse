@@ -70,6 +70,36 @@ describe "Composer - Drafts" do
     end
   end
 
+  context "when starting a topic with the keyboard shortcut on a topic page" do
+    let(:dialog) { PageObjects::Components::Dialog.new }
+    let(:drafts_page) { PageObjects::Pages::UserActivityDrafts.new }
+
+    it "lets the user save a new topic draft next to an older one" do
+      # an older topic draft on the shared key, whose sequence has moved on
+      DraftSequence.next!(current_user, Draft::NEW_TOPIC)
+      Draft.set(
+        current_user,
+        Draft::NEW_TOPIC,
+        1,
+        { title: "An older topic draft", reply: "Started before the new one" }.to_json,
+      )
+
+      topic_page.visit_topic(topic)
+      send_keys("c")
+
+      expect(composer).to be_opened
+      composer.fill_title("A new topic started from a topic page")
+      composer.fill_content("This draft must not conflict with the older one")
+      composer.close
+
+      expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+      expect(dialog).to be_closed
+
+      drafts_page.visit(current_user)
+      expect(drafts_page).to have_drafts(count: 2)
+    end
+  end
+
   context "when clicking discard" do
     let(:dialog) { PageObjects::Components::Dialog.new }
 

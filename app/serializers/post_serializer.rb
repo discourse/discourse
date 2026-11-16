@@ -469,10 +469,12 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_bookmark
+    return @post_bookmark if defined?(@post_bookmark)
+
     if @topic_view.present?
-      @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
+      @post_bookmark = @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
     else
-      @post_bookmark ||= Bookmark.find_by(user: scope.user, bookmarkable: object)
+      @post_bookmark = Bookmark.find_by(user: scope.user, bookmarkable: object)
     end
   end
 
@@ -754,7 +756,9 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable
-    @reviewable ||=
+    return @reviewable if defined?(@reviewable)
+
+    @reviewable =
       Reviewable
         .where(target: object, type: Reviewable.sti_names)
         .includes(:reviewable_scores)

@@ -12,7 +12,7 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
   discourseImport: "optional",
 };
-import ModelAccuracies from "../model-accuracies";
+import ModelAccuracies from "../model-accuracies.gjs";
 
 export default class ReviewableRefreshAiChatMessage extends Component {
   @cached

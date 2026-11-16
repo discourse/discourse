@@ -7,8 +7,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   onPresenceChange,
   removeOnPresenceChange,
@@ -121,7 +121,7 @@ export default class Chat extends Service {
     return this.userCanChat || this.anonymousUserCanViewPublicChat;
   }
 
-  @computed("currentUser.staff")
+  @computed("currentUser.staff", "currentUser.can_direct_message")
   get userCanDirectMessage() {
     if (!this.currentUser) {
       return false;
@@ -133,6 +133,16 @@ export default class Chat extends Service {
   @computed("chatChannelsManager.directMessageChannels")
   get userHasDirectMessages() {
     return this.chatChannelsManager.directMessageChannels?.length > 0;
+  }
+
+  get enabledViewCount() {
+    return [
+      this.currentUser && this.chatChannelsManager.hasStarredChannels,
+      this.siteSettings.chat_threads_enabled &&
+        this.chatChannelsManager.shouldShowMyThreads,
+      this.userCanAccessDirectMessages,
+      this.siteSettings.enable_public_channels,
+    ].filter(Boolean).length;
   }
 
   get userCanAccessDirectMessages() {
@@ -279,7 +289,12 @@ export default class Chat extends Service {
         return;
       }
 
-      if (this.chatStateManager.isActive) {
+      const active = applyValueTransformer(
+        "chat-presence-active",
+        this.chatStateManager.isActive
+      );
+
+      if (active) {
         this.presenceChannel.enter({ activeOptions: CHAT_ONLINE_OPTIONS });
       } else {
         this.presenceChannel.leave();
@@ -400,13 +415,6 @@ export default class Chat extends Service {
     return ajax("/chat/direct_messages.json", {
       data: { usernames: uniqueItemsFromArray(usernames).join(",") },
     });
-  }
-
-  addToolbarButton() {
-    deprecated(
-      "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`",
-      { id: "discourse.chat.addToolbarButton" }
-    );
   }
 
   @action

@@ -12,6 +12,48 @@ RSpec.describe UserNameSuggester do
 
     let(:fallback_username) { I18n.t("fallback_username") + "1" }
 
+    it "suggests a valid username when the input matches a watched word" do
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+
+      suggestion = described_class.suggest("Badger")
+
+      expect(UsernameValidator.new(suggestion).valid_format?).to eq(true)
+      expect(User.username_available?(suggestion)).to eq(true)
+    end
+
+    it "checks watched words on numbered candidates" do
+      Fabricate(:user, username: "sam")
+      Fabricate(:watched_word, word: "sam1", action: WatchedWord.actions[:block])
+
+      expect(described_class.suggest("sam")).to eq("sam2")
+    end
+
+    it "uses a valid random name when named candidates are blocked" do
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+      Fabricate(:watched_word, word: "*user*", action: WatchedWord.actions[:block])
+
+      suggestion = described_class.suggest("Badger")
+
+      expect(UsernameValidator.new(suggestion).valid_format?).to eq(true)
+      expect(User.username_available?(suggestion)).to eq(true)
+    end
+
+    it "fails explicitly when watched words block every candidate" do
+      Fabricate(:watched_word, word: "*", action: WatchedWord.actions[:block])
+
+      expect { described_class.suggest("Badger") }.to raise_error(
+        Discourse::InvalidParameters,
+        "Unable to suggest a valid username",
+      )
+    end
+
+    it "preserves an existing username that now matches a watched word" do
+      Fabricate(:user, username: "Badger")
+      Fabricate(:watched_word, word: "*bad*", action: WatchedWord.actions[:block])
+
+      expect(described_class.suggest("badger", current_username: "Badger")).to eq("Badger")
+    end
+
     it "keeps adding numbers to the username" do
       Fabricate(:user, username: "sam")
       Fabricate(:user, username: "sAm1")

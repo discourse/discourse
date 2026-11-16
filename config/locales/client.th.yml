@@ -6,6 +6,13 @@
 
 th:
   js:
+    code_editor:
+      search:
+        next: "ต่อไป"
+        previous: "ก่อนหน้า"
+        close: "ปิด"
+      fold:
+        to: "ถึง"
     user_api_key:
       deny: "ยกเลิก"
       copied: "คัดลอกแล้ว!"
@@ -21,6 +28,7 @@ th:
         failed: "ล้มเหลว"
     access_control:
       manage:
+        access_permission_owner: "เจ้าของ"
         access_permission_remove: "ลบ"
     number:
       format:
@@ -175,7 +183,6 @@ th:
       ja:
         name: ญี่ปุ่น
     share:
-      topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber} โดย @%{username}"
       close: "ปิด"
       facebook: "แชร์บนเฟสบุ๊ค"
@@ -220,6 +227,8 @@ th:
     skip_to_last_reply: "ข้ามไปยังคำตอบสุดท้าย"
     skip_to_top: "ข้ามไปที่ด้านบน"
     skip_user_nav: "ข้ามไปยังเนื้อหาโปรไฟล์"
+    reorder:
+      removed: "ลบ %{label}"
     emails_are_disabled: "อีเมลขาออกทั้งหมดถูกปิดโดยผู้ดูแลระบบ จะไม่มีอีเมลแจ้งเตือนใดๆถูกส่งออกไป"
     emails_are_disabled_no_smtp: "ระบบส่งอีเมลขาออกทั้งหมดถูกปิดใช้งาน เนื่องจากไม่ได้ตั้งค่าเซิร์ฟเวอร์ SMTP ไว้ จึงไม่สามารถส่งอีเมลใดๆ ได้"
     emails_are_disabled_non_staff: "การส่งอีเมลออกถูกปิดใช้งานสำหรับผู้ใช้ที่ไม่ใช่เจ้าหน้าที่"
@@ -305,8 +314,6 @@ th:
     every_six_months: "ทุกหกเดือน"
     max_of_count:
       other: "สูงสุดของ %{count}"
-    character_count:
-      other: "%{count} ตัวอักษร"
     period_chooser:
       aria_label: "กรองตามช่วงเวลา"
     related_messages:
@@ -314,15 +321,9 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "กลับ"
     design_wizard:
       back: "กลับ"
       next: "ต่อไป"
-      sections:
-        theme: "ธีม"
-        search: "ค้นหา"
       theme:
         selected: "เลือก"
       homepage:
@@ -427,6 +428,8 @@ th:
       title:
         search: "ค้นหาข้อความ"
         placeholder: "ระบุหัวข้อข้อความ หมายเลข หรือ url ที่นี่ "
+    dsa_statements:
+      category: "หมวดหมู่"
     review:
       order_by: "สั่งโดย"
       in_reply_to: "ตอบไปยัง"
@@ -1497,6 +1500,8 @@ th:
       medium_dark_tone: โทนผิวเข้มปานกลาง
       dark_tone: โทนผิวเข้ม
       default: อีโมจิที่กำหนดเอง
+    filter_controls:
+      sort_label: "เรียงโดย"
     shared_drafts:
       title: "แบบร่างที่ถูกแบ่งปัน"
       publish: "เผยแพร่แบบร่างที่ถูกแบ่งปัน"
@@ -1528,8 +1533,7 @@ th:
       reply: "ตอบกลับ"
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
-      title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
-      title_placeholder_redesign: "ชื่อเรื่อง"
+      title_placeholder: "ชื่อเรื่อง"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
       topic_featured_link_placeholder: "กรอกลิงก์ที่แสดงหัวข้อ"
@@ -2175,6 +2179,9 @@ th:
         confirm:
           other: "คุณแน่ใจหรือว่าต้องการลบ %{count}โพสต์นี้"
       revisions:
+        visibility:
+          hidden:
+            title: "ถูกซ่อน"
         controls:
           edit_post: "แก้ไขโพสต์"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong>%{icon}<strong>%{current}</strong> / %{total}"
@@ -2649,18 +2656,6 @@ th:
         type_mismatch:
           default: "กรอกค่าที่ถูกต้อง"
           email: "กรุณาใส่อีเมลที่ถูกต้อง."
-    table_builder:
-      modal:
-        help:
-          enter_key: "เอ็นเทอร์"
-      edit:
-        modal:
-          cancel: "ยกเลิก"
-          create: "บันทึก"
-          reason: "ทำไมคุณถึงแก้ไข"
-      spreadsheet:
-        show: "แสดง"
-        about: "เกี่ยวกับ"
     filter:
       description:
         yesterday: "เมื่อวาน"
@@ -2699,9 +2694,9 @@ th:
           title: "ตัวเสริม"
       upcoming_changes:
         name: "ชื่อ"
+        enabled: "เปิดใช้"
+        settings: "การตั้งค่า"
         preview: "แสดงตัวอย่าง"
-        enabled_for_options:
-          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
@@ -2715,6 +2710,9 @@ th:
           impact_role_admins: "แอดมิน"
           impact_role_moderators: "ผู้ดูแลระบบ"
           impact_role_staff: "ทีมงาน"
+        sort:
+          status: "สถานะ"
+          name: "ชื่อ"
       config:
         developer:
           title: "นักพัฒนา"
@@ -2738,6 +2736,7 @@ th:
           clients:
             actions: "การกระทำ"
             block: "บล็อก"
+            automatic: "อัตโนมัติ"
           authorizations:
             user: "ผู้ใช้"
             status: "สถานะ"
@@ -2870,28 +2869,14 @@ th:
         version: "เวอร์ชัน"
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
         updates_available: "มีการอัปเดต"
-        installed_version: "ติดตั้งแล้ว"
-        github: "กิตฮับ"
         dismiss_notice: "ไม่สนใจ"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."
-        last_checked: "ตรวจล่าสุด"
         refresh_problems: "รีเฟรช"
-        no_problems: "ไม่พบปัญหา"
-        moderators: "ผู้ดูแล:"
-        admins: "แอดมิน:"
-        suspended: "ถูกระงับชั่วคราว:"
-        private_messages_short: "ข้อความ"
-        private_messages_title: "ข้อความ"
-        mobile_title: "โทรศัพท์"
         space_used_and_free: "%{usedSize}(%{freeSize}ฟรี)"
         uploads: "อัปโหลด"
         backups: "สำรองข้อมูล"
         lastest_backup: "ล่าสุด: %{date}"
-        traffic_short: "การจราจร"
-        moderators_activity: กิจกรรมของผู้ดูแลระบบ
-        general_tab: "ทั่วไป"
-        security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
         sections:
@@ -2926,9 +2911,6 @@ th:
           series:
             anonymous: "ไม่ระบุชื่อ"
           crawler_learn_more: "เรียนรู้เพิ่มเติม"
-        period:
-          last_7_days: "7 วันที่ผ่านมา"
-          last_30_days: "30 วันที่ผ่านมา"
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"
@@ -3204,6 +3186,7 @@ th:
           collapse: ย่อ
           uploads: "อัปโหลด"
           upload: "อัปโหลด"
+          leave: "ออก"
           add_all: "เพิ่มทั้งหมด"
           install: "ติดตั้ง"
           installed: "ติดตั้งแล้ว"
@@ -3437,6 +3420,9 @@ th:
         activation_filter:
           activated: "เปิดใช้งานแล้ว"
         approved: "ยืนยันหรือไม่"
+        bots:
+          name: "ชื่อ"
+          username: "ชื่อผู้ใช้"
         titles:
           pending: "ผู้ใช้งานที่รอการยืนยัน"
           newuser: "ผู้ใช้ที่ระดับความไว้ใจ 0 (ผู้ใช้ใหม่)"

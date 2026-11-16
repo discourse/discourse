@@ -9,7 +9,6 @@ import bodyClass from "discourse/helpers/body-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and, not } from "discourse/truth-helpers";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";

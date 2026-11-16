@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe LlmModelSerializer do
-  fab!(:admin)
-
   before { enable_current_plugin }
 
   describe "#include_credit_allocation?" do

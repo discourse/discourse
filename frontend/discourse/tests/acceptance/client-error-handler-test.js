@@ -2,7 +2,7 @@ import { getOwner } from "@ember/owner";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Sinon from "sinon";
-import { acceptance } from "../helpers/qunit-helpers";
+import { acceptance } from "../helpers/qunit-helpers.js";
 
 acceptance("client-error-handler service", function (needs) {
   needs.user({

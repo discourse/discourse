@@ -36,6 +36,91 @@ RSpec.describe UserSearch do
     UserSearch.new(*args).search.map(&:username)
   end
 
+  describe "#search with a scoped users modifier" do
+    let(:plugin_instance) { Plugin::Instance.new }
+    let(:modifier) { ->(users, _context) { users.where(id: [mr_blue.id, mr_brown.id]) } }
+
+    before { plugin_instance.register_modifier(:user_search_scoped_users, &modifier) }
+
+    after do
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :user_search_scoped_users,
+        &modifier
+      )
+    end
+
+    it "filters exact and partial matches before applying the result limit" do
+      expect(search_for("mrb", limit: 2)).to contain_exactly(mr_blue.username, mr_brown.username)
+    end
+
+    it "filters topic participants before applying the result limit" do
+      Fabricate(:post, topic: topic, user: mr_b)
+      Fabricate(:post, topic: topic, user: mr_blue)
+
+      expect(search_for("", topic_id: topic.id, limit: 1)).to eq([mr_blue.username])
+    end
+  end
+
+  describe "#search modifier context" do
+    fab!(:searching_user, :user)
+    fab!(:selected_category, :category)
+
+    it "passes the selected category, topic, guardian, and search context" do
+      plugin_instance = Plugin::Instance.new
+      contexts = []
+      modifier = ->(users, context) do
+        contexts << context
+        users
+      end
+      plugin_instance.register_modifier(:user_search_scoped_users, &modifier)
+
+      search_for(
+        "mrb",
+        topic_id: topic.id,
+        category_id: selected_category.id,
+        searching_user: searching_user,
+        search_context: "mention",
+      )
+
+      expect(contexts).to be_present
+      contexts.each do |context|
+        expect(context.except(:guardian)).to eq(
+          category: selected_category,
+          topic: topic,
+          search_context: "mention",
+        )
+        expect(context[:guardian].user).to eq(searching_user)
+      end
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :user_search_scoped_users,
+        &modifier
+      )
+    end
+
+    it "leaves the category unset when only a topic is supplied" do
+      plugin_instance = Plugin::Instance.new
+      categories = []
+      modifier = ->(users, context) do
+        categories << context[:category]
+        users
+      end
+      plugin_instance.register_modifier(:user_search_scoped_users, &modifier)
+
+      search_for("mrb", topic_id: topic.id)
+
+      expect(categories.uniq).to eq([nil])
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :user_search_scoped_users,
+        &modifier
+      )
+    end
+  end
+
   context "with a secure category" do
     fab!(:user)
     fab!(:searching_user, :user)
@@ -162,6 +247,13 @@ RSpec.describe UserSearch do
         searching_user: Fabricate(:user),
       ),
     ).to eq(["mixedmember"])
+  end
+
+  it "allows restricting results to a set of users" do
+    expect(search_for("mrb", user_ids: User.where(id: mr_blue.id).select(:id))).to eq(
+      [mr_blue.username],
+    )
+    expect(search_for("mrb", user_ids: [])).to eq([])
   end
 
   it "does not let membership in one group grant visibility into a co-filtered hidden group" do

@@ -20,6 +20,13 @@
   min-width: 17rem;
 }
 
+.chat-channel-list-sort-menu {
+  &__priority {
+    white-space: normal;
+    text-align: left;
+  }
+}
+
 .chat-channel-list-filter-menu .dropdown-menu__item,
 .chat-channel-list-sort-menu .dropdown-menu__item,
 .chat-channel-list-sort-choice {

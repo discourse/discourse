@@ -910,6 +910,35 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
 
         expect(response).to have_http_status(:ok)
       end
+
+      it "masks the authentication header in the trigger data" do
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_X_API_KEY" => "secret-value",
+             }
+
+        trigger_data =
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"][0]["trigger_data"]
+        expect(trigger_data["headers"]).to include("x-api-key" => "[FILTERED]")
+      end
+
+      it "authenticates against a header the parser filters" do
+        credential.update!(data: { "name" => "Proxy-Authorization", "value" => "Token abc" })
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_PROXY_AUTHORIZATION" => "Token abc",
+             }
+
+        expect(response).to have_http_status(:ok)
+        trigger_data =
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"][0]["trigger_data"]
+        expect(trigger_data["headers"]).to include("proxy-authorization" => "[FILTERED]")
+      end
     end
   end
 end

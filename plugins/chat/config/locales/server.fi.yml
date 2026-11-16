@@ -9,7 +9,6 @@ fi:
     chat_separate_sidebar_mode: "Näytä erilliset sivupalkkitilat foorumille ja chatille."
     chat_enabled: "Ota chat käyttöön."
     enable_public_channels: "Käytä julkisia kanavia kategorioiden perusteella."
-    chat_channel_retention_days: "Tavallisten kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_dm_retention_days: "Henkilökohtaisten chat-kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_auto_silence_duration: "Määrä minuutteina, jonka ajaksi käyttäjät hiljennetään heidän ylittäessään chat-viestien luontirajan. Voit poistaa automaattisen hiljentämisen käytöstä asettamalla arvoksi 0."
     chat_allowed_messages_for_trust_level_0: "Viestien määrä, jonka luottamustason 0 käyttäjät voivat lähettää 30 sekunnin aikana. Voit poistaa rajan käytöstä asettamalla arvoksi 0."
@@ -56,7 +55,17 @@ fi:
 
         Yritä uudelleen vierailemalla kanavalla osoitteessa %{channel_url}.
   chat:
+    design_wizard_homepage_name: "Chat"
     deleted_chat_username: poistettu
+    crawler:
+      directory_title: "Chat-kanavat"
+      nav_title: "Chat"
+      members_count:
+        one: "%{count} jäsen"
+        other: "%{count} jäsentä"
+      thread_replies:
+        one: "%{count} vastaus"
+        other: "%{count} vastausta"
     errors:
       users_cant_be_added_to_channel: "Käyttäjiä ei voi lisätä tälle kanavalle."
       user_cant_be_removed_from_channel: "Käyttäjää ei voi poistaa tältä kanavalta"

@@ -66,6 +66,8 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(output[:post][:post_number]).to eq(reply.post_number)
       expect(output[:post][:raw]).to eq(reply.raw)
       expect(output[:post][:reply_to_post_number]).to eq(topic.first_post.post_number)
+      expect(output[:post][:reply_to_post_id]).to eq(topic.first_post.id)
+      expect(output[:post][:reply_to_username]).to eq(topic_owner.username)
       expect(output[:post][:user_id]).to eq(reply_user.id)
       expect(output[:post][:username]).to eq(reply_user.username)
       expect(output[:post][:upload_ids]).to contain_exactly(upload.id)
@@ -92,6 +94,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       output = described_class.new(personal_message_post).output
 
       expect(output.dig(:post, :category_id)).to be_nil
+      expect(output[:post]).to include(reply_to_post_id: nil, reply_to_username: nil)
       expect(output.dig(:topic, :category_id)).to be_nil
       expect(output).to match_node_output_schema(described_class)
     end
@@ -240,9 +243,5 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
         ),
       ).to eq(false)
     end
-  end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

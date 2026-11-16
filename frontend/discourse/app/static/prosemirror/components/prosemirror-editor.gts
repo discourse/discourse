@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
@@ -7,7 +8,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import "../extensions/register-default";
+import "../extensions/register-default.ts";
 import type { ComponentLike } from "@glint/template";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { baseKeymap } from "prosemirror-commands";
@@ -52,21 +53,21 @@ import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
 import { i18n } from "discourse-i18n";
-import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
-import { buildCommands, buildCustomState } from "../core/commands";
-import { buildInputRules } from "../core/inputrules";
-import { buildKeymap } from "../core/keymap";
-import Parser, { UnsupportedTokenError } from "../core/parser";
-import { extractNodeViews, extractPlugins } from "../core/plugin";
-import { createSchema } from "../core/schema";
-import Serializer from "../core/serializer";
-import placeholder from "../extensions/placeholder";
-import type GlimmerNodeView from "../lib/glimmer-node-view";
-import * as utils from "../lib/plugin-utils";
+import { authorizesOneOrMoreExtensions } from "../../../lib/uploads.js";
+import { buildCommands, buildCustomState } from "../core/commands.js";
+import { buildInputRules } from "../core/inputrules.js";
+import { buildKeymap } from "../core/keymap.js";
+import Parser, { UnsupportedTokenError } from "../core/parser.js";
+import { extractNodeViews, extractPlugins } from "../core/plugin.js";
+import { createSchema } from "../core/schema.js";
+import Serializer from "../core/serializer.js";
+import placeholder from "../extensions/placeholder.ts";
+import type GlimmerNodeView from "../lib/glimmer-node-view.js";
+import * as utils from "../lib/plugin-utils.js";
 import TextManipulation, {
   type CustomState,
   type EditorCommands,
-} from "../lib/text-manipulation";
+} from "../lib/text-manipulation.ts";
 
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 
@@ -119,7 +120,7 @@ type NodeViewComponent = ComponentLike<{
     dom: HTMLElement;
     contentDOM?: HTMLElement;
     pluginParams: PluginParams;
-    options: Record<string, unknown>;
+    options?: Record<string, unknown>;
     onSetup: (instance: unknown) => void;
   };
 }>;
@@ -153,7 +154,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   @service declare currentUser: User;
 
   schema: Schema = createSchema(this.extensions, this.args.includeDefault);
-  view: EditorView;
+  declare view: EditorView;
   declare parser: Parser;
   declare serializer: Serializer;
   declare textManipulation: TextManipulation;
@@ -278,7 +279,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     this.view = new EditorView(container, {
       state,
       nodeViews: extractNodeViews(this.extensions, params),
-      attributes: { class: this.args.class ?? "" },
+      attributes: {
+        class: this.args.class ?? "",
+        autocorrect: "on",
+      },
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {
         this.view.updateState(this.view.state.apply(tr));
@@ -311,8 +315,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         paste: (view, event) => {
           // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
           // which is originally responsible for preventDefault.
+          const { clipboardData } = event;
+          assert("A paste event carries clipboard data", clipboardData);
           if (
-            event.clipboardData.files.length > 0 &&
+            clipboardData.files.length > 0 &&
             !authorizesOneOrMoreExtensions(
               this.currentUser.staff,
               this.siteSettings
@@ -330,9 +336,9 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
             return;
           }
 
-          if (
-            [...event.dataTransfer.items].some((item) => item.kind === "file")
-          ) {
+          const { dataTransfer } = event;
+          assert("A drop event carries a data transfer", dataTransfer);
+          if ([...dataTransfer.items].some((item) => item.kind === "file")) {
             // Skip processing the drop event (e.g. Safari cross-window content drag),
             // Uppy's DropTarget should handle that instead.
             return true;
@@ -348,10 +354,11 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       },
     });
 
-    this.textManipulation = new TextManipulation(getOwner(this), {
+    this.textManipulation = new TextManipulation(getOwner(this)!, {
       schema: this.schema,
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
+      tryConvertFromMarkdown: this.tryConvertFromMarkdown,
       convertToMarkdown: this.convertToMarkdown,
       splitNonEmptyLines: this.splitNonEmptyLines,
       buildListNode: this.buildListNode,
@@ -374,28 +381,39 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
 
   @bind
   convertFromMarkdown(markdown: string): Node {
+    const doc = this.tryConvertFromMarkdown(markdown);
+    if (doc) {
+      return doc;
+    }
+
+    this.dialog.alert({
+      message: i18n("composer.unsupported_token"),
+      didConfirm: this.args.toggleRichEditor,
+      didCancel: this.args.toggleRichEditor,
+    });
+
+    return this.schema.nodes.paragraph.create(
+      null,
+      markdown
+        // our html_block avoids double newlines
+        // because markdown-it closes the html block parsing at double newlines
+        .split("\n\n")
+        .filter(Boolean)
+        .map((line) =>
+          // this creates a dependency on having a html_block in the schema
+          this.schema.nodes.html_block.create(null, this.schema.text(line))
+        )
+    );
+  }
+
+  /** Parses markdown, returning null instead of alerting on unsupported tokens. */
+  @bind
+  tryConvertFromMarkdown(markdown: string): Node | null {
     try {
       return this.parser.convert(this.schema, markdown);
     } catch (e) {
       if (e instanceof UnsupportedTokenError) {
-        this.dialog.alert({
-          message: i18n("composer.unsupported_token"),
-          didConfirm: this.args.toggleRichEditor,
-          didCancel: this.args.toggleRichEditor,
-        });
-
-        return this.schema.nodes.paragraph.create(
-          null,
-          markdown
-            // our html_block avoids double newlines
-            // because markdown-it closes the html block parsing at double newlines
-            .split("\n\n")
-            .filter(Boolean)
-            .map((line) =>
-              // this creates a dependency on having a html_block in the schema
-              this.schema.nodes.html_block.create(null, this.schema.text(line))
-            )
-        );
+        return null;
       }
 
       throw e;

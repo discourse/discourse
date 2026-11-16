@@ -3,11 +3,20 @@
 class ReviewableUser < Reviewable
   include ReviewableActionBuilder
 
+  def self.approval_style?
+    true
+  end
+
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
 
   after_create :retain_avatar_snapshot
+
+  def title_for_notification(user)
+    target&.username || payload&.dig("username") ||
+      I18n.t("js.review.user_label", locale: user.effective_locale)
+  end
 
   def self.payload_for(user)
     profile = user.user_profile
@@ -25,16 +34,21 @@ class ReviewableUser < Reviewable
   end
 
   def self.additional_args(params)
-    { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
+    ReviewableActionBuilder.penalty_args(params).merge(
+      reject_reason: params[:reject_reason],
+      send_email: params[:send_email] != "false",
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
     build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
 
     suspect_pending = status == "pending" && is_a_suspect_user?
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
 
     # For suspect users the destructive "confirm spam" bundle must be added
-    # before the approve action so it renders first in the queue UI.
+    # before the approve action so it renders first in the queue UI. With
+    # consistent answers every "Yes, there's a problem" bundle goes first.
     if suspect_pending
       bundle =
         actions.add_bundle(
@@ -43,13 +57,37 @@ class ReviewableUser < Reviewable
           label: "reviewables.actions.confirm_spam.title",
         )
 
-      build_penalty_actions(actions, bundle:, silence: :silence_user, suspend: :suspend_user)
+      build_penalty_actions(
+        actions,
+        bundle:,
+        silence: :silence_user,
+        suspend: :suspend_user,
+        dsa_classification_required: true,
+      )
 
-      delete_user_actions(actions, bundle, require_reject_reason: false)
+      delete_user_actions(
+        actions,
+        bundle,
+        require_reject_reason: false,
+        dsa_classification_required: true,
+      )
+    elsif status == "pending" && consistent_answers
+      delete_user_actions(
+        actions,
+        nil,
+        require_reject_reason: true,
+        bundle_label: "reviewables.actions.answer_yes.title",
+      )
     end
 
     if status == "pending" && target&.uploaded_avatar_id.present?
-      build_action(actions, :remove_avatar, icon: "user-xmark", secondary: true)
+      build_action(
+        actions,
+        :remove_avatar,
+        icon: "user-xmark",
+        secondary: true,
+        dsa_classification_required: is_a_suspect_user?,
+      )
     end
 
     # Reviewed items must not offer approval in the queue, but approving an
@@ -62,13 +100,15 @@ class ReviewableUser < Reviewable
         if suspect_pending
           a.label = "reviewables.actions.not_spam.title"
           a.description = "reviewables.actions.not_spam.description"
+        elsif consistent_answers
+          a.label = "reviewables.actions.answer_no.title"
         else
           a.label = "reviewables.actions.approve_user.title"
         end
       end
     end
 
-    if status == "pending" && !suspect_pending
+    if status == "pending" && !suspect_pending && !consistent_answers
       delete_user_actions(actions, nil, require_reject_reason: true)
     end
   end
@@ -79,9 +119,24 @@ class ReviewableUser < Reviewable
   end
 
   def perform_remove_avatar(performed_by, args)
+    avatar = target.uploaded_avatar
     target.remove_avatar!(performed_by)
 
-    create_result(:success)
+    create_result(:success) { |result| result.removed_avatar = avatar }
+  end
+
+  def perform_silence_user(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
+  end
+
+  def perform_suspend_user(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
   end
 
   def perform_approve_user(performed_by, args)
@@ -102,9 +157,11 @@ class ReviewableUser < Reviewable
     self.class.transaction do
       scrubbed_at = Time.zone.now
       # We need to scrub the UserHistory record for when this user was deleted, as well as this reviewable's payload
+      # Match on the deleted user's ID, not the reviewable: the deletion may have been logged
+      # under another reviewable, such as a flagged post the user was deleted from.
       UserHistory
         .where(action: UserHistory.actions[:delete_user])
-        .where("details LIKE :query", query: "%\nusername: #{payload["username"]}\n%")
+        .where("details LIKE ?", "id: #{target_id}\n%")
         .where(created_at: (updated_at - 10.minutes)..(updated_at + 10.minutes))
         .update_all(
           details:
@@ -193,6 +250,63 @@ class ReviewableUser < Reviewable
   end
 
   private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    return if !is_a_suspect_user? && !target&.approved?
+
+    case action_id
+    when :suspend_user
+      user = target.reload
+
+      {
+        decision_facts: "The reviewed account was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :silence_user
+      user = target.reload
+
+      {
+        decision_facts: "The reviewed account had its ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :delete_user, :delete_user_block
+      user = target
+      return unless user&.destroyed?
+
+      {
+        decision_facts: "The reviewed account was deleted.",
+        decision_account: "DECISION_ACCOUNT_TERMINATED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :remove_avatar
+      {
+        decision_facts: "The reviewed account's avatar was removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_IMAGE"],
+        content_date: result.removed_avatar.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    end
+  end
 
   def retain_avatar_snapshot
     upload_id = payload&.dig("avatar_upload_id")

@@ -25,6 +25,11 @@ nb_NO:
         context_menu:
           actions:
             delete: "Slett"
+        reorderable_list:
+          policies_pinned: "Fastsatt"
+          policies_required: "Påkrevd"
+          table_type: "Type"
+          cross_list_primary: "Primær"
         font_scale:
           title: "Font System"
         colors:

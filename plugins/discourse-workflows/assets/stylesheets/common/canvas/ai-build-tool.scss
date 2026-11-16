@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .workflows-canvas {
   --workflows-canvas-ai-panel-top: calc(var(--space-2) + 3rem);
   --workflows-canvas-ai-panel-viewport-offset: 18rem;
@@ -43,6 +45,21 @@
     border-radius: var(--d-border-radius);
     background: var(--secondary);
     box-shadow: 0 10px 32px rgb(0, 0, 0, 0.16);
+
+    // No room beside the assistant on narrow screens; the latest step is shown inline instead.
+    @include viewport.until(md) {
+      display: none;
+    }
+  }
+
+  &__ai-progress-current {
+    margin: 0;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    @include viewport.from(md) {
+      display: none;
+    }
   }
 
   &__ai-progress-title {
@@ -76,14 +93,15 @@
 
   &__ai-panel-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
   }
 
-  &__ai-title-row {
+  &__ai-title {
     display: flex;
-    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
     min-width: 0;
 
     h3 {
@@ -92,31 +110,6 @@
       font-size: var(--font-up-1);
       line-height: 1.15;
     }
-
-    p {
-      margin: var(--space-half) 0 0;
-      color: var(--primary-medium);
-      font-size: var(--font-down-2);
-      line-height: 1.25;
-    }
-  }
-
-  &__ai-title {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  &__ai-title-icon {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 50%;
-    background: var(--tertiary-low);
-    color: var(--tertiary);
   }
 
   &__ai-close {
@@ -213,6 +206,8 @@
   &__ai-review-footer {
     display: flex;
     flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: var(--space-2);
     justify-content: flex-end;
     padding-top: var(--space-3);
     border-top: 1px solid var(--primary-low);

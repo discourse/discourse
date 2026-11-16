@@ -1,5 +1,5 @@
 import { buildBBCodeAttrs } from "discourse/lib/text";
-import PollNodeView from "../discourse/components/poll-node-view";
+import PollNodeView from "../discourse/components/poll-node-view.gjs";
 
 /** @type {RichEditorExtension} */
 const extension = {

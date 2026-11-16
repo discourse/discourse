@@ -1,29 +1,25 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class Patreon extends Component {
   static shouldRender(args, context) {
     return context.siteSettings.patreon_enabled && args.model.patreon_id;
   }
 
-  init() {
-    super.init(...arguments);
-    this.set("patron_url", "https://patreon.com/members");
-  }
+  @tracked patreon_email;
+  @tracked patron_url = "https://patreon.com/members";
 
   @action
   async checkPatreonEmail() {
     const result = await ajax(
-      userPath(`${this.model.username_lower}/patreon_email.json`),
+      userPath(`${this.args.model.username_lower}/patreon_email.json`),
       {
         data: {
           context: window.location.pathname,
@@ -39,8 +35,8 @@ export default class Patreon extends Component {
         url = `${url}?query=${email}`;
       }
 
-      this.set("patreon_email", email);
-      this.set("patron_url", url);
+      this.patreon_email = email;
+      this.patron_url = url;
     }
   }
 
@@ -50,9 +46,9 @@ export default class Patreon extends Component {
         <h1>{{i18n "patreon.title"}}</h1>
         <div class="display-row">
           <div class="field">{{i18n "patreon.field.id"}}</div>
-          <div class="value">{{this.model.patreon_id}}</div>
+          <div class="value">{{@model.patreon_id}}</div>
         </div>
-        {{#if this.model.patreon_email_exists}}
+        {{#if @model.patreon_email_exists}}
           <div class="display-row">
             <div class="field">{{i18n "patreon.field.email"}}</div>
             <div class="value">
@@ -70,24 +66,23 @@ export default class Patreon extends Component {
             </div>
           </div>
         {{/if}}
-        {{#if this.model.patreon_amount_cents}}
+        {{#if @model.patreon_amount_cents}}
           <div class="display-row">
             <div class="field">{{i18n "patreon.field.amount_cents"}}</div>
-            <div class="value">{{this.model.patreon_amount_cents}}</div>
+            <div class="value">{{@model.patreon_amount_cents}}</div>
           </div>
         {{/if}}
-        {{#if this.model.patreon_rewards}}
+        {{#if @model.patreon_rewards}}
           <div class="display-row">
             <div class="field">{{i18n "patreon.field.rewards"}}</div>
-            <div class="value">{{this.model.patreon_rewards}}</div>
+            <div class="value">{{@model.patreon_rewards}}</div>
           </div>
         {{/if}}
-        {{#if this.model.patreon_declined_since}}
+        {{#if @model.patreon_declined_since}}
           <div class="display-row">
             <div class="field">{{i18n "patreon.field.declined_since"}}</div>
-            <div class="value">{{trustHTML
-                this.format-date
-                this.model.patreon_declined_since
+            <div class="value">{{dFormatDate
+                @model.patreon_declined_since
               }}</div>
           </div>
         {{/if}}
@@ -103,7 +98,7 @@ export default class Patreon extends Component {
             </a>
           </div>
           <div class="controls">
-            {{#if this.model.patreon_email}}
+            {{#if @model.patreon_email}}
               {{i18n "patreon.field.more_details.help_text.email_available"}}
             {{else}}
               {{i18n

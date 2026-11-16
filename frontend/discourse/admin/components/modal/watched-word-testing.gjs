@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { Textarea } from "@ember/component";
-import { or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 

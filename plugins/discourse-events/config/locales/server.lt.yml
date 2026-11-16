@@ -19,6 +19,7 @@ lt:
     discourse_events_enable_holiday_failed: "Šios šventės negalėjo būti įjungtos, ji jau įjungta arba ji nėra išjungta."
   site_settings:
     calendar_categories: "Rodyti kalendorių kategorijos viršuje. categoryId yra privalomas. pvz.: categoryId=6;weekends=false;defaultView=year;\n Kiti galimi nustatymai: weekends(true/false) ir defaultView(day,week,month,year)."
+    calendar_upcoming_events_default_category: "Kategorija naujiems įvykiams, sukurta iš būsimų įvykių kalendoriaus. Jei tuščia arba narys negali kurti temų šioje kategorijoje, naudojama {{setting:default_composer_category}}."
   discourse_events:
     reminder:
       subjects:

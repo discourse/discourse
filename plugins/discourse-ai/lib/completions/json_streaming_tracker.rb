@@ -3,7 +3,7 @@
 module DiscourseAi
   module Completions
     class JsonStreamingTracker
-      attr_reader :stream_consumer
+      attr_reader :stream_consumer, :last_key
 
       def initialize(stream_consumer)
         @stream_consumer = stream_consumer
@@ -42,6 +42,7 @@ module DiscourseAi
       private
 
       def notify_changes(parsed)
+        @last_key = parsed.keys.last
         parsed.each do |key, value|
           next if value.nil?
           next if @last_notified[key] == value

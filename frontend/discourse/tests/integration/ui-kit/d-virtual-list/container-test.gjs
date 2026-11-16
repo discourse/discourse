@@ -22,10 +22,6 @@ function buildRows(count) {
   }));
 }
 
-class State {
-  @tracked as = "div";
-}
-
 function sizerHeight() {
   const sizer = find(".d-virtual-list__sizer");
   return sizer ? parseFloat(sizer.style.height) : null;
@@ -85,7 +81,7 @@ module("Integration | ui-kit | DVirtualList | container", function (hooks) {
   // keeps the engine's geometry on an element that cannot be swapped underneath it.
   test("container fallback: changing @as after mount keeps the sized container", async function (assert) {
     const items = buildRows(COUNT);
-    const state = new State();
+    const tagName = tracked("div");
 
     await render(
       <template>
@@ -97,7 +93,7 @@ module("Integration | ui-kit | DVirtualList | container", function (hooks) {
           }
         </style>
         <DVirtualList
-          @as={{state.as}}
+          @as={{tagName.value}}
           @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
@@ -111,7 +107,7 @@ module("Integration | ui-kit | DVirtualList | container", function (hooks) {
     const heightBefore = sizerHeight();
     assert.true(heightBefore > 0, "precondition: the sizer starts sized");
 
-    state.as = "ul";
+    tagName.value = "ul";
     await settled();
 
     assert.true(
