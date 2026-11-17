@@ -65,6 +65,9 @@
 #                         If left blank, no special behavior is applied and the setting is shown as normal.
 # dependent_setting_display - Optional display mode for hidden dependent settings. "inline" renders the setting
 #                         under its parent instead of as a separate row.
+# section               - Optional group key for a plugin's own settings page. Settings are grouped by section in
+#                         file order, titled by admin.site_settings.sections.<key>. Prefix plugin keys with the plugin name.
+# unit                  - Optional unit shown after number inputs, translated by admin.site_settings.units.<unit>.
 #
 #
 #

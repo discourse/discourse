@@ -138,6 +138,14 @@ module SiteSettingExtension
     @areas ||= {}
   end
 
+  def sections
+    @sections ||= {}
+  end
+
+  def units
+    @units ||= {}
+  end
+
   def mandatory_values
     @mandatory_values ||= {}
   end
@@ -560,6 +568,8 @@ module SiteSettingExtension
         end
 
         opts[:plugin] = plugins[s] if plugins[s]
+        opts[:section] = sections[s] if sections[s]
+        opts[:unit] = units[s] if units[s]
         opts[:upload] = upload_metadata if upload_metadata
 
         DiscoursePluginRegistry.apply_modifier(:site_setting_result, opts)
@@ -1413,6 +1423,19 @@ module SiteSettingExtension
         end
         areas[name] = split_areas
       end
+
+      if opts[:section]
+        sections[name] = opts[:section].to_s
+      else
+        sections.delete(name)
+      end
+
+      if opts[:unit]
+        units[name] = opts[:unit].to_s
+      else
+        units.delete(name)
+      end
+
       hidden_settings_provider.add_hidden(name) if opts[:hidden]
 
       if GlobalSetting.respond_to?(name)
