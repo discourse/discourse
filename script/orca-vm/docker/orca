@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
+cli=/opt/orca-app/app.asar.unpacked/out/cli/index.js
+if [ ! -f "$cli" ]; then
+  echo "The Orca CLI is not mounted at /opt/orca-app. Recreate this workspace from the docker recipe." >&2
+  exit 1
+fi
+exec node "$cli" "$@"

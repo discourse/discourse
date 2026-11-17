@@ -1,0 +1,4 @@
+AllowUsers discourse
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no

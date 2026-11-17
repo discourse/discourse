@@ -1,0 +1,18 @@
+scripts:
+  setup: |
+    bundle install
+    pnpm install
+
+environmentRecipes:
+  - id: docker
+    name: Local Docker
+    create: ./script/orca-vm/docker-create.sh
+    suspend: ./script/orca-vm/docker-suspend.sh
+    resume: ./script/orca-vm/docker-resume.sh
+    destroy: ./script/orca-vm/docker-destroy.sh
+    passEnv: [ORCA_CLI_BIN_DIR, "DOCKER_*", "DISCOURSE_ORCA_*"]
+    timeoutSeconds:
+      create: 600
+      suspend: 120
+      resume: 300
+      destroy: 120

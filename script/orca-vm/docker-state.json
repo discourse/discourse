@@ -1,0 +1,8 @@
+{
+  "baseImage": "discourse-orca-env:base",
+  "authImage": "discourse-orca-env:auth",
+  "username": "discourse",
+  "repoUrl": "https://github.com/discourse/discourse.git",
+  "repoRef": "main",
+  "projectRoot": "/home/discourse/discourse"
+}
