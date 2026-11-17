@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "digest"
 require "fileutils"
 require "rbconfig"
 require "socket"
@@ -26,11 +25,7 @@ module DiscourseVips
     attr_reader :pid, :socket_path
 
     def self.shared_socket_path
-      @shared_socket_path ||=
-        begin
-          root_hash = Digest::SHA256.hexdigest(Rails.root.to_s)[0, 32]
-          "/tmp/discourse-vips-#{Process.euid}-#{Rails.env}-#{root_hash}/socket"
-        end
+      @shared_socket_path ||= Rails.root.join("tmp/vips-socket").to_s
     end
 
     def initialize(socket_path: nil)
@@ -111,11 +106,7 @@ module DiscourseVips
       if @socket_path
         socket_directory = File.dirname(@socket_path)
         FileUtils.mkdir_p(socket_directory, mode: 0o700)
-        socket_directory_stat = File.lstat(socket_directory)
-        if !socket_directory_stat.directory? || socket_directory_stat.uid != Process.euid
-          raise Error, "libvips socket directory must be a directory owned by the current user"
-        end
-        File.chmod(0o700, socket_directory)
+        File.chmod(0o700, socket_directory) if @socket_path != self.class.shared_socket_path
         FileUtils.rm_f(@socket_path)
       else
         socket_directory = Dir.mktmpdir("vips-")
@@ -174,7 +165,7 @@ module DiscourseVips
 
         File.unlink(@socket_path)
       end
-      Dir.rmdir(File.dirname(@socket_path))
+      Dir.rmdir(File.dirname(@socket_path)) if @socket_path != self.class.shared_socket_path
     rescue SystemCallError
     end
   end
