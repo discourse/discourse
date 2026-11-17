@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { cancel, next, schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import discourseDebounce from "discourse/lib/debounce";
@@ -124,7 +124,7 @@ export default class DFilterControls extends Component {
   @resettableTracked textFilter = this.initialTextFilterValue;
 
   dropdownFilters = trackedObject();
-  #routeSearchParams = tracked(this.currentSearchParams);
+  #searchSeed = tracked(this.#linkedSearch);
   #searchDebounce;
 
   constructor() {
@@ -153,16 +153,8 @@ export default class DFilterControls extends Component {
       return "";
     }
 
-    const fromUrl =
-      this.args.textFilterQueryParam && this.showFilters
-        ? this.#routeSearchParams.value.get(this.args.textFilterQueryParam)
-        : null;
-
-    if (fromUrl !== null) {
-      return fromUrl;
-    }
-
-    return this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
+    const seed = this.showFilters ? this.#searchSeed.value : null;
+    return seed ?? (this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "");
   }
 
   get initialSortValue() {
@@ -190,6 +182,11 @@ export default class DFilterControls extends Component {
         this.args.dropdownFilterQueryParams) &&
       !("dropdownValue" in this.args)
     );
+  }
+
+  get #linkedSearch() {
+    const param = this.args.textFilterQueryParam;
+    return param ? this.currentSearchParams.get(param) : null;
   }
 
   get #hasUrlOwnedFilters() {
@@ -385,7 +382,8 @@ export default class DFilterControls extends Component {
   @action
   applyFiltersFromRoute() {
     cancel(this.#searchDebounce);
-    this.#routeSearchParams.value = this.currentSearchParams;
+    this.#searchDebounce = undefined;
+    this.#searchSeed.value = this.#linkedSearch;
     if (this.args.textFilterQueryParam) {
       this.textFilter = this.initialTextFilterValue;
     }
@@ -442,34 +440,25 @@ export default class DFilterControls extends Component {
     }
   }
 
-  syncTextFilterQueryParam() {
-    this.updateQueryParams({
-      [this.args.textFilterQueryParam]: this.textFilter,
-    });
-  }
-
   updateQueryParams(updates) {
     // no currentURL means the router isn't live (e.g. rendering tests)
-    if (this.isDestroying || !this.showFilters || !this.router.currentURL) {
+    if (!this.showFilters || !this.router.currentURL) {
       return;
     }
 
-    DiscourseURL.replaceState(
-      applyQueryParams(this.router.currentURL, updates)
-    );
+    const searchParam = this.args.textFilterQueryParam;
+    const params =
+      searchParam && this.#searchDebounce
+        ? { [searchParam]: this.textFilter, ...updates }
+        : updates;
+    DiscourseURL.replaceState(applyQueryParams(this.router.currentURL, params));
   }
 
   @action
   onTextFilterChange(event) {
     this.textFilter = event.target?.value || "";
 
-    if (this.args.textFilterQueryParam) {
-      this.#searchDebounce = discourseDebounce(
-        this,
-        this.syncTextFilterQueryParam,
-        INPUT_DELAY
-      );
-    }
+    this.#scheduleSearchSync();
 
     this.args.onTextFilterChange?.(event);
   }
@@ -522,8 +511,10 @@ export default class DFilterControls extends Component {
 
   @action
   async resetFilters() {
-    cancel(this.#searchDebounce);
     this.textFilter = "";
+    if (this.#searchDebounce) {
+      this.#scheduleSearchSync();
+    }
 
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownFilters).forEach((key) => {
@@ -542,9 +533,7 @@ export default class DFilterControls extends Component {
       ...Object.values(this.args.dropdownFilterQueryParams ?? {}),
     ].filter(Boolean);
     if (queryParams.length) {
-      next(
-        this,
-        this.updateQueryParams,
+      this.updateQueryParams(
         Object.fromEntries(queryParams.map((name) => [name, null]))
       );
     }
@@ -564,6 +553,18 @@ export default class DFilterControls extends Component {
   toggleFilters() {
     this.showFilterDropdowns = !this.showFilterDropdowns;
     this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
+  }
+
+  #scheduleSearchSync() {
+    if (this.args.textFilterQueryParam) {
+      this.#searchSeed.value ??= this.initialTextFilterValue;
+      this.#searchDebounce = discourseDebounce(
+        this,
+        this.updateQueryParams,
+        {},
+        INPUT_DELAY
+      );
+    }
   }
 
   #sorted(items) {
