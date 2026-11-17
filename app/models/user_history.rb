@@ -191,6 +191,8 @@ class UserHistory < ActiveRecord::Base
         remove_access_control_list_owner: 134,
         assume_access_control_ownership: 135,
         create_bot: 136,
+        web_hook_ping: 137,
+        web_hook_redeliver: 138,
       )
   end
 
@@ -261,6 +263,8 @@ class UserHistory < ActiveRecord::Base
       web_hook_update
       web_hook_destroy
       web_hook_deactivate
+      web_hook_ping
+      web_hook_redeliver
       embeddable_host_create
       embeddable_host_update
       embeddable_host_destroy
