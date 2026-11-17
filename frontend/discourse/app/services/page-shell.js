@@ -45,7 +45,7 @@ export default class PageShell extends Service {
   @service siteSettings;
 
   @tracked width = "centered";
-  @tracked resize = "grow";
+  @tracked resize = "content";
   @tracked navigation;
   @tracked context;
   @tracked footer = "content";
@@ -89,7 +89,7 @@ export default class PageShell extends Service {
     const { name, value } = event.target;
     const choices = {
       width: ["centered", "full"],
-      resize: ["grow", "content"],
+      resize: ["content", "grow"],
       navigation: ["open", "rail", "hidden"],
       context: ["open", "rail", "hidden"],
       footer: ["content", "row", "off"],
