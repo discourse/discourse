@@ -131,6 +131,106 @@ describe "MCP transport" do
       expect(theme.reload.theme_fields.find_by(name: "scss").value).to eq("body { color: red; }")
     end
 
+    it "requires moderation scope rather than content scope to pin topics" do
+      topic = Fabricate(:topic)
+      name = "discourse_set_topic_pin"
+      McpPrimitive.create!(kind: "tool", identifier: name, enabled: true)
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::CONTENT_WRITE)
+      request_payload = payload.deep_dup
+      request_payload[:params][:name] = name
+      request_payload[:params][:arguments] = { topic_id: topic.id, mode: "global" }
+      request_headers = headers.merge("HTTP_MCP_NAME" => name)
+
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(403)
+      expect(topic.reload.pinned_at).to be_nil
+
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::MODERATION_WRITE)
+      request_headers[
+        "HTTP_AUTHORIZATION"
+      ] = "Bearer #{McpOauthAccessToken.issue!(authorization: authorization)}"
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "isError")).to eq(false)
+      expect(topic.reload.pinned_globally).to eq(true)
+      expect(DiscourseMcp.registry.find(:tool, name).risk).to eq(:moderation)
+    end
+
+    it "requires moderation scope for user restrictions and returns persisted state" do
+      user = Fabricate(:user)
+      request_payload = payload.deep_dup
+      unscoped_headers = headers
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::MODERATION_WRITE)
+      scoped_headers =
+        headers.merge(
+          "HTTP_AUTHORIZATION" =>
+            "Bearer #{McpOauthAccessToken.issue!(authorization: authorization)}",
+        )
+
+      %w[suspend unsuspend silence unsilence].each do |operation|
+        name = "discourse_#{operation}_user"
+        McpPrimitive.create!(kind: "tool", identifier: name, enabled: true)
+        request_payload[:params][:name] = name
+        arguments = { username: user.username, confirm: true }
+        if %w[suspend silence].include?(operation)
+          arguments.merge!(duration_days: 2, reason: "Repeated abuse")
+        end
+        request_payload[:params][:arguments] = arguments
+        post "/mcp",
+             params: request_payload.to_json,
+             headers: unscoped_headers.merge("HTTP_MCP_NAME" => name)
+        expect(response.status).to eq(403)
+
+        post "/mcp",
+             params: request_payload.to_json,
+             headers: scoped_headers.merge("HTTP_MCP_NAME" => name)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("result", "isError")).to eq(false)
+        expect(response.parsed_body.dig("result", "structuredContent")).to include(
+          "operation" => operation,
+          "changed" => true,
+          "user" =>
+            include(
+              "id" => user.id,
+              "suspended" => user.reload.suspended?,
+              "silenced" => user.silenced?,
+            ),
+        )
+      end
+    end
+
+    it "requires moderation scope to close and reopen topics" do
+      topic = Fabricate(:topic)
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_set_topic_closed", enabled: true)
+      request_payload = payload.deep_dup
+      request_payload[:params][:name] = "discourse_set_topic_closed"
+      request_payload[:params][:arguments] = { topic_id: topic.id, closed: true }
+      post "/mcp",
+           params: request_payload.to_json,
+           headers: headers.merge("HTTP_MCP_NAME" => "discourse_set_topic_closed")
+      expect(response.status).to eq(403)
+      expect(topic.reload.closed).to eq(false)
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::MODERATION_WRITE)
+      request_headers =
+        headers.merge(
+          "HTTP_MCP_NAME" => "discourse_set_topic_closed",
+          "HTTP_AUTHORIZATION" =>
+            "Bearer #{McpOauthAccessToken.issue!(authorization: authorization)}",
+        )
+
+      [true, false].each do |closed|
+        request_payload[:params][:arguments] = { topic_id: topic.id, closed: closed }
+        post "/mcp", params: request_payload.to_json, headers: request_headers
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("result", "isError")).to eq(false)
+        expect(response.parsed_body.dig("result", "structuredContent")).to include(
+          "topic_id" => topic.id,
+          "closed" => closed,
+        )
+        expect(topic.reload.closed).to eq(closed)
+      end
+    end
+
     it "returns topic validation errors and accepts a corrected category" do
       SiteSetting.allow_uncategorized_topics = false
       McpPrimitive.create!(kind: "tool", identifier: "discourse_create_topic", enabled: true)
