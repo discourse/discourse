@@ -1276,6 +1276,31 @@ RSpec.describe Voice::RoomsController do
       expect(response.parsed_body["room"]["max_quality_profile"]).to eq("high")
     end
 
+    it "kicks participants who no longer qualify when the room is made private" do
+      resuming_user = Fabricate(:user)
+      room.update!(creator: room_owner)
+      room.room_memberships.create!(user: other_participant)
+      Voice::ParticipantTracker.add(room.id, user.id)
+      Voice::ParticipantTracker.add(room.id, other_participant.id)
+      Voice::ParticipantTracker.add(room.id, resuming_user.id)
+      Voice::ParticipantTracker.update_metadata(room.id, resuming_user.id, { role: "participant" })
+      Voice::ParticipantTracker.create_participant_session!(room.id, resuming_user.id)
+      Voice::ParticipantTracker.expire_presence(room.id, resuming_user.id)
+      sign_in(room_owner)
+
+      messages =
+        MessageBus.track_publish(Voice.room_channel(room.id)) do
+          put "/voice/rooms/#{room.id}.json", params: { room: { public: false } }
+        end
+
+      expect(response.status).to eq(200)
+      expect(
+        messages.select { |m| m.data[:type] == "kicked" }.flat_map(&:user_ids),
+      ).to contain_exactly(user.id, resuming_user.id)
+      expect(Voice::ParticipantTracker.user_ids(room.id)).to contain_exactly(other_participant.id)
+      expect(Voice::ParticipantTracker.participant_session?(room.id, resuming_user.id)).to eq(false)
+    end
+
     it "clears the room-level quality cap when set to site_default" do
       private_room.update!(max_quality_profile: Voice::Room::QUALITY_PROFILES["standard"])
       sign_in(room_owner)

@@ -180,6 +180,19 @@ module Voice
         SiteSetting.voice_participant_ttl_seconds.to_i * 2
       end
 
+      def resuming_user_ids(room_id)
+        present = user_ids(room_id).to_set
+        candidates = redis.hkeys(metadata_key(room_id)).map(&:to_i)
+        candidates = candidates.select { |id| id.positive? && present.exclude?(id) }
+        return [] if candidates.empty?
+
+        exists =
+          redis.pipelined do |pipeline|
+            candidates.each { |id| pipeline.exists(participant_session_key(room_id, id)) }
+          end
+        candidates.zip(exists).filter_map { |id, count| id if count.to_i > 0 }
+      end
+
       # Short-lived tombstone for a deliberate departure (leave/kick), letting
       # presence-refreshing endpoints distinguish a racing in-flight heartbeat
       # (dropped) from an intentional return (join clears it). Purely

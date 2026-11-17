@@ -159,6 +159,21 @@ RSpec.describe Voice::LivekitWebhooksController do
       expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
     end
 
+    it "removes a participant who joins a room they can no longer access" do
+      remove_stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+        ).with(body: { identity: user.id.to_s, room: Voice::Livekit.room_name(room) }.to_json)
+
+      post_webhook(event_for(event: "participant_joined"))
+      expect(remove_stub).not_to have_been_requested
+
+      room.update!(public: false)
+      post_webhook(event_for(event: "participant_joined"))
+      expect(remove_stub).to have_been_requested.once
+    end
+
     context "with an invalid delivery" do
       it "rejects a request with no Authorization token and records no delivery" do
         body = event_for.to_json
