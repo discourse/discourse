@@ -1,4 +1,5 @@
 import CodeLoginForm from "discourse/components/code-login-form";
+import InvitationGate from "discourse/components/invitation-gate";
 import LocalLoginForm from "discourse/components/local-login-form";
 import LoginButtons from "discourse/components/login-buttons";
 import LoginPageCta from "discourse/components/login-page-cta";
@@ -34,7 +35,9 @@ export default <template>
         }}
       />
 
-      {{#if @controller.hasNoLoginOptions}}
+      {{#if @controller.login.showInvitationGate}}
+        <InvitationGate @externalLogin={{@controller.externalLogin}} />
+      {{else if @controller.hasNoLoginOptions}}
         <div class={{if @controller.site.desktopView "login-left-side"}}>
           <NoLoginMethods />
         </div>
