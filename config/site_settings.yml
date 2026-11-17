@@ -4318,9 +4318,6 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
-  concord_in_wizard:
-    default: true
-    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
