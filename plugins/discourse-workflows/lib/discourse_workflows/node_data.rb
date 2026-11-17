@@ -30,11 +30,11 @@ module DiscourseWorkflows
       WorkflowDocument.node_webhook_id(node)
     end
 
-    def split(parameters:, credentials: {}, webhook_id: nil, node_type: nil)
+    def split(parameters:, credentials: {}, webhook_id: nil, node_type: nil, type_version: nil)
       parameters = (parameters || {}).deep_stringify_keys
       credentials = normalize_credentials(credentials)
 
-      credentials = filter_declared_credentials(credentials, node_type, parameters)
+      credentials = filter_declared_credentials(credentials, node_type, parameters, type_version:)
 
       {
         "parameters" => parameters,
@@ -78,10 +78,10 @@ module DiscourseWorkflows
       node[key] || node[key.to_sym]
     end
 
-    def filter_declared_credentials(credentials, node_type, parameters)
+    def filter_declared_credentials(credentials, node_type, parameters, type_version: nil)
       return credentials if node_type.blank?
 
-      definitions = credential_definitions_for(node_type)
+      definitions = credential_definitions_for(node_type, type_version:)
       return {} if definitions.blank?
 
       definitions.each_with_object({}) do |definition, result|
@@ -98,8 +98,8 @@ module DiscourseWorkflows
       end
     end
 
-    def credential_definitions_for(node_type)
-      normalize_credential_definitions(node_class(node_type)&.credentials)
+    def credential_definitions_for(node_type, type_version: nil)
+      normalize_credential_definitions(node_class(node_type, type_version:)&.credentials)
     end
 
     def normalize_credential_definitions(definitions)
@@ -120,8 +120,9 @@ module DiscourseWorkflows
       Schema.visible?(definition["display_options"] || {}, parameters)
     end
 
-    def node_class(node_type)
-      node_type.respond_to?(:identifier) ? node_type : Registry.find_node_type(node_type)
+    def node_class(node_type, type_version: nil)
+      return node_type if node_type.respond_to?(:identifier)
+      Registry.find_node_type(node_type, version: type_version)
     end
   end
 end

@@ -15,17 +15,16 @@ RSpec.describe UserBadge do
   end
 
   describe "#save" do
-    it "triggers the 'user_badge_granted' DiscourseEvent" do
+    it "triggers the 'user_badge_granted' DiscourseEvent with the granting user" do
+      admin = Fabricate(:admin)
       user_badge =
-        UserBadge.new(
-          badge: badge,
-          user: user,
-          granted_at: Time.zone.now,
-          granted_by: Discourse.system_user,
-        )
+        UserBadge.new(badge: badge, user: user, granted_at: Time.zone.now, granted_by: admin)
 
       event =
-        DiscourseEvent.track(:user_badge_granted, args: [badge.id, user.id]) { user_badge.save! }
+        DiscourseEvent.track(
+          :user_badge_granted,
+          args: [badge.id, user.id, { acting_user: admin }],
+        ) { user_badge.save! }
 
       expect(event).to be_present
     end
@@ -41,7 +40,23 @@ RSpec.describe UserBadge do
           granted_by: Discourse.system_user,
         )
 
-      event = DiscourseEvent.track(:user_badge_revoked) { user_badge.destroy! }
+      event =
+        DiscourseEvent.track(:user_badge_revoked, args: [{ user_badge:, acting_user: nil }]) do
+          user_badge.destroy!
+        end
+
+      expect(event).to be_present
+    end
+
+    it "passes who revoked the badge as the acting user" do
+      admin = Fabricate(:admin)
+      user_badge = BadgeGranter.grant(badge, user)
+      user_badge.revoked_by = admin
+
+      event =
+        DiscourseEvent.track(:user_badge_revoked, args: [{ user_badge:, acting_user: admin }]) do
+          user_badge.destroy!
+        end
 
       expect(event).to be_present
     end

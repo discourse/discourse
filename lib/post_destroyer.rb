@@ -116,6 +116,7 @@ class PostDestroyer
   end
 
   def recover
+    topic_was_trashed = @topic.trashed?
     staff_recovery = (post_is_reviewable? || can_moderate_this_topic?) && @post.deleted_at.present?
     user_recovery = !staff_recovery && (@user.staff? || @user.id == @post.user_id)
 
@@ -124,7 +125,8 @@ class PostDestroyer
 
     @topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@topic.user_id
     if (staff_recovery || user_recovery) && @post.is_first_post? && @post.deleted_at.nil?
-      @topic.recover!(@user)
+      # Announced below, once the topic's statistics are up to date.
+      @topic.recover!(@user, announce: false)
     end
     @topic.update_statistics!
     Topic.publish_stats_to_clients!(@topic.id, :recovered)
@@ -138,7 +140,12 @@ class PostDestroyer
 
     if @post.is_first_post?
       UserActionManager.topic_created(@topic)
-      DiscourseEvent.trigger(:topic_recovered, @topic, @user)
+      if topic_was_trashed && !@topic.trashed?
+        DiscourseEvent.trigger(:topic_recovered, @topic, acting_user: @user)
+      else
+        # A topic that didn't leave the trash, such as an author cancelling a pending deletion.
+        DiscourseEvent.trigger(:topic_recovered, @topic, acting_user: @user, from_trash: false)
+      end
 
       if @user.id != @post.user_id
         StaffActionLogger.new(@user).log_topic_delete_recover(

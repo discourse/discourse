@@ -23,6 +23,32 @@ describe GroupOwnerManager do
       ).to eq(true)
     end
 
+    it "adds new members as owners before announcing them" do
+      owner_when_announced = nil
+      on_added = ->(added_user, added_group, **) do
+        owner_when_announced = added_group.group_users.find_by(user: added_user).owner
+      end
+      DiscourseEvent.on(:user_added_to_group, &on_added)
+
+      described_class.add(admin.guardian, group, usernames: user.username)
+
+      expect(owner_when_announced).to eq(true)
+    ensure
+      DiscourseEvent.off(:user_added_to_group, &on_added)
+    end
+
+    it "reports the guardian's user as the actor of the membership event" do
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          described_class.add(admin.guardian, group, usernames: user.username)
+        end
+
+      expect(events).to contain_exactly(
+        event_name: :user_added_to_group,
+        params: [user, group, { automatic: false, acting_user: admin }],
+      )
+    end
+
     it "notifies the new owner only when asked" do
       expect {
         described_class.add(owner.guardian, group, usernames: user.username)

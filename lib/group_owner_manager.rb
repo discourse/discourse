@@ -19,13 +19,11 @@ class GroupOwnerManager
     users = authorized_users
     logger = GroupActionLogger.new(guardian.user, group)
     user_ids = users.map(&:id)
-    member_ids = group.group_users.where(user_id: user_ids).pluck(:user_id).to_set
+    member_ids = group.group_users.where(user_id: user_ids).pluck(:user_id)
 
-    users.each do |user|
-      next if member_ids.include?(user.id)
-      group.add(user)
-      logger.log_add_user_to_group(user)
-    end
+    added_user_ids =
+      GroupManager.new(group).add(user_ids - member_ids, acting_user: guardian.user, owner: true)
+    users.each { |user| logger.log_add_user_to_group(user) if added_user_ids.include?(user.id) }
 
     group.group_users.where(user_id: user_ids).update_all(owner: true)
     users.each { |user| logger.log_make_user_group_owner(user) }

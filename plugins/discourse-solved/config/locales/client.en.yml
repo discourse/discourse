@@ -92,8 +92,24 @@ en:
         requires_solved: "Requires the Solved plugin to be enabled"
       nodes:
         "trigger:solution_changed": "Solution changed"
+        "trigger:solution_accepted": "Solution accepted"
+        "trigger:solution_unaccepted": "Solution unaccepted"
+        "action:accept_solution": "Accept solution"
+        "action:unaccept_solution": "Unaccept solution"
+      node_search_terms:
+        "trigger:solution_accepted": "solved, answer, marked"
+        "trigger:solution_unaccepted": "unsolved, answer, removed"
+        "action:accept_solution": "solve, mark solved, answer"
+        "action:unaccept_solution": "unsolve, unmark, answer"
       node_descriptions:
         "trigger:solution_changed": "Fires when an answer is accepted as a solution or its acceptance is removed"
+        "trigger:solution_accepted": "Fires when a post is accepted as a solution. The user is the post author; the actor is whoever accepted it."
+        "trigger:solution_unaccepted": "Fires when a post stops being an accepted solution. The user is the post author; the actor is whoever removed it."
+        "action:accept_solution": "Accept a post as the solution of its topic, like the solution button"
+        "action:unaccept_solution": "Remove a post's acceptance as a solution, like the solution button"
+      solution_action:
+        post_id: "Post ID"
+        actor_username: "Performed by user"
       solution_changed:
         changes: "Changes"
         changes_description: "Leave empty to match any change."

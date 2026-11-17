@@ -105,7 +105,7 @@ class GroupMemberAdder
   end
 
   def add_users(users)
-    added_user_ids = GroupManager.new(group).add(users.map(&:id))
+    added_user_ids = GroupManager.new(group).add(users.map(&:id), acting_user: guardian.user)
     GroupActionLogger.new(guardian.user, group).bulk_log_add_users_to_group(added_user_ids)
     if notify? && added_user_ids.present?
       Jobs.enqueue(:notify_users_added_to_group, user_ids: added_user_ids, group_id: group.id)

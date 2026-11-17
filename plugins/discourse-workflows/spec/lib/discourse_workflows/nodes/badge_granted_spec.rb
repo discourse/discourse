@@ -69,7 +69,26 @@ RSpec.describe DiscourseWorkflows::Nodes::BadgeGranted::V1 do
         system: false,
         multiple_grant: false,
       )
+      expect(output[:actor]).to be_nil
       expect(output).to match_node_output_schema(described_class)
+    end
+
+    it "returns the granting user as actor", :aggregate_failures do
+      admin = Fabricate(:admin)
+      output = described_class.new(badge.id, user.id, acting_user: admin).output
+
+      expect(output[:actor]).to include(id: admin.id, username: admin.username)
+      expect(output).to match_node_output_schema(described_class)
+    end
+
+    it "builds from the event BadgeGranter fires" do
+      admin = Fabricate(:admin)
+      event =
+        DiscourseEvent.track(:user_badge_granted) do
+          BadgeGranter.grant(badge, user, granted_by: admin)
+        end
+
+      expect(described_class.new(*event[:params]).output[:actor]).to include(id: admin.id)
     end
   end
 

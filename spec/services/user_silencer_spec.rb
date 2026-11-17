@@ -4,6 +4,9 @@ RSpec.describe UserSilencer do
   fab!(:user) { Fabricate(:user, trust_level: 0) }
   fab!(:post) { Fabricate(:post, user: user) }
   fab!(:admin)
+  fab!(:shadow) do
+    Fabricate(:anonymous).tap { it.anonymous_user_master.update!(master_user: user) }
+  end
 
   describe "silence" do
     subject(:silence_user) { silencer.silence }
@@ -107,6 +110,44 @@ RSpec.describe UserSilencer do
       expect(old_post.topic).to be_visible
     end
 
+    it "reports each topic it unlists as unlisted by the silencing user", :aggregate_failures do
+      admin = Fabricate(:admin)
+      already_unlisted = Fabricate(:post, user:)
+      already_unlisted.topic.update_columns(visible: false)
+
+      events =
+        DiscourseEvent.track_events(:topic_status_updated) do
+          UserSilencer.new(user, admin, post_id: post.id).silence
+        end
+
+      expect(events.map { it[:params] }).to eq(
+        [[post.topic, "visible", false, { acting_user: admin }]],
+      )
+    end
+
+    it "reports each post it newly hides as hidden by the silencing user" do
+      already_hidden = Fabricate(:post, user: user)
+      already_hidden.hide!(PostActionType.types[:spam])
+
+      events = DiscourseEvent.track_events(:post_hidden) { UserSilencer.silence(user, admin) }
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [[post, { acting_user: admin, post_action_type_id: nil }]],
+      )
+      expect(events.first[:params].first).to have_attributes(
+        hidden: true,
+        hidden_reason_id: Post.hidden_reasons[:new_user_spam_threshold_reached],
+      )
+    end
+
+    it "reports the system user as the actor when silencing without a user" do
+      events = DiscourseEvent.track_events(:post_hidden) { UserSilencer.silence(user) }
+
+      expect(events.map { |event| event[:params].last[:acting_user] }).to eq(
+        [Discourse.system_user],
+      )
+    end
+
     it "links the staff action log to the reviewable when passed via opts" do
       reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
 
@@ -161,9 +202,68 @@ RSpec.describe UserSilencer do
         end
       end
     end
+
+    context "with an anonymous shadow" do
+      before { SiteSetting.allow_anonymous_mode = true }
+
+      it "silences the account behind the shadow and reports the shadow" do
+        events =
+          DiscourseEvent.track_events(:user_silenced) do
+            expect(UserSilencer.silence(shadow, admin, keep_posts: true)).to eq(true)
+          end
+
+        expect(user.reload).to be_silenced
+        expect(shadow.reload).to be_silenced
+        expect(shadow[:silenced_till]).to be_nil
+        expect(events.map { it[:params].first[:user] }).to eq([shadow])
+        expect(
+          UserHistory.where(action: UserHistory.actions[:silence_user]).pluck(:target_user_id),
+        ).to eq([shadow.id])
+        expect(shadow.topics_allowed.count).to eq(1)
+        expect(user.topics_allowed.count).to eq(0)
+      end
+
+      it "names the shadow when telling moderators about an automatic silence" do
+        SiteSetting.notify_mods_when_user_silenced = true
+
+        UserSilencer.auto_silence(shadow, Discourse.system_user, reason: "spam")
+
+        expect(user.reload).to be_silenced
+        message = TopicAllowedGroup.find_by!(group_id: Group::AUTO_GROUPS[:moderators]).topic
+        expect(message.first_post.raw).to include(shadow.username).and exclude(user.username)
+      end
+
+      it "does nothing when the account behind the shadow is already silenced" do
+        user.update!(silenced_till: 1.day.from_now)
+
+        events =
+          DiscourseEvent.track_events(:user_silenced) do
+            expect(UserSilencer.silence(shadow, admin)).to eq(false)
+          end
+
+        expect(events).to be_empty
+      end
+
+      it "does not silence a staff account through its shadow" do
+        user.update!(moderator: true)
+
+        expect(UserSilencer.silence(shadow, admin)).to eq(false)
+        expect(user.reload).not_to be_silenced
+      end
+    end
   end
 
   describe "unsilence" do
+    it "only lifts an expired silence when asked to", :aggregate_failures do
+      user.update!(silenced_till: 1.day.from_now)
+
+      expect(UserSilencer.unsilence(user, admin, expired_only: true)).to eq(false)
+      expect(user.reload).to be_silenced
+
+      user.update!(silenced_till: 1.minute.ago)
+      expect(UserSilencer.unsilence(user, admin, expired_only: true)).to eq(true)
+    end
+
     it "unsilences the user correctly" do
       user.update!(silenced_till: 1.year.from_now)
 
@@ -201,6 +301,25 @@ RSpec.describe UserSilencer do
       end
     end
 
+    it "returns true when it unsilenced the user" do
+      user.update!(silenced_till: 1.year.from_now)
+
+      expect(UserSilencer.unsilence(user, admin)).to eq(true)
+    end
+
+    it "does nothing when the user was unsilenced since it was loaded" do
+      user.update!(silenced_till: 1.year.from_now)
+      User.where(id: user.id).update_all(silenced_till: nil)
+
+      events =
+        DiscourseEvent.track_events(:user_unsilenced) do
+          expect(UserSilencer.unsilence(user, admin)).to eq(false)
+        end
+
+      expect(events).to be_empty
+      expect(UserHistory.where(action: UserHistory.actions[:unsilence_user])).to be_empty
+    end
+
     it "does nothing when the user is not silenced" do
       expect(UserSilencer.unsilence(user, admin)).to eq(false)
 
@@ -221,6 +340,37 @@ RSpec.describe UserSilencer do
           .where(title: I18n.t("system_messages.unsilenced.subject_template"))
           .count,
       ).to eq(1)
+    end
+
+    context "with an anonymous shadow" do
+      before { SiteSetting.allow_anonymous_mode = true }
+
+      it "unsilences the account behind the shadow and reports the shadow" do
+        user.update!(silenced_till: 1.year.from_now)
+
+        events =
+          DiscourseEvent.track_events(:user_unsilenced) { UserSilencer.unsilence(shadow, admin) }
+
+        expect(user.reload).not_to be_silenced
+        expect(shadow.reload).not_to be_silenced
+        expect(events.map { it[:params].first[:user] }).to eq([shadow])
+        expect(
+          UserHistory.where(action: UserHistory.actions[:unsilence_user]).pluck(:target_user_id),
+        ).to eq([shadow.id])
+        expect(shadow.topics_allowed.count).to eq(1)
+        expect(user.topics_allowed.count).to eq(0)
+      end
+
+      it "does nothing when only the shadow's own column is set" do
+        shadow.update_columns(silenced_till: 1.year.from_now)
+
+        events =
+          DiscourseEvent.track_events(:user_unsilenced) do
+            expect(UserSilencer.unsilence(shadow, admin)).to eq(false)
+          end
+
+        expect(events).to be_empty
+      end
     end
   end
 end

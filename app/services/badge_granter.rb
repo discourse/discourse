@@ -170,6 +170,10 @@ class BadgeGranter
 
   def self.revoke(user_badge, options = {})
     UserBadge.transaction do
+      # A concurrent revoke of the same grant raises RecordNotFound here
+      # instead of logging and firing :user_badge_revoked a second time.
+      user_badge.lock!
+      user_badge.revoked_by = options[:revoked_by]
       user_badge.destroy!
       if options[:revoked_by]
         StaffActionLogger.new(options[:revoked_by]).log_badge_revoke(user_badge)
@@ -505,7 +509,11 @@ class BadgeGranter
       next if row.staff && badge.awarded_for_trust_level?
 
       notification = send_notification(row.user_id, row.username, row.locale, badge)
-      UserBadge.trigger_user_badge_granted_event(badge.id, row.user_id)
+      UserBadge.trigger_user_badge_granted_event(
+        badge.id,
+        row.user_id,
+        acting_user: Discourse.system_user,
+      )
 
       DB.exec(
         "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",

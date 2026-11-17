@@ -153,6 +153,7 @@ function graphFromOperations(operations) {
     switch (operation.op) {
       case "create_ai_agent":
       case "update_node_parameters":
+      case "upgrade_node":
         break;
       case "add_node": {
         const node = operation.node;

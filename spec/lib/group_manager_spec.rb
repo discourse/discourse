@@ -19,6 +19,32 @@ RSpec.describe GroupManager do
       expect(manager.add([])).to eq([])
       expect(manager.add(nil)).to eq([])
     end
+
+    it "passes the acting user to each added user's event" do
+      admin = Fabricate(:admin)
+
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          manager.add([user.id, user2.id], automatic: true, acting_user: admin)
+        end
+
+      expect(events).to contain_exactly(
+        {
+          event_name: :user_added_to_group,
+          params: [user, group, { automatic: true, acting_user: admin }],
+        },
+        {
+          event_name: :user_added_to_group,
+          params: [user2, group, { automatic: true, acting_user: admin }],
+        },
+      )
+    end
+
+    it "passes a nil acting user when none is given" do
+      events = DiscourseEvent.track_events(:user_added_to_group) { manager.add([user.id]) }
+
+      expect(events.first[:params].last).to eq(automatic: false, acting_user: nil)
+    end
   end
 
   describe "user_count" do
@@ -62,6 +88,78 @@ RSpec.describe GroupManager do
     it "returns empty array for blank input" do
       expect(manager.remove([])).to eq([])
       expect(manager.remove(nil)).to eq([])
+    end
+
+    it "skips users who aren't members" do
+      non_member = Fabricate(:user)
+
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          expect(manager.remove([user.id, non_member.id])).to contain_exactly(user.id)
+        end
+
+      expect(events.map { |event| event[:params][0] }).to contain_exactly(user)
+    end
+
+    it "passes the acting user to each removed user's event" do
+      admin = Fabricate(:admin)
+
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          manager.remove([user.id, user2.id], acting_user: admin)
+        end
+
+      expect(events).to contain_exactly(
+        { event_name: :user_removed_from_group, params: [user, group, { acting_user: admin }] },
+        { event_name: :user_removed_from_group, params: [user2, group, { acting_user: admin }] },
+      )
+    end
+
+    it "passes a nil acting user when none is given" do
+      events = DiscourseEvent.track_events(:user_removed_from_group) { manager.remove([user.id]) }
+
+      expect(events.first[:params].last).to eq(acting_user: nil)
+    end
+
+    context "when a concurrent removal deletes a member first" do
+      fab!(:group_user_web_hook)
+
+      before do
+        user.update!(primary_group: group)
+        group.update!(title: "Leader")
+        user.update!(title: "Leader")
+
+        allow(DB).to receive(:query_hash).and_wrap_original do |original, sql, *args, **kwargs|
+          if sql.include?("DELETE FROM group_users")
+            GroupUser.where(group:, user:).delete_all
+            Group.update_counters(group.id, user_count: -1)
+          end
+          original.call(sql, *args, **kwargs)
+        end
+      end
+
+      it "reports, announces and cleans up only the members it removed" do
+        events = nil
+
+        expect {
+          events =
+            DiscourseEvent.track_events(:user_removed_from_group) do
+              expect(manager.remove([user.id, user2.id])).to contain_exactly(user2.id)
+            end
+        }.to change { group.reload.user_count }.from(2).to(0)
+
+        expect(events.map { |event| event[:params][0] }).to contain_exactly(user2)
+        removal_payloads =
+          Jobs::EmitWebHookEvent
+            .jobs
+            .map { |job| job["args"].first }
+            .select { |args| args["event_name"] == "user_removed_from_group" }
+            .map { |args| JSON.parse(args["payload"]) }
+        expect(removal_payloads).to contain_exactly(
+          include("user_id" => user2.id, "group_id" => group.id),
+        )
+        expect(user.reload).to have_attributes(primary_group_id: group.id, title: "Leader")
+      end
     end
   end
 end

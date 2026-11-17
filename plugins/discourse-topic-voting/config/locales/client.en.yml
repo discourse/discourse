@@ -50,8 +50,12 @@ en:
         requires_topic_voting: "Requires topic voting to be enabled"
       nodes:
         "trigger:topic_received_vote": "Topic received vote"
+        "trigger:topic_vote_removed": "Topic vote removed"
+      node_search_terms:
+        "trigger:topic_vote_removed": "unvote, unvoted, withdrawn"
       node_descriptions:
         "trigger:topic_received_vote": "Fires when a user votes on a topic"
+        "trigger:topic_vote_removed": "Fires when a user removes their vote from a topic. The user is the topic author; the actor is the voter."
       topic_received_vote:
         category_ids_description: "Only trigger for topics in these categories. Leave empty to match all categories."
         tag_names: "Tags"

@@ -390,6 +390,22 @@ export function nodeTypeOperationLabel(nodeTypeOrIdentifier, operation) {
   return entry?.label || entry?.name || entry?.value || operation;
 }
 
+// Everything the palette search matches: the name, the operations and the node's search terms.
+export function nodeTypeSearchText(nodeTypeOrIdentifier) {
+  const operationLabels = nodeTypeOperations(nodeTypeOrIdentifier).map(
+    (operation) => nodeTypeOperationLabel(nodeTypeOrIdentifier, operation.value)
+  );
+  const searchTerms = translatedOrNull(
+    nodeTypeUi(nodeTypeOrIdentifier).search_terms_key ||
+      `discourse_workflows.node_search_terms.${nodeTypeIdentifier(nodeTypeOrIdentifier)}`
+  );
+
+  return [nodeTypeLabel(nodeTypeOrIdentifier), ...operationLabels, searchTerms]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
 export function nodeTypePresenter(nodeTypeOrIdentifier) {
   const operations = nodeTypeOperations(nodeTypeOrIdentifier);
 

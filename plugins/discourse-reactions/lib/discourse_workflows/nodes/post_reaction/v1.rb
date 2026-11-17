@@ -73,6 +73,23 @@ if defined?(DiscourseWorkflows)
             },
           )
 
+          deprecated(replaced_by: %w[action:add_reaction action:remove_reaction]) do |parameters|
+            reaction_parameters = parameters.slice("post_id", "reaction", "actor_username")
+            notes = ["discourse_reactions.discourse_workflows.node_upgrades.post_reaction_output"]
+
+            # An operation set by an expression can't be upgraded automatically.
+            case parameters.fetch("operation", "add")
+            when "add"
+              {
+                type: "action:add_reaction",
+                parameters: reaction_parameters.merge(parameters.slice("if_exists")),
+                notes:,
+              }
+            when "remove"
+              { type: "action:remove_reaction", parameters: reaction_parameters, notes: }
+            end
+          end
+
           def execute(exec_ctx)
             items =
               exec_ctx.input_items.map.with_index do |_item, item_index|

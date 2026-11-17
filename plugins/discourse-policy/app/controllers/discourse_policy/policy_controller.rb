@@ -10,7 +10,7 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
   def accept
     PolicyUser.add!(current_user, @post.post_policy)
     @post.publish_change_to_clients!(:policy_change)
-    @add_users_group&.add(current_user)
+    @add_users_group&.add(current_user, acting_user: current_user)
 
     render json: success_json
   end
@@ -18,7 +18,7 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
   def unaccept
     PolicyUser.remove!(current_user, @post.post_policy)
     @post.publish_change_to_clients!(:policy_change)
-    @add_users_group&.remove(current_user)
+    @add_users_group&.remove(current_user, acting_user: current_user)
 
     render json: success_json
   end

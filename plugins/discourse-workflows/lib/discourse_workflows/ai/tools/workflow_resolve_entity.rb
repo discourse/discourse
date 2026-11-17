@@ -4,7 +4,17 @@ module DiscourseWorkflows
   module Ai
     module Tools
       class WorkflowResolveEntity < Base
-        SUPPORTED_KINDS = %w[category tag tag_group user group badge data_table topic].freeze
+        SUPPORTED_KINDS = %w[
+          category
+          tag
+          tag_group
+          user
+          group
+          badge
+          data_table
+          topic
+          node_option
+        ].freeze
         MAX_RESULTS = 10
 
         def self.signature
@@ -24,6 +34,23 @@ module DiscourseWorkflows
                 description: "Name, slug, username, topic id, or partial text to search for",
                 type: "string",
                 required: true,
+              },
+              {
+                name: "node_type",
+                description:
+                  "For node_option: the node identifier whose setting declares type_options.load_options_method, e.g. trigger:reviewable_created",
+                type: "string",
+              },
+              {
+                name: "method",
+                description: "For node_option: the setting's type_options.load_options_method",
+                type: "string",
+              },
+              {
+                name: "node_parameters",
+                description:
+                  "For node_option: the node's other settings, for option lists that depend on them (type_options.load_options_depends_on)",
+                type: "object",
               },
             ],
           }
@@ -127,6 +154,27 @@ module DiscourseWorkflows
             .limit(MAX_RESULTS)
             .pluck(:id, :name)
             .map { |id, name| { id: id, name: name } }
+        end
+
+        # Any option list a node loads in the editor, so the AI can fill settings the other kinds don't cover.
+        def resolve_node_option(query)
+          node_class = DiscourseWorkflows::Registry.latest_node_type(parameters[:node_type].to_s)
+          return [] if !node_class.respond_to?(:load_options_context)
+
+          options_context =
+            DiscourseWorkflows::LoadOptionsContext.new(
+              method_name: parameters[:method],
+              parameters: parameters[:node_parameters].presence || {},
+              filter: query,
+              node_class:,
+              user: context.user,
+              guardian: context.user.guardian,
+            )
+
+          Array(node_class.load_options_context(options_context)).first(MAX_RESULTS)
+        rescue Discourse::InvalidAccess
+          # Loaders that need credentials can't run here: the AI has no node credentials to pass.
+          []
         end
       end
     end

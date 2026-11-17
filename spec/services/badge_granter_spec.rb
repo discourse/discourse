@@ -549,6 +549,31 @@ RSpec.describe BadgeGranter do
         expect(user.reload.title).to eq(nil)
       end
     end
+
+    it "says who revoked the badge in :user_badge_revoked" do
+      event =
+        DiscourseEvent.track(:user_badge_revoked, args: [{ user_badge:, acting_user: admin }]) do
+          BadgeGranter.revoke(user_badge, revoked_by: admin)
+        end
+
+      expect(event).to be_present
+    end
+
+    it "doesn't revoke a grant again once it's gone" do
+      stale_user_badge = UserBadge.find(user_badge.id)
+      BadgeGranter.revoke(user_badge, revoked_by: admin)
+
+      events =
+        DiscourseEvent.track_events(:user_badge_revoked) do
+          expect { BadgeGranter.revoke(stale_user_badge, revoked_by: admin) }.to raise_error(
+            ActiveRecord::RecordNotFound,
+          )
+        end
+
+      expect(events).to be_empty
+      expect(badge.reload.grant_count).to eq(0)
+      expect(UserHistory.where(action: UserHistory.actions[:revoke_badge]).count).to eq(1)
+    end
   end
 
   describe "revoke_all" do
@@ -758,8 +783,12 @@ RSpec.describe BadgeGranter do
       events = DiscourseEvent.track_events(:user_badge_granted) { BadgeGranter.process_queue! }
 
       expect(events.length).to eq(2)
-      expect(events[0][:params]).to eq([Badge::FirstLike, liker.id])
-      expect(events[1][:params]).to eq([Badge::Welcome, user.id])
+      expect(events.map { |event| event[:params] }).to eq(
+        [
+          [Badge::FirstLike, liker.id, { acting_user: Discourse.system_user }],
+          [Badge::Welcome, user.id, { acting_user: Discourse.system_user }],
+        ],
+      )
     end
   end
 

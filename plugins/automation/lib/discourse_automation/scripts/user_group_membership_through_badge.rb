@@ -61,11 +61,11 @@ DiscourseAutomation::Scriptable.add(
       User
         .where(id: user_ids_to_add)
         .each do |user|
-          group.add(user)
+          group.add(user, acting_user: Discourse.system_user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
         end
     else
-      group.bulk_add(user_ids_to_add)
+      group.bulk_add(user_ids_to_add, acting_user: Discourse.system_user)
     end
 
     if update_user_title_and_flair && user_ids_to_add.present?
@@ -98,11 +98,11 @@ DiscourseAutomation::Scriptable.add(
       User
         .where(id: user_ids_to_remove)
         .each do |user|
-          group.remove(user)
+          group.remove(user, acting_user: Discourse.system_user)
           GroupActionLogger.new(Discourse.system_user, group).log_remove_user_from_group(user)
         end
     else
-      group.bulk_remove(user_ids_to_remove)
+      group.bulk_remove(user_ids_to_remove, acting_user: Discourse.system_user)
     end
 
     if update_user_title_and_flair && user_ids_to_remove.present?

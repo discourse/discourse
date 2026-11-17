@@ -70,10 +70,40 @@ module DiscourseWorkflows
       **TOPIC_FILTER_PROPERTIES,
     }.freeze
 
+    REVIEWABLE_TYPE_FILTER_PROPERTIES = {
+      reviewable_types: {
+        type: :multi_options,
+        required: false,
+        default: [],
+        type_options: {
+          load_options_method: "reviewable_types",
+        },
+        control_options: {
+          value_property: "id",
+          name_property: "name",
+          filterable: true,
+        },
+      },
+    }.freeze
+
     def self.actor_property(allow_anonymous: true, **options)
       property = { type: :string, required: false, default: "system", ui: { control: :actor } }
       property[:control_options] = { allow_anonymous: false } if !allow_anonymous
       { actor_username: property.merge(options) }
+    end
+
+    def self.timezone_property(none:, **options)
+      property = {
+        type: :string,
+        required: false,
+        ui: {
+          control: :timezone,
+        },
+        control_options: {
+          none:,
+        },
+      }
+      { timezone: property.merge(options) }
     end
 
     DESCRIPTION_DEFAULTS = {
@@ -123,8 +153,29 @@ module DiscourseWorkflows
       end
     end
 
-    def self.deprecated(superseded_by:, changes: {}, description_key: nil, notice_key: nil)
-      @deprecation = { superseded_by:, changes:, description_key:, notice_key: }.compact.freeze
+    # The upgrade block maps a saved node's parameters to its replacement, `{ type:, version:, parameters:,
+    # notes: }`, when that's another node (`replaced_by:`) or takes different parameters. `notes` are I18n keys
+    # telling admins what changes for them; nil means the configuration can't be upgraded automatically.
+    def self.deprecated(
+      superseded_by: nil,
+      replaced_by: nil,
+      changes: {},
+      description_key: nil,
+      notice_key: nil,
+      &upgrade
+    )
+      if superseded_by.nil? && upgrade.nil?
+        raise ArgumentError, "A deprecated node needs superseded_by: or an upgrade block"
+      end
+
+      @upgrade = upgrade
+      @deprecation = {
+        superseded_by:,
+        replaced_by: Array.wrap(replaced_by).presence,
+        changes:,
+        description_key:,
+        notice_key:,
+      }.compact.freeze
     end
 
     def self.deprecation
@@ -133,6 +184,15 @@ module DiscourseWorkflows
 
     def self.deprecated?
       deprecation.present?
+    end
+
+    def self.upgrade(parameters)
+      return if !deprecated?
+
+      parameters = parameters.deep_stringify_keys
+      return @upgrade.call(parameters) if @upgrade
+
+      { type: identifier, version: deprecation[:superseded_by], parameters: }
     end
 
     def self.identifier
@@ -152,7 +212,7 @@ module DiscourseWorkflows
     end
 
     def self.palette_visible?
-      description_value(:palette_visible)
+      description_value(:palette_visible) && !deprecated?
     end
 
     def self.previewable?
@@ -374,6 +434,32 @@ module DiscourseWorkflows
         .map { |klass| { id: klass.sti_name, name: klass.name.demodulize.underscore.humanize } }
     end
 
+    def self.load_reviewable_type_options(context)
+      return if context.method_name != "reviewable_types"
+      reviewable_type_options.select { |option| context.matches_filter?(option[:name]) }
+    end
+
+    def self.load_badge_options(context)
+      return if context.method_name != "badges"
+
+      ::Badge
+        .where(enabled: true)
+        .order(:name)
+        .pluck(:id, :name)
+        .select { |_, name| context.matches_filter?(name) }
+        .map { |id, name| { id:, name: } }
+    end
+
+    def self.load_group_options(context, groups = ::Group.all)
+      return if context.method_name != "groups"
+
+      groups
+        .order(:name)
+        .pluck(:id, :name)
+        .select { |_, name| context.matches_filter?(name) }
+        .map { |id, name| { id:, name: } }
+    end
+
     def self.trust_level_options
       TrustLevel.levels.map do |name, level|
         { value: level.to_s, label_key: "trust_levels.names.#{name}" }
@@ -505,6 +591,23 @@ module DiscourseWorkflows
       end
 
       timezone
+    end
+
+    # Reads a date and time in the node's timezone, or the workflow's when it has none.
+    def parse_time_in_timezone(exec_ctx, value, item_index:, field:, error_key:)
+      value = value.to_s.presence
+      return if value.nil?
+
+      zone = ActiveSupport::TimeZone[resolve_timezone(exec_ctx, item_index)]
+      parsed =
+        begin
+          zone&.parse(value)
+        rescue ArgumentError
+          nil
+        end
+      raise_node_error!(I18n.t(error_key, field:, value:), item_index:) if parsed.nil?
+
+      parsed
     end
 
     def matches_user_groups?(user, group_ids)

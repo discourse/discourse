@@ -17,6 +17,18 @@ describe GroupSelfMembership do
       ).to eq(true)
     end
 
+    it "reports the joining user as the actor of the event" do
+      events =
+        DiscourseEvent.track_events(:user_added_to_group) do
+          described_class.join(user.guardian, group)
+        end
+
+      expect(events).to contain_exactly(
+        event_name: :user_added_to_group,
+        params: [user, group, { automatic: false, acting_user: user }],
+      )
+    end
+
     it "reports no change when the user is already a member" do
       group.add(user)
 
@@ -68,6 +80,18 @@ describe GroupSelfMembership do
           target_user: user,
         ),
       ).to eq(true)
+    end
+
+    it "reports the leaving user as the actor of the event" do
+      events =
+        DiscourseEvent.track_events(:user_removed_from_group) do
+          described_class.leave(user.guardian, group)
+        end
+
+      expect(events).to contain_exactly(
+        event_name: :user_removed_from_group,
+        params: [user, group, { acting_user: user }],
+      )
     end
 
     it "refuses a group that does not allow public exit" do

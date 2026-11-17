@@ -93,7 +93,7 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
-    post.hide!(reviewable_scores.first.reviewable_score_type)
+    post.hide!(reviewable_scores.first.reviewable_score_type, acting_user: performed_by)
 
     agree
   end
@@ -123,10 +123,7 @@ class ReviewableAiPost < Reviewable
 
   def perform_disagree(performed_by, args)
     # Undo hide/silence if applicable
-    if post.hidden?
-      post.acting_user = performed_by
-      post.unhide!
-    end
+    post.unhide!(acting_user: performed_by) if post.hidden?
 
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: [created_by_id] }

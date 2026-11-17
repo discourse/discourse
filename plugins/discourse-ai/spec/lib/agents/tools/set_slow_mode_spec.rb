@@ -34,7 +34,23 @@ RSpec.describe DiscourseAi::Agents::Tools::SetSlowMode do
     expect(topic.reload.slow_mode_seconds).to eq(0)
   end
 
-  it "sets an expiration timer when duration_hours is provided" do
+  it "logs the change and triggers topic_slow_mode_set as the acting user" do
+    events =
+      DiscourseEvent.track_events(:topic_slow_mode_set) do
+        tool(topic_id: topic.id, slow_mode_seconds: 600, reason: "Heated discussion").invoke
+      end
+
+    expect(events.map { |event| event[:params] }).to eq([[topic, nil, { acting_user: bot_user }]])
+    expect(UserHistory.last).to have_attributes(
+      action: UserHistory.actions[:topic_slow_mode_set],
+      acting_user_id: bot_user.id,
+      topic_id: topic.id,
+    )
+  end
+
+  it "sets an expiration timer duration_hours from now" do
+    freeze_time
+
     result =
       tool(
         topic_id: topic.id,
@@ -45,7 +61,27 @@ RSpec.describe DiscourseAi::Agents::Tools::SetSlowMode do
 
     expect(result[:status]).to eq("success")
     timer = TopicTimer.find_by(topic: topic, status_type: TopicTimer.types[:clear_slow_mode])
-    expect(timer).to be_present
+    expect(timer.execute_at).to be_within(1.second).of(2.hours.from_now)
+  end
+
+  it "removes an end time set earlier when duration_hours is omitted" do
+    Fabricate(
+      :topic_timer,
+      topic:,
+      user: Fabricate(:moderator),
+      status_type: TopicTimer.types[:clear_slow_mode],
+    )
+
+    tool(topic_id: topic.id, slow_mode_seconds: 600, reason: "Still heated").invoke
+
+    expect(topic.reload.slow_mode_topic_timer).to be_nil
+  end
+
+  it "returns an error when the slow mode settings are invalid" do
+    result = tool(topic_id: topic.id, slow_mode_seconds: -1, reason: "Test").invoke
+
+    expect(result[:status]).to eq("error")
+    expect(topic.reload.slow_mode_seconds).to eq(0)
   end
 
   it "returns an error when topic is not found" do

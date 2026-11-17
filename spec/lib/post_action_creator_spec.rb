@@ -176,6 +176,45 @@ RSpec.describe PostActionCreator do
       expect(event_names).not_to include(:flag_created)
     end
 
+    it "does not report a like that lost a race with a concurrent like" do
+      creator = PostActionCreator.new(user, post, like_type_id)
+      creator.post_can_act?
+      PostAction.create!(user:, post:, post_action_type_id: like_type_id)
+
+      result = nil
+      events =
+        DiscourseEvent.track_events(:like_created) do
+          expect { result = creator.perform }.not_to change {
+            GivenDailyLike.find_for(user.id, Date.today).pick(:likes_given)
+          }
+        end
+
+      expect(result.failed?).to eq(true)
+      expect(events).to be_empty
+    end
+
+    it "doesn't report a trashed like a concurrent request revived first", :aggregate_failures do
+      PostActionCreator.like(user, post)
+      PostActionDestroyer.destroy(user, post, :like)
+      creator = PostActionCreator.new(user, post, like_type_id)
+      # The concurrent request revives it between this one finding it and reviving it.
+      ActiveRecord::Relation.any_instance.stubs(:update_all).returns(0)
+
+      result = nil
+      events = DiscourseEvent.track_events(:like_created) { result = creator.perform }
+
+      expect(result).to have_attributes(success: true, already_existed: true)
+      expect(events).to be_empty
+    end
+
+    it "says the action already existed when a concurrent request created it first" do
+      PostAction.stubs(:create).raises(ActiveRecord::RecordNotUnique)
+
+      result = PostActionCreator.new(user, post, like_type_id).perform
+
+      expect(result).to have_attributes(success: true, already_existed: true)
+    end
+
     it "sends the right event arguments" do
       events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :like) }
       event = events.find { |e| e[:event_name] == :like_created }
@@ -269,6 +308,26 @@ RSpec.describe PostActionCreator do
       expect(post.reload).to be_hidden
     end
 
+    it "hides a post whose flags reach the threshold as the system user" do
+      Reviewable.set_priorities(high: 3.0)
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
+
+      events = DiscourseEvent.track_events(:post_hidden) { PostActionCreator.spam(user, post) }
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [
+          [
+            post,
+            {
+              acting_user: Discourse.system_user,
+              post_action_type_id: PostActionType.types[:spam],
+            },
+          ],
+        ],
+      )
+    end
+
     describe "Auto hide spam flagged posts" do
       before do
         user.trust_level = TrustLevel[3]
@@ -280,6 +339,41 @@ RSpec.describe PostActionCreator do
         PostActionCreator.create(user, post, :spam)
 
         expect(post.hidden?).to eq(true)
+      end
+
+      it "hides it as the system user" do
+        events =
+          DiscourseEvent.track_events(:post_hidden) { PostActionCreator.create(user, post, :spam) }
+
+        expect(events.map { |event| event[:params] }).to eq(
+          [
+            [
+              post,
+              {
+                acting_user: Discourse.system_user,
+                post_action_type_id: PostActionType.types[:spam],
+              },
+            ],
+          ],
+        )
+        expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl3_user])
+      end
+
+      it "reports staff taking action as the actor" do
+        moderator = Fabricate(:moderator, refresh_auto_groups: true)
+
+        events =
+          DiscourseEvent.track_events(:post_hidden) do
+            PostActionCreator.new(
+              moderator,
+              post,
+              PostActionType.types[:spam],
+              take_action: true,
+            ).perform
+          end
+
+        expect(events.map { |event| event[:params].last[:acting_user] }).to eq([moderator])
+        expect(post.reload.hidden_reason_id).to eq(Post.hidden_reasons[:flagged_by_tl3_user])
       end
 
       it "does not hide the post if the setting is disabled" do
@@ -412,6 +506,29 @@ RSpec.describe PostActionCreator do
       expect(post.reload).to be_hidden
     end
 
+    it "reports the moderator as the actor of the hide" do
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+
+      events =
+        DiscourseEvent.track_events(:post_hidden) do
+          PostActionCreator.new(
+            moderator,
+            post,
+            PostActionType.types[:inappropriate],
+            take_action: true,
+          ).perform
+        end
+
+      expect(events.map { |event| event[:params] }).to eq(
+        [
+          [
+            post,
+            { acting_user: moderator, post_action_type_id: PostActionType.types[:inappropriate] },
+          ],
+        ],
+      )
+    end
+
     context "when there is another reviewable on the post" do
       before do
         PostActionCreator.create(Fabricate(:user, refresh_auto_groups: true), post, :inappropriate)
@@ -473,6 +590,12 @@ RSpec.describe PostActionCreator do
       score = result.reviewable.reviewable_scores.last
       expect(score.reason).to eq("queued_by_staff")
       expect(post.reload).to be_hidden
+    end
+
+    it "reports the staff member as the actor of the hide" do
+      events = DiscourseEvent.track_events(:post_hidden) { build_creator.perform }
+
+      expect(events.map { |event| event[:params].last[:acting_user] }).to eq([admin])
     end
 
     it "hides the topic even if it has replies" do

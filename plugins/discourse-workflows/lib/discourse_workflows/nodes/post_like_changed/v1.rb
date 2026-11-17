@@ -57,7 +57,8 @@ module DiscourseWorkflows
         end
 
         def valid?
-          @change.present? && @post&.topic.present? && @user.present?
+          @change.present? && @post&.topic.present? && @user.present? &&
+            (fixed_changes.nil? || fixed_changes.include?(@change))
         end
 
         def user_id
@@ -75,10 +76,15 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_changes?(trigger_ctx, @change) && matches_topic_filters?(@post.topic, trigger_ctx)
+          (fixed_changes.present? || matches_changes?(trigger_ctx, @change)) &&
+            matches_topic_filters?(@post.topic, trigger_ctx)
         end
 
         private
+
+        def fixed_changes
+          self.class.description[:fixed_changes]
+        end
 
         def subject_user
           @user

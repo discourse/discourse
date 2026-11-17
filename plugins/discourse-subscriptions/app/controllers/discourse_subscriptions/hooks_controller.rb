@@ -105,7 +105,7 @@ module DiscourseSubscriptions
             Subscription.create!(customer_id: discourse_customer.id, external_id: subscription)
           end
 
-          group.add(user) if group
+          group.add(user, acting_user: Discourse.system_user) if group
         end
       when "customer.subscription.created"
       when "customer.subscription.updated"
@@ -123,7 +123,7 @@ module DiscourseSubscriptions
         return render_json_error "user not found" if !user
 
         if group = plan_group(subscription[:plan])
-          group.add(user)
+          group.add(user, acting_user: Discourse.system_user)
         end
       when "customer.subscription.deleted"
         subscription = event[:data][:object]
@@ -138,7 +138,7 @@ module DiscourseSubscriptions
         return render_json_error "user not found" if !user
 
         if group = plan_group(subscription[:plan])
-          group.remove(user)
+          group.remove(user, acting_user: Discourse.system_user)
         end
       end
 

@@ -48,6 +48,7 @@ class UsernameChanger
           new_username: @new_username,
           avatar_template: @user.avatar_template_url,
           asynchronous: asynchronous,
+          acting_user_id: @actor&.id,
         )
       end
       return true
@@ -61,13 +62,15 @@ class UsernameChanger
     old_username:,
     new_username:,
     avatar_template:,
-    asynchronous: true
+    asynchronous: true,
+    acting_user_id: nil
   )
     args = {
       user_id: user_id,
       old_username: old_username,
       new_username: new_username,
       avatar_template: avatar_template,
+      acting_user_id: acting_user_id,
     }
 
     if asynchronous
