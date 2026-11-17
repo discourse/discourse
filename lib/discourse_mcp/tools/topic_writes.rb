@@ -49,9 +49,13 @@ module DiscourseMcp
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
         ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
-        guardian.ensure_can_pin_unpin_topic!(topic)
         mode = arguments.fetch("mode")
         raise Discourse::InvalidParameters.new(:mode) if %w[category global unpin].exclude?(mode)
+        if mode == "global"
+          guardian.ensure_can_moderate!(topic)
+        else
+          guardian.ensure_can_pin_unpin_topic!(topic)
+        end
 
         topic.update_status(
           mode == "global" ? "pinned_globally" : "pinned",

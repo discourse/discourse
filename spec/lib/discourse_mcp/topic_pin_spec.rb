@@ -39,6 +39,40 @@ describe DiscourseMcp::Tools::SetTopicPin do
       expect(topic.reload.pinned_at).to be_nil
     end
 
+    it "allows category moderators to pin locally but not globally" do
+      SiteSetting.enable_category_group_moderation = true
+      user.update!(trust_level: TrustLevel[1])
+      group = Fabricate(:group)
+      group.add(user)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
+
+      expect { invoke("global", actor: user) }.to raise_error(Discourse::InvalidAccess)
+      expect(topic.reload.pinned_at).to be_nil
+      expect(topic.pinned_globally).to eq(false)
+      expect(invoke("category", actor: user)[:structuredContent]).to include(
+        pinned: true,
+        pinned_globally: false,
+      )
+      expect(invoke("unpin", actor: user)[:structuredContent]).to include(pinned: false)
+    end
+
+    it "allows global pins for trust level four users under normal moderation permissions" do
+      user.update!(trust_level: TrustLevel[4])
+
+      expect(invoke("global", actor: user)[:structuredContent]).to include(
+        pinned: true,
+        pinned_globally: true,
+      )
+    end
+
+    it "denies global pins for silenced trust level four users" do
+      user.update!(trust_level: TrustLevel[4], silenced_till: 1.day.from_now)
+
+      expect { invoke("global", actor: user) }.to raise_error(Discourse::InvalidAccess)
+      expect(topic.reload.pinned_at).to be_nil
+      expect(topic.pinned_globally).to eq(false)
+    end
+
     it "replaces an existing pin expiration" do
       topic.update!(pinned_at: 1.day.ago, pinned_until: 1.day.from_now)
 
