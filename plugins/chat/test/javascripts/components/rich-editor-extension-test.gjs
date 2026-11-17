@@ -79,6 +79,57 @@ haha **ok** _cool_
       assert.strictEqual(editor.value, "H2O is wet");
     });
 
+    test("keeps the text of a lone pasted inline HTML element", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const markdownOptions = {
+        featuresOverride: chat.limited_pretty_text_features,
+        markdownItRules: chat.limited_pretty_text_markdown_rules,
+      };
+
+      const [editor] = await setupRichEditor(assert, "", { markdownOptions });
+      editor.view.pasteHTML("<p><sub>2</sub></p>");
+      await settled();
+
+      assert.strictEqual(editor.value, "2");
+    });
+
+    test("keeps pasted inline HTML chat can show", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const markdownOptions = {
+        featuresOverride: chat.limited_pretty_text_features,
+        markdownItRules: chat.limited_pretty_text_markdown_rules,
+      };
+
+      const [editor] = await setupRichEditor(assert, "", { markdownOptions });
+      editor.view.pasteHTML(
+        "<p>press <kbd>Ctrl</kbd> to <mark>go</mark> now</p>"
+      );
+      await settled();
+      assert.strictEqual(
+        editor.value,
+        "press <kbd>Ctrl</kbd> to <mark>go</mark> now"
+      );
+    });
+
+    test("keeps inline HTML chat can show in pasted text", async function (assert) {
+      const chat =
+        getOwner(this).lookup("service:site").markdown_additional_options.chat;
+      const [editor] = await setupRichEditor(assert, "", {
+        markdownOptions: {
+          featuresOverride: chat.limited_pretty_text_features,
+          markdownItRules: chat.limited_pretty_text_markdown_rules,
+        },
+      });
+      editor.view.pasteText("press <kbd>Ctrl</kbd> to <mark>go</mark> now");
+      await settled();
+      assert.strictEqual(
+        editor.value,
+        "press <kbd>Ctrl</kbd> to <mark>go</mark> now"
+      );
+    });
+
     test("keeps typed inline HTML as text in chat", async function (assert) {
       const chat =
         getOwner(this).lookup("service:site").markdown_additional_options.chat;

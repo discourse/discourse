@@ -533,6 +533,7 @@ const extension = {
     pmModel: { Slice },
     pmView: { Decoration, DecorationSet },
     getContext,
+    utils: { convertFromMarkdown },
   }) {
     function outlineDecorations(doc) {
       const decorations = [];
@@ -555,10 +556,29 @@ const extension = {
       return DecorationSet.create(doc, decorations);
     }
 
+    // a host that doesn't cook raw inline HTML may still cook some tags
+    const hostCooks = new Map();
+    function isCookedByHost(tag) {
+      if (!hostCooks.has(tag)) {
+        let cooked = false;
+        convertFromMarkdown(`<${tag}>x</${tag}>`).descendants((node) => {
+          cooked ||= node.type.name === "html_inline" && node.attrs.tag === tag;
+        });
+        hostCooks.set(tag, cooked);
+      }
+      return hostCooks.get(tag);
+    }
+
+    function shouldUnwrap(node) {
+      return (
+        node.type.name === "html_inline" && !isCookedByHost(node.attrs.tag)
+      );
+    }
+
     function unwrapInlineHtml(fragment) {
       const children = [];
       fragment.forEach((node) => {
-        if (node.type.name === "html_inline") {
+        if (shouldUnwrap(node)) {
           unwrapInlineHtml(node.content).forEach((child) =>
             children.push(child)
           );
@@ -569,6 +589,19 @@ const extension = {
         }
       });
       return Fragment.fromArray(children);
+    }
+
+    // unwrapped nodes on the slice's open edge no longer count toward its depth
+    function openDepthAfterUnwrap(fragment, depth, side) {
+      let unwrapped = 0;
+      let node = fragment[side];
+      for (let level = 0; level < depth && node; level++) {
+        if (shouldUnwrap(node)) {
+          unwrapped++;
+        }
+        node = node[side];
+      }
+      return depth - unwrapped;
     }
 
     return [
@@ -595,8 +628,12 @@ const extension = {
 
             return new Slice(
               unwrapInlineHtml(slice.content),
-              slice.openStart,
-              slice.openEnd
+              openDepthAfterUnwrap(
+                slice.content,
+                slice.openStart,
+                "firstChild"
+              ),
+              openDepthAfterUnwrap(slice.content, slice.openEnd, "lastChild")
             );
           },
         },
