@@ -170,11 +170,10 @@ module DiscourseAi
           field == :description ? current_description : category.public_send(field).to_s
         end
 
-        # `description` stores cooked HTML; the editable source is the
-        # definition topic's first post, which this tool replaces wholesale.
+        # `description` stores cooked HTML and stays nil while the definition
+        # post holds the placeholder; that post is the editable source, which
+        # this tool replaces wholesale.
         def current_description
-          return "" if category.description.blank?
-
           category.topic&.first_post&.raw.presence || category.plain_text_description.to_s
         end
 
