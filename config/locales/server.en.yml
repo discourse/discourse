@@ -4053,6 +4053,8 @@ en:
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
     moderation_appeal_instructions: "To appeal this decision, contact %{email}"
+    moderation_reason: "More specifically, your post violated the following community guideline: **%{ground}**. %{explanation}"
+    moderation_reason_for_responders: "More specifically, the post you replied to violated the following community guideline: **%{ground}**. %{explanation}"
 
     post_hidden:
       title: "Post Hidden"
