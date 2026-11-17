@@ -234,6 +234,7 @@ module DiscourseAi
             HeaderMapper.request_headers(method, params, input_schema: options[:input_schema]),
           )
         end
+        request_access_token = server.oauth_token_store.access_token if server.oauth?
         response, raw_body = perform_request(uri, payload, headers)
 
         handle_response(
@@ -246,7 +247,7 @@ module DiscourseAi
       rescue UnauthorizedError => e
         if server.oauth? && options.fetch(:allow_oauth_retry, true) &&
              server.oauth_token_store.refresh_token.present?
-          DiscourseAi::Mcp::OAuthFlow.refresh!(server)
+          DiscourseAi::Mcp::OAuthFlow.refresh!(server, rejected_access_token: request_access_token)
 
           return post_jsonrpc(method, **options.merge(allow_oauth_retry: false))
         end
