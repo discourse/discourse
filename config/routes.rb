@@ -46,7 +46,7 @@ Discourse::Application.routes.draw do
         "t/:slug/:topic_id" => "topics#show",
       }.each do |path, action|
         # Require the format so HTML URL generation cannot select a Markdown route.
-        get "#{path}.:format", to: action, constraints: { format: /md/ }
+        get "#{path}.:format", to: action, constraints: { format: "md" }
         get path,
             to: action,
             defaults: {
@@ -68,7 +68,19 @@ Discourse::Application.routes.draw do
   get "secure-media-uploads/*path" => "uploads#_show_secure_deprecated", :format => false
   get "secure-uploads/*path" => "uploads#show_secure", :format => false
 
-  scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
+  get "svg-sprite/search/:keyword" => "svg_sprite#search",
+      :format => false,
+      :constraints => {
+        keyword: /[-a-z0-9\s\%]+/,
+      }
+  get "favicon/proxied" => "static#favicon", :format => false
+
+  # Apple accepts either of these paths for the apple-app-site-association file
+  # Might as well support both
+  get "apple-app-site-association" => "metadata#app_association_ios", :format => false
+  get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
+
+  scope path: nil, constraints: { format: %w[json html] } do
     relative_url_root =
       (
         if defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root
@@ -1139,11 +1151,6 @@ Discourse::Application.routes.draw do
           theme_id: /(-?[0-9]+)?/,
           format: :js,
         }
-    get "svg-sprite/search/:keyword" => "svg_sprite#search",
-        :format => false,
-        :constraints => {
-          keyword: /[-a-z0-9\s\%]+/,
-        }
     get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search",
         :defaults => {
           format: :json,
@@ -1760,8 +1767,6 @@ Discourse::Application.routes.draw do
           format: /.*/,
         }
 
-    get "favicon/proxied" => "static#favicon", :format => false
-
     get "robots.txt" => "robots_txt#index"
     get "robots-builder.json" => "robots_txt#builder"
     get "llms.txt" => "static#llms_txt"
@@ -1770,10 +1775,6 @@ Discourse::Application.routes.draw do
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
     get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
-    # Apple accepts either of these paths for the apple-app-site-association file
-    # Might as well support both
-    get "apple-app-site-association" => "metadata#app_association_ios", :format => false
-    get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
     # Tag Routes - Canonical vs Legacy
@@ -1859,7 +1860,7 @@ Discourse::Application.routes.draw do
       delete "/unused" => "tags#destroy_unused"
 
       # canonical slug/id format for category+tag routes
-      constraints(tag_id: /\d+/, format: /json|rss/) do
+      constraints(tag_id: /\d+/, format: %w[json rss]) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
             get "/none/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
@@ -1895,7 +1896,7 @@ Discourse::Application.routes.draw do
       end
 
       # legacy name-based format for category+tag routes
-      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
+      constraints(tag_name: %r{[^/]+?}, format: %w[json rss]) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
             get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
