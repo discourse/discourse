@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -40,12 +41,12 @@ module("Unit | Components | ChatThread", function (hooks) {
     });
     const thread = this.fabricators.thread({ id: 1, channel });
     this.thread = thread;
-    this.set("targetMessageId", null);
+    const targetMessageId = tracked(null);
 
     await render(
       <template>
         <ChatThread
-          @targetMessageId={{this.targetMessageId}}
+          @targetMessageId={{targetMessageId.value}}
           @thread={{this.thread}}
         />
       </template>
@@ -53,7 +54,7 @@ module("Unit | Components | ChatThread", function (hooks) {
 
     const requestsAfterMount = threadMessageRequests().length;
 
-    this.set("targetMessageId", 42);
+    targetMessageId.value = 42;
     await settled();
 
     const newRequests = threadMessageRequests().slice(requestsAfterMount);
@@ -75,12 +76,12 @@ module("Unit | Components | ChatThread", function (hooks) {
     });
     const thread = this.fabricators.thread({ id: 1, channel });
     this.thread = thread;
-    this.set("targetMessageId", null);
+    const targetMessageId = tracked(null);
 
     await render(
       <template>
         <ChatThread
-          @targetMessageId={{this.targetMessageId}}
+          @targetMessageId={{targetMessageId.value}}
           @thread={{this.thread}}
         />
       </template>
@@ -88,7 +89,7 @@ module("Unit | Components | ChatThread", function (hooks) {
 
     const requestsAfterMount = threadMessageRequests().length;
 
-    this.set("targetMessageId", null);
+    targetMessageId.value = null;
     await settled();
 
     assert.strictEqual(
