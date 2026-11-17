@@ -100,7 +100,7 @@ module DiscourseAi
           raise OAuthError.new(e.message, server: server), cause: e
         end
 
-        def refresh!(server)
+        def refresh!(server, rejected_access_token: nil)
           previous_refresh_token = server.oauth_token_store.refresh_token
           previous_refreshed_at = server.oauth_last_refreshed_at
 
@@ -114,6 +114,10 @@ module DiscourseAi
                  (
                    server.oauth_token_store.refresh_token != previous_refresh_token ||
                      server.oauth_last_refreshed_at != previous_refreshed_at
+                 ) &&
+                 (
+                   rejected_access_token.nil? ||
+                     server.oauth_token_store.access_token != rejected_access_token
                  ) && !server.oauth_needs_refresh?
               next server.oauth_token_store.access_token
             end
