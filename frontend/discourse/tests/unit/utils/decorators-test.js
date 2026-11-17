@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
+/* eslint-disable discourse/no-test-context-set -- tests classic decorators */
 import Component from "@ember/component";
 import EmberObject, { computed } from "@ember/object";
 import { clearRender, render, settled } from "@ember/test-helpers";
@@ -118,7 +119,7 @@ module("Unit | Utils | decorators", function (hooks) {
 
   test("afterRender", async function (assert) {
     this.registry.register("component:foo-component", fooComponent);
-    this.set("baz", 0);
+    this.baz = 0;
 
     await render(hbs`<FooComponent @baz={{this.baz}} />`);
 
@@ -137,7 +138,7 @@ module("Unit | Utils | decorators", function (hooks) {
       EmberObjectComponent
     );
 
-    this.set("name", "Jarek");
+    this.name = "Jarek";
     await render(hbs`<EmberObjectComponent @name={{this.name}} />`);
 
     assert.dom(".ember-object-component").hasText("hello, Jarek");
@@ -154,7 +155,7 @@ module("Unit | Utils | decorators", function (hooks) {
   test("discourseComputed works in native classes", async function (assert) {
     this.registry.register("component:native-component", NativeComponent);
 
-    this.set("name", "Jarek");
+    this.name = "Jarek";
     await render(hbs`<NativeComponent @name={{this.name}} />`);
 
     assert.dom(".native-component").hasText("hello, Jarek");

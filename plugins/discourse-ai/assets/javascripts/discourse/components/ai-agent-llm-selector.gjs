@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { slugify } from "discourse/lib/utilities";
@@ -108,6 +109,16 @@ export default class AiAgentLlmSelector extends Component {
       this.allowLLMSelector &&
       (this.llmOptions.length > 1 || this.hasUnavailableLlm)
     );
+  }
+
+  @action
+  changeAgent(value) {
+    this.value = value;
+  }
+
+  @action
+  changeLlm(value) {
+    this.currentLlm = value;
   }
 
   setAllowLLMSelector() {
@@ -253,6 +264,7 @@ export default class AiAgentLlmSelector extends Component {
           <DropdownSelectBox
             class="agent-llm-selector__agent-dropdown"
             @content={{this.botOptions}}
+            @onChange={{this.changeAgent}}
             @options={{hash
               customStyle=true
               filterable=this.filterable
@@ -270,6 +282,7 @@ export default class AiAgentLlmSelector extends Component {
           <DropdownSelectBox
             class="agent-llm-selector__llm-dropdown"
             @content={{this.llmOptions}}
+            @onChange={{this.changeLlm}}
             @options={{hash
               customStyle=true
               icon=(if @showLabels "angle-down" "globe")

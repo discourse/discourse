@@ -24,8 +24,9 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
     )
   end
   fab!(:small_action) do
-    Fabricate(:post, topic: topic, user: reply_user, post_type: Post.types[:small_action])
+    Fabricate(:post, topic:, user: reply_user, post_type: Post.types[:small_action])
   end
+  fab!(:whisper) { Fabricate(:whisper, topic:, action_code: "issue_created") }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -43,7 +44,11 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(trigger).not_to be_valid
     end
 
-    it "returns false for non-regular posts" do
+    it "returns true for whispers" do
+      expect(described_class.new(whisper)).to be_valid
+    end
+
+    it "returns false for small actions" do
       trigger = described_class.new(small_action)
       expect(trigger).not_to be_valid
     end
@@ -89,6 +94,13 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(output).to match_node_output_schema(described_class)
     end
 
+    it "returns the post action code" do
+      output = described_class.new(whisper).output
+
+      expect(output.dig(:post, :action_code)).to eq("issue_created")
+      expect(output).to match_node_output_schema(described_class)
+    end
+
     it "returns personal message data without a category", :aggregate_failures do
       personal_message_post = Fabricate(:post, topic: direct_pm_topic, user: reply_user)
       output = described_class.new(personal_message_post).output
@@ -101,6 +113,17 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
   end
 
   describe "#matches?" do
+    it "does not match whispers by default" do
+      expect(described_class.new(whisper).matches?(trigger_context({}))).to eq(false)
+    end
+
+    it "matches only whispers when post type is whisper" do
+      context = trigger_context("post_type" => "whisper")
+
+      expect(described_class.new(whisper).matches?(context)).to eq(true)
+      expect(described_class.new(reply).matches?(context)).to eq(false)
+    end
+
     it "matches posts in subcategories by default" do
       expect(
         described_class.new(subcategory_post).matches?(

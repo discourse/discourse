@@ -4,12 +4,15 @@ module Jobs
   class ReindexSearch < ::Jobs::Scheduled
     every 2.hours
 
+    HIDDEN_TAG_IDS_KEY = "reindex_search_hidden_tag_ids"
+
     def execute(args)
       @verbose = args[:verbose]
       @cleanup_grace_period = 1.day.ago
 
       rebuild_categories
       rebuild_tags
+      queue_hidden_tags_changes
       rebuild_topics
       rebuild_posts
       rebuild_users
@@ -29,6 +32,15 @@ module Jobs
       tag_ids = load_problem_tag_ids(limit)
       puts "rebuilding #{tag_ids.size} tags" if @verbose
       reindex_records(Tag, tag_ids, indexer)
+    end
+
+    def queue_hidden_tags_changes
+      hidden_tag_ids = SearchIndexer.hidden_tags.pluck(:id)
+      previous_tag_ids = JSON.parse(Discourse.redis.get(HIDDEN_TAG_IDS_KEY) || "[]")
+      changed_tag_ids = (hidden_tag_ids - previous_tag_ids) | (previous_tag_ids - hidden_tag_ids)
+
+      SearchIndexer.queue_tags_posts_reindex(changed_tag_ids) if changed_tag_ids.present?
+      Discourse.redis.set(HIDDEN_TAG_IDS_KEY, hidden_tag_ids.to_json)
     end
 
     def rebuild_topics(limit: 10_000, indexer: SearchIndexer)

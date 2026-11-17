@@ -11,6 +11,15 @@ fi:
       go_back: "Palaa takaisin"
       title: "Ilmoita laittomasta sisällöstä"
       email: "Sähköpostiosoite"
+    code_editor:
+      search:
+        replace: "Korvaa"
+        next: "Seuraava"
+        previous: "Edellinen"
+        close: "Sulje"
+        go: "Siirry"
+      fold:
+        to: "-"
     user_api_key:
       authorize: "Anna käyttöoikeus"
       deny: "Peruuta"
@@ -438,9 +447,6 @@ fi:
       title: "Uudet ja lukemattomat ketjut"
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Takaisin"
     design_wizard:
       back: "Takaisin"
       next: "Seuraava"
@@ -869,6 +875,7 @@ fi:
         is_this_post: "Onko tämä %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "tai"
         something_else_wrong: "Onko tämä %{reviewable_type} jollakin tavalla viallinen?"
+        something_wrong_with_post: "Onko tässä viestissä jotain vikaa?"
       types:
         reviewable_flagged_post:
           title: "Liputettu viesti"
@@ -5197,11 +5204,11 @@ fi:
           title: "Lisäasetukset"
       upcoming_changes:
         name: "Nimi"
-        enabled: "Käytössä"
+        enabled: "Otettu käyttöön?"
+        feedback: "Palaute"
         select_groups: "Valitse ryhmät…"
+        settings: "Asetukset"
         preview: "Esikatselu"
-        enabled_for_options:
-          everyone: "Kaikki"
         statuses:
           experimental: "Kokeellinen"
         impact_roles:

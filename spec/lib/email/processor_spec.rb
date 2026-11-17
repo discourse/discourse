@@ -122,6 +122,46 @@ RSpec.describe Email::Processor do
     end
   end
 
+  describe "rejection email recipient" do
+    fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+
+    let(:mail_with_relayed_sender) { <<~EMAIL }
+        From: attacker@example.com
+        Reply-To: Discourse User <discourse@bar.com>
+        X-Original-From: Discourse User <discourse@bar.com>
+        To: team@bar.com
+        Subject: Hello there
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+
+        Please let me in.
+      EMAIL
+
+    let(:mail_from_sender) { <<~EMAIL }
+        From: discourse@bar.com
+        To: team@bar.com
+        Subject: Hello there
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+
+        Please let me in.
+      EMAIL
+
+    before { user.update!(silenced_till: 1.day.from_now) }
+
+    it "does not send the rejection to an address other than the one whose account was checked" do
+      Email::Processor.process!(mail_with_relayed_sender)
+
+      expect(IncomingEmail.last.from_address).to eq("discourse@bar.com")
+      expect(ActionMailer::Base.deliveries.map(&:to)).to contain_exactly(["discourse@bar.com"])
+      expect(ActionMailer::Base.deliveries.last.body.to_s).to include("has been silenced")
+    end
+
+    it "sends the rejection to the sender when the From header is the sender" do
+      Email::Processor.process!(mail_from_sender)
+
+      expect(ActionMailer::Base.deliveries.map(&:to)).to contain_exactly(["discourse@bar.com"])
+    end
+  end
+
   describe "rate limits" do
     let(:mail) { "From: #{from}\nTo: bar@foo.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
     let(:limit_exceeded) { RateLimiter::LimitExceeded.new(10) }

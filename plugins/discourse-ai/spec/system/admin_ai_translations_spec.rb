@@ -3,6 +3,8 @@
 describe "Admin AI translations" do
   fab!(:admin)
   let(:translations_page) { PageObjects::Pages::AdminAiTranslations.new }
+  let(:form) { PageObjects::Components::FormKit.new(".ai-translations__settings-panel") }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     enable_current_plugin
@@ -58,6 +60,7 @@ describe "Admin AI translations" do
     before do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = true
+      SiteSetting.content_localization_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr|es"
       SiteSetting.ai_translation_backfill_hourly_rate = 10
 
@@ -69,20 +72,20 @@ describe "Admin AI translations" do
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.title"))
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.description"))
 
-      expect(translations_page).to have_translation_settings_button
-      expect(translations_page).to have_localization_settings_button
-      expect(page).to have_css(
-        ".ai-translation-settings-button",
-        text: I18n.t("js.discourse_ai.translations.admin_actions.translation_settings"),
-      )
-      expect(page).to have_css(
-        ".ai-localization-settings-button",
-        text: I18n.t("js.discourse_ai.translations.admin_actions.localization_settings"),
-      )
-      expect(page).to have_css(".ai-translations__locale-input-row .multi-select")
-      expect(page).to have_css(".ai-translations__category-input-row .combo-box")
+      expect(translations_page).to have_locale_selector
       expect(translations_page).to have_toggle
-      expect(page).to have_no_css(".ai-translations__settings-panel.alert-info")
+      expect(page).to have_css(".ai-translations__readers-notice")
+      expect(page).to have_css(
+        ".ai-translations__more-settings",
+        text: I18n.t("js.discourse_ai.translations.more_language_settings"),
+      )
+      expect(page).to have_css(
+        ".form-kit__section-title",
+        text: I18n.t("js.discourse_ai.translations.sections.backfill"),
+      )
+      expect(page).to have_no_css(".ai-translations__agents[open]")
+      find(".ai-translations__agents summary").click
+      expect(form.field("ai_translation_locale_detector_agent")).to be_enabled
 
       expect(translations_page).to have_overview_cards
       expect(page).to have_no_css(".ai-translations__overview .admin-config-area-card")
@@ -103,19 +106,9 @@ describe "Admin AI translations" do
       screenshot_marker(label: "ai-admin-translations", only: "desktop")
     end
 
-    it "navigates to translation settings when clicking the settings button" do
-      translation_id = DiscourseAi::Configuration::Module::TRANSLATION_ID
-      find(".ai-translation-settings-button").click
-
-      expect(page).to have_current_path(
-        "/admin/plugins/discourse-ai/ai-features/#{translation_id}/edit",
-      )
-    end
-
-    it "takes the user to content localization settings when clicking the localization settings button" do
-      find(".ai-localization-settings-button").click
-
-      expect(page).to have_current_path("/admin/site_settings/category/content_localization")
+    it "links to the remaining core language settings" do
+      find(".ai-translations__more-settings").click
+      expect(page).to have_current_path("/admin/config/localization")
     end
 
     it "toggles the selected target for the upcoming details panel" do
@@ -149,174 +142,98 @@ describe "Admin AI translations" do
       translations_page.toggle_target("post")
       expect(translations_page).to have_detail_table
 
-      find(".ai-translations__category-scope-row .combo-box").click
-      find(".select-kit-row[data-value='all']").click
-      within(".ai-translations__category-input-row") { find(".setting-controls__ok").click }
+      form.field("ai_translation_category_scope").select("all")
+      form.submit
+      expect(toasts).to have_success(I18n.t("js.saved"))
 
       expect(translations_page).to have_detail_table
       expect(DiscourseAi::Translation::Progress).to have_received(:fetch_detail).with("post").twice
     end
   end
 
-  describe "when translations are disabled" do
-    fab!(:category)
+  it "saves languages without enabling generation or reader visibility" do
+    SiteSetting.discourse_ai_enabled = true
+    SiteSetting.ai_translation_enabled = false
+    SiteSetting.content_localization_enabled = false
+    SiteSetting.content_localization_supported_locales = ""
 
-    before do
-      SiteSetting.discourse_ai_enabled = true
-      SiteSetting.ai_translation_enabled = false
-      SiteSetting.content_localization_supported_locales = "en|fr|es"
-      SiteSetting.ai_translation_category_scope = "include"
-      SiteSetting.ai_translation_categories = category.id.to_s
+    translations_page.visit
+    expect(translations_page).to have_toggle_disabled
+    expect(page).to have_css(
+      ".ai-translations__toggle-hint",
+      text: I18n.t("js.discourse_ai.translations.admin_actions.enable_translations_disabled"),
+    )
+    form.field("content_localization_supported_locales").select("English")
+    expect(translations_page).to have_toggle_disabled
+    form.submit
+    expect(toasts).to have_success(I18n.t("js.saved"))
 
-      translations_page.visit
-    end
-
-    it "shows the toggle in off state and no progress cards" do
-      expect(translations_page).to have_toggle
-
-      expect(translations_page).to have_no_overview_cards
-    end
-
-    it "shows localization settings button" do
-      expect(translations_page).to have_localization_settings_button
-    end
-
-    it "keeps language and category selectors visible" do
-      expect(page).to have_css(".ai-translations__locale-input-row .multi-select")
-      expect(page).to have_css(".ai-translations__category-input-row .category-selector")
-    end
+    page.refresh
+    expect(form.field("content_localization_supported_locales")).to have_value("en")
+    expect(form.field("content_localization_enabled")).to be_unchecked
+    expect(translations_page).to have_toggle_off
+    expect(translations_page).to have_no_toggle_disabled
   end
 
-  describe "when locales are not configured" do
-    before do
-      SiteSetting.discourse_ai_enabled = true
-      SiteSetting.ai_translation_enabled = false
-      SiteSetting.content_localization_supported_locales = ""
+  it "saves category scope, selected categories, and backfill in the same form" do
+    category = Fabricate(:category)
+    SiteSetting.discourse_ai_enabled = true
+    SiteSetting.ai_translation_enabled = false
+    SiteSetting.content_localization_supported_locales = "en|fr"
+    SiteSetting.ai_translation_category_scope = "public"
 
-      translations_page.visit
-    end
+    translations_page.visit
+    expect(page).to have_no_css("[data-name='ai_translation_categories']")
+    form.field("ai_translation_category_scope").select("include")
+    find(".category-selector").click
+    find(".category-row[data-value='#{category.id}']").click
+    find(".category-selector .select-kit-header").click
+    form.field("ai_translation_backfill_hourly_rate").fill_in(75)
+    form.submit
+    expect(toasts).to have_success(I18n.t("js.saved"))
 
-    it "displays the settings panel with locale selector" do
-      expect(translations_page).to have_locale_selector
-      expect(page).to have_content(I18n.t("js.discourse_ai.translations.supported_locales"))
-    end
-
-    it "displays the category scope selector alongside the locale selector" do
-      expect(page).to have_css(".ai-translations__settings-panel")
-      expect(page).to have_content(I18n.t("js.discourse_ai.translations.category_scope"))
-      expect(page).to have_css(".ai-translations__category-input-row .combo-box")
-    end
-
-    it "allows adding and saving languages" do
-      within(".ai-translations__locale-input-row") do
-        find(".multi-select").click
-        find(".select-kit-row[data-value='en']").click
-        find(".setting-controls__ok").click
-      end
-
-      expect(page).to have_no_css(".ai-translations__locale-input-row .setting-controls__ok")
-
-      expect(SiteSetting.content_localization_supported_locales).to eq("en")
-    end
+    page.refresh
+    expect(form.field("ai_translation_category_scope")).to have_value("include")
+    expect(page).to have_css(".category-selector .select-kit-header", text: category.name)
+    expect(form.field("ai_translation_backfill_hourly_rate")).to have_value("75")
   end
 
-  describe "when selected categories are configured" do
-    fab!(:category)
+  it "controls generation independently from readers" do
+    SiteSetting.discourse_ai_enabled = true
+    SiteSetting.ai_translation_enabled = false
+    SiteSetting.content_localization_supported_locales = "en|fr"
+    SiteSetting.content_localization_enabled = false
+    SiteSetting.content_localization_language_switcher = "none"
 
-    before do
-      SiteSetting.discourse_ai_enabled = true
-      SiteSetting.ai_translation_enabled = false
-      SiteSetting.content_localization_supported_locales = "en|fr"
-      SiteSetting.ai_translation_category_scope = "include"
-      SiteSetting.ai_translation_categories = ""
+    translations_page.visit
+    translations_page.toggle_translations
+    expect(translations_page).to have_toggle_on
+    expect(page).to have_css(".ai-translations__readers-notice a[href='#ai-translations-readers']")
+    expect(form.field("content_localization_enabled")).to be_unchecked
+    expect(form.field("content_localization_language_switcher")).to have_value("none")
 
-      visit "/admin/plugins/discourse-ai/ai-translations"
-    end
+    form.field("content_localization_enabled").check
+    form.submit
+    expect(toasts).to have_success(I18n.t("js.saved"))
+    expect(page).to have_no_css(".ai-translations__readers-notice")
 
-    it "displays the settings panel with the category selector" do
-      expect(page).to have_css(".ai-translations__settings-panel")
-      expect(page).to have_content(I18n.t("js.discourse_ai.translations.category_scope"))
-      expect(page).to have_css(".category-selector")
-    end
-
-    it "allows adding and saving selected categories" do
-      find(".category-selector").click
-      find(".category-row[data-value='#{category.id}']").click
-
-      within(".ai-translations__category-input-row") { find(".setting-controls__ok").click }
-
-      expect(page).to have_no_css(".ai-translations__category-input-row .setting-controls__ok")
-      expect(SiteSetting.ai_translation_category_scope).to eq("include")
-      expect(SiteSetting.ai_translation_categories).to eq(category.id.to_s)
-    end
+    translations_page.toggle_translations
+    expect(translations_page).to have_toggle_off
+    page.refresh
+    expect(form.field("content_localization_enabled")).to be_checked
+    expect(form.field("content_localization_language_switcher")).to have_value("none")
+    expect(translations_page).to have_toggle_off
   end
 
-  describe "translation toggle" do
-    before do
-      SiteSetting.discourse_ai_enabled = true
-      SiteSetting.content_localization_supported_locales = "en|fr"
-    end
+  it "allows disabling generation when no languages are configured" do
+    SiteSetting.discourse_ai_enabled = true
+    SiteSetting.ai_translation_enabled = true
+    SiteSetting.content_localization_supported_locales = ""
 
-    it "displays the translation toggle" do
-      SiteSetting.ai_translation_enabled = false
-
-      translations_page.visit
-
-      expect(translations_page).to have_toggle
-    end
-
-    it "shows progress cards when translations are enabled" do
-      SiteSetting.ai_translation_enabled = true
-      SiteSetting.ai_translation_backfill_hourly_rate = 10
-
-      translations_page.visit
-
-      expect(translations_page).to have_toggle
-      expect(translations_page).to have_overview_cards
-    end
-
-    it "hides progress cards when translations are disabled" do
-      SiteSetting.ai_translation_enabled = false
-
-      translations_page.visit
-
-      expect(translations_page).to have_toggle
-      expect(translations_page).to have_no_overview_cards
-    end
-
-    it "enables the language switcher along with translations" do
-      SiteSetting.ai_translation_enabled = false
-      SiteSetting.content_localization_language_switcher = "none"
-
-      translations_page.visit
-
-      expect(translations_page.language_switcher_checkbox).to be_checked
-      translations_page.toggle_translations
-
-      wait_for { SiteSetting.ai_translation_enabled }
-      expect(SiteSetting.content_localization_enabled).to eq(true)
-      expect(SiteSetting.content_localization_language_switcher).to eq("all")
-    end
-
-    it "leaves the language switcher off when the admin opts out" do
-      SiteSetting.ai_translation_enabled = false
-      SiteSetting.content_localization_language_switcher = "none"
-
-      translations_page.visit
-      translations_page.language_switcher_checkbox.click
-      translations_page.toggle_translations
-
-      wait_for { SiteSetting.ai_translation_enabled }
-      expect(SiteSetting.content_localization_language_switcher).to eq("none")
-    end
-
-    it "keeps toggle disabled when no locales are configured" do
-      SiteSetting.ai_translation_enabled = false
-      SiteSetting.content_localization_supported_locales = ""
-
-      translations_page.visit
-
-      expect(translations_page).to have_toggle_disabled
-    end
+    translations_page.visit
+    expect(translations_page).to have_toggle_on
+    translations_page.toggle_translations
+    expect(translations_page).to have_toggle_off
+    expect(translations_page).to have_toggle_disabled
   end
 end

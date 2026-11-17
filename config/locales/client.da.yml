@@ -9,6 +9,14 @@ da:
     dsa_notice:
       choice_title: "Det er ulovligt"
       email: "E-mail adresse"
+    code_editor:
+      search:
+        replace: "Erstat"
+        next: "Næste"
+        previous: "Forrige"
+        close: "Luk"
+      fold:
+        to: "til"
     user_api_key:
       authorize: "Autoriser"
       deny: "Annuller"
@@ -431,9 +439,6 @@ da:
       title: "Nye og ulæste emner"
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Tilbage"
     design_wizard:
       back: "Tilbage"
       next: "Næste"
@@ -812,6 +817,7 @@ da:
           title: "Alting"
       context_question:
         delimiter: "eller"
+        something_wrong_with_post: "Er der noget galt med dette indlæg?"
       types:
         reviewable_flagged_post:
           title: "Markeret indlæg"
@@ -1855,6 +1861,7 @@ da:
         redeemed_tab_with_count: "Indløst (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} indløst)"
+        invited_via_link_without_key: "link (%{count} / %{max} indløst)"
         groups: "Grupper"
         topic: "Emne"
         sent: "Oprettet/Senest Sendt"
@@ -4395,11 +4402,11 @@ da:
           title: "Avanceret"
       upcoming_changes:
         name: "Navn"
-        enabled: "Aktiveret"
+        enabled: "Aktiveret?"
+        feedback: "Tilbagemelding"
         select_groups: "Vælg grupper…"
+        settings: "Indstillinger"
         preview: "Forhåndsvisning"
-        enabled_for_options:
-          everyone: "Alle"
         statuses:
           experimental: "Eksperimentel"
         impact_roles:

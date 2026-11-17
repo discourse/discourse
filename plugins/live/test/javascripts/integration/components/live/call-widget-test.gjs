@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import {
+  clearRender,
   click,
   render,
   settled,
@@ -157,14 +158,7 @@ module("Integration | Component | live/call-widget", function (hooks) {
   });
 
   test("keeps video watching and participant tiles live in widget mode", async function (assert) {
-    this.set("renderWidget", true);
-    await render(
-      <template>
-        {{#if this.renderWidget}}
-          <LiveCallWidget />
-        {{/if}}
-      </template>
-    );
+    await render(<template><LiveCallWidget /></template>);
 
     assert.deepEqual(
       this.liveWebrtc.watchingCalls.at(-1),
@@ -202,8 +196,7 @@ module("Integration | Component | live/call-widget", function (hooks) {
       .dom(".live-call-widget .live-video-tile[data-user-id='2']")
       .doesNotExist("removes the participant tile while the widget is docked");
 
-    this.set("renderWidget", false);
-    await settled();
+    await clearRender();
 
     assert.deepEqual(
       this.liveWebrtc.watchingCalls.at(-1),

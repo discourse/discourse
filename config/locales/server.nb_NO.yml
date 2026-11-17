@@ -1091,6 +1091,8 @@ nb_NO:
       invalid_integer_min_max: "Verdien må være mellom %{min} og %{max}."
       invalid_integer: "Verdien må være et heltall."
       invalid_string: "Ugyldig verdi"
+    keywords:
+      company_url: "nettside"
   search:
     within_post: "#%{post_number} av %{username}"
     types:
@@ -1441,6 +1443,10 @@ nb_NO:
         one: "%{count} sekund"
         other: "%{count} sekunder"
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nei"
       agree:
         title: "Ja"
       agree_and_suspend:

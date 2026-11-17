@@ -65,6 +65,7 @@ acceptance("Blog editor", function (needs) {
           drafts: [draft],
           published: [published],
           unpublished: [],
+          pages: [draft, published].filter((topic) => topic.page),
         }[status || "all"],
         blog_url: "https://blog.example.com",
       });
@@ -103,6 +104,22 @@ acceptance("Blog editor", function (needs) {
     assert
       .dom(".blog-dashboard__row")
       .exists({ count: 2 }, "resetting the filters lists everything again");
+  });
+
+  test("marks standalone pages and filters them", async function (assert) {
+    published = { ...published, page: true };
+    await visit("/blog-editor");
+    assert
+      .dom('[data-topic-id="124"] .blog-dashboard__page-badge')
+      .hasText("Page", "standalone pages are marked");
+    assert
+      .dom('[data-topic-id="123"] .blog-dashboard__page-badge')
+      .doesNotExist("articles are not");
+    await select(".d-filter-controls__dropdown", "pages");
+    assert.dom('[data-topic-id="124"]').exists("pages are shown");
+    assert
+      .dom('[data-topic-id="123"]')
+      .doesNotExist("articles are filtered out");
   });
 
   test("separates published articles from private correction work", async function (assert) {
@@ -410,5 +427,34 @@ acceptance("Blog editor", function (needs) {
     assert
       .dom(".d-filter-controls__no-results")
       .doesNotExist("there is nothing to reset");
+  });
+});
+
+acceptance("Blog composer", function (needs) {
+  needs.user({ admin: true, moderator: false });
+  needs.settings({
+    blog_enabled: true,
+    blog_category: 3,
+    blog_drafts_category: 10,
+    min_topic_title_length: 15,
+  });
+  needs.pretender((server, helper) => {
+    server.get("/blog-editor.json", () =>
+      helper.response({ topics: [], blog_url: "https://blog.example.com" })
+    );
+  });
+
+  test("accepts a short title for a page", async function (assert) {
+    await visit("/blog-editor");
+    await click(".d-page-header__actions .btn-primary");
+    await fillIn("#reply-title", "Contact");
+    await click(".submit-panel .create");
+
+    assert
+      .dom(".title-input .popup-tip.bad")
+      .doesNotExist("a draft title can be as short as Contact");
+    assert
+      .dom(".d-editor-textarea-wrapper .popup-tip.bad")
+      .exists("the composer still validated the draft");
   });
 });

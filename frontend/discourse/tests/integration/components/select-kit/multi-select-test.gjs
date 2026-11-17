@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -27,7 +28,7 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("content", async function (assert) {
@@ -62,13 +63,16 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
 
   test("maximum=1", async function (assert) {
     setDefaultState(this);
+    const value = tracked(null);
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
         <MultiSelect
           @content={{this.content}}
+          @onChange={{onChange}}
           @options={{hash maximum=1}}
-          @value={{this.value}}
+          @value={{value.value}}
         />
       </template>
     );
@@ -89,13 +93,16 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
 
   test("maximum=2", async function (assert) {
     setDefaultState(this);
+    const value = tracked(null);
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
         <MultiSelect
           @content={{this.content}}
+          @onChange={{onChange}}
           @options={{hash maximum=2}}
-          @value={{this.value}}
+          @value={{value.value}}
         />
       </template>
     );
@@ -108,13 +115,16 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
 
   test("pasting", async function (assert) {
     setDefaultState(this);
+    const value = tracked(null);
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
         <MultiSelect
           @content={{this.content}}
+          @onChange={{onChange}}
           @options={{hash maximum=2}}
-          @value={{this.value}}
+          @value={{value.value}}
         />
       </template>
     );
@@ -137,14 +147,17 @@ module("Integration | Component | SelectKit | MultiSelect", function (hooks) {
   });
 
   test("useHeaderSelectedCount=true", async function (assert) {
-    setDefaultState(this, { value: [1, 2] });
+    setDefaultState(this);
+    const value = tracked([1, 2]);
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
         <MultiSelect
           @content={{this.content}}
+          @onChange={{onChange}}
           @options={{hash useHeaderSelectedCount=true}}
-          @value={{this.value}}
+          @value={{value.value}}
         />
       </template>
     );

@@ -153,6 +153,7 @@ interface ExpectedCategoryType {
   title: string;
   description: string;
   icon: string | null;
+  svg_icon: string | null;
   available: boolean;
   visible: boolean;
   configuration_schema: Record<string, Record<string, unknown>[]>;

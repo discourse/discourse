@@ -95,6 +95,7 @@ export default class ColorPaletteListItem extends Component {
       <div class="color-palette__container">
         <ColorPalettePreview
           class="color-palette__preview"
+          @defaultTheme={{@defaultTheme}}
           @scheme={{@scheme}}
         />
 

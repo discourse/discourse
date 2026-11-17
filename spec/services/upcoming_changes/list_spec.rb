@@ -64,6 +64,37 @@ RSpec.describe UpcomingChanges::List do
       end
     end
 
+    context "when a change uses a linked group setting" do
+      before do
+        mock_upcoming_change_metadata(
+          enable_upload_debug_mode: {
+            status: :experimental,
+            group_setting: :hidden_post_visible_groups,
+          },
+        )
+        Fabricate(:site_setting_group, name: "enable_upload_debug_mode", group_ids: "3")
+      end
+
+      it "lists the linked default audience and metadata rather than stale opt-in groups" do
+        expect(result).to run_successfully
+        setting =
+          result.upcoming_changes.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+        expect(setting[:groups].split(",")).to contain_exactly(
+          "admins",
+          "moderators",
+          "trust_level_4",
+        )
+        expect(setting[:group_setting]).to include(
+          setting: :hidden_post_visible_groups,
+          value: SiteSetting.hidden_post_visible_groups,
+          mandatory_values: "1|2",
+          disallowed_groups: "4",
+        )
+        expect(setting[:group_setting]).to have_key(:requires_confirmation)
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

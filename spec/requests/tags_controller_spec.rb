@@ -571,6 +571,17 @@ RSpec.describe TagsController do
       )
     end
 
+    it "doesn't use the description of a tag restricted to a category the user can't see" do
+      restricted = Fabricate(:tag, name: "restricted", description: "secret description")
+      Fabricate(:private_category, group: Fabricate(:group)).update!(tags: [restricted])
+      Fabricate(:tag, name: "other")
+
+      get "/tags/intersection/restricted/other"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("secret description")
+    end
+
     it "returns tag info for an encoded period tag name" do
       Fabricate(:tag, name: "node.js")
 
@@ -985,6 +996,65 @@ RSpec.describe TagsController do
       )
       expect(response.parsed_body["categories"]).to be_present
       expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
+    end
+
+    context "when the tag is restricted to a category the user can't see" do
+      fab!(:group)
+      fab!(:member) { Fabricate(:user, groups: [group]) }
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+      before do
+        tag.update!(description: "secret description")
+        private_category.update!(tags: [tag])
+      end
+
+      it "returns 404 when looked up by ID" do
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+
+        sign_in(user)
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when looked up by ID and restricted through a tag group" do
+        private_category.update!(tags: [], tag_groups: [Fabricate(:tag_group, tags: [tag])])
+
+        get "/tag/#{tag.id}/info.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "omits the description when looked up by name" do
+        get "/tag/#{tag.name}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tag_info"]).to include(
+          "name" => tag.name,
+          "category_restricted" => true,
+        )
+        expect(response.parsed_body["tag_info"]).not_to include("description", "description_cooked")
+      end
+
+      it "doesn't translate the name or description" do
+        SiteSetting.content_localization_enabled = true
+        tag.update!(locale: "en")
+        Fabricate(:tag_localization, tag: tag, locale: "ja", name: "秘密", description: "秘密の説明")
+        sign_in(Fabricate(:user, locale: "ja"))
+
+        get "/tag/#{tag.name}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "name")).to eq(tag.name)
+        expect(response.body).not_to include("秘密")
+      end
+
+      it "returns the full tag to users who can see the category" do
+        sign_in(member)
+        get "/tag/#{tag.id}/info.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "description")).to eq("secret description")
+      end
     end
 
     context "when tag belongs to a tag group" do
@@ -1575,6 +1645,35 @@ RSpec.describe TagsController do
         get "/tags/personal_messages/#{admin.username}.json"
 
         expect(response.status).to eq(200)
+      end
+    end
+
+    context "with a hidden tag" do
+      fab!(:group)
+      fab!(:hidden_tag) { Fabricate(:tag, topics: [personal_message], name: "hidden") }
+
+      before do
+        group.add(regular_user)
+        SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:admins]}|#{group.id}"
+        create_hidden_tags([hidden_tag.name])
+      end
+
+      it "excludes it for users who can't see it" do
+        sign_in(regular_user)
+
+        get "/tags/personal_messages/#{regular_user.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tags"].map { it["name"] }).to contain_exactly("test")
+      end
+
+      it "includes it for admins viewing another user's pm tags" do
+        sign_in(admin)
+
+        get "/tags/personal_messages/#{regular_user.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tags"].map { it["name"] }).to contain_exactly("test", "hidden")
       end
     end
   end
@@ -2236,6 +2335,37 @@ RSpec.describe TagsController do
         include_examples "invalid limit params",
                          "/tags/filter/search.json",
                          SiteSetting.max_tag_search_results
+      end
+
+      it "does not expose restricted required tag group details" do
+        otherwise_allowed_tag = Fabricate(:tag, name: "otherwise-allowed")
+        restricted_tag = Fabricate(:tag, name: "restricted-required-tag")
+        restricted_tag_group =
+          Fabricate(
+            :tag_group,
+            name: "Restricted Required Group",
+            permissions: {
+              "staff" => 1,
+            },
+            tags: [restricted_tag],
+          )
+        crtg = CategoryRequiredTagGroup.new(tag_group: restricted_tag_group, min_count: 1)
+        category = Fabricate(:category, category_required_tag_groups: [crtg])
+
+        response_bodies =
+          ["", otherwise_allowed_tag.name].map do |query|
+            get "/tags/filter/search.json",
+                params: {
+                  q: query,
+                  categoryId: category.id,
+                  filterForInput: true,
+                }
+            expect(response.status).to eq(200)
+            response.body
+          end
+
+        expect(JSON.parse(response_bodies.first)).not_to have_key("required_tag_group")
+        expect(response_bodies.join).not_to include(restricted_tag_group.name)
       end
 
       it "includes required tag group information" do

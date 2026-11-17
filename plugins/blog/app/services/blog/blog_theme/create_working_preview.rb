@@ -6,7 +6,7 @@ class Blog::BlogTheme::CreateWorkingPreview
   include Service::Base
 
   STATIC_PAGE_PATHS = { "index" => "/", "archive" => "/archive", "about" => "/about" }.freeze
-  PAGES = [*STATIC_PAGE_PATHS.keys, "not_found", "article"].freeze
+  PAGES = [*STATIC_PAGE_PATHS.keys, "not_found", "article", "page"].freeze
 
   params(base_class: Blog::BlogTheme::AttributesContract) do
     attribute :page, :string
@@ -17,6 +17,10 @@ class Blog::BlogTheme::CreateWorkingPreview
 
     def article?
       page == "article"
+    end
+
+    def standalone_page?
+      page == "page"
     end
 
     # The random path guarantees the blog renders its not-found page.
@@ -37,6 +41,7 @@ class Blog::BlogTheme::CreateWorkingPreview
   end
 
   def fetch_preview_path(params:)
+    return Blog::Publication.publicly_visible.pages.newest.pick(:path) if params.standalone_page?
     return params.static_page_path unless params.article?
     Blog::Publication.publicly_visible.find_by(id: params.article_id)&.path
   end

@@ -101,6 +101,47 @@ RSpec.describe Jobs::StreamTopicAiSummary do
       expect(cached_summary.reload.summarized_text).to eq("Cached summary")
     end
 
+    it "flags a summary of content edited during generation as outdated without storing it" do
+      allow(AiSummary).to receive(:store!).and_wrap_original do |original, *args, **kwargs|
+        PostRevisor.new(post_2).revise!(
+          Fabricate(:admin),
+          raw: "This content was redacted by staff",
+        )
+        original.call(*args, **kwargs)
+      end
+
+      messages =
+        MessageBus.track_publish("/discourse-ai/summaries/topic/#{topic.id}") do
+          with_responses(["dummy"]) { job.execute(topic_id: topic.id, user_id: user.id) }
+        end
+
+      expect(messages.last.data).to include(done: true)
+      expect(messages.last.data[:ai_topic_summary]).to include(outdated: true)
+      expect(AiSummary.where(target: topic)).to be_empty
+    end
+
+    it "does not store a summary when the topic title changes during generation" do
+      allow(AiSummary).to receive(:store!).and_wrap_original do |original, *args, **kwargs|
+        topic.update!(title: "This title was redacted by staff")
+        original.call(*args, **kwargs)
+      end
+
+      with_responses(["dummy"]) { job.execute(topic_id: topic.id, user_id: user.id) }
+
+      expect(AiSummary.where(target: topic)).to be_empty
+    end
+
+    it "stores the summary when a reply is added during generation" do
+      allow(AiSummary).to receive(:store!).and_wrap_original do |original, *args, **kwargs|
+        Fabricate(:post, topic:, post_number: 3)
+        original.call(*args, **kwargs)
+      end
+
+      with_responses(["dummy"]) { job.execute(topic_id: topic.id, user_id: user.id) }
+
+      expect(AiSummary.where(target: topic).pluck(:summarized_text)).to eq(["dummy"])
+    end
+
     it "publishes a final update to signal we're done and provide metadata" do
       summary = "dummy"
 

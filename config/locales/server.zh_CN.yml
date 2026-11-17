@@ -143,6 +143,19 @@ zh_CN:
       theme_not_found: "主题未找到"
       theme_update_failed: "主题无法更新"
       theme_update_required: "至少提供一个主题字段以供更新"
+      theme_confirmation_required: "请确认此主题操作后再继续。"
+      theme_name_mismatch: "主题名称已更改。请在继续操作前再次阅读主题。"
+      theme_delete_failed: "主题无法删除。默认主题和系统主题无法删除。"
+      theme_install_source_required: "请提供一个仓库 URL 或 base64 主题存档。"
+      theme_install_options_invalid: "仅提供适用于所选主题源的选项"
+      theme_repository_migrations_required: "仓库安装会运行主题迁移。请勿禁用迁移，并确认它们可以运行。"
+      theme_component_migrations_required: "导入主题组件需要进行迁移。启用并确认迁移，或选择不导入组件。"
+      theme_not_remote: "该主题没有 Git 仓库。"
+      theme_remote_mismatch: "仓库 URL 已更改。请在继续操作前再次阅读主题。"
+      theme_setting_value_invalid: "设置主题时需要提供值，还原主题时则省略该值。"
+      theme_setting_type_invalid: "主题设置 %{name} 需要一个类型为 %{type} 的值"
+      theme_setting_not_found: "该主题未声明此设置"
+      theme_translation_not_found: "该主题未声明一个或多个翻译键"
       topic_not_found: "找不到话题"
       topic_update_required: "至少提供一个要更新的主题字段"
       top_period_only_for_top_view: "热门时间范围仅支持热门视图"
@@ -354,6 +367,7 @@ zh_CN:
       resolve_group_membership_requires_group_list: "resolve_group_membership 需要 list_type: group"
       resolve_group_membership_requires_groups_property: "resolve_group_membership 只能与 object schema 中的 type: groups 一起使用。无效属性：%{property}"
       objects:
+        invalid_objects: "值必须是一个对象数组。"
         humanize_required: "JSON 指针 '%{property_json_pointer}' 处的属性必须存在。"
         required: "必须存在"
         humanize_invalid_type: "JSON 指针 '%{property_json_pointer}' 处的属性必须是%{type}类型。"
@@ -442,8 +456,10 @@ zh_CN:
         auto_generated_email_error: "当 'precedence' 标头设置为 list、junk、bulk 或 auto_reply，或者任何其他标头包含 auto-submitted、auto-replied 或 auto-generated 时，就会发生这种情况。"
         no_body_detected_error: "当我们无法提取正文且没有附件时，就会发生这种情况。"
         no_sender_detected_error: "当我们在“发件人”标头中找不到有效的电子邮件地址时，就会发生这种情况。"
+        authentication_failed_error: "当收到的电子邮件认证需要审核时会发生这种情况，但该操作会立即生效，无法排队处理。"
         from_reply_by_address_error: "当“发件人”标头与回复电子邮件地址时，就会发生这种情况。"
         inactive_user_error: "当发件人不活跃时，就会发生这种情况。"
+        suspended_user_error: "当发件人被暂停使用时会发生这种情况。"
         silenced_user_error: "当发件人被禁言时，就会发生这种情况。"
         bad_destination_address: "当“收件人/抄送”字段中的电子邮件地址均不与已配置的传入电子邮件地址匹配时，就会发生这种情况。"
         strangers_not_allowed_error: "当用户尝试在他们不属于的类别中创建新话题时，就会发生这种情况。"
@@ -1207,6 +1223,7 @@ zh_CN:
     approval_required: "版主必须手动批准您的新帐户，然后您才可以访问此论坛。当您的帐户获得批准时，您会收到一封电子邮件！"
     missing_session: "我们无法检测您的帐户是否已创建，请确保您已启用 Cookie。"
     activated: "抱歉，此帐户已被激活。"
+    email_change_not_allowed: "此帐户以前已激活，因此它只能使用其当前的电子邮件地址重新激活。"
     admin_confirm:
       title: "确认管理员帐户"
       description: "确定要将 <b>%{target_username} (%{target_email})</b> 设为管理员吗？"
@@ -2252,6 +2269,7 @@ zh_CN:
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
     google_oauth2_hd_groups: '进行身份验证时检索用户在托管域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关详情，请参阅<a target="_blank" href="https://meta.discourse.org/t/226850">此 Meta 话题</a>。'
+    google_oauth2_hd_groups_allowed: "仅允许至少属于这其中一个 Google 群组的用户使用 Google 登录。输入每个群组的 ID 或电子邮件地址。需要 {{setting:google_oauth2_hd}}、 {{setting:google_oauth2_hd_groups_service_account_admin_email}} 和 {{setting:google_oauth2_hd_groups_service_account_json}}。群组查询失败拒绝登录。留空则允许任何用户进入托管域。"
     google_oauth2_hd_groups_service_account_admin_email: "属于 Google Workspace 管理员帐号的电子邮件地址。将与服务帐户凭据一起使用以获取群组信息。"
     google_oauth2_hd_groups_service_account_json: "服务帐户的 JSON 格式密钥信息。将用于获取群组信息。"
     google_oauth2_verbose_logging: "将详细的 Google OAuth2 相关诊断记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2850,6 +2868,7 @@ zh_CN:
     enable_composer_redesign: "启用重新设计的编辑器。"
     enable_new_reordering_controls: "在列表设置、管理列表、用户目录列和侧边栏链接上使用共享的重新排序控件，使每个控件都具有相同的拖动手柄、移动菜单和键盘支持。"
     enable_main_outlet_grid_layout_change: "将编辑器放置在主布局网格内，以便主题可以将其定位在网格列中，并使用更窄的侧边栏。"
+    review_queue_consistent_answers: "统一所有审核队列问题的表述，让“是”始终表示存在问题，并将所有类型的审核结果标记为“确认存在问题”或“未发现问题”。"
     enable_composer_toolbar_customization: "允许成员在其界面偏好设置中选择哪些按钮显示在编辑器工具栏中。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
@@ -2895,7 +2914,7 @@ zh_CN:
     nested_replies_hot_preload_depth_penalty: "在热度视图中选择预展开的嵌套回复时，每向下延伸一级扣除的优先级数值。"
     nested_replies_default_sort: "嵌套回复视图的默认排序算法。"
     nested_replies_max_depth: "消息串回复的最大视觉嵌套深度。超过此深度的帖子会显示“继续此消息串”链接。"
-    nested_replies_backfill_batch_size: "每个嵌套回复统计信息回填批次要处理的话题数。"
+    nested_replies_backfill_batch_size: "每个嵌套回复数据回填的最大主题数量。 设置为 0 以禁用自动反补填充。明确的统计准备仍然每批处理至少一个主题。"
     nested_replies_stats_maintenance_enabled: "即使嵌套回复已禁用，也应保留嵌套回复统计信息。"
     nested_replies_cap_nesting_depth: "将回复嵌套层级限制在最大视觉深度。启用此功能后，最深层的回复将被重新设置为同级回复，而不是子回复。"
     enable_new_defaults_for_trust_level_3_requirements: "我们更新了 TL3 的默认要求，使其对大型活跃社区的成员更加合理。如果您之前覆盖了这些设置，即将进行的更改将不会产生任何影响。"
@@ -2987,6 +3006,7 @@ zh_CN:
         other: "该列表必须恰好包含 %{count} 个值。"
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
+      google_oauth2_hd_groups_allowed: "您必须先配置 Google OAuth2 托管域和群组服务帐户设置才能添加允许的群组。"
       discourse_id_registration: "无法使用 Discourse ID 自动注册。这可能是由于网络连接问题、防火墙限制或 Discourse ID 服务无法访问。请查看服务器日志了解更多详情或联系支持团队。"
       auth_provider_credentials_missing: "必须先设置 %{settings} 才能启用此设置。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
@@ -2994,7 +3014,7 @@ zh_CN:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法启用 DiscourseConnect。"
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
-      uncategorized_category_missing: "“允许未分类主题”功能无法启用，因为“未分类”类别已不存在。"
+      uncategorized_category_missing: '“允许未分类主题”功能无法启用，因为“未分类”类别已不存在。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 站点设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
       content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
       content_localization_language_switcher_requirements: "语言切换器需要启用 {{setting:allow_user_locale}} ，并且 {{setting:content_localization_supported_locales}} 至少包含一种语言。 {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
@@ -3003,10 +3023,29 @@ zh_CN:
       mediaconvert_output_subdirectory_required: "MediaConvert 输出子目录为必选项。"
       s3_credentials_required_for_video_conversion: "需要具有 S3 凭据才能进行视频转换。请配置 S3 访问密钥或启用 IAM 配置文件。"
     keywords:
+      about_banner_image: "横幅图片"
+      about_page_extra_groups: "群组列表"
+      about_page_extra_groups_initial_members: "展开成员"
+      about_page_extra_groups_order: "排序顺序"
+      about_page_extra_groups_show_description: "包括描述"
       clean_up_inactive_users_after_days: "已停用|闲置|未激活"
+      company_url: "网站"
+      default_composition_mode: "rte|富文本|输入框|Markdown|富文本编辑器"
+      embed_full_app: "完整应用模式"
+      extended_site_description: "社区描述"
+      large_icon: "方形图标"
+      logo: "主要徽标"
+      logo_dark: "深色主要徽标"
+      logo_small: "小徽标"
+      logo_small_dark: "深色小徽标"
       navigation_menu: "边栏|标题下拉菜单"
       purge_unactivated_users_grace_period_days: "已停用|闲置|未激活"
-      default_composition_mode: "rte|富文本|输入框|Markdown|富文本编辑器"
+      short_site_description: "社区标题"
+      site_contact_group_name: "网站联系群组"
+      site_contact_username: "网站联系人名称"
+      site_description: "社区摘要"
+      title: "社区名称"
+      welcome_banner_image: "背景图片"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3202,6 +3241,10 @@ zh_CN:
       other: "%{count} 个帖子被合并到现有话题中：%{topic_link}"
     existing_message_moderator_post:
       other: "%{count} 个帖子被合并到现有消息中：%{topic_link}"
+    new_topic_moderator_post_no_link:
+      other: "%{count} 个帖子被拆分为一个新话题。"
+    existing_topic_moderator_post_no_link:
+      other: "%{count} 个帖子被合并到现有话题中。"
   change_owner:
     post_revision_text: "已转让所有权"
   publish_page:
@@ -3951,6 +3994,16 @@ zh_CN:
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
         您与此电子邮件地址关联的帐户未被激活，请先激活您的帐户，然后再发送电子邮件。
+    email_reject_suspended_user:
+      title: "电子邮件被拒：停用用户"
+      subject_template: "[%{email_prefix}] 电子邮件问题 -- 已暂停用户"
+      subject_template_improved: "%{email_prefix}：电子邮件问题 -- 用户已暂停"
+      text_body_template: |
+        抱歉，您发送至 %{destination} （标题为 %{former_title}）的电子邮件未能成功送达。
+
+        与此电子邮件地址关联的帐户已被暂停。被暂停的帐户无法创建帖子或发送电子邮件。
+
+        如果您认为这是一个错误，请[联系工作人员](%{base_url}/about。
     email_reject_silenced_user:
       title: "电子邮件被拒：被禁言的用户"
       subject_template: "[%{email_prefix}] 电子邮件问题 - 被禁言的用户"
@@ -5609,7 +5662,6 @@ zh_CN:
       confirm_body: "成功！已启用通知。"
       custom: "来自%{site_title}上 %{username} 的通知"
   staff_action_logs:
-    admin_onboarding_topic_option: "已选选项： %{option}\n选项 ID： %{option_id}"
     redacted: "[内容不可见]"
     json_too_long: "值由于超出列长度限制而未记录"
     not_found: "找不到"
@@ -5686,6 +5738,12 @@ zh_CN:
       no_context:
         watched_word: "此帖子包括一个关注词。请查看%{link}了解更多信息。"
     actions:
+      answer_yes:
+        title: "是"
+        delete_post_title: "是的，删除帖子"
+        keep_post_deleted_title: "是，保持帖子已删除状态"
+      answer_no:
+        title: "否"
       agree:
         title: "是"
       agree_and_keep:
@@ -5782,6 +5840,7 @@ zh_CN:
         complete: "帖子已被批准。"
       approve_post:
         title: "是"
+        action_title: "批准帖子"
         complete: "帖子已被批准。"
       approve_post_closed:
         title: "是"
@@ -5875,6 +5934,9 @@ zh_CN:
     mute_error: "抱歉，您无法将该用户设为免打扰。"
     error: "抱歉，您无法更改该用户的通知级别。"
     invalid_value: '"%{value}" 不是一个有效的通知级别。'
+  google_oauth2:
+    not_in_allowed_group: "身份验证失败。您不是允许的 Google 群组成员。"
+    group_lookup_failed: "身份验证失败。无法验证您的 Google 群组成员身份。"
   discord:
     not_in_allowed_guild: "身份验证失败。您不是允许的 Discord 公会的成员。"
   old_keys_reminder:

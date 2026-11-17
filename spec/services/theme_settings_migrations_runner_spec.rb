@@ -10,6 +10,94 @@ describe ThemeSettingsMigrationsRunner do
     YAML
 
   describe "#run" do
+    context "when moving settings to translations" do
+      before do
+        theme.set_field(target: :translations, name: "en", value: "en:\n  heading: ''\n")
+        theme.update_setting(:string_setting, "HELLO")
+        theme.save!
+        migration_field.update!(value: <<~JS)
+          export default function migrate(settings, helpers) {
+            const updated = new Map(settings);
+            helpers.migrateSettingToTranslation("string_setting", "heading");
+            helpers.migrateSettingToTranslation("unsaved_setting", "heading");
+            if (settings.has("string_setting")) {
+              throw new Error("The migrated setting was not removed from the input map");
+            }
+            return updated;
+          }
+        JS
+      end
+
+      it "removes saved settings from both maps and stages translations without database writes" do
+        results = described_class.new(theme).run
+
+        expect(results.first[:settings_after]).to eq({})
+        expect(results.first[:translations]).to eq([{ "key" => "heading", "value" => "HELLO" }])
+        expect(theme.theme_translation_overrides).to be_empty
+        expect(theme.reload.get_setting(:string_setting)).to eq("HELLO")
+      end
+
+      it "rejects non-string settings" do
+        theme.update_setting(:integer_setting, 123)
+        theme.save!
+        migration_field.update!(value: <<~JS)
+          export default function migrate(settings, helpers) {
+            helpers.migrateSettingToTranslation("integer_setting", "heading");
+            return settings;
+          }
+        JS
+
+        expect { described_class.new(theme).run }.to raise_error(
+          Theme::SettingsMigrationError,
+          /setting value must be a string/,
+        )
+      end
+
+      it "reports invalid English locale data as a migration error" do
+        theme.set_field(target: :translations, name: "en", value: "en:\n  heading: []\n")
+        theme.save!
+
+        expect { described_class.new(theme).run }.to raise_error(
+          Theme::SettingsMigrationError,
+          /#{Regexp.escape(I18n.t("themes.locale_errors.invalid_yaml"))}/,
+        )
+      end
+
+      it "requires an exact public English text key even without a saved setting" do
+        theme.set_field(target: :translations, name: "en", value: <<~YAML)
+          en:
+            heading: ""
+            group:
+              title: Text
+            theme_metadata:
+              description: Metadata
+        YAML
+        theme.save!
+
+        ["unknown", "group", "heading.", "theme_metadata.description", 123].each do |key|
+          migration_field.update!(value: <<~JS)
+            export default function migrate(settings, helpers) {
+              helpers.migrateSettingToTranslation("unsaved_setting", #{key.to_json});
+              return settings;
+            }
+          JS
+          message =
+            (
+              if key.is_a?(String)
+                /translation key '#{Regexp.escape(key)}'/
+              else
+                /translation key must be a string/
+              end
+            )
+
+          expect { described_class.new(theme).run }.to raise_error(
+            Theme::SettingsMigrationError,
+            message,
+          )
+        end
+      end
+    end
+
     it "passes values of overridden settings only to migrations" do
       theme.update_setting(:integer_setting, 1)
       theme.update_setting(:string_setting, "osama")

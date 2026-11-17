@@ -6,6 +6,14 @@
 
 gl:
   js:
+    code_editor:
+      search:
+        replace: "Substituír"
+        next: "Seguinte"
+        previous: "Anterior"
+        close: "Pechar"
+      fold:
+        to: "para o"
     user_api_key:
       authorize: "Autorizar"
       deny: "Cancelar"
@@ -266,9 +274,6 @@ gl:
       pill: "Mensaxes relacionadas"
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Volver"
     design_wizard:
       back: "Volver"
       next: "Seguinte"
@@ -1434,6 +1439,7 @@ gl:
         redeemed_tab_with_count: "Utilizados (%{count})"
         invited_via: "Convite"
         invited_via_link: "ligazón %{key} (%{count} / %{max} rescatadas)"
+        invited_via_link_without_key: "ligazón (%{count} / %{max} ofrecementos)"
         groups: "Grupos"
         topic: "Tema"
         sent: "Creado/Último envío"
@@ -3475,10 +3481,9 @@ gl:
           title: "Complementos"
       upcoming_changes:
         name: "Nome"
-        enabled: "Activado"
+        enabled: "Activado?"
+        settings: "Configuración"
         preview: "Visualizar"
-        enabled_for_options:
-          everyone: "Todos"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"

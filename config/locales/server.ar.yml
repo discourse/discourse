@@ -3040,7 +3040,6 @@ ar:
     nested_replies_hot_preload_depth_penalty: "نقاط الأولوية التي يتم طرحها لكل مستوى عمق عند اختيار الردود المتداخلة التي سيتم توسيعها مُسبقًا في عرض الردود الرائجة"
     nested_replies_default_sort: "خوارزمية الفرز الافتراضية لعرض الردود المتداخلة."
     nested_replies_max_depth: "الحد الأقصى للعمق البصري لتداخل الردود في سلسلة الدردشة. تظهر المنشورات التي تتجاوز هذا العمق رابطًا بعنوان \"متابعة هذه السلسلة\"."
-    nested_replies_backfill_batch_size: "عدد الموضوعات التي تتم معالجتها في كل دفعة أثناء الملء الرجعي لإحصاءات الردود المتداخلة"
     nested_replies_stats_maintenance_enabled: "الاحتفاظ بإحصائيات الردود المتداخلة حتى في حال تعطيل الردود المتداخلة"
     nested_replies_cap_nesting_depth: "تقييد تداخل الردود عند الحد الأقصى للعمق البصري؛ عند تفعيل هذا الخيار، تُعرض الردود في أعمق مستوى كردود شقيقة في نفس المستوى بدلًا من إدراجها كفروع تابعة."
     enable_new_defaults_for_trust_level_3_requirements: "حدثنا المتطلبات الافتراضية لمستوى الثقة الثالث (TL3) لتصبح أكثر ملاءمة لأعضاء المجتمعات الكبيرة والنشطة. إذا سبق تعديل هذه الإعدادات يدويًا، فلن يؤثر هذا التغيير القادم عليها."
@@ -3157,10 +3156,29 @@ ar:
       mediaconvert_output_subdirectory_required: "يُشترط تحديد الدليل الفرعي لمخرجات MediaConvert."
       s3_credentials_required_for_video_conversion: "تتطلب عملية تحويل الفيديو بيانات اعتماد S3. يرجى إعداد مفاتيح الوصول إلى S3 أو تفعيل ملف تعريف IAM."
     keywords:
+      about_banner_image: "صورة البانر"
+      about_page_extra_groups: "قائمة المجموعة"
+      about_page_extra_groups_initial_members: "الأعضاء الموسّعون"
+      about_page_extra_groups_order: "ترتيب الفرز"
+      about_page_extra_groups_show_description: "تضمين الوصف"
       clean_up_inactive_users_after_days: "تم إلغاء تنشيطه|غير نشط|لم يتم تنشيطه"
+      company_url: "الموقع الإلكتروني"
+      default_composition_mode: "rte|نص منسق|أداة الإنشاء|markdown|محرر النصوص المنسقة"
+      embed_full_app: "وضع التطبيق الكامل"
+      extended_site_description: "وصف المجتمع"
+      large_icon: "أيقونة مربعة"
+      logo: "الشعار الرئيسي"
+      logo_dark: "الشعار الأساسي للوضع الداكن"
+      logo_small: "شعار صغير"
+      logo_small_dark: "الشعار الصغير للوضع الداكن"
       navigation_menu: "شريط جانبي|قائمة منسدلة للرأس"
       purge_unactivated_users_grace_period_days: "تم إلغاء تنشيطه|غير نشط|لم يتم تنشيطه"
-      default_composition_mode: "rte|نص منسق|أداة الإنشاء|markdown|محرر النصوص المنسقة"
+      short_site_description: "لقب المجتمع"
+      site_contact_group_name: "مجموعة جهات الاتصال للموقع"
+      site_contact_username: "اسم جهة الاتصال للموقع"
+      site_description: "ملخص المجتمع"
+      title: "اسم المجتمع"
+      welcome_banner_image: "صورة الخلفية"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -6181,6 +6199,10 @@ ar:
       no_context:
         watched_word: "تضمن هذا المنشور كلمة مراقبة. تحقق من %{link} لمزيد من المعلومات."
     actions:
+      answer_yes:
+        title: "نعم"
+      answer_no:
+        title: "لا"
       agree:
         title: "نعم"
       agree_and_keep:

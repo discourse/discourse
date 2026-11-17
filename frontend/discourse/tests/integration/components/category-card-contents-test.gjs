@@ -1,5 +1,6 @@
 import {
   click,
+  find,
   findAll,
   render,
   triggerEvent,
@@ -38,13 +39,79 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.dom(".category-card .card-content").exists("the card opens");
 
     await triggerEvent("#main-outlet", "pointerdown");
 
     assert.dom(".category-card .card-content").doesNotExist("the card closes");
+  });
+
+  for (const destination of [".category-card .card-content", "#main-outlet"]) {
+    test(`leaving the hashtag for ${destination}`, async function (assert) {
+      await render(
+        <template>
+          <div id="main-outlet">
+            <a
+              class="hashtag-cooked"
+              data-id="2"
+              data-type="category"
+              href="/c/product/2"
+            >
+              <span>product</span>
+            </a>
+          </div>
+          <CategoryCardContents />
+        </template>
+      );
+
+      await triggerEvent(".hashtag-cooked span", "pointerover");
+      assert.dom(".category-card .card-content").exists("hover opens the card");
+      assert.dom(".category-card").isNotFocused("hover does not take focus");
+
+      await triggerEvent(".hashtag-cooked span", "pointerout", {
+        relatedTarget: find(destination),
+      });
+      await triggerEvent(destination, "pointerover");
+
+      if (destination === "#main-outlet") {
+        assert
+          .dom(".category-card .card-content")
+          .doesNotExist("leaving closes the card");
+      } else {
+        assert
+          .dom(".category-card .card-content")
+          .exists("the card stays open while hovered");
+        await triggerEvent(destination, "pointerout");
+        assert
+          .dom(".category-card .card-content")
+          .doesNotExist("leaving the card closes it");
+      }
+    });
+  }
+
+  test("touching a hashtag does not open a card", async function (assert) {
+    await render(
+      <template>
+        <div id="main-outlet">
+          <a
+            class="hashtag-cooked"
+            data-id="2"
+            data-type="category"
+            href="/c/product/2"
+          >product</a>
+        </div>
+        <CategoryCardContents />
+      </template>
+    );
+
+    await triggerEvent(".hashtag-cooked", "pointerover", {
+      pointerType: "touch",
+    });
+    assert
+      .dom(".category-card .card-content")
+      .doesNotExist("touch leaves the link available for navigation");
   });
 
   test("lazy loads a category outside a post and reuses it on reopening", async function (assert) {
@@ -74,7 +141,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.deepEqual(
       requestedIds,
@@ -91,7 +158,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       .exists("the card opens without a topic or post");
 
     await triggerEvent("#main-outlet", "pointerdown");
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.dom(".category-card .card-content").exists("the card reopens");
     assert.strictEqual(requestedIds.length, 1, "the loaded category is reused");
@@ -142,7 +209,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.deepEqual(
       requestedLookups,
@@ -203,14 +270,14 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click(".readonly-hashtag");
+    await triggerEvent(".readonly-hashtag", "pointerover");
 
     assert
       .dom(".category-card__new-topic")
       .doesNotExist("hidden without create permission on the category");
 
     await triggerEvent("#main-outlet", "pointerdown");
-    await click(".writable-hashtag");
+    await triggerEvent(".writable-hashtag", "pointerover");
     await click(".category-card__new-topic");
 
     assert.true(composer.openNewTopic.calledOnce, "opens the composer");
@@ -253,7 +320,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.dom(".category-card .card-content").exists("the card opens");
     assert.dom(".category-card__new-topic").doesNotExist();
@@ -291,7 +358,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
     );
 
     currentUser.set("admin", true);
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.dom(".category-card .bio").doesNotExist("there is no description");
     assert
@@ -300,7 +367,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
 
     await triggerEvent("#main-outlet", "pointerdown");
     currentUser.set("admin", false);
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert
       .dom(".category-card__edit-description")
@@ -347,7 +414,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.dom(".category-card__new-topic").hasText("Create a new topic");
     assert.dom(".category-card__new-topic .d-icon-plus").exists();
@@ -399,7 +466,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
     await click(".category-card__edit-description");
 
     assert.true(composer.open.calledOnce, "opens the composer");
@@ -473,7 +540,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.dom(".category-card__topics .featured-topic").exists({ count: 2 });
     assert
@@ -497,7 +564,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
     );
 
     await triggerEvent("#main-outlet", "pointerdown");
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert
       .dom(".category-card__topics .featured-topic")
@@ -545,7 +612,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
       </template>
     );
 
-    await click('a.hashtag-cooked[data-type="category"]');
+    await triggerEvent('a.hashtag-cooked[data-type="category"]', "pointerover");
 
     assert.dom(".category-card__topics .featured-topic").exists({ count: 1 });
     assert.dom(".category-card__view-all").doesNotExist();
@@ -576,7 +643,7 @@ module(
 
     for (const mobileView of [false, true]) {
       for (const status of [null, 200, 403, 404]) {
-        test(`navigates without opening a popup for an inaccessible category (${mobileView ? "mobile" : "desktop"}, ${status ?? "preloaded"})`, async function (assert) {
+        test(`hovering an inaccessible category does not navigate or open a popup (${mobileView ? "mobile" : "desktop"}, ${status ?? "preloaded"})`, async function (assert) {
           if (mobileView) {
             forceMobile();
           }
@@ -594,14 +661,12 @@ module(
             this.owner.lookup("service:menu"),
             "newInstance"
           );
-          await click('a.hashtag-cooked[data-type="category"]');
-
-          assert.true(
-            routeTo.calledOnceWithExactly(
-              `${window.location.origin}/c/staff/123456`
-            ),
-            "the original category URL handles the unavailable category"
+          await triggerEvent(
+            'a.hashtag-cooked[data-type="category"]',
+            "pointerover"
           );
+
+          assert.false(routeTo.called, "hovering never navigates");
           assert.false(createMenu.called, "no floating menu is ever created");
           assert
             .dom('.fk-d-menu[data-identifier="category-card"]')
@@ -632,7 +697,10 @@ module(
         });
 
         await renderStaffHashtag();
-        const opening = click('a.hashtag-cooked[data-type="category"]');
+        const opening = triggerEvent(
+          'a.hashtag-cooked[data-type="category"]',
+          "pointerover"
+        );
         await waitUntil(() => releaseLookup);
 
         assert

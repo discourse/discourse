@@ -390,6 +390,26 @@ RSpec.describe PostsController do
       expect(json[0]["user_custom_fields"]["hidden"]).to be_blank
     end
 
+    it "fills the reply page after filtering hidden replies, retaining author and moderator access" do
+      parent = Fabricate(:post)
+      hidden_replies = Fabricate.times(21, :post, topic: parent.topic, user: user, hidden: true)
+      visible_replies = Fabricate.times(20, :post, topic: parent.topic)
+      (hidden_replies + visible_replies).each do |reply|
+        PostReply.create!(post: parent, reply: reply)
+      end
+
+      get "/posts/#{parent.id}/replies.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.pluck("id")).to eq(visible_replies.map(&:id))
+
+      [user, Fabricate(:moderator)].each do |viewer|
+        sign_in(viewer)
+        get "/posts/#{parent.id}/replies.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.pluck("id")).to eq(hidden_replies.first(20).map(&:id))
+      end
+    end
+
     it "supports pagination" do
       parent = Fabricate(:post)
 
@@ -1300,6 +1320,23 @@ RSpec.describe PostsController do
       expect(post.topic.reload.category_id).not_to eq(category.id)
     end
 
+    it "does not let a moderator move a topic to a category they cannot see" do
+      post = create_post
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      sign_in(moderator)
+
+      put "/posts/#{post.id}.json",
+          params: {
+            post: {
+              category_id: private_category.id,
+              raw: "this is a test edit to post",
+            },
+          }
+
+      expect(response.status).to eq(403)
+      expect(post.topic.reload.category_id).not_to eq(private_category.id)
+    end
+
     describe "trying to add a link without permission" do
       it "returns an error message if links are added to posts when not allowed" do
         post = create_post
@@ -1620,6 +1657,24 @@ RSpec.describe PostsController do
     before do
       SiteSetting.fast_typing_threshold = "disabled"
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+    end
+
+    it "does not spend quadratic time cooking a post full of unclosed bbcode tags" do
+      # A TL0 user can submit a post (well within max_post_length) whose server
+      # side cooking is quadratic in its length, tying up the web worker for
+      # several seconds regardless of whether the post is ultimately accepted.
+      sign_in(user_trust_level_0)
+      PrettyText.cook("warm up the v8 context")
+
+      raw = (["[quote]"] * 2000).join("\n")
+
+      elapsed =
+        Benchmark.realtime do
+          post "/posts.json", params: { raw: raw, title: "a perfectly ordinary topic title" }
+        end
+
+      expect(response.status).to be_between(200, 499)
+      expect(elapsed).to be < 2
     end
 
     it "prevents regular users from publishing a global banner while creating a topic" do
@@ -2671,6 +2726,36 @@ RSpec.describe PostsController do
         expect(cooked.at_css("iframe")).to be_nil
       end
 
+      it "keeps an iframe URL inside the link href of notification emails" do
+        recipient = Fabricate(:user)
+        topic = Fabricate(:topic, user: recipient)
+        Fabricate(:post, topic: topic, user: recipient)
+        iframe_source = "https://www.instagram.com/p/x'style='position:fixed;inset:0'title='x"
+
+        post "/posts.json",
+             params: {
+               raw: %(Reply <iframe src="#{iframe_source}"></iframe>),
+               topic_id: topic.id,
+             }
+
+        expect(response.status).to eq(200)
+        email =
+          UserNotifications.user_replied(
+            recipient,
+            post: Post.find(response.parsed_body["id"]),
+            notification_type: "replied",
+            notification_data_hash: {
+              original_username: user.username,
+            },
+          )
+        link =
+          Nokogiri
+            .HTML5(Email::Renderer.new(email).html)
+            .css("a")
+            .find { |a| a["href"].start_with?("https://www.instagram.com") }
+        expect(link.to_h).to eq("href" => iframe_source)
+      end
+
       it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {
@@ -3438,6 +3523,22 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(422)
       end
+    end
+
+    it "cooks an unrecognized image size suffix in bounded time" do
+      sign_in(user_trust_level_0)
+      numbers = "1" * 800
+      raw = "![a|#{numbers}x#{numbers},](https://example.com/image.png)"
+
+      # Warm up the JS context so the measurement only covers cooking.
+      PrettyText.cook("warmup")
+
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      post "/posts.json", params: { raw: raw, topic_id: post_by_user.topic_id }
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+      expect(response.status).to eq(200)
+      expect(elapsed).to be < 2, "request took #{elapsed.round(2)}s to cook"
     end
   end
 
@@ -4534,6 +4635,19 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "excludes shared drafts from the deleted-post feed for moderators without draft access" do
+        shared_draft = Fabricate(:shared_draft)
+        denied_post = Fabricate(:post, user: user, topic: shared_draft.topic)
+        visible_post = Fabricate(:post, user: user)
+        denied_post.trash!(admin)
+        visible_post.trash!(admin)
+        SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.pluck("id")).to contain_exactly(visible_post.id)
+      end
+
       it "doesn't return secured categories for moderators if they don't have access" do
         Fabricate(:moderator)
 
@@ -4565,6 +4679,42 @@ RSpec.describe PostsController do
 
         data = response.parsed_body
         expect(data.length).to eq(0)
+      end
+
+      it "doesn't return whispers for moderators outside whispers_allowed_groups" do
+        whisperers = Fabricate(:group)
+        whisperers.add(user)
+        SiteSetting.whispers_allowed_groups = whisperers.id.to_s
+
+        Fabricate(:post, topic: topic)
+        whisper = Fabricate(:post, topic: topic, user: user, post_type: Post.types[:whisper])
+        reply = Fabricate(:post, topic: topic, user: user)
+        PostDestroyer.new(admin, whisper).destroy
+        PostDestroyer.new(admin, reply).destroy
+
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |deleted_post| deleted_post["id"] }).to contain_exactly(
+          reply.id,
+        )
+      end
+
+      it "returns whispers for moderators in whispers_allowed_groups" do
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+        Fabricate(:post, topic: topic)
+        whisper = Fabricate(:post, topic: topic, user: user, post_type: Post.types[:whisper])
+        PostDestroyer.new(admin, whisper).destroy
+
+        sign_in(moderator)
+        get "/posts/#{user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |deleted_post| deleted_post["id"] }).to contain_exactly(
+          whisper.id,
+        )
       end
 
       it "returns PMs for admins who are also moderators" do

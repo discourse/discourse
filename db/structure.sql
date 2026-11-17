@@ -2275,7 +2275,16 @@ CREATE TABLE public.blog_publications (
     last_published_at timestamp(6) without time zone,
     schedule_token character varying,
     schedule_error text DEFAULT ''::text NOT NULL,
-    draft_metadata jsonb DEFAULT '{}'::jsonb NOT NULL
+    draft_metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    cooked text,
+    image_url text,
+    meta_description character varying DEFAULT ''::character varying NOT NULL,
+    canonical_url character varying DEFAULT ''::character varying NOT NULL,
+    cover_upload_id integer,
+    cover_alt character varying DEFAULT ''::character varying NOT NULL,
+    word_count integer,
+    co_author_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    page boolean DEFAULT false NOT NULL
 );
 
 
@@ -2563,7 +2572,8 @@ CREATE TABLE public.browser_pageview_event_scores (
     ip_rotation_score smallint DEFAULT 0 NOT NULL,
     datacenter_asn_score smallint DEFAULT 0 NOT NULL,
     single_request_no_referrer_score smallint DEFAULT 0 NOT NULL,
-    stale_browser_score smallint DEFAULT 0 NOT NULL
+    stale_browser_score smallint DEFAULT 0 NOT NULL,
+    distributed_traffic_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -2584,7 +2594,8 @@ CREATE TABLE public.browser_pageview_event_scores_backup (
     ip_rotation_score smallint NOT NULL,
     datacenter_asn_score smallint NOT NULL,
     single_request_no_referrer_score smallint NOT NULL,
-    stale_browser_score smallint NOT NULL
+    stale_browser_score smallint NOT NULL,
+    distributed_traffic_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -5238,7 +5249,8 @@ CREATE TABLE public.discourse_post_event_events (
     all_day boolean DEFAULT false NOT NULL,
     image_upload_id bigint,
     livestream boolean DEFAULT false NOT NULL,
-    recording_url character varying(1000)
+    recording_url character varying(1000),
+    allow_anonymous_livestream boolean DEFAULT false NOT NULL
 );
 
 
@@ -11688,7 +11700,8 @@ CREATE TABLE public.theme_translation_overrides (
     translation_key character varying NOT NULL,
     value character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    original_translation text
 );
 
 
@@ -13161,7 +13174,8 @@ CREATE TABLE public.user_chat_channel_memberships (
     last_viewed_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     notification_level integer DEFAULT 1 NOT NULL,
     starred boolean DEFAULT false NOT NULL,
-    last_viewed_pins_at timestamp(6) without time zone
+    last_viewed_pins_at timestamp(6) without time zone,
+    muted_until timestamp(6) without time zone
 );
 
 
@@ -24616,6 +24630,13 @@ CREATE INDEX index_search_logs_on_created_at_excluding_crawlers ON public.search
 
 
 --
+-- Name: index_search_logs_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_search_logs_on_session_id ON public.search_logs USING btree (session_id) WHERE (session_id IS NOT NULL);
+
+
+--
 -- Name: index_search_logs_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25736,6 +25757,13 @@ CREATE INDEX index_user_badges_on_user_id ON public.user_badges USING btree (use
 
 
 --
+-- Name: index_user_chat_channel_memberships_on_muted_until; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_chat_channel_memberships_on_muted_until ON public.user_chat_channel_memberships USING btree (muted_until) WHERE (muted_until IS NOT NULL);
+
+
+--
 -- Name: index_user_chat_channel_memberships_on_user_id_and_starred; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26635,8 +26663,20 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261113163304'),
+('20261113130002'),
+('20261113090951'),
+('20261112162839'),
+('20261112150235'),
+('20261110093228'),
+('20261110093224'),
+('20261110080540'),
+('20261109074217'),
+('20261109060019'),
 ('20261106020035'),
 ('20261105165644'),
+('20261104164335'),
+('20261104164326'),
 ('20261104011110'),
 ('20261102174233'),
 ('20261030215104'),
@@ -26696,6 +26736,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260925155026'),
 ('20260925054715'),
 ('20260923174053'),
+('20260923151316'),
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),

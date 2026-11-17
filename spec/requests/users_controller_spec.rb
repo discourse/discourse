@@ -125,6 +125,43 @@ RSpec.describe UsersController do
         end
       end
 
+      context "when the user has a second factor enabled" do
+        before { user_deferred.update!(active: false) }
+
+        it "activates the account without logging in a user with TOTP" do
+          Fabricate(:user_second_factor_totp, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+
+        it "activates the account without logging in a user with only backup codes" do
+          Fabricate(:user_second_factor_backup, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+
+        it "activates the account without logging in a user with a security key" do
+          Fabricate(:user_security_key_with_random_credential, user: user_deferred)
+
+          put "/u/activate-account/#{email_token.token}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.active).to eq(true)
+        end
+      end
+
       context "when user is not approved" do
         before { SiteSetting.must_approve_users = true }
 
@@ -912,6 +949,67 @@ RSpec.describe UsersController do
       expect(response.parsed_body["success"]).to eq(true)
     end
 
+    it "accepts only signup fields from anonymous registration" do
+      visible_field = Fabricate(:user_field, show_on_signup: true, editable: false)
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+
+      post_user(
+        user_fields: {
+          visible_field.id.to_s => "visible",
+          hidden_field.id.to_s => "hidden",
+        },
+      )
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(
+        visible_field.id.to_s => "visible",
+        hidden_field.id.to_s => nil,
+      )
+    end
+
+    it "skips hidden required fields during anonymous registration" do
+      Fabricate(:user_field, show_on_signup: false, requirement: "on_signup")
+
+      post_user
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+    end
+
+    it "accepts only signup fields from a regular user API key" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: true)
+      api_key = Fabricate(:api_key, user: user1)
+
+      post "/u.json",
+           params: post_user_params.merge(user_fields: { hidden_field.id.to_s => "hidden" }),
+           headers: {
+             HTTP_API_KEY: api_key.key,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(hidden_field.id.to_s => nil)
+    end
+
+    it "accepts hidden fields from an administrator API key" do
+      hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+      api_key = Fabricate(:api_key, user: admin)
+
+      post "/u.json",
+           params: post_user_params.merge(user_fields: { hidden_field.id.to_s => "provisioned" }),
+           headers: {
+             HTTP_API_KEY: api_key.key,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      created_user = User.find(response.parsed_body["user_id"])
+      expect(created_user.user_fields).to eq(hidden_field.id.to_s => "provisioned")
+    end
+
     context "when email params is missing" do
       it "returns the missing-email error" do
         post "/u.json",
@@ -1119,6 +1217,34 @@ RSpec.describe UsersController do
 
           post "/u.json", params: params, headers: { HTTP_API_KEY: api_key.key }
           expect(response.status).to eq(400)
+        end
+
+        it "cannot set external_ids with a granular users:create API key" do
+          staged = Fabricate(:staged, email: "test@example.com", active: true)
+          granular_api_key =
+            Fabricate(
+              :api_key,
+              user: admin,
+              api_key_scopes: [
+                Fabricate.build(:api_key_scope, resource: "users", action: "create"),
+              ],
+            )
+
+          params = {
+            username: "foobar",
+            email: "test@example.com",
+            external_ids: {
+              "pluginauth" => "pluginauth_uid",
+            },
+          }
+
+          expect {
+            post "/u.json", params: params, headers: { HTTP_API_KEY: granular_api_key.key }
+          }.not_to change { UserAssociatedAccount.count }
+
+          expect(response.status).to eq(403)
+          expect(staged.reload).to have_attributes(staged: true, active: true)
+          expect(staged.custom_fields["from_staged"]).to be_nil
         end
       end
     end
@@ -3084,7 +3210,7 @@ RSpec.describe UsersController do
 
             invites = response.parsed_body["invites"]
             expect(invites.size).to eq(1)
-            expect(invites.first).to include("id" => invite.id)
+            expect(invites.first).to include("id" => invite.id, "invite_key" => invite.invite_key)
             expect(response.parsed_body["can_see_invite_details"]).to eq(true)
           end
 
@@ -3126,6 +3252,105 @@ RSpec.describe UsersController do
 
             get "/u/#{inviter.username}/invited/pending.json"
             expect(response.status).to eq(403)
+          end
+        end
+
+        context "when viewing another user's pending invites as a moderator" do
+          fab!(:inviting_admin, :admin)
+
+          it "does not expose the invite key or link" do
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["can_see_invite_details"]).to eq(true)
+
+            invite_json = response.parsed_body["invites"].first
+            expect(invite_json).to include("id" => invite.id)
+            expect(invite_json).not_to include("invite_key", "link")
+          end
+
+          it "still shows the invite key and link to admins" do
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+
+            sign_in(Fabricate(:admin))
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+
+            expect(response.status).to eq(200)
+
+            invite_json = response.parsed_body["invites"].first
+            expect(invite_json).to include(
+              "id" => invite.id,
+              "invite_key" => invite.invite_key,
+              "link" => invite.link,
+            )
+          end
+
+          it "cannot mint a moderator account by redeeming a harvested staff invite" do
+            Fabricate(
+              :invite,
+              invited_by: inviting_admin,
+              email: nil,
+              max_redemptions_allowed: 1,
+              moderator: true,
+              expires_at: 1.month.from_now,
+              emailed_status: Invite.emailed_status_types[:not_required],
+            )
+            accomplice = Fabricate(:user)
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+            harvested_key = response.parsed_body["invites"].first["invite_key"]
+
+            sign_in(accomplice)
+            # A withheld key is unredeemable; use an unknown key so the request stays routable.
+            put "/invites/show/#{harvested_key.presence || "withheld"}.json"
+
+            expect(accomplice.reload.moderator?).to eq(false)
+          end
+
+          it "cannot join an owners-only group by redeeming a harvested group invite" do
+            group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+            category = Fabricate(:private_category, group: group)
+            topic = Fabricate(:topic, category: category)
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+            InvitedGroup.create!(invite: invite, group: group)
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+            harvested_key = response.parsed_body["invites"].first["invite_key"]
+
+            # A withheld key is unredeemable; use an unknown key so the request stays routable.
+            put "/invites/show/#{harvested_key.presence || "withheld"}.json"
+
+            expect(GroupUser.where(user: moderator, group: group)).to be_empty
+            expect(moderator.reload.guardian.can_see?(topic)).to eq(false)
           end
         end
       end
@@ -3876,6 +4101,48 @@ RSpec.describe UsersController do
         put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key }
         expect(response.status).to eq(400)
       end
+
+      context "when authenticating with a granular users:update API key" do
+        fab!(:granular_api_key, refind: false) do
+          Fabricate(
+            :api_key,
+            user: admin,
+            api_key_scopes: [Fabricate.build(:api_key_scope, resource: "users", action: "update")],
+          )
+        end
+
+        fab!(:victim, :admin)
+
+        it "cannot bind a new SSO identity to another account" do
+          params = { external_ids: { discourse_connect: "attacker_controlled_uid" } }
+
+          expect {
+            put "/u/#{victim.username}.json",
+                params: params,
+                headers: {
+                  HTTP_API_KEY: granular_api_key.key,
+                }
+          }.not_to change { SingleSignOnRecord.count }
+
+          expect(response.status).to eq(403)
+          expect(victim.reload.single_sign_on_record).to be_blank
+        end
+
+        it "cannot bind a new associated account to another account" do
+          params = { external_ids: { "pluginauth" => "pluginauth_uid" } }
+
+          expect {
+            put "/u/#{victim.username}.json",
+                params: params,
+                headers: {
+                  HTTP_API_KEY: granular_api_key.key,
+                }
+          }.not_to change { UserAssociatedAccount.count }
+
+          expect(response.status).to eq(403)
+          expect(victim.reload.user_associated_account_ids).to be_blank
+        end
+      end
     end
 
     context "with user status" do
@@ -4624,6 +4891,31 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(user1.reload.uploaded_avatar_id).to eq(upload.id)
         expect(user1.user_avatar.reload.custom_upload_id).to eq(upload.id)
+      end
+    end
+
+    context "when a moderator picks a secure upload belonging to the target user" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+        SiteSetting.authorized_extensions = "*"
+        sign_in(moderator)
+      end
+
+      it "forbids using this image as an avatar" do
+        pm_post = Fabricate(:private_message_post, user: user1)
+        secure_upload = Fabricate(:upload, user: user1, secure: true, access_control_post: pm_post)
+
+        expect(moderator.guardian.can_see_upload?(secure_upload)).to eq(false)
+
+        put "/u/#{user1.username}/preferences/avatar/pick.json",
+            params: {
+              upload_id: secure_upload.id,
+              type: "custom",
+            }
+
+        expect(response).to be_forbidden
+        expect(user1.reload.uploaded_avatar_id).to be_nil
       end
     end
   end
@@ -5690,6 +5982,19 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
+      it "raises an error for an account that has been active before" do
+        user = post_user
+        user.update!(last_seen_at: 1.year.ago)
+
+        put "/u/update-activation-email.json", params: { email: "updatedemail@example.com" }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(user.reload.email).to eq("osama@example.com")
+      end
+
       it "raises an error when logged in" do
         post_user
         sign_in(moderator)
@@ -5784,6 +6089,49 @@ RSpec.describe UsersController do
             }
 
         expect(response.status).to eq(403)
+      end
+
+      it "raises an error for an admin deactivated for inactivity" do
+        admin = Fabricate(:admin, password: "dormantadminpassword", last_seen_at: 2.years.ago)
+        Jobs::InvalidateInactiveAdmins.new.execute({})
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: admin.username,
+              password: "dormantadminpassword",
+              email: "updatedemail@example.com",
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(admin.reload.active).to eq(false)
+        expect(admin.email).not_to eq("updatedemail@example.com")
+      end
+
+      it "raises an error for an account deactivated by staff before it was ever seen" do
+        unseen_user = Fabricate(:user, active: false, password: "qwerqwer123")
+        Fabricate(
+          :user_history,
+          acting_user: admin,
+          target_user_id: unseen_user.id,
+          action: UserHistory.actions[:deactivate_user],
+        )
+
+        put "/u/update-activation-email.json",
+            params: {
+              username: unseen_user.username,
+              password: "qwerqwer123",
+              email: "updatedemail@example.com",
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed"),
+        )
+        expect(unseen_user.reload.active).to eq(false)
+        expect(unseen_user.email).not_to eq("updatedemail@example.com")
       end
 
       it "raises an error when logged in" do
@@ -6120,6 +6468,17 @@ RSpec.describe UsersController do
           Fabricate(:post, user: admin, topic: topic, post_type: Post.types[:whisper])
         end
 
+        it "excludes hidden posts from another viewer's topic post count" do
+          Fabricate(:post, user: admin, topic: topic, hidden: true)
+          get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("user", "topic_post_count", topic.id.to_s)).to eq(1)
+
+          sign_in(admin)
+          get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
+          expect(response.parsed_body.dig("user", "topic_post_count", topic.id.to_s)).to eq(3)
+        end
+
         it "includes only visible posts" do
           get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
           topic_post_count = response.parsed_body.dig("user", "topic_post_count")
@@ -6221,6 +6580,58 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "anonymous account penalty privacy" do
+    it "keeps shared penalty expiry dates private on public cards and profiles" do
+      freeze_time
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      member = Fabricate(:user, trust_level: 1)
+      shadow = AnonymousShadowCreator.get(member)
+      member.user_stat.update!(post_count: 1)
+      shadow.user_stat.update!(post_count: 1)
+      expiry = 3.days.from_now
+
+      UserSilencer.new(member, admin, keep_posts: true, silenced_till: expiry).silence
+      UserSuspender.new(member, suspended_till: expiry, reason: "spam", by_user: admin).suspend
+
+      ["/u/#{member.username}/card.json", "/u/#{member.username}.json"].each do |path|
+        get path
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user"]).to include(
+          "silenced_till" => expiry.iso8601(3),
+          "suspended_till" => expiry.iso8601(3),
+        )
+      end
+
+      ["/u/#{shadow.username}/card.json", "/u/#{shadow.username}.json"].each do |path|
+        get path
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user"]).not_to have_key("silenced_till")
+        expect(response.parsed_body["user"]).not_to have_key("suspended_till")
+      end
+
+      get "/user-cards.json", params: { user_ids: "#{member.id},#{shadow.id}" }
+      expect(response.status).to eq(200)
+      shadow_card = response.parsed_body["users"].find { |card| card["id"] == shadow.id }
+      expect(shadow_card).not_to have_key("silenced_till")
+      expect(shadow_card).not_to have_key("suspended_till")
+
+      SiteSetting.allow_anonymous_mode = false
+      get "/u/#{shadow.username}/card.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user"]).not_to have_key("suspended_till")
+
+      SiteSetting.allow_anonymous_mode = true
+      sign_in(admin)
+      get "/u/#{shadow.username}/card.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user"]).to include(
+        "silenced_till" => expiry.iso8601(3),
+        "suspended_till" => expiry.iso8601(3),
+      )
+    end
+  end
+
   describe "#show_card" do
     context "when anon" do
       let(:user) { Discourse.system_user }
@@ -6236,6 +6647,8 @@ RSpec.describe UsersController do
       end
 
       it "sanitizes suspension and silencing reasons" do
+        SiteSetting.hide_suspension_reasons = false
+        SiteSetting.hide_silencing_reasons = false
         payload = "public <img src=x onerror=alert(1)> reason"
         penalized_user = Fabricate(:user)
         penalized_user.user_stat.update!(post_count: 1)
@@ -6388,6 +6801,45 @@ RSpec.describe UsersController do
       SiteSetting.hide_user_profiles_from_public = true
       get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
       expect(response).to have_http_status(:forbidden)
+    end
+
+    context "when a requested user is inactive" do
+      before do
+        inactive_user.user_stat.update!(post_count: 1)
+        inactive_user.user_profile.update!(bio_raw: "Inactive user bio")
+      end
+
+      it "does not include the inactive user for anonymous users" do
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+        )
+      end
+
+      it "does not include the inactive user for regular users" do
+        sign_in(another_user)
+
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+        )
+      end
+
+      it "includes the inactive user for staff" do
+        sign_in(moderator)
+
+        get "/user-cards.json?user_ids=#{user2.id},#{inactive_user.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["users"].map { |u| u["username"] }).to contain_exactly(
+          user2.username,
+          inactive_user.username,
+        )
+      end
     end
 
     context "when `hide_profile` user option is checked" do
@@ -8901,18 +9353,15 @@ RSpec.describe UsersController do
 
       TopicUser.change(user.id, hidden_post.topic_id, total_msecs_viewed: 1)
       hidden_post.update!(hidden: true)
+      TopicUser.change(user.id, topic.id, total_msecs_viewed: 1)
 
       sign_in(user)
 
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
-      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
-      hidden_post_response = bookmark_list.find { |item| item["id"] == hidden_post_bookmark.id }
-
-      expect(hidden_post_response).to be_present
-      expect(hidden_post_response).not_to have_key("excerpt")
-      expect(hidden_post_response).not_to have_key("truncated")
-      expect(hidden_post_response).not_to have_key("cooked")
+      bookmark_list = response.parsed_body.fetch("user_bookmark_list").fetch("bookmarks")
+      expect(bookmark_list.pluck("id")).to contain_exactly(bookmark.id)
+      expect(hidden_post_bookmark.reload).to be_persisted
       expect(response.body).not_to include(hidden_post.raw)
     end
 

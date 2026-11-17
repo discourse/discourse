@@ -21,7 +21,8 @@ DiscourseAutomation::Scriptable.add(
       custom_field_name = "#{::User::USER_FIELD_PREFIX}#{fields.dig("custom_field_name", "value")}"
 
       # mapping of group full_names to ids for quick lookup
-      group_ids_by_name = Group.where.not(full_name: [nil, ""]).pluck(:full_name, :id).to_h
+      group_ids_by_name =
+        Group.where(automatic: false).where.not(full_name: [nil, ""]).pluck(:full_name, :id).to_h
       groups_by_id = {}
 
       # find users with the custom field who aren't in their designated group
@@ -56,7 +57,7 @@ DiscourseAutomation::Scriptable.add(
         ).first
       next if !group_name
 
-      group = Group.find_by(full_name: group_name)
+      group = Group.find_by(full_name: group_name, automatic: false)
       next if !group
 
       user = trigger["user"]

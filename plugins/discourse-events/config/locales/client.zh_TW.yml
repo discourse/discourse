@@ -41,6 +41,8 @@ zh_TW:
           load_error: "你已離開網路研討會，或我們無法在此頁面載入 Zoom。"
           too_early: "你可以在接近活動開始時間時加入網路研討會"
           view_topic: "查看活動主題"
+          guest_prompt:
+            register: "注冊"
         chat:
           rsvp_to_event: "回覆活動邀請以開始聊天"
           rsvp_to_event_with_link: "回覆<a href='%{url}'>活動</a>邀請以開始聊天"

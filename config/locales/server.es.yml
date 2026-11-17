@@ -2572,10 +2572,29 @@ es:
       mediaconvert_output_subdirectory_required: "Se requiere el subdirectorio de salida de MediaConvert."
       s3_credentials_required_for_video_conversion: "Se requieren credenciales de S3 para la conversión de video. Configura las claves de acceso de S3 o activa el perfil IAM."
     keywords:
+      about_banner_image: "imagen del banner"
+      about_page_extra_groups: "listado de grupos"
+      about_page_extra_groups_initial_members: "ampliación de miembros"
+      about_page_extra_groups_order: "orden de clasificación"
+      about_page_extra_groups_show_description: "incluir descripción"
       clean_up_inactive_users_after_days: "desactivado|inactivo|no activado"
+      company_url: "página web"
+      default_composition_mode: "rte|texto enriquecido|compositor|markdown|editor enriquecido"
+      embed_full_app: "modo de aplicación completa"
+      extended_site_description: "descripción de la comunidad"
+      large_icon: "icono cuadrado"
+      logo: "logotipo principal"
+      logo_dark: "logotipo principal oscuro"
+      logo_small: "logotipo pequeño"
+      logo_small_dark: "logotipo pequeño oscuro"
       navigation_menu: "barra lateral|menú desplegable de encabezado"
       purge_unactivated_users_grace_period_days: "desactivado|inactivo|no activado"
-      default_composition_mode: "rte|texto enriquecido|compositor|markdown|editor enriquecido"
+      short_site_description: "título de la comunidad"
+      site_contact_group_name: "grupo de contacto del sitio"
+      site_contact_username: "nombre del contacto del sitio"
+      site_description: "resumen comunitario"
+      title: "nombre de la comunidad"
+      welcome_banner_image: "imagen de fondo"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -5003,6 +5022,10 @@ es:
       no_context:
         watched_word: "Esta publicación incluía una palabra vigilada. Consulta los %{link} para obtener más información."
     actions:
+      answer_yes:
+        title: "Sí"
+      answer_no:
+        title: "No"
       agree:
         title: "Sí"
       agree_and_keep:

@@ -14,6 +14,7 @@ ar:
     about: نبذة
     community: المجتمع
     preview: معاينة
+    author: المؤلف
     search: البحث
     replies:
       zero: "%{count} من الردود"
@@ -22,3 +23,5 @@ ar:
       few: "%{count} من الردود"
       many: "%{count} من الردود"
       other: "%{count} من الردود"
+    themes:
+      default: افتراضي

@@ -1,5 +1,7 @@
 import { schema } from "prosemirror-markdown";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
+import { AI_QUOTE_MARKER } from "discourse-markdown-it/features/quotes";
+import { createAiBadge } from "../lib/ai-badge.js";
 
 // null values are omitted, both when serialized and applied by the node view
 function quoteDataAttrs(node) {
@@ -125,6 +127,20 @@ const extension = {
     blockquote: {
       createGapCursor: true,
       ...schema.nodes.blockquote.spec,
+      attrs: { ai: { default: false } },
+      parseDOM: [
+        {
+          tag: "blockquote",
+          getAttrs: (dom) => ({
+            ai: dom.getAttribute("data-ai-generated") === "true",
+          }),
+        },
+      ],
+      toDOM: (node) => [
+        "blockquote",
+        node.attrs.ai ? { "data-ai-generated": "true" } : {},
+        0,
+      ],
     },
     quote: {
       content: "block+",
@@ -174,6 +190,12 @@ const extension = {
   },
 
   parse: {
+    blockquote: {
+      block: "blockquote",
+      getAttrs: (token) => ({
+        ai: token.attrGet("data-ai-generated") === "true",
+      }),
+    },
     quote_header_open(state, token, tokens, i) {
       // removing the text child, this depends on the current token order:
       // quote_header_open quote_controls_open quote_controls_close text quote_header_close
@@ -214,6 +236,14 @@ const extension = {
   },
 
   serializeNode: {
+    blockquote(state, node) {
+      state.wrapBlock("> ", null, node, () => {
+        if (node.attrs.ai) {
+          state.write(`${AI_QUOTE_MARKER}\n`);
+        }
+        state.renderContent(node);
+      });
+    },
     quote(state, node) {
       const { username, displayName, postNumber, topicId, full } = node.attrs;
       const postNumberParam = postNumber ? `, post:${postNumber}` : "";
@@ -244,9 +274,24 @@ const extension = {
   plugins({
     pmState: { Plugin, NodeSelection },
     pmModel: { Slice, Fragment },
+    pmView: { Decoration, DecorationSet },
   }) {
+    const decorationsByDoc = new WeakMap();
     return new Plugin({
       props: {
+        decorations({ doc }) {
+          if (!decorationsByDoc.has(doc)) {
+            const badges = [];
+            doc.descendants((node, pos) => {
+              if (node.type.name === "blockquote" && node.attrs.ai) {
+                badges.push(Decoration.widget(pos + 1, createAiBadge));
+              }
+            });
+            decorationsByDoc.set(doc, DecorationSet.create(doc, badges));
+          }
+          return decorationsByDoc.get(doc);
+        },
+
         transformPasted(slice, view) {
           // Prevent quotes that start with a list from being unwrapped during paste.
           // When a quote's first child is a list, Slice.maxOpen opens it too deeply

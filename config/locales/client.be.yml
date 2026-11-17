@@ -6,6 +6,12 @@
 
 be:
   js:
+    code_editor:
+      search:
+        next: "Далей"
+        close: "Закрыць"
+      fold:
+        to: "каму"
     user_api_key:
       authorize: "Аўтарызаваць"
       deny: "Скасаваць"
@@ -418,9 +424,6 @@ be:
       pill: "Звязаныя паведамленні"
     suggested_topics:
       pm_title: "Прапанаваныя паведамленні"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Назад"
     design_wizard:
       back: "Назад"
       next: "Далей"
@@ -715,6 +718,7 @@ be:
           title: "Усё"
       context_question:
         delimiter: "або"
+        something_wrong_with_post: "Штосьці не так з гэтай публікацыяй?"
       types:
         reviewable_flagged_post:
           noun: "пост"
@@ -2094,9 +2098,8 @@ be:
           title: "Убудовы"
       upcoming_changes:
         name: "Назва"
+        settings: "Налады"
         preview: "Перадпрагляд"
-        enabled_for_options:
-          everyone: "Усе"
         impact_roles:
           admins: "Адміністратары"
           moderators: "Мадэратары"

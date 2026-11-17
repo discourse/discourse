@@ -44,6 +44,14 @@ function pendingWork(topic) {
   }
 }
 
+const PageBadge = <template>
+  {{#if @topic.page}}
+    <span class="status-label blog-dashboard__page-badge">
+      <span class="status-label-text">{{i18n "blog.editor_table.page"}}</span>
+    </span>
+  {{/if}}
+</template>;
+
 const PendingWork = <template>
   {{#let (pendingWork @topic) as |pending|}}
     {{#if pending}}
@@ -275,7 +283,7 @@ export default class BlogDashboard extends Component {
               <thead class="d-table__header">
                 <tr class="d-table__row">
                   <th class="d-table__header-cell">{{i18n
-                      "blog.editor_table.article"
+                      "blog.editor_table.title"
                     }}</th>
                   <th
                     class="d-table__header-cell blog-dashboard__status-column"
@@ -307,6 +315,7 @@ export default class BlogDashboard extends Component {
                                 topic.title
                               }}</div>
                           </a>
+                          <PageBadge @topic={{topic}} />
                           <PendingWork @topic={{topic}} />
                         </div>
                         {{#if topic.public_excerpt}}
@@ -324,6 +333,7 @@ export default class BlogDashboard extends Component {
                               class="d-table__overview-name"
                             >{{topic.title}}</div>
                           </a>
+                          <PageBadge @topic={{topic}} />
                           <PendingWork @topic={{topic}} />
                         </div>
                         {{#if topic.excerpt}}

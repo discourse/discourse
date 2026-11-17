@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { find, render, tab } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -37,7 +38,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("suppresses hover during teardown", function (assert) {
@@ -225,7 +226,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("valueAttribute (deprecated)", async function (assert) {
-    this.set("value", "normal");
+    this.value = "normal";
 
     const content = [
       { name: "Smallest", value: "smallest" },
@@ -234,7 +235,7 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
       { name: "Larger", value: "larger" },
       { name: "Largest", value: "largest" },
     ];
-    this.set("content", content);
+    this.content = content;
 
     await render(
       <template>
@@ -396,34 +397,29 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("prevents propagating click event on header", async function (assert) {
-    this.setProperties({
-      onClick: () => this.set("value", "foo"),
-      content: DEFAULT_CONTENT,
-      value: DEFAULT_VALUE,
-    });
+    const value = tracked(DEFAULT_VALUE);
+    const onClick = () => (value.value = "foo");
 
     await render(
       <template>
-        <DButton @action={{this.onClick}} @icon="xmark">
+        <DButton @action={{onClick}} @icon="xmark">
           <SingleSelect
-            @content={{this.content}}
+            @content={{DEFAULT_CONTENT}}
             @options={{hash preventsClickPropagation=true}}
-            @value={{this.value}}
+            @value={{value.value}}
           />
         </DButton>
       </template>
     );
 
-    assert.strictEqual(this.value, DEFAULT_VALUE);
+    assert.strictEqual(value.value, DEFAULT_VALUE);
     await this.subject.expand();
-    assert.strictEqual(this.value, DEFAULT_VALUE);
+    assert.strictEqual(value.value, DEFAULT_VALUE);
   });
 
   test("labelProperty", async function (assert) {
-    this.setProperties({
-      content: [{ id: 1, name: "john", foo: "JACKSON" }],
-      value: 1,
-    });
+    this.content = [{ id: 1, name: "john", foo: "JACKSON" }];
+    this.value = 1;
 
     await render(
       <template>
@@ -445,10 +441,8 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("titleProperty", async function (assert) {
-    this.setProperties({
-      content: [{ id: 1, name: "john", foo: "JACKSON" }],
-      value: 1,
-    });
+    this.content = [{ id: 1, name: "john", foo: "JACKSON" }];
+    this.value = 1;
 
     await render(
       <template>
@@ -470,17 +464,17 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("langProperty", async function (assert) {
-    this.setProperties({
-      content: [{ id: 1, name: "john", foo: "be" }],
-      value: null,
-    });
+    const content = [{ id: 1, name: "john", foo: "be" }];
+    const value = tracked(null);
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
         <SingleSelect
-          @content={{this.content}}
+          @content={{content}}
           @langProperty="foo"
-          @value={{this.value}}
+          @onChange={{onChange}}
+          @value={{value.value}}
         />
       </template>
     );
@@ -504,14 +498,17 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("name", async function (assert) {
-    this.setProperties({
-      content: [{ id: 1, name: "john" }],
-      value: null,
-    });
+    const content = [{ id: 1, name: "john" }];
+    const value = tracked(null);
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
-        <SingleSelect @content={{this.content}} @value={{this.value}} />
+        <SingleSelect
+          @content={{content}}
+          @onChange={{onChange}}
+          @value={{value.value}}
+        />
       </template>
     );
 
@@ -525,19 +522,17 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
     assert.dom(this.subject.header().el()).hasAttribute(
       "name",
       i18n("select_kit.filter_by", {
-        name: this.content[0].name,
+        name: content[0].name,
       })
     );
   });
 
   test("row index", async function (assert) {
-    this.setProperties({
-      content: [
-        { id: 1, name: "john" },
-        { id: 2, name: "jane" },
-      ],
-      value: null,
-    });
+    this.content = [
+      { id: 1, name: "john" },
+      { id: 2, name: "jane" },
+    ];
+    this.value = null;
 
     await render(
       <template>
@@ -629,10 +624,8 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
   });
 
   test("disabled", async function (assert) {
-    this.setProperties({
-      content: [{ id: 1, name: "john", disabled: true }],
-      value: null,
-    });
+    this.content = [{ id: 1, name: "john", disabled: true }];
+    this.value = null;
 
     await render(
       <template>

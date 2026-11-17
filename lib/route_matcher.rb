@@ -51,8 +51,11 @@ class RouteMatcher
     # message_bus is not a rails route, special handling
     return true if actions.include?("message_bus") && request.fullpath =~ %r{\A/message-bus/.*/poll}
 
-    # logster is not a rails route, special handling
-    return true if actions.include?(Logster::Web) && request.fullpath =~ %r{\A/logs/.*\.json\z}
+    # logster is not a rails route, special handling. Only its read endpoints are
+    # allowed, matched on the path so that a query string can't change the match.
+    if actions.include?(Logster::Web)
+      return request.path.match?(%r{\A/logs/(messages|show/\h+)\.json\z})
+    end
 
     recognized_params = path_params_from_request(request)
     actions.include? "#{recognized_params[:controller]}##{recognized_params[:action]}"
@@ -75,7 +78,7 @@ class RouteMatcher
       allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
 
       value = requested_params[param.to_s]
-      alias_value = requested_params[param_alias.to_s]
+      alias_value = requested_params[param_alias.to_s] if param_alias
 
       return false if value.present? && alias_value.present?
 
@@ -103,6 +106,7 @@ class RouteMatcher
       param_alias = param_alias_for(param)
       value_present, value = path_parameter(requested_params, param)
       alias_present, alias_value = path_parameter(requested_params, param_alias)
+      alias_value = extract_category_id(alias_value) if param_alias == :category_slug_path_with_id
 
       next false if value_present && alias_present
       next false unless value_present || alias_present

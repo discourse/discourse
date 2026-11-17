@@ -14,10 +14,14 @@ gl:
         preview_archive: Arquivo
         desktop: Escritorio
         mobile: Móbil
+        save: Gardar
+        path_formats:
+          custom: Personalizado
         themes: Temas
         theme_name: Nome do tema
         edit: Editar
         preview: Visualizar
+        customize: Personalizar
         import: Importar
         export: Exportar
         active: Activo
@@ -30,6 +34,7 @@ gl:
         change:
           title: título
           body: mensaxe
+          tags: etiquetas
       review:
         copy: Copiar
         open: Abrir

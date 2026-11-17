@@ -18,3 +18,5 @@ lv:
       zero: "%{count} atbildes"
       one: "%{count} atbilde"
       other: "%{count} atbildes"
+    themes:
+      default: Noklusējums

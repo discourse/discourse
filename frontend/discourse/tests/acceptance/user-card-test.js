@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { longDate } from "discourse/lib/formatter";
 import { cloneJSON } from "discourse/lib/object";
@@ -114,7 +120,10 @@ acceptance("Category Card", function (needs) {
   test("opens a category card from a topic post without navigating", async function (assert) {
     const topicUrl = "/t/internationalization-localization/280";
     await visit(topicUrl);
-    await click('#post_1 a.hashtag-cooked[data-type="category"] span');
+    await triggerEvent(
+      '#post_1 a.hashtag-cooked[data-type="category"] span',
+      "pointerover"
+    );
 
     assert
       .dom(".category-card .card-content")
@@ -131,7 +140,10 @@ acceptance("Category Card", function (needs) {
   test("closes the category card when navigating away", async function (assert) {
     const topicUrl = "/t/internationalization-localization/280";
     await visit(topicUrl);
-    await click('#post_1 a.hashtag-cooked[data-type="category"] span');
+    await triggerEvent(
+      '#post_1 a.hashtag-cooked[data-type="category"] span',
+      "pointerover"
+    );
 
     assert.dom(".category-card .card-content").exists("the card opens");
 
@@ -145,11 +157,29 @@ acceptance("Category Card", function (needs) {
       .doesNotExist("navigation removes the floating menu");
 
     await visit(topicUrl);
-    await click('#post_1 a.hashtag-cooked[data-type="category"] span');
+    await triggerEvent(
+      '#post_1 a.hashtag-cooked[data-type="category"] span',
+      "pointerover"
+    );
 
     assert
       .dom(".category-card .card-content")
       .exists("the card can reopen after navigation");
+  });
+
+  test("clicking a hovered hashtag navigates directly to the category", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await triggerEvent("#post_1 a.hashtag-cooked span", "pointerover");
+    assert
+      .dom(".category-card .card-content")
+      .exists("the card opens on hover");
+
+    await click("#post_1 a.hashtag-cooked span");
+
+    assert.strictEqual(currentURL(), "/c/bug/1", "click opens the category");
+    assert
+      .dom(".category-card .card-content")
+      .doesNotExist("navigation closes the card");
   });
 
   test("navigates to the category when category cards are disabled", async function (assert) {

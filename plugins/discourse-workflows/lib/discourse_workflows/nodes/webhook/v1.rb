@@ -29,19 +29,7 @@ module DiscourseWorkflows
           capabilities: {
             manually_triggerable: true,
           },
-          credentials: [
-            {
-              name: "auth",
-              credential_types: %w[basic_auth bearer_token header_auth],
-              required: false,
-              display_options: {
-                show: {
-                  authentication: %w[basic_auth bearer_auth header_auth],
-                },
-              },
-              label_key: "discourse_workflows.webhook.credential",
-            },
-          ],
+          credentials: Schemas::Webhook::CREDENTIALS,
           webhooks: [{ name: "default", path: "path", http_method: "http_method" }],
         )
 

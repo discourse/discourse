@@ -155,6 +155,7 @@ Discourse::Application.routes.draw do
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
       get "search" => "search#index"
+      get "menu" => "admin#index"
       get "schema/:setting_name" => "admin#index"
 
       get "plugins" => "plugins#index"
@@ -1749,6 +1750,7 @@ Discourse::Application.routes.draw do
 
     resources :invites, only: %i[create update destroy]
     get "/invites/:id" => "invites#show", :constraints => { format: :html }
+    post "/invites/:id/sso" => "invites#sso", :constraints => { format: :html }
     post "invites/create-multiple" => "invites#create_multiple", :constraints => { format: :json }
 
     post "invites/upload_csv" => "invites#upload_csv"

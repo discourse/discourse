@@ -25,7 +25,7 @@ module DiscourseVips
     attr_reader :pid, :socket_path
 
     def self.shared_socket_path
-      Rails.root.join("tmp", "discourse-vips-worker", Rails.env, "socket").to_s
+      @shared_socket_path ||= Rails.root.join("tmp/vips/sock").to_s
     end
 
     def initialize(socket_path: nil)

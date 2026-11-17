@@ -18,3 +18,5 @@ sw:
     replies:
       one: "%{count} jibu"
       other: "%{count} majibu"
+    themes:
+      default: Halisi

@@ -104,6 +104,11 @@ he:
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_backfill_hourly_rate: "מספר הפוסטים והנושאים לתרגום לשעה במהלך פעולות מילוי לאחור. יש להגדיר ל־0 כדי להשבית מילוי לאחור של תרגומים אוטומטית לתוכן קיים."
     ai_usage_rollup_after_days: "מספר הימים לשמירת סטטיסטיקות שימוש בבינה מלאכותית לפי בקשה לפני גלגולן לצבירה יומית. הגדרה ל־0 תשבית איסופים."
+    keywords:
+      ai_default_llm_model: "מודל שפה כברירת מחדל"
+      ai_discord_search_enabled: "שילוב מול Discord"
+      ai_summarization_enabled: "סיכומים"
+      ai_summary_gists_enabled: "תקצירים מקוצרים של רשימת הנושאים"
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -194,10 +199,6 @@ he:
           name: "יצירת תמונות…"
         image_generation_custom:
           name: "מותאם"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "ננו בננה"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -580,6 +581,10 @@ he:
       fonts:
         base_font: "גופן גוף"
         heading_font: "גופן כותרת"
+    mcp_theme_access:
+      none: "ללא"
+    mcp_app_setup:
+      none: "ללא"
     reviewables:
       ai_tool_action:
         approve:

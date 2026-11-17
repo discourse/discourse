@@ -14,7 +14,10 @@ fi:
     about: Tietoja
     community: Yhteisö
     preview: Esikatselu
+    author: Käyttäjä
     search: Haku
     replies:
       one: "%{count} vastaus"
       other: "%{count} vastausta"
+    themes:
+      default: Oletus

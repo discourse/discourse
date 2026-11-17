@@ -7,13 +7,15 @@
   }
 
   &__list-container {
-    margin-top: var(--space-4);
+    .chat-modal-new-message & {
+      margin-top: var(--space-4);
+    }
   }
 
   &__add-members {
     display: flex;
-    gap: 1rem;
     flex-direction: column;
+    gap: 1rem;
   }
 
   &__participants-count {
@@ -59,18 +61,28 @@
     }
   }
 
-  &__add-members__close-btn {
-    align-self: flex-start;
-    margin-top: 10px;
-  }
-
   &__add-members-header {
     display: flex;
     flex-grow: 1;
+    align-items: flex-start;
+    gap: var(--space-2);
 
     &-container {
       display: flex;
     }
+  }
+
+  &__add-members-input {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  &__members-count {
+    align-self: flex-end;
+    margin-top: var(--space-half);
+    font-size: var(--font-down-2-rem);
   }
 
   &__new-group-header {
@@ -172,9 +184,7 @@
   }
 
   &__list {
-    list-style: none;
-    margin: 0;
-    gap: 0.25rem;
+    @include unstyled-list;
     display: flex;
     flex-direction: column;
 
@@ -186,9 +196,13 @@
     &-item {
       box-sizing: border-box;
       cursor: pointer;
-      padding: 0.5rem 1rem;
+      padding: var(--space-3);
       display: flex;
       align-items: center;
+
+      &:not(:last-of-type) {
+        border-bottom: 1px solid var(--content-border-color);
+      }
 
       .d-icon-users {
         padding: 4px 4px;
@@ -205,7 +219,7 @@
       }
 
       &.-highlighted {
-        background: var(--tertiary-very-low);
+        background: var(--d-hover);
       }
     }
 

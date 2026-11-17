@@ -41,8 +41,6 @@ pt:
         confirm_move: "Mover mensagens"
       channel_settings:
         title: "Configurações do canal"
-        edit: "Editar"
-        add: "Adicionar"
         close_channel: "Fechar canal"
         open_channel: "Abrir canal"
         archive_channel: "Arquivar canal"
@@ -124,16 +122,17 @@ pt:
       search_view:
         filter_placeholder: Pesquisar mensagens
       about_view:
-        title: Título
         name: Nome
         description: Descrição
       channel_info:
         back_to_channel: "Retroceder"
         tabs:
           members: Membros
+          preferences: Preferências
           settings: Configurações
           search: Procurar
         remove_member: "Remover"
+        members_title: "%{channel} membros"
       new_message_modal:
         no_items: "Sem itens"
         filter: "Filtrar"
@@ -172,8 +171,6 @@ pt:
         save: "Guardar"
         saved: "Guardado"
         unfollow: "Sair"
-        admin_title: "Administração"
-        settings_title: "Configurações"
         category_label: "Categoria"
         history_label: "Histórico"
         members_label: "Membros"

@@ -14,7 +14,10 @@ et:
     about: Teave
     community: Kogukond
     preview: Eelvaade
+    author: Autor
     search: Otsi
     replies:
       one: "%{count} vastus"
       other: "%{count} vastust"
+    themes:
+      default: Vaikimisi

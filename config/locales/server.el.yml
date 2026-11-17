@@ -1626,6 +1626,20 @@ el:
       staged_users_disabled: "Θα πρέπει να ενεργοποιήσετε τους σταδιακούς χρηστες πριν ενεργοποιήσετε αυτή τη ρύθμιση."
       reply_by_email_disabled: "Θα πρέπει να ενεργοποιήσετε την απάντηση μέσω email πριν ενεργοποιήσετε αυτή τη ρύθμιση."
       markdown_linkify_tlds: "Δεν μπορείτε να συμπεριλάβετε την τιμή '*'."
+    keywords:
+      about_banner_image: "εικόνα banner"
+      about_page_extra_groups: "κατάλογος ομάδων"
+      about_page_extra_groups_order: "σειρά ταξινόμησης"
+      about_page_extra_groups_show_description: "συμπερίληψη περιγραφής"
+      company_url: "website"
+      extended_site_description: "περιγραφή κοινότητας"
+      large_icon: "τετράγωνο εικονίδιο"
+      logo_small: "μικρό λογότυπο"
+      logo_small_dark: "μικρό σκοτεινό λογότυπο"
+      short_site_description: "τίτλος κοινότητας"
+      site_description: "σύνοψη κοινότητας"
+      title: "όνομα κοινότητας"
+      welcome_banner_image: "εικόνα φόντου"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3123,6 +3137,10 @@ el:
         watched_word: ρυθμίσεις παρακολουθούμενης λέξης
         category: ρυθμίσεις κατηγορίας
     actions:
+      answer_yes:
+        title: "Ναι "
+      answer_no:
+        title: "Όχι"
       agree:
         title: "Ναι"
       agree_and_keep:

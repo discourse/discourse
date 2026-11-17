@@ -63,17 +63,15 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
   });
 
   test("dynamic classes and @icon update without dropping its own classes", async function (assert) {
-    const state = new (class {
-      @tracked extra = "first";
-      @tracked icon = "gear";
-    })();
+    const extra = tracked("first");
+    const icon = tracked("gear");
 
     await render(
       <template>
         <DEmptyState
-          class={{state.extra}}
+          class={{extra.value}}
           role="status"
-          @icon={{state.icon}}
+          @icon={{icon.value}}
           @identifier="probe"
           @title="Empty"
         />
@@ -83,8 +81,8 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
     assert.dom(".empty-state__container").hasClass("--probe");
     assert.dom(".empty-state__container").hasClass("--with-image");
 
-    state.extra = "second";
-    state.icon = null;
+    extra.value = "second";
+    icon.value = null;
     await rerender();
 
     assert

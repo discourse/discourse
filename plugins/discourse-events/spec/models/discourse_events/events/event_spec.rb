@@ -1238,6 +1238,14 @@ RSpec.describe DiscourseEvents::Events::Event do
   end
 
   describe ".valid_reminder?" do
+    it "accepts singular units with explicit and legacy reminder types" do
+      %w[minute hour day week].each do |unit|
+        expect(described_class.valid_reminder?("notification.1.#{unit}")).to eq(true)
+        expect(described_class.valid_reminder?("bumpTopic.-1.#{unit}")).to eq(true)
+        expect(described_class.valid_reminder?("1.#{unit}")).to eq(true)
+      end
+    end
+
     it "accepts known types, legacy type-less reminders, padding and signed values" do
       expect(described_class.valid_reminder?("notification.15.minutes")).to eq(true)
       expect(described_class.valid_reminder?("bumpTopic.1.days")).to eq(true)

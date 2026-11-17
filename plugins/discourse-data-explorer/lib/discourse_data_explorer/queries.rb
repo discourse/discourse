@@ -306,7 +306,7 @@ module DiscourseDataExplorer
           id: -43,
           name: "Crawler and Bot Traffic Detailed Report",
           description:
-            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it this report will be empty. Accepts 'hours' and 'min_score' parameters.",
+            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, distributed traffic, no measured interaction). WARNING: requires the improved_crawler_detection upcoming change to be enabled; without it this report will be empty. Accepts 'hours' and 'min_score' parameters.",
           tags: %w[traffic],
         },
         "suspected-bot-networks": {
@@ -1617,20 +1617,18 @@ module DiscourseDataExplorer
           e.country_code,
           COUNT(*) AS pageviews,
           MAX(s.automation_ua_score) AS automation_ua,
-          MAX(s.known_asn_score) AS known_asn,
           MAX(s.datacenter_asn_score) AS datacenter_asn,
           MAX(s.single_request_no_referrer_score) AS single_request_no_referrer,
           MAX(s.stale_browser_score) AS stale_browser,
           MAX(s.velocity_score) AS velocity,
           MAX(s.churn_score) AS churn,
           MAX(s.rapid_nav_score) AS rapid_nav,
-          MAX(s.ip_rotation_score) AS ip_rotation,
           MAX(s.referrer_score) AS referrer,
+          MAX(s.distributed_traffic_score) AS distributed_traffic,
           MAX(s.engagement_score) AS no_engagement,
           NULLIF(
               CONCAT_WS(', ',
                   CASE WHEN MAX(s.automation_ua_score) > 0 THEN 'automation UA' END,
-                  CASE WHEN MAX(s.known_asn_score) > 0 THEN 'known crawler ASN' END,
                   CASE WHEN MAX(s.datacenter_asn_score) > 0 THEN 'datacenter ASN' END,
                   CASE
                     WHEN MAX(s.single_request_no_referrer_score) = #{CrawlerScorer::SINGLE_REQUEST_NO_REFERRER_SCORE + CrawlerScorer::SINGLE_REQUEST_LOCALE_PARAM_BONUS}
@@ -1642,8 +1640,8 @@ module DiscourseDataExplorer
                   CASE WHEN MAX(s.velocity_score) > 0 THEN 'high velocity (+' || MAX(s.velocity_score) || ')' END,
                   CASE WHEN MAX(s.churn_score) > 0 THEN 'session churn (+' || MAX(s.churn_score) || ')' END,
                   CASE WHEN MAX(s.rapid_nav_score) > 0 THEN 'rapid navigation' END,
-                  CASE WHEN MAX(s.ip_rotation_score) > 0 THEN 'ip rotation (+' || MAX(s.ip_rotation_score) || ')' END,
                   CASE WHEN MAX(s.referrer_score) > 0 THEN 'bad referrer (+' || MAX(s.referrer_score) || ')' END,
+                  CASE WHEN MAX(s.distributed_traffic_score) > 0 THEN 'distributed traffic (+' || MAX(s.distributed_traffic_score) || ')' END,
                   CASE WHEN MAX(s.engagement_score) > 0 THEN 'no measured interaction (+' || MAX(s.engagement_score) || ')' END
               ),
               ''

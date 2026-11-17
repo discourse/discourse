@@ -694,12 +694,12 @@ module("Integration | Component | QueryResult | Chart", function (hooks) {
     ];
 
     for (const testCase of cases) {
-      this.set("content", {
+      this.content = {
         colrender: [],
         result_count: testCase.rows.length,
         columns: testCase.columns,
         rows: testCase.rows,
-      });
+      };
 
       await render(
         <template>

@@ -105,6 +105,7 @@ RSpec.describe Blog::Publication::Publish do
             published_revision: revision,
             publisher: acting_user,
             path: revision.data["path"],
+            cooked: revision.cooked,
           )
           expect(publication.discussion_topic).to have_attributes(
             category_id: category.id,
@@ -194,6 +195,77 @@ RSpec.describe Blog::Publication::Publish do
       end
     end
 
+    context "with a dated path format" do
+      let(:revision) { submit_blog_draft(publication, writer) }
+      let(:params) { { topic_id: topic.id, revision_id: revision.id } }
+
+      before do
+        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+        freeze_time Time.utc(2026, 10, 30)
+        approve_blog_revision(publication, revision, acting_user)
+        freeze_time Time.utc(2026, 11, 2)
+      end
+
+      it "moves the generated path to the month of the first release" do
+        expect(revision.data["path"]).to eq("/2026/10/#{topic.slug}")
+
+        result
+        published = publication.reload
+        expect(published).to have_attributes(
+          path: "/2026/11/#{topic.slug}",
+          approved_revision: published.published_revision,
+          submitted_revision: published.published_revision,
+          pending_changes: [],
+        )
+        expect(published.published_revision).to have_attributes(
+          raw: revision.raw,
+          approver: acting_user,
+        )
+        expect(published.paths.pluck(:path)).to contain_exactly("/2026/11/#{topic.slug}")
+      end
+
+      it "keeps a path the editor typed, even in the generated shape" do
+        Blog::Publication::UpdateMetadata.call!(
+          params: {
+            topic_id: topic.id,
+            metadata: {
+              path: "/2020/03/#{topic.slug}",
+            },
+          },
+          guardian: acting_user.guardian,
+        )
+        revision = submit_blog_draft(publication, writer)
+        approve_blog_revision(publication, revision, acting_user)
+
+        described_class.call!(
+          params: {
+            topic_id: topic.id,
+            revision_id: revision.id,
+          },
+          guardian: acting_user.guardian,
+        )
+        expect(publication.reload.path).to eq("/2020/03/#{topic.slug}")
+      end
+
+      it "renders the path from the approved title, not a later rename" do
+        topic.update!(title: "A working title changed after the approval")
+
+        result
+        expect(publication.reload.path).to eq(
+          "/2026/11/#{Slug.for(publication.published_revision.title)}",
+        )
+      end
+
+      it "keeps the path of an article that was published before" do
+        result
+        freeze_time Time.utc(2026, 12, 5)
+        first_post.revise(writer, raw: "A correction to the article after its release.")
+
+        publish_blog_draft(publication, acting_user)
+        expect(publication.reload.path).to eq("/2026/11/#{topic.slug}")
+      end
+    end
+
     context "with a live article whose discussion belongs to someone else" do
       fab!(:publishers, :group)
       fab!(:acting_user) { Fabricate(:user, groups: [publishers], refresh_auto_groups: true) }
@@ -217,6 +289,7 @@ RSpec.describe Blog::Publication::Publish do
         )
         expect(discussion.first_post.raw).to eq(first_post.reload.raw)
         expect(discussion.user).not_to eq(acting_user)
+        expect(publication.cooked).to eq(publication.published_revision.cooked)
       end
     end
   end

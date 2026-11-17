@@ -34,6 +34,57 @@ RSpec.describe DiscourseAi::Agents::Bot do
   end
 
   describe "#reply" do
+    it "disables tools and requests one final explanation after repeated MCP failures" do
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "Fix the theme" }],
+        )
+      3.times do
+        context.record_mcp_failure(
+          server_id: 1,
+          tool_name: "discourse_update_theme",
+          message: "Invalid source",
+        )
+      end
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["The theme was not changed because the source was invalid."],
+      ) do |canned, _, prompts|
+        bot.reply(context)
+        expect(canned.completions).to eq(1)
+        expect(prompts.last.tool_choice).to eq(:none)
+        expect(prompts.last.messages.last[:content]).to eq(
+          described_class::MCP_FAILURE_FINAL_ANSWER_HINT,
+        )
+      end
+    end
+
+    it "clears the MCP failure limit when a reused context starts a new root turn" do
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "Fix the theme" }],
+        )
+      3.times do
+        context.record_mcp_failure(
+          server_id: 1,
+          tool_name: "discourse_update_theme",
+          message: "Invalid source",
+        )
+      end
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Not changed."]) { bot.reply(context) }
+      expect(context.mcp_failure_limit_reached?).to eq(true)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Hello again."]) do |_, _, prompts|
+        bot.reply(context)
+        expect(context.mcp_failure_limit_reached?).to eq(false)
+        expect(prompts.last.tool_choice).not_to eq(:none)
+        expect(prompts.last.messages.map { |m| m[:content] }).not_to include(
+          described_class::MCP_FAILURE_FINAL_ANSWER_HINT,
+        )
+      end
+    end
+
     it "sets top_p, temperature, and thinking_effort params" do
       SiteSetting.ai_llm_temperature_top_p_enabled = true
       DiscourseAi::Completions::Endpoints::Fake.delays = []
@@ -237,6 +288,30 @@ RSpec.describe DiscourseAi::Agents::Bot do
             expect(placeholder).to eq(partial_placeholder) if placeholder
           end
         end
+      end
+
+      it "reports tool progress to the context callback when thinking is hidden" do
+        progress = []
+        context =
+          DiscourseAi::Agents::BotContext.new(
+            messages: [{ type: :user, content: "Find posts about tags" }],
+            skip_show_thinking: true,
+          )
+        context.tool_progress_callback = ->(tool, message) { progress << [tool.name, message] }
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "search",
+            id: "search",
+            parameters: {
+              search_query: "tags",
+            },
+          )
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([tool_call, "Found them"]) do
+          bot.reply(context) { |_partial| }
+        end
+
+        expect(progress).to eq([["search", I18n.t("discourse_ai.ai_bot.searching", query: "tags")]])
       end
     end
 

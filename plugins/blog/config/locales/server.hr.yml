@@ -14,8 +14,11 @@ hr:
     about: O nama
     community: Zajednica
     preview: Pregled
+    author: Autor
     search: Pretraživanje
     replies:
       one: "%{count} odgovor"
       few: "%{count} odgovora"
       other: "%{count} odgovora"
+    themes:
+      default: Zadano

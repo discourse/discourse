@@ -52,7 +52,7 @@ class ApiKeyScope < ActiveRecord::Base
           },
           read_lists: {
             actions: list_actions,
-            params: %i[category_id],
+            path_params: %i[category_id],
             aliases: {
               category_id: :category_slug_path_with_id,
             },
