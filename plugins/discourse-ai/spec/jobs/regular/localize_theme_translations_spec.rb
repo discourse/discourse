@@ -87,7 +87,9 @@ describe Jobs::LocalizeThemeTranslations do
     expect(ThemeTranslationOverride.where(theme_id: theme.id)).to be_empty
   end
 
-  it "uses the en override value when present instead of the yaml default" do
+  it "uses the en override value even when the yaml default is empty" do
+    theme.set_field(target: :translations, name: "en", value: "en:\n  greeting: ''\n")
+    theme.save!
     ThemeTranslationOverride.create!(
       theme_id: theme.id,
       locale: "en",

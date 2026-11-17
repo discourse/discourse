@@ -369,6 +369,7 @@ en:
         no_returned_value: "Migration '%{name}' didn't return any value (or returned null or undefined). It must return a Map object"
         wrong_return_type: "Migration '%{name}' returned an unknown data type. It must return a Map object"
         runtime_error: "Migration '%{name}' encountered the following runtime error: %{error}"
+        invalid_translation_key: "Migration '%{name}' cannot move a setting to translation key '%{key}' because it is not declared as text in the theme's English locale file"
         unknown_setting_returned_by_migration: "Migrations '%{name}' returned a setting '%{setting_name}' which is not declared in the theme's settings.yml file"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
