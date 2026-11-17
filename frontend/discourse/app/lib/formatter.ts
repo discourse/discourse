@@ -513,7 +513,7 @@ export function relativeAgeSpoken(date: Date): string {
 
   // The page's own date pattern, with the month written out in full.
   const spokenDate = (key: string) =>
-    moment(date).format(i18n(key).replace(/M{3}(?!M)/, "MMMM"));
+    moment(date).format(i18n(key).replace(/(?<!M)M{3}(?!M)/, "MMMM"));
 
   switch (bucket.unit) {
     case "minutes":

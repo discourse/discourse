@@ -24,6 +24,7 @@ import {
   updateRelativeAge,
 } from "discourse/lib/formatter";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 function formatMins(mins, opts = {}) {
   const dt = new Date(new Date() - mins * 60 * 1000);
@@ -641,6 +642,21 @@ module("Unit | Utility | formatter | dates", function (hooks) {
       "June 12",
       "a relative_date_duration of 0 shows dates instead of days"
     );
+  });
+
+  test("relativeAgeSpoken leaves a month that is already in full alone", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.relative_date_duration = 14;
+
+    const tiny = I18n.translations[I18n.locale].js.dates.tiny;
+    const original = tiny.date_month;
+    tiny.date_month = "D. MMMM";
+
+    try {
+      assert.strictEqual(relativeAgeSpoken(new Date(2024, 4, 26)), "26. May");
+    } finally {
+      tiny.date_month = original;
+    }
   });
 
   test("relativeAgeMediumSpan", function (assert) {
