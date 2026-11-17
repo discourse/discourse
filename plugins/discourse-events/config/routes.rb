@@ -5,7 +5,7 @@
 DiscourseEvents::Engine.routes.draw do
   get "/discourse-post-event/events" => "events#index",
       :constraints => {
-        format: /(json|ics)/,
+        format: %w[json ics],
       },
       :defaults => {
         format: :json,
