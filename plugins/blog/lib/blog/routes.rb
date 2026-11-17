@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../../../config/routes/dotted_route_constraint"
-
 module Blog
   # Prepended from plugin.rb so these routes are matched before core's routes. Rails
   # draws prepended blocks before loading any routes file, so they can't live in
@@ -49,15 +47,7 @@ module Blog
         get "/blog-custom.js" => "articles#theme_js", :format => false
         get "/feed.xml" => "articles#feed", :defaults => { format: "rss" }, :format => false
         get "/sitemap" => "articles#sitemap", :format => true, :constraints => { format: :xml }
-        get "/*path" => "articles#show",
-            :format => false,
-            :constraints => {
-              path: DottedRouteConstraint.new(/.+/),
-            }
-
-        constraints ->(_request) { false } do
-          get "/*path", to: "articles#show", format: false, anchor: false, as: nil
-        end
+        get "/*path" => "articles#show", :format => false
       end
 
     DRAW =
@@ -93,10 +83,7 @@ module Blog
             constraints(MOVED_TO_CUSTOM_DOMAIN) do
               get "/(*path)" =>
                     redirect(status: 302) { |_, request| Routes.custom_domain_url(request) },
-                  :format => false,
-                  :constraints => {
-                    path: DottedRouteConstraint.new(/.+/),
-                  }
+                  :format => false
             end
           end
         end

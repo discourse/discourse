@@ -52,7 +52,7 @@ after_initialize do
         :constraints => AdminConstraint.new
     get "/u/:username/patreon_email" => "patreon/patreon_admin#email",
         :constraints => {
-          username: DottedRouteConstraint.new(RouteFormat.username),
+          username: RouteFormat.username,
         }
   end
 

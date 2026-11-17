@@ -46,17 +46,11 @@ Discourse::Application.routes.append do
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/coupons" => "admin/plugins#index",
       :constraints => AdminConstraint.new
-  get "u/:username/billing" => "users#show",
-      :constraints => {
-        username: DottedRouteConstraint.new(RouteFormat.username),
-      }
-  get "u/:username/billing/:id" => "users#show",
-      :constraints => {
-        username: DottedRouteConstraint.new(RouteFormat.username),
-      }
+  get "u/:username/billing" => "users#show", :constraints => { username: RouteFormat.username }
+  get "u/:username/billing/:id" => "users#show", :constraints => { username: RouteFormat.username }
   get "u/:username/billing/subscriptions/card/:subscription_id" => "users#show",
       :constraints => {
-        username: DottedRouteConstraint.new(RouteFormat.username),
+        username: RouteFormat.username,
       }
 end
 

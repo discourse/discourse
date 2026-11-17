@@ -607,7 +607,7 @@ after_initialize do
            :constraints => StaffConstraint.new
     get "u/:username/preferences/chat" => "users#preferences",
         :constraints => {
-          username: DottedRouteConstraint.new(RouteFormat.username),
+          username: RouteFormat.username,
         }
   end
 

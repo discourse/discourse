@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../../config/routes/dotted_route_constraint"
-
 DiscourseWorkflows::Engine.routes.draw do
   scope "/admin/plugins/discourse-workflows",
         as: "admin_discourse_workflows",
@@ -19,7 +17,7 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/workflows/:id/nodes/:node_id" => "admin#index",
           :constraints => {
             id: /\d+/,
-            node_id: DottedRouteConstraint.new(%r{[^/]+}),
+            node_id: %r{[^/]+},
           }
       get "/workflows/:id/executions" => "admin#index", :constraints => { id: /\d+/ }
       get "/workflows/:id/executions/:execution_id" => "admin#index",
@@ -120,19 +118,10 @@ DiscourseWorkflows::Engine.routes.draw do
     match "/waiting/:execution_id/webhook(/*suffix)" => "webhooks#receive",
           :via => :all,
           :constraints => {
-            suffix: DottedRouteConstraint.new(/.+?/m),
             execution_id: /\d+/,
           }
-    match "/webhook-test/:listener_id/*path" => "webhooks#receive_test",
-          :via => :all,
-          :constraints => {
-            path: DottedRouteConstraint.new(/.+?/m),
-          }
-    match "/webhooks/*path" => "webhooks#receive",
-          :via => :all,
-          :constraints => {
-            path: DottedRouteConstraint.new(/.+?/m),
-          }
+    match "/webhook-test/:listener_id/*path" => "webhooks#receive_test", :via => :all
+    match "/webhooks/*path" => "webhooks#receive", :via => :all
   end
 
   scope "/workflows/form", defaults: { format: :json } do

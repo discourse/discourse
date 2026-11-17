@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../../config/routes/dotted_route_constraint"
-
 DiscourseAssign::Engine.routes.draw do
   put "/claim/:topic_id" => "assign#claim"
   put "/assign" => "assign#assign"
@@ -18,16 +16,16 @@ Discourse::Application.routes.draw do
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
       :as => "topics_private_messages_assigned",
       :constraints => {
-        username: DottedRouteConstraint.new(::RouteFormat.username),
+        username: ::RouteFormat.username,
       }
   get "/topics/messages-assigned/:username" => "list#messages_assigned",
       :constraints => {
-        username: DottedRouteConstraint.new(::RouteFormat.username),
+        username: ::RouteFormat.username,
       },
       :as => "messages_assigned"
   get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned",
       :constraints => {
-        username: DottedRouteConstraint.new(::RouteFormat.username),
+        username: ::RouteFormat.username,
       },
       :as => "group_topics_assigned"
   get "/g/:id/assigned" => "groups#index"

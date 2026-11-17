@@ -63,7 +63,7 @@ after_initialize do
   Discourse::Application.routes.append do
     get "u/:username/preferences/rewind" => "users#preferences",
         :constraints => {
-          username: DottedRouteConstraint.new(RouteFormat.username),
+          username: RouteFormat.username,
         }
   end
 end

@@ -236,14 +236,8 @@ after_initialize do
     DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
   end
 
-  require Rails.root.join("config/routes/dotted_route_constraint")
-
   Discourse::Application.routes.prepend do
-    get "c/*category_slug_path_with_id/l/votes.rss" => "list#votes_feed",
-        :format => :rss,
-        :constraints => {
-          category_slug_path_with_id: DottedRouteConstraint.new(/.+?/m),
-        }
+    get "c/*category_slug_path_with_id/l/votes.rss" => "list#votes_feed", :format => :rss
   end
 
   Discourse::Application.routes.append do
@@ -252,7 +246,7 @@ after_initialize do
     get "topics/voted-by/:username" => "list#voted_by",
         :as => "voted_by",
         :constraints => {
-          username: DottedRouteConstraint.new(RouteFormat.username),
+          username: RouteFormat.username,
         }
   end
 
