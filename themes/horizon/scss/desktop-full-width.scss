@@ -72,7 +72,8 @@ $sidebar-width: 17em;
   border: none;
 }
 
-#main-outlet > .regular {
+#main-outlet > .regular,
+.page-shell__main-content > .regular {
   max-width: var(--d-max-width);
   margin: 0 auto;
 

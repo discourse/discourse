@@ -892,7 +892,8 @@ form {
   }
 }
 
-#main-outlet {
+#main-outlet,
+.page-shell__main-content {
   padding: var(--main-outlet-padding-top) var(--main-outlet-padding-x)
     var(--main-outlet-padding-bottom);
 

@@ -1,7 +1,8 @@
 @use "lib/viewport";
 
 html.composer-open:not(.has-full-page-chat) {
-  #main-outlet {
+  #main-outlet,
+  .page-shell__main-content {
     padding-bottom: var(--composer-height);
     transition: padding-bottom 250ms ease;
   }

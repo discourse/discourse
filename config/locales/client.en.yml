@@ -1,7 +1,7 @@
 en:
   js:
-    page_shell_prototype:
-      title: "Page shell layout prototype"
+    page_shell:
+      title: "Page shell layout controls"
       width: "Shell width"
       centered: "Centered"
       full: "Full width"

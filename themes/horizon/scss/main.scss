@@ -79,7 +79,8 @@ body:not(.has-full-page-chat, .wizard) {
   }
 
   #main-outlet-wrapper {
-    #main-outlet {
+    #main-outlet,
+    .page-shell__main-content {
       width: 100%;
       max-width: unset;
       padding-bottom: var(--space-6);
@@ -110,7 +111,10 @@ body:not(.has-full-page-chat, .wizard) {
   }
 }
 
-body.d-floating-control-bar-visible #main-outlet-wrapper #main-outlet {
+body.d-floating-control-bar-visible #main-outlet-wrapper #main-outlet,
+body.d-floating-control-bar-visible
+  #main-outlet-wrapper
+  .page-shell__main-content {
   padding-bottom: var(--d-floating-control-bar-clearance);
 }
 

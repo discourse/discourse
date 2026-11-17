@@ -30,6 +30,7 @@ export default class GlimmerSiteHeader extends Component {
   @service currentUser;
   @service site;
   @service header;
+  @service pageShell;
 
   pxClosed;
   headerElement;
@@ -435,6 +436,7 @@ export default class GlimmerSiteHeader extends Component {
       class={{dConcatClass
         (unless this.slideInMode "drop-down-mode")
         "d-header-wrap"
+        (if this.pageShell.enabled "page-shell__header")
       }}
       {{didInsert this.setupHeader}}
       {{dSwipe

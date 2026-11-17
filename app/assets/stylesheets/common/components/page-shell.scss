@@ -1,0 +1,475 @@
+// Page shell layout, gated by the opt-in setting and new composer grid.
+// No transforms or containment on composer ancestors.
+:root {
+  --d-comp-PageShell-space-padding-inline: var(--space-6);
+  --d-comp-PageShell-space-padding-block: var(--space-6);
+  --d-comp-PageShell-color-background: var(--secondary);
+  --d-comp-PageShell-color-background-raised: var(--primary-very-low);
+  --d-comp-PageShell-color-border: var(--primary-low);
+}
+
+body.has-page-shell {
+  .page-shell#main-outlet-wrapper {
+    // Private layout values; component tokens above expose themeable styles.
+    --_page-shell-content-max-width: var(--d-max-width);
+    --_page-shell-content-min-width: 448px;
+    --_page-shell-panel-rail-width: 56px;
+    --_page-shell-navigation-track-width: min(
+      400px,
+      var(--_page-shell-navigation-width),
+      max(
+        0px,
+        100% - var(--_page-shell-content-min-width) - var(
+            --_page-shell-composer-track-width
+          )
+      )
+    );
+    --_page-shell-context-track-width: min(
+      1000px,
+      var(--_page-shell-context-width),
+      max(
+        0px,
+        100% - var(--_page-shell-navigation-track-width) - var(
+            --_page-shell-composer-track-width
+          ) - var(--_page-shell-content-min-width)
+      )
+    );
+    --_page-shell-composer-track-width: 0px;
+    --_page-shell-main-track: minmax(
+      0,
+      calc(
+        var(--_page-shell-content-max-width) + 2 *
+          var(--d-comp-PageShell-space-padding-inline)
+      )
+    );
+    --_page-shell-end-track: minmax(0, 1fr);
+    --_page-shell-grid-columns: var(--_page-shell-inline-offset)
+      var(--_page-shell-navigation-track-width) var(--_page-shell-main-track)
+      var(--_page-shell-composer-track-width)
+      var(--_page-shell-context-track-width) var(--_page-shell-end-track);
+    --_page-shell-max-inline-size: calc(
+      var(--_page-shell-content-max-width) + 2 *
+        var(--d-comp-PageShell-space-padding-inline) +
+        var(--_page-shell-navigation-track-width) +
+        var(--_page-shell-context-track-width) +
+        var(--_page-shell-composer-track-width)
+    );
+
+    // Center against the viewport, so a scrollbar does not move the start edge.
+    --_page-shell-inline-offset: max(
+      0px,
+      min(
+        (100vw - var(--_page-shell-max-inline-size)) / 2,
+        100% - var(--_page-shell-navigation-track-width) - var(
+            --_page-shell-context-track-width
+          ) - var(--_page-shell-composer-track-width) - var(
+            --_page-shell-content-min-width
+          )
+      )
+    );
+    display: grid;
+    grid-template-columns: var(--_page-shell-grid-columns);
+    grid-template-areas:
+      "shell-header shell-header shell-header shell-header shell-header shell-header"
+      ". shell-notices shell-notices shell-notices shell-notices ."
+      ". sidebar content composer shell-context ."
+      ". sidebar shell-footer composer shell-context .";
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0;
+    padding: 0;
+    max-width: none;
+    inline-size: 100%;
+    margin: 0;
+    min-block-size: max(0px, 100dvh - var(--_page-shell-document-offset, 0px));
+    align-content: start;
+
+    &[data-width="full"] {
+      --_page-shell-inline-offset: 0px;
+      --_page-shell-main-track: minmax(0, 1fr);
+      --_page-shell-end-track: 0px;
+    }
+
+    &[data-navigation="rail"] {
+      --_page-shell-navigation-track-width: min(
+        var(--_page-shell-panel-rail-width),
+        max(
+          0px,
+          100% - var(--_page-shell-content-min-width) - var(
+              --_page-shell-composer-track-width
+            )
+        )
+      );
+    }
+
+    &[data-navigation="hidden"] {
+      --_page-shell-navigation-track-width: 0px;
+    }
+
+    &[data-context="rail"] {
+      --_page-shell-context-track-width: min(
+        var(--_page-shell-panel-rail-width),
+        max(
+          0px,
+          100% - var(--_page-shell-navigation-track-width) - var(
+              --_page-shell-composer-track-width
+            ) - var(--_page-shell-content-min-width)
+        )
+      );
+    }
+
+    &[data-context="hidden"] {
+      --_page-shell-context-track-width: 0px;
+    }
+
+    // Above-header outlets and pre-body notices stay in their original order.
+    > * {
+      grid-column: 1 / -1;
+      min-inline-size: 0;
+    }
+
+    > .d-header-wrap {
+      grid-area: shell-header;
+      display: grid;
+      grid-template-columns: subgrid;
+      align-self: start;
+      gap: 0;
+    }
+
+    .d-header {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      align-items: stretch;
+      gap: 0;
+      height: auto;
+      min-block-size: 4em;
+
+      > .wrap {
+        display: grid;
+        grid-template-columns:
+          minmax(0, var(--_page-shell-header-chrome-width)) minmax(0, 1fr)
+          minmax(0, var(--_page-shell-header-chrome-width));
+
+        --_page-shell-header-chrome-width: max(
+          var(--_page-shell-header-start-width, 184px),
+          var(--_page-shell-header-end-width, 240px)
+        );
+        grid-column: 2 / -2;
+        gap: 0;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+        min-block-size: 4em;
+
+        .contents {
+          display: grid;
+          grid-template-columns: subgrid;
+          grid-column: 1 / -1;
+          grid-template-areas: none;
+          gap: 0;
+          align-items: center;
+          position: relative;
+        }
+      }
+    }
+
+    .page-shell__header-start {
+      grid-column: 1;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      min-inline-size: 0;
+      inline-size: max-content;
+      padding-inline: var(--space-1);
+      box-sizing: border-box;
+
+      .header-sidebar-toggle {
+        flex-shrink: 0;
+        margin: 0;
+
+        button {
+          margin-inline: 0;
+        }
+      }
+
+      .home-logo-wrapper-outlet {
+        flex-shrink: 0;
+        min-inline-size: 0;
+        margin-inline: 0;
+        overflow: hidden;
+      }
+
+      .title {
+        min-width: 0;
+      }
+
+      #site-logo {
+        max-inline-size: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .page-shell__header-main {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      min-inline-size: 0;
+      padding-inline: var(--d-comp-PageShell-space-padding-inline);
+
+      .floating-search-input-wrapper,
+      .extra-info-wrapper {
+        min-inline-size: 0;
+        max-inline-size: var(--_page-shell-content-max-width);
+        margin-inline: auto;
+      }
+    }
+
+    .d-header .contents > .panel {
+      grid-area: auto;
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: end;
+      margin: 0;
+      padding-inline-end: var(--space-2);
+      inline-size: max-content;
+      max-inline-size: calc(100vw - 48px);
+    }
+
+    .page-shell__notices {
+      grid-area: shell-notices;
+    }
+
+    > #main-outlet.page-shell__main {
+      grid-area: content;
+      display: flex;
+      flex-direction: column;
+      min-inline-size: 0;
+      inline-size: 100%;
+      max-inline-size: none;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+
+      .page-shell__main-content {
+        flex: 1;
+        min-inline-size: 0;
+        inline-size: 100%;
+        max-width: calc(
+          var(--_page-shell-content-max-width) + 2 *
+            var(--d-comp-PageShell-space-padding-inline)
+        );
+        margin-inline: auto;
+        box-sizing: border-box;
+        padding-inline: var(--d-comp-PageShell-space-padding-inline);
+      }
+
+      .powered-by-discourse {
+        align-self: flex-start;
+        transition-property: color, background;
+        margin-inline-start: max(
+          var(--d-comp-PageShell-space-padding-inline),
+          (100% - var(--_page-shell-content-max-width)) / 2
+        );
+      }
+    }
+
+    .page-shell__navigation {
+      grid-area: sidebar;
+      min-inline-size: 0;
+      align-self: start;
+      position: sticky;
+      top: var(--header-offset);
+      block-size: max(
+        0px,
+        100dvh - var(--_page-shell-body-offset, var(--header-offset)) - var(
+            --_page-shell-footer-row-height,
+            0px
+          )
+      );
+      inline-size: 100%;
+      overflow: hidden;
+    }
+
+    &[data-navigation="hidden"] .page-shell__navigation {
+      display: none;
+    }
+
+    &[data-navigation="rail"] .sidebar-wrapper {
+      box-sizing: border-box;
+      border-inline-end: 1px solid var(--d-sidebar-border-color);
+    }
+
+    .page-shell__context {
+      grid-area: shell-context;
+      min-inline-size: 0;
+    }
+
+    &[data-constrained-context] {
+      --_page-shell-context-track-width: 0px;
+
+      .page-shell__context {
+        display: none;
+      }
+    }
+
+    .page-shell__context-content {
+      position: sticky;
+      top: var(--header-offset);
+      block-size: max(
+        0px,
+        100dvh - var(--_page-shell-body-offset, var(--header-offset)) - var(
+            --_page-shell-footer-row-height,
+            0px
+          )
+      );
+      padding: var(--space-4);
+      border-inline-start: 1px solid var(--d-comp-PageShell-color-border);
+      background: var(--d-comp-PageShell-color-background);
+      overflow: auto;
+      box-sizing: border-box;
+    }
+
+    &[data-context="rail"] .page-shell__context-content {
+      padding: var(--space-1);
+      overflow-wrap: anywhere;
+    }
+
+    .page-shell__footer {
+      grid-area: shell-footer;
+      min-inline-size: 0;
+      border-block-start: 1px solid var(--d-comp-PageShell-color-border);
+      background: var(--d-comp-PageShell-color-background);
+    }
+
+    .page-shell__footer-content {
+      inline-size: 100%;
+      max-inline-size: calc(
+        var(--_page-shell-content-max-width) + 2 *
+          var(--d-comp-PageShell-space-padding-inline)
+      );
+      padding-inline: var(--d-comp-PageShell-space-padding-inline);
+      margin-inline: auto;
+      box-sizing: border-box;
+      min-inline-size: 0;
+    }
+
+    .page-shell__footer-sample {
+      padding-block: var(--d-comp-PageShell-space-padding-block);
+    }
+
+    &[data-footer="row"] {
+      .page-shell__navigation,
+      .page-shell__context {
+        grid-row: 3 / 4;
+      }
+
+      .page-shell__footer {
+        grid-column: 2 / -2;
+        grid-row: 4;
+        display: grid;
+        grid-template-columns: subgrid;
+        background: var(--d-comp-PageShell-color-background-raised);
+
+        > * {
+          grid-column: 2;
+        }
+      }
+    }
+
+    &[data-footer="off"] .page-shell__footer {
+      display: none;
+    }
+
+    // Dashboard widgets need the space inside the main column, rather than
+    // viewport breakpoints which cannot see the two shell panels. This route
+    // container is not an ancestor of the grid-hosted composer.
+    .admin-contents {
+      container-type: inline-size;
+      container-name: page-shell-admin;
+    }
+  }
+
+  @container page-shell-admin (width < 600px) {
+    .db-section__subheader {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .db-section__metrics {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: var(--space-4);
+    }
+
+    .db-section__metric {
+      min-inline-size: 0;
+      flex: 1 1 7em;
+    }
+
+    .db-section__metric-label {
+      white-space: normal;
+    }
+
+    .db-section__row-block-title,
+    .db-section__row-block-title > a {
+      white-space: normal;
+    }
+
+    .db-section__row-block-title .db-link-arrow {
+      inset-inline-end: 0;
+    }
+  }
+
+  // Preserve viewport-fixed composer positioning while aligning it to the
+  // measured main column rather than the old one-sidebar breakpoint formula.
+  #main-outlet-wrapper #reply-control:not(.fullscreen) {
+    inset-inline-start: var(--_page-shell-content-inline-start);
+    inset-inline-end: auto;
+    margin-inline: 0;
+    width: var(--_page-shell-content-width);
+    max-width: var(--_page-shell-content-width);
+  }
+
+  @media (width < 1100px) {
+    .page-shell#main-outlet-wrapper[data-context] {
+      --_page-shell-context-track-width: 0px;
+
+      .page-shell__context {
+        display: none;
+      }
+    }
+  }
+
+  @media (width < 768px) {
+    .page-shell#main-outlet-wrapper[data-navigation] {
+      --_page-shell-navigation-track-width: 0px;
+      --d-comp-PageShell-space-padding-inline: var(--space-3);
+
+      .page-shell__navigation {
+        display: none;
+      }
+    }
+  }
+}
+
+// Horizon's new-grid peek composer uses the reserved composer track. Its toggle and
+// sticky presentation are reused, while these scoped rules own the tracks.
+@media (width >= 1280px) {
+  html.composer-open:not(.fullscreen-composer)
+    body.has-page-shell.full-width-enabled.peek-mode-active {
+    .page-shell#main-outlet-wrapper {
+      --_page-shell-composer-track-width: clamp(30em, 36vw, 40em);
+      grid-template-columns: var(--_page-shell-grid-columns);
+    }
+
+    #main-outlet-wrapper #reply-control:not(.fullscreen).hide-preview {
+      grid-column: 4;
+      grid-row: 3;
+      inset-inline-start: auto;
+      inset-inline-end: auto;
+      width: auto;
+      max-width: none;
+    }
+  }
+}
