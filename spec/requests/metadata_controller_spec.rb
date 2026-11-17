@@ -205,6 +205,17 @@ RSpec.describe MetadataController do
   end
 
   describe "#app_association_ios" do
+    it "accepts wildcard Accept headers" do
+      SiteSetting.app_association_ios = { applinks: { apps: [] } }.to_json
+
+      %w[/apple-app-site-association /.well-known/apple-app-site-association].each do |path|
+        get path, headers: { "Accept" => "*/*" }
+
+        expect(response.status).to eq(200)
+        expect(response.media_type).to eq("application/json")
+      end
+    end
+
     it "returns 404 by default" do
       get "/apple-app-site-association"
       expect(response.status).to eq(404)
