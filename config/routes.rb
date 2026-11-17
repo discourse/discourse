@@ -1054,7 +1054,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/bookmarks" => "users#bookmarks",
           :constraints => {
             username: RouteFormat.username,
-            format: %w[json ics],
+            format: /(json|ics)/,
           }
       get "#{root_path}/:username/user-menu-bookmarks" => "users#user_menu_bookmarks",
           :constraints => {
@@ -1269,11 +1269,11 @@ Discourse::Application.routes.draw do
           format: /.*/,
         }
 
-    get "posts" => "posts#latest", :id => "latest_posts", :constraints => { format: %w[json rss] }
+    get "posts" => "posts#latest", :id => "latest_posts", :constraints => { format: /(json|rss)/ }
     get "private-posts" => "posts#latest",
         :id => "private_posts",
         :constraints => {
-          format: %w[json rss],
+          format: /(json|rss)/,
         }
     get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
     get "posts/by-date/:topic_id/:date" => "posts#by_date"
@@ -1442,7 +1442,7 @@ Discourse::Application.routes.draw do
     resources :user_actions, only: %i[index show]
 
     resources :badges, only: [:index]
-    get "/badges/:id(/:slug)" => "badges#show", :constraints => { format: %w[json html rss] }
+    get "/badges/:id(/:slug)" => "badges#show", :constraints => { format: /(json|html|rss)/ }
     resources :user_badges, only: %i[index create destroy] do
       put "toggle_favorite" => "user_badges#toggle_favorite", :constraints => { format: :json }
     end
@@ -1963,7 +1963,7 @@ Discourse::Application.routes.draw do
     get "/tag_groups/filter/search" => "tag_groups#search", :format => :json
 
     # Allow the controller to fall back to HTML when Markdown loses Accept negotiation.
-    scope constraints: { format: %w[json html md */*] } do
+    scope constraints: { format: %r{(json|html|markdown|\*/\*)} } do
       Discourse.filters.each do |filter|
         root to: "list##{filter}",
              constraints: HomePageConstraint.new("#{filter}"),

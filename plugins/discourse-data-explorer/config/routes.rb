@@ -15,7 +15,7 @@ DiscourseDataExplorer::Engine.routes.draw do
     post "queries" => "query#create"
     put "queries/:id" => "query#update"
     delete "queries/:id" => "query#destroy"
-    post "queries/:id/run" => "query#run", :constraints => { format: %w[json csv] }
+    post "queries/:id/run" => "query#run", :constraints => { format: /(json|csv)/ }
   end
 end
 
@@ -51,7 +51,7 @@ Discourse::Application.routes.draw do
   # Public API to fetch query results via GET with permission checks
   get "/data-explorer/queries/:id/run" => "discourse_data_explorer/query#public_run",
       :constraints => {
-        format: %w[json csv],
+        format: /(json|csv)/,
       }
 
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
@@ -75,7 +75,7 @@ Discourse::Application.routes.draw do
     delete "/admin/plugins/explorer/queries/:id" => "discourse_data_explorer/query#destroy"
     post "/admin/plugins/explorer/queries/:id/run" => "discourse_data_explorer/query#run",
          :constraints => {
-           format: %w[json csv],
+           format: /(json|csv)/,
          }
   end
 end
