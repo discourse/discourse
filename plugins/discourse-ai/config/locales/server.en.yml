@@ -1253,6 +1253,7 @@ en:
       edit_post:
         errors:
           not_found: "Post not found."
+          invalid_target: "Identify the post by either post_id, or topic_id with an optional post_number, but not both."
           not_allowed: "You are not allowed to edit this post."
           nothing_to_edit: "Either raw or title must be provided."
           no_reason: "An edit reason is required."

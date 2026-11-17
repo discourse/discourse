@@ -7,13 +7,26 @@ module DiscourseAi
         def self.signature
           {
             name: name,
-            description: "Edits the content of a post, and optionally the topic title.",
+            description:
+              "Edits the content of a post, and optionally the topic title. Identify the post by post_id, or by topic_id and post_number when you only have its URL.",
             parameters: [
               {
                 name: "post_id",
-                description: "The ID of the post to edit",
+                description:
+                  "The ID of the post to edit. Omit it when you identify the post by topic_id.",
                 type: "integer",
-                required: true,
+              },
+              {
+                name: "topic_id",
+                description:
+                  "The ID of the topic containing the post, used instead of post_id. In a URL such as /t/some-title/123/4, the topic ID is 123.",
+                type: "integer",
+              },
+              {
+                name: "post_number",
+                description:
+                  "The number of the post within the topic, used with topic_id. In /t/some-title/123/4, the post number is 4. Defaults to 1, the first post, when the URL has no post number.",
+                type: "integer",
               },
               { name: "raw", description: "The new raw content for the post", type: "string" },
               {
@@ -46,8 +59,9 @@ module DiscourseAi
         end
 
         def invoke
-          post = Post.find_by(id: parameters[:post_id])
-          return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.not_found")) if !post
+          if (error = validation_error)
+            return error
+          end
 
           if !guardian.can_edit_post?(post)
             return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.not_allowed"))
@@ -56,14 +70,6 @@ module DiscourseAi
           raw = parameters[:raw]
           title = parameters[:title]
           edit_reason = parameters[:edit_reason].to_s.strip
-
-          if raw.blank? && title.blank?
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.nothing_to_edit"))
-          end
-
-          if edit_reason.blank?
-            return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.no_reason"))
-          end
 
           fields = {}
           fields[:edit_reason] = edit_reason if !!parameters[:public_edit_reason]
@@ -78,6 +84,27 @@ module DiscourseAi
           else
             error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.revision_failed"))
           end
+        end
+
+        def validation_error
+          targets_by_id = parameters[:post_id].present?
+          targets_by_topic = parameters[:topic_id].present? || parameters[:post_number].present?
+          if targets_by_id == targets_by_topic
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.invalid_target"))
+          end
+          return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.not_found")) if !post
+
+          if parameters[:raw].blank? && parameters[:title].blank?
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.nothing_to_edit"))
+          end
+
+          if parameters[:edit_reason].to_s.strip.blank?
+            return error_response(I18n.t("discourse_ai.ai_bot.edit_post.errors.no_reason"))
+          end
+
+          # Approval replay and DSA reporting read post_id from the stored parameters.
+          self.parameters = parameters.except(:topic_id, :post_number).merge(post_id: post.id)
+          nil
         end
 
         def description_args
@@ -127,7 +154,15 @@ module DiscourseAi
         private
 
         def post
-          @post ||= Post.find_by(id: parameters[:post_id])
+          @post ||=
+            if parameters[:post_id].present?
+              Post.find_by(id: parameters[:post_id])
+            else
+              Post.find_by(
+                topic_id: parameters[:topic_id],
+                post_number: parameters[:post_number] || 1,
+              )
+            end
         end
       end
     end
