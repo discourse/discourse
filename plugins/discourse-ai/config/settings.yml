@@ -686,6 +686,14 @@ discourse_ai:
       - 2
       - 3
       - 4
+  ai_reviewable_action_decision_model:
+    type: enum
+    default: ""
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+  ai_reviewable_action_min_confidence:
+    default: 0.9
+    min: 0
+    max: 1
   ai_dsa_classification_decision_model:
     type: enum
     default: ""
