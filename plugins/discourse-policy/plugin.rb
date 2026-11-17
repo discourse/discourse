@@ -69,116 +69,119 @@ after_initialize do
   end
 
   on(:post_process_cooked) do |doc, post|
-    has_group = false
+    PostPolicy.transaction(requires_new: true) do
+      has_group = false
 
-    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
-      policy = doc.search(".policy").find { |node| node.ancestors("blockquote").none? }
-      if policy
-        post_policy = post.post_policy || post.build_post_policy
+      if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
+        policy = doc.search(".policy").find { |node| node.ancestors("blockquote").none? }
+        if policy
+          post_policy = post.post_policy || post.build_post_policy
 
-        group_names = []
+          group_names = []
 
-        if group = policy["data-group"]
-          group_names << group
-        end
+          if group = policy["data-group"]
+            group_names << group
+          end
 
-        if groups = policy["data-groups"]
-          group_names.concat(groups.split(","))
-        end
+          if groups = policy["data-groups"]
+            group_names.concat(groups.split(","))
+          end
 
-        new_group_ids = Group.where("name in (?)", group_names).pluck(:id)
+          new_group_ids = Group.where("name in (?)", group_names).pluck(:id)
 
-        has_group = true if new_group_ids.length > 0
+          has_group = true if new_group_ids.length > 0
 
-        existing_ids = post_policy.post_policy_groups.pluck(:group_id)
+          existing_ids = post_policy.post_policy_groups.pluck(:group_id)
 
-        missing = (new_group_ids - existing_ids)
+          missing = (new_group_ids - existing_ids)
 
-        new_relations = []
+          new_relations = []
 
-        post_policy.post_policy_groups.each do |relation|
-          new_relations << relation if new_group_ids.include?(relation.group_id)
-        end
+          post_policy.post_policy_groups.each do |relation|
+            new_relations << relation if new_group_ids.include?(relation.group_id)
+          end
 
-        missing.each do |id|
-          new_relations << PostPolicyGroup.new(post_policy_id: post_policy.id, group_id: id)
-        end
+          missing.each do |id|
+            new_relations << PostPolicyGroup.new(post_policy_id: post_policy.id, group_id: id)
+          end
 
-        post_policy.post_policy_groups = new_relations
+          post_policy.post_policy_groups = new_relations
 
-        renew_days = policy["data-renew"]
-        if renew_days.to_i > 0 || PostPolicy.renew_intervals.keys.include?(renew_days)
-          post_policy.renew_days =
-            PostPolicy.renew_intervals.keys.include?(renew_days) ? nil : renew_days
-          post_policy.renew_interval = post_policy.renew_days.present? ? nil : renew_days
+          renew_days = policy["data-renew"]
+          if renew_days.to_i > 0 || PostPolicy.renew_intervals.keys.include?(renew_days)
+            post_policy.renew_days =
+              PostPolicy.renew_intervals.keys.include?(renew_days) ? nil : renew_days
+            post_policy.renew_interval = post_policy.renew_days.present? ? nil : renew_days
 
-          post_policy.renew_start = nil
+            post_policy.renew_start = nil
 
-          if (renew_start = policy["data-renew-start"])
-            begin
-              renew_start = Date.parse(renew_start)
-              post_policy.renew_start = renew_start
-              if !post_policy.next_renew_at || post_policy.next_renew_at < renew_start
-                post_policy.next_renew_at = renew_start
+            if (renew_start = policy["data-renew-start"])
+              begin
+                renew_start = Date.parse(renew_start)
+                post_policy.renew_start = renew_start
+                if !post_policy.next_renew_at || post_policy.next_renew_at < renew_start
+                  post_policy.next_renew_at = renew_start
+                end
+              rescue ArgumentError
+                # already nil
               end
-            rescue ArgumentError
-              # already nil
+            else
+              post_policy.next_renew_at = nil
             end
           else
+            post_policy.renew_days = nil
+            post_policy.renew_start = nil
             post_policy.next_renew_at = nil
           end
-        else
-          post_policy.renew_days = nil
-          post_policy.renew_start = nil
-          post_policy.next_renew_at = nil
-        end
 
-        if version = policy["data-version"]
-          old_version = post_policy.version || "1"
-          if version != old_version
-            post_policy.version = version
+          if version = policy["data-version"]
+            old_version = post_policy.version || "1"
+            if version != old_version
+              post_policy.version = version
 
-            if post_policy.add_users_to_group.present?
-              previously_accepted_users = post_policy.accepted_policy_users
+              if post_policy.add_users_to_group.present?
+                previously_accepted_users = post_policy.accepted_policy_users
 
-              Group.find_by(id: post_policy.add_users_to_group)&.bulk_remove(
-                previously_accepted_users.pluck(:user_id),
-              )
+                Group.find_by(id: post_policy.add_users_to_group)&.bulk_remove(
+                  previously_accepted_users.pluck(:user_id),
+                )
+              end
             end
           end
-        end
 
-        if reminder = policy["data-reminder"]
-          post_policy.reminder = reminder
-          post_policy.last_reminded_at ||= Time.zone.now
-        end
-
-        post_policy.private = policy["data-private"] == "true"
-
-        if policy["data-add-users-to-group"].present?
-          add_to_group = Group.find_by_name(policy["data-add-users-to-group"])
-          post_policy.add_users_to_group =
-            if add_to_group && Guardian.new(post.user).can_edit_group?(add_to_group)
-              add_to_group.id
-            end
-        else
-          post_policy.add_users_to_group = nil
-        end
-
-        if has_group
-          if !post.custom_fields[DiscoursePolicy::HAS_POLICY]
-            post.custom_fields[DiscoursePolicy::HAS_POLICY] = true
-            post.save_custom_fields
+          if reminder = policy["data-reminder"]
+            post_policy.reminder = reminder
+            post_policy.last_reminded_at ||= Time.zone.now
           end
-          post_policy.save!
+
+          post_policy.private = policy["data-private"] == "true"
+
+          if policy["data-add-users-to-group"].present?
+            add_to_group = Group.find_by_name(policy["data-add-users-to-group"])
+            post_policy.add_users_to_group =
+              if add_to_group && Guardian.new(post.user).can_edit_group?(add_to_group)
+                add_to_group.id
+              end
+          else
+            post_policy.add_users_to_group = nil
+          end
+
+          if has_group
+            if !post.custom_fields[DiscoursePolicy::HAS_POLICY]
+              post.custom_fields[DiscoursePolicy::HAS_POLICY] = true
+              post.save_custom_fields
+            end
+            post_policy.save!
+          end
         end
       end
-    end
 
-    if !has_group && (post.custom_fields[DiscoursePolicy::HAS_POLICY] || !post_policy&.new_record?)
-      post.custom_fields.delete(DiscoursePolicy::HAS_POLICY)
-      post.save_custom_fields
-      PostPolicy.where(post_id: post.id).destroy_all
+      if !has_group &&
+           (post.custom_fields[DiscoursePolicy::HAS_POLICY] || !post_policy&.new_record?)
+        post.custom_fields.delete(DiscoursePolicy::HAS_POLICY)
+        post.save_custom_fields
+        PostPolicy.where(post_id: post.id).destroy_all
+      end
     end
   end
 
