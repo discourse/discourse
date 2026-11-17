@@ -1105,10 +1105,11 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     });
 
     test("already persisted bytes are not reserved a second time", async function (assert) {
-      // Fill one write window, then pause the sender before the last byte.
+      // Fill one write window, then pause the sender before the last chunk.
       const windowBytes = WINDOW_CHUNKS * CHUNK_SIZE;
-      this.estimate = { quota: windowBytes + 10, usage: 0 };
-      const id = await this.offer("x".repeat(windowBytes + 1));
+      const size = windowBytes + CHUNK_SIZE;
+      this.estimate = { quota: size + 10, usage: 0 };
+      const id = await this.offer("x".repeat(size));
       const send = this.b.send.bind(this.b);
       this.b.send = (data) => {
         if (JSON.parse(data).type !== "ack") {
@@ -1121,7 +1122,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
           this.sinks[0]?.chunks.reduce((sum, c) => sum + c.byteLength, 0) ===
           windowBytes
       );
-      this.estimate = { quota: windowBytes + 6, usage: windowBytes };
+      this.estimate = { quota: size + 5, usage: windowBytes };
       const channel = new Channel();
       this.receiver.attach(1, 3, channel);
       const second = crypto.randomUUID();
