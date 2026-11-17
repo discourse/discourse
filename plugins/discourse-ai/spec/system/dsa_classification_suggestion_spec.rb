@@ -92,4 +92,48 @@ RSpec.describe "DSA classification suggestion" do
       expect(modal).to have_no_field_hint(:community_rule)
     end
   end
+
+  it "clears each inline error when the moderator changes its field" do
+    RateLimiter.enable
+    stub_const(
+      DiscourseAi::AiModeration::DsaClassificationsController,
+      :SUGGESTIONS_PER_MINUTE,
+      1,
+    ) do
+      RateLimiter.new(
+        moderator,
+        "ai_dsa_classification_suggestions",
+        1,
+        1.minute,
+        apply_limit_to_staff: true,
+      ).performed!
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
+
+      expect(modal).to have_field_hint(
+        :community_rule,
+        "AI request limit reached. Choose a rule manually.",
+      )
+      expect(modal).to have_field_hint(
+        :category,
+        "AI request limit reached. Review the selected category.",
+      )
+      modal.select_rule(advertising_rule[:ground])
+      expect(modal).to have_no_field_hint(:community_rule)
+      expect(modal).to have_field_hint(:category, "Review the selected category.")
+      modal.select_category(category)
+      expect(modal).to have_no_field_hint(:category)
+    end
+  end
+
+  it "shows manual guidance only for the category when the sole rule is already selected" do
+    SiteSetting.dsa_community_rules = [advertising_rule].to_json
+    DiscourseAi::Decisions.with_canned_answers(category: :refusal) do
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
+
+      expect(modal).to have_field_hint(:category, "Review the selected category.")
+      expect(modal).to have_no_field_hint(:community_rule)
+    end
+  end
 end

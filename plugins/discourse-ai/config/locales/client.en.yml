@@ -312,7 +312,10 @@ en:
       title: "AI"
       dsa_classification:
         suggested_by_ai: "Suggested by AI"
-        no_suggestion: "The AI could not suggest a classification"
+        no_suggestion: "The AI could not suggest a classification."
+        rate_limit: "AI request limit reached."
+        rule_error: "%{reason} Choose a rule manually."
+        category_error: "%{reason} Review the selected category."
       copied: "Copied"
       view_raw: "View raw"
       view_decoded: "View decoded"

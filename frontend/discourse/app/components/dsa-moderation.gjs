@@ -265,14 +265,14 @@ export default class DsaModeration extends Component {
 
     this.pendingFieldHints = pendingFieldHints;
     try {
-      const { community_rule, category } = await load();
+      const { community_rule, category, fieldHints } = await load();
       if (!this.isDestroying) {
         const values = {
           ...(community_rule && { community_rule }),
           ...(category && { category }),
         };
         await this.#setClassification(values);
-        this.fieldHints = {
+        this.fieldHints = fieldHints ?? {
           community_rule: community_rule && hint,
           category: category && hint,
         };

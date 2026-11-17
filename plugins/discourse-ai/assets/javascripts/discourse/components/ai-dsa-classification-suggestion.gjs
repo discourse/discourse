@@ -19,6 +19,10 @@ const SuggestionHint = <template>
   {{i18n "discourse_ai.dsa_classification.suggested_by_ai"}}
 </template>;
 
+function errorHint(message) {
+  return <template>{{dIcon "triangle-exclamation"}} {{message}}</template>;
+}
+
 export default class AiDsaClassificationSuggestion extends Component {
   static shouldRender(_outletArgs, { siteSettings }) {
     return (
@@ -34,45 +38,54 @@ export default class AiDsaClassificationSuggestion extends Component {
     const { communityRules, reviewableId, updateClassification } =
       this.args.outletArgs;
 
-    try {
-      await updateClassification(
-        async () => {
+    const suggestRule = communityRules.length > 1;
+    await updateClassification(
+      async () => {
+        let reason;
+        try {
           const suggestion = await ajax(
             `/discourse-ai/ai-moderation/dsa-classifications/${reviewableId}/suggest`,
             { type: "POST" }
           );
-          if (communityRules.length === 1) {
-            suggestion.community_rule = null;
+          const community_rule = suggestRule && suggestion.community_rule;
+          const category = suggestion.category;
+          if (community_rule || category) {
+            return { community_rule, category };
           }
-          if (!this.isDestroying) {
-            this.message =
-              suggestion.community_rule || suggestion.category
-                ? null
-                : i18n("discourse_ai.dsa_classification.no_suggestion");
-          }
-          return suggestion;
-        },
-        SuggestionHint,
-        {
-          community_rule: communityRules.length > 1 && LoadingHint,
-          category: LoadingHint,
+          reason = i18n("discourse_ai.dsa_classification.no_suggestion");
+        } catch (error) {
+          reason =
+            error.jqXHR?.responseJSON?.error_type === "rate_limit"
+              ? i18n("discourse_ai.dsa_classification.rate_limit")
+              : extractError(error);
         }
-      );
-    } catch (error) {
-      if (!this.isDestroying) {
-        this.message = extractError(error);
-      }
-    }
+        if (!this.isDestroying) {
+          this.message = reason;
+        }
+        return {
+          fieldHints: {
+            community_rule:
+              suggestRule &&
+              errorHint(
+                i18n("discourse_ai.dsa_classification.rule_error", { reason })
+              ),
+            category: errorHint(
+              i18n("discourse_ai.dsa_classification.category_error", { reason })
+            ),
+          },
+        };
+      },
+      SuggestionHint,
+      { community_rule: suggestRule && LoadingHint, category: LoadingHint }
+    );
   }
 
   <template>
-    <div role="status" {{didInsert this.suggest}}>
+    <div class="sr-only" role="status" {{didInsert this.suggest}}>
       {{#if @outletArgs.loading}}
-        <span class="sr-only">{{i18n
-            "discourse_ai.ai_helper.context_menu.loading"
-          }}</span>
+        {{i18n "discourse_ai.ai_helper.context_menu.loading"}}
       {{else if this.message}}
-        <p>{{this.message}}</p>
+        {{this.message}}
       {{/if}}
     </div>
   </template>
