@@ -68,6 +68,18 @@ Discourse::Application.routes.draw do
   get "secure-media-uploads/*path" => "uploads#_show_secure_deprecated", :format => false
   get "secure-uploads/*path" => "uploads#show_secure", :format => false
 
+  get "svg-sprite/search/:keyword" => "svg_sprite#search",
+      :format => false,
+      :constraints => {
+        keyword: /[-a-z0-9\s\%]+/,
+      }
+  get "favicon/proxied" => "static#favicon", :format => false
+
+  # Apple accepts either of these paths for the apple-app-site-association file
+  # Might as well support both
+  get "apple-app-site-association" => "metadata#app_association_ios", :format => false
+  get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
+
   scope path: nil, constraints: { format: %w[json html] } do
     relative_url_root =
       (
@@ -1152,12 +1164,6 @@ Discourse::Application.routes.draw do
           theme_id: /(-?[0-9]+)?/,
           format: :js,
         }
-    get "svg-sprite/search/:keyword" => "svg_sprite#search",
-        :format => false,
-        :constraints => {
-          format: %r{(json|html|\*/\*)},
-          keyword: /[-a-z0-9\s\%]+/,
-        }
     get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search",
         :defaults => {
           format: :json,
@@ -1783,12 +1789,6 @@ Discourse::Application.routes.draw do
           format: /.*/,
         }
 
-    get "favicon/proxied" => "static#favicon",
-        :format => false,
-        :constraints => {
-          format: %r{(json|html|\*/\*)},
-        }
-
     get "robots.txt" => "robots_txt#index"
     get "robots-builder.json" => "robots_txt#builder"
     get "llms.txt" => "static#llms_txt"
@@ -1797,18 +1797,6 @@ Discourse::Application.routes.draw do
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
     get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
-    # Apple accepts either of these paths for the apple-app-site-association file
-    # Might as well support both
-    get "apple-app-site-association" => "metadata#app_association_ios",
-        :format => false,
-        :constraints => {
-          format: %r{(json|html|\*/\*)},
-        }
-    get ".well-known/apple-app-site-association" => "metadata#app_association_ios",
-        :format => false,
-        :constraints => {
-          format: %r{(json|html|\*/\*)},
-        }
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
     # Tag Routes - Canonical vs Legacy
