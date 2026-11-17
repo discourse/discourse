@@ -58,6 +58,7 @@ export default class PageShellControls extends Component {
             type="range"
             value={{this.pageShell.navigationWidth}}
             {{on "input" this.pageShell.change}}
+            {{on "change" this.pageShell.change}}
           />
           <output>{{this.pageShell.navigationWidth}}</output>
         </label>
@@ -92,6 +93,7 @@ export default class PageShellControls extends Component {
             type="range"
             value={{this.pageShell.effectiveContextWidth}}
             {{on "input" this.pageShell.change}}
+            {{on "change" this.pageShell.change}}
           />
           <output>{{this.pageShell.effectiveContextWidth}}</output>
         </label>
