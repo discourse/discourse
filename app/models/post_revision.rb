@@ -38,6 +38,7 @@ class PostRevision < ActiveRecord::Base
 
   def hide!
     update_column(:hidden, true)
+    DiscourseEvent.trigger(:post_revision_hidden, self)
   end
 
   def show!
