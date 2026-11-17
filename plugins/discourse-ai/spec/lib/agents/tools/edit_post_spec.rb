@@ -106,6 +106,94 @@ RSpec.describe DiscourseAi::Agents::Tools::EditPost do
     expect(first_post.topic.reload.title).to eq("New Topic Title")
   end
 
+  it "edits the post a topic URL points at, defaulting to the first post" do
+    reply = Fabricate(:post, topic: post.topic, raw: "Original reply content")
+
+    reply_result =
+      tool(
+        topic_id: post.topic_id,
+        post_number: reply.post_number,
+        raw: "Updated reply content",
+        edit_reason: "Requested by admin",
+      ).invoke
+    first_post_result =
+      tool(
+        topic_id: post.topic_id,
+        raw: "Updated first post content",
+        edit_reason: "Requested by admin",
+      ).invoke
+
+    expect([reply_result[:status], first_post_result[:status]]).to eq(%w[success success])
+    expect(reply.reload.raw).to eq("Updated reply content")
+    expect(post.reload.raw).to eq("Updated first post content")
+  end
+
+  it "queues an edit addressed by a topic URL and applies it to that post on approval" do
+    enable_dsa_reporting
+    reply = Fabricate(:post, topic: post.topic, raw: "Original reply content")
+    agent = Fabricate(:ai_agent, require_approval: true, tools: [["EditPost", nil, false]])
+    tool_call =
+      DiscourseAi::Completions::ToolCall.new(
+        id: "edit-1",
+        name: "edit_post",
+        parameters: {
+          topic_id: post.topic_id,
+          post_number: reply.post_number,
+          raw: "Corrected reply content",
+          edit_reason: "Requested by admin",
+        },
+      )
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: bot_user,
+        messages: [{ type: :user, content: "Edit #{reply.full_url}" }],
+      )
+
+    DiscourseAi::Completions::Llm.with_prepared_responses([tool_call, "Queued for approval"]) do
+      DiscourseAi::Agents::Bot
+        .as(bot_user, agent: agent.class_instance.new, model: llm_model)
+        .reply(context) { |_partial| }
+    end
+    expect(reply.reload.raw).to eq("Original reply content")
+
+    expect(ReviewableAiToolAction.last.perform(Fabricate(:admin), :approve)).to be_success
+    expect(reply.reload.raw).to eq("Corrected reply content")
+  end
+
+  describe "#validation_error" do
+    it "rejects a request that names no post, or names it both by ID and by topic" do
+      no_target = tool(raw: "Content", edit_reason: "Reason").validation_error
+      both_targets =
+        tool(
+          post_id: post.id,
+          topic_id: post.topic_id,
+          raw: "Content",
+          edit_reason: "Reason",
+        ).validation_error
+
+      expect([no_target[:status], both_targets[:status]]).to eq(%w[error error])
+    end
+
+    it "rejects a post number given with a post ID instead of a topic ID" do
+      error =
+        tool(
+          post_id: post.id,
+          post_number: 2,
+          raw: "Content",
+          edit_reason: "Reason",
+        ).validation_error
+
+      expect(error[:status]).to eq("error")
+    end
+
+    it "rejects a request that changes nothing or gives no reason before it can be queued" do
+      nothing_to_edit = tool(post_id: post.id, edit_reason: "Reason").validation_error
+      no_reason = tool(post_id: post.id, raw: "Content", edit_reason: " ").validation_error
+
+      expect([nothing_to_edit[:status], no_reason[:status]]).to eq(%w[error error])
+    end
+  end
+
   it "returns an error when post is not found" do
     result = tool(post_id: -1, raw: "Content", edit_reason: "Reason").invoke
 
