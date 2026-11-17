@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
-import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import { FORMAT } from "discourse/lib/time-shortcut";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -76,6 +76,7 @@ export default class PinOptionSection extends Component {
           <field.Control>
             <DFutureDateInput
               class="pin-until"
+              @ariaLabel={{i18n "topic.feature_topic.pin_until"}}
               @clearable={{true}}
               @input={{field.value}}
               @onChangeInput={{field.set}}

@@ -15,13 +15,13 @@ import { INVITE_DESCRIPTION_MAX_LENGTH } from "discourse/lib/constants";
 import { shortDate } from "discourse/lib/formatter";
 import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
+import { FORMAT as DATE_INPUT_FORMAT } from "discourse/lib/time-shortcut";
 import {
   clipboardCopyAsync,
   emailValid,
   hostnameValid,
 } from "discourse/lib/utilities";
 import Invite from "discourse/models/invite";
-import { FORMAT as DATE_INPUT_FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import TopicChooser from "discourse/select-kit/components/topic-chooser";
 import DButton from "discourse/ui-kit/d-button";

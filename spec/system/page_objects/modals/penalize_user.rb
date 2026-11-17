@@ -38,6 +38,14 @@ module PageObjects
       end
 
       def set_future_date(date)
+        if SiteSetting.enable_new_select_controls
+          return(
+            PageObjects::Components::UiKit::DSelect.at(".future-date-input .d-select").select_value(
+              date,
+            )
+          )
+        end
+
         select = PageObjects::Components::SelectKit.new(".future-date-input details")
         select.expand
         select.select_row_by_value(date)

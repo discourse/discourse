@@ -9,9 +9,13 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
+import { FORMAT, timeShortcuts } from "discourse/lib/time-shortcut";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
+  fakeTime,
+  loggedInUser,
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -359,6 +363,55 @@ acceptance(
         notificationLevelDropdown.selectedRow().value(),
         "changeToIgnored"
       );
+    });
+  }
+);
+
+acceptance(
+  "User - Ignoring other user with the new select controls",
+  function (needs) {
+    let ignoredUntil = null;
+
+    needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
+    needs.settings({ enable_new_select_controls: true });
+    needs.pretender((server, helper) => {
+      server.get("/u/charlie.json", () => {
+        const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
+        cloned.user.can_ignore_user = true;
+        return helper.response(200, cloned);
+      });
+
+      server.put("/u/charlie/notification_level.json", (request) => {
+        ignoredUntil = new URLSearchParams(request.requestBody).get(
+          "expiring_at"
+        );
+        return helper.response(200, {});
+      });
+    });
+
+    test("ignores until the picked timeframe", async function (assert) {
+      const timezone = loggedInUser().user_option.timezone;
+      const clock = fakeTime("2100-05-03T08:00:00", timezone, true);
+
+      try {
+        await visit("/u/charlie");
+        const notificationLevelDropdown = selectKit(
+          ".user-notifications-dropdown"
+        );
+        await notificationLevelDropdown.expand();
+        await notificationLevelDropdown.selectRowByValue("changeToIgnored");
+        await dSelect(
+          ".ignore-duration-with-username-modal .future-date-input .d-select"
+        ).select("tomorrow");
+        await click(".d-modal__footer .btn-primary");
+
+        assert.strictEqual(
+          ignoredUntil,
+          timeShortcuts(timezone).tomorrow().time.locale("en").format(FORMAT)
+        );
+      } finally {
+        clock.restore();
+      }
     });
   }
 );

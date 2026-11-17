@@ -17,11 +17,11 @@ import {
 } from "discourse/components/modal/edit-topic-timer";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
 import {
+  FORMAT,
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
-import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";

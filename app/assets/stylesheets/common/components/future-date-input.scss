@@ -1,0 +1,43 @@
+.future-date-input {
+  &__option,
+  &__selection {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    min-width: 0;
+  }
+
+  &__option .d-icon {
+    color: var(--primary-medium);
+  }
+
+  &__selection {
+    flex: 1;
+  }
+
+  // At rest the held value takes the trigger's free space, so its date sits by the caret.
+  &__select .d-select__presentation {
+    display: flex;
+    flex: 1 1 auto;
+  }
+
+  &__select .d-select__presentation + .d-select__input {
+    flex-grow: 0;
+  }
+
+  &__selection-date {
+    margin-left: auto;
+    color: var(--primary-medium);
+    white-space: nowrap;
+  }
+}
+
+// A short date fits beside the name; space-between leaves a wrapped date aligned with the name.
+.d-select__content[data-identifier="future-date-input"]
+  .d-select__option-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: 1em;
+  flex: 1;
+}

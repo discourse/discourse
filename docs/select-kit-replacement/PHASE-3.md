@@ -270,11 +270,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     here as `0592a861ca8`. Merging `main` after it lands may conflict in the events builder's
     integration test imports again: keep `pretender` and `dSelect`, drop `selectKit`. The
     third-party migration notes are in [`MIGRATION-GUIDE.md`](MIGRATION-GUIDE.md).
-  - ☐ `d-future-date-input` with `FutureDateInputSelector`: 7 core sites (slow mode, ignoring a
-    user, pinning a topic, both invite modals, penalizing a user, bulk suspension), plus the
-    styleguide. The selector's `FORMAT` constant is imported by five files, two of them (the topic
-    timer modal and form) for nothing else. Its rows compute a date and one opens a date picker,
-    so decide between `DSelect` and `DMenu` first.
+  - ☑ `d-future-date-input` (2026-11-16): its shortcut select branches on the flag to a typeahead
+    `DSelect`, so its 7 core sites need no change. Typing matches a shortcut's name or its date
+    ("nov" finds the November ones). Each row shows its date as a description, and the trigger
+    shows the held one's. "Custom" is an ordinary value that reveals the date and time fields.
+    Clearing now emits `null`; the old header had no clear button, so `@clearable` did nothing.
+    `FORMAT` moved to `discourse/lib/time-shortcut`, re-exported from the old module.
   - ☑ `d-access-control`: the add box (2026-11-11) and the permission select both branch on the
     flag. The legacy grantee chooser goes in the cleanup.
 

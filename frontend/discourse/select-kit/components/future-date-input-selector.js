@@ -1,6 +1,7 @@
 import { action, computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import { FORMAT } from "discourse/lib/time-shortcut";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
   pluginApiIdentifiers,
@@ -9,7 +10,7 @@ import {
 import FutureDateInputSelectorHeader from "./future-date-input-selector/future-date-input-selector-header.gjs";
 import FutureDateInputSelectorRow from "./future-date-input-selector/future-date-input-selector-row.gjs";
 
-export const FORMAT = "YYYY-MM-DD HH:mmZ";
+export { FORMAT } from "discourse/lib/time-shortcut";
 
 @classNames("future-date-input-selector")
 @selectKitOptions({

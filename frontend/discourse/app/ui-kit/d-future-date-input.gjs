@@ -3,21 +3,24 @@ import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import DatePickerFuture from "discourse/components/date-picker-future";
 import withEventValue from "discourse/helpers/with-event-value";
 import {
   extendedDefaultTimeShortcuts,
+  FORMAT,
   formatTime,
   hideDynamicTimeShortcuts,
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import FutureDateInputSelector, {
-  FORMAT,
-} from "discourse/select-kit/components/future-date-input-selector";
+import { removeAccents } from "discourse/lib/utilities";
+import FutureDateInputSelector from "discourse/select-kit/components/future-date-input-selector";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -29,6 +32,13 @@ export default class DFutureDateInput extends Component {
   /** @type {string | null} */
   displayLabel = null;
 
+  /**
+   * Names the select when there is no visible `label`.
+   *
+   * @type {string | null | undefined}
+   */
+  ariaLabel = null;
+
   /** @type {string | null | undefined} */
   labelClasses = null;
 
@@ -37,6 +47,8 @@ export default class DFutureDateInput extends Component {
 
   /** @type {((value: string | null) => void) | null | undefined} */
   onChangeInput = null;
+
+  labelId = `future-date-input-label-${guidFor(this)}`;
 
   /** @type {string | null} */
   _date = null;
@@ -57,6 +69,21 @@ export default class DFutureDateInput extends Component {
   @computed("includeDateTime", "isCustom")
   get displayDateAndTimePicker() {
     return this.includeDateTime && this.isCustom;
+  }
+
+  @computed("shortcuts", "selection")
+  get heldIcon() {
+    return this.shortcuts.find((shortcut) => shortcut.id === this.selection)
+      ?.icon;
+  }
+
+  @computed("shortcuts")
+  get shortcutOptions() {
+    return this.shortcuts.map((shortcut) =>
+      shortcut.timeFormatted
+        ? selectOption(shortcut, { description: shortcut.timeFormatted })
+        : shortcut
+    );
   }
 
   @computed("_date")
@@ -120,6 +147,17 @@ export default class DFutureDateInput extends Component {
     }
   }
 
+  /** Matches the typed text against a shortcut's name or its date. */
+  @action
+  filterShortcut(shortcut, term) {
+    const folded = removeAccents(term);
+    return [shortcut.name, shortcut.timeFormatted].some((text) =>
+      removeAccents(text ?? "")
+        .toLowerCase()
+        .includes(folded)
+    );
+  }
+
   @action
   onChangeDate(date) {
     if (!date) {
@@ -127,6 +165,21 @@ export default class DFutureDateInput extends Component {
     }
 
     this._dateTimeChanged(date, this._time);
+  }
+
+  @action
+  onChangeShortcut(id) {
+    this.set("selection", id);
+
+    if (id === null) {
+      this.onChangeInput?.(null);
+      return;
+    }
+
+    const time = this.shortcuts.find((shortcut) => shortcut.id === id)?.time;
+    if (id !== TIME_SHORTCUT_TYPES.CUSTOM && time) {
+      this.onChangeInput?.(time.locale("en").format(FORMAT));
+    }
   }
 
   @action
@@ -160,19 +213,59 @@ export default class DFutureDateInput extends Component {
     <div class="future-date-input" ...attributes>
       {{#unless this.noRelativeOptions}}
         <div class="control-group">
-          <label class={{this.labelClasses}}>
+          <label class={{this.labelClasses}} id={{this.labelId}}>
             {{#if this.displayLabelIcon}}{{dIcon
                 this.displayLabelIcon
               }}{{/if}}{{this.displayLabel}}
           </label>
-          <FutureDateInputSelector
-            @clearable={{this.clearable}}
-            @content={{this.shortcuts}}
-            @onChange={{fn (mut this.selection)}}
-            @onChangeInput={{this.onChangeInput}}
-            @options={{hash none="time_shortcut.select_timeframe"}}
-            @value={{readonly this.selection}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelect
+              class="future-date-input__select"
+              @ariaLabelledBy={{if this.displayLabel this.labelId}}
+              @clearable={{this.clearable}}
+              @filterBy={{this.filterShortcut}}
+              @icon={{this.heldIcon}}
+              @identifier="future-date-input"
+              @onChange={{this.onChangeShortcut}}
+              @options={{this.shortcutOptions}}
+              @texts={{hash
+                ariaLabel=this.ariaLabel
+                placeholder=(i18n "time_shortcut.select_timeframe")
+              }}
+              @value={{this.selection}}
+              @variant="typeahead"
+            >
+              <:selection as |shortcut|>
+                <span class="future-date-input__selection">
+                  {{shortcut.name}}
+                  {{#if shortcut.timeFormatted}}
+                    <span class="future-date-input__selection-date">
+                      {{shortcut.timeFormatted}}
+                    </span>
+                  {{/if}}
+                </span>
+              </:selection>
+              <:option as |shortcut|>
+                <span class="future-date-input__option">
+                  {{#if shortcut.icon}}
+                    {{dIcon shortcut.icon}}
+                  {{/if}}
+                  {{shortcut.name}}
+                </span>
+              </:option>
+            </DSelect>
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <FutureDateInputSelector
+              @clearable={{this.clearable}}
+              @content={{this.shortcuts}}
+              @onChange={{fn (mut this.selection)}}
+              @onChangeInput={{this.onChangeInput}}
+              @options={{hash none="time_shortcut.select_timeframe"}}
+              @value={{readonly this.selection}}
+            />
+          {{/if}}
         </div>
       {{/unless}}
 

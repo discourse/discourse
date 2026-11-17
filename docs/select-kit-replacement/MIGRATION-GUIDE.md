@@ -77,3 +77,36 @@ export default class MyTimeField extends Component {
   always 24-hour `"HH:mm"`.
 - **Emptying the field** gives an empty value. `DDateTimeInput` ignores it and keeps the time, as
   `DTimeInput` could not be emptied.
+
+## `DFutureDateInput` renders `DSelect` behind the flag
+
+Shipped on this branch, behind `enable_new_select_controls`.
+
+- **What changed:** with the flag on, `DFutureDateInput` (and the old
+  `discourse/components/future-date-input` path) renders its shortcut list as a typeahead `DSelect`
+  instead of `FutureDateInputSelector`. Its arguments and the value it emits are unchanged, apart
+  from clearing (below). It takes a new `@ariaLabel` to name the select where no `@label` is
+  shown.
+- **`FORMAT`** now lives in `discourse/lib/time-shortcut`. The old
+  `discourse/select-kit/components/future-date-input-selector` module still re-exports it.
+
+### Who is affected
+
+- Styles that target `.future-date-input-selector`, `.future-date-input-selector-header`,
+  `-row`, `-icons` or `-datetime`. With the flag on, the select is `.future-date-input__select`
+  (a `.d-select` with `@identifier="future-date-input"`, which its list carries as
+  `data-identifier`); rows are `.future-date-input__option`, and the trigger's date is
+  `.future-date-input__selection-date`.
+- Tests that open it through select-kit (`selectKit(".future-date-input-selector")`,
+  `.future-date-input-selector-header`). Use the `DSelect` test helper on
+  `.future-date-input .d-select`.
+- Code that renders `FutureDateInputSelector` directly. It keeps working with the flag off and goes
+  away with select-kit.
+
+### What behaves differently
+
+- **Clearing** empties the caller's date: `@onChangeInput` receives `null`. The old header had no
+  clear button, so `@clearable` had no effect before.
+- **The list can be searched.** Typing matches a shortcut's name or its date.
+- **Each row's date** is the option's description. It sits beside the name when the row has room
+  and wraps under it when it doesn't.

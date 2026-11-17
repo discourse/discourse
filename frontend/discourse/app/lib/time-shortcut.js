@@ -26,6 +26,9 @@ import {
 } from "discourse/lib/time-utils";
 import { i18n } from "discourse-i18n";
 
+/** The moment format future dates are emitted in. */
+export const FORMAT = "YYYY-MM-DD HH:mmZ";
+
 export const TIME_SHORTCUT_TYPES = {
   ONE_HOUR: "one_hour",
   TWO_HOURS: "two_hours",
