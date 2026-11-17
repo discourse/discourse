@@ -14,10 +14,14 @@ ko:
         preview_archive: 보관
         desktop: 데스크톱
         mobile: 모바일
+        save: 저장
+        path_formats:
+          custom: 사용자 정의
         themes: 테마
         theme_name: 테마명
         edit: 편집
         preview: 미리 보기
+        customize: 사용자 지정
         import: 가져오기
         export: 내보내기
         active: 활성화 사용자
@@ -30,6 +34,7 @@ ko:
         change:
           title: 제목
           body: 바디
+          tags: 태그
       review:
         create: 링크 만들기
         copy: 복사

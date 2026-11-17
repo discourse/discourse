@@ -14,7 +14,10 @@ ug:
     about: ھەققىدە
     community: جامائەت
     preview: ئالدىن كۆزەت
+    author: يازغۇچى
     search: ئىزدە
     replies:
       one: "%{count} جاۋاب"
       other: "%{count} جاۋاب"
+    themes:
+      default: كۆڭۈلدىكى

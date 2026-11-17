@@ -29,6 +29,10 @@ blog:
   blog_about:
     default: ""
     textarea: true
+  blog_path_format:
+    default: "/{slug}"
+    client: true
+    validator: "Blog::PathFormatValidator"
   blog_posts_per_page:
     default: 10
     min: 1

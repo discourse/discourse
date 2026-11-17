@@ -30,6 +30,10 @@ module DiscourseCaptcha
       response_json
     end
 
+    def signup_score(_response_json)
+      nil
+    end
+
     protected
 
     def send_verification(captcha_token, captcha_verification_url, secret_key)

@@ -112,7 +112,7 @@ describe "Classifying reviewable moderation" do
     modal.confirm("Suspend")
 
     expect(modal).to be_closed
-    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
 
     page.refresh
 
@@ -196,7 +196,7 @@ describe "Classifying reviewable moderation" do
     composer.submit
 
     expect(composer).to be_closed
-    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
 
     page.refresh
 

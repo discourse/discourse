@@ -15,6 +15,8 @@ RSpec.describe StaticController do
 
     context "with local store" do
       it "returns the default favicon if favicon has not been configured" do
+        Upload.find(SiteIconManager::SKETCH_LOGO_ID).optimized_images.delete_all
+
         get "/favicon/proxied"
 
         expect(response.status).to eq(200)
@@ -23,6 +25,7 @@ RSpec.describe StaticController do
       end
 
       it "does not include a username in the cacheable response" do
+        SiteSetting.favicon = upload
         sign_in(user)
 
         get "/favicon/proxied"
@@ -55,6 +58,17 @@ RSpec.describe StaticController do
         expect(response.status).to eq(200)
         expect(response.media_type).to eq("image/vnd.microsoft.icon")
         expect(response.body.b).to eq(File.binread(file_from_fixtures("smallest.ico", "images")))
+      end
+
+      it "serves the default favicon when the file is not in the store" do
+        SiteSetting.favicon = upload
+        SiteIconManager.favicon.update_columns(url: "/403.html")
+
+        get "/favicon/proxied"
+
+        expect(response.body.b).to eq(
+          File.binread(Rails.public_path.join("images/default-favicon.png")),
+        )
       end
     end
 
@@ -314,6 +328,26 @@ RSpec.describe StaticController do
       expect(response.body).to include(
         PrettyText.cook(I18n.t("login_required.welcome_message", title: SiteSetting.title)),
       )
+    end
+
+    it "includes dimensions for the login logo and its dark variant" do
+      SiteSetting.login_required = true
+      SiteSetting.logo = Fabricate(:upload, width: 600, height: 200)
+      SiteSetting.logo_dark = Fabricate(:upload, width: 500, height: 150)
+      Fabricate(
+        :theme,
+        color_scheme: ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]),
+      )
+
+      get "/login"
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body.at_css(".site-logo").attributes.transform_values(&:value),
+      ).to include("src" => SiteSetting.site_logo_url, "width" => "600", "height" => "200")
+      expect(
+        response.parsed_body.at_css(".logo-container source").attributes.transform_values(&:value),
+      ).to include("srcset" => SiteSetting.site_logo_dark_url, "width" => "500", "height" => "150")
     end
 
     context "when login_required is enabled" do

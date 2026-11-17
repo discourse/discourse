@@ -284,6 +284,7 @@ export default class ChatComposer extends Component {
       this.draft.uploads = cloneJSON(uploads);
       this.persistDraft();
     }
+    this.args.onUploadActivity?.(this.inProgressUploadsCount);
   }
 
   @action
@@ -318,7 +319,9 @@ export default class ChatComposer extends Component {
     }
 
     await this.args.onSendMessage(this.draft);
-    this.composer.textarea.refreshHeight();
+    if (!this.isDestroying) {
+      this.composer.textarea?.refreshHeight();
+    }
   }
 
   async reactingToLastMessage() {
@@ -357,7 +360,7 @@ export default class ChatComposer extends Component {
   }
 
   reportReplyingPresence() {
-    if (!this.args.channel || !this.draft) {
+    if (!this.args.channel || !this.draft || !this.presenceChannelName) {
       return;
     }
 
@@ -904,11 +907,13 @@ export default class ChatComposer extends Component {
         />
       {{/if}}
 
-      <div class="chat-replying-indicator-container">
-        <ChatReplyingIndicator
-          @presenceChannelName={{this.presenceChannelName}}
-        />
-      </div>
+      {{#if this.presenceChannelName}}
+        <div class="chat-replying-indicator-container">
+          <ChatReplyingIndicator
+            @presenceChannelName={{this.presenceChannelName}}
+          />
+        </div>
+      {{/if}}
     </div>
   </template>
 }

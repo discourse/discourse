@@ -803,6 +803,12 @@ login:
     default: false
     validator: GoogleOauth2HdGroupsValidator
     area: "authenticators"
+  google_oauth2_hd_groups_allowed:
+    default: ""
+    type: list
+    list_type: simple
+    validator: GoogleOauth2HdGroupsAllowedValidator
+    area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
     area: "authenticators"
@@ -1233,10 +1239,16 @@ users:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   hide_silencing_reasons:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   log_personal_messages_views:
     default: false
     area: "users"
@@ -2195,7 +2207,7 @@ nested_replies:
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
-    min: 1
+    min: 0
     max: 10000
     hidden: true
   nested_replies_stats_maintenance_enabled:
@@ -4306,9 +4318,6 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
-  concord_in_wizard:
-    default: false
-    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4824,7 +4833,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/414613"
   enable_composer_redesign:
@@ -4843,17 +4852,26 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/414357"
+  review_queue_consistent_answers:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "other,moderators"
+      learn_more_url: "https://meta.discourse.org/t/-/417015"
   enable_composer_toolbar_customization:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412749"
   enable_category_hashtag_cards:
@@ -5048,6 +5066,17 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/416547"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
   update_whispers_allowed_groups_default:
     default: false
     hidden: true
@@ -5067,3 +5096,11 @@ experimental:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/413150"
+  mobile_footer_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/417307"

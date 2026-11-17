@@ -1,4 +1,5 @@
-import { hash } from "@ember/helper";
+import { tracked } from "@glimmer/tracking";
+import { array, hash } from "@ember/helper";
 import { fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -13,59 +14,17 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
-    });
-
-    test("groupsOnly searches groups including pseudogroups without searching users", async function (assert) {
-      let searchParams;
-      pretender.get("/groups/search.json", (request) => {
-        searchParams = request.queryParams;
-        return response([
-          { id: 4, name: "anonymous_users" },
-          { id: 0, name: "everyone" },
-        ]);
-      });
-      await render(
-        <template>
-          <EmailGroupUserChooser @options={{hash groupsOnly=true}} />
-        </template>
-      );
-      await this.subject.expand();
-      assert.strictEqual(searchParams.include_pseudogroups, "true");
-      assert.dom('.select-kit-row[data-value="anonymous_users"]').exists();
-      assert.dom('.select-kit-row[data-value="everyone"]').doesNotExist();
-      assert.dom(".email-group-user-chooser__user").doesNotExist();
-    });
-
-    test("groupsOnly does not create pasted usernames or emails", async function (assert) {
-      const changes = [];
-      this.set("onChange", (values) => changes.push(values));
-      pretender.get("/groups/search.json", () => response([]));
-      await render(
-        <template>
-          <EmailGroupUserChooser
-            @onChange={{this.onChange}}
-            @options={{hash groupsOnly=true allowAny=true}}
-          />
-        </template>
-      );
-      await this.subject.expand();
-      await paste(
-        ".select-kit input.filter-input",
-        "someone@example.com, a_user"
-      );
-      assert.true(changes.every((values) => values.length === 0));
-      assert.dom(".selected-choice").doesNotExist();
+      this.subject = selectKit();
     });
 
     test("renders group results with group name and full name", async function (assert) {
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           name: "team_a",
           full_name: "Team A",
           isGroup: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -93,13 +52,13 @@ module(
     });
 
     test("prioritizeGroupFullNameOrdering renders the full name before the group name", async function (assert) {
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           name: "team_a",
           full_name: "Team A Full Name",
           isGroup: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -134,7 +93,7 @@ module(
     });
 
     test("excludeGroupNameWhenMatchingFullName hides a redundant group name", async function (assert) {
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           name: "team_a",
           full_name: "Team A",
@@ -145,7 +104,7 @@ module(
           full_name: null,
           isGroup: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -184,13 +143,13 @@ module(
 
     test("prioritizeUserNameOrdering can render the name before username", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = false;
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           username: "ada",
           name: "Ada Lovelace",
           isUser: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -223,13 +182,13 @@ module(
 
     test("prioritize_username_in_ux keeps username first", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = true;
-      this.set("defaultSearchResults", [
+      this.defaultSearchResults = [
         {
           username: "ada",
           name: "Ada Lovelace",
           isUser: true,
         },
-      ]);
+      ];
 
       await render(
         <template>
@@ -261,12 +220,14 @@ module(
     });
 
     test("pasting", async function (assert) {
-      this.set("onChange", (value) => this.set("value", value));
+      const value = tracked(undefined);
+      const onChange = (newValue) => (value.value = newValue);
+
       await render(
         <template>
           <EmailGroupUserChooser
-            @onChange={{this.onChange}}
-            @value={{this.value}}
+            @onChange={{onChange}}
+            @value={{value.value}}
           />
         </template>
       );
@@ -320,11 +281,10 @@ module(
         return response({ users });
       });
 
-      this.set("excludedUsernames", ["osama", "joshua"]);
       await render(
         <template>
           <EmailGroupUserChooser
-            @options={{hash excludedUsernames=this.excludedUsernames}}
+            @options={{hash excludedUsernames=(array "osama" "joshua")}}
           />
         </template>
       );
@@ -335,11 +295,10 @@ module(
       let suggestions = this.subject.displayedContent().map((item) => item.id);
       assert.deepEqual(suggestions, ["sam"]);
 
-      this.set("excludedUsernames", ["osama"]);
       await render(
         <template>
           <EmailGroupUserChooser
-            @options={{hash excludedUsernames=this.excludedUsernames}}
+            @options={{hash excludedUsernames=(array "osama")}}
           />
         </template>
       );

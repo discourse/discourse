@@ -57,4 +57,44 @@ RSpec.describe "Browse queries" do
     expect(queries_page).to have_search("revenue")
     expect(queries_page).to have_queries([monthly_revenue])
   end
+
+  it "lets the admin delete a query from the list" do
+    DiscourseDataExplorer::DefaultQuerySync.execute
+    obsolete = Fabricate(:query, name: "Zebra obsolete")
+    kept = Fabricate(:query, name: "Zebra kept")
+    default_query = DiscourseDataExplorer::Query.where("id < 0").first
+
+    queries_page.visit.search("zebra").delete(obsolete)
+
+    expect(queries_page).to have_no_query(obsolete)
+    expect(queries_page).to have_queries([kept])
+    expect(obsolete.reload).to be_hidden
+
+    queries_page.search(default_query.name)
+
+    expect(queries_page).to have_no_delete_option(default_query)
+  end
+
+  it "lets the admin add a query to the dashboard from the list and remove it again" do
+    DiscourseDataExplorer::DefaultQuerySync.execute
+    default_query = DiscourseDataExplorer::Query.where("id < 0").first
+    report_scope =
+      AdminDashboardReport.where(source: "data_explorer_query", identifier: default_query.id.to_s)
+
+    queries_page.visit.search(default_query.name).toggle_dashboard(default_query)
+
+    expect(queries_page).to have_dashboard_action(
+      default_query,
+      I18n.t("js.explorer.dashboard.remove"),
+    )
+    expect(report_scope).to exist
+
+    queries_page.toggle_dashboard(default_query)
+
+    expect(queries_page).to have_dashboard_action(
+      default_query,
+      I18n.t("js.explorer.dashboard.add"),
+    )
+    expect(report_scope).not_to exist
+  end
 end

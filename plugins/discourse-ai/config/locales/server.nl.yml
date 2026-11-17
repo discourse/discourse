@@ -129,6 +129,12 @@ nl:
     ai_translation_backfill_hourly_rate: "Het aantal te vertalen berichten en topics per uur tijdens aanvulbewerkingen. Stel in op 0 om automatisch aanvullen van vertalingen voor bestaande content uit te schakelen."
     ai_translation_backfill_parallel_jobs: "Het aantal parallelle postlokalisatietaken dat wordt uitgevoerd per aanvulcyclus. Hogere waarden verhogen de doorvoer, maar verbruiken meer bronnen."
     ai_usage_rollup_after_days: "Aantal dagen dat de AI-gebruiksstatistieken per verzoek worden bewaard voordat ze in de dagelijkse aggregaten worden opgenomen. Stel in op 0 om samentellen uit te schakelen."
+    keywords:
+      ai_default_llm_model: "standaard taalmodel"
+      ai_discord_search_enabled: "discord-integratie"
+      ai_helper_automatic_chat_thread_title: "chatthreadtitels"
+      ai_summarization_enabled: "samenvattingen"
+      ai_summary_gists_enabled: "korte samenvattingen voor topiclijst"
   reviewables:
     reasons:
       flagged_by_toxicity: De AI-plug-in heeft dit gemarkeerd nadat het als toxisch was geclassificeerd.
@@ -223,10 +229,6 @@ nl:
           name: "Afbeelding genereren..."
         image_generation_custom:
           name: "Aangepast"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -835,6 +837,14 @@ nl:
       fonts:
         base_font: "Lettertype inhoud"
         heading_font: "Lettertype kop"
+    mcp_theme_access:
+      "on": "Aan"
+      "off": "Uit"
+      none: "geen"
+      changes:
+        server: "MCP-server"
+    mcp_app_setup:
+      none: "geen"
     reviewables:
       ai_tool_action:
         title: "AI-toolactie"

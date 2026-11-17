@@ -22,19 +22,51 @@ a deferred, interactive Discourse discussion below each article.
 - Private working topics, frozen approved revisions, and preserved public discussions.
 - Durable paths, including historical date-based paths; automatic 301 aliases when
   changing an article path. Topic title edits never change the published path.
-  Imported paths retain case, plus signs, underscores, dots, commas, and encoded
-  plus/comma characters. Dated `/blog/archive/YYYY/MM/DD/...` paths are supported;
+  Imported paths retain case, plus signs, underscores, dots, commas, encoded
+  plus/comma characters, and percent-encoded UTF-8 such as `/%E6%97%A5%E6%9C%AC`
+  (stored with upper-case hex, as requests arrive). Dated
+  `/blog/archive/YYYY/MM/DD/...` paths are supported;
   other editorial and asset paths remain reserved. Paths cannot contain queries,
   fragments, traversal segments, or encoded separators.
-- On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`
-  and `/posts.atom` redirect permanently to the RSS feed at `/feed.xml`. Article discussions retain
-  both the `#discussion` and `#comments` fragment targets.
+- On a dedicated hostname, legacy `/posts` redirects permanently to `/`; `/posts.rss`,
+  `/posts.atom`, `/rss` and `/feed` (the Ghost and WordPress feed URLs) redirect permanently to the
+  RSS feed at `/feed.xml`, and Ghost's `/page/N` pagination redirects to `/?page=N`. Article
+  discussions retain both the `#discussion` and `#comments` fragment targets.
+- A blog path that is not an article falls back to core permalinks, so a migration can
+  redirect old author, tag or page URLs. Permalinks match the request path (`/blog/...` under the
+  community), and relative targets resolve against the community host.
 - Excerpts, featured articles, author bylines, reading time, publication/updated
-  dates, and card/social images from the topic's first image upload.
+  dates, and an optional cover image with alt text, shown above the article and
+  used for cards and social previews (otherwise the topic's first image upload).
 - Paginated homepage, searchable archive (titles/excerpts), public tag pages, and
   Markdown About page.
+- Standalone pages, such as Contact or Privacy, marked in the article settings. They're
+  served at their own path and listed in the sitemap, but left out of the homepage,
+  archive, search, tag and author pages, and the feed. They render with the `page`
+  template, which gets the same `article` variables as the article template; the
+  built-in and bundled versions leave out the byline, dates, reading time and tags, and
+  no discussion section is shown. Theme previews use the newest published page. Their
+  structured data is `WebPage` rather than
+  `BlogPosting`, and new pages get a `/<slug>` path whatever the path format. The About
+  page stays the `blog_about` setting. Topics in the blog and drafts categories skip
+  the forum's minimum title length, so a page can be called "Contact".
+- Author pages at `/author/<username>`, as on Ghost and WordPress, listing an author's
+  articles under their name, avatar and bio. Bylines link to them. The bio follows the
+  user's profile visibility, and a user with no public article gets a 404, so the URLs
+  can't be used to check which usernames exist. Imported author URLs with a different
+  slug can be redirected with permalinks. Articles owned by the system user or a bot,
+  as imports with no known author are, show no byline and have no author page.
+  Templates get `article.authors` (`name`, `url`, `separator`) for bylines, plus
+  `article.author` (the names joined) and `article.author_url` (the first author's page),
+  and, on author pages, `page.author` (`name`, `username`, `url`, `avatar_url`, `bio_html`).
+- Co-authors, set in the article settings: up to 10 active users credited after the
+  topic's owner in the byline and the structured data, staged until the next publish like
+  other settings. Their author pages list the article too. Credit only: co-authors get no
+  extra editing rights. Names are kept as they were when the article was published.
 - RSS with stable item identifiers, sitemap, robots, social metadata, and
-  `BlogPosting` structured data.
+  `BlogPosting` structured data. Item identifiers come from the article's topic, not
+  its path, so after a migration, feed readers subscribed to the old blog's feed see
+  each imported article as new once.
 - Blog-primary canonical for the discussion landing page; later discussion pages
   keep their page-specific canonical.
 - A configurable paper/ink/accent palette, graphic covers, and Liquid-based
@@ -145,9 +177,9 @@ embedding host then includes that port, for example `blog.dev.localhost:8443`.
 
 ### Backups and hostname changes
 
-Back up uploads as well as the database. Enable `include_thumbnails_in_backups`
-when preserving published revisions: their frozen HTML can reference optimized
-images that are not regenerated simply by rendering the article.
+Back up uploads as well as the database. Enable `include_thumbnails_in_backups`:
+published articles keep the HTML they were approved with, and a restore without
+thumbnails regenerates them by rebaking posts, which does not change articles.
 
 A backup carries blog settings, themes, publications, and revisions, but not plugin
 source, DNS, TLS, or reverse-proxy configuration. Restore onto a compatible
@@ -155,11 +187,15 @@ Discourse build with this plugin installed. Before exposing a restored site, set
 the correct blog origin and exact embedding host, and verify both reader and
 editorial permissions.
 
-For a hostname-changing restore, also remap absolute URLs inside
-`blog_revisions.data`. These snapshots use JSONB; core's text-column
-hostname remapping does not update them. Perform this as an explicit, backed-up
-restore operation, not by republishing or rebaking live articles. Verify canonicals,
-feeds, sitemap, article images, and embedded discussions before reopening traffic.
+Published articles store their HTML in text columns, so hostname remaps (`discourse
+remap` or a restore onto a new hostname) and upload migrations to S3 update them like
+posts. Rebakes do not: a refetched onebox or other re-rendered content stays out of an
+article until it is published again or an admin runs `bin/rake blog:refresh_articles`,
+which copies each discussion post's current HTML into its article and recounts its
+words for the reading time. Run it after rebaking
+posts in bulk, such as after an import, once Sidekiq has finished post-processing them.
+Verify canonicals, feeds, sitemap, article images, and embedded discussions before
+reopening traffic.
 
 ### Local demo provisioning
 
@@ -272,7 +308,8 @@ design's decorative graphic covers.
 
 Reader pages use Liquid templates with optional per-theme overrides. Switch themes
 through the normal preview/activation interface; no articles or editorial data need
-to change.
+to change. Article previews in the editor use the active theme's templates and CSS,
+so they match the published page apart from its custom JavaScript.
 
 ## Editorial workflow
 
@@ -284,8 +321,9 @@ to change.
 3. For an existing public article, the public discussion topic shows a banner
    with **Edit privately**, which creates a private working copy and links to it.
    The existing public discussion and its replies keep their IDs.
-4. **Article settings** (path, excerpt, date, featured) are edited inline in the
-   panel. **Save settings** stages metadata without changing the live article.
+4. **Article settings** (path, excerpt, cover image, meta description, canonical
+   URL, date, featured) are edited inline in the panel. **Save settings** stages metadata
+   without changing the live article.
 5. **Publish** (or **Publish correction** once live) requires confirmation and
    freezes the current draft and settings as a revision, approves it, and copies
    only that frozen article into a separate public discussion (or updates its
@@ -353,6 +391,10 @@ at narrow and desktop widths in both color modes. Article images outside oneboxe
 must retain their normal sizing. Code oneboxes normalize whitespace around their
 line lists, preserving it only inside each line. Check line numbering, indentation,
 empty lines, and horizontal scrolling without applying article-list spacing.
+
+Images inside `.blog-article__body` open in a lightbox, except emoji, avatars, site icons,
+onebox images, video thumbnails, and images that link elsewhere. The article cover
+and other images outside the body do not.
 
 Syntax highlighting is progressive enhancement in the shared reader. Only articles
 with eligible code blocks load the minified core module and the site's existing
@@ -462,10 +504,11 @@ style `.blog-post-summary` without reaching into cooked article content.
 time and loads the next page as you scroll near the end of the list, while another
 page exists.
 
-The All articles, Drafts, Published, and Not on the blog filters run on the server
+The All, Drafts, Published, Not on the blog, and Pages filters run on the server
 before pagination. Not on the blog means discussions in the public publication
 category which are not currently live articles; private drafts have their own
-filter. Search matches titles, slugs, and stored article paths case-insensitively,
+filter. Pages lists standalone pages, which are also marked with a Page badge.
+Search matches titles, slugs, and stored article paths case-insensitively,
 across the entire authorized editorial collection, not just downloaded entries.
 Search and status apply to every page that loads and are kept in the URL, so a
 filtered view survives a reload; changing either starts at the first page. Search input is bounded to 100 characters and SQL wildcards are
@@ -488,7 +531,7 @@ Exports use the same version-2 source layout as Git imports:
 
 - `blog-theme.json`: `version`, `name`, `accent_color`, `paper_color`, `ink_color`
 - `blog.css` and `blog.js`
-- `templates/{layout,index,article,about,not_found}.liquid`
+- `templates/{layout,index,article,page,about,not_found}.liquid`
 
 Empty template files retain the built-in fallback. Archives may contain these files
 at the root or inside one enclosing directory. Import applies the same per-file size

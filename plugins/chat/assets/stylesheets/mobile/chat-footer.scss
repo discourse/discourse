@@ -42,3 +42,72 @@
     }
   }
 }
+
+// The core tab bar owns the bottom edge, so chat's own tabs become pills in
+// the strip it keeps above its tabs
+html.mobile-tab-bar-visible {
+  .c-footer.--pills {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0;
+    border-top: none;
+
+    > :first-child {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .nav-pills {
+      margin: 0;
+    }
+
+    .c-unread-indicator {
+      margin-left: var(--space-1);
+    }
+
+    .c-footer__options {
+      display: flex;
+      flex: none;
+      gap: var(--space-2);
+      margin-left: auto;
+
+      // Sits inside the tab bar's strip, shaped like the lists beside it
+      .btn {
+        width: var(--mobile-tab-bar-item-size);
+        height: var(--mobile-tab-bar-item-size);
+        padding: 0;
+        border: 0;
+        border-radius: var(--mobile-tab-bar-inner-radius);
+        background: transparent;
+
+        .d-icon {
+          color: var(--header_primary-medium);
+        }
+      }
+    }
+  }
+
+  .chat-header-icon {
+    display: none;
+  }
+}
+
+.mobile-tab-bar__badge .chat-channel-unread-indicator,
+.mobile-tab-bar__more-badge .chat-channel-unread-indicator {
+  position: static;
+  margin: 0;
+}
+
+// The tabs name the list, so the lists' own title bars only repeat them
+html.mobile-tab-bar-visible
+  .c-routes:is(.--channels, .--direct-messages, .--starred-channels, .--threads)
+  > .c-navbar-container:not(.--single-view),
+html.mobile-tab-bar-visible .c-routes.--search > .c-navbar-container {
+  display: none;
+}
+
+// The tab bar's strip is their background
+.mobile-tab-bar__views .c-footer.--pills {
+  background: transparent;
+}

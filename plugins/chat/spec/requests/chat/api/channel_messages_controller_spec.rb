@@ -283,6 +283,134 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when the channel is a named two-person direct message" do
+      fab!(:recipient, :user)
+      fab!(:channel) do
+        Fabricate(
+          :direct_message_channel,
+          group: true,
+          name: "Private chat",
+          users: [current_user, recipient],
+        )
+      end
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "enforces the recipient's communication restrictions" do
+        recipient.user_option.update!(allow_private_messages: false)
+
+        expect { post "/chat/#{channel.id}.json", params: params }.not_to change {
+          channel.chat_messages.count
+        }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("chat.errors.not_accepting_dms", username: recipient.username),
+        )
+      end
+    end
+
+    context "when the channel is a genuine multi-person group direct message" do
+      fab!(:recipient, :user)
+      fab!(:third_user, :user)
+      fab!(:channel) do
+        Fabricate(
+          :direct_message_channel,
+          group: true,
+          name: "Group chat",
+          users: [current_user, recipient, third_user],
+        )
+      end
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "still allows messaging even when a recipient disallows direct messages" do
+        recipient.user_option.update!(allow_private_messages: false)
+
+        expect { post "/chat/#{channel.id}.json", params: params }.to change {
+          channel.chat_messages.count
+        }.by(1)
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "when a channel member has lost access to the channel's category" do
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+      fab!(:channel) { Fabricate(:category_channel, chatable: private_category) }
+      fab!(:removed_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+      let(:message) { "@all this is a secret message" }
+
+      before do
+        Jobs.run_immediately!
+        group.add(current_user)
+        group.add(removed_user)
+        channel.add(removed_user)
+        GroupUser.where(group: group, user: removed_user).delete_all
+      end
+
+      it "does not send channel-wide mention notifications to the removed user" do
+        messages =
+          MessageBus.track_publish("/chat/notification-alert/#{removed_user.id}") do
+            post "/chat/#{channel.id}.json", params: params
+          end
+
+        expect(response.status).to eq(200)
+        expect(messages).to be_empty
+        expect(
+          Notification.where(
+            user: removed_user,
+            notification_type: Notification.types[:chat_mention],
+          ),
+        ).to be_empty
+      end
+
+      it "still notifies members who retain access" do
+        other_member = Fabricate(:user, refresh_auto_groups: true)
+        group.add(other_member)
+        channel.add(other_member)
+
+        post "/chat/#{channel.id}.json", params: params
+
+        expect(response.status).to eq(200)
+        expect(
+          Notification.where(
+            user: other_member,
+            notification_type: Notification.types[:chat_mention],
+          ),
+        ).to exist
+      end
+    end
+
+    context "when a watching user ignores the sender in a category channel" do
+      fab!(:watcher, :user)
+      fab!(:watcher_membership) do
+        Fabricate(
+          :user_chat_channel_membership,
+          user: watcher,
+          chat_channel: channel,
+          notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        )
+      end
+
+      before do
+        Jobs.run_immediately!
+        Fabricate(:ignored_user, user: watcher, ignored_user: current_user)
+      end
+
+      it "does not publish a notification alert to the watcher" do
+        messages =
+          MessageBus.track_publish("/chat/notification-alert/#{watcher.id}") do
+            post "/chat/#{channel.id}.json", params: params
+          end
+
+        expect(response).to have_http_status(:ok)
+        expect(messages).to be_empty
+      end
+    end
+
     context "when force_thread param is given" do
       let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
@@ -424,6 +552,29 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     fab!(:other_user, :user)
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
+
+    it "keeps remaining pins readable for another DM participant after bulk deletion" do
+      SiteSetting.chat_pinned_messages = true
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+      dm = Fabricate(:direct_message_channel, users: [current_user, other_user])
+      removed = Fabricate(:chat_message, chat_channel: dm, user: current_user)
+      retained = Fabricate(:chat_message, chat_channel: dm, user: other_user)
+      [removed, retained].each do |message|
+        Fabricate(:chat_pinned_message, chat_channel: dm, chat_message: message)
+      end
+
+      delete "/chat/api/channels/#{dm.id}/messages", params: { message_ids: [removed.id] }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+
+      sign_in(other_user)
+      get "/chat/api/channels/#{dm.id}/pins"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["pinned_messages"].pluck("chat_message_id")).to eq([retained.id])
+      expect(dm.pinned_messages.count).to eq(1)
+    end
 
     context "when user is staff" do
       fab!(:current_user, :admin)

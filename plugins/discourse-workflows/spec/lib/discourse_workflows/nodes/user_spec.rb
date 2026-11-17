@@ -4,6 +4,26 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
   fab!(:user)
   fab!(:admin)
 
+  describe ".load_options_context" do
+    let(:load_options_context) do
+      DiscourseWorkflows::LoadOptionsContext.new(
+        method_name: "user_custom_fields",
+        filter: nil,
+        node_class: described_class,
+      )
+    end
+
+    it "lists custom field names but not admin-defined user fields" do
+      user.custom_fields["workflow_key"] = "first"
+      user.custom_fields["user_field_1"] = "profile value"
+      user.save_custom_fields
+
+      expect(described_class.load_options_context(load_options_context)).to eq(
+        [{ id: "workflow_key", name: "workflow_key" }],
+      )
+    end
+  end
+
   describe "#execute" do
     it "gets user fields and group memberships", :aggregate_failures do
       user.user_profile.update!(bio_raw: "Original bio")
@@ -257,6 +277,77 @@ RSpec.describe DiscourseWorkflows::Nodes::User::V1 do
           },
         )
       end.to raise_error(DiscourseWorkflows::NodeError, "Unknown user extensions: nope.")
+    end
+
+    context "with custom fields" do
+      let(:configuration) do
+        {
+          "operation" => "get",
+          "username" => user.username,
+          "custom_field_names" => %w[wf_plain_field wf_missing user_field_1],
+        }
+      end
+
+      before do
+        user.custom_fields["wf_plain_field"] = "plain"
+        user.custom_fields["wf_unrequested"] = "hidden"
+        user.custom_fields["user_field_1"] = "profile value"
+        user.save_custom_fields
+      end
+
+      it "returns only the requested custom fields", :aggregate_failures do
+        result = execute_node(configuration:)
+
+        expect(result.dig("user", "custom_fields")).to eq(
+          "wf_plain_field" => "plain",
+          "wf_missing" => nil,
+        )
+        expect(result).to match_node_output_schema(described_class, configuration:)
+      end
+
+      it "does not return custom fields that were not requested", :aggregate_failures do
+        configuration = { "operation" => "get", "username" => user.username }
+        result = execute_node(configuration:)
+
+        expect(result["user"]).not_to have_key("custom_fields")
+        expect(result).to match_node_output_schema(described_class, configuration:)
+      end
+
+      fab!(:moderator)
+
+      it "withholds fields outside the allowed list from a non-admin actor", :aggregate_failures do
+        SiteSetting.public_user_custom_fields = "wf_plain_field"
+        configuration =
+          self.configuration.merge(
+            "custom_field_names" => %w[wf_plain_field wf_unrequested],
+            "actor_username" => moderator.username,
+          )
+        result = execute_node(configuration:)
+
+        expect(result.dig("user", "custom_fields")).to eq("wf_plain_field" => "plain")
+        expect(result).to match_node_output_schema(described_class, configuration:)
+      end
+
+      it "returns empty custom fields when none of the requested fields are readable",
+         :aggregate_failures do
+        configuration =
+          self.configuration.merge(
+            "custom_field_names" => %w[wf_unrequested user_field_1],
+            "actor_username" => moderator.username,
+          )
+        result = execute_node(configuration:)
+
+        expect(result.dig("user", "custom_fields")).to eq({})
+        expect(result).to match_node_output_schema(described_class, configuration:)
+      end
+
+      it "returns any requested field to an admin actor", :aggregate_failures do
+        configuration = self.configuration.merge("actor_username" => admin.username)
+        result = execute_node(configuration:)
+
+        expect(result.dig("user", "custom_fields")).to include("wf_plain_field" => "plain")
+        expect(result).to match_node_output_schema(described_class, configuration:)
+      end
     end
 
     it "removes the avatar and logs a staff action", :aggregate_failures do

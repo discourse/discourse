@@ -19,3 +19,5 @@ sl:
       two: "%{count} odgovora"
       few: "%{count} odgovori"
       other: "%{count} odgovorov"
+    themes:
+      default: Privzeto

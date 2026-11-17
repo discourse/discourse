@@ -14,7 +14,10 @@ nb_NO:
     about: Om
     community: Gemenskap
     preview: Forhåndsvis
+    author: Forfatter
     search: Søk
     replies:
       one: "%{count} svar"
       other: "%{count} svar"
+    themes:
+      default: Forvalg

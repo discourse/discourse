@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
@@ -656,23 +657,23 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   });
 
   test("@portalOutletElement", async function (assert) {
-    this.set("portalOutletElement", null);
-    this.setPortalOutletElement = (element) => {
-      this.set("portalOutletElement", element);
+    const portalOutletElement = tracked(null);
+    const setPortalOutletElement = (element) => {
+      portalOutletElement.value = element;
     };
 
     await render(
       <template>
         <div
           id="custom-tooltip-portal"
-          {{didInsert this.setPortalOutletElement}}
+          {{didInsert setPortalOutletElement}}
         ></div>
-        {{#if this.portalOutletElement}}
+        {{#if portalOutletElement.value}}
           <DTooltip
             @content="content"
             @inline={{false}}
             @label="label"
-            @portalOutletElement={{this.portalOutletElement}}
+            @portalOutletElement={{portalOutletElement.value}}
           />
         {{/if}}
       </template>

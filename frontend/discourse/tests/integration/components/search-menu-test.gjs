@@ -13,6 +13,8 @@ import { module, test } from "qunit";
 import SearchMenu, {
   DEFAULT_TYPE_FILTER,
 } from "discourse/components/search-menu";
+import TagResult from "discourse/components/search-menu/results/type/tag";
+import { defaultRenderTag, replaceTagRenderer } from "discourse/lib/render-tag";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -23,6 +25,66 @@ import { i18n } from "discourse-i18n";
 // menu panel separate from the search input.
 module("Integration | Component | SearchMenu", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("tag results preserve IDs and localized names through search translation", async function (assert) {
+    pretender.get("/search/query", () =>
+      response({
+        tags: [{ id: 123, name: "猫", slug: "cat" }],
+        grouped_search_result: { term: "cat", more_tags: false },
+      })
+    );
+
+    await render(
+      <template>
+        <SearchMenu @location="test" @searchInputId="icon-search-input" />
+      </template>
+    );
+    await click("#icon-search-input");
+    await fillIn("#icon-search-input", "cat");
+
+    assert
+      .dom(".search-result-tag span.discourse-tag")
+      .hasAttribute("data-tag-id", "123")
+      .hasAttribute("data-tag-name", "猫")
+      .hasText("猫")
+      .doesNotHaveAttribute("href");
+  });
+
+  test("tag results continue to support names without IDs", async function (assert) {
+    this.result = "cat";
+
+    await render(<template><TagResult @result={{this.result}} /></template>);
+
+    assert
+      .dom("span.discourse-tag")
+      .doesNotHaveAttribute("data-tag-id")
+      .hasAttribute("data-tag-name", "cat")
+      .hasText("cat");
+  });
+
+  test("tag results preserve name inputs for custom tag renderers", async function (assert) {
+    this.result = { id: 123, name: "猫", slug: "cat" };
+    let input;
+    let options;
+    replaceTagRenderer((tag, params) => {
+      input = tag;
+      options = params;
+      return '<span class="custom-tag">Custom tag</span>';
+    });
+
+    try {
+      await render(<template><TagResult @result={{this.result}} /></template>);
+
+      assert.strictEqual(input, "猫");
+      assert.propContains(options, { tagId: 123, tagName: "span" });
+      assert
+        .dom(".custom-tag")
+        .hasText("Custom tag")
+        .doesNotHaveAttribute("data-tag-id");
+    } finally {
+      replaceTagRenderer(defaultRenderTag);
+    }
+  });
 
   test("rendering standalone", async function (assert) {
     pretender.get("/search/query", (request) => {

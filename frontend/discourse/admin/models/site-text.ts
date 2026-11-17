@@ -7,13 +7,16 @@ export interface SiteTextFields {
   id: string;
   value: string;
   status:
+    | "unknown"
     | "up_to_date"
     | "outdated"
     | "invalid_interpolation_keys"
     | "deprecated";
   old_default: string | null;
   new_default: string | null;
-  interpolation_keys: string[];
+  default_text?: string | null;
+  default_locale?: string | null;
+  interpolation_keys: string[] | null;
   overridden: boolean;
   can_revert: boolean;
 }
@@ -34,6 +37,8 @@ export default class SiteText extends RestModel {
       | "status"
       | "old_default"
       | "new_default"
+      | "default_text"
+      | "default_locale"
       | "interpolation_keys"
     >
   > {
@@ -48,6 +53,8 @@ export default class SiteText extends RestModel {
         "status",
         "old_default",
         "new_default",
+        "default_text",
+        "default_locale",
         "interpolation_keys"
       )
     );

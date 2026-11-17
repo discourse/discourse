@@ -514,6 +514,11 @@ textarea {
     color: var(--danger);
     border-color: var(--danger);
     outline: 1px solid var(--danger);
+
+    // Some platforms (e.g. Windows) render the open option list with the select's color
+    option {
+      color: var(--d-input-text-color);
+    }
   }
 }
 

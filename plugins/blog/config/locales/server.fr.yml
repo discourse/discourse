@@ -14,7 +14,10 @@ fr:
     about: À propos
     community: Communauté
     preview: Aperçu
+    author: Auteur
     search: Recherche
     replies:
       one: "%{count} réponse"
       other: "%{count} réponses"
+    themes:
+      default: Par défaut

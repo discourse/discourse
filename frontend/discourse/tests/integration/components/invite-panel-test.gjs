@@ -22,7 +22,7 @@ module("Integration | Component | InvitePanel", function (hooks) {
     const user = store.createRecord("user", {
       details: { can_invite_via_email: true },
     });
-    this.set("inviteModel", user);
+    this.inviteModel = user;
 
     await render(
       <template><InvitePanel @inviteModel={{this.inviteModel}} /></template>

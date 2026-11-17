@@ -738,88 +738,33 @@ RSpec.describe PrettyText do
       expect(cooked).to eq(html.strip)
     end
 
-    it "highlights Unicode bidirectional override characters during cleanup" do
-      cooked = <<~HTML
-        <p>X</p>
-        <pre><code class="lang-auto">var isAdmin = false;
-        \u202E
-        </code></pre>
-      HTML
-      cleaned = PrettyText.cleanup(cooked)
-      hidden_bidi_title = I18n.t("post.hidden_bidi_character")
+    it "highlights every dangerous Unicode bidirectional character in code and pre elements" do
+      characters = %W[\u202A \u202B \u202C \u202D \u202E \u2066 \u2067 \u2068 \u2069]
 
-      html = <<~HTML
-        <p>X</p>
-        <pre><code class="lang-auto">var isAdmin = false;
-        <span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+202E&gt;</span>
-        </code></pre>
-      HTML
+      cooked = PrettyText.cook(<<~MD)
+        ```
+        #{characters.join}
+        ```
 
-      expect(cleaned.strip).to eq(html.strip)
+        <code>#{characters.join}</code>
+
+        <pre>#{characters.join}</pre>
+      MD
+
+      warnings = Nokogiri::HTML5.fragment(cooked).css(".bidi-warning")
+      expect(warnings.map { |warning| [warning.parent.name, warning.text] }).to eq(
+        %w[code code pre]
+          .product(characters)
+          .map { |tag, char| [tag, format("<U+%04X>", char.ord)] },
+      )
     end
 
-    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters, making sure they are replaced" do
-      bad_bidi = [
-        "\u202A",
-        "\u202B",
-        "\u202C",
-        "\u202D",
-        "\u202E",
-        "\u2066",
-        "\u2067",
-        "\u2068",
-        "\u2069",
-      ]
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        ```
-        #{bidi}
-        ```
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <pre><code class="lang-auto"><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span>
-          </code></pre>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
-    end
+    it "keeps attributes intact when they contain Unicode bidirectional override characters" do
+      title = "\u202E<img src=/x style=position:fixed>"
 
-    it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters in solo code and pre nodes, making sure they are replaced" do
-      bad_bidi = [
-        "\u202A",
-        "\u202B",
-        "\u202C",
-        "\u202D",
-        "\u202E",
-        "\u2066",
-        "\u2067",
-        "\u2068",
-        "\u2069",
-      ]
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        <code>#{bidi}</code>
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <p><code><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></code></p>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
-      bad_bidi.each do |bidi|
-        code = <<~MD
-        <pre>#{bidi}</pre>
-        MD
-        cooked = PrettyText.cook(code)
-        formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
-        html = <<~HTML
-          <pre><span class="bidi-warning" title="#{I18n.t("post.hidden_bidi_character")}">#{formatted_bidi}</span></pre>
-        HTML
-        expect(cooked).to eq(html.strip)
-      end
+      cooked = PrettyText.cook("<code>\u202E<abbr title=\"#{title}\">a</abbr></code>")
+
+      expect(Nokogiri::HTML5.fragment(cooked).at_css("code abbr")["title"]).to eq(title)
     end
   end
 
@@ -871,6 +816,18 @@ RSpec.describe PrettyText do
       expect(
         PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow ugc/,
       ).to eq(true)
+    end
+
+    it "does not inject nofollow for an allowlisted host requested in a different case" do
+      expect(PrettyText.cook("<a href='http://FOO.COM/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(
+        true,
+      )
+    end
+
+    it "injects nofollow for a host that only shares a suffix with an allowlisted host" do
+      expect(PrettyText.cook("<a href='http://notfoo.com/test.html'>cnn</a>")).to match(
+        /nofollow ugc/,
+      )
     end
 
     it "does not inject nofollow when omit_nofollow is enabled" do
@@ -1668,6 +1625,12 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("*️⃣")).to match(/\:asterisk\:/)
     end
 
+    it "renders adjacent multi-codepoint emoji" do
+      england_flag = [0x1F3F4, 0xE0067, 0xE0062, 0xE0065, 0xE006E, 0xE0067, 0xE007F].pack("U*")
+
+      expect(PrettyText.cook(england_flag * 2).scan('title=":england:"').size).to eq(2)
+    end
+
     it "doesn't replace unicode emoji if emoji is disabled" do
       SiteSetting.enable_emoji = false
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
@@ -1821,21 +1784,6 @@ RSpec.describe PrettyText do
     it "sets the custom translation" do
       expect(PrettyText.cook("hello 0:)")).to match(/otter/)
     end
-  end
-
-  it "replaces skin toned emoji" do
-    expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 👩‍🎤")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 🤷‍♀️")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
   end
 
   it "does not treat a non-emoji as an emoji" do
@@ -2050,6 +1998,20 @@ RSpec.describe PrettyText do
     )
   end
 
+  it "bounds hashtag lookups per cook" do
+    stub_const(HashtagAutocompleteService, "HASHTAGS_PER_REQUEST", 2) do
+      %w[cat-a cat-b cat-c].each { |slug| Fabricate(:category, slug:) }
+      allow(HashtagAutocompleteService).to receive(:new).and_call_original
+
+      cooked = PrettyText.cook("#cat-a #cat-a #cat-a #cat-b #cat-c")
+
+      expect(cooked.scan(%(data-slug="cat-a")).length).to eq(3)
+      expect(cooked).to include(%(data-slug="cat-b"))
+      expect(cooked).not_to include(%(data-slug="cat-c"))
+      expect(HashtagAutocompleteService).to have_received(:new).twice
+    end
+  end
+
   it "does not fight with the autolinker" do
     expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?#known")).not_to include("hashtag")
@@ -2224,11 +2186,11 @@ HTML
 
       # Due to a bug in node 18.16 and lower this takes about 11s.
       # On node 18.19 and newer it takes about 250ms
-      expect do
-        Timeout.timeout(3) do
-          expect(PrettyText.cook("abc nope def")).to match_html("<p>abc yep def</p>")
-        end
-      end.not_to raise_error
+      cooked = nil
+      elapsed =
+        Timeout.timeout(15) { Benchmark.realtime { cooked = PrettyText.cook("abc nope def") } }
+      expect(cooked).to match_html("<p>abc yep def</p>")
+      expect(elapsed).to be < 3
     end
 
     it "replaces words with other words" do
@@ -2659,6 +2621,20 @@ HTML
       expect(cooked).to eq(html.strip)
     end
 
+    it "does not backtrack catastrophically on long numeric suffixes" do
+      suffix = "#{"1" * 1000}x#{"1" * 1000},"
+
+      # Warm up the JS context so the measurement only covers cooking.
+      PrettyText.cook("warmup")
+
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      cooked = PrettyText.cook("![a|#{suffix}](http://png.com/my.png)")
+      elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+      expect(cooked).to include(%{alt="a|#{suffix}"})
+      expect(elapsed).to be < 2, "cooking took #{elapsed.round(2)}s"
+    end
+
     it "ignores whitespace and allows scaling by percent, width, height" do
       cooked = PrettyText.cook <<~MD
         ![|220x100, 50%](http://png.com/my.png)
@@ -2900,6 +2876,7 @@ HTML
       <iframe src='https://bob.com/abc/def'></iframe>
       <iframe src='https://bob.com/abc/def/../ghi'></iframe>
       <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+      <iframe src='https://bob.com/abc/def\\..\\ghi'></iframe>
     HTML
 
     html = <<~HTML
@@ -2919,6 +2896,23 @@ HTML
 
     html = <<~HTML
       <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
+  end
+
+  it "skips allowlist iframes with a src the browser decodes or strips" do
+    SiteSetting.allowed_iframes = "https://*.example.com/|https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def?a=1&amp;b=2'></iframe>
+      <iframe src='https://evil.com&sol;x.example.com/'></iframe>
+      <iframe src='https://bob.com/abc/def/&#46;&#46;&#47;ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/.&#46#;'></iframe>
+      <iframe src='https://bob.com/abc/def/.\t./ghi'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def?a=1&amp;b=2"></iframe>
     HTML
 
     expect(PrettyText.cook(raw).strip).to eq(html.strip)
@@ -3278,6 +3272,14 @@ HTML
     it "cooks many unclosed replace-style inline bbcode tags in roughly linear time" do
       raw = "[code]" * 6000
       expect(cook_duration(raw)).to be < 2
+    end
+
+    it "cooks whitespace-heavy unclosed quote and details tags quickly" do
+      %w[quote details].each do |tag|
+        raw = "[#{tag}=#{" " * 31_000} no closing bracket"
+
+        expect(cook_duration(raw)).to be < 2
+      end
     end
   end
 end

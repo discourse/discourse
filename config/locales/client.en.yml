@@ -29,6 +29,7 @@ en:
       resize: "Resize code editor"
     code_editor:
       resize: "Resize code editor"
+      load_failed: "The code editor couldn't load. Reload the page to try again."
       tab_hint: "Press Escape, then Tab to move focus out of the editor."
       completions: "Completions"
       search:
@@ -654,39 +655,16 @@ en:
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
+      create_category:
+        title: "Create a category"
+        description: "Give conversations a place to live."
+        action: "Create category"
+        completed: "Create another"
       invite_collaborators:
         title: "Invite collaborators"
         description: "Early members bring it to life."
         action: "Create invite"
         completed: "Invite more"
-      start_posting:
-        title: "Start posting"
-        description: "Give people something to discuss."
-        action: "See ideas"
-        completed: "See more ideas"
-        choose_option: "How would you like to start?"
-        predefined_topics: "Icebreaker templates"
-        predefined_topics_subtitle: "Give members something to discuss"
-        predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
-        use_predefined: "Browse templates"
-        back: "Back"
-        category_unavailable: "This category is unavailable for posting."
-        icebreakers:
-          plan_categories:
-            title: "What categories should we start with?"
-            description: "Ask your team which categories to launch with."
-            body: "Let’s figure out how to organise things before we launch! What will people want to talk about most? We can start with just a few categories and add more later."
-          plan_invites:
-            title: "Who should we invite before we launch?"
-            description: "Agree with your team on who to invite first."
-            body: "It’s always nicer to join a community that already has some people in it. Who should we invite first? Think of folks who love to chat, help others out, and would be excited to get involved early."
-          introduce_yourself:
-            title: "Introduce yourself"
-            description: "Get members sharing a little about themselves."
-            body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
-          write_your_own:
-            title: "Write your own"
-            description: "Start a conversation with a topic tailored to your community."
 
     design_wizard:
       title: "Customize your site"
@@ -1230,6 +1208,10 @@ en:
       statuses:
         pending:
           title: "Pending"
+        problem_confirmed:
+          title: "Problem confirmed"
+        no_problem_found:
+          title: "No problem found"
         approved:
           title: "Approved"
         approved_flag:
@@ -1263,6 +1245,9 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
+        something_wrong_with_post: "Is there something wrong with this post?"
+        something_wrong_with_topic: "Is there something wrong with this topic?"
+        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -1313,6 +1298,8 @@ en:
         reviewed: "Reviewed"
         approved_by: "Approved by %{username} · %{relativeDate}"
         rejected_by: "Rejected by %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem confirmed by %{username} · %{relativeDate}"
+        no_problem_found_by: "No problem found by %{username} · %{relativeDate}"
         ignored_by: "Ignored by %{username} · %{relativeDate}"
         view_conversation: "view PM"
         note_added: "Moderator note"
@@ -1770,6 +1757,7 @@ en:
       view_all: "view all"
       category: "Category"
       category_list: "Display category list"
+      page_layout: "Categories page layout"
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"
@@ -2653,6 +2641,7 @@ en:
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
+        invited_via_link_without_key: "link (%{count} / %{max} redeemed)"
         generating_link: "Generating link..."
         groups: "Groups"
         topic: "Topic"
@@ -2996,6 +2985,7 @@ en:
       no_results: "No results"
       search: "Search…"
       label: "Select options"
+      remove_item: "Remove %{name}"
     d_otp:
       screen_reader:
         one: Enter a number
@@ -3262,6 +3252,10 @@ en:
 
     login:
       header_title: "Welcome back"
+      invitation_gate:
+        title: "This community is invite-only"
+        description: "To join, open the invitation link you received. If you don’t have an invitation, contact the community owner to request one."
+        existing_member: "Already a member of this community? Log in below."
       title: "Log In"
       username: "User"
       password: "Password"
@@ -3527,11 +3521,14 @@ en:
 
     emoji_picker:
       filter_placeholder: Search for emoji
-      smileys_&_emotion: Smileys and Emotion
-      people_&_body: People and Body
-      animals_&_nature: Animals and Nature
-      food_&_drink: Food and Drink
-      travel_&_places: Travel and Places
+      search_placeholder: "Search by emoji name and alias..."
+      no_results: "No results"
+      favorites: "Frequently used"
+      smileys_&_emotion: Smileys and emotion
+      people_&_body: People and body
+      animals_&_nature: Animals and nature
+      food_&_drink: Food and drink
+      travel_&_places: Travel and places
       activities: Activities
       objects: Objects
       symbols: Symbols
@@ -3667,6 +3664,12 @@ en:
       emoji: "Emoji :)"
       more_emoji: "more…"
       options: "Options"
+      ai_content:
+        menu: "Add AI content..."
+        code: "Code"
+        quote: "Quote"
+        details: "Details"
+        placeholder: "AI content"
       whisper: "whisper"
       unlist: "unlisted"
 
@@ -4377,6 +4380,7 @@ en:
 
     topics:
       new_messages_marker: "last visit"
+      list_options: "List options"
       bulk:
         select: "Bulk select"
         confirm: "Confirm"
@@ -5183,6 +5187,8 @@ en:
 
     post:
       accessible_heading: "post by %{username} %{date}"
+      ai_generated: "AI"
+      ai_generated_title: "This content has been partially or fully generated by AI"
       heading_anchor: "Heading link"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
@@ -5324,6 +5330,7 @@ en:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
         no_uploads_authorized: "Sorry, no files are authorized to be uploaded."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
+        media_upload_not_allowed: "Sorry, you are not allowed to upload images, videos, or audio."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
@@ -5621,6 +5628,7 @@ en:
         site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
+        description: "Each type comes set up for a different kind of conversation."
         requires_plugin: "Requires %{plugin_name} plugin"
         unavailable: "Unavailable"
         ask_admin_to_enable_plugin: "Ask an admin to enable the %{plugin_name} plugin"
@@ -6489,6 +6497,24 @@ en:
       forward: "Forward"
       share: "Share"
       dismiss: "Dismiss"
+
+    mobile_tab_bar:
+      label: "Site sections"
+      new_topic: "New topic"
+      new_personal_message: "New personal message"
+      create: "Create"
+      menu: "Menu"
+      more: "More"
+      edit_topic: "Edit title, category and tags"
+      menu_with_reviewables:
+        one: "Menu, %{count} item to review"
+        other: "Menu, %{count} items to review"
+      back: "Back"
+      topics: "Topics"
+      drafts:
+        one: "Drafts (%{count})"
+        other: "Drafts (%{count})"
+      hub: "Hub"
 
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
@@ -9348,6 +9374,7 @@ en:
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
           theme_setting_saved: "Theme setting saved!"
+          setting_link_label: "Link to the %{name} setting"
           theme_site_setting_saved: "Theme site setting saved!"
 
         schema:
@@ -9370,6 +9397,7 @@ en:
                 one: "at least %{count} tag is required"
                 other: "at least %{count} tags are required"
             string:
+              invalid_translation_identifier: "Use at most 80 characters, starting with a lowercase letter and containing only lowercase letters, numbers, and underscores."
               too_short:
                 one: "must be at least %{count} character"
                 other: "must be at least %{count} characters"
@@ -10455,17 +10483,21 @@ en:
         theme: "Theme or component"
         all_themes: "All site texts"
         theme_disabled: "Disabled"
+        usable_keys: "Translation keys"
+        manage_translations: "Manage translations"
         filters: "Filters"
         filters_active:
           one: "Filters (%{count})"
           other: "Filters (%{count})"
         edit_title: "Edit site text"
         default_text: "Default text"
+        default_text_language: "Default text · %{language}"
         value_label: "Your text · %{language}"
         invalid_title: "Invalid interpolation placeholders"
         invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."
         status:
           customized: "Customized"
+          unknown: "Unknown baseline"
           outdated: "Outdated"
           invalid: "Invalid"
         title: "Site texts"
@@ -10485,6 +10517,10 @@ en:
         interpolation_key_insert: "Click to insert"
         interpolation_key_used: "Already used"
         interpolation_key_invalid: "Unknown key — will not be interpolated"
+        unknown:
+          title: "The previous default was not recorded"
+          description: "This customization predates default tracking. Review the current default below and acknowledge it to track future changes."
+          acknowledge: "Acknowledge current default"
         outdated:
           title: "This translation is outdated"
           description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."

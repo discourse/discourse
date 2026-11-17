@@ -172,6 +172,7 @@ pl_PL:
     holiday_status:
       description: "Na świętach"
   discourse_post_event:
+    zoom_guest: "Gość"
     event_excerpt:
       summary: "📅 %{summary}"
       separator: " · "

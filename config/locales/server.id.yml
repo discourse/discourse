@@ -1331,6 +1331,9 @@ id:
       email_polling_disabled: "Anda harus mengaktifkan polling POP3 manual atau mengaktifkan poller email khusus sebelum mengaktifkan balasan melalui email."
       invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'
       invalid_search_ranking_weights: "Nilai tidak valid untuk setelan situs search_ranking_weights. Contoh: '{0.1,0.2,0.3,1.0}'. Perhatikan bahwa nilai maksimum untuk setiap bobot adalah 1,0."
+    keywords:
+      company_url: "situs web"
+      title: "nama komunitas"
   search:
     within_post: "#%{post_number} oleh %{username}"
     types:
@@ -1600,6 +1603,10 @@ id:
       fast_typer_time:
         other: "%{count} detik"
     actions:
+      answer_yes:
+        title: "Ya"
+      answer_no:
+        title: "Tidak"
       agree:
         title: "Ya"
       agree_and_keep:

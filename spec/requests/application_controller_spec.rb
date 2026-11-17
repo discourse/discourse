@@ -172,6 +172,37 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
+    it "keeps invite-only visitors on site with a sole authenticator" do
+      enable_auth_provider(:google_oauth2)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/latest"
+      expect(response).to redirect_to("/login")
+
+      get "/login"
+      expect(response.status).to eq(200)
+
+      invite = Fabricate(:invite, invited_by: admin)
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+    end
+
+    it "keeps invite-only visitors on site with Discourse ID" do
+      enable_auth_provider(:discourse_id)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/login"
+      expect(response.status).to eq(200)
+    end
+
     it "does not redirect to SSO when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
       SiteSetting.discourse_connect_url = "http://someurl.com"
@@ -1051,6 +1082,15 @@ RSpec.describe ApplicationController do
     it "disallows invalid public_key param" do
       args[:auth_redirect] = "discourse://auth_redirect"
       get "/latest", params: args
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
+    end
+
+    it "disallows a non-string public_key param without generating a keypair" do
+      args[:auth_redirect] = "discourse://auth_redirect"
+      args[:user_api_public_key] = 4_096
+
+      post "/posts", params: args.merge(raw: "hi", title: "test topic"), as: :json
 
       expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
     end

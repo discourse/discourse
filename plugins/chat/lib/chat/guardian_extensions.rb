@@ -94,6 +94,9 @@ module Chat
     # so this isn't too dangerous, if we end up wanting to change
     # more things in future we may want to re-evaluate to be staff-only here.
     def can_edit_thread?(thread)
+      return false if !can_post_in_chatable?(thread.channel.chatable)
+      return false if !can_modify_channel_message?(thread.channel)
+
       is_staff? || thread.original_message_user_id == @user.id
     end
 

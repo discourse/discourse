@@ -21,6 +21,7 @@ $dw-button-default-border: #d3d3d3;
 
 // px, so the reserved space matches the panel, whose font size is pinned
 $dw-docked-width: 375px;
+$dw-floating-width: 432px;
 $dw-rail-width: 56px;
 
 // fixed-position UI pinned to the inline end reads this to stay uncovered
@@ -33,6 +34,15 @@ html.design-wizard-docked {
 
   body {
     padding-inline-end: var(--d-page-inset-inline-end);
+  }
+}
+
+// floating over the page, which keeps its width, so only fixed UI moves aside;
+// it stays aside while minimized, where the restore button takes the corner.
+// Narrower, a reserved strip would leave fixed UI too little room
+html.design-wizard-floating {
+  @include viewport.from(md) {
+    --d-page-inset-inline-end: #{$dw-floating-width};
   }
 }
 
@@ -141,7 +151,7 @@ html.design-wizard-docked {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: min(27em, 100vw);
+  width: min(#{$dw-floating-width}, 100vw);
   background: var(--secondary);
   border: 1px solid var(--content-border-color);
   border-inline-end: none;

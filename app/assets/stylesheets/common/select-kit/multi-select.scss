@@ -24,16 +24,11 @@
       }
     }
 
-    // Locked and mandatory choices are informational, so keep them legible;
-    // the lock icon and cursor already signal they can't be removed.
+    // Mandatory choices are informational, so keep them legible; the cursor
+    // already signals they can't be removed.
     .tag-choice.disabled {
       opacity: 1;
       background: var(--primary-very-low);
-
-      .d-icon-lock {
-        font-size: var(--font-down-1);
-        color: var(--primary-high);
-      }
     }
 
     &.is-disabled {

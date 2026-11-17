@@ -1646,6 +1646,13 @@ da:
       reply_by_email_address_is_empty: "Du skal angive en 'svar via email-adresse', før du aktiverer svar via e-mail."
       invalid_hex_value: "Farveværdier skal være 6-cifrede hexadecimale koder."
       empty_selectable_avatars: "Du skal først overføre mindst to valgbare avatarer før du aktiverer denne indstilling."
+    keywords:
+      about_banner_image: "bannerbillede"
+      company_url: "hjemmeside"
+      logo: "primært logo"
+      logo_dark: "primært logo mørkt"
+      logo_small_dark: "lille, mørkt logo"
+      site_contact_username: "navn på websteds kontaktperson"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.eksempel.dk"
@@ -3243,6 +3250,10 @@ da:
       email_auth_res_enqueue: "Denne e-mail fejlede et DMARC tjek, den er højst sandsynligt ikke fra hvem den ser ud til at være fra. Tjek de rå e-mail-headere for mere information."
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nej"
       agree:
         title: "Ja"
       agree_and_restore:

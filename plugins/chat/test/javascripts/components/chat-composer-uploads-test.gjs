@@ -183,7 +183,7 @@ module("Component | ChatComposerUploads", function (hooks) {
 
   test("upload starts and completes", async function (assert) {
     setupUploadPretender();
-    this.set("onUploadChanged", () => {});
+    this.onUploadChanged = () => {};
 
     await render(
       <template>
@@ -215,8 +215,8 @@ module("Component | ChatComposerUploads", function (hooks) {
   });
 
   test("removing a completed upload", async function (assert) {
-    this.set("changedUploads", null);
-    this.set("onUploadChanged", () => {});
+    this.changedUploads = null;
+    this.onUploadChanged = () => {};
 
     this.existingUploads = [fakeUpload];
 
@@ -241,16 +241,13 @@ module("Component | ChatComposerUploads", function (hooks) {
     silenceConsoleErrorsMatching("[Uppy]");
     setupUploadPretender();
 
-    this.set("changedUploads", null);
-    this.set("onUploadChanged", (uploads) => {
-      this.set("changedUploads", uploads);
-    });
+    const onUploadChanged = () => {};
 
     await render(
       <template>
         <ChatComposerUploads
           @fileUploadElementId="chat-widget-uploader"
-          @onUploadChanged={{this.onUploadChanged}}
+          @onUploadChanged={{onUploadChanged}}
         />
       </template>
     );

@@ -1049,6 +1049,108 @@ RSpec.describe Theme do
 
     fab!(:migration_field) { Fabricate(:migration_theme_field, theme: theme, version: 1) }
 
+    context "when moving a setting to a translation" do
+      before do
+        theme.update_setting(:list_setting, "HELLO")
+        theme.set_field(target: :translations, name: "en", value: <<~YAML)
+          en:
+            headings:
+              header: ""
+        YAML
+        theme.save!
+        settings_field.update!(value: "integer_setting: 1")
+        migration_field.update!(value: <<~JS)
+          export default function migrate(settings, helpers) {
+            helpers.migrateSettingToTranslation("list_setting", "headings.header");
+            return settings;
+          }
+        JS
+      end
+
+      it "moves saved text into an English override and removes the old setting" do
+        SiteSetting.default_locale = "fr"
+        theme.migrate_settings
+
+        override =
+          theme.theme_translation_overrides.find_by!(
+            locale: "en",
+            translation_key: "headings.header",
+          )
+        expect(override.value).to eq("HELLO")
+        expect(theme.theme_settings.exists?(name: "list_setting")).to eq(false)
+      end
+
+      it "preserves existing overrides, including intentionally empty text" do
+        ThemeTranslationOverride.create!(
+          theme: theme,
+          locale: "en",
+          translation_key: "headings.header",
+          value: "",
+        )
+        ThemeTranslationOverride.create!(
+          theme: theme,
+          locale: "fr",
+          translation_key: "headings.header",
+          value: "Bonjour",
+        )
+
+        theme.migrate_settings
+
+        expect(theme.theme_translation_overrides.order(:locale).pluck(:locale, :value)).to eq(
+          [["en", ""], %w[fr Bonjour]],
+        )
+        expect(theme.theme_settings.exists?(name: "list_setting")).to eq(false)
+      end
+
+      it "preserves an explicitly empty setting even when it matches the default" do
+        theme.theme_settings.find_by!(name: "list_setting").update!(value: "")
+
+        theme.migrate_settings
+
+        override =
+          theme.theme_translation_overrides.find_by!(
+            locale: "en",
+            translation_key: "headings.header",
+          )
+        expect(override.value).to eq("")
+      end
+
+      it "rolls back a created translation when recording the migration fails" do
+        ThemeSettingsMigration.any_instance.stubs(:save!).raises(ActiveRecord::RecordInvalid)
+
+        expect { theme.migrate_settings }.to raise_error(ActiveRecord::RecordInvalid)
+
+        expect(theme.reload.theme_settings.find_by!(name: "list_setting").value).to eq("HELLO")
+        expect(theme.theme_translation_overrides).to be_empty
+        expect(theme.theme_settings_migrations).to be_empty
+      end
+
+      it "preserves the first migrated value when several migrations target the same translation" do
+        ThemeSetting.create!(
+          theme: theme,
+          name: "other_heading",
+          data_type: ThemeSetting.types[:string],
+          value: "SECOND",
+        )
+        Fabricate(:migration_theme_field, theme: theme, version: 2, value: <<~JS)
+          export default function migrate(settings, helpers) {
+            helpers.migrateSettingToTranslation("other_heading", "headings.header");
+            return settings;
+          }
+        JS
+
+        theme.migrate_settings
+
+        expect(
+          theme
+            .theme_translation_overrides
+            .find_by!(locale: "en", translation_key: "headings.header")
+            .value,
+        ).to eq("HELLO")
+        expect(theme.theme_settings.where(name: %w[list_setting other_heading])).to be_empty
+      end
+    end
+
     it "persists the results of the last pending migration to the database" do
       migration_field.update!(value: <<~JS)
         export default function migrate(settings) {

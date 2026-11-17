@@ -4,6 +4,7 @@
   display: flex;
   padding: 1rem;
   flex-direction: column;
+  max-width: var(--d-max-width);
 
   @include viewport.until(sm) {
     padding-inline: var(--d-wrap-padding-x);

@@ -6,6 +6,13 @@
 
 bg:
   js:
+    code_editor:
+      search:
+        next: "Напред"
+        previous: "Предишни"
+        close: "Затвори"
+      fold:
+        to: "до"
     user_api_key:
       deny: "Отмени"
       copied: "Копирано!"
@@ -297,9 +304,6 @@ bg:
       pill: "Свързани съобщения"
     suggested_topics:
       pm_title: "Предложени съобщения"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Назад"
     design_wizard:
       back: "Назад"
       next: "Напред"
@@ -610,6 +614,7 @@ bg:
           title: "Всичко"
       context_question:
         delimiter: "или"
+        something_wrong_with_post: "Има ли нещо нередно с тази публикация?"
       types:
         reviewable_flagged_post:
           title: "Маркирана публикация"
@@ -3517,10 +3522,10 @@ bg:
           title: "Приставки"
       upcoming_changes:
         name: "Име"
-        enabled: "Да е включен"
+        enabled: "Да е включен?"
+        feedback: "Обратна връзка"
+        settings: "Настройки"
         preview: "Преглед"
-        enabled_for_options:
-          everyone: "Всички"
         impact_roles:
           admins: "Админи"
           moderators: "Модератори"

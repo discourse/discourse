@@ -121,6 +121,16 @@ describe DiscourseAi::Translation::TranslationController do
         expect(response.status).to eq(404)
       end
 
+      it "does not schedule another author's hidden posts" do
+        post2.update!(hidden: true, user: admin)
+        post "/discourse-ai/translate/topics/#{topic.id}"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["scheduled_posts"]).to eq(1)
+        expect(
+          Jobs::DetectTranslatePost.jobs.map { |job| job["args"].first["post_id"] },
+        ).to contain_exactly(post1.id)
+      end
+
       it "successfully enqueues translation jobs for untranslated posts" do
         post1.update!(locale: "en")
         post2.update!(locale: "en")

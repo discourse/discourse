@@ -186,4 +186,47 @@ RSpec.describe UserHistory do
       )
     end
   end
+
+  describe "#context_with_ips_masked" do
+    def masked(context)
+      described_class.new(context: context).context_with_ips_masked("[hidden]")
+    end
+
+    it "masks IPv4 addresses inside free-form context" do
+      expect(masked("Same IP address (42.42.42.42) as other users")).to eq(
+        "Same IP address ([hidden]) as other users",
+      )
+      expect(masked("Matched 42.42.42.42 and 198.51.100.7.")).to eq(
+        "Matched [hidden] and [hidden].",
+      )
+    end
+
+    it "masks IPv6 addresses inside free-form context" do
+      %w[2001:db8::1 2001:db8:1234:: ::1 ::ffff:1.2.3.4 2001:db8:0:0:0:0:0:1].each do |address|
+        expect(masked("Same IP address (#{address}) as other users")).to eq(
+          "Same IP address ([hidden]) as other users",
+        )
+      end
+    end
+
+    it "keeps punctuation that surrounds an address" do
+      expect(masked("Matched 2001:db8::1.")).to eq("Matched [hidden].")
+      expect(masked("Matched 2001:db8:1234::.")).to eq("Matched [hidden].")
+      expect(masked("Matched :2001:db8::1")).to eq("Matched :[hidden]")
+    end
+
+    it "leaves class names, usernames, dates and invalid addresses alone" do
+      [
+        "Same IP address as bob_smith",
+        "Deleted while reviewing Jobs::Base failures",
+        "Deleted while reviewing Service::Base failures",
+        "Discourse::Plugin raised",
+        "Inactive user since 2026-11-06",
+        "Deleted at 12:30 :: spam",
+        "Matched 999.999.999.999",
+        "",
+        nil,
+      ].each { |context| expect(masked(context)).to eq(context) }
+    end
+  end
 end

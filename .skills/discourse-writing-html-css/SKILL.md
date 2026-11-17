@@ -12,8 +12,8 @@ navigating the markup. A component is correct only when it holds up across all o
 Two CSS rules are the most load-bearing — get them right by reflex:
 
 1. **Name classes with BEM** so themes can target and override cleanly.
-2. **Never hardcode color** — pull from the CSS custom-property palette so themes and dark
-   mode work for free.
+2. **Reuse design tokens.** Definitions: `app/assets/stylesheets/common/foundation/base.scss`
+   (spacing, standard radii), `app/assets/stylesheets/common/tokens.scss` (weights).
 
 These rules operationalize Discourse's documented frontend philosophy — **mobile-first,
 progressive enhancement (works without hover or JS), a themeable base layer, and a shared design

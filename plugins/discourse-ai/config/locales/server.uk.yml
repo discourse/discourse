@@ -180,6 +180,12 @@ uk:
     ai_usage_rollup_after_days: "Кількість днів для зберігання статистики використання ШІ для кожного запиту перед її перетворенням на щоденні зведені дані. Встановіть значення 0, щоб вимкнути зведення."
     ai_audit_logs_detailed_retention_days: "Зберігати необроблені корисні навантаження запитів і відповідей ШІ протягом певної кількості днів. Встановіть значення 0, щоб зберігати корисні навантаження, доки журнал підсумків не буде видалено. Необроблені корисні навантаження можуть містити приватний або конфіденційний контент. Очищення триває, навіть якщо плагін ШІ вимкнено."
     ai_audit_logs_purge_after_days: "Зберігати зведені дані журналу аудиту AI API протягом заданої кількості днів, перш ніж видаляти весь журнал. Встановіть значення 0, щоб зберігати зведені дані назавжди. Очищення продовжується, навіть якщо плагін AI вимкнено."
+    keywords:
+      ai_default_llm_model: "мовна модель за замовчуванням"
+      ai_discord_search_enabled: "інтеграція з Discord"
+      ai_helper_automatic_chat_thread_title: "назви тем чату"
+      ai_summarization_enabled: "підсумки"
+      ai_summary_gists_enabled: "короткий опис списку тем"
   reviewables:
     reasons:
       flagged_by_toxicity: Плагін ШІ позначив його, класифікувавши як токсичний.
@@ -285,10 +291,6 @@ uk:
           name: "Генерація зображень..."
         image_generation_custom:
           name: "Користувацька"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -1153,6 +1155,23 @@ uk:
       fonts:
         base_font: "Основний шрифт"
         heading_font: "Шрифт заголовка"
+    mcp_theme_access:
+      "on": "Увімк"
+      "off": "Вимк."
+      none: "немає"
+      changes:
+        server: "Сервер MCP"
+    mcp_app_setup:
+      none: "немає"
+      apps:
+        chatgpt:
+          name: "ChatGPT"
+        claude_code:
+          name: "Claude Code"
+        codex:
+          name: "Кодекс"
+        vscode:
+          name: "Visual Studio Code"
     reviewables:
       ai_tool_action:
         title: "Дія інструменту ШІ"

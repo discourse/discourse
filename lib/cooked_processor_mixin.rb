@@ -21,6 +21,7 @@ module CookedProcessorMixin
             locale: @opts[:locale],
           )
 
+        onebox = nil if respond_to?(:onebox_allowed?, true) && !onebox_allowed?(url, onebox)
         @has_oneboxes = true if onebox.present?
         onebox
       else
@@ -209,7 +210,6 @@ module CookedProcessorMixin
       RemoteImage.size_and_animated(absolute_url)
     end
   rescue URI::Error
-    # the secure uploads url helpers raise on malformed urls
   end
 
   def get_filename(upload, src)

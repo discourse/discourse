@@ -52,6 +52,14 @@ RSpec.describe Blog::PublicationSerializer do
     expect(serialize[:changes]).to contain_exactly("tags")
   end
 
+  it "names staged co-authors by username, in order" do
+    ada = Fabricate(:user, username: "ada")
+    bob = Fabricate(:user, username: "bob")
+    publication.update!(co_author_ids: [bob.id, ada.id])
+
+    expect(serialize[:co_authors]).to eq(%w[bob ada])
+  end
+
   it "reports public visibility unless the caller already knows it" do
     publish_blog_draft(publication, admin)
 

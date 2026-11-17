@@ -11,6 +11,9 @@ module Jobs
         post,
         triggering_user_id: args[:triggering_user_id],
       )
+    rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed => error
+      # Keep retries without logging provider failures already surfaced by the admin notice.
+      raise ::Jobs::HandledExceptionWrapper.new(error)
     end
   end
 end

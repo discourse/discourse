@@ -7,8 +7,8 @@ import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-ar
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
-import DNativeSelect from "discourse/ui-kit/d-native-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import I18n, { i18n } from "discourse-i18n";
 import AiCreditAllocationStatus from "discourse/plugins/discourse-ai/discourse/components/ai-credit-allocation-status";
@@ -100,10 +100,9 @@ export default class AiModelsList extends Component {
         description: decisionModel.seeded
           ? i18n("discourse_ai.decision_models.seeded_description")
           : null,
-        editRoute: decisionModel.seeded
-          ? null
-          : "adminPlugins.show.discourse-ai-decision-models.edit",
+        editRoute: "adminPlugins.show.discourse-ai-decision-models.edit",
         editModel: decisionModel.id,
+        seeded: decisionModel.seeded,
         creditAllocation: decisionModel.credit_allocation,
       })
     );
@@ -170,26 +169,21 @@ export default class AiModelsList extends Component {
 
       {{#if this.rows.length}}
         <div class="ai-models-list__controls">
-          <DNativeSelect
-            class="ai-models-list__type-filter"
-            @includeNone={{false}}
-            @onChange={{this.onTypeChange}}
-            @value={{this.selectedType}}
-            as |select|
-          >
-            {{#each this.typeOptions as |option|}}
-              <select.Option @value={{option.value}}>
-                {{option.label}}
-              </select.Option>
-            {{/each}}
-          </DNativeSelect>
-
           <DFilterInput
             class="admin-filter__input"
             placeholder={{i18n "discourse_ai.models.filters.text"}}
             @filterAction={{this.onFilterChange}}
             @icons={{hash left="magnifying-glass"}}
             @value={{this.filterValue}}
+          />
+
+          <DFilterControls
+            @dropdownOptions={{this.typeOptions}}
+            @dropdownValue={{this.selectedType}}
+            @onDropdownFilterChange={{this.onTypeChange}}
+            @showNoResults={{false}}
+            @showResetButton={{false}}
+            @showTextFilter={{false}}
           />
         </div>
 
@@ -256,7 +250,7 @@ export default class AiModelsList extends Component {
                           />
                         </:trigger>
                         <:content>
-                          {{i18n "discourse_ai.embeddings.seeded_warning"}}
+                          {{i18n "discourse_ai.models.seeded_warning"}}
                         </:content>
                       </DTooltip>
                     {{else if row.editRoute}}

@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-classes, ember/no-classic-components */
+/* eslint-disable discourse/no-test-context-set -- tests classic event handling */
 
 import GlimmerComponent from "@glimmer/component";
 import ClassicComponent, { setComponentTemplate } from "@ember/component";
@@ -66,12 +67,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it adds listeners for standard event handlers on the component prototype or the component itself", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onOneClick: () => this.set("oneClicked", i++),
-        onTwoClick: () => this.set("twoClicked", i++),
-        oneClicked: undefined,
-        twoClicked: undefined,
-      });
+      this.onOneClick = () => this.set("oneClicked", i++);
+      this.onTwoClick = () => this.set("twoClicked", i++);
+      this.oneClicked = undefined;
+      this.twoClicked = undefined;
 
       await render(hbs`
         <ExampleClassicButton id="buttonOne" @onClick={{this.onOneClick}} />
@@ -88,12 +87,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it adds listeners for standard event handlers on the component itself or the component prototype (order reversed)", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onOneClick: () => this.set("oneClicked", i++),
-        onTwoClick: () => this.set("twoClicked", i++),
-        oneClicked: undefined,
-        twoClicked: undefined,
-      });
+      this.onOneClick = () => this.set("oneClicked", i++);
+      this.onTwoClick = () => this.set("twoClicked", i++);
+      this.oneClicked = undefined;
+      this.twoClicked = undefined;
 
       await render(hbs`
         <ExampleClassicButton id="buttonOne" @click={{this.onOneClick}} />
@@ -112,12 +109,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it handles click events and allows propagation by default", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onParentClick: () => this.set("parentClicked", i++),
-        onChildClick: () => this.set("childClicked", i++),
-        parentClicked: undefined,
-        childClicked: undefined,
-      });
+      this.onParentClick = () => this.set("parentClicked", i++);
+      this.onChildClick = () => this.set("childClicked", i++);
+      this.parentClicked = undefined;
+      this.childClicked = undefined;
 
       await render(hbs`
         <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
@@ -134,12 +129,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it handles click events and can prevent event propagation", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onParentClick: () => this.set("parentClicked", i++),
-        onChildClick: () => this.set("childClicked", i++),
-        parentClicked: undefined,
-        childClicked: undefined,
-      });
+      this.onParentClick = () => this.set("parentClicked", i++);
+      this.onChildClick = () => this.set("childClicked", i++);
+      this.parentClicked = undefined;
+      this.childClicked = undefined;
 
       await render(hbs`
         <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
@@ -158,12 +151,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it handles click events and allows propagation by default", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onParentClick: () => this.set("parentClicked", i++),
-        onChildClick: () => this.set("childClicked", i++),
-        parentClicked: undefined,
-        childClicked: undefined,
-      });
+      this.onParentClick = () => this.set("parentClicked", i++);
+      this.onChildClick = () => this.set("childClicked", i++);
+      this.parentClicked = undefined;
+      this.childClicked = undefined;
 
       await render(hbs`
         <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
@@ -180,12 +171,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it handles click events and can prevent event propagation", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onParentClick: () => this.set("parentClicked", i++),
-        onChildClick: () => this.set("childClicked", i++),
-        parentClicked: undefined,
-        childClicked: undefined,
-      });
+      this.onParentClick = () => this.set("parentClicked", i++);
+      this.onChildClick = () => this.set("childClicked", i++);
+      this.parentClicked = undefined;
+      this.childClicked = undefined;
 
       await render(hbs`
         <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
@@ -204,12 +193,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it handles click events and allows propagation by default", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onParentClick: () => this.set("parentClicked", i++),
-        onChildClick: () => this.set("childClicked", i++),
-        parentClicked: undefined,
-        childClicked: undefined,
-      });
+      this.onParentClick = () => this.set("parentClicked", i++);
+      this.onChildClick = () => this.set("childClicked", i++);
+      this.parentClicked = undefined;
+      this.childClicked = undefined;
 
       await withSilencedDeprecationsAsync(
         "discourse.template-action",
@@ -231,12 +218,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it handles click events and can prevent event propagation", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onParentClick: () => this.set("parentClicked", i++),
-        onChildClick: () => this.set("childClicked", i++),
-        parentClicked: undefined,
-        childClicked: undefined,
-      });
+      this.onParentClick = () => this.set("parentClicked", i++);
+      this.onChildClick = () => this.set("childClicked", i++);
+      this.parentClicked = undefined;
+      this.childClicked = undefined;
 
       await withSilencedDeprecationsAsync(
         "discourse.template-action",
@@ -260,12 +245,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it handles click events and allows propagation by default", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onParentClick: () => this.set("parentClicked", i++),
-        onChildClick: () => this.set("childClicked", i++),
-        parentClicked: undefined,
-        childClicked: undefined,
-      });
+      this.onParentClick = () => this.set("parentClicked", i++);
+      this.onChildClick = () => this.set("childClicked", i++);
+      this.parentClicked = undefined;
+      this.childClicked = undefined;
 
       await withSilencedDeprecationsAsync(
         "discourse.template-action",
@@ -287,12 +270,10 @@ module("Unit | Lib | ember-events", function (hooks) {
     test("it handles click events and can prevent event propagation", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onParentClick: () => this.set("parentClicked", i++),
-        onChildClick: () => this.set("childClicked", i++),
-        parentClicked: undefined,
-        childClicked: undefined,
-      });
+      this.onParentClick = () => this.set("parentClicked", i++);
+      this.onChildClick = () => this.set("childClicked", i++);
+      this.parentClicked = undefined;
+      this.childClicked = undefined;
 
       await withSilencedDeprecationsAsync(
         "discourse.template-action",

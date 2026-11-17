@@ -15,6 +15,9 @@ fi:
         preview_archive: Arkistoi
         desktop: Työpöytä
         mobile: Mobiili
+        save: Tallenna
+        path_formats:
+          custom: Mukautettu
         back_to_themes: Takaisin teemoihin
         new_theme_short: Uusi teema
         themes: Teemat
@@ -22,6 +25,8 @@ fi:
         edit: Muokkaa
         activate: Aktivoi
         preview: Esikatselu
+        customize: Mukauta
+        customized_theme_name: "%{name} (mukautettu)"
         import: Tuo
         export: Vie
         active: Aktiivinen
@@ -34,6 +39,7 @@ fi:
         change:
           title: otsikko
           body: leipäteksti
+          tags: tunnisteet
       review:
         create: Luo linkki
         copy: Kopioi

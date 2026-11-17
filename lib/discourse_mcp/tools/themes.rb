@@ -45,7 +45,60 @@ module DiscourseMcp
 
       def normalize_fields(fields)
         Array(fields).map do |field|
-          field.slice("name", "target", "value", "type", "type_id", "upload_id").compact_blank
+          normalized =
+            field.slice("name", "target", "value", "type", "type_id", "upload_id").compact_blank
+          normalized["value"] = field["value"] if field.key?("value")
+          if normalized["type"].present? && !ThemeField.types.key?(normalized["type"].to_sym)
+            raise ToolError, I18n.t("mcp.errors.theme_field_type_invalid", type: normalized["type"])
+          end
+          if field.key?("value") && !field["value"].is_a?(String)
+            raise ToolError,
+                  I18n.t("mcp.errors.theme_field_value_required", name: normalized["name"])
+          end
+          type_id =
+            normalized["type_id"] ||
+              (ThemeField.types[normalized["type"].to_sym] if normalized["type"].present?) ||
+              ThemeField.guess_type(name: normalized["name"], target: normalized["target"])
+          upload_field = [
+            ThemeField.types[:theme_upload_var],
+            ThemeField.types[:theme_screenshot_upload_var],
+          ].include?(type_id)
+
+          if normalized["upload_id"].present?
+            if normalized["value"].present?
+              raise ToolError, I18n.t("mcp.errors.theme_field_source_conflict")
+            end
+            unless upload_field
+              raise ToolError,
+                    I18n.t("mcp.errors.theme_inline_field_upload", name: normalized["name"])
+            end
+            unless Upload.exists?(id: normalized["upload_id"])
+              raise ToolError, I18n.t("mcp.errors.theme_field_upload_not_found")
+            end
+          elsif !normalized.key?("value")
+            raise ToolError,
+                  I18n.t("mcp.errors.theme_field_value_required", name: normalized["name"])
+          end
+
+          if normalized["value"].present? && type_id && Theme.targets[normalized["target"]&.to_sym]
+            candidate =
+              ThemeField.new(
+                name: normalized["name"],
+                target_id: Theme.targets[normalized["target"].to_sym],
+                type_id: type_id,
+              )
+            if [
+                 ThemeField.types[:html],
+                 ThemeField.types[:scss],
+                 ThemeField.types[:js],
+                 ThemeField.types[:yaml],
+                 ThemeField.types[:json],
+               ].include?(type_id) && candidate.file_path.nil?
+              raise ToolError, I18n.t("mcp.errors.theme_field_location_invalid")
+            end
+          end
+
+          normalized
         end
       end
 
@@ -55,6 +108,18 @@ module DiscourseMcp
           name: theme.name,
           component: theme.component,
           enabled: theme.enabled,
+          activation: {
+            applies_to_default_theme:
+              (
+                if theme.component?
+                  theme.enabled? && theme.parent_theme_ids.include?(SiteSetting.default_theme_id)
+                else
+                  theme.default?
+                end
+              ),
+            note:
+              "Enabled does not mean applied. Components must be attached to a theme; standalone themes must be default or selected by a user. Browser appearance is not verified.",
+          },
           user_selectable: theme.user_selectable,
           color_scheme_id: theme.color_scheme_id,
           dark_color_scheme_id: theme.dark_color_scheme_id,
@@ -65,6 +130,7 @@ module DiscourseMcp
           created_at: theme.created_at.iso8601,
           updated_at: theme.updated_at.iso8601,
           theme_fields: theme.theme_fields.map { |field| theme_field_json(field) },
+          code_revision: code_revision(theme),
           settings:
             theme.settings.values.map do |setting|
               ThemeSettingsSerializer.new(setting, root: false).as_json
@@ -84,7 +150,18 @@ module DiscourseMcp
           value: field.value,
           upload_id: field.upload_id,
           error: field.error.presence,
+          file_path: field.file_path,
         }
+      end
+
+      def code_revision(theme)
+        Digest::SHA256.hexdigest(
+          theme
+            .theme_fields
+            .reorder(:id)
+            .pluck(:target_id, :name, :type_id, :value, :upload_id)
+            .to_json,
+        )
       end
 
       def raise_create_failure!(result)
@@ -107,6 +184,80 @@ module DiscourseMcp
       def ensure_fields_editable!(theme)
         raise Discourse::InvalidAccess if !::Theme.allowed_remote_theme_ids.nil?
         raise Discourse::InvalidAccess if theme.remote_theme&.is_git?
+      end
+    end
+
+    class SetThemeCode
+      REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(theme: OutputSchema::OBJECT, verification: OutputSchema::OBJECT)
+      JAVASCRIPT_NAME = "discourse/api-initializers/mcp-theme-code.js"
+
+      def self.call(arguments:, request_context:)
+        guardian = request_context.guardian
+        guardian.ensure_is_admin!
+        theme = Theme.find_by(id: arguments.fetch("theme_id"))
+        raise ToolError, I18n.t("mcp.errors.theme_not_found") unless theme
+        guardian.ensure_can_edit_theme!(theme)
+        ThemeSupport.ensure_fields_editable!(theme)
+        provided = %w[css javascript].select { |key| arguments.key?(key) }
+        raise ToolError, I18n.t("mcp.errors.theme_code_required") if provided.empty?
+        provided.each do |key|
+          unless arguments[key].is_a?(String) && arguments[key].length <= 65_536
+            raise ToolError, I18n.t("mcp.errors.theme_code_too_large")
+          end
+        end
+
+        Theme.transaction do
+          theme.lock!
+          unless arguments["expected_code_revision"] == ThemeSupport.code_revision(theme)
+            raise ToolError, I18n.t("mcp.errors.theme_code_stale")
+          end
+          fields = []
+          if provided.include?("css")
+            fields << { "target" => "common", "name" => "scss", "value" => arguments["css"] }
+          end
+          if provided.include?("javascript")
+            fields << {
+              "target" => "extra_js",
+              "name" => JAVASCRIPT_NAME,
+              "value" => arguments["javascript"],
+            }
+          end
+          UpdateTheme.call(
+            arguments: {
+              "theme_id" => theme.id,
+              "theme_fields" => fields,
+            },
+            request_context: request_context,
+          )
+          theme.reload
+          if provided.include?("css") && arguments["css"].present?
+            theme
+              .theme_fields
+              .find_by!(target_id: Theme.targets[:common], name: "scss")
+              .compile_scss
+          end
+          if provided.include?("javascript") && (javascript = theme.load_all_extra_js).present?
+            compiler = ThemeJavascriptCompiler.new(theme.id, theme.name, minify: false)
+            compiler.append_tree(javascript)
+            if error = compiler.error
+              raise ToolError, I18n.t("mcp.errors.theme_code_js_invalid", message: error.message)
+            end
+          end
+          ToolHelpers.text_and_structured(
+            theme: ThemeSupport.theme_json(theme),
+            verification: {
+              saved: true,
+              compilation_checked: true,
+              browser_verified: false,
+              note:
+                "Saved and compilation checked; this does not verify selectors, imports in other files, or rendered browser behavior.",
+            },
+          )
+        end
+      rescue SassC::SyntaxError, SassC::NotRenderedError, AssetProcessor::TranspileError => error
+        raise ToolError, I18n.t("mcp.errors.theme_code_compile_failed", message: error.message)
       end
     end
 
@@ -163,10 +314,19 @@ module DiscourseMcp
         raise ToolError, I18n.t("mcp.errors.theme_not_found") if theme.blank?
 
         guardian.ensure_can_edit_theme!(theme)
+        child_theme_ids = arguments["child_theme_ids"]
+        parent_theme_ids = arguments["parent_theme_ids"]
+        if arguments.key?("component") && arguments["component"] != theme.component?
+          if arguments["component"]
+            child_theme_ids = []
+          else
+            parent_theme_ids = []
+          end
+        end
         if !guardian.can_edit_theme_relations?(
              theme,
-             child_theme_ids: arguments["child_theme_ids"],
-             parent_theme_ids: arguments["parent_theme_ids"],
+             child_theme_ids: child_theme_ids,
+             parent_theme_ids: parent_theme_ids,
            )
           raise Discourse::InvalidAccess
         end
@@ -176,12 +336,22 @@ module DiscourseMcp
           raise ToolError, I18n.t("mcp.errors.theme_update_required")
         end
 
-        if arguments["default"] && theme.component?
+        if arguments["default"] && arguments.fetch("component", theme.component?)
           raise ToolError, I18n.t("themes.errors.component_no_default")
         end
 
         original_json = ThemeSerializer.new(theme, root: false).to_json
         ::Theme.transaction do
+          if arguments.key?("component") && arguments["component"] != theme.component?
+            raise ToolError, I18n.t("themes.errors.component_no_default") if theme.default?
+            if arguments["component"]
+              theme.switch_to_component!
+            else
+              theme.switch_to_theme!
+            end
+            theme.reload
+            guardian.ensure_can_edit_theme!(theme)
+          end
           assign_changes(theme, arguments)
           if !theme.save
             raise ToolError,
@@ -222,8 +392,25 @@ module DiscourseMcp
           theme.public_send("#{field}=", arguments[field]) if arguments.key?(field)
         end
 
-        theme.child_theme_ids = arguments["child_theme_ids"] if arguments.key?("child_theme_ids")
-        theme.parent_theme_ids = arguments["parent_theme_ids"] if arguments.key?("parent_theme_ids")
+        if arguments.key?("child_theme_ids")
+          ids = arguments["child_theme_ids"]
+          if ids.present? &&
+               (theme.component? || Theme.where(id: ids, component: true).count != ids.uniq.length)
+            raise ToolError, I18n.t("mcp.errors.theme_children_must_be_components")
+          end
+          theme.child_theme_ids = ids
+        end
+        if arguments.key?("parent_theme_ids")
+          ids = arguments["parent_theme_ids"]
+          if ids.present? &&
+               (
+                 !theme.component? ||
+                   Theme.where(id: ids, component: false).count != ids.uniq.length
+               )
+            raise ToolError, I18n.t("mcp.errors.theme_parents_must_be_themes")
+          end
+          theme.parent_theme_ids = ids
+        end
 
         return if !arguments.key?("theme_fields")
 

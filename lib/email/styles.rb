@@ -126,11 +126,14 @@ module Email
         "aside.quote .avatar",
         "margin-right: 5px; width:20px; height:20px; vertical-align:middle;",
       )
-      style("aside.quote", "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;")
+      style(
+        "aside.quote",
+        "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; color: #222222; margin: 0;",
+      )
 
       style(
         "blockquote",
-        "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin-left: 0; padding: 12px;",
+        "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; color: #222222; margin-left: 0; padding: 12px;",
       )
 
       # Oneboxes
@@ -237,11 +240,9 @@ module Email
           # If an iframe is protocol relative, use SSL when displaying it
           display_src =
             "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
-          i.replace(
-            Nokogiri::HTML5.fragment(
-              "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
-            ),
-          )
+          paragraph = @fragment.document.create_element("p")
+          paragraph << @fragment.document.create_element("a", display_src, href: src_uri.to_s)
+          i.replace(paragraph)
         rescue URI::Error
           # If the URL is weird, remove the iframe
           i.remove
@@ -286,10 +287,10 @@ module Email
       style("div.summary-footer", "color:#666; font-size:95%; text-align:center; padding-top:15px;")
       style("span.post-count", "margin: 0 5px; color: #777;")
       style("pre", "word-wrap: break-word; max-width: 694px;")
-      style("code", "background-color: #{CODE_BACKGROUND_COLOR}; padding: 2px 5px;")
+      style("code", "background-color: #{CODE_BACKGROUND_COLOR}; color: #222222; padding: 2px 5px;")
       style(
         "pre code",
-        "display: block; background-color: #{CODE_BACKGROUND_COLOR}; overflow: auto; padding: 5px;",
+        "display: block; background-color: #{CODE_BACKGROUND_COLOR}; color: #222222; overflow: auto; padding: 5px;",
       )
       style("pre.onebox code", "white-space: normal;")
       style("pre code li", "white-space: pre;")
@@ -416,10 +417,14 @@ module Email
               calculate_width_and_height_style(div)
             end
 
-          div.add_next_sibling(<<~HTML)
-            <img src="#{url}" data-embedded-secure-image="true" style="#{style}" />
-          HTML
-          div.remove
+          div.replace(
+            @fragment.document.create_element(
+              "img",
+              src: url,
+              "data-embedded-secure-image": "true",
+              style: style,
+            ),
+          )
         end
       end
     end
@@ -471,7 +476,7 @@ module Email
           end
 
           if img["title"] && img["src"][%r{/_?emoji/}]
-            img.add_previous_sibling(img["title"] || "emoji")
+            img.add_previous_sibling(img.document.create_text_node(img["title"]))
             img.remove
           end
         end
@@ -527,9 +532,9 @@ module Email
     end
 
     def calculate_width_and_height_style(div)
-      width = div["data-width"]
-      height = div["data-height"]
-      if width.present? && height.present? && height.to_i < MAX_IMAGE_DIMENSION &&
+      width = div["data-width"].to_s
+      height = div["data-height"].to_s
+      if width.match?(/\A\d+\z/) && height.match?(/\A\d+\z/) && height.to_i < MAX_IMAGE_DIMENSION &&
            width.to_i < MAX_IMAGE_DIMENSION
         "width: #{width}px; height: #{height}px;"
       else

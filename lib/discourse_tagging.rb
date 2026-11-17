@@ -942,8 +942,8 @@ module DiscourseTagging
     DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)
   end
 
-  def self.find_or_create_tags!(tag_names, guardian)
-    tag_names = tags_for_saving(tag_names, guardian) || []
+  def self.find_or_create_tags!(tag_names, guardian, **options)
+    tag_names = tags_for_saving(tag_names, guardian, options) || []
     return [] if tag_names.empty?
 
     existing_tag_names = Tag.where_name(tag_names).pluck(:name)
@@ -1065,6 +1065,8 @@ module DiscourseTagging
 
       UPDATE topic_tags SET tag_id = :target_id WHERE tag_id IN (:synonym_ids);
     SQL
+
+    SearchIndexer.queue_tags_posts_reindex([target_tag.id])
 
     Scheduler::Defer.later("Update tag topic counts") { Tag.ensure_consistency! }
     failed.presence || true

@@ -69,9 +69,11 @@ en:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      author_must_match: "This connection acts as %{username} and cannot create content as another user. Omit author_username or use %{username}."
       category_create_failed: "Category could not be created"
       category_delete_confirmation_required: "Category deletion must be confirmed"
       category_delete_name_mismatch: "Category name does not match"
+      category_emoji_required: "Emoji must contain a shortcode name, such as dog or paw_prints."
       category_not_found: "Category not found"
       category_update_failed: "Category could not be updated"
       category_update_required: "At least one category field must be provided"
@@ -96,6 +98,10 @@ en:
       invalid_date: "Invalid date"
       invalid_directory_period: "Invalid directory period"
       invalid_reply_mode: "Invalid reply mode"
+      moderation_confirmation_required: "Set confirm to true to attest that this specific moderation action was requested."
+      moderation_invalid_duration_reason: "Provide a nonblank reason of at most 300 characters and duration_days from 1 to %{max}."
+      moderation_operation_failed: "The moderation action could not be verified. Read the user's current state before retrying."
+      moderation_user_not_found: "User not found. Use an exact existing username."
       post_not_found: "Post not found"
       user_directory_disabled: "The user directory is disabled"
       filter_only_for_filtered_view: "Filter is only supported by the filtered view"
@@ -116,6 +122,10 @@ en:
       private_message_recipient_required: "At least one private-message recipient is required"
       private_message_single_recipient: "Provide exactly one user, group, or email recipient"
       post_revision_not_found: "Post revision not found"
+      report_date_range: "Provide a date range of no more than %{count} days, with start_date on or before end_date"
+      report_failed: "The report could not be generated"
+      report_not_found: "Report not found or unavailable"
+      report_timeout: "The report took too long to generate. Try a shorter date range or narrower filters."
       reviewable_action_failed: "The reviewable action failed"
       reviewable_action_unavailable: "The reviewable action is no longer available"
       reviewable_confirmation_required: "Explicit confirmation is required for a reviewable action"
@@ -135,8 +145,21 @@ en:
       site_setting_value_forbidden: "Do not provide a value when resetting a site setting"
       site_setting_value_required: "Provide a value when setting a site setting"
       site_setting_verification_failed: "The site setting update could not be verified"
+      theme_children_must_be_components: "Only standalone themes can have child components, and every child_theme_id must identify an existing component. Convert a standalone child with component:true first."
+      theme_code_compile_failed: "Theme compilation failed; no changes were committed: %{message}"
+      theme_code_js_invalid: "The theme's JavaScript bundle failed compilation, possibly in another file; no changes were committed: %{message}"
+      theme_code_required: "Provide css or javascript. Omit unchanged inputs; explicitly use an empty string to remove a managed file."
+      theme_code_stale: "Theme code changed since your read. Call discourse_get_theme and use its current code_revision before editing."
+      theme_code_too_large: "Theme code must be text of at most 65,536 characters per file."
       theme_create_failed: "The theme could not be created"
+      theme_field_location_invalid: "That field has no supported theme file path and will not load. For page CSS use target common, name scss; JavaScript modules use target extra_js with a .js filename. Prefer discourse_set_theme_code for inline code."
+      theme_field_source_conflict: "Provide either inline value or an upload_id, not both."
+      theme_field_type_invalid: "Unknown theme field type '%{type}'."
+      theme_field_upload_not_found: "Upload not found. Use an existing upload ID returned by the upload tool."
+      theme_field_value_required: "Field '%{name}' requires a string value for inline source or upload_id for an upload variable. To remove an existing field, explicitly set value to an empty string."
+      theme_inline_field_upload: "Field '%{name}' is an inline source field. Put its code in value and omit upload_id; upload IDs are only supported for theme upload variables. For CSS/JavaScript prefer discourse_set_theme_code."
       theme_not_found: "Theme not found"
+      theme_parents_must_be_themes: "Only components can be attached to parent themes, and every parent_theme_id must identify an existing standalone theme. Use component:true to convert first, or in the same update."
       theme_update_failed: "The theme could not be updated"
       theme_update_required: "Provide at least one theme field to update"
       theme_confirmation_required: "Confirm this theme operation before proceeding"
@@ -149,6 +172,13 @@ en:
       theme_not_remote: "The theme does not have a Git repository"
       theme_remote_mismatch: "The repository URL has changed. Read the theme again before proceeding"
       theme_setting_value_invalid: "Provide a value when setting a theme setting and omit it when reverting"
+      tag_group_not_found: "Tag group not found"
+      tag_group_tags_unresolved: "One or more selected tags could not be applied. Use valid tag names or original tag IDs."
+      tag_group_unknown_tags: "One or more selected tags do not exist"
+      tag_group_unknown_permission_groups: "One or more permission groups do not exist"
+      tag_group_tag_creation_confirmation: "Name selectors require allow_tag_creation=true; use tag IDs to select existing tags"
+      tag_group_update_required: "Provide at least one tag group field to update"
+      tag_group_delete_confirmation: "Confirm deletion and provide the exact current tag group name"
       theme_setting_type_invalid: "Theme setting %{name} requires a value of type %{type}"
       theme_setting_not_found: "The theme does not declare this setting"
       theme_translation_not_found: "The theme does not declare one or more translation keys"
@@ -358,6 +388,7 @@ en:
         no_returned_value: "Migration '%{name}' didn't return any value (or returned null or undefined). It must return a Map object"
         wrong_return_type: "Migration '%{name}' returned an unknown data type. It must return a Map object"
         runtime_error: "Migration '%{name}' encountered the following runtime error: %{error}"
+        invalid_translation_key: "Migration '%{name}' cannot move a setting to translation key '%{key}' because it is not declared as text in the theme's English locale file"
         unknown_setting_returned_by_migration: "Migrations '%{name}' returned a setting '%{setting_name}' which is not declared in the theme's settings.yml file"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
@@ -366,6 +397,15 @@ en:
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
       optimized_link: Optimized image links are ephemeral and should not be included in theme source code.
     settings_errors:
+      translatable_requires_translation_key: "The '%{schema}' schema has translatable fields and must declare a 'translation_key' property with type string and required: true."
+      translatable_requires_string: "The translatable property '%{property}' must have type string."
+      object_translation_metadata: "The translations option for '%{path}' must be a mapping."
+      object_translation_locale: "The default_locale for '%{path}' must be one supported language; got %{value}."
+      object_translation_identifier: "The identifier at '%{path}' (%{value}) must start with a lowercase letter, contain only lowercase letters, numbers, and underscores, and be at most 80 characters."
+      object_translation_duplicate: "The identifier '%{value}' at '%{path}' is already used in this collection."
+      object_translation_length: "The translation key '%{path}' exceeds 400 bytes."
+      object_translation_property: "The translatable field or collection '%{path}' must start with a lowercase letter and contain only lowercase letters, numbers, and underscores."
+      object_translation_key_conflict: "The object setting %{setting} reserves %{key} for its text. Rename the setting or move locale-file translations out of this namespace before saving."
       invalid_yaml: "Provided YAML is invalid."
       data_type_inclusion: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list`, `enum` and `upload`"
       name_too_long: "There is a setting with a too long name. Maximum length is 255"
@@ -509,6 +549,7 @@ en:
         auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
+        authentication_failed_error: "Happens when incoming email authentication requires review, but the action takes effect immediately and cannot be queued."
         from_reply_by_address_error: "Happens when the From header matches the reply by email address."
         inactive_user_error: "Happens when the sender is not active."
         suspended_user_error: "Happens when the sender has been suspended."
@@ -724,6 +765,7 @@ en:
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
+  scoped_api_key_html_not_allowed: "API keys with scopes cannot be used to request HTML pages. Request the JSON format instead."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
@@ -793,11 +835,11 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_embedded_media_allowed_group: "Sorry, you can't embed media items in a post."
-  no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
+  no_embedded_media_allowed_group: "Sorry, you can't include images, videos, or audio in posts. You can link to them within a sentence instead."
+  no_embedded_media_allowed: "Sorry, new users can't include images, videos, or audio in posts. You can link to them within a sentence instead."
   too_many_embedded_media:
-    one: "Sorry, new users can only put one embedded media item in a post."
-    other: "Sorry, new users can only put %{count} embedded media items in a post."
+    one: "Sorry, new users can only include one image, video, or audio file in a post."
+    other: "Sorry, new users can only include %{count} images, videos, or audio files in a post."
   no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   too_many_attachments:
     one: "Sorry, new users can only put one attachment in a post."
@@ -1401,6 +1443,7 @@ en:
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
+    email_change_not_allowed: "This account has been active before, so it can only be reactivated using its current email address."
     admin_confirm:
       title: "Confirm Admin Account"
       description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
@@ -2488,6 +2531,7 @@ en:
     google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for the possible values."
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
     google_oauth2_hd_groups: 'Retrieve users'' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information, see <a target="_blank" href="https://meta.discourse.org/t/226850">this Meta topic</a>.'
+    google_oauth2_hd_groups_allowed: "Only allow users who belong to at least one of these Google groups to log in with Google. Enter each group's ID or email address. Requires {{setting:google_oauth2_hd}}, {{setting:google_oauth2_hd_groups_service_account_admin_email}}, and {{setting:google_oauth2_hd_groups_service_account_json}}. Group lookup failures deny login. Leave blank to allow any user in the hosted domain."
     google_oauth2_hd_groups_service_account_admin_email: "An email address belonging to a Google Workspace administrator account. Will be used with the service account credentials to fetch group information."
     google_oauth2_hd_groups_service_account_json: "JSON formatted key information for the Service Account. Will be used to fetch group information."
     google_oauth2_verbose_logging: "Log verbose Google OAuth2 related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -3210,7 +3254,6 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
-    concord_in_wizard: "Offer Concord and the General chat homepage in the design wizard."
     enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
     site_owner_onboarding_max_days: "Maximum number of days after site creation to show the onboarding banner."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
@@ -3232,6 +3275,7 @@ en:
     enable_composer_redesign: "Enable the redesigned composer."
     enable_new_reordering_controls: "Use the shared reordering controls on list settings, admin lists, the user directory columns and sidebar links, giving each one the same drag handle, move menu and keyboard support."
     enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
+    review_queue_consistent_answers: "Frame every review queue question so \"Yes\" always means there is a problem, and label reviewed items \"Problem confirmed\" or \"No problem found\" for every type."
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
@@ -3277,7 +3321,7 @@ en:
     nested_replies_hot_preload_depth_penalty: "Priority subtracted for each level of depth when choosing nested replies to pre-expand in hot view."
     nested_replies_default_sort: "Default sort algorithm for nested replies view."
     nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
-    nested_replies_backfill_batch_size: "Number of topics to process per nested reply stats backfill batch."
+    nested_replies_backfill_batch_size: "Maximum number of topics to inspect per nested reply stats backfill batch. Set to 0 to disable automatic backfill. Explicit stats preparation still processes at least one topic per batch."
     nested_replies_stats_maintenance_enabled: "Maintain nested reply statistics even while nested replies are disabled."
     nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
@@ -3293,8 +3337,10 @@ en:
     improved_crawler_detection: "Enables improved crawler tracking which can better detect likely crawlers and ensure traffic reporting is more accurate."
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
     update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
+    enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons: "We are updating the defaults for the {{setting:hide_suspension_reasons}} and {{setting:hide_silencing_reasons}} settings to hide these reasons from public view. If you have previously changed either setting, this change will have no effect on that setting."
     update_whispers_allowed_groups_default: "We are updating the default for the {{setting:whispers_allowed_groups}} setting to allow staff to post whispers by default. If you have previously changed this setting, your configuration will not change unless you reset the setting."
     sidebar_user_navigation: "Moves the navigation for user pages — profile, activity, notifications, messages, invites and preferences — out of the horizontal tab bars and into a dedicated sidebar panel, the way the admin area works. On mobile the panel is served from the hamburger menu."
+    mobile_footer_navigation: "Replaces the mobile header's menu button with a tab bar at the bottom of the screen. The footer navigation has a tab for each area of the site, a global menu button, and a button for writing new content. Plugins can add their own menu items and secondary menus using a new API."
     enable_generated_llms_txt: "Generates a concise /llms.txt when no custom file is uploaded. The document describes public discovery routes, the preferred Discourse MCP interface, and responsible agent access. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
     enable_markdown_endpoints: "Serve supported topics and topic lists as Markdown through .md URLs and requests with an Accept: text/markdown header. Normal visibility and profile privacy rules always apply."
 
@@ -3374,6 +3420,7 @@ en:
         other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
+      google_oauth2_hd_groups_allowed: "You must configure the Google OAuth2 hosted domain and group service account settings before adding allowed groups."
       discourse_id_registration: "Failed to automatically register with Discourse ID. This could be due to network connectivity issues, firewall restrictions, or the Discourse ID service being unreachable. Please check server logs for more details or contact support."
       auth_provider_credentials_missing: "You must set %{settings} before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
@@ -3381,7 +3428,7 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
-      uncategorized_category_missing: "'allow uncategorized topics' cannot be enabled because the \"Uncategorized\" category no longer exists."
+      uncategorized_category_missing: '''allow uncategorized topics'' cannot be enabled because the "Uncategorized" category no longer exists.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
@@ -3391,10 +3438,36 @@ en:
       s3_credentials_required_for_video_conversion: "S3 credentials are required for video conversion. Please configure S3 access keys or enable IAM profile."
 
     keywords:
+      about_banner_image: "banner image"
+      about_page_extra_groups: "group listing"
+      about_page_extra_groups_initial_members: "expanded members"
+      about_page_extra_groups_order: "sort order"
+      about_page_extra_groups_show_description: "include description"
+      allow_user_locale: "let users choose their language"
       clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
+      company_url: "website"
+      content_localization_crawler_param: "let search engines index translations"
+      content_localization_enabled: "show translations to readers"
+      content_localization_supported_locales: "translate into"
+      content_localization_use_default_locale_when_unsupported: "fall back to the default language"
+      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      embed_full_app: "full app mode"
+      extended_site_description: "community description"
+      large_icon: "square icon"
+      logo: "primary logo"
+      logo_dark: "primary logo dark"
+      logo_small: "small logo"
+      logo_small_dark: "small logo dark"
       navigation_menu: "sidebar|header dropdown"
       purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
-      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      set_locale_from_param: "language links"
+      short_site_description: "community title"
+      site_archived: "enable archive mode|disable archive mode"
+      site_contact_group_name: "site contact group"
+      site_contact_username: "site contact name"
+      site_description: "community summary"
+      title: "community name"
+      welcome_banner_image: "background image"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -3605,6 +3678,12 @@ en:
     existing_message_moderator_post:
       one: "A post was merged into an existing message: %{topic_link}"
       other: "%{count} posts were merged into an existing message: %{topic_link}"
+    new_topic_moderator_post_no_link:
+      one: "A post was split to a new topic."
+      other: "%{count} posts were split to a new topic."
+    existing_topic_moderator_post_no_link:
+      one: "A post was merged into an existing topic."
+      other: "%{count} posts were merged into an existing topic."
 
   change_owner:
     post_revision_text: "Ownership transferred"
@@ -6528,7 +6607,6 @@ en:
       custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
-    admin_onboarding_topic_option: "Selected option: %{option}\nOption ID: %{option_id}"
     redacted: "[content not visible]"
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
@@ -6611,6 +6689,12 @@ en:
         watched_word: "This post included a Watched Word. Check the %{link} for more."
 
     actions:
+      answer_yes:
+        title: "Yes"
+        delete_post_title: "Yes, delete post"
+        keep_post_deleted_title: "Yes, keep post deleted"
+      answer_no:
+        title: "No"
       agree:
         title: "Yes"
       agree_and_keep:
@@ -6707,6 +6791,7 @@ en:
         complete: "Post approved."
       approve_post:
         title: "Yes"
+        action_title: "Approve post"
         complete: "Post approved."
       approve_post_closed:
         title: "Yes"
@@ -6802,6 +6887,10 @@ en:
     mute_error: "Sorry, you can't mute that user."
     error: "Sorry, you cannot change the notification level for that user."
     invalid_value: '"%{value}" is not a valid notification level.'
+
+  google_oauth2:
+    not_in_allowed_group: "Authentication failed. You are not a member of a permitted Google group."
+    group_lookup_failed: "Authentication failed. Your Google group membership could not be verified."
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

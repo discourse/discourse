@@ -207,9 +207,57 @@ RSpec.describe "Blog publication", type: :request do
   describe "GET blog articles and feeds" do
     let!(:publication) do
       publication = Blog::Publication.for_topic(topic)
-      publication.path = "/private-to-public"
+      update_blog_metadata(publication, admin, path: "/private-to-public")
       publish_blog_draft(publication, admin)
-      publication
+    end
+
+    it "uses an article's meta description and canonical URL, and keeps syndicated articles out of the sitemap" do
+      update_blog_metadata(
+        publication,
+        admin,
+        meta_description: "For search engines.",
+        canonical_url: "https://example.com/original",
+      )
+      publish_blog_draft(publication, admin)
+
+      get publication.url
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css('meta[name="description"]')["content"]).to eq("For search engines.")
+      expect(html.at_css('meta[property="og:description"]')["content"]).to eq("For search engines.")
+      expect(html.at_css('link[rel="canonical"]')["href"]).to eq("https://example.com/original")
+      expect(html.at_css('meta[property="og:url"]')["content"]).to eq(
+        "https://example.com/original",
+      )
+      schema = JSON.parse(html.at_css('script[type="application/ld+json"]').text)
+      expect(schema["description"]).to eq("For search engines.")
+      expect(TopicView.new(publication.discussion_topic_id).canonical_path).to eq(
+        "https://example.com/original",
+      )
+
+      get "https://blog.example.com/sitemap.xml"
+      expect(response.body).not_to include(publication.url)
+    end
+
+    it "shows an article's cover above the body and uses it for link previews" do
+      cover = Fabricate(:upload, user: admin, width: 1200, height: 630)
+      update_blog_metadata(
+        publication,
+        admin,
+        cover_upload_id: cover.id,
+        cover_alt: "A lighthouse at dusk",
+      )
+      publish_blog_draft(publication, admin)
+
+      get publication.url
+      html = Nokogiri.HTML5(response.body)
+      image = html.at_css('figure[class$="cover"] img')
+      expect(image["src"]).to eq(UrlHelper.absolute(cover.url))
+      expect(image["alt"]).to eq("A lighthouse at dusk")
+      expect(image["width"]).to eq("1200")
+      expect(html.at_css('meta[property="og:image"]')["content"]).to eq(
+        UrlHelper.absolute(cover.url),
+      )
+      expect(html.at_css('meta[property="og:image:alt"]')["content"]).to eq("A lighthouse at dusk")
     end
 
     it "preserves historical canonical paths through publishing and corrections" do
@@ -253,10 +301,56 @@ RSpec.describe "Blog publication", type: :request do
         "/posts" => "/",
         "/posts.rss" => "/feed.xml",
         "/posts.atom" => "/feed.xml",
+        "/rss" => "/feed.xml",
+        "/rss/" => "/feed.xml",
+        "/feed" => "/feed.xml",
+        "/feed/" => "/feed.xml",
+        "/page/1" => "/",
+        "/page/3/" => "/?page=3",
       }.each do |path, target|
         get "https://blog.example.com#{path}"
         expect(response.status).to eq(301)
         expect(response).to redirect_to("https://blog.example.com#{target}")
+      end
+    end
+
+    it "serves an article link with a trailing slash under the stored canonical path" do
+      get "https://blog.example.com#{publication.path}/"
+      expect(response.status).to eq(200)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css('link[rel="canonical"]')["href"]).to eq(publication.url)
+    end
+
+    it "redirects other old links on the blog host through permalinks" do
+      Permalink.create!(url: "author/jo", external_url: "https://blog.example.com/")
+      Permalink.create!(url: "contact", topic_id: publication.discussion_topic_id)
+      Permalink.create!(url: "forum", external_url: "/")
+      Permalink.create!(url: "tag/old-slug", external_url: "https://blog.example.com/tag/news")
+      Permalink.create!(url: "private", topic_id: Fabricate(:topic, category: drafts).id)
+
+      %w[/author/jo /author/jo/].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("https://blog.example.com/")
+      end
+
+      get "https://blog.example.com/contact"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(
+        "#{Discourse.base_url}#{publication.discussion_topic.relative_url}",
+      )
+
+      get "https://blog.example.com/forum"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("#{Discourse.base_url}/")
+
+      get "https://blog.example.com/tag/old-slug"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("https://blog.example.com/tag/news")
+
+      %w[/private /author/someone-else /tag/unknown].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.status).to eq(404)
       end
     end
 
@@ -330,7 +424,133 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.status).to eq(200)
       expect(response.body).to include(publication.url)
 
+      Tag.find_by(name: "field-notes").update!(description: "Dispatches from **the field**.")
+      get "https://blog.example.com/tag/field-notes"
+      expect(response.body).to include("<strong>the field</strong>")
+      expect(response.body).to include(
+        '<meta name="description" content="Dispatches from the field.">',
+      )
+
       get "https://blog.example.com/tag/some-other-tag"
+      expect(response.status).to eq(404)
+    end
+
+    it "lists an author's articles on their author page, linked from the byline" do
+      admin.update!(name: "Ada Writer", username: "ada.writer")
+      admin.user_profile.update!(bio_raw: "Writes about **the field**.")
+      author_url = "https://blog.example.com/author/ada.writer"
+
+      get publication.url
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css(%(a[href="#{author_url}"])).text).to eq(
+        publication.article.data["author_name"],
+      )
+      schema = JSON.parse(html.at_css('script[type="application/ld+json"]').text)
+      expect(schema["author"]["url"]).to eq(author_url)
+
+      get "https://blog.example.com/author/Ada.Writer/"
+      expect(response.status).to eq(200)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css("h1").text).to eq("Ada Writer")
+      expect(html.at_css("img.blog__author-avatar")["src"]).to end_with("/240.png")
+      expect(html.at_css(".blog__description strong").text).to eq("the field")
+      expect(html.at_css('link[rel="canonical"]')["href"]).to eq(author_url)
+      expect(response.body).to include(publication.url)
+      expect(html.at_css('meta[name="description"]')["content"]).to eq("Writes about the field.")
+
+      SiteSetting.blog_description = "Notes from the team."
+      SiteSetting.hide_user_profiles_from_public = true
+      get author_url
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Writes about")
+      expect(Nokogiri.HTML5(response.body).at_css(".blog__description").text).to be_blank
+
+      get "https://blog.example.com/author/#{user.username}"
+      expect(response.status).to eq(404)
+    end
+
+    it "hides a deactivated author's bio, as their public profile does" do
+      admin.user_profile.update!(bio_raw: "Writes about **the field**.")
+      admin.deactivate(Discourse.system_user)
+
+      get "https://blog.example.com/author/#{admin.username}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Writes about")
+    end
+
+    it "serves a standalone page at its path while leaving it out of listings and the feed" do
+      update_blog_metadata(publication, admin, page: true)
+      publish_blog_draft(publication, admin)
+
+      get publication.url
+      expect(response.status).to eq(200)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css("h1").text).to eq(publication.article.title)
+      expect(html.at_css("#discussion")).to be_nil
+      expect(html.at_css('a[href*="/author/"]')).to be_nil
+      expect(html.at_css('meta[property="og:type"]')["content"]).to eq("website")
+      expect(JSON.parse(html.at_css('script[type="application/ld+json"]').text)["@type"]).to eq(
+        "WebPage",
+      )
+
+      theme =
+        create_blog_theme(
+          {
+            "name" => "Pages",
+            "accent_color" => "d64b2a",
+            "paper_color" => "f5f0e6",
+            "ink_color" => "19382d",
+            "css" => "",
+            "javascript" => "",
+            "template_page" => "<p id=custom>{{ article.title }}</p>",
+          },
+          user: admin,
+        )
+      activate_blog_theme(theme, user: admin)
+      get publication.url
+      expect(Nokogiri.HTML5(response.body).at_css("#custom").text).to eq(publication.article.title)
+
+      %w[/ /archive /feed.xml].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.body).not_to include(publication.url)
+      end
+
+      get "https://blog.example.com/sitemap.xml"
+      expect(response.body).to include(publication.url)
+    end
+
+    it "credits co-authors in the byline and lists the article on their author pages" do
+      co_author = Fabricate(:user, name: "Bea Coauthor")
+      update_blog_metadata(publication, admin, co_authors: co_author.username)
+      publish_blog_draft(publication, admin)
+      co_author_url = "https://blog.example.com/author/#{co_author.username_lower}"
+
+      [publication.url, "https://blog.example.com/"].each do |url|
+        get url
+        link = Nokogiri.HTML5(response.body).at_css(%(a[href="#{co_author_url}"]))
+        expect(link.text).to eq("Bea Coauthor")
+        expect(link.parent.text).to include(
+          "#{publication.article.data["author_name"]} and Bea Coauthor",
+        )
+      end
+
+      get co_author_url
+      expect(response.status).to eq(200)
+      expect(response.body).to include(publication.url)
+    end
+
+    it "shows no byline for an article the system user owns" do
+      publication.discussion_topic.update!(user: Discourse.system_user)
+
+      [publication.url, "https://blog.example.com/"].each do |url|
+        get url
+        html = Nokogiri.HTML5(response.body)
+        expect(html.at_css('a[href*="/author/"]')).to be_nil
+        expect(html.text).not_to include(publication.article.data["author_name"])
+      end
+
+      get "https://blog.example.com/author/#{Discourse.system_user.username}"
       expect(response.status).to eq(404)
     end
 

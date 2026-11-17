@@ -10,22 +10,28 @@ export default class SidebarApiSections extends Component {
   @service router;
   @service sidebarState;
 
+  // A panel rendered outside the sidebar is passed in, so it doesn't follow
+  // whichever panel the sidebar shows
+  get panel() {
+    return this.args.panel ?? this.sidebarState.currentPanel;
+  }
+
   @cached
   get sections() {
     let sectionConfigs;
 
-    if (this.sidebarState.combinedMode) {
+    if (!this.args.panel && this.sidebarState.combinedMode) {
       sectionConfigs = this.sidebarState.panels
         .filter((panel) => !panel.hidden)
         .flatMap((panel) => panel.sections);
     } else {
-      sectionConfigs = this.sidebarState.currentPanel.sections;
+      sectionConfigs = this.panel.sections;
     }
 
     const options = {
       filterable:
-        !this.sidebarState.combinedMode &&
-        this.sidebarState.currentPanel.filterable,
+        (!!this.args.panel || !this.sidebarState.combinedMode) &&
+        this.panel.filterable,
       owner: getOwner(this),
       router: this.router,
       sidebarState: this.sidebarState,
@@ -41,6 +47,7 @@ export default class SidebarApiSections extends Component {
   <template>
     <PanelHeader
       @filteredSections={{this.filteredSections}}
+      @panel={{this.panel}}
       @sections={{this.sections}}
     />
 

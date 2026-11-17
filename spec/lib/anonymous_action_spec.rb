@@ -68,6 +68,22 @@ RSpec.describe AnonymousAction do
       expect(cookies.signed[AnonymousAction::COOKIE]).to be_nil
     end
 
+    it "does not run the handler for a suspended user but clears the cookie" do
+      user.update!(suspended_till: 1.day.from_now, suspended_at: Time.zone.now)
+      cookies.signed[AnonymousAction::COOKIE] = {
+        "type" => "anon_action_spec_test",
+        "params" => {
+          "post_id" => post.id,
+        },
+      }
+
+      expect { AnonymousAction.consume(user, cookies) }.not_to change {
+        PostAction.where(post: post, user: user).count
+      }
+
+      expect(cookies.signed[AnonymousAction::COOKIE]).to be_nil
+    end
+
     it "no-ops without a cookie" do
       expect { AnonymousAction.consume(user, cookies) }.not_to raise_error
     end

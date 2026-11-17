@@ -226,6 +226,13 @@ module DiscourseAi
 
         protected
 
+        def log_provider_error(message, level: :error)
+          # Spam scanning reports provider failures through an admin notice and the API audit log.
+          return if @feature_name == "spam_detection"
+
+          Rails.logger.public_send(level, message)
+        end
+
         def output_stop_reason
           nil
         end
@@ -588,8 +595,9 @@ module DiscourseAi
                 rescue *RETRIABLE_NETWORK_ERRORS => e
                   raise if cancelled
 
-                  Rails.logger.warn(
+                  log_provider_error(
                     "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
+                    level: :warn,
                   )
                   if generation_started?(response_output_started, log)
                     retrying = false
@@ -610,8 +618,9 @@ module DiscourseAi
             rescue *RETRIABLE_NETWORK_ERRORS => e
               raise if cancelled
 
-              Rails.logger.warn(
+              log_provider_error(
                 "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
+                level: :warn,
               )
               if generation_started?(response_output_started, log)
                 retrying = false
@@ -755,9 +764,9 @@ module DiscourseAi
             )
 
           log_method = retry_delay ? :warn : :error
-          Rails.logger.public_send(
-            log_method,
+          log_provider_error(
             "#{self.class.name}: status: #{status} - body: #{response.body}",
+            level: log_method,
           )
           response_raw << response.body.to_s
 

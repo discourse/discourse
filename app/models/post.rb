@@ -117,8 +117,17 @@ class Post < ActiveRecord::Base
         -> { joins(:topic).where("topics.archetype = ?", Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where("topics.subtype = ?", subtype) }
   scope :visible, -> { joins(:topic).where("topics.visible = true").where(hidden: false) }
-  scope :secured,
-        ->(guardian) { where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user)) }
+  # Adds the rules of Guardian#can_see_post? without removing existing conditions.
+  # Admins are unchanged, including whispers. Nil means anonymous.
+  # Use with_deleted to include permitted deleted posts.
+  # Assumes an unaliased posts table; predicate overrides in plugins are not reflected.
+  scope :secured, ->(guardian = nil) { (guardian || Guardian.new).filter_visible_posts(all) }
+
+  # Post types only: does not authorize topic access or hidden/deleted state.
+  scope :with_visible_post_types,
+        ->(guardian = nil) do
+          where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user))
+        end
 
   scope :for_mailing_list,
         ->(user, since) do
@@ -362,11 +371,9 @@ class Post < ActiveRecord::Base
 
     # A rule in our Markdown pipeline may have Guardian checks that require a
     # user to be present. The last editing user of the post will be more
-    # generally up to date than the creating user. For example, we use
-    # this when cooking #hashtags to determine whether we should render
-    # the found hashtag based on whether the user can access the category it
-    # is referencing.
+    # generally up to date than the creating user.
     options[:user_id] = last_editor_id
+    options[:hashtag_user_ids] = [user_id, last_editor_id, *post_revisions.pluck(:user_id)].compact
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
     options
@@ -397,7 +404,8 @@ class Post < ActiveRecord::Base
       end
     end
 
-    cooked = post_analyzer.cook(raw, options)
+    cooked =
+      post_analyzer.cook(raw, options) { |url, onebox, doc| onebox_allowed?(url, onebox, doc) }
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
@@ -410,6 +418,13 @@ class Post < ActiveRecord::Base
     end
 
     new_cooked
+  end
+
+  def onebox_allowed?(url, onebox, doc)
+    return true if !PostAnalyzer.unvalidated_media?(onebox, url)
+
+    limit = unvalidated_media_limit
+    limit.nil? || PostAnalyzer.embedded_media_count(doc) < limit
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
@@ -1267,6 +1282,20 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def unvalidated_media_limit
+    writer_ids = [user_id, last_editor_id, *post_revisions.pluck(:user_id)]
+
+    User.where(id: writer_ids).filter_map { |writer| embedded_media_limit(writer) }.min
+  end
+
+  def embedded_media_limit(writer)
+    return if writer.staff?
+    return 0 if !writer.guardian.can_embed_media?
+    return 0 if !writer.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+
+    SiteSetting.newuser_max_embedded_media if writer.trust_level == TrustLevel[0]
+  end
 
   def ensure_edit_reason_length
     return if edit_reason.blank? || edit_reason.length <= MAX_EDIT_REASON_LENGTH

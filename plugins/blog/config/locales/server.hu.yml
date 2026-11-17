@@ -14,7 +14,10 @@ hu:
     about: Névjegy
     community: Közösség
     preview: Előnézet
+    author: Szerző
     search: Keresés
     replies:
       one: "%{count} válasz"
       other: "%{count} válasz"
+    themes:
+      default: Alapértelmezett

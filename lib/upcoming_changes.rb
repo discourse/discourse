@@ -219,8 +219,8 @@ module UpcomingChanges
     return true if plugin.nil?
 
     # Recursion guard: a change that is its own plugin's enabled_site_setting
-    # must opt out with requires_plugin_enabled: false (enforced by the
-    # integrity spec), but if that metadata is forgotten, plugin.enabled? below
+    # must opt out with requires_plugin_enabled: false (enforced by
+    # script/upcoming_changes_lint.rb), but if that metadata is forgotten, plugin.enabled? below
     # would read the change setting, which resolves back through
     # UpcomingChanges.enabled? and recurses infinitely.
     return true if plugin.enabled_site_setting&.to_sym == change_setting_name

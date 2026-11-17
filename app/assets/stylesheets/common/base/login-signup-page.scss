@@ -431,6 +431,11 @@ body.signup-page {
       }
     }
 
+    &.invitation-gate__buttons {
+      height: auto;
+      padding: 0;
+    }
+
     .btn-social {
       border: 1px solid var(--content-border-color);
       padding: 0.75em 0.77em; // matches input padding
@@ -748,6 +753,22 @@ body.signup-page {
     #login-form {
       padding-bottom: 0;
     }
+  }
+}
+
+.invitation-gate {
+  max-width: 36rem;
+  margin-inline: auto;
+  text-align: center;
+
+  .btn-discourse-id__suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding-block: 0.5rem;
+    color: var(--primary-500);
+    font-size: var(--font-down-1);
   }
 }
 

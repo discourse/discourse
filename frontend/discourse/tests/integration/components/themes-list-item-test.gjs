@@ -9,7 +9,7 @@ module("Integration | Component | ThemesListItem", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default theme", async function (assert) {
-    this.set("theme", Theme.create({ name: "Test", default: true }));
+    this.theme = Theme.create({ name: "Test", default: true });
 
     await render(<template><ThemesListItem @theme={{this.theme}} /></template>);
 
@@ -17,10 +17,10 @@ module("Integration | Component | ThemesListItem", function (hooks) {
   });
 
   test("pending updates", async function (assert) {
-    this.set(
-      "theme",
-      Theme.create({ name: "Test", remote_theme: { commits_behind: 6 } })
-    );
+    this.theme = Theme.create({
+      name: "Test",
+      remote_theme: { commits_behind: 6 },
+    });
 
     await render(<template><ThemesListItem @theme={{this.theme}} /></template>);
 
@@ -28,13 +28,10 @@ module("Integration | Component | ThemesListItem", function (hooks) {
   });
 
   test("broken theme", async function (assert) {
-    this.set(
-      "theme",
-      Theme.create({
-        name: "Test",
-        theme_fields: [{ name: "scss", type_id: 1, error: "something" }],
-      })
-    );
+    this.theme = Theme.create({
+      name: "Test",
+      theme_fields: [{ name: "scss", type_id: 1, error: "something" }],
+    });
 
     await render(<template><ThemesListItem @theme={{this.theme}} /></template>);
 
@@ -46,14 +43,11 @@ module("Integration | Component | ThemesListItem", function (hooks) {
       Theme.create({ name: `Child ${num}`, component: true })
     );
 
-    this.set(
-      "theme",
-      Theme.create({
-        name: "Test",
-        childThemes: this.childrenList,
-        default: true,
-      })
-    );
+    this.theme = Theme.create({
+      name: "Test",
+      childThemes: this.childrenList,
+      default: true,
+    });
 
     await render(<template><ThemesListItem @theme={{this.theme}} /></template>);
 

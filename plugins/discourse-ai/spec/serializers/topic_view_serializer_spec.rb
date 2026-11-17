@@ -32,6 +32,36 @@ RSpec.describe TopicViewSerializer do
     )
   end
 
+  it "uses the current Discoveries classes in serializer callbacks retained across a reload" do
+    request_field = "reloaded_discovery_request_id"
+    conversation = Fabricate(:private_message_topic, user: user, highest_post_number: 1)
+    Fabricate(:post, topic: conversation, user: user, post_number: 1)
+    conversation.custom_fields[request_field] = "request-id"
+    conversation.save_custom_fields
+    view = TopicView.new(conversation, user)
+    current_discoveries = Module.new
+    current_continuation = Class.new(DiscourseAi::Discoveries::ContinueConversation)
+    current_cited_topics =
+      Class.new(DiscourseAi::Discoveries::CitedTopics) do
+        def as_json(*)
+          super.merge(reloaded: true)
+        end
+      end
+
+    stub_const(current_continuation, :TOPIC_REQUEST_ID_FIELD, request_field) do
+      stub_const(current_discoveries, :ContinueConversation, current_continuation) do
+        stub_const(current_discoveries, :CitedTopics, current_cited_topics) do
+          stub_const(DiscourseAi, :Discoveries, current_discoveries) do
+            json = described_class.new(view, scope: guardian, root: false).as_json
+
+            expect(json[:ai_search_conversation]).to eq(true)
+            expect(json[:ai_search_cited_topics]).to eq(replies: 0, topics: [], reloaded: true)
+          end
+        end
+      end
+    end
+  end
+
   describe "#summarizable" do
     let(:anon_topic_view) { TopicView.new(topic, nil) }
     let(:anon_serializer) { described_class.new(anon_topic_view, scope: Guardian.new, root: false) }
