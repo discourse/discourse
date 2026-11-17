@@ -1,3 +1,8 @@
+import {
+  authorizedExtensions,
+  authorizesAllExtensions,
+} from "discourse/lib/uploads";
+
 export const MEBIBYTE = 1024 * 1024;
 export const DEFAULT_MAX_FILE_SIZE = 100 * MEBIBYTE;
 export const MAX_CONFIGURED_FILE_SIZE = 102400 * MEBIBYTE;
@@ -8,4 +13,19 @@ export function fileTransferMaxSize(mebibytes) {
     return DEFAULT_MAX_FILE_SIZE;
   }
   return mebibytes * MEBIBYTE;
+}
+
+// Mirrors upload authorization: `staff` is the sender's staff status, because
+// the sender's extension list applies on both ends of a transfer.
+export function isAuthorizedFileName(name, staff, siteSettings) {
+  if (authorizesAllExtensions(staff, siteSettings)) {
+    return true;
+  }
+  const dot = name.lastIndexOf(".");
+  if (dot === -1) {
+    return false;
+  }
+  return authorizedExtensions(staff, siteSettings).includes(
+    name.slice(dot + 1).toLowerCase()
+  );
 }

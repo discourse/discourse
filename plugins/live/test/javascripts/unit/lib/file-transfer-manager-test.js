@@ -214,6 +214,63 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     assert.strictEqual(this.b.readyState, "open");
   });
 
+  test("file type checks apply to sending, incoming offers and acceptance", async function (assert) {
+    const checks = [];
+    this.allowedTypes = true;
+    const isFileTypeAllowed = (name, context) => {
+      checks.push({ name, ...context });
+      return this.allowedTypes;
+    };
+    this.sender.destroy();
+    this.receiver.destroy();
+    this.sender = createManager({
+      isEligible: () => true,
+      isFileTypeAllowed,
+    });
+    this.receiver = createManager({
+      isEligible: () => true,
+      isFileTypeAllowed,
+      openReceiveSink: this.openSink,
+    });
+    this.sender.attach(1, 2, this.a);
+    this.receiver.attach(1, 1, this.b);
+
+    this.allowedTypes = false;
+    assert.throws(() => this.sender.send(1, 2, new File(["x"], "x.exe")));
+    assert.deepEqual(checks.at(-1), {
+      name: "x.exe",
+      roomId: 1,
+      userId: 2,
+      direction: "outgoing",
+    });
+
+    const refused = crypto.randomUUID();
+    this.message(this.b, "offer", refused, { name: "x.exe", size: 1 });
+    assert.deepEqual(this.receiver.transfers, []);
+    assert.deepEqual(JSON.parse(this.b.sent.at(-1)), {
+      type: "reject",
+      id: refused,
+    });
+    assert.deepEqual(
+      checks.at(-1),
+      { name: "x.exe", roomId: 1, userId: 1, direction: "incoming" },
+      "incoming offers are checked against the sending peer"
+    );
+    assert.strictEqual(this.b.readyState, "open");
+
+    this.allowedTypes = true;
+    const id = await this.offer();
+    assert.strictEqual(this.receiver.transfers[0].status, "pending");
+    this.allowedTypes = false;
+    await this.receiver.accept(id);
+    assert.strictEqual(
+      this.receiver.transfers[0].status,
+      "rejected",
+      "acceptance rechecks the type"
+    );
+    assert.strictEqual(this.sinks.length, 0);
+  });
+
   test("disabled or non-participant eligibility blocks send and incoming offers", async function (assert) {
     this.eligible = false;
     assert.false(this.sender.canSend(1, 2));

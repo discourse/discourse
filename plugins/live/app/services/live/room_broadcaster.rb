@@ -50,7 +50,12 @@ module Live
           .as_json
           .merge(metadata[user.id] || {})
           .merge(entitlements[user.id] || Live::MediaEntitlements::NONE)
-          .merge(can_send_files: file_sender_ids.include?(user.id))
+          .merge(
+            can_send_files: file_sender_ids.include?(user.id),
+            # Receivers apply the sender's upload extension list, which is
+            # wider for staff.
+            can_send_staff_file_types: file_sender_ids.include?(user.id) && user.staff?,
+          )
       end
     end
 

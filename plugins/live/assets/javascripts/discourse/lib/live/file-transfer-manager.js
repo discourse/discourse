@@ -35,6 +35,7 @@ export default class FileTransferManager {
   #timeout;
   #sendAllowed;
   #receiveAllowed;
+  #fileTypeAllowed;
   #openSink;
   #getMaxFileSize;
   #estimateStorage;
@@ -50,6 +51,7 @@ export default class FileTransferManager {
     isEligible,
     isSendAllowed = isEligible,
     isReceiveAllowed = isEligible,
+    isFileTypeAllowed = () => true,
     openReceiveSink: openSink = openReceiveSink,
     timeoutMs = 120_000,
     getMaxFileSize = () => DEFAULT_MAX_FILE_SIZE,
@@ -61,6 +63,7 @@ export default class FileTransferManager {
     this.#timeout = timeoutMs;
     this.#sendAllowed = isSendAllowed;
     this.#receiveAllowed = isReceiveAllowed;
+    this.#fileTypeAllowed = isFileTypeAllowed;
     this.#openSink = openSink;
     this.#getMaxFileSize = getMaxFileSize;
     this.#estimateStorage = estimateStorage;
@@ -115,7 +118,12 @@ export default class FileTransferManager {
     if (
       !this.canSend(roomId, userId) ||
       !(file instanceof Blob) ||
-      !this.#validMetadata(file.name, file.size)
+      !this.#validMetadata(file.name, file.size) ||
+      !this.#fileTypeAllowed(file.name, {
+        roomId,
+        userId,
+        direction: "outgoing",
+      })
     ) {
       throw new Error("File transfer is unavailable or file is invalid");
     }
@@ -149,7 +157,7 @@ export default class FileTransferManager {
     ) {
       return;
     }
-    if (!this.#validMetadata(t.entry.name, t.entry.size)) {
+    if (!this.#validIncoming(t.peer, t.entry.name, t.entry.size)) {
       this.reject(id);
       return;
     }
@@ -184,7 +192,7 @@ export default class FileTransferManager {
       if (
         !this.#eligible(t.peer.roomId, t.peer.userId) ||
         !this.#receiveAllowed(t.peer.roomId, t.peer.userId) ||
-        !this.#validMetadata(t.entry.name, t.entry.size)
+        !this.#validIncoming(t.peer, t.entry.name, t.entry.size)
       ) {
         this.cancel(id);
         return;
@@ -204,7 +212,7 @@ export default class FileTransferManager {
       if (
         !this.#eligible(t.peer.roomId, t.peer.userId) ||
         !this.#receiveAllowed(t.peer.roomId, t.peer.userId) ||
-        !this.#validMetadata(t.entry.name, t.entry.size)
+        !this.#validIncoming(t.peer, t.entry.name, t.entry.size)
       ) {
         this.cancel(id);
         return;
@@ -410,6 +418,18 @@ export default class FileTransferManager {
       size >= 0 &&
       maxSize > 0 &&
       size <= maxSize
+    );
+  }
+
+  // Incoming files are checked against the sender's allowed types, not ours.
+  #validIncoming(peer, name, size) {
+    return (
+      this.#validMetadata(name, size) &&
+      this.#fileTypeAllowed(name, {
+        roomId: peer.roomId,
+        userId: peer.userId,
+        direction: "incoming",
+      })
     );
   }
 
@@ -619,7 +639,7 @@ export default class FileTransferManager {
         incomingCount >= 4 ||
         !this.#hasRoom() ||
         this.transfers.some((entry) => entry.id === id) ||
-        !this.#validMetadata(name, size)
+        !this.#validIncoming(peer, name, size)
       ) {
         this.#control(peer, "reject", id);
         return;

@@ -25,6 +25,7 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
     SiteSetting.live_enabled = true
     SiteSetting.live_mesh_privacy_warning_enabled = false
     SiteSetting.live_stun_servers = ""
+    SiteSetting.authorized_extensions = "*"
     sender_group.add(alice)
     SiteSetting.live_file_transfer_allowed_groups = sender_group.id.to_s
     SiteSetting.live_allowed_groups =
