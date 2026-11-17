@@ -232,6 +232,11 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       isFileTypeAllowed,
       openReceiveSink: this.openSink,
     });
+    // destroy() closed the original channels.
+    this.a = new Channel();
+    this.b = new Channel();
+    this.a.remote = this.b;
+    this.b.remote = this.a;
     this.sender.attach(1, 2, this.a);
     this.receiver.attach(1, 1, this.b);
 

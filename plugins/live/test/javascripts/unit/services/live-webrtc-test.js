@@ -696,20 +696,23 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       authorized_extensions: settings.authorized_extensions,
       authorized_extensions_for_staff: settings.authorized_extensions_for_staff,
     };
+    const { admin, moderator } = this.currentUser;
+    const setStaff = (staff) =>
+      this.currentUser.setProperties({ admin: staff, moderator: false });
     settings.authorized_extensions = "txt";
     settings.authorized_extensions_for_staff = "zip";
     try {
       this.subject.site.live_file_transfers_available = true;
       this.currentUser.live_can_send_files = true;
-      this.currentUser.staff = false;
+      setStaff(false);
       assert.true(this.subject.canSendFileType("notes.txt"));
       assert.false(this.subject.canSendFileType("archive.zip"));
-      this.currentUser.staff = true;
+      setStaff(true);
       assert.true(
         this.subject.canSendFileType("archive.zip"),
         "staff may send staff extensions"
       );
-      this.currentUser.staff = false;
+      setStaff(false);
 
       await this.subject.join(this.room);
       const channel = FakeRTCPeerConnection.instances.find(
@@ -740,7 +743,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       );
     } finally {
       Object.assign(settings, original);
-      this.currentUser.staff = false;
+      this.currentUser.setProperties({ admin, moderator });
     }
   });
 
