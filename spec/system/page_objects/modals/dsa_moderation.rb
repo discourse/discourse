@@ -115,6 +115,17 @@ module PageObjects
         within(full_modal_selector) { has_text?(message, normalize_ws: true) }
       end
 
+      def has_field_hint?(field, text)
+        has_css?(
+          "#{full_modal_selector} [data-name='#{field}'] .form-kit__container-help-text",
+          text:,
+        )
+      end
+
+      def has_no_field_hint?(field)
+        has_no_css?("#{full_modal_selector} [data-name='#{field}'] .form-kit__container-help-text")
+      end
+
       def has_selected_rule?(ground)
         has_css?(
           "#{full_modal_selector} [data-name='community_rule'] .d-button-label",

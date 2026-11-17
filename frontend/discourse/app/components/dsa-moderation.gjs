@@ -84,9 +84,21 @@ const Body = <template>
       <div hidden={{not @flow.showContinue}}>{{yield}}</div>
     {{/if}}
     <div hidden={{@flow.showContinue}}>
+      {{#if @flow.reviewableId}}
+        <PluginOutlet
+          @name="dsa-classification-before-fields"
+          @outletArgs={{lazyHash
+            communityRules=@flow.options.community_rules
+            reviewableId=@flow.reviewableId
+            updateClassification=@flow.updateClassification
+          }}
+        />
+      {{/if}}
       <DsaModerationDetails
         @disabled={{@flow.isUpdatingClassification}}
+        @fieldHints={{@flow.fieldHints}}
         @formId={{@flow.formId}}
+        @onFieldSet={{@flow.editField}}
         @onRegisterApi={{@flow.registerFormApi}}
         @onSubmit={{@flow.classify}}
         @options={{@flow.options}}
@@ -146,8 +158,9 @@ const Footer = <template>
 </template>;
 
 export default class DsaModeration extends Component {
+  @tracked fieldHints = {};
   @tracked classificationStep = false;
-  @tracked classificationUpdate = null;
+  @tracked isUpdatingClassification = false;
 
   formId = `dsa-moderation-${guidFor(this)}`;
   #setClassification;
@@ -176,10 +189,6 @@ export default class DsaModeration extends Component {
     return this.args.reviewableId;
   }
 
-  get isUpdatingClassification() {
-    return this.classificationUpdate !== null;
-  }
-
   get showTitleHelp() {
     return this.enabled && !this.hasActionDetails && !this.nextStepLabel;
   }
@@ -199,7 +208,6 @@ export default class DsaModeration extends Component {
 
   @action
   back() {
-    this.classificationUpdate = null;
     this.classificationStep = false;
   }
 
@@ -235,24 +243,38 @@ export default class DsaModeration extends Component {
   }
 
   @action
-  async updateClassification(load) {
+  async editField(value, { name, set }) {
+    if (this.fieldHints[name]) {
+      const hints = { ...this.fieldHints };
+      delete hints[name];
+      this.fieldHints = hints;
+    }
+    await set(name, value);
+  }
+
+  @action
+  async updateClassification(load, hint) {
     if (this.isUpdatingClassification) {
       return;
     }
 
-    const update = Symbol();
-    this.classificationUpdate = update;
+    this.isUpdatingClassification = true;
     try {
       const { community_rule, category } = await load();
-      if (!this.isDestroying && this.classificationUpdate === update) {
-        await this.#setClassification({
+      if (!this.isDestroying) {
+        const values = {
           ...(community_rule && { community_rule }),
           ...(category && { category }),
-        });
+        };
+        await this.#setClassification(values);
+        this.fieldHints = {
+          community_rule: community_rule && hint,
+          category: category && hint,
+        };
       }
     } finally {
-      if (!this.isDestroying && this.classificationUpdate === update) {
-        this.classificationUpdate = null;
+      if (!this.isDestroying) {
+        this.isUpdatingClassification = false;
       }
     }
   }

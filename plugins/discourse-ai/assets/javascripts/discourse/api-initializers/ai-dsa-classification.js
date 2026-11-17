@@ -3,7 +3,7 @@ import AiDsaClassificationSuggestion from "../components/ai-dsa-classification-s
 
 export default apiInitializer((api) => {
   api.renderInOutlet(
-    "dsa-classification-footer",
+    "dsa-classification-before-fields",
     AiDsaClassificationSuggestion
   );
 });

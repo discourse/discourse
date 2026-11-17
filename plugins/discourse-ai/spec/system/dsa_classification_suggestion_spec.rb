@@ -5,6 +5,14 @@ RSpec.describe "DSA classification suggestion" do
   fab!(:decision_model)
   fab!(:post) { Fabricate(:post, raw: "Buy cheap watches at my shop, best deals online!") }
 
+  fab!(:reviewable) do
+    PostActionCreator.create(
+      Fabricate(:user, trust_level: TrustLevel[3]),
+      post,
+      :inappropriate,
+    ).reviewable
+  end
+
   let(:review_page) { PageObjects::Pages::Review.new }
   let(:modal) { PageObjects::Modals::DsaModeration.new }
   let(:advertising_rule) do
@@ -29,13 +37,7 @@ RSpec.describe "DSA classification suggestion" do
     sign_in(moderator)
   end
 
-  it "lets the moderator suggest and adjust classification before silencing the user" do
-    reviewable =
-      PostActionCreator.create(
-        Fabricate(:user, trust_level: TrustLevel[3]),
-        post,
-        :inappropriate,
-      ).reviewable
+  it "prefills the classification and lets the moderator adjust it before silencing the user" do
     penalty_modal = PageObjects::Modals::PenalizeUser.new("silence")
 
     DiscourseAi::Decisions.with_canned_answers(
@@ -48,37 +50,45 @@ RSpec.describe "DSA classification suggestion" do
       penalty_modal.fill_in_silence_reason("Repeated unsolicited advertising.")
       modal.continue
 
-      expect(modal).to have_classification
-
-      modal.open_rule_menu
-
-      expect(modal).to have_readable_rule(advertising_rule[:ground])
-
-      modal.close_rule_menu
-      PageObjects::CDP
-        .new
-        .with_paused_request("**/dsa-classifications/*/suggest") do |request|
-          page.driver.with_playwright_page do |browser|
-            browser.get_by_role("button", name: "Suggest with AI", exact: true).click
-          end
-          request.wait
-
-          expect(modal).to have_disabled_classification_fields
-          expect(modal).to have_disabled_button("Silence")
-
-          request.resume
-        end
-
       expect(modal).to have_selected_rule(advertising_rule[:ground])
       expect(modal).to have_selected_category(category)
       expect(review_page).to have_reviewable_with_pending_status(reviewable)
 
+      expect(modal).to have_field_hint(:community_rule, "Suggested by AI")
+      expect(modal).to have_field_hint(:category, "Suggested by AI")
+      modal.open_rule_menu
+      expect(modal).to have_readable_rule(advertising_rule[:ground])
+      modal.close_rule_menu
+
       modal.select_category("Other violation of terms and conditions")
+
+      expect(modal).to have_no_field_hint(:category)
+      expect(modal).to have_field_hint(:community_rule, "Suggested by AI")
 
       modal.confirm("Silence")
 
       expect(modal).to be_closed
       expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
+    end
+  end
+
+  it "labels only the field AI prefilled when there is a partial suggestion" do
+    SiteSetting.dsa_community_rules = [advertising_rule].to_json
+    DiscourseAi::Decisions.with_canned_answers(category:) do
+      review_page.visit_reviewable(reviewable)
+      PageObjects::CDP
+        .new
+        .with_paused_request("**/dsa-classifications/*/suggest") do |request|
+          review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
+          expect(modal).to have_confirmation_prompt("Getting AI suggestions…")
+          expect(modal).to have_disabled_classification_fields
+          request.wait
+          request.resume
+        end
+
+      expect(modal).to have_selected_category(category)
+      expect(modal).to have_field_hint(:category, "Suggested by AI")
+      expect(modal).to have_no_field_hint(:community_rule)
     end
   end
 end

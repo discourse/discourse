@@ -1,11 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import DButton from "discourse/ui-kit/d-button";
+import { extractError } from "discourse/lib/ajax-error";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const SuggestionHint = <template>
+  {{dIcon "discourse-sparkles"}}
+  {{i18n "discourse_ai.dsa_classification.suggested_by_ai"}}
+</template>;
 
 export default class AiDsaClassificationSuggestion extends Component {
   static shouldRender(_outletArgs, { siteSettings }) {
@@ -15,57 +20,42 @@ export default class AiDsaClassificationSuggestion extends Component {
     );
   }
 
-  @service a11y;
-  @service toasts;
-
-  @tracked loading = false;
+  @tracked message = i18n("discourse_ai.dsa_classification.loading");
 
   @action
   async suggest() {
-    const { reviewableId, updateClassification } = this.args.outletArgs;
-    let hasSuggestion = false;
-    this.loading = true;
+    const { communityRules, reviewableId, updateClassification } =
+      this.args.outletArgs;
+
     try {
       await updateClassification(async () => {
-        const classification = await ajax(
+        const suggestion = await ajax(
           `/discourse-ai/ai-moderation/dsa-classifications/${reviewableId}/suggest`,
           { type: "POST" }
         );
-        hasSuggestion = Object.values(classification).some(Boolean);
-        return classification;
-      });
-
-      if (!this.isDestroying) {
-        if (hasSuggestion) {
-          this.a11y.announce(i18n("discourse_ai.dsa_classification.updated"));
-        } else {
-          this.toasts.error({
-            duration: "short",
-            data: {
-              message: i18n("discourse_ai.dsa_classification.no_suggestion"),
-            },
-          });
+        if (communityRules.length === 1) {
+          suggestion.community_rule = null;
         }
-      }
+        if (!this.isDestroying) {
+          this.message =
+            suggestion.community_rule || suggestion.category
+              ? null
+              : i18n("discourse_ai.dsa_classification.no_suggestion");
+        }
+        return suggestion;
+      }, SuggestionHint);
     } catch (error) {
       if (!this.isDestroying) {
-        popupAjaxError(error);
-      }
-    } finally {
-      if (!this.isDestroying) {
-        this.loading = false;
+        this.message = extractError(error);
       }
     }
   }
 
   <template>
-    <DButton
-      class="btn-default"
-      @action={{this.suggest}}
-      @disabled={{@outletArgs.disabled}}
-      @icon="discourse-sparkles"
-      @isLoading={{this.loading}}
-      @label="discourse_ai.dsa_classification.suggest"
-    />
+    <div role="status" {{didInsert this.suggest}}>
+      {{#if this.message}}
+        <p>{{this.message}}</p>
+      {{/if}}
+    </div>
   </template>
 }
