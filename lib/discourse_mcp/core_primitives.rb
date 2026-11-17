@@ -69,6 +69,8 @@ module DiscourseMcp
       register_report_tools(registry)
       register_site_setting_tools(registry)
       register_theme_tools(registry)
+      register_authoring_guide_tools(registry)
+      register_source_tools(registry)
       register_theme_management_tools(registry)
       register_group_tools(registry)
       register_tag_group_tools(registry)
@@ -76,6 +78,131 @@ module DiscourseMcp
       register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    def register_source_tools(registry)
+      register_tool(
+        registry,
+        "discourse_source_version",
+        title: "Source version",
+        description:
+          "Reports the site's version, reported Git revision, local checkout revision, and whether tracked files have local edits. Use before inspecting source. Committed source is pinned to the reported revision, not latest main; this does not prove every running process has reloaded local changes. Administrator only.",
+        implementation: Tools::SourceVersion,
+        annotations: READ_ONLY,
+        risk: :read,
+        availability: -> { Tools::SourceSupport.available? },
+      )
+      mode = {
+        type: "string",
+        enum: %w[committed working_tree],
+        description:
+          "Defaults to committed: the site's reported revision. working_tree explicitly reads current tracked files on disk, including local edits.",
+      }
+      register_tool(
+        registry,
+        "discourse_read_source",
+        title: "Read source",
+        description:
+          "Reads a bounded page of a tracked code/documentation file from the site's core repository. Files are limited to 2 MiB; pages are limited to 256 KiB and 400 lines. Defaults to the reported Git revision with a commit-pinned GitHub reference. Optional working_tree mode is explicitly local, may differ from loaded processes, and has no matching public permalink. This is not shell access. Separate plugin checkouts and private configuration are unavailable. Administrator only.",
+        implementation: Tools::ReadSource,
+        input_schema:
+          object_schema(
+            {
+              path: {
+                type: "string",
+                minLength: 1,
+                maxLength: 1000,
+              },
+              mode: mode,
+              start_line: {
+                type: "integer",
+                minimum: 1,
+              },
+              max_lines: {
+                type: "integer",
+                minimum: 1,
+                maximum: 400,
+              },
+            },
+            required: %w[path],
+          ),
+        annotations: READ_ONLY,
+        risk: :read,
+        availability: -> { Tools::SourceSupport.available? },
+      )
+      register_tool(
+        registry,
+        "discourse_search_source",
+        title: "Search source",
+        description:
+          "Searches tracked source files for a literal string, with bounded results and line numbers. Defaults to the site's reported Git revision. Use discourse_read_source for surrounding code; choose working_tree explicitly to inspect local edits. Broad queries may require narrowing. Administrator only.",
+        implementation: Tools::SearchSource,
+        input_schema:
+          object_schema(
+            {
+              query: {
+                type: "string",
+                minLength: 3,
+                maxLength: 200,
+              },
+              mode: mode,
+              max_results: {
+                type: "integer",
+                minimum: 1,
+                maximum: 50,
+              },
+            },
+            required: %w[query],
+          ),
+        annotations: READ_ONLY,
+        risk: :read,
+        availability: -> { Tools::SourceSupport.available? },
+      )
+    end
+
+    def register_authoring_guide_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_authoring_guides",
+        title: "List authoring guides",
+        description:
+          "Lists the local repository's authoring skills with descriptions and readable paths. Before authoring themes, styles, JavaScript, or other site code, find relevant skills here and read them with discourse_read_authoring_guide. Administrator only; requires the repository documentation to be installed.",
+        implementation: Tools::ListAuthoringGuides,
+        annotations: READ_ONLY,
+        risk: :read,
+        availability: -> { Tools::AuthoringGuideSupport.available? },
+      )
+      register_tool(
+        registry,
+        "discourse_read_authoring_guide",
+        title: "Read authoring guide",
+        description:
+          "Reads a bounded page of a local Markdown skill, companion reference, or developer guide under .skills/ or docs/developer-guides/, including untracked guides. Unlike source tools, guides do not require Git tracking. Paths are repository-relative; resolve links relative to the document's directory. Follow next_line for more. These are authoring instructions, not proof of installed runtime behavior. Local CLI commands described in guides are not available through this tool; report verification limits honestly. Administrator only.",
+        implementation: Tools::ReadAuthoringGuide,
+        input_schema:
+          object_schema(
+            {
+              path: {
+                type: "string",
+                minLength: 1,
+                maxLength: 1000,
+              },
+              start_line: {
+                type: "integer",
+                minimum: 1,
+              },
+              max_lines: {
+                type: "integer",
+                minimum: 1,
+                maximum: 400,
+              },
+            },
+            required: %w[path],
+          ),
+        annotations: READ_ONLY,
+        risk: :read,
+        availability: -> { Tools::AuthoringGuideSupport.available? },
+      )
     end
 
     def register_report_tools(registry)

@@ -17,6 +17,7 @@ module DiscourseMcp
     REPORTS_READ = "mcp:reports:read"
     SITE_SETTINGS_READ = "mcp:site-settings:read"
     SITE_SETTINGS_WRITE = "mcp:site-settings:write"
+    REPOSITORY_READ = "mcp:repository:read"
     THEMES_READ = "mcp:themes:read"
     THEMES_WRITE = "mcp:themes:write"
     TAG_GROUPS_READ = "mcp:tag-groups:read"
