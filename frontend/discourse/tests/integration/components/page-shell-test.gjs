@@ -350,6 +350,114 @@ module("Integration | Component | page shell", function (hooks) {
     );
   });
 
+  test("wide logos are capped at the navigation maximum", async function (assert) {
+    const wideLogo = `data:image/svg+xml,${encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="100"></svg>'
+    )}`;
+
+    await render(
+      <template>
+        <div style="width: 1920px;">
+          <PageShell @sidebarEnabled={{true}}>
+            <:header>
+              <div class="d-header-wrap">
+                <header class="d-header">
+                  <div class="wrap">
+                    <div class="contents">
+                      <div class="page-shell__header-start">
+                        <div class="home-logo-wrapper-outlet">
+                          <div class="title">
+                            <a href="/"><img
+                                alt=""
+                                id="site-logo"
+                                src={{wideLogo}}
+                              /></a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="page-shell__header-main"></div>
+                      <nav class="panel">Actions</nav>
+                    </div>
+                  </div>
+                </header>
+              </div>
+            </:header>
+            <:main>Route</:main>
+          </PageShell>
+        </div>
+      </template>
+    );
+
+    const logo = find("#site-logo");
+    await waitUntil(() => logo.complete && logo.naturalWidth > 0);
+    const start = find(".page-shell__header-start").getBoundingClientRect();
+    const logoBox = logo.getBoundingClientRect();
+    assert.true(start.width <= 400, `header start is ${start.width}px wide`);
+    assert.true(
+      logoBox.right <= start.right + 0.5,
+      "the logo scales down inside the capped cell"
+    );
+  });
+
+  test("the header switches to the compact logo without oscillating", async function (assert) {
+    this.shell.width = "full";
+
+    await render(
+      <template>
+        <div class="shell-logo-test" style="width: 1440px;">
+          <PageShell @sidebarEnabled={{true}}>
+            <:header>
+              <div class="d-header-wrap">
+                <header class="d-header">
+                  <div class="wrap">
+                    <div class="contents">
+                      <div class="page-shell__header-start">
+                        {{#if this.shell.compactLogo}}
+                          <div style="width: 40px;">Small</div>
+                        {{else}}
+                          <div style="width: 380px;">Full logo</div>
+                        {{/if}}
+                      </div>
+                      <div class="page-shell__header-main"></div>
+                      <nav class="panel">Actions</nav>
+                    </div>
+                  </div>
+                </header>
+              </div>
+            </:header>
+            <:main>Route</:main>
+          </PageShell>
+        </div>
+      </template>
+    );
+
+    const shellElement = find(".page-shell");
+    await waitUntil(() =>
+      shellElement.style.getPropertyValue("--_page-shell-header-start-width")
+    );
+    assert.false(this.shell.compactLogo, "the full logo fits at 1440px");
+
+    const wrapper = find(".shell-logo-test");
+    wrapper.style.width = "1000px";
+    await waitUntil(() => this.shell.compactLogo);
+    await waitUntil(
+      () =>
+        shellElement.style.getPropertyValue(
+          "--_page-shell-header-start-width"
+        ) !== "380px"
+    );
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    assert.true(
+      this.shell.compactLogo,
+      "the narrower compact logo does not switch the full logo back on"
+    );
+
+    wrapper.style.width = "1440px";
+    await waitUntil(() => !this.shell.compactLogo);
+    assert.dom(".page-shell__header-start").hasText("Full logo");
+  });
+
   test("RTL composer follows the content's logical start edge", async function (assert) {
     await render(
       <template>
