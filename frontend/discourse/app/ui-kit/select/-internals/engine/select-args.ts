@@ -6,6 +6,7 @@ import type {
   SelectPresentationArgs,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
 import {
+  entryRecord,
   isSelectOption,
   type SelectOption,
   selectOption,
@@ -101,6 +102,22 @@ export default class SelectArgsView {
       object,
       ReturnType<typeof createCache<SelectRecord | SelectRecord[]>>
     >
+  >();
+
+  /** Each `valueRecords` list with the entries it was indexed from, as for the wrapped lists. */
+  #valueRecordIndexes = new WeakMap<
+    readonly unknown[],
+    {
+      entries: readonly unknown[];
+      records: readonly SelectRecord[];
+      index: ReadonlyMap<string, SelectRecord>;
+    }
+  >();
+
+  /** Each wrapped option list with its key index. A wrapped list is frozen and never edited. */
+  #optionIndexes = new WeakMap<
+    readonly SelectOption[],
+    ReadonlyMap<string, SelectOption>
   >();
   #valueRecords?: SelectEngineInit["valueRecords"];
   #resolveValue?: SelectEngineInit["resolveValue"];
@@ -447,6 +464,64 @@ export default class SelectArgsView {
     return this.#legacy;
   }
 
+  /**
+   * The `valueRecords` record for a value key, the first one listed winning.
+   *
+   * @param key - A normalized key, as {@link valueKey} returns.
+   */
+  valueRecordFor(key: string): SelectRecord | undefined {
+    const source = this.valueRecords as
+      | SelectOptionLike
+      | readonly SelectOptionLike[]
+      | null
+      | undefined;
+    if (source == null) {
+      return undefined;
+    }
+    if (!Array.isArray(source)) {
+      const record = entryRecord(source as SelectOptionLike);
+      return this.valueKey(this.recordValue(record)) === key
+        ? record
+        : undefined;
+    }
+    const list = source as readonly SelectOptionLike[];
+    let cached = this.#valueRecordIndexes.get(list);
+    // Reading every entry also consumes a tracked list's contents, and catches an edit in place.
+    if (!cached || !sameEntries(cached.entries, list)) {
+      const records = [...list]
+        .filter((entry) => entry != null)
+        .map((entry) => entryRecord(entry));
+      cached = {
+        entries: [...list],
+        records,
+        index: indexByKey(records, (record) => this.#keyOfRecord(record)),
+      };
+      this.#valueRecordIndexes.set(list, cached);
+    }
+    return lookUpByKey(cached.index, cached.records, key, (record) =>
+      this.#keyOfRecord(record)
+    );
+  }
+
+  /**
+   * A wrapped list's option for a value key, the first one listed winning.
+   *
+   * @param options - A list {@link wrapEntries} returned.
+   * @param key - A normalized key, as {@link valueKey} returns.
+   */
+  findOption(
+    options: readonly SelectOption[],
+    key: string
+  ): SelectOption | undefined {
+    const keyOf = (option: SelectOption) => this.#keyOfRecord(option.record);
+    let index = this.#optionIndexes.get(options);
+    if (!index) {
+      index = indexByKey(options, keyOf);
+      this.#optionIndexes.set(options, index);
+    }
+    return lookUpByKey(index, options, key, keyOf);
+  }
+
   /** Connects engine-owned resolution without making raw option reads depend on it. */
   attachResolvedOptions(read: () => SelectConfig): void {
     this.#readResolvedOptions = read;
@@ -533,11 +608,7 @@ export default class SelectArgsView {
     }
     const cached = this.#wrapped.get(entries);
     // Reading every entry also consumes a tracked list's contents, so an edit re-renders.
-    if (
-      cached &&
-      cached.entries.length === entries.length &&
-      entries.every((entry, index) => Object.is(entry, cached.entries[index]))
-    ) {
+    if (cached && sameEntries(cached.entries, entries)) {
       return cached.options;
     }
     const options = this.#wrapList(entries);
@@ -562,6 +633,10 @@ export default class SelectArgsView {
         return option;
       })
     );
+  }
+
+  #keyOfRecord(record: SelectRecord): string | null {
+    return this.valueKey(this.recordValue(record));
   }
 
   #wrapList(entries: readonly SelectOptionLike[]): readonly SelectOption[] {
@@ -620,6 +695,69 @@ export default class SelectArgsView {
       );
     }
   }
+}
+
+/**
+ * Whether a list still holds exactly the entries it was cached from, compared by identity. An
+ * indexed loop, because `every` skips holes and would miss a deleted slot.
+ */
+function sameEntries(
+  cached: readonly unknown[],
+  entries: readonly unknown[]
+): boolean {
+  if (cached.length !== entries.length) {
+    return false;
+  }
+  for (let index = 0; index < entries.length; index++) {
+    if (!(index in entries) || !Object.is(entries[index], cached[index])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Indexes a list by value key, the first item for a key winning.
+ *
+ * @param items - The list to index.
+ * @param keyOf - The item's normalized key, or `null` when it has none.
+ */
+export function indexByKey<T>(
+  items: readonly T[],
+  keyOf: (item: T) => string | null
+): Map<string, T> {
+  const index = new Map<string, T>();
+  for (const item of items) {
+    const key = keyOf(item);
+    if (key != null && !index.has(key)) {
+      index.set(key, item);
+    }
+  }
+  return index;
+}
+
+/**
+ * Looks a key up through an index, which only accelerates the lookup: a hit is re-checked and a
+ * miss walks the list, so a record whose key changed in place still answers for its new key,
+ * and a tracked key is consumed by the read. A record changed in place to a key a later record
+ * already holds does not displace it: duplicates are settled when the list is indexed.
+ *
+ * @param index - The list's index, from {@link indexByKey}.
+ * @param items - The list the index was built from.
+ * @param key - The normalized key to find.
+ * @param keyOf - The item's normalized key, or `null` when it has none.
+ */
+export function lookUpByKey<T>(
+  index: ReadonlyMap<string, T>,
+  items: readonly T[],
+  key: string,
+  keyOf: (item: T) => string | null
+): T | undefined {
+  const hit = index.get(key);
+  if (hit !== undefined && keyOf(hit) === key) {
+    return hit;
+  }
+  return items.find((item) => item != null && keyOf(item) === key);
 }
 
 /** Legacy select-kit takes a settings hash as `@options`; here it is the list. */

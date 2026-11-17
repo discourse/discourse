@@ -7,7 +7,7 @@ import type {
   SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectArgsView from "./select-args.ts";
-import { assertOptionsList } from "./select-args.ts";
+import { assertOptionsList, lookUpByKey } from "./select-args.ts";
 import type { SelectOption, SelectOptionLike } from "./select-option.ts";
 import type { UpdateRecord } from "./selection-updates.ts";
 
@@ -146,10 +146,10 @@ export interface SelectSource {
   revealPending(): boolean;
   queryPending(): boolean;
   revealMore(): boolean;
-  /** The options the source holds now, for resolving values and parsing pastes. */
+  /** The options the source holds now, for parsing pastes. */
   knownOptions(): readonly SelectOption[];
-  /** The records behind {@link knownOptions}. */
-  knownRecords(): SelectRecord[];
+  /** The option the source holds for a value key, through an index. */
+  knownOption(key: string): SelectOption | undefined;
   reset(): void;
   revealToken(): number;
   reactiveOptions(): readonly SelectOption[];
@@ -158,13 +158,16 @@ export interface SelectSource {
 export class LocalSource implements SelectSource {
   #filtered: () => readonly SelectOption[];
   #all: () => readonly SelectOption[];
+  #find: (key: string) => SelectOption | undefined;
 
   constructor(opts: {
     filtered: () => readonly SelectOption[];
     all: () => readonly SelectOption[];
+    find: (key: string) => SelectOption | undefined;
   }) {
     this.#filtered = opts.filtered;
     this.#all = opts.all;
+    this.#find = opts.find;
   }
 
   rows(): SelectOption[] {
@@ -218,8 +221,8 @@ export class LocalSource implements SelectSource {
     return this.#all();
   }
 
-  knownRecords(): SelectRecord[] {
-    return this.#all().map((option) => option.record);
+  knownOption(key: string): SelectOption | undefined {
+    return this.#find(key);
   }
 
   reset(): void {}
@@ -244,7 +247,7 @@ export class PagedSource implements SelectSource {
   #wrap: (entries: readonly SelectOptionLike[]) => readonly SelectOption[];
   #getMaxLoaded: () => number | undefined;
   #serverOptions: SelectOption[] = [];
-  #serverKeys = new Set<string>();
+  #serverIndex = new Map<string, SelectOption>();
   #serverOffset = 0;
   #serverCursor?: unknown;
   #serverPage = 1;
@@ -404,8 +407,17 @@ export class PagedSource implements SelectSource {
     return this.#serverOptions;
   }
 
-  knownRecords(): SelectRecord[] {
-    return this.#serverOptions.map((option) => option.record);
+  /**
+   * Untracked: this runs during render, and the fetch path already covers a row that has not
+   * landed yet.
+   */
+  knownOption(key: string): SelectOption | undefined {
+    return lookUpByKey(
+      this.#serverIndex,
+      this.#serverOptions,
+      key,
+      this.#keyOf
+    );
   }
 
   /** Ignores retained rows both during a request and before its new rows reach the list. */
@@ -435,7 +447,7 @@ export class PagedSource implements SelectSource {
     // short-circuit then answers `[]` synchronously with nothing left to re-ask.
     this.#state.serverSettledKey = null;
     this.#serverOptions = [];
-    this.#serverKeys.clear();
+    this.#serverIndex.clear();
     this.#serverOffset = 0;
     this.#serverCursor = undefined;
     this.#serverPage = 1;
@@ -604,7 +616,7 @@ export class PagedSource implements SelectSource {
     const maxLoaded = this.#getMaxLoaded();
     for (const option of options) {
       const key = this.#keyOf(option);
-      if (key != null && this.#serverKeys.has(key)) {
+      if (key != null && this.#serverIndex.has(key)) {
         continue;
       }
 
@@ -615,7 +627,7 @@ export class PagedSource implements SelectSource {
 
       this.#serverOptions.push(option);
       if (key != null) {
-        this.#serverKeys.add(key);
+        this.#serverIndex.set(key, option);
       }
     }
 

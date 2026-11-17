@@ -13,7 +13,7 @@ import { entryRecord, type SelectOptionLike } from "./select-option.ts";
 
 interface ValueResolverInit {
   args: SelectArgsView;
-  knownRecords: () => SelectRecord[];
+  knownRecord: (key: string) => SelectRecord | undefined;
 }
 
 /** A batch stays alive while any joined caller still needs its values. */
@@ -49,15 +49,15 @@ export default class ValueResolver {
 
   #args: SelectArgsView;
 
-  // The records already in hand for the current source, whichever kind it is. A paginated
-  // source returns its untracked accumulator; without this rung it would refetch a value
+  // The record the current source already holds for a key, whichever kind it is. A paginated
+  // source answers from its untracked accumulator; without this rung it would refetch a value
   // whose row is already on screen. Read untracked on purpose — this runs during render,
   // and the fetch path already covers the case where the row has not landed yet.
-  #knownRecords: () => SelectRecord[];
+  #knownRecord: (key: string) => SelectRecord | undefined;
 
   constructor(opts: ValueResolverInit) {
     this.#args = opts.args;
-    this.#knownRecords = opts.knownRecords;
+    this.#knownRecord = opts.knownRecord;
   }
 
   resolveSelection(
@@ -167,14 +167,9 @@ export default class ValueResolver {
     }
     const recorded = this.#recordedOutcomes(key);
     return (
-      this.#matching(
-        (makeArray(this.#args.valueRecords) as SelectOptionLike[]).map(
-          entryRecord
-        ),
-        key
-      ) ??
+      this.#args.valueRecordFor(key) ??
       recorded.find((record) => !this.isUnresolvedRecord(record)) ??
-      this.#matching(this.#knownRecords(), key) ??
+      this.#knownRecord(key) ??
       recorded[0]
     );
   }
@@ -364,12 +359,6 @@ export default class ValueResolver {
       this.#resolvedCache.get(key),
       this.#synchronousOutcomes.get(key),
     ].filter((record) => record != null);
-  }
-
-  #matching(records: SelectRecord[], key: string): SelectRecord | undefined {
-    return records.find(
-      (i) => this.#args.valueKey(this.#args.recordValue(i)) === key
-    );
   }
 
   // Resolves ids to a key→record map, containing only what genuinely resolved. Never throws

@@ -828,7 +828,7 @@ export default class SelectEngine {
     this.#control = new EngineControl(this);
     this.#valueResolver = new ValueResolver({
       args: this.#args,
-      knownRecords: () => this.#source.knownRecords(),
+      knownRecord: (key) => this.#source.knownOption(key)?.record,
     });
     this.#selectionActions = new SelectionActions({
       args: this.#args,
@@ -889,6 +889,7 @@ export default class SelectEngine {
       : new LocalSource({
           filtered: () => this.filteredOptions,
           all: () => localOptions(this.#args),
+          find: (key) => this.#args.findOption(localOptions(this.#args), key),
         });
     this.#customizations = new SelectCustomizations(
       {
