@@ -1122,33 +1122,10 @@ module DiscourseMcp
       )
       register_tool(
         registry,
-        "discourse_set_topic_pin",
-        title: "Set topic pin",
-        description:
-          "Pins a topic in its category, pins it globally, or unpins it. Uses normal topic pin permissions and status-change behavior. Category/global pins remain until unpinned; this replaces any existing pin expiration. Returns persisted pin state. Use this tool rather than update_topic for pinning.",
-        implementation: Tools::SetTopicPin,
-        input_schema:
-          object_schema(
-            {
-              topic_id: {
-                type: "integer",
-                minimum: 1,
-              },
-              mode: {
-                type: "string",
-                enum: %w[category global unpin],
-              },
-            },
-            required: %w[topic_id mode],
-          ),
-        annotations: WRITE,
-        risk: :write,
-      )
-      register_tool(
-        registry,
         "discourse_update_topic",
         title: "Update topic",
-        description: "Updates fields on a topic when the user may edit it.",
+        description:
+          "Updates title, category, tags, or featured link when the user may edit the topic. Omit unchanged fields. To close or reopen, use discourse_set_topic_closed; to pin or unpin, use discourse_set_topic_pin.",
         implementation: Tools::UpdateTopic,
         input_schema:
           object_schema(
@@ -1559,6 +1536,45 @@ module DiscourseMcp
     end
 
     def register_moderation_tools(registry)
+      register_tool(
+        registry,
+        "discourse_set_topic_pin",
+        title: "Set topic pin",
+        description:
+          "Pins a topic in its category, pins it globally, or unpins it. Uses normal topic pin permissions and status-change behavior. Category/global pins remain until unpinned; this replaces any existing pin expiration. Returns persisted pin state. Use this tool rather than update_topic for pinning.",
+        implementation: Tools::SetTopicPin,
+        input_schema:
+          object_schema(
+            {
+              topic_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              mode: {
+                type: "string",
+                enum: %w[category global unpin],
+              },
+            },
+            required: %w[topic_id mode],
+          ),
+        annotations: WRITE,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_set_topic_closed",
+        title: "Close or reopen topic",
+        description:
+          "Closes a topic with closed=true or reopens it with closed=false. Uses normal topic moderation permissions, status-change posts, timers, and staff logging. Returns persisted closed and archived state. Does not change archived status. Use this tool, not update_topic, to close or reopen topics.",
+        implementation: Tools::SetTopicClosed,
+        input_schema:
+          object_schema(
+            { topic_id: { type: "integer", minimum: 1 }, closed: { type: "boolean" } },
+            required: %w[topic_id closed],
+          ),
+        annotations: WRITE,
+        risk: :moderation,
+      )
       {
         "suspend" => Tools::SuspendUser,
         "unsuspend" => Tools::UnsuspendUser,

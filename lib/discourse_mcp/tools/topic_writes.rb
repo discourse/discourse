@@ -2,8 +2,38 @@
 
 module DiscourseMcp
   module Tools
+    class SetTopicClosed
+      REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          topic_id: OutputSchema::INTEGER,
+          closed: OutputSchema::BOOLEAN,
+          archived: OutputSchema::BOOLEAN,
+        )
+
+      def self.call(arguments:, request_context:)
+        topic = Topic.find_by(id: arguments.fetch("topic_id"))
+        guardian = request_context.guardian
+        unless topic && guardian.can_see?(topic)
+          raise ToolError, I18n.t("mcp.errors.topic_not_found")
+        end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
+        guardian.ensure_can_close_topic!(topic)
+        closed = arguments.fetch("closed")
+        raise Discourse::InvalidParameters.new(:closed) if [true, false].exclude?(closed)
+
+        topic.update_status("closed", closed, request_context.user) if topic.closed != closed
+        topic.reload
+        ToolHelpers.text_and_structured(
+          topic_id: topic.id,
+          closed: topic.closed,
+          archived: topic.archived,
+        )
+      end
+    end
+
     class SetTopicPin
-      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           topic_id: OutputSchema::INTEGER,
