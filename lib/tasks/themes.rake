@@ -504,36 +504,58 @@ end
 
 # Note that this should only be used in CI where it is safe to mutate the database without rolling back since running
 # the themes QUnit tests requires the themes to be installed in the database.
+#
+# TEST_IMPACT_THEMES, a comma-separated list of theme directories (tmp/themes/<name>,
+# themes/<name>), runs only those themes' tests. While recording test impact, the
+# theme directories are written by id to tmp/test_impact/themes.json, for
+# script/test_impact/resolve_js.
 desc "Runs qunit tests for all official themes"
 task "themes:qunit_all_official" => :environment do |task, args|
+  only = ENV["TEST_IMPACT_THEMES"]&.split(",")
+  directories = {}
+  tested = ->(directory) do
+    if only && !only.include?(directory)
+      puts "Skipping #{directory} as its tests aren't selected"
+    elsif Dir.glob("#{Rails.root.join(directory, "test", "**/*.{js,gjs,ts,gts}")}").any?
+      true
+    else
+      puts "Skipping #{directory} as no QUnit tests have been detected"
+    end
+  end
+
   official_theme_ids_with_qunit_tests = []
 
   ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
-    path = Rails.root.join("tmp/themes/#{theme_name}").to_s
+    directory = "tmp/themes/#{theme_name}"
+    next if !tested.call(directory)
 
-    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs,ts,gts}").any?
-      theme = RemoteTheme.import_theme_from_directory(path)
-      official_theme_ids_with_qunit_tests << theme.id
-    else
-      puts "Skipping #{theme_name} as no QUnit tests have been detected"
-    end
+    theme = RemoteTheme.import_theme_from_directory(Rails.root.join(directory).to_s)
+    official_theme_ids_with_qunit_tests << theme.id
+    directories[theme.id] = directory
   end
 
   core_theme_ids_with_qunit_tests = []
 
   Theme::CORE_THEMES.each do |(theme_name, theme_id)|
-    path = Rails.root.join("themes/#{theme_name}").to_s
+    directory = "themes/#{theme_name}"
+    next if !tested.call(directory)
 
-    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs,ts,gts}").any?
-      core_theme_ids_with_qunit_tests << theme_id
-    else
-      puts "Skipping #{theme_name} as no QUnit tests have been detected"
-    end
+    core_theme_ids_with_qunit_tests << theme_id
+    directories[theme_id] = directory
   end
 
-  Rake::Task["themes:qunit"].reenable
-  Rake::Task["themes:qunit"].invoke("ids", official_theme_ids_with_qunit_tests.join("|"))
+  if ENV["TEST_IMPACT_RECORD"] == "1"
+    FileUtils.mkdir_p(Rails.root.join("tmp/test_impact"))
+    File.write(Rails.root.join("tmp/test_impact/themes.json"), directories.to_json)
+  end
 
-  ENV["EMBER_RAISE_ON_DEPRECATION"] = "1"
-  Rake::Task["themes:qunit"].invoke("ids", core_theme_ids_with_qunit_tests.join("|"))
+  if official_theme_ids_with_qunit_tests.any?
+    Rake::Task["themes:qunit"].reenable
+    Rake::Task["themes:qunit"].invoke("ids", official_theme_ids_with_qunit_tests.join("|"))
+  end
+
+  if core_theme_ids_with_qunit_tests.any?
+    ENV["EMBER_RAISE_ON_DEPRECATION"] = "1"
+    Rake::Task["themes:qunit"].invoke("ids", core_theme_ids_with_qunit_tests.join("|"))
+  end
 end

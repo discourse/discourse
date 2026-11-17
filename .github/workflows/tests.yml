@@ -35,6 +35,10 @@ jobs:
         || 'ubuntu-latest'
       }}
     container: discourse/discourse_test:release
+    permissions:
+      contents: read
+      # To download the test impact map from the run that built it.
+      actions: read
     services:
       minio:
         image: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'bitnami/minio@sha256:50cec18ac4184af4671a78aedd5554942c8ae105d51a465fa82037949046da01' || '' }}
@@ -43,9 +47,11 @@ jobs:
           MINIO_ROOT_PASSWORD: minioadmin
           MINIO_DEFAULT_BUCKETS: discoursetest
           MINIO_DOMAIN: minio.local
+    # Recording for test impact (script/test_impact) can take half again as long.
     timeout-minutes: >-
       ${{
-        matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
+        (contains(github.event.pull_request.labels.*.name, 'test-impact-record') || github.event_name == 'push' && github.ref == 'refs/heads/main') && 40
+        || matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
         && 30
         || 20
       }}
@@ -72,6 +78,9 @@ jobs:
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
+      TEST_IMPACT_RECORD: ${{ (contains(github.event.pull_request.labels.*.name, 'test-impact-record') || github.event_name == 'push' && github.ref == 'refs/heads/main') && '1' || '' }}
+      # test-impact-full runs a pull request's whole suite.
+      TEST_IMPACT_SELECT: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'test-impact-full') && !contains(github.event.pull_request.labels.*.name, 'test-impact-record') && '1' || '' }}
 
     strategy:
       fail-fast: false
@@ -119,12 +128,45 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 1
+          # A pull request's merge commit and the base it merges into.
+          fetch-depth: ${{ env.TEST_IMPACT_SELECT == '1' && 2 || 1 }}
 
       - name: Setup Git
         run: |
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
+
+      # The newest map recorded on main, or failing that on the branch the pull
+      # request merges into or its own, from runs of this repository: forks can
+      # upload one too.
+      - name: Find the newest test impact map
+        if: env.TEST_IMPACT_SELECT == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          run_id=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/artifacts?name=test-impact-map&per_page=100" |
+            ruby -rjson -e '
+              maps = JSON.parse($stdin.read)["artifacts"].select do |artifact|
+                run = artifact["workflow_run"]
+                !artifact["expired"] && run["head_repository_id"] == run["repository_id"]
+              end
+              map = %W[main #{ENV["BASE_REF"]} #{ENV["HEAD_REF"]}].lazy.filter_map do |branch|
+                maps.find { |artifact| artifact.dig("workflow_run", "head_branch") == branch }
+              end.first
+              puts map&.dig("workflow_run", "id")
+            ')
+          echo "TEST_IMPACT_MAP_RUN=$run_id" >> $GITHUB_ENV
+
+      - uses: actions/download-artifact@v8
+        if: env.TEST_IMPACT_SELECT == '1' && env.TEST_IMPACT_MAP_RUN != ''
+        with:
+          name: test-impact-map
+          path: tmp
+          run-id: ${{ env.TEST_IMPACT_MAP_RUN }}
+          github-token: ${{ github.token }}
 
       - name: Start redis
         run: redis-server /etc/redis/redis.conf --daemonize yes --logfile ""
@@ -180,6 +222,19 @@ jobs:
       - name: Checkout official themes
         if: matrix.target == 'themes'
         run: bin/rake themes:clone_all_official themes:pull_compatible_all
+
+      # Sets TEST_IMPACT_MODE: full runs the job's whole suite, none skips its
+      # tests, list runs the files in tmp/test-impact-files.txt. After the
+      # official plugins and themes are cloned, since their specs are selected
+      # too.
+      - name: Select tests by test impact
+        if: env.TEST_IMPACT_SELECT == '1'
+        run: |
+          mkdir -p tmp
+          mode=$(script/test_impact/ci_select --map tmp/test-impact-map.json.gz --base HEAD^1 \
+            --job ${{ matrix.build_type }}/${{ matrix.target }} --out tmp/test-impact-files.txt)
+          echo "TEST_IMPACT_MODE=$mode" >> $GITHUB_ENV
+          cat tmp/test-impact-files.txt
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -292,8 +347,8 @@ jobs:
         run: find . -name node_modules -type d -prune -not -path './tmp/*' -print0 | xargs -0 rm -rf
 
       - name: Core RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
+        if: matrix.build_type == 'backend' && matrix.target == 'core' && env.TEST_IMPACT_MODE != 'none'
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress ${{ env.TEST_IMPACT_MODE == 'list' && '$(cat tmp/test-impact-files.txt)' || '' }}
 
       - name: Prepare Chrome environment for QUnit
         if: matrix.build_type == 'frontend'
@@ -304,8 +359,8 @@ jobs:
           echo "DBUS_SESSION_BUS_ADDRESS=$bus_addr" >> "$GITHUB_ENV"
 
       - name: Core QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+        if: matrix.build_type == 'frontend' && matrix.target == 'core' && env.TEST_IMPACT_MODE != 'none'
+        run: QUNIT_WRITE_EXECUTION_FILE=1 ${{ env.TEST_IMPACT_MODE == 'list' && 'bin/qunit --standalone $(cat tmp/test-impact-files.txt)' || 'bin/rake qunit:test' }}
 
       - name: Asset Processor Tests
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
@@ -313,17 +368,37 @@ jobs:
         run: pnpm test
 
       - name: Plugins RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
+        if: matrix.build_type == 'backend' && matrix.target == 'plugins' && env.TEST_IMPACT_MODE != 'none'
         run: |
-          LD_PRELOAD="$RUBY_ALLOCATOR" bin/rake plugin:turbo_spec['*','--format=progress --use-runtime-info']
+          if [ "$TEST_IMPACT_MODE" = list ]; then
+            LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --format=progress --use-runtime-info $(cat tmp/test-impact-files.txt)
+          else
+            LD_PRELOAD="$RUBY_ALLOCATOR" bin/rake plugin:turbo_spec['*','--format=progress --use-runtime-info']
+          fi
 
       - name: Plugins QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake 'plugin:qunit[*]'
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins' && env.TEST_IMPACT_MODE != 'none'
+        run: |
+          if [ "$TEST_IMPACT_MODE" = list ]; then
+            # bin/qunit runs one plugin's files at a time.
+            status=0
+            for plugin in $(cut -d/ -f2 tmp/test-impact-files.txt | sort -u); do
+              bin/qunit --standalone $(grep "^plugins/$plugin/" tmp/test-impact-files.txt) || status=1
+            done
+            exit $status
+          else
+            bin/rake 'plugin:qunit[*]'
+          fi
 
       - name: Theme QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+        if: matrix.build_type == 'frontend' && matrix.target == 'themes' && env.TEST_IMPACT_MODE != 'none'
+        run: |
+          if [ "$TEST_IMPACT_MODE" = list ]; then
+            # The selected tests' themes, each run whole.
+            TEST_IMPACT_THEMES=$(sed -E 's|^((tmp/)?themes/[^/]+)/.*|\1|' tmp/test-impact-files.txt | sort -u | paste -sd, -)
+            export TEST_IMPACT_THEMES
+          fi
+          DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'core'
@@ -332,36 +407,36 @@ jobs:
           path: ./frontend/discourse/test-execution-*.json
 
       - name: Core System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'core'
+        if: matrix.build_type == 'system' && matrix.target == 'core' && env.TEST_IMPACT_MODE != 'none'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation ${{ env.TEST_IMPACT_MODE == 'list' && '$(cat tmp/test-impact-files.txt)' || 'spec/system' }}
 
       - name: Core Plugins System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
+        if: matrix.build_type == 'system' && matrix.target == 'core-plugins' && env.TEST_IMPACT_MODE != 'none'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation plugins/*/spec/system
+          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation ${{ env.TEST_IMPACT_MODE == 'list' && '$(cat tmp/test-impact-files.txt)' || 'plugins/*/spec/system' }}
 
       - name: Official Plugins System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
+        if: matrix.build_type == 'system' && matrix.target == 'official-plugins' && env.TEST_IMPACT_MODE != 'none'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --format documentation plugins/*/spec/system
+          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --format documentation ${{ env.TEST_IMPACT_MODE == 'list' && '$(cat tmp/test-impact-files.txt)' || 'plugins/*/spec/system' }}
 
       - name: Chat System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'chat'
+        if: matrix.build_type == 'system' && matrix.target == 'chat' && env.TEST_IMPACT_MODE != 'none'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation plugins/chat/spec/system
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation ${{ env.TEST_IMPACT_MODE == 'list' && '$(cat tmp/test-impact-files.txt)' || 'plugins/chat/spec/system' }}
 
       - name: Theme System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'themes'
+        if: matrix.build_type == 'system' && matrix.target == 'themes' && env.TEST_IMPACT_MODE != 'none'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation tmp/themes/*/spec/system themes/*/spec/system
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation ${{ env.TEST_IMPACT_MODE == 'list' && '$(cat tmp/test-impact-files.txt)' || 'tmp/themes/*/spec/system themes/*/spec/system' }}
 
       - name: Prepare JS deprecation reports
         if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
@@ -413,6 +488,24 @@ jobs:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
 
+      - name: Summarize test impact recordings
+        if: always() && env.TEST_IMPACT_RECORD == '1'
+        run: |
+          # Source maps of the build that served the browser.
+          if [ "${{ matrix.build_type }}" != "backend" ]; then
+            node script/test_impact/resolve_js tmp/test_impact
+          fi
+          script/test_impact/build_map tmp/test_impact && ls -la tmp/test_impact
+
+      - name: Upload test impact recordings
+        uses: actions/upload-artifact@v7
+        if: always() && env.TEST_IMPACT_RECORD == '1'
+        with:
+          name: test-impact-recordings-${{ matrix.build_type }}-${{ matrix.target }}
+          path: tmp/test_impact/recording-*.jsonl.gz
+          # Only the run's Test impact map job reads them.
+          retention-days: 3
+
   deprecation-report:
     name: JS deprecation report
     if: ${{ !cancelled() && github.repository == 'discourse/discourse' && needs.build.result != 'skipped' }}
@@ -455,6 +548,44 @@ jobs:
           name: js-deprecation-report
           path: tmp/js-deprecation-report.json
           overwrite: true
+
+  # Merges the jobs' test impact recordings into the map that runs labeled
+  # test-impact-select restore.
+  test-impact-map:
+    name: Test impact map
+    if: ${{ !cancelled() && (contains(github.event.pull_request.labels.*.name, 'test-impact-record') || github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: test-impact-recordings-*
+          path: tmp/test-impact-recordings
+
+      # Each job names its recordings by process, so names repeat across jobs.
+      - name: Build the map
+        run: |
+          mkdir -p tmp/test_impact
+          for dir in tmp/test-impact-recordings/*; do
+            for file in "$dir"/recording-*.jsonl.gz; do
+              cp "$file" "tmp/test_impact/recording-$(basename "$dir")-$(basename "$file" | sed 's/^recording-//')"
+            done
+          done
+          script/test_impact/build_map tmp/test_impact tmp/test-impact-map.json.gz
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: test-impact-map
+          path: tmp/test-impact-map.json.gz
+          # Pull requests take the newest; older ones are only a fallback.
+          retention-days: 14
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'

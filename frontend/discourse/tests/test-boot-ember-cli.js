@@ -4,6 +4,7 @@ import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
 import { loadAdmin, loadThemesAndPlugins } from "discourse/app";
 import config from "discourse/config/environment";
+import { setupTestImpact } from "discourse/tests/helpers/test-impact";
 import setupTests from "discourse/tests/setup-tests";
 
 /**
@@ -115,6 +116,8 @@ export async function startTests() {
   }
 
   await awaitVisualReadiness();
+
+  await setupTestImpact(QUnit);
 
   startEmberExam({
     setupTestContainer: false,

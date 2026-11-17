@@ -2,7 +2,14 @@
 
 describe "bin/qunit" do
   def run(*args, env: {})
-    out, err, status = Open3.capture3(env, "bin/qunit", "--dry-run", *args, chdir: Rails.root.to_s)
+    out, err, status =
+      Open3.capture3(
+        { "TEST_IMPACT_RECORD" => nil, **env },
+        "bin/qunit",
+        "--dry-run",
+        *args,
+        chdir: Rails.root.to_s,
+      )
 
     parsed_args, parsed_env =
       if parsed_result = out.match(/Executing: (?<args>\[.+?\])\nwith env: (?<env>\{.+?\})/m)

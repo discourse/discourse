@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+if ENV["TEST_IMPACT_RECORD"] == "1"
+  require_relative "../script/test_impact/recorder"
+  TestImpact::Recorder.start
+end
+
 if ENV["COVERAGE"]
   require "simplecov"
   if ENV["TEST_ENV_NUMBER"]
@@ -322,4 +327,8 @@ RSpec.configure do |config|
       raise capybara_timeout_error
     end
   end
+
+  # Last, so its system spec hooks run once the browser is set up and before
+  # it is torn down.
+  TestImpact::Recorder.install(config) if defined?(TestImpact::Recorder)
 end

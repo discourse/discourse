@@ -105,7 +105,9 @@ module SystemDrivers
       end
 
     Capybara.register_driver(name) do |app|
-      Capybara::Playwright::Driver.new(app, **options, **mobile_options)
+      args = options[:args]
+      args = [*args, *TestImpact::Recorder.chrome_args] if defined?(TestImpact::Recorder)
+      Capybara::Playwright::Driver.new(app, **options, args: args, **mobile_options)
     end
   end
 
