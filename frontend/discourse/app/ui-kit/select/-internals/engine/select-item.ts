@@ -44,7 +44,12 @@ export interface SelectItemSources {
     key: string,
     view: SelectItemView
   ): { record: SelectRecord; unresolved: boolean };
-  contributions(key: string, view: SelectItemView): SelectItemContributions;
+  /** What each source knows about the key, given the record the key stands for. */
+  contributions(
+    key: string,
+    view: SelectItemView,
+    record: SelectRecord
+  ): SelectItemContributions;
   /**
    * The engine's name for an unresolved record, or `undefined` to keep the record's own label
    * (a fallback a caller named already explains itself).
@@ -193,7 +198,7 @@ export class ItemDirectory {
   itemFor(key: string, view: SelectItemView): SelectItem {
     const { record, unresolved } = this.#sources.recordFor(key, view);
     const properties = mergeContributions(
-      this.#sources.contributions(key, view)
+      this.#sources.contributions(key, view, record)
     );
     const memo = this.#memos[view.kind];
     const cached = memo.get(key);

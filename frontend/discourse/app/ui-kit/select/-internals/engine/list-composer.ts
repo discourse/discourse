@@ -259,6 +259,21 @@ export default class ListComposer {
   }
 
   /**
+   * The extra options as they stand at rest, for an empty query whatever the live one is, so a
+   * held value an extra stands for resolves to it while the user types.
+   */
+  extraOptionsAtRest(): SelectOption[] {
+    // Built without reading the live filter, so typing never re-runs a held value's lookup.
+    return this.#wrapExtras(
+      Object.freeze({
+        filter: "",
+        value: this.#getValue(),
+        hasValue: this.#getHasValue(),
+      })
+    );
+  }
+
+  /**
    * The end options this build shows, and how many the set size counts. While the source can
    * still grow they wait for its last option, still counted, as a pinned sticky option is, so
    * the size never jumps. With nothing else to show they show under an empty query, so the list
@@ -344,23 +359,7 @@ export default class ListComposer {
 
   /** The extra options the select adds beside its source, wrapped, one per value. */
   #extraOptions(sourceOptions: readonly SelectOption[]): SelectOption[] {
-    const entries = makeArray(
-      this.#args.extraOptions?.(this.#snapshot(), this.#args.config) ?? []
-    ) as SelectOptionLike[];
-    const keys = new Set<string>();
-    const extra = entries
-      .map((entry) => this.#args.wrapEntry(entry))
-      .filter((option) => {
-        const key = this.#keyOf(option);
-        if (key == null) {
-          return true;
-        }
-        if (keys.has(key)) {
-          return false;
-        }
-        keys.add(key);
-        return true;
-      });
+    const extra = this.#wrapExtras(this.#snapshot());
     if (DEBUG) {
       const records = new Set<object>(sourceOptions.map((o) => o.record));
       for (const option of extra) {
@@ -373,6 +372,26 @@ export default class ListComposer {
       }
     }
     return extra;
+  }
+
+  #wrapExtras(snapshot: SelectSnapshot): SelectOption[] {
+    const entries = makeArray(
+      this.#args.extraOptions?.(snapshot, this.#args.config) ?? []
+    ) as SelectOptionLike[];
+    const keys = new Set<string>();
+    return entries
+      .map((entry) => this.#args.wrapEntry(entry))
+      .filter((option) => {
+        const key = this.#keyOf(option);
+        if (key == null) {
+          return true;
+        }
+        if (keys.has(key)) {
+          return false;
+        }
+        keys.add(key);
+        return true;
+      });
   }
 
   /**

@@ -67,7 +67,7 @@ module("Unit | ui-kit | SelectEngine | known records", function (hooks) {
 
   for (const source of ["client", "paged"]) {
     for (const outcome of ["synchronous", "asynchronous"]) {
-      test(`preserves the answer ladder for ${source} sources with ${outcome} outcomes`, async function (assert) {
+      test(`lets later listed records replace ${outcome} resolver outcomes for ${source} sources`, async function (assert) {
         const recorded = { id: "recorded", name: "Resolver record" };
         const listedRecorded = { id: recorded.id, name: "Listed duplicate" };
         const late = { id: "late", name: "Late listed record" };
@@ -122,8 +122,8 @@ module("Unit | ui-kit | SelectEngine | known records", function (hooks) {
 
         assert.strictEqual(
           engine.resolveSingleSync(recorded.id),
-          recorded,
-          "a real recorded outcome beats a known listed record"
+          listedRecorded,
+          "the later listed record replaces the resolver outcome"
         );
         assert.strictEqual(
           engine.resolveSingleSync(late.id),
@@ -150,8 +150,8 @@ module("Unit | ui-kit | SelectEngine | known records", function (hooks) {
         state.valueRecords = [];
         assert.strictEqual(
           engine.resolveSingleSync(recorded.id),
-          recorded,
-          "removing valueRecords exposes the recorded outcome again"
+          listedRecorded,
+          "removing valueRecords exposes the later listed record again"
         );
         assert.strictEqual(
           resolveValue.callCount,
@@ -161,7 +161,7 @@ module("Unit | ui-kit | SelectEngine | known records", function (hooks) {
       });
     }
 
-    test(`preserves selected outcomes for ${source} sources`, async function (assert) {
+    test(`keeps ${source === "client" ? "local records above picks" : "newer picks above paged sightings"} for ${source} sources`, async function (assert) {
       const listed = { id: 1, name: "Listed" };
       const selected = { id: listed.id, name: "Selected" };
       const provided = { id: listed.id, name: "Provided" };
@@ -188,8 +188,10 @@ module("Unit | ui-kit | SelectEngine | known records", function (hooks) {
       );
       assert.strictEqual(
         engine.resolveSingleSync(state.value),
-        selected,
-        "the selected outcome beats the listed record with the same key"
+        source === "client" ? listed : selected,
+        source === "client"
+          ? "the local record beats the pick with the same key"
+          : "the newer pick beats the earlier page sighting"
       );
       state.valueRecords = provided;
       assert.strictEqual(

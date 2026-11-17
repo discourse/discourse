@@ -1,5 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
 import { untrack } from "@glimmer/validator";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
@@ -37,6 +38,11 @@ import {
   applyLegacySelectKitContent,
   applyLegacySelectKitOnChange,
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
+import {
+  ItemDirectory,
+  type SelectItem,
+  type SelectItemView,
+} from "./-internals/engine/select-item.ts";
 import SelectionUpdates, {
   type SelectionOrigin,
 } from "./-internals/engine/selection-updates.ts";
@@ -551,6 +557,15 @@ export interface SelectEngineInit {
   /** Field holding a record's label. Defaults to `"name"`. */
   labelField?: string;
 
+  /** Field holding a record's icon name. Without it, an option shows an icon only when given one. */
+  iconField?: string;
+
+  /**
+   * Field holding a record's description. Without it, an option shows a description only when
+   * given one.
+   */
+  descriptionField?: string;
+
   /**
    * Already-resolved record(s) for the ids in `value`, so the trigger displays them without a
    * fetch. It selects nothing on its own: every entry is looked up BY `value`, so supplying
@@ -794,6 +809,12 @@ export default class SelectEngine {
   #args: SelectArgsView;
   #legacyKinds: readonly string[];
   #valueResolver: ValueResolver;
+
+  /** The items every surface shows, one per value key, built over the record ledger. */
+  #items: ItemDirectory;
+
+  /** The extras at rest, built for an empty query and rebuilt when what they read changes. */
+  #extrasAtRest = createCache(() => this.#listComposer.extraOptionsAtRest());
   #selectionActions: SelectionActions;
   #selectionUpdates: SelectionUpdates;
   #listComposer: ListComposer;
@@ -828,7 +849,35 @@ export default class SelectEngine {
     this.#control = new EngineControl(this);
     this.#valueResolver = new ValueResolver({
       args: this.#args,
-      knownRecord: (key) => this.#source.knownOption(key)?.record,
+      localRecord: (key) =>
+        this.#args.isAsync
+          ? undefined
+          : this.#args.findOption(localOptions(this.#args), key)?.record,
+      extraRecord: (key) =>
+        this.#args.findOption(getValue(this.#extrasAtRest) ?? [], key)?.record,
+      heldKeys: () => this.#selectionActions._selectedKeys,
+    });
+    this.#items = new ItemDirectory({
+      fields: () => ({
+        labelField: this.#args.labelField,
+        iconField: this.#args.iconField,
+        descriptionField: this.#args.descriptionField,
+      }),
+      valueOf: (record) => this.#args.recordValue(record),
+      recordFor: (key, view) => {
+        const record = this.#valueResolver.recordForView(key, view.input)!;
+        return { record, unresolved: this.isUnresolvedRecord(record) };
+      },
+      contributions: (key, view, record) => ({
+        view: view.input,
+        valueRecords: this.#args.valueRecordEntryFor(key),
+        pick: this.#valueResolver.pickFor(key),
+        answer: this.#valueResolver.answerFor(key, record),
+      }),
+      unresolvedLabel: (record) =>
+        this.isCustomUnresolvedRecord(record)
+          ? undefined
+          : this.getSelectionLabel(record),
     });
     this.#selectionActions = new SelectionActions({
       args: this.#args,
@@ -885,11 +934,11 @@ export default class SelectEngine {
           keyOf: (option) =>
             this.#args.valueKey(this.#args.recordValue(option.record)),
           wrap: (entries) => this.#args.wrapPage(entries),
+          onAccept: (accepted) => this.#valueResolver.sightPage(accepted),
         })
       : new LocalSource({
           filtered: () => this.filteredOptions,
           all: () => localOptions(this.#args),
-          find: (key) => this.#args.findOption(localOptions(this.#args), key),
         });
     this.#customizations = new SelectCustomizations(
       {
@@ -1374,6 +1423,20 @@ export default class SelectEngine {
     return this.#valueResolver.resolveSingleSync(value);
   }
 
+  /**
+   * The item a view shows for a value key: the key-scope record with every source's settings
+   * merged. `undefined` when no source knows the key and the view brought no input.
+   *
+   * @param key - A normalized key, as {@link SelectArgsView#valueKey} returns.
+   * @param view - The surface asking.
+   */
+  itemFor(key: string, view: SelectItemView): SelectItem | undefined {
+    if (!this.#valueResolver.recordForView(key, view.input)) {
+      return undefined;
+    }
+    return this.#items.itemFor(key, view);
+  }
+
   getRecordLabel(record: SelectRecord | null | undefined): string {
     return selectRecordLabel(record, this.#args.labelField);
   }
@@ -1461,6 +1524,7 @@ export default class SelectEngine {
     }
 
     this.#source.reset();
+    this.#valueResolver.pruneUnheld();
     this.#state.filter = filter;
   }
 
@@ -1665,6 +1729,7 @@ export default class SelectEngine {
   #reloadList(): void {
     this.#onReloadList?.();
     this.#source.reset();
+    this.#valueResolver.pruneUnheld();
     this.#state.nonce++;
   }
 

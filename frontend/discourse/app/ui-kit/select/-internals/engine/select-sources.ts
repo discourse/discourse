@@ -7,7 +7,7 @@ import type {
   SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectArgsView from "./select-args.ts";
-import { assertOptionsList, lookUpByKey } from "./select-args.ts";
+import { assertOptionsList } from "./select-args.ts";
 import type { SelectOption, SelectOptionLike } from "./select-option.ts";
 import type { UpdateRecord } from "./selection-updates.ts";
 
@@ -148,8 +148,6 @@ export interface SelectSource {
   revealMore(): boolean;
   /** The options the source holds now, for parsing pastes. */
   knownOptions(): readonly SelectOption[];
-  /** The option the source holds for a value key, through an index. */
-  knownOption(key: string): SelectOption | undefined;
   reset(): void;
   revealToken(): number;
   reactiveOptions(): readonly SelectOption[];
@@ -158,16 +156,13 @@ export interface SelectSource {
 export class LocalSource implements SelectSource {
   #filtered: () => readonly SelectOption[];
   #all: () => readonly SelectOption[];
-  #find: (key: string) => SelectOption | undefined;
 
   constructor(opts: {
     filtered: () => readonly SelectOption[];
     all: () => readonly SelectOption[];
-    find: (key: string) => SelectOption | undefined;
   }) {
     this.#filtered = opts.filtered;
     this.#all = opts.all;
-    this.#find = opts.find;
   }
 
   rows(): SelectOption[] {
@@ -221,10 +216,6 @@ export class LocalSource implements SelectSource {
     return this.#all();
   }
 
-  knownOption(key: string): SelectOption | undefined {
-    return this.#find(key);
-  }
-
   reset(): void {}
 
   revealToken(): number {
@@ -246,8 +237,9 @@ export class PagedSource implements SelectSource {
   #keyOf: (option: SelectOption) => string | null;
   #wrap: (entries: readonly SelectOptionLike[]) => readonly SelectOption[];
   #getMaxLoaded: () => number | undefined;
+  #onAccept: (accepted: ReadonlyMap<string, SelectOption>) => void;
   #serverOptions: SelectOption[] = [];
-  #serverIndex = new Map<string, SelectOption>();
+  #serverKeys = new Set<string>();
   #serverOffset = 0;
   #serverCursor?: unknown;
   #serverPage = 1;
@@ -286,12 +278,18 @@ export class PagedSource implements SelectSource {
     wrap: (entries: readonly SelectOptionLike[]) => readonly SelectOption[];
     /** Reads the optional server row ceiling. */
     getMaxLoaded?: () => number | undefined;
+    /**
+     * Receives the keyed options a settled page added, after the await, so a write there never
+     * lands during render.
+     */
+    onAccept?: (accepted: ReadonlyMap<string, SelectOption>) => void;
   }) {
     this.#resolveLoad = opts.resolveLoad;
     this.#state = opts.state;
     this.#keyOf = opts.keyOf;
     this.#wrap = opts.wrap;
     this.#getMaxLoaded = opts.getMaxLoaded ?? (() => undefined);
+    this.#onAccept = opts.onAccept ?? (() => {});
   }
 
   /**
@@ -407,19 +405,6 @@ export class PagedSource implements SelectSource {
     return this.#serverOptions;
   }
 
-  /**
-   * Untracked: this runs during render, and the fetch path already covers a row that has not
-   * landed yet.
-   */
-  knownOption(key: string): SelectOption | undefined {
-    return lookUpByKey(
-      this.#serverIndex,
-      this.#serverOptions,
-      key,
-      this.#keyOf
-    );
-  }
-
   /** Ignores retained rows both during a request and before its new rows reach the list. */
   noteVisible(visible: number, input: number): void {
     if (this.#serverRequest || input !== this.#serverOptions.length) {
@@ -447,7 +432,7 @@ export class PagedSource implements SelectSource {
     // short-circuit then answers `[]` synchronously with nothing left to re-ask.
     this.#state.serverSettledKey = null;
     this.#serverOptions = [];
-    this.#serverIndex.clear();
+    this.#serverKeys.clear();
     this.#serverOffset = 0;
     this.#serverCursor = undefined;
     this.#serverPage = 1;
@@ -613,10 +598,22 @@ export class PagedSource implements SelectSource {
   }
 
   #appendServerOptions(options: readonly SelectOption[]): boolean {
+    const accepted = new Map<string, SelectOption>();
+    const truncated = this.#appendEach(options, accepted);
+    if (accepted.size) {
+      this.#onAccept(accepted);
+    }
+    return truncated;
+  }
+
+  #appendEach(
+    options: readonly SelectOption[],
+    accepted: Map<string, SelectOption>
+  ): boolean {
     const maxLoaded = this.#getMaxLoaded();
     for (const option of options) {
       const key = this.#keyOf(option);
-      if (key != null && this.#serverIndex.has(key)) {
+      if (key != null && this.#serverKeys.has(key)) {
         continue;
       }
 
@@ -627,7 +624,8 @@ export class PagedSource implements SelectSource {
 
       this.#serverOptions.push(option);
       if (key != null) {
-        this.#serverIndex.set(key, option);
+        this.#serverKeys.add(key);
+        accepted.set(key, option);
       }
     }
 

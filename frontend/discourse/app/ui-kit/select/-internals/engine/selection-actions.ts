@@ -55,7 +55,7 @@ export default class SelectionActions {
     value: SelectValue
   ) => boolean;
   #runAction: (option: SelectOption) => void;
-  #cacheResolved: (record: SelectRecord | null | undefined) => void;
+  #cacheResolved: (entry: SelectOptionLike | null | undefined) => void;
   #resolveOneSync: (value: SelectId) => SelectRecord | undefined;
   #applyLegacyOnChange: (
     value: SelectValue,
@@ -77,7 +77,8 @@ export default class SelectionActions {
       value: SelectValue
     ) => boolean;
     runAction: (option: SelectOption) => void;
-    cacheResolved: (record: SelectRecord | null | undefined) => void;
+    /** Records a pick in the ledger, with the input it came from. */
+    cacheResolved: (entry: SelectOptionLike | null | undefined) => void;
     resolveOneSync: (value: SelectId) => SelectRecord | undefined;
     applyLegacyOnChange: (
       value: SelectValue,
@@ -360,7 +361,7 @@ export default class SelectionActions {
     if (this.#atMaximum) {
       return;
     }
-    this.#cacheResolved(record);
+    this.#cacheResolved(entry);
     if (this.#args.multiple) {
       this.#emitChange(
         [...this._valueArray, this.#args.recordValue(record)],

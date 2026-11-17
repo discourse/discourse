@@ -1,6 +1,6 @@
 import { DEBUG } from "@glimmer/env";
+import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
-import { trackedMap } from "@ember/reactive/collections";
 import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectId,
@@ -9,35 +9,73 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type SelectArgsView from "./select-args.ts";
-import { entryRecord, type SelectOptionLike } from "./select-option.ts";
+import {
+  entryRecord,
+  isSelectOption,
+  recordOf,
+  type SelectOptionLike,
+} from "./select-option.ts";
 
 interface ValueResolverInit {
   args: SelectArgsView;
-  knownRecord: (key: string) => SelectRecord | undefined;
+  /** The local source's record for a key; empty for a server source. */
+  localRecord: (key: string) => SelectRecord | undefined;
+  /** The record the extras give a key at rest, whatever the query. */
+  extraRecord: (key: string) => SelectRecord | undefined;
+  /** The keys the held value holds now. */
+  heldKeys: () => ReadonlySet<string | null>;
+}
+
+/**
+ * Advanced whenever a sighting or fallback is written outside render. Only readers outside
+ * async data consume it: a held value's async data reads the stores directly, so a page or an
+ * answer landing never re-runs, and so never aborts, a resolve still in flight.
+ */
+class LedgerRevision {
+  @tracked value = 0;
 }
 
 /** A batch stays alive while any joined caller still needs its values. */
 type PendingResolution = {
   controller: AbortController;
   callers: Set<AbortSignal | undefined>;
-  promise: Promise<Map<string, SelectRecord>>;
+  promise: Promise<Map<string, SelectOptionLike>>;
 };
 
+/**
+ * The record ledger: the one place that decides which record a value key stands for, so every
+ * surface and every data edge shares it. The first rule that knows the key wins: `valueRecords`,
+ * the local source, the extras at rest, the latest sighting (a pick, an answer or a loaded page,
+ * newest first), the asking view's own input, and last the unresolved fallback.
+ */
 export default class ValueResolver {
   /**
-   * value → resolved record, so a re-render or reopen never re-fetches a label. Keyed by the
-   * normalized value (see `SelectArgsView#valueKey`) so a string/number id mismatch is a
-   * cache hit.
+   * Every real record seen, by identity, oldest first: a pick, a resolver answer, or a row a page
+   * added. A record answers for the key it names now, so an edit in place moves it. Plain, read
+   * through {@link LedgerRevision}: a synchronous resolver's answer is written during render,
+   * which a tracked write would fail.
    */
-  #resolvedCache = trackedMap<string, SelectRecord>();
+  #seen = new Set<SelectRecord>();
+
+  /** The record last seen for each key, re-checked on every hit; a miss walks the sightings. */
+  #seenIndex = new Map<string, SelectRecord>();
+
+  /** The fallback recorded for a key that could not be resolved; outranked by any real record. */
+  #fallbacks = new Map<string, SelectRecord>();
+
+  /** The input each pick came from, so its settings show while its key is held. */
+  #picks = new Map<string, SelectOptionLike>();
 
   /**
-   * The same, for outcomes a synchronous resolver produced, which the trigger still has to
-   * read later in the same render. Deliberately untracked: `#resolveMany` runs during a
-   * render that already consumed `#resolvedCache`, so writing that tracked map here would
-   * invalidate the very computation performing the write.
+   * The option each accepted resolver answer came in, by key, with the record it named. A later
+   * sighting of another record for the key drops it.
    */
-  #synchronousOutcomes = new Map<string, SelectRecord>();
+  #answers = new Map<
+    string,
+    { record: SelectRecord; option: SelectOptionLike }
+  >();
+
+  #revision = new LedgerRevision();
 
   #pending = new Map<string, PendingResolution>();
 
@@ -48,16 +86,15 @@ export default class ValueResolver {
   #customUnresolvedRecords = new WeakSet<SelectRecord>();
 
   #args: SelectArgsView;
-
-  // The record the current source already holds for a key, whichever kind it is. A paginated
-  // source answers from its untracked accumulator; without this rung it would refetch a value
-  // whose row is already on screen. Read untracked on purpose — this runs during render,
-  // and the fetch path already covers the case where the row has not landed yet.
-  #knownRecord: (key: string) => SelectRecord | undefined;
+  #localRecord: (key: string) => SelectRecord | undefined;
+  #extraRecord: (key: string) => SelectRecord | undefined;
+  #heldKeys: () => ReadonlySet<string | null>;
 
   constructor(opts: ValueResolverInit) {
     this.#args = opts.args;
-    this.#knownRecord = opts.knownRecord;
+    this.#localRecord = opts.localRecord;
+    this.#extraRecord = opts.extraRecord;
+    this.#heldKeys = opts.heldKeys;
   }
 
   resolveSelection(
@@ -111,15 +148,61 @@ export default class ValueResolver {
   }
 
   evictUnresolved(): void {
-    for (const [key, record] of [...this.#resolvedCache.entries()]) {
-      if (this.isUnresolvedRecord(record)) {
-        this.#resolvedCache.delete(key);
+    if (this.#fallbacks.size) {
+      this.#fallbacks.clear();
+      this.#revision.value++;
+    }
+  }
+
+  /**
+   * Forgets what was seen for keys the value does not hold, when the list starts over. A held
+   * key keeps its record, so the trigger and chips never blank while a new query loads. A pick
+   * is kept too: the query can clear before the parent applies the value the pick emitted.
+   */
+  pruneUnheld(): void {
+    const held = this.#heldKeys();
+    const kept = (key: string | null) =>
+      key != null && (held.has(key) || this.#picks.has(key));
+    let pruned = false;
+    for (const record of [...this.#seen]) {
+      if (!kept(this.#keyOf(record))) {
+        this.#seen.delete(record);
+        pruned = true;
       }
     }
-    for (const [key, record] of this.#synchronousOutcomes) {
-      if (this.isUnresolvedRecord(record)) {
-        this.#synchronousOutcomes.delete(key);
+    for (const [key, record] of [...this.#seenIndex]) {
+      if (!this.#seen.has(record)) {
+        this.#seenIndex.delete(key);
       }
+    }
+    for (const [key, answer] of [...this.#answers]) {
+      if (!this.#seen.has(answer.record)) {
+        this.#answers.delete(key);
+      }
+    }
+    for (const key of [...this.#fallbacks.keys()]) {
+      if (!kept(key)) {
+        this.#fallbacks.delete(key);
+        pruned = true;
+      }
+    }
+    if (pruned) {
+      this.#revision.value++;
+    }
+  }
+
+  /**
+   * Records the rows a page added as sightings, after the page's await. Every key counts, held
+   * or not, so a value held later is already known.
+   *
+   * @param accepted - The options the page added, by the key the source read for each.
+   */
+  sightPage(accepted: ReadonlyMap<string, SelectOptionLike>): void {
+    for (const [key, option] of accepted) {
+      this.#record(key, entryRecord(option));
+    }
+    if (accepted.size) {
+      this.#revision.value++;
     }
   }
 
@@ -140,38 +223,86 @@ export default class ValueResolver {
       !this.#args.load ||
         !!this.#args.resolveValue ||
         !!this.#args.resolveValues ||
-        this.#args.valueRecordsDeclared
+        this.#args.valueRecordsDeclared ||
+        (makeArray(value) as SelectId[]).every((held) => {
+          const key = this.#args.valueKey(held);
+          return key == null || this.#realRecord(key) !== undefined;
+        })
     );
   }
 
-  cacheResolved(record: SelectRecord | null | undefined): void {
-    if (record) {
-      this.#cacheResolvedValue(this.#args.recordValue(record), record);
+  /**
+   * Records a pick as the newest sighting of its key, with the input it came from.
+   *
+   * @param entry - What was picked: a record, or an option with settings.
+   */
+  cacheResolved(entry: SelectOptionLike | null | undefined): void {
+    if (!entry) {
+      return;
     }
+    const record = entryRecord(entry);
+    const key = this.#args.valueKey(this.#args.recordValue(record));
+    if (key == null) {
+      return;
+    }
+    if (this.#record(key, record)) {
+      this.#picks.set(key, entry);
+    }
+    this.#revision.value++;
   }
 
   /**
-   * The record to show for a value: `valueRecords` → a real recorded outcome → client list →
-   * the fallback left by an earlier failed attempt.
-   *
-   * An unresolved fallback ranks LAST, so any real source that turns up later — a record
-   * landing in the client list, a re-resolve — supersedes it instead of being masked by it.
-   * But it is still a hit, deliberately: a resolve records its outcome, and a read that
-   * missed would re-resolve, record again, invalidate the render that read it, and never
-   * settle. "Failed" has to be a terminal answer; `reload` is what retries it.
+   * The record a value stands for now, including a fallback left by an earlier failed attempt.
+   * Tracked, for readers outside async data: a sighting landing re-renders them.
    */
   resolveOneSync(value: SelectId): SelectRecord | undefined {
     const key = this.#args.valueKey(value);
     if (key == null) {
       return undefined;
     }
-    const recorded = this.#recordedOutcomes(key);
+    void this.#revision.value;
+    return this.#recordFor(key);
+  }
+
+  /**
+   * The record a view shows for a key: the ledger's, or the view's own input when nothing else
+   * knows the key. Tracked, like {@link resolveOneSync}.
+   *
+   * @param key - A normalized key.
+   * @param input - The view's own input, if it brought one.
+   */
+  recordForView(
+    key: string,
+    input: SelectOptionLike | undefined
+  ): SelectRecord | undefined {
+    void this.#revision.value;
     return (
-      this.#args.valueRecordFor(key) ??
-      recorded.find((record) => !this.isUnresolvedRecord(record)) ??
-      this.#knownRecord(key) ??
-      recorded[0]
+      this.#realRecord(key) ??
+      (input ? (recordOf(input) as SelectRecord) : undefined) ??
+      this.#fallbacks.get(key)
     );
+  }
+
+  /**
+   * The pick that put a held key in the value, while the key stays held.
+   *
+   * @param key - A normalized key.
+   */
+  pickFor(key: string): SelectOptionLike | undefined {
+    void this.#revision.value;
+    return this.#heldKeys().has(key) ? this.#picks.get(key) : undefined;
+  }
+
+  /**
+   * The option an accepted resolver answer came in, while its record is the one the key stands
+   * for.
+   *
+   * @param key - A normalized key.
+   * @param record - The record the key stands for.
+   */
+  answerFor(key: string, record: SelectRecord): SelectOptionLike | undefined {
+    const answer = this.#answers.get(key);
+    return answer?.record === record ? answer.option : undefined;
   }
 
   // Narrows a resolved batch back to the single arity. `#resolveMany` always yields at least
@@ -190,11 +321,12 @@ export default class ValueResolver {
     values: SelectId[],
     opts: SelectLoadRequest
   ): SelectRecord[] | Promise<SelectRecord[]> {
-    const synced = values.map((v) => this.resolveOneSync(v));
+    // Read without the revision, so a sighting landing never re-runs the async data asking.
+    const synced = values.map((v) => this.#lookUp(v));
     if (synced.every((record) => record != null)) {
       return synced as SelectRecord[];
     }
-    let resolved = new Map<string, SelectRecord>();
+    let resolved: Map<string, SelectOptionLike> = new Map();
     if (opts.signal?.aborted) {
       return this.#assemble(values, synced, resolved);
     }
@@ -225,9 +357,12 @@ export default class ValueResolver {
           // A synchronous result must not dirty the tracked cache consumed during render.
           this.#rememberSynchronousOutcomes(
             uncached,
-            [],
-            this.#assemble(uncached, [], batch)
+            this.#assemble(uncached, [], batch),
+            batch
           );
+          if (!requests.size) {
+            return this.#assemble(values, this.#current(values), resolved);
+          }
         }
       }
     }
@@ -239,14 +374,16 @@ export default class ValueResolver {
     ).then((batches) => {
       if (opts.signal?.aborted) {
         resolved.clear();
-      } else {
-        for (const batch of batches) {
-          for (const [key, record] of batch) {
-            resolved.set(key, record);
-          }
+        return this.#assemble(values, synced, resolved);
+      }
+      for (const batch of batches) {
+        for (const [key, record] of batch) {
+          resolved.set(key, record);
         }
       }
-      return this.#assemble(values, synced, resolved);
+      // Re-read at settlement: a record that arrived while the request was out outranks what
+      // was known when it started.
+      return this.#assemble(values, this.#current(values), resolved);
     });
   }
 
@@ -256,7 +393,7 @@ export default class ValueResolver {
    */
   #trackRequest(
     values: SelectId[],
-    batch: Promise<Map<string, SelectRecord>>,
+    batch: Promise<Map<string, SelectOptionLike>>,
     controller: AbortController
   ): PendingResolution {
     const request: PendingResolution = {
@@ -265,7 +402,11 @@ export default class ValueResolver {
       promise: batch
         .then((resolved) => {
           if (!controller.signal.aborted) {
-            this.#cacheOutcome(values, this.#assemble(values, [], resolved));
+            this.#cacheOutcome(
+              values,
+              this.#assemble(values, [], resolved),
+              resolved
+            );
           }
           return resolved;
         })
@@ -294,7 +435,7 @@ export default class ValueResolver {
   #joinRequest(
     request: PendingResolution,
     signal: AbortSignal | undefined
-  ): Promise<Map<string, SelectRecord>> {
+  ): Promise<Map<string, SelectOptionLike>> {
     request.callers.add(signal);
     return new Promise((resolve) => {
       const onAbort = () => {
@@ -314,51 +455,140 @@ export default class ValueResolver {
     });
   }
 
+  /** Records a synchronous resolver's outcomes. Written during render, so the revision stays. */
   #rememberSynchronousOutcomes(
     values: SelectId[],
-    synced: Array<SelectRecord | undefined>,
-    records: SelectRecord[]
+    records: SelectRecord[],
+    resolved: ReadonlyMap<string, SelectOptionLike>
   ): void {
     values.forEach((value, index) => {
       const key = this.#args.valueKey(value);
       const record = records[index];
-      if (synced[index] == null && key != null && record) {
-        this.#synchronousOutcomes.set(key, record);
+      if (key != null && record) {
+        this.#accept(key, record, resolved.get(key));
       }
     });
   }
 
   /**
-   * Records the outcome of an async resolve: real records, so later reads hit the cache
-   * instead of refetching, and unresolved fallbacks, so a trigger can tell "resolved and
-   * failed" (show the fallback) from "still resolving" (show nothing). A cached fallback
-   * remains a sync hit, but ranks after real valueRecords/cache/list records; `reload()` evicts it
-   * when the caller explicitly retries.
+   * Records the outcome of an async resolve: real records as sightings, so later reads need no
+   * fetch, and fallbacks, so a trigger can tell "resolved and failed" from "still resolving".
+   * A fallback stays a hit but ranks after every real record; `reload()` evicts it.
    *
-   * Only ever called from a promise continuation, i.e. a microtask after render, where
-   * writing tracked state cannot dirty what the render already read.
+   * Only ever called from a promise continuation, after render, so advancing the revision
+   * cannot dirty what the render already read.
    */
-  #cacheOutcome(values: SelectId[], records: SelectRecord[]): void {
+  #cacheOutcome(
+    values: SelectId[],
+    records: SelectRecord[],
+    resolved: ReadonlyMap<string, SelectOptionLike>
+  ): void {
     values.forEach((value, index) => {
+      const key = this.#args.valueKey(value);
       const record = records[index];
-      if (record) {
-        this.#cacheResolvedValue(value, record);
+      if (key != null && record) {
+        this.#accept(key, record, resolved.get(key));
       }
     });
+    this.#revision.value++;
+  }
+
+  /** Stores an accepted outcome, and the settings its answer came with. */
+  #accept(
+    key: string,
+    record: SelectRecord,
+    answer: SelectOptionLike | undefined
+  ): void {
+    if (!this.#record(key, record)) {
+      return;
+    }
+    if (answer && isSelectOption(answer)) {
+      this.#answers.set(key, { record, option: answer });
+    } else {
+      this.#answers.delete(key);
+    }
+  }
+
+  /** The key a record names now, which an edit in place can change. */
+  #keyOf(record: SelectRecord): string | null {
+    return this.#args.valueKey(this.#args.recordValue(record));
+  }
+
+  /** Every rule that names a real record, `valueRecords` first; untracked for the sightings. */
+  #realRecord(key: string): SelectRecord | undefined {
+    return (
+      this.#args.valueRecordFor(key) ??
+      this.#localRecord(key) ??
+      this.#extraRecord(key) ??
+      this.#sightingFor(key)
+    );
   }
 
   /**
-   * What past resolves recorded for a value, across both stores. Async resolves record into
-   * the tracked cache — their landing has to re-render the trigger — while synchronous ones
-   * record into the untracked map, because writing tracked state during render would
-   * invalidate the very render doing the write. A value normally lands in one or the other;
-   * both are read the same way, so neither store's ordering is load-bearing.
+   * The record seen last for a key it still names. A record edited in place to another key
+   * moves with its edit, as the source indexes do: a hit is re-checked, and a miss walks the
+   * sightings for the newest that names the key.
    */
-  #recordedOutcomes(key: string): SelectRecord[] {
-    return [
-      this.#resolvedCache.get(key),
-      this.#synchronousOutcomes.get(key),
-    ].filter((record) => record != null);
+  #sightingFor(key: string): SelectRecord | undefined {
+    const hit = this.#seenIndex.get(key);
+    if (hit !== undefined && this.#seen.has(hit) && this.#keyOf(hit) === key) {
+      return hit;
+    }
+    let found: SelectRecord | undefined;
+    for (const record of this.#seen) {
+      if (this.#keyOf(record) === key) {
+        found = record;
+      }
+    }
+    return found;
+  }
+
+  /** The ledger's record for a key, a fallback ranking last so a real record supersedes it. */
+  #recordFor(key: string): SelectRecord | undefined {
+    return this.#realRecord(key) ?? this.#fallbacks.get(key);
+  }
+
+  /** The ledger's record for a value, read without consuming the revision. */
+  #lookUp(value: SelectId): SelectRecord | undefined {
+    const key = this.#args.valueKey(value);
+    return key == null ? undefined : this.#recordFor(key);
+  }
+
+  /** What the ledger knows for each value now, without consuming the revision. */
+  #current(values: SelectId[]): Array<SelectRecord | undefined> {
+    return values.map((value) => this.#lookUp(value));
+  }
+
+  /**
+   * Stores a resolved record: a real one as the key's newest sighting, displacing the record the
+   * key held, and a fallback only while no real record is known. Returns whether a real record
+   * was stored.
+   */
+  #record(key: string, record: SelectRecord): boolean {
+    if (this.isUnresolvedRecord(record)) {
+      if (!this.#sightingFor(key)) {
+        this.#fallbacks.set(key, record);
+      }
+      return false;
+    }
+    // Only the indexed owner is displaced, so a page costs one key read per row. A record moved
+    // onto this key unindexed stays behind, but the index hit and the newest-first walk both
+    // rank it below this one.
+    const previous = this.#seenIndex.get(key);
+    if (
+      previous !== undefined &&
+      previous !== record &&
+      this.#keyOf(previous) === key
+    ) {
+      this.#seen.delete(previous);
+    }
+    if (this.#answers.get(key)?.record !== record) {
+      this.#answers.delete(key);
+    }
+    this.#seen.delete(record);
+    this.#seen.add(record);
+    this.#seenIndex.set(key, record);
+    return true;
   }
 
   // Resolves ids to a key→record map, containing only what genuinely resolved. Never throws
@@ -367,7 +597,7 @@ export default class ValueResolver {
   #resolveBatch(
     values: SelectId[],
     opts: SelectLoadRequest
-  ): Map<string, SelectRecord> | Promise<Map<string, SelectRecord>> {
+  ): Map<string, SelectOptionLike> | Promise<Map<string, SelectOptionLike>> {
     const request = { ...opts, config: this.#args.config };
     if (this.#args.resolveValues) {
       const result = this.#attempt(() =>
@@ -376,7 +606,7 @@ export default class ValueResolver {
       return this.#isPromise(result)
         ? result.then(
             (records) => this.#toResolvedMap(records),
-            () => new Map<string, SelectRecord>()
+            () => new Map<string, SelectOptionLike>()
           )
         : this.#toResolvedMap(result);
     }
@@ -384,15 +614,17 @@ export default class ValueResolver {
       const result = this.#attempt(() => this.#args.resolveValue?.(v, request));
       return this.#isPromise(result)
         ? result.then(
-            (entry) => [v, entry && entryRecord(entry)] as const,
+            (entry) => [v, entry] as const,
             () => [v, undefined] as const
           )
-        : ([v, result && entryRecord(result)] as const);
+        : ([v, result] as const);
     });
     return per.some((r) => this.#isPromise(r))
       ? Promise.all(per).then((pairs) => this.#pairsToMap(pairs))
       : this.#pairsToMap(
-          per as ReadonlyArray<readonly [SelectId, SelectRecord | undefined]>
+          per as ReadonlyArray<
+            readonly [SelectId, SelectOptionLike | undefined]
+          >
         );
   }
 
@@ -412,19 +644,18 @@ export default class ValueResolver {
   // silently mis-pairing the two.
   #toResolvedMap(
     records: SelectRecord[] | null | undefined
-  ): Map<string, SelectRecord> {
+  ): Map<string, SelectOptionLike> {
     return this.#pairsToMap(
-      (makeArray(records) as SelectOptionLike[]).map((entry) => {
-        const record = entryRecord(entry);
-        return [this.#args.recordValue(record), record] as const;
-      })
+      (makeArray(records) as SelectOptionLike[]).map(
+        (entry) => [this.#args.recordValue(entryRecord(entry)), entry] as const
+      )
     );
   }
 
   #pairsToMap(
-    pairs: ReadonlyArray<readonly [SelectId, SelectRecord | undefined]>
-  ): Map<string, SelectRecord> {
-    const map = new Map<string, SelectRecord>();
+    pairs: ReadonlyArray<readonly [SelectId, SelectOptionLike | undefined]>
+  ): Map<string, SelectOptionLike> {
+    const map = new Map<string, SelectOptionLike>();
     for (const [value, record] of pairs) {
       const key = this.#args.valueKey(value);
       if (key != null && record) {
@@ -440,16 +671,24 @@ export default class ValueResolver {
   #assemble(
     values: SelectId[],
     synced: Array<SelectRecord | undefined>,
-    resolved: Map<string, SelectRecord>
+    resolved: Map<string, SelectOptionLike>
   ): SelectRecord[] {
     return values.map((v, index) => {
       const key = this.#args.valueKey(v);
       return (
         synced[index] ??
-        (key == null ? undefined : resolved.get(key)) ??
+        this.#resolvedRecord(resolved, key) ??
         this.#unresolvedRecord(v)
       );
     });
+  }
+
+  #resolvedRecord(
+    resolved: ReadonlyMap<string, SelectOptionLike>,
+    key: string | null
+  ): SelectRecord | undefined {
+    const entry = key == null ? undefined : resolved.get(key);
+    return entry === undefined ? undefined : entryRecord(entry);
   }
 
   // The fallback for a held id that could not be resolved. `createUnresolvedRecord` names it
@@ -488,27 +727,6 @@ export default class ValueResolver {
       record[this.#args.labelField] = String(value ?? "");
     }
     return record;
-  }
-
-  #cacheResolvedValue(
-    value: SelectId,
-    record: SelectRecord | null | undefined
-  ): void {
-    const key = this.#args.valueKey(value);
-    if (key == null || !record) {
-      return;
-    }
-    if (
-      this.isUnresolvedRecord(record) &&
-      this.#recordedOutcomes(key).some(
-        (cached) => !this.isUnresolvedRecord(cached)
-      )
-    ) {
-      return;
-    }
-    if (this.#resolvedCache.get(key) !== record) {
-      this.#resolvedCache.set(key, record);
-    }
   }
 
   #isPromise<T>(value: T | Promise<T>): value is Promise<T> {

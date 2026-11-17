@@ -76,6 +76,8 @@ export default class SelectArgsView {
   #valueField: string;
   #normalizeKey?: SelectEngineInit["normalizeKey"];
   #labelField: string;
+  #iconField?: string;
+  #descriptionField?: string;
   // Whether the consumer declared `valueRecords` at all, as opposed to it merely being empty
   // right now. Those are different: an empty-but-declared arg is the late-arrival pattern
   // mid-flight, and the misconfiguration assert must not fire on it.
@@ -109,8 +111,8 @@ export default class SelectArgsView {
     readonly unknown[],
     {
       entries: readonly unknown[];
-      records: readonly SelectRecord[];
-      index: ReadonlyMap<string, SelectRecord>;
+      present: readonly SelectOptionLike[];
+      index: ReadonlyMap<string, SelectOptionLike>;
     }
   >();
 
@@ -173,6 +175,8 @@ export default class SelectArgsView {
     this.#valueField = opts.valueField ?? "id";
     this.#normalizeKey = opts.normalizeKey;
     this.#labelField = opts.labelField ?? "name";
+    this.#iconField = opts.iconField;
+    this.#descriptionField = opts.descriptionField;
     // Values are unique by contract (selection identity, row keys), so grouping by the value
     // field deterministically yields one group per row. This certain misuse fails loudly; a
     // function `groupBy` can express the same mapping, but its outcome has no static tell.
@@ -380,6 +384,14 @@ export default class SelectArgsView {
     return this.#labelField;
   }
 
+  get iconField(): string | undefined {
+    return this.#iconField;
+  }
+
+  get descriptionField(): string | undefined {
+    return this.#descriptionField;
+  }
+
   get valueRecordsDeclared(): boolean {
     return this.#valueRecordsDeclared;
   }
@@ -470,6 +482,16 @@ export default class SelectArgsView {
    * @param key - A normalized key, as {@link valueKey} returns.
    */
   valueRecordFor(key: string): SelectRecord | undefined {
+    const entry = this.valueRecordEntryFor(key);
+    return entry === undefined ? undefined : entryRecord(entry);
+  }
+
+  /**
+   * The `valueRecords` entry for a value key, as given: an option keeps its settings.
+   *
+   * @param key - A normalized key, as {@link valueKey} returns.
+   */
+  valueRecordEntryFor(key: string): SelectOptionLike | undefined {
     const source = this.valueRecords as
       | SelectOptionLike
       | readonly SelectOptionLike[]
@@ -478,29 +500,26 @@ export default class SelectArgsView {
     if (source == null) {
       return undefined;
     }
+    const keyOf = (entry: SelectOptionLike) =>
+      this.#keyOfRecord(entryRecord(entry));
     if (!Array.isArray(source)) {
-      const record = entryRecord(source as SelectOptionLike);
-      return this.valueKey(this.recordValue(record)) === key
-        ? record
+      return keyOf(source as SelectOptionLike) === key
+        ? (source as SelectOptionLike)
         : undefined;
     }
     const list = source as readonly SelectOptionLike[];
     let cached = this.#valueRecordIndexes.get(list);
     // Reading every entry also consumes a tracked list's contents, and catches an edit in place.
     if (!cached || !sameEntries(cached.entries, list)) {
-      const records = [...list]
-        .filter((entry) => entry != null)
-        .map((entry) => entryRecord(entry));
+      const present = list.filter((entry) => entry != null);
       cached = {
         entries: [...list],
-        records,
-        index: indexByKey(records, (record) => this.#keyOfRecord(record)),
+        present,
+        index: indexByKey(present, keyOf),
       };
       this.#valueRecordIndexes.set(list, cached);
     }
-    return lookUpByKey(cached.index, cached.records, key, (record) =>
-      this.#keyOfRecord(record)
-    );
+    return lookUpByKey(cached.index, cached.present, key, keyOf);
   }
 
   /**
