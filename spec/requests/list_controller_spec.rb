@@ -12,6 +12,15 @@ RSpec.describe ListController do
   end
 
   describe "#index" do
+    it "serves the homepage with wildcard Accept headers" do
+      SiteSetting.default_homepage = "latest"
+
+      get "/", headers: { "Accept" => "*/*" }
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("text/html")
+    end
+
     it "does not expose the Klipy API key in anonymous preloaded site settings" do
       SiteSetting.klipy_api_key = "super-secret-klipy-key"
 
