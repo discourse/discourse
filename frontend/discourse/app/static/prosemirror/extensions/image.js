@@ -424,36 +424,52 @@ const extension = {
         const uploadToHost = async (dataURIs, view, uploadFiles) => {
           dataURIs.forEach((dataURI) => processingDataURIs.add(dataURI));
 
-          const files = await Promise.all(
-            dataURIs.map(async (dataURI) => {
-              const blob = await (await fetch(dataURI)).blob();
-              return new File([blob], fileNameFor(dataURI), {
-                type: blob.type,
-              });
-            })
-          );
-          const accepted = uploadFiles(files) !== false;
+          try {
+            const results = await Promise.allSettled(
+              dataURIs.map(async (dataURI) => {
+                const blob = await (await fetch(dataURI)).blob();
+                return new File([blob], fileNameFor(dataURI), {
+                  type: blob.type,
+                });
+              })
+            );
+            if (view.isDestroyed) {
+              return;
+            }
 
-          const dataURIMap = dataImageUploader.getState(view.state);
-          const tr = view.state.tr;
-          dataURIs
-            .flatMap((dataURI) => [...(dataURIMap.get(dataURI) ?? [])])
-            .sort((a, b) => b - a)
-            .forEach((pos) => {
-              const end = pos + view.state.doc.nodeAt(pos).nodeSize;
-              if (accepted) {
-                tr.delete(pos, end);
-              } else {
-                tr.replaceWith(
+            const files = results
+              .filter(({ status }) => status === "fulfilled")
+              .map(({ value }) => value);
+            const accepted = files.length > 0 && uploadFiles(files) !== false;
+
+            const dataURIMap = dataImageUploader.getState(view.state);
+            const tr = view.state.tr;
+            dataURIs
+              .flatMap((dataURI, index) =>
+                [...(dataURIMap.get(dataURI) ?? [])].map((pos) => ({
                   pos,
-                  end,
-                  view.state.schema.text(i18n("composer.image"))
-                );
-              }
-            });
-          view.dispatch(tr);
-
-          dataURIs.forEach((dataURI) => processingDataURIs.delete(dataURI));
+                  uploaded: accepted && results[index].status === "fulfilled",
+                }))
+              )
+              .sort((a, b) => b.pos - a.pos)
+              .forEach(({ pos, uploaded }) => {
+                const end = pos + view.state.doc.nodeAt(pos).nodeSize;
+                if (uploaded) {
+                  tr.delete(pos, end);
+                } else {
+                  tr.replaceWith(
+                    pos,
+                    end,
+                    view.state.schema.text(i18n("composer.image"))
+                  );
+                }
+              });
+            if (tr.docChanged) {
+              view.dispatch(tr);
+            }
+          } finally {
+            dataURIs.forEach((dataURI) => processingDataURIs.delete(dataURI));
+          }
         };
 
         const uploadDataImage = async (dataURI, view) => {
