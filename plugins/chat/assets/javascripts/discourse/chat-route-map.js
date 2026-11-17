@@ -1,6 +1,6 @@
 /* eslint-disable ember/routes-segments-snake-case */
 export default function () {
-  this.route("chat", function () {
+  this.route("chat", { bundleName: "chat" }, function () {
     this.route("disabled");
     this.route("search");
 

@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
-import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
+
+let messageCreator;
 
 export default class ChatModalNewMessage extends Component {
   @service chat;
@@ -13,6 +16,10 @@ export default class ChatModalNewMessage extends Component {
     );
   }
 
+  get messageCreator() {
+    return (messageCreator ??= import("../message-creator/index.gjs"));
+  }
+
   <template>
     {{#if this.shouldRender}}
       <DModal
@@ -22,11 +29,18 @@ export default class ChatModalNewMessage extends Component {
         @inline={{@inline}}
         @title="chat.new_message_modal.title"
       >
-        <MessageCreator
-          @channel={{@model}}
-          @initialMode={{@model.initialMode}}
-          @onClose={{@closeModal}}
-        />
+        <DAsyncContent @asyncData={{this.messageCreator}}>
+          <:loading>
+            <DConditionalLoadingSpinner @condition={{true}} />
+          </:loading>
+          <:content as |module|>
+            <module.default
+              @channel={{@model}}
+              @initialMode={{@model.initialMode}}
+              @onClose={{@closeModal}}
+            />
+          </:content>
+        </DAsyncContent>
       </DModal>
     {{/if}}
   </template>
