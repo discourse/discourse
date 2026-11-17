@@ -91,6 +91,45 @@ describe "MCP transport" do
     allow(DiscourseMcp).to receive(:registry).and_return(registry)
   end
 
+  describe "#create" do
+    it "requires theme write scope and returns compilation failures without changing saved code" do
+      theme = Fabricate(:theme, component: true)
+      name = "discourse_set_theme_code"
+      McpPrimitive.create!(kind: "tool", identifier: name, enabled: true)
+      request_payload = payload.deep_dup
+      request_payload[:params][:name] = name
+      request_payload[:params][:arguments] = {
+        theme_id: theme.id,
+        expected_code_revision: DiscourseMcp::Tools::ThemeSupport.code_revision(theme),
+        css: "body { color: red; }",
+      }
+      request_headers = headers.merge("HTTP_MCP_NAME" => name)
+
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(403)
+      expect(theme.reload.theme_fields).to be_empty
+
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::THEMES_WRITE)
+      request_headers[
+        "HTTP_AUTHORIZATION"
+      ] = "Bearer #{McpOauthAccessToken.issue!(authorization: authorization)}"
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "isError")).to eq(false)
+      saved = response.parsed_body.dig("result", "structuredContent")
+      expect(saved["verification"]).to include("saved" => true, "browser_verified" => false)
+
+      request_payload[:params][:arguments].merge!(
+        expected_code_revision: saved.dig("theme", "code_revision"),
+        css: "body { color: blue;",
+      )
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "isError")).to eq(true)
+      expect(theme.reload.theme_fields.find_by(name: "scss").value).to eq("body { color: red; }")
+    end
+  end
+
   it "runs fast tools without waiting for deferred work" do
     io = StringIO.new
     Scheduler::Defer.capture_later do
