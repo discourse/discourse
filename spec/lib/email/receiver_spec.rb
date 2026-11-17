@@ -169,6 +169,28 @@ RSpec.describe Email::Receiver do
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
 
+    it "does not update the bounce score when the bounce key was shared with other recipients" do
+      email_log.update!(cc_addresses: "someone@else.com")
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+    end
+
+    it "does not update the bounce score when the address changed owner since it was sent" do
+      email_log.update!(user: Fabricate(:user))
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+    end
+
+    it "does not update the bounce score without a matching email log" do
+      expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+    end
+
     it "sends a system message once they reach the 'bounce_score_threshold'" do
       expect(user.active).to eq(true)
 
