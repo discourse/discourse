@@ -15,7 +15,6 @@ stop on runlevel [06]
 
 env RAILS_ROOT=/var/www/discourse
 env RAILS_ENV=production
-env NUM_WEBS=4
 env HOME=/home/discourse
 env USER=discourse
 env GROUP=discourse
