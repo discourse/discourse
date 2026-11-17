@@ -29,6 +29,23 @@ export default class PageShellControls extends Component {
           </select>
         </label>
         <label>
+          {{i18n "page_shell.resize"}}
+          <select
+            name="resize"
+            value={{this.pageShell.resize}}
+            {{on "change" this.pageShell.change}}
+          >
+            <option
+              selected={{eq this.pageShell.resize "grow"}}
+              value="grow"
+            >{{i18n "page_shell.resize_grow"}}</option>
+            <option
+              selected={{eq this.pageShell.resize "content"}}
+              value="content"
+            >{{i18n "page_shell.resize_content"}}</option>
+          </select>
+        </label>
+        <label>
           {{i18n "page_shell.navigation"}}
           <select
             name="navigation"

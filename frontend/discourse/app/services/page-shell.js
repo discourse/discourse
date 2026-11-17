@@ -13,7 +13,7 @@ const PANEL_FIELDS = [
   "navigationWidth",
   "contextWidth",
 ];
-const PANELS = {
+export const PANEL_LIMITS = {
   navigation: { defaultWidth: 260, minWidth: 200, maxWidth: 400 },
   context: { defaultWidth: 300, minWidth: 200, maxWidth: 1000 },
 };
@@ -27,7 +27,7 @@ const PANELS = {
  * @returns {{ mode: string, width: number }}
  */
 function parsePanelPreference(name, stored, fallbackMode = "open") {
-  const { defaultWidth, minWidth, maxWidth } = PANELS[name];
+  const { defaultWidth, minWidth, maxWidth } = PANEL_LIMITS[name];
   const mode = PANEL_MODES.includes(stored?.mode) ? stored.mode : fallbackMode;
   const width =
     typeof stored?.width === "number" && Number.isFinite(stored.width)
@@ -45,17 +45,23 @@ export default class PageShell extends Service {
   @service siteSettings;
 
   @tracked width = "centered";
+  @tracked resize = "grow";
   @tracked navigation;
   @tracked context;
   @tracked footer = "content";
   @tracked navigationWidth;
   @tracked contextWidth;
+  @tracked navigationMaxWidth = PANEL_LIMITS.navigation.maxWidth;
   @tracked contextMaxWidth = Math.max(200, Math.min(1000, window.innerWidth));
   @tracked compactLogo = false;
 
   constructor() {
     super(...arguments);
     this.#load();
+  }
+
+  get effectiveNavigationWidth() {
+    return Math.min(this.navigationWidth, this.navigationMaxWidth);
   }
 
   get effectiveContextWidth() {
@@ -83,6 +89,7 @@ export default class PageShell extends Service {
     const { name, value } = event.target;
     const choices = {
       width: ["centered", "full"],
+      resize: ["grow", "content"],
       navigation: ["open", "rail", "hidden"],
       context: ["open", "rail", "hidden"],
       footer: ["content", "row", "off"],
@@ -96,7 +103,7 @@ export default class PageShell extends Service {
         const maximum =
           name === "contextWidth"
             ? this.contextMaxWidth
-            : PANELS.navigation.maxWidth;
+            : PANEL_LIMITS.navigation.maxWidth;
         this[name] = Math.max(200, Math.min(size, maximum));
       }
     } else {
@@ -106,6 +113,27 @@ export default class PageShell extends Service {
     if (event.type === "change" && PANEL_FIELDS.includes(name)) {
       this.#save();
     }
+  }
+
+  /**
+   * Shows a width while a panel is being dragged, without saving it.
+   *
+   * @param {"navigation"|"context"} panel
+   * @param {number} width
+   */
+  previewPanelWidth(panel, width) {
+    this[`${panel}Width`] = width;
+  }
+
+  /**
+   * Keeps the width a drag ended on as the panel's preference.
+   *
+   * @param {"navigation"|"context"} panel
+   * @param {number} width
+   */
+  commitPanelWidth(panel, width) {
+    this[`${panel}Width`] = width;
+    this.#save();
   }
 
   @action

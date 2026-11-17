@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
+import PageShellPanelSeparator from "discourse/components/page-shell/panel-separator";
 import Sidebar from "discourse/components/sidebar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -19,6 +20,9 @@ export default class SidebarWrapper extends Component {
     >
       {{#if @showSidebar}}
         <Sidebar @toggleSidebar={{@toggleSidebar}} />
+        {{#if this.pageShell.enabled}}
+          <PageShellPanelSeparator @panel="navigation" />
+        {{/if}}
       {{else if
         (and this.pageShell.enabled (eq this.pageShell.navigation "rail"))
       }}
