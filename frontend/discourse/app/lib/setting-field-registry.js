@@ -15,9 +15,6 @@ import TagListControl from "discourse/components/setting-field/tag-list";
 
 const REGISTRY = {};
 
-const ROW = { format: "large", labelFormat: "full" };
-const INLINE = { format: "full" };
-
 export function registerSettingFieldType(type, entry) {
   REGISTRY[type] = entry;
 }
@@ -57,48 +54,41 @@ function typeKeyFor({ type, subtype, list_type }) {
   return "default";
 }
 
-const TEXT_INPUT = { ...ROW, type: "input", adminReady: true };
-const CUSTOM_CONTROL = { ...ROW, type: "custom", adminReady: true };
+const TEXT_INPUT = { type: "input", adminReady: true };
+const CUSTOM_CONTROL = { type: "custom", adminReady: true };
 
-registerSettingFieldType("default", { ...ROW, type: "input" });
+registerSettingFieldType("default", { type: "input" });
 registerSettingFieldType("string", TEXT_INPUT);
 registerSettingFieldType("float", TEXT_INPUT);
 registerSettingFieldType("username", TEXT_INPUT);
 registerSettingFieldType("textarea", {
-  ...ROW,
   type: "textarea",
   adminReady: true,
 });
 registerSettingFieldType("email", {
-  ...ROW,
   type: "input-email",
   adminReady: true,
 });
-registerSettingFieldType("date", { ...ROW, type: "input-date" });
+registerSettingFieldType("date", { type: "input-date" });
 registerSettingFieldType("password", {
-  ...ROW,
   type: "password",
   adminReady: true,
 });
 registerSettingFieldType("radio-group", {
-  ...ROW,
   type: "radio-group",
   renderer: RadioGroupControl,
 });
 registerSettingFieldType("enum", {
-  ...ROW,
   type: "select",
   adminReady: true,
   renderer: EnumControl,
 });
 registerSettingFieldType("locale_enum", {
-  ...ROW,
   type: "select",
   adminReady: true,
   renderer: LocaleEnumControl,
 });
 registerSettingFieldType("icon", {
-  ...ROW,
   type: "icon",
   adminReady: true,
   renderer: IconControl,
@@ -120,35 +110,29 @@ registerSettingFieldType("tag_group_list", {
   renderer: TagGroupListControl,
 });
 registerSettingFieldType("group_list", {
-  ...ROW,
   type: "custom",
   renderer: GroupListControl,
 });
 registerSettingFieldType("category_list", {
-  ...ROW,
   type: "custom",
   renderer: CategoryListControl,
 });
 registerSettingFieldType("compact_list", {
-  ...ROW,
   type: "custom",
   renderer: CompactListControl,
 });
 registerSettingFieldType("bool", {
-  ...INLINE,
   type: "checkbox",
   includeDescription: false,
   adminReady: true,
   renderer: BoolControl,
 });
 registerSettingFieldType("integer", {
-  ...INLINE,
   type: "input-number",
   adminReady: true,
   renderer: IntegerControl,
 });
 registerSettingFieldType("duration", {
-  ...INLINE,
   type: "custom",
   renderer: DurationControl,
 });

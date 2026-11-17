@@ -68,6 +68,7 @@
 # section               - Optional group key for a plugin's own settings page. Settings are grouped by section in
 #                         file order, titled by admin.site_settings.sections.<key>. Prefix plugin keys with the plugin name.
 # unit                  - Optional unit shown after number inputs, translated by admin.site_settings.units.<unit>.
+# format                - Optional FormKit size for the setting's field: small, medium, large, max or full.
 #
 #
 #

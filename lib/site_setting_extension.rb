@@ -146,6 +146,10 @@ module SiteSettingExtension
     @units ||= {}
   end
 
+  def formats
+    @formats ||= {}
+  end
+
   def mandatory_values
     @mandatory_values ||= {}
   end
@@ -570,6 +574,7 @@ module SiteSettingExtension
         opts[:plugin] = plugins[s] if plugins[s]
         opts[:section] = sections[s] if sections[s]
         opts[:unit] = units[s] if units[s]
+        opts[:format] = formats[s] if formats[s]
         opts[:upload] = upload_metadata if upload_metadata
 
         DiscoursePluginRegistry.apply_modifier(:site_setting_result, opts)
@@ -1434,6 +1439,12 @@ module SiteSettingExtension
         units[name] = opts[:unit].to_s
       else
         units.delete(name)
+      end
+
+      if opts[:format]
+        formats[name] = opts[:format].to_s
+      else
+        formats.delete(name)
       end
 
       hidden_settings_provider.add_hidden(name) if opts[:hidden]
