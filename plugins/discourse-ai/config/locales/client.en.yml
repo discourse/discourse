@@ -310,6 +310,7 @@ en:
 
     discourse_ai:
       title: "AI"
+      apply_review_suggestion: "Apply AI suggestion: %{action}"
       dsa_classification:
         suggest: "Suggest with AI"
         updated: "Classification updated"
