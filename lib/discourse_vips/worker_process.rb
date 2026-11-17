@@ -25,7 +25,7 @@ module DiscourseVips
     attr_reader :pid, :socket_path
 
     def self.shared_socket_path
-      @shared_socket_path ||= Rails.root.join("tmp/vips-socket").to_s
+      @shared_socket_path ||= Rails.root.join("tmp/vips/sock").to_s
     end
 
     def initialize(socket_path: nil)
@@ -106,7 +106,7 @@ module DiscourseVips
       if @socket_path
         socket_directory = File.dirname(@socket_path)
         FileUtils.mkdir_p(socket_directory, mode: 0o700)
-        File.chmod(0o700, socket_directory) if @socket_path != self.class.shared_socket_path
+        File.chmod(0o700, socket_directory)
         FileUtils.rm_f(@socket_path)
       else
         socket_directory = Dir.mktmpdir("vips-")
@@ -165,7 +165,7 @@ module DiscourseVips
 
         File.unlink(@socket_path)
       end
-      Dir.rmdir(File.dirname(@socket_path)) if @socket_path != self.class.shared_socket_path
+      Dir.rmdir(File.dirname(@socket_path))
     rescue SystemCallError
     end
   end
