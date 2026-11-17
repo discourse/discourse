@@ -58,6 +58,18 @@ module("Live | Unit | Lib | file-transfer-limits", function () {
     assert.false(isAuthorizedFileName("photo.jpg.exe", true, siteSettings));
     assert.false(isAuthorizedFileName("jpg", false, siteSettings));
     assert.false(isAuthorizedFileName("photo.", false, siteSettings));
+    assert.true(
+      isAuthorizedFileName("a".repeat(300) + ".jpg", false, siteSettings),
+      "long names keep their extension"
+    );
+    const longExtension = "b".repeat(40);
+    assert.false(
+      isAuthorizedFileName("a".repeat(300) + "." + longExtension, false, {
+        authorized_extensions: longExtension,
+        authorized_extensions_for_staff: "",
+      }),
+      "checks the saved name, whose overlong extension is dropped"
+    );
   });
 
   test("wildcards authorize any file name", function (assert) {

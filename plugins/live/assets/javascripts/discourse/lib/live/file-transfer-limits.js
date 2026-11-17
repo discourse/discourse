@@ -2,6 +2,7 @@ import {
   authorizedExtensions,
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
+import { safeTransferFilename } from "./file-transfer-ui.js";
 
 export const MEBIBYTE = 1024 * 1024;
 export const DEFAULT_MAX_FILE_SIZE = 100 * MEBIBYTE;
@@ -16,11 +17,13 @@ export function fileTransferMaxSize(mebibytes) {
 }
 
 // Mirrors upload authorization: `staff` is the sender's staff status, because
-// the sender's extension list applies on both ends of a transfer.
+// the sender's extension list applies on both ends of a transfer. Checks the
+// name the receiver will save, not the one on the wire.
 export function isAuthorizedFileName(name, staff, siteSettings) {
   if (authorizesAllExtensions(staff, siteSettings)) {
     return true;
   }
+  name = safeTransferFilename(name);
   const dot = name.lastIndexOf(".");
   if (dot === -1) {
     return false;
