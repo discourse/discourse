@@ -126,6 +126,18 @@ RSpec.describe Blog::TopicExtensions do
     end
   end
 
+  describe "#valid?" do
+    fab!(:user)
+
+    it "accepts short titles like a page's in the blog and drafts categories only" do
+      draft = Fabricate.build(:topic, category: drafts, user: user, title: "Contact")
+      article = Fabricate.build(:topic, category: category, user: user, title: "Contact")
+      elsewhere = Fabricate.build(:topic, category: other_category, user: user, title: "Contact")
+
+      expect([draft, article, elsewhere].select(&:valid?)).to contain_exactly(draft, article)
+    end
+  end
+
   describe "#save" do
     it "rejects moving a topic out of the drafts category" do
       topic.category_id = category.id

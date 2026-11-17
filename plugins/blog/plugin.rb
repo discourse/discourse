@@ -55,6 +55,11 @@ after_initialize do
 
   Rails.application.config.filter_parameters += [:review_token]
 
+  # Article titles like "Contact" are shorter than a forum topic title needs to be.
+  register_modifier(:min_topic_title_length) do |min_length, topic|
+    topic.blog_article_topic? ? 1 : min_length
+  end
+
   add_to_serializer(
     :post,
     :blog_article,
