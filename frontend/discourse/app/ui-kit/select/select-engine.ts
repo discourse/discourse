@@ -892,7 +892,8 @@ export default class SelectEngine {
         ...this.#extensionContext(),
         control: this.#control,
       }),
-      cacheResolved: (record) => this.#valueResolver.cacheResolved(record),
+      stagePicks: (picks) => this.#valueResolver.stage(picks),
+      authorityRecord: (key) => this.#valueResolver.authorityRecord(key),
       resolveOneSync: (value) => this.#valueResolver.resolveOneSync(value),
       applyLegacyOnChange: (value, payload) =>
         applyLegacySelectKitOnChange(this, value, payload),
@@ -917,6 +918,12 @@ export default class SelectEngine {
       isLockedValue: (value) => this.isLockedValue(value),
       getAtMaximum: () => this.atMaximum,
       getTotal: () => this.total,
+      keyScopeRecord: (record) => {
+        const key = this.#args.valueKey(this.#args.recordValue(record));
+        return (
+          (key != null && this.#valueResolver.realRecordFor(key)) || record
+        );
+      },
       noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
       canGrow: () => this.#source.mayGrow(),
       applyLegacyContent: (options) =>

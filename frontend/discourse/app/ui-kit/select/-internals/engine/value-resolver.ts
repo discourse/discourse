@@ -26,6 +26,15 @@ interface ValueResolverInit {
   heldKeys: () => ReadonlySet<string | null>;
 }
 
+/** A pick an emit carried, waiting for the held value to take its key. */
+export interface StagedPick {
+  key: string;
+  /** The record the pick stands for: the authoritative one when known, else its own. */
+  record: SelectRecord;
+  /** What was picked, so its settings show once the pick is accepted. */
+  input: SelectOptionLike;
+}
+
 /**
  * Advanced whenever a sighting or fallback is written outside render. Only readers outside
  * async data consume it: a held value's async data reads the stores directly, so a page or an
@@ -75,6 +84,18 @@ export default class ValueResolver {
     { record: SelectRecord; option: SelectOptionLike }
   >();
 
+  /**
+   * The latest emit's picks not yet held. One is accepted when the value takes its key, and
+   * dropped when the value changes without it or a later emit supersedes it.
+   */
+  #staged: readonly StagedPick[] = [];
+
+  /** The held keys when the staged picks were emitted, moved forward while equal by content. */
+  #stagedHeld?: ReadonlySet<string | null>;
+
+  /** The held keys the ledger last saw, so a key leaving them drops what was seen for it. */
+  #observedHeld?: ReadonlySet<string | null>;
+
   #revision = new LedgerRevision();
 
   #pending = new Map<string, PendingResolution>();
@@ -106,6 +127,7 @@ export default class ValueResolver {
     | Promise<SelectRecord>
     | Promise<SelectRecord[]>
     | undefined {
+    this.#observe();
     if (!this.#args.multiple) {
       const single = this.#args.singleValue(value);
       if (single == null) {
@@ -125,6 +147,7 @@ export default class ValueResolver {
   }
 
   resolveSingleSync(value: SelectValue): SelectRecord | undefined {
+    this.#observe();
     if (value == null || Array.isArray(value)) {
       return undefined;
     }
@@ -133,6 +156,7 @@ export default class ValueResolver {
 
   /** Whether any non-null value currently resolves to an unresolved fallback. */
   hasUnresolved(values: SelectId[]): boolean {
+    this.#observe();
     return values.some((value) => {
       const record = value == null ? undefined : this.resolveOneSync(value);
       return !!record && this.isUnresolvedRecord(record);
@@ -156,13 +180,13 @@ export default class ValueResolver {
 
   /**
    * Forgets what was seen for keys the value does not hold, when the list starts over. A held
-   * key keeps its record, so the trigger and chips never blank while a new query loads. A pick
-   * is kept too: the query can clear before the parent applies the value the pick emitted.
+   * key keeps its record, so the trigger and chips never blank while a new query loads. Staged
+   * picks are untouched: the query can clear before the parent applies the value.
    */
   pruneUnheld(): void {
+    this.#observe();
     const held = this.#heldKeys();
-    const kept = (key: string | null) =>
-      key != null && (held.has(key) || this.#picks.has(key));
+    const kept = (key: string | null) => key != null && held.has(key);
     let pruned = false;
     for (const record of [...this.#seen]) {
       if (!kept(this.#keyOf(record))) {
@@ -198,6 +222,7 @@ export default class ValueResolver {
    * @param accepted - The options the page added, by the key the source read for each.
    */
   sightPage(accepted: ReadonlyMap<string, SelectOptionLike>): void {
+    this.#observe();
     for (const [key, option] of accepted) {
       this.#record(key, entryRecord(option));
     }
@@ -232,23 +257,40 @@ export default class ValueResolver {
   }
 
   /**
-   * Records a pick as the newest sighting of its key, with the input it came from.
+   * Stages the picks an emit carries, at the moment the parent is told. Nothing shows until the
+   * value holds a pick's key, so a parent that declines, a veto or a superseded change leaves
+   * no trace.
    *
-   * @param entry - What was picked: a record, or an option with settings.
+   * @param picks - The picks the emit carries.
    */
-  cacheResolved(entry: SelectOptionLike | null | undefined): void {
-    if (!entry) {
-      return;
-    }
-    const record = entryRecord(entry);
-    const key = this.#args.valueKey(this.#args.recordValue(record));
-    if (key == null) {
-      return;
-    }
-    if (this.#record(key, record)) {
-      this.#picks.set(key, entry);
-    }
-    this.#revision.value++;
+  stage(picks: readonly StagedPick[]): void {
+    this.#observe();
+    this.#staged = picks;
+    this.#stagedHeld = this.#heldKeys();
+  }
+
+  /**
+   * The record `valueRecords`, the local source or the extras at rest give a key: what a pick
+   * of that key stands for.
+   *
+   * @param key - A normalized key.
+   */
+  authorityRecord(key: string): SelectRecord | undefined {
+    return (
+      this.#args.valueRecordFor(key) ??
+      this.#localRecord(key) ??
+      this.#extraRecord(key)
+    );
+  }
+
+  /**
+   * The real record the ledger knows for a key, without the fallback.
+   *
+   * @param key - A normalized key.
+   */
+  realRecordFor(key: string): SelectRecord | undefined {
+    this.#observe();
+    return this.#realRecord(key);
   }
 
   /**
@@ -256,6 +298,7 @@ export default class ValueResolver {
    * Tracked, for readers outside async data: a sighting landing re-renders them.
    */
   resolveOneSync(value: SelectId): SelectRecord | undefined {
+    this.#observe();
     const key = this.#args.valueKey(value);
     if (key == null) {
       return undefined;
@@ -276,6 +319,7 @@ export default class ValueResolver {
     input: SelectOptionLike | undefined
   ): SelectRecord | undefined {
     void this.#revision.value;
+    this.#observe();
     return (
       this.#realRecord(key) ??
       (input ? (recordOf(input) as SelectRecord) : undefined) ??
@@ -290,6 +334,7 @@ export default class ValueResolver {
    */
   pickFor(key: string): SelectOptionLike | undefined {
     void this.#revision.value;
+    this.#observe();
     return this.#heldKeys().has(key) ? this.#picks.get(key) : undefined;
   }
 
@@ -321,6 +366,7 @@ export default class ValueResolver {
     values: SelectId[],
     opts: SelectLoadRequest
   ): SelectRecord[] | Promise<SelectRecord[]> {
+    this.#observe();
     // Read without the revision, so a sighting landing never re-runs the async data asking.
     const synced = values.map((v) => this.#lookUp(v));
     if (synced.every((record) => record != null)) {
@@ -461,6 +507,7 @@ export default class ValueResolver {
     records: SelectRecord[],
     resolved: ReadonlyMap<string, SelectOptionLike>
   ): void {
+    this.#observe();
     values.forEach((value, index) => {
       const key = this.#args.valueKey(value);
       const record = records[index];
@@ -483,6 +530,8 @@ export default class ValueResolver {
     records: SelectRecord[],
     resolved: ReadonlyMap<string, SelectOptionLike>
   ): void {
+    // A pick the parent applied while this request was out is older than its answer.
+    this.#observe();
     values.forEach((value, index) => {
       const key = this.#args.valueKey(value);
       const record = records[index];
@@ -505,6 +554,57 @@ export default class ValueResolver {
     if (answer && isSelectOption(answer)) {
       this.#answers.set(key, { record, option: answer });
     } else {
+      this.#answers.delete(key);
+    }
+  }
+
+  /**
+   * Brings the ledger up to the held value: what was seen for a key that left it is forgotten,
+   * and a staged pick is accepted once its key is held or dropped once the value moved on
+   * without it. Runs on every read; its writes are untracked, and every reader already depends
+   * on the held value.
+   */
+  #observe(): void {
+    const held = this.#heldKeys();
+    const previous = this.#observedHeld;
+    if (previous !== held) {
+      this.#observedHeld = held;
+      const departed = new Set(
+        [...(previous ?? [])].filter((key) => key != null && !held.has(key))
+      );
+      if (departed.size) {
+        this.#forget(departed as Set<string>);
+      }
+    }
+    if (this.#staged.length === 0) {
+      return;
+    }
+    const unchanged =
+      this.#stagedHeld === held || sameKeys(held, this.#stagedHeld!);
+    const waiting = this.#staged.filter((pick) => {
+      if (held.has(pick.key)) {
+        if (this.#record(pick.key, pick.record)) {
+          this.#picks.set(pick.key, pick.input);
+        }
+        return false;
+      }
+      return unchanged;
+    });
+    this.#staged = waiting;
+    this.#stagedHeld = held;
+  }
+
+  /** Forgets every sighting, pick and answer for keys the value let go, in one sweep. */
+  #forget(keys: ReadonlySet<string>): void {
+    for (const record of [...this.#seen]) {
+      const key = this.#keyOf(record);
+      if (key != null && keys.has(key)) {
+        this.#seen.delete(record);
+      }
+    }
+    for (const key of keys) {
+      this.#seenIndex.delete(key);
+      this.#picks.delete(key);
       this.#answers.delete(key);
     }
   }
@@ -734,4 +834,11 @@ export default class ValueResolver {
       value != null && typeof (value as { then?: unknown }).then === "function"
     );
   }
+}
+
+function sameKeys(
+  a: ReadonlySet<string | null>,
+  b: ReadonlySet<string | null>
+): boolean {
+  return a === b || (a.size === b.size && [...a].every((key) => b.has(key)));
 }

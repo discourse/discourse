@@ -16,6 +16,7 @@ import {
   type SelectOptionLike,
 } from "./select-option.ts";
 import type { SelectionOrigin } from "./selection-updates.ts";
+import type { StagedPick } from "./value-resolver.ts";
 
 /** The option an entry was passed as, if it was one. A bare record has no settings. */
 function optionOf(entry: SelectOptionLike): SelectOption | undefined {
@@ -55,7 +56,8 @@ export default class SelectionActions {
     value: SelectValue
   ) => boolean;
   #runAction: (option: SelectOption) => void;
-  #cacheResolved: (entry: SelectOptionLike | null | undefined) => void;
+  #stagePicks: (picks: readonly StagedPick[]) => void;
+  #authorityRecord: (key: string) => SelectRecord | undefined;
   #resolveOneSync: (value: SelectId) => SelectRecord | undefined;
   #applyLegacyOnChange: (
     value: SelectValue,
@@ -77,8 +79,10 @@ export default class SelectionActions {
       value: SelectValue
     ) => boolean;
     runAction: (option: SelectOption) => void;
-    /** Records a pick in the ledger, with the input it came from. */
-    cacheResolved: (entry: SelectOptionLike | null | undefined) => void;
+    /** Hands the ledger the picks an emit carries, as the parent is told. */
+    stagePicks: (picks: readonly StagedPick[]) => void;
+    /** The record a key stands for by `valueRecords`, the local source or the extras. */
+    authorityRecord: (key: string) => SelectRecord | undefined;
     resolveOneSync: (value: SelectId) => SelectRecord | undefined;
     applyLegacyOnChange: (
       value: SelectValue,
@@ -95,7 +99,8 @@ export default class SelectionActions {
     this.#onIntent = opts.onIntent;
     this.#beforeEmit = opts.beforeEmit;
     this.#runAction = opts.runAction;
-    this.#cacheResolved = opts.cacheResolved;
+    this.#stagePicks = opts.stagePicks;
+    this.#authorityRecord = opts.authorityRecord;
     this.#resolveOneSync = opts.resolveOneSync;
     this.#applyLegacyOnChange = opts.applyLegacyOnChange;
     this.#getExtensionContext = opts.getExtensionContext;
@@ -344,7 +349,10 @@ export default class SelectionActions {
     const record = entryRecord(entry);
     if (this.isSelected(entry)) {
       if (origin) {
-        this.#args.onReconfirm?.(record, origin);
+        this.#args.onReconfirm?.(
+          this.#resolveOneSync(this.#args.recordValue(record)) ?? record,
+          origin
+        );
       }
       // Re-picking the current value is a confirmation, not a change: emit nothing, but still
       // close. Since the list restores the cursor to the selected option, this is the first
@@ -361,14 +369,18 @@ export default class SelectionActions {
     if (this.#atMaximum) {
       return;
     }
-    this.#cacheResolved(entry);
+    const pick = this.#pickOf(entry);
     if (this.#args.multiple) {
       this.#emitChange(
-        [...this._valueArray, this.#args.recordValue(record)],
-        origin
+        [...this._valueArray, this.#args.recordValue(pick.record)],
+        origin,
+        undefined,
+        [pick]
       );
     } else {
-      this.#emitChange(this.#args.recordValue(record), origin);
+      this.#emitChange(this.#args.recordValue(pick.record), origin, undefined, [
+        pick,
+      ]);
       if (this.#args.closeOnSelect) {
         this.#args.requestClose?.();
       }
@@ -386,7 +398,7 @@ export default class SelectionActions {
     }
 
     const seen = new Set<string>();
-    const additions: SelectRecord[] = [];
+    const additions: StagedPick[] = [];
     let held = 0;
     let limit = 0;
     const remaining = this.remaining;
@@ -405,14 +417,14 @@ export default class SelectionActions {
       }
       seen.add(key);
       if (!this.#args.multiple) {
-        this.select(record, origin);
+        this.select(entry, origin);
         return;
       }
       if (remaining !== undefined && additions.length >= remaining) {
         limit++;
         continue;
       }
-      additions.push(record);
+      additions.push(this.#pickOf(entry));
     }
     if (additions.length === 0) {
       if (held + limit > 0) {
@@ -420,18 +432,17 @@ export default class SelectionActions {
       }
       return;
     }
-    for (const record of additions) {
-      this.#cacheResolved(record);
-    }
     this.#emitChange(
       [
         ...this._valueArray,
-        ...additions.map((record) => this.#args.recordValue(record)),
+        ...additions.map((pick) => this.#args.recordValue(pick.record)),
       ],
       {
         ...(origin ?? { programmatic: true }),
         bulk: { added: additions.length, held, limit },
-      }
+      },
+      undefined,
+      additions
     );
   }
 
@@ -505,14 +516,19 @@ export default class SelectionActions {
   #emitChange(
     rawNextValue: SelectValue,
     origin?: SelectionOrigin,
-    reason?: "clear"
+    reason?: "clear",
+    picks: readonly StagedPick[] = []
   ): void {
+    const staged = new Map(picks.map((pick) => [pick.key, pick.record]));
+    const lookUp = (value: SelectId) =>
+      staged.get(this.#args.valueKey(value) ?? "") ??
+      this.#resolveOneSync(value);
     // Coerce ids to their source record's native type up front, so the payload, the
     // change customization context, and the legacy bridge all emit one consistent,
     // single-typed value rather than a parent/URL-typed held id mixed with a freshly-picked
     // native one.
-    const nextValue = this.#coerceValue(rawNextValue);
-    const records = this.#recordsFor(nextValue);
+    const nextValue = this.#coerceValue(rawNextValue, lookUp);
+    const records = this.#recordsFor(nextValue, lookUp);
     const payload = this.#args.multiple ? records : (records[0] ?? null);
     const context = {
       value: nextValue,
@@ -531,6 +547,7 @@ export default class SelectionActions {
         this.#beforeEmit(origin, nextValue) &&
         !this.#args.locked
       ) {
+        this.#stagePicks(picks);
         this.#args.onChange?.(nextValue, payload, {
           origin,
           reason,
@@ -541,6 +558,17 @@ export default class SelectionActions {
         this.#applyLegacyOnChange(nextValue, payload);
       }
     }, context);
+  }
+
+  /** A pick of an entry: the authoritative record for its key when one exists, else its own. */
+  #pickOf(entry: SelectOptionLike): StagedPick {
+    const record = entryRecord(entry);
+    const key = this.#args.valueKey(this.#args.recordValue(record))!;
+    return {
+      key,
+      record: this.#authorityRecord(key) ?? record,
+      input: entry,
+    };
   }
 
   #dropsLockedValue(nextValue: SelectValue): boolean {
@@ -558,7 +586,10 @@ export default class SelectionActions {
 
   // Best-effort synchronous resolution of a value to its record(s), from the escape
   // hatch / cache / client list — never async (this feeds the `onChange` payload).
-  #recordsFor(value: SelectValue): SelectRecord[] {
+  #recordsFor(
+    value: SelectValue,
+    lookUp: (value: SelectId) => SelectRecord | undefined
+  ): SelectRecord[] {
     const values: SelectId[] =
       value == null
         ? []
@@ -566,7 +597,7 @@ export default class SelectionActions {
           ? (makeArray(value) as SelectId[])
           : [value];
     return values
-      .map((v) => this.#resolveOneSync(v))
+      .map((v) => lookUp(v))
       .filter((record): record is SelectRecord => record != null);
   }
 
@@ -576,12 +607,15 @@ export default class SelectionActions {
   // unknowable — and order is preserved. Single-select already emits the native id, so its value
   // is returned untouched. Matching is by string form, so coercion never changes which option is
   // selected, only the emitted type.
-  #coerceValue(value: SelectValue): SelectValue {
+  #coerceValue(
+    value: SelectValue,
+    lookUp: (value: SelectId) => SelectRecord | undefined
+  ): SelectValue {
     if (!this.#args.multiple || value == null) {
       return value;
     }
     return (makeArray(value) as SelectId[]).map((id) => {
-      const record = this.#resolveOneSync(id);
+      const record = lookUp(id);
       return record ? this.#args.recordValue(record) : id;
     });
   }

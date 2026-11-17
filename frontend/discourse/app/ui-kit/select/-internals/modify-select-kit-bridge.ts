@@ -129,12 +129,12 @@ function facadeFor(engine: SelectEngine): LegacySelectKitComponent {
     close() {
       engine.requestClose();
     },
-    // Old signature: `select(value, record)`. The engine selects by record, so synthesize a
-    // minimal record from the value when the caller passes only an id. While `isLoading`
-    // holds an update, the write goes through its scope, so a hand pick made meanwhile
-    // wins and the late write is dropped.
+    // Old signature: `select(value, record)`. The engine selects by record, so a bare id selects
+    // the record the engine knows for it, and only an unknown id falls back to a minimal one.
+    // While `isLoading` holds an update, the write goes through its scope, so a hand pick made
+    // meanwhile wins and the late write is dropped.
     select(value, record) {
-      const target = record ?? { id: value };
+      const target = record ?? engine.resolveSingleSync(value) ?? { id: value };
       if (loading) {
         loading.scope.select(target);
       } else {

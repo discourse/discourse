@@ -71,6 +71,7 @@ export default class ListComposer {
   #isLockedValue: (value: SelectId) => boolean;
   #getAtMaximum: () => boolean;
   #getTotal: () => number | undefined;
+  #keyScopeRecord: (record: SelectRecord) => SelectRecord;
   #getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
 
   /** Native content steps run before the compatibility bridge. */
@@ -104,6 +105,8 @@ export default class ListComposer {
     isLockedValue: (value: SelectId) => boolean;
     getAtMaximum: () => boolean;
     getTotal: () => number | undefined;
+    /** The record a row's key stands for, which a displayed copy never replaces. */
+    keyScopeRecord?: (record: SelectRecord) => SelectRecord;
     getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
     /** Applies sealed per-select content declarations. */
     applyContent: (
@@ -125,6 +128,7 @@ export default class ListComposer {
     this.#getAtMaximum = opts.getAtMaximum;
     this.#isLockedValue = opts.isLockedValue;
     this.#getTotal = opts.getTotal;
+    this.#keyScopeRecord = opts.keyScopeRecord ?? ((record) => record);
     this.#getContentContext = opts.getContentContext;
     this.#applyContent = opts.applyContent;
     this.#applyLegacyContent = opts.applyLegacyContent;
@@ -470,7 +474,9 @@ export default class ListComposer {
     if (!filter || !this.#args.createOption) {
       return null;
     }
-    const records = options.map((option) => option.record);
+    const records = options.map((option) =>
+      this.#keyScopeRecord(option.record)
+    );
     const allowed =
       typeof this.#args.allowCreate === "function"
         ? this.#args.allowCreate(filter, records, this.#args.config)

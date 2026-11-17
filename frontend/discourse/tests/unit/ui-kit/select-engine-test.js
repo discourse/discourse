@@ -1161,9 +1161,12 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
 
-    test("in-flight resolve: a failure landing late never replaces a real item", async function (assert) {
+    test("in-flight resolve: a failure landing late never replaces an accepted pick", async function (assert) {
       const gate = deferred();
+      const state = trackedObject({ value: null });
       const engine = new SelectEngine({
+        getValue: () => state.value,
+        onChange: (next) => (state.value = next),
         resolveValues: () => gate.promise,
       });
       const picked = { id: 1, name: "Picked" };
