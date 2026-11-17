@@ -1,12 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, fn } from "@ember/helper";
+import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import EmojiPicker from "discourse/components/emoji-picker";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -14,6 +12,9 @@ import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ChatPendingThreadComposer from "discourse/plugins/chat/discourse/components/chat/composer/pending-thread" with {
+  discourseImport: "optional",
+};
 import ChatNavbar from "discourse/plugins/chat/discourse/components/chat/navbar" with {
   discourseImport: "optional",
 };
@@ -26,25 +27,13 @@ import ChatSkeleton from "discourse/plugins/chat/discourse/components/chat-skele
 import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread" with {
   discourseImport: "optional",
 };
-
-const SendButton = <template>
-  <div class="chat-composer-button__wrapper">
-    <button
-      aria-label={{i18n "live.chat.send"}}
-      class="chat-composer-button -send"
-      disabled={{@disabled}}
-      title={{i18n "live.chat.send"}}
-      type="button"
-      {{on "click" @onSend}}
-    >
-      {{dIcon "paper-plane"}}
-    </button>
-  </div>
-</template>;
+import LiveChatPanelStateSync from "../../lib/live/chat-panel-state-sync.js";
 
 export default class LiveChatPanel extends Component {
   @service chat;
   @service chatChannelsManager;
+  @service chatDraftsManager;
+  @service liveChatDrafts;
   @service messageBus;
   @service router;
   @service site;
@@ -53,18 +42,24 @@ export default class LiveChatPanel extends Component {
   @tracked unavailable = false;
   @tracked channel = null;
   @tracked thread = null;
-  @tracked draft = "";
-  @tracked sending = false;
-  @tracked hideSkeleton = false;
-  @tracked composerFocused = false;
+  @tracked draft = null;
+  @tracked initialDraft = null;
+  @tracked uploadDropZone = null;
 
-  textareaElement = null;
-  #sessionPath = null;
+  sessionSync = new LiveChatPanelStateSync({
+    roomId: this.args.room.id,
+    channelManager: this.chatChannelsManager,
+    messageBus: this.messageBus,
+    onChannel: (channel) => this.#setChannel(channel),
+    onThread: (channel, thread) => this.#showThread(channel, thread),
+  });
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.#unsubscribeSession();
-    this.#deactivate();
+    this.sessionSync.dispose();
+    if (this.channel && this.chat.activeChannel === this.channel) {
+      this.chat.activeChannel = null;
+    }
   }
 
   get room() {
@@ -75,204 +70,120 @@ export default class LiveChatPanel extends Component {
     return !!this.thread;
   }
 
-  get sendDisabled() {
-    return this.sending || this.draft.trim().length === 0;
-  }
-
   @action
   async loadSession() {
-    this.#subscribeSession();
-
     try {
-      // POST prepares the session: it rolls a stale session over and follows
-      // us on the channel so chat's own message endpoints accept our posts.
-      // The thread itself only comes into existence with the first message.
-      const data = await ajax(`/live/rooms/${this.room.id}/chat_session`, {
-        type: "POST",
-      });
-      await this.#applyState(data);
-    } catch (e) {
-      this.unavailable = true;
-      popupAjaxError(e);
+      await this.sessionSync.start();
+    } catch (error) {
+      if (!this.isDestroying) {
+        this.unavailable = true;
+        popupAjaxError(error);
+      }
     } finally {
-      this.loading = false;
-    }
-  }
-
-  @action
-  async onSessionMessage() {
-    try {
-      const data = await ajax(`/live/rooms/${this.room.id}/chat_session`);
-      await this.#applyState(data);
-    } catch {
-      // A transient refresh failure only delays the panel following a session
-      // change; the next signal or reopen retries.
+      if (!this.isDestroying) {
+        this.loading = false;
+      }
     }
   }
 
   @action
   interceptEscape(event) {
-    if (event.key !== "Escape") {
-      return;
+    if (event.key === "Escape" && !this.thread?.draft?.editing) {
+      event.stopPropagation();
     }
-    if (this.thread?.draft?.editing) {
-      // Let the composer's own handler cancel the in-progress edit.
-      return;
-    }
-    // The thread composer's Escape handler "closes the pane" by routing to the
-    // chat channel page, which would navigate away from the room — swallow it.
-    event.stopPropagation();
   }
 
   @action
   openInChat() {
-    if (!this.thread) {
-      return;
-    }
-    this.router.transitionTo("chat.channel.thread", ...this.thread.routeModels);
-  }
-
-  @action
-  registerTextarea(element) {
-    this.textareaElement = element;
-  }
-
-  @action
-  setComposerFocused(focused) {
-    this.composerFocused = focused;
-  }
-
-  @action
-  updateDraft(event) {
-    this.draft = event.target.value;
-    this.#autogrow();
-  }
-
-  @action
-  onKeydown(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      this.sendFirstMessage();
+    if (this.thread) {
+      this.router.transitionTo(
+        "chat.channel.thread",
+        ...this.thread.routeModels
+      );
     }
   }
 
   @action
-  insertEmoji(emoji) {
-    const code = `:${emoji}:`;
-    const element = this.textareaElement;
-
-    if (!element) {
-      this.draft = `${this.draft}${code}`;
-      return;
-    }
-
-    const value = element.value;
-    const start = element.selectionStart ?? value.length;
-    const end = element.selectionEnd ?? value.length;
-    const nextValue = `${value.slice(0, start)}${code}${value.slice(end)}`;
-    element.value = nextValue;
-    this.draft = nextValue;
-    this.#autogrow();
-
-    element.focus();
-    const caret = start + code.length;
-    element.setSelectionRange(caret, caret);
+  registerDropZone(element) {
+    this.uploadDropZone = element;
   }
 
-  // Sends the session's opening message, which creates the thread it roots —
-  // the panel then swaps to chat's own thread UI and every later message goes
-  // through chat's own composer instead.
   @action
-  async sendFirstMessage() {
-    if (this.sendDisabled) {
-      return;
-    }
+  onUploadActivity(count) {
+    this.sessionSync.updateUploadCount(count);
+  }
 
-    this.sending = true;
-    // The freshly created thread holds only this message, which loads faster
-    // than the thread's skeleton can finish appearing — keep the skeleton out
-    // of this swap so it doesn't flash.
-    this.hideSkeleton = true;
+  @action
+  resetDraft() {
+    this.liveChatDrafts.clear(this.room.id, this.channel.id);
+    this.draft = this.liveChatDrafts.get(this.room.id, this.channel);
+  }
+
+  @action
+  async sendFirstMessage(message) {
     try {
-      const data = await ajax(`/live/rooms/${this.room.id}/chat_message`, {
-        type: "POST",
-        data: { message: this.draft },
+      await this.sessionSync.sendFirstMessage(message, () => {
+        if (message === this.draft) {
+          this.liveChatDrafts.clear(this.room.id, message.channel.id);
+        }
+        if (!this.isDestroying) {
+          this.draft = this.liveChatDrafts.get(this.room.id, this.channel);
+        }
       });
-      // Swap to the thread UI before clearing anything: the starter composer
-      // keeps the typed text until the native thread replaces it, so the panel
-      // doesn't flash an empty "no chat yet" state mid-send. Clearing only on
-      // success also means a rejection (a duplicate, rate limit, …) doesn't
-      // eat what the user typed.
-      await this.#applyState(data);
-      this.draft = "";
-      if (this.textareaElement) {
-        this.textareaElement.value = "";
+    } catch (error) {
+      if (!this.isDestroying) {
+        popupAjaxError(error);
       }
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.sending = false;
     }
   }
 
-  async #applyState(data) {
-    if (!data?.channel_id || !data?.thread_id) {
-      return;
-    }
-    if (this.thread?.id === data.thread_id && this.channel) {
-      return;
-    }
+  @action
+  retryLoadingThread() {
+    return this.sessionSync.retryLoadingThread();
+  }
 
-    const channel = await this.chatChannelsManager.find(data.channel_id);
-    if (!channel.isFollowing) {
-      // The server already followed us when the session was ensured; this only
-      // refreshes a channel that was cached client-side before that happened.
-      await this.chatChannelsManager.follow(channel);
-    }
-    const thread = await channel.threadsManager.find(
-      channel.id,
-      data.thread_id
-    );
-
+  #setChannel(channel) {
     this.channel = channel;
-    this.thread = thread;
+    if (this.chat.activeChannel !== channel) {
+      this.chat.activeChannel = channel;
+    }
+    this.draft ||= this.liveChatDrafts.get(this.room.id, channel);
+  }
 
-    // ChatThreadPane and the composer resolve "the current thread" from this
-    // global active state, exactly like the chat drawer's router sets it —
-    // without it, sending and message actions break outside chat's own routes.
-    this.chat.activeChannel = channel;
+  #showThread(channel, thread) {
+    this.initialDraft = null;
+    const saved = this.chatDraftsManager.get(channel.id, thread.id);
+    const pending = this.draft;
+    if (pending.message || pending.uploads.length) {
+      if (
+        saved &&
+        saved !== pending &&
+        (saved.message || saved.uploads.length)
+      ) {
+        saved.message = [saved.message, pending.message]
+          .filter(Boolean)
+          .join("\n\n");
+        saved.uploads = Array.from(
+          new Map(
+            [...saved.uploads, ...pending.uploads].map((upload) => [
+              upload.id,
+              upload,
+            ])
+          ).values()
+        );
+        saved.editing = false;
+        saved.inReplyTo = null;
+        this.initialDraft = saved;
+      } else {
+        this.initialDraft = pending;
+      }
+      this.initialDraft.thread = thread;
+      this.chatDraftsManager.add(this.initialDraft, channel.id, thread.id);
+    }
+    this.liveChatDrafts.clear(this.room.id, channel.id);
     channel.activeThread = thread;
-  }
-
-  #deactivate() {
-    if (this.channel && this.chat.activeChannel === this.channel) {
-      // Also clears the channel's activeThread (the setter handles it).
-      this.chat.activeChannel = null;
-    }
-  }
-
-  #subscribeSession() {
-    if (this.#sessionPath) {
-      return;
-    }
-    this.#sessionPath = `/live/rooms/${this.room.id}/chat`;
-    this.messageBus.subscribe(this.#sessionPath, this.onSessionMessage);
-  }
-
-  #unsubscribeSession() {
-    if (this.#sessionPath) {
-      this.messageBus.unsubscribe(this.#sessionPath, this.onSessionMessage);
-      this.#sessionPath = null;
-    }
-  }
-
-  #autogrow() {
-    const element = this.textareaElement;
-    if (!element) {
-      return;
-    }
-    element.style.height = "auto";
-    element.style.height = `${element.scrollHeight}px`;
+    this.thread = thread;
+    this.draft = null;
   }
 
   <template>
@@ -318,7 +229,7 @@ export default class LiveChatPanel extends Component {
 
       {{! eslint-disable ember/template-no-invalid-interactive }}
       <div
-        class="live-chat__body {{if this.hideSkeleton '--hide-skeleton'}}"
+        class="live-chat__body"
         {{on "keydown" this.interceptEscape capture=true}}
       >
         {{#if this.loading}}
@@ -329,7 +240,11 @@ export default class LiveChatPanel extends Component {
           {{/if}}
         {{else if (and ChatThread this.thread)}}
           {{#each (array this.thread) key="id" as |thread|}}
-            <ChatThread @thread={{thread}} />
+            <ChatThread
+              @channel={{this.channel}}
+              @initialDraft={{this.initialDraft}}
+              @thread={{thread}}
+            />
           {{/each}}
         {{else if this.unavailable}}
           <DEmptyState
@@ -342,64 +257,35 @@ export default class LiveChatPanel extends Component {
               </div>
             </:tip>
           </DEmptyState>
-        {{else}}
-          <DEmptyState
-            @svgContent={{dIcon "d-chat"}}
-            @title={{i18n "live.chat.empty_title"}}
-          >
-            <:tip>
-              <div class="empty-state__tip-text">
-                {{i18n "live.chat.empty_body"}}
-              </div>
-            </:tip>
-          </DEmptyState>
-          <div class="chat-composer__wrapper --live">
-            <div
-              aria-label={{i18n "chat.aria_roles.composer"}}
-              class={{dConcatClass
-                "chat-composer is-enabled"
-                (if this.composerFocused "is-focused")
-                (if this.sending "is-sending")
-                (if this.sendDisabled "is-send-disabled" "is-send-enabled")
-              }}
-              role="region"
+        {{else if (and ChatPendingThreadComposer this.draft)}}
+          <div class="live-chat__pending" {{didInsert this.registerDropZone}}>
+            <DEmptyState
+              @svgContent={{dIcon "d-chat"}}
+              @title={{i18n "live.chat.empty_title"}}
             >
-              <div class="chat-composer__outer-container">
-                <div class="chat-composer__inner-container">
-                  <div class="chat-composer__input-container">
-                    <textarea
-                      aria-label={{i18n "live.chat.composer_placeholder"}}
-                      class="chat-composer__input"
-                      placeholder={{i18n "live.chat.composer_placeholder"}}
-                      rows="1"
-                      {{didInsert this.registerTextarea}}
-                      {{on "input" this.updateDraft}}
-                      {{on "keydown" this.onKeydown}}
-                      {{on "focusin" (fn this.setComposerFocused true)}}
-                      {{on "focusout" (fn this.setComposerFocused false)}}
-                    ></textarea>
-                  </div>
-                  {{#if this.site.desktopView}}
-                    <EmojiPicker
-                      @btnClass="chat-composer-button btn-transparent --emoji"
-                      @context="live-chat"
-                      @didSelectEmoji={{this.insertEmoji}}
-                    />
-                    <div class="chat-composer-separator"></div>
-                    <SendButton
-                      @disabled={{this.sendDisabled}}
-                      @onSend={{this.sendFirstMessage}}
-                    />
-                  {{/if}}
+              <:tip>
+                <div class="empty-state__tip-text">
+                  {{i18n "live.chat.empty_body"}}
                 </div>
-                {{#if this.site.mobileView}}
-                  <SendButton
-                    @disabled={{this.sendDisabled}}
-                    @onSend={{this.sendFirstMessage}}
-                  />
-                {{/if}}
-              </div>
-            </div>
+              </:tip>
+            </DEmptyState>
+            {{#if this.sessionSync.threadLoadError}}
+              <DButton
+                @action={{this.retryLoadingThread}}
+                @label="live.chat.retry"
+              />
+            {{/if}}
+            <ChatPendingThreadComposer
+              @channel={{this.channel}}
+              @disabled={{this.sessionSync.threadLoadError}}
+              @draft={{this.draft}}
+              @onResetDraft={{this.resetDraft}}
+              @onSendMessage={{this.sendFirstMessage}}
+              @onUploadActivity={{this.onUploadActivity}}
+              @pane={{this.sessionSync.pane}}
+              @placeholder={{i18n "live.chat.composer_placeholder"}}
+              @uploadDropZone={{this.uploadDropZone}}
+            />
           </div>
         {{/if}}
       </div>

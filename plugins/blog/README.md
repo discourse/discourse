@@ -48,7 +48,8 @@ a deferred, interactive Discourse discussion below each article.
   no discussion section is shown. Theme previews use the newest published page. Their
   structured data is `WebPage` rather than
   `BlogPosting`, and new pages get a `/<slug>` path whatever the path format. The About
-  page stays the `blog_about` setting.
+  page stays the `blog_about` setting. Topics in the blog and drafts categories skip
+  the forum's minimum title length, so a page can be called "Contact".
 - Author pages at `/author/<username>`, as on Ghost and WordPress, listing an author's
   articles under their name, avatar and bio. Bylines link to them. The bio follows the
   user's profile visibility, and a user with no public article gets a 404, so the URLs

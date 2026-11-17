@@ -3,19 +3,41 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import {
+  authorizedExtensions,
+  authorizesAllExtensions,
+} from "discourse/lib/uploads";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import { MEBIBYTE } from "../../lib/live/file-transfer-limits.js";
 import { FileTransferRateLimitError } from "../../lib/live/file-transfer-manager.js";
 
 export default class LiveSendFileModal extends Component {
+  @service currentUser;
   @service liveWebrtc;
+  @service siteSettings;
 
   @tracked error = null;
   @tracked sending = false;
 
   get maxSizeMiB() {
     return this.liveWebrtc.maxFileTransferSize / MEBIBYTE;
+  }
+
+  get allowedExtensions() {
+    const staff = !!this.currentUser?.staff;
+    if (authorizesAllExtensions(staff, this.siteSettings)) {
+      return null;
+    }
+    return authorizedExtensions(staff, this.siteSettings);
+  }
+
+  get accept() {
+    return this.allowedExtensions?.map((ext) => `.${ext}`).join(",");
+  }
+
+  get allowedExtensionsList() {
+    return this.allowedExtensions?.join(", ");
   }
 
   @action
@@ -26,6 +48,12 @@ export default class LiveSendFileModal extends Component {
       return;
     }
     this.error = null;
+    if (!this.liveWebrtc.canSendFileType(file.name)) {
+      this.error = i18n("live.file_transfer.not_authorized", {
+        extensions: this.allowedExtensionsList,
+      });
+      return;
+    }
     if (file.size > this.liveWebrtc.maxFileTransferSize) {
       this.error = i18n("live.file_transfer.too_large", {
         limit: this.maxSizeMiB,
@@ -63,9 +91,16 @@ export default class LiveSendFileModal extends Component {
             username=@model.participant.username
           }}</p>
         <p>{{i18n "live.file_transfer.size_limit" limit=this.maxSizeMiB}}</p>
+        {{#if this.allowedExtensionsList}}
+          <p class="live-send-file-modal__allowed-types">{{i18n
+              "live.file_transfer.allowed_types"
+              extensions=this.allowedExtensionsList
+            }}</p>
+        {{/if}}
         <label>
           {{i18n "live.file_transfer.choose"}}
           <input
+            accept={{this.accept}}
             disabled={{this.sending}}
             type="file"
             {{on "change" this.chooseFile}}

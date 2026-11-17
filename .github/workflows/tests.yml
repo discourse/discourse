@@ -118,8 +118,13 @@ jobs:
           fi
 
       - uses: actions/checkout@v7
+        timeout-minutes: 5
         with:
           fetch-depth: 1
+        env:
+          # Fail stalled fetches so checkout retries them
+          GIT_HTTP_LOW_SPEED_LIMIT: 1000
+          GIT_HTTP_LOW_SPEED_TIME: 30
 
       - name: Setup Git
         run: |

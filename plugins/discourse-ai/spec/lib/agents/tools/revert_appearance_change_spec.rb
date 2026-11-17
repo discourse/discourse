@@ -110,6 +110,13 @@ RSpec.describe DiscourseAi::Agents::Tools::RevertAppearanceChange do
     ).and change { SiteSetting.heading_font }.from("lora").to("inter")
   end
 
+  it "tells the administrator to refresh the page after switching back" do
+    result = approve_as(other_admin, build_reviewable(appearance_change))
+
+    expect(result[:status]).to eq("success")
+    expect(result[:message]).to include("refresh the page")
+  end
+
   it "makes the previous default theme the default again once approved" do
     theme_change = save_change(service: AppearanceChange::DraftTheme)
     make_live(theme_change)

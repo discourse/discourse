@@ -118,6 +118,7 @@ module DiscourseAi
         end
 
         def write_cache(server_id, definitions)
+          previous_definitions = Rails.cache.read(cache_key(server_id))&.dig("definitions")
           now = Time.zone.now
           Rails.cache.write(
             cache_key(server_id),
@@ -128,6 +129,16 @@ module DiscourseAi
             },
             expires_in: CACHE_TTL * 2,
           )
+          if previous_definitions.nil? ||
+               sort_by_tool_name(previous_definitions) != sort_by_tool_name(definitions)
+            AiAgent.agent_cache.flush!
+          end
+        end
+
+        def sort_by_tool_name(definitions)
+          Array(definitions).sort_by do |definition|
+            definition.is_a?(Hash) ? definition["name"].to_s : ""
+          end
         end
 
         def unique_function_name(original_name, server, taken_names, needs_namespace:)

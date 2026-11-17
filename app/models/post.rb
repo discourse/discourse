@@ -117,8 +117,17 @@ class Post < ActiveRecord::Base
         -> { joins(:topic).where("topics.archetype = ?", Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where("topics.subtype = ?", subtype) }
   scope :visible, -> { joins(:topic).where("topics.visible = true").where(hidden: false) }
-  scope :secured,
-        ->(guardian) { where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user)) }
+  # Adds the rules of Guardian#can_see_post? without removing existing conditions.
+  # Admins are unchanged, including whispers. Nil means anonymous.
+  # Use with_deleted to include permitted deleted posts.
+  # Assumes an unaliased posts table; predicate overrides in plugins are not reflected.
+  scope :secured, ->(guardian = nil) { (guardian || Guardian.new).filter_visible_posts(all) }
+
+  # Post types only: does not authorize topic access or hidden/deleted state.
+  scope :with_visible_post_types,
+        ->(guardian = nil) do
+          where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user))
+        end
 
   scope :for_mailing_list,
         ->(user, since) do
@@ -689,7 +698,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil, moderation_notice: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, message_options: {})
     return if hidden?
 
     reason ||=
@@ -734,34 +743,18 @@ class Post < ActiveRecord::Base
         **Dsa::AppealInstructions.message_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason:
-          I18n.t(
-            "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path,
-            default: PostActionType.names[post_action_type_id],
-          ),
+        **message_options,
       }
 
       message = custom_message
       message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
 
-      if moderation_notice && custom_message.nil?
-        options.merge!(
-          moderation_notice.message_options(
-            recipient: user,
-            message_type: message,
-            post_action_type_id:,
-          ),
-        )
-      end
-
-      Jobs.enqueue_in(
-        5.seconds,
-        :send_system_message,
-        user_id: user.id,
+      ModerationNotice.enqueue(
+        delay: 5.seconds,
+        user: user,
         message_type: message.to_s,
         message_options: options,
+        post_action_type_id:,
       )
     end
 

@@ -31,12 +31,12 @@ class SystemMessage
     title =
       params[:message_title] ||
         I18n.with_locale(@recipient.effective_locale) do
-          I18n.t(params[:title_template_key] || "system_messages.#{type}.subject_template", params)
+          I18n.t("system_messages.#{type}.subject_template", params)
         end
     raw =
       params[:message_raw] ||
         I18n.with_locale(@recipient.effective_locale) do
-          I18n.t(params[:body_template_key] || "system_messages.#{type}.text_body_template", params)
+          I18n.t("system_messages.#{type}.text_body_template", params)
         end
 
     if key = params[:body_suffix_key]

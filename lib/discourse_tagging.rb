@@ -1066,6 +1066,8 @@ module DiscourseTagging
       UPDATE topic_tags SET tag_id = :target_id WHERE tag_id IN (:synonym_ids);
     SQL
 
+    SearchIndexer.queue_tags_posts_reindex([target_tag.id])
+
     Scheduler::Defer.later("Update tag topic counts") { Tag.ensure_consistency! }
     failed.presence || true
   end

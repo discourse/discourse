@@ -1,6 +1,7 @@
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -12,10 +13,10 @@ import categoryVariables from "discourse/helpers/category-variables";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import categoryStyleType from "discourse/lib/category-style-type";
+import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
@@ -70,14 +71,17 @@ export default class CategoryCardContents extends CardContentsBase {
   categoryId = null;
   elementId = "category-card";
   eventPrefix = null;
+  focusOnShow = false;
 
   /** @type {import("discourse/models/topic").default[] | null} */
   latestTopics = null;
   menuIdentifier = "category-card";
   mentionSelector = CATEGORY_HASHTAG_SELECTOR;
   showCardBeforeLoad = false;
+  triggerEvent = "pointerover";
   triggeringLinkSelector = CATEGORY_HASHTAG_SELECTOR;
 
+  #hoverTimer;
   #latestTopicsCache = new Map();
 
   @computed("category.permission")
@@ -149,10 +153,14 @@ export default class CategoryCardContents extends CardContentsBase {
   didInsertElement() {
     super.didInsertElement(...arguments);
     this.appEvents.on("dom:clean", this, this._close);
+    document.addEventListener("pointerout", this._pointerOut);
+    this.element.addEventListener("pointerover", this._cardClickHandler);
   }
 
   willDestroyElement() {
     this.appEvents.off("dom:clean", this, this._close);
+    document.removeEventListener("pointerout", this._pointerOut);
+    this.element.removeEventListener("pointerover", this._cardClickHandler);
     super.willDestroyElement(...arguments);
   }
 
@@ -250,7 +258,59 @@ export default class CategoryCardContents extends CardContentsBase {
     return { categories, complete: true };
   }
 
+  @bind
+  _cardClickHandler(event) {
+    if (event.pointerType === "touch") {
+      return;
+    }
+
+    if (this.element.contains(event.target)) {
+      cancel(this.#hoverTimer);
+      return;
+    }
+
+    const target = event.target.closest(CATEGORY_HASHTAG_SELECTOR);
+    if (
+      !target ||
+      target.closest(".card-content") ||
+      target.contains(event.relatedTarget)
+    ) {
+      return;
+    }
+
+    cancel(this.#hoverTimer);
+    if (this.cardTarget !== target) {
+      this.#hoverTimer = later(
+        () => this._show(target.dataset.id, target),
+        300
+      );
+    }
+  }
+
+  @bind
+  _pointerOut(event) {
+    if (
+      !this.element.contains(event.target) &&
+      !event.target.closest(CATEGORY_HASHTAG_SELECTOR)
+    ) {
+      return;
+    }
+
+    const nextTarget = event.relatedTarget;
+    const hashtag = event.target.closest(CATEGORY_HASHTAG_SELECTOR);
+    if (
+      nextTarget &&
+      (this.element.contains(nextTarget) || hashtag?.contains(nextTarget))
+    ) {
+      return;
+    }
+
+    cancel(this.#hoverTimer);
+    this.#hoverTimer = later(() => this._close(), 300);
+  }
+
   _close() {
+    cancel(this.#hoverTimer);
     this.setProperties({
       ancestorCategories: [],
       category: null,
@@ -280,7 +340,6 @@ export default class CategoryCardContents extends CardContentsBase {
 
       if (!category) {
         this._close();
-        DiscourseURL.routeTo(target.href);
         return;
       }
 
@@ -299,7 +358,6 @@ export default class CategoryCardContents extends CardContentsBase {
         this.cardTarget === target
       ) {
         this._close();
-        DiscourseURL.routeTo(target.href);
       }
     }
   }

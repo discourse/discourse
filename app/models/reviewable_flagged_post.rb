@@ -334,9 +334,9 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
-    notice = moderation_notice(performed_by)
+    moderation = moderation_action(performed_by:, args:)
     agree(performed_by, args) do |action|
-      post.hide!(action.post_action_type_id, moderation_notice: notice)
+      moderation.hide(post_action_type_id: action.post_action_type_id)
     end
   end
 
@@ -392,31 +392,31 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    notice = moderation_notice(performed_by)
+    moderation = moderation_action(performed_by:, args:)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    destroyer(performed_by:, post:, moderation_notice: notice).destroy
+    moderation.delete
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
-    notice = moderation_notice(performed_by)
+    moderation = moderation_action(performed_by:, args:)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id, moderation_notice: notice)
+    moderation.delete_with_replies
 
     result
   end
 
   def perform_delete_and_agree(performed_by, args)
-    notice = moderation_notice(performed_by)
+    moderation = moderation_action(performed_by:, args:)
     result = agree(performed_by, args)
-    destroyer(performed_by:, post:, moderation_notice: notice).destroy
+    moderation.delete
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
-    notice = moderation_notice(performed_by)
+    moderation = moderation_action(performed_by:, args:)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id, moderation_notice: notice)
+    moderation.delete_with_replies
     result
   end
 
@@ -531,17 +531,12 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  def moderation_notice(performed_by)
-    return unless performed_by.human?
-
-    scores =
-      reviewable_scores.pending.where(reviewable_score_type: PostActionType.flag_types.values)
-    automated_detection = scores.present? && scores.all?(&:automated_detection?)
-    ModerationNotice.new(automated_detection:)
-  end
-
-  def destroyer(performed_by:, post:, moderation_notice:)
-    PostDestroyer.new(performed_by, post, reviewable_id: id, moderation_notice:)
+  def moderation_action(performed_by:, args:)
+    ReviewableModerationActions.new(
+      reviewable: self,
+      performed_by:,
+      classification: args[:dsa_classification],
+    )
   end
 
   def notify_poster(performed_by)

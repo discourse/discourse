@@ -123,6 +123,27 @@ RSpec.describe Live::RoomBroadcaster do
       SiteSetting.live_file_transfer_allowed_groups = ""
       expect(entries.call.first[:can_send_files]).to eq(false)
     end
+
+    it "attests staff file types only for staff senders" do
+      SiteSetting.live_file_transfer_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      metadata = { participant.id => { can_send_staff_file_types: true } }
+      entry = -> do
+        described_class.participant_entries(
+          room,
+          [User.find(participant.id)],
+          guardian: Guardian.new(nil),
+          metadata: metadata,
+        ).first
+      end
+
+      expect(entry.call).to include(can_send_files: true, can_send_staff_file_types: false)
+
+      participant.update!(moderator: true)
+      expect(entry.call).to include(can_send_staff_file_types: true)
+
+      SiteSetting.live_file_transfer_allowed_groups = ""
+      expect(entry.call).to include(can_send_staff_file_types: false)
+    end
   end
 
   describe ".publish_hand_raise" do

@@ -690,6 +690,88 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     );
   });
 
+  test("file types follow the sender's authorized extensions on both ends", async function (assert) {
+    const settings = this.subject.siteSettings;
+    const original = {
+      authorized_extensions: settings.authorized_extensions,
+      authorized_extensions_for_staff: settings.authorized_extensions_for_staff,
+    };
+    const { admin, moderator } = this.currentUser;
+    const setStaff = (staff) =>
+      this.currentUser.setProperties({ admin: staff, moderator: false });
+    settings.authorized_extensions = "txt";
+    settings.authorized_extensions_for_staff = "zip";
+    try {
+      this.subject.site.live_file_transfers_available = true;
+      this.currentUser.live_can_send_files = true;
+      setStaff(false);
+      assert.true(this.subject.canSendFileType("notes.txt"));
+      assert.false(this.subject.canSendFileType("archive.zip"));
+      setStaff(true);
+      assert.true(
+        this.subject.canSendFileType("archive.zip"),
+        "staff may send staff extensions"
+      );
+      setStaff(false);
+
+      await this.subject.join(this.room);
+      const channel = FakeRTCPeerConnection.instances.find(
+        (pc) => pc.fileChannel
+      )?.fileChannel;
+      channel.send = () => {};
+      const peer = this.rooms
+        .roomById(1)
+        .active_participants.find((user) => user.id === 2);
+      peer.can_send_files = true;
+      const offer = (id) =>
+        channel.onmessage({
+          data: JSON.stringify({
+            type: "offer",
+            id,
+            name: "a.zip",
+            size: 1,
+            chunkSize: 65500,
+          }),
+        });
+
+      offer("55555555-5555-4555-8555-555555555555");
+      assert.deepEqual(
+        this.subject.fileTransfers,
+        [],
+        "non-staff sender cannot offer staff extensions"
+      );
+      peer.can_send_staff_file_types = true;
+      offer("66666666-6666-4666-8666-666666666666");
+      assert.strictEqual(
+        this.subject.fileTransfers[0]?.status,
+        "pending",
+        "a non-staff recipient accepts staff extensions from staff senders"
+      );
+    } finally {
+      Object.assign(settings, original);
+      this.currentUser.setProperties({ admin, moderator });
+    }
+  });
+
+  test("hides file sending when no extensions are authorized", async function (assert) {
+    const settings = this.subject.siteSettings;
+    const original = {
+      authorized_extensions: settings.authorized_extensions,
+      authorized_extensions_for_staff: settings.authorized_extensions_for_staff,
+    };
+    try {
+      this.subject.site.live_file_transfers_available = true;
+      this.currentUser.live_can_send_files = true;
+      await this.subject.join(this.room);
+      assert.true(this.subject.canSendFile(1, 2));
+      settings.authorized_extensions = "";
+      settings.authorized_extensions_for_staff = "";
+      assert.false(this.subject.canSendFile(1, 2));
+    } finally {
+      Object.assign(settings, original);
+    }
+  });
+
   test("the real transfer manager rejects unprivileged incoming offers but allows non-sender recipients", async function (assert) {
     this.subject.site.live_file_transfers_available = true;
     this.currentUser.live_can_send_files = false;
@@ -707,6 +789,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
           id,
           name: "test.txt",
           size: 1,
+          chunkSize: 65500,
         }),
       });
     offer("11111111-1111-4111-8111-111111111111");

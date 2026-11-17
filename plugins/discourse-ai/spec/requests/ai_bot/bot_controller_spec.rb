@@ -29,6 +29,31 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.status).to eq(403)
     end
 
+    it "omits another author's hidden post when selecting the latest debug log" do
+      debug_group = Fabricate(:group, users: [user])
+      SiteSetting.ai_bot_debugging_allowed_groups = debug_group.id.to_s
+      visible_post = Fabricate(:post, user: debug_bot_user)
+      hidden_post = Fabricate(:post, topic: visible_post.topic, user: debug_bot_user, hidden: true)
+      later_post = Fabricate(:post, topic: visible_post.topic, user: user)
+      visible_log =
+        AiApiAuditLog.create!(
+          post_id: visible_post.id,
+          topic_id: visible_post.topic_id,
+          provider_id: 1,
+          feature_name: "ai_bot",
+          created_at: 1.minute.ago,
+        )
+      AiApiAuditLog.create!(
+        post_id: hidden_post.id,
+        topic_id: hidden_post.topic_id,
+        provider_id: 1,
+        feature_name: "ai_bot",
+      )
+      get "/discourse-ai/ai-bot/post/#{later_post.id}/show-debug-info"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["id"]).to eq(visible_log.id)
+    end
+
     it "does not disclose hidden whisper audit logs" do
       debug_group = Fabricate(:group)
       debug_group.add(user)

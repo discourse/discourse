@@ -3252,6 +3252,10 @@ en:
 
     login:
       header_title: "Welcome back"
+      invitation_gate:
+        title: "This community is invite-only"
+        description: "To join, open the invitation link you received. If you don’t have an invitation, contact the community owner to request one."
+        existing_member: "Already a member of this community? Log in below."
       title: "Log In"
       username: "User"
       password: "Password"

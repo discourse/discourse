@@ -12,6 +12,7 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content.to_s).to include("\"templates/connectors/blah-1\":")
       expect(compiler.content.to_s).to include("\"templates/connectors/blah-2\":")
       expect(compiler.content.to_s).to include("\"javascripts/templates/connectors/blah-3\":")
+      expect(compiler.error).to be_nil
     end
   end
 
@@ -192,6 +193,11 @@ RSpec.describe ThemeJavascriptCompiler do
 
     it "handles invalid JS" do
       compiler.append_tree({ "filename.js" => "if(someCondition" })
+      expect(compiler.error).to be_a(ThemeJavascriptCompiler::CompileError)
+      expect(compiler.error.message).to include(
+        "[THEME 1 'marks'] Compile error:",
+        "Unexpected token",
+      )
       expect(compiler.content).to include('throw new Error("[THEME 1')
       expect(compiler.content).to include("Unexpected token")
     end

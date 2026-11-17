@@ -14,7 +14,10 @@ import {
   formatUsername,
   toNumber,
 } from "discourse/lib/utilities";
-import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
+import {
+  renderAvatar,
+  type RenderAvatarOptions,
+} from "discourse/ui-kit/helpers/d-user-avatar";
 import I18n, { i18n } from "discourse-i18n";
 
 /** Change when the report format changes and cached reports must be reset. */
@@ -859,17 +862,19 @@ export default class Report extends EmberObject {
         }) => EmberObject & { name: string }
       )({
         username,
-        name: formatUsername(username),
+        // The username column holds usernames.
+        name: formatUsername(username as string | null | undefined),
         avatar_template: row[properties.avatar],
       });
 
       const href = getURL(`/admin/users/${userId}/${username}`);
 
+      // `renderAvatar` doesn't read `siteSettings`.
       const avatarImg = renderAvatar(user, {
         imageSize: "tiny",
         ignoreTitle: true,
         siteSettings: this.siteSettings,
-      });
+      } as RenderAvatarOptions);
 
       return `<a href='${href}'>${avatarImg}<span class='username'>${user.name}</span></a>`;
     };

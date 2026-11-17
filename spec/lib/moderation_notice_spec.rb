@@ -15,7 +15,11 @@ RSpec.describe ModerationNotice do
   describe "notices from review actions" do
     shared_examples "notice source attribution" do |action:, source:, dsa_enabled:|
       it "describes #{source} detection for #{action} with DSA #{dsa_enabled ? "enabled" : "disabled"}" do
-        enable_dsa_reporting if dsa_enabled
+        rule = {
+          "ground" => "Terms, section 3",
+          "explanation" => "Personal attacks are prohibited.",
+        }
+        enable_dsa_reporting(community_rules: [rule]) if dsa_enabled
         post = Fabricate(:post, user: author)
         reply =
           PostCreator.create(
@@ -37,7 +41,14 @@ RSpec.describe ModerationNotice do
         end
         Jobs::SendSystemMessage.clear
 
-        reviewable.perform(moderator, action)
+        reviewable.perform(
+          moderator,
+          action,
+          dsa_classification: {
+            community_rule: rule,
+            category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY,
+          },
+        )
         jobs = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first.deep_symbolize_keys }
         jobs.each { |args| Jobs::SendSystemMessage.new.execute(args) }
 
@@ -82,6 +93,9 @@ RSpec.describe ModerationNotice do
           expect(notice.raw).to include("the community feels") if source != :automated
           if dsa_enabled
             expect(notice.raw).to include("To appeal this decision, contact appeals@example.com")
+            expect(notice.raw).to include(rule["ground"], rule["explanation"])
+          else
+            expect(notice.raw).not_to include(rule["ground"])
           end
         end
         expect(jobs.size).to eq(action.to_s.end_with?("_replies") ? 2 : 1)
@@ -234,6 +248,29 @@ RSpec.describe ModerationNotice do
       )
     end
 
+    it "retains community attribution when a custom community flag contributes" do
+      custom_flag = Fabricate(:flag, name: "Custom community flag", notify_type: true)
+      post = Fabricate(:post, user: author)
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.reviewable_scores.first.update!(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: "watched_word",
+      )
+      PostActionCreator.new(
+        Fabricate(:user, refresh_auto_groups: true),
+        post,
+        custom_flag.id,
+      ).perform
+
+      reviewable.perform(moderator, :agree_and_hide)
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include("hidden by a moderator due to flags from the community")
+      expect(Post.last.topic.title).to eq("Post hidden by community flags")
+    end
+
     it "identifies an automated check when a moderator hides a post again" do
       post = Fabricate(:post, user: author, hidden_at: 1.day.ago)
       reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
@@ -279,7 +316,10 @@ RSpec.describe ModerationNotice do
           Post.last.raw.gsub(post.url, "/flagged-post")
         end
 
-      expect(notices.first).to eq(notices.last)
+      paragraph =
+        "More specifically, your post violated the following community guideline: **Terms, section 3**. Personal attacks are prohibited."
+      expect(notices.last).to include(paragraph)
+      expect(notices.first).to eq(notices.last.sub("\n\n#{paragraph}", ""))
     end
 
     it "identifies the moderator when a post is hidden again" do
@@ -315,25 +355,71 @@ RSpec.describe ModerationNotice do
     end
   end
 
-  describe "template compatibility" do
+  describe ".enqueue" do
+    it "keeps automated attribution when the notice falls back from an untranslated locale" do
+      SiteSetting.default_locale = "de"
+
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "post_hidden",
+        post_action_type_id: PostActionType.types[:inappropriate],
+        message_options: {
+          flag_source: "automated",
+          url: "/flagged-post",
+          edit_delay: 10,
+        },
+      )
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include("an automated check indicates")
+      expect(Post.last.raw).to include("hidden by a moderator due to an automated flag")
+    end
+
+    it "uses the custom flag name when an automated flag has no seeded explanation" do
+      custom_flag = Fabricate(:flag, name: 'Unwanted "sales" links 日本語', notify_type: true)
+
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "flags_agreed_and_post_deleted",
+        post_action_type_id: custom_flag.id,
+        message_options: {
+          flag_source: "automated",
+          url: "/flagged-post",
+          flagged_post_raw_content: "The flagged post.",
+        },
+      )
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include("\n\n#{custom_flag.name}\n\n")
+      expect(Post.last.raw).to include("This post was flagged automatically")
+    end
+
     shared_examples "a customized notice body" do |message_type:|
-      it "preserves the customized #{message_type} body" do
+      it "uses the customized #{message_type} variant" do
         customized_body = "Custom instructions for this site."
         TranslationOverride.upsert!(
           :en,
-          "system_messages.#{message_type}.text_body_template",
+          "system_messages.#{message_type}.automated.text_body_template",
           customized_body,
         )
-        options =
-          ModerationNotice.new(automated_detection: true).message_options(
-            recipient: author,
-            message_type:,
-            post_action_type_id: PostActionType.types[:inappropriate],
-          )
 
-        notice = SystemMessage.create(author, message_type, options)
+        ModerationNotice.enqueue(
+          user: author,
+          message_type:,
+          message_options: {
+            flag_source: "automated",
+          },
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        Jobs::SendSystemMessage.new.execute(
+          Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+        )
 
-        expect(notice.raw).to eq(customized_body)
+        expect(Post.last.raw).to eq(customized_body)
       end
     end
 
@@ -382,218 +468,106 @@ RSpec.describe ModerationNotice do
       expect(Post.last.topic.title).to eq("Post hidden by an automated flag")
     end
 
-    it "corrects the explanation interpolated into a customized body" do
-      TranslationOverride.upsert!(
-        :en,
-        "system_messages.post_hidden.text_body_template",
-        "CUSTOM %{flag_reason} END",
-      )
-      post = Fabricate(:post, user: author)
-      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      reviewable.reviewable_scores.first.update!(
-        user_id: Discourse::SYSTEM_USER_ID,
-        reason: "watched_word",
-      )
-
-      reviewable.perform(moderator, :agree_and_hide)
-      Jobs::SendSystemMessage.new.execute(
-        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
-      )
-
-      expect(Post.last.raw).to start_with("CUSTOM Your post was flagged")
-      expect(Post.last.raw).to include("an automated check indicates")
-      expect(Post.last.raw).to end_with("END")
-      expect(Post.last.topic.title).to eq("Post hidden by an automated flag")
-    end
-
-    it "uses a translated variant when a fallback base override is shadowed" do
+    it "uses the recipient locale for a translated notice variant" do
       SiteSetting.allow_user_locale = true
       author.update!(locale: "de")
-      TranslationOverride.upsert!(
-        :en,
-        "system_messages.post_hidden.text_body_template",
-        "ENGLISH BASE",
-      )
       TranslationOverride.upsert!(
         :de,
         "system_messages.post_hidden.automated.text_body_template",
-        "DEUTSCHE VARIANTE",
-      )
-      post = Fabricate(:post, user: author)
-      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      reviewable.reviewable_scores.first.update!(
-        user_id: Discourse::SYSTEM_USER_ID,
-        reason: "watched_word",
-      )
-
-      reviewable.perform(moderator, :agree_and_hide)
-      Jobs::SendSystemMessage.new.execute(
-        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
-      )
-
-      expect(Post.last.raw).to eq("DEUTSCHE VARIANTE")
-    end
-
-    it "keeps a translated explanation until its automated variant is available" do
-      SiteSetting.default_locale = "de"
-      TranslationOverride.upsert!(
-        :de,
-        "system_messages.post_hidden.automated.text_body_template",
-        "Lokaler Hinweis %{flag_reason}",
-      )
-      expected_reason =
-        I18n.t("flag_reasons.inappropriate", locale: :de, base_path: Discourse.base_path)
-      post = Fabricate(:post, user: author)
-      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      reviewable.reviewable_scores.first.update!(
-        user_id: Discourse::SYSTEM_USER_ID,
-        reason: "watched_word",
-      )
-
-      reviewable.perform(moderator, :agree_and_hide)
-      Jobs::SendSystemMessage.new.execute(
-        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
-      )
-
-      expect(Post.last.raw).to eq("Lokaler Hinweis #{expected_reason}")
-    end
-
-    it "preserves an existing translated body until the variant is translated" do
-      SiteSetting.allow_user_locale = true
-      author.update!(locale: "de")
-      post = Fabricate(:post, user: author)
-      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      reviewable.reviewable_scores.first.update!(
-        user_id: Discourse::SYSTEM_USER_ID,
-        reason: "watched_word",
-      )
-
-      reviewable.perform(moderator, :agree_and_hide)
-      Jobs::SendSystemMessage.new.execute(
-        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
-      )
-
-      expect(Post.last.raw).to start_with("Hallo,")
-      expect(Post.last.topic.title).to eq("Beitrag versteckt wegen Community-Meldungen")
-    end
-
-    it "uses a variant translated for the recipient locale" do
-      SiteSetting.allow_user_locale = true
-      author.update!(locale: "de")
-      TranslationOverride.upsert!(
-        :de,
-        "system_messages.post_hidden.moderator.text_body_template",
         "Lokaler Hinweis.",
       )
-      post = Fabricate(:post, user: author)
-      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      TranslationOverride.upsert!(
+        :de,
+        "system_messages.post_hidden.automated.subject_template",
+        "Lokaler Betreff",
+      )
 
-      reviewable.perform(moderator, :agree_and_hide)
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "post_hidden",
+        message_options: {
+          flag_source: "automated",
+        },
+        post_action_type_id: PostActionType.types[:inappropriate],
+      )
       Jobs::SendSystemMessage.new.execute(
         Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
       )
 
       expect(Post.last.raw).to eq("Lokaler Hinweis.")
+      expect(Post.last.topic.title).to eq("Lokaler Betreff")
     end
 
-    it "preserves a customized subject while disclosing automated detection in the body" do
+    it "uses a customized automated explanation in a customized notice" do
+      customized_reason = "A customized explanation of this flag."
+      TranslationOverride.upsert!(:en, "flag_reasons.automated.inappropriate", customized_reason)
       TranslationOverride.upsert!(
         :en,
-        "system_messages.post_hidden.subject_template",
-        "A message about your post",
-      )
-      post = Fabricate(:post, user: author)
-      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      reviewable.reviewable_scores.first.update!(
-        user_id: Discourse::SYSTEM_USER_ID,
-        reason: "watched_word",
+        "system_messages.post_hidden.automated.text_body_template",
+        "CUSTOM %{flag_reason} END",
       )
 
-      reviewable.perform(moderator, :agree_and_hide)
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "post_hidden",
+        message_options: {
+          flag_source: "automated",
+        },
+        post_action_type_id: PostActionType.types[:inappropriate],
+      )
       Jobs::SendSystemMessage.new.execute(
         Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
       )
 
-      expect(Post.last.raw).to include(
-        "This post was hidden by a moderator due to an automated flag",
-      )
-      expect(Post.last.topic.title).to eq("A message about your post")
-    end
-
-    it "preserves a customized flag explanation" do
-      customized_reason = "A customized explanation of this flag."
-      TranslationOverride.upsert!(:en, "flag_reasons.inappropriate", customized_reason)
-      post = Fabricate(:post, user: author)
-      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
-      reviewable.reviewable_scores.first.update!(
-        user_id: Discourse::SYSTEM_USER_ID,
-        reason: "watched_word",
-      )
-
-      reviewable.perform(moderator, :agree_and_hide)
-      Jobs::SendSystemMessage.new.execute(
-        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
-      )
-
-      expect(Post.last.raw).to include(customized_reason)
-      expect(Post.last.raw).to include(
-        "This post was hidden by a moderator due to an automated flag",
-      )
+      expect(Post.last.raw).to eq("CUSTOM #{customized_reason} END")
     end
   end
 
   describe "automated flag explanations" do
-    it "preserves the existing label when a responder has no seeded explanation" do
-      message_type = "flags_agreed_and_post_deleted_for_responders"
-      options =
-        ModerationNotice.new(automated_detection: true).message_options(
-          recipient: author,
-          message_type:,
-          post_action_type_id: PostActionType.types[:illegal],
-        )
+    it "uses the existing flag label when a responder has no seeded explanation" do
+      flag_type = PostActionType.types[:illegal]
+      expected_label = PostActionTypeView.new.names[flag_type]
 
-      expect(options).not_to have_key(:flag_reason)
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "flags_agreed_and_post_deleted_for_responders",
+        post_action_type_id: flag_type,
+        message_options: {
+          flag_source: "automated",
+          url: "/flagged-post",
+          flagged_post_raw_content: "The flagged post.",
+          flagged_post_response_raw_content: "A response to the flagged post.",
+        },
+      )
+      args = Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys
+      Jobs::SendSystemMessage.new.execute(args)
 
-      notice =
-        SystemMessage.create(
-          author,
-          message_type,
-          options.merge(
-            flag_reason: "Illegal",
-            url: "/flagged-post",
-            flagged_post_raw_content: "The flagged post.",
-            flagged_post_response_raw_content: "A response to the flagged post.",
-          ),
-        )
-
-      expect(notice.raw).to include("\n\nIllegal\n\n")
-      expect(notice.raw).to include(
+      expect(args[:message_options][:flag_reason]).to eq(expected_label)
+      expect(Post.last.raw).to include("\n\n#{expected_label}\n\n")
+      expect(Post.last.raw).to include(
         "This post was flagged automatically and a staff member opted to remove it.",
       )
     end
 
     shared_examples "an automated flag explanation" do |flag_type:, message_type:, explanation:|
       it "attributes #{flag_type} to an automated check in #{message_type}" do
-        options =
-          ModerationNotice.new(automated_detection: true).message_options(
-            recipient: author,
-            message_type:,
-            post_action_type_id: PostActionType.types[flag_type],
-          )
+        ModerationNotice.enqueue(
+          user: author,
+          message_type:,
+          post_action_type_id: PostActionType.types[flag_type],
+          message_options: {
+            flag_source: "automated",
+            url: "/flagged-post",
+            flagged_post_raw_content: "The flagged post.",
+            flagged_post_response_raw_content: "A response to the flagged post.",
+          },
+        )
+        Jobs::SendSystemMessage.new.execute(
+          Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+        )
 
-        notice =
-          SystemMessage.create(
-            author,
-            message_type,
-            options.merge(
-              url: "/flagged-post",
-              flagged_post_raw_content: "The flagged post.",
-              flagged_post_response_raw_content: "A response to the flagged post.",
-            ),
-          )
-
-        expect(notice.raw).to include(explanation)
-        expect(notice.raw).to include(
+        expect(Post.last.raw).to include(explanation)
+        expect(Post.last.raw).to include(
           "This post was flagged automatically and a staff member opted to remove it.",
         )
       end

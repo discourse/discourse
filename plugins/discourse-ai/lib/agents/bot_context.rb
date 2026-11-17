@@ -3,6 +3,8 @@
 module DiscourseAi
   module Agents
     class BotContext
+      MAX_IDENTICAL_MCP_FAILURES = 3
+
       attr_accessor :messages,
                     :topic_id,
                     :post_id,
@@ -248,6 +250,28 @@ module DiscourseAi
 
       def mcp_session_for(server_id)
         @mcp_state&.dig(server_id.to_i, :session_id)
+      end
+
+      def mcp_failure_limit_reached?
+        !!@mcp_failure_limit_reached
+      end
+
+      def record_mcp_failure(server_id:, tool_name:, message:, arguments: {})
+        @mcp_failure_counts ||= Hash.new(0)
+        signature = [server_id, tool_name, arguments.deep_stringify_keys.deep_dup, message]
+        @mcp_failure_counts[signature] += 1
+        @mcp_failure_limit_reached ||= @mcp_failure_counts[signature] >= MAX_IDENTICAL_MCP_FAILURES
+      end
+
+      def reset_mcp_failures!
+        @mcp_failure_counts = nil
+        @mcp_failure_limit_reached = false
+      end
+
+      def record_mcp_success(server_id:, tool_name:, arguments: {})
+        @mcp_failure_counts&.delete_if do |(server, tool, input, _), _count|
+          server == server_id && tool == tool_name && input == arguments.deep_stringify_keys
+        end
       end
 
       def mcp_protocol_version_for(server_id)
