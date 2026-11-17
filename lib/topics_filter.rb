@@ -745,7 +745,11 @@ class TopicsFilter
     values.each do |_, value|
       tag_group_ids = TagGroup.visible(@guardian).where_name(strip_quotes(value)).pluck(:id)
 
-      tag_ids = TagGroupMembership.where(tag_group_id: tag_group_ids).select(:tag_id)
+      tag_ids =
+        TagGroupMembership.where(
+          tag_group_id: tag_group_ids,
+          tag_id: DiscourseTagging.visible_tags(@guardian).select(:id),
+        ).select(:tag_id)
 
       @scope = @scope.where(id: TopicTag.where(tag_id: tag_ids).select(:topic_id))
     end

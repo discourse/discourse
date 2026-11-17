@@ -566,6 +566,25 @@ RSpec.describe SearchController do
 
         expect(response.status).to eq(403)
       end
+
+      it "doesn’t work for tags restricted to a private category" do
+        category_tag = Fabricate(:tag)
+        awesome_topic.tags << category_tag
+        CategoryTag.create!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          tag: category_tag,
+        )
+
+        get "/search.json",
+            params: {
+              q: "awesome",
+              context: "tag",
+              context_id: category_tag.name,
+              skip_context: false,
+            }
+
+        expect(response.status).to eq(403)
+      end
     end
 
     context "when rate limited" do
