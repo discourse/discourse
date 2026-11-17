@@ -15,6 +15,7 @@ export default class PageShell extends Service {
   @tracked navigationWidth = 260;
   @tracked contextWidth = 300;
   @tracked contextMaxWidth = Math.max(200, Math.min(1000, window.innerWidth));
+  @tracked compactLogo = false;
 
   get effectiveContextWidth() {
     return Math.min(this.contextWidth, this.contextMaxWidth);

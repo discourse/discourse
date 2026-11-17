@@ -4,6 +4,7 @@ import Modifier from "ember-modifier";
 
 export default class MeasurePageShell extends Modifier {
   @service pageShell;
+  @service site;
 
   modify(element, [, , , navigationWidth, contextWidth]) {
     element.style.setProperty(
@@ -29,6 +30,8 @@ export default class MeasurePageShell extends Modifier {
     const headerEnd = element.querySelector(".d-header .contents > .panel");
     const body = element.querySelector(".page-shell__main");
     const footer = element.querySelector(".page-shell__footer");
+    const headerWrap = element.querySelector(".d-header > .wrap");
+    let fullHeaderStartWidth = 0;
 
     let frame;
     const measure = () => {
@@ -91,6 +94,25 @@ export default class MeasurePageShell extends Modifier {
             `${headerEnd.getBoundingClientRect().width}px`
           );
         }
+        if (headerStart && headerWrap && !this.site.mobileView) {
+          // Keep the full logo's width while compact, so the narrower compact
+          // logo cannot switch it back on. Layout sizes ignore transforms.
+          if (
+            !this.pageShell.compactLogo &&
+            !headerStart.querySelector(".title--minimized")
+          ) {
+            fullHeaderStartWidth = headerStart.offsetWidth;
+          }
+          const compactLogo =
+            2 * Math.max(fullHeaderStartWidth, headerEnd?.offsetWidth ?? 0) +
+              parseFloat(
+                styles.getPropertyValue("--_page-shell-header-main-min-width")
+              ) >
+            headerWrap.clientWidth;
+          if (this.pageShell.compactLogo !== compactLogo) {
+            this.pageShell.compactLogo = compactLogo;
+          }
+        }
         element.style.setProperty(
           "--_page-shell-content-inline-start",
           `${inlineStart}px`
@@ -130,6 +152,7 @@ export default class MeasurePageShell extends Modifier {
       observer.disconnect();
       window.removeEventListener("resize", measure);
       cancelAnimationFrame(frame);
+      this.pageShell.compactLogo = false;
       element.style.removeProperty("--_page-shell-document-offset");
       element.style.removeProperty("--_page-shell-body-offset");
       element.style.removeProperty("--_page-shell-footer-row-height");

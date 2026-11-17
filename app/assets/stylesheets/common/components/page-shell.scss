@@ -13,9 +13,13 @@ body.has-page-shell {
     // Private layout values; component tokens above expose themeable styles.
     --_page-shell-content-max-width: var(--d-max-width);
     --_page-shell-content-min-width: 448px;
+    --_page-shell-navigation-max-width: 400px;
+
+    // Below this, the header shows the compact logo; read by the measure modifier.
+    --_page-shell-header-main-min-width: 320px;
     --_page-shell-panel-rail-width: 56px;
     --_page-shell-navigation-track-width: min(
-      400px,
+      var(--_page-shell-navigation-max-width),
       var(--_page-shell-navigation-width),
       max(
         0px,
@@ -180,6 +184,7 @@ body.has-page-shell {
       align-items: center;
       min-inline-size: 0;
       inline-size: max-content;
+      max-inline-size: var(--_page-shell-navigation-max-width);
       padding-inline: var(--space-1);
       box-sizing: border-box;
 
@@ -192,8 +197,9 @@ body.has-page-shell {
         }
       }
 
+      // Logos wider than the cap scale down rather than squeezing the header.
       .home-logo-wrapper-outlet {
-        flex-shrink: 0;
+        flex-shrink: 1;
         min-inline-size: 0;
         margin-inline: 0;
         overflow: hidden;
@@ -379,6 +385,15 @@ body.has-page-shell {
 
     &[data-footer="off"] .page-shell__footer {
       display: none;
+    }
+
+    // Banner layouts query their container; viewport breakpoints cannot see
+    // the shell panels. Containment creates a stacking context, so the banner
+    // is raised to keep its search results above the following content.
+    .page-shell__main-content .welcome-banner {
+      container-type: inline-size;
+      position: relative;
+      z-index: z("dropdown");
     }
 
     // Dashboard widgets need the space inside the main column, rather than
