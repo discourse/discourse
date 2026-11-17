@@ -73,6 +73,9 @@ module DiscourseWorkflows
     only_if(:resuming_execution) do
       model :waiting_node
       policy :valid_http_method
+      model :webhook_nodes, :waiting_webhook_nodes
+      model :authenticated_nodes, :filter_authenticated_nodes
+      model :request_allowed_nodes, :filter_request_allowed_nodes
 
       only_if(:async_resume?) do
         step :enqueue_async_resume
@@ -165,6 +168,16 @@ module DiscourseWorkflows
 
     def fetch_waiting_node(waiting_execution:)
       waiting_execution.find_waiting_node
+    end
+
+    def waiting_webhook_nodes(waiting_execution:, waiting_node:)
+      [
+        PublishedTrigger.new(
+          workflow: waiting_execution.workflow,
+          workflow_version: nil,
+          trigger_node: waiting_node,
+        ),
+      ]
     end
 
     def valid_http_method(waiting_node:, params:)
