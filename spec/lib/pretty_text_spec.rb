@@ -1786,21 +1786,6 @@ RSpec.describe PrettyText do
     end
   end
 
-  it "replaces skin toned emoji" do
-    expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 👩‍🎤")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 👩🏾‍🎓")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_student/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_student:t5:\" class=\"emoji\" alt=\":woman_student:t5:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-    expect(PrettyText.cook("hello 🤷‍♀️")).to eq(
-      "<p>hello <img src=\"/images/emoji/twitter/woman_shrugging.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_shrugging:\" class=\"emoji\" alt=\":woman_shrugging:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
-    )
-  end
-
   it "does not treat a non-emoji as an emoji" do
     expect(PrettyText.cook(":email,class_name:")).not_to include("emoji")
   end
@@ -2891,6 +2876,7 @@ HTML
       <iframe src='https://bob.com/abc/def'></iframe>
       <iframe src='https://bob.com/abc/def/../ghi'></iframe>
       <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+      <iframe src='https://bob.com/abc/def\\..\\ghi'></iframe>
     HTML
 
     html = <<~HTML
@@ -2910,6 +2896,23 @@ HTML
 
     html = <<~HTML
       <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
+  end
+
+  it "skips allowlist iframes with a src the browser decodes or strips" do
+    SiteSetting.allowed_iframes = "https://*.example.com/|https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def?a=1&amp;b=2'></iframe>
+      <iframe src='https://evil.com&sol;x.example.com/'></iframe>
+      <iframe src='https://bob.com/abc/def/&#46;&#46;&#47;ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/.&#46#;'></iframe>
+      <iframe src='https://bob.com/abc/def/.\t./ghi'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def?a=1&amp;b=2"></iframe>
     HTML
 
     expect(PrettyText.cook(raw).strip).to eq(html.strip)

@@ -100,36 +100,58 @@ module DiscourseAi
           raise OAuthError.new(e.message, server: server), cause: e
         end
 
-        def refresh!(server)
-          discovery = server.oauth_discovery_result || OAuthDiscovery.discover!(server)
-          refresh_token = server.oauth_token_store.refresh_token
-          if refresh_token.blank?
-            raise DiscourseAi::Mcp::Client::Error,
-                  I18n.t("discourse_ai.mcp_servers.errors.oauth_refresh_token_missing")
+        def refresh!(server, rejected_access_token: nil)
+          previous_refresh_token = server.oauth_token_store.refresh_token
+          previous_refreshed_at = server.oauth_last_refreshed_at
+
+          # Providers may revoke the token family on reuse, so only one worker may refresh at a time.
+          DistributedMutex.synchronize(
+            "discourse-ai:mcp-oauth-refresh:#{server.id}",
+            validity: server.timeout_seconds * 6 + 15.seconds,
+          ) do
+            server.reload
+            if server.oauth_connected? &&
+                 (
+                   server.oauth_token_store.refresh_token != previous_refresh_token ||
+                     server.oauth_last_refreshed_at != previous_refreshed_at
+                 ) &&
+                 (
+                   rejected_access_token.nil? ||
+                     server.oauth_token_store.access_token != rejected_access_token
+                 ) && !server.oauth_needs_refresh?
+              next server.oauth_token_store.access_token
+            end
+
+            discovery = server.oauth_discovery_result || OAuthDiscovery.discover!(server)
+            refresh_token = server.oauth_token_store.refresh_token
+            if refresh_token.blank?
+              raise DiscourseAi::Mcp::Client::Error,
+                    I18n.t("discourse_ai.mcp_servers.errors.oauth_refresh_token_missing")
+            end
+
+            token_payload =
+              token_request(
+                server: server,
+                endpoint: discovery.token_endpoint,
+                auth_method: token_endpoint_client_auth_method(server, discovery),
+                params:
+                  merged_oauth_params(
+                    {
+                      "grant_type" => "refresh_token",
+                      "refresh_token" => refresh_token,
+                      "client_id" => server.effective_oauth_client_id,
+                      "resource" => discovery.resource.presence || server.url,
+                    },
+                    server.oauth_token_params,
+                  ),
+              )
+
+            store_token_response!(server, token_payload, preserve_refresh_token: true)
+            token_payload["access_token"]
+          rescue StandardError => e
+            server.mark_oauth_refresh_failed!(e.message)
+            raise
           end
-
-          token_payload =
-            token_request(
-              server: server,
-              endpoint: discovery.token_endpoint,
-              auth_method: token_endpoint_client_auth_method(server, discovery),
-              params:
-                merged_oauth_params(
-                  {
-                    "grant_type" => "refresh_token",
-                    "refresh_token" => refresh_token,
-                    "client_id" => server.effective_oauth_client_id,
-                    "resource" => discovery.resource.presence || server.url,
-                  },
-                  server.oauth_token_params,
-                ),
-            )
-
-          store_token_response!(server, token_payload, preserve_refresh_token: true)
-          token_payload["access_token"]
-        rescue StandardError => e
-          server.mark_oauth_refresh_failed!(e.message)
-          raise
         end
 
         def disconnect!(server)

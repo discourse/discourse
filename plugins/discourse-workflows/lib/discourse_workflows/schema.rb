@@ -91,6 +91,7 @@ module DiscourseWorkflows
         "cooked_original_length": { "type": "integer", "x-optional": true },
         "post_number": { "type": "integer" },
         "post_type": { "type": "integer" },
+        "action_code": { "type": ["string", "null"] },
         "reply_to_post_number": { "type": ["integer", "null"] },
         "reply_to_post_id": { "type": ["integer", "null"] },
         "reply_to_username": { "type": ["string", "null"] },

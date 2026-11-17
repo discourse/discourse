@@ -14,6 +14,7 @@ pt_BR:
     about: Sobre
     community: Comunidade
     preview: Pré-visualizar
+    author: Autor(a)
     search: Pesquisar
     replies:
       one: "%{count} resposta"

@@ -1,0 +1,539 @@
+html.mobile-tab-bar-visible {
+  --mobile-tab-bar-control-size: 2.5rem;
+  --mobile-tab-bar-controls-height: calc(
+    var(--mobile-tab-bar-control-size) + var(--space-2)
+  );
+  --mobile-tab-bar-item-size: 2.25rem;
+  --mobile-tab-bar-views-gap: var(--space-1);
+  --mobile-tab-bar-views-height: calc(
+    var(--mobile-tab-bar-item-size) + var(--space-1) * 2 +
+      var(--mobile-tab-bar-views-gap)
+  );
+  --mobile-tab-bar-bottom-inset: max(
+    var(--space-2),
+    env(safe-area-inset-bottom)
+  );
+  --mobile-tab-bar-side-inset: var(--space-3);
+  --mobile-tab-bar-corner-radius: var(--d-button-border-radius);
+
+  @media (display-mode: standalone) {
+    --mobile-tab-bar-side-inset: var(--space-5);
+
+    // Other platforms may reserve this inset for system navigation controls.
+    --mobile-tab-bar-bottom-inset: max(
+      var(--space-5),
+      env(safe-area-inset-bottom)
+    );
+
+    &.ios-device {
+      --mobile-tab-bar-bottom-inset: max(
+        var(--space-5),
+        min(env(safe-area-inset-bottom), var(--space-6))
+      );
+      --mobile-tab-bar-corner-radius: max(
+        var(--d-button-border-radius),
+        min(
+          env(safe-area-inset-bottom) * 100,
+          calc(3.5rem - var(--mobile-tab-bar-side-inset))
+        )
+      );
+    }
+  }
+
+  // Set here rather than on the bar, so the page's own bubbles over it match.
+  // The theme's button radius, so containers match the buttons beside them;
+  // items inside keep their corners parallel, never quite square
+  --mobile-tab-bar-radius: var(--d-button-border-radius);
+  --mobile-tab-bar-inner-radius: max(
+    calc(var(--d-border-radius) / 2),
+    calc(var(--mobile-tab-bar-radius) - var(--space-1))
+  );
+
+  // Kept close, as the controls have no border to set them off
+  --mobile-tab-bar-shadow:
+    0 1px 2px rgb(0, 0, 0, 0.12), 0 2px 6px rgb(0, 0, 0, 0.08);
+
+  // Layouts across the app already clear the footer nav by this height plus
+  // the safe area, so it gives back whatever of the safe area the bar sits in
+  --footer-nav-height: calc(
+    var(--mobile-tab-bar-controls-height) +
+      var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
+  );
+
+  &:has(.mobile-tab-bar__views > *) {
+    --footer-nav-height: calc(
+      var(--mobile-tab-bar-controls-height) +
+        var(--mobile-tab-bar-views-height) +
+        var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
+    );
+  }
+}
+
+@mixin mobile-tab-bar-floating($fill: true) {
+  border-radius: var(--mobile-tab-bar-radius);
+  box-shadow: var(--mobile-tab-bar-shadow);
+
+  @if $fill {
+    background: var(--header_background);
+  }
+}
+
+.mobile-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: z("footer-nav");
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
+  padding: 0 var(--mobile-tab-bar-side-inset) var(--mobile-tab-bar-bottom-inset);
+  box-sizing: border-box;
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--secondary-rgb), 0),
+    rgb(var(--secondary-rgb), 0.2) 25%,
+    rgb(var(--secondary-rgb), 0.5) 50%,
+    rgb(var(--secondary-rgb), 0.75) 75%,
+    rgb(var(--secondary-rgb), 1)
+  );
+  pointer-events: none;
+
+  @include unselectable;
+
+  &.--views-tucked &__views {
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none;
+  }
+
+  &__views {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    margin-block-end: var(--mobile-tab-bar-views-gap);
+    padding: var(--space-1);
+    box-sizing: border-box;
+    pointer-events: auto;
+
+    @include mobile-tab-bar-floating;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:not(:has(> *)) {
+      display: none;
+    }
+
+    > * {
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+
+    > :first-child {
+      flex: 1 1 auto;
+    }
+  }
+
+  &__views .nav-pills {
+    --fade-width: 1.5rem;
+    flex-wrap: nowrap;
+    gap: 0;
+    margin: 0;
+
+    @include horizontal-scroll-strip;
+
+    > li {
+      flex: none;
+    }
+
+    > li > a {
+      min-height: var(--mobile-tab-bar-item-size);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--mobile-tab-bar-inner-radius);
+      color: var(--header_primary-high);
+      font-size: var(--font-down-1);
+
+      &::after,
+      &:hover::after,
+      &.active::after {
+        display: none;
+      }
+
+      &:not(.active) {
+        @include hover {
+          background: var(--d-hover);
+          color: var(--header_primary);
+        }
+      }
+
+      &.active {
+        background: var(--d-selected);
+        color: var(--d-nav-color--active);
+        font-weight: bold;
+      }
+    }
+
+    .navigation-item__count {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      right: calc(var(--space-1) * -1);
+    }
+
+    // Holds each label's bold width, so the views don't shift as the
+    // current view changes
+    [data-label] {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      &::before {
+        content: attr(data-label);
+        height: 0;
+        overflow: hidden;
+        font-weight: bold;
+        visibility: hidden;
+      }
+    }
+  }
+
+  &__views > .nav-pills:last-child > li {
+    flex: 1 0 auto;
+
+    > a {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  // Outweighs the topic lists' own layout for their nav, which wraps
+  &__views #navigation-bar {
+    flex-wrap: nowrap;
+    margin-right: 0;
+  }
+
+  &__views .navigation-options__trigger {
+    flex: none;
+    width: var(--mobile-tab-bar-item-size);
+    height: var(--mobile-tab-bar-item-size);
+    margin-left: var(--space-2);
+    padding: 0;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+
+    .d-icon {
+      margin: 0;
+      color: var(--header_primary-medium);
+    }
+  }
+
+  &__controls {
+    container: mobile-tab-bar-controls / inline-size;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-1);
+    height: var(--mobile-tab-bar-controls-height);
+    padding-inline-start: var(--space-1);
+    box-sizing: border-box;
+    pointer-events: auto;
+
+    @include mobile-tab-bar-floating;
+    border-bottom-left-radius: var(--mobile-tab-bar-corner-radius);
+    border-bottom-right-radius: var(--mobile-tab-bar-corner-radius);
+  }
+
+  &__menu,
+  &__tabs,
+  &__create {
+    flex: none;
+    height: var(--mobile-tab-bar-control-size);
+    pointer-events: auto;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+  }
+
+  &__menu,
+  &__create {
+    width: var(--mobile-tab-bar-control-size);
+
+    .d-icon {
+      margin: 0;
+      font-size: var(--font-0);
+    }
+  }
+
+  &__menu {
+    --mobile-tab-bar-badge-background: var(--d-button-default-bg-color);
+    --d-button-default-bg-color: var(--header_background);
+    --d-button-default-bg-color--hover: var(--d-hover);
+    --d-button-default-icon-color: var(--header_primary);
+    --d-button-default-icon-color--hover: var(--header_primary);
+    --d-button-default-border: 0;
+    --d-button-default-border--hover: 0;
+    position: relative;
+    flex: 1 1 0;
+    min-width: var(--mobile-tab-bar-control-size);
+    padding: 0;
+
+    .mobile-tab-bar__badge {
+      top: var(--space-2);
+      left: 55%;
+    }
+
+    .mobile-tab-bar__count {
+      outline: 2px solid var(--mobile-tab-bar-badge-background);
+    }
+
+    &:focus-visible {
+      --mobile-tab-bar-badge-background: var(
+        --d-button-default-bg-color--hover
+      );
+    }
+
+    @include hover {
+      --mobile-tab-bar-badge-background: var(
+        --d-button-default-bg-color--hover
+      );
+    }
+
+    &[aria-expanded="true"].btn-default {
+      --mobile-tab-bar-badge-background: var(--d-selected);
+      background: var(--d-selected);
+
+      @include hover {
+        background: var(--d-selected);
+      }
+
+      .d-icon {
+        color: var(--d-nav-color--active);
+      }
+    }
+  }
+
+  &__login.btn-primary {
+    gap: var(--space-2);
+    width: auto;
+    min-width: var(--mobile-tab-bar-controls-height);
+    padding-inline: var(--space-3);
+
+    .d-button-label {
+      max-width: 8em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  @container mobile-tab-bar-controls (width < 22rem) {
+    &__tabs:has(
+        .mobile-tab-bar__tab ~ .mobile-tab-bar__tab ~ .mobile-tab-bar__tab
+      )
+      ~ .mobile-tab-bar__login
+      .d-button-label {
+      display: none;
+    }
+  }
+
+  @container mobile-tab-bar-controls (width < 16rem) {
+    &__login .d-button-label {
+      display: none;
+    }
+  }
+
+  &__create {
+    --mobile-tab-bar-create-background: var(--d-button-primary-bg-color);
+    position: relative;
+    isolation: isolate;
+    width: var(--mobile-tab-bar-controls-height);
+    height: var(--mobile-tab-bar-controls-height);
+
+    &.btn-primary {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+
+      &:focus-visible {
+        background: transparent;
+      }
+
+      @include hover {
+        border: 0;
+        background: transparent;
+      }
+    }
+
+    // Round only the painted surface so the entire square remains tappable.
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      border-start-end-radius: var(--mobile-tab-bar-radius);
+      border-end-end-radius: var(--mobile-tab-bar-corner-radius);
+      background: var(--mobile-tab-bar-create-background);
+      box-shadow: 0 3px 3px -1px rgb(0, 0, 0, 0.12);
+      pointer-events: none;
+    }
+
+    &:focus-visible {
+      --mobile-tab-bar-create-background: var(
+        --d-button-primary-bg-color--hover
+      );
+    }
+
+    @include hover {
+      --mobile-tab-bar-create-background: var(
+        --d-button-primary-bg-color--hover
+      );
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    flex: var(--mobile-tab-bar-tab-count, 1) 1 0;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  &__track {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: stretch;
+    min-width: 0;
+  }
+
+  &__highlight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--mobile-tab-bar-highlight-width, 0);
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    background: var(--d-selected);
+    transform: translateX(var(--mobile-tab-bar-highlight-x, 0));
+    pointer-events: none;
+
+    .--no-section & {
+      opacity: 0;
+    }
+
+    [data-sliding] > & {
+      transition:
+        transform 250ms ease,
+        width 250ms ease,
+        opacity 250ms ease;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+  }
+
+  &__tab {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    color: var(--header_primary-medium);
+
+    // The highlight behind it is its pill; outweighs the transparent button
+    // style it's built on
+    &.--active.btn-transparent {
+      color: var(--d-nav-color--active);
+
+      .d-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  &__indicator {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .d-icon {
+      margin: 0;
+      font-size: var(--font-0);
+      color: inherit;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: -0.2rem;
+    left: 55%;
+    display: flex;
+  }
+
+  &__count,
+  &__views .navigation-item__count {
+    min-width: 1rem;
+    padding: 0 0.3em;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: var(--tertiary);
+    color: var(--secondary);
+    font-size: var(--font-down-3);
+    font-weight: bold;
+    line-height: 1rem;
+    text-align: center;
+  }
+
+  @media (display-mode: standalone) {
+    padding-inline: max(
+        var(--mobile-tab-bar-side-inset),
+        env(safe-area-inset-left)
+      )
+      max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-right));
+
+    &__create .d-icon-pencil {
+      transform: translate(-1px, -1px);
+    }
+
+    &__menu.btn-default {
+      border-end-start-radius: max(
+        var(--mobile-tab-bar-inner-radius),
+        calc(var(--mobile-tab-bar-corner-radius) - var(--space-1))
+      );
+    }
+  }
+}
+
+html.keyboard-visible .mobile-tab-bar {
+  display: none;
+}
+
+.mobile-tab-bar__more-item {
+  .d-button-label {
+    flex: 1 1 auto;
+    text-align: start;
+  }
+
+  &.--active {
+    background: var(--d-selected);
+    color: var(--d-nav-color--active);
+
+    .d-icon {
+      color: inherit;
+    }
+  }
+}
+
+.mobile-tab-bar__more-badge {
+  display: flex;
+  margin-left: auto;
+}

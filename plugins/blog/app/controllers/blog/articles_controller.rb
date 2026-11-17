@@ -89,6 +89,7 @@ module ::Blog
       @publications =
         Publication
           .publicly_visible
+          .articles
           .newest
           .limit(30)
           .includes(:published_revision, discussion_topic: %i[first_post user])

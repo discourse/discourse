@@ -110,6 +110,7 @@ module EmailHelper
         blockquote {
           background: #323232 !important;
           border-color: #454545 !important;
+          color: #dddddd !important;
         }
       }
     </style>

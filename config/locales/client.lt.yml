@@ -2627,6 +2627,7 @@ lt:
         redeemed_tab_with_count: "Atstatyta (%{count})"
         invited_via: "Kvietimas"
         invited_via_link: "nuoroda %{key} (%{count} / %{max} panaudota)"
+        invited_via_link_without_key: "nuoroda (%{count} / %{max} atkurta)"
         generating_link: "Generuojama nuoroda..."
         groups: "Grupės"
         topic: "Tema"
@@ -8173,6 +8174,10 @@ lt:
                 stickiness_and_daily_engagement_up: "Padidėjo vartotojų lojalumas ir kasdienis aktyvumas."
                 stickiness_and_new_signups_up_daily_engagement_down: "Vartotojų lojalumas ir naujų vartotojų skaičius didėja, tačiau kasdienis aktyvumas mažėja."
                 stickiness_up_daily_engagement_and_new_signups_down: "Vartotojų lojalumas padidėjo, tačiau kasdienis aktyvumas ir naujų vartotojų registracijų skaičius sumažėjo."
+                stickiness_up_daily_engagement_down: "Vartotojų lojalumas didėja, tačiau kasdienis aktyvumas mažėja."
+                stickiness_and_new_signups_up_daily_engagement_flat: "Vartotojų lojalumas ir naujų vartotojų skaičius auga, tačiau kasdienis aktyvumas nesikeičia."
+                stickiness_up_new_signups_down: "Lankytojų aktyvumas padidėjo, tačiau naujų registracijų skaičius sumažėjo."
+                stickiness_up_daily_engagement_and_new_signups_flat: "Vartotojų lojalumas didėja, tačiau kasdienis aktyvumas ir naujų vartotojų skaičius nesikeičia."
           search:
             title: "Paieška"
             table:

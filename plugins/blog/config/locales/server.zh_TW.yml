@@ -14,6 +14,7 @@ zh_TW:
     about: 關於
     community: 社群
     preview: 預覽
+    author: 作者
     search: 搜索
     replies:
       other: "%{count} 則回覆"

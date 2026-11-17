@@ -8,6 +8,8 @@ describe "Admin Site Setting Value Lists" do
 
   describe "reordering items in value lists" do
     context "when on non-touch devices" do
+      before { SiteSetting.enable_new_reordering_controls = false }
+
       it "hides reorder buttons by default for simple-list settings" do
         settings_page.visit("top_menu")
         expect(page).to have_css("html.discourse-no-touch")
@@ -22,6 +24,8 @@ describe "Admin Site Setting Value Lists" do
     end
 
     context "when on touch devices", mobile: true do
+      before { SiteSetting.enable_new_reordering_controls = false }
+
       it "shows reorder buttons by default for simple-list settings" do
         settings_page.visit("top_menu")
         expect(page).to have_css("html.discourse-touch")

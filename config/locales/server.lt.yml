@@ -1547,6 +1547,14 @@ lt:
       allowed_unicode_usernames:
         leading_trailing_slash: "Reguliarioji išraiška neturi prasidėti ir baigtis pasviruoju brūkšniu."
       uncategorized_category_missing: 'Funkcijos „leisti neklasifikuotas temas“ neįmanoma įjungti, nes kategorija „Neklasifikuotos“ nebeegzistuoja.'
+    keywords:
+      company_url: "interneto svetainė"
+      large_icon: "kvadratinė ikona"
+      logo: "pagrindinis logotipas"
+      logo_dark: "pagrindinis logotipas (tamsus)"
+      logo_small: "mažas logotipas"
+      logo_small_dark: "mažas logotipas (tamsus)"
+      welcome_banner_image: "fono paveikslėlis"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

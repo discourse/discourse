@@ -29,6 +29,18 @@ RSpec.describe Blog::ThemeAuthoringSerializer do
     )
   end
 
+  it "says when there's no standalone page to preview" do
+    expect(json["has_page"]).to eq(false)
+  end
+
+  context "with a published standalone page" do
+    before { publication.update!(page: true) }
+
+    it "says a page can be previewed" do
+      expect(json["has_page"]).to eq(true)
+    end
+  end
+
   context "when there are no published articles" do
     let(:publications) { [] }
 

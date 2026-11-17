@@ -1,5 +1,13 @@
+import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
-import { click, fillIn, render, select, settled } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  rerender,
+  select,
+  settled,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -278,11 +286,11 @@ module("Integration | Component | AiFeatures", function (hooks) {
     });
     const row = "tr[data-module-name='translation']";
 
-    this.set("features", [
+    const features = tracked([
       translation({ state: "setup", note_key: "no_languages" }, true),
     ]);
     await render(
-      <template><AiFeatures @features={{this.features}} /></template>
+      <template><AiFeatures @features={{features.value}} /></template>
     );
 
     assert
@@ -299,7 +307,7 @@ module("Integration | Component | AiFeatures", function (hooks) {
       .dom(`${row} .ai-feature-setting-toggle`)
       .doesNotExist("hides the switch while it needs setup, even when on");
 
-    this.set("features", [
+    features.value = [
       translation(
         {
           state: "on",
@@ -309,7 +317,8 @@ module("Integration | Component | AiFeatures", function (hooks) {
         },
         true
       ),
-    ]);
+    ];
+    await rerender();
 
     assert
       .dom(`${row} .ai-features-status`)

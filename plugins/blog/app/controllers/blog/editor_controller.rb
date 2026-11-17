@@ -325,6 +325,7 @@ module ::Blog
           :cover_upload_id,
           :cover_alt,
           :co_authors,
+          :page,
         )
         .to_h
     end

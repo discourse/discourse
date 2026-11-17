@@ -2101,6 +2101,10 @@ sv:
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
       invalid_uncategorized_category_setting: 'Kategorin "Okategoriserade" kan inte väljas om inte "tillåt okategoriserade ämnen" har aktiverats.'
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
+    keywords:
+      company_url: "webbplats"
+      logo: "primär logotyp"
+      title: "forumets namn"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"

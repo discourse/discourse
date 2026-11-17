@@ -10,7 +10,7 @@ module(
 
     test("username and no name", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = true;
-      this.set("user", { username: "bob", name: null });
+      this.user = { username: "bob", name: null };
 
       await render(
         <template><ChatUserDisplayName @user={{this.user}} /></template>
@@ -21,7 +21,7 @@ module(
 
     test("username and name", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = true;
-      this.set("user", { username: "bob", name: "Bobcat" });
+      this.user = { username: "bob", name: "Bobcat" };
 
       await render(
         <template><ChatUserDisplayName @user={{this.user}} /></template>
@@ -38,7 +38,7 @@ module("Component | ChatUserDisplayName | names disabled", function (hooks) {
   test("does not display a user's name", async function (assert) {
     this.siteSettings.enable_names = false;
     this.siteSettings.prioritize_username_in_ux = false;
-    this.set("user", { username: "bob", name: "Bobcat" });
+    this.user = { username: "bob", name: "Bobcat" };
 
     await render(
       <template><ChatUserDisplayName @user={{this.user}} /></template>
@@ -55,7 +55,7 @@ module(
 
     test("no name", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = false;
-      this.set("user", { username: "bob", name: null });
+      this.user = { username: "bob", name: null };
 
       await render(
         <template><ChatUserDisplayName @user={{this.user}} /></template>
@@ -66,7 +66,7 @@ module(
 
     test("name and username", async function (assert) {
       this.siteSettings.prioritize_username_in_ux = false;
-      this.set("user", { username: "bob", name: "Bobcat" });
+      this.user = { username: "bob", name: "Bobcat" };
 
       await render(
         <template><ChatUserDisplayName @user={{this.user}} /></template>

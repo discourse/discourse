@@ -126,11 +126,14 @@ module Email
         "aside.quote .avatar",
         "margin-right: 5px; width:20px; height:20px; vertical-align:middle;",
       )
-      style("aside.quote", "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;")
+      style(
+        "aside.quote",
+        "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; color: #222222; margin: 0;",
+      )
 
       style(
         "blockquote",
-        "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin-left: 0; padding: 12px;",
+        "border-left: 5px solid #e9e9e9; background-color: #f8f8f8; color: #222222; margin-left: 0; padding: 12px;",
       )
 
       # Oneboxes
@@ -284,10 +287,10 @@ module Email
       style("div.summary-footer", "color:#666; font-size:95%; text-align:center; padding-top:15px;")
       style("span.post-count", "margin: 0 5px; color: #777;")
       style("pre", "word-wrap: break-word; max-width: 694px;")
-      style("code", "background-color: #{CODE_BACKGROUND_COLOR}; padding: 2px 5px;")
+      style("code", "background-color: #{CODE_BACKGROUND_COLOR}; color: #222222; padding: 2px 5px;")
       style(
         "pre code",
-        "display: block; background-color: #{CODE_BACKGROUND_COLOR}; overflow: auto; padding: 5px;",
+        "display: block; background-color: #{CODE_BACKGROUND_COLOR}; color: #222222; overflow: auto; padding: 5px;",
       )
       style("pre.onebox code", "white-space: normal;")
       style("pre code li", "white-space: pre;")
@@ -473,7 +476,7 @@ module Email
           end
 
           if img["title"] && img["src"][%r{/_?emoji/}]
-            img.add_previous_sibling(img["title"] || "emoji")
+            img.add_previous_sibling(img.document.create_text_node(img["title"]))
             img.remove
           end
         end

@@ -17,6 +17,10 @@ zh_CN:
     blog_description: 首页、信息流和搜索引擎的简短描述。
     blog_about: 博客“关于”页面的 Markdown 内容。
     blog_posts_per_page: 每个首页或存档页面上显示的文章数量。
+    keywords:
+      blog_about: "关于页面"
+      blog_description: "标语"
+      blog_title: "博客名称"
   blog:
     home: 首页
     continue_reading: 继续阅读
@@ -51,6 +55,7 @@ zh_CN:
     footer: 用 Discourse 撰写。欢迎讨论。
     from_the_blog: 来自社区的笔记
     tagged: 归档于 %{tag}
+    author: 作者
     search: 搜索
     search_placeholder: 搜索文章标题和摘要
     featured: 功能

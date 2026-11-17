@@ -43,11 +43,9 @@ module("Integration | Component | workflows filter query", function (hooks) {
       }
     );
 
-    this.setProperties({
-      placeholder:
-        "Filter posts by category, tag, author, keywords, or other criteria",
-      schema: { ui: { filter: "posts" } },
-    });
+    this.placeholder =
+      "Filter posts by category, tag, author, keywords, or other criteria";
+    this.schema = { ui: { filter: "posts" } };
 
     await render(
       <template>

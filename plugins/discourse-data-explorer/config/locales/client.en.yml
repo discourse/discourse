@@ -110,6 +110,7 @@ en:
       undo: "Discard changes"
       delete: "Delete"
       delete_confirm: "Are you sure you want to delete this query?"
+      delete_success: "Query deleted"
       recover: "Undelete query"
       dashboard:
         add: "Add to dashboard"

@@ -779,6 +779,54 @@ blockquote {
   padding: 0.75em;
 }
 
+.ai-badge {
+  padding: 2px 6px 0;
+  background: var(--primary-medium);
+  color: var(--secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-down-2);
+  line-height: var(--cooked-line-height);
+  white-space: nowrap;
+
+  &::before {
+    content: attr(data-ai-label);
+  }
+}
+
+blockquote > .ai-badge {
+  float: inline-end;
+  margin-inline-start: 0.75em;
+}
+
+pre[data-code-ai="true"] {
+  position: relative;
+
+  > .ai-badge {
+    position: absolute;
+    inset-block-start: 0.5rem;
+    inset-inline-end: 1rem;
+  }
+
+  > code {
+    padding-inline-end: 3rem;
+  }
+
+  .codeblock-button-wrapper {
+    align-items: center;
+    padding-inline-end: 1rem;
+
+    > .ai-badge {
+      margin-inline-start: 0.5rem;
+    }
+  }
+
+  @include viewport.until(sm) {
+    &.codeblock-buttons > code {
+      padding-inline-end: 5rem;
+    }
+  }
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
@@ -1327,7 +1375,8 @@ blockquote,
 blockquote .post__contents-cooked-quote {
   overflow-wrap: break-word;
 
-  > *:first-child {
+  > *:first-child,
+  > .ai-badge + * {
     margin-top: 0 !important;
   }
 
