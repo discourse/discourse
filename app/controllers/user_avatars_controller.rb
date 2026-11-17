@@ -76,16 +76,18 @@ class UserAvatarsController < ApplicationController
   def show
     is_asset_path
 
+    originating_db = RailsMultisite::ConnectionManagement.current_db
+
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(
       params[:hostname],
       raise_on_missing: false,
-    ) { hijack { show_in_site(params[:hostname]) } }
+    ) { hijack { show_in_site(params[:hostname], originating_db: originating_db) } }
   end
 
   protected
 
-  def show_in_site(hostname)
+  def show_in_site(hostname, originating_db:)
     username = params[:username].to_s
     return render_blank unless user = User.find_by(username_lower: username.downcase)
 
@@ -106,7 +108,9 @@ class UserAvatarsController < ApplicationController
     @retained_avatar = upload && upload_id != user.uploaded_avatar_id
     if @retained_avatar
       response.cache_control.replace(private: true, no_store: true)
-      return head :forbidden unless guardian.can_edit?(user)
+      # The cached identity belongs to the request's original tenant, even after hijacking.
+      same_tenant = originating_db == RailsMultisite::ConnectionManagement.current_db
+      return head :forbidden unless same_tenant && guardian.can_edit?(user)
     end
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
