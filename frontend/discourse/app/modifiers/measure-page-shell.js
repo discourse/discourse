@@ -1,14 +1,17 @@
 import { registerDestructor } from "@ember/destroyable";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 
-export default class MeasurePageShellPrototype extends Modifier {
+export default class MeasurePageShell extends Modifier {
+  @service pageShell;
+
   modify(element, [, , , navigationWidth, contextWidth]) {
     element.style.setProperty(
-      "--shell-prototype-navigation-width",
+      "--_page-shell-navigation-width",
       `${navigationWidth}px`
     );
     element.style.setProperty(
-      "--shell-prototype-context-width",
+      "--_page-shell-context-width",
       `${contextWidth}px`
     );
     if (!this.measure) {
@@ -18,16 +21,14 @@ export default class MeasurePageShellPrototype extends Modifier {
   }
 
   setup(element) {
-    const content = element.querySelector("#main-outlet");
+    const content = element.querySelector(".page-shell__main-content");
     if (!content) {
       return;
     }
-    const headerStart = element.querySelector(
-      ".page-shell-prototype__header-start"
-    );
+    const headerStart = element.querySelector(".page-shell__header-start");
     const headerEnd = element.querySelector(".d-header .contents > .panel");
-    const body = element.querySelector("#main-outlet-wrapper");
-    const footer = element.querySelector(".page-shell-prototype__footer");
+    const body = element.querySelector(".page-shell__main");
+    const footer = element.querySelector(".page-shell__footer");
 
     let frame;
     const measure = () => {
@@ -35,42 +36,43 @@ export default class MeasurePageShellPrototype extends Modifier {
       frame = requestAnimationFrame(() => {
         // Document offsets stay stable when a preceding bar scrolls away.
         element.style.setProperty(
-          "--shell-prototype-document-offset",
+          "--_page-shell-document-offset",
           `${element.getBoundingClientRect().top + window.scrollY}px`
         );
         if (body) {
           element.style.setProperty(
-            "--shell-prototype-body-offset",
+            "--_page-shell-body-offset",
             `${body.getBoundingClientRect().top + window.scrollY}px`
           );
         }
         element.style.setProperty(
-          "--shell-prototype-footer-row-height",
+          "--_page-shell-footer-row-height",
           `${element.dataset.footer === "row" && footer ? footer.getBoundingClientRect().height : 0}px`
-        );
-        element.style.setProperty(
-          "--shell-prototype-viewport-width",
-          `${document.documentElement.clientWidth}px`
         );
         const styles = getComputedStyle(element);
         const tracks = styles.gridTemplateColumns.split(" ").map(parseFloat);
-        const preferredContext =
+        const minimumMainWidth = parseFloat(
+          styles.getPropertyValue("--_page-shell-content-min-width")
+        );
+        const availableWidth =
+          element.clientWidth - (tracks[1] || 0) - (tracks[3] || 0);
+        const contextMaxWidth = Math.max(
+          200,
+          Math.min(1000, Math.floor(availableWidth - minimumMainWidth))
+        );
+        if (this.pageShell.contextMaxWidth !== contextMaxWidth) {
+          this.pageShell.contextMaxWidth = contextMaxWidth;
+        }
+        const minimumContextWidth =
           element.dataset.context === "open"
-            ? parseFloat(
-                styles.getPropertyValue("--shell-prototype-context-width")
-              )
+            ? 200
             : element.dataset.context === "rail"
               ? 56
               : 0;
-        // Use viewport space, not the centered shell's current size: hiding a
-        // track shrinks that shell and must not change the decision next frame.
+        // Hiding Context must not change the available-width decision next frame.
         element.toggleAttribute(
           "data-constrained-context",
-          document.documentElement.clientWidth -
-            (tracks[0] || 0) -
-            (tracks[2] || 0) -
-            preferredContext <
-            448
+          availableWidth - minimumContextWidth < minimumMainWidth
         );
         const { left, right, width } = content.getBoundingClientRect();
         const inlineStart =
@@ -79,24 +81,21 @@ export default class MeasurePageShellPrototype extends Modifier {
             : left;
         if (headerStart) {
           element.style.setProperty(
-            "--shell-prototype-header-start-width",
+            "--_page-shell-header-start-width",
             `${headerStart.getBoundingClientRect().width}px`
           );
         }
         if (headerEnd) {
           element.style.setProperty(
-            "--shell-prototype-header-end-width",
+            "--_page-shell-header-end-width",
             `${headerEnd.getBoundingClientRect().width}px`
           );
         }
         element.style.setProperty(
-          "--shell-prototype-content-inline-start",
+          "--_page-shell-content-inline-start",
           `${inlineStart}px`
         );
-        element.style.setProperty(
-          "--shell-prototype-content-width",
-          `${width}px`
-        );
+        element.style.setProperty("--_page-shell-content-width", `${width}px`);
       });
     };
 
@@ -107,9 +106,13 @@ export default class MeasurePageShellPrototype extends Modifier {
     for (const child of element.children) {
       observer.observe(child);
     }
-    const controls = element.previousElementSibling;
-    if (controls) {
-      observer.observe(controls);
+    // Bars and notices before the shell can move it without resizing it.
+    for (
+      let sibling = element.previousElementSibling;
+      sibling;
+      sibling = sibling.previousElementSibling
+    ) {
+      observer.observe(sibling);
     }
     if (footer) {
       observer.observe(footer);
@@ -127,14 +130,13 @@ export default class MeasurePageShellPrototype extends Modifier {
       observer.disconnect();
       window.removeEventListener("resize", measure);
       cancelAnimationFrame(frame);
-      element.style.removeProperty("--shell-prototype-viewport-width");
-      element.style.removeProperty("--shell-prototype-document-offset");
-      element.style.removeProperty("--shell-prototype-body-offset");
-      element.style.removeProperty("--shell-prototype-footer-row-height");
-      element.style.removeProperty("--shell-prototype-content-inline-start");
-      element.style.removeProperty("--shell-prototype-content-width");
-      element.style.removeProperty("--shell-prototype-header-start-width");
-      element.style.removeProperty("--shell-prototype-header-end-width");
+      element.style.removeProperty("--_page-shell-document-offset");
+      element.style.removeProperty("--_page-shell-body-offset");
+      element.style.removeProperty("--_page-shell-footer-row-height");
+      element.style.removeProperty("--_page-shell-content-inline-start");
+      element.style.removeProperty("--_page-shell-content-width");
+      element.style.removeProperty("--_page-shell-header-start-width");
+      element.style.removeProperty("--_page-shell-header-end-width");
     });
   }
 }

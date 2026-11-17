@@ -46,7 +46,7 @@ export default class GlimmerHeader extends Component {
   @service site;
   @service appEvents;
   @service header;
-  @service pageShellPrototype;
+  @service pageShell;
 
   appEventsListeners = modifierFn((element) => {
     this.appEvents.on(
@@ -57,7 +57,7 @@ export default class GlimmerHeader extends Component {
 
     const closeOnEscape = (event) => {
       if (
-        this.pageShellPrototype.enabled &&
+        this.pageShell.enabled &&
         event.key === "Escape" &&
         !event.defaultPrevented &&
         !event.isComposing &&

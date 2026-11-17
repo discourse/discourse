@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import MobileTabBarBackButton from "discourse/components/mobile-tab-bar/back-button";
-import PageShellPrototypeRegion from "discourse/components/page-shell-prototype-region";
+import PageShellRegion from "discourse/components/page-shell/region";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -15,7 +15,7 @@ import TopicInfo from "./topic/info.gjs";
 
 export default class Contents extends Component {
   @service site;
-  @service pageShellPrototype;
+  @service pageShell;
   @service header;
   @service mobileTabBar;
   @service documentTitle;
@@ -98,9 +98,9 @@ export default class Contents extends Component {
           sidebarIcon=this.sidebarIcon
         }}
       />
-      <PageShellPrototypeRegion
-        class="page-shell-prototype__header-start"
-        @enabled={{this.pageShellPrototype.enabled}}
+      <PageShellRegion
+        class="page-shell__header-start"
+        @enabled={{this.pageShell.enabled}}
       >
         {{#if this.site.desktopView}}
           {{#if @sidebarEnabled}}
@@ -124,11 +124,11 @@ export default class Contents extends Component {
           </PluginOutlet>
         </div>
 
-      </PageShellPrototypeRegion>
+      </PageShellRegion>
 
-      <PageShellPrototypeRegion
-        class="page-shell-prototype__header-main"
-        @enabled={{this.pageShellPrototype.enabled}}
+      <PageShellRegion
+        class="page-shell__header-main"
+        @enabled={{this.pageShell.enabled}}
       >
         {{#if @topicInfoVisible}}
           <TopicInfo @topicInfo={{@topicInfo}} />
@@ -155,7 +155,7 @@ export default class Contents extends Component {
             }}
           />
         </div>
-      </PageShellPrototypeRegion>
+      </PageShellRegion>
       <div
         aria-label={{i18n "header_panel"}}
         class="panel"
