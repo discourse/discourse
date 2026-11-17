@@ -221,6 +221,19 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
     expect(repeat_tool.validation_error).to include(status: "error")
   end
 
+  it "previews the placeholder definition post that the new description replaces" do
+    category_with_topic = Fabricate(:category_with_definition)
+    placeholder = category_with_topic.topic.first_post.raw
+    expect(category_with_topic.description).to be_nil
+
+    category_tool =
+      tool(category_id: category_with_topic.id, description: "New description", reason: "Setup")
+
+    expect(category_tool.approval_changes).to eq(
+      [{ label: "Changing description:", before: placeholder, after: "New description" }],
+    )
+  end
+
   it "returns an error when reason is blank" do
     result = tool(category_id: category.id, name: "New name", reason: " ").invoke
 
