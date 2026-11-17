@@ -454,6 +454,11 @@ acceptance("Blog publication panel", function (needs) {
         "ada,bob",
         "co-authors are sent as one list of usernames"
       );
+      assert.strictEqual(
+        data.get("publication[page]"),
+        "true",
+        "the standalone page setting is saved"
+      );
       publication = { ...publication, excerpt: "A revised introduction" };
       return response(publication);
     });
@@ -481,6 +486,7 @@ acceptance("Blog publication panel", function (needs) {
     await formKit(`${PANEL}__form`)
       .field("canonical_url")
       .fillIn("https://example.com/original");
+    await formKit(`${PANEL}__form`).field("page").toggle();
     await formKit(`${PANEL}__form`).submit();
     assert
       .dom(`${PANEL}__badge`)

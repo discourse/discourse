@@ -25,9 +25,15 @@ RSpec.describe Guardian do
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
-  before { Guardian.enable_topic_can_see_consistency_check }
+  before do
+    Guardian.enable_topic_can_see_consistency_check
+    Guardian.enable_post_can_see_consistency_check
+  end
 
-  after { Guardian.disable_topic_can_see_consistency_check }
+  after do
+    Guardian.disable_topic_can_see_consistency_check
+    Guardian.disable_post_can_see_consistency_check
+  end
 
   it "can be created without a user (not logged in)" do
     expect { Guardian.new }.not_to raise_error
@@ -3449,8 +3455,8 @@ RSpec.describe Guardian do
   end
 
   describe "suspension reasons" do
-    it "shows suspension reasons by default" do
-      expect(Guardian.new.can_see_suspension_reason?(user)).to eq(true)
+    it "hides suspension reasons by default" do
+      expect(Guardian.new.can_see_suspension_reason?(user)).to eq(false)
     end
 
     context "with hide suspension reason enabled" do
@@ -3471,8 +3477,8 @@ RSpec.describe Guardian do
   end
 
   describe "silencing reasons" do
-    it "shows silencing reasons by default" do
-      expect(Guardian.new.can_see_silencing_reason?(user)).to eq(true)
+    it "hides silencing reasons by default" do
+      expect(Guardian.new.can_see_silencing_reason?(user)).to eq(false)
     end
 
     context "with hide silencing reason enabled" do

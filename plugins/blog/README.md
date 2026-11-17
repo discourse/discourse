@@ -40,6 +40,16 @@ a deferred, interactive Discourse discussion below each article.
   used for cards and social previews (otherwise the topic's first image upload).
 - Paginated homepage, searchable archive (titles/excerpts), public tag pages, and
   Markdown About page.
+- Standalone pages, such as Contact or Privacy, marked in the article settings. They're
+  served at their own path and listed in the sitemap, but left out of the homepage,
+  archive, search, tag and author pages, and the feed. They render with the `page`
+  template, which gets the same `article` variables as the article template; the
+  built-in and bundled versions leave out the byline, dates, reading time and tags, and
+  no discussion section is shown. Theme previews use the newest published page. Their
+  structured data is `WebPage` rather than
+  `BlogPosting`, and new pages get a `/<slug>` path whatever the path format. The About
+  page stays the `blog_about` setting. Topics in the blog and drafts categories skip
+  the forum's minimum title length, so a page can be called "Contact".
 - Author pages at `/author/<username>`, as on Ghost and WordPress, listing an author's
   articles under their name, avatar and bio. Bylines link to them. The bio follows the
   user's profile visibility, and a user with no public article gets a 404, so the URLs
@@ -494,10 +504,11 @@ style `.blog-post-summary` without reaching into cooked article content.
 time and loads the next page as you scroll near the end of the list, while another
 page exists.
 
-The All articles, Drafts, Published, and Not on the blog filters run on the server
+The All, Drafts, Published, Not on the blog, and Pages filters run on the server
 before pagination. Not on the blog means discussions in the public publication
 category which are not currently live articles; private drafts have their own
-filter. Search matches titles, slugs, and stored article paths case-insensitively,
+filter. Pages lists standalone pages, which are also marked with a Page badge.
+Search matches titles, slugs, and stored article paths case-insensitively,
 across the entire authorized editorial collection, not just downloaded entries.
 Search and status apply to every page that loads and are kept in the URL, so a
 filtered view survives a reload; changing either starts at the first page. Search input is bounded to 100 characters and SQL wildcards are
@@ -520,7 +531,7 @@ Exports use the same version-2 source layout as Git imports:
 
 - `blog-theme.json`: `version`, `name`, `accent_color`, `paper_color`, `ink_color`
 - `blog.css` and `blog.js`
-- `templates/{layout,index,article,about,not_found}.liquid`
+- `templates/{layout,index,article,page,about,not_found}.liquid`
 
 Empty template files retain the built-in fallback. Archives may contain these files
 at the root or inside one enclosing directory. Import applies the same per-file size

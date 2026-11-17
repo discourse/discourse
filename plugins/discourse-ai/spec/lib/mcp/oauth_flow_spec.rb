@@ -380,6 +380,78 @@ RSpec.describe DiscourseAi::Mcp::OAuthFlow do
   end
 
   describe ".refresh!" do
+    it "reuses a token already refreshed by another caller with stale credentials" do
+      ai_mcp_server.update!(
+        oauth_client_registration: "manual",
+        oauth_client_id: "client-id",
+        oauth_status: "connected",
+        oauth_access_token_expires_at: 1.minute.ago,
+      )
+      ai_mcp_server.update_columns(
+        oauth_issuer: "https://auth.example.com",
+        oauth_authorization_endpoint: "https://auth.example.com/authorize",
+        oauth_token_endpoint: "https://auth.example.com/token",
+      )
+      ai_mcp_server.oauth_token_store.write!(
+        access_token: "old-access",
+        refresh_token: "old-refresh",
+      )
+      stale_server = AiMcpServer.find(ai_mcp_server.id)
+      expect(stale_server.oauth_token_store.refresh_token).to eq("old-refresh")
+      stub_request(:post, "https://auth.example.com/token").with(
+        body: hash_including("refresh_token" => "old-refresh"),
+      ).to_return(
+        status: 200,
+        body: {
+          access_token: "new-access",
+          refresh_token: "new-refresh",
+          expires_in: 3600,
+        }.to_json,
+      )
+
+      expect(described_class.refresh!(ai_mcp_server)).to eq("new-access")
+      expect(described_class.refresh!(stale_server)).to eq("new-access")
+      expect(stale_server.oauth_token_store.refresh_token).to eq("new-refresh")
+      expect(stale_server.oauth_status).to eq("connected")
+      expect(a_request(:post, "https://auth.example.com/token")).to have_been_made.once
+    end
+
+    it "recovers from a failed refresh and lets stale callers reuse the recovered token" do
+      ai_mcp_server.update!(oauth_client_registration: "manual", oauth_client_id: "client-id")
+      ai_mcp_server.update_columns(
+        oauth_issuer: "https://auth.example.com",
+        oauth_authorization_endpoint: "https://auth.example.com/authorize",
+        oauth_token_endpoint: "https://auth.example.com/token",
+      )
+      ai_mcp_server.oauth_token_store.write!(
+        access_token: "old-access",
+        refresh_token: "old-refresh",
+      )
+      request =
+        stub_request(:post, "https://auth.example.com/token")
+          .to_return(status: 400, body: { error: "invalid_grant" }.to_json)
+          .then
+          .to_return(status: 200, body: { access_token: "new-access", expires_in: 3600 }.to_json)
+
+      expect { described_class.refresh!(ai_mcp_server) }.to raise_error(
+        DiscourseAi::Mcp::Client::Error,
+      )
+      expect(ai_mcp_server.reload.oauth_status).to eq("refresh_failed")
+      expect(ai_mcp_server.oauth_last_error).to be_present
+      stale_server = AiMcpServer.find(ai_mcp_server.id)
+      expect(stale_server.oauth_token_store.refresh_token).to eq("old-refresh")
+
+      expect(described_class.refresh!(ai_mcp_server)).to eq("new-access")
+      expect(ai_mcp_server.reload.oauth_status).to eq("connected")
+      expect(ai_mcp_server.oauth_last_error).to be_nil
+      expect(ai_mcp_server.oauth_token_store.refresh_token).to eq("old-refresh")
+
+      expect(described_class.refresh!(stale_server)).to eq("new-access")
+      expect(stale_server.oauth_status).to eq("connected")
+      expect(stale_server.oauth_last_error).to be_nil
+      expect(request).to have_been_requested.twice
+    end
+
     it "uses HTTP basic auth without sending client_secret in the request body" do
       ai_mcp_server.update!(
         oauth_client_registration: "manual",

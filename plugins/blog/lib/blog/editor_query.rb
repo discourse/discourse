@@ -2,7 +2,7 @@
 
 module ::Blog
   class EditorQuery
-    FILTERS = %w[all drafts published unpublished].freeze
+    FILTERS = %w[all drafts published unpublished pages].freeze
     MAX_QUERY_LENGTH = 100
 
     def self.call(guardian, filter: "all", query: "")
@@ -58,6 +58,14 @@ module ::Blog
           topics.where(id: live_ids)
         when "unpublished"
           topics.where(category_id: SiteSetting.blog_category.to_i).where.not(id: live_ids)
+        when "pages"
+          # A staged page setting wins over the live one, as in the article settings.
+          topics.where(
+            id:
+              Publication.where("COALESCE((draft_metadata->>'page')::boolean, page)").select(
+                :topic_id,
+              ),
+          )
         else
           topics
         end

@@ -24,6 +24,9 @@ import Topic, { type TopicCreateAttrs } from "discourse/models/topic";
 import User, { type UserCreateAttrs } from "discourse/models/user";
 import type WarpStore from "discourse/services/warp-store";
 
+/** Server default page size for the badge grants feed; a shorter page means the feed is exhausted. */
+export const USER_BADGES_PAGE_SIZE = 96;
+
 /**
  * Grant fields across the basic, detailed and full user badge serializers.
  * The getter-backed relations (`badge`, `topic`, `user`, `granted_by`) are declared on the class.
@@ -116,7 +119,7 @@ export default class UserBadge extends RestCompatModel {
 
   static findByBadgeId(
     badgeId: number,
-    options: { offset?: number; username?: string | null } = {}
+    options: { limit?: number; offset?: number; username?: string | null } = {}
   ) {
     return requestMany(this, findUserBadgesByBadgeId(badgeId, options));
   }

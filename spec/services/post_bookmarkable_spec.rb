@@ -25,6 +25,56 @@ RSpec.describe PostBookmarkable do
       )
     end
 
+    it "hides another author's hidden post bookmarks without deleting them or sending reminders" do
+      post1.update!(hidden: true)
+      expect(
+        registered_bookmarkable.perform_list_query(user, guardian).map(&:id),
+      ).to contain_exactly(bookmark2.id)
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
+      expect(user.bookmarks.count).to eq(2)
+
+      post1.update!(user: user)
+      expect(
+        registered_bookmarkable.perform_list_query(user, user.guardian).map(&:id),
+      ).to contain_exactly(bookmark1.id, bookmark2.id)
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1.reload)).to eq(true)
+
+      post1.update!(user: Fabricate(:user))
+      user.update!(moderator: true)
+      Group.refresh_automatic_groups_for_user!(user)
+      expect(
+        registered_bookmarkable.perform_list_query(user, Guardian.new(user)).map(&:id),
+      ).to contain_exactly(bookmark1.id, bookmark2.id)
+    end
+
+    it "lists direct and group PM bookmarks without adding moderator-only access" do
+      [post1.topic, post2.topic].each do |topic|
+        topic.update!(archetype: Archetype.private_message, category: nil)
+      end
+      TopicAllowedUser.create!(topic: post1.topic, user: user)
+      group = Fabricate(:group, users: [user])
+      TopicAllowedGroup.create!(topic: post2.topic, group: group)
+      warning = Fabricate(:private_message_topic, subtype: TopicSubtype.moderator_warning)
+      warning_post = Fabricate(:post, topic: warning)
+      Fabricate(:bookmark, user: user, bookmarkable: warning_post)
+      Fabricate(:topic_user, user: user, topic: warning)
+
+      expect(
+        registered_bookmarkable.perform_list_query(user, user.guardian).map(&:id),
+      ).to contain_exactly(bookmark1.id, bookmark2.id)
+
+      user.update!(moderator: true)
+      Group.refresh_automatic_groups_for_user!(user)
+      expect(user.guardian.can_see_topic?(warning)).to eq(true)
+      expect(
+        registered_bookmarkable.perform_list_query(user, user.guardian).map(&:id),
+      ).to contain_exactly(bookmark1.id, bookmark2.id)
+
+      TopicAllowedUser.where(topic: post1.topic, user: user).delete_all
+      group.remove(user)
+      expect(registered_bookmarkable.perform_list_query(user, user.guardian)).to be_empty
+    end
+
     it "does not return bookmarks for posts where the user does not have access to the topic category" do
       bookmark1.bookmarkable.topic.update(category: private_category)
       expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).to match_array(

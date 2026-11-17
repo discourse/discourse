@@ -1,11 +1,5 @@
 import { fn } from "@ember/helper";
-import {
-  clearRender,
-  click,
-  render,
-  settled,
-  waitFor,
-} from "@ember/test-helpers";
+import { clearRender, click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { restoreBaseUri, setupURL } from "discourse/lib/get-url";
@@ -19,11 +13,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("file - uploading in progress", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       progress: 50,
       extension: ".pdf",
       fileName: "test.pdf",
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -34,11 +28,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - uploading in progress", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".png",
       progress: 78,
       fileName: "test.png",
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -50,12 +44,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - uploading in progress with local file previews it", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".png",
       progress: 78,
       fileName: "test.png",
       data: createFile("test.png", "image/png", PNG_BYTES),
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -69,12 +63,12 @@ module("Component | ChatComposerUpload", function (hooks) {
 
   test("image - revokes the local preview url on teardown", async function (assert) {
     const revoke = sinon.spy(URL, "revokeObjectURL");
-    this.set("upload", {
+    this.upload = {
       extension: ".png",
       progress: 10,
       fileName: "test.png",
       data: createFile("test.png", "image/png", PNG_BYTES),
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -87,12 +81,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("video - uploading in progress with local file previews it", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".webm",
       progress: 20,
       fileName: "clip.webm",
       data: createFile("clip.webm", "video/webm", WEBM_BYTES),
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -107,11 +101,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("video - uploading in progress without local file", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".mp4",
       progress: 20,
       fileName: "clip.mp4",
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -122,11 +116,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("video - upload complete", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       original_filename: "clip.mp4",
       extension: "mp4",
       url: "/uploads/clip.mp4",
-    });
+    };
 
     await render(
       <template>
@@ -142,12 +136,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - falls back to the icon when the preview cannot be decoded", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".heic",
       progress: 10,
       fileName: "photo.heic",
       data: createFile("photo.heic", "image/heic"),
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -162,30 +156,27 @@ module("Component | ChatComposerUpload", function (hooks) {
 
   test("registers its preview and asks to open it when clicked", async function (assert) {
     const unregister = sinon.spy();
-    this.set("registerPreview", sinon.stub().returns(unregister));
-    this.set("onPreview", sinon.spy());
-    this.set("shown", true);
-    this.set("upload", {
+    const registerPreview = sinon.stub().returns(unregister);
+    const onPreview = sinon.spy();
+    const upload = {
       original_filename: "photo.png",
       extension: "png",
       url: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
-        {{#if this.shown}}
-          <ChatComposerUpload
-            @isDone={{true}}
-            @onPreview={{this.onPreview}}
-            @registerPreview={{this.registerPreview}}
-            @upload={{this.upload}}
-          />
-        {{/if}}
+        <ChatComposerUpload
+          @isDone={{true}}
+          @onPreview={{onPreview}}
+          @registerPreview={{registerPreview}}
+          @upload={{upload}}
+        />
       </template>
     );
 
     assert.true(
-      this.registerPreview.calledOnceWith({
+      registerPreview.calledOnceWith({
         type: "image",
         element: document.querySelector("img.preview-img"),
         alt: "photo.png",
@@ -196,20 +187,19 @@ module("Component | ChatComposerUpload", function (hooks) {
       .hasAria("label", i18n("chat.preview_upload", { filename: "photo.png" }));
 
     await click(".chat-composer-upload__preview-btn");
-    assert.true(this.onPreview.calledOnce);
+    assert.true(onPreview.calledOnce);
 
-    this.set("shown", false);
-    await settled();
+    await clearRender();
     assert.true(unregister.calledOnce, "unregisters when removed");
   });
 
   test("image - preprocessing upload in progress", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       extension: ".png",
       progress: 78,
       fileName: "test.png",
       processing: true,
-    });
+    };
 
     await render(
       <template><ChatComposerUpload @upload={{this.upload}} /></template>
@@ -219,11 +209,11 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("file - upload complete", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       type: ".pdf",
       original_filename: "some file.pdf",
       extension: "pdf",
-    });
+    };
 
     await render(
       <template>
@@ -237,12 +227,12 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("image - upload complete", async function (assert) {
-    this.set("upload", {
+    this.upload = {
       type: ".png",
       original_filename: "bar_image.png",
       extension: "png",
       url: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
@@ -259,12 +249,12 @@ module("Component | ChatComposerUpload", function (hooks) {
         snapshot: true,
       });
 
-      this.set("upload", {
+      this.upload = {
         type: ".png",
         original_filename: "bar_image.png",
         extension: "png",
         url: "/images/avatar.png",
-      });
+      };
 
       await render(
         <template>
@@ -281,53 +271,53 @@ module("Component | ChatComposerUpload", function (hooks) {
   });
 
   test("removing completed upload", async function (assert) {
-    this.set("uploadRemoved", false);
-    this.set("removeUpload", () => {
-      this.set("uploadRemoved", true);
-    });
-    this.set("upload", {
+    let uploadRemoved = false;
+    const removeUpload = () => {
+      uploadRemoved = true;
+    };
+    const upload = {
       type: ".png",
       original_filename: "bar_image.png",
       extension: "png",
       short_path: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
         <ChatComposerUpload
           @isDone={{true}}
-          @onCancel={{fn this.removeUpload this.upload}}
-          @upload={{this.upload}}
+          @onCancel={{fn removeUpload upload}}
+          @upload={{upload}}
         />
       </template>
     );
 
     await click(".chat-composer-upload__remove-btn");
-    assert.true(this.uploadRemoved);
+    assert.true(uploadRemoved);
   });
 
   test("cancelling in progress upload", async function (assert) {
-    this.set("uploadRemoved", false);
-    this.set("removeUpload", () => {
-      this.set("uploadRemoved", true);
-    });
-    this.set("upload", {
+    let uploadRemoved = false;
+    const removeUpload = () => {
+      uploadRemoved = true;
+    };
+    const upload = {
       type: ".png",
       original_filename: "bar_image.png",
       extension: "png",
       short_path: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
         <ChatComposerUpload
-          @onCancel={{fn this.removeUpload this.upload}}
-          @upload={{this.upload}}
+          @onCancel={{fn removeUpload upload}}
+          @upload={{upload}}
         />
       </template>
     );
 
     await click(".chat-composer-upload__remove-btn");
-    assert.true(this.uploadRemoved);
+    assert.true(uploadRemoved);
   });
 });

@@ -502,6 +502,7 @@ export default class BlogPublicationPanel extends Component {
       cover_alt: this.publication?.cover_alt || "",
       co_authors: this.publication?.co_authors || [],
       featured: this.publication?.featured,
+      page: this.publication?.page,
       published_at: this.publication?.published_at?.slice(0, 10) || "",
     };
   }
@@ -1090,6 +1091,13 @@ export default class BlogPublicationPanel extends Component {
                   <form.Field
                     @name="featured"
                     @title={{i18n "blog.featured"}}
+                    @type="checkbox"
+                    as |field|
+                  ><field.Control /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.page_hint"}}
+                    @name="page"
+                    @title={{i18n "blog.page"}}
                     @type="checkbox"
                     as |field|
                   ><field.Control /></form.Field>

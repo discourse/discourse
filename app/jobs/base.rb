@@ -322,6 +322,7 @@ module Jobs
             exception[:message] = "While establishing database connection to #{db}"
             exception[:other] = { problem_db: db }
           ensure
+            Thread.current[Logster::Logger::LOGSTER_ENV] = nil
             job_instrumenter.stop(exception: exception)
           end
         end

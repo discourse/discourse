@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -16,7 +17,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
   });
 
   test("adding a value", async function (assert) {
-    this.set("values", "vinkas\nosama");
+    this.values = "vinkas\nosama";
 
     await render(
       <template><DMenus /><ValueList @values={{this.values}} /></template>
@@ -42,7 +43,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
   });
 
   test("changing a value", async function (assert) {
-    this.set("values", "vinkas\nosama");
+    this.values = "vinkas\nosama";
 
     await render(
       <template><DMenus /><ValueList @values={{this.values}} /></template>
@@ -61,7 +62,7 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
   });
 
   test("removing a value", async function (assert) {
-    this.set("values", "vinkas\nosama");
+    this.values = "vinkas\nosama";
 
     await render(
       <template><DMenus /><ValueList @values={{this.values}} /></template>
@@ -85,10 +86,8 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
   });
 
   test("selecting a value", async function (assert) {
-    this.setProperties({
-      values: "vinkas\nosama",
-      choices: ["maja", "michael"],
-    });
+    this.values = "vinkas\nosama";
+    this.choices = ["maja", "michael"];
 
     await render(
       <template>
@@ -112,16 +111,14 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
   });
 
   test("array support", async function (assert) {
-    this.set("values", ["vinkas", "osama"]);
+    const values = tracked(["vinkas", "osama"]);
 
     await render(
       <template>
         <DMenus />
-        <ValueList @inputType="array" @values={{this.values}} />
+        <ValueList @inputType="array" @values={{values.value}} />
       </template>
     );
-
-    this.set("values", ["vinkas", "osama"]);
 
     await selectKit().expand();
     await selectKit().fillInFilter("eviltrout");
@@ -132,14 +129,14 @@ module("Integration | Component | ValueList | reorderable", function (hooks) {
       .exists({ count: 3 }, "adds the value to the list of values");
 
     assert.deepEqual(
-      this.values,
+      values.value,
       ["vinkas", "osama", "eviltrout"],
       "it adds the value to the list of values"
     );
   });
 
   test("delimiter support", async function (assert) {
-    this.set("values", "vinkas|osama");
+    this.values = "vinkas|osama";
 
     await render(
       <template>

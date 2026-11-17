@@ -864,6 +864,8 @@ et:
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
     errors:
       invalid_integer: "Väärtuseks peab olema täisarv."
+    keywords:
+      company_url: "veebileht"
   search:
     within_post: "postituse nr%{post_number} tegi %{username}"
     types:

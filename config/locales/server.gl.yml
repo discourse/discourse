@@ -1782,6 +1782,8 @@ gl:
         regex_invalid: "A expresión regular non é válida: %{error}"
         leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
       unicode_usernames_avatars: "O sistema interno de avatares non admite nomes de usuario Unicode."
+    keywords:
+      company_url: "sitio web"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

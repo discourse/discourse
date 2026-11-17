@@ -12,6 +12,7 @@ pl_PL:
         max_prompt_tokens: "Okno kontekstowe"
   dashboard:
     problem:
+      ai_spam_scan_errors: "Funkcja wykrywania spamu AI nie mogła przeskanować postów, ponieważ jej model AI nie odpowiedział. Sprawdź konfigurację modelu, dostępność dostawcy lub problemy z kredytem. <a href='%{base_path}/admin/plugins/discourse-ai/ai-spam'>Sprawdź ustawienia wykrywania spamu</a>."
       ai_llm_status:
         one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatniej godziny nie odpowiedział w %{failed_calls} na %{total_calls}."
         few: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
@@ -210,6 +211,27 @@ pl_PL:
     ai_usage_rollup_after_days: "Liczba dni przechowywania statystyk użycia AI dla każdego żądania przed ich przekształceniem w dzienne agregaty. Ustaw na 0, aby wyłączyć agregacje."
     ai_audit_logs_detailed_retention_days: "Zachowaj surowe ładunki żądań i odpowiedzi AI przez określoną liczbę dni. Ustaw na 0, aby zachować ładunki do momentu usunięcia dziennika podsumowania. Surowe ładunki mogą zawierać treści prywatne lub poufne. Czyszczenie będzie kontynuowane, gdy wtyczka AI będzie wyłączona."
     ai_audit_logs_purge_after_days: "Zachowaj podsumowania logów audytu API AI przez określoną liczbę dni przed usunięciem całego logu. Ustaw na 0, aby zachować podsumowania na zawsze. Czyszczenie będzie kontynuowane, gdy wtyczka AI będzie wyłączona."
+    keywords:
+      ai_default_llm_model: "domyślny model językowy"
+      ai_discord_search_enabled: "integracja z Discordem"
+      ai_embeddings_semantic_quick_search_enabled: "wyniki ai w szybkim wyszukiwaniu"
+      ai_embeddings_semantic_search_enabled: "wyniki wyszukiwania ai"
+      ai_embeddings_semantic_search_use_hyde: "lepsze zapytania wyszukiwania (hyde)"
+      ai_helper_automatic_chat_thread_title: "tytuły wątków czatu"
+      ai_sentiment_backfill_post_max_age_days: "limit wieku dla wpisów (dni)"
+      ai_sentiment_emotion_classification_strategy: "zaplecze"
+      ai_sentiment_sentiment_classification_strategy: "zaplecze"
+      ai_summarization_enabled: "podsumowania"
+      ai_summary_gists_enabled: "krótkie podsumowania listy tematów"
+      ai_translation_backfill_hourly_rate: "istniejąca treść na godzinę"
+      ai_translation_backfill_start_date: "przetłumacz istniejącą treść od"
+      ai_translation_categories: "wybrane kategorie"
+      ai_translation_include_bot_content: "tłumaczenie treści pisanych przez boty"
+      ai_translation_locale_detector_agent: "agent wykrywania języka"
+      ai_translation_locale_detector_decision_model: "model decyzyjny wykrywania języka"
+      ai_translation_post_raw_translator_agent: "narzędzie do tłumaczenia wpisów"
+      ai_translation_short_text_translator_agent: "agent tłumaczący krótkie teksty"
+      ai_translation_topic_title_translator_agent: "agent tłumaczący tytuł tematu"
   reviewables:
     reasons:
       flagged_by_toxicity: Wtyczka AI oznaczyła to po sklasyfikowaniu jako toksyczne.

@@ -6,6 +6,7 @@ export default class ThemeSettingEditor extends SiteSettingComponent {
   @service toasts;
 
   trackChanges = false;
+  linkableSetting = true;
 
   _save() {
     return this.setting

@@ -59,12 +59,12 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("avatar flair for admin user", async function (assert) {
-    this.set("args", {
+    this.args = {
       admin: true,
       moderator: false,
       trust_level: 2,
       flair_group_id: 12,
-    });
+    };
     setupSiteGroups(this);
 
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
@@ -78,12 +78,12 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("avatar flair for moderator user with fallback to staff", async function (assert) {
-    this.set("args", {
+    this.args = {
       admin: false,
       moderator: true,
       trust_level: 2,
       flair_group_id: 12,
-    });
+    };
     setupSiteGroups(this);
 
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
@@ -97,12 +97,12 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("avatar flair for trust level", async function (assert) {
-    this.set("args", {
+    this.args = {
       admin: false,
       moderator: false,
       trust_level: 2,
       flair_group_id: 12,
-    });
+    };
     setupSiteGroups(this);
 
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
@@ -116,12 +116,12 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("avatar flair for trust level when set to none", async function (assert) {
-    this.set("args", {
+    this.args = {
       admin: false,
       moderator: false,
       trust_level: 2,
       flair_group_id: null,
-    });
+    };
     setupSiteGroups(this);
 
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
@@ -130,12 +130,12 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("avatar flair for trust level with fallback", async function (assert) {
-    this.set("args", {
+    this.args = {
       admin: false,
       moderator: false,
       trust_level: 3,
       flair_group_id: 13,
-    });
+    };
     setupSiteGroups(this);
 
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
@@ -149,12 +149,12 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("avatar flair for login-required site, before login", async function (assert) {
-    this.set("args", {
+    this.args = {
       admin: false,
       moderator: false,
       trust_level: 3,
       flair_group_id: 13,
-    });
+    };
     // Groups not serialized for anon on login_required
     this.site.groups = undefined;
 
@@ -164,7 +164,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("avatar flair for primary group flair", async function (assert) {
-    this.set("args", {
+    this.args = {
       admin: false,
       moderator: false,
       trust_level: 3,
@@ -174,7 +174,7 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
       flair_color: "B0B0B0",
       flair_group_id: 41,
       primary_group_name: "Band Geeks",
-    });
+    };
     setupSiteGroups(this);
 
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
@@ -188,9 +188,9 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("avatar flair resolves the selected group", async function (assert) {
-    this.set("args", {
+    this.args = {
       flair_group_id: 41,
-    });
+    };
     setupSiteGroups(this);
 
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
@@ -203,12 +203,12 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
   });
 
   test("user-avatar-flair for user with no flairs", async function (assert) {
-    this.set("args", {
+    this.args = {
       admin: false,
       moderator: false,
       trust_level: 1,
       flair_group_id: 11,
-    });
+    };
 
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 

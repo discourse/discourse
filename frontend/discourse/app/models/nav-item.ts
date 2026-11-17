@@ -379,26 +379,46 @@ export default class NavItem extends EmberObject {
       return this._displayName;
     }
 
-    let count = this.count || 0;
-
-    if (
-      this.name === "latest" &&
-      (Site.currentProp("desktopView") || this.tag !== undefined)
-    ) {
-      count = 0;
-    }
-
-    // eslint-disable-next-line prefer-const -- Preserve the original declaration in this types-only port.
-    let extra = { count };
+    const count = this.displayCount;
     const titleKey = count === 0 ? ".title" : ".title_with_count";
 
     return emojiUnescape(
-      i18n(`filters.${this.name.replace("/", ".") + titleKey}`, extra)
+      i18n(`filters.${this.name.replace("/", ".") + titleKey}`, { count })
     );
   }
 
   set displayName(value: string) {
     this._displayName = value;
+  }
+
+  /**
+   * The count shown with the name, or 0 where none is.
+   */
+  @dependentKeyCompat
+  get displayCount(): number {
+    if (this._displayName) {
+      return 0;
+    }
+
+    if (
+      this.name === "latest" &&
+      (Site.currentProp("desktopView") || this.tag !== undefined)
+    ) {
+      return 0;
+    }
+
+    return this.count || 0;
+  }
+
+  /**
+   * The name without its count, for showing the count apart from it.
+   */
+  @dependentKeyCompat
+  get displayNameWithoutCount(): string {
+    return (
+      this._displayName ||
+      emojiUnescape(i18n(`filters.${this.name.replace("/", ".")}.title`))
+    );
   }
 
   @computed("filterType", "category", "noSubcategories", "tag")

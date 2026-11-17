@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MenuItem from "discourse/components/user-menu/menu-item";
@@ -53,9 +54,10 @@ module(
     setupRenderingTest(hooks);
 
     test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
-      this.set(
-        "item",
-        getNotification(this.currentUser, this.siteSettings, this.site)
+      this.item = getNotification(
+        this.currentUser,
+        this.siteSettings,
+        this.site
       );
       this.item.notification.read = false;
       await render(<template><MenuItem @item={{this.item}} /></template>);
@@ -74,18 +76,17 @@ module(
     });
 
     test("pushes the notification type name to the classList", async function (assert) {
-      this.set(
-        "item",
+      const item = tracked(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(<template><MenuItem @item={{this.item}} /></template>);
+      await render(<template><MenuItem @item={{item.value}} /></template>);
       assert.dom("li").hasClass("mentioned");
 
-      this.set(
-        "item",
-        getNotification(this.currentUser, this.siteSettings, this.site, {
-          notification_type: NOTIFICATION_TYPES.private_message,
-        })
+      item.value = getNotification(
+        this.currentUser,
+        this.siteSettings,
+        this.site,
+        { notification_type: NOTIFICATION_TYPES.private_message }
       );
       await settled();
 

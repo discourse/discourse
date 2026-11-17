@@ -158,6 +158,12 @@ de:
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
     ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
+    keywords:
+      ai_default_llm_model: "standard-Sprachmodell"
+      ai_discord_search_enabled: "discord-Integration"
+      ai_helper_automatic_chat_thread_title: "titel von Chat-Threads"
+      ai_summarization_enabled: "zusammenfassungen"
+      ai_summary_gists_enabled: "kurze Zusammenfassungen der Themenliste"
   reviewables:
     reasons:
       flagged_by_toxicity: Das KI-Plug-in meldete dies nach der Klassifizierung als toxisch.

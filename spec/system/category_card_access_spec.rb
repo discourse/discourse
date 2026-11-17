@@ -30,7 +30,7 @@ RSpec.describe "Category card access" do
     sign_in(allowed_user)
     topic_page.visit_topic(topic, post_number: post_with_category_hashtag.post_number)
 
-    hashtag_post.click_category_hashtag(private_category)
+    hashtag_post.hover_category_hashtag(private_category)
 
     expect(category_card).to be_showing_category(private_category)
   end

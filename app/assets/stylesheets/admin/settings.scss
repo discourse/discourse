@@ -25,14 +25,65 @@
         }
       }
 
-      .history-icon {
+      .history-icon,
+      .setting-link {
         opacity: 0;
         transition: opacity 0.3s;
         color: var(--primary-medium);
       }
 
-      &:hover .history-icon {
-        opacity: 1;
+      // Word joiner: wraps the icons with the name's last word.
+      .staff-action-log-link,
+      .setting-link {
+        white-space: nowrap;
+
+        &::before {
+          content: "\2060" / "";
+        }
+      }
+
+      .setting-link {
+        font-size: var(--font-0);
+      }
+
+      &:hover,
+      &:focus-within {
+        .history-icon,
+        .setting-link {
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .history-icon,
+        .setting-link {
+          transition: none;
+        }
+      }
+    }
+
+    &.linkable {
+      scroll-margin-top: calc(var(--header-offset) + var(--space-4));
+      transition: background-color 1s ease;
+
+      &.--highlighted {
+        background-color: var(--highlight-low);
+      }
+
+      .setting-label__heading {
+        margin-bottom: 0.5rem;
+
+        h3 {
+          display: inline;
+        }
+      }
+
+      .staff-action-log-link {
+        margin-left: var(--space-1);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
       }
     }
 

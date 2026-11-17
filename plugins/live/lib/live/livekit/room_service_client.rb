@@ -9,8 +9,21 @@ module Live
     # the call, and mesh rooms must make zero HTTP requests.
     class RoomServiceClient
       TIMEOUT_SECONDS = 2
+      HUMAN_IDENTITY = /\A[1-9]\d*\z/
 
       class << self
+        def participant_user_ids(room)
+          return [] unless sync?(room, agent_cleanup: false)
+
+          result = list_participants(Livekit.room_name(room))
+          return [] unless result[:ok]
+
+          Array(result.dig(:data, "participants")).filter_map do |participant|
+            identity = participant["identity"].to_s
+            identity.to_i if identity.match?(HUMAN_IDENTITY)
+          end
+        end
+
         def remove_participant(room, user_id, identity: nil)
           call(
             room,
@@ -74,6 +87,20 @@ module Live
           probe(
             "ListParticipants",
             body: {
+              room: livekit_room,
+            },
+            grants: {
+              roomAdmin: true,
+              room: livekit_room,
+            },
+          )
+        end
+
+        def expel(livekit_room, identity)
+          probe(
+            "RemoveParticipant",
+            body: {
+              identity:,
               room: livekit_room,
             },
             grants: {

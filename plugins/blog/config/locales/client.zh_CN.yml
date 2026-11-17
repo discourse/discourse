@@ -190,6 +190,7 @@ zh_CN:
           body: 正文
           path: 路径
           excerpt: 摘录
+          cover: 封面图片
           featured: 精选标签
           tags: 标签
           published_at: 发布日期
@@ -291,6 +292,10 @@ zh_CN:
       path: 文章路径
       excerpt: 摘录
       excerpt_hint: 文章卡片和搜索预览的简短介绍。留空则生成文章摘录。
+      cover: 封面图片
+      cover_hint: 显示在文章上方，用于文章卡片和链接预览。留空则使用文章中的第一张图片。
+      cover_alt: 封面图片的替代文本
+      cover_alt_hint: 为无法看到封面图片的人描述该图片。
       date: 发布日期
       date_hint: 留空则使用首次发布时间。对于导入的文章，请选择过去的日期。日期采用 UTC 时间。
       featured: 首页专题

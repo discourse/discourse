@@ -234,7 +234,7 @@ module TopicGuardian
   def visible_topic_scope(scope, deleted: :visible)
     return scope if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
 
-    if deleted == :visible && !is_staff?
+    if deleted == :visible && !can_delete_all_posts_and_topics?
       visible = scope.where(deleted_at: nil)
       if category_group_moderation_allowed?
         visible = visible.or(scope.where(category_id: category_group_moderator_scope.select(:id)))
@@ -242,9 +242,10 @@ module TopicGuardian
       scope = visible
     end
 
-    scope = scope.where.missing(:shared_draft) if !can_see_shared_draft?
-
     regular_topics = secured_regular_topic_scope(scope)
+    regular_topics = regular_topics.where(<<~SQL) if !can_see_shared_draft?
+        NOT EXISTS (SELECT 1 FROM shared_drafts WHERE shared_drafts.topic_id = topics.id)
+      SQL
     return regular_topics if !authenticated?
 
     regular_topics.or(private_message_topic_scope(scope))
@@ -365,10 +366,10 @@ module TopicGuardian
     allowed = scope.allowed_to_user(user)
     return allowed if !is_moderator?
 
-    flagged = Topic.has_flag_scope.where("reviewables.topic_id = topics.id").select(1)
-    allowed.or(scope.where(<<~SQL))
-      topics.subtype = '#{TopicSubtype.moderator_warning}' OR EXISTS (#{flagged.to_sql})
-    SQL
+    flagged_pm_topic_ids = @flagged_pm_topic_ids ||= Topic.has_flag_scope.select(:topic_id)
+    allowed.or(scope.where(subtype: TopicSubtype.moderator_warning)).or(
+      scope.where(id: flagged_pm_topic_ids),
+    )
   end
 
   private
@@ -390,13 +391,16 @@ module TopicGuardian
         FROM topics
         INNER JOIN categories ON categories.id = topics.category_id
         WHERE categories.read_restricted
-        AND categories.email_in IS NOT NULL
+        AND NULLIF(BTRIM(categories.email_in, :email_whitespace), '') IS NOT NULL
         AND categories.email_in_allow_strangers
         AND topics.user_id = :user_id
       )
       SQL
 
-      secured_scope = secured_scope.or(Topic.unscoped.where(sql, user_id: user.id))
+      secured_scope =
+        secured_scope.or(
+          Topic.unscoped.where(sql, user_id: user.id, email_whitespace: " \t\r\n\f\v"),
+        )
     end
 
     scope.listable_topics.merge(secured_scope)

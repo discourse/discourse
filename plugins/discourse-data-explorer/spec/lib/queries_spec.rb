@@ -8,6 +8,22 @@ describe DiscourseDataExplorer::Queries do
   before { SiteSetting.data_explorer_enabled = true }
 
   describe ".default" do
+    it "includes distributed traffic scores and reasons in the detailed crawler report" do
+      event = Fabricate(:browser_pageview_event, score: 60, created_at: 1.hour.ago)
+      BrowserPageviewEventScore.create!(event: event, distributed_traffic_score: 60)
+      attributes = described_class.default.fetch("-43")
+      query =
+        DiscourseDataExplorer::Query.new(id: -43, name: attributes[:name], sql: attributes["sql"])
+
+      result =
+        DiscourseDataExplorer::DataExplorer.run_query(query, {}, current_user: user, limit: 10)
+
+      expect(result[:error]).to be_nil
+      row = result[:pg_result].to_a.first
+      expect(row["distributed_traffic"].to_i).to eq(60)
+      expect(row["reasons"]).to include("distributed traffic (+60)")
+    end
+
     # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     described_class.default.each do |id, attributes|
       it "runs #{attributes[:name]} with its declared parameters" do

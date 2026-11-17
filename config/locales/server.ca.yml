@@ -1607,6 +1607,8 @@ ca:
         regex_invalid: "L'expressió regular no és vàlida: %{error}"
         leading_trailing_slash: "L'expressió regular no ha de començar ni acabar amb una barra inclinada."
       unicode_usernames_avatars: "Els avatars de sistema interns no admeten noms d'usuari amb caràcters Unicode."
+    keywords:
+      company_url: "lloc web"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

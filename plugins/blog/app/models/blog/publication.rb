@@ -16,6 +16,7 @@ module ::Blog
       cover_upload_id
       cover_alt
       co_author_ids
+      page
     ].freeze
     MAX_PATH_LENGTH = 240
     MAX_CO_AUTHORS = 10
@@ -62,6 +63,7 @@ module ::Blog
     validate :image_cover_upload
     validate :credited_co_authors, if: :co_author_ids_changed?
     validates :featured, inclusion: { in: [true, false] }
+    validates :page, inclusion: { in: [true, false] }
     validate :available_path
     validate :decodable_path
     validate :valid_publication_date
@@ -72,6 +74,9 @@ module ::Blog
                if: -> { saved_change_to_cover_upload_id? || saved_change_to_draft_metadata? }
 
     scope :newest, -> { order(published_at: :desc, id: :desc) }
+    # Standalone pages, like Privacy or Contact, stay out of listings and the feed.
+    scope :articles, -> { where(page: false) }
+    scope :pages, -> { where(page: true) }
 
     def self.publicly_visible
       return none unless Configuration.public_enabled?
@@ -114,8 +119,8 @@ module ::Blog
       publication if guardian.can_edit_blog_topic?(publication.editable_topic)
     end
 
-    def self.default_path(topic, date: nil, slug: topic.slug)
-      format = PathFormat.current
+    def self.default_path(topic, date: nil, slug: topic.slug, page: false)
+      format = page ? PathFormat.new("/{slug}") : PathFormat.current
       slug = visible_slug(slug).presence || topic.id.to_s
       date ||= Time.current
       path = format.render(slug:, id: topic.id, date:, max_length: MAX_PATH_LENGTH)
@@ -198,6 +203,7 @@ module ::Blog
             metadata["cover_alt"].to_s != live["cover_alt"].to_s,
         "co_authors" => Array(metadata["co_author_ids"]) != Array(live["co_author_ids"]),
         "featured" => metadata["featured"] != live["featured"],
+        "page" => metadata["page"].present? != live["page"].present?,
         "tags" => source.tags.visible(Guardian.new).pluck(:name).sort != Array(live["tags"]).sort,
         "published_at" => draft_date_changed?(metadata["published_at"]),
         "revision" => submitted_revision_differs?,
@@ -272,7 +278,7 @@ module ::Blog
       live = attributes.slice(*METADATA)
       assign_attributes(values.slice(*METADATA))
       custom_path = staged["custom_path"] || path != staged["path"]
-      if !published_revision_id && changes.key?("published_at") && !custom_path
+      if !published_revision_id && changes.keys.intersect?(%w[published_at page]) && !custom_path
         self.path = generated_path(published_at) || path
       end
       return self if invalid?
@@ -318,7 +324,12 @@ module ::Blog
     # and the date the article goes live.
     def release_revision(revision)
       return revision if published_revision_id || revision.data["custom_path"]
-      path = generated_path(release_date(revision), title: revision.title) || revision.data["path"]
+      path =
+        generated_path(
+          release_date(revision),
+          title: revision.title,
+          page: revision.data["page"].present?,
+        ) || revision.data["path"]
       return revision if path == revision.data["path"]
 
       successor =
@@ -348,6 +359,7 @@ module ::Blog
         cover_alt: data["cover_alt"].to_s,
         co_author_ids: Array(data["co_author_ids"]),
         featured: data["featured"],
+        page: data["page"].present?,
         published_at: release_date(revision),
         last_published_at: Time.current,
         published_revision: revision,
@@ -365,10 +377,11 @@ module ::Blog
     end
 
     # Nil when another article already holds the address, so the current path stays.
-    def generated_path(date, title: nil)
+    # Pages skip the article path format: a dated "/privacy" would look odd.
+    def generated_path(date, title: nil, page: self.page)
       source = editable_topic
       slug = title ? source.slug_for_topic(title) : source.slug
-      generated = self.class.default_path(source, date:, slug:)
+      generated = self.class.default_path(source, date:, slug:, page:)
       generated if path_available?(generated)
     end
 
@@ -404,7 +417,8 @@ module ::Blog
       submitted = submitted_revision.data
       live = published_revision.data
       submitted.values_at(*compared).map(&:to_s) != live.values_at(*compared).map(&:to_s) ||
-        Array(submitted["co_author_ids"]) != Array(live["co_author_ids"])
+        Array(submitted["co_author_ids"]) != Array(live["co_author_ids"]) ||
+        submitted["page"].present? != live["page"].present?
     end
 
     def initialize_topics
@@ -517,6 +531,7 @@ end
 #  image_url             :text
 #  last_published_at     :datetime
 #  meta_description      :string           default(""), not null
+#  page                  :boolean          default(FALSE), not null
 #  path                  :string           not null
 #  published             :boolean          default(FALSE), not null
 #  published_at          :datetime

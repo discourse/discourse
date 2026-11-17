@@ -10,17 +10,14 @@ module("Integration | Component | ThemeSiteSettingEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows link to the staff action logs for the setting on hover", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "enable_welcome_banner",
-        value: "false",
-        default: "true",
-        type: "bool",
-      })
-    );
+    this.setting = SiteSetting.create({
+      setting: "enable_welcome_banner",
+      value: "false",
+      default: "true",
+      type: "bool",
+    });
 
-    this.set("model", Theme.create({ name: "Test Theme" }));
+    this.model = Theme.create({ name: "Test Theme" });
 
     await render(
       <template>

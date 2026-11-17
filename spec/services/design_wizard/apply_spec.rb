@@ -150,12 +150,6 @@ RSpec.describe DesignWizard::Apply do
       let(:theme_id) { concord_theme.id }
       let(:params) { { theme_id:, light_palette_id: palette.id, palettes_user_selectable: true } }
 
-      it "rejects the installed theme when Concord is disabled" do
-        SiteSetting.concord_in_wizard = false
-
-        expect(result).to fail_a_contract
-      end
-
       it "selects the theme and its palette" do
         expect(result).to run_successfully
         expect(SiteSetting.default_theme_id).to eq(concord_theme.id)

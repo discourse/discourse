@@ -15,7 +15,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("suppresses hover during teardown", function (assert) {
@@ -48,7 +48,7 @@ module(
     });
 
     test("with value", async function (assert) {
-      this.set("value", 2);
+      this.value = 2;
 
       await render(
         <template><CategoryChooser @value={{this.value}} /></template>
