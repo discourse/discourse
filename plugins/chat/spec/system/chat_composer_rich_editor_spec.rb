@@ -18,9 +18,9 @@ RSpec.describe "Chat composer rich editor" do
     sign_in(current_user)
   end
 
-  def paste_embedded_image(count: 1)
-    page.execute_script(<<~JS, count)
-      const count = arguments[0];
+  def paste_embedded_image(count: 1, unreadable: 0)
+    page.execute_script(<<~JS, count, unreadable)
+      const [count, unreadable] = arguments;
       const png =
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
       // distinct sources, so each image is its own upload
@@ -28,8 +28,9 @@ RSpec.describe "Chat composer rich editor" do
         { length: count },
         (_, i) => `<img src="data:image/png;name=image${i};base64,${png}">`
       ).join(" ");
+      const broken = '<img src="data:image/png;base64,@@@">'.repeat(unreadable);
       const data = new DataTransfer();
-      data.setData("text/html", `<p>look ${images} here</p>`);
+      data.setData("text/html", `<p>look ${broken}${images} here</p>`);
       data.setData("text/plain", "look here");
       document
         .querySelector(".chat-composer__input")
@@ -303,6 +304,27 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.composer).to have_value("look image image image here")
     expect(page).to have_no_css(".dialog-container")
     expect(page).to have_no_css(".chat-composer-upload")
+  end
+
+  it "uploads the readable images of a paste and leaves the others as text" do
+    chat_page.visit_channel(channel_1)
+    expect(channel_page.composer).to have_rich_editor
+
+    paste_embedded_image(unreadable: 1)
+
+    expect(page).to have_css(".chat-composer-upload--image")
+    expect(channel_page.composer).to have_value("look image here")
+  end
+
+  it "uploads pasted embedded images when uploads at once are unlimited" do
+    SiteSetting.simultaneous_uploads = 0
+    chat_page.visit_channel(channel_1)
+    expect(channel_page.composer).to have_rich_editor
+
+    paste_embedded_image
+
+    expect(page).to have_css(".chat-composer-upload--image")
+    expect(channel_page.composer).to have_value("look  here")
   end
 
   it "keeps a pasted embedded image as text when chat uploads are off" do

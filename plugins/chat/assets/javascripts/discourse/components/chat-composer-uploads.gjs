@@ -105,7 +105,21 @@ export default class ChatComposerUploads extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-    this.onSetup?.((files, opts) => this.uppyUpload.addFiles(files, opts));
+    this.onSetup?.(this.addFiles);
+  }
+
+  // Declines files the uploader would reject as too many, since it then
+  // cancels every upload in the batch.
+  @bind
+  addFiles(files, opts) {
+    const limit = this.siteSettings.simultaneous_uploads;
+    const queued =
+      this.uppyUpload.uppyWrapper.uppyInstance?.getFiles().length ?? 0;
+    if (limit > 0 && queued + files.length > limit) {
+      return false;
+    }
+
+    this.uppyUpload.addFiles(files, opts);
   }
 
   willDestroyElement() {
