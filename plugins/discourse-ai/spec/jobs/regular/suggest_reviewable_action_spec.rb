@@ -20,10 +20,11 @@ RSpec.describe Jobs::SuggestReviewableAction do
       2.times { described_class.new.execute(reviewable_id: reviewable.id) }
       expect(canned.calls.size).to eq(1)
       call = canned.calls.first
-      expect(call[:state][:forum]).to eq(
-        title: SiteSetting.title,
-        description: SiteSetting.site_description,
+      expect(call[:questions].first.instructions).to include(
+        SiteSetting.title,
+        SiteSetting.site_description,
       )
+      expect(call[:state]).not_to have_key(:forum)
       expect(call[:questions].first.choices).to match_array(actions)
       expect(call[:state].dig(:item, "raw")).to eq(reviewable.payload["raw"])
     end
