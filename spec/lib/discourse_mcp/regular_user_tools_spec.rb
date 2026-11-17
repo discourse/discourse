@@ -432,7 +432,10 @@ describe DiscourseMcp::Tools do
           },
           request_context: request_context(user),
         )
-      end.to raise_error(Discourse::InvalidAccess)
+      end.to raise_error(
+        DiscourseMcp::ToolError,
+        I18n.t("mcp.errors.author_must_match", username: user.username),
+      )
     end
 
     it "creates a compatible topic and post response as the current user" do
@@ -485,6 +488,41 @@ describe DiscourseMcp::Tools do
   describe DiscourseMcp::Tools::SetPostDeleted do
     fab!(:topic) { Fabricate(:post, user:).topic }
     fab!(:post) { Fabricate(:post, topic:, user:) }
+
+    it "lets an admin delete and recover their own topic through its first post" do
+      first_post = Fabricate(:post, user: admin)
+      owned_topic = first_post.topic
+      arguments = { "post_id" => first_post.id, "deleted" => true }
+
+      described_class.call(arguments: arguments, request_context: request_context(admin))
+
+      expect(first_post.reload.deleted_at).to be_present
+      expect(owned_topic.reload.deleted_at).to be_present
+
+      described_class.call(
+        arguments: arguments.merge("deleted" => false),
+        request_context: request_context(admin),
+      )
+
+      expect(first_post.reload.deleted_at).to be_nil
+      expect(owned_topic.reload.deleted_at).to be_nil
+    end
+
+    it "keeps the topic deletion restriction when another user has replied" do
+      Fabricate(:post, topic: topic, user: other_user)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "post_id" => topic.first_post.id,
+            "deleted" => true,
+          },
+          request_context: request_context(user),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(topic.reload.deleted_at).to be_nil
+    end
 
     it "deletes and recovers only the caller's post" do
       result =
