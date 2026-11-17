@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "digest"
 require "fileutils"
 require "rbconfig"
 require "socket"
@@ -25,7 +26,8 @@ module DiscourseVips
     attr_reader :pid, :socket_path
 
     def self.shared_socket_path
-      Rails.root.join("tmp", "discourse-vips-worker", Rails.env, "socket").to_s
+      root_hash = Digest::SHA256.hexdigest(Rails.root.to_s)[0, 32]
+      "/tmp/discourse-vips/#{Rails.env}/#{root_hash}/socket"
     end
 
     def initialize(socket_path: nil)
