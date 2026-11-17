@@ -23,6 +23,15 @@ Rosters are re-broadcast at least once a minute, so removing someone from a
 sender group stops their new transfers within about a minute, on both their own
 client and their recipients', without a reload.
 
+Allowed file types follow the upload extension settings: `authorized_extensions`
+for everyone, plus `authorized_extensions_for_staff` when the sender is staff.
+The sender's list applies on both ends: the picker refuses other types, and the
+receiver rejects offers whose filename extension the sender's list does not
+allow, using the server-attested `can_send_staff_file_types` roster flag rather
+than channel metadata. A `*` in the applicable list allows any file. When
+neither list authorizes anything for the sender, **Send file…** is hidden. Like
+uploads, only the filename extension is checked, not the file contents.
+
 ## Sending and receiving
 
 1. Join a mesh room and wait for the connection to the recipient to open.
