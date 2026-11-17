@@ -60,12 +60,39 @@ html.mobile-tab-bar-visible {
       var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
   );
 
+  // What a collapsed composer resting on the bar adds to its height, for
+  // anything else floating above the bar to clear
+  --mobile-tab-bar-composer-offset: 0px;
+
+  &:has(#reply-control.draft, #reply-control.saving) {
+    --mobile-tab-bar-composer-offset: calc(
+      var(--composer-collapsed-height) + var(--mobile-tab-bar-views-gap)
+    );
+  }
+
   &:has(.mobile-tab-bar__views > *) {
     --footer-nav-height: calc(
       var(--mobile-tab-bar-controls-height) +
         var(--mobile-tab-bar-views-height) +
         var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
     );
+  }
+
+  // How far up the screen the bar reaches right now, as parts of it tuck
+  // away, for whatever floats above it to follow. Layouts keep clearing the
+  // full `--footer-nav-height`, so content doesn't jump as it moves.
+  --mobile-tab-bar-current-height: calc(
+    var(--footer-nav-height) + env(safe-area-inset-bottom)
+  );
+
+  &.mobile-tab-bar-views-tucked {
+    --mobile-tab-bar-current-height: calc(
+      var(--mobile-tab-bar-controls-height) + var(--mobile-tab-bar-bottom-inset)
+    );
+  }
+
+  &.mobile-tab-bar-tucked:not(:has(.mobile-tab-bar :focus-visible)) {
+    --mobile-tab-bar-current-height: var(--mobile-tab-bar-bottom-inset);
   }
 }
 
@@ -101,6 +128,24 @@ html.mobile-tab-bar-visible {
   pointer-events: none;
 
   @include unselectable;
+  transition:
+    transform 200ms ease,
+    opacity 200ms ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  // Off screen but still reachable from the keyboard, which brings it back
+  &.--tucked:not(:has(:focus-visible)) {
+    opacity: 0;
+    transform: translateY(100%);
+
+    .mobile-tab-bar__views,
+    .mobile-tab-bar__controls {
+      pointer-events: none;
+    }
+  }
 
   &.--views-tucked &__views {
     opacity: 0;
@@ -536,4 +581,36 @@ html.keyboard-visible .mobile-tab-bar {
 .mobile-tab-bar__more-badge {
   display: flex;
   margin-left: auto;
+}
+
+// A collapsed composer sits on the bar rather than under it
+html.mobile-tab-bar-visible #reply-control {
+  &.draft,
+  &.saving {
+    // Above the bar's fade, which would otherwise wash over it
+    z-index: z("footer-nav") + 1;
+    bottom: calc(
+      var(--mobile-tab-bar-current-height) + var(--mobile-tab-bar-views-gap)
+    );
+    left: var(--mobile-tab-bar-side-inset);
+    right: var(--mobile-tab-bar-side-inset);
+    max-width: none;
+    margin-top: 0;
+    padding-bottom: 0;
+    border-radius: var(--mobile-tab-bar-radius);
+    box-shadow: var(--mobile-tab-bar-shadow);
+
+    @media (display-mode: standalone) {
+      left: max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-left));
+      right: max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-right));
+    }
+    transition:
+      height 0.2s,
+      min-height 0.2s,
+      bottom 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
 }
