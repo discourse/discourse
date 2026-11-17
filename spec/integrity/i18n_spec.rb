@@ -1,35 +1,28 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
 
-def extract_locale(path)
-  path[/\.([^.]{2,})\.yml$/, 1]
-end
+RSpec.describe "i18n integrity checks" do
+  def extract_locale(path)
+    path[/\.([^.]{2,})\.yml$/, 1]
+  end
 
-def is_yaml_compatible?(english, translated)
-  english.each do |k, v|
-    if translated.has_key?(k)
-      if Hash === v
-        if Hash === translated[k]
-          return false unless is_yaml_compatible?(v, translated[k])
-        end
+  def is_yaml_compatible?(english, translated)
+    english.all? do |key, value|
+      next true unless translated.key?(key)
+
+      translated_value = translated[key]
+      if value.is_a?(Hash)
+        !translated_value.is_a?(Hash) || is_yaml_compatible?(value, translated_value)
       else
-        return false unless v.class == translated[k].class
+        value.class == translated_value.class
       end
     end
   end
 
-  true
-end
-
-def load_yaml(path)
-  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.1.0")
+  def load_yaml(path)
     YAML.load_file(path, aliases: true)
-  else
-    YAML.load_file(path)
   end
-end
 
-RSpec.describe "i18n integrity checks" do
   it "has an i18n key for each Site Setting" do
     SiteSetting.all_settings.each do |s|
       next if s[:plugin] == SiteSetting::SAMPLE_TEST_PLUGIN.name
@@ -46,52 +39,67 @@ RSpec.describe "i18n integrity checks" do
       end
   end
 
-  Dir["#{Rails.root.join("config/locales/{client,server}.*.yml")}"].each do |path|
-    it "does not contain invalid interpolation keys for '#{path}'" do
-      matches = File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/)
-      matches.flatten!
-      matches.compact!
-      matches.uniq!
-      expect(matches).to eq([])
-    end
-  end
-
-  Dir["#{Rails.root.join("config/locales/client.*.yml")}"].each do |path|
-    it "has valid client YAML for '#{path}'" do
-      yaml = load_yaml(path)
-      locale = extract_locale(path)
-
-      expect(yaml.keys).to eq([locale])
-
-      expect(yaml[locale]["js"]).to be
-      expect(yaml[locale]["admin_js"]).to be unless LocaleSiteSetting.fallback_locale(locale)
-      expect(yaml[locale]["wizard_js"]).to be if locale == "en"
-    end
-  end
-
-  Dir["#{Rails.root.join("**/locale*/*.en.yml")}"].each do |english_path|
-    english_yaml = load_yaml(english_path)["en"]
-
-    context(english_path) do
-      it "has no duplicate keys" do
-        english_duplicates = DuplicateKeyFinder.new.find_duplicates(english_path)
-        expect(english_duplicates).to be_empty
+  it "has valid interpolation keys in core locale files", :aggregate_failures do
+    Dir[Rails.root.join("config/locales/{client,server}.*.yml")].each do |path|
+      aggregate_failures(path) do
+        matches =
+          File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/).flatten.compact.uniq
+        expect(matches).to eq([]), "#{path}: invalid interpolation keys #{matches.inspect}"
       end
     end
+  end
 
-    Dir[english_path.sub(".en.yml", ".*.yml")].each do |path|
-      next if path[".en.yml"]
-
-      context(path) do
-        locale = extract_locale(path)
+  it "has valid client locale roots and namespaces", :aggregate_failures do
+    Dir[Rails.root.join("config/locales/client.*.yml")].each do |path|
+      aggregate_failures(path) do
         yaml = load_yaml(path)
+        locale = extract_locale(path)
+        expect(yaml).to be_a(Hash), "#{path}: expected a locale mapping"
+        next unless yaml.is_a?(Hash)
 
-        it "has valid translation YAML", :aggregate_failures do
+        expect(yaml.keys).to eq([locale]), "#{path}: expected only the #{locale} locale"
+        translations = yaml[locale]
+        expect(translations).to be_a(Hash), "#{path}: expected client namespaces"
+        next unless translations.is_a?(Hash)
+
+        expect(translations["js"]).to be, "#{path}: missing js namespace"
+        unless LocaleSiteSetting.fallback_locale(locale)
+          expect(translations["admin_js"]).to be, "#{path}: missing admin_js namespace"
+        end
+        if locale == "en"
+          expect(translations["wizard_js"]).to be, "#{path}: missing wizard_js namespace"
+        end
+      end
+    end
+  end
+
+  # Batch by reference file to avoid per-translation setup without creating one long-running example.
+  Dir[Rails.root.join("**/locale*/*.en.yml")].each do |english_path|
+    it "has valid locale YAML for #{english_path}", :aggregate_failures do
+      english_yaml = load_yaml(english_path)["en"]
+      expect(DuplicateKeyFinder.new.find_duplicates(english_path)).to be_empty
+
+      Dir[english_path.sub(".en.yml", ".*.yml")].each do |path|
+        next if path[".en.yml"]
+
+        aggregate_failures(path) do
+          yaml = load_yaml(path)
+          locale = extract_locale(path)
           duplicates = DuplicateKeyFinder.new.find_duplicates(path)
-          expect(duplicates).to be_empty
-          expect(yaml.keys).to eq([locale])
+          expect(duplicates).to be_empty, "#{path}: duplicate keys #{duplicates.inspect}"
+          expect(yaml).to be_a(Hash), "#{path}: expected a locale mapping"
+          next unless yaml.is_a?(Hash)
 
-          expect(is_yaml_compatible?(english_yaml, yaml)).to eq(true) unless path["transliterate"]
+          expect(yaml.keys).to eq([locale]), "#{path}: expected only the #{locale} locale"
+          next if path["transliterate"]
+
+          # Empty locale files rely entirely on fallback translations.
+          translations = yaml[locale] || {}
+          expect(translations).to be_a(Hash), "#{path}: expected translations or an empty locale"
+          next unless translations.is_a?(Hash)
+
+          expect(is_yaml_compatible?(english_yaml, translations)).to eq(true),
+          "#{path}: translation value types differ from #{english_path}"
         end
       end
     end
