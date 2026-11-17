@@ -69,6 +69,23 @@ remove settings, use `discourse-migration`.
 - `area`: use the filtered admin settings page key when the setting belongs with an existing admin
   workflow.
 - `refresh: true`: use when clients should reload after the setting changes.
+- `section`: groups a plugin's settings into titled sections on that plugin's own settings page
+  (not on area pages or the all site settings page). Sections appear in file order, so keep each
+  section's settings together in `settings.yml`; settings without a section render first,
+  untitled. Prefix keys with the plugin name (`chat_general`) and add the title under
+  `admin_js.admin.site_settings.sections.<key>` in the plugin's `client.en.yml`. Headings hide
+  while the page is filtered.
+- `unit`: a label shown after a number input, such as `seconds` or `users`. It is translated by
+  `admin.site_settings.units.<unit>`; core provides `characters`, `days`, `minutes` and `seconds`,
+  and a plugin adds its own under `admin_js.admin.site_settings.units` in its `client.en.yml`.
+- `format`: the FormKit size of this setting's field (`small`, `medium`, `large`, `max` or
+  `full`). Setting field types have no default size, because the same field renders in stacked
+  forms and in horizontal rows where the grid sizes the control. Leave `format` unset so the field
+  takes FormKit's natural width, and only add it to a specific setting that needs a different
+  size. Never reintroduce per-type format defaults in `setting-field-registry.js`, and never pass
+  a blanket or derived `@format` (for example by type or unit) from a shared row template. A page
+  that renders one field in a fixed place may pass `@format` on that `SettingDefinitionField`;
+  sizing that holds for a control type in every layout belongs in FormKit CSS for that control.
 
 ## Setting Types
 
