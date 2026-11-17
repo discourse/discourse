@@ -293,6 +293,14 @@ RSpec.describe Email::Styles do
       expect(fragment.to_s.squish).to match(%r{^<blockquote.+</blockquote>$})
     end
 
+    it "renders nested quotes once, each as a <blockquote>" do
+      fragment =
+        html_fragment(
+          '<aside class="quote"><div class="title">alice:</div><blockquote><p>outer</p><aside class="quote"><div class="title">bob:</div><blockquote><p>inner</p></blockquote></aside></blockquote></aside>',
+        )
+      expect(fragment.css("blockquote").map(&:text)).to eq(%w[alice:outerbob:inner bob:inner])
+    end
+
     it "sets an explicit text color on quotes and code so it doesn't inherit a client's dark-theme text color" do
       fragment =
         html_fragment(
