@@ -280,6 +280,36 @@ module("Unit | ui-kit | selectOption", function (hooks) {
     );
   });
 
+  test("label and icon are presentation settings that null clears", function (assert) {
+    const fruit = { id: "fig", name: "Fig" };
+    const option = selectOption(fruit, { label: "Ripe fig", icon: "lemon" });
+    assert.strictEqual(option.label, "Ripe fig", "label survives");
+    assert.strictEqual(option.icon, "lemon", "icon survives");
+    assert.strictEqual(option.settings.label, "Ripe fig", "label is exposed");
+    assert.strictEqual(option.settings.icon, "lemon", "icon is exposed");
+    const empty = option.with({ icon: "" });
+    assert.strictEqual(empty.icon, "", "an empty icon is kept as none");
+    const cleared = option.with({ label: null, icon: null });
+    assert.strictEqual(cleared.label, undefined, "null clears the label");
+    assert.strictEqual(cleared.icon, undefined, "null clears the icon");
+    assert.strictEqual(
+      cleared.record,
+      fruit,
+      "presentation settings never touch the record"
+    );
+  });
+
+  test("label and icon settings must be strings", function (assert) {
+    const fruit = { id: "fig", name: "Fig" };
+    for (const settings of [{ label: 3 }, { icon: { id: "lemon" } }]) {
+      assert.throws(
+        () => selectOption(fruit, settings),
+        /Assertion Failed:/,
+        `a non-string ${Object.keys(settings)[0]} asserts`
+      );
+    }
+  });
+
   test("unknown position and divider values assert", function (assert) {
     const fruit = { id: "apple", name: "Apple" };
     const option = selectOption(fruit);

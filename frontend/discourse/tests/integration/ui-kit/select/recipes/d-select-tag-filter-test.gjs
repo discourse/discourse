@@ -1134,6 +1134,53 @@ module(
       });
     });
 
+    for (const setting of ["label", "icon"]) {
+      test(`tag filter reloads when an option's ${setting} setting changes`, async function (assert) {
+        const bug = { id: 1, name: "bug" };
+        const options = tracked([selectOption(bug, { [setting]: "first" })]);
+        const loads = [];
+        const onChange = () => {};
+
+        class CountingTagFilter extends DSelectTagFilter {
+          @emberAction
+          load(filter) {
+            loads.push(filter);
+            return super.load(filter);
+          }
+        }
+
+        this.siteSettings.tagging_enabled = true;
+        this.siteSettings.max_tags_in_filter_list = 30;
+        this.siteSettings.max_tags_per_topic = 5;
+        await render(
+          <template>
+            <CountingTagFilter
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @options={{options.value}}
+            />
+          </template>
+        );
+        await dSelect().open();
+        const opened = loads.length;
+
+        options.value = [selectOption(bug, { [setting]: "first" })];
+        await settled();
+        assert.strictEqual(
+          loads.length,
+          opened,
+          "an identical rebuild keeps the list"
+        );
+
+        options.value = [selectOption(bug, { [setting]: "second" })];
+        await settled();
+        assert.true(
+          loads.length > opened,
+          `a changed ${setting} setting reloads the list`
+        );
+      });
+    }
+
     test("tag filter refreshes changed settings without reloading identical options", async function (assert) {
       const bug = { id: 1, name: "bug" };
       const ui = { id: 2, name: "ui" };

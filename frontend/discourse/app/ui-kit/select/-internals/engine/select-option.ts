@@ -26,6 +26,10 @@ export interface SelectOptionSettings<T extends object = SelectRecord> {
   disabled?: boolean | null;
   /** Secondary text drawn under the option's name and read as its description. */
   description?: string | null;
+  /** The name shown for the option, in place of its record's; `""` shows none. */
+  label?: string | null;
+  /** The icon drawn beside the option, in place of its record's; `""` draws none. */
+  icon?: string | null;
   /** Pins the option at the top, or holds it after every other option. */
   position?: SelectOptionPosition | null;
   /** Draws a rule between this option and its neighbour. */
@@ -53,6 +57,8 @@ export type SelectOptionKind =
 const SETTING_KEYS = new Set([
   "disabled",
   "description",
+  "label",
+  "icon",
   "position",
   "divider",
   "onSelect",
@@ -113,6 +119,14 @@ class Option<T extends object> {
     return this.#settings.description ?? undefined;
   }
 
+  get label(): string | undefined {
+    return this.#settings.label ?? undefined;
+  }
+
+  get icon(): string | undefined {
+    return this.#settings.icon ?? undefined;
+  }
+
   get position(): SelectOptionPosition | undefined {
     return this.#settings.position ?? undefined;
   }
@@ -167,11 +181,21 @@ function validateSettings(settings: object): void {
     assert(
       key === "sticky"
         ? 'DSelect: an option has no `sticky` setting; use `position: "sticky"`.'
-        : `DSelect: \`${key}\` is not an option setting. The settings are disabled, description, position, divider and onSelect.`,
+        : `DSelect: \`${key}\` is not an option setting. The settings are disabled, description, label, icon, position, divider and onSelect.`,
       SETTING_KEYS.has(key)
     );
   }
-  const { position, divider, onSelect } = settings as SelectOptionSettings;
+  const { position, divider, onSelect, label, icon } =
+    settings as SelectOptionSettings;
+  for (const [name, value] of [
+    ["label", label],
+    ["icon", icon],
+  ] as const) {
+    assert(
+      `DSelect: an option's \`${name}\` is a string, not ${typeof value}.`,
+      value == null || typeof value === "string"
+    );
+  }
   assert(
     `DSelect: an option's \`position\` is "sticky" or "end", not "${String(position)}".`,
     position == null || POSITIONS.has(position)

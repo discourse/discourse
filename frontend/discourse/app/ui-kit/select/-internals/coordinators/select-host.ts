@@ -57,6 +57,8 @@ export interface SelectHostArgs
       | "valueField"
       | "normalizeKey"
       | "labelField"
+      | "iconField"
+      | "descriptionField"
       | "valueRecords"
       | "resolveValue"
       | "resolveValues"
@@ -223,6 +225,8 @@ export default class SelectHost {
       valueField: this.#init.getArgs().valueField,
       normalizeKey: this.#init.getArgs().normalizeKey,
       labelField: this.#init.getArgs().labelField,
+      iconField: this.#init.getArgs().iconField,
+      descriptionField: this.#init.getArgs().descriptionField,
       // Passed only when the consumer actually declared the arg. An arg that is present but
       // still empty is the late-arrival pattern mid-flight; withholding the reader entirely is
       // what lets the engine tell that apart from "no identity mechanism was ever supplied".

@@ -386,6 +386,36 @@ module("Unit | ui-kit | select-item", function (hooks) {
     );
   });
 
+  test("explicit labels and icons override derivation and empty means none", function (assert) {
+    const record = { id: "date", name: "Date", glyph: "calendar" };
+    const answer = selectOption(record, {
+      label: "Answer label",
+      icon: "clock",
+    });
+    const { directory, state } = createDirectory(record, { answer });
+    state.fields.iconField = "glyph";
+    const view = { kind: "held" };
+
+    const explicit = directory.itemFor(record.id, view);
+    assert.strictEqual(
+      explicit.label,
+      "Answer label",
+      "an explicit label wins"
+    );
+    assert.strictEqual(explicit.icon, "clock", "an explicit icon wins");
+
+    state.contributions.view = selectOption(record, { label: "", icon: "" });
+    const empty = directory.itemFor(record.id, view);
+    assert.strictEqual(empty.label, "", "an empty label is shown as empty");
+    assert.strictEqual(empty.icon, undefined, "an empty icon means none");
+
+    delete state.contributions.view;
+    delete state.contributions.answer;
+    const derived = directory.itemFor(record.id, view);
+    assert.strictEqual(derived.label, record.name, "the label field derives");
+    assert.strictEqual(derived.icon, record.glyph, "the icon field derives");
+  });
+
   test("unresolved items keep fallback labels and suppress derived details", function (assert) {
     const record = { id: "missing", fallbackName: "Missing fruit" };
     const reads = { icon: 0, details: 0 };

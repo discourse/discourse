@@ -124,6 +124,10 @@ export interface DSelectSignature {
     /** Maps an id to the key that decides identity, such as a lowercasing one for usernames. Ids match exactly without it. Read once. */
     normalizeKey?: SelectEngineInit["normalizeKey"];
     labelField?: string;
+    /** Record field holding each option's icon name. Without it, an option has an icon only when given one. */
+    iconField?: string;
+    /** Record field holding each option's description. Without it, an option has a description only when given one. */
+    descriptionField?: string;
     valueRecords?: SelectEngineInit["valueRecords"];
     resolveValue?: SelectEngineInit["resolveValue"];
     resolveValues?: SelectEngineInit["resolveValues"];

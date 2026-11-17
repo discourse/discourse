@@ -72,6 +72,10 @@ interface DSelectListSignature {
     normalizeKey?: SelectHostArgs["normalizeKey"];
     /** Fallback display-label field. */
     labelField?: string;
+    /** Record field holding each option's icon name. */
+    iconField?: string;
+    /** Record field holding each option's description. */
+    descriptionField?: string;
     /** Already resolved held records. */
     valueRecords?: SelectHostArgs["valueRecords"];
     /** Resolves one held value; used when `@resolveValues` is absent. */

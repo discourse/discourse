@@ -122,7 +122,12 @@ export class SelectItem {
     return this.#properties;
   }
 
+  /** An explicit label wins, `""` included; otherwise it is derived. */
   get label(): string {
+    const explicit = this.#properties.label;
+    if (explicit != null) {
+      return explicit;
+    }
     if (this.#unresolved) {
       const named = this.#sources.unresolvedLabel?.(this.#record);
       if (named != null) {
@@ -132,7 +137,12 @@ export class SelectItem {
     return String(this.#record[this.#sources.fields().labelField] ?? "");
   }
 
+  /** An explicit icon wins, and `""` means none; otherwise it is derived. */
   get icon(): string | undefined {
+    const explicit = this.#properties.icon;
+    if (explicit != null) {
+      return explicit || undefined;
+    }
     return this.#unresolved
       ? undefined
       : this.#derived(this.#sources.fields().iconField);

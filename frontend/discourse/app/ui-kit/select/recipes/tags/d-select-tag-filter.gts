@@ -225,6 +225,8 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
         JSON.stringify([
           option.disabled,
           option.description ?? null,
+          option.label ?? null,
+          option.icon ?? null,
           option.position ?? null,
           option.divider ?? null,
           option.action,
