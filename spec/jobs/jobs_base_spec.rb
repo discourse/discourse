@@ -87,6 +87,32 @@ RSpec.describe ::Jobs::Base do
   end
 
   describe "#perform" do
+    it "restores the caller's logging context after a successful job" do
+      previous_env = Thread.current[Logster::Logger::LOGSTER_ENV]
+      caller_env = { request_id: "parent_request" }
+      Thread.current[Logster::Logger::LOGSTER_ENV] = caller_env
+
+      GoodJob.new.perform({})
+
+      expect(Thread.current[Logster::Logger::LOGSTER_ENV]).to equal(caller_env)
+    ensure
+      Thread.current[Logster::Logger::LOGSTER_ENV] = previous_env
+    end
+
+    it "restores the caller's logging context when a job exits nonlocally" do
+      previous_env = Thread.current[Logster::Logger::LOGSTER_ENV]
+      caller_env = { request_id: "parent_request" }
+      Thread.current[Logster::Logger::LOGSTER_ENV] = caller_env
+      job = GoodJob.new
+      job.define_singleton_method(:execute) { |args| throw :cancel_job }
+
+      catch(:cancel_job) { job.perform({}) }
+
+      expect(Thread.current[Logster::Logger::LOGSTER_ENV]).to equal(caller_env)
+    ensure
+      Thread.current[Logster::Logger::LOGSTER_ENV] = previous_env
+    end
+
     context "when a job raises an error" do
       before { Discourse.reset_job_exception_stats! }
 

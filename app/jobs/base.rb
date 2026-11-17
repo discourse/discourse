@@ -302,6 +302,7 @@ module Jobs
 
           job_instrumenter =
             JobInstrumenter.new(job_class: self.class, opts: opts, db: db, jid: jid)
+          previous_logster_env = Thread.current[Logster::Logger::LOGSTER_ENV]
           begin
             I18n.locale =
               SiteSetting.default_locale || SiteSettings::DefaultsProvider::DEFAULT_LOCALE
@@ -322,14 +323,13 @@ module Jobs
             exception[:message] = "While establishing database connection to #{db}"
             exception[:other] = { problem_db: db }
           ensure
+            Thread.current[Logster::Logger::LOGSTER_ENV] = previous_logster_env
             job_instrumenter.stop(exception: exception)
           end
         end
 
         exceptions << exception unless exception.empty?
       end
-
-      Thread.current[Logster::Logger::LOGSTER_ENV] = nil
 
       if exceptions.length > 0
         exceptions.each do |exception_hash|
