@@ -552,6 +552,8 @@ RSpec.describe ModerationNotice do
           post_action_type_id: PostActionType.types[:illegal],
         )
 
+      expect(options).not_to have_key(:flag_reason)
+
       notice =
         SystemMessage.create(
           author,
