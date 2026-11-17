@@ -330,6 +330,21 @@ RSpec.describe Voice::RoomMembershipsController do
       expect(update_stub).not_to have_been_requested
     end
 
+    it "evicts a removed member from the SFU after the transport pin expired" do
+      Voice::ParticipantTracker.remove(room.id, member.id)
+      Voice::ParticipantTracker.clear_transport_pin(room.id)
+      remove_stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+        ).with(body: { identity: member.id.to_s, room: Voice::Livekit.room_name(room) }.to_json)
+
+      delete "/voice/rooms/#{room.id}/memberships/#{participant_membership.id}.json"
+
+      expect(response.status).to eq(204)
+      expect(remove_stub).to have_been_requested.once
+    end
+
     it "revokes publishing on the SFU when a present speaker's public room membership is removed" do
       room.update!(public: true)
       participant_membership.update!(role: Voice::RoomMembership::ROLE_SPEAKER)

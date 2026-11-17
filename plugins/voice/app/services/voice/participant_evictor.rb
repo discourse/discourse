@@ -16,7 +16,9 @@ module Voice
       Voice::RoomBroadcaster.publish_kick(room, user_id)
       Voice::RoomBroadcaster.publish_participants(room)
 
-      Voice::Livekit::RoomServiceClient.remove_participant(room, user_id) unless user_id.negative?
+      if user_id.positive? && Voice::ParticipantTracker.pinned_transport(room.id) != "mesh"
+        Voice::Livekit::RoomServiceClient.expel(Voice::Livekit.room_name(room), user_id.to_s)
+      end
 
       if Voice::ParticipantTracker.human_user_ids(room.id).empty? &&
            Voice::AgentManager.provider_room?(room.id)

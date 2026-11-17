@@ -13,7 +13,7 @@ module Voice
 
       class << self
         def participant_user_ids(room)
-          return [] unless sync?(room, agent_cleanup: false)
+          return [] if Voice::ParticipantTracker.pinned_transport(room.id) == "mesh"
 
           result = list_participants(Livekit.room_name(room))
           return [] unless result[:ok]
