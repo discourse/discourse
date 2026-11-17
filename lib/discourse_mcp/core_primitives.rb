@@ -1128,7 +1128,8 @@ module DiscourseMcp
         registry,
         "discourse_update_topic",
         title: "Update topic",
-        description: "Updates fields on a topic when the user may edit it.",
+        description:
+          "Updates title, category, tags, or featured link when the user may edit the topic. Omit unchanged fields. To close or reopen, use discourse_set_topic_closed; to pin or unpin, use discourse_set_topic_pin.",
         implementation: Tools::UpdateTopic,
         input_schema:
           object_schema(
@@ -1539,6 +1540,107 @@ module DiscourseMcp
     end
 
     def register_moderation_tools(registry)
+      register_tool(
+        registry,
+        "discourse_set_topic_pin",
+        title: "Set topic pin",
+        description:
+          "Pins a topic in its category, pins it globally, or unpins it. Uses normal topic pin permissions and status-change behavior. Category/global pins remain until unpinned; this replaces any existing pin expiration. Returns persisted pin state. Use this tool rather than update_topic for pinning.",
+        implementation: Tools::SetTopicPin,
+        input_schema:
+          object_schema(
+            {
+              topic_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              mode: {
+                type: "string",
+                enum: %w[category global unpin],
+              },
+            },
+            required: %w[topic_id mode],
+          ),
+        annotations: WRITE,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_set_topic_closed",
+        title: "Close or reopen topic",
+        description:
+          "Closes a topic with closed=true or reopens it with closed=false. Uses normal topic moderation permissions, status-change posts, timers, and staff logging. Returns persisted closed and archived state. Does not change archived status. Use this tool, not update_topic, to close or reopen topics.",
+        implementation: Tools::SetTopicClosed,
+        input_schema:
+          object_schema(
+            { topic_id: { type: "integer", minimum: 1 }, closed: { type: "boolean" } },
+            required: %w[topic_id closed],
+          ),
+        annotations: WRITE,
+        risk: :moderation,
+      )
+      {
+        "suspend" => Tools::SuspendUser,
+        "unsuspend" => Tools::UnsuspendUser,
+        "silence" => Tools::SilenceUser,
+        "unsilence" => Tools::UnsilenceUser,
+      }.each do |operation, implementation|
+        restriction = %w[suspend silence].include?(operation)
+        properties = {
+          username: {
+            type: "string",
+            minLength: 1,
+            maxLength: 255,
+          },
+          confirm: {
+            type: "boolean",
+            const: true,
+            description:
+              "Caller attests this specific moderation action was requested. This argument is not an interactive approval flow.",
+          },
+        }
+        required = %w[username confirm]
+        if restriction
+          properties.merge!(
+            duration_days: {
+              type: "integer",
+              minimum: 1,
+              maximum: Tools::UserModerationSupport::MAX_DURATION_DAYS,
+            },
+            reason: {
+              type: "string",
+              minLength: 1,
+              maxLength: 300,
+            },
+            message: {
+              type: "string",
+              maxLength: 2000,
+              description:
+                "Optional explanation for the user. Standard site moderation notices and audit logging still apply.",
+            },
+          )
+          required.concat(%w[duration_days reason])
+        end
+        description =
+          case operation
+          when "suspend"
+            "Suspends a user, blocking login until the requested duration ends. Requires staff permissions, explicit confirmation, duration and reason. Does not deactivate the account or delete posts. Uses standard suspension audit/notification behavior; independent of reviewable status."
+          when "silence"
+            "Silences a user for the requested duration, restricting posting while preserving login. Requires staff permissions, explicit confirmation, duration and reason. Uses standard silence audit/notification behavior without deleting posts; independent of reviewable status."
+          else
+            "Removes the user's #{operation == "unsuspend" ? "suspension" : "silence"} using standard staff permission checks and audit/notification behavior. Requires explicit confirmation. Returns verified current state; already-clear restrictions are a no-op."
+          end
+        register_tool(
+          registry,
+          "discourse_#{operation}_user",
+          title: "#{operation.capitalize} user",
+          description: description,
+          implementation: implementation,
+          input_schema: object_schema(properties, required: required),
+          annotations: restriction ? DESTRUCTIVE : WRITE,
+          risk: :moderation,
+        )
+      end
       register_tool(
         registry,
         "discourse_get_review_queue_count",
