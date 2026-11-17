@@ -1980,6 +1980,37 @@ module DiscourseMcp
     def register_theme_tools(registry)
       register_tool(
         registry,
+        "discourse_set_theme_code",
+        title: "Set theme code",
+        description:
+          "Preferred tool for inline theme code. First get_theme and copy code_revision into expected_code_revision. Supply plain css and/or javascript strings; no field arrays, upload IDs, or numeric types. CSS replaces common/common.scss; JavaScript replaces javascripts/discourse/api-initializers/mcp-theme-code.js and should import { apiInitializer } from discourse/lib/api and export default apiInitializer((api) => { ... }). Each input accepts at most 65,536 characters. Omitted inputs remain unchanged; empty strings remove these managed files. Does not attach/enable a component. Checks compilation and rejects a code revision that has changed since your read. The revision check coordinates edits through this tool; it does not prevent concurrent edits through other interfaces. Read the returned verification; saved code is not browser-verified.",
+        implementation: Tools::SetThemeCode,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              expected_code_revision: {
+                type: "string",
+                pattern: "^[0-9a-f]{64}$",
+              },
+              css: {
+                type: "string",
+                maxLength: 65_536,
+              },
+              javascript: {
+                type: "string",
+                maxLength: 65_536,
+              },
+            },
+            required: %w[theme_id expected_code_revision],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
         "discourse_get_theme",
         title: "Get theme",
         description:
@@ -2005,6 +2036,8 @@ module DiscourseMcp
           value: {
             type: "string",
             maxLength: 1_000_000,
+            description:
+              "Inline source code or text for this field. Put CSS, SCSS, JavaScript, HTML, and YAML source here. An empty string removes an existing inline field.",
           },
           type: {
             type: "string",
@@ -2013,10 +2046,14 @@ module DiscourseMcp
           type_id: {
             type: "integer",
             minimum: 0,
+            description:
+              "Advanced numeric field type. Prefer type or allow inference from name and target.",
           },
           upload_id: {
             type: "integer",
             minimum: 1,
+            description:
+              "An existing upload ID returned by an upload tool. Only valid with type theme_upload_var or theme_screenshot_upload_var. Omit value when supplying upload_id. For inline source code, use value and omit upload_id.",
           },
         },
         required: %w[name target],
@@ -2027,7 +2064,7 @@ module DiscourseMcp
         "discourse_create_theme",
         title: "Create theme",
         description:
-          "Creates a theme or theme component with optional HTML, SCSS, and settings fields.",
+          "Creates theme metadata or a component. For additive styling use component:true, then attach with update_theme parent_theme_ids; enabled alone does not apply it. Standalone themes do not affect the default theme unless made default or selected by a user. For inline CSS/JavaScript prefer creating without fields, then discourse_set_theme_code using the returned code_revision. theme_fields is an advanced file/asset interface; do not invent upload IDs.",
         implementation: Tools::CreateTheme,
         input_schema:
           object_schema(
@@ -2069,7 +2106,7 @@ module DiscourseMcp
         "discourse_update_theme",
         title: "Update theme",
         description:
-          "Updates attributes and fields on a theme when the authenticated user may edit it.",
+          "Updates theme metadata, component relationships, or advanced files/assets when the authenticated user may edit it. Set component:true to convert an existing non-default theme in place, preserving its ID and code; conversion removes incompatible relationships and resets palette/user-selectability. Attach components using parent_theme_ids (full replacement list); child_theme_ids also replaces the full list, so preserve existing components. enabled alone does not attach a component. Prefer discourse_set_theme_code for inline CSS/JavaScript; it chooses canonical paths and checks revision and compilation.",
         implementation: Tools::UpdateTheme,
         input_schema:
           object_schema(
@@ -2092,6 +2129,11 @@ module DiscourseMcp
               },
               user_selectable: {
                 type: "boolean",
+              },
+              component: {
+                type: "boolean",
+                description:
+                  "Convert in place between theme and component. The default theme cannot be converted.",
               },
               enabled: {
                 type: "boolean",
