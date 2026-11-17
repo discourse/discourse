@@ -30,7 +30,7 @@ The plugin seeds a default "Watercooler" room on first enable.
 
 | Setting                              | Description                                                                          |
 | ------------------------------------ | ------------------------------------------------------------------------------------ |
-| `live_file_transfer_max_size_mb` | Per-file maximum in binary MiB (1 MiB = 1,048,576 bytes). Default 100; integer range 1–102400 (100 GiB). Receive disk budget is twice the current maximum, including files awaiting deletion; browser quotas still apply. Streaming window remains 256 KiB. |
+| `live_file_transfer_max_size_mb` | Per-file maximum in binary MiB (1 MiB = 1,048,576 bytes). Default 100; integer range 1–102400 (100 GiB). Receive disk budget is twice the current maximum, including files awaiting deletion; browser quotas still apply. Streaming window remains 8 MiB. |
 | `live_file_transfer_allowed_groups` | Groups allowed to send mesh-room files (empty by default; disables all transfers). See [File transfers](docs/file-transfers.md). |
 | `live_enabled`                    | Master switch.                                                                       |
 | `live_allowed_groups`             | Groups that can access live rooms (default: everyone).                              |

@@ -203,8 +203,8 @@ export default class LiveWebrtcService extends Service {
     });
 
     this.#peerManager = new PeerManager({
-      onFileChannel: (roomId, userId, channel) =>
-        this.#fileTransfers.attach(roomId, userId, channel),
+      onFileChannel: (roomId, userId, channel, getMaxMessageSize) =>
+        this.#fileTransfers.attach(roomId, userId, channel, getMaxMessageSize),
       getIceServers: () => this.iceServers,
       getIceTransportPolicy: () => this.iceTransportPolicy,
       getLocalStream: () => this.localStream,
