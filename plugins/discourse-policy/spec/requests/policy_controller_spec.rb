@@ -344,6 +344,39 @@ describe DiscoursePolicy::PolicyController do
       target_group.add_owner(admin)
     end
 
+    it "prevents a policy editor from redirecting a group grant to themselves" do
+      SiteSetting.create_policy_allowed_groups = "#{audience_group.id}"
+      policy_post = create_post(user: admin, raw: <<~MD)
+        [policy group=#{group.name} add-users-to-group=#{target_group.name}]
+        I agree
+        [/policy]
+      MD
+      original_raw = policy_post.raw
+
+      sign_in(editor)
+      put "/posts/#{policy_post.id}.json",
+          params: {
+            post: {
+              raw: original_raw.sub("group=#{group.name}", "groups=#{audience_group.name}"),
+            },
+          }
+
+      aggregate_failures do
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.no_policy_permission"),
+        )
+        expect(policy_post.reload.raw).to eq(original_raw)
+
+        put "/policy/accept.json", params: { post_id: policy_post.id }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.user_missing"),
+        )
+        expect(target_group.users.exists?(editor.id)).to eq(false)
+      end
+    end
+
     it "rejects an HTML policy from an editor without policy permissions" do
       raw = <<~HTML
         <div class="policy" data-group="#{audience_group.name}" data-add-users-to-group="#{target_group.name}">
