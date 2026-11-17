@@ -725,7 +725,13 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       peer.can_send_files = true;
       const offer = (id) =>
         channel.onmessage({
-          data: JSON.stringify({ type: "offer", id, name: "a.zip", size: 1 }),
+          data: JSON.stringify({
+            type: "offer",
+            id,
+            name: "a.zip",
+            size: 1,
+            chunkSize: 65500,
+          }),
         });
 
       offer("55555555-5555-4555-8555-555555555555");
@@ -783,6 +789,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
           id,
           name: "test.txt",
           size: 1,
+          chunkSize: 65500,
         }),
       });
     offer("11111111-1111-4111-8111-111111111111");

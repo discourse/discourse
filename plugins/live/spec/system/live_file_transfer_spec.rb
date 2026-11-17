@@ -528,7 +528,7 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
       # A modified sender must not be able to bypass the receiver's limit.
       page.execute_script(<<~JS)
         window.__fileChannels.find(c => c.readyState === "open").send(JSON.stringify({
-          type: "offer", id: crypto.randomUUID(), name: "too-large.bin", size: 1024 * 1024 + 1
+          type: "offer", id: crypto.randomUUID(), name: "too-large.bin", size: 1024 * 1024 + 1, chunkSize: 65500
         }));
       JS
     end
@@ -543,7 +543,7 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
         (() => {
           const id = crypto.randomUUID();
           window.__fileChannels.find(c => c.readyState === "open").send(JSON.stringify({
-            type: "offer", id, name: "at-limit.bin", size: 1024 * 1024
+            type: "offer", id, name: "at-limit.bin", size: 1024 * 1024, chunkSize: 65500
           }));
           return id;
         })()
@@ -565,7 +565,7 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
       # hidden menu. This is still an offer over the native RTC data channel.
       page.execute_script(<<~JS)
         window.__fileChannels.find(c => c.readyState === "open").send(JSON.stringify({
-          type: "offer", id: crypto.randomUUID(), name: "unauthorized.dat", size: 3
+          type: "offer", id: crypto.randomUUID(), name: "unauthorized.dat", size: 3, chunkSize: 65500
         }));
       JS
     end
