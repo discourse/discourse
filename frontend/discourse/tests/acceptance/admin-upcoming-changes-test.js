@@ -93,6 +93,14 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
     await visit(
       "/admin/config/upcoming-changes?changeNamesFilter=alpha_composer"
     );
+    await fillIn(".d-filter-controls__input", "beta_sidebar");
+    await visit(
+      "/admin/config/upcoming-changes?changeNamesFilter=stable_defaults"
+    );
+    assert
+      .dom(".d-filter-controls__input")
+      .hasValue("stable_defaults", "navigation restores the linked search");
+
     await visit("/admin/config/upcoming-changes?status=stable");
 
     assert.dom(".d-filter-controls__input").hasValue("");
@@ -129,6 +137,43 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
     await settled();
 
     assert.dom(input).hasValue("", "the cleared search stays empty");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/upcoming-changes",
+      "the pending search is removed from the URL"
+    );
+    assert
+      .dom(".upcoming-change-row")
+      .exists({ count: 3 }, "all changes are visible");
+  });
+
+  test("reset discards a pending search URL update", async function (assert) {
+    await visit("/admin/config/upcoming-changes");
+    await fillIn(".d-filter-controls__input", "beta_sidebar");
+
+    const input = find(".d-filter-controls__input");
+    const clock = sinon.useFakeTimers({
+      toFake: ["Date", "setTimeout", "clearTimeout"],
+    });
+
+    try {
+      run(() => {
+        input.value = "alpha_composer";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      clock.tick(10);
+      assert
+        .dom(".d-filter-controls__reset")
+        .isEnabled("Reset is available to the user");
+      run(() => find(".d-filter-controls__reset").click());
+      clock.tick(20);
+    } finally {
+      clock.restore();
+    }
+
+    await settled();
+
+    assert.dom(input).hasValue("", "the reset search stays empty");
     assert.strictEqual(
       currentURL(),
       "/admin/config/upcoming-changes",
