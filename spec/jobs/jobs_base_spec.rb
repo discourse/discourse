@@ -87,28 +87,38 @@ RSpec.describe ::Jobs::Base do
   end
 
   describe "#perform" do
-    it "restores the caller's logging context after a successful job" do
+    it "clears logging context after a successful job" do
       previous_env = Thread.current[Logster::Logger::LOGSTER_ENV]
-      caller_env = { request_id: "parent_request" }
-      Thread.current[Logster::Logger::LOGSTER_ENV] = caller_env
+      Thread.current[Logster::Logger::LOGSTER_ENV] = { request_id: "parent_request" }
 
       GoodJob.new.perform({})
 
-      expect(Thread.current[Logster::Logger::LOGSTER_ENV]).to equal(caller_env)
+      expect(Thread.current[Logster::Logger::LOGSTER_ENV]).to be_nil
     ensure
       Thread.current[Logster::Logger::LOGSTER_ENV] = previous_env
     end
 
-    it "restores the caller's logging context when a job exits nonlocally" do
+    it "clears logging context when every site is skipped" do
       previous_env = Thread.current[Logster::Logger::LOGSTER_ENV]
-      caller_env = { request_id: "parent_request" }
-      Thread.current[Logster::Logger::LOGSTER_ENV] = caller_env
+      Thread.current[Logster::Logger::LOGSTER_ENV] = { request_id: "parent_request" }
+      Sidekiq.stubs(:paused?).returns(true)
+
+      Jobs::Scheduled.new.perform({})
+
+      expect(Thread.current[Logster::Logger::LOGSTER_ENV]).to be_nil
+    ensure
+      Thread.current[Logster::Logger::LOGSTER_ENV] = previous_env
+    end
+
+    it "clears logging context when a job exits nonlocally" do
+      previous_env = Thread.current[Logster::Logger::LOGSTER_ENV]
+      Thread.current[Logster::Logger::LOGSTER_ENV] = { request_id: "parent_request" }
       job = GoodJob.new
       job.define_singleton_method(:execute) { |args| throw :cancel_job }
 
       catch(:cancel_job) { job.perform({}) }
 
-      expect(Thread.current[Logster::Logger::LOGSTER_ENV]).to equal(caller_env)
+      expect(Thread.current[Logster::Logger::LOGSTER_ENV]).to be_nil
     ensure
       Thread.current[Logster::Logger::LOGSTER_ENV] = previous_env
     end
