@@ -3,11 +3,16 @@ import {
   find,
   render,
   triggerEvent,
+  triggerKeyEvent,
   waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PageShell from "discourse/components/page-shell";
 import SidebarWrapper from "discourse/components/sidebar-wrapper";
+import {
+  readShellGeometry,
+  shellTracks,
+} from "discourse/lib/page-shell-geometry";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 async function choose(name, value) {
@@ -456,6 +461,91 @@ module("Integration | Component | page shell", function (hooks) {
     wrapper.style.width = "1440px";
     await waitUntil(() => !this.shell.compactLogo);
     assert.dom(".page-shell__header-start").hasText("Full logo");
+  });
+
+  test("the geometry model matches the rendered tracks", async function (assert) {
+    await render(
+      <template>
+        <div style="width: 2000px;">
+          <PageShell @sidebarEnabled={{true}}><:main>Route</:main></PageShell>
+        </div>
+      </template>
+    );
+    const shellElement = find(".page-shell");
+    const frame = () =>
+      new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve))
+      );
+
+    for (const state of [
+      { width: "centered", resize: "grow" },
+      { width: "centered", resize: "content" },
+      { width: "centered", resize: "content", navigationWidth: 400 },
+      { width: "centered", resize: "grow", contextWidth: 1000 },
+      { width: "centered", resize: "content", contextWidth: 1000 },
+      { width: "centered", resize: "content", navigation: "rail" },
+      { width: "full", resize: "content", context: "hidden" },
+    ]) {
+      Object.assign(this.shell, {
+        navigation: "open",
+        context: "open",
+        navigationWidth: 260,
+        contextWidth: 300,
+        ...state,
+      });
+      await frame();
+      const predicted = Object.values(
+        shellTracks(readShellGeometry(shellElement, this.shell))
+      );
+      const rendered = getComputedStyle(shellElement)
+        .gridTemplateColumns.split(" ")
+        .map(parseFloat);
+      assert.true(
+        predicted.every(
+          (track, index) => Math.abs(track - rendered[index]) < 1
+        ),
+        `${JSON.stringify(state)}: predicted ${predicted.map(Math.round)}, rendered ${rendered.map(Math.round)}`
+      );
+    }
+  });
+
+  test("keyboard resizing steps the width directly and saves on release", async function (assert) {
+    await render(
+      <template>
+        <div style="width: 2000px;">
+          <PageShell @sidebarEnabled={{true}}><:main>Route</:main></PageShell>
+        </div>
+      </template>
+    );
+    await waitUntil(() => this.shell.contextMaxWidth === 1000);
+
+    const separator = ".page-shell__separator--context";
+    assert.dom(separator).hasAttribute("role", "separator");
+    assert.dom(separator).hasAttribute("aria-valuenow", "300");
+
+    // Context sits at the inline end, so ArrowLeft grows it in LTR.
+    await triggerKeyEvent(separator, "keydown", "ArrowLeft");
+    await triggerKeyEvent(separator, "keydown", "ArrowLeft");
+    assert.strictEqual(this.shell.contextWidth, 332);
+    assert.dom(separator).hasAttribute("aria-valuenow", "332");
+
+    await triggerKeyEvent(separator, "keyup", "ArrowLeft");
+    const store = this.owner.lookup("service:key-value-store");
+    assert.strictEqual(store.getObject("page-shell-panels").context.width, 332);
+
+    await triggerKeyEvent(separator, "keydown", "Home");
+    await triggerKeyEvent(separator, "keyup", "Home");
+    assert.strictEqual(this.shell.contextWidth, 200);
+  });
+
+  test("only open panels get a separator", async function (assert) {
+    this.shell.context = "rail";
+    await render(
+      <template>
+        <PageShell @sidebarEnabled={{true}}><:main>Route</:main></PageShell>
+      </template>
+    );
+    assert.dom(".page-shell__separator--context").doesNotExist();
   });
 
   test("RTL composer follows the content's logical start edge", async function (assert) {
