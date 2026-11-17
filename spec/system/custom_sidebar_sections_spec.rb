@@ -268,6 +268,7 @@ describe "Custom sidebar sections" do
   end
 
   it "does not allow to drag on mobile", mobile: true do
+    SiteSetting.enable_new_reordering_controls = false
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
