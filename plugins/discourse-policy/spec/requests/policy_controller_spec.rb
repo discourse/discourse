@@ -377,6 +377,37 @@ describe DiscoursePolicy::PolicyController do
       end
     end
 
+    it "keeps the previous policy when processing an edit fails" do
+      SiteSetting.create_policy_allowed_groups = "#{audience_group.id}"
+      policy_post = create_post(user: admin, raw: <<~MD)
+        [policy group=#{group.name} add-users-to-group=#{target_group.name}]
+        I agree
+        [/policy]
+      MD
+
+      Jobs.run_later!
+      sign_in(editor)
+      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
+        [policy group=#{audience_group.name} renew=2147483648]
+        I agree
+        [/policy]
+      MD
+
+      expect(response.status).to eq(200)
+
+      expect { Jobs::ProcessPost.new.execute(post_id: policy_post.id, cook: true) }.to raise_error(
+        ActiveModel::RangeError,
+      )
+
+      put "/policy/accept.json", params: { post_id: policy_post.id }
+
+      aggregate_failures do
+        expect(response.status).to eq(422)
+        expect(policy_post.reload.post_policy.groups).to contain_exactly(group)
+        expect(target_group.users.exists?(editor.id)).to eq(false)
+      end
+    end
+
     it "rejects an HTML policy from an editor without policy permissions" do
       raw = <<~HTML
         <div class="policy" data-group="#{audience_group.name}" data-add-users-to-group="#{target_group.name}">
