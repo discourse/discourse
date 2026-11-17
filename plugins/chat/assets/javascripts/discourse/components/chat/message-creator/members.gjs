@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import { getNext, getPrevious } from "./lib/iterate-list.js";
 import Member from "./member.gjs";
@@ -83,10 +84,10 @@ export default class Members extends Component {
         {{/each}}
 
         <Input
-          autofocus={{true}}
           class="chat-message-creator__members-input"
           placeholder={{this.addMoreMembersLabel}}
           @value={{@filter}}
+          {{dAutoFocus}}
           {{on "input" this.onFilter}}
           {{on "keydown" this.handleKeypress}}
           {{didInsert this.registerFocusFilterAction}}
