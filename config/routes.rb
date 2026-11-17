@@ -1882,7 +1882,7 @@ Discourse::Application.routes.draw do
       delete "/unused" => "tags#destroy_unused"
 
       # canonical slug/id format for category+tag routes
-      constraints(tag_id: /\d+/, format: /json|rss/) do
+      constraints(tag_id: /\d+/, format: %w[json rss]) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
             get "/none/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
@@ -1918,7 +1918,7 @@ Discourse::Application.routes.draw do
       end
 
       # legacy name-based format for category+tag routes
-      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
+      constraints(tag_name: %r{[^/]+?}, format: %w[json rss]) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
             get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
