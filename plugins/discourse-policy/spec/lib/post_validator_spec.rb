@@ -19,6 +19,31 @@ RSpec.describe DiscoursePolicy::PostValidator do
   end
 
   describe "#validate_post" do
+    it "requires target management for changes to either audience attribute, but not policy text" do
+      policy_group.add(post_owner)
+      policy_group.add(acting_user)
+      target_group = Fabricate(:group)
+      target_group.add_owner(post_owner)
+      post.update!(raw: <<~MD)
+        [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
+        I agree
+        [/policy]
+      MD
+      original_raw = post.raw
+      post.acting_user = acting_user
+
+      post.raw = original_raw.sub("I agree", "Updated agreement")
+      expect(described_class.new(post).validate_post).to eq(true)
+
+      ["group=other", "groups=other", "group=#{policy_group.name} groups=other"].each do |audience|
+        post.raw = original_raw.sub("group=#{policy_group.name}", audience)
+        expect(described_class.new(post).validate_post).to eq(false)
+      end
+
+      target_group.add_owner(acting_user)
+      expect(described_class.new(post).validate_post).to eq(true)
+    end
+
     it "returns true when policy blocks have not changed" do
       policy_group.add(post_owner)
       post.update!(raw: <<~MD)
