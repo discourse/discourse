@@ -120,6 +120,11 @@
       }
     }
 
+    .reviewable-action {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
     .dropdown-select-box.reviewable-action-dropdown {
       white-space: wrap;
       text-wrap: pretty;
