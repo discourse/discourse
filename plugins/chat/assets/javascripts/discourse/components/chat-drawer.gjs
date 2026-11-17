@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
+import { cached } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -36,6 +37,17 @@ export default class ChatDrawer extends Component {
   bodyInlineSize = null;
   hasUnreadMessages = false;
   drawerStyle = null;
+
+  // A retained route keeps the model and params it loaded with until the next route is ready.
+  @cached
+  get routeView() {
+    const { component, model, params } = this.chatDrawerRouter;
+    return component?.().then((RouteComponent) => ({
+      RouteComponent,
+      model,
+      params,
+    }));
+  }
 
   get drawerActions() {
     return {
@@ -324,7 +336,7 @@ export default class ChatDrawer extends Component {
 
           {{#if this.chatDrawerRouter.component}}
             <DAsyncContent
-              @asyncData={{this.chatDrawerRouter.component}}
+              @asyncData={{this.routeView}}
               @retainWhileReloading={{true}}
             >
               <:loading>
@@ -350,14 +362,14 @@ export default class ChatDrawer extends Component {
                   {{/if}}
                 </div>
               </:loading>
-              <:content as |RouteComponent|>
-                <RouteComponent
+              <:content as |view|>
+                <view.RouteComponent
                   @close={{this.close}}
                   @drawerActions={{this.drawerActions}}
-                  @model={{this.chatDrawerRouter.model}}
+                  @model={{view.model}}
                   @openInFullPage={{this.openInFullPage}}
                   @openURL={{this.openURL}}
-                  @params={{this.chatDrawerRouter.params}}
+                  @params={{view.params}}
                   @toggleExpand={{this.toggleExpand}}
                 />
               </:content>
