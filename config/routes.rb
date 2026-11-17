@@ -11,7 +11,19 @@ Discourse::Application.routes.draw do
   def patch(*)
   end # Disable PATCH requests
 
-  scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
+  get "svg-sprite/search/:keyword" => "svg_sprite#search",
+      :format => false,
+      :constraints => {
+        keyword: /[-a-z0-9\s\%]+/,
+      }
+  get "favicon/proxied" => "static#favicon", :format => false
+
+  # Apple accepts either of these paths for the apple-app-site-association file
+  # Might as well support both
+  get "apple-app-site-association" => "metadata#app_association_ios", :format => false
+  get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
+
+  scope path: nil, constraints: { format: %w[json html] } do
     relative_url_root =
       (
         if defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root
@@ -1072,11 +1084,6 @@ Discourse::Application.routes.draw do
           theme_id: /(-?[0-9]+)?/,
           format: :js,
         }
-    get "svg-sprite/search/:keyword" => "svg_sprite#search",
-        :format => false,
-        :constraints => {
-          keyword: /[-a-z0-9\s\%]+/,
-        }
     get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search",
         :defaults => {
           format: :json,
@@ -1705,8 +1712,6 @@ Discourse::Application.routes.draw do
           format: /.*/,
         }
 
-    get "favicon/proxied" => "static#favicon", :format => false
-
     get "robots.txt" => "robots_txt#index"
     get "robots-builder.json" => "robots_txt#builder"
     get "llms.txt" => "static#llms_txt"
@@ -1715,10 +1720,6 @@ Discourse::Application.routes.draw do
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
     get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
-    # Apple accepts either of these paths for the apple-app-site-association file
-    # Might as well support both
-    get "apple-app-site-association" => "metadata#app_association_ios", :format => false
-    get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
     # Tag Routes - Canonical vs Legacy
@@ -1804,7 +1805,7 @@ Discourse::Application.routes.draw do
       delete "/unused" => "tags#destroy_unused"
 
       # canonical slug/id format for category+tag routes
-      constraints(tag_id: /\d+/, format: /json|rss/) do
+      constraints(tag_id: /\d+/, format: %w[json rss]) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
             get "/none/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
@@ -1840,7 +1841,7 @@ Discourse::Application.routes.draw do
       end
 
       # legacy name-based format for category+tag routes
-      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
+      constraints(tag_name: %r{[^/]+?}, format: %w[json rss]) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
             get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
@@ -1884,28 +1885,32 @@ Discourse::Application.routes.draw do
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
     get "/tag_groups/filter/search" => "tag_groups#search", :format => :json
 
-    Discourse.filters.each do |filter|
-      root to: "list##{filter}",
-           constraints: HomePageConstraint.new("#{filter}"),
-           as: "list_#{filter}"
+    scope constraints: { format: %r{(json|html|\*/\*)} } do
+      Discourse.filters.each do |filter|
+        root to: "list##{filter}",
+             constraints: HomePageConstraint.new("#{filter}"),
+             as: "list_#{filter}"
+      end
+
+      # special case for categories
+      root to: "categories#index",
+           constraints: HomePageConstraint.new("categories"),
+           as: "categories_index"
+
+      root to: "finish_installation#index",
+           constraints: HomePageConstraint.new("finish_installation"),
+           as: "installation_redirect"
+
+      root to: "home_page#custom",
+           constraints: HomePageConstraint.new("custom"),
+           as: "home_page_custom"
+
+      root to: "home_page#blank",
+           constraints: HomePageConstraint.new("blank"),
+           as: "home_page_blank"
     end
 
     get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
-
-    # special case for categories
-    root to: "categories#index",
-         constraints: HomePageConstraint.new("categories"),
-         as: "categories_index"
-
-    root to: "finish_installation#index",
-         constraints: HomePageConstraint.new("finish_installation"),
-         as: "installation_redirect"
-
-    root to: "home_page#custom",
-         constraints: HomePageConstraint.new("custom"),
-         as: "home_page_custom"
-
-    root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
 
     get "/custom" => "home_page#custom"
 
