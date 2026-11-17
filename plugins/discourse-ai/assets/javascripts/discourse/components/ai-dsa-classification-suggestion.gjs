@@ -7,6 +7,13 @@ import { extractError } from "discourse/lib/ajax-error";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const LoadingHint = <template>
+  <span class="ai-dsa-loading-hint">
+    {{dIcon "spinner"}}
+    {{i18n "discourse_ai.ai_helper.context_menu.loading"}}
+  </span>
+</template>;
+
 const SuggestionHint = <template>
   {{dIcon "discourse-sparkles"}}
   {{i18n "discourse_ai.dsa_classification.suggested_by_ai"}}
@@ -20,7 +27,7 @@ export default class AiDsaClassificationSuggestion extends Component {
     );
   }
 
-  @tracked message = i18n("discourse_ai.dsa_classification.loading");
+  @tracked message;
 
   @action
   async suggest() {
@@ -28,22 +35,29 @@ export default class AiDsaClassificationSuggestion extends Component {
       this.args.outletArgs;
 
     try {
-      await updateClassification(async () => {
-        const suggestion = await ajax(
-          `/discourse-ai/ai-moderation/dsa-classifications/${reviewableId}/suggest`,
-          { type: "POST" }
-        );
-        if (communityRules.length === 1) {
-          suggestion.community_rule = null;
+      await updateClassification(
+        async () => {
+          const suggestion = await ajax(
+            `/discourse-ai/ai-moderation/dsa-classifications/${reviewableId}/suggest`,
+            { type: "POST" }
+          );
+          if (communityRules.length === 1) {
+            suggestion.community_rule = null;
+          }
+          if (!this.isDestroying) {
+            this.message =
+              suggestion.community_rule || suggestion.category
+                ? null
+                : i18n("discourse_ai.dsa_classification.no_suggestion");
+          }
+          return suggestion;
+        },
+        SuggestionHint,
+        {
+          community_rule: communityRules.length > 1 && LoadingHint,
+          category: LoadingHint,
         }
-        if (!this.isDestroying) {
-          this.message =
-            suggestion.community_rule || suggestion.category
-              ? null
-              : i18n("discourse_ai.dsa_classification.no_suggestion");
-        }
-        return suggestion;
-      }, SuggestionHint);
+      );
     } catch (error) {
       if (!this.isDestroying) {
         this.message = extractError(error);
@@ -53,7 +67,11 @@ export default class AiDsaClassificationSuggestion extends Component {
 
   <template>
     <div role="status" {{didInsert this.suggest}}>
-      {{#if this.message}}
+      {{#if @outletArgs.loading}}
+        <span class="sr-only">{{i18n
+            "discourse_ai.ai_helper.context_menu.loading"
+          }}</span>
+      {{else if this.message}}
         <p>{{this.message}}</p>
       {{/if}}
     </div>

@@ -311,7 +311,6 @@ en:
     discourse_ai:
       title: "AI"
       dsa_classification:
-        loading: "Getting AI suggestions…"
         suggested_by_ai: "Suggested by AI"
         no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"

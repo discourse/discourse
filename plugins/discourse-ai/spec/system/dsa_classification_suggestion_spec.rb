@@ -80,7 +80,8 @@ RSpec.describe "DSA classification suggestion" do
         .new
         .with_paused_request("**/dsa-classifications/*/suggest") do |request|
           review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
-          expect(modal).to have_confirmation_prompt("Getting AI suggestions…")
+          expect(modal).to have_field_hint(:category, "AI is generating")
+          expect(modal).to have_no_field_hint(:community_rule)
           expect(modal).to have_disabled_classification_fields
           request.wait
           request.resume

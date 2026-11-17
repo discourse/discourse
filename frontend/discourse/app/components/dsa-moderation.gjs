@@ -89,6 +89,7 @@ const Body = <template>
           @name="dsa-classification-before-fields"
           @outletArgs={{lazyHash
             communityRules=@flow.options.community_rules
+            loading=@flow.isUpdatingClassification
             reviewableId=@flow.reviewableId
             updateClassification=@flow.updateClassification
           }}
@@ -96,7 +97,7 @@ const Body = <template>
       {{/if}}
       <DsaModerationDetails
         @disabled={{@flow.isUpdatingClassification}}
-        @fieldHints={{@flow.fieldHints}}
+        @fieldHints={{or @flow.pendingFieldHints @flow.fieldHints}}
         @formId={{@flow.formId}}
         @onFieldSet={{@flow.editField}}
         @onRegisterApi={{@flow.registerFormApi}}
@@ -160,7 +161,7 @@ const Footer = <template>
 export default class DsaModeration extends Component {
   @tracked fieldHints = {};
   @tracked classificationStep = false;
-  @tracked isUpdatingClassification = false;
+  @tracked pendingFieldHints = null;
 
   formId = `dsa-moderation-${guidFor(this)}`;
   #setClassification;
@@ -179,6 +180,10 @@ export default class DsaModeration extends Component {
 
   get nextStepLabel() {
     return this.args.nextStepLabel;
+  }
+
+  get isUpdatingClassification() {
+    return this.pendingFieldHints !== null;
   }
 
   get options() {
@@ -253,12 +258,12 @@ export default class DsaModeration extends Component {
   }
 
   @action
-  async updateClassification(load, hint) {
+  async updateClassification(load, hint, pendingFieldHints = {}) {
     if (this.isUpdatingClassification) {
       return;
     }
 
-    this.isUpdatingClassification = true;
+    this.pendingFieldHints = pendingFieldHints;
     try {
       const { community_rule, category } = await load();
       if (!this.isDestroying) {
@@ -274,7 +279,7 @@ export default class DsaModeration extends Component {
       }
     } finally {
       if (!this.isDestroying) {
-        this.isUpdatingClassification = false;
+        this.pendingFieldHints = null;
       }
     }
   }
