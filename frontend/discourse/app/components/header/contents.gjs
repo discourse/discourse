@@ -32,15 +32,20 @@ export default class Contents extends Component {
   }
 
   get minimized() {
-    return applyValueTransformer(
-      "home-logo-minimized",
-      this.args.topicInfoVisible ||
-        (this.mobileTabBar.isNestedPage && !this.args.topicInfo),
-      {
-        topicInfo: this.args.topicInfo,
-        sidebarEnabled: this.args.sidebarEnabled,
-        showSidebar: this.args.showSidebar,
-      }
+    // Applied after the transformer: the full logo does not fit at all.
+    // Below a section's top level, the logo makes room for the back button.
+    return (
+      this.pageShell.compactLogo ||
+      applyValueTransformer(
+        "home-logo-minimized",
+        this.args.topicInfoVisible ||
+          (this.mobileTabBar.isNestedPage && !this.args.topicInfo),
+        {
+          topicInfo: this.args.topicInfo,
+          sidebarEnabled: this.args.sidebarEnabled,
+          showSidebar: this.args.showSidebar,
+        }
+      )
     );
   }
 
