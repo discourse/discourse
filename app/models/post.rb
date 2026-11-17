@@ -689,7 +689,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, moderation_notice: nil)
     return if hidden?
 
     reason ||=
@@ -745,6 +745,16 @@ class Post < ActiveRecord::Base
 
       message = custom_message
       message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
+
+      if moderation_notice && custom_message.nil?
+        options.merge!(
+          moderation_notice.message_options(
+            recipient: user,
+            message_type: message,
+            post_action_type_id:,
+          ),
+        )
+      end
 
       Jobs.enqueue_in(
         5.seconds,

@@ -48,12 +48,18 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
+  def self.delete_with_replies(
+    performed_by,
+    post,
+    reviewable_id = nil,
+    defer_reply_flags: true,
+    moderation_notice: nil
+  )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id, moderation_notice:).destroy
 
-    options = { defer_flags: defer_reply_flags }
+    options = { defer_flags: defer_reply_flags, moderation_notice: }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
       options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
     end
@@ -476,31 +482,37 @@ class PostDestroyer
 
     notify_responders = options[:notify_responders]
 
-    Jobs.enqueue(
-      :send_system_message,
-      user_id: @post.user_id,
-      message_type:
-        (
-          if notify_responders
-            "flags_agreed_and_post_deleted_for_responders"
-          else
-            "flags_agreed_and_post_deleted"
-          end
+    message_type =
+      if notify_responders
+        "flags_agreed_and_post_deleted_for_responders"
+      else
+        "flags_agreed_and_post_deleted"
+      end
+    message_options = {
+      **Dsa::AppealInstructions.message_options,
+      flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
+      flagged_post_response_raw_content: @post.raw,
+      url: notify_responders ? options[:parent_post].url : @post.url,
+      flag_reason:
+        I18n.t(
+          "flag_reasons#{".responder" if notify_responders}.#{flag_type}",
+          locale: SiteSetting.default_locale,
+          base_path: Discourse.base_path,
+          default: PostActionType.flags.find { |flag| flag[:name_key] == flag_type.to_s }[:name],
         ),
-      message_options: {
-        **Dsa::AppealInstructions.message_options,
-        flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
-        flagged_post_response_raw_content: @post.raw,
-        url: notify_responders ? options[:parent_post].url : @post.url,
-        flag_reason:
-          I18n.t(
-            "flag_reasons#{".responder" if notify_responders}.#{flag_type}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path,
-            default: PostActionType.flags.find { |flag| flag[:name_key] == flag_type.to_s }[:name],
-          ),
-      },
-    )
+    }
+
+    if notice = @opts[:moderation_notice]
+      message_options.merge!(
+        notice.message_options(
+          recipient: @post.user,
+          message_type:,
+          post_action_type_id: rs.reviewable_score_type,
+        ),
+      )
+    end
+
+    Jobs.enqueue(:send_system_message, user_id: @post.user_id, message_type:, message_options:)
   end
 
   def trash_user_actions
