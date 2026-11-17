@@ -529,8 +529,6 @@ module DiscourseAi
 
         reply = +""
         post_streamer = nil
-        stream_user_ids = nil
-        stream_group_ids = nil
 
         post_type =
           (
@@ -633,17 +631,7 @@ module DiscourseAi
 
           save_ai_custom_fields(reply_post, authorization_user_id: authorization_user_id)
 
-          stream_user_ids = reply_post.topic.allowed_users.pluck(:id)
-          stream_group_ids = reply_post.topic.allowed_groups.pluck(:id)
-
-          publish_update(
-            reply_post,
-            payload: {
-              raw: reply.dup,
-            },
-            user_ids: stream_user_ids,
-            group_ids: stream_group_ids,
-          )
+          publish_update(reply_post, payload: { raw: reply.dup })
 
           redis_stream_key = "gpt_cancel:#{reply_post.id}"
           Discourse.redis.setex(redis_stream_key, MAX_STREAM_DELAY_SECONDS, 1)
@@ -698,14 +686,7 @@ module DiscourseAi
             if post_streamer
               post_streamer.run_later do
                 Discourse.redis.expire(redis_stream_key, MAX_STREAM_DELAY_SECONDS)
-                publish_update(
-                  reply_post,
-                  payload: {
-                    raw: raw,
-                  },
-                  user_ids: stream_user_ids,
-                  group_ids: stream_group_ids,
-                )
+                publish_update(reply_post, payload: { raw: raw })
               end
             end
           end
@@ -723,7 +704,7 @@ module DiscourseAi
 
           # land the final message prior to saving so we don't clash
           reply_post.cooked = PrettyText.cook(reply)
-          publish_final_update(reply_post, user_ids: stream_user_ids, group_ids: stream_group_ids)
+          publish_final_update(reply_post)
 
           reply_post.revise(
             bot.bot_user,
@@ -818,9 +799,7 @@ module DiscourseAi
           reply_post.topic.update!(participant_count: 2)
         end
         post_streamer&.finish(skip_callback: true)
-        if stream_reply
-          publish_final_update(reply_post, user_ids: stream_user_ids, group_ids: stream_group_ids)
-        end
+        publish_final_update(reply_post) if stream_reply
         if reply_post && post.post_number == 1 && post.topic.private_message? && auto_set_title
           title_playground(reply_post, post.user)
         end
@@ -891,30 +870,15 @@ module DiscourseAi
           User.joins("INNER JOIN llm_models llm ON llm.user_id = users.id").where(active: true)
       end
 
-      def publish_final_update(reply_post, user_ids:, group_ids:)
+      def publish_final_update(reply_post)
         return if @published_final_update
         if reply_post
-          publish_update(
-            reply_post,
-            payload: {
-              cooked: reply_post.cooked,
-              done: true,
-            },
-            user_ids: user_ids,
-            group_ids: group_ids,
-          )
+          publish_update(reply_post, payload: { cooked: reply_post.cooked, done: true })
           # we subscribe at position -2 so we will always get this message
           # moving all cooked on every page load is wasteful ... this means
           # we have a benign message at the end, 2 is set to ensure last message
           # is delivered
-          publish_update(
-            reply_post,
-            payload: {
-              noop: true,
-            },
-            user_ids: user_ids,
-            group_ids: group_ids,
-          )
+          publish_update(reply_post, payload: { noop: true })
           @published_final_update = true
         end
       end
@@ -949,7 +913,12 @@ module DiscourseAi
         }
       end
 
-      def publish_update(bot_reply_post, payload:, user_ids:, group_ids:)
+      def publish_update(bot_reply_post, payload:)
+        user_ids, group_ids =
+          Topic.uncached do
+            topic = Topic.find_by(id: bot_reply_post.topic_id)
+            [topic&.allowed_users&.pluck(:id), topic&.allowed_groups&.pluck(:id)]
+          end
         return if user_ids.blank? && group_ids.blank?
 
         payload = { post_id: bot_reply_post.id, post_number: bot_reply_post.post_number }.merge(
