@@ -64,6 +64,10 @@ module DiscourseMcp
         attributes = arguments.slice(*BASIC_ATTRIBUTE_NAMES)
 
         if arguments["emoji"].present?
+          attributes["emoji"] = arguments["emoji"].strip.sub(/\A:+/, "").sub(/:+\z/, "")
+          if attributes["emoji"].blank?
+            raise ToolError, I18n.t("mcp.errors.category_emoji_required")
+          end
           attributes["style_type"] = "emoji"
         elsif arguments["icon"].present?
           attributes["style_type"] = "icon"

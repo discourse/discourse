@@ -229,11 +229,15 @@ module DiscourseMcp
         OutputSchema.object(post_id: OutputSchema::INTEGER, deleted: OutputSchema::BOOLEAN)
 
       def self.call(arguments:, request_context:)
-        post = Post.find_by(id: arguments.fetch("post_id").to_i, user_id: request_context.user_id)
+        posts = arguments.fetch("deleted") ? Post.all : Post.with_deleted
+        post = posts.find_by(id: arguments.fetch("post_id").to_i, user_id: request_context.user_id)
         raise DiscourseMcp::ToolError, "Post not found" if post.blank?
+        post.topic ||= Topic.with_deleted.find_by(id: post.topic_id)
 
         if arguments.fetch("deleted")
-          raise Discourse::InvalidAccess if !request_context.guardian.can_delete_post?(post)
+          if !request_context.guardian.can_delete_post_or_topic?(post)
+            raise Discourse::InvalidAccess
+          end
         else
           raise Discourse::InvalidAccess if !request_context.guardian.can_recover_post?(post)
         end

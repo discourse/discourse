@@ -91,6 +91,40 @@ describe "MCP transport" do
     allow(DiscourseMcp).to receive(:registry).and_return(registry)
   end
 
+  describe "#create" do
+    fab!(:category)
+
+    it "returns topic validation errors and accepts a corrected category" do
+      SiteSetting.allow_uncategorized_topics = false
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_create_topic", enabled: true)
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::CONTENT_WRITE)
+      arguments = {
+        title: "A topic created through MCP",
+        raw: "A complete topic body for this test.",
+      }
+      request_payload = payload.deep_dup
+      request_payload[:params][:name] = "discourse_create_topic"
+      request_payload[:params][:arguments] = arguments
+      request_headers = headers.merge("HTTP_MCP_NAME" => "discourse_create_topic")
+
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "isError")).to eq(true)
+      expect(response.parsed_body.dig("result", "content").sole["text"]).to include(
+        "Category can't be blank",
+      )
+
+      arguments[:category_id] = category.id
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "isError")).to eq(false)
+      topic = Topic.find(response.parsed_body.dig("result", "structuredContent", "topic_id"))
+      expect(topic).to have_attributes(category_id: category.id, user_id: admin.id)
+    end
+  end
+
   it "runs fast tools without waiting for deferred work" do
     io = StringIO.new
     Scheduler::Defer.capture_later do
