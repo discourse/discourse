@@ -388,26 +388,24 @@ describe "Admin upcoming changes" do
     end
   end
 
-  it "can filter by name, description, plugin, status, impact type, or enabled/disabled" do
+  it "can search upcoming changes by name" do
     upcoming_changes_page.visit
-
-    # Filter by name
     upcoming_changes_page.filter_controls.type_in_search("upload debug")
 
     expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+  end
 
-    upcoming_changes_page.filter_controls.click_reset_button
-
-    # Filter by plugin
+  it "can search upcoming changes by plugin" do
+    upcoming_changes_page.visit
     upcoming_changes_page.filter_controls.type_in_search("sample plugin")
 
     expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+  end
 
-    upcoming_changes_page.filter_controls.click_reset_button
-    expect(upcoming_changes_page).to have_change(:about_page_extra_groups_show_description)
-
+  it "can filter upcoming changes by status, impact type, impact role, and enabled state" do
+    upcoming_changes_page.visit
     upcoming_changes_page.filter_controls.toggle_dropdown_filters
 
     # Filter by status
