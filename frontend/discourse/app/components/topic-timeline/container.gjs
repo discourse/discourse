@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -113,18 +114,9 @@ export default class TopicTimelineScrollArea extends Component {
       }
     });
 
-    // The timeline is usually rendered on a topic page where both of these
-    // anchors exist. When it's rendered outside of that context (for example,
-    // a modal opened from a floating composer on a non-topic route), they
-    // may be absent — skip observing rather than crashing.
-    const elements = [
-      document.querySelector(".container.posts"),
-      document.querySelector("#topic-bottom"),
-    ].filter(Boolean);
-
-    for (const element of elements) {
-      this.intersectionObserver.observe(element);
-    }
+    // The timeline renders ahead of the posts in the same pass, so
+    // #topic-bottom only exists once rendering completes.
+    schedule("afterRender", this, this.#observeTopicBounds);
 
     this.calculatePosition();
     this.dockCheck();
@@ -457,6 +449,23 @@ export default class TopicTimelineScrollArea extends Component {
       : DEFAULT_MAX_SCROLLAREA_HEIGHT;
 
     return Math.max(minHeight, Math.min(availableHeight, maxHeight));
+  }
+
+  #observeTopicBounds() {
+    if (this.isDestroying) {
+      return;
+    }
+
+    // Outside a topic page (e.g. a modal opened from a floating composer)
+    // these anchors may be absent.
+    const elements = [
+      document.querySelector(".container.posts"),
+      document.querySelector("#topic-bottom"),
+    ].filter(Boolean);
+
+    for (const element of elements) {
+      this.intersectionObserver.observe(element);
+    }
   }
 
   _percentFor(topic, postIndex) {
