@@ -1,7 +1,8 @@
-# Defaults for GlobalSetting. All settings apply to production only.
+# Defaults for GlobalSetting.
 #
 # To change a setting, set an env var with its name in upper case and a DISCOURSE_ prefix.
 # For example, to set db_pool to 200, use DISCOURSE_DB_POOL=200
+# The db_* settings only apply in production. The test environment ignores these env vars.
 
 # connection pool size, sidekiq is set to 5, allowing an extra 3 for bg threads
 db_pool: 8
