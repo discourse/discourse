@@ -79,6 +79,10 @@ module Jobs
           ],
         )
       {
+        forum: {
+          title: SiteSetting.title,
+          description: SiteSetting.site_description,
+        }.compact_blank,
         type: reviewable.type,
         topic: reviewable.topic&.title,
         category: reviewable.category&.name,

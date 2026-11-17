@@ -13,10 +13,17 @@ RSpec.describe Jobs::SuggestReviewableAction do
   let(:actions) { reviewable.actions_for(Discourse.system_user.guardian).to_a.map(&:action_name) }
 
   it "sends the queued content and available choices and records a confident answer once" do
+    SiteSetting.title = "Repair café"
+    SiteSetting.site_description = "A forum for repairing household appliances."
+
     DiscourseAi::Decisions.with_canned_answers(action: actions.first) do |canned|
       2.times { described_class.new.execute(reviewable_id: reviewable.id) }
       expect(canned.calls.size).to eq(1)
       call = canned.calls.first
+      expect(call[:state][:forum]).to eq(
+        title: SiteSetting.title,
+        description: SiteSetting.site_description,
+      )
       expect(call[:questions].first.choices).to match_array(actions)
       expect(call[:state].dig(:item, "raw")).to eq(reviewable.payload["raw"])
     end
