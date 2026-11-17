@@ -347,6 +347,8 @@ module DiscourseMcp
                 type: "string",
                 minLength: 1,
                 maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+                description:
+                  "Emoji shortcode name without surrounding colons, for example dog or paw_prints. Colon-wrapped names are normalized.",
               },
               icon: {
                 type: "string",
@@ -402,6 +404,8 @@ module DiscourseMcp
                 type: "string",
                 minLength: 1,
                 maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+                description:
+                  "Emoji shortcode name without surrounding colons, for example dog or paw_prints. Colon-wrapped names are normalized.",
               },
               icon: {
                 type: "string",

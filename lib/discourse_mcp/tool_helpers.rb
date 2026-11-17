@@ -172,7 +172,7 @@ module DiscourseMcp
       requested_author = arguments["author_username"]
       return if requested_author.blank? || requested_author.casecmp?(user.username)
 
-      raise Discourse::InvalidAccess
+      raise ToolError, I18n.t("mcp.errors.author_must_match", username: user.username)
     end
 
     def user_post_json(action)
