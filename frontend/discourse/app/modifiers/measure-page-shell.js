@@ -1,6 +1,7 @@
 import { registerDestructor } from "@ember/destroyable";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
+import { PANEL_LIMITS } from "discourse/services/page-shell";
 
 export default class MeasurePageShell extends Modifier {
   @service pageShell;
@@ -31,6 +32,14 @@ export default class MeasurePageShell extends Modifier {
     const body = element.querySelector(".page-shell__main");
     const footer = element.querySelector(".page-shell__footer");
     const headerWrap = element.querySelector(".d-header > .wrap");
+    element.style.setProperty(
+      "--_page-shell-navigation-default-width",
+      `${PANEL_LIMITS.navigation.defaultWidth}px`
+    );
+    element.style.setProperty(
+      "--_page-shell-context-default-width",
+      `${PANEL_LIMITS.context.defaultWidth}px`
+    );
     let fullHeaderStartWidth = 0;
 
     let frame;
@@ -65,6 +74,18 @@ export default class MeasurePageShell extends Modifier {
         );
         if (this.pageShell.contextMaxWidth !== contextMaxWidth) {
           this.pageShell.contextMaxWidth = contextMaxWidth;
+        }
+        const navigationMaxWidth = Math.max(
+          PANEL_LIMITS.navigation.minWidth,
+          Math.min(
+            PANEL_LIMITS.navigation.maxWidth,
+            Math.floor(
+              element.clientWidth - (tracks[3] || 0) - minimumMainWidth
+            )
+          )
+        );
+        if (this.pageShell.navigationMaxWidth !== navigationMaxWidth) {
+          this.pageShell.navigationMaxWidth = navigationMaxWidth;
         }
         const minimumContextWidth =
           element.dataset.context === "open"
@@ -160,6 +181,8 @@ export default class MeasurePageShell extends Modifier {
       element.style.removeProperty("--_page-shell-content-width");
       element.style.removeProperty("--_page-shell-header-start-width");
       element.style.removeProperty("--_page-shell-header-end-width");
+      element.style.removeProperty("--_page-shell-navigation-default-width");
+      element.style.removeProperty("--_page-shell-context-default-width");
     });
   }
 }

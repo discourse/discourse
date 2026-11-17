@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
 import PageShellControls from "discourse/components/page-shell/controls";
+import PageShellPanelSeparator from "discourse/components/page-shell/panel-separator";
 import bodyClass from "discourse/helpers/body-class";
 import measurePageShell from "discourse/modifiers/measure-page-shell";
 import { i18n } from "discourse-i18n";
@@ -36,6 +37,7 @@ export default class PageShell extends Component {
           this.pageShell.navigation
           "hidden"
         }}
+        data-resize={{this.pageShell.resize}}
         data-width={{this.pageShell.width}}
         id="main-outlet-wrapper"
         {{measurePageShell
@@ -78,6 +80,9 @@ export default class PageShell extends Component {
             aria-label={{i18n "page_shell.context"}}
             class="page-shell__context"
           >
+            {{#if (eq this.pageShell.context "open")}}
+              <PageShellPanelSeparator @panel="context" />
+            {{/if}}
             <div class="page-shell__context-content">
               {{#if (eq this.pageShell.context "rail")}}
                 <button

@@ -14,6 +14,7 @@ body.has-page-shell {
     --_page-shell-content-max-width: var(--d-max-width);
     --_page-shell-content-min-width: 448px;
     --_page-shell-navigation-max-width: 400px;
+    --_page-shell-context-max-width: 1000px;
 
     // Below this, the header shows the compact logo; read by the measure modifier.
     --_page-shell-header-main-min-width: 320px;
@@ -29,7 +30,7 @@ body.has-page-shell {
       )
     );
     --_page-shell-context-track-width: min(
-      1000px,
+      var(--_page-shell-context-max-width),
       var(--_page-shell-context-width),
       max(
         0px,
@@ -37,6 +38,15 @@ body.has-page-shell {
             --_page-shell-composer-track-width
           ) - var(--_page-shell-content-min-width)
       )
+    );
+
+    // What the "content" resize policy reserves for each panel; the default
+    // widths come from the service through the measure modifier.
+    --_page-shell-navigation-reference-width: var(
+      --_page-shell-navigation-default-width
+    );
+    --_page-shell-context-reference-width: var(
+      --_page-shell-context-default-width
     );
     --_page-shell-composer-track-width: 0px;
     --_page-shell-main-track: minmax(
@@ -94,6 +104,9 @@ body.has-page-shell {
     }
 
     &[data-navigation="rail"] {
+      --_page-shell-navigation-reference-width: var(
+        --_page-shell-panel-rail-width
+      );
       --_page-shell-navigation-track-width: min(
         var(--_page-shell-panel-rail-width),
         max(
@@ -107,9 +120,13 @@ body.has-page-shell {
 
     &[data-navigation="hidden"] {
       --_page-shell-navigation-track-width: 0px;
+      --_page-shell-navigation-reference-width: 0px;
     }
 
     &[data-context="rail"] {
+      --_page-shell-context-reference-width: var(
+        --_page-shell-panel-rail-width
+      );
       --_page-shell-context-track-width: min(
         var(--_page-shell-panel-rail-width),
         max(
@@ -123,6 +140,34 @@ body.has-page-shell {
 
     &[data-context="hidden"] {
       --_page-shell-context-track-width: 0px;
+      --_page-shell-context-reference-width: 0px;
+    }
+
+    // A growing panel takes its space from Main instead of widening the
+    // centered shell, until Main reaches its minimum. Mirrored in
+    // `lib/page-shell-geometry.js`.
+    &[data-width="centered"][data-resize="content"] {
+      --_page-shell-max-inline-size: max(
+        var(--_page-shell-content-max-width) + 2 *
+          var(--d-comp-PageShell-space-padding-inline) +
+          var(--_page-shell-navigation-reference-width) +
+          var(--_page-shell-context-reference-width) +
+          var(--_page-shell-composer-track-width),
+        var(--_page-shell-navigation-track-width) +
+          var(--_page-shell-context-track-width) +
+          var(--_page-shell-composer-track-width) +
+          var(--_page-shell-content-min-width)
+      );
+      --_page-shell-main-track: minmax(
+        0,
+        calc(
+          var(--_page-shell-max-inline-size) - var(
+              --_page-shell-navigation-track-width
+            ) - var(--_page-shell-context-track-width) - var(
+              --_page-shell-composer-track-width
+            )
+        )
+      );
     }
 
     // Above-header outlets and pre-body notices stay in their original order.
@@ -280,6 +325,20 @@ body.has-page-shell {
       }
     }
 
+    // Panels stick at viewport height, which can end before their rows do, so
+    // the full-height rows carry the background and border.
+    &::before {
+      content: "";
+      grid-area: sidebar;
+      min-inline-size: 0;
+      border-inline-end: 1px solid var(--d-sidebar-border-color);
+      background: var(--d-sidebar-background);
+    }
+
+    &[data-navigation="hidden"]::before {
+      display: none;
+    }
+
     .page-shell__navigation {
       grid-area: sidebar;
       min-inline-size: 0;
@@ -306,13 +365,71 @@ body.has-page-shell {
       border-inline-end: 1px solid var(--d-sidebar-border-color);
     }
 
+    // The separator and the content share one cell, so both can stick.
     .page-shell__context {
       grid-area: shell-context;
+      display: grid;
+      grid-template-areas: "panel";
+      align-items: start;
       min-inline-size: 0;
+      border-inline-start: 1px solid var(--d-comp-PageShell-color-border);
+      background: var(--d-comp-PageShell-color-background);
+
+      > * {
+        grid-area: panel;
+      }
+    }
+
+    .page-shell__separator {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-end: 0;
+      z-index: 1;
+      inline-size: var(--space-2);
+      touch-action: none;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: 2px;
+        background: transparent;
+        transition: background 0.15s;
+      }
+
+      &:hover::after,
+      &:focus-visible::after,
+      &.page-shell__separator--active::after {
+        background: var(--tertiary);
+      }
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+
+    .page-shell__separator--context {
+      position: sticky;
+      top: var(--header-offset);
+      inset-inline-end: auto;
+      justify-self: start;
+      block-size: max(
+        0px,
+        100dvh - var(--_page-shell-body-offset, var(--header-offset)) - var(
+            --_page-shell-footer-row-height,
+            0px
+          )
+      );
+
+      &::after {
+        inset-inline: 0 auto;
+      }
     }
 
     &[data-constrained-context] {
       --_page-shell-context-track-width: 0px;
+      --_page-shell-context-reference-width: 0px;
 
       .page-shell__context {
         display: none;
@@ -330,8 +447,6 @@ body.has-page-shell {
           )
       );
       padding: var(--space-4);
-      border-inline-start: 1px solid var(--d-comp-PageShell-color-border);
-      background: var(--d-comp-PageShell-color-background);
       overflow: auto;
       box-sizing: border-box;
     }
@@ -365,6 +480,7 @@ body.has-page-shell {
     }
 
     &[data-footer="row"] {
+      &::before,
       .page-shell__navigation,
       .page-shell__context {
         grid-row: 3 / 4;
@@ -449,6 +565,7 @@ body.has-page-shell {
   @media (width < 1100px) {
     .page-shell#main-outlet-wrapper[data-context] {
       --_page-shell-context-track-width: 0px;
+      --_page-shell-context-reference-width: 0px;
 
       .page-shell__context {
         display: none;
@@ -459,8 +576,10 @@ body.has-page-shell {
   @media (width < 768px) {
     .page-shell#main-outlet-wrapper[data-navigation] {
       --_page-shell-navigation-track-width: 0px;
+      --_page-shell-navigation-reference-width: 0px;
       --d-comp-PageShell-space-padding-inline: var(--space-3);
 
+      &::before,
       .page-shell__navigation {
         display: none;
       }
