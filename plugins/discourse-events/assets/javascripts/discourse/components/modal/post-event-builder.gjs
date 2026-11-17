@@ -1376,12 +1376,22 @@ export default class PostEventBuilder extends Component {
             </Form>
           {{else}}
             <div class="composer-event-node">
-              <CompactEventEditor
-                @hideAdvanced={{true}}
-                @initialState={{this.compactInitialState}}
-                @namePlaceholder={{this.namePlaceholder}}
-                @onChange={{this.onCompactChange}}
-              />
+              <PluginOutlet
+                @connectorTagName="div"
+                @name="discourse-post-event-compact-editor"
+                @outletArgs={{lazyHash
+                  initialState=this.compactInitialState
+                  onChange=this.onCompactChange
+                  hideAdvanced=true
+                }}
+              >
+                <CompactEventEditor
+                  @hideAdvanced={{true}}
+                  @initialState={{this.compactInitialState}}
+                  @namePlaceholder={{this.namePlaceholder}}
+                  @onChange={{this.onCompactChange}}
+                />
+              </PluginOutlet>
             </div>
           {{/if}}
         </DConditionalLoadingSection>

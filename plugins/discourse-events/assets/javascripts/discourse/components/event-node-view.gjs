@@ -3,6 +3,8 @@ import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import {
   buildParams,
   camelCase,
@@ -162,11 +164,22 @@ export default class EventNodeView extends Component {
   }
 
   <template>
-    <CompactEventEditor
-      @hideAdvanced={{this.hideAdvancedEditor}}
-      @initialState={{this.initialState}}
-      @onChange={{this.onChange}}
-      @onDelete={{this.onDelete}}
-    />
+    <PluginOutlet
+      @connectorTagName="div"
+      @name="discourse-post-event-compact-editor"
+      @outletArgs={{lazyHash
+        initialState=this.initialState
+        onChange=this.onChange
+        onDelete=this.onDelete
+        hideAdvanced=this.hideAdvancedEditor
+      }}
+    >
+      <CompactEventEditor
+        @hideAdvanced={{this.hideAdvancedEditor}}
+        @initialState={{this.initialState}}
+        @onChange={{this.onChange}}
+        @onDelete={{this.onDelete}}
+      />
+    </PluginOutlet>
   </template>
 }

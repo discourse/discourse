@@ -3,6 +3,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import {
   buildEventBlock,
   buildParams,
@@ -118,13 +120,25 @@ export default class ComposerEventEditor extends Component {
       {{didInsert this.attachWrapper}}
       {{willDestroy this.detachWrapper}}
     >
-      <CompactEventEditor
-        @initialState={{this.initialState}}
-        @onChange={{this.onChange}}
-        @onCommit={{this.flush}}
-        @onDelete={{this.onDelete}}
-        @hideAdvanced={{this.hideAdvancedEditor}}
-      />
+      <PluginOutlet
+        @connectorTagName="div"
+        @name="discourse-post-event-compact-editor"
+        @outletArgs={{lazyHash
+          initialState=this.initialState
+          onChange=this.onChange
+          onCommit=this.flush
+          onDelete=this.onDelete
+          hideAdvanced=this.hideAdvancedEditor
+        }}
+      >
+        <CompactEventEditor
+          @hideAdvanced={{this.hideAdvancedEditor}}
+          @initialState={{this.initialState}}
+          @onChange={{this.onChange}}
+          @onCommit={{this.flush}}
+          @onDelete={{this.onDelete}}
+        />
+      </PluginOutlet>
     </div>
   </template>
 }
