@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import discourseDebounce from "discourse/lib/debounce";
@@ -124,6 +124,7 @@ export default class DFilterControls extends Component {
   @resettableTracked textFilter = this.initialTextFilterValue;
 
   dropdownFilters = trackedObject();
+  #searchDebounce;
 
   constructor() {
     super(...arguments);
@@ -140,6 +141,7 @@ export default class DFilterControls extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    cancel(this.#searchDebounce);
     if (this.hasUrlOwnedDropdowns) {
       this.router.off("routeDidChange", this.applyDropdownsFromUrl);
     }
@@ -430,29 +432,16 @@ export default class DFilterControls extends Component {
     }
   }
 
-  syncTextFilterQueryParam() {
-    this.updateQueryParams({
-      [this.args.textFilterQueryParam]: this.textFilter,
-    });
-  }
-
-  updateQueryParams(updates) {
-    // no currentURL means the router isn't live (e.g. rendering tests)
-    if (!this.showFilters || !this.router.currentURL) {
-      return;
-    }
-
-    DiscourseURL.replaceState(
-      applyQueryParams(this.router.currentURL, updates)
-    );
-  }
-
   @action
   onTextFilterChange(event) {
     this.textFilter = event.target?.value || "";
 
     if (this.args.textFilterQueryParam) {
-      discourseDebounce(this, this.syncTextFilterQueryParam, INPUT_DELAY);
+      this.#searchDebounce = discourseDebounce(
+        this,
+        this.#syncTextFilterQueryParam,
+        INPUT_DELAY
+      );
     }
 
     this.args.onTextFilterChange?.(event);
@@ -476,7 +465,7 @@ export default class DFilterControls extends Component {
     }
 
     if (paramName) {
-      this.updateQueryParams({
+      this.#updateQueryParams({
         [paramName]: selectedValue === defaultValue ? null : selectedValue,
       });
     }
@@ -495,7 +484,7 @@ export default class DFilterControls extends Component {
     this.sort = value;
 
     if (this.args.sortQueryParam) {
-      this.updateQueryParams({
+      this.#updateQueryParams({
         [this.args.sortQueryParam]: value === this.defaultSort ? null : value,
       });
     }
@@ -506,6 +495,7 @@ export default class DFilterControls extends Component {
 
   @action
   async resetFilters() {
+    cancel(this.#searchDebounce);
     this.textFilter = "";
 
     if (this.hasMultipleDropdowns) {
@@ -525,8 +515,9 @@ export default class DFilterControls extends Component {
       ...Object.values(this.args.dropdownFilterQueryParams ?? {}),
     ].filter(Boolean);
     if (queryParams.length) {
-      this.updateQueryParams(
-        Object.fromEntries(queryParams.map((name) => [name, null]))
+      this.#updateQueryParams(
+        Object.fromEntries(queryParams.map((name) => [name, null])),
+        { syncSearch: true }
       );
     }
 
@@ -545,6 +536,32 @@ export default class DFilterControls extends Component {
   toggleFilters() {
     this.showFilterDropdowns = !this.showFilterDropdowns;
     this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
+  }
+
+  #syncTextFilterQueryParam() {
+    this.#updateQueryParams({}, { syncSearch: true });
+  }
+
+  #updateQueryParams(updates, { syncSearch = false } = {}) {
+    // no currentURL means the router isn't live (e.g. rendering tests)
+    if (!this.showFilters || !this.router.currentURL) {
+      return;
+    }
+
+    const route = this.router.currentRoute;
+    DiscourseURL.replaceState((currentURL) => {
+      if (this.isDestroying || this.router.currentRoute !== route) {
+        return;
+      }
+
+      const searchParam = this.args.textFilterQueryParam;
+      const params =
+        syncSearch && searchParam
+          ? { ...updates, [searchParam]: this.textFilter }
+          : updates;
+
+      return applyQueryParams(currentURL, params);
+    });
   }
 
   #sorted(items) {

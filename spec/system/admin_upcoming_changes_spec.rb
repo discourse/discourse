@@ -388,7 +388,7 @@ describe "Admin upcoming changes" do
     end
   end
 
-  it "can filter upcoming changes through search and dropdowns" do
+  it "can filter by name, description, plugin, status, impact type, or enabled/disabled" do
     upcoming_changes_page.visit
 
     # Filter by name
@@ -397,7 +397,7 @@ describe "Admin upcoming changes" do
     expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
 
-    upcoming_changes_page.visit
+    upcoming_changes_page.filter_controls.clear_search
 
     # Filter by plugin
     upcoming_changes_page.filter_controls.type_in_search("sample plugin")
@@ -405,7 +405,7 @@ describe "Admin upcoming changes" do
     expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
 
-    upcoming_changes_page.visit
+    upcoming_changes_page.filter_controls.clear_search
 
     upcoming_changes_page.filter_controls.toggle_dropdown_filters
 

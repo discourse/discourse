@@ -205,22 +205,31 @@ class DiscourseURL extends EmberObject {
   }
 
   replaceState(path) {
-    if (path.startsWith("#")) {
-      path = this.routerService.currentURL.replace(/#.*$/, "") + path;
+    if (typeof path !== "function") {
+      if (path.startsWith("#")) {
+        path = this.routerService.currentURL.replace(/#.*$/, "") + path;
+      }
+
+      path = withoutPrefix(path);
+      if (this.routerService.currentURL === path) {
+        return;
+      }
     }
 
-    path = withoutPrefix(path);
+    // Always use replaceState in the next runloop to prevent weird routes changing
+    // while URLs are loading. For example, while a topic loads it sets `currentPost`
+    // which triggers a replaceState even though the topic hasn't fully loaded yet!
+    next(() => {
+      const currentURL = this.routerService.currentURL;
+      const replacement = typeof path === "function" ? path(currentURL) : path;
+      if (replacement == null || replacement === currentURL) {
+        return;
+      }
 
-    if (this.routerService.currentURL !== path) {
-      // Always use replaceState in the next runloop to prevent weird routes changing
-      // while URLs are loading. For example, while a topic loads it sets `currentPost`
-      // which triggers a replaceState even though the topic hasn't fully loaded yet!
-      next(() => {
-        // Using the private `_routerMicrolib` is not ideal, but Ember doesn't provide
-        // any other way for us to do `history.replaceState` without a full transition
-        this.router._routerMicrolib.replaceURL(path);
-      });
-    }
+      // Using the private `_routerMicrolib` is not ideal, but Ember doesn't provide
+      // any other way for us to do `history.replaceState` without a full transition
+      this.router._routerMicrolib.replaceURL(replacement);
+    });
   }
 
   pushState(path) {

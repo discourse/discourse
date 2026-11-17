@@ -1,5 +1,14 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { run } from "@ember/runloop";
+import {
+  click,
+  currentURL,
+  fillIn,
+  find,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 function buildChange(
@@ -91,6 +100,43 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
     assert
       .dom(".upcoming-change-row[data-upcoming-change='stable_defaults']")
       .exists();
+  });
+
+  test("clearing the search discards a pending URL update", async function (assert) {
+    await visit("/admin/config/upcoming-changes");
+
+    const input = find(".d-filter-controls__input");
+    const clock = sinon.useFakeTimers({
+      toFake: ["Date", "setTimeout", "clearTimeout"],
+    });
+
+    try {
+      run(() => {
+        input.value = "beta_sidebar";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      clock.tick(10);
+
+      run(() => {
+        input.value = "";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      clock.tick(20);
+    } finally {
+      clock.restore();
+    }
+
+    await settled();
+
+    assert.dom(input).hasValue("", "the cleared search stays empty");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/config/upcoming-changes",
+      "the pending search is removed from the URL"
+    );
+    assert
+      .dom(".upcoming-change-row")
+      .exists({ count: 3 }, "all changes are visible");
   });
 
   test("reset removes every owned parameter", async function (assert) {
