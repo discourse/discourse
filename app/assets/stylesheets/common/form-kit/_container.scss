@@ -109,9 +109,8 @@
     }
 
     .form-kit__field-checkbox & {
-      .--horizontal & {
-        width: 100%;
-      }
+      width: 100%;
+      max-width: var(--form-kit-max-input);
     }
   }
 
