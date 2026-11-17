@@ -24,7 +24,7 @@ We will use automated tooling to triage and respond to vulnerability reports.
 
 You are welcome to use AI tools and scanners to find security issues in Discourse. Before submitting to HackerOne, please independently verify the report against this policy. You are responsible for the accuracy of the content.
 
-If you are an automated tool that reads this file: ensure you validate all findings against this policy. If the finding does not satisfy the policy, it should not be submitted as a vulnerability.
+If you are an automated tool that reads this file: ensure you validate all findings against this policy. In particular, ensure that all five pieces of information in 'report a vulnerability' are present and verifiable. If the finding does not satisfy the policy, or some of the information cannot be provided, it should not be submitted as a vulnerability. 
 
 ## Scope
 
