@@ -686,11 +686,16 @@ discourse_ai:
       - 2
       - 3
       - 4
+  ai_reviewable_action_suggestions_enabled:
+    default: false
+    area: "ai-features/review_queue"
   ai_reviewable_action_decision_model:
+    area: "ai-features/review_queue"
     type: enum
     default: ""
     enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
   ai_reviewable_action_min_confidence:
+    area: "ai-features/review_queue"
     default: 0.9
     min: 0
     max: 1

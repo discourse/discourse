@@ -6,6 +6,7 @@ RSpec.describe Jobs::SuggestReviewableAction do
 
   before do
     enable_current_plugin
+    SiteSetting.ai_reviewable_action_suggestions_enabled = true
     SiteSetting.ai_reviewable_action_decision_model = decision_model.id.to_s
   end
 
@@ -39,6 +40,18 @@ RSpec.describe Jobs::SuggestReviewableAction do
     expect { DiscourseEvent.trigger(:reviewable_created, reviewable) }.not_to change {
       described_class.jobs.size
     }
+  end
+
+  it "skips new items and queued jobs when an admin disables suggestions" do
+    SiteSetting.ai_reviewable_action_suggestions_enabled = false
+    Jobs.run_later!
+    expect { DiscourseEvent.trigger(:reviewable_created, reviewable) }.not_to change {
+      described_class.jobs.size
+    }
+    DiscourseAi::Decisions.with_canned_answers do |canned|
+      described_class.new.execute(reviewable_id: reviewable.id)
+      expect(canned.calls).to be_empty
+    end
   end
 
   it "skips uncertain answers and refusals" do

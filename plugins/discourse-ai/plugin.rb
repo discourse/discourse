@@ -209,7 +209,8 @@ after_initialize do
   add_permitted_reviewable_param :reviewable_ai_tool_action, :post_id
 
   on(:reviewable_created) do |reviewable|
-    if reviewable.pending? && SiteSetting.ai_reviewable_action_decision_model.present?
+    if reviewable.pending? && SiteSetting.ai_reviewable_action_suggestions_enabled &&
+         SiteSetting.ai_reviewable_action_decision_model.present?
       Jobs.enqueue(:suggest_reviewable_action, reviewable_id: reviewable.id)
     end
   end

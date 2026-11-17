@@ -3,7 +3,10 @@
 module Jobs
   class SuggestReviewableAction < ::Jobs::Base
     def execute(args)
-      return unless SiteSetting.discourse_ai_enabled
+      unless SiteSetting.discourse_ai_enabled &&
+               SiteSetting.ai_reviewable_action_suggestions_enabled
+        return
+      end
       model = DecisionModel.find_by(id: SiteSetting.ai_reviewable_action_decision_model.presence)
       return unless model
 
