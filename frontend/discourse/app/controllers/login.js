@@ -20,6 +20,7 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class LoginPageController extends Controller {
+  @service a11y;
   @service siteSettings;
 
   @service capabilities;
@@ -226,6 +227,14 @@ export default class LoginPageController extends Controller {
     this.secondFactorToken = token;
   }
 
+  /** The page does not change when the same message returns, so announce it. */
+  setFlash(message, previousFlash = this.flash) {
+    this.flash = message;
+    if (typeof message === "string" && message === previousFlash) {
+      this.a11y.announce(message, "assertive");
+    }
+  }
+
   @action
   showNotActivated(props) {
     this.modal.show(NotActivatedModal, { model: props });
@@ -237,8 +246,8 @@ export default class LoginPageController extends Controller {
       return;
     }
     if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
-      this.flash = i18n("login.blank_username_or_password");
       this.flashType = "error";
+      this.setFlash(i18n("login.blank_username_or_password"));
       return;
     }
 
@@ -256,6 +265,7 @@ export default class LoginPageController extends Controller {
         },
       });
       if (result?.error) {
+        const previousFlash = this.flash;
         this.loggingIn = false;
         this.flash = null;
         this.flashType = "error";
@@ -293,7 +303,7 @@ export default class LoginPageController extends Controller {
             })
           );
         } else {
-          this.flash = result.error;
+          this.setFlash(result.error, previousFlash);
         }
       } else {
         this.loggedIn = true;
@@ -324,13 +334,13 @@ export default class LoginPageController extends Controller {
       this.loggingIn = false;
       this.flashType = "error";
       if (e.jqXHR?.status === 429) {
-        this.flash = i18n("login.rate_limit");
+        this.setFlash(i18n("login.rate_limit"));
       } else if (isReadOnlyError(e)) {
-        this.flash = this.login.readOnlyLoginMessage;
+        this.setFlash(this.login.readOnlyLoginMessage);
       } else if (!areCookiesEnabled()) {
-        this.flash = i18n("login.cookies_error");
+        this.setFlash(i18n("login.cookies_error"));
       } else {
-        this.flash = i18n("login.error");
+        this.setFlash(i18n("login.error"));
       }
     }
   }
