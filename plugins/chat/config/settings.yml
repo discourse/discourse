@@ -1,73 +1,34 @@
 chat:
   chat_enabled:
+    section: "chat_general"
     default: true
     client: true
-  chat_pinned_messages:
-    default: false
-    hidden: true
-    client: true
-    upcoming_change:
-      status: "permanent"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/397571"
   enable_public_channels:
+    section: "chat_general"
     default: true
     client: true
-  chat_allowed_groups:
-    type: group_list
-    list_type: compact
-    default: "1|2|4|10" # @admins, @moderators, @anonymous_users, @trust_level_0
-    mandatory_values: "1|2" # @admins, @moderators
-    allow_any: false
-    client: true
-    refresh: true
-    area: "group_permissions"
-  chat_threads_enabled:
-    client: true
-    default: false
-    hidden: true
   chat_search_enabled:
+    section: "chat_general"
     client: true
     default: true
-  needs_chat_seeded:
-    default: true
-    hidden: true
-  chat_debug_webhook_payloads:
-    default: false
-    hidden: true
-  chat_channel_retention_days:
-    default: 90
+  chat_separate_sidebar_mode:
+    section: "chat_general"
     client: true
-    max: 3652 # 10 years
-    min: 0
-  chat_max_direct_message_users:
-    default: 20
-    min: 0
-    max: 100
-    client: true
-  chat_dm_retention_days:
-    default: 0
-    client: true
-    max: 3652 # 10 years
-    min: 0
-  chat_auto_silence_duration:
-    default: 30
-    min: 0
-  chat_allowed_messages_for_trust_level_0:
-    default: 20
-    min: 0
-  chat_allowed_messages_for_other_trust_levels:
-    default: 40
-    min: 0
-  chat_silence_user_sensitivity:
+    default: "never"
     type: enum
-    enum: "ReviewableSensitivitySetting"
-    default: 6
-  chat_auto_silence_from_flags_duration:
-    default: 60
-    min: 0
-    area: "flags"
+    enum: "Chat::SeparateSidebarModeSiteSetting"
+    area: "navigation"
+  chat_preferred_index:
+    section: "chat_general"
+    client: true
+    type: enum
+    default: channels
+    choices:
+      - channels
+      - direct_messages
+      - my_threads
   chat_homepage_channel:
+    section: "chat_general"
     refresh: true
     type: enum
     default: ""
@@ -80,27 +41,173 @@ chat:
         - chat
     depends_behavior: "hidden"
     dependent_setting_display: "inline"
+  chat_allowed_groups:
+    section: "chat_access"
+    type: group_list
+    list_type: compact
+    default: "1|2|4|10" # @admins, @moderators, @anonymous_users, @trust_level_0
+    mandatory_values: "1|2" # @admins, @moderators
+    allow_any: false
+    client: true
+    refresh: true
+    area: "group_permissions"
+  chat_max_direct_message_users:
+    section: "chat_access"
+    unit: "users"
+    default: 20
+    min: 0
+    max: 100
+    client: true
+  direct_message_enabled_groups:
+    section: "chat_access"
+    default: "11" # @trust_level_1
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "Chat::DirectMessageEnabledGroupsValidator"
+    area: "group_permissions"
+  chat_pinning_messages_allowed_groups:
+    section: "chat_access"
+    default: "1|2" # @admins, @moderators
+    mandatory_values: "1|2" # @admins, @moderators
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
+  allow_chat_in_anonymous_mode:
+    section: "chat_access"
+    default: false
+    validator: "Chat::AllowChatInAnonymousModeValidator"
+    depends_on:
+      - "allow_anonymous_mode"
+  chat_minimum_message_length:
+    section: "chat_messages"
+    unit: "characters"
+    type: integer
+    default: 1
+    min: 1
+    max: 50
+    client: true
+  chat_allow_uploads:
+    section: "chat_messages"
+    default: true
+    client: true
+    validator: "Chat::AllowUploadsValidator"
+  max_mentions_per_chat_message:
+    section: "chat_messages"
+    unit: "mentions"
+    client: true
+    type: integer
+    default: 5
+    max: 10
+    min: 0
+    area: "notifications"
+  chat_editing_grace_period:
+    section: "chat_messages"
+    unit: "seconds"
+    client: true
+    type: integer
+    default: 30
+    min: 0
+  chat_editing_grace_period_max_diff_low_trust:
+    section: "chat_messages"
+    unit: "characters"
+    client: true
+    type: integer
+    default: 10
+    min: 0
+  chat_editing_grace_period_max_diff_high_trust:
+    section: "chat_messages"
+    unit: "characters"
+    client: true
+    type: integer
+    default: 40
+    min: 0
+  chat_auto_silence_duration:
+    section: "chat_moderation"
+    unit: "minutes"
+    default: 30
+    min: 0
+  chat_allowed_messages_for_trust_level_0:
+    section: "chat_moderation"
+    unit: "messages"
+    default: 20
+    min: 0
+  chat_allowed_messages_for_other_trust_levels:
+    section: "chat_moderation"
+    unit: "messages"
+    default: 40
+    min: 0
+  chat_silence_user_sensitivity:
+    section: "chat_moderation"
+    type: enum
+    enum: "ReviewableSensitivitySetting"
+    default: 6
+  chat_auto_silence_from_flags_duration:
+    section: "chat_moderation"
+    unit: "minutes"
+    default: 60
+    min: 0
+    area: "flags"
+  chat_duplicate_message_sensitivity:
+    section: "chat_moderation"
+    type: float
+    default: 0.5
+    min: 0
+    max: 1
+  chat_message_flag_allowed_groups:
+    section: "chat_moderation"
+    default: "1|2|11" # @admins, @moderators, @trust_level_1
+    mandatory_values: "1|2" # @admins, @moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    area: "flags|group_permissions"
+  chat_channel_retention_days:
+    section: "chat_retention"
+    unit: "days"
+    default: 90
+    client: true
+    max: 3652 # 10 years
+    min: 0
+  chat_dm_retention_days:
+    section: "chat_retention"
+    unit: "days"
+    default: 0
+    client: true
+    max: 3652 # 10 years
+    min: 0
   chat_allow_archiving_channels:
+    section: "chat_retention"
     default: false
     client: true
   chat_archive_destination_topic_status:
+    section: "chat_retention"
     type: enum
     default: archived
     choices:
       - archived
       - open
       - closed
-  chat_duplicate_message_sensitivity:
-    type: float
-    default: 0.5
-    min: 0
-    max: 1
-  chat_minimum_message_length:
-    type: integer
-    default: 1
-    min: 1
-    max: 50
+  chat_pinned_messages:
+    default: false
+    hidden: true
     client: true
+    upcoming_change:
+      status: "permanent"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/397571"
+  chat_threads_enabled:
+    client: true
+    default: false
+    hidden: true
+  needs_chat_seeded:
+    default: true
+    hidden: true
+  chat_debug_webhook_payloads:
+    default: false
+    hidden: true
   chat_maximum_message_length:
     type: integer
     default: 6000
@@ -108,10 +215,6 @@ chat:
     hidden: true
     min: 100
     max: 12000
-  chat_allow_uploads:
-    default: true
-    client: true
-    validator: "Chat::AllowUploadsValidator"
   chat_show_copy_button_on_codeblocks:
     client: true
     default: true
@@ -121,69 +224,6 @@ chat:
     default: 10000
     hidden: true
     client: true
-  direct_message_enabled_groups:
-    default: "11" # @trust_level_1
-    type: group_list
-    allow_any: false
-    refresh: true
-    validator: "Chat::DirectMessageEnabledGroupsValidator"
-    area: "group_permissions"
-  chat_pinning_messages_allowed_groups:
-    default: "1|2" # @admins, @moderators
-    mandatory_values: "1|2" # @admins, @moderators
-    type: group_list
-    list_type: compact
-    allow_any: false
-    refresh: true
-    area: "group_permissions"
-  chat_message_flag_allowed_groups:
-    default: "1|2|11" # @admins, @moderators, @trust_level_1
-    mandatory_values: "1|2" # @admins, @moderators
-    type: group_list
-    allow_any: false
-    refresh: true
-    area: "flags|group_permissions"
-  max_mentions_per_chat_message:
-    client: true
-    type: integer
-    default: 5
-    max: 10
-    min: 0
-    area: "notifications"
   max_chat_draft_length:
     default: 50_000
     hidden: true
-  chat_separate_sidebar_mode:
-    client: true
-    default: "never"
-    type: enum
-    enum: "Chat::SeparateSidebarModeSiteSetting"
-    area: "navigation"
-  chat_editing_grace_period:
-    client: true
-    type: integer
-    default: 30
-    min: 0
-  chat_editing_grace_period_max_diff_low_trust:
-    client: true
-    type: integer
-    default: 10
-    min: 0
-  chat_editing_grace_period_max_diff_high_trust:
-    client: true
-    type: integer
-    default: 40
-    min: 0
-  chat_preferred_index:
-    client: true
-    type: enum
-    default: channels
-    choices:
-      - channels
-      - direct_messages
-      - my_threads
-  allow_chat_in_anonymous_mode:
-    default: false
-    validator: "Chat::AllowChatInAnonymousModeValidator"
-    depends_on:
-      - "allow_anonymous_mode"
