@@ -108,7 +108,7 @@ class SearchController < ApplicationController
       search_args[:type_filter] = type if type
     end
 
-    search_args[:search_type] = :header
+    search_args[:search_type] = :header unless params[:skip_search_log] == "true"
     search_args[:ip_address] = request.remote_ip
     search_args[:user_agent] = request.user_agent
     search_args[:session_id] = pageview_session_id
