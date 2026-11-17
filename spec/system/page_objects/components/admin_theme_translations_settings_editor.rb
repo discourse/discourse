@@ -9,7 +9,7 @@ module PageObjects
       end
 
       def save
-        find(".btn.no-text.btn-icon.ok").click
+        find(".setting-controls .btn-success").click
         self
       end
 

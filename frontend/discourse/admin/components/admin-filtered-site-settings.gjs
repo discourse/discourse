@@ -96,7 +96,7 @@ export default class AdminFilteredSiteSettings extends Component {
             {{/if}}
 
             {{#each group.siteSettings as |setting|}}
-              <SiteSetting @setting={{setting}} />
+              <SiteSetting @formKitRows={{@formKitRows}} @setting={{setting}} />
             {{/each}}
           {{/each}}
 

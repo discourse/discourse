@@ -43,6 +43,7 @@ export default class SettingDefinitionField extends Component {
       @name={{@definition.key}}
       @placeholder={{@definition.placeholder}}
       @showControlTitle={{@showControlTitle}}
+      @showOptional={{@showOptional}}
       @showTitle={{@showTitle}}
       @title={{@definition.label}}
       @type={{this.entry.type}}
@@ -54,6 +55,7 @@ export default class SettingDefinitionField extends Component {
       {{else}}
         <field.Control placeholder={{field.placeholder}} />
       {{/if}}
+      {{yield field}}
     </@form.Field>
   </template>
 }

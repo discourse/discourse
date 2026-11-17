@@ -1,7 +1,45 @@
+@use "lib/viewport";
+
 // styles for admin/settings
 .settings {
   .setting {
-    padding-bottom: 20px;
+    &.row {
+      .form-kit {
+        grid-column: 1 / -1;
+      }
+
+      &:not(:has(> .form-kit)) {
+        @include viewport.from(sm) {
+          display: grid;
+          grid-template-columns:
+            clamp(8rem, 30%, 14rem)
+            minmax(0, 1fr)
+            calc(2 * (2.3em + 2px) + 0.5rem);
+          grid-template-areas:
+            "title content ."
+            "title description .";
+          align-items: baseline;
+          width: 100%;
+          column-gap: var(--space-4);
+          padding-block: var(--space-4);
+          border-top: 0.5px solid var(--content-border-color);
+
+          // for the old overridden
+          &::before,
+          &::after {
+            display: none;
+          }
+
+          .setting-controls {
+            grid-column: 3;
+            grid-row: 1;
+            display: flex;
+            gap: var(--space-1);
+            justify-content: end;
+          }
+        }
+      }
+    }
 
     &.icon {
       .setting-value .multi-select .formatted-selection {
@@ -10,15 +48,8 @@
     }
 
     .setting-label {
-      float: left;
-      width: 17.6576%;
-      margin-right: 12px;
-
-      @media (max-width: $mobile-breakpoint) {
-        float: none;
-        margin-right: 0;
+      @include viewport.until(md) {
         margin-left: 0;
-        width: 100%;
 
         h3 {
           margin-bottom: 6px;
@@ -37,10 +68,6 @@
     }
 
     .setting-value {
-      float: left;
-      width: 53%;
-      padding-right: 20px;
-
       input[type="checkbox"],
       input[type="radio"] {
         flex: 0 0 auto;
@@ -48,11 +75,6 @@
 
       .category-selector {
         width: 95%;
-      }
-
-      @media (max-width: $mobile-breakpoint) {
-        width: 100%;
-        padding-right: 0;
       }
 
       .select-kit {
@@ -72,15 +94,9 @@
       margin-top: var(--space-3);
 
       .setting.inline-dependent-setting {
-        padding-bottom: var(--space-2);
-
-        .setting-label,
-        .setting-value,
-        .setting-controls {
-          float: none;
-          width: 100%;
-          padding-right: 0;
-        }
+        display: block;
+        padding-block: 0 var(--space-2);
+        border-top: none;
 
         .setting-label h3 {
           margin-top: 0;
@@ -97,10 +113,6 @@
         font-size: var(--font-down-1);
         vertical-align: baseline;
       }
-    }
-
-    .setting-controls {
-      float: left;
     }
 
     .input-setting-string,
@@ -186,7 +198,7 @@
 
     h3 {
       font-size: var(--font-0);
-      font-weight: normal;
+      font-weight: 500;
     }
   }
 
@@ -195,7 +207,8 @@
       background-color: var(--highlight-bg);
     }
 
-    h3 {
+    h3,
+    .form-kit__container-title {
       position: relative;
 
       &::before {

@@ -326,7 +326,7 @@ describe "Admin Customize Themes" do
         theme_page.parent_themes_selector.expand
         theme_page.parent_themes_selector.unselect_by_name(theme.name)
         theme_page.parent_themes_selector.collapse
-        find(".parent-themes-setting .setting-controls .ok").click
+        find(".parent-themes-setting .setting-controls .btn-success").click
         expect(page).to have_no_css(".parent-themes-setting .setting-controls")
         expect(component.reload.parent_themes).to be_empty
 
@@ -488,9 +488,11 @@ describe "Admin Customize Themes" do
       icon_picker.filter("gamepad")
       icon_picker.select_icon("gamepad")
 
-      find(".setting[data-setting='icon_setting'] .setting-controls__ok").click
+      find(".setting[data-setting='icon_setting'] .setting-controls .btn-success").click
 
-      expect(page).to have_no_css(".setting[data-setting='icon_setting'] .setting-controls__ok")
+      expect(page).to have_no_css(
+        ".setting[data-setting='icon_setting'] .setting-controls .btn-success",
+      )
       expect(theme.reload.settings[:icon_setting].value).to eq("gamepad")
     end
   end

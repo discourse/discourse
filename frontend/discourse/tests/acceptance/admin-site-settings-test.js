@@ -70,13 +70,13 @@ acceptance("Admin - Site Settings", function (needs) {
       .doesNotExist("setting isn't overridden");
 
     await fillIn(".form-kit__control-input", "Test");
-    await click("button.cancel");
+    await click(".setting-controls .btn-danger");
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("canceling doesn't mark setting as overridden");
 
     await fillIn(".form-kit__control-input", "Test");
-    await click("button.ok");
+    await click(".setting-controls .btn-success");
     assert
       .dom(".row.setting.overridden")
       .exists("saving marks setting as overridden");
@@ -86,13 +86,13 @@ acceptance("Admin - Site Settings", function (needs) {
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't marked as overridden after undo");
 
-    await click("button.cancel");
+    await click(".setting-controls .btn-danger");
     assert
       .dom(".row.setting.overridden")
       .exists("setting is marked as overridden after cancel");
 
     await click("button.undo");
-    await click("button.ok");
+    await click(".setting-controls .btn-success");
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't marked as overridden after undo");
@@ -191,10 +191,14 @@ acceptance("Admin - Site Settings", function (needs) {
       )
       .doesNotExist("dependent setting does not render its own controls");
     assert
-      .dom('[data-setting="highlight_scope"] > .setting-controls__undo')
+      .dom(
+        '[data-setting="highlight_scope"] > .setting-controls .setting-controls__undo'
+      )
       .exists("parent setting renders controls for an overridden dependent");
 
-    await click('[data-setting="highlight_scope"] > .setting-controls__undo');
+    await click(
+      '[data-setting="highlight_scope"] > .setting-controls .setting-controls__undo'
+    );
 
     assert
       .dom('[data-setting="highlight_categories"] .form-kit__control-input')
@@ -353,7 +357,9 @@ acceptance("Admin - Site Settings", function (needs) {
       "do not save me"
     );
 
-    await click('[data-setting="highlight_scope"] > .setting-controls .ok');
+    await click(
+      '[data-setting="highlight_scope"] > .setting-controls .btn-success'
+    );
 
     assert.deepEqual(
       updatedSettings,
@@ -476,7 +482,7 @@ acceptance("Admin - Site Settings", function (needs) {
     await fillIn(".select-kit-filter input", "proper.com");
     await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
 
-    await click("button.ok");
+    await click(".setting-controls .btn-success");
 
     assert.strictEqual(
       pretender.handledRequests.find((request) => request.method === "PUT")

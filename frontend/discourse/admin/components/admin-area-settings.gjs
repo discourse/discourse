@@ -109,6 +109,7 @@ export default class AdminAreaSettings extends Component {
     >
       {{#if this.showSettings}}
         <AdminFilteredSiteSettings
+          @formKitRows={{@formKitRows}}
           @initialFilter={{this.filter}}
           @onFilterChanged={{this.adminSettingsFilterChangedCallback}}
           @settings={{this.settings}}

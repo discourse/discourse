@@ -209,7 +209,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await fillIn(input, "42");
 
     assert.strictEqual(document.querySelector("input[type='number']"), input);
-    assert.dom(".setting-controls__ok").exists();
+    assert.dom(".setting-controls .btn-success").exists();
   });
 
   test("clearing an integer setting does not mark it dirty", async function (assert) {
@@ -221,7 +221,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     });
     await fillIn("input[type='number']", "");
 
-    assert.dom(".setting-controls__ok").doesNotExist();
+    assert.dom(".setting-controls .btn-success").doesNotExist();
   });
 
   test("cancelling a changed integer setting reverts the input", async function (assert) {
@@ -233,7 +233,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     });
     await fillIn("input[type='number']", "50");
     assert.dom("input[type='number']").hasValue("50");
-    await click(".setting-controls__cancel");
+    await click(".setting-controls .btn-danger");
     assert.dom("input[type='number']").hasValue("90");
   });
 
@@ -263,7 +263,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       type: "bool",
     });
     await click("input[type='checkbox']");
-    await click(".setting-controls__ok");
+    await click(".setting-controls .btn-success");
 
     assert.strictEqual(body.test_bool, "true");
   });
@@ -536,7 +536,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await settled();
 
     assert
-      .dom(".setting-controls .ok")
+      .dom(".setting-controls .btn-success")
       .exists("the row itself still shows its save button");
     assert.strictEqual(
       tracker.count,
@@ -584,21 +584,21 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await fillIn(".form-kit__control-select", "1");
 
     assert
-      .dom(".setting-controls__ok")
+      .dom(".setting-controls .btn-success")
       .exists("the save button is shown after changing the value");
     assert
-      .dom(".setting-controls__cancel")
+      .dom(".setting-controls .btn-danger")
       .exists("the cancel button is shown after changing the value");
 
     await fillIn(".form-kit__control-select", "2");
 
     assert
-      .dom(".setting-controls__ok")
+      .dom(".setting-controls .btn-success")
       .doesNotExist(
         "the save button is not shown after changing the value back to the original"
       );
     assert
-      .dom(".setting-controls__cancel")
+      .dom(".setting-controls .btn-danger")
       .doesNotExist(
         "the cancel button is not shown after changing the value back to the original"
       );
@@ -625,7 +625,7 @@ module(
 
       assert.dom(".form-kit__control-input").hasAttribute("disabled", "");
       assert
-        .dom(".setting-controls__ok")
+        .dom(".setting-controls .btn-success")
         .doesNotExist("save button is not shown");
     });
 
@@ -756,7 +756,9 @@ module(
         }),
         "validation error message is shown"
       );
-      assert.dom(".setting-controls__cancel").doesNotHaveAttribute("disabled");
+      assert
+        .dom(".setting-controls .btn-danger")
+        .doesNotHaveAttribute("disabled");
     });
 
     test("shows validation error when the value is below the min limit", async function (assert) {
@@ -770,7 +772,9 @@ module(
         }),
         "validation error message is shown"
       );
-      assert.dom(".setting-controls__cancel").doesNotHaveAttribute("disabled");
+      assert
+        .dom(".setting-controls .btn-danger")
+        .doesNotHaveAttribute("disabled");
     });
 
     test("cancelling pending changes resets the value and removes validation error", async function (assert) {
@@ -779,7 +783,7 @@ module(
       await fillIn(".file-size-input", "100");
       assert.dom(".validation-error").hasNoClass("hidden");
 
-      await click(".setting-controls__cancel");
+      await click(".setting-controls .btn-danger");
       assert
         .dom(".file-size-input")
         .hasValue("1000", "the value resets to the saved value");
@@ -800,9 +804,11 @@ module(
       assert
         .dom(".setting-controls__undo")
         .doesNotExist("the reset button is not shown");
-      assert.dom(".setting-controls__ok").exists("the save button is shown");
       assert
-        .dom(".setting-controls__cancel")
+        .dom(".setting-controls .btn-success")
+        .exists("the save button is shown");
+      assert
+        .dom(".setting-controls .btn-danger")
         .exists("the cancel button is shown");
     });
 
@@ -825,9 +831,11 @@ module(
       assert
         .dom(".setting-controls__undo")
         .doesNotExist("the reset button is not shown");
-      assert.dom(".setting-controls__ok").exists("the save button is shown");
       assert
-        .dom(".setting-controls__cancel")
+        .dom(".setting-controls .btn-success")
+        .exists("the save button is shown");
+      assert
+        .dom(".setting-controls .btn-danger")
         .exists("the cancel button is shown");
     });
 
@@ -839,20 +847,24 @@ module(
 
       await fillIn(".file-size-input", "");
       assert.dom(".validation-error").hasNoClass("hidden");
-      assert.dom(".setting-controls__ok").exists("the save button is shown");
       assert
-        .dom(".setting-controls__cancel")
+        .dom(".setting-controls .btn-success")
+        .exists("the save button is shown");
+      assert
+        .dom(".setting-controls .btn-danger")
         .exists("the cancel button is shown");
-      assert.dom(".setting-controls__cancel").doesNotHaveAttribute("disabled");
+      assert
+        .dom(".setting-controls .btn-danger")
+        .doesNotHaveAttribute("disabled");
 
-      await click(".setting-controls__cancel");
+      await click(".setting-controls .btn-danger");
       assert.dom(".file-size-input").hasValue("1000");
       assert.dom(".validation-error").hasClass("hidden");
       assert
-        .dom(".setting-controls__ok")
+        .dom(".setting-controls .btn-success")
         .doesNotExist("the save button is not shown");
       assert
-        .dom(".setting-controls__cancel")
+        .dom(".setting-controls .btn-danger")
         .doesNotExist("the cancel button is shown");
     });
   }

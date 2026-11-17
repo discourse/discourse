@@ -121,7 +121,7 @@ module PageObjects
 
       def save_setting(setting)
         setting = find_setting(setting) if setting.is_a?(String)
-        setting.find(".setting-controls button.ok").click
+        setting.find(".setting-controls .btn-success").click
         self
       end
 

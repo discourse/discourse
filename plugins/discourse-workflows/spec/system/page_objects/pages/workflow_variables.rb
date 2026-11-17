@@ -45,7 +45,7 @@ module PageObjects
         end
 
         def save_variable_value(variable)
-          within(value_row_for(variable)) { find(".setting-controls__ok").click }
+          within(value_row_for(variable)) { find(".setting-controls .btn-success").click }
           self
         end
 
