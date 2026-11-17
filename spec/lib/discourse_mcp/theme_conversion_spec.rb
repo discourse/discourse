@@ -90,5 +90,44 @@ describe DiscourseMcp::Tools::UpdateTheme do
         )
       end
     end
+
+    it "rolls back conversion when the resulting theme is forbidden by a plugin policy" do
+      parent.set_default!
+      theme.update!(component: true)
+      theme.set_field(target: :common, name: "scss", value: "body { color: red; }")
+      theme.save!
+      original_revision = DiscourseMcp::Tools::ThemeSupport.code_revision(theme)
+      original_audit_count = UserHistory.where(acting_user_id: admin.id).count
+      plugin = Plugin::Instance.new
+      modifier = proc { |allowed, _guardian, target| allowed && target.component? }
+      plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+      expect do
+        invoke(
+          "component" => false,
+          "default" => true,
+          "theme_fields" => [
+            {
+              "target" => "extra_js",
+              "name" => "discourse/api-initializers/restricted.js",
+              "value" => "document.documentElement.dataset.restricted = 'yes';",
+            },
+          ],
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(theme.reload.component?).to eq(true)
+      expect(SiteSetting.default_theme_id).to eq(parent.id)
+      expect(DiscourseMcp::Tools::ThemeSupport.code_revision(theme)).to eq(original_revision)
+      expect(UserHistory.where(acting_user_id: admin.id).count).to eq(original_audit_count)
+    ensure
+      if plugin
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+    end
   end
 end

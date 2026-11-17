@@ -350,6 +350,7 @@ module DiscourseMcp
               theme.switch_to_theme!
             end
             theme.reload
+            guardian.ensure_can_edit_theme!(theme)
           end
           assign_changes(theme, arguments)
           if !theme.save
