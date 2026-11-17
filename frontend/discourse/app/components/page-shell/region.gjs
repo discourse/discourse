@@ -1,4 +1,4 @@
-const PageShellPrototypeRegion = <template>
+const PageShellRegion = <template>
   {{#if @enabled}}
     <div ...attributes>{{yield}}</div>
   {{else}}
@@ -6,4 +6,4 @@ const PageShellPrototypeRegion = <template>
   {{/if}}
 </template>;
 
-export default PageShellPrototypeRegion;
+export default PageShellRegion;

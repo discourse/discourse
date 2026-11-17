@@ -4,7 +4,7 @@ import Service, { service } from "@ember/service";
 import EmbedMode from "discourse/lib/embed-mode";
 
 // Temporary layout controls. This is deliberately not the route/panel API.
-export default class PageShellPrototype extends Service {
+export default class PageShell extends Service {
   @service siteSettings;
   @service router;
 
@@ -14,6 +14,11 @@ export default class PageShellPrototype extends Service {
   @tracked footer = "content";
   @tracked navigationWidth = 260;
   @tracked contextWidth = 300;
+  @tracked contextMaxWidth = Math.max(200, Math.min(1000, window.innerWidth));
+
+  get effectiveContextWidth() {
+    return Math.min(this.contextWidth, this.contextMaxWidth);
+  }
 
   get enabled() {
     return (
@@ -42,7 +47,8 @@ export default class PageShellPrototype extends Service {
     } else if (name === "navigationWidth" || name === "contextWidth") {
       const size = Number(value);
       if (Number.isFinite(size)) {
-        this[name] = Math.max(200, Math.min(size, 480));
+        const maximum = name === "contextWidth" ? this.contextMaxWidth : 400;
+        this[name] = Math.max(200, Math.min(size, maximum));
       }
     }
   }

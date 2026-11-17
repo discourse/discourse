@@ -1,6 +1,7 @@
 @use "lib/viewport";
 
-#main-outlet > .regular {
+#main-outlet > .regular,
+.page-shell__main-content > .regular {
   background: var(--d-content-background);
 }
 
