@@ -17,6 +17,7 @@ import ListSetting from "discourse/select-kit/components/list-setting";
  * @param {boolean} allowAny - Whether to allow arbitrary values
  */
 export default class CompactList extends Component {
+  /** @type {Array<string | { name: string, value: string }> | null} */
   @tracked createdChoices = null;
   tokenSeparator = "|";
 
@@ -74,15 +75,15 @@ export default class CompactList extends Component {
 
   <template>
     <ListSetting
-      @value={{this.settingValue}}
-      @settingName={{@setting.setting}}
       @choices={{this.settingChoices}}
+      @mandatoryValues={{@setting.mandatory_values}}
       @nameProperty={{if this.hasValidValues "name"}}
-      @valueProperty={{if this.hasValidValues "value"}}
       @onChange={{this.onChangeListSetting}}
       @onChangeChoices={{this.onChangeChoices}}
       @options={{hash allowAny=@allowAny}}
-      @mandatoryValues={{@setting.mandatory_values}}
+      @settingName={{@setting.setting}}
+      @value={{this.settingValue}}
+      @valueProperty={{if this.hasValidValues "value"}}
     />
   </template>
 }

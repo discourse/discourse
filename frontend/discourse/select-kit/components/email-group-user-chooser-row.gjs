@@ -2,7 +2,6 @@ import { classNames } from "@ember-decorators/component";
 import decorateUsernameSelector from "discourse/helpers/decorate-username-selector";
 import formatUsername from "discourse/helpers/format-username";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
-import { and, eq } from "discourse/truth-helpers";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -64,8 +63,8 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
       </div>
       {{#if (and this.item.showUserStatus this.item.status)}}
         <DUserStatusMessage
-          @status={{this.item.status}}
           @showDescription={{true}}
+          @status={{this.item.status}}
         />
       {{/if}}
       {{decorateUsernameSelector this.item.id}}

@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import AdminReportBody from "discourse/admin/components/admin-report-body";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
@@ -58,15 +57,31 @@ export function updateReportFilters(filters, id, value) {
   return customFilters;
 }
 
+/**
+ * @typedef {import("discourse/admin/components/admin-report-table-cell").ReportTableOptions & {
+ *   chartGrouping?: string,
+ *   hiddenLabels?: string[],
+ *   legendPosition?: string,
+ *   onLegendClick?: (key: string) => void
+ * }} AdminReportOptions
+ */
 export default class AdminReport extends Component {
-  @service siteSettings;
-
   @tracked isLoading = false;
+
+  /** @type {string | null} */
   @tracked rateLimitationString = null;
+
+  /** @type {import("discourse/admin/models/report").default | null} */
   @tracked model = null;
   @tracked currentMode = this.args.filters?.mode;
+
+  /** @type {AdminReportOptions | null | undefined} */
   @tracked options = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked dateRangeFrom = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked dateRangeTo = null;
   @tracked userHasCustomDates = false;
 
@@ -108,14 +123,6 @@ export default class AdminReport extends Component {
 
   get reportClasses() {
     const builtReportClasses = ["is-enabled"];
-
-    if (this.isHidden) {
-      builtReportClasses.push("hidden");
-    }
-
-    if (!this.isHidden) {
-      builtReportClasses.push("is-visible");
-    }
 
     if (this.isLoading) {
       builtReportClasses.push("is-loading");
@@ -181,13 +188,6 @@ export default class AdminReport extends Component {
     return this.args.disabledLabel || i18n("admin.dashboard.disabled");
   }
 
-  get isHidden() {
-    return (this.siteSettings.dashboard_hidden_reports || "")
-      .split("|")
-      .filter(Boolean)
-      .includes(this.args.dataSourceName);
-  }
-
   get dasherizedDataSourceName() {
     return (this.args.dataSourceName || this.model.type || "undefined").replace(
       /_/g,
@@ -216,37 +216,6 @@ export default class AdminReport extends Component {
     );
   }
 
-  @action
-  changeGrouping(grouping) {
-    const options = { chartGrouping: grouping };
-
-    if (!this.userHasCustomDates) {
-      const endDate = moment().endOf("day");
-      let startDate;
-
-      switch (grouping) {
-        case "daily":
-          startDate = moment().subtract(1, "month").startOf("day");
-          break;
-        case "weekly":
-          startDate = moment().subtract(3, "months").startOf("day");
-          break;
-        case "monthly":
-          startDate = moment().subtract(12, "months").startOf("day");
-          break;
-      }
-
-      if (startDate) {
-        this.dateRangeFrom = startDate;
-        this.dateRangeTo = endDate;
-        options.startDate = startDate;
-        options.endDate = endDate;
-      }
-    }
-
-    this.refreshReport(options);
-  }
-
   get displayedModes() {
     const modes = this.args.forcedModes
       ? this.args.forcedModes.split(",")
@@ -262,23 +231,6 @@ export default class AdminReport extends Component {
         icon: mode === REPORT_MODES.table ? "table" : "signal",
       };
     });
-  }
-
-  reportFilterComponent(filter) {
-    switch (filter.type) {
-      case "bool":
-        return ReportFilterBoolComponent;
-      case "category":
-        return ReportFilterCategoryComponent;
-      case "category_list":
-        return ReportFilterCategoryListComponent;
-      case "group":
-        return ReportFilterGroupComponent;
-      case "groups":
-        return ReportFilterGroupsComponent;
-      case "list":
-        return ReportFilterListComponent;
-    }
   }
 
   get modeComponent() {
@@ -375,6 +327,54 @@ export default class AdminReport extends Component {
   }
 
   @action
+  changeGrouping(grouping) {
+    const options = { chartGrouping: grouping };
+
+    if (!this.userHasCustomDates) {
+      const endDate = moment().endOf("day");
+      let startDate;
+
+      switch (grouping) {
+        case "daily":
+          startDate = moment().subtract(1, "month").startOf("day");
+          break;
+        case "weekly":
+          startDate = moment().subtract(3, "months").startOf("day");
+          break;
+        case "monthly":
+          startDate = moment().subtract(12, "months").startOf("day");
+          break;
+      }
+
+      if (startDate) {
+        this.dateRangeFrom = startDate;
+        this.dateRangeTo = endDate;
+        options.startDate = startDate;
+        options.endDate = endDate;
+      }
+    }
+
+    this.refreshReport(options);
+  }
+
+  reportFilterComponent(filter) {
+    switch (filter.type) {
+      case "bool":
+        return ReportFilterBoolComponent;
+      case "category":
+        return ReportFilterCategoryComponent;
+      case "category_list":
+        return ReportFilterCategoryListComponent;
+      case "group":
+        return ReportFilterGroupComponent;
+      case "groups":
+        return ReportFilterGroupsComponent;
+      case "list":
+        return ReportFilterListComponent;
+    }
+  }
+
+  @action
   onChangeDateRange(range) {
     this.userHasCustomDates = true;
     this.dateRangeFrom = range.from;
@@ -441,7 +441,7 @@ export default class AdminReport extends Component {
   fetchOrRender() {
     if (this.args.preloadedData) {
       next(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         this._renderReport(this._loadReport(this.args.preloadedData));
@@ -514,7 +514,7 @@ export default class AdminReport extends Component {
       let payload = this._buildPayload(["prev_period"]);
 
       const callback = (response) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -649,7 +649,7 @@ export default class AdminReport extends Component {
         {{/if}}
       </div>
     {{else}}
-      <AdminReportBody @report={{this}} @filters={{@filters}} />
+      <AdminReportBody @filters={{@filters}} @report={{this}} />
     {{/if}}
   </template>
 }

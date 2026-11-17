@@ -23,6 +23,7 @@ import type {
   BlockEntry,
   ChildBlockResult,
 } from "discourse/lib/blocks/-internals/types";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import type Blocks from "discourse/services/blocks";
 
 interface BlockOutletRootContainerSignature {
@@ -119,9 +120,7 @@ export default class BlockOutletRootContainer extends Component<BlockOutletRootC
       createChildBlockFn,
     } = this.args;
 
-    // force tracking the value
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    this.args.showVisualOverlay;
+    manuallyTrack(this.args.showVisualOverlay);
 
     if (!rawChildren?.length) {
       return [];

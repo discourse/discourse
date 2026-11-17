@@ -5,7 +5,14 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_login_with_amazon: "Discourse 使用 Amazon 登入"
   js:
     login:
       amazon:
         name: "Amazon"
+        title: "使用 Amazon 登入"
+        message: "正在透過 Amazon 登入進行驗證（請確認未啟用彈出式視窗封鎖程式）"

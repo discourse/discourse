@@ -10,7 +10,7 @@ RSpec.describe TopicTimestampChanger do
     context "when new timestamp is in the future" do
       let(:new_timestamp) { old_timestamp + 2.days }
 
-      it "should raise the right error" do
+      it "raises the expected error" do
         expect {
           TopicTimestampChanger.new(topic: topic, timestamp: new_timestamp.to_f).change!
         }.to raise_error(TopicTimestampChanger::InvalidTimestampError)
@@ -42,7 +42,7 @@ RSpec.describe TopicTimestampChanger do
       end
 
       context "when posts have timestamps in the future" do
-        it "should set the new timestamp as the default timestamp" do
+        it "sets the new timestamp as the default" do
           new_timestamp = freeze_time
 
           p3 = Fabricate(:post, topic: topic, created_at: new_timestamp + 3.days)
@@ -57,12 +57,10 @@ RSpec.describe TopicTimestampChanger do
     end
 
     it "deletes the stats cache" do
-      Discourse.redis.set AdminDashboardData.stats_cache_key, "X"
       Discourse.redis.set About.stats_cache_key, "X"
 
       TopicTimestampChanger.new(topic: topic, timestamp: Time.zone.now.to_f).change!
 
-      expect(Discourse.redis.get(AdminDashboardData.stats_cache_key)).to eq(nil)
       expect(Discourse.redis.get(About.stats_cache_key)).to eq(nil)
     end
   end

@@ -24,8 +24,14 @@ class PrivateMessageTopicTrackingState extends Service {
   @tracked isTracking = false;
   @tracked isTrackingIncoming = false;
   @tracked statesModificationCounter = 0;
+
+  /** @type {string | null} */
   @tracked inbox = null;
+
+  /** @type {string | null} */
   @tracked filter = null;
+
+  /** @type {import("discourse/models/group").default | null | undefined} */
   @tracked activeGroup = null;
   @tracked newIncoming = trackedArray();
   states = trackedMap();

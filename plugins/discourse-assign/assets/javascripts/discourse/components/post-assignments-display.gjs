@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { assignedToGroupPath, assignedToUserPath } from "../lib/url";
-import AssignedFirstPost from "./assigned-to-first-post";
-import AssignedToPost from "./assigned-to-post";
+import { assignedToGroupPath, assignedToUserPath } from "../lib/url.js";
+import AssignedFirstPost from "./assigned-to-first-post.gjs";
+import AssignedToPost from "./assigned-to-post.gjs";
 
 export default class PostAssignmentsDisplay extends Component {
   static shouldRender(args) {
@@ -38,8 +38,8 @@ export default class PostAssignmentsDisplay extends Component {
     {{else if this.assignedTo}}
       <p class="assigned-to">
         <AssignedToPost
-          @assignedToUser={{this.assignedToUser}}
           @assignedToGroup={{this.assignedToGroup}}
+          @assignedToUser={{this.assignedToUser}}
           @href={{this.assignedHref}}
           @post={{this.post}}
         />

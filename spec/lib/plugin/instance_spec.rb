@@ -21,6 +21,48 @@ TEXT
 
   after { DiscoursePluginRegistry.reset! }
 
+  describe "#register_preloaded_data" do
+    it "namespaces keys and filters disabled plugins at lookup time" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      plugin_instance.register_preloaded_data("visibility") { |guardian| guardian.authenticated? }
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.preloaded_data_callbacks.pluck(:key)).to eq(
+        ["discourse-sample-plugin:visibility"],
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+      expect(DiscoursePluginRegistry.preloaded_data_callbacks).to eq([])
+    end
+
+    it "requires a block" do
+      expect { plugin_instance.register_preloaded_data("visibility") }.to raise_error(
+        ArgumentError,
+        "register_preloaded_data requires a block",
+      )
+    end
+  end
+
+  describe "#register_navigation_destination" do
+    it "namespaces destinations and filters disabled plugins at lookup time" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      plugin_instance.register_navigation_destination(
+        "example",
+        path: "/admin/example",
+        title: "example.title",
+        description: "example.description",
+      ) { |guardian| guardian.is_admin? }
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.navigation_destinations.map(&:id)).to eq(
+        ["discourse-sample-plugin:example"],
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+      expect(DiscoursePluginRegistry.navigation_destinations).to eq([])
+    end
+  end
+
   # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
 
   describe ".humanized_name" do
@@ -113,6 +155,9 @@ TEXT
         :participating_users_last_day,
         :participating_users_7_days,
         :participating_users_30_days,
+        # grouped under their stat type rather than being flat top-level keys
+        :onboarding,
+        :category_types,
       )
     end
 
@@ -371,7 +416,7 @@ TEXT
       plugin.send :register_assets!
 
       expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq(
-        "frontend/discourse/node_modules/moment/moment.js",
+        "#{Rails.root.join("vendor/runtime_node_modules/moment/moment.js")}",
       )
     end
   end
@@ -483,13 +528,26 @@ TEXT
   end
 
   describe ".register_seedfu_fixtures" do
-    it "should add the new path to SeedFu's fixtures path" do
+    it "adds the new path to SeedFu's fixture paths" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_seedfu_fixtures(["some_path"])
       plugin.register_seedfu_fixtures("some_path2")
 
       expect(SeedFu.fixture_paths).to include("some_path")
       expect(SeedFu.fixture_paths).to include("some_path2")
+    end
+  end
+
+  describe "#gem" do
+    let(:plugin_instance) { described_class.new(metadata, "/tmp/sample/plugin.rb") }
+
+    it "refuses to be mixed with a Gemfile" do
+      metadata.gemfile = "true"
+
+      expect { plugin_instance.gem("some_gem", "1.0.0") }.to raise_error(
+        RuntimeError,
+        "Plugin sample declares its gems in a Gemfile, `gem` can't be mixed with that",
+      )
     end
   end
 
@@ -506,7 +564,7 @@ TEXT
       plugin
     end
 
-    it "should add the right callback" do
+    it "adds the expected callback" do
       called = 0
 
       plugin_instance.add_model_callback(User, :after_create) { called += 1 }
@@ -520,7 +578,7 @@ TEXT
       expect(called).to eq(1)
     end
 
-    it "should add the right callback with options" do
+    it "adds the expected callback with options" do
       called = 0
 
       plugin_instance.add_model_callback(User, :after_commit, on: :create) { called += 1 }
@@ -603,12 +661,12 @@ TEXT
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
       expect(locale[:moment_js]).to eq(
-        ["pt-br", "#{Rails.root.join("frontend/discourse/node_modules/moment/locale/pt-br.js")}"],
+        ["pt-br", "#{Rails.root.join("vendor/runtime_node_modules/moment/locale/pt-br.js")}"],
       )
       expect(locale[:moment_js_timezones]).to eq(
         [
           "pt",
-          "#{Rails.root.join("node_modules/@discourse/moment-timezone-names-translations/locales/pt.js")}",
+          "#{Rails.root.join("vendor/runtime_node_modules/moment-timezone-names/locales/pt.js")}",
         ],
       )
       expect(locale[:plural]).to be_nil
@@ -624,7 +682,7 @@ TEXT
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root.join("frontend/discourse/node_modules/moment/locale/tlh.js")}"],
+        ["tlh", "#{Rails.root.join("vendor/runtime_node_modules/moment/locale/tlh.js")}"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
@@ -636,13 +694,9 @@ TEXT
       expect(DiscoursePluginRegistry.locales.count).to eq(0)
     end
 
-    %w[
-      config/locales/client.foo_BAR.yml
-      config/locales/server.foo_BAR.yml
-      lib/javascripts/locale/moment_js/foo_BAR.js
-    ].each do |path|
-      it "does not register a new locale when #{path} is missing" do
-        path = "#{plugin_path}/#{path}"
+    shared_examples "rejecting an incomplete plugin locale" do |missing_path:|
+      it "does not register the locale when a required file is missing" do
+        path = "#{plugin_path}/#{missing_path}"
         File.stubs("exist?").returns(false)
         File.stubs("exist?").with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
         File.stubs("exist?").with(path).returns(false)
@@ -650,6 +704,21 @@ TEXT
         register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
         expect(DiscoursePluginRegistry.locales.count).to eq(0)
       end
+    end
+
+    context "without the client translations" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "config/locales/client.foo_BAR.yml"
+    end
+
+    context "without the server translations" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "config/locales/server.foo_BAR.yml"
+    end
+
+    context "without the Moment locale" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "lib/javascripts/locale/moment_js/foo_BAR.js"
     end
   end
 
@@ -822,6 +891,21 @@ TEXT
         *actions,
       )
     end
+
+    it "retains path parameters and replaces conflicting mapping arrays" do
+      plugin_instance.add_api_key_scope(
+        :topics,
+        read: {
+          actions: %w[topics#show],
+          path_params: %i[topic_id],
+        },
+      )
+
+      mapping = ApiKeyScope.scope_mappings.dig(:topics, :read)
+
+      expect(mapping[:actions]).to eq(%w[topics#show])
+      expect(mapping[:path_params]).to eq(%i[topic_id])
+    end
   end
 
   describe "#add_directory_column" do
@@ -944,6 +1028,7 @@ TEXT
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
+
     fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }
@@ -1199,6 +1284,8 @@ TEXT
           route: "sample_plugin/homepage#index",
           anonymous: true,
           server_side: false,
+          enabled: nil,
+          available: nil,
         },
       )
 
@@ -1234,6 +1321,35 @@ TEXT
           server_side: nil,
         )
       end.to raise_error(ArgumentError, /server_side/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "other",
+          route: "plugin#other",
+        )
+      end.to raise_error(ArgumentError, /path/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          available: true,
+        )
+      end.to raise_error(ArgumentError, /available/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "/other",
+          route: "plugin#other",
+          enabled: true,
+        )
+      end.to raise_error(ArgumentError, /enabled/)
 
       plugin_instance.register_homepage(
         "sample_homepage",
@@ -1365,7 +1481,7 @@ TEXT
   describe "#add_request_rate_limiter" do
     after { Middleware::RequestTracker.reset_rate_limiters_stack }
 
-    it "should raise an error if `after` and `before` kwarg are provided" do
+    it "raises an error when both `after` and `before` are provided" do
       plugin = Plugin::Instance.new
 
       expect do
@@ -1379,7 +1495,7 @@ TEXT
       end.to raise_error(ArgumentError, "only one of `after` or `before` can be provided")
     end
 
-    it "should raise an error if value of `after` kwarg is invalid" do
+    it "raises an error when `after` is invalid" do
       plugin = Plugin::Instance.new
 
       expect {
@@ -1395,7 +1511,7 @@ TEXT
       )
     end
 
-    it "should raise an error if value of `before` kwarg is invalid" do
+    it "raises an error when `before` is invalid" do
       plugin = Plugin::Instance.new
 
       expect {

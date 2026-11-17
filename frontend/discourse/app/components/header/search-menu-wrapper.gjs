@@ -15,16 +15,16 @@ export default class SearchMenuWrapper extends Component {
 
   <template>
     <div
-      class="search-menu glimmer-search-menu"
       aria-live="polite"
+      class="search-menu glimmer-search-menu"
       ...attributes
     >
       <MenuPanel class={{dConcatClass this.animationClass "search-menu-panel"}}>
         <SearchMenu
-          @onClose={{@closeSearchMenu}}
-          @inlineResults={{true}}
           @autofocusInput={{true}}
+          @inlineResults={{true}}
           @location="header"
+          @onClose={{@closeSearchMenu}}
           @searchInputId={{@searchInputId}}
         />
       </MenuPanel>

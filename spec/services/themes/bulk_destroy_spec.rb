@@ -5,6 +5,7 @@ RSpec.describe Themes::BulkDestroy do
     it { is_expected.to validate_presence_of(:theme_ids) }
     it { is_expected.to allow_values([1], (1..50).to_a).for(:theme_ids) }
     it { is_expected.not_to allow_values([], (1..51).to_a).for(:theme_ids) }
+
     it do
       is_expected.not_to allow_values([1, 0, -3]).for(:theme_ids).with_message(
         /must all be positive/,
@@ -35,6 +36,22 @@ RSpec.describe Themes::BulkDestroy do
       end
 
       it { is_expected.to fail_to_find_a_model(:themes) }
+    end
+
+    context "when one of the themes can't be edited" do
+      let(:guardian) { admin.guardian }
+      let(:dependencies) { { guardian: } }
+
+      before do
+        allow(guardian).to receive(:can_edit_theme?).and_call_original
+        allow(guardian).to receive(:can_edit_theme?).with(theme_2).and_return(false)
+      end
+
+      it { is_expected.to fail_a_policy(:can_edit_themes) }
+
+      it "destroys nothing" do
+        expect { result }.not_to change { Theme.count }
+      end
     end
 
     context "when everything is ok" do

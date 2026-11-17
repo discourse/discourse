@@ -77,6 +77,7 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
 
   include_context "an engine", urltype: :short
 
+  # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
   URLS.each do |kind, t|
     it "processes #{kind} url correctly", urltype: kind do
       expect(onebox.url).to eq t[:expect]
@@ -85,4 +86,5 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
       expect(onebox.placeholder_html).to include("placeholder-icon map")
     end
   end
+  # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 end

@@ -270,35 +270,12 @@
 }
 
 .recalculate-scores-form-modal {
-  .-custom-range {
-    display: flex;
-    align-items: baseline;
-    margin-top: 0.5rem;
-
-    > * {
-      flex: 1 1 0;
-    }
-
-    .date-picker-wrapper {
-      margin-left: auto;
-    }
-
-    .date-picker {
-      max-width: 400px;
-    }
-  }
-
   .recalculate-modal__status.is-success .d-icon-check {
     color: $success;
   }
 }
 
 .recalculate-modal {
-  &__date-range {
-    margin-top: 0.5rem;
-    color: var(--primary-high);
-  }
-
   &__footer-text {
     margin-left: auto;
     color: var(--primary-high);

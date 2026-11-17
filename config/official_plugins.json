@@ -73,6 +73,8 @@
   "discourse-zoom",
   "discourse-rewind",
   "automation",
+  "blog",
+  "boards",
   "chat",
   "checklist",
   "docker_manager",

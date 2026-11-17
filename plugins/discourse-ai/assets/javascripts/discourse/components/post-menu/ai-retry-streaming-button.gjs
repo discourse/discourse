@@ -46,9 +46,9 @@ export default class AiRetryStreamingButton extends Component {
       class="post-action-menu__ai-retry-streaming ai-retry-streaming"
       ...attributes
       @action={{this.retry}}
+      @disabled={{this.retrying}}
       @icon={{if this.retrying "spinner" "arrow-rotate-right"}}
       @title="discourse_ai.ai_bot.try_again"
-      @disabled={{this.retrying}}
     />
   </template>
 }

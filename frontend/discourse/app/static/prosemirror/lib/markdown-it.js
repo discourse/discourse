@@ -1,5 +1,6 @@
 import { helperContext } from "discourse/lib/helpers";
 import { buildEngine } from "discourse/static/markdown-it";
+import { extractTokenInfo } from "discourse-markdown-it/features/code";
 
 let engine;
 
@@ -26,7 +27,16 @@ export function resetEngine() {
 
 export const parse = (text) => getEngine().parse(text);
 
+export function getCodeFenceInfo(info) {
+  if (info) {
+    return extractTokenInfo(info, getEngine().options.engine);
+  }
+}
+
+/** @returns {import("discourse/lib/link-matcher").LinkMatcher} */
 export const getLinkify = () => getEngine().linkify;
+
+export const getAllowLister = () => getEngine().allowLister;
 
 export const isWhiteSpace = (str, index) =>
   !str || getEngine().options.engine.utils.isWhiteSpace(str.charCodeAt(index));

@@ -12,23 +12,23 @@ export default class DSaveControls extends Component {
     return this.model?.isSaving || this.saveDisabled;
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.set("saved", false);
-  }
-
   @computed("model.isSaving")
   get savingText() {
     return this.model?.isSaving ? "saving" : "save";
   }
 
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.set("saved", false);
+  }
+
   <template>
     <div class="controls save-button" ...attributes>
       <DButton
+        class="btn-primary save-changes"
         @action={{this.action}}
         @disabled={{this.buttonDisabled}}
         @label={{this.savingText}}
-        class="btn-primary save-changes"
       />
       {{#if this.saved}}
         <span class="saved">{{i18n "saved"}}</span>

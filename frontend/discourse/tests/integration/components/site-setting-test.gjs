@@ -37,6 +37,19 @@ function renderSetting(props) {
 module("Integration | Component | SiteSetting", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("plain site settings have no theme anchor", async function (assert) {
+    await renderSetting({
+      setting: "test_setting",
+      value: true,
+      type: "bool",
+    });
+
+    assert.dom(".setting").doesNotHaveClass("linkable");
+    assert.dom(".setting").doesNotHaveAttribute("id");
+    assert.dom(".setting-link").doesNotExist();
+    assert.dom(".setting-label h3").doesNotHaveAttribute("tabindex");
+  });
+
   test("displays host-list setting value", async function (assert) {
     await renderSetting({
       setting: "blocked_onebox_domains",
@@ -518,16 +531,14 @@ module("Integration | Component | SiteSetting", function (hooks) {
       default: "true",
       type: "bool",
     });
-    this.setProperties({
-      themeSetting,
-      theme: { id: 1, name: "Horizon" },
-    });
+    this.themeSetting = themeSetting;
+    this.theme = { id: 1, name: "Horizon" };
 
     await render(
       <template>
         <ThemeSiteSettingEditor
-          @setting={{this.themeSetting}}
           @model={{this.theme}}
+          @setting={{this.themeSetting}}
         />
       </template>
     );
@@ -552,16 +563,14 @@ module("Integration | Component | SiteSetting", function (hooks) {
       default: "A theme",
       textarea: true,
     });
-    this.setProperties({
-      translation,
-      theme: { id: 1, locale: "en" },
-    });
+    this.translation = translation;
+    this.theme = { id: 1, locale: "en" };
 
     await render(
       <template>
         <ThemeTranslation
-          @translation={{this.translation}}
           @model={{this.theme}}
+          @translation={{this.translation}}
         />
       </template>
     );
@@ -686,6 +695,23 @@ module(
           "/admin/site_settings/category/all_results?filter=parent_setting"
         )
         .hasText("Parent setting");
+    });
+
+    test("uses value-based copy for settings that depend on another setting's value", async function (assert) {
+      await renderSetting({
+        setting: "dependent_setting",
+        value: "1",
+        type: "integer",
+        depends_on: ["parent_setting"],
+        depends_on_humanized_names: ["Parent setting"],
+        depends_on_values: { parent_setting: ["include"] },
+      });
+
+      assert
+        .dom(".setting-depends-on-notice__text")
+        .includesText(
+          "This setting only applies when Parent setting is set to a compatible value."
+        );
     });
 
     test("does not show the depends_on notice when setting has no dependencies", async function (assert) {

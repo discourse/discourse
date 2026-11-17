@@ -53,10 +53,13 @@ module("Integration | Component | AiToolApproval", function (hooks) {
 
     assert
       .dom(".ai-tool-approval__toggle")
-      .hasText("Approved", "collapses to a status toggle after approving");
+      .hasText(
+        "Suspend user Approved",
+        "keeps the action visible after approving"
+      );
     assert
-      .dom(".ai-tool-approval__summary")
-      .doesNotExist("hides the details once resolved");
+      .dom(".ai-tool-approval__details")
+      .doesNotHaveAttribute("open", "details are collapsed");
 
     await click(".ai-tool-approval__toggle");
 
@@ -65,7 +68,7 @@ module("Integration | Component | AiToolApproval", function (hooks) {
       .includesText("Spam", "expands to reveal the approved action's reason");
   });
 
-  test("an approved action collapses to an expandable status with no revert action", async function (assert) {
+  test("an approved action keeps its name visible with expandable details", async function (assert) {
     updateCurrentUser({ moderator: true, admin: false });
 
     const approved = { ...reviewable, status: 1 };
@@ -77,7 +80,7 @@ module("Integration | Component | AiToolApproval", function (hooks) {
 
     assert
       .dom(".ai-tool-approval__toggle")
-      .hasText("Approved", "shows the collapsed approved state");
+      .hasText("Suspend user Approved", "shows the action and approval status");
 
     await click(".ai-tool-approval__toggle");
 
@@ -87,7 +90,97 @@ module("Integration | Component | AiToolApproval", function (hooks) {
     assert
       .dom(".ai-tool-approval__actions")
       .doesNotExist("offers no revert action");
+    assert
+      .dom(".ai-tool-approval__details")
+      .hasAttribute("open", "", "exposes the expanded state");
+
+    await click(".ai-tool-approval__toggle");
+
+    assert
+      .dom(".ai-tool-approval__details")
+      .doesNotHaveAttribute("open", "details can be collapsed again");
   });
+
+  test("rejecting an action shows its name and rejected status", async function (assert) {
+    updateCurrentUser({ moderator: true, admin: false });
+    pretender.get("/review/42", () => response({ reviewable }));
+    pretender.put("/review/42/perform/reject", () =>
+      response({ reviewable_perform_result: { success: true } })
+    );
+
+    await render(
+      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
+    );
+    await click(".ai-tool-approval__actions .btn-danger");
+
+    assert
+      .dom(".ai-tool-approval__toggle")
+      .hasText("Suspend user Rejected", "identifies the rejected action");
+    assert
+      .dom(".ai-tool-approval__badge .d-icon-xmark")
+      .exists("distinguishes rejection with an icon as well as text");
+    assert
+      .dom(".ai-tool-approval__actions")
+      .doesNotExist("removes the approval controls");
+  });
+
+  for (const { toolName, title, parameters, detail } of [
+    {
+      toolName: "create_category",
+      title: "Create category",
+      parameters: { name: "Bugs", description: "Report bugs and issues here." },
+      detail: "Report bugs and issues here.",
+    },
+    {
+      toolName: "set_site_setting",
+      title: "Set site setting",
+      parameters: { setting_name: "title", value: "Our community" },
+      detail: "Our community",
+    },
+    {
+      toolName: "silence_user",
+      title: "Silence user",
+      parameters: { username: "noisyuser", reason: "Repeated spam" },
+      detail: "@noisyuser",
+    },
+    {
+      toolName: "custom_action",
+      title: "Custom action",
+      parameters: { enabled: false, count: 0, options: { groups: [1, 2] } },
+      detail: '{"groups":[1,2]}',
+    },
+  ]) {
+    test(`${toolName} uses the generic approval receipt`, async function (assert) {
+      pretender.get("/review/42", () =>
+        response({
+          reviewable: {
+            ...reviewable,
+            status: 1,
+            tool_name: toolName,
+            tool_parameters: parameters,
+          },
+        })
+      );
+
+      await render(
+        <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
+      );
+
+      assert
+        .dom(".ai-tool-approval__title")
+        .hasText(title, "identifies the action without expanding");
+      assert
+        .dom(".ai-tool-approval__details")
+        .doesNotHaveAttribute("open", "parameters are collapsed initially");
+
+      await click(".ai-tool-approval__toggle");
+
+      assert
+        .dom(".ai-tool-approval__summary")
+        .includesText(detail, "preserves the action's parameters")
+        .includesText("Snorlax", "includes the agent for context");
+    });
+  }
 
   test("non-staff sees a pending message without action buttons", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });

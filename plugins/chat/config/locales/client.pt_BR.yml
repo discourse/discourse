@@ -96,8 +96,6 @@ pt_BR:
           other: "Tem certeza de que deseja excluir estas %{count} mensagens?"
       channel_settings:
         title: "Configurações do canal"
-        edit: "Editar"
-        add: "Adicionar"
         star_channel: "Adicionar canal aos favoritos"
         unstar_channel: "Remover canal dos favoritos"
         close_channel: "Fechar canal"
@@ -109,7 +107,6 @@ pt_BR:
         join_channel: "Entrar no canal"
         leave_channel: "Sair do canal"
         leave_groupchat_info: "Ao sair do chat em grupo, você não terá mais acesso a ele nem receberá as notificações relacionadas. Para entrar novamente, você precisa ser convidado(a) novamente por um membro do chat em grupo."
-        notification_settings: "Configurações de notificação"
         notification_settings_context: "Notificações"
         join: "Participar"
         leave: "Sair"
@@ -136,7 +133,7 @@ pt_BR:
         process_started: "O processo para excluir o canal foi iniciado. Este modal será fechado em breve, você não verá mais o canal excluído em lugar algum."
       channels_list_popup:
         browse: "Navegar por canais"
-        create: "Novo canal"
+        create: "Novo canal..."
       close: "Fechar"
       remove: "Remover"
       collapse: "Recolher gaveta de chat"
@@ -151,8 +148,6 @@ pt_BR:
       muted: "silenciado(a)"
       joined: "entrou"
       empty_state:
-        direct_message_cta: "Inicie um chat pessoal"
-        direct_message: "Você também pode iniciar um chat pessoal com um(as) ou mais usuários(as)."
         title: "Nenhum canal encontrado"
         my_threads: "Você ainda não tem nenhum tópico. Os tópicos de que você participa serão exibidos aqui."
       email_frequency:
@@ -377,21 +372,22 @@ pt_BR:
       members_view:
         filter_placeholder: Encontrar membros
         add_member: Adicionar membro
-        back_to_settings: "Voltar para as configurações"
       about_view:
         associated_topic: Tópico vinculado
         associated_category: Categoria vinculada
-        title: Título
         name: Nome
         description: Descrição
       channel_info:
         back_to_all_channels: "Todos os canais"
         back_to_channel: "Voltar"
+        nav_label: "Informações do canal"
         tabs:
           members: Membros
+          preferences: Preferências
           settings: Configurações
           search: Pesquisar
         remove_member: "Remover"
+        members_title: "%{channel} membros"
       new_message_modal:
         title: Enviar mensagem
         add_user_long: <kbd>shift + clique</kbd> ou <kbd>shift + enter</kbd><span>Adicionar @%{username}</span>
@@ -411,15 +407,12 @@ pt_BR:
         create_new_group_chat: "Criar chat em grupo"
         group_with_too_many_members: "tem membros de mais (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Editar canal
         input_placeholder: Adicionar um nome
         slug_description: Um slug de canal é usado na URL em vez do nome do canal
         name: Nome do canal
         reset_emoji: Redefinir emoji
       channel_edit_description_modal:
-        title: Editar descrição
         input_placeholder: Adicione uma descrição
-        description: Diga às pessoas do que se trata este canal
       direct_message_creator:
         add_to_channel: "Adicionar ao canal"
         title: Novas mensagens
@@ -524,7 +517,6 @@ pt_BR:
         always: "Para todas as atividades"
       settings:
         channel_wide_mentions_label: "Permitir menções @all e @here"
-        channel_wide_mentions_description: "Permitir que os usuários notifiquem todos os membros de #%{channel} com @all ou apenas aqueles que estão ativos no momento com @here"
         channel_threading_label: "Criar linha de discussão"
         channel_threading_description: "Ao ativar a criação da linha de discussão, as respostas a uma mensagem de chat criarão uma conversa separada, que existirá junto com o canal principal."
         auto_join_users_label: "Adicionar usuários(as) automaticamente"
@@ -536,6 +528,9 @@ pt_BR:
         followed: "Entrou"
         mute: "Silenciar canal"
         unmute: "Reativar canal"
+        muted_until_hint: "até %{until}"
+        mute_options:
+          "off": "Desligado"
         threading_enabled: "Ativada"
         threading_disabled: "Desativada"
         muted_on: "Ligado"
@@ -545,9 +540,6 @@ pt_BR:
         save: "Salvar"
         saved: "Salvou"
         unfollow: "Sair"
-        admin_title: "Administração"
-        settings_title: "Configurações"
-        info_title: "Informações do canal"
         category_label: "Categoria"
         history_label: "Histórico"
         members_label: "Membros"
@@ -573,14 +565,21 @@ pt_BR:
       direct_messages:
         title: "MDs"
         aria_label: "Mudar para mensagens diretas"
-        new: "Criar um chat pessoal"
+        new_group: "Novo chat em grupo"
         create: "Ir"
-        leave: "Sair deste chat pessoal"
-        close: "Fechar este chat pessoal"
+        leave: "Sair do canal"
+        close: "Fechar canal"
         cannot_create: "Desculpe, você não pode enviar mensagens diretas."
       channel_list:
         title: "Canais"
         aria_label: "Mudar para lista de canais"
+        options:
+          filter: "Filtro"
+        filter:
+          all: "Todos os canais"
+          mentions: "Menções"
+        sort:
+          priority: "Prioridade"
       incoming_webhooks:
         back: "Voltar"
         channel_placeholder: "Selecione um canal"
@@ -735,11 +734,6 @@ pt_BR:
           direct_html: '<span>%{username}</span> <span>convidou você em "%{channel}"</span>'
           other_plain: 'mencionou %{identifier} em "%{channel}"'
           other_html: '<span>%{username}</span> <span>mencionou %{identifier} em "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "mencionei você no chat pessoal"
-          direct_html: "<span>%{username}</span> <span>mencionou você no chat pessoal</span>"
-          other_plain: "mencionou %{identifier} no chat pessoal"
-          other_html: "<span>%{username}</span> <span>mencionou %{identifier} no chat pessoal</span>"
         chat_message: "Nova mensagem de chat"
         chat_quoted: "%{username} citou sua mensagem do chat"
       titles:
@@ -809,9 +803,6 @@ pt_BR:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        text: Iniciar nova DM
-        title: Criar um chat pessoal
       panels:
         chat:
           label: "Chat"
@@ -821,8 +812,12 @@ pt_BR:
       chat_message_created:
         channel_id: "Canal"
       send_chat_message:
+        targets:
+          channel: "Canal"
         channel_id: "Canal"
+        target_usernames: "Destinatários"
         message: "Mensagem"
+        actor_username: "Remetente"
       chat_approval:
         message: "Mensagem"
         buttons: "Botões"

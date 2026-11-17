@@ -25,9 +25,16 @@ class BulkImport::Generic < BulkImport::Base
   DELTA_IMPORT = ENV["DELTA_IMPORT"].present?
   CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
   LAST_VIEWED_AT_PLACEHOLDER = "1970-01-01 00:00:00"
+  # Same quote pairs as the BBCode parser accepts (QUOTATION_MARKS in discourse-markdown-it).
+  BBCODE_QUOTATION_MARKS = ["\"\"", "''", "«»", "“”", "””", "‘’", "„“", "‚’", "‹›"]
 
   def initialize(db_path, uploads_db_path = nil)
     self.class.validate_modes!(merge_import: MERGE_IMPORT, delta_import: DELTA_IMPORT)
+    # SQLite would silently create an empty database for a mistyped path
+    {
+      "Intermediate database" => db_path,
+      "Uploads database" => uploads_db_path,
+    }.each { |label, path| raise "#{label} not found: #{path}" if path && !File.file?(path) }
     super()
     @source_db = create_connection(db_path)
     @uploads_db = create_connection(uploads_db_path) if uploads_db_path
@@ -209,7 +216,11 @@ class BulkImport::Generic < BulkImport::Base
       SQL
   end
 
+  # A destination user can carry several source ids (base-import email merges,
+  # alias merges); prefer the one this delta still exports so its updates apply.
   def canonical_user_import_mappings
+    delta_source_ids =
+      query("SELECT id FROM users") { |rows| rows.map { |row| row["id"].to_i }.to_set }
     rows = DB.query(<<~SQL)
       SELECT value, user_id AS discourse_id, created_at, id
         FROM user_custom_fields
@@ -221,9 +232,120 @@ class BulkImport::Generic < BulkImport::Base
       .group_by(&:discourse_id)
       .values
       .to_h do |mapping_rows|
-        row = mapping_rows.first
+        row =
+          mapping_rows.find { |mapping| delta_source_ids.include?(Integer(mapping.value, 10)) } ||
+            mapping_rows.first
         [Integer(row.value, 10), row.discourse_id.to_i]
       end
+  end
+
+  # The converter may consolidate several source accounts into one winner. The
+  # optional user_aliases table lists those alias -> winner pairs so a delta can
+  # merge destination accounts the base import created separately.
+  def delta_user_aliases
+    @delta_user_aliases ||=
+      if table_column_names("user_aliases").any?
+        query(
+          "SELECT alias_user_id, canonical_user_id FROM user_aliases ORDER BY alias_user_id",
+        ) { |rows| rows.map { |row| [row["alias_user_id"].to_i, row["canonical_user_id"].to_i] } }
+      else
+        []
+      end
+  end
+
+  def delta_alias_accounts_by_canonical
+    base_mappings = plain_import_mappings("user")
+    delta_user_aliases.each_with_object(
+      Hash.new { |hash, key| hash[key] = Set.new },
+    ) do |(alias_id, canonical_id), result|
+      account_id = base_mappings[alias_id]
+      result[canonical_id] << account_id if account_id
+    end
+  end
+
+  # Runs once before existing users are updated (both accounts came from the
+  # base import) and once after the delta's new users, profiles, and stats
+  # exist (the winner is new to this delta). Each pass is a no-op for pairs that
+  # already share one account, so reruns are safe.
+  def merge_delta_user_aliases
+    pending_merges =
+      delta_user_aliases.filter_map do |alias_source_id, canonical_source_id|
+        source_id = user_id_from_imported_id(alias_source_id)
+        target_id = user_id_from_imported_id(canonical_source_id)
+        next if source_id.nil? || target_id.nil? || source_id == target_id
+
+        source_user = User.unscoped.find_by(id: source_id)
+        target_user = User.unscoped.find_by(id: target_id)
+        next unless source_user && target_user
+
+        [alias_source_id, canonical_source_id, source_user, target_user]
+      end
+    return if pending_merges.empty?
+
+    # UserMerger inserts through ActiveRecord, but this run has COPYed rows with
+    # importer-assigned ids that the sequences only learn about at the end.
+    fix_primary_keys
+    removed_users = pending_merges.map { |_, _, source_user, _| source_user }
+
+    pending_merges.each do |alias_source_id, canonical_source_id, source_user, target_user|
+      begin
+        UserMerger.new(source_user, target_user).merge!
+      rescue StandardError => e
+        raise "Merging alias user #{alias_source_id} into user #{canonical_source_id} failed: #{e.message}"
+      end
+
+      # UserMerger keeps the target's own import_id and drops the alias's; keep
+      # it on the survivor so reruns and later deltas still resolve the alias.
+      UserCustomField.find_or_create_by!(
+        user_id: target_user.id,
+        name: "import_id",
+        value: alias_source_id.to_s,
+      )
+      @users[alias_source_id] = target_user.id
+      @delta_stats[:users][:updated_ids] << target_user.id if @delta_stats
+    end
+
+    # the merger's replacement addresses took ids above the importer's counter
+    @last_user_email_id = last_id(UserEmail)
+    refresh_user_lookup_caches(
+      pending_merges.map { |_, _, _, target_user| target_user.id }.uniq,
+      removed_users: removed_users,
+    )
+
+    merged_source_ids = pending_merges.map(&:first)
+    shown_ids = merged_source_ids.first(20)
+    suffix =
+      (
+        if merged_source_ids.length > shown_ids.length
+          " +#{merged_source_ids.length - shown_ids.length} more"
+        else
+          ""
+        end
+      )
+    puts "  Merged #{merged_source_ids.length} alias accounts into their winners (source IDs: #{shown_ids.join(", ")}#{suffix})"
+  end
+
+  def refresh_user_lookup_caches(user_ids, removed_users: [])
+    removed_users.each do |user|
+      @usernames_lower.delete(user.username_lower)
+      @user_ids_by_username_lower.delete(user.username_lower)
+      @usernames_by_id.delete(user.id)
+      @user_full_names_by_id.delete(user.id)
+    end
+
+    user_ids.each_slice(10_000) do |ids|
+      User
+        .unscoped
+        .where(id: ids)
+        .pluck(:id, :username, :username_lower, :name)
+        .each do |id, username, username_lower, name|
+          @usernames_lower << username_lower
+          @user_ids_by_username_lower[username_lower] = id
+          @usernames_by_id[id] = username
+          @user_full_names_by_id[id] = name if name.present?
+        end
+    end
+    @emails = UserEmail.pluck(:email, :user_id).to_h
   end
 
   def delta_update_mapping(name)
@@ -240,6 +362,7 @@ class BulkImport::Generic < BulkImport::Base
     email_owners = UserEmail.pluck(Arel.sql("LOWER(email)"), :user_id).to_h
     username_owners = User.unscoped.pluck(:username_lower, :id).to_h
     username_lower_by_id = User.unscoped.pluck(:id, :username_lower).to_h
+    alias_accounts = delta_alias_accounts_by_canonical
     seen_emails = {}
     seen_usernames = {}
 
@@ -273,7 +396,8 @@ class BulkImport::Generic < BulkImport::Base
       if row["email"].present?
         email = row["email"].downcase
         owner_id = email_owners[email]
-        if owner_id && owner_id != discourse_id
+        if owner_id && owner_id != discourse_id &&
+             !alias_accounts.fetch(row["id"].to_i, Set.new).include?(owner_id)
           errors << "user #{row["id"]} email belongs to Discourse user #{owner_id}"
         end
 
@@ -463,10 +587,6 @@ class BulkImport::Generic < BulkImport::Base
       mapped_topic_id = mappings[:topics][row["topic_id"].to_i]
       errors << "post #{row["id"]} changes immutable topic" if mapped_topic_id != post[:topic_id]
 
-      if row["post_number"].present? && row["post_number"].to_i != post[:post_number]
-        errors << "post #{row["id"]} changes immutable post number"
-      end
-
       next if row["reply_to_post_id"].blank?
 
       parent_id = mappings[:posts][row["reply_to_post_id"].to_i]
@@ -559,9 +679,11 @@ class BulkImport::Generic < BulkImport::Base
     import_engagement
     import_post_voting_votes
     import_topic_voting_votes
+    import_category_topic_voting
     import_answers
     import_gamification_scores
     import_post_events
+    import_event_invitees
 
     import_badge_groupings
     import_badges
@@ -572,10 +694,13 @@ class BulkImport::Generic < BulkImport::Base
     import_optimized_images
 
     import_topic_users
+    import_event_invitee_topic_tracking
     update_topic_users
     import_bookmarks
 
     import_user_stats
+    merge_delta_user_aliases if delta_import?
+    import_user_associated_groups
 
     import_permalink_normalizations
     import_permalinks
@@ -1156,7 +1281,9 @@ class BulkImport::Generic < BulkImport::Base
     category_users = query(<<~SQL)
       SELECT *
         FROM category_users
-       ORDER BY category_id, user_id
+       ORDER BY CASE notification_level WHEN 3 THEN 0 WHEN 4 THEN 1
+                     WHEN 2 THEN 2 WHEN 1 THEN 3 WHEN 0 THEN 4 ELSE 5 END,
+                category_id, user_id
     SQL
 
     existing_category_user_ids = CategoryUser.pluck(:category_id, :user_id).to_set
@@ -1164,7 +1291,8 @@ class BulkImport::Generic < BulkImport::Base
     create_category_users(category_users) do |row|
       category_id = category_id_from_imported_id(row["category_id"])
       user_id = user_id_from_imported_id(row["user_id"])
-      next if existing_category_user_ids.include?([category_id, user_id])
+      next unless category_id && user_id
+      next unless existing_category_user_ids.add?([category_id, user_id])
 
       {
         category_id: category_id,
@@ -1206,6 +1334,7 @@ class BulkImport::Generic < BulkImport::Base
 
         if current_read_restricted != expected_read_restricted
           category.update_column(:read_restricted, expected_read_restricted)
+          Jobs.enqueue(:update_category_upload_security, category_id: category.id)
           updated_count += 1
         else
           skipped_count += 1
@@ -1345,7 +1474,14 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing users..."
 
     start_delta_entity(:users, "users", :users, @last_user_id)
-    update_delta_users if delta_import?
+    if delta_import?
+      merge_delta_user_aliases
+      update_delta_users
+    end
+
+    query("SELECT id, username, email, sso_record, anonymized FROM users ORDER BY id") do |rows|
+      reserve_valid_usernames(rows)
+    end
 
     users = query(<<~SQL)
       SELECT *
@@ -1406,6 +1542,37 @@ class BulkImport::Generic < BulkImport::Base
 
     users.close
     finish_delta_entity(:users, :users)
+  end
+
+  # Lets each source username that is already valid claim its name before an
+  # earlier row's sanitized username can take it, so only the sanitized one
+  # receives a dedup suffix. Rows that process_user will map onto an existing
+  # user by email or external ID reserve nothing.
+  def reserve_valid_usernames(rows)
+    @reserved_usernames = {}
+    emails = Set.new
+    external_ids = Set.new
+
+    rows.each do |row|
+      next if user_id_from_imported_id(row["id"]).present? || row["anonymized"] == 1
+
+      if (email = row["email"].presence&.downcase)
+        next if @emails.key?(email) || emails.include?(email)
+      end
+
+      external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
+      if external_id.present?
+        next if @external_ids.key?(external_id) || external_ids.include?(external_id)
+      end
+
+      emails.add(email) if email
+      external_ids.add(external_id) if external_id.present?
+
+      username = row["username"]
+      next if username.blank? || fix_name(username) != username
+
+      @reserved_usernames[User.normalize_username(username)] ||= row["id"].to_i
+    end
   end
 
   def update_delta_users
@@ -1476,9 +1643,12 @@ class BulkImport::Generic < BulkImport::Base
       end
       updates << update
 
-      if row["email"].present? && (primary_email = primary_emails[discourse_id])
+      if row["email"].present? && (primary_email = primary_emails[discourse_id]) &&
+           !primary_email.email.casecmp?(row["email"])
         email = row["email"].downcase
         if EmailAddressValidator.valid_value?(email)
+          # UserMerger may have moved the address over as a secondary email
+          UserEmail.where(user_id: discourse_id, email:).where.not(id: primary_email.id).delete_all
           email_updates << { id: primary_email.id, user_id: discourse_id, email: email }
         else
           log_import_issue("invalid email update skipped", "user #{row["id"]}")
@@ -1494,16 +1664,7 @@ class BulkImport::Generic < BulkImport::Base
       email_result[:updated_keys].filter_map { |id| updated_user_ids_by_email_id[id.to_i] },
     )
 
-    User
-      .unscoped
-      .where(id: updates.map { |update| update[:id] })
-      .find_each do |user|
-        @usernames_lower << user.username_lower
-        @user_ids_by_username_lower[user.username_lower] = user.id
-        @usernames_by_id[user.id] = user.username
-        @user_full_names_by_id[user.id] = user.name if user.name.present?
-      end
-    @emails = UserEmail.pluck(:email, :user_id).to_h
+    refresh_user_lookup_caches(updates.map { |update| update[:id] })
   ensure
     rows&.close
   end
@@ -1806,6 +1967,8 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_associated_accounts
     puts "", "Importing user associated accounts..."
 
+    update_delta_user_associated_accounts if delta_import?
+
     accounts = query(<<~SQL)
       SELECT a.*, COALESCE(u.last_seen_at, u.created_at) AS last_used_at, u.email, u.username
         FROM user_associated_accounts a
@@ -1833,6 +1996,126 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     accounts.close
+  end
+
+  # Source and destination share the identity provider, so the source's current
+  # provider UID wins over whichever destination account still holds it,
+  # including the userless rows UserMerger leaves behind.
+  def update_delta_user_associated_accounts
+    wanted_by_identity = {}
+    users_by_account_id = {}
+    rows = query(<<~SQL)
+      SELECT a.user_id, a.provider_name, a.provider_uid
+        FROM user_associated_accounts a
+             JOIN users u ON u.id = a.user_id
+       WHERE u.anonymized IS NOT TRUE
+       ORDER BY a.user_id, a.provider_name
+    SQL
+    rows.each do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      wanted_by_identity[[row["provider_name"], row["provider_uid"]]] = user_id if user_id
+    end
+
+    # rows whose identity the delta gives to someone else go first, so both
+    # unique indexes stay satisfied; a user left without a row is created by
+    # the regular loop below, which also covers two users swapping identities
+    displaced_ids = []
+    current_by_user = {}
+    UserAssociatedAccount
+      .pluck(:id, :user_id, :provider_name, :provider_uid)
+      .each do |id, user_id, provider_name, provider_uid|
+        wanted_by = wanted_by_identity[[provider_name, provider_uid]]
+        if wanted_by && wanted_by != user_id
+          log_import_issue(
+            "associated account reassigned",
+            "#{provider_name}/#{provider_uid} moved from user #{user_id.inspect} to user #{wanted_by}",
+          )
+          displaced_ids << id
+        elsif user_id
+          current_by_user[[user_id, provider_name]] = [id, provider_uid]
+        end
+      end
+    displaced_ids.each_slice(1_000) { |ids| UserAssociatedAccount.where(id: ids).delete_all }
+
+    updates =
+      wanted_by_identity.filter_map do |(provider_name, provider_uid), user_id|
+        current_id, current_uid = current_by_user[[user_id, provider_name]]
+        next if current_id.nil? || current_uid == provider_uid
+
+        users_by_account_id[current_id] = user_id
+        { id: current_id, provider_uid: provider_uid }
+      end
+    result = update_records(updates, "user_associated_account", [:provider_uid])
+    @delta_stats[:users][:updated_ids].merge(
+      result[:updated_keys].filter_map { |id| users_by_account_id[id.to_i] },
+    )
+  ensure
+    rows&.close
+  end
+
+  # An authenticator that provides group claims rewrites each user's
+  # associated groups on every login, and only a destroyed claim row removes
+  # the user from the Discourse groups that claim granted. Imported members
+  # hold group_users rows alone, so seed the claim rows a login would have
+  # created for the linked groups they already belong to; their next login
+  # then reconciles against the provider like any other user's. A group
+  # granted by several claims seeds all of them, and the login keeps only the
+  # ones the provider still returns.
+  def import_user_associated_groups
+    puts "", "Importing user associated groups..."
+
+    provider_names = Discourse.enabled_authenticators.select(&:provides_groups?).map(&:name)
+    if provider_names.empty?
+      puts "  Skipped: no enabled authenticator provides group claims"
+      return
+    end
+
+    links =
+      GroupAssociatedGroup
+        .joins(:associated_group)
+        .where(associated_groups: { provider_name: provider_names })
+        .pluck(:group_id, :associated_group_id)
+    if links.empty?
+      puts "  Skipped: no Discourse group is linked to a #{provider_names.join(", ")} group"
+      return
+    end
+
+    associated_group_ids_by_group_id =
+      links.group_by(&:first).transform_values { |pairs| pairs.map(&:last).uniq }
+    imported_user_ids = @users.values.to_set
+    existing_claims =
+      UserAssociatedGroup
+        .where(associated_group_id: links.map(&:last).uniq)
+        .pluck(:user_id, :associated_group_id)
+        .to_set
+
+    memberships =
+      GroupUser
+        .where(group_id: associated_group_ids_by_group_id.keys)
+        .order(:user_id, :group_id)
+        .pluck(:user_id, :group_id)
+
+    seeded_associated_group_ids = Set.new
+    seeded_user_ids = Set.new
+    claims =
+      memberships.flat_map do |user_id, group_id|
+        next [] if imported_user_ids.exclude?(user_id)
+
+        associated_group_ids_by_group_id[group_id].filter_map do |associated_group_id|
+          next unless existing_claims.add?([user_id, associated_group_id])
+
+          seeded_associated_group_ids << associated_group_id
+          seeded_user_ids << user_id
+          { user_id: user_id, associated_group_id: associated_group_id }
+        end
+      end
+
+    create_user_associated_groups(claims) { |claim| claim }
+
+    # The daily cleanup drops associated groups unused for a week; the seeded
+    # claims count as use.
+    AssociatedGroup.where(id: seeded_associated_group_ids.to_a).update_all(last_used: Time.zone.now)
+    puts "  Seeded #{claims.size} group claim(s) for #{seeded_user_ids.size} imported user(s)"
   end
 
   def import_topics
@@ -1910,6 +2193,7 @@ class BulkImport::Generic < BulkImport::Base
       slug
       user_id
       category_id
+      views
       closed
       archived
       pinned_at
@@ -1917,6 +2201,13 @@ class BulkImport::Generic < BulkImport::Base
       pinned_globally
       subtype
     ]
+    indexed_columns =
+      Topic
+        .unscoped
+        .where(id: delta_update_mapping(:topics).values)
+        .pluck(:id, :title, :category_id)
+        .to_h { |id, title, category_id| [id, [title, category_id]] }
+    reindex_ids = []
     rows = query("SELECT * FROM topics ORDER BY id")
     updates =
       rows.filter_map do |row|
@@ -1945,6 +2236,7 @@ class BulkImport::Generic < BulkImport::Base
         if row["category_id"].present?
           update[:category_id] = category_id_from_imported_id(row["category_id"])
         end
+        update[:views] = row["views"] if source_columns.include?("views") && !row["views"].nil?
         %i[archived pinned_globally].each do |column|
           if source_columns.include?(column.to_s)
             update[column] = to_nullable_boolean(row[column.to_s])
@@ -1957,16 +2249,22 @@ class BulkImport::Generic < BulkImport::Base
             update[column] = to_datetime(row[column.to_s])
           end
         end
+        current_title, current_category_id = indexed_columns[discourse_id]
+        if (update[:title] && update[:title] != current_title) ||
+             (update[:category_id] && update[:category_id] != current_category_id)
+          reindex_ids << discourse_id
+        end
         update
       end
     result = update_records(updates, "topic", columns)
     record_delta_updates(:topics, result)
 
-    # direct SQL updates bypass the model callbacks that keep search in sync
-    Topic
-      .unscoped
-      .where(id: result[:updated_keys])
-      .find_each { |topic| SearchIndexer.index(topic, force: true) }
+    # direct SQL updates bypass the model callbacks that keep search in sync;
+    # only the title and category feed the index, so reindex just those
+    reindex_ids &= result[:updated_keys].map(&:to_i)
+    reindex_ids.each_slice(1_000) do |ids|
+      Topic.unscoped.where(id: ids).find_each { |topic| SearchIndexer.index(topic, force: true) }
+    end
   ensure
     rows&.close
   end
@@ -2069,6 +2367,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing posts..."
 
     start_delta_entity(:posts, "posts", :posts, @last_post_id)
+    load_event_lookups
     update_delta_posts if delta_import?
 
     posts = query(<<~SQL)
@@ -2211,7 +2510,7 @@ class BulkImport::Generic < BulkImport::Base
          WHERE id = :event_id
       SQL
 
-      raw.gsub!(event["placeholder"], event_bbcode(event_details)) if event_details
+      raw.gsub!(event["placeholder"], event_bbcode(event_details).to_s) if event_details
     end
 
     if (quotes = placeholders&.fetch("quotes", nil))
@@ -2391,6 +2690,7 @@ class BulkImport::Generic < BulkImport::Base
 
     starts_at = to_datetime(event["starts_at"])
     ends_at = to_datetime(event["ends_at"])
+    timezone = event_timezone(event)
     status = DiscourseEvents::Events::Event.statuses[event["status"]].to_s
     name =
       if (name = event["name"].presence)
@@ -2399,19 +2699,103 @@ class BulkImport::Generic < BulkImport::Base
         )
       end
     url = event["url"]
+    location = event_location(event)
+    allowed_groups = event_allowed_group_names(event)
+    image = @event_image_urls_by_upload_id[event_image_upload_id(event)]
     custom_fields = event["custom_fields"] ? JSON.parse(event["custom_fields"]) : nil
 
     text = +"[event"
-    text << %{ start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}"} if starts_at
-    text << %{ end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}"} if ends_at
-    text << %{ timezone="UTC"}
+    # The plugin reads start and end as local times in the event's timezone.
+    text << %{ start="#{format_event_time(starts_at, timezone)}"} if starts_at
+    text << %{ end="#{format_event_time(ends_at, timezone)}"} if ends_at
+    text << %{ timezone="#{timezone}"}
     text << %{ status="#{status}"} if status
-    text << %{ name="#{name}"} if name
-    text << %{ url="#{url}"} if url
-    custom_fields.each { |key, value| text << %{ #{key}="#{value}"} } if custom_fields
+    text << bbcode_attribute("name", name) if name
+    text << bbcode_attribute("url", url) if url
+    text << bbcode_attribute("location", location) if location
+    text << %{ allowed-groups="#{allowed_groups.join(",")}"} if allowed_groups.present?
+    text << %{ image="#{image}"} if image
+    text << %{ closed="true"} if to_boolean(event["closed"])
+    custom_fields&.each { |key, value| text << bbcode_attribute(key, value) }
     text << "]\n"
     text << "[/event]\n"
     text
+  end
+
+  def event_timezone(event)
+    timezone = event["timezone"].presence
+    timezone && ActiveSupport::TimeZone[timezone] ? timezone : "UTC"
+  end
+
+  def format_event_time(time, timezone)
+    time.in_time_zone(timezone).strftime("%Y-%m-%d %H:%M")
+  end
+
+  # The plugin only keeps invited groups on private events. Public events invite
+  # everyone and standalone events nobody.
+  def event_allowed_group_names(event)
+    return [] if event["status"] != DiscourseEvents::Events::Event.statuses[:private]
+
+    event_allowed_group_ids(event).filter_map { |id| @group_names_by_id[id] }
+  end
+
+  def event_allowed_group_ids(event)
+    return [] if event["allowed_group_ids"].blank?
+
+    JSON.parse(event["allowed_group_ids"]).filter_map { |id| group_id_from_imported_id(id) }
+  end
+
+  # Events are converted while rows are copied, when the connection can't run queries.
+  def load_event_lookups
+    return unless defined?(DiscourseEvents::Events)
+
+    @group_names_by_id = Group.pluck(:id, :name).to_h
+
+    upload_ids =
+      if table_column_names("events").include?("image_upload_id")
+        query(
+          "SELECT DISTINCT image_upload_id FROM events WHERE image_upload_id IS NOT NULL",
+        ) { |rows| rows.filter_map { |row| upload_id_from_original_id(row["image_upload_id"]) } }
+      else
+        []
+      end
+    @event_image_urls_by_upload_id =
+      Upload.where(id: upload_ids).to_h { |upload| [upload.id, upload.short_url] }
+  end
+
+  def log_event_allowed_group_issues(event)
+    return if event["allowed_group_ids"].blank?
+
+    if event["status"] != DiscourseEvents::Events::Event.statuses[:private]
+      log_import_issue("event allowed groups ignored (event isn't private)", "event #{event["id"]}")
+      return
+    end
+
+    missing = JSON.parse(event["allowed_group_ids"]).reject { |id| group_id_from_imported_id(id) }
+    return if missing.empty?
+
+    log_import_issue(
+      "event allowed groups not found",
+      "#{missing.join(", ")} (event #{event["id"]})",
+    )
+  end
+
+  def event_image_upload_id(event)
+    upload_id_from_original_id(event["image_upload_id"]) if event["image_upload_id"].present?
+  end
+
+  # Line breaks would end the BBCode tag, and the plugin stores at most 1000 characters.
+  def event_location(event)
+    event["location"]&.squish.presence&.[](0..999)
+  end
+
+  # Picks a quote pair that doesn't occur in the value, so it needs no escaping.
+  def bbcode_attribute(name, value)
+    value = value.to_s
+    marks = BBCODE_QUOTATION_MARKS.find { |pair| pair.chars.none? { |mark| value.include?(mark) } }
+    return %{ #{name}="#{value.delete('"')}"} unless marks
+
+    %{ #{name}=#{marks[0]}#{value}#{marks[1]}}
   end
 
   def import_post_custom_fields
@@ -2685,7 +3069,8 @@ class BulkImport::Generic < BulkImport::Base
     topic_users = query(<<~SQL)
       SELECT *
         FROM topic_users
-       ORDER BY user_id, topic_id
+       ORDER BY CASE notification_level WHEN 3 THEN 0 WHEN 2 THEN 1 WHEN 1 THEN 2 WHEN 0 THEN 3 ELSE 4 END,
+                user_id, topic_id
     SQL
 
     existing_topic_users = TopicUser.pluck(:topic_id, :user_id).to_set
@@ -2694,7 +3079,7 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
       next unless user_id && topic_id
-      next if existing_topic_users.include?([topic_id, user_id])
+      next unless existing_topic_users.add?([topic_id, user_id])
 
       {
         user_id: user_id,
@@ -2713,6 +3098,38 @@ class BulkImport::Generic < BulkImport::Base
     topic_users.close
   end
 
+  # Mirrors Invitee#update_topic_tracking!. Runs after the imported topic users, so an
+  # explicit subscription from the source wins, and before update_topic_users, which
+  # keeps the level because the row has a notification reason.
+  def import_event_invitee_topic_tracking
+    return unless defined?(DiscourseEvents::Events)
+
+    puts "", "Importing topic tracking of event invitees..."
+
+    statuses = DiscourseEvents::Events::Invitee.statuses
+    levels = TopicUser.notification_levels
+
+    DB.exec(
+      <<~SQL,
+      INSERT INTO topic_users (user_id, topic_id, notification_level, notifications_changed_at,
+                               notifications_reason_id)
+      SELECT i.user_id, p.topic_id,
+             CASE i.status WHEN :going THEN :watching WHEN :interested THEN :tracking ELSE :regular END,
+             i.created_at, :user_changed
+        FROM discourse_post_event_invitees i
+             JOIN posts p ON p.id = i.post_id
+       WHERE i.status IS NOT NULL
+          ON CONFLICT (user_id, topic_id) DO NOTHING
+    SQL
+      going: statuses[:going],
+      interested: statuses[:interested],
+      watching: levels[:watching],
+      tracking: levels[:tracking],
+      regular: levels[:regular],
+      user_changed: TopicUser.notification_reasons[:user_changed],
+    )
+  end
+
   def update_topic_users
     puts "", "Updating topic users..."
 
@@ -2727,6 +3144,9 @@ class BulkImport::Generic < BulkImport::Base
       reason_posted: TopicUser.notification_reasons[:created_post],
     }
 
+    # Like TopicUser.auto_notification, posting history only fills rows without a
+    # notification reason. Imported subscriptions, earlier posting history and user
+    # changes all carry a reason and survive this pass and later imports.
     DB.exec(<<~SQL, params)
       INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, first_visited_at, last_visited_at,
                                notification_level, notifications_changed_at, notifications_reason_id, total_msecs_viewed,
@@ -2749,13 +3169,13 @@ class BulkImport::Generic < BulkImport::Base
                                                         last_read_post_number = GREATEST(topic_users.last_read_post_number, excluded.last_read_post_number),
                                                         first_visited_at = LEAST(topic_users.first_visited_at, excluded.first_visited_at),
                                                         last_visited_at = GREATEST(topic_users.last_visited_at, excluded.last_visited_at),
-                                                        notification_level = GREATEST(topic_users.notification_level, excluded.notification_level),
-                                                        notifications_changed_at = CASE WHEN COALESCE(excluded.notification_level, 0) > COALESCE(topic_users.notification_level, 0)
-                                                                                          THEN COALESCE(excluded.notifications_changed_at, topic_users.notifications_changed_at)
+                                                        notification_level = CASE WHEN topic_users.notifications_reason_id IS NULL
+                                                                                    THEN excluded.notification_level
+                                                                                  ELSE topic_users.notification_level END,
+                                                        notifications_changed_at = CASE WHEN topic_users.notifications_reason_id IS NULL
+                                                                                          THEN excluded.notifications_changed_at
                                                                                         ELSE topic_users.notifications_changed_at END,
-                                                        notifications_reason_id = CASE WHEN COALESCE(excluded.notification_level, 0) > COALESCE(topic_users.notification_level, 0)
-                                                                                         THEN COALESCE(excluded.notifications_reason_id, topic_users.notifications_reason_id)
-                                                                                       ELSE topic_users.notifications_reason_id END,
+                                                        notifications_reason_id = COALESCE(topic_users.notifications_reason_id, excluded.notifications_reason_id),
                                                         total_msecs_viewed = CASE WHEN topic_users.total_msecs_viewed = 0
                                                                                     THEN excluded.total_msecs_viewed
                                                                                   ELSE topic_users.total_msecs_viewed END,
@@ -3048,6 +3468,8 @@ class BulkImport::Generic < BulkImport::Base
       return
     end
 
+    return import_delta_user_notes if delta_import?
+
     user_notes = query(<<~SQL)
       SELECT un.user_id,
              JSON_GROUP_ARRAY(JSON_OBJECT('raw', un.raw, 'created_by', un.created_by_user_id,
@@ -3095,7 +3517,93 @@ class BulkImport::Generic < BulkImport::Base
     user_notes.close
   end
 
+  def import_delta_user_notes
+    notes_by_user = Hash.new { |notes, user_id| notes[user_id] = [] }
+    query(<<~SQL) do |rows|
+      SELECT un.*
+        FROM user_notes un
+             JOIN users u ON u.id = un.user_id
+       WHERE u.anonymized IS NOT TRUE
+       ORDER BY un.user_id, un.id
+    SQL
+      rows.each do |row|
+        source_user_id = row["user_id"].to_i
+        next if @delta_unverified_user_source_ids&.include?(source_user_id)
+
+        user_id = user_id_from_imported_id(source_user_id)
+        next unless user_id
+
+        author_id = user_id_from_imported_id(row["created_by_user_id"]) if row["created_by_user_id"]
+        notes_by_user[user_id] << {
+          "user_id" => user_id,
+          "raw" => row["raw"],
+          "created_by" => author_id || Discourse::SYSTEM_USER_ID,
+          "created_at" => row["created_at"],
+        }
+      end
+    end
+
+    notes_by_user.each do |user_id, incoming_notes|
+      User.transaction(requires_new: true) do
+        next unless User.lock.find_by(id: user_id)
+
+        stored_row =
+          PluginStoreRow.find_or_initialize_by(plugin_name: "user_notes", key: "notes:#{user_id}")
+        notes = delta_stored_user_notes(stored_row, user_id)
+        # Source IDs may be positional; match occurrences of the stored values instead.
+        unmatched_counts = notes.map { |note| delta_user_note_key(note, user_id) }.tally
+        original_count = notes.size
+
+        incoming_notes.each do |note|
+          key = delta_user_note_key(note, user_id)
+          if unmatched_counts.fetch(key, 0) > 0
+            unmatched_counts[key] -= 1
+          else
+            notes << note.merge("id" => SecureRandom.hex(16))
+          end
+        end
+
+        if notes.size != original_count
+          stored_row.type_name = "JSON"
+          stored_row.value = notes.to_json
+          stored_row.save!
+        end
+
+        count_field =
+          UserCustomField.find_or_initialize_by(user_id: user_id, name: "user_notes_count")
+        count_field.value = notes.size.to_s
+        count_field.save! if count_field.changed?
+      end
+    end
+  end
+
+  def delta_stored_user_notes(row, user_id)
+    return [] if row.new_record?
+
+    notes = JSON.parse(row.value)
+    unless row.type_name == "JSON" && notes.is_a?(Array) &&
+             notes.all? { |note|
+               note.is_a?(Hash) && note["id"].is_a?(String) && note["id"].present? &&
+                 note["raw"].is_a?(String)
+             }
+      raise ArgumentError
+    end
+    notes
+  rescue JSON::ParserError, ArgumentError, TypeError
+    raise "Invalid stored user notes for user #{user_id}", cause: nil
+  end
+
+  def delta_user_note_key(note, user_id)
+    timestamp = to_datetime(note["created_at"])&.new_offset(0)
+    author = Integer((note["created_by"] || Discourse::SYSTEM_USER_ID).to_s, 10)
+    [note.fetch("raw"), timestamp, author]
+  rescue ArgumentError, TypeError, KeyError
+    raise "Invalid user-note metadata for user #{user_id}", cause: nil
+  end
+
   def import_user_note_counts
+    return if delta_import?
+
     puts "", "Importing user note counts..."
 
     unless defined?(DiscourseUserNotes)
@@ -3340,7 +3848,10 @@ class BulkImport::Generic < BulkImport::Base
       result[:updated_keys].filter_map { |id| users_by_avatar_id[id.to_i] },
     )
 
+    updated_avatar_ids = result[:updated_keys].map(&:to_i).to_set
     updates.each do |update|
+      next if updated_avatar_ids.exclude?(update[:id])
+
       UploadReference.ensure_exist!(
         upload_ids: [update[:custom_upload_id]],
         target_type: "UserAvatar",
@@ -3417,8 +3928,23 @@ class BulkImport::Generic < BulkImport::Base
     SQL
     puts "  Import took #{(Time.now - start_time).to_i} seconds."
 
+    import_event_upload_references
+
     import_content_upload_references("posts")
     import_content_upload_references("chat_messages")
+  end
+
+  def import_event_upload_references
+    return unless defined?(DiscourseEvents::Events)
+
+    puts "", "Importing upload references for events..."
+    DB.exec(<<~SQL, target_type: DiscourseEvents::Events::Event.name)
+      INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
+      SELECT image_upload_id, :target_type, id, NOW(), NOW()
+        FROM discourse_post_event_events
+       WHERE image_upload_id IS NOT NULL
+          ON CONFLICT DO NOTHING
+    SQL
   end
 
   def import_content_upload_references(type)
@@ -3588,7 +4114,7 @@ class BulkImport::Generic < BulkImport::Base
       intermediate_group_ids = []
       if row["tag_group_ids"] && !row["tag_group_ids"].empty?
         intermediate_group_ids = JSON.parse(row["tag_group_ids"])
-      elsif row["tag_group_id"] && !row["tag_group_id"].empty?
+      elsif row["tag_group_id"].present?
         # Support old single tag_group_id
         intermediate_group_ids = [row["tag_group_id"]]
       end
@@ -3775,6 +4301,30 @@ class BulkImport::Generic < BulkImport::Base
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
+  # Runs after the votes are imported because creating a CategorySetting unarchives
+  # votes of the category's existing open topics.
+  def import_category_topic_voting
+    unless defined?(DiscourseTopicVoting)
+      puts "", "Skipping topic voting categories, because the topic voting plugin is not installed."
+      return
+    end
+
+    return if table_column_names("categories").exclude?("topic_voting")
+
+    puts "", "Enabling topic voting on categories..."
+
+    rows = query("SELECT id FROM categories WHERE topic_voting = 1 ORDER BY id")
+
+    rows.each do |row|
+      category_id = category_id_from_imported_id(row["id"])
+      next unless category_id
+
+      DiscourseTopicVoting::CategorySetting.find_or_create_by!(category_id:)
+    end
+
+    rows.close
+  end
+
   def import_answers
     unless defined?(DiscourseSolved)
       puts "  Skipping import of solved topics"
@@ -3916,15 +4466,35 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     default_custom_fields = "{}"
-    timezone = "UTC"
-    public_group_invitees = "{#{DiscourseEvents::Events::Event::PUBLIC_GROUP}}"
-    standalone_invitees = "{}"
+    statuses = DiscourseEvents::Events::Event.statuses
+    array_encoder = PG::TextEncoder::Array.new
 
     existing_events = DiscourseEvents::Events::Event.pluck(:id).to_set
+    load_event_lookups
 
     create_post_events(post_events) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
       next if !post_id || existing_events.include?(post_id)
+
+      timezone = event_timezone(row)
+      if row["timezone"].present? && timezone != row["timezone"]
+        log_import_issue(
+          "invalid event timezone, using UTC",
+          "#{row["timezone"]} (event #{row["id"]})",
+        )
+      end
+
+      raw_invitees =
+        case row["status"]
+        when statuses[:public]
+          [DiscourseEvents::Events::Event::PUBLIC_GROUP]
+        when statuses[:private]
+          event_allowed_group_names(row)
+        else
+          []
+        end
+
+      log_event_allowed_group_issues(row)
 
       {
         id: post_id,
@@ -3933,18 +4503,34 @@ class BulkImport::Generic < BulkImport::Base
         original_ends_at: to_datetime(row["ends_at"]),
         name: row["name"],
         url: row["url"] ? row["url"][0..999] : nil,
+        location: event_location(row),
         custom_fields: row["custom_fields"] || default_custom_fields,
-        timezone: timezone,
-        raw_invitees:
-          (
-            if row["status"] == DiscourseEvents::Events::Event.statuses[:public]
-              public_group_invitees
-            else
-              standalone_invitees
-            end
-          ),
+        timezone:,
+        raw_invitees: array_encoder.encode(raw_invitees),
+        closed: to_boolean(row["closed"]),
+        image_upload_id: event_image_upload_id(row),
       }
     end
+
+    # Like Event#sync_image_to_post_and_topic, without waiting for a rebake.
+    DB.exec(<<~SQL)
+      UPDATE posts p
+         SET image_upload_id = e.image_upload_id
+        FROM discourse_post_event_events e
+       WHERE e.id = p.id
+         AND e.image_upload_id IS NOT NULL
+         AND p.image_upload_id IS DISTINCT FROM e.image_upload_id
+    SQL
+    DB.exec(<<~SQL)
+      UPDATE topics t
+         SET image_upload_id = p.image_upload_id
+        FROM posts p
+             JOIN discourse_post_event_events e ON e.id = p.id
+       WHERE p.topic_id = t.id
+         AND p.post_number = 1
+         AND e.image_upload_id IS NOT NULL
+         AND t.image_upload_id IS DISTINCT FROM e.image_upload_id
+    SQL
 
     puts "", "Importing event dates..."
 
@@ -3995,6 +4581,90 @@ class BulkImport::Generic < BulkImport::Base
     post_events.close
   end
 
+  def import_event_invitees
+    unless defined?(DiscourseEvents::Events)
+      puts "", "Skipping event invitees, because the events plugin is not installed."
+      return
+    end
+
+    unless @source_db.get_first_value(
+             "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'event_invitees'",
+           )
+      return
+    end
+
+    puts "", "Importing event invitees..."
+
+    invitees = query(<<~SQL)
+      SELECT event_invitees.*, events.post_id AS event_post_id
+        FROM event_invitees
+             JOIN events ON events.id = event_invitees.event_id
+       ORDER BY event_invitees.event_id, event_invitees.user_id
+    SQL
+
+    statuses = DiscourseEvents::Events::Invitee.statuses
+    event_statuses = DiscourseEvents::Events::Event.statuses
+    events =
+      DiscourseEvents::Events::Event
+        .pluck(:id, :status, :raw_invitees)
+        .to_h { |id, status, groups| [id, { status:, groups: groups || [] }] }
+    private_event_groups =
+      events.values.filter_map do |event|
+        event[:groups] if event[:status] == event_statuses[:private]
+      end
+    group_members =
+      GroupUser
+        .joins(:group)
+        .where(groups: { name: private_event_groups.flatten.uniq })
+        .pluck(:user_id, "groups.name")
+        .to_set
+    # The default scope hides suspended, silenced and staged users.
+    existing_invitees = DiscourseEvents::Events::Invitee.unscoped.pluck(:post_id, :user_id).to_set
+
+    create_event_invitees(invitees) do |row|
+      post_id = post_id_from_imported_id(row["event_post_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      event = events[post_id]
+      next unless event && user_id
+
+      # The plugin removes invitees from standalone events, and from private events
+      # when they aren't in one of the allowed groups.
+      case event[:status]
+      when event_statuses[:standalone]
+        log_import_issue(
+          "event invitee skipped (standalone event)",
+          "user #{row["user_id"]} of event #{row["event_id"]}",
+        )
+        next
+      when event_statuses[:private]
+        if event[:groups].none? { |group| group_members.include?([user_id, group]) }
+          log_import_issue(
+            "event invitee skipped (not in the event's allowed groups)",
+            "user #{row["user_id"]} of event #{row["event_id"]}",
+          )
+          next
+        end
+      end
+
+      status = row["status"] || statuses[:going]
+      if statuses.values.exclude?(status)
+        log_import_issue(
+          "event invitee skipped (unknown status)",
+          "status #{status} of user #{row["user_id"]} in event #{row["event_id"]}",
+        )
+        next
+      end
+
+      next unless existing_invitees.add?([post_id, user_id])
+
+      created_at = to_datetime(row["created_at"])
+
+      { post_id:, user_id:, status:, created_at:, updated_at: created_at }
+    end
+
+    invitees.close
+  end
+
   def import_tag_users
     puts "", "Importing tag users..."
 
@@ -4025,6 +4695,7 @@ class BulkImport::Generic < BulkImport::Base
     rows = query(<<~SQL)
       SELECT DISTINCT badge_group
         FROM badges
+       WHERE badge_group IS NOT NULL
        ORDER BY badge_group
     SQL
 
@@ -4067,7 +4738,7 @@ class BulkImport::Generic < BulkImport::Base
         name: badge_name,
         description: row["description"],
         badge_type_id: row["badge_type_id"],
-        badge_grouping_id: @badge_group_mapping[row["badge_group"]],
+        badge_grouping_id: @badge_group_mapping[row["badge_group"]] || BadgeGrouping::Other,
         long_description: row["long_description"],
         image_upload_id:
           (
@@ -4896,6 +5567,14 @@ class BulkImport::Generic < BulkImport::Base
 
     placeholders.each do |placeholder|
       case placeholder["type"]
+      when "topic_url"
+        topic_id = topic_id_from_imported_id(placeholder["id"])
+        topic = topic_id && Topic.find_by(id: topic_id)
+        unless topic
+          puts "WARNING: Skipping permalink #{row["url"]}: missing topic target for #{placeholder["id"]}"
+          return nil
+        end
+        external_url.gsub!(placeholder["placeholder"], "t/#{topic.slug}/#{topic.id}")
       when "category_url"
         category_id = category_id_from_imported_id(placeholder["id"])
         category = Category.find(category_id)

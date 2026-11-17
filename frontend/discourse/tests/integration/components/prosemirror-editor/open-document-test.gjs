@@ -18,9 +18,9 @@ async function openRichEditor(markdown) {
   await render(
     <template>
       <DEditor
-        @value={{state.value}}
         @change={{state.onChange}}
         @processPreview={{false}}
+        @value={{state.value}}
       />
     </template>
   );

@@ -4,6 +4,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.gif" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
+  let(:rate_limited_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat4.png" }
   let(:encoded_image_url) { "https://example.com/אלחוט-.jpg" }
   let(:gif) do
     Base64.decode64(
@@ -16,6 +17,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     )
   end
   let(:upload_path) { Discourse.store.upload_path }
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   before do
@@ -29,6 +31,12 @@ RSpec.describe Jobs::PullHotlinkedImages do
       },
     )
     stub_request(:get, broken_image_url).to_return(status: 404)
+    stub_request(:get, rate_limited_image_url).to_return(
+      status: 429,
+      headers: {
+        "Retry-After" => "120",
+      },
+    )
     stub_request(:get, large_image_url).to_return(
       body: large_png,
       headers: {
@@ -100,6 +108,53 @@ RSpec.describe Jobs::PullHotlinkedImages do
         },
         at: Time.zone.now + delay.seconds,
       ) { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+    end
+
+    it "retries at Retry-After instead of recording a failure when rate limited" do
+      Jobs.run_later!
+
+      post = Fabricate(:post, user: user, raw: "<img src='#{rate_limited_image_url}'>")
+
+      freeze_time
+      expect_enqueued_with(
+        job: :pull_hotlinked_images,
+        args: {
+          post_id: post.id,
+          rate_limit_retries: 1,
+        },
+        at: 120.seconds.from_now,
+      ) { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+
+      expect(post.reload.post_hotlinked_media).to be_empty
+    end
+
+    it "still pulls the remaining images when one is rate limited" do
+      Jobs.run_later!
+
+      post =
+        Fabricate(
+          :post,
+          user: user,
+          raw: "<img src='#{rate_limited_image_url}'>\n<img src='#{encoded_image_url}'>",
+        )
+      stub_image_size
+
+      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+
+      expect(post.reload.post_hotlinked_media.map(&:status)).to contain_exactly("downloaded")
+    end
+
+    it "stops retrying rate limited images once the retry limit is reached" do
+      Jobs.run_later!
+
+      post = Fabricate(:post, user: user, raw: "<img src='#{rate_limited_image_url}'>")
+
+      expect_not_enqueued_with(job: :pull_hotlinked_images) do
+        Jobs::PullHotlinkedImages.new.execute(
+          post_id: post.id,
+          rate_limit_retries: described_class::MAX_RATE_LIMIT_RETRIES,
+        )
+      end
     end
 
     it "removes downloaded images when they are no longer needed" do
@@ -539,26 +594,26 @@ RSpec.describe Jobs::PullHotlinkedImages do
     subject(:job) { described_class.new }
 
     describe "when url is invalid" do
-      it "should return false" do
+      it "rejects image URLs without a scheme or protocol-relative prefix" do
         expect(job.should_download_image?("null")).to eq(false)
         expect(job.should_download_image?("meta.discourse.org")).to eq(false)
       end
     end
 
     describe "when url is valid" do
-      it "should return true" do
+      it "accepts HTTP and protocol-relative image URLs" do
         expect(job.should_download_image?("http://meta.discourse.org")).to eq(true)
         expect(job.should_download_image?("//meta.discourse.org")).to eq(true)
       end
     end
 
     describe "when url is an upload" do
-      it "should return false for original" do
+      it "rejects an original upload URL" do
         expect(job.should_download_image?(Fabricate(:upload).url)).to eq(false)
       end
 
       context "when secure uploads enabled" do
-        it "should return false for secure-upload url" do
+        it "rejects a secure upload URL" do
           setup_s3
           SiteSetting.secure_uploads = true
 
@@ -569,7 +624,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
         end
       end
 
-      it "should return true for optimized" do
+      it "accepts an optimized image URL" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
         expect(job.should_download_image?(src)).to eq(true)
       end

@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { click, findAll, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -13,14 +14,14 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("displays tags", async function (assert) {
-      this.set("value", [
+      this.value = [
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
-      ]);
+      ];
 
       await render(
         <template><MiniTagChooser @value={{this.value}} /></template>
@@ -105,13 +106,16 @@ module(
     });
 
     test("create a tag", async function (assert) {
-      this.set("value", [
+      const value = tracked([
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
       ]);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
-        <template><MiniTagChooser @value={{this.value}} /></template>
+        <template>
+          <MiniTagChooser @onChange={{onChange}} @value={{value.value}} />
+        </template>
       );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
@@ -164,10 +168,10 @@ module(
     });
 
     test("max_tags_per_topic", async function (assert) {
-      this.set("value", [
+      this.value = [
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
-      ]);
+      ];
       this.siteSettings.max_tags_per_topic = 2;
 
       await render(
@@ -188,10 +192,10 @@ module(
     });
 
     test("disables search and shows limit when max_tags_per_topic is zero", async function (assert) {
-      this.set("value", [
+      this.value = [
         { id: "cat", name: "cat", slug: "cat" },
         { id: "kit", name: "kit", slug: "kit" },
-      ]);
+      ];
       this.siteSettings.max_tags_per_topic = 0;
 
       await render(
@@ -213,16 +217,18 @@ module(
     });
 
     test("required_tag_group", async function (assert) {
-      this.set("value", [
+      const value = tracked([
         { id: "foo", name: "foo", slug: "foo" },
         { id: "bar", name: "bar", slug: "bar" },
       ]);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
+            @onChange={{onChange}}
             @options={{hash categoryId=1}}
+            @value={{value.value}}
           />
         </template>
       );
@@ -280,11 +286,11 @@ module(
     });
 
     test("values in hiddenFromPreview will not display in preview", async function (assert) {
-      this.set("value", [
+      this.value = [
         { id: 1, name: "foo", slug: "foo" },
         { id: 2, name: "bar", slug: "bar" },
-      ]);
-      this.set("hiddenValues", [{ id: 1, name: "foo", slug: "foo" }]);
+      ];
+      this.hiddenValues = [{ id: 1, name: "foo", slug: "foo" }];
 
       await render(
         <template>
@@ -313,21 +319,23 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("displays tags and filter in header", async function (assert) {
-      this.set("value", [
+      const value = tracked([
         { id: 10, name: "apple", slug: "apple" },
         { id: 11, name: "orange", slug: "orange" },
         { id: 12, name: "potato", slug: "potato" },
       ]);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
+            @onChange={{onChange}}
             @options={{hash filterable=true useHeaderFilter=true}}
+            @value={{value.value}}
           />
         </template>
       );
@@ -340,7 +348,12 @@ module(
       assert.dom(".select-kit-header button[data-name='potato']").exists();
 
       const filterInput = ".select-kit-header .filter-input";
-      await click(filterInput);
+      await triggerKeyEvent(".select-kit-header", "keydown", 77);
+
+      assert.dom(filterInput).isFocused();
+      assert.dom(filterInput).hasValue("m");
+
+      await this.subject.emptyFilter();
 
       await triggerKeyEvent(filterInput, "keydown", "ArrowDown");
       await triggerKeyEvent(filterInput, "keydown", "Enter");
@@ -360,17 +373,19 @@ module(
     });
 
     test("removing a tag does not display the dropdown", async function (assert) {
-      this.set("value", [
+      const value = tracked([
         { id: 10, name: "apple", slug: "apple" },
         { id: 11, name: "orange", slug: "orange" },
         { id: 12, name: "potato", slug: "potato" },
       ]);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
         <template>
           <MiniTagChooser
-            @value={{this.value}}
+            @onChange={{onChange}}
             @options={{hash filterable=true useHeaderFilter=true}}
+            @value={{value.value}}
           />
         </template>
       );

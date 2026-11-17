@@ -8,16 +8,16 @@ module("Integration | Component | SelectKit | ListSetting", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("default", async function (assert) {
-    this.set("value", ["bold", "italic"]);
-    this.set("choices", ["bold", "italic", "underline"]);
+    this.value = ["bold", "italic"];
+    this.choices = ["bold", "italic", "underline"];
 
     await render(
       <template>
-        <ListSetting @value={{this.value}} @choices={{this.choices}} />
+        <ListSetting @choices={{this.choices}} @value={{this.value}} />
       </template>
     );
 

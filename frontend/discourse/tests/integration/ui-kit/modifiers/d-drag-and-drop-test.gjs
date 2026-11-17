@@ -30,13 +30,11 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
   module("marker attribute lifecycle", function () {
     test("removes every marker when its element is destroyed", async function (assert) {
-      const state = new (class {
-        @tracked show = true;
-      })();
+      const show = tracked(true);
 
       await render(
         <template>
-          {{#if state.show}}
+          {{#if show.value}}
             <div id="source" {{dDragAndDropSource type="row"}}>source</div>
             <div id="target" {{dDragAndDropTarget accepts="row"}}>target</div>
           {{/if}}
@@ -54,7 +52,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         target.hasAttribute("data-drop-target"),
         "the element target starts registered"
       );
-      state.show = false;
+      show.value = false;
       await settled();
 
       assert.false(
@@ -68,15 +66,13 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
 
     test("source marker follows the disabled registration cycle", async function (assert) {
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
 
       await render(
         <template>
           <div
             id="source"
-            {{dDragAndDropSource type="row" disabled=state.disabled}}
+            {{dDragAndDropSource type="row" disabled=disabled.value}}
           >source</div>
         </template>
       );
@@ -87,14 +83,14 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "the enabled source is marked"
       );
 
-      state.disabled = true;
+      disabled.value = true;
       await settled();
       assert.false(
         source.hasAttribute("data-drag-source"),
         "disabling removes the marker from the live element"
       );
 
-      state.disabled = false;
+      disabled.value = false;
       await settled();
       assert.true(
         source.hasAttribute("data-drag-source"),
@@ -872,15 +868,13 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   module("a torn-down source drops its deferred callbacks", function () {
     test("destroying the modifier before the runloop flushes cancels them", async function (assert) {
       const calls = [];
-      const state = new (class {
-        @tracked rendered = true;
-      })();
+      const rendered = tracked(true);
       const onDragEnd = () => calls.push("dragEnd");
       const onDrop = () => calls.push("drop");
 
       await render(
         <template>
-          {{#if state.rendered}}
+          {{#if rendered.value}}
             <div
               id="src"
               {{dDragAndDropSource
@@ -900,7 +894,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
       // Torn down in the same task as the drop, before the deferred callbacks flush.
       dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
-      state.rendered = false;
+      rendered.value = false;
       await settled();
 
       assert.deepEqual(
@@ -912,9 +906,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
     test("re-registering the modifier before the runloop flushes keeps them", async function (assert) {
       const calls = [];
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
       const onDragEnd = () => calls.push("dragEnd");
       const onDrop = () => calls.push("drop");
 
@@ -924,7 +916,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             id="src"
             {{dDragAndDropSource
               type="row"
-              disabled=state.disabled
+              disabled=disabled.value
               onDragEnd=onDragEnd
               onDrop=onDrop
             }}
@@ -938,7 +930,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await dragOver("#tgt", { dataTransfer });
 
       dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
-      state.disabled = true;
+      disabled.value = true;
       await settled();
 
       assert.deepEqual(
@@ -950,9 +942,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
     test("a source disabled mid-drag still reports how that drag ended", async function (assert) {
       const calls = [];
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
       const onDragEnd = () => calls.push("dragEnd");
       const onDrop = () => calls.push("drop");
 
@@ -962,7 +952,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             id="src"
             {{dDragAndDropSource
               type="row"
-              disabled=state.disabled
+              disabled=disabled.value
               onDragEnd=onDragEnd
               onDrop=onDrop
             }}
@@ -981,7 +971,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#tgt"),
       });
 
-      state.disabled = true;
+      disabled.value = true;
       await settled();
 
       await dragEvent("#tgt", "dragover", {
@@ -1004,15 +994,13 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       // White-box: a duplicate registration is only visible through the
       // library's dev-only warning, so that is what is asserted on.
       const warn = sinon.stub(console, "warn");
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
 
       await render(
         <template>
           <div
             id="src"
-            {{dDragAndDropSource type="row" disabled=state.disabled}}
+            {{dDragAndDropSource type="row" disabled=disabled.value}}
           >src</div>
           <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
         </template>
@@ -1024,9 +1012,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#src"),
       });
 
-      state.disabled = true;
+      disabled.value = true;
       await settled();
-      state.disabled = false;
+      disabled.value = false;
       await settled();
 
       const duplicate = warn
@@ -1131,9 +1119,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
     test("a source disabled and re-enabled mid-drag still reports how that drag ended", async function (assert) {
       const calls = [];
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
       const onDragEnd = () => calls.push("dragEnd");
       const onDrop = () => calls.push("drop");
 
@@ -1143,7 +1129,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             id="src"
             {{dDragAndDropSource
               type="row"
-              disabled=state.disabled
+              disabled=disabled.value
               onDragEnd=onDragEnd
               onDrop=onDrop
             }}
@@ -1162,9 +1148,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ...centerOf("#tgt"),
       });
 
-      state.disabled = true;
+      disabled.value = true;
       await settled();
-      state.disabled = false;
+      disabled.value = false;
       await settled();
 
       assert
@@ -1189,9 +1175,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
     test("a source re-enabled between the drop and its deferred dispatch keeps its registration for the next drag", async function (assert) {
       const calls = [];
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
       const onDragEnd = () => calls.push("dragEnd");
       const onDrop = () => calls.push("drop");
 
@@ -1201,7 +1185,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             id="src"
             {{dDragAndDropSource
               type="row"
-              disabled=state.disabled
+              disabled=disabled.value
               onDragEnd=onDragEnd
               onDrop=onDrop
             }}
@@ -1213,11 +1197,11 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       const dataTransfer = new DataTransfer();
       await startDrag("#src", { dataTransfer });
       await dragOver("#tgt", { dataTransfer });
-      state.disabled = true;
+      disabled.value = true;
       await settled();
 
       dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
-      state.disabled = false;
+      disabled.value = false;
       await settled();
       await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
 
@@ -1311,21 +1295,19 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
     test("a source disabled mid-drag and then destroyed drops its callbacks", async function (assert) {
       const calls = [];
-      const state = new (class {
-        @tracked disabled = false;
-        @tracked rendered = true;
-      })();
+      const disabled = tracked(false);
+      const rendered = tracked(true);
       const onDragEnd = () => calls.push("dragEnd");
       const onDrop = () => calls.push("drop");
 
       await render(
         <template>
-          {{#if state.rendered}}
+          {{#if rendered.value}}
             <div
               id="src"
               {{dDragAndDropSource
                 type="row"
-                disabled=state.disabled
+                disabled=disabled.value
                 onDragEnd=onDragEnd
                 onDrop=onDrop
               }}
@@ -1339,12 +1321,12 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await startDrag("#src", { dataTransfer });
       await dragOver("#tgt", { dataTransfer });
 
-      state.disabled = true;
+      disabled.value = true;
       await settled();
 
       // Destroyed in the same task as the drop, before its deferred callbacks flush.
       dragEventNow("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
-      state.rendered = false;
+      rendered.value = false;
       await settled();
 
       assert.deepEqual(
@@ -1485,21 +1467,19 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
 
     test("a source still registered keeps answering after a sibling detaches", async function (assert) {
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
 
       await render(
         <template>
           <div
             id="going"
-            {{dDragAndDropSource type="going" disabled=state.disabled}}
+            {{dDragAndDropSource type="going" disabled=disabled.value}}
           >going</div>
           <div id="staying" {{dDragAndDropSource type="staying"}}>staying</div>
         </template>
       );
 
-      state.disabled = true;
+      disabled.value = true;
       await settled();
 
       const dataTransfer = recordingTransfer();
@@ -1518,21 +1498,19 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     test("the last source to go takes the shared listener with it", async function (assert) {
       // White-box, because the only thing a leak costs is an idle listener and
       // a map entry per registration, nothing a drag can observe.
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
 
       await render(
         <template>
           <div
             id="row"
-            {{dDragAndDropSource type="row" disabled=state.disabled}}
+            {{dDragAndDropSource type="row" disabled=disabled.value}}
           >row</div>
         </template>
       );
 
       const released = sinon.spy(window, "removeEventListener");
-      state.disabled = true;
+      disabled.value = true;
       await settled();
 
       assert.true(
@@ -1862,7 +1840,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           <template>
             <div id="row" {{dDragAndDropSource type="row"}}>
               row
-              <a id="link" href="/somewhere">link</a>
+              <a href="/somewhere" id="link">link</a>
             </div>
           </template>
         );
@@ -1898,8 +1876,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           >
             <button
               id="grip"
-              type="button"
               style="width: 30px"
+              type="button"
               {{didInsert state.captureHandle}}
             >grip</button>
           </div>
@@ -2330,9 +2308,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
 
     test("flipping indicator off mid-hover clears the class already shown", async function (assert) {
-      const state = new (class {
-        @tracked indicator = true;
-      })();
+      const indicator = tracked(true);
 
       await render(
         <template>
@@ -2342,7 +2318,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             {{dDragAndDropTarget
               accepts="row"
               position="before"
-              indicator=state.indicator
+              indicator=indicator.value
             }}
           >tgt</div>
         </template>
@@ -2354,7 +2330,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
       assert.dom("#tgt").hasClass("--drag-above", "lit while indicating");
 
-      state.indicator = false;
+      indicator.value = false;
       await settled();
       await dragEvent("#tgt", "dragover", {
         dataTransfer,
@@ -2871,9 +2847,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     test("a throwing source onDrop still runs the teardown that was waiting on the drag", async function (assert) {
       const reported = [];
       setupOnerror((error) => reported.push(error));
-      const state = new (class {
-        @tracked disabled = false;
-      })();
+      const disabled = tracked(false);
 
       await render(
         <template>
@@ -2882,7 +2856,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             {{dDragAndDropSource
               type="row"
               onDrop=blowUp
-              disabled=state.disabled
+              disabled=disabled.value
             }}
           >src</div>
           <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
@@ -2893,7 +2867,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       await startDrag("#src", { dataTransfer });
       await dragOver("#tgt", { dataTransfer });
 
-      state.disabled = true;
+      disabled.value = true;
       await settled();
       assert.dom("#src").hasAttribute("data-drag-source", "", "waiting");
 
@@ -2914,10 +2888,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
   module("arg changes reach a drag already in flight", function () {
     test("disabling a source mid-drag still reports to its current callbacks", async function (assert) {
       const calls = [];
-      const state = new (class {
-        @tracked disabled = false;
-        @tracked onDragEnd = () => calls.push("before");
-      })();
+      const disabled = tracked(false);
+      const onDragEnd = tracked(() => calls.push("before"));
 
       await render(
         <template>
@@ -2925,8 +2897,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             id="src"
             {{dDragAndDropSource
               type="row"
-              disabled=state.disabled
-              onDragEnd=state.onDragEnd
+              disabled=disabled.value
+              onDragEnd=onDragEnd.value
             }}
           >src</div>
           <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
@@ -2944,8 +2916,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       });
 
       // One flush for both: the registration detaches with the callback replaced.
-      state.disabled = true;
-      state.onDragEnd = () => calls.push("after");
+      disabled.value = true;
+      onDragEnd.value = () => calls.push("after");
       await settled();
 
       await dragEvent("#tgt", "dragover", {
@@ -2984,9 +2956,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         await render(
           <template>
             <div
-              id="tgt"
               class="positioned --drag-above"
               data-drop-target
+              id="tgt"
             >tgt</div>
           </template>
         );
@@ -3001,7 +2973,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       test("a drop target that positions nothing still gets the containing block the line needs", async function (assert) {
         await render(
           <template>
-            <div id="tgt" class="--drag-above" data-drop-target>tgt</div>
+            <div class="--drag-above" data-drop-target id="tgt">tgt</div>
           </template>
         );
 
@@ -3273,10 +3245,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
 
     test("a sticky target keeps its enter while the pointer is outside it and is left when stickiness ends", async function (assert) {
-      const state = new (class {
-        @tracked sticky = true;
-      })();
-      const isSticky = () => state.sticky;
+      const sticky = tracked(true);
+      const isSticky = () => sticky.value;
       const events = [];
       const onEnter = () => events.push("enter");
       const onLeave = () => events.push("leave");
@@ -3312,7 +3282,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         .dom("#tgt")
         .hasClass("--drag-above", "and the indicator stays with the role");
 
-      state.sticky = false;
+      sticky.value = false;
       await settled();
       await dragEvent("#away", "dragover", {
         dataTransfer,
@@ -3364,5 +3334,96 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "and is still told the drag arrived, so it can draw it"
       );
     });
+  });
+
+  // Authored as the independent oracle for the clear-before-measure ordering in
+  // the kernel's `onDrop`. The assertion compares the position the target was
+  // PAINTING at the moment of release against the one the consumer is handed,
+  // so it needs no prediction of which way the mismatch falls.
+  module("drop position layout oracle", function (oracleHooks) {
+    let consumerSheet;
+
+    oracleHooks.afterEach(function () {
+      consumerSheet?.remove();
+      consumerSheet = null;
+    });
+
+    /**
+     * Gives the indicator classes a layout effect, which core's own stylesheet
+     * deliberately avoids. A consumer is free to do this, and it is what makes
+     * the ordering observable: clearing the class resizes the element that the
+     * drop position is then measured against.
+     */
+    function styleIndicatorWithLayout() {
+      consumerSheet = document.createElement("style");
+      consumerSheet.textContent = `
+        .oracle-target { height: 60px; }
+        .oracle-target.--drag-above { padding-block-start: 120px; }
+        .oracle-target.--drag-below { padding-block-end: 120px; }
+      `;
+      document.head.appendChild(consumerSheet);
+    }
+
+    /** The position the target is painting right now, read from its classes. */
+    function paintedPosition() {
+      const target = find("#tgt");
+      if (target.classList.contains("--drag-above")) {
+        return "before";
+      }
+      return target.classList.contains("--drag-below") ? "after" : null;
+    }
+
+    for (const [label, grip] of [
+      ["above its midpoint", 0.25],
+      ["below its midpoint", 0.75],
+    ]) {
+      test(`drop position layout oracle: a release ${label} reports the position it painted`, async function (assert) {
+        styleIndicatorWithLayout();
+
+        const drops = [];
+        const onDrop = ({ position }) => drops.push(position);
+
+        await render(
+          <template>
+            <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+            <div
+              class="oracle-target"
+              id="tgt"
+              {{dDragAndDropTarget accepts="row" onDrop=onDrop}}
+            >tgt</div>
+          </template>
+        );
+
+        const dataTransfer = new DataTransfer();
+        // Taken before anything is painted, and reused for the release, so the
+        // pointer is provably stationary across the hover and the drop.
+        const rect = find("#tgt").getBoundingClientRect();
+        const coordinates = {
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height * grip,
+        };
+
+        await startDrag("#src", {
+          dataTransfer,
+          coordinates: centerOf("#src"),
+        });
+        await dragOver("#tgt", { dataTransfer, coordinates });
+
+        const painted = paintedPosition();
+        assert.notStrictEqual(
+          painted,
+          null,
+          "the target is painting a position before release"
+        );
+
+        await dragEvent("#tgt", "drop", { dataTransfer, ...coordinates });
+
+        assert.deepEqual(
+          drops,
+          [painted],
+          "onDrop receives the position painted immediately before release"
+        );
+      });
+    }
   });
 });

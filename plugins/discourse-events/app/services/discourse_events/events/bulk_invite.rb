@@ -8,8 +8,12 @@ module DiscourseEvents
       params do
         attribute :event_id, :integer
         attribute :invitees, :array
+        attribute :recurring, :boolean, default: false
 
-        before_validation { self.invitees = Array(invitees).reject(&:blank?) }
+        before_validation do
+          max_invitees = SiteSetting.discourse_post_event_max_bulk_invitees
+          self.invitees = Array(invitees).reject(&:blank?).first(max_invitees)
+        end
 
         validates :event_id, presence: true
       end
@@ -44,6 +48,7 @@ module DiscourseEvents
           :discourse_post_event_bulk_invite,
           event_id: event.id,
           invitees: params.invitees,
+          recurring: params.recurring,
           current_user_id: guardian.user.id,
         )
       end

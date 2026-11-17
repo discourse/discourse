@@ -13,18 +13,34 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { number } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
-import { eq } from "discourse/truth-helpers";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const MAX_CATEGORIES = 10;
 
+/**
+ * @typedef {{
+ *   category_id: number,
+ *   name: string,
+ *   color: string,
+ *   slug: string,
+ *   topics: number,
+ *   posts: number,
+ *   page_views: number,
+ *   share: number,
+ *   share_change: number,
+ *   share_formatted: string,
+ *   share_change_formatted: string
+ * }} CategoryActivityRow
+ */
 export default class ActivityByCategory extends Component {
   @service currentUser;
   @service toasts;
 
   @tracked selectedCategories = [];
+
+  /** @type {{ rows: CategoryActivityRow[], total: number } | null} */
   @tracked overrideActivity = null;
   @tracked loading = false;
   @tracked sortBy = "share";
@@ -82,61 +98,11 @@ export default class ActivityByCategory extends Component {
     return (this.activity?.rows ?? []).length > 0;
   }
 
-  #safeHex(color) {
-    return /^[0-9a-fA-F]{6}$/.test(color) ? color : "cccccc";
-  }
-
-  #topicQuery(categorySlug, dateFilter) {
-    const terms = [];
-
-    if (this.args.startDate) {
-      terms.push(
-        `${dateFilter}-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
-      );
-    }
-    if (this.args.endDate) {
-      terms.push(
-        `${dateFilter}-before:${moment(this.args.endDate)
-          .add(1, "day")
-          .format("YYYY-MM-DD")}`
-      );
-    }
-    terms.push(`=category:${categorySlug}`);
-
-    return { q: terms.join(" ") };
-  }
-
   @action
   onCategoriesChange(categories) {
     this.selectedCategories = categories;
     this.refetch();
     this.#persistSelection();
-  }
-
-  #persistSelection() {
-    if (!this.currentUser?.admin) {
-      return;
-    }
-
-    ajax(
-      "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
-      {
-        type: "PUT",
-        contentType: "application/json",
-        data: JSON.stringify({
-          category_ids: this.selectedCategories.map((c) => c.id),
-        }),
-      }
-    ).catch(() => {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: i18n(
-            "admin.dashboard.sections.engagement.activity_by_category.save_error"
-          ),
-        },
-      });
-    });
   }
 
   @action
@@ -186,6 +152,56 @@ export default class ActivityByCategory extends Component {
     }
   }
 
+  #safeHex(color) {
+    return /^[0-9a-fA-F]{6}$/.test(color) ? color : "cccccc";
+  }
+
+  #topicQuery(categorySlug, dateFilter) {
+    const terms = [];
+
+    if (this.args.startDate) {
+      terms.push(
+        `${dateFilter}-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
+      );
+    }
+    if (this.args.endDate) {
+      terms.push(
+        `${dateFilter}-before:${moment(this.args.endDate)
+          .add(1, "day")
+          .format("YYYY-MM-DD")}`
+      );
+    }
+    terms.push(`=category:${categorySlug}`);
+
+    return { q: terms.join(" ") };
+  }
+
+  #persistSelection() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax(
+      "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+      {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+          category_ids: this.selectedCategories.map((c) => c.id),
+        }),
+      }
+    ).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n(
+            "admin.dashboard.sections.engagement.activity_by_category.save_error"
+          ),
+        },
+      });
+    });
+  }
+
   <template>
     <div
       class="db-activity"
@@ -193,9 +209,9 @@ export default class ActivityByCategory extends Component {
     >
       <div class="db-section__row-block-header">
         <LinkTo
-          @route="adminReports.show"
-          @model="activity_by_category"
           class="db-section__row-block-title --label"
+          @model="activity_by_category"
+          @route="adminReports.show"
         >
           {{i18n
             "admin.dashboard.sections.engagement.activity_by_category.title"
@@ -205,7 +221,10 @@ export default class ActivityByCategory extends Component {
         <MultipleCategoriesSelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onCategoriesChange}}
-          @options={{hash maximum=MAX_CATEGORIES}}
+          @options={{hash
+            maximum=MAX_CATEGORIES
+            showAncestorsInSelectedChoice=true
+          }}
         />
       </div>
 
@@ -220,16 +239,16 @@ export default class ActivityByCategory extends Component {
                   }}
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "topics")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "topics")}}
                   >
                     {{i18n
@@ -242,16 +261,16 @@ export default class ActivityByCategory extends Component {
                   </button>
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "posts")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "posts")}}
                   >
                     {{i18n
@@ -264,16 +283,16 @@ export default class ActivityByCategory extends Component {
                   </button>
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "page_views")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "page_views")}}
                   >
                     {{i18n
@@ -286,16 +305,16 @@ export default class ActivityByCategory extends Component {
                   </button>
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "share")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "share")}}
                   >
                     {{i18n
@@ -308,16 +327,16 @@ export default class ActivityByCategory extends Component {
                   </button>
                 </th>
                 <th
-                  class="db-activity-table__col-number"
                   aria-sort={{if
                     (eq this.sortBy "share_change")
                     (if (eq this.sortDir "asc") "ascending" "descending")
                     "none"
                   }}
+                  class="db-activity-table__col-number"
                 >
                   <button
-                    type="button"
                     class="db-activity-table__sort-button"
+                    type="button"
                     {{on "click" (fn this.updateSort "share_change")}}
                   >
                     {{i18n
@@ -336,26 +355,30 @@ export default class ActivityByCategory extends Component {
                 <tr>
                   <td class="db-activity-table__cell-category">
                     {{#if row.category}}
-                      {{dCategoryBadge row.category}}
+                      {{dCategoryBadge
+                        row.category
+                        ancestors=row.category.predecessors
+                        hideParent=true
+                      }}
                     {{else}}
                       <span
+                        aria-hidden="true"
                         class="db-activity-table__swatch"
                         style={{row.swatchStyle}}
-                        aria-hidden="true"
                       ></span>
                       {{row.name}}
                     {{/if}}
                   </td>
                   <td class="db-activity-table__cell-number">
                     <LinkTo
-                      @route="discovery.filter"
                       @query={{row.topicsQuery}}
+                      @route="discovery.filter"
                     >
                       {{row.topicsFormatted}}
                     </LinkTo>
                   </td>
                   <td class="db-activity-table__cell-number">
-                    <LinkTo @route="discovery.filter" @query={{row.postsQuery}}>
+                    <LinkTo @query={{row.postsQuery}} @route="discovery.filter">
                       {{row.postsFormatted}}
                     </LinkTo>
                   </td>

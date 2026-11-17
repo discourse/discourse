@@ -18,8 +18,8 @@ export default <template>
         {{i18n "groups.notifications.watching.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.watchingCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.watchingCategories}}
         @onChange={{fn (mut @controller.model.watchingCategories)}}
       />
 
@@ -33,8 +33,8 @@ export default <template>
         {{i18n "groups.notifications.tracking.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.trackingCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.trackingCategories}}
         @onChange={{fn (mut @controller.model.trackingCategories)}}
       />
 
@@ -48,8 +48,8 @@ export default <template>
         {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.watchingFirstPostCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.watchingFirstPostCategories}}
         @onChange={{fn (mut @controller.model.watchingFirstPostCategories)}}
       />
 
@@ -65,8 +65,8 @@ export default <template>
         {{i18n "groups.notifications.regular.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.regularCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.regularCategories}}
         @onChange={{fn (mut @controller.model.regularCategories)}}
       />
 
@@ -80,8 +80,8 @@ export default <template>
         {{i18n "groups.notifications.muted.title"}}</label>
 
       <CategorySelector
-        @categories={{@controller.model.mutedCategories}}
         @blockedCategories={{@controller.selectedCategories}}
+        @categories={{@controller.model.mutedCategories}}
         @onChange={{fn (mut @controller.model.mutedCategories)}}
       />
 

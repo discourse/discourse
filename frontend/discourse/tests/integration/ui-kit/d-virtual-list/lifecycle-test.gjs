@@ -28,12 +28,6 @@ function buildRows(count) {
   }));
 }
 
-class State {
-  @tracked items = buildRows(100);
-  @tracked estimate = estimate;
-  @tracked edgeThreshold = 8;
-}
-
 async function scrollTo(top) {
   const element = find(".d-virtual-list");
   element.scrollTop = top;
@@ -56,7 +50,7 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
   // the remembered boundary keys return to their mount state, so a refill can
   // fire its end edge again.
   test("lifecycle pin: emptying and refilling a list clears its height and re-arms its edges", async function (assert) {
-    const state = new State();
+    const items = tracked(buildRows(100));
     let endFires = 0;
     const onReachEnd = () => endFires++;
 
@@ -70,11 +64,11 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{state.items}}
-          @key="id"
           @estimateSize={{estimate}}
-          @overscan={{0}}
+          @items={{items.value}}
+          @key="id"
           @onReachEnd={{onReachEnd}}
+          @overscan={{0}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -89,7 +83,7 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
     );
     const firesWhilePopulated = endFires;
 
-    state.items = [];
+    items.value = [];
     await settled();
 
     assert.dom(".d-virtual-list__item").doesNotExist("no rows remain");
@@ -99,7 +93,7 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
       "the sizer drops its height rather than keeping the outgoing list's scroll range"
     );
 
-    state.items = buildRows(12);
+    items.value = buildRows(12);
     await settled();
 
     assert.true(
@@ -120,7 +114,8 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
   // the memo has to be dropped: keeping it would match every later identical
   // window and strand a mounted list on whatever it last drew.
   test("lifecycle pin: a publish that throws does not strand the window", async function (assert) {
-    const state = new State();
+    const items = tracked(buildRows(100));
+    const edgeThreshold = tracked(8);
     const payloads = [];
     let shouldThrow = true;
     const onState = (payload) => {
@@ -137,10 +132,10 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           class="viewport"
           style="height: 400px; overflow-y: auto"
           {{dVirtualizer
-            items=state.items
+            items=items.value
             estimateSize=estimate
             key="id"
-            edgeThreshold=state.edgeThreshold
+            edgeThreshold=edgeThreshold.value
             onState=onState
           }}
         >
@@ -157,7 +152,7 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
 
     // Re-run the modifier without moving the window, so the republish depends on
     // the failed memo having been dropped rather than on the signature changing.
-    state.edgeThreshold = 4;
+    edgeThreshold.value = 4;
     await settled();
 
     assert.true(
@@ -186,11 +181,11 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
+          @itemRole="option"
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @role="listbox"
-          @itemRole="option"
           @setSize={{total}}
           as |item|
         >
@@ -222,9 +217,9 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @setSize={{total}}
           as |item|
         >
@@ -267,11 +262,11 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
+          @itemRole="option"
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @role="listbox"
-          @itemRole="option"
           @setSize={{unbounded}}
           as |item|
         >
@@ -302,11 +297,11 @@ module("Integration | ui-kit | DVirtualList | lifecycle", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
+          @itemRole="option"
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @role="listbox"
-          @itemRole="option"
           @setSize={{staleTotal}}
           as |item|
         >

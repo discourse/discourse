@@ -122,7 +122,7 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
   end
 
   context "with repeated grants" do
-    it "won't award twice in the same year" do
+    it "does not award twice in the same year" do
       user = Fabricate(:user, created_at: 400.days.ago)
       Fabricate(:post, user: user, created_at: 1.week.ago)
 
@@ -132,7 +132,7 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(1)
     end
 
-    it "will award again if a year has passed" do
+    it "awards the badge again after a year has passed" do
       user = Fabricate(:user, created_at: 800.days.ago)
       Fabricate(:post, user: user, created_at: 450.days.ago)
 
@@ -145,6 +145,22 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
       granter.execute({})
       badge = user.user_badges.where(badge_id: Badge::Anniversary)
       expect(badge.count).to eq(2)
+    end
+
+    it "realigns a delayed grant with the user's join-date anniversary" do
+      previous_grant_at = Time.zone.parse("2023-05-21 18:00")
+      current_run_at = Time.zone.parse("2024-05-21 12:00")
+      anniversary_at = Time.zone.parse("2024-05-20 18:00")
+      user = Fabricate(:user, created_at: anniversary_at - 2.years)
+      badge = Badge.find(Badge::Anniversary)
+      Fabricate(:post, user: user, created_at: current_run_at - 1.month)
+      Fabricate(:user_badge, user: user, badge: badge, granted_at: previous_grant_at)
+
+      freeze_time(current_run_at) { granter.execute({}) }
+
+      expect(user.user_badges.where(badge: badge).order(:granted_at).pluck(:granted_at)).to eq(
+        [previous_grant_at, anniversary_at],
+      )
     end
 
     it "supports date ranges" do

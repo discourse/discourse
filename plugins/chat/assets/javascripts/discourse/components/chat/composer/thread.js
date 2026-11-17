@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatComposer from "../../chat-composer";
+import ChatComposer from "../../chat-composer.gjs";
 
 export default class ChatComposerThread extends ChatComposer {
   @service("chat-channel-composer") channelComposer;
@@ -16,28 +16,6 @@ export default class ChatComposerThread extends ChatComposer {
   context = "thread";
 
   composerId = "thread-composer";
-
-  @debounce(2000)
-  persistDraft() {
-    this.chatDraftsManager.add(
-      this.draft,
-      this.args.thread.channel.id,
-      this.args.thread.id
-    );
-  }
-
-  @action
-  destroyDraft() {
-    this.chatDraftsManager.remove(
-      this.args.thread.channel.id,
-      this.args.thread.id
-    );
-  }
-
-  @action
-  resetDraft() {
-    this.args.thread.resetDraft(this.currentUser);
-  }
 
   get draft() {
     return this.args.thread.draft;
@@ -61,6 +39,28 @@ export default class ChatComposerThread extends ChatComposer {
 
   get lastMessage() {
     return this.args.thread.messagesManager.findLastMessage();
+  }
+
+  @debounce(2000)
+  persistDraft() {
+    this.chatDraftsManager.add(
+      this.draft,
+      this.args.thread.channel.id,
+      this.args.thread.id
+    );
+  }
+
+  @action
+  destroyDraft() {
+    this.chatDraftsManager.remove(
+      this.args.thread.channel.id,
+      this.args.thread.id
+    );
+  }
+
+  @action
+  resetDraft() {
+    this.args.thread.resetDraft(this.currentUser);
   }
 
   lastUserMessage(user) {

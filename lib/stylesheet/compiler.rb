@@ -34,7 +34,7 @@ module Stylesheet
         file += "@import \"#{asset}\";\n"
 
         case asset.to_s
-        when "embed", "publish"
+        when *Importer::FONT_TARGETS
           file += importer.font
         when "wizard"
           file += importer.wizard_fonts

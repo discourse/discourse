@@ -7,7 +7,7 @@ RSpec.describe TopicListSerializer do
 
   before { topic.allowed_user_ids = [topic.user_id] }
 
-  it "should return the right payload" do
+  it "returns the expected payload" do
     topic_list = TopicList.new(nil, user, [topic])
 
     serialized = described_class.new(topic_list, scope: Guardian.new(user)).as_json

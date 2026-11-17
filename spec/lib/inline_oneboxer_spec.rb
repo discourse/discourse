@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe InlineOneboxer do
-  it "should return nothing with empty input" do
+  it "returns nothing for empty input" do
     expect(InlineOneboxer.new([]).process).to be_blank
   end
 
@@ -146,7 +146,7 @@ RSpec.describe InlineOneboxer do
       expect(InlineOneboxer.lookup("/test")).to be_nil
     end
 
-    it "will return the fancy title" do
+    it "returns the fancy title" do
       topic = Fabricate(:topic, title: "Hello :pizza: with an emoji")
       onebox = InlineOneboxer.lookup(topic.url, skip_cache: true)
       expect(onebox).to be_present
@@ -154,7 +154,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
     end
 
-    it "will append the post number post author's username to the title" do
+    it "appends the post number and author's username to the title" do
       topic = Fabricate(:topic, title: "Inline oneboxer")
       Fabricate(:post, topic: topic) # OP
       Fabricate(:post, topic: topic)
@@ -182,13 +182,13 @@ RSpec.describe InlineOneboxer do
       expect(lookup.call(99)).to eq("Inline oneboxer - #4 by #{posts[3].user.username}")
     end
 
-    it "will not crawl domains that aren't allowlisted" do
+    it "does not crawl domains that are not allowlisted" do
       SiteSetting.enable_inline_onebox_on_all_domains = false
       onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
       expect(onebox).to be_blank
     end
 
-    it "will crawl anything if allowed to" do
+    it "crawls any domain when configured to do so" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
       stub_request(:get, "https://eviltrout.com/some-path").to_return(
@@ -203,7 +203,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq("a blog")
     end
 
-    it "will not return a onebox if it does not meet minimal length" do
+    it "does not return a onebox shorter than the minimum length" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
       stub_request(:get, "https://eviltrout.com/some-path").to_return(
@@ -218,7 +218,7 @@ RSpec.describe InlineOneboxer do
       expect(onebox[:title]).to eq(nil)
     end
 
-    it "will lookup allowlisted domains" do
+    it "looks up allowlisted domains" do
       SiteSetting.allowed_inline_onebox_domains = "eviltrout.com"
       RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")
 
@@ -421,6 +421,22 @@ RSpec.describe InlineOneboxer do
     end
   end
 
+  describe "title truncation" do
+    it "truncates overly long remote titles" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      url = "https://eviltrout.com/long-title"
+
+      stub_request(:get, url).to_return(
+        status: 200,
+        body: "<html><head><title>#{"A" * 600}</title></head></html>",
+      )
+
+      onebox = InlineOneboxer.lookup(url, skip_cache: true)
+
+      expect(onebox[:title].length).to eq(InlineOneboxer::MAX_TITLE_LENGTH)
+    end
+  end
+
   describe ".register_local_handler" do
     it "calls registered local handler" do
       InlineOneboxer.register_local_handler("wizard") do |url, route|
@@ -506,6 +522,36 @@ RSpec.describe InlineOneboxer do
       subdomain_url = "https://api.example.com/foo"
       expect(InlineOneboxer.lookup(subdomain_url, skip_cache: true)).to be_nil
       expect(Oneboxer).not_to have_received(:inline_data_for)
+    end
+  end
+
+  describe "allowed_inline_onebox_domains matching" do
+    before do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
+      SiteSetting.allowed_inline_onebox_domains = "example.com"
+      allow(Oneboxer).to receive(:inline_data_for).and_return(nil)
+      RetrieveTitle.stubs(:crawl).returns("Example Title")
+    end
+
+    it "oneboxes an allowlisted host regardless of casing" do
+      onebox = InlineOneboxer.lookup("https://EXAMPLE.com/foo", skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:title]).to eq("Example Title")
+    end
+
+    it "oneboxes an allowlisted host requested as a trailing-dot FQDN" do
+      onebox = InlineOneboxer.lookup("https://example.com./foo", skip_cache: true)
+      expect(onebox).to be_present
+      expect(onebox[:title]).to eq("Example Title")
+    end
+
+    it "does not widen the exact allowlist to subdomains" do
+      expect(InlineOneboxer.lookup("https://dev.example.com/foo", skip_cache: true)).to be_nil
+    end
+
+    it "gives blocked_onebox_domains precedence over the allowlist" do
+      SiteSetting.blocked_onebox_domains = "example.com."
+      expect(InlineOneboxer.lookup("https://example.com/foo", skip_cache: true)).to be_nil
     end
   end
 

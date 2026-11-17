@@ -38,7 +38,7 @@ describe Chat::Notifier do
         expect(to_notify[list_key]).to be_empty
       end
 
-      it "will never include someone who is not accepting channel-wide notifications" do
+      it "excludes users who ignore channel-wide notifications" do
         user_2.user_option.update!(ignore_channel_wide_mention: true)
         msg = build_cooked_msg(mention, user_1)
 
@@ -47,7 +47,7 @@ describe Chat::Notifier do
         expect(to_notify[list_key]).to be_empty
       end
 
-      it "will never mention when channel is not accepting channel wide mentions" do
+      it "excludes mentions when the channel disables channel-wide mentions" do
         channel.update!(allow_channel_wide_mentions: false)
         msg = build_cooked_msg(mention, user_1)
 
@@ -56,7 +56,7 @@ describe Chat::Notifier do
         expect(to_notify[list_key]).to be_empty
       end
 
-      it "will publish a mention warning" do
+      it "publishes a mention warning" do
         channel.update!(allow_channel_wide_mentions: false)
         msg = build_cooked_msg(mention, user_1)
 
@@ -73,7 +73,7 @@ describe Chat::Notifier do
         )
       end
 
-      it "will respect user's locale on mention warning" do
+      it "uses the user's locale for the mention warning" do
         SiteSetting.allow_user_locale = true
         user_1.update!(locale: "pt_BR")
         channel.update!(allow_channel_wide_mentions: false)
@@ -102,7 +102,7 @@ describe Chat::Notifier do
     end
 
     shared_examples "ensure only channel members are notified" do
-      it "will never include someone outside the channel" do
+      it "excludes users outside the channel" do
         user3 = Fabricate(:user)
         @chat_group.add(user3)
         another_channel = Fabricate(:category_channel)
@@ -114,7 +114,7 @@ describe Chat::Notifier do
         expect(to_notify[list_key]).to contain_exactly(user_2.id)
       end
 
-      it "will never include someone not following the channel anymore" do
+      it "excludes users who no longer follow the channel" do
         user3 = Fabricate(:user)
         @chat_group.add(user3)
         Fabricate(
@@ -130,7 +130,7 @@ describe Chat::Notifier do
         expect(to_notify[list_key]).to contain_exactly(user_2.id)
       end
 
-      it "will never include someone who is suspended" do
+      it "excludes suspended users" do
         user3 = Fabricate(:user, suspended_till: 2.years.from_now)
         @chat_group.add(user3)
         Fabricate(
@@ -454,8 +454,8 @@ describe Chat::Notifier do
 
         unreachable_msg = messages.first
 
-        expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-        expect(unreachable_msg[:data][:text_content]).to eq(
+        expect(unreachable_msg.data[:type].to_sym).to eq(:notice)
+        expect(unreachable_msg.data[:text_content]).to eq(
           I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
         )
       end
@@ -474,8 +474,8 @@ describe Chat::Notifier do
 
         unreachable_msg = messages.first
 
-        expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-        expect(unreachable_msg[:data][:text_content]).to eq(
+        expect(unreachable_msg.data[:type].to_sym).to eq(:notice)
+        expect(unreachable_msg.data[:text_content]).to eq(
           I18n.t(
             "chat.mention_warning.cannot_see",
             first_identifier: user_3.username,
@@ -516,8 +516,8 @@ describe Chat::Notifier do
 
           unreachable_msg = messages.first
 
-          expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-          expect(unreachable_msg[:data][:text_content]).to eq(
+          expect(unreachable_msg.data[:type].to_sym).to eq(:notice)
+          expect(unreachable_msg.data[:text_content]).to eq(
             I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
           )
         end
@@ -541,8 +541,8 @@ describe Chat::Notifier do
 
           unreachable_msg = messages.first
 
-          expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
-          expect(unreachable_msg[:data][:text_content]).to eq(
+          expect(unreachable_msg.data[:type].to_sym).to eq(:notice)
+          expect(unreachable_msg.data[:text_content]).to eq(
             I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
           )
         end
@@ -566,10 +566,10 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
-        expect(not_participating_msg[:data][:text_content]).to be_nil
-        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
-        expect(not_participating_msg[:data][:data]).to eq(
+        expect(not_participating_msg.data[:type].to_sym).to eq(:notice)
+        expect(not_participating_msg.data[:text_content]).to be_nil
+        expect(not_participating_msg.data[:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg.data[:data]).to eq(
           user_ids: [user_3.id],
           text:
             I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
@@ -623,10 +623,10 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
-        expect(not_participating_msg[:data][:text_content]).to be_nil
-        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
-        expect(not_participating_msg[:data][:data]).to eq(
+        expect(not_participating_msg.data[:type].to_sym).to eq(:notice)
+        expect(not_participating_msg.data[:text_content]).to be_nil
+        expect(not_participating_msg.data[:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg.data[:data]).to eq(
           user_ids: [user_3.id],
           text:
             I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
@@ -652,15 +652,67 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
-        expect(not_participating_msg[:data][:text_content]).to be_nil
-        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
-        expect(not_participating_msg[:data][:data]).to eq(
+        expect(not_participating_msg.data[:type].to_sym).to eq(:notice)
+        expect(not_participating_msg.data[:text_content]).to be_nil
+        expect(not_participating_msg.data[:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg.data[:data]).to eq(
           user_ids: [user_3.id],
           text:
             I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
           message_id: msg.id,
         )
+      end
+
+      context "when the mentioned group's member list is hidden from the message creator" do
+        fab!(:hidden_members_group) do
+          Fabricate(
+            :public_group,
+            mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            members_visibility_level: Group.visibility_levels[:staff],
+          )
+        end
+
+        before { hidden_members_group.add(user_3) }
+
+        it "does not publish an invitation notice revealing hidden group members" do
+          msg = build_cooked_msg("Hello @#{hidden_members_group.name}", user_1)
+
+          messages =
+            MessageBus.track_publish("/chat/#{channel.id}") do
+              described_class.new(msg, msg.created_at).notify_new
+            end
+
+          expect(messages).to be_empty
+        end
+
+        it "still invites members whose membership is visible through another mentioned group" do
+          visible_group =
+            Fabricate(
+              :public_group,
+              users: [user_3],
+              mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            )
+          msg =
+            build_cooked_msg("Hello @#{hidden_members_group.name} @#{visible_group.name}", user_1)
+
+          messages =
+            MessageBus.track_publish("/chat/#{channel.id}") do
+              described_class.new(msg, msg.created_at).notify_new
+            end
+
+          expect(messages.first.data[:data][:user_ids]).to eq([user_3.id])
+        end
+
+        it "still invites directly mentioned users" do
+          msg = build_cooked_msg("Hello @#{user_3.username} @#{hidden_members_group.name}", user_1)
+
+          messages =
+            MessageBus.track_publish("/chat/#{channel.id}") do
+              described_class.new(msg, msg.created_at).notify_new
+            end
+
+          expect(messages.first.data[:data][:user_ids]).to eq([user_3.id])
+        end
       end
 
       it "cannot invite a member of a group who is ignoring the user who created the message" do
@@ -714,6 +766,19 @@ describe Chat::Notifier do
         )
       end
 
+      it "doesn't signal when a group with hidden members exceeds the notification limit" do
+        group.update!(members_visibility_level: Group.visibility_levels[:owners])
+        SiteSetting.max_users_notified_per_group_mention = (group.reload.user_count - 1)
+        msg = build_cooked_msg("Hello @#{group.name}", user_1)
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            described_class.new(msg, msg.created_at).notify_new
+          end
+
+        expect(messages).to be_empty
+      end
+
       it "sends a message to the client signaling the group has too many members" do
         SiteSetting.max_users_notified_per_group_mention = (group.user_count - 1)
         msg = build_cooked_msg("Hello @#{group.name}", user_1)
@@ -727,8 +792,8 @@ describe Chat::Notifier do
 
         too_many_members_msg = messages.first
 
-        expect(too_many_members_msg[:data][:type].to_sym).to eq(:notice)
-        expect(too_many_members_msg[:data][:text_content]).to eq(
+        expect(too_many_members_msg.data[:type].to_sym).to eq(:notice)
+        expect(too_many_members_msg.data[:text_content]).to eq(
           I18n.t("chat.mention_warning.too_many_members", first_identifier: group.name),
         )
       end
@@ -746,8 +811,8 @@ describe Chat::Notifier do
 
         mentions_disabled_msg = messages.first
 
-        expect(mentions_disabled_msg[:data][:type].to_sym).to eq(:notice)
-        expect(mentions_disabled_msg[:data][:text_content]).to eq(
+        expect(mentions_disabled_msg.data[:type].to_sym).to eq(:notice)
+        expect(mentions_disabled_msg.data[:text_content]).to eq(
           I18n.t("chat.mention_warning.group_mentions_disabled", first_identifier: group.name),
         )
       end
@@ -767,14 +832,162 @@ describe Chat::Notifier do
 
         mentions_disabled_msg = messages.first
 
-        expect(mentions_disabled_msg[:data][:type].to_sym).to eq(:notice)
-        expect(mentions_disabled_msg[:data][:text_content]).to eq(
+        expect(mentions_disabled_msg.data[:type].to_sym).to eq(:notice)
+        expect(mentions_disabled_msg.data[:text_content]).to eq(
           I18n.t(
             "chat.mention_warning.group_mentions_disabled",
             first_identifier: group.name,
             locale: "pt_BR",
           ),
         )
+      end
+    end
+
+    describe "mentioning a group whose members are hidden from the message creator" do
+      fab!(:user_3, :user)
+      fab!(:secret_group, :group)
+      fab!(:hidden_members_group) do
+        Fabricate(
+          :public_group,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          members_visibility_level: Group.visibility_levels[:staff],
+        )
+      end
+      fab!(:private_channel) { Fabricate(:private_category_channel, group: secret_group) }
+
+      before do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        secret_group.add(user_1)
+        hidden_members_group.add(user_2)
+        Fabricate(:user_chat_channel_membership, chat_channel: private_channel, user: user_1)
+        # `user_3` can chat and has a membership for the channel, but is not a member of
+        # the group the channel's category is restricted to.
+        Fabricate(:user_chat_channel_membership, chat_channel: private_channel, user: user_3)
+
+        expect(user_1.guardian.can_see_group_members?(hidden_members_group)).to eq(false)
+        expect(user_3.user_option.chat_enabled).to eq(true)
+        expect(user_3.guardian.can_join_chat_channel?(private_channel)).to eq(false)
+      end
+
+      def notice_texts(chat_channel, message_body)
+        message = build_cooked_msg(message_body, user_1, chat_channel: chat_channel)
+
+        MessageBus
+          .track_publish("/chat/#{chat_channel.id}") do
+            described_class.new(message, message.created_at).notify_new
+          end
+          .filter_map do |published|
+            published.data[:text_content] if published.data[:type].to_sym == :notice
+          end
+      end
+
+      def unreachable_notice_text(user)
+        I18n.t("chat.mention_warning.cannot_see", first_identifier: user.username)
+      end
+
+      def delivered_user_ids(message_body)
+        message = build_cooked_msg(message_body, user_1, chat_channel: private_channel)
+        to_notify = described_class.new(message, message.created_at).notify_new
+        to_notify.values.flatten
+      end
+
+      it "names a directly mentioned unreachable user who is also hidden in the over-limit mentioned group" do
+        hidden_members_group.add(user_3)
+        limit = hidden_members_group.reload.user_count
+
+        SiteSetting.max_users_notified_per_group_mention = limit
+        at_limit =
+          notice_texts(private_channel, "Hello @#{user_3.username} @#{hidden_members_group.name}")
+
+        SiteSetting.max_users_notified_per_group_mention = limit - 1
+        over_limit =
+          notice_texts(private_channel, "Hello @#{user_3.username} @#{hidden_members_group.name}")
+
+        expect(at_limit).to contain_exactly(unreachable_notice_text(user_3))
+        expect(over_limit).to eq(at_limit)
+      end
+
+      it "names an unreachable user whose membership is visible through another mentioned group, whatever the hidden group's size" do
+        visible_group =
+          Fabricate(
+            :public_group,
+            mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            users: [user_3],
+          )
+        hidden_members_group.add(user_3)
+        limit = hidden_members_group.reload.user_count
+
+        SiteSetting.max_users_notified_per_group_mention = limit
+        at_limit =
+          notice_texts(
+            private_channel,
+            "Hello @#{hidden_members_group.name} @#{visible_group.name}",
+          )
+
+        SiteSetting.max_users_notified_per_group_mention = limit - 1
+        over_limit =
+          notice_texts(
+            private_channel,
+            "Hello @#{hidden_members_group.name} @#{visible_group.name}",
+          )
+
+        expect(at_limit).to contain_exactly(unreachable_notice_text(user_3))
+        expect(over_limit).to eq(at_limit)
+      end
+
+      it "publishes nothing when the only unreachable member of the mentioned groups is hidden from the creator" do
+        # `user_3` cannot reach `private_channel` and is a member of `hidden_members_group`
+        # only, so neither their username nor the group may be named back to them.
+        hidden_members_group.add(user_3)
+        limit = hidden_members_group.reload.user_count
+
+        SiteSetting.max_users_notified_per_group_mention = limit
+        at_limit = notice_texts(private_channel, "Hello @#{hidden_members_group.name}")
+
+        SiteSetting.max_users_notified_per_group_mention = limit - 1
+        over_limit = notice_texts(private_channel, "Hello @#{hidden_members_group.name}")
+
+        expect(at_limit).to eq([])
+        expect(over_limit).to eq([])
+      end
+
+      it "warns about an over-limit group whose members are visible to the creator" do
+        visible_group =
+          Fabricate(
+            :public_group,
+            mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            users: [user_2, user_3],
+          )
+
+        SiteSetting.max_users_notified_per_group_mention = visible_group.reload.user_count - 1
+
+        expect(notice_texts(channel, "Hello @#{visible_group.name}")).to contain_exactly(
+          I18n.t("chat.mention_warning.too_many_members", first_identifier: visible_group.name),
+        )
+      end
+
+      it "does not name an over-limit group whose members are hidden from the creator" do
+        SiteSetting.max_users_notified_per_group_mention =
+          hidden_members_group.reload.user_count - 1
+
+        expect(notice_texts(channel, "Hello @#{hidden_members_group.name}")).to eq([])
+      end
+
+      it "keeps delivering mentions to reachable hidden group members at and over the group size limit" do
+        secret_group.add(user_2)
+        Fabricate(:user_chat_channel_membership, chat_channel: private_channel, user: user_2)
+        expect(user_2.user_option.chat_enabled).to eq(true)
+        expect(user_2.guardian.can_join_chat_channel?(private_channel)).to eq(true)
+        limit = hidden_members_group.reload.user_count
+
+        SiteSetting.max_users_notified_per_group_mention = limit
+        at_limit = delivered_user_ids("Hello @#{hidden_members_group.name}")
+
+        SiteSetting.max_users_notified_per_group_mention = limit - 1
+        over_limit = delivered_user_ids("Hello @#{hidden_members_group.name}")
+
+        expect(at_limit).to eq([user_2.id])
+        expect(over_limit).to eq([])
       end
     end
   end

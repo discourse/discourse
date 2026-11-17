@@ -96,7 +96,7 @@ RSpec.describe TopicConverter do
           category.update!(read_restricted: false)
         end
 
-        it "should convert private message into the right category" do
+        it "moves the private message into the destination category" do
           topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic
           topic.reload
 
@@ -116,7 +116,7 @@ RSpec.describe TopicConverter do
       end
 
       context "when a custom category_id is given" do
-        it "should convert private message into the right category" do
+        it "moves the private message into the destination category" do
           topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
 
           expect(topic.reload.category).to eq(category)
@@ -222,6 +222,14 @@ RSpec.describe TopicConverter do
         expect(topic.archetype).to eq("private_message")
         expect(topic.category_id).to eq(nil)
         expect(category.reload.topic_count).to eq(0)
+      end
+
+      it "clears the category of reviewables belonging to the converted topic" do
+        reviewable = Fabricate(:reviewable_flagged_post, target: post, topic:, category:)
+
+        expect { topic.convert_to_private_message(admin) }.to change {
+          reviewable.reload.category_id
+        }.from(category.id).to(nil)
       end
 
       it "moves the tags' topic counts to their personal message counts" do
@@ -386,7 +394,7 @@ RSpec.describe TopicConverter do
     context "when user already exists in topic_allowed_users table" do
       before { topic.topic_allowed_users.create!(user_id: admin.id) }
 
-      it "works" do
+      it "converts the topic to a public topic" do
         topic.convert_to_private_message(admin)
 
         expect(topic.reload.archetype).to eq("private_message")

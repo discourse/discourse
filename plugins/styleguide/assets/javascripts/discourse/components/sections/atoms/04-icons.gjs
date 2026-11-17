@@ -37,7 +37,7 @@ export default class Icons extends Component {
         <pre class="pre-inline">.d-icon-link</pre>)</p>
     </div>
 
-    <StyleguideExample @title="Available icons" @code={{this.codeSample}}>
+    <StyleguideExample @code={{this.codeSample}} @title="Available icons">
       <StyleguideIcons />
     </StyleguideExample>
   </template>

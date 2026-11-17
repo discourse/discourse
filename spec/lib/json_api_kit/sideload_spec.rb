@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Sideload do
-  subject(:sideload) { described_class.new(relationship, paths:, rows:, request:, schema:) }
+  subject(:sideload) { described_class.new(relationship, paths:, rows:, request:, owner_resource:) }
 
   fab!(:author, :user)
   fab!(:topic) { Fabricate(:topic, user: author, title: "A topic read with its author") }
@@ -18,10 +18,27 @@ RSpec.describe JsonApiKit::Sideload do
   end
   let(:paths) { JsonApiKit::Paths.new([]) }
   let(:records) { [topic] }
-  let(:rows) { records.map { JsonApiKit::Pagination::Row.new(record: it, segment: nil) } }
+  let(:rows) do
+    records.map do
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: it, segment: nil)
+    end
+  end
   let(:params) { {} }
-  let(:request) { JsonApiKit::Request::Collection.new(params, guardian: Guardian.new) }
-  let(:schema) { JsonApiKit::Schema.new(Topic) }
+  let(:request) do
+    JsonApiKit::Request::Collection.new(
+      params,
+      guardian: Guardian.new,
+      edition: JsonApiKit::Edition.current,
+    )
+  end
+  let(:owner_resource) do
+    Class
+      .new(JsonApiKit::Resource) do
+        model Topic
+        type :topics
+      end
+      .new(guardian: request.guardian, edition: request.edition)
+  end
 
   describe "#linkage_for" do
     subject(:linkage) { sideload.linkage_for(rows.first) }
@@ -53,25 +70,13 @@ RSpec.describe JsonApiKit::Sideload do
       end
     end
 
-    context "when a path reads past the relationship" do
-      let(:paths) { JsonApiKit::Paths.new(%w[user.groups]).next_for("user") }
-
-      before { allow(relationship).to receive(:listing).and_call_original }
-
-      it "gives the rest of the path to the related resource" do
-        linkage
-        expect(relationship).to have_received(:listing).with(
-          a_hash_including(include: paths),
-          any_args,
-        )
-      end
-    end
-
     context "when a request asks for fields of the related type" do
       let(:params) { { fields: { users: %w[username] } } }
 
       it "renders the related record as those fields" do
-        expect(linkage.records.map(&:attributes)).to eq([{ "username" => author.username }])
+        expect(linkage.records.map(&:attributes)).to eq(
+          [{ JsonApiKit::Name::Field.new(value: "username", type: "users") => author.username }],
+        )
       end
     end
 
@@ -79,14 +84,14 @@ RSpec.describe JsonApiKit::Sideload do
       fab!(:another) { Fabricate(:topic, user: author, title: "Another topic by that author") }
 
       let(:records) { [topic, another] }
-      let(:reads_of_users) do
+      let(:user_queries) do
         track_sql_queries { rows.each { sideload.linkage_for(it) } }.grep(/FROM "users"/).size
       end
 
       def related_record(row) = sideload.linkage_for(row).records.first
 
-      it "reads the related rows of them all in one query" do
-        expect(reads_of_users).to eq(1)
+      it "loads the related rows of them all in one query" do
+        expect(user_queries).to eq(1)
       end
 
       it "gives two rows that relate to one row the same record" do

@@ -5,3 +5,71 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    data_explorer_enabled: "啟用資料瀏覽器"
+    data_explorer_ai_queries_enabled: "在資料瀏覽器中啟用 AI 查詢產生功能"
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_query_generator:
+          name: "資料瀏覽器查詢產生器"
+          description: "根據自然語言為資料瀏覽器產生 SQL 查詢"
+      tool_help:
+        find_queries: "尋找現有的資料瀏覽器查詢，作為可能有用的範例"
+        run_sql: "執行 SQL 查詢並傳回結果"
+        submit_query: "提交最後產生的查詢"
+      tool_summary:
+        find_queries: "正在尋找查詢範例"
+        run_sql: "正在執行 SQL 查詢"
+        submit_query: "正在提交產生的查詢"
+      tool_description:
+        find_queries: "已找到 %{search} 的查詢範例"
+        run_sql: "已執行 SQL 查詢"
+        submit_query: "已提交產生的查詢 %{name}"
+  discourse_data_explorer:
+    ai:
+      error_agent_not_configured: "尚未設定 AI 代理程式。請檢查 AI 功能設定。"
+      error_no_sql_returned: "AI 未傳回有效的 SQL 查詢。請再試一次或手動撰寫查詢。"
+    errors:
+      tool_not_allowed: "你沒有使用此工具的權限"
+    discourse_workflows:
+      sql_action:
+        no_query_selected: "未選擇查詢。"
+        no_sql_provided: "未提供 SQL 查詢。"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: 排程傳送包含資料瀏覽器結果的私人訊息
+        description: 將排程報表傳送至你的訊息
+        no_csv_allowed: "使用 `attach_csv` 欄位時，必須在網站設定的已授權副檔名清單中加入 `csv`。"
+      recurring_data_explorer_result_topic:
+        title: 排程在主題中發佈包含資料瀏覽器結果的貼文
+        description: 將排程報表發佈至特定主題
+  data_explorer:
+    admin_dashboard_label: "資料瀏覽器"
+    report_generator:
+      private_message:
+        title: "%{query_name} 的排程報表"
+        body: |
+          嗨 %{recipient_name}，你的資料瀏覽器報表已準備完成。
+
+          查詢名稱：
+          %{query_name}
+
+          以下是結果：
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>在資料瀏覽器中檢視查詢</a>
+
+          報表建立時間：%{created_at}（%{timezone}）
+      post:
+        body: |
+          ### %{query_name} 的排程報表
+
+          以下是結果：
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>在資料瀏覽器中檢視查詢</a>
+
+          報表建立時間：%{created_at}（%{timezone}）
+      upload_appendix: "附件：[%{filename}|attachment](%{short_url})"

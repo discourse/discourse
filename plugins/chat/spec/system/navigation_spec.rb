@@ -18,6 +18,9 @@ RSpec.describe "Navigation" do
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
+    # a new admin gets the onboarding checklist over the channel, where it can
+    # cover the messages these specs click
+    SiteSetting.enable_site_owner_onboarding = false
     current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => category_channel.id)
     chat_system_bootstrap(current_user, [category_channel, category_channel_2])
     current_user.user_option.update(

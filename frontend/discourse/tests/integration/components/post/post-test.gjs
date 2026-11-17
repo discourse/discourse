@@ -36,12 +36,12 @@ function renderComponent(
   return render(
     <template>
       <Post
-        @post={{post}}
-        @prevPost={{prevPost}}
         @changePostOwner={{changePostOwner}}
         @editPost={{editPost}}
         @expandHidden={{expandHidden}}
         @permanentlyDeletePost={{permanentlyDeletePost}}
+        @post={{post}}
+        @prevPost={{prevPost}}
         @rebakePost={{rebakePost}}
         @showHistory={{showHistory}}
         @showRawEmail={{showRawEmail}}
@@ -1125,7 +1125,7 @@ module("Integration | Component | Post", function (hooks) {
   test("a11y heading is rendered when post is cloaked", async function (assert) {
     await render(
       <template>
-        <Post @post={{this.post}} @cloaked={{true}} />
+        <Post @cloaked={{true}} @post={{this.post}} />
         <DMenus />
       </template>
     );

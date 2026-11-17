@@ -5,8 +5,22 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse Poll"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "已關閉投票"
+            poll_opened: "已開啟投票"
   js:
     poll:
+      title: "投票"
+      closed_by: "由 %{username} 關閉"
+      dynamic:
+        enabled_hint: "可以新增或移除選項。"
       voters:
         other: "投票者"
       total_votes:
@@ -25,16 +39,44 @@ zh_TW:
           title: "結果將顯示一次之後<strong>關閉</strong>。"
         staff:
           title: "結果僅向 <strong>內部人員顯示</strong> 。"
+        tabs:
+          votes: "投票"
+          outcome: "結果"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "至少選擇 <strong>%{count} 個選項</strong>。"
+          up_to_max_options:
+            other: "最多選擇 <strong>%{count} 個選項</strong>。"
+          x_options:
+            other: "選擇 <strong>%{count} 個選項</strong>。"
+          between_min_and_max_options: "選擇 <strong>%{min} 至 %{max} 個選項</strong>。"
+      vote_recorded: "您的投票已記錄。"
+      voted_choices:
+        title: "您投給："
       cast-votes:
         title: "投你的票"
         label: "現在投票！"
+        update_title: "更新您的投票"
+        update_label: "更新投票"
+      amend-vote:
+        title: "變更您的投票"
+        label: "變更投票"
       keep-vote:
+        title: "返回且不變更投票"
         label: "上一步"
       show-results:
         title: "顯示投票結果"
         label: "結果"
+      show-tally:
+        title: "依票數顯示投票結果"
+        label: "顯示票數"
+      show-percentage:
+        title: "以百分比顯示投票結果"
+        label: "顯示為百分比"
       remove-vote:
         title: "移除您的投票"
+        label: "取消投票"
       hide-results:
         title: "返回到你的投票"
         label: "投票"
@@ -62,14 +104,30 @@ zh_TW:
         percentage: "百分比"
         count: "次數"
       ranked_choice:
+        title:
+          rounds: "輪次"
+          outcome: "結果"
         none: "無"
+        majority: "多數"
+        eliminated: "已淘汰"
+        round: "輪"
+        winner:
+          other: "經過 %{count} 輪後，%{winner} 勝出。"
+        tied:
+          other: "經過 %{count} 輪後，下列候選人平手："
       options:
         label: "選項"
+        ranked_choice:
+          abstain: "棄權"
+          highest_priority: "（最高優先）"
+          lowest_priority: "（最低優先）"
+          login: "登入以投票！"
       error_while_toggling_status: "對不起，改變投票狀態時出錯了。"
       error_while_casting_votes: "對不起，投票時出錯了。"
       error_while_fetching_voters: "對不起，顯示投票者時出錯了。"
       error_while_exporting_results: "抱歉，匯出投票結果時發生錯誤。"
       ui_builder:
+        title: 建立投票
         insert: 插入投票
         help:
           options_min_count: 至少輸入 1 個選項。
@@ -82,6 +140,7 @@ zh_TW:
           label: 類型
           regular: 單選
           multiple: 多選
+          ranked_choice: 順位選擇
           number: 評分
         poll_result:
           label: 顯示結果...
@@ -101,6 +160,8 @@ zh_TW:
           step: 梯級
         poll_public:
           label: 顯示投票人
+        poll_dynamic:
+          label: 允許在發佈後新增或移除選項
         poll_title:
           label: 標題（可選）
         poll_options:

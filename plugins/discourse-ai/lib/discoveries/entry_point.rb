@@ -13,6 +13,36 @@ module DiscourseAi
             include_condition: -> { SiteSetting.ai_ask_ai_enabled && scope.authenticated? },
           ) { object.ai_ask_ai_default }
         end
+
+        plugin.register_topic_custom_field_type(ContinueConversation::TOPIC_SOURCES_FIELD, :json)
+
+        # These callbacks outlive reloads; short names would use the stale namespace.
+        # A conversation continued from a combined search lists the topics it
+        # cites in place of the timeline.
+        plugin.add_to_serializer(
+          :topic_view,
+          :ai_search_conversation,
+          include_condition: -> do
+            object.topic.private_message? &&
+              object.topic.custom_fields[
+                DiscourseAi::Discoveries::ContinueConversation::TOPIC_REQUEST_ID_FIELD
+              ].present?
+          end,
+        ) { true }
+
+        # sent with the conversation, so the list shows without loading it
+        plugin.add_to_serializer(
+          :topic_view,
+          :ai_search_cited_topics,
+          include_condition: -> do
+            object.topic.private_message? &&
+              object.topic.custom_fields[
+                DiscourseAi::Discoveries::ContinueConversation::TOPIC_REQUEST_ID_FIELD
+              ].present?
+          end,
+        ) do
+          DiscourseAi::Discoveries::CitedTopics.new(topic: object.topic, guardian: scope).as_json
+        end
       end
     end
   end

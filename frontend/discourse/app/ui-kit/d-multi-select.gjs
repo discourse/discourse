@@ -11,7 +11,6 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DTextField from "discourse/ui-kit/d-text-field";
@@ -37,6 +36,7 @@ class Skeleton extends Component {
 export default class DMultiSelect extends Component {
   @tracked searchTerm = "";
 
+  /** @type {object | null | undefined} */
   @tracked preselectedItem = null;
 
   compareKey = "id";
@@ -56,7 +56,7 @@ export default class DMultiSelect extends Component {
 
   @cached
   get data() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -77,16 +77,6 @@ export default class DMultiSelect extends Component {
     }
 
     return new TrackedAsyncData(promise);
-  }
-
-  #debounceSearch() {
-    discourseDebounce(
-      this,
-      this.#resolveAsyncData,
-      this.args.loadFn,
-      this.searchTerm,
-      INPUT_DELAY
-    );
   }
 
   get availableOptions() {
@@ -179,7 +169,7 @@ export default class DMultiSelect extends Component {
   remove(selectedItem, event) {
     event?.stopPropagation();
 
-    if (selectedItem.preventRemoval) {
+    if (this.args.disabled || selectedItem.preventRemoval) {
       return;
     }
 
@@ -221,6 +211,25 @@ export default class DMultiSelect extends Component {
     return item?.name;
   }
 
+  @action
+  removeLabel(item) {
+    if (!this.args.disabled && !item.preventRemoval) {
+      return i18n("multi_select.remove_item", {
+        name: this.getDisplayText(item),
+      });
+    }
+  }
+
+  #debounceSearch() {
+    discourseDebounce(
+      this,
+      this.#resolveAsyncData,
+      this.args.loadFn,
+      this.searchTerm,
+      INPUT_DELAY
+    );
+  }
+
   #resolveAsyncData(asyncData, context) {
     const { resolve, reject } = this.#promise;
 
@@ -234,34 +243,49 @@ export default class DMultiSelect extends Component {
 
   <template>
     <DMenu
-      @identifier="d-multi-select"
-      @triggerComponent={{dElement "div"}}
-      @triggerClass={{dConcatClass (if this.hasSelection "--has-selection")}}
-      @visibilityOptimizer={{@visibilityOptimizer}}
-      @placement={{@placement}}
+      ...attributes
       @allowedPlacements={{@allowedPlacements}}
-      @offset={{@offset}}
+      @contentClass={{if
+        (has-block "footer")
+        "d-multi-select-menu--with-footer"
+      }}
+      @disabled={{@disabled}}
+      @identifier="d-multi-select"
       @matchTriggerMinWidth={{@matchTriggerMinWidth}}
       @matchTriggerWidth={{@matchTriggerWidth}}
+      @offset={{@offset}}
       @onRegisterApi={{@onRegisterDMenuApi}}
-      ...attributes
+      @placement={{@placement}}
+      @triggerClass={{dConcatClass
+        (if this.hasSelection "--has-selection")
+        (if @disabled "--disabled")
+      }}
+      @triggerComponent={{dElement "div"}}
+      @visibilityOptimizer={{@visibilityOptimizer}}
     >
-      <:trigger>
+      <:trigger as |trigger|>
         {{#if @selection}}
-          <div class="d-multi-select-trigger__selection">
+          <div
+            aria-label={{this.label}}
+            class="d-multi-select-trigger__selection"
+            role="group"
+          >
             {{#each @selection as |item|}}
               <button
-                type="button"
+                aria-disabled={{if item.preventRemoval "true"}}
+                aria-label={{this.removeLabel item}}
                 class="d-multi-select-trigger__selected-item"
-                {{on "click" (fn this.remove item)}}
+                disabled={{@disabled}}
                 title={{this.getDisplayText item}}
+                type="button"
+                {{on "click" (fn this.remove item)}}
               >
                 <span class="d-multi-select-trigger__selection-label">{{yield
                     item
                     to="selection"
                   }}</span>
 
-                {{#unless item.preventRemoval}}
+                {{#unless (or @disabled item.preventRemoval)}}
                   {{dIcon
                     "xmark"
                     class="d-multi-select-trigger__remove-selection-icon"
@@ -275,27 +299,34 @@ export default class DMultiSelect extends Component {
         {{/if}}
 
         <DButton
-          @icon="angle-down"
           class="d-multi-select-trigger__expand-btn btn-transparent"
           @action={{@componentArgs.show}}
+          @ariaExpanded={{trigger.expanded}}
+          @disabled={{@disabled}}
+          @icon="angle-down"
+          @translatedAriaLabel={{this.label}}
         />
       </:trigger>
-      <:content>
+      <:content as |menuApi|>
         <DDropdownMenu
-          class={{dConcatClass "d-multi-select__content" @contentClass}}
+          class={{dConcatClass
+            "d-multi-select__content"
+            (if (has-block "footer") "--with-footer")
+            @contentClass
+          }}
           as |menu|
         >
           <menu.item class="d-multi-select__search-container">
             {{dIcon "magnifying-glass"}}
             <DTextField
-              class="d-multi-select__search-input"
               autocomplete="off"
+              class="d-multi-select__search-input"
               @placeholder={{i18n "multi_select.search"}}
               @type="search"
+              @value={{readonly this.searchTerm}}
               {{on "input" this.search}}
               {{on "keydown" this.handleKeydown}}
               {{didInsert this.focus}}
-              @value={{readonly this.searchTerm}}
             />
           </menu.item>
 
@@ -339,6 +370,12 @@ export default class DMultiSelect extends Component {
                 {{this.noResultsLabel}}
               </div>
             {{/if}}
+          {{/if}}
+          {{#if (has-block "footer")}}
+            <menu.divider />
+            <menu.item class="d-multi-select__footer">
+              {{yield menuApi to="footer"}}
+            </menu.item>
           {{/if}}
         </DDropdownMenu>
       </:content>

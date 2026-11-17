@@ -540,6 +540,63 @@ module("Unit | Model | category", function (hooks) {
     stub.restore();
   });
 
+  test("asyncFindByIds preserves request order and skips missing categories", async function (assert) {
+    const missingId = 12345;
+    const categoryIds = [12346, 12347];
+    const site = this.owner.lookup("service:site");
+    site.set("lazy_load_categories", true);
+    site.updateCategory({ id: missingId, name: "Stale category" });
+    pretender.get("/categories/find", () =>
+      response({
+        categories: categoryIds.map((id) => ({ id, name: `Category ${id}` })),
+      })
+    );
+
+    const ids = [missingId, ...categoryIds.toReversed()];
+    const categories = await Category.asyncFindByIds(ids);
+    assert.deepEqual(
+      categories.map((category) => category.id),
+      categoryIds.toReversed(),
+      "available categories keep their requested order"
+    );
+    assert.deepEqual(
+      (await Category.asyncFindByIds(ids)).map((category) => category.id),
+      categoryIds.toReversed(),
+      "cached results match"
+    );
+  });
+
+  test("asyncFindByIds caches entirely missing categories", async function (assert) {
+    const notFoundStatus = 404;
+    const missingId = 12345;
+    this.owner.lookup("service:site").set("lazy_load_categories", true);
+    const request = sinon.spy(() => response(notFoundStatus, {}));
+    pretender.get("/categories/find", request);
+
+    assert.deepEqual(
+      await Category.asyncFindByIds([missingId]),
+      [],
+      "missing categories are omitted"
+    );
+    assert.strictEqual(
+      await Category.asyncFindById(missingId),
+      undefined,
+      "single lookup returns undefined"
+    );
+    assert.true(request.calledOnce, "missing IDs are cached");
+  });
+
+  test("asyncFindByIds propagates server errors", async function (assert) {
+    const serverErrorStatus = 500;
+    this.owner.lookup("service:site").set("lazy_load_categories", true);
+    pretender.get("/categories/find", () => response(serverErrorStatus, {}));
+
+    await assert.rejects(
+      Category.asyncFindByIds([12345]),
+      "server errors are not treated as missing categories"
+    );
+  });
+
   test("registerCategorySaveProperty includes property in save request", async function (assert) {
     const done = assert.async();
 

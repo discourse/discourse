@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
   click,
@@ -29,7 +30,7 @@ import dElement from "discourse/ui-kit/helpers/d-element";
  * the next stop after the trigger, and so the only one that can pin that the search for that stop
  * excludes the panel.
  *
- * Each menu waits on `{{#if this.outlet}}`: the outlet element only exists after its own insert
+ * Each menu waits on `{{#if outlet.value}}`: the outlet element only exists after its own insert
  * hook runs, and `{{#in-element}}` rejects a nullish destination. The menu still renders in its
  * template position.
  *
@@ -51,32 +52,35 @@ module(
       document.activeElement?.className ||
       "<none>";
 
+    let outlet;
+    const setOutlet = (element) => (outlet.value = element);
+
     hooks.beforeEach(function () {
-      this.setOutlet = (element) => this.set("outlet", element);
+      outlet = tracked(undefined);
     });
 
     test("Tab enters the float's own controls, then leaves for the trigger's neighbour", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
-                <button type="button" id="in-panel" class="in-panel">panel
+                <button class="in-panel" id="in-panel" type="button">panel
                   action</button>
               </:content>
             </DMenu>
           {{/if}}
           <button
-            type="button"
-            id="after-trigger"
             class="after-trigger"
+            id="after-trigger"
+            type="button"
           >after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -109,20 +113,20 @@ module(
     test("the option alone is enough, without turning containment off by hand", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <button type="button" id="after-trigger">after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <button id="after-trigger" type="button">after</button>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -146,21 +150,21 @@ module(
     test("Tab visits every panel control before the float is left", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
-                <input id="panel-filter" aria-label="filter" />
-                <button type="button" id="panel-action">panel action</button>
+                <input aria-label="filter" id="panel-filter" />
+                <button id="panel-action" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <button type="button" id="after-trigger">after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <button id="after-trigger" type="button">after</button>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -196,15 +200,15 @@ module(
     test("the forward exit steps over the panel to reach the trigger's neighbour", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
@@ -212,8 +216,8 @@ module(
               the next stop in document order. Searching the page for the stop after the trigger
               has to exclude the panel, or the forward exit lands back inside the float it is
               dismissing. }}
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
-          <button type="button" id="after-trigger">after</button>
+          <div id="outlet" {{didInsert setOutlet}}></div>
+          <button id="after-trigger" type="button">after</button>
         </template>
       );
 
@@ -235,23 +239,23 @@ module(
     test("a non-focusable trigger wrapper resumes from its last stop", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
+              @portalOutletElement={{outlet.value}}
               @triggerComponent={{dElement "div"}}
-              @portalOutletElement={{this.outlet}}
             >
               <:trigger>
-                <input id="trigger-input" aria-label="trigger" />
+                <input aria-label="trigger" id="trigger-input" />
               </:trigger>
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <button type="button" id="after-trigger">after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <button id="after-trigger" type="button">after</button>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -270,25 +274,25 @@ module(
     test("a compound trigger finishes its own tab sequence before entering the panel", async function (assert) {
       await render(
         <template>
-          <button type="button" id="before-trigger">before</button>
-          {{#if this.outlet}}
+          <button id="before-trigger" type="button">before</button>
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
+              @portalOutletElement={{outlet.value}}
               @triggerComponent={{dElement "div"}}
-              @portalOutletElement={{this.outlet}}
             >
               <:trigger>
-                <input id="trigger-first" aria-label="first trigger control" />
-                <button type="button" id="trigger-last">last trigger control</button>
+                <input aria-label="first trigger control" id="trigger-first" />
+                <button id="trigger-last" type="button">last trigger control</button>
               </:trigger>
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <button type="button" id="after-trigger">after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <button id="after-trigger" type="button">after</button>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -322,20 +326,20 @@ module(
     test("Shift+Tab out of the float returns to the trigger", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
-                <button type="button" id="in-panel" class="in-panel">panel
+                <button class="in-panel" id="in-panel" type="button">panel
                   action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -354,12 +358,12 @@ module(
     test("a float with nothing focusable is passed over", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
             >
               <:content>
                 <p class="in-panel">nothing to focus here</p>
@@ -367,11 +371,11 @@ module(
             </DMenu>
           {{/if}}
           <button
-            type="button"
-            id="after-trigger"
             class="after-trigger"
+            id="after-trigger"
+            type="button"
           >after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -398,20 +402,20 @@ module(
 
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
-              @trapTab={{true}}
               @inlineTabOrder={{true}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
+              @trapTab={{true}}
             >
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -425,25 +429,25 @@ module(
     test("without the option, Tab out of the float does not come back to the trigger", async function (assert) {
       await render(
         <template>
-          {{#if this.outlet}}
+          {{#if outlet.value}}
             <DMenu
               @inline={{false}}
-              @trapTab={{false}}
               @label="trigger"
-              @portalOutletElement={{this.outlet}}
+              @portalOutletElement={{outlet.value}}
+              @trapTab={{false}}
             >
               <:content>
-                <button type="button" id="in-panel" class="in-panel">panel
+                <button class="in-panel" id="in-panel" type="button">panel
                   action</button>
               </:content>
             </DMenu>
           {{/if}}
           <button
-            type="button"
-            id="after-trigger"
             class="after-trigger"
+            id="after-trigger"
+            type="button"
           >after</button>
-          <div id="outlet" {{didInsert this.setOutlet}}></div>
+          <div id="outlet" {{didInsert setOutlet}}></div>
         </template>
       );
 
@@ -491,19 +495,19 @@ module(
       await render(
         <template>
           <input
-            id="checked-outside"
-            type="radio"
-            name="outside-group"
             checked
+            id="checked-outside"
+            name="outside-group"
+            type="radio"
           />
           <div id="root">
-            <input id="unchecked" type="radio" name="group" />
-            <input id="checked" type="radio" name="group" checked />
-            <input id="unchecked-after" type="radio" name="group" />
+            <input id="unchecked" name="group" type="radio" />
+            <input checked id="checked" name="group" type="radio" />
+            <input id="unchecked-after" name="group" type="radio" />
             <input
               id="suppressed-by-outside"
-              type="radio"
               name="outside-group"
+              type="radio"
             />
           </div>
         </template>
@@ -521,14 +525,14 @@ module(
         <template>
           <div id="root">
             <button id="before-radios">before</button>
-            <input id="first-radio" type="radio" name="group" />
-            <input id="focused-radio" type="radio" name="group" />
+            <input id="first-radio" name="group" type="radio" />
+            <input id="focused-radio" name="group" type="radio" />
             <button id="after-radios">after</button>
             <form id="form-a">
-              <input id="form-a-radio" type="radio" name="shared" />
+              <input id="form-a-radio" name="shared" type="radio" />
             </form>
             <form id="form-b">
-              <input id="form-b-radio" type="radio" name="shared" />
+              <input id="form-b-radio" name="shared" type="radio" />
             </form>
           </div>
         </template>
@@ -592,7 +596,7 @@ module(
           <div id="root">
             <button id="before-panel">before</button>
             <div id="panel">
-              <input id="panel-filter" aria-label="filter" />
+              <input aria-label="filter" id="panel-filter" />
               <button id="panel-action">panel action</button>
             </div>
             <button id="after-panel">after</button>
@@ -620,6 +624,8 @@ module(
     });
 
     test("each call re-measures instead of answering from an earlier one", async function (assert) {
+      const showLateRadio = tracked(false);
+
       await render(
         <template>
           {{! Names unique to this test: group membership is resolved by querying the whole
@@ -627,13 +633,13 @@ module(
               teardown order. }}
           <div id="root">
             <button id="rescan-control">control</button>
-            <input id="rescan-first-radio" type="radio" name="rescan-group" />
-            {{#if this.showLateRadio}}
+            <input id="rescan-first-radio" name="rescan-group" type="radio" />
+            {{#if showLateRadio.value}}
               <input
-                id="rescan-late-radio"
-                type="radio"
-                name="rescan-group"
                 checked
+                id="rescan-late-radio"
+                name="rescan-group"
+                type="radio"
               />
             {{/if}}
           </div>
@@ -652,7 +658,7 @@ module(
       // state, and a group's representative from the radios present at the time. Reusing either
       // measurement past the call that took it would report the DOM as it used to be.
       find("#rescan-control").tabIndex = -1;
-      this.set("showLateRadio", true);
+      showLateRadio.value = true;
       await settled();
 
       assert.deepEqual(
@@ -666,7 +672,7 @@ module(
       await render(
         <template>
           <div id="root">
-            <button id="aria-hidden" aria-hidden="true">aria hidden</button>
+            <button aria-hidden="true" id="aria-hidden">aria hidden</button>
             <button id="transparent" style="opacity: 0">transparent</button>
             <button id="visibility-hidden" style="visibility: hidden">visibility
               hidden</button>

@@ -1,0 +1,55 @@
+.discourse-boards-onebox.discourse-boards-board-onebox,
+.discourse-boards-onebox.discourse-boards-card-onebox {
+  .discourse-boards-onebox__title {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--space-2);
+
+    .discourse-boards-onebox__type {
+      margin-top: var(--space-1);
+      font-size: var(--font-down-3);
+      font-weight: 400;
+      color: var(--primary-medium);
+    }
+  }
+
+  .discourse-boards-onebox__columns {
+    margin-top: var(--space-2);
+  }
+
+  .discourse-boards-onebox__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    align-items: center;
+    margin-top: var(--space-2);
+  }
+
+  .discourse-boards-onebox__card-board-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    .discourse-boards-onebox__card-board-link {
+      font-size: var(--font-down-2);
+    }
+  }
+
+  .discourse-boards-onebox__tags,
+  .discourse-boards-onebox__categories,
+  .discourse-boards-onebox__column-title {
+    .hashtag-cooked {
+      color: var(--tag-text-color);
+      font-size: var(--font-down-2);
+      font-weight: 400;
+
+      &:visited {
+        color: var(--tag-text-color);
+      }
+    }
+  }
+
+  .discourse-boards-onebox__notes {
+    margin-top: var(--space-2);
+  }
+}

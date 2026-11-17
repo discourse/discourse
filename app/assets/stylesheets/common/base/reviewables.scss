@@ -10,6 +10,7 @@
   .status {
     color: var(--primary-medium);
 
+    span.no-problem-found,
     span.approved {
       color: var(--success);
 
@@ -18,6 +19,7 @@
       }
     }
 
+    span.problem-confirmed,
     span.rejected {
       color: var(--danger);
 

@@ -7,4 +7,6 @@
 ro:
   js:
     discourse_captcha:
+      configuration_test:
+        tab_title: "Test"
       placeholder: substituent

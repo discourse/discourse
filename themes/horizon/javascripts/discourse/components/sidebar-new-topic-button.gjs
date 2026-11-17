@@ -9,7 +9,6 @@ import { service } from "@ember/service";
 import CreateTopicButton from "discourse/components/create-topic-button";
 import bodyClass from "discourse/helpers/body-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { gt } from "discourse/truth-helpers";
 
 export default class SidebarNewTopicButton extends Component {
   @service composer;
@@ -121,18 +120,18 @@ export default class SidebarNewTopicButton extends Component {
     {{#if this.shouldRender}}
       {{bodyClass "horizon-new-topic-button-enabled"}}
       <CreateTopicButton
+        class="sidebar-new-topic-button__wrapper"
+        @action={{this.createNewTopic}}
+        @btnClass="sidebar-new-topic-button"
+        @btnTypeClass="btn-primary"
+        @canCreateTopic={{this.canCreateTopic}}
+        @icon={{this.createTopicIcon}}
+        @label={{this.createTopicLabel}}
+        @showDrafts={{gt this.draftCount 0}}
         {{didInsert this.getCategoryAndTag}}
         {{didUpdate this.getCategoryAndTag this.router.currentRoute}}
         {{didInsert this.watchForComposer}}
         {{willDestroy this.stopWatchingForComposer}}
-        @canCreateTopic={{this.canCreateTopic}}
-        @action={{this.createNewTopic}}
-        @label={{this.createTopicLabel}}
-        @icon={{this.createTopicIcon}}
-        @btnClass="sidebar-new-topic-button"
-        @btnTypeClass="btn-primary"
-        @showDrafts={{gt this.draftCount 0}}
-        class="sidebar-new-topic-button__wrapper"
       />
     {{/if}}
   </template>

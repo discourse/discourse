@@ -581,6 +581,8 @@ schema:
 
 plugins:
   - "automation"
+  - "blog"
+  - "boards"
   - "chat"
   - "checklist"
   - "discourse-adplugin"

@@ -16,6 +16,12 @@ pt:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Tentar novamente"
+          date: "Data"
+          outcomes:
+            failed: "Falhado"
         emotion:
           title: "Emoção"
         reports:
@@ -75,6 +81,12 @@ pt:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imagens"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Pontuação"
       ai_tool_approval:
         loading: "A carregar..."
         tool: "Ação"
@@ -83,25 +95,24 @@ pt:
         reject: "Rejeitar"
         approved: "Aprovado"
         rejected: "Rejeitado"
-      default_llm:
-        title: "Modelo de LLM Predefinido"
       llm_selector:
         none: "Nenhuma"
       features:
         short_title: "Funcionalidades"
-        disabled: "(desativado)"
-        groups: "Grupos:"
-        llm:
-          one: "LLM:"
-          other: "LLMs:"
+        table:
+          status: "Estado"
+          enabled: "Ativado"
+          feature: "Funcionalidade"
+          llm: "LLM"
+          groups: "Grupos"
+        chatbot:
+          column: "Robô de Conversação"
+          places:
+            none: "Indisponível"
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não definido"
         no_groups: "Nenhuma"
         edit: "Configurações"
-        expand_list:
-          one: "(%{count} mais)"
-          other: "(%{count} mais)"
-        collapse_list: "(mostrar menos)"
         bot:
           bot: "Robô de Conversação"
           name: "Robô"
@@ -109,19 +120,19 @@ pt:
         nav:
           enabled: "Ativado"
         filters:
-          all: "Todos"
           reset: "Repor"
+        sentiment:
+          emotion: "Emoção"
+          enabled: "Ativado"
+          setting_groups:
+            emotion: "Emoção"
         summarization:
           name: "Resumos"
           topic_summaries: "Resumos de tópico"
         search:
           name: "Pesquisar"
-          discoveries: "Descobertas"
-        embeddings:
-          hyde: "HyDE"
         discord:
           name: "Integração do Discord"
-          description: "Adiciona a capacidade para procurar canais no Discord"
           search: "Procura no Discord"
         ai_helper:
           description: "Auxilia os utilizadores na interação com a comunidade, como criar tópicos, escrever artigos, e ler conteúdo"
@@ -150,7 +161,19 @@ pt:
         select_option: "Selecione uma opção..."
       translations:
         title: "Traduções"
-        category_scope: "Categorias"
+        sections:
+          advanced: "Avançado"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorias"
+          ai_translation_personal_messages:
+            choices:
+              none: "Nenhuma"
+              all: "Todos"
+          content_localization_language_switcher:
+            choices:
+              none: "Ninguém"
+              all: "Todos"
         model_progress:
           detail:
             retry: "Tentar novamente"
@@ -167,6 +190,8 @@ pt:
               title: "Categorias"
             tag:
               title: "Etiquetas"
+        admin_actions:
+          enabled: "Ativado"
         stats:
           title: "Estatísticas da tradução"
           eta_minutes:
@@ -189,6 +214,8 @@ pt:
         short_title: "Spam"
         title: "Configurar manipulação do lixo eletrónico"
         select_llm: "Selecionar LLM"
+        no_llm_selected: "Nenhuma"
+        no_decision_model_selected: "Nenhuma"
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:
@@ -211,8 +238,6 @@ pt:
         successful: "Sucesso"
         failed: "Falhado"
         unknown: "Desconhecido"
-        topic_id: "Id. do Tópico"
-        post_id: "Id. da Publicação"
         time: "Hora"
         when: "Quando"
         feature: "Funcionalidade"
@@ -226,8 +251,7 @@ pt:
         post_short: "Publicação %{id}"
         duration: "Duração"
         actions: "Ações"
-        filters:
-          title: "Filtros"
+        view_details: "Detalhes"
         periods:
           day: "Últimas 24 horas"
           week: "Últimos 7 Dias"
@@ -297,6 +321,13 @@ pt:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporação"
+      decision_models:
+        no_preset: "Nenhuma"
+        display_name: "Nome"
+        model: "Modelo"
+        provider: "Provedor"
+        edit: "Editar"
+        delete: "Eliminar"
       mcp_servers:
         name: "Nome"
         description: "Descrição"
@@ -308,6 +339,16 @@ pt:
         delete: "Eliminar"
         tools_modal:
           required: "Necessário"
+      models:
+        name: "Nome"
+        type: "Tipo"
+        provider: "Provedor"
+        edit: "Editar"
+        select_type: "Selecionar"
+        types:
+          embedding: "Incorporação"
+        filters:
+          all: "Todos os tipos"
       llms:
         display_name: "Nome"
         provider: "Provedor"
@@ -331,8 +372,6 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -361,6 +400,15 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
+      ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Predefinição"
+          apply: "Aplicar"
+        share: "Partilhar"
+        create_link: "Criar ligação"
+        copy_link: "Copiar hiperligação"
+        filter_all: "Todos"
       ai_bot:
         llm: "Modelo:"
         debug_ai_modal:
@@ -391,9 +439,20 @@ pt:
           summarize: "Resumir"
         topic:
           regenerate_summaries_option: "Resumos de tópico"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
-        regular_results: "Tópicos"
-        collapse: "Colapsar"
-        tooltip:
-          actions:
-            disable: "Desativar"
+        legacy:
+          regular_results: "Tópicos"
+          collapse: "Colapsar"
+          tooltip:
+            actions:
+              disable: "Desativar"
+        search_type: "IA"
+        search_messages: "Mensagens"
+        ask_ai: "IA"

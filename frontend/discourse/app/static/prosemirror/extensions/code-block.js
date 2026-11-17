@@ -3,11 +3,19 @@ import { highlightPlugin } from "prosemirror-highlightjs";
 import { schema as markdownSchema } from "prosemirror-markdown";
 import { TextSelection } from "prosemirror-state";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
+import { createAiBadge } from "../lib/ai-badge.js";
+import { getCodeFenceInfo } from "../lib/markdown-it.js";
 
 const INDENT = "  ";
 
+const PLAIN_TEXT_LANGS = ["auto", "text", "pre", "plain"];
+
 // cached hljs instance with custom plugins/languages
 let hljs;
+
+function isAiGenerated(params) {
+  return getCodeFenceInfo(params)?.attributes.ai === "true";
+}
 
 function selectedCodeLines(state) {
   const { selection } = state;
@@ -77,7 +85,22 @@ function indentCodeBlock(outdent = false) {
 }
 
 class CodeBlockWithLangSelectorNodeView {
-  #selectAdded = false;
+  #aiBadge;
+  #select;
+
+  #changeLanguage = (event) => {
+    const { params } = this.node.attrs;
+    const options =
+      getCodeFenceInfo(params)?.options ?? params.trim().replace(/^\S+\s*/, "");
+    const language =
+      event.target.value ||
+      (options && !isAiGenerated(` ${options}`) ? "auto" : "");
+    this.view.dispatch(
+      this.view.state.tr.setNodeMarkup(this.getPos(), null, {
+        params: options ? `${language} ${options}` : language,
+      })
+    );
+  };
 
   constructor(node, view, getPos) {
     this.node = node;
@@ -91,59 +114,80 @@ class CodeBlockWithLangSelectorNodeView {
     this.dom = pre;
     this.contentDOM = code;
 
-    this.appendSelect();
+    this.#renderAiLabel();
+    this.#appendSelect();
   }
 
-  changeListener(e) {
-    this.view.dispatch(
-      this.view.state.tr.setNodeMarkup(this.getPos(), null, {
-        params: e.target.value,
-      })
-    );
-
-    if (e.target.firstChild.textContent) {
-      e.target.firstChild.textContent = "";
+  update(node) {
+    if (node.type !== this.node.type) {
+      return false;
     }
+
+    const markupChanged = !this.node.sameMarkup(node);
+    this.node = node;
+    if (markupChanged) {
+      this.#renderAiLabel();
+      this.#updateLanguage();
+    }
+    this.#appendSelect();
+    return true;
   }
 
-  appendSelect() {
-    if (!hljs || this.#selectAdded) {
+  destroy() {
+    this.#select?.removeEventListener("change", this.#changeLanguage);
+  }
+
+  #appendSelect() {
+    if (!hljs || this.#select) {
       return;
     }
 
-    this.#selectAdded = true;
-
     const select = document.createElement("select");
     select.contentEditable = false;
-    select.addEventListener("change", (e) => this.changeListener(e));
+    select.addEventListener("change", this.#changeLanguage);
     select.classList.add("code-language-select");
 
     const languages = hljs.listLanguages().sort((a, b) => a.localeCompare(b));
-
-    const empty = document.createElement("option");
-    empty.textContent = languages.includes(this.node.attrs.params)
-      ? ""
-      : this.node.attrs.params;
-    select.appendChild(empty);
+    select.appendChild(document.createElement("option"));
 
     languages.forEach((lang) => {
       const option = document.createElement("option");
       option.textContent = lang;
-      option.selected = lang === this.node.attrs.params;
       select.appendChild(option);
     });
 
+    this.#select = select;
+    this.#updateLanguage();
     this.dom.appendChild(select);
   }
 
-  update(node) {
-    this.appendSelect();
-
-    return node.type === this.node.type;
+  #renderAiLabel() {
+    if (isAiGenerated(this.node.attrs.params)) {
+      this.dom.setAttribute("data-code-ai", "true");
+      if (!this.#aiBadge) {
+        this.#aiBadge = createAiBadge();
+        this.dom.prepend(this.#aiBadge);
+      }
+    } else if (this.#aiBadge) {
+      this.dom.removeAttribute("data-code-ai");
+      this.#aiBadge.remove();
+      this.#aiBadge = undefined;
+    }
   }
 
-  destroy() {
-    this.dom.removeEventListener("change", (e) => this.changeListener(e));
+  #updateLanguage() {
+    if (!this.#select) {
+      return;
+    }
+
+    const { params } = this.node.attrs;
+    const language = getCodeFenceInfo(params)?.tag ?? params;
+    this.#select.firstChild.textContent = "";
+    this.#select.value = language;
+    if (this.#select.selectedIndex === -1) {
+      this.#select.firstChild.textContent = language;
+      this.#select.selectedIndex = 0;
+    }
   }
 }
 
@@ -195,6 +239,57 @@ function isBlockLevelSelection(selection) {
   return hasMultipleBlocks || isFullBlockSelection;
 }
 
+const LANGUAGE_CLASS = /^lang(?:uage)?-(.+)$/;
+
+function codeBlockLanguage(...elements) {
+  for (const element of elements) {
+    for (const className of element.classList) {
+      const language = className.match(LANGUAGE_CLASS)?.[1];
+      // `auto` is a request to autodetect, not a language
+      if (language && language !== "auto") {
+        return language;
+      }
+    }
+  }
+}
+
+export function normalizeCodeBlocks(doc) {
+  let changed = false;
+
+  for (const code of doc.querySelectorAll("pre > code")) {
+    const pre = code.parentElement;
+
+    if (!pre.hasAttribute("data-params")) {
+      const language = codeBlockLanguage(code, pre, pre.parentElement);
+      if (language) {
+        pre.setAttribute("data-params", language);
+        changed = true;
+      }
+    }
+
+    const lines = [...code.childNodes];
+    if (
+      !lines.length ||
+      !lines.every(
+        (line) => line.nodeName === "DIV" && line.lastChild?.nodeName === "BR"
+      )
+    ) {
+      continue;
+    }
+
+    // The final break ends the last line; keeping it would add a blank one.
+    lines.at(-1).lastChild.remove();
+
+    // Each line already has an explicit break; block wrappers would split the code block.
+    for (const line of lines) {
+      line.replaceWith(...line.childNodes);
+    }
+    changed = true;
+  }
+
+  return changed;
+}
+
 function convertSelectionToCodeBlock(schema) {
   return (editorState, dispatch) => {
     const { from, to } = editorState.selection;
@@ -227,9 +322,34 @@ const extension = {
     code_block: {
       createGapCursor: true,
       ...markdownSchema.nodes.code_block.spec,
+      parseDOM: [
+        {
+          tag: "pre",
+          preserveWhitespace: "full",
+          getAttrs(dom) {
+            let params = dom.getAttribute("data-params") || "";
+            if (
+              dom.getAttribute("data-code-ai") === "true" &&
+              !isAiGenerated(params)
+            ) {
+              params = params.trim();
+              params += /\s/.test(params) ? ",ai" : " ai";
+            }
+            return { params };
+          },
+        },
+      ],
+      toDOM(node) {
+        const spec = markdownSchema.nodes.code_block.spec.toDOM(node);
+        if (isAiGenerated(node.attrs.params)) {
+          spec[1]["data-code-ai"] = "true";
+        }
+        return spec;
+      },
     },
   },
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
+  transformParsedHTML: normalizeCodeBlocks,
   keymap: () => ({
     Tab: indentCodeBlock(),
     "Shift-Tab": indentCodeBlock(true),
@@ -263,22 +383,37 @@ const extension = {
       };
     },
   }),
-  async plugins({ getContext }) {
-    return highlightPlugin(
-      (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
-      ["code_block", "html_block", "preview_source"],
+  plugins: [
+    ({ pmState: { Plugin } }) =>
+      new Plugin({
+        props: {
+          transformPastedHTML(html) {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            return normalizeCodeBlocks(doc) ? doc.body.innerHTML : html;
+          },
+        },
+      }),
+    async ({ getContext }) => {
+      const { session, siteSettings } = getContext();
 
-      // NOTE: If the language has not been set with the code block, we default to plain
-      // text rather than autodetecting. This is to work around an infinite loop issue
-      // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
-      // for > 10 seconds, for example:
-      //
-      // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
-      //
-      // We can remove this if we find some other workaround.
-      (node) => node.attrs.params || "text"
-    );
-  },
+      // Autodetection can hang the browser (https://github.com/b-kelly/prosemirror-highlightjs/issues/21)
+      const { default_code_lang } = siteSettings;
+      const defaultCodeLang =
+        !default_code_lang || PLAIN_TEXT_LANGS.includes(default_code_lang)
+          ? "text"
+          : default_code_lang;
+
+      return highlightPlugin(
+        (hljs = await ensureHighlightJs(session.highlightJsPath)),
+        ["code_block", "html_block", "preview_source"],
+        (node) =>
+          node.type.name === "code_block"
+            ? (getCodeFenceInfo(node.attrs.params)?.tag ?? node.attrs.params) ||
+              defaultCodeLang
+            : node.attrs.params || "text"
+      );
+    },
+  ],
 };
 
 export default extension;

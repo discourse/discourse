@@ -105,14 +105,6 @@ export default class TextareaEditor extends Component {
 
   <template>
     <DTextarea
-      @autocomplete="off"
-      @value={{@value}}
-      @placeholder={{@placeholder}}
-      @aria-label={{@placeholder}}
-      @disabled={{@disabled}}
-      @input={{@change}}
-      @focusIn={{@focusIn}}
-      @focusOut={{@focusOut}}
       class={{dConcatClass
         @class
         (if
@@ -120,7 +112,16 @@ export default class TextareaEditor extends Component {
           "--markdown-monospace"
         )
       }}
+      @aria-label={{@placeholder}}
+      @autocomplete="off"
+      @autocorrect="on"
+      @disabled={{@disabled}}
+      @focusIn={{@focusIn}}
+      @focusOut={{@focusOut}}
       @id={{@id}}
+      @input={{@change}}
+      @placeholder={{@placeholder}}
+      @value={{@value}}
       {{forceScrollingElementPosition}}
       {{preventScrollOnFocus}}
       {{this.registerTextarea}}

@@ -1,0 +1,27 @@
+import { ajax } from "discourse/lib/ajax";
+import DiscourseRoute from "discourse/routes/discourse";
+import GamificationLeaderboard from "discourse/plugins/discourse-gamification/discourse/models/gamification-leaderboard";
+
+export default class DiscourseGamificationLeaderboardEdit extends DiscourseRoute {
+  model(params) {
+    const leaderboardsData = this.modelFor(
+      "adminPlugins.show.discourse-gamification-leaderboards"
+    );
+    const id = parseInt(params.id, 10);
+
+    const leaderboard = leaderboardsData.leaderboards.find(
+      (item) => item.id === id
+    );
+    if (leaderboard) {
+      return leaderboard;
+    }
+
+    return ajax(
+      `/admin/plugins/discourse-gamification/leaderboards/${id}`
+    ).then((response) => GamificationLeaderboard.create(response.leaderboard));
+  }
+
+  titleToken() {
+    return this.currentModel?.name;
+  }
+}

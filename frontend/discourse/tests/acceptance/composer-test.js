@@ -11,9 +11,11 @@ import {
   triggerKeyEvent,
   visit,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
 import { headerOffset } from "discourse/lib/offset-calculator";
@@ -250,6 +252,13 @@ acceptance(`Composer`, function (needs) {
   test("the grippie is an operable separator", async function (assert) {
     await visit("/");
     await click("#create-topic");
+
+    // The announced height follows a ResizeObserver, which `settled()` doesn't wait for.
+    await waitUntil(
+      () =>
+        find(".grippie").getAttribute("aria-valuenow") ===
+        `${find("#reply-control").offsetHeight}`
+    );
 
     const { currentHeight, minimumHeight, maximumHeight } =
       composerResizeMeasurements();
@@ -2278,5 +2287,172 @@ acceptance(`composer buttons API`, function (needs) {
         /\/images\/custom-quote-avatar\.png/,
         "Quote avatar can be customized"
       );
+  });
+});
+
+acceptance("Composer - Typing paused", function (needs) {
+  needs.user();
+  needs.settings({ allow_uncategorized_topics: true });
+
+  function trackPauses(owner) {
+    const paused = [];
+    owner
+      .lookup("service:app-events")
+      .on("composer:typing-paused", (composer) => paused.push(composer.reply));
+    return paused;
+  }
+
+  test("fires once the user pauses after an edit", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Magic words");
+    await triggerKeyEvent(".d-editor-input", "keyup", "S");
+
+    assert.deepEqual(paused, ["Magic words"], "fires after the pause");
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "ArrowLeft");
+    assert.deepEqual(paused, ["Magic words"], "ignores keys without edits");
+
+    await fillIn(".d-editor-input", "Magic words and more");
+    await triggerKeyEvent(".d-editor-input", "keyup", "E");
+    assert.deepEqual(
+      paused,
+      ["Magic words", "Magic words and more"],
+      "fires again after the next edit"
+    );
+  });
+
+  test("fires right away at the end of a sentence", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Food stand. ");
+
+    // Dispatched directly so the assertion runs before the pause timer.
+    document
+      .querySelector(".d-editor-input")
+      .dispatchEvent(new KeyboardEvent("keyup", { key: " ", bubbles: true }));
+    assert.deepEqual(paused, ["Food stand. "], "fires immediately");
+
+    await settled();
+    assert.deepEqual(
+      paused,
+      ["Food stand. "],
+      "the pause that follows doesn't fire again"
+    );
+  });
+
+  test("editing earlier text waits for the pause", async function (assert) {
+    await visit("/");
+    const paused = trackPauses(this.owner);
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "Hello world.\n");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Enter");
+
+    await fillIn(".d-editor-input", "Hey, hello world.\n");
+    document
+      .querySelector(".d-editor-input")
+      .dispatchEvent(new KeyboardEvent("keyup", { key: "y", bubbles: true }));
+    assert.deepEqual(paused, ["Hello world.\n"], "doesn't fire right away");
+
+    await settled();
+    assert.deepEqual(
+      paused,
+      ["Hello world.\n", "Hey, hello world.\n"],
+      "fires after the pause"
+    );
+  });
+});
+
+async function insertAiContent(type) {
+  await click(".toolbar-menu__options-trigger");
+  await click("[data-name='ai-content']");
+  await click(`[data-name='ai-content-${type}']`);
+  await waitUntil(() => !find(".toolbar-menu__options-content"), {
+    timeoutMessage: "the composer + menu closes after selecting AI content",
+  });
+}
+
+acceptance("Composer - Insert AI content | Markdown editor", function (needs) {
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.markdown,
+  });
+
+  test("inserts a marked code block and quote", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await fillIn(".d-editor-input", "Introduction");
+
+    await insertAiContent("code");
+    await waitUntil(() =>
+      find(".d-editor-input").value.includes("// AI content")
+    );
+    await insertAiContent("quote");
+    await waitUntil(() => find(".d-editor-input").value.includes("> [!AI]"));
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "Introduction\n\n```javascript ai\n// AI content\n```\n\n> [!AI]\n> AI content\n",
+        "each choice adds a standalone block with its AI marker and placeholder"
+      );
+    assert
+      .dom(".toolbar-menu__ai-content-content")
+      .doesNotExist("the submenu closes after insertion");
+    assert
+      .dom(".toolbar-menu__options-content")
+      .doesNotExist("the + menu closes after insertion");
+  });
+});
+
+acceptance("Composer - Insert AI content | rich editor", function (needs) {
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.rich,
+  });
+
+  test("inserts editable code and quote blocks with AI badges", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await waitFor("#reply-control .ProseMirror");
+
+    await insertAiContent("code");
+    await waitFor(".ProseMirror pre");
+    assert
+      .dom(".ProseMirror pre[data-code-ai='true'] code")
+      .hasText("// AI content");
+
+    await insertAiContent("quote");
+    await waitFor(".ProseMirror blockquote");
+    assert
+      .dom(".ProseMirror blockquote[data-ai-generated='true'] p")
+      .hasText("AI content");
+  });
+});
+
+acceptance("Composer - Insert AI content | mobile", function (needs) {
+  needs.mobileView();
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.markdown,
+  });
+
+  test("inserts a marked quote from the submenu", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await fillIn(".d-editor-input", "");
+    await insertAiContent("quote");
+    await waitUntil(() => find(".d-editor-input").value, {
+      timeoutMessage: "the mobile composer receives the AI quote",
+    });
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "> [!AI]\n> AI content\n",
+        "the mobile submenu inserts the quote"
+      );
+    assert
+      .dom(".toolbar-menu__options-content")
+      .doesNotExist("both menus close");
   });
 });

@@ -5,6 +5,21 @@ module DiscourseWorkflows
     module DataTable
       class V1 < NodeType
         OPERATIONS = %w[insert get update delete upsert row_exists row_not_exists].freeze
+        PASSTHROUGH_OPERATIONS = %w[row_exists row_not_exists].freeze
+        COLUMN_SCHEMAS = {
+          "string" => {
+            "type" => %w[string null],
+          },
+          "number" => {
+            "type" => %w[number null],
+          },
+          "boolean" => {
+            "type" => %w[boolean null],
+          },
+          "date" => {
+            "type" => %w[string null],
+          },
+        }.freeze
         MAPPING_MODES = %w[manual auto].freeze
         DEFAULT_LIMIT = DiscourseWorkflows::DataTables::Facade::MAX_LIMIT
         CONDITION_OVERRIDES =
@@ -47,6 +62,20 @@ module DiscourseWorkflows
           },
           group: "data",
           i18n_scope: "data_table_node",
+          output_contracts: [
+            {
+              variants: [
+                {
+                  mode: :passthrough,
+                  display_options: {
+                    show: {
+                      operation: PASSTHROUGH_OPERATIONS,
+                    },
+                  },
+                },
+              ],
+            },
+          ],
           capabilities: {
             run_scope: "per_item",
           },
@@ -95,6 +124,8 @@ module DiscourseWorkflows
                 },
               },
             },
+            # A missing key leaves the column untouched (NULL/default on insert);
+            # a present key is always written, and an empty value writes NULL.
             columns: {
               type: :object,
               required: false,
@@ -105,6 +136,7 @@ module DiscourseWorkflows
                   operation: %w[insert update upsert],
                 },
                 hide: {
+                  operation: ["insert"],
                   mapping_mode: ["auto"],
                 },
               },
@@ -175,6 +207,19 @@ module DiscourseWorkflows
           },
         )
 
+        def self.output_schemas(configuration = {}, input_schemas: [])
+          config = (configuration || {}).deep_stringify_keys
+          return super if PASSTHROUGH_OPERATIONS.include?(config["operation"])
+
+          columns = DiscourseWorkflows::DataTable.find_by(id: config["data_table_id"])&.columns.to_a
+          types =
+            DataTables::Types::SYSTEM_COLUMN_TYPE_MAP.merge(
+              columns.to_h { |column| [column["name"], column["type"]] },
+            )
+
+          [Schema.document(types.transform_values { |type| COLUMN_SCHEMAS.fetch(type) })]
+        end
+
         def self.load_options_context(context)
           case context.method_name
           when "data_tables"
@@ -191,6 +236,7 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
+          empty_column = empty_column_expression(exec_ctx)
           items =
             exec_ctx.input_items.flat_map.with_index do |item, item_index|
               config = {
@@ -208,6 +254,14 @@ module DiscourseWorkflows
                 "sort_direction" =>
                   exec_ctx.get_node_parameter("sort_direction", item_index, default: "asc"),
               }
+              if empty_column && manual_columns?(config)
+                raise_node_error!(
+                  I18n.t(
+                    "discourse_workflows.errors.data_table.empty_column_expression",
+                    column: empty_column,
+                  ),
+                )
+              end
               begin
                 pair_output_items(execute_with_config(config, item, exec_ctx), exec_ctx, item)
               rescue ArgumentError => e
@@ -220,6 +274,28 @@ module DiscourseWorkflows
 
         private
 
+        # An empty expression resolves to "", which would silently overwrite the column.
+        # Raw values don't depend on the item, so this is scanned once per run.
+        def empty_column_expression(exec_ctx)
+          raw_columns = exec_ctx.get_node_parameter("columns", options: { raw_expressions: true })
+
+          DiscourseWorkflows::DataTables::ColumnsResolver
+            .column_pairs(raw_columns)
+            &.find { |_, value| DiscourseWorkflows::ExpressionResolver.empty_expression?(value) }
+            &.first
+        end
+
+        def manual_columns?(config)
+          DiscourseWorkflows::Schema.visible?(
+            self.class.properties[:columns][:display_options],
+            config,
+          )
+        end
+
+        def auto_mapped_insert?(config)
+          config["operation"] == "insert" && config["mapping_mode"] == "auto"
+        end
+
         def pair_output_items(output_items, exec_ctx, item)
           paired_item = exec_ctx.paired_item_for(item)
 
@@ -230,22 +306,22 @@ module DiscourseWorkflows
           node_proxy = exec_ctx.helpers.get_data_table_proxy(config.fetch("data_table_id"))
           operation_name = config.fetch("operation", "insert")
 
-          if operation_name == "insert" && config["mapping_mode"] == "auto"
+          if auto_mapped_insert?(config)
             json = item["json"] || {}
             config = config.merge("columns" => json.slice(*column_names(node_proxy)))
           end
 
           case operation_name
           when "insert"
-            wrap(node_proxy.insert_rows([config["columns"] || {}], "all"))
+            wrap(node_proxy.insert_rows([config["columns"]], "all"))
           when "get"
             wrap(node_proxy.get_many_rows_and_count(row_query_options(config))[:data])
           when "update"
-            wrap(node_proxy.update_rows(row_mutation_options(config)))
+            wrap(node_proxy.update_rows(row_mutation_options(config))[:data])
           when "delete"
-            wrap(node_proxy.delete_rows(row_delete_options(config)))
+            wrap(node_proxy.delete_rows(row_delete_options(config))[:data])
           when "upsert"
-            wrap(node_proxy.upsert_row(row_mutation_options(config)))
+            wrap(node_proxy.upsert_row(row_mutation_options(config))[:data])
           when "row_exists", "row_not_exists"
             row_existence_items(config, item, operation_name, node_proxy)
           else
@@ -281,7 +357,7 @@ module DiscourseWorkflows
         end
 
         def row_mutation_options(config)
-          { filter: normalized_filter(config), data: config["columns"] || {} }
+          { filter: normalized_filter(config), data: config["columns"] }
         end
 
         def row_delete_options(config)

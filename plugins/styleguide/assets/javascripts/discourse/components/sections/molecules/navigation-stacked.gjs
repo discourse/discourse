@@ -1,17 +1,17 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import NavStackedExample from "../../examples/molecules/nav-stacked";
+import NavStackedExample from "../../examples/molecules/nav-stacked.gjs";
 import navStackedSource from "../../examples/molecules/nav-stacked?source=file";
-import UserNavStackedExample from "../../examples/molecules/user-nav-stacked";
+import UserNavStackedExample from "../../examples/molecules/user-nav-stacked.gjs";
 import userNavStackedSource from "../../examples/molecules/user-nav-stacked?source=file";
 
 export default <template>
-  <StyleguideExample @title=".nav-stacked" @code={{navStackedSource}}>
+  <StyleguideExample @code={{navStackedSource}} @title=".nav-stacked">
     <NavStackedExample @navItems={{@dummy.navItems}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title=".user-navigation .nav-stacked"
     @code={{userNavStackedSource}}
+    @title=".user-navigation .nav-stacked"
   >
     <UserNavStackedExample @navItems={{@dummy.navItems}} />
   </StyleguideExample>

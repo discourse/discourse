@@ -3,6 +3,9 @@
 module DiscourseWorkflows
   module Schema
     class GraphResolver
+      class NotConverged < StandardError
+      end
+
       def self.call(nodes, connections)
         new(nodes, connections).call
       end
@@ -33,6 +36,7 @@ module DiscourseWorkflows
         end
         @input_schemas = {}
         @output_schemas = {}
+        @resolved_output_schemas = {}
       end
 
       def call
@@ -54,9 +58,7 @@ module DiscourseWorkflows
         sweeps = 0
 
         while changed
-          if (sweeps += 1) > @nodes.length + 2
-            raise ArgumentError, "Output schema graph did not converge"
-          end
+          raise NotConverged if (sweeps += 1) > @nodes.length + 2
 
           changed = false
           @nodes_by_id.each_key do |node_id|
@@ -89,7 +91,7 @@ module DiscourseWorkflows
         node_class = @node_classes[node_id]
         return [{}] unless node_class
 
-        node_class.output_schemas(
+        @resolved_output_schemas[[node_id, input_schemas]] ||= node_class.output_schemas(
           NodeData.parameters(@nodes_by_id.fetch(node_id)),
           input_schemas: input_schemas,
         )

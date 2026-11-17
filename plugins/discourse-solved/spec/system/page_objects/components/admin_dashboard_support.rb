@@ -73,6 +73,14 @@ module PageObjects
       def has_no_selected_category?(category)
         has_no_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
       end
+
+      def has_selected_category_with_parent?(category)
+        has_css?(
+          "#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+            ".badge-category__wrapper:has(.badge-category[data-category-id='#{category.parent_category_id}']) + " \
+            ".badge-category__wrapper .badge-category[data-category-id='#{category.id}']",
+        )
+      end
     end
   end
 end

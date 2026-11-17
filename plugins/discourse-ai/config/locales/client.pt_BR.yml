@@ -17,6 +17,16 @@ pt_BR:
         categories:
           discourse_ai: "Discourse IA"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Perguntar à IA"
+        ask_ai:
+          title: "Perguntar à IA"
+          reports:
+            retry_questions: "Tentar novamente"
+          date: "Data"
+          outcomes:
+            failed: "Falha"
         emotion:
           title: "Gesto"
         reports:
@@ -203,6 +213,8 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Sugestão com IA"
       copied: "Copiou"
       ai_decoded_transcript:
         thinking: "Pensando"
@@ -214,6 +226,12 @@ pt_BR:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imagens"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Nota"
       ai_tool_approval:
         loading: "Carregando..."
         tool: "Ação"
@@ -223,26 +241,34 @@ pt_BR:
         approved: "Aprovado (approved)"
         rejected: "Recusados(as)"
       default_llm:
-        title: "Modelo de LLM padrão"
+        title: "Modelo de linguagem padrão"
       llm_selector:
         none: "Nenhum"
-        saved: "Modelo LLM padrão atualizado com sucesso"
       features:
         short_title: "Recursos"
         settings_save_error: "Algumas configurações não puderam ser salvas."
-        disabled: "(desativada)"
-        groups: "Grupos:"
-        llm:
-          one: "LLM:"
-          other: "LLMs:"
+        table:
+          status: "Status"
+          enabled: "Ativados"
+          feature: "Recurso"
+          llm: "LLM"
+          groups: "Grupos"
+        who_can_use:
+          no_one: "Ninguém"
+        status:
+          "on": "Ligado"
+          "off": "Desligado"
+        chatbot:
+          column: "Chatbot"
+          places:
+            personal_messages: "Mensagens pessoais"
+            chat_direct_messages: "Mensagens de chat"
+            none: "Não disponível"
+        set_up: "Configurar"
         no_llm: "Nenhum LLM selecionado"
         no_agent: "Não configurado"
         no_groups: "Nenhum"
         edit: "Configurações"
-        expand_list:
-          one: "(mais %{count})"
-          other: "(mais %{count})"
-        collapse_list: "(exibir menos)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -255,10 +281,16 @@ pt_BR:
         nav:
           enabled: "Ativados"
         filters:
-          all: "Tudo"
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."
           reset: "Redefinir"
         no_automations: "Ainda não há nenhuma automação"
+        sentiment:
+          sentiment: "Sentimento"
+          emotion: "Gesto"
+          enabled: "Ativados"
+          setting_groups:
+            sentiment: "Sentimento"
+            emotion: "Gesto"
         summarization:
           name: "Resumos"
           description: "Ativa o botão de criação de resumo para os visitantes resumirem os tópicos"
@@ -271,13 +303,13 @@ pt_BR:
         search:
           name: "Pesquisar"
           description: "Melhore a experiência de pesquisa ao fornecer respostas geradas por IA para as consultas"
-          discoveries: "Descobertas"
+          ask_ai: "Perguntar à IA"
           setting_groups:
             settings: "Configurações básicas"
+            access_control: "Controle de acesso"
         embeddings:
           name: "Incorporações"
-          description: "Alimenta recursos, como tópicos relacionados e pesquisa com IA, ao gerar representações semânticas do texto"
-          hyde: "HyDE"
+          related_topics: "Tópicos relacionados"
           setting_groups:
             model_settings: "Configurações de modelo"
             related_topics: "Tópicos relacionados"
@@ -287,7 +319,6 @@ pt_BR:
             settings: "Configurações básicas"
         discord:
           name: "Integração com o Discourse"
-          description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
           search: "Pesquisa no Discord"
           setting_groups:
             settings: "Configurações básicas"
@@ -334,9 +365,6 @@ pt_BR:
             one: "Tradução agendada para %{count} postagem não traduzida"
             other: "Tradução agendada para %{count} postagens não traduzidas"
           schedule_topic_error: "Erro ao agendar traduções. Por favor tente novamente."
-          setting_groups:
-            settings: "Configurações básicas"
-            backfill_and_limits: "Backfill e limites"
         spam:
           name: "Spam"
           description: "Identifica possíveis spams usando o LLM selecionado e os sinaliza para inspeção pela moderação do site na fila de revisão"
@@ -355,8 +383,20 @@ pt_BR:
       translations:
         title: "Traduções"
         description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
-        supported_locales: "Idiomas suportados"
-        category_scope: "Categorias"
+        sections:
+          advanced: "Avançado"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorias"
+          ai_translation_personal_messages:
+            label: "Mensagens pessoais"
+            choices:
+              none: "Nenhum"
+              all: "Todas"
+          content_localization_language_switcher:
+            choices:
+              none: "Ninguém"
+              all: "Todos(as)"
         model_progress:
           detail:
             retry: "Tentar novamente"
@@ -374,7 +414,7 @@ pt_BR:
             tag:
               title: "Tags"
         admin_actions:
-          enable_translations: "Ativar traduções automáticas"
+          enabled: "Ativados"
         stats:
           title: "Estatísticas de tradução"
           backfill_disabled: "O backfilling está desativado; apenas novas postagens serão traduzidas."
@@ -409,6 +449,8 @@ pt_BR:
         short_title: "Spam"
         title: "Configurar tratamento de spam"
         select_llm: "Selecionar LLM"
+        no_llm_selected: "Nenhum"
+        no_decision_model_selected: "Nenhum"
         custom_instructions: "Instruções personalizadas"
         custom_instructions_help: "Instruções específicas para seu site para ajudar a orientar a IA na identificação de spam, por exemplo: \"Verificar com mais intensidade postagens que não estão em inglês\"."
         last_seven_days: "Últimos sete dias"
@@ -503,8 +545,6 @@ pt_BR:
         successful: "Realizado(a)"
         failed: "Falha"
         unknown: "Desconhecido"
-        topic_id: "ID do tópico"
-        post_id: "ID da postagem"
         time: "Hora"
         when: "Quando"
         outcome: "Resultado"
@@ -520,9 +560,7 @@ pt_BR:
         duration: "Duração"
         cost: "Custo"
         actions: "Ações"
-        filters:
-          title: "Filtros"
-          period: "Período"
+        view_details: "Detalhes"
         periods:
           hour: "Última hora"
           day: "Últimas 24 horas"
@@ -687,7 +725,6 @@ pt_BR:
           result: "Resultado do teste"
       secrets:
         short_title: "Credenciais"
-        description: "Gerenciar as credenciais de autenticação compartilhadas entre LLMs, incorporações e ferramentas."
         name: "Nome"
         secret: "Valor"
         select_secret: "Selecionar uma credencial..."
@@ -709,6 +746,17 @@ pt_BR:
         tool: "Ferramenta"
         modal:
           title: "Criar nova credencial"
+      decision_models:
+        no_preset: "Nenhum"
+        display_name: "Nome"
+        model: "Modelo"
+        provider: "Provedor"
+        api_key: "Credencial"
+        edit: "Editar"
+        delete: "Excluir"
+        test: "Executar teste"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Nome"
         description: "Descrição"
@@ -725,6 +773,19 @@ pt_BR:
         tools_modal:
           parameters: "Parâmetros"
           required: "Necessário(a)"
+      models:
+        new: "Novo modelo"
+        name: "Nome"
+        type: "Tipo"
+        provider: "Provedor"
+        edit: "Editar"
+        seeded_warning: "Isto foi pré-configurado no seu site e não pode ser editado."
+        select_type: "Selecionar"
+        types:
+          embedding: "Incorporar"
+        filters:
+          all: "Todos os tipos"
+          reset: "Redefinir filtros"
       llms:
         short_title: "LLMs"
         no_llms: "Nenhum LLM ainda"
@@ -786,11 +847,6 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-7: "Modelo mais inteligente da Anthropic"
-          anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
-          anthropic-claude-haiku-4-5: "Rápido e econômico"
-          google-gemini-3-1-pro-preview: "O modelo mais inteligente do Google"
-          open_router-moonshotai-kimi-k2-6: "Modelo multimodal da Moonshot com recursos de visão"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
           title: "LLMs configurados"
@@ -924,7 +980,6 @@ pt_BR:
         presets: "Selecione uma predefinição..."
         configure_manually: "Configurar manualmente"
         edit: "Editar"
-        seeded_warning: "Isto foi pré-configurado no seu site e não pode ser editado."
         tests:
           title: "Executar teste"
           running: "Executando teste..."
@@ -956,28 +1011,36 @@ pt_BR:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizados(as)"
         provider_fields:
           model_name: "Nome do modelo"
         semantic_search: "Tópicos (semântica)"
-        semantic_search_results:
-          toggle: "Resultados de IA"
-          unavailable: "Resultados de IA indisponíveis"
-          zero_results_expanded: "Nenhum resultado encontrado; exibindo %{count} resultados de IA"
         semantic_search_tooltips:
           results_explanation: "Ao ativar esta opção, os resultados de pesquisa com IA são adicionados abaixo."
-          invalid_sort: "Os resultados das pesquisas devem ser classificados por ordem de relevância para exibir resultados com IA"
           not_submitted: "Envie uma pesquisa para ativar os resultados da IA."
           no_results: "Nenhum resultado de IA foi encontrado para esta pesquisa."
-        semantic_search_unavailable_tooltip: "Os resultados das pesquisas devem ser classificados por ordem de relevância para exibir resultados com IA"
-        ai_generated_result: "Resultado de pesquisa encontrado usando IA"
         quick_search:
           suffix: "em todos os tópicos e postagens com IA"
       ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Padrão"
+          option_on: "Ligado"
+          option_off: "Desligado"
+          apply: "Aplicar"
         expand_view_label: "Expandir visualização"
         collapse_view_label: "Sair de tela cheia (ESC ou botão de voltar)"
         click_to_run_label: "Rodar artefato"
+        share: "Compartilhar"
+        create_link: "Criar link"
+        copied: "Copiou para área de transferência"
+        copy_link: "Copiar link"
+        copy_embed: "Copiar incorporado"
+        new_tab: "Exibir na aba nova"
+        filter_all: "Todas"
+        filter_standalone: "Independente"
       ai_bot:
         title: "Bot de IA"
         llm: "Modelo:"
@@ -1055,10 +1118,7 @@ pt_BR:
           scroll_to_bottom: "Rolar para a parte inferior"
           editing_post: "Editando postagem"
       sentiments:
-        dashboard:
-          title: "Sentimento"
         sidebar:
-          overview: "Visão geral de sentimento"
           analysis: "Análise de sentimento"
         sentiment_analysis:
           share_chart: "Copiar link para o gráfico"
@@ -1100,21 +1160,39 @@ pt_BR:
             compact: "Compactar"
             expanded: "Expandido(a)"
             expanded_description: "com resumos de IA"
+      ai_search:
+        related_topics: "Tópicos relacionados"
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          ask: "Perguntar à IA"
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
-        main_title: "Descobertas do Discobot"
-        regular_results: "Tópicos"
-        tell_me_more: "Conte mais..."
-        continue_convo: "Continuar conversa"
+        main_title: "Perguntar à IA"
         loading_convo: "Carregando conversa"
-        collapse: "Recolher"
-        timed_out: "O discobot não conseguiu encontrar mais nenhuma descoberta. Algo deu errado."
         user_setting: "Ativar descobertas de pesquisa com IA"
-        tooltip:
-          header: "Pesquisa alimentada por IA"
-          content: "Pequisa em linguagem natural desenvolvida pelo %{model}"
-          actions:
-            info: "Como funciona?"
-            disable: "Desativar"
+        legacy:
+          main_title: "Descobertas do Discobot"
+          regular_results: "Tópicos"
+          tell_me_more: "Conte mais..."
+          continue_convo: "Continuar conversa"
+          loading_convo: "Carregando conversa"
+          collapse: "Recolher"
+          timed_out: "O discobot não conseguiu encontrar mais nenhuma descoberta. Algo deu errado."
+          tooltip:
+            header: "Pesquisa alimentada por IA"
+            content: "Pequisa em linguagem natural desenvolvida pelo %{model}"
+            actions:
+              info: "Como funciona?"
+              disable: "Desativar"
+        search_type: "IA"
+        search_all_topics: "Todos os tópicos"
+        search_messages: "Mensagens"
+        ask_ai: "IA"
+        sources:
+          related_discussions: "Tópicos relacionados"
       user_preferences:
         empty: "Não há configurações relevantes disponíveis no momento"
     review:

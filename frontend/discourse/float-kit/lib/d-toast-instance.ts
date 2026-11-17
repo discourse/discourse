@@ -24,14 +24,14 @@ export default class DToastInstance {
     this.options = { ...TOAST.options, ...options };
   }
 
-  @action
-  close() {
-    this.toasts.close(this);
-  }
-
   get isValidForView() {
     return this.options.views.includes(
       this.site.desktopView ? "desktop" : "mobile"
     );
+  }
+
+  @action
+  close() {
+    this.toasts.close(this);
   }
 }

@@ -24,6 +24,7 @@ export default class UserStatusPicker extends Component {
   @action
   emojiSelected(emoji) {
     this.args.status.emoji = emoji;
+    this.args.onEmojiSelected?.(emoji);
   }
 
   @action
@@ -46,24 +47,24 @@ export default class UserStatusPicker extends Component {
         }}
       >
         <EmojiPicker
-          @emoji={{@status.emoji}}
-          @didSelectEmoji={{this.emojiSelected}}
-          @btnClass="btn-emoji"
-          @modalForMobile={{false}}
+          @btnClass="btn-emoji btn-transparent"
           @context="user-status"
+          @didSelectEmoji={{this.emojiSelected}}
+          @emoji={{@status.emoji}}
           @inline={{true}}
+          @modalForMobile={{false}}
         />
 
         <input
+          class="user-status-description"
+          maxlength="100"
+          placeholder={{i18n "user_status.what_are_you_doing"}}
+          type="text"
+          value={{@status.description}}
           {{on "input" this.updateDescription}}
           {{on "focus" this.focus}}
           {{on "blur" this.blur}}
           {{dAutoFocus}}
-          value={{@status.description}}
-          type="text"
-          placeholder={{i18n "user_status.what_are_you_doing"}}
-          maxlength="100"
-          class="user-status-description"
         />
       </div>
     </div>

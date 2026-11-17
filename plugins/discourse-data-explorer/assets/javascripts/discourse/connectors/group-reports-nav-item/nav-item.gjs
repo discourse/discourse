@@ -1,11 +1,8 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { tagName } from "@ember-decorators/component";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class NavItem extends Component {
   static shouldRender(args) {
     return args.group.has_visible_data_explorer_queries;

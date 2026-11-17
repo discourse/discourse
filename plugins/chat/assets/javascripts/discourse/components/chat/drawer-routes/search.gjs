@@ -24,8 +24,8 @@ export default class ChatDrawerRoutesSearch extends Component {
       {{#if this.chatStateManager.isDrawerExpanded}}
         <div class="chat-drawer-content">
           <ChatSearch
-            @query={{this.chatSearchQuery.query}}
             @enableQueryParams={{false}}
+            @query={{this.chatSearchQuery.query}}
           />
         </div>
       {{/if}}

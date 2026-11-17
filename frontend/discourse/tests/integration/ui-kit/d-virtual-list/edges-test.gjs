@@ -51,8 +51,8 @@ module("Integration | ui-kit | DVirtualList | edges", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{estimate}}
+          @items={{items}}
           @onRegisterApi={{onRegisterApi}}
           @onVisibleRangeChange={{onVisibleRangeChange}}
           as |item|
@@ -128,10 +128,10 @@ module("Integration | ui-kit | DVirtualList | edges", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{estimate}}
-          @onRegisterApi={{onRegisterApi}}
+          @items={{items}}
           @onReachEnd={{onReachEnd}}
+          @onRegisterApi={{onRegisterApi}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -189,10 +189,10 @@ module("Integration | ui-kit | DVirtualList | edges", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{estimate}}
-          @onRegisterApi={{onRegisterApi}}
+          @items={{items}}
           @onReachStart={{onReachStart}}
+          @onRegisterApi={{onRegisterApi}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -236,8 +236,8 @@ module("Integration | ui-kit | DVirtualList | edges", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{estimate}}
+          @items={{items}}
           @onReachEnd={{onReachEnd}}
           as |item|
         >

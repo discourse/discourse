@@ -27,6 +27,15 @@ class Users::AssociateAccountsController < ApplicationController
 
     server_session.delete(self.class.key(params[:token]))
 
+    if !auth_result.failed?
+      Jobs.enqueue(
+        :critical_user_email,
+        type: "account_associated",
+        user_id: current_user.id,
+        provider_name: authenticator.display_name,
+      )
+    end
+
     render json: success_json
   end
 

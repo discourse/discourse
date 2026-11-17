@@ -8,10 +8,10 @@ export default class PluginCommitHash extends Component {
   <template>
     {{#if @plugin.commitHash}}
       <a
-        href={{@plugin.commitUrl}}
-        target="_blank"
-        rel="noopener noreferrer"
         class="current commit-hash"
+        href={{@plugin.commitUrl}}
+        rel="noopener noreferrer"
+        target="_blank"
         title={{@plugin.commitHash}}
       >{{this.shortCommitHash}}</a>
     {{/if}}

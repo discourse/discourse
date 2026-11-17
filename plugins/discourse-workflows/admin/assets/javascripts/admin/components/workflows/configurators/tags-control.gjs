@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 function tagValue(value) {
   if (Array.isArray(value)) {
@@ -24,16 +24,16 @@ export default class TagsControl extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <MiniTagChooser
-        @value={{tagValue @field.value}}
         @onChange={{this.handleChange}}
+        @value={{tagValue @field.value}}
       />
     </ExpressionWrapper>
   </template>

@@ -11,7 +11,6 @@ import {
   authorizedExtensions,
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -28,12 +27,40 @@ import { i18n } from "discourse-i18n";
 export default class DPickFilesButton extends Component {
   @service dialog;
 
+  /** @type {string | null | undefined} */
   fileInputId = null;
+
+  /** @type {string | null | undefined} */
   fileInputClass = null;
   fileInputDisabled = false;
+
+  /** @type {string | string[] | null | undefined} */
   acceptedFormatsOverride = null;
   allowMultiple = false;
   showButton = false;
+
+  @computed()
+  get acceptsAllFormats() {
+    return (
+      this.capabilities.isIOS ||
+      authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
+    );
+  }
+
+  @computed()
+  get acceptedFormats() {
+    // the acceptedFormatsOverride can be a list of extensions or mime types
+    if (!isBlank(this.acceptedFormatsOverride)) {
+      return this.acceptedFormatsOverride;
+    }
+
+    const extensions = authorizedExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
+
+    return extensions.map((ext) => `.${ext}`).join();
+  }
 
   didInsertElement() {
     super.didInsertElement(...arguments);
@@ -57,29 +84,6 @@ export default class DPickFilesButton extends Component {
   onChange() {
     const files = this.fileInput.files;
     this._filesPicked(files);
-  }
-
-  @computed()
-  get acceptsAllFormats() {
-    return (
-      this.capabilities.isIOS ||
-      authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
-    );
-  }
-
-  @computed()
-  get acceptedFormats() {
-    // the acceptedFormatsOverride can be a list of extensions or mime types
-    if (!isBlank(this.acceptedFormatsOverride)) {
-      return this.acceptedFormatsOverride;
-    }
-
-    const extensions = authorizedExtensions(
-      this.currentUser.staff,
-      this.siteSettings
-    );
-
-    return extensions.map((ext) => `.${ext}`).join();
   }
 
   @action
@@ -129,30 +133,30 @@ export default class DPickFilesButton extends Component {
   <template>
     {{#if this.showButton}}
       <DButton
-        @action={{this.openSystemFilePicker}}
-        @label={{this.label}}
-        @icon={{this.icon}}
         class={{dConcatClass this.class "btn-default"}}
+        @action={{this.openSystemFilePicker}}
+        @icon={{this.icon}}
+        @label={{this.label}}
       />
     {{/if}}
     {{#if this.acceptsAllFormats}}
       <input
-        {{didInsert (or @registerFileInput (noop))}}
-        type="file"
-        id={{this.fileInputId}}
         class={{this.fileInputClass}}
-        multiple={{this.allowMultiple}}
         disabled={{this.fileInputDisabled}}
+        id={{this.fileInputId}}
+        multiple={{this.allowMultiple}}
+        type="file"
+        {{didInsert (or @registerFileInput (noop))}}
       />
     {{else}}
       <input
-        {{didInsert (or @registerFileInput (noop))}}
-        type="file"
-        id={{this.fileInputId}}
-        class={{this.fileInputClass}}
         accept={{this.acceptedFormats}}
-        multiple={{this.allowMultiple}}
+        class={{this.fileInputClass}}
         disabled={{this.fileInputDisabled}}
+        id={{this.fileInputId}}
+        multiple={{this.allowMultiple}}
+        type="file"
+        {{didInsert (or @registerFileInput (noop))}}
       />
     {{/if}}
   </template>

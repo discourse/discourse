@@ -161,6 +161,7 @@ RSpec.describe DiscourseAi::Utils::Search do
 
     context "when using semantic search" do
       let(:query) { "this is an expanded search" }
+
       after do
         if defined?(DiscourseAi::Embeddings::SemanticSearch)
           DiscourseAi::Embeddings::SemanticSearch.clear_cache_for(query)
@@ -188,6 +189,29 @@ RSpec.describe DiscourseAi::Utils::Search do
               search_query: "totally different query",
               current_user: admin,
             )
+          end
+
+        expect(results[:rows].length).to eq(1)
+      end
+
+      it "includes semantic results when the query is too long for ranked search" do
+        assign_fake_provider_to(:ai_default_llm_model)
+
+        vector_def = Fabricate(:embedding_definition)
+        SiteSetting.ai_embeddings_selected_model = vector_def.id
+        SiteSetting.ai_embeddings_enabled = true
+        SiteSetting.ai_embeddings_semantic_search_enabled = true
+
+        hyde_embedding = [0.049382] * vector_def.dimensions
+        EmbeddingsGenerationStubs.hugging_face_service(query, hyde_embedding)
+
+        post = Fabricate(:post, topic: topic_with_tags)
+        DiscourseAi::Embeddings::Schema.for(Topic).store(post.topic, hyde_embedding, "digest")
+        long_query = (1..51).map { |number| "word#{number}" }.join(" ")
+
+        results =
+          DiscourseAi::Completions::Llm.with_prepared_responses([query]) do
+            described_class.perform_search(search_query: long_query, current_user: admin)
           end
 
         expect(results[:rows].length).to eq(1)

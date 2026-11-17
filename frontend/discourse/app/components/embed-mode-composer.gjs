@@ -18,7 +18,10 @@ export default class EmbedModeComposer extends Component {
   @service site;
   @service store;
 
+  /** @type {import("discourse/models/post").default | null} */
   @tracked replyingToPost = null;
+
+  /** @type {import("discourse/models/post").default | null} */
   @tracked editingPost = null;
   @tracked isSubmitting = false;
   @tracked footerVisible = true;
@@ -160,11 +163,11 @@ export default class EmbedModeComposer extends Component {
   }
 
   @action
-  async handleSubmit({ raw }) {
+  async handleSubmit({ raw, typingTime }) {
     if (this.editingPost) {
       return this.#submitEdit(raw);
     }
-    return this.#submitReply(raw);
+    return this.#submitReply({ raw, typingTime });
   }
 
   async #submitEdit(raw) {
@@ -197,7 +200,7 @@ export default class EmbedModeComposer extends Component {
     }
   }
 
-  async #submitReply(raw) {
+  async #submitReply({ raw, typingTime }) {
     const topic = this.args.topic;
     const postStream = topic.postStream;
     const user = this.currentUser;
@@ -206,6 +209,7 @@ export default class EmbedModeComposer extends Component {
 
     const createdPost = this.store.createRecord("post", {
       raw,
+      typing_duration_msecs: typingTime,
       topic_id: topic.id,
       reply_to_post_number: this.replyingToPost?.post_number,
       nested_post: true,
@@ -269,9 +273,9 @@ export default class EmbedModeComposer extends Component {
     {{#if this.showSigninCta}}
       <div class="embed-mode-composer embed-mode-composer--signin-cta">
         <DButton
+          class="btn-primary embed-mode-composer__signin-cta"
           @action={{this.handleSigninCtaClick}}
           @label="embed_mode.signin_flow.sign_in_to_reply"
-          class="btn-primary embed-mode-composer__signin-cta"
         />
       </div>
     {{else if this.show}}
@@ -279,10 +283,10 @@ export default class EmbedModeComposer extends Component {
         {{#if this.showFloatingTimelineButton}}
           <div class="embed-floating-buttons">
             <DButton
+              class="btn-default embed-floating-timeline-button"
               @action={{this.handleTimelineToggle}}
               @icon="bars-staggered"
               @title="topic.progress.title"
-              class="btn-default embed-floating-timeline-button"
             />
           </div>
         {{/if}}
@@ -293,9 +297,9 @@ export default class EmbedModeComposer extends Component {
               {{i18n "embed_mode.editing_post"}}
             </span>
             <DButton
-              @icon="xmark"
-              @action={{this.cancelEditing}}
               class="btn-transparent embed-mode-composer__editing-dismiss"
+              @action={{this.cancelEditing}}
+              @icon="xmark"
             />
           </div>
         {{else if this.replyingToPost}}
@@ -308,24 +312,24 @@ export default class EmbedModeComposer extends Component {
               }}
             </span>
             <DButton
-              @icon="xmark"
-              @action={{this.clearReplyingTo}}
               class="btn-transparent embed-mode-composer__replying-to-dismiss"
+              @action={{this.clearReplyingTo}}
+              @icon="xmark"
             />
           </div>
         {{/if}}
         <DockedComposer
-          @topicId={{@topic.id}}
-          @categoryId={{@topic.category.id}}
-          @onSubmit={{this.handleSubmit}}
-          @onRegisterApi={{this.registerComposerApi}}
-          @isSubmitting={{this.isSubmitting}}
-          @resizable={{true}}
-          @placeholder={{this.placeholder}}
-          @draftKey={{this.draftKey}}
-          @submitOnEnter={{false}}
           @bodyClassName="embed-docked-composer-open"
+          @categoryId={{@topic.category.id}}
           @class="embed-mode-composer__composer"
+          @draftKey={{this.draftKey}}
+          @isSubmitting={{this.isSubmitting}}
+          @onRegisterApi={{this.registerComposerApi}}
+          @onSubmit={{this.handleSubmit}}
+          @placeholder={{this.placeholder}}
+          @resizable={{true}}
+          @submitOnEnter={{false}}
+          @topicId={{@topic.id}}
         />
       </div>
     {{/if}}

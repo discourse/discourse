@@ -2,7 +2,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 // Decorative, inert loading skeleton — content is placeholder bars, not text.
 export default <template>
-  <div class="site-skeleton" aria-hidden="true">
+  <div aria-hidden="true" class="site-skeleton">
     <div class="site-skeleton__header">
       <div class="site-skeleton__brand">
         <span class="site-skeleton__menu">
@@ -133,7 +133,7 @@ export default <template>
             <span>
               <span class="site-skeleton__bar --sm"></span>
             </span>
-            <button type="button" tabindex="-1"></button>
+            <button tabindex="-1" type="button"></button>
           </div>
 
           <div class="site-skeleton__topic-list">

@@ -97,20 +97,20 @@ export default class DTableHeaderToggle extends Component {
   <template>
     <div
       ...attributes
-      class="directory-table__column-header sortable"
       aria-sort={{this.ariaSort}}
+      class="directory-table__column-header sortable"
       role="columnheader"
       {{on "click" this.click}}
       {{on "keypress" this.keyPress}}
     >
       {{! eslint-disable-next-line ember/template-no-nested-interactive }}
       <div
+        aria-label={{this.ariaLabel}}
+        aria-pressed={{this.pressedState}}
         class="header-contents"
         id={{this.id}}
         role="button"
         tabindex="0"
-        aria-label={{this.ariaLabel}}
-        aria-pressed={{this.pressedState}}
       >
         {{yield}}
         <span class="text">

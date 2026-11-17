@@ -32,10 +32,10 @@ export default class ChatNavbarBackButton extends Component {
     {{#if this.showBackButton}}
       {{#if @routeModels}}
         <LinkTo
-          @route={{@route}}
-          @models={{@routeModels}}
           class="c-navbar__back-button no-text btn-transparent btn"
           title={{this.title}}
+          @models={{@routeModels}}
+          @route={{@route}}
         >
           {{#if (has-block)}}
             {{yield}}
@@ -44,19 +44,19 @@ export default class ChatNavbarBackButton extends Component {
           {{/if}}
           {{#if this.site.mobileView}}
             <ChatHeaderIconUnreadIndicator
-              @urgentCount={{@urgentCount}}
-              @unreadCount={{@unreadCount}}
-              @mentionCount={{@mentionCount}}
               @hasUnreadThreads={{@hasUnreadThreads}}
               @indicatorPreference={{@indicatorPreference}}
+              @mentionCount={{@mentionCount}}
+              @unreadCount={{@unreadCount}}
+              @urgentCount={{@urgentCount}}
             />
           {{/if}}
         </LinkTo>
       {{else}}
         <LinkTo
-          @route={{this.targetRoute}}
           class="c-navbar__back-button no-text btn-transparent btn"
           title={{this.title}}
+          @route={{this.targetRoute}}
         >
           {{#if (has-block)}}
             {{yield}}
@@ -65,11 +65,11 @@ export default class ChatNavbarBackButton extends Component {
           {{/if}}
           {{#if this.site.mobileView}}
             <ChatHeaderIconUnreadIndicator
-              @urgentCount={{@urgentCount}}
-              @unreadCount={{@unreadCount}}
-              @mentionCount={{@mentionCount}}
               @hasUnreadThreads={{@hasUnreadThreads}}
               @indicatorPreference={{@indicatorPreference}}
+              @mentionCount={{@mentionCount}}
+              @unreadCount={{@unreadCount}}
+              @urgentCount={{@urgentCount}}
             />
           {{/if}}
         </LinkTo>

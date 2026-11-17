@@ -26,19 +26,19 @@ const UserNote = <template>
           <span class="post-date">{{dAgeWithTooltip @note.created_at}}</span>
           {{#if @note.reviewable_id}}
             <LinkTo
-              @route="review.show"
-              @model={{@note.reviewable_id}}
               class="btn btn-small btn-default show-reviewable"
+              @model={{@note.reviewable_id}}
+              @route="review.show"
             >
               {{i18n "user_notes.show_flag"}}
             </LinkTo>
           {{/if}}
           {{#if @note.can_delete}}
             <DButton
+              class="btn-small btn-danger"
               @action={{fn @removeNote @note}}
               @icon="far-trash-can"
               @title="user_notes.remove"
-              class="btn-small btn-danger"
             />
           {{/if}}
         </div>
@@ -48,8 +48,8 @@ const UserNote = <template>
         </div>
         {{#if @note.post_id}}
           <a
-            href={{@note.post_url}}
             class="btn btn-default btn-small show-post"
+            href={{@note.post_url}}
           >
             {{i18n "user_notes.show_post"}}
           </a>

@@ -81,12 +81,12 @@ module("Integration | Component | AdminReport", function (hooks) {
   });
 
   test("options", async function (assert) {
-    this.set("options", {
+    this.options = {
       table: {
         perPage: 4,
         total: false,
       },
-    });
+    };
 
     await render(
       <template>
@@ -249,8 +249,8 @@ module("Integration | Component | AdminReport", function (hooks) {
         <template>
           <AdminReport
             @dataSourceName="signups"
-            @showFilteringUI={{true}}
             @onRefresh={{refreshCallback}}
+            @showFilteringUI={{true}}
           />
         </template>
       );
@@ -279,8 +279,8 @@ module("Integration | Component | AdminReport", function (hooks) {
         <template>
           <AdminReport
             @dataSourceName="signups"
-            @showFilteringUI={{true}}
             @onRefresh={{refreshCallback}}
+            @showFilteringUI={{true}}
           />
         </template>
       );
@@ -309,8 +309,8 @@ module("Integration | Component | AdminReport", function (hooks) {
         <template>
           <AdminReport
             @dataSourceName="signups"
-            @showFilteringUI={{true}}
             @onRefresh={{refreshCallback}}
+            @showFilteringUI={{true}}
           />
         </template>
       );
@@ -340,8 +340,8 @@ module("Integration | Component | AdminReport", function (hooks) {
         <template>
           <AdminReport
             @dataSourceName="signups"
-            @showFilteringUI={{true}}
             @onRefresh={{refreshCallback}}
+            @showFilteringUI={{true}}
           />
         </template>
       );

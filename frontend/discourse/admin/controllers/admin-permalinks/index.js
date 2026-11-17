@@ -15,6 +15,8 @@ export default class AdminPermalinksIndexController extends Controller {
   @service toasts;
 
   @tracked loading = false;
+
+  /** @type {string | null} */
   @tracked filter = null;
   @autoTrackedArray model;
 

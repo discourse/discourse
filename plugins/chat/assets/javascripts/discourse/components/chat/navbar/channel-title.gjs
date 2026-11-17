@@ -23,6 +23,16 @@ export default class ChatNavbarChannelTitle extends Component {
     );
   }
 
+  get infoRoute() {
+    const channel = this.args.channel;
+
+    if (channel.isOpen && channel.currentUserMembership.following) {
+      return "chat.channel.info.preferences";
+    }
+
+    return "chat.channel.info.settings";
+  }
+
   get isStarred() {
     return this.args.channel?.currentUserMembership?.starred;
   }
@@ -73,9 +83,9 @@ export default class ChatNavbarChannelTitle extends Component {
     {{#if @channel}}
       {{#if this.shouldLinkToSettings}}
         <LinkTo
-          @route="chat.channel.info.settings"
-          @models={{@channel.routeModels}}
           class="c-navbar__channel-title"
+          @models={{@channel.routeModels}}
+          @route={{this.infoRoute}}
         >
           <ChannelTitle @channel={{@channel}} />
         </LinkTo>
@@ -85,17 +95,17 @@ export default class ChatNavbarChannelTitle extends Component {
         </div>
       {{/if}}
       {{#if this.showStarButton}}
-        <DTooltip @placement="bottom" @identifier="star-channel">
+        <DTooltip @identifier="star-channel" @placement="bottom">
           <:trigger>
             <DButton
-              @action={{this.toggleStarred}}
-              @icon={{this.starIcon}}
-              @disabled={{this.isTogglingStarred}}
               class={{dConcatClass
                 "btn-transparent"
                 "c-navbar__star-channel-button"
                 (if this.isStarred "--starred")
               }}
+              @action={{this.toggleStarred}}
+              @disabled={{this.isTogglingStarred}}
+              @icon={{this.starIcon}}
             />
           </:trigger>
           <:content>

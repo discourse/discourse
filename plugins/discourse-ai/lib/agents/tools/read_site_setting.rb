@@ -31,7 +31,12 @@ module DiscourseAi
             return validation_result
           end
 
-          { setting_name: setting_name, value: SiteSetting.get(setting_sym) }
+          {
+            setting_name: setting_name,
+            value: SiteSetting.get(setting_sym),
+            url:
+              "#{Discourse.base_url}/admin/site_settings/category/all_results?#{Rack::Utils.build_query(filter: setting_name)}",
+          }
         end
 
         def validation_error

@@ -402,6 +402,31 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Validator, :rails do
       expect(errors).to include(match(/Table 'users' is both configured and ignored/))
     end
 
+    it "does not flag configured tables as conflicting with all_other_tables" do
+      schema =
+        build_schema(
+          tables: {
+            users: proc { include_all },
+          },
+          ignored: proc { all_other_tables "only mirrors a few tables" },
+        )
+
+      stub_database(
+        connection,
+        db_tables: %i[users posts],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+            },
+          },
+        },
+      )
+
+      errors = described_class.new(schema).validate
+      expect(errors).to be_empty
+    end
+
     it "detects source table belonging to an ignored plugin" do
       manifest = instance_double(Migrations::Tooling::Schema::DSL::PluginManifest)
       allow(manifest).to receive(:available?).and_return(true)

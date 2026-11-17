@@ -1,6 +1,6 @@
 ---
 name: discourse-writing-typescript
-description: Write TypeScript for Discourse core, plugins, and themes. Use when authoring new .ts/.gts files (components, modifiers, helpers, services, utils), typing an existing public API, or converting existing .js/.gjs files to .ts/.gts. Covers the component/modifier/plain-class Signature patterns, TSDoc for Signatures, typing untyped dependencies, compile-time type tests, the strict-grade bar under the loose global tsconfig, and the faithful-port and rename pitfalls that the type-checker does NOT catch.
+description: Write TypeScript for Discourse core, plugins, and themes. Use when authoring new .ts/.gts files (components, modifiers, helpers, services, utils), typing an existing public API, or converting existing .js/.gjs files to .ts/.gts. Covers the component/modifier/plain-class Signature patterns, TSDoc for Signatures, typing untyped dependencies, compile-time type tests, the `strict` bar enforced by `pnpm lint:types`, and the faithful-port and rename pitfalls that the type-checker does NOT catch.
 ---
 
 # Writing TypeScript for Discourse
@@ -13,13 +13,17 @@ and
 [`frontend/discourse/float-kit/components/d-tooltip.gts`](../../frontend/discourse/float-kit/components/d-tooltip.gts)
 (typed `@service declare` injection, `Element`, several documented `Blocks`, an option bag
 derived from a shared type); the developer guide is
-[`27-types.md`](../../docs/developer-guides/docs/03-code-internals/27-types.md). **The
-global tsconfig is deliberately NOT strict** (it extends the repo-root `tsconfig-base.json`,
-which sets no `strict` and no `checkJs`); tightening it is a separate, repo-wide effort.
+[`27-types.md`](../../docs/developer-guides/docs/03-code-internals/27-types.md).
+
+**`pnpm lint:types` runs under `strict`.** Core's repo-root `tsconfig-base.json` and the
+`tsconfig-plugin.json` that plugins and themes extend both set `strict: true`. `checkJs` is
+off, so `.js`/`.gjs` files are not checked, but the `@discourse/types` declarations that
+`lint:types` emits for them are inferred under `strict` (see golden rule 3).
 
 **Converting an existing `.js`/`.gjs` file?** Read
 [references/js-to-ts-conversion.md](references/js-to-ts-conversion.md) first (the faithful-port
-rules, rename mechanics, scope triage, and the runtime pitfall), and apply
+rules, the tests to add before renaming, rename mechanics, scope triage, and the runtime
+pitfall), and apply
 [references/conversion-completeness.md](references/conversion-completeness.md) before
 claiming any file or subsystem converted.
 
@@ -28,12 +32,17 @@ claiming any file or subsystem converted.
 1. **A conversion is a types-only port.** Types are erased; runtime behavior is not. Never
    change runtime code to satisfy a type. The full rule and the catalogue of changes that
    pass `lint:types` but alter behavior are in the conversion reference.
-2. **Write strict-grade TS anyway.** The loose global tsconfig is not a licence for
-   sloppiness. Author as if `strict` were on: **no `any`** (implicit or explicit), **no
-   `@ts-ignore`/`@ts-nocheck`/`@ts-expect-error`**, no `{{! @glint-nocheck }}`. Proper
-   `null`/`undefined` handling, real generics, precise `Signature`s. A documented `as` cast
-   at a genuine DOM or loose-runtime boundary is fine; blanket suppression is not.
-3. **Never tighten the global tsconfig** in a feature PR; the blast radius is the whole repo.
+2. **Write strict TS.** `pnpm lint:types` fails on what `strict` rejects, such as implicit
+   `any`, unhandled `null`/`undefined` and unsound callback parameters. Beyond what it
+   checks: **no explicit `any`**, **no `@ts-ignore`/`@ts-nocheck`/`@ts-expect-error`**, no
+   `{{! @glint-nocheck }}`. Real narrowing, real generics, precise `Signature`s. A
+   documented `as` cast at a genuine DOM or loose-runtime boundary is fine; blanket
+   suppression is not.
+3. **Type what JavaScript publishes.** Declarations for `.js`/`.gjs` files are inferred
+   under `strict`: a field initialized to `null` is published as type `null`, an empty array
+   literal often as `never[]`, and a JSDoc `{Object}` as `Object`. These reject the values
+   the code really uses, so give such a value in a public class or function a real JSDoc
+   type, e.g. `/** @type {number | null} */`.
 4. **The type-checker is necessary but NOT sufficient.** `pnpm lint:types` green does not
    mean the code runs. Always also run the tests (see "Verification").
 5. **A `Signature` is a contract for ALL consumers, across time, not just the type-checked
@@ -162,8 +171,7 @@ plugin-setting extension mechanism.
 
 **A plain function IS a valid Glint template helper.** You do not need a class-based
 `Helper` to get a precise, argument-dependent return. A generic variadic function with a
-`const` type param resolves correctly both as a direct call and in `{{...}}` invocation (see
-`frontend/discourse/truth-helpers/helpers/or.ts`):
+`const` type param resolves correctly both as a direct call and in `{{...}}` invocation:
 
 ```ts
 export default function or<const T extends MaybeTruthy[]>(...args: T): FirstTruthy<T>;
@@ -252,9 +260,8 @@ in type ...`, or a helper returning a loose or wrong type). Two fixes:
   these stopgaps are greppable and get removed once the underlying component is typed.
 
 - **Untyped helper:** either wrap the value in a typed getter at the call site, or, better,
-  type the helper itself (and add a type test). `truth-helpers` is fully typed, so `or`/`and`
-  already return the precise value union; a still-untyped helper can follow the same
-  plain-function-with-overload pattern. Tag any interim workaround `TODO(typescript-pending)`.
+  type the helper itself (and add a type test) with the plain-function-with-overload pattern
+  above. Tag any interim workaround `TODO(typescript-pending)`.
 
 - **Sibling types:** `HelperLike<Sig>` / `ModifierLike<Sig>` are the same idea for untyped
   helpers and modifiers; **`WithBoundArgs<typeof Comp, "argName">`** types a *curried*
@@ -264,6 +271,41 @@ in type ...`, or a helper returning a loose or wrong type). Two fixes:
   `{{component}}`. Bind several with a union: `WithBoundArgs<typeof Comp, "a" | "b">`. In an
   `expect-type` test, a curried result asserts as `WithBoundArgs<typeof Comp, "arg">`, **not**
   the raw component type.
+
+## Model types follow the server
+
+Models in `frontend/discourse/app/models` and `frontend/discourse/admin/models` declare the
+fields the server sends in an exported `<Model>Fields` interface. The class merges it with
+`export default interface <Model> extends <Model>Fields {}` (with the
+`no-empty-object-type` and `no-unsafe-declaration-merging` lint rules disabled on the merge
+lines). Their type tests live in `frontend/discourse/type-tests/models/`.
+
+Type each field from what the server sends, not from how the client happens to use it:
+
+- **Trace the serializer** and everything it inherits. A field behind an `include_<name>?`
+  condition, or sent by only some of the endpoints that build the model, is optional (`?`).
+- **Add `| null`** when the serializer can return `nil`: a nullable column, a `&.` chain, a
+  `nil` default.
+- **Check the shape against a real response** when you can (a request spec, or the dev
+  server), and say in the PR which one you used.
+- **Keep plugin fields out of core.** Plugins augment the `Fields` interface themselves
+  (see `27-types.md`).
+- **Leave getters out.** A name backed by a getter or `@computed` is declared by the class,
+  not by the `Fields` interface.
+- **Add missing fields with `declare`.** A real class field changes runtime behavior: it
+  shadows forwarders and resets values that `create` assigned.
+
+**When a change alters what the server sends, update the model in the same change.** That
+covers a new, renamed or removed attribute, a changed `include_*?` condition, a value that
+can now be `nil`, and a new or removed endpoint that builds the model.
+
+- Update the `Fields` interface and the field's pin in the model's type test.
+- For a removed attribute or endpoint, also delete its loader method and pins. When the
+  removal is the point, pin it with `not.toHaveProperty`.
+- Response shapes a model method reads inline (the result of an `ajax` call) follow the
+  same rule.
+- Run `pnpm lint:types`. A TypeScript caller that stops compiling is the signal the change
+  was needed.
 
 ## Type tests (compile-time)
 
@@ -297,11 +339,6 @@ type), assert them at compile time with `expect-type` (a devDependency of
   `type-tests/ui-kit/d-drag-and-drop-adoption-test.gts` vs `...-adoption-errors-test.gts`).
   A short comment at the top of the positives file ("keep this file free of
   `@glint-expect-error`") stops someone reintroducing one.
-- **Non-strict gotchas** (type-level results diverge from the strict mental model): a
-  `Conditional<null>`/`<undefined>` often resolves to `true` not `false`; a `const`-inferred
-  object or tuple return carries `readonly`, which `toEqualTypeOf` treats as a mismatch; and
-  `string | undefined` collapses to `string`. Assert the **robust, real** cases; avoid
-  `null`/`undefined`-literal and object-return edge assertions that only hold under strict.
 
 ## Glint directives: avoid in production code
 
@@ -332,6 +369,11 @@ on template imports). Reword to plain prose. JS-body `//` and `/* */` are fine.
   `(element: El, args: PositionalTuple)`; the extra positionals arrive as **one tuple in the
   2nd param**. So `{{didInsert this.announce count}}` is `announce(el: HTMLElement, [count]:
   [number])` (destructure the tuple), not `announce(el, count)`.
+- **Defaulted destructuring of an optional tuple element:** in
+  `[fn, { a, b } = {}]: XSignature["Args"]["Positional"]`, `lint:types` can report `a` and
+  `b` as implicitly `any` (TS7031). Type the default with an erased assertion instead of
+  changing the code: `{ a, b } = {} as XOptions`. Seen on the TypeScript 7 build that
+  `lint:types` runs; not checked on older compilers.
 - **DOM element types:** `querySelector` returns `Element` (no `.focus()`/`.tabIndex`); use
   `el.querySelector<HTMLElement>(sel)`. Type element params as `HTMLElement` /
   `HTMLInputElement` where you call element methods, not `Element`.
@@ -355,21 +397,21 @@ on template imports). Reword to plain prose. JS-body `//` and `/* */` are fine.
   {Function}`), not a reason to loosen the primitive. Precision rarely forces a consumer
   chase: a param typed `(x: T) => void` still accepts a consumer's `() => void`.
 
-## Lint hazard: member ordering can split comments
+## Lint hazard: member ordering moves arrow-function fields
 
-`sort-class-members` (via `bin/lint`) reorders class members and can **split a comment that
-was attached to a member it moves**: an arrow-function field (`foo = () => ...`) sorts into
-the *field* bucket, landing between another field and its leading comment. When **authoring
-new** code, prefer `@action` methods over arrow-function fields for template-referenced
-callbacks (auto-bound AND sorted into the methods bucket). **Re-read the file after
-`bin/lint --fix`** to confirm no comment got orphaned or split.
+`discourse/sort-class-members` (via `bin/lint`) reorders class members. Its autofix moves a
+member together with its comments and decorators, but an arrow-function field
+(`foo = () => ...`) sorts into the *field* bucket, far from the methods it belongs with. When
+**authoring new** code, prefer `@action` methods over arrow-function fields for
+template-referenced callbacks (auto-bound AND sorted into the methods bucket). **Re-read the
+file after `bin/lint --fix`** to confirm the placement still reads well.
 
 ## Verification (all three, in order)
 
 1. `bin/lint --fix <files>`: clean.
-2. `pnpm lint:types` from the **repo root** (composite `ember-tsc -b`): **0 errors**. This
-   is the type gate; it also surfaces consumer fallout when you tighten a previously loose
-   type (e.g. an untyped helper's return).
+2. `pnpm lint:types` from the **repo root** (composite `tsc -b --runExternalCode`): **0 errors**. It
+   also surfaces consumer fallout when you tighten a previously loose type (e.g. an untyped
+   helper's return).
 3. `bin/qunit` for the touched files' tests: behavior plus the runtime module-resolution
    check in the conversion reference.
 

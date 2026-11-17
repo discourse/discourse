@@ -5,9 +5,9 @@ import { i18n } from "discourse-i18n";
 
 const PostEnqueued = <template>
   <DModal
+    class="post-enqueued-modal"
     @closeModal={{@closeModal}}
     @title={{i18n "review.approval.title"}}
-    class="post-enqueued-modal"
   >
     <:body>
       <p>{{i18n "review.approval.description"}}</p>
@@ -19,8 +19,8 @@ const PostEnqueued = <template>
     </:body>
     <:footer>
       <DButton
-        @action={{@closeModal}}
         class="btn-primary"
+        @action={{@closeModal}}
         @label="review.approval.ok"
       />
     </:footer>

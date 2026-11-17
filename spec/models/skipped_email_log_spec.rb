@@ -14,7 +14,7 @@ RSpec.describe SkippedEmailLog, type: :model do
 
     describe "#reason_type" do
       describe "when reason_type is not valid" do
-        it "should not be valid" do
+        it "is invalid" do
           skipped_email_log.reason_type = 999_999
 
           expect(skipped_email_log.valid?).to eq(false)
@@ -26,7 +26,7 @@ RSpec.describe SkippedEmailLog, type: :model do
     describe "#custom_reason" do
       describe "when log is a custom reason type" do
         describe "when custom reason is blank" do
-          it "should not be valid" do
+          it "is invalid" do
             expect(custom_skipped_email_log.valid?).to eq(false)
 
             expect(custom_skipped_email_log.errors.messages).to include(:custom_reason)
@@ -34,7 +34,7 @@ RSpec.describe SkippedEmailLog, type: :model do
         end
 
         describe "when custom reason is not blank" do
-          it "should be valid" do
+          it "is valid" do
             custom_skipped_email_log.custom_reason = "test"
 
             expect(custom_skipped_email_log.valid?).to eq(true)
@@ -44,13 +44,13 @@ RSpec.describe SkippedEmailLog, type: :model do
 
       describe "when log is not a custom reason type" do
         describe "when custom reason is blank" do
-          it "should be valid" do
+          it "is valid" do
             expect(skipped_email_log.valid?).to eq(true)
           end
         end
 
         describe "when custom reason is not blank" do
-          it "should not be valid" do
+          it "is invalid" do
             skipped_email_log.custom_reason = "test"
 
             expect(skipped_email_log.valid?).to eq(false)
@@ -63,7 +63,7 @@ RSpec.describe SkippedEmailLog, type: :model do
 
   describe ".reason_types" do
     describe "verify enum sequence" do
-      it "should return the right sequence" do
+      it "returns the next sequence number" do
         expect(SkippedEmailLog.reason_types[:custom]).to eq(1)
         expect(SkippedEmailLog.reason_types[:user_email_already_read]).to eq(15)
       end
@@ -72,14 +72,14 @@ RSpec.describe SkippedEmailLog, type: :model do
 
   describe "#reason" do
     describe "for a custom log" do
-      it "should return the right output" do
+      it "returns the serialized log entries" do
         custom_skipped_email_log.custom_reason = "test"
         expect(custom_skipped_email_log.reason).to eq("test")
       end
     end
 
     describe "for a non custom log" do
-      it "should return the right output" do
+      it "returns an empty collection when no entries exist" do
         expect(skipped_email_log.reason).to eq(
           "
           #{I18n.t("skipped_email_log.exceeded_emails_limit")}

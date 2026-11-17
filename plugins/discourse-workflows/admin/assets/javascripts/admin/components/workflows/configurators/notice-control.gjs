@@ -3,7 +3,7 @@ import { trustHTML } from "@ember/template";
 import {
   fieldShowDescription,
   propertyDescription,
-} from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/property-engine.js";
 
 export default class NoticeControl extends Component {
   get description() {

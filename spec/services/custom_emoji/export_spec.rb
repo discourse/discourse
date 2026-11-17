@@ -55,7 +55,8 @@ RSpec.describe CustomEmoji::Export do
 
       it "writes a manifest row per emoji with a blank group for the default group" do
         with_archive do |zip|
-          manifest = CSV.parse(zip.read("emojis.csv"), headers: true)
+          csv = zip.read("emojis.csv").force_encoding(Encoding::UTF_8)
+          manifest = CSV.parse(csv.delete_prefix(Encodings::BOM), headers: true)
 
           expect(manifest.map { |row| row.to_h.slice("name", "group", "filename") }).to eq(
             [
@@ -63,6 +64,21 @@ RSpec.describe CustomEmoji::Export do
               { "name" => "emoji-b", "group" => "fun", "filename" => "emoji-b.png" },
             ],
           )
+        end
+      end
+
+      context "when an emoji name contains slashes" do
+        before do
+          Fabricate(:custom_emoji, name: "a/b", upload: png_upload)
+          Fabricate(:custom_emoji, name: "b", upload: png_upload)
+        end
+
+        let(:names) { %w[a/b b] }
+
+        it "uses a distinct image file name per emoji" do
+          with_archive do |zip|
+            expect(zip.entries.map(&:name)).to contain_exactly("emojis.csv", "a%2Fb.png", "b.png")
+          end
         end
       end
 

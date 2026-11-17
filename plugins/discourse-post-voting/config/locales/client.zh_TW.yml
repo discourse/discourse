@@ -5,22 +5,49 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_post_voting: "Discourse Post Voting"
+  post_voting:
+    reviewables:
+      comment_already_handled: "感謝，但我們已審查此留言，並判定不需要再次檢舉。"
   js:
+    discourse_post_voting:
+      title: "貼文投票"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
         question_answer_user_commented: "新評論"
       popup:
         question_answer_user_commented: '%{username} 在「%{topic}」- %{site_title} 中評論'
+    category:
+      post_voting_settings_heading: 貼文投票
+      create_as_post_voting_default: 此分類中的新主題預設為貼文投票主題。
+      only_post_voting_in_this_category: 此分類中的新主題只能是貼文投票主題。
     composer:
+      create_post_voting:
+        label: "建立貼文投票主題"
       composer_actions:
+        create_as_post_voting:
+          label: "切換貼文投票"
+          desc: "將以可投票貼文建立主題"
         remove_as_post_voting:
+          label: "移除貼文投票"
           desc: "主題將以常規格式建立"
     vote:
       already_voted: "每個問題只能投票一次。"
       user_over_limit: "您不能投超過您的信任等級的投票數。"
       one_vote_per_post: "您只能替每個貼文投票一次。"
+      button:
+        upvote: "讚成票"
+        remove_upvote: "移除讚成票"
+        downvote: "反對票"
+        remove_downvote: "移除反對票"
       toggle_voters: "顯示投票人"
+      upvotes: "讚成票數"
+      downvotes: "反對票數"
     last_answer_lowercase: 最後一個答案
     answer_lowercase:
       other: 回答
@@ -38,6 +65,10 @@ zh_TW:
           edit: "編輯"
           cancel: "取消"
           add: "新增一個評論"
+          actions:
+            edit: "編輯留言"
+            delete: "刪除留言"
+            flag: "檢舉留言"
           show:
             other: 顯示 %{count} 更多評論
           delete:
@@ -45,17 +76,41 @@ zh_TW:
           user:
             deleted: "（使用者已被刪除）"
           reviewables:
+            comment_already_handled: "感謝，但我們已審查此留言，並判定不需要再次檢舉。"
             actions:
               agree:
                 title: "同意..."
+              agree_and_keep_comment:
+                title: "保留留言"
+                description: "同意檢舉並保持留言不變。"
+              agree_and_keep_deleted:
+                title: "保持留言為已刪除"
+                description: "同意檢舉並維持留言已刪除。"
               agree_and_suspend:
                 title: "將使用者停權"
                 description: "同意檢舉並停權使用者"
               agree_and_silence:
                 title: "將使用者禁言"
                 description: "同意檢舉並禁止使用者發文"
+              agree_and_restore:
+                title: "還原留言"
+                description: "還原留言，讓使用者可以看見。"
+              agree_and_delete:
+                title: "刪除留言"
+                description: "刪除留言，讓使用者無法看見。"
+              delete_and_agree:
+                title: "忽略檢舉並刪除留言"
+                description: "從佇列中移除檢舉以忽略，並刪除留言。"
+              disagree_and_restore:
+                title: "不同意並還原留言"
+                description: "還原留言，讓所有使用者可以看見。"
               disagree:
                 title: "不同意"
+              ignore:
+                title: "不採取動作"
+                description: "從佇列中移除檢舉以忽略，但不採取任何動作。"
+            transcript:
+              view: "查看先前的留言記錄"
       topic:
         answer:
           label: "回答"
@@ -65,3 +120,11 @@ zh_TW:
         activity: "活動"
         answer_count:
           other: "%{count} 個回答"
+        voters_count_diff:
+          other: "以及其他 %{count} 位使用者..."
+    review:
+      transcript:
+        view: "查看先前的訊息記錄"
+      types:
+        reviewable_post_voting_comment:
+          title: "已檢舉的貼文投票留言"

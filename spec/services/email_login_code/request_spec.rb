@@ -6,6 +6,12 @@ RSpec.describe EmailLoginCode::Request do
     it { is_expected.to validate_length_of(:email).is_at_most(513) }
     it { is_expected.to allow_values("foo@example.com", "Foo.Bar@example.com").for(:email) }
     it { is_expected.not_to allow_values("not-an-email", "foo@").for(:email) }
+
+    it "defaults signup to false and coerces string booleans" do
+      expect(described_class.new(email: "foo@example.com").signup).to be(false)
+      expect(described_class.new(email: "foo@example.com", signup: "true").signup).to be(true)
+      expect(described_class.new(email: "foo@example.com", signup: "false").signup).to be(false)
+    end
   end
 
   describe ".call" do
@@ -21,6 +27,44 @@ RSpec.describe EmailLoginCode::Request do
       let(:email) { "not-an-email" }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when the signup IP has reached the account limit" do
+      let(:email) { "newuser@example.com" }
+      let(:ip_address) { "192.0.2.1" }
+      let(:dependencies) { { ip_address: } }
+      let(:params) { { email:, signup: "true" } }
+
+      before do
+        Fabricate(:user, ip_address:, trust_level: TrustLevel[0])
+        SiteSetting.max_new_accounts_per_registration_ip = 1
+      end
+
+      it { is_expected.to fail_a_policy(:can_register_from_ip) }
+
+      it "does not generate or enqueue a login code" do
+        expect_not_enqueued_with(job: :send_email_login_code) { result }
+
+        expect(EmailLoginCode.for_email(email)).to be_empty
+      end
+    end
+
+    context "when a login IP has reached the account limit" do
+      let(:ip_address) { "192.0.2.1" }
+      let(:dependencies) { { ip_address: } }
+      let(:params) { { email:, signup: "false" } }
+
+      before do
+        Fabricate(:user, ip_address:, trust_level: TrustLevel[0])
+        SiteSetting.max_new_accounts_per_registration_ip = 1
+      end
+
+      it "generates and enqueues a login code for an existing account" do
+        expect_enqueued_with(job: :send_email_login_code, args: { to_address: email }) { result }
+
+        expect(result).to run_successfully
+        expect(EmailLoginCode.for_email(email).count).to eq(1)
+      end
     end
 
     context "when the email belongs to an existing user" do

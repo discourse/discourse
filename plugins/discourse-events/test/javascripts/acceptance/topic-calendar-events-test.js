@@ -3,8 +3,8 @@ import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance, fakeTime } from "discourse/tests/helpers/qunit-helpers";
-import eventTopicFixture from "../helpers/event-topic-fixture";
-import getEventByText from "../helpers/get-event-by-text";
+import eventTopicFixture from "../helpers/event-topic-fixture.js";
+import getEventByText from "../helpers/get-event-by-text.js";
 
 function fixtureWithFullDay(fullDay) {
   const fixture = cloneJSON(eventTopicFixture);

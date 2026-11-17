@@ -16,10 +16,10 @@ module(
       await render(
         <template>
           <FormUpload
-            @id="test-upload"
             @attributes={{attributes}}
-            @validations={{validations}}
+            @id="test-upload"
             @onChange={{noop}}
+            @validations={{validations}}
           />
         </template>
       );
@@ -34,10 +34,10 @@ module(
       await render(
         <template>
           <FormUpload
-            @id="test-upload"
             @attributes={{attributes}}
-            @validations={{validations}}
+            @id="test-upload"
             @onChange={{noop}}
+            @validations={{validations}}
           />
         </template>
       );

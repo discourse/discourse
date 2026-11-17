@@ -24,7 +24,6 @@ import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { getLockState } from "discourse/lib/body-scroll-lock";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dElement from "discourse/ui-kit/helpers/d-element";
@@ -32,7 +31,7 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 const ModalWithMenu = <template>
   <DModal @closeModal={{@closeModal}} @inline={{true}}>
     <span class="outer-modal-content">Outer modal</span>
-    <DMenu @inline={{true}} @modalForMobile={{true}} @label="Permission">
+    <DMenu @inline={{true}} @label="Permission" @modalForMobile={{true}}>
       <:content as |menu|>
         <DButton class="close-menu" @action={{menu.close}}>Viewer</DButton>
       </:content>
@@ -82,7 +81,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("@icon", async function (assert) {
-    await render(<template><DMenu @inline={{true}} @icon="check" /></template>);
+    await render(<template><DMenu @icon="check" @inline={{true}} /></template>);
 
     assert.dom(".fk-d-menu__trigger .d-icon-check").exists();
   });
@@ -90,7 +89,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("@content", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @label="label" @content="content" />
+        <DMenu @content="content" @inline={{true}} @label="label" />
       </template>
     );
     await open();
@@ -104,10 +103,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
           @identifier="foo"
           @inline={{true}}
           @modalForMobile={{true}}
-          @content="content"
         />
       </template>
     );
@@ -123,7 +122,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
 
     await render(
       <template>
-        <DMenu @inline={{true}} @modalForMobile={{true}} @label="Permission">
+        <DMenu @inline={{true}} @label="Permission" @modalForMobile={{true}}>
           <:content as |menu|>
             <DButton class="close-menu" @action={{menu.close}}>Viewer</DButton>
           </:content>
@@ -235,9 +234,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
           @inline={{true}}
           @label="label"
-          @content="content"
           @onPositioned={{this.onPositioned}}
         />
       </template>
@@ -264,10 +263,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @inline={{true}}
-          @modalForMobile={{true}}
-          @label="label"
           @content="content"
+          @inline={{true}}
+          @label="label"
+          @modalForMobile={{true}}
           @onPositioned={{this.onPositioned}}
         />
       </template>
@@ -291,10 +290,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
           @identifier="foo"
           @inline={{true}}
           @modalForMobile={{true}}
-          @content="content"
         />
       </template>
     );
@@ -376,7 +375,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
 
     await render(
       <template>
-        <button type="button" class="menu-trigger">Open</button>
+        <button class="menu-trigger" type="button">Open</button>
         <DMenus />
       </template>
     );
@@ -402,11 +401,11 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
 
     await render(
       <template>
-        <button type="button" class="outside-button">Outside</button>
+        <button class="outside-button" type="button">Outside</button>
         <DMenu
-          @onRegisterApi={{this.onRegisterApi}}
           @inline={{true}}
           @label="Open"
+          @onRegisterApi={{this.onRegisterApi}}
         />
       </template>
     );
@@ -443,7 +442,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("@identifier", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @label="label" @identifier="tip" />
+        <DMenu @identifier="tip" @inline={{true}} @label="label" />
       </template>
     );
 
@@ -555,10 +554,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @inline={{true}}
-          @label="test"
           @component={{this.component}}
           @data={{hash message="content"}}
+          @inline={{true}}
+          @label="test"
         />
       </template>
     );
@@ -588,7 +587,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("@closeOnEscape", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @label="label" @closeOnEscape={{true}} />
+        <DMenu @closeOnEscape={{true}} @inline={{true}} @label="label" />
       </template>
     );
     await open();
@@ -598,7 +597,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
 
     await render(
       <template>
-        <DMenu @inline={{true}} @label="label" @closeOnEscape={{false}} />
+        <DMenu @closeOnEscape={{false}} @inline={{true}} @label="label" />
       </template>
     );
     await open();
@@ -611,9 +610,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <span class="test">test</span><DMenu
+          @closeOnClickOutside={{true}}
           @inline={{true}}
           @label="label"
-          @closeOnClickOutside={{true}}
         />
       </template>
     );
@@ -625,9 +624,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <span class="test">test</span><DMenu
+          @closeOnClickOutside={{false}}
           @inline={{true}}
           @label="label"
-          @closeOnClickOutside={{false}}
         />
       </template>
     );
@@ -663,7 +662,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       <template>
         <DMenu @inline={{true}}><:trigger>test</:trigger><:content
             as |args|
-          ><DButton @icon="xmark" @action={{args.close}} /></:content></DMenu>
+          ><DButton @action={{args.close}} @icon="xmark" /></:content></DMenu>
       </template>
     );
     await open();
@@ -700,11 +699,11 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("trigger disabled argument reflects the disabled state", async function (assert) {
-    this.disabled = false;
+    const disabled = tracked(false);
 
     await render(
       <template>
-        <DMenu @disabled={{this.disabled}} @inline={{true}}>
+        <DMenu @disabled={{disabled.value}} @inline={{true}}>
           <:trigger as |args|>
             <span class="disabled-flag">{{if args.disabled "off" "on"}}</span>
           </:trigger>
@@ -715,7 +714,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
 
     assert.dom(".disabled-flag").hasText("on", "disabled is false by default");
 
-    this.set("disabled", true);
+    disabled.value = true;
     await rerender();
     assert
       .dom(".disabled-flag")
@@ -728,7 +727,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("@autofocus", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @autofocus={{true}}>
+        <DMenu @autofocus={{true}} @inline={{true}}>
           <:content>
             <DButton class="my-button" />
           </:content>
@@ -744,9 +743,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <span class="test">test</span><DMenu
+          @autofocus={{true}}
           @inline={{true}}
           @label="label"
-          @autofocus={{true}}
         >
           <:content>
             <DButton class="my-button" />
@@ -782,9 +781,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DButton class="outside-button" /><DMenu
+          @autofocus={{true}}
           @inline={{true}}
           @label="label"
-          @autofocus={{true}}
         >
           <:content>
             <DButton class="my-button" />
@@ -808,7 +807,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("a menu can be closed by identifier", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @identifier="test">test</DMenu>
+        <DMenu @identifier="test" @inline={{true}}>test</DMenu>
       </template>
     );
     await open();
@@ -821,7 +820,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("get a menu by identifier", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @identifier="test">test</DMenu>
+        <DMenu @identifier="test" @inline={{true}}>test</DMenu>
       </template>
     );
     await open();
@@ -838,10 +837,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("opening a menu with the same identifier", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @identifier="foo" @class="first">1</DMenu><DMenu
-          @inline={{true}}
-          @identifier="foo"
+        <DMenu @class="first" @identifier="foo" @inline={{true}}>1</DMenu><DMenu
           @class="second"
+          @identifier="foo"
+          @inline={{true}}
         >2</DMenu>
       </template>
     );
@@ -861,13 +860,13 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @inline={{true}}
-          @groupIdentifier="foo"
           @class="first"
-        >1</DMenu><DMenu
-          @inline={{true}}
           @groupIdentifier="foo"
+          @inline={{true}}
+        >1</DMenu><DMenu
           @class="second"
+          @groupIdentifier="foo"
+          @inline={{true}}
         >2</DMenu>
       </template>
     );
@@ -886,9 +885,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("empty @identifier/@groupIdentifier", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @class="first">1</DMenu><DMenu
-          @inline={{true}}
+        <DMenu @class="first" @inline={{true}}>1</DMenu><DMenu
           @class="second"
+          @inline={{true}}
         >2</DMenu>
       </template>
     );
@@ -907,7 +906,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("@class", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @class="first">1</DMenu>
+        <DMenu @class="first" @inline={{true}}>1</DMenu>
       </template>
     );
 
@@ -933,7 +932,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   test("@contentClass", async function (assert) {
     await render(
       <template>
-        <DMenu @inline={{true}} @contentClass="first">1</DMenu>
+        <DMenu @contentClass="first" @inline={{true}}>1</DMenu>
       </template>
     );
 
@@ -951,11 +950,11 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @onRegisterApi={{this.onRegisterApi}}
-          @inline={{true}}
           @icon="xmark"
+          @inline={{true}}
+          @onRegisterApi={{this.onRegisterApi}}
         >
-          <DButton @icon="xmark" class="close" @action={{this.close}} />
+          <DButton class="close" @action={{this.close}} @icon="xmark" />
         </DMenu>
       </template>
     );
@@ -975,11 +974,11 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @onRegisterApi={{this.onRegisterApi}}
-          @inline={{true}}
           @icon="xmark"
+          @inline={{true}}
+          @onRegisterApi={{this.onRegisterApi}}
         >
-          <DButton @icon="xmark" class="close" @action={{this.close}} />
+          <DButton class="close" @action={{this.close}} @icon="xmark" />
         </DMenu>
       </template>
     );
@@ -1009,9 +1008,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       <template>
         <div {{didInsert this.didInsert}} {{willDestroy this.willDestroy}}>
           <DMenu
+            @identifier="d-menu-pointerdown-trap-test"
             @inline={{true}}
             @label="label"
-            @identifier="d-menu-pointerdown-trap-test"
           />
         </div>
       </template>
@@ -1048,15 +1047,15 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("@disabled blocks a custom trigger and updates reactively", async function (assert) {
-    this.disabled = true;
+    const disabled = tracked(true);
 
     await render(
       <template>
         <DMenu
-          @disabled={{this.disabled}}
+          @content="content"
+          @disabled={{disabled.value}}
           @inline={{true}}
           @triggerComponent={{dElement "div"}}
-          @content="content"
         />
       </template>
     );
@@ -1066,13 +1065,14 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       .dom(".fk-d-menu")
       .doesNotExist("a custom trigger cannot open while disabled");
 
-    this.set("disabled", false);
+    disabled.value = false;
+    await rerender();
     await click(".fk-d-menu__trigger");
     assert
       .dom(".fk-d-menu")
       .exists("clearing disabled after mount restores trigger opening");
 
-    this.set("disabled", true);
+    disabled.value = true;
     await settled();
     assert
       .dom(".fk-d-menu")
@@ -1088,10 +1088,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
           @disabled={{true}}
           @inline={{true}}
           @label="label"
-          @content="content"
         />
       </template>
     );
@@ -1110,16 +1110,16 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("disabled delayed-hover does not swallow the first click after re-enabling", async function (assert) {
-    this.disabled = true;
+    const disabled = tracked(true);
 
     await render(
       <template>
         <DMenu
-          @disabled={{this.disabled}}
+          @content="content"
+          @disabled={{disabled.value}}
           @inline={{true}}
           @triggerComponent={{dElement "div"}}
           @triggers={{array "delayed-hover" "click"}}
-          @content="content"
         />
       </template>
     );
@@ -1130,7 +1130,8 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       .dom(".fk-d-menu")
       .doesNotExist("disabled vetoes the delayed-hover open");
 
-    this.set("disabled", false);
+    disabled.value = false;
+    await rerender();
     await click(".fk-d-menu__trigger");
     assert
       .dom(".fk-d-menu")
@@ -1138,18 +1139,19 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("disabling during beforeTrigger vetoes the pending open", async function (assert) {
-    this.disabled = false;
-    this.beforeTrigger = () =>
-      new Promise((resolve) => (this.resolveBeforeTrigger = resolve));
+    const disabled = tracked(false);
+    let resolveBeforeTrigger;
+    const beforeTrigger = () =>
+      new Promise((resolve) => (resolveBeforeTrigger = resolve));
 
     await render(
       <template>
         <DMenu
-          @beforeTrigger={{this.beforeTrigger}}
-          @disabled={{this.disabled}}
+          @beforeTrigger={{beforeTrigger}}
+          @content="content"
+          @disabled={{disabled.value}}
           @inline={{true}}
           @triggerComponent={{dElement "div"}}
-          @content="content"
         />
       </template>
     );
@@ -1157,9 +1159,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     find(".fk-d-menu__trigger").dispatchEvent(
       new MouseEvent("click", { bubbles: true })
     );
-    this.set("disabled", true);
+    disabled.value = true;
     await rerender();
-    this.resolveBeforeTrigger();
+    resolveBeforeTrigger();
     await settled();
 
     assert
@@ -1170,15 +1172,15 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("disabling an open menu returns focus to a trigger that stays focusable", async function (assert) {
-    this.disabled = false;
+    const disabled = tracked(false);
 
     await render(
       <template>
         <DMenu
-          @disabled={{this.disabled}}
+          tabindex="0"
+          @disabled={{disabled.value}}
           @inline={{true}}
           @triggerComponent={{dElement "div"}}
-          tabindex="0"
         >
           <:content><input class="menu-input" /></:content>
         </DMenu>
@@ -1189,7 +1191,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await focus(".menu-input");
     assert.dom(".menu-input").isFocused("focus moved into the open menu");
 
-    this.set("disabled", true);
+    disabled.value = true;
     await settled();
 
     assert.dom(".fk-d-menu").doesNotExist("becoming disabled closed the menu");
@@ -1209,10 +1211,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
         {{! eslint-disable ember/template-no-invalid-interactive }}
         <div {{on "click" onAncestorClick}}>
           <DMenu
+            @content="content"
             @disabled={{true}}
             @inline={{true}}
             @triggerComponent={{dElement "div"}}
-            @content="content"
           />
         </div>
       </template>
@@ -1232,10 +1234,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @label="a long label"
-          @inline={{true}}
-          @matchTriggerWidth={{true}}
           style="width: 200px;"
+          @inline={{true}}
+          @label="a long label"
+          @matchTriggerWidth={{true}}
         >1</DMenu>
       </template>
     );
@@ -1247,14 +1249,51 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     });
   });
 
+  // Matching the trigger's width already decides the width, so the menu's default max width
+  // must not cap it: a trigger wider than the cap would otherwise get a narrower menu.
+  test("@matchTriggerWidth is not capped by the default max width", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          style="width: 500px;"
+          @inline={{true}}
+          @label="a long label"
+          @matchTriggerWidth={{true}}
+        >1</DMenu>
+      </template>
+    );
+
+    await open();
+
+    assert.dom(".fk-d-menu.-content").hasStyle({ width: "500px" });
+  });
+
+  test("@matchTriggerWidth is not capped by an explicit @maxWidth", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          style="width: 500px;"
+          @inline={{true}}
+          @label="a long label"
+          @matchTriggerWidth={{true}}
+          @maxWidth={{300}}
+        >1</DMenu>
+      </template>
+    );
+
+    await open();
+
+    assert.dom(".fk-d-menu.-content").hasStyle({ width: "500px" });
+  });
+
   test("delayed-hover opens menu after delay", async function (assert) {
     await render(
       <template>
         <DMenu
+          @content="content"
           @inline={{true}}
           @label="label"
           @triggers={{array "delayed-hover"}}
-          @content="content"
         />
       </template>
     );
@@ -1271,10 +1310,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
           @inline={{true}}
           @label="label"
           @triggers={{array "delayed-hover"}}
-          @content="content"
         />
       </template>
     );
@@ -1289,10 +1328,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
           @inline={{true}}
           @label="label"
           @triggers={{array "delayed-hover" "click"}}
-          @content="content"
         />
       </template>
     );
@@ -1309,10 +1348,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @label="a long label"
-          @inline={{true}}
-          @matchTriggerMinWidth={{true}}
           style="width: 200px;"
+          @inline={{true}}
+          @label="a long label"
+          @matchTriggerMinWidth={{true}}
         >1</DMenu>
       </template>
     );
@@ -1328,12 +1367,12 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
+          @hoverGracePeriod={{150}}
           @inline={{true}}
           @label="label"
           @triggers={{array "hover"}}
           @untriggers={{array "hover"}}
-          @hoverGracePeriod={{150}}
-          @content="content"
         />
       </template>
     );
@@ -1354,12 +1393,12 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
+          @hoverGracePeriod={{150}}
           @inline={{true}}
           @label="label"
           @triggers={{array "hover"}}
           @untriggers={{array "hover"}}
-          @hoverGracePeriod={{150}}
-          @content="content"
         />
       </template>
     );
@@ -1374,11 +1413,11 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
+          @content="content"
           @inline={{true}}
           @label="label"
           @triggers={{array "hover"}}
           @untriggers={{array "hover"}}
-          @content="content"
         />
       </template>
     );
@@ -1392,14 +1431,12 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("destroys its instance when the menu itself is torn down", async function (assert) {
-    const state = new (class {
-      @tracked rendered = true;
-    })();
+    const rendered = tracked(true);
 
     await render(
       <template>
-        {{#if state.rendered}}
-          <DMenu @inline={{true}} @label="label" @content="content" />
+        {{#if rendered.value}}
+          <DMenu @content="content" @inline={{true}} @label="label" />
         {{/if}}
       </template>
     );
@@ -1410,7 +1447,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     const menuService = getOwner(this).lookup("service:menu");
     assert.strictEqual(menuService.registeredMenus.size, 1, "menu registered");
 
-    state.rendered = false;
+    rendered.value = false;
     await rerender();
 
     assert.dom(".fk-d-menu").doesNotExist("the float is gone");
@@ -1422,9 +1459,7 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
   });
 
   test("a changing triggerComponent does not kill the menu", async function (assert) {
-    const state = new (class {
-      @tracked label = "first";
-    })();
+    const label = tracked("first");
 
     const trigger = <template>
       <button ...attributes type="button">{{@componentArgs.expanded}}</button>
@@ -1436,9 +1471,9 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @inline={{true}}
           @content="content"
-          @triggerComponent={{if (eq state.label "first") trigger otherTrigger}}
+          @inline={{true}}
+          @triggerComponent={{if (eq label.value "first") trigger otherTrigger}}
         />
       </template>
     );
@@ -1447,12 +1482,41 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu").exists("opens with the first trigger");
 
     await click(".fk-d-menu__trigger");
-    state.label = "second";
+    label.value = "second";
     await rerender();
 
     await click(".fk-d-menu__trigger");
     assert
       .dom(".fk-d-menu")
       .exists("still opens after the trigger component is swapped");
+  });
+  test("@closeOnScroll ignores an overflow container whose content fits", async function (assert) {
+    await render(
+      <template>
+        <div class="scroller" style="height: 100px; overflow-y: auto">
+          <div style="height: 1000px">
+            <div style="overflow-x: auto">
+              <DMenu
+                @closeOnScroll={{true}}
+                @content="content"
+                @inline={{true}}
+                @label="label"
+              />
+            </div>
+          </div>
+        </div>
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+    assert.dom(".fk-d-menu").exists();
+
+    await triggerEvent(".scroller", "scroll");
+
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist(
+        "scrolling the nearest scrollable ancestor closes the menu"
+      );
   });
 });

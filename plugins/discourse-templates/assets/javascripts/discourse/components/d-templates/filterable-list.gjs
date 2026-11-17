@@ -14,8 +14,8 @@ import {
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
-import Item from "./item";
-import TagDrop from "./tag-drop";
+import Item from "./item.gjs";
+import TagDrop from "./tag-drop.js";
 
 const PREV_TEMPLATE_TAG_ID = "template-selected-tag";
 
@@ -159,22 +159,22 @@ export default class DTemplatesFilterableList extends Component {
           {{#if this.siteSettings.tagging_enabled}}
             <TagDrop
               @availableTags={{this.availableTags}}
-              @tag={{this.selectedTagObject}}
               @onChangeSelectedTag={{this.changeSelectedTag}}
+              @tag={{this.selectedTagObject}}
             />
           {{/if}}
           <DTextField
             class="templates-filter"
-            @value={{this.listFilter}}
             placeholder={{i18n "templates.filter_hint"}}
+            @value={{this.listFilter}}
           />
         </div>
         <div class="templates-list">
           {{#each this.filteredReplies as |r|}}
             <Item
-              @template={{r}}
               @model={{@model}}
               @onInsertTemplate={{this.insertTemplate}}
+              @template={{r}}
             />
           {{/each}}
         </div>

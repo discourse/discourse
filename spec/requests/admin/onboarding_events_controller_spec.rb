@@ -23,6 +23,17 @@ RSpec.describe Admin::OnboardingEventsController do
         expect(log.subject).to eq("select_theme")
       end
 
+      it "logs a completed category step" do
+        post "/admin/onboarding/events.json",
+             params: {
+               event: "step_completed",
+               step: "create_category",
+             }
+
+        expect(response.status).to eq(204)
+        expect(UserHistory.last.subject).to eq("create_category")
+      end
+
       it "logs a staff action when onboarding is completed" do
         post "/admin/onboarding/events.json", params: { event: "completed" }
 

@@ -19,16 +19,16 @@ export default class ColorSchemeSelectBase extends Component {
   <template>
     <DModal
       class="create-color-palette"
-      @title={{i18n "admin.customize.colors.select_base.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.customize.colors.select_base.title"}}
     >
       <:body>
         {{i18n "admin.customize.colors.select_base.description"}}
         <ColorPalettePicker
-          @content={{@model.colorSchemes}}
-          @value={{this.selectedBaseThemeId}}
-          @onChange={{fn (mut this.selectedBaseThemeId)}}
           class="select-base-palette"
+          @content={{@model.colorSchemes}}
+          @onChange={{fn (mut this.selectedBaseThemeId)}}
+          @value={{this.selectedBaseThemeId}}
         />
       </:body>
       <:footer>

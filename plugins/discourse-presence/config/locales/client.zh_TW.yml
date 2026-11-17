@@ -11,5 +11,7 @@ zh_TW:
         other: "正在回覆"
       editing:
         other: "正在編輯"
+      translating:
+        other: "正在翻譯"
       replying_to_topic:
         other: "正在回覆"

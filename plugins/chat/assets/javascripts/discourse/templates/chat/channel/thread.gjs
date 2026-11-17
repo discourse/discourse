@@ -2,7 +2,7 @@ import ChannelThread from "discourse/plugins/chat/discourse/components/chat/rout
 
 export default <template>
   <ChannelThread
-    @thread={{@controller.model}}
     @targetMessageId={{@controller.targetMessageId}}
+    @thread={{@controller.model}}
   />
 </template>

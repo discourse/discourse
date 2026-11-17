@@ -19,14 +19,14 @@ export default class FullnameInput extends Component {
   <template>
     <div ...attributes>
       <DTextField
-        {{on "focusin" @onFocusIn}}
-        @disabled={{@nameDisabled}}
-        @value={{@accountName}}
-        @id="new-account-name"
         aria-describedby="fullname-validation fullname-validation-more-info"
         aria-invalid={{@nameValidation.failed}}
         class={{valueEntered @accountName}}
         name="name"
+        @disabled={{@nameDisabled}}
+        @id="new-account-name"
+        @value={{@accountName}}
+        {{on "focusin" @onFocusIn}}
       />
       <label class="alt-placeholder" for="new-account-name">
         {{@nameTitle}}
@@ -37,7 +37,7 @@ export default class FullnameInput extends Component {
           {{i18n "user.name.instructions_required"}}
         </span>
       {{else}}
-        <DInputTip @validation={{@nameValidation}} id="fullname-validation" />
+        <DInputTip id="fullname-validation" @validation={{@nameValidation}} />
       {{/if}}
     </div>
   </template>

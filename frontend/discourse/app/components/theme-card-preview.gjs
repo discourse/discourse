@@ -7,9 +7,15 @@ import { i18n } from "discourse-i18n";
 
 export default class ThemeCardPreview extends Component {
   @service interfaceColor;
-  @service session;
 
-  @tracked showingDarkScreenshot = this.#shouldShowDarkByDefault();
+  // Null until toggled, so the preview follows the interface's color mode.
+  @tracked selectedScreenshotMode = null;
+
+  get showingDarkScreenshot() {
+    return this.selectedScreenshotMode
+      ? this.selectedScreenshotMode === "dark"
+      : this.interfaceColor.darkModeActive;
+  }
 
   get currentScreenshotUrl() {
     const { screenshot_dark_url, screenshot_light_url } = this.args.theme;
@@ -35,35 +41,27 @@ export default class ThemeCardPreview extends Component {
       : i18n("admin_onboarding_banner.select_theme.show_dark_screenshot");
   }
 
-  #shouldShowDarkByDefault() {
-    return (
-      this.interfaceColor?.colorModeIsDark ||
-      window.matchMedia("(prefers-color-scheme: dark)").matches ||
-      this.session?.defaultColorSchemeIsDark
-    );
-  }
-
   @action
   toggleScreenshot() {
-    this.showingDarkScreenshot = !this.showingDarkScreenshot;
+    this.selectedScreenshotMode = this.showingDarkScreenshot ? "light" : "dark";
   }
 
   <template>
     <div class="theme-card-preview__image-wrapper">
       {{#if this.currentScreenshotUrl}}
         <img
+          alt={{@theme.name}}
           class="theme-card-preview__image"
           src={{this.currentScreenshotUrl}}
-          alt={{@theme.name}}
         />
         {{#if this.hasBothScreenshots}}
           <DButton
+            class="btn-flat theme-card-preview__screenshot-toggle"
             @action={{this.toggleScreenshot}}
-            @translatedAriaLabel={{this.screenshotToggleLabel}}
             @icon={{this.screenshotToggleIcon}}
             @preventFocus={{true}}
+            @translatedAriaLabel={{this.screenshotToggleLabel}}
             @translatedTitle={{this.screenshotToggleLabel}}
-            class="btn-flat theme-card-preview__screenshot-toggle"
           />
         {{/if}}
       {{else}}

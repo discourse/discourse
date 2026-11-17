@@ -12,9 +12,9 @@ module("Integration | Component | TopicTimerInfo", function (hooks) {
     await render(
       <template>
         <TopicTimerInfo
-          @statusType="publish_to_category"
-          @executeAt={{executeAt}}
           @categoryId={{99999}}
+          @executeAt={{executeAt}}
+          @statusType="publish_to_category"
         />
       </template>
     );
@@ -28,10 +28,10 @@ module("Integration | Component | TopicTimerInfo", function (hooks) {
     await render(
       <template>
         <TopicTimerInfo
-          @statusType="delete"
           @basedOnLastPost={{true}}
-          @executeAt={{executeAt}}
           @durationMinutes={{2880}}
+          @executeAt={{executeAt}}
+          @statusType="delete"
         />
       </template>
     );

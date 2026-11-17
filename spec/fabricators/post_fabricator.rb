@@ -10,6 +10,15 @@ Fabricator(:post) do
   after_create { |post, _transients| UserStatCountUpdater.increment!(post) }
 end
 
+# Use for structural fixtures, not content-processing or validation scenarios.
+Fabricator(:post_with_cooked_content, from: :post) do
+  raw "Hello world"
+  cooked "<p>Hello world</p>"
+  skip_validation true
+
+  after_create { |post| post.skip_validation = false }
+end
+
 Fabricator(:post_with_long_raw_content, from: :post) do
   raw "This is a sample post with semi-long raw content. The raw content is also more than
       two hundred characters to satisfy any test conditions that require content longer

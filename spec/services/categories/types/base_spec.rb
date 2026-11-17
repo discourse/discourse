@@ -110,6 +110,7 @@ RSpec.describe Categories::Types::Base do
       expect(described_class.metadata).to include(
         id: :base,
         icon: "memo",
+        svg_icon: nil,
         available: true,
         configuration_schema: {
         },
@@ -130,7 +131,7 @@ RSpec.describe Categories::Types::Base do
     end
   end
 
-  describe ".configure_site_settings" do
+  describe ".configure_site_settings with scalar defaults" do
     it "applies site settings from configuration_schema defaults" do
       test_type =
         build_test_type(
@@ -544,7 +545,7 @@ RSpec.describe Categories::Types::Base do
     end
   end
 
-  describe ".configure_site_settings" do
+  describe ".configure_site_settings with hash defaults" do
     it "extracts default from hash config values" do
       test_type =
         build_test_type(

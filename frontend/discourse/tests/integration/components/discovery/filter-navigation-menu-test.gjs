@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import {
   fillIn,
   render,
@@ -14,6 +15,9 @@ module(
   "Integration | Component | Discovery | FilterNavigationMenu",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    let query;
+    const update = (val) => (query.value = val);
 
     hooks.beforeEach(function () {
       this.tips = [
@@ -37,8 +41,7 @@ module(
         { name: "status:open", description: "Open topics" },
       ];
 
-      this.query = "";
-      this.update = (val) => this.set("query", val);
+      query = tracked("");
 
       this.site = this.owner.lookup("service:site");
       this.site.categories = [
@@ -56,9 +59,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
+            @initialFilterQueryString={{query.value}}
+            @onChange={{update}}
             @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
           />
           <DMenus />
         </template>
@@ -103,9 +106,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
+            @initialFilterQueryString={{query.value}}
+            @onChange={{update}}
             @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
           />
 
           <DMenus />
@@ -121,7 +124,7 @@ module(
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Tab");
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Enter");
 
-      assert.strictEqual(this.query, "category:", "category filter added");
+      assert.strictEqual(query.value, "category:", "category filter added");
 
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Tab");
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Enter");
@@ -134,9 +137,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
+            @initialFilterQueryString={{query.value}}
+            @onChange={{update}}
             @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
           />
           <DMenus />
         </template>
@@ -160,16 +163,16 @@ module(
       );
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Enter");
 
-      assert.strictEqual(this.query, "tag:ember", "tag result selected");
+      assert.strictEqual(query.value, "tag:ember", "tag result selected");
     });
 
     test("escape hides suggestions", async function (assert) {
       await render(
         <template>
           <FilterNavigationMenu
+            @initialFilterQueryString={{query.value}}
+            @onChange={{update}}
             @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
           />
           <DMenus />
         </template>
@@ -204,9 +207,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
+            @initialFilterQueryString={{query.value}}
+            @onChange={{update}}
             @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
           />
           <DMenus />
         </template>

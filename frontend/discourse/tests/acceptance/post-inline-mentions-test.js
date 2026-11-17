@@ -6,7 +6,7 @@ import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicFixtures from "../fixtures/topic";
+import topicFixtures from "../fixtures/topic.js";
 
 function topicWithoutUserStatus(topicId, mentionedUserId) {
   const topic = cloneJSON(topicFixtures[`/t/${topicId}.json`]);

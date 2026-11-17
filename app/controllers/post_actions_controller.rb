@@ -7,7 +7,7 @@ class PostActionsController < ApplicationController
   before_action :fetch_post_action_type_id_from_params
 
   def create
-    raise Discourse::NotFound if @post.blank?
+    raise Discourse::NotFound unless guardian.can_see?(@post)
 
     creator =
       PostActionCreator.new(

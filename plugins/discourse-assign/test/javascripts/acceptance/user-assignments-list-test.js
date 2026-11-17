@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import AssignedTopics from "../fixtures/assigned-topics-fixtures";
+import AssignedTopics from "../fixtures/assigned-topics-fixtures.js";
 
 acceptance("Unassign/reassign from the topics list", function (needs) {
   needs.user();

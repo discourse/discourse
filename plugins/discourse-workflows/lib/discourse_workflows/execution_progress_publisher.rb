@@ -13,6 +13,7 @@ module DiscourseWorkflows
       position
       status
       error
+      error_html
       started_at
       finished_at
     ].freeze
@@ -21,12 +22,22 @@ module DiscourseWorkflows
       "/discourse-workflows/execution/#{execution_id}"
     end
 
-    def self.publish_created(execution, workflow_name:)
+    def self.subscription_start_id(execution, last_id)
+      return last_id if !execution.running? || execution.execution_data&.entries.present?
+
+      [last_id - MAX_BACKLOG_SIZE, 0].max
+    end
+
+    def self.publish_created(execution, workflow_name:, trigger_node: nil)
       MessageBus.publish(
         EXECUTIONS_CHANNEL,
         {
           type: "execution_created",
-          execution: execution_summary(execution, workflow_name: workflow_name),
+          execution:
+            execution_summary(execution, workflow_name:).merge(
+              trigger: Execution.trigger_summary(trigger_node),
+              execution_mode: execution.execution_mode,
+            ),
         },
         **publish_options,
       )
@@ -38,7 +49,10 @@ module DiscourseWorkflows
         execution: execution_progress(execution),
         refresh: refresh,
       }
-      payload[:step] = step.to_h.slice(*STEP_FIELDS).merge("error" => step.error) if step
+      payload[:step] = step
+        .to_h
+        .slice(*STEP_FIELDS)
+        .merge("error" => step.error, "error_html" => step.error_html) if step
 
       MessageBus.publish(execution_channel(execution.id), payload, **publish_options)
       publish_list_update(execution) unless step

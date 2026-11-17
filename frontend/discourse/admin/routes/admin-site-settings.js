@@ -5,6 +5,15 @@ import SiteSetting from "discourse/admin/models/site-setting";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {Object} SiteSettingCategory
+ * @property {string} nameKey
+ * @property {string} name
+ * @property {import("discourse/admin/models/site-setting").default[]} siteSettings
+ * @property {number | string} [count]
+ * @property {boolean} [hasMore]
+ * @property {number} [maxResults]
+ */
 export default class AdminSiteSettingsRoute extends DiscourseRoute {
   @service adminSiteSettingStore;
   @service siteSettingChangeTracker;
@@ -24,6 +33,7 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
     },
   };
 
+  /** @type {SiteSettingCategory[] | null} */
   _siteSettings = null;
 
   titleToken() {
@@ -64,6 +74,7 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
     }
   }
 
+  /** @returns {SiteSettingCategory[]} */
   @action
   filterSettings(filter, onlyOverridden, dependsOn) {
     const settingFilter = new SiteSettingFilter(this._siteSettings);

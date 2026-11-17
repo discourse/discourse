@@ -9,6 +9,7 @@ et:
     discourse_local_dates:
       create:
         form:
+          save: Salvesta
           date_title: Kuupäev
           time_title: Aeg
           timezone: Ajavöönd

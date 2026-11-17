@@ -66,22 +66,22 @@ export default class KpiTile extends Component {
 
   <template>
     <LinkTo
+      aria-label={{this.ariaLabel}}
       class="db-kpi db-section__row-block"
-      @route="adminReports.show"
       @model={{@reportType}}
       @query={{hash
         start_date=this.reportQuery.start_date
         end_date=this.reportQuery.end_date
       }}
-      aria-label={{this.ariaLabel}}
+      @route="adminReports.show"
     >
       <div class="db-kpi__value">{{this.displayValue}}</div>
       <div class="db-kpi__label">
         {{this.label}}
         <DTooltip
           class="db-kpi__tooltip"
-          @icon="far-circle-question"
           @content={{this.tooltip}}
+          @icon="far-circle-question"
           {{on "click" this.stopPropagation}}
         />
       </div>
@@ -90,7 +90,7 @@ export default class KpiTile extends Component {
           class={{concat "db-delta " this.deltaClass}}
         >{{this.deltaText}}</div>
       {{/if}}
-      <span class="db-link-arrow" aria-hidden="true">{{dIcon
+      <span aria-hidden="true" class="db-link-arrow">{{dIcon
           "arrow-right"
         }}</span>
     </LinkTo>

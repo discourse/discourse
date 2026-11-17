@@ -17,27 +17,6 @@ export default class RagUploadProgress extends Component {
     this.messageBus.unsubscribe(`/discourse-ai/rag/${this.args.upload.id}`);
   }
 
-  @action
-  trackProgress() {
-    this.messageBus.subscribe(
-      `/discourse-ai/rag/${this.args.upload.id}`,
-      this.onIndexingUpdate
-    );
-  }
-
-  @bind
-  onIndexingUpdate(data) {
-    // Order not guaranteed. Discard old updates.
-    if (
-      !this.updatedProgress ||
-      this.updatedProgress.left === 0 ||
-      this.updatedProgress.left > data.left ||
-      data.total === data.indexed
-    ) {
-      this.updatedProgress = data;
-    }
-  }
-
   get calculateProgress() {
     if (this.progress.total === 0) {
       return 0;
@@ -59,6 +38,27 @@ export default class RagUploadProgress extends Component {
       return this.args.ragIndexingStatuses[this.args.upload.id];
     } else {
       return [];
+    }
+  }
+
+  @action
+  trackProgress() {
+    this.messageBus.subscribe(
+      `/discourse-ai/rag/${this.args.upload.id}`,
+      this.onIndexingUpdate
+    );
+  }
+
+  @bind
+  onIndexingUpdate(data) {
+    // Order not guaranteed. Discard old updates.
+    if (
+      !this.updatedProgress ||
+      this.updatedProgress.left === 0 ||
+      this.updatedProgress.left > data.left ||
+      data.total === data.indexed
+    ) {
+      this.updatedProgress = data;
     }
   }
 

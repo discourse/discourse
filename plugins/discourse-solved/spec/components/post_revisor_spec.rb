@@ -140,6 +140,7 @@ describe PostRevisor do
 
     describe "with multiple solutions enabled" do
       before { SiteSetting.solved_allow_multiple_solutions = true }
+
       it "unaccepts all answers when both category changes to unsolved and solved tag is removed" do
         topic = Fabricate(:topic, category: category_solved, tags: [solved_tag])
         post = Fabricate(:post, topic: topic)

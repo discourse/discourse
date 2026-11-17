@@ -59,6 +59,9 @@ zh_CN:
           tabs:
             ads: "广告"
             settings: "设置"
+          above_site_header:
+            title: "网站标题上方"
+            description: "在页面顶部、网站标题上方显示的广告。"
           topic_list_top:
             title: "话题列表顶部广告"
             description: "在话题列表页面顶部显示的广告。"

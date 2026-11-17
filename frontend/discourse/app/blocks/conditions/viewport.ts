@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import type { CapabilitiesService } from "discourse/services/capabilities";
-import { BlockCondition } from "./condition";
-import { blockCondition } from "./decorator";
+import { BlockCondition } from "./condition.ts";
+import { blockCondition } from "./decorator.ts";
 
 /** A viewport breakpoint name, matching the breakpoints defined in
  *  `capabilities.viewport`. */

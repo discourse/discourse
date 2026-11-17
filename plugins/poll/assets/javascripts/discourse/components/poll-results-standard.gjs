@@ -3,8 +3,8 @@ import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 import evenRound from "discourse/plugins/poll/lib/even-round";
-import decoratePollOption from "../modifiers/decorate-poll-option";
-import PollVoters from "./poll-voters";
+import decoratePollOption from "../modifiers/decorate-poll-option.js";
+import PollVoters from "./poll-voters.gjs";
 
 export default class PollResultsStandardComponent extends Component {
   orderOptions = (options) => {
@@ -108,15 +108,15 @@ export default class PollResultsStandardComponent extends Component {
             {{/unless}}
             {{#if @isPublic}}
               <PollVoters
-                @postId={{@postId}}
-                @pollType={{@pollType}}
+                @fetchVoters={{@fetchVoters}}
+                @isRankedChoice={{@isRankedChoice}}
+                @loading={{option.loading}}
                 @optionId={{option.id}}
                 @pollName={{@pollName}}
-                @isRankedChoice={{@isRankedChoice}}
+                @pollType={{@pollType}}
+                @postId={{@postId}}
                 @totalVotes={{option.votes}}
                 @voters={{option.voters}}
-                @fetchVoters={{@fetchVoters}}
-                @loading={{option.loading}}
               />
             {{/if}}
           </div>

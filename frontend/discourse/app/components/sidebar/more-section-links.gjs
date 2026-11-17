@@ -8,11 +8,10 @@ import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
-import { and } from "discourse/truth-helpers";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import MoreSectionLink from "./more-section-link";
-import MoreSectionTrigger from "./more-section-trigger";
-import SectionLinkButton from "./section-link-button";
+import MoreSectionLink from "./more-section-link.gjs";
+import MoreSectionTrigger from "./more-section-trigger.gjs";
+import SectionLinkButton from "./section-link-button.gjs";
 
 export default class SidebarMoreSectionLinks extends Component {
   @service router;
@@ -50,19 +49,6 @@ export default class SidebarMoreSectionLinks extends Component {
     }
   }
 
-  #filterActiveSectionLink(sectionLinks) {
-    return sectionLinks.filter((sectionLink) => {
-      return sectionLink.name !== this.activeSectionLink.name;
-    });
-  }
-
-  #setActiveSectionLink() {
-    this.activeSectionLink = findActiveLink(
-      this.args.sectionLinks,
-      this.router
-    );
-  }
-
   @cached
   get triggerComponent() {
     return curryComponent(
@@ -87,22 +73,35 @@ export default class SidebarMoreSectionLinks extends Component {
     }
   }
 
+  #filterActiveSectionLink(sectionLinks) {
+    return sectionLinks.filter((sectionLink) => {
+      return sectionLink.name !== this.activeSectionLink.name;
+    });
+  }
+
+  #setActiveSectionLink() {
+    this.activeSectionLink = findActiveLink(
+      this.args.sectionLinks,
+      this.router
+    );
+  }
+
   <template>
     {{#if (and this.hoistActiveLink this.activeSectionLink)}}
       <MoreSectionLink
-        @sectionLink={{this.activeSectionLink}}
         @scrollIntoView={{@scrollActiveLinkIntoView}}
+        @sectionLink={{this.activeSectionLink}}
       />
     {{/if}}
 
     <li class="sidebar-section-link-wrapper">
       <DMenu
-        @triggerClass="sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
-        @modalForMobile={{true}}
         @autofocus={{true}}
-        @placement="bottom"
-        @inline={{true}}
         @identifier={{if @identifier @identifier "sidebar-more-section"}}
+        @inline={{true}}
+        @modalForMobile={{true}}
+        @placement="bottom"
+        @triggerClass="sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
         @triggerComponent={{this.triggerComponent}}
       >
 
@@ -110,8 +109,8 @@ export default class SidebarMoreSectionLinks extends Component {
           <DDropdownMenu as |dropdown|>
             {{#each this.sectionLinks as |sectionLink|}}
               <MoreSectionLink
-                @sectionLink={{sectionLink}}
                 class="dropdown-menu__item"
+                @sectionLink={{sectionLink}}
                 {{on "click" (fn this.closeMenu menu)}}
               />
             {{/each}}
@@ -123,8 +122,8 @@ export default class SidebarMoreSectionLinks extends Component {
                 <SectionLinkButton
                   @action={{@moreButtonAction}}
                   @icon={{@moreButtonIcon}}
-                  @text={{@moreButtonText}}
                   @name="customize"
+                  @text={{@moreButtonText}}
                   @toggleNavigationMenu={{@toggleNavigationMenu}}
                 />
               </dropdown.item>

@@ -352,6 +352,74 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
         )
       end
 
+      it "rejects a signed callback from an IP outside the wait allowlist" do
+        update_workflow_node(workflow, "wait-1") do |node|
+          node.merge("parameters" => node["parameters"].merge("ip_allowlist" => "192.0.2.10"))
+        end
+        waiting_execution.execution_data.update!(
+          workflow_data: DiscourseWorkflows::WorkflowSnapshot.from_workflow(workflow).to_h,
+        )
+
+        expect do
+          post "/workflows/waiting/#{waiting_execution.id}/webhook/after-approval.json?signature=#{signature}",
+               params: { foo: "bar" }.to_json,
+               headers: {
+                 "CONTENT_TYPE" => "application/json",
+                 "REMOTE_ADDR" => "198.51.100.20",
+               }
+        end.not_to change { Jobs::DiscourseWorkflows::ResumeWebhookWaiting.jobs.size }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(waiting_execution.reload.status).to eq("waiting")
+      end
+
+      it "requires the wait webhook credential before resuming synchronously" do
+        credential =
+          Fabricate(
+            :discourse_workflows_credential,
+            credential_type: "basic_auth",
+            data: {
+              "user" => "hook_user",
+              "password" => "hook_pass",
+            },
+          )
+        update_workflow_node(workflow, "wait-1") do |node|
+          node.merge(
+            "parameters" =>
+              node["parameters"].merge(
+                "authentication" => "basic_auth",
+                "response_mode" => "last_node",
+              ),
+            "credentials" => {
+              "auth" => {
+                "id" => credential.id.to_s,
+                "credential_type" => "basic_auth",
+              },
+            },
+          )
+        end
+        waiting_execution.execution_data.update!(
+          workflow_data: DiscourseWorkflows::WorkflowSnapshot.from_workflow(workflow).to_h,
+        )
+        url =
+          "/workflows/waiting/#{waiting_execution.id}/webhook/after-approval.json?signature=#{signature}"
+
+        post url, params: { foo: "bar" }.to_json, headers: { "CONTENT_TYPE" => "application/json" }
+
+        expect(response).to have_http_status(:unauthorized)
+        expect(waiting_execution.reload.status).to eq("waiting")
+
+        post url,
+             params: { foo: "bar" }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_AUTHORIZATION" => "Basic #{Base64.strict_encode64("hook_user:hook_pass")}",
+             }
+
+        expect(response).to have_http_status(:ok)
+        expect(waiting_execution.reload.status).to eq("success")
+      end
+
       it "returns 404 when the suffix does not match" do
         post "/workflows/waiting/#{waiting_execution.id}/webhook/wrong-suffix.json?signature=#{signature}",
              params: { foo: "bar" }.to_json,
@@ -909,6 +977,35 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
              }
 
         expect(response).to have_http_status(:ok)
+      end
+
+      it "masks the authentication header in the trigger data" do
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_X_API_KEY" => "secret-value",
+             }
+
+        trigger_data =
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"][0]["trigger_data"]
+        expect(trigger_data["headers"]).to include("x-api-key" => "[FILTERED]")
+      end
+
+      it "authenticates against a header the parser filters" do
+        credential.update!(data: { "name" => "Proxy-Authorization", "value" => "Token abc" })
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_PROXY_AUTHORIZATION" => "Token abc",
+             }
+
+        expect(response).to have_http_status(:ok)
+        trigger_data =
+          Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"][0]["trigger_data"]
+        expect(trigger_data["headers"]).to include("proxy-authorization" => "[FILTERED]")
       end
     end
   end

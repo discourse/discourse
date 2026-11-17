@@ -15,11 +15,11 @@ RSpec.describe "Managing Embeddings configurations" do
   it "correctly sets defaults" do
     preset = "text-embedding-3-small"
 
-    visit "/admin/plugins/discourse-ai/ai-embeddings"
+    visit "/admin/plugins/discourse-ai/ai-models"
 
-    find(".ai-embeddings-list-editor__new-button").click()
-
-    find("[data-preset-id='text-embedding-3-small'] button").click()
+    find(".ai-models-list__new-button").click()
+    find("[data-model-type='embedding'] button").click()
+    find("[data-template-id='text-embedding-3-small'] button").click()
 
     secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
     secret_selector.expand
@@ -27,7 +27,7 @@ RSpec.describe "Managing Embeddings configurations" do
 
     form.submit
 
-    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-embeddings")
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-models")
 
     embedding_def = EmbeddingDefinition.order(:id).last
     expect(embedding_def.ai_secret_id).to eq(ai_secret.id)
@@ -46,11 +46,11 @@ RSpec.describe "Managing Embeddings configurations" do
   end
 
   it "supports manual config" do
-    visit "/admin/plugins/discourse-ai/ai-embeddings"
+    visit "/admin/plugins/discourse-ai/ai-models"
 
-    find(".ai-embeddings-list-editor__new-button").click()
-
-    find("[data-preset-id='manual'] button").click()
+    find(".ai-models-list__new-button").click()
+    find("[data-model-type='embedding'] button").click()
+    find("[data-template-id='manual'] button").click()
 
     form.field("display_name").fill_in("text-embedding-3-small")
     form.field("provider").select(EmbeddingDefinition::OPEN_AI)
@@ -73,7 +73,7 @@ RSpec.describe "Managing Embeddings configurations" do
 
     form.submit
 
-    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-embeddings")
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-models")
 
     embedding_def = EmbeddingDefinition.order(:id).last
 
@@ -91,5 +91,19 @@ RSpec.describe "Managing Embeddings configurations" do
     expect(embedding_def.provider).to eq(preset[:provider])
     expect(embedding_def.embed_prompt).to eq(embed_prefix)
     expect(embedding_def.search_prompt).to eq(search_prefix)
+  end
+
+  it "supports editing an existing configuration" do
+    embedding_def = Fabricate(:embedding_definition)
+
+    visit "/admin/plugins/discourse-ai/ai-embeddings/#{embedding_def.id}/edit"
+
+    form.field("display_name").fill_in("Updated embeddings")
+    form.submit
+
+    expect(PageObjects::Components::Toasts.new).to have_success(
+      I18n.t("js.discourse_ai.embeddings.saved"),
+    )
+    expect(embedding_def.reload.display_name).to eq("Updated embeddings")
   end
 end

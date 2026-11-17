@@ -6,6 +6,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class DBreadcrumbsItem extends Component {
   @service breadcrumbs;
+  @service router;
 
   constructor() {
     super(...arguments);
@@ -20,16 +21,19 @@ export default class DBreadcrumbsItem extends Component {
   // @cached
   get templateForContainer() {
     // Those are evaluated in a different context than the `@linkClass`
-    const { label, path, route } = this.args;
+    const { label, route } = this.args;
+    // An item with no target stands for the current page. An empty href would
+    // reload the page, and on a subfolder install it would point at the root.
+    const path = this.args.path ?? this.router.currentURL;
 
     return <template>
       <li ...attributes>
         {{#if route}}
-          <LinkTo @route={{route}} class={{@linkClass}}>
+          <LinkTo class={{@linkClass}} @route={{route}}>
             {{label}}
           </LinkTo>
         {{else}}
-          <a href={{getURL path}} class={{@linkClass}}>
+          <a class={{@linkClass}} href={{getURL path}}>
             {{label}}
           </a>
         {{/if}}

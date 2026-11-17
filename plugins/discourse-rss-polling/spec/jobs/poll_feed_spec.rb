@@ -122,6 +122,7 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
 
       context "with rss polling set to true" do
         before { SiteSetting.rss_polling_update_tags = true }
+
         it "updates tags by default" do
           topic = author.topics.last
           job.execute(
@@ -295,6 +296,15 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
 
         job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
         expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+      end
+
+      it "records already imported items as updated on subsequent polls" do
+        job.execute(feed_url:, user_id: author.id, rss_feed_id: rss_feed.id)
+        job.execute(feed_url:, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.imported_count).to eq(0)
+        expect(attempt.updated_count).to eq(1)
       end
 
       it "does not poll a disabled feed on a scheduled (non-forced) run" do

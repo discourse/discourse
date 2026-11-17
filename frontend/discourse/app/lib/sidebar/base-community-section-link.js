@@ -25,16 +25,6 @@ export default class BaseCommunitySectionLink {
   }
 
   /**
-   * Called when state has changed in the TopicTrackingState service
-   */
-  onTopicTrackingStateChange() {}
-
-  /**
-   * Called when community-section component is torn down.
-   */
-  teardown() {}
-
-  /**
    * @returns {string} The name of the section link. Needs to be dasherized and lowercase.
    */
   get name() {
@@ -59,17 +49,17 @@ export default class BaseCommunitySectionLink {
   get href() {}
 
   /**
-   * @returns {Object} Model for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
+   * @returns {string | number | object | null | undefined} Model for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
    */
   get model() {}
 
   /**
-   * @returns {Object} Models for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
+   * @returns {Array<string | number | object> | undefined} Models for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
    */
   get models() {}
 
   /**
-   * @returns {Object} Query parameters for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
+   * @returns {Record<string, unknown>} Query parameters for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
    */
   get query() {
     return {};
@@ -119,6 +109,16 @@ export default class BaseCommunitySectionLink {
   get prefixValue() {
     return this.overriddenIcon || this.defaultPrefixValue;
   }
+
+  /**
+   * Called when state has changed in the TopicTrackingState service
+   */
+  onTopicTrackingStateChange() {}
+
+  /**
+   * Called when community-section component is torn down.
+   */
+  teardown() {}
 
   _notImplemented() {
     throw "not implemented";

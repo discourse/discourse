@@ -6,17 +6,32 @@ import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import {
+  menuSheetClosedTransform,
+  menuSheetEdge,
+} from "discourse/lib/menu-sheet";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
-import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
+import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown.gjs";
 
 const CLOSE_ON_CLICK_SELECTORS =
   "a[href], .sidebar-section-header-button, .sidebar-section-link:not(.--link-button)";
 
 export default class HamburgerDropdownWrapper extends Component {
   @service navigationMenu;
+
+  get forceMainSidebarPanel() {
+    // NOTE: In this scenario, we are forcing the sidebar to be shown
+    // when the navigation mode is hamburger. We still need to show the
+    // main panel in the hamburger menu, regardless of what is in the sidebar.
+    if (this.args.sidebarEnabled && this.navigationMenu.isDesktopDropdownMode) {
+      return true;
+    }
+
+    return false;
+  }
 
   @action
   toggleNavigation() {
@@ -34,7 +49,12 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
-    let exceptionSelectors = [".sidebar-more-section-content"];
+    // The tab bar's menu button opens and closes this menu itself
+    let exceptionSelectors = [
+      ".sidebar-more-section-content",
+      ".fk-d-menu-modal",
+      ".mobile-tab-bar__menu",
+    ];
 
     exceptionSelectors = applyValueTransformer(
       "hamburger-dropdown-click-outside-exceptions",
@@ -53,8 +73,12 @@ export default class HamburgerDropdownWrapper extends Component {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition = isDocumentRTL() ? "340px" : "-340px";
+      const sheetEdge = menuSheetEdge(panel);
+      const transform = sheetEdge
+        ? menuSheetClosedTransform(sheetEdge)
+        : `translate3d(${finishPosition}, 0, 0)`;
       const panelAnimatePromise = panel
-        .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+        .animate([{ transform }], {
           duration: isTesting() ? 0 : 200,
           fill: "forwards",
           easing: "ease-in",
@@ -78,21 +102,11 @@ export default class HamburgerDropdownWrapper extends Component {
     }
   }
 
-  get forceMainSidebarPanel() {
-    // NOTE: In this scenario, we are forcing the sidebar to be shown
-    // when the navigation mode is hamburger. We still need to show the
-    // main panel in the hamburger menu, regardless of what is in the sidebar.
-    if (this.args.sidebarEnabled && this.navigationMenu.isDesktopDropdownMode) {
-      return true;
-    }
-
-    return false;
-  }
-
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
       class="hamburger-dropdown-wrapper"
+      ...attributes
       {{on "click" this.click}}
       {{! we don't want to close the hamburger dropdown when clicking on the hamburger dropdown itself
         so we use the secondaryTargetSelector to prevent that }}
@@ -103,7 +117,6 @@ export default class HamburgerDropdownWrapper extends Component {
           secondaryTargetSelector=".hamburger-dropdown"
         )
       }}
-      ...attributes
     >
       <SidebarHamburgerDropdown
         @forceMainSidebarPanel={{this.forceMainSidebarPanel}}

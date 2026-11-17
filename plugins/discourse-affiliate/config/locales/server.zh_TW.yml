@@ -5,3 +5,21 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    affiliate_enabled: '啟用 Affiliate 插件。如果您更改此設置，則必須通過此命令重新發布所有貼文："rake posts:rebake"。'
+    affiliate_amazon_ca: "您的 amazon.ca（加拿大）聯盟 ID。"
+    affiliate_amazon_cn: "您的 amazon.cn（中國）聯盟 ID。"
+    affiliate_amazon_co_jp: "您的 amazon.co.jp（日本）聯盟 ID。"
+    affiliate_amazon_co_uk: "您的 amazon.co.uk（英國）聯盟 ID。"
+    affiliate_amazon_com: "您的 amazon.com/amzn.com/amzn.to（美國）聯盟 ID。"
+    affiliate_amazon_com_au: "您的 amazon.com.au（澳大利亞）聯盟 ID。"
+    affiliate_amazon_com_br: "您的 amazon.com.br（巴西）聯盟 ID。"
+    affiliate_amazon_com_mx: "您的 amazon.com.mx（墨西哥）聯盟 ID。"
+    affiliate_amazon_de: "您的 amazon.de（德國）聯盟 ID。"
+    affiliate_amazon_es: "您的 amazon.es（西班牙）聯盟 ID。"
+    affiliate_amazon_fr: "您的 amazon.fr（法國）聯盟 ID。"
+    affiliate_amazon_in: "您的 amazon.in（印度）聯盟 ID。"
+    affiliate_amazon_it: "您的 amazon.it（意大利）聯盟 ID。"
+    affiliate_amazon_nl: "您的 amazon.nl（荷蘭）聯盟 ID。"
+    affiliate_amazon_eu: "您的 amzn.eu（歐洲）聯盟 ID。"
+    affiliate_ldlc_com: "您的 ldlc.com 聯屬 ID（不帶 #）。"

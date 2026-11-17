@@ -50,7 +50,7 @@ RSpec.describe ComposerMessagesFinder do
           ComposerMessagesFinder.new(user, composer_action: "createTopic", topic_id: topic.id)
         end
 
-        it "should return an empty string" do
+        it "returns an empty string" do
           expect(finder.check_education_message).to eq(nil)
         end
       end
@@ -60,7 +60,7 @@ RSpec.describe ComposerMessagesFinder do
           ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: topic.id)
         end
 
-        it "should return an empty string" do
+        it "returns an empty string" do
           expect(finder.check_education_message).to eq(nil)
         end
       end
@@ -404,7 +404,7 @@ RSpec.describe ComposerMessagesFinder do
         expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
       end
 
-      it "will notify you if it hasn't in the current topic" do
+      it "notifies the user if no notice was shown in the current topic" do
         UserHistory.create!(
           action: UserHistory.actions[:notified_about_get_a_room],
           target_user_id: user.id,
@@ -413,7 +413,7 @@ RSpec.describe ComposerMessagesFinder do
         expect(finder.check_get_a_room(min_users_posted: 2)).to be_present
       end
 
-      it "won't notify you if you haven't had enough posts" do
+      it "does not notify users with too few posts" do
         SiteSetting.get_a_room_threshold = 10
         expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
       end

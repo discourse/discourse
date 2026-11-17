@@ -8,7 +8,7 @@ module("Component | Collapser", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders header", async function (assert) {
-    this.set("header", trustHTML(`<div class="cat">tomtom</div>`));
+    this.header = trustHTML(`<div class="cat">tomtom</div>`);
 
     await render(<template><Collapser @header={{this.header}} /></template>);
 

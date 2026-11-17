@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::Google do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
   let(:search) { described_class.new({ query: "some search term" }, bot_user: bot_user, llm: llm) }
@@ -15,7 +15,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Google do
   end
 
   describe "#process" do
-    it "will not explode if there are no results" do
+    it "returns safely when there are no results" do
       json_text = { searchInformation: { totalResults: "0" } }.to_json
 
       stub_request(
@@ -27,6 +27,20 @@ RSpec.describe DiscourseAi::Agents::Tools::Google do
 
       expect(search.results_count).to eq(0)
       expect(info).to_not include("oops")
+    end
+
+    it "uses the configured endpoint" do
+      SiteSetting.ai_google_custom_search_url = "https://search.example.com/customsearch/v1"
+      json_text = { searchInformation: { totalResults: "0" } }.to_json
+
+      stub_request(
+        :get,
+        "https://search.example.com/customsearch/v1?cx=cx&key=abc&num=10&q=some%20search%20term",
+      ).to_return(status: 200, body: json_text, headers: {})
+
+      search.invoke(&progress_blk)
+
+      expect(search.results_count).to eq(0)
     end
 
     it "supports base_query" do

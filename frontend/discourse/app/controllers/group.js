@@ -24,6 +24,8 @@ export default class GroupController extends Controller {
 
   counts = null;
   showing = "members";
+
+  /** @type {boolean | null} */
   destroying = null;
   showTooltip = false;
 

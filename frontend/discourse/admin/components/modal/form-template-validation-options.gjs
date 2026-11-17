@@ -34,8 +34,8 @@ export default class FormTemplateValidationOptions extends Component {
   <template>
     <DModal
       class="form-templates__validation-options admin-form-template-validation-options-modal"
-      @title={{i18n "admin.form_templates.validations_modal.modal_title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.form_templates.validations_modal.modal_title"}}
     >
       <:body>
         <table>

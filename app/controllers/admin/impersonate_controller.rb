@@ -2,6 +2,7 @@
 
 class Admin::ImpersonateController < Admin::AdminController
   skip_before_action :ensure_admin, only: :destroy
+  skip_before_action :redirect_to_login_if_required, only: :destroy
 
   def create
     params.require(:username_or_email)

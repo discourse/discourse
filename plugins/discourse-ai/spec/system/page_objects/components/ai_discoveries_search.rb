@@ -70,6 +70,24 @@ module PageObjects
         has_no_css?("#{ROOT_SELECTOR} .ai-discobot-discoveries")
       end
 
+      def has_forum_source?(topic, category:)
+        has_css?(
+          "#{ROOT_SELECTOR} .ai-discovery-source[href*='#{topic.relative_url}']:not([target]) .ai-discovery-source__metadata",
+          text: category.name,
+        )
+      end
+
+      def has_external_source?(title:, url:, source_name:)
+        has_css?(
+          "#{ROOT_SELECTOR} .ai-discovery-source[href='#{url}'][target='_blank']",
+          text: title,
+        ) &&
+          has_css?(
+            "#{ROOT_SELECTOR} .ai-discovery-source[href='#{url}'] .ai-discovery-source__metadata-source",
+            text: source_name,
+          )
+      end
+
       def has_topic_result?(topic)
         has_css?("#{ROOT_SELECTOR} .search-result-topic", text: topic.title)
       end

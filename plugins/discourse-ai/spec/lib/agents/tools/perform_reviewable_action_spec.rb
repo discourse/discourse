@@ -2,8 +2,9 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+
   fab!(:admin)
 
   before do
@@ -89,6 +90,29 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
       expect(note.content).to eq("AI determined this violates policy")
     end
 
+    it "returns the note validation error without performing the action" do
+      SiteSetting.max_mentions_per_post = 1
+      agent_bot_user = Fabricate(:bot, trust_level: TrustLevel[4])
+      ctx = DiscourseAi::Agents::BotContext.new(user: admin)
+
+      result =
+        described_class.new(
+          {
+            reviewable_id: flagged_reviewable.id,
+            action_id: "agree_and_keep",
+            reason: "Reported by @alice and @bob",
+          },
+          bot_user: agent_bot_user,
+          llm: llm,
+          context: ctx,
+        ).invoke
+
+      expect(result[:status]).to eq("error")
+      expect(result[:error]).to eq(I18n.t("too_many_mentions", count: 1))
+      expect(flagged_reviewable.reload.status).to eq("pending")
+      expect(flagged_reviewable.reviewable_notes).to be_empty
+    end
+
     it "successfully performs agree_and_hide" do
       PostActionCreator.inappropriate(Fabricate(:user, refresh_auto_groups: true), post)
 
@@ -148,6 +172,63 @@ RSpec.describe DiscourseAi::Agents::Tools::PerformReviewableAction do
 
       expect(result[:status]).to eq("success")
       expect(queued_reviewable.reload.status).to eq("approved")
+    end
+  end
+
+  context "with a queued AI tool action" do
+    fab!(:ai_agent)
+    fab!(:target_user, :user)
+    fab!(:tool_action_reviewable) do
+      tool_action =
+        AiToolAction.create!(
+          tool_name: "suspend_user",
+          tool_parameters: {
+            username: target_user.username,
+            duration_days: 30,
+            reason: "spam",
+          },
+          ai_agent: ai_agent,
+          bot_user_id: bot_user.id,
+        )
+
+      ReviewableAiToolAction.needs_review!(
+        target: tool_action,
+        created_by: bot_user,
+        reviewable_by_moderator: true,
+        payload: {
+          agent_name: ai_agent.name,
+          reason: "spam",
+        },
+      )
+    end
+
+    it "does not approve an AI tool action on behalf of the staff invoker" do
+      result =
+        tool(
+          reviewable_id: tool_action_reviewable.id,
+          action_id: "approve",
+          reason: "confirmed",
+        ).invoke
+
+      expect(result[:status]).to eq("error")
+      expect(result[:error]).to include("not found")
+      expect(tool_action_reviewable.reload.status).to eq("pending")
+      expect(tool_action_reviewable.reviewable_notes).to be_empty
+      expect(target_user.reload.suspended_till).to be_nil
+    end
+
+    it "does not reject an AI tool action on behalf of the staff invoker" do
+      result =
+        tool(
+          reviewable_id: tool_action_reviewable.id,
+          action_id: "reject",
+          reason: "not needed",
+        ).invoke
+
+      expect(result[:status]).to eq("error")
+      expect(result[:error]).to include("not found")
+      expect(tool_action_reviewable.reload.status).to eq("pending")
+      expect(tool_action_reviewable.reviewable_notes).to be_empty
     end
   end
 end

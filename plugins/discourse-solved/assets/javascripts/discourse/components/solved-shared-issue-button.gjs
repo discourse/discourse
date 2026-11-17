@@ -118,8 +118,8 @@ export default class SolvedSharedIssueButton extends Component {
           @action={{this.toggle}}
           @disabled={{this.disabled}}
           @icon="hand"
-          @translatedLabel={{this.label}}
           @title={{this.titleKey}}
+          @translatedLabel={{this.label}}
         />
       </div>
     {{/if}}

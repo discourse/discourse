@@ -7,12 +7,12 @@
 ur:
   js:
     user_notes:
-      title: "صارف نوٹس"
+      title: "صارف کے نوٹس"
       attach: "صارف کا نوٹ شامل کریں"
       attach_note_description: "اس صارف کے بارے میں ایک نوٹ شامل کریں جو صرف عملہ دیکھ سکتا ہے"
       remove: "صارف کا نوٹ ہٹائیں"
-      show: "صارف کے نوٹس (%{count})"
-      delete_confirm: "کیا آپ واقعی وہ صارف نوٹ حذف کرنا چاہتے ہیں؟"
-      show_post: "پوسٹ دکھائیں"
+      show: "صارف کے (%{count}) نوٹس"
+      delete_confirm: "کیا آپ واقعی اس صارف نوٹ حذف کرنا چاہتے ہیں؟"
+      show_post: "دھاگہ دکھائیں"
       show_flag: "فلیگ دکھائیں"
       copy_reviewable_note: "%{username} کے پروفائل پر 'صارف نوٹس' میں نوٹ کاپی کریں؟"

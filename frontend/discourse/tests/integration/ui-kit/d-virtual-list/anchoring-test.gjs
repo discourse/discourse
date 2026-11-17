@@ -17,14 +17,6 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
 const ROW_PX = 40;
 const estimate = () => ROW_PX;
 
-class State {
-  @tracked items;
-
-  constructor(items) {
-    this.items = items;
-  }
-}
-
 function buildRows(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
@@ -80,9 +72,9 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{estimate}}
           @initialIndex={{500}}
+          @items={{items}}
           @overscan={{0}}
           as |item|
         >
@@ -117,10 +109,10 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
             }
           </style>
           <DVirtualList
-            @items={{items}}
             @estimateSize={{estimate}}
-            @initialIndex={{500}}
             @initialAlign={{align}}
+            @initialIndex={{500}}
+            @items={{items}}
             @overscan={{0}}
             as |item|
           >
@@ -138,7 +130,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
   }
 
   test("initial positioning runs only once", async function (assert) {
-    const state = new State(buildRows(1000));
+    const items = tracked(buildRows(1000));
 
     await render(
       <template>
@@ -150,10 +142,10 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{state.items}}
-          @key="id"
           @estimateSize={{estimate}}
           @initialIndex={{500}}
+          @items={{items.value}}
+          @key="id"
           @overscan={{0}}
           as |item|
         >
@@ -169,7 +161,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
     );
 
     await scrollTo(0);
-    state.items = buildRows(1000);
+    items.value = buildRows(1000);
     await settled();
 
     assert
@@ -196,12 +188,12 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
-          @key="id"
           @estimateSize={{estimate}}
           @itemRole="option"
-          @pinnedIndices={{pinFirst}}
+          @items={{items}}
+          @key="id"
           @overscan={{0}}
+          @pinnedIndices={{pinFirst}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -246,11 +238,11 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @pinnedIndices={{pinFifth}}
           @overscan={{0}}
+          @pinnedIndices={{pinFifth}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -279,11 +271,11 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @pinnedIndices={{null}}
           @overscan={{0}}
+          @pinnedIndices={{null}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>

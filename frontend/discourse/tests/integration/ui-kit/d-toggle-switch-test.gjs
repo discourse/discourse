@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { find, render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -28,28 +29,50 @@ module("Integration | ui-kit | DToggleSwitch", function (hooks) {
 
   test("it renders a label for the button", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
-    this.set("state", true);
+    const label = tracked("test.fooLabel");
+    const translatedLabel = tracked(undefined);
     await render(
       <template>
         <DToggleSwitch
-          @state={{this.state}}
-          @label={{this.label}}
-          @translatedLabel={{this.translatedLabel}}
+          @label={{label.value}}
+          @state={{true}}
+          @translatedLabel={{translatedLabel.value}}
         />
       </template>
     );
-
-    this.set("label", "test.fooLabel");
 
     assert
       .dom(".d-toggle-switch__checkbox-label")
       .hasText(i18n("test.fooLabel"));
 
-    this.setProperties({
-      label: null,
-      translatedLabel: "bar",
-    });
+    label.value = null;
+    translatedLabel.value = "bar";
+    await rerender();
 
     assert.dom(".d-toggle-switch__checkbox-label").hasText("bar");
+  });
+
+  test("it names the switch with its label", async function (assert) {
+    await render(
+      <template>
+        <DToggleSwitch @state={{false}} @translatedLabel="bar" />
+      </template>
+    );
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .hasAria(
+        "labelledby",
+        find(".d-toggle-switch__checkbox-label").id,
+        "the switch is announced with its visible label"
+      );
+  });
+
+  test("it leaves an unlabelled switch to its caller", async function (assert) {
+    await render(<template><DToggleSwitch @state={{false}} /></template>);
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .doesNotHaveAttribute("aria-labelledby");
   });
 });

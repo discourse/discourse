@@ -8,6 +8,9 @@ sq:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          outcomes:
+            failed: "Dështoi"
         reports:
           filters:
             sort_by:
@@ -38,6 +41,13 @@ sq:
       ai_decoded_transcript:
         type: "Lloji"
         error: "Gabim"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Imazhet"
+          name: "Emri"
+          type: "Lloji"
+          type_score: "Vlerësimi"
       ai_tool_approval:
         loading: "Duke ngarkuar..."
         tool: "Veprimi"
@@ -49,20 +59,24 @@ sq:
       llm_selector:
         none: "Asnjë"
       features:
-        disabled: "(e çaktivizuar)"
-        groups: "Grupet:"
+        table:
+          status: "Status"
+          enabled: "Aktivizuar"
+          groups: "Grupet"
+        chatbot:
+          places:
+            personal_messages: "Mesazhe personale"
+            chat_direct_messages: "Mesazhet e bisedës"
+            none: "I padisponueshëm"
         no_agent: "Nuk është vendosur"
         no_groups: "Asnjë"
         edit: "Rregullimet"
-        expand_list:
-          one: "(%{count} tjetër)"
-          other: "(%{count} të tjera)"
-        collapse_list: "(shfaq më pak)"
         nav:
           enabled: "Aktivizuar"
         filters:
-          all: "Të gjitha"
           reset: "Rivendosni"
+        sentiment:
+          enabled: "Aktivizuar"
         search:
           name: "Kërko"
         image_caption:
@@ -73,7 +87,18 @@ sq:
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
-        category_scope: "Categories"
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
+          ai_translation_personal_messages:
+            label: "Mesazhe personale"
+            choices:
+              none: "Asnjë"
+              all: "Të gjitha"
+          content_localization_language_switcher:
+            choices:
+              none: "Asnjëri"
+              all: "Të gjithë"
         model_progress:
           detail:
             columns:
@@ -88,6 +113,8 @@ sq:
               title: "Categories"
             tag:
               title: "Etiketat"
+        admin_actions:
+          enabled: "Aktivizuar"
         stats:
           eta_minutes:
             one: "%{count} minutë"
@@ -104,6 +131,8 @@ sq:
             other: "%{count} postime"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Asnjë"
+        no_decision_model_selected: "Asnjë"
         enable: "Aktivizo"
         test_modal:
           spam: "Spam"
@@ -119,8 +148,6 @@ sq:
         apply: "Apliko"
         failed: "Dështoi"
         unknown: "I panjohur"
-        topic_id: "ID e temës"
-        post_id: "ID e postimit"
         time: "Koha"
         when: "Kur"
         request: "Kërkesë"
@@ -131,6 +158,7 @@ sq:
         post_short: "Postimi %{id}"
         duration: "Kohëzgjatja"
         actions: "Veprimet"
+        view_details: "Detaje"
         periods:
           custom: "Grupet e krijuara"
         detail:
@@ -182,6 +210,11 @@ sq:
         edit: "Redaktoni"
         delete: "Fshij"
         embedding: "Embedding"
+      decision_models:
+        no_preset: "Asnjë"
+        display_name: "Emri"
+        edit: "Redaktoni"
+        delete: "Fshij"
       mcp_servers:
         name: "Emri"
         description: "Përshkrimi"
@@ -193,6 +226,15 @@ sq:
         delete: "Fshij"
         tools_modal:
           required: "E nevojshme"
+      models:
+        name: "Emri"
+        type: "Lloji"
+        edit: "Redaktoni"
+        select_type: "Zgjidhni"
+        types:
+          embedding: "Embedding"
+        filters:
+          all: "Të gjitha llojet"
       llms:
         display_name: "Emri"
         vision_modes:
@@ -240,6 +282,15 @@ sq:
         providers:
           google: "Google"
           fake: "Grupet e krijuara"
+      ai_artifact:
+        editor:
+          version: "Versioni"
+          default: "Paracaktuar"
+          apply: "Apliko"
+        share: "Shpërndaje"
+        create_link: "Krijoni lidhje"
+        copy_link: "Kopjoni lidhjen"
+        filter_all: "Të gjitha"
       ai_bot:
         debug_ai_modal:
           duration_label: "Kohëzgjatja:"
@@ -263,9 +314,18 @@ sq:
       summarization:
         chat:
           summarize: "Përmblidhni"
+      ai_search:
+        related_replies:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
+        tabs:
+          topics: "Topics"
+          messages: "Mesazhet"
       discobot_discoveries:
-        regular_results: "Topics"
-        collapse: "Zvogëloni"
-        tooltip:
-          actions:
-            disable: "Çaktivizoni"
+        legacy:
+          regular_results: "Topics"
+          collapse: "Zvogëloni"
+          tooltip:
+            actions:
+              disable: "Çaktivizoni"
+        search_messages: "Mesazhet"

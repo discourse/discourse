@@ -54,7 +54,6 @@ fr:
         scoring_configuration: "Configuration du calcul des scores"
         scoring_configuration_description: "Remplacez les règles globales de calcul des scores pour ce classement. Laissez les champs vides pour utiliser les valeurs globales par défaut."
         scorable_categories: "Catégories prises en compte dans le score"
-        scorable_categories_help: "Catégories à inclure dans le calcul du score. Laissez ce champ vide pour utiliser le paramètre global."
         score_overrides: "Pondérations du score"
         score_overrides_help: "Remplacez la valeur en points de chaque action. Laissez ce champ vide pour utiliser la valeur globale par défaut. Définissez-la sur 0 pour désactiver l'attribution de points."
         weight:
@@ -86,9 +85,7 @@ fr:
       close: "Fermer"
       delete: "Supprimer"
       edit: "Modifier"
-      back: "Retour"
       save: "Enregistrer"
-      apply: "Appliquer"
       recalculate: "Recalculer les scores"
       recalculating: "Recalcul des scores..."
       completed: "Terminé ! Les scores ont été recalculés avec succès."
@@ -107,9 +104,11 @@ fr:
       admin:
         title: "Gamification"
         name: "Nom"
+        created_by: "Créé par "
         period: "Période"
     discourse_workflows:
       gamification_score:
         username: "Utilisateur"
         date: "Date"
         description: "Description"
+        category_id: "Catégorie"

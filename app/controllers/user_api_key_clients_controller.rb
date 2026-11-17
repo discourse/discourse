@@ -52,13 +52,13 @@ class UserApiKeyClientsController < ApplicationController
 
   def require_params
     %i[client_id application_name public_key auth_redirect scopes].each { |p| params.require(p) }
-    @scopes = params[:scopes].to_s.split(",").map(&:strip).reject(&:blank?)
+    @scopes = params[:scopes].to_s.split(",").map(&:strip).reject(&:blank?).uniq
     raise Discourse::InvalidParameters.new(:scopes) if @scopes.empty?
   end
 
   def validate_params
     raise Discourse::InvalidAccess unless UserApiKeyClientScope.allowed.superset?(Set.new(@scopes))
-    OpenSSL::PKey::RSA.new(params[:public_key])
+    UserApiKey::DeviceAuth::Crypto.parse_public_key!(params[:public_key])
   end
 
   def ensure_new_client

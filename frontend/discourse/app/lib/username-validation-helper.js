@@ -20,6 +20,8 @@ function validResult(attrs) {
 
 export default class UsernameValidationHelper {
   @tracked usernameValidationResult;
+
+  /** @type {string | null | undefined} */
   checkedUsername = null;
 
   constructor({
@@ -44,19 +46,6 @@ export default class UsernameValidationHelper {
     this.updateUsernames = updateUsernames;
   }
 
-  async fetchExistingUsername() {
-    const accountUsername = this.getAccountUsername();
-    const result = await User.checkUsername(null, this.getAccountEmail());
-
-    if (
-      result.suggestion &&
-      (isEmpty(accountUsername) ||
-        accountUsername === this.getAuthOptionsUsername())
-    ) {
-      this.updateUsernames(result.suggestion);
-    }
-  }
-
   get usernameValidation() {
     const accountUsername = this.getAccountUsername();
     if (
@@ -73,6 +62,19 @@ export default class UsernameValidationHelper {
     }
 
     return result;
+  }
+
+  async fetchExistingUsername() {
+    const accountUsername = this.getAccountUsername();
+    const result = await User.checkUsername(null, this.getAccountEmail());
+
+    if (
+      result.suggestion &&
+      (isEmpty(accountUsername) ||
+        accountUsername === this.getAuthOptionsUsername())
+    ) {
+      this.updateUsernames(result.suggestion);
+    }
   }
 
   basicUsernameValidation(username) {

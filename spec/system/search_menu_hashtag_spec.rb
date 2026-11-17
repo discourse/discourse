@@ -2,6 +2,7 @@
 
 describe "Search menu hashtag autocomplete" do
   let(:search_page) { PageObjects::Pages::Search.new }
+
   fab!(:user)
   fab!(:category) { Fabricate(:category, name: "UX", slug: "ux") }
   fab!(:tag) { Fabricate(:tag, name: "design") }

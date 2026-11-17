@@ -1,26 +1,10 @@
-import { click, render, settled, waitFor } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { fillInCodeEditor } from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import PinDataEditor from "discourse/plugins/discourse-workflows/admin/components/workflows/context/pin-data-editor";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
-
-async function setBuffer(element, value) {
-  const editorContent = element.querySelector(
-    ".workflows-context-panel__editor .cm-content"
-  );
-  if (!editorContent) {
-    throw new Error("CodeMirror content not found");
-  }
-  const view = editorContent.cmTile?.root?.view;
-  if (!view) {
-    throw new Error("CodeMirror view not found");
-  }
-  view.dispatch({
-    changes: { from: 0, to: view.state.doc.length, insert: value },
-  });
-  await settled();
-}
 
 module(
   "Integration | Component | Workflows | Context | PinDataEditor",
@@ -39,9 +23,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -57,9 +41,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -82,9 +66,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -93,7 +77,10 @@ module(
       await click(".workflows-context-panel__empty-state-btn");
       await waitFor(".cm-editor");
 
-      await setBuffer(this.element, "{ not json");
+      await fillInCodeEditor(
+        ".workflows-context-panel__editor .code-editor",
+        "{ not json"
+      );
       await waitFor(".workflows-context-panel__editor-error");
 
       assert
@@ -108,9 +95,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -119,7 +106,10 @@ module(
       await click(".workflows-context-panel__empty-state-btn");
       await waitFor(".cm-editor");
 
-      await setBuffer(this.element, '"not an array"');
+      await fillInCodeEditor(
+        ".workflows-context-panel__editor .code-editor",
+        '"not an array"'
+      );
       await waitFor(".workflows-context-panel__editor-error");
 
       assert
@@ -143,9 +133,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -155,7 +145,10 @@ module(
       await waitFor(".cm-editor");
 
       // Unwrapped form — the editor wraps it as `{json: ...}` on save.
-      await setBuffer(this.element, '[{"id": 42}]');
+      await fillInCodeEditor(
+        ".workflows-context-panel__editor .code-editor",
+        '[{"id": 42}]'
+      );
       await waitFor(".workflows-context-panel__editor-save:not([disabled])");
 
       await click(".workflows-context-panel__editor-save");
@@ -190,9 +183,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{true}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -201,7 +194,10 @@ module(
       await click(".workflows-context-panel__empty-state-btn");
       await waitFor(".cm-editor");
 
-      await setBuffer(this.element, '[{"json": {"id": 1}}]');
+      await fillInCodeEditor(
+        ".workflows-context-panel__editor .code-editor",
+        '[{"json": {"id": 1}}]'
+      );
       await waitFor(".workflows-context-panel__editor-save:not([disabled])");
       await click(".workflows-context-panel__editor-save");
 
@@ -217,9 +213,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{items}}
             @canEdit={{true}}
+            @initialItems={{items}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
@@ -250,16 +246,19 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{items}}
             @canEdit={{true}}
+            @initialItems={{items}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>
       );
 
       await waitFor(".cm-editor");
-      await setBuffer(this.element, '[{"hello": "edited"}]');
+      await fillInCodeEditor(
+        ".workflows-context-panel__editor .code-editor",
+        '[{"hello": "edited"}]'
+      );
 
       assert.dom(".workflows-context-panel__editor-toolbar").exists();
       assert.dom(".workflows-context-panel__editor-save").exists();
@@ -270,9 +269,9 @@ module(
       await render(
         <template>
           <PinDataEditor
-            @nodeName="n1"
-            @initialItems={{undefined}}
             @canEdit={{false}}
+            @initialItems={{undefined}}
+            @nodeName="n1"
             @session={{this.session}}
           />
         </template>

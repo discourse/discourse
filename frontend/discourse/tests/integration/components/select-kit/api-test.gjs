@@ -14,10 +14,8 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.setProperties({
-      comboBox: selectKit(".combo-box"),
-      singleSelect: selectKit(".single-select:not(.combo-box)"),
-    });
+    this.comboBox = selectKit(".combo-box");
+    this.singleSelect = selectKit(".single-select:not(.combo-box)");
   });
 
   hooks.afterEach(function () {
@@ -40,14 +38,14 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
         <SingleSelect
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -80,14 +78,14 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
         <SingleSelect
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -117,9 +115,9 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
       <template>
         <div id="test"></div>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -148,9 +146,9 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -181,14 +179,14 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
         <SingleSelect
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );

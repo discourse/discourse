@@ -9,7 +9,7 @@ module Jobs
       to_award = {}
 
       Post
-        .secured(Guardian.new)
+        .with_visible_post_types(Guardian.new)
         .select(:id, :created_at, :raw, :user_id)
         .visible
         .public_posts

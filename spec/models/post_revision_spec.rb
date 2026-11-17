@@ -30,4 +30,34 @@ RSpec.describe PostRevision do
     pr.reload
     expect(pr.modifications).to eq({ key: :value })
   end
+
+  it "can't be hidden and unlisted at the same time" do
+    post_revision = Fabricate(:post_revision, hidden: true)
+
+    expect { post_revision.unlist! }.to raise_error(ActiveRecord::CheckViolation)
+  end
+
+  it "relists an unlisted revision when hiding it" do
+    post_revision = Fabricate(:post_revision, unlisted: true)
+
+    post_revision.hide!
+
+    expect(post_revision.reload).to have_attributes(hidden: true, unlisted: false)
+  end
+
+  describe ".latest_for" do
+    fab!(:post)
+    fab!(:listed_revision) { Fabricate(:post_revision, post:, number: 2) }
+    fab!(:unlisted_revision) { Fabricate(:post_revision, post:, number: 3, unlisted: true) }
+
+    it "returns the latest listed revision when skipping unlisted ones" do
+      expect(described_class.latest_for(post, Guardian.new)).to eq(listed_revision)
+    end
+
+    it "returns the latest unlisted revision when no listed one is left" do
+      listed_revision.unlist!
+
+      expect(described_class.latest_for(post, Guardian.new)).to eq(unlisted_revision)
+    end
+  end
 end

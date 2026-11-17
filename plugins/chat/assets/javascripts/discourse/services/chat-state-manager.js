@@ -1,10 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { withoutPrefix } from "discourse/lib/get-url";
+import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 import { CHAT_PANEL } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
@@ -35,10 +35,86 @@ export default class ChatStateManager extends Service {
   @tracked isDrawerActive = false;
   @tracked hasPreloadedChannels = false;
 
+  /**
+   * Where a chat page renders its navbar when the header stands in for it,
+   * as it does alongside the mobile tab bar.
+   */
+  @tracked headerNavbarSlot = null;
+
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
   _store = new KeyValueStore(PREFERRED_MODE_STORE_NAMESPACE);
+
+  get isFullPagePreferred() {
+    return !!(
+      this.site.mobileView ||
+      this._store.getObject(PREFERRED_MODE_KEY) === FULL_PAGE_CHAT
+    );
+  }
+
+  get isDrawerPreferred() {
+    return !!(
+      !this.isFullPagePreferred ||
+      (this.site.desktopView &&
+        (this.hasNoPreferredMode ||
+          this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
+    );
+  }
+
+  get hasNoPreferredMode() {
+    return !this._store.getObject(PREFERRED_MODE_KEY);
+  }
+
+  get isFullPageActive() {
+    return this.router.currentRouteName?.startsWith("chat");
+  }
+
+  get isActive() {
+    return this.isFullPageActive || this.isDrawerActive;
+  }
+
+  get canInteract() {
+    const routeName = this.router.currentRouteName;
+    return routeName !== "wizard" && !routeName?.startsWith("wizard.");
+  }
+
+  get isDrawerCollapsed() {
+    return this.isDrawerActive && !this.isDrawerExpanded;
+  }
+
+  get isPinnedMessagesPaneOpen() {
+    return this.router.currentRouteName === "chat.channel.pins";
+  }
+
+  get lastKnownAppURL() {
+    let url = this._appURL;
+
+    if (!url || url === "/") {
+      url = this.router.urlFor(discoveryHomepageRoute());
+    }
+
+    return withoutPrefix(url);
+  }
+
+  get lastKnownChatURL() {
+    const url = this._chatURL;
+
+    if (url) {
+      return withoutPrefix(url);
+    }
+
+    // On mobile or drawer mode, default to starred channels if user has any
+    // On desktop fullscreen, starred channels are shown in the sidebar
+    if (
+      (this.site.mobileView || this.isDrawerPreferred) &&
+      this.chatChannelsManager.hasStarredChannels
+    ) {
+      return "/chat/starred-channels";
+    }
+
+    return "/chat";
+  }
 
   reset() {
     this._store.remove(PREFERRED_MODE_KEY);
@@ -138,47 +214,6 @@ export default class ChatStateManager extends Service {
     this.#publishStateChange();
   }
 
-  get isFullPagePreferred() {
-    return !!(
-      this.site.mobileView ||
-      this._store.getObject(PREFERRED_MODE_KEY) === FULL_PAGE_CHAT
-    );
-  }
-
-  get isDrawerPreferred() {
-    return !!(
-      !this.isFullPagePreferred ||
-      (this.site.desktopView &&
-        (this.hasNoPreferredMode ||
-          this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
-    );
-  }
-
-  get hasNoPreferredMode() {
-    return !this._store.getObject(PREFERRED_MODE_KEY);
-  }
-
-  get isFullPageActive() {
-    return this.router.currentRouteName?.startsWith("chat");
-  }
-
-  get isActive() {
-    return this.isFullPageActive || this.isDrawerActive;
-  }
-
-  get canInteract() {
-    const routeName = this.router.currentRouteName;
-    return routeName !== "wizard" && !routeName?.startsWith("wizard.");
-  }
-
-  get isDrawerCollapsed() {
-    return this.isDrawerActive && !this.isDrawerExpanded;
-  }
-
-  get isPinnedMessagesPaneOpen() {
-    return this.router.currentRouteName === "chat.channel.pins";
-  }
-
   storeAppURL(url = null) {
     if (url) {
       this._appURL = url;
@@ -191,35 +226,6 @@ export default class ChatStateManager extends Service {
 
   storeChatURL(url) {
     this._chatURL = url;
-  }
-
-  get lastKnownAppURL() {
-    let url = this._appURL;
-
-    if (!url || url === "/") {
-      url = this.router.urlFor(`discovery.${defaultHomepage()}`);
-    }
-
-    return withoutPrefix(url);
-  }
-
-  get lastKnownChatURL() {
-    const url = this._chatURL;
-
-    if (url) {
-      return withoutPrefix(url);
-    }
-
-    // On mobile or drawer mode, default to starred channels if user has any
-    // On desktop fullscreen, starred channels are shown in the sidebar
-    if (
-      (this.site.mobileView || this.isDrawerPreferred) &&
-      this.chatChannelsManager.hasStarredChannels
-    ) {
-      return "/chat/starred-channels";
-    }
-
-    return "/chat";
   }
 
   #publishStateChange() {

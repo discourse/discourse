@@ -27,13 +27,13 @@ export default class QueryModeSwitch extends Component {
 
   <template>
     <DSegmentedControl
-      @name="query-mode"
-      @value={{@value}}
-      @items={{this.items}}
-      @onSelect={{@onChange}}
-      @translatedLabel={{i18n "explorer.mode.label"}}
       class="query-mode-switch"
       ...attributes
+      @items={{this.items}}
+      @name="query-mode"
+      @onSelect={{@onChange}}
+      @translatedLabel={{i18n "explorer.mode.label"}}
+      @value={{@value}}
     />
   </template>
 }

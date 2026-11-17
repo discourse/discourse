@@ -90,7 +90,7 @@ RSpec.describe ReviewableScore, type: :model do
     fab!(:user)
     let(:user_stat) { user.user_stat }
 
-    it "returns 0 for a user with no flags" do
+    it "returns zero when there are no reviewed flags" do
       expect(ReviewableScore.user_accuracy_bonus(user)).to eq(0.0)
     end
 

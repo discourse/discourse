@@ -5,18 +5,26 @@ module JsonApiKit
     class Filters
       delegate :fetch, to: :filters
 
-      def initialize(filters)
-        @filters = filters.index_by(&:name)
+      def initialize(declarations)
+        @declarations = declarations
       end
 
-      def apply(scope, filtering = {})
+      def names = filters.keys
+
+      def with(additional_filters) = self.class.new(declarations.chain(additional_filters))
+
+      def apply(scope, filtering = {}, adapter:)
         return scope if filtering.blank?
-        filtering.reduce(scope) { |narrowed, (name, value)| fetch(name).apply(narrowed, value) }
+        filtering.reduce(scope) do |narrowed, (name, value)|
+          fetch(name).apply(narrowed, value, adapter:)
+        end
       end
 
       private
 
-      attr_reader :filters
+      attr_reader :declarations
+
+      def filters = @filters ||= declarations.index_by(&:name)
     end
   end
 end

@@ -21,7 +21,7 @@ RSpec.describe PrettyText::Helpers do
       expect(result["動画"][:url]).to eq(thumbnail.url)
     end
 
-    it "should return cdn url if available" do
+    it "returns the CDN URL when available" do
       short_url = upload.short_url
       result = PrettyText::Helpers.lookup_upload_urls([short_url])
       expect(result[short_url][:url]).to eq(upload.url)
@@ -165,6 +165,18 @@ RSpec.describe PrettyText::Helpers do
           type: "category",
         },
       )
+    end
+
+    it "only resolves hashtags that all the cooking users resolve to the same target" do
+      Fabricate(:private_category, slug: "somecooltag", group: Fabricate(:group))
+      admin = Fabricate(:admin)
+
+      expect(
+        PrettyText::Helpers.hashtag_lookup("somecooltag", [user.id, admin.id], %w[category tag]),
+      ).to eq(nil)
+      expect(
+        PrettyText::Helpers.hashtag_lookup("somecooltag", [user.id, user.id], %w[category tag]),
+      ).to include(id: tag.id, type: "tag")
     end
 
     it "does not return any results for disabled types" do

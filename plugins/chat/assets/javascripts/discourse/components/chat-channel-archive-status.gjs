@@ -39,18 +39,18 @@ export default class ChatChannelArchiveStatus extends Component {
     );
   }
 
-  @action
-  retryArchive() {
-    return this.chatApi
-      .createChannelArchive(this.args.channel.id)
-      .catch(popupAjaxError);
-  }
-
   get topicUrl() {
     if (!this.args.channel.archive.topicId) {
       return "";
     }
     return getURL(`/t/-/${this.args.channel.archive.topicId}`);
+  }
+
+  @action
+  retryArchive() {
+    return this.chatApi
+      .createChannelArchive(this.args.channel.id)
+      .catch(popupAjaxError);
   }
 
   <template>

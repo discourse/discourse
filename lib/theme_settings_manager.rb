@@ -36,7 +36,15 @@ class ThemeSettingsManager
   end
 
   def value
-    has_record? ? db_record.value : default
+    configured_value
+  end
+
+  def default_value
+    default
+  end
+
+  def value_for_editing
+    value
   end
 
   def type_name
@@ -93,7 +101,7 @@ class ThemeSettingsManager
   def ensure_is_valid_value!(new_value)
     return if new_value.nil?
 
-    error_messages = ThemeSettingsValidator.validate_value(new_value, type, @opts)
+    error_messages = ThemeSettingsValidator.validate_value(new_value, type, @opts.merge(name:))
     raise Discourse::InvalidParameters.new error_messages.join(" ") if error_messages.present?
   end
 
@@ -105,5 +113,11 @@ class ThemeSettingsManager
   def has_max?
     max = @opts[:max]
     (max.is_a?(::Integer) || max.is_a?(::Float)) && max != ::Float::INFINITY
+  end
+
+  protected
+
+  def configured_value
+    has_record? ? db_record.value : default
   end
 end

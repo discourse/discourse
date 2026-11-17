@@ -29,9 +29,9 @@ export default class HandleExample extends Component {
         {{dDragAndDropSource type="card" dragHandle=this.gripElement}}
       >
         <span
-          {{this.captureGrip}}
-          class="styleguide-drag-and-drop__grip"
           aria-hidden="true"
+          class="styleguide-drag-and-drop__grip"
+          {{this.captureGrip}}
         >{{dIcon "grip-vertical"}}</span>
         {{i18n "styleguide.sections.drag_and_drop.selectable_text"}}
       </div>

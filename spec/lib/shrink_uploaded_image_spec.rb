@@ -31,9 +31,9 @@ RSpec.describe ShrinkUploadedImage do
 
     it "updates HotlinkedMedia records when there is an upload for downsized image" do
       OptimizedImage.downsize(
-        Discourse.store.path_for(upload),
-        "/tmp/smaller.png",
-        "10000@",
+        from: Discourse.store.path_for(upload),
+        to: "/tmp/smaller.png",
+        max_pixels: 10_000,
         filename: upload.original_filename,
       )
       smaller_sha1 = Upload.generate_digest("/tmp/smaller.png")

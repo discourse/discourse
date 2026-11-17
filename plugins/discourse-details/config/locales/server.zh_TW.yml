@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    details_enabled: '啟用在貼文中新增可展開詳細內容的功能。此功能位於編輯器工具列的彈出式選單中。如果變更此設定，必須使用 `rake posts:rebake` 重新烘焙所有貼文。'
+  details:
+    excerpt_details: "（點選以查看更多詳細內容）"

@@ -59,7 +59,8 @@ module JsonApiKit
             validate :check_cursors, if: -> { raw_cursors.present? }
             validate :check_cursor_ordering, if: -> { cursors.present? && sortable? }
             validate :check_anchor_name, if: -> { anchor.present? }
-            validate :check_anchor_value, if: -> { anchor.present? }
+            validate :check_anchor_value,
+                     if: -> { anchor.present? && anchoring.name.in?(resource.anchor_names) }
             validate :check_anchor_ordering, if: -> { anchor.present? && sortable? }
 
             def cursor? = after.present? || before.present?
@@ -69,26 +70,26 @@ module JsonApiKit
             def window? = window_names.present?
 
             def window_names
-              { before_size:, after_size:, include_anchor: }.compact.keys.map { "page[#{it}]" }
+              { before_size:, after_size:, include_anchor: }.compact.keys
             end
 
             private
 
             def cursors
               raw_cursors
-                .select { |_, raw| Pagination::Cursor.valid?(raw) }
-                .transform_values { Pagination::Cursor.parse(it) }
+                .select { |_, raw| resource.valid_cursor?(raw) }
+                .transform_values { resource.parse_cursor(it) }
             end
 
             def resource = options[:resource]
 
             def raw_sort = options[:raw_parameters][:sort]
 
-            def ordering = raw_sort.nil? ? {} : Sorting::SORT.cast(raw_sort)
+            def ordering = INDIFFERENT_HASH.cast(raw_sort)
 
             def sortable?
               return false unless ordering
-              ordering.values.all? { it.in?(Sorting::DIRECTIONS.values) } &&
+              ordering.values.all? { it.in?(SORT_DIRECTIONS.values) } &&
                 resource.sortable_by?(ordering:)
             end
 
@@ -102,8 +103,8 @@ module JsonApiKit
             def raw_cursors = { after:, before: }.compact
 
             def check_cursors
-              (raw_cursors.keys - cursors.keys).each do
-                errors.add(it, :unreadable_cursor, message: "unreadable cursor")
+              (raw_cursors.keys - cursors.keys).each do |name|
+                errors.add(name, :unreadable_cursor, message: "unreadable cursor")
               end
             end
 
@@ -114,32 +115,40 @@ module JsonApiKit
             end
 
             def check_anchor_name
-              ([anchor_name.to_s] - resource.anchor_names).each do
-                errors.add(:anchor, :no_such_name, name: it, message: "no such name")
+              ([anchoring.name] - resource.anchor_names).each do
+                errors.add(
+                  :anchor,
+                  :no_such_name,
+                  name: Name::Anchor.new(value: it.to_s, type: resource.type),
+                  message: "no such name",
+                )
               end
             end
 
             def check_anchor_value
-              return unless anchor_value.is_a?(Enumerable)
-              errors.add(:anchor, :bad_value, name: anchor_name, message: "bad value")
+              return if resource.anchor_accepts?(anchoring)
+              errors.add(
+                :anchor,
+                :bad_value,
+                name: Name::Anchor.new(value: anchoring.name, type: resource.type),
+                message: "bad value",
+              )
             end
 
             def check_anchor_ordering
-              return if resource.anchored_by?(anchor_name:, ordering:)
+              return unless anchoring.name.in?(resource.anchor_names)
+              return if resource.anchored_by?(anchor_name: anchoring.name, ordering:)
               errors.add(
                 :anchor,
                 :not_the_sort,
-                name: anchor_name,
-                key: resource.order(ordering).leading.name,
+                name: Name::Anchor.new(value: anchoring.name, type: resource.type),
+                key:
+                  Name::Sort.new(value: resource.leading_sort_name(ordering), type: resource.type),
                 message: "not the sort",
               )
             end
 
-            def anchor_pair = Array(anchor.to_a.first)
-
-            def anchor_name = anchor_pair.first
-
-            def anchor_value = anchor_pair.last
+            def anchoring = @anchoring ||= Anchoring.for(anchor)
           end
         end
       end

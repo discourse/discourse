@@ -3,7 +3,6 @@ import { concat, fn, hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
 import type { ToastComponentArgs } from "discourse/float-kit/lib/constants";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -61,11 +60,11 @@ const DDefaultToast: TemplateOnlyComponent<DDefaultToastSignature> = <template>
           {{#each @data.actions as |toastAction|}}
             {{#if toastAction.action}}
               <DButton
-                @icon={{toastAction.icon}}
-                @translatedLabel={{toastAction.label}}
-                @action={{fn toastAction.action (hash data=@data close=@close)}}
                 class={{toastAction.class}}
                 tabindex="0"
+                @action={{fn toastAction.action (hash data=@data close=@close)}}
+                @icon={{toastAction.icon}}
+                @translatedLabel={{toastAction.label}}
               />
             {{/if}}
           {{/each}}
@@ -73,7 +72,7 @@ const DDefaultToast: TemplateOnlyComponent<DDefaultToastSignature> = <template>
       {{/if}}
     </div>
     <div class="fk-d-default-toast__close-container">
-      <DButton class="btn-transparent" @icon="xmark" @action={{@close}} />
+      <DButton class="btn-transparent" @action={{@close}} @icon="xmark" />
     </div>
   </div>
 </template>;

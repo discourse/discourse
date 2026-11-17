@@ -16,7 +16,21 @@ Each authenticator **must** implement a subclass of [Auth::Authenticator](https:
 
 https://github.com/discourse/discourse/blob/main/lib/auth/facebook_authenticator.rb
 
-`name`, `enabled?` and `register_middleware` must be overridden by implementing classes.
+`name` and `register_middleware` must be overridden by implementing classes, along with `enable_setting` — the boolean site setting an admin uses to turn the provider on.
+
+An authenticator **should** also declare `required_settings`: the site settings that must have a value before an authentication can succeed. The base class uses them for `configured?`, and `enabled?` is `enable_setting && configured?`, so a provider with missing credentials is never advertised on the login page and its `/auth/<name>` route stays closed — otherwise clicking the button strands the user on the provider's own error page with no way back. Declaring `required_settings` also lets `AuthProviderCredentialsValidator` refuse to enable the provider in the first place; wire it up with `validator: "AuthProviderCredentialsValidator"` on the enable setting.
+
+```rb
+def enable_setting
+  :enable_google_oauth2_logins
+end
+
+def required_settings
+  %i[google_oauth2_client_id google_oauth2_client_secret]
+end
+```
+
+An authenticator that overrides `enabled?` directly opts out of both gates.
 
 > :information_source: **Aside:** for multisite compatibility, it is important that any site-specific information is supplied to omniauth in a `setup` lambda, rather than being fixed at the time of definition. See all core authenticators for examples of this.
 
@@ -25,6 +39,16 @@ All logic to link external accounts to Discourse accounts is handled by `Auth::M
 https://github.com/discourse/discourse/blob/b46b6e72d1906ca31e29855bda71f3498c8e203f/lib/auth/twitter_authenticator.rb#L10-L14
 
 Data is stored in the `user_associated_accounts` database table. `provider_uid`, `info`, `credentials` and `extra` are all taken directly from the data returned by omniauth.
+
+Provider images are downloaded from `info.image` on authentication and retained in each account's `avatar_upload_id`. They remain separate from the user's uploaded picture and selectable presets. The avatar picker offers cached images from enabled providers under the existing avatar permissions.
+
+`UserAvatar` owns avatar imports, selection, refreshes, and cleanup. Authentication schedules provider retrieval through `UserAvatar.retrieve_for_associated_account`; download jobs and importers use `UserAvatar.import_url_for_user`, passing `associated_account_id` for provider images. User convenience methods and account/upload lifecycle callbacks delegate avatar changes to `UserAvatar`; permissions remain in Guardian.
+
+`user_avatars.selected_user_associated_account_id` records an explicitly selected provider. Subsequent downloads update the displayed avatar only while that provider remains selected. New accounts initially select their provider when no avatar was assigned; `auth_overrides_avatar` continues to enforce provider selection. Existing avatars retain their appearance and are not assigned a provider automatically. Existing linked accounts populate their provider choices on their next login.
+
+Choosing another avatar clears provider selection. Disconnecting an account preserves its currently displayed image as a local snapshot and preserves any separate uploaded picture. Failed downloads retain the previous image. Queued downloads are discarded if the account was disconnected, moved to another user, or now supplies a different image URL.
+
+Gravatar selection still uses upload-ID matching. A custom or preset picture identical to the cached Gravatar can therefore follow subsequent Gravatar updates.
 
 https://github.com/discourse/discourse/blob/b46b6e72d1906ca31e29855bda71f3498c8e203f/app/models/user_associated_account.rb#L13-L24
 

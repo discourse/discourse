@@ -25,11 +25,11 @@ export default class PinnedButton extends Component {
       <div class="pinned-button" ...attributes>
         {{#if @appendReason}}
           <p class="reason">
-            <PinnedOptions @value={{@pinned}} @topic={{@topic}} />
+            <PinnedOptions @topic={{@topic}} @value={{@pinned}} />
             <span class="text">{{trustHTML this.reasonText}}</span>
           </p>
         {{else}}
-          <PinnedOptions @value={{@pinned}} @topic={{@topic}} />
+          <PinnedOptions @topic={{@topic}} @value={{@pinned}} />
         {{/if}}
       </div>
     {{/unless}}

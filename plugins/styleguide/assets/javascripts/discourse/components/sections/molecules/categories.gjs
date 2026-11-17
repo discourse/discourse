@@ -1,9 +1,9 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import CategoryBadgeExample from "../../examples/molecules/category-badge";
+import CategoryBadgeExample from "../../examples/molecules/category-badge.gjs";
 import categoryBadgeSource from "../../examples/molecules/category-badge?source=file";
 
 export default <template>
-  <StyleguideExample @title="categoryBadge" @code={{categoryBadgeSource}}>
+  <StyleguideExample @code={{categoryBadgeSource}} @title="categoryBadge">
     <CategoryBadgeExample @categories={{@dummy.categories}} />
   </StyleguideExample>
 </template>

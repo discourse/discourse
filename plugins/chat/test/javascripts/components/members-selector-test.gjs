@@ -45,12 +45,12 @@ module("Component | MembersSelector", function (hooks) {
     await render(
       <template>
         <MembersSelector
+          @cancel={{noop}}
+          @close={{noop}}
+          @maxReached={{false}}
           @members={{members}}
           @membersCount={{0}}
-          @maxReached={{false}}
           @onChange={{noop}}
-          @close={{noop}}
-          @cancel={{noop}}
         />
       </template>
     );

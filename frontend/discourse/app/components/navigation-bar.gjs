@@ -13,6 +13,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class NavigationBarComponent extends Component {
+  @service mobileTabBar;
   @service site;
 
   get filterType() {
@@ -29,9 +30,10 @@ export default class NavigationBarComponent extends Component {
   }
 
   get showDropdown() {
+    // The tab bar shows the views as pills beside it, not as a dropdown
     return applyValueTransformer(
       "navigation-bar-dropdown-mode",
-      this.site.mobileView
+      this.site.mobileView && !this.mobileTabBar.enabled
     );
   }
 
@@ -48,13 +50,13 @@ export default class NavigationBarComponent extends Component {
   }
 
   <template>
-    <ul id="navigation-bar" class="nav nav-pills">
+    <ul class="nav nav-pills" id="navigation-bar" ...attributes>
       {{#if this.showDropdown}}
         <li>
           <DMenu
-            @modalForMobile={{true}}
             @autofocus={{true}}
             @identifier="list-control-toggle-link"
+            @modalForMobile={{true}}
             @onRegisterApi={{this.onRegisterApi}}
           >
             <:trigger>
@@ -68,17 +70,17 @@ export default class NavigationBarComponent extends Component {
               <DDropdownMenu {{on "click" this.dMenu.close}} as |dropdown|>
                 {{#each @navItems as |navItem|}}
                   <NavigationItem
+                    class={{concat "nav-item_" navItem.name}}
+                    @category={{@category}}
                     @content={{navItem}}
                     @filterMode={{@filterMode}}
-                    @category={{@category}}
-                    class={{concat "nav-item_" navItem.name}}
                   />
 
                 {{/each}}
                 <dropdown.item>
                   <PluginOutlet
-                    @name="extra-nav-item"
                     @connectorTagName="span"
+                    @name="extra-nav-item"
                     @outletArgs={{lazyHash
                       category=@category
                       tag=@tag
@@ -92,23 +94,24 @@ export default class NavigationBarComponent extends Component {
         </li>
         <li>
           <PluginOutlet
-            @name="inline-extra-nav-item"
             @connectorTagName="span"
+            @name="inline-extra-nav-item"
             @outletArgs={{lazyHash category=@category filterMode=@filterMode}}
           />
         </li>
       {{else}}
         {{#each @navItems as |navItem|}}
           <NavigationItem
-            @content={{navItem}}
-            @filterMode={{@filterMode}}
-            @category={{@category}}
             class={{concat "nav-item_" navItem.name}}
+            @category={{@category}}
+            @content={{navItem}}
+            @countAsBadge={{@countAsBadge}}
+            @filterMode={{@filterMode}}
           />
         {{/each}}
         <PluginOutlet
-          @name="extra-nav-item"
           @connectorTagName="li"
+          @name="extra-nav-item"
           @outletArgs={{lazyHash
             category=@category
             tag=@tag

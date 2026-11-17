@@ -26,13 +26,15 @@ module ImageOrientationHelpers
 
     Dir.mktmpdir do |directory|
       png_path = File.join(directory, "stored.png")
-      ImageMagick.magick(
-        stored_path,
-        png_path,
-        operation: :upload_format_conversion,
-        read: [stored_path],
-        write: [directory],
-      )
+      ImageProcessing::OutputFile.write(png_path) do |temporary_path|
+        ImageMagick.magick(
+          stored_path,
+          temporary_path,
+          operation: :upload_format_conversion,
+          read: [stored_path],
+          write: [temporary_path],
+        )
+      end
       stored_image = ChunkyPNG::Image.from_file(png_path)
 
       Array.new(rows) do |row_index|

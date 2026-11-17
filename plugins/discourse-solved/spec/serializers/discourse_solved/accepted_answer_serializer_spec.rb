@@ -44,6 +44,7 @@ RSpec.describe DiscourseSolved::AcceptedAnswerSerializer do
 
   context "when display_name_on_posts is set" do
     before { SiteSetting.display_name_on_posts = true }
+
     it "also includes the poster's name" do
       expect(json["name"]).to eq(user.name)
     end
@@ -58,6 +59,7 @@ RSpec.describe DiscourseSolved::AcceptedAnswerSerializer do
 
     context "when display_name_on_posts is set" do
       before { SiteSetting.display_name_on_posts = true }
+
       it "also includes the accepter name" do
         expect(json["accepter_username"]).to eq(accepter.username)
         expect(json["accepter_name"]).to eq(accepter.name)

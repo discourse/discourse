@@ -19,8 +19,8 @@ const Categories = <template>
           }}</a>
       {{/if}}
       <CategorySelector
-        @categories={{@model.watchedCategories}}
         @blockedCategories={{@selectedCategories}}
+        @categories={{@model.watchedCategories}}
         @onChange={{fn (mut @model.watchedCategories)}}
       />
     </div>
@@ -38,8 +38,8 @@ const Categories = <template>
           }}</a>
       {{/if}}
       <CategorySelector
-        @categories={{@model.trackedCategories}}
         @blockedCategories={{@selectedCategories}}
+        @categories={{@model.trackedCategories}}
         @onChange={{fn (mut @model.trackedCategories)}}
       />
     </div>
@@ -53,8 +53,8 @@ const Categories = <template>
       <label>{{dIcon "d-watching-first"}}
         {{i18n "user.watched_first_post_categories"}}</label>
       <CategorySelector
-        @categories={{@model.watchedFirstPostCategories}}
         @blockedCategories={{@selectedCategories}}
+        @categories={{@model.watchedFirstPostCategories}}
         @onChange={{fn (mut @model.watchedFirstPostCategories)}}
       />
     </div>
@@ -68,8 +68,8 @@ const Categories = <template>
       >
         <label>{{dIcon "d-regular"}} {{i18n "user.regular_categories"}}</label>
         <CategorySelector
-          @categories={{@model.regularCategories}}
           @blockedCategories={{@selectedCategories}}
+          @categories={{@model.regularCategories}}
           @onChange={{fn (mut @model.regularCategories)}}
         />
       </div>
@@ -89,8 +89,8 @@ const Categories = <template>
         {{/if}}
 
         <CategorySelector
-          @categories={{@model.mutedCategories}}
           @blockedCategories={{@selectedCategories}}
+          @categories={{@model.mutedCategories}}
           @onChange={{fn (mut @model.mutedCategories)}}
         />
       </div>
@@ -107,8 +107,8 @@ const Categories = <template>
 
   <span>
     <PluginOutlet
-      @name="user-preferences-categories"
       @connectorTagName="div"
+      @name="user-preferences-categories"
       @outletArgs={{lazyHash model=@model save=@save}}
     />
   </span>
@@ -117,8 +117,8 @@ const Categories = <template>
 
   <span>
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@model}}
     />
   </span>

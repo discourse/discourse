@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::MovePosts do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:topic)
   fab!(:post1, :post) { Fabricate(:post, topic: topic) }
@@ -20,6 +20,66 @@ RSpec.describe DiscourseAi::Agents::Tools::MovePosts do
   end
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
+
+  it "previews the source, destination and selected post numbers" do
+    preview =
+      tool(
+        topic_id: topic.id,
+        post_ids: [post2.id],
+        destination_topic_id: destination_topic.id,
+        reason: "Organizing",
+      )
+
+    expect(preview.approval_title).to include(topic.title, topic.url)
+    expect(preview.approval_changes).to eq(
+      [{ label: "Changing destination:", before: topic.title, after: destination_topic.title }],
+    )
+    expect(preview.approval_parameters).to eq(
+      [{ label: "Posts", value: "Post ##{post2.post_number}" }],
+    )
+  end
+
+  it "previews a new topic and its category" do
+    category = Fabricate(:category)
+    preview =
+      tool(
+        topic_id: topic.id,
+        post_ids: [post2.id],
+        new_title: "A separate discussion",
+        category_id: category.id,
+      )
+
+    expect(preview.approval_changes.first[:after]).to eq("A separate discussion")
+    expect(preview.approval_parameters).to eq(
+      [
+        { label: "Posts", value: "Post ##{post2.post_number}" },
+        { label: "Category", value: category.name, color: category.color },
+      ],
+    )
+  end
+
+  describe "#invoke" do
+    fab!(:user, :trust_level_4)
+    let(:context) { DiscourseAi::Agents::BotContext.new(user: user) }
+
+    it "leaves posts unchanged when the user can only reply in the destination category" do
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :reply)
+      category.save!
+
+      expect do
+        expect do
+          tool(
+            topic_id: topic.id,
+            post_ids: [post2.id],
+            new_title: "A separate discussion",
+            category_id: category.id,
+            reason: "Organizing the discussion",
+          ).invoke
+        end.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Topic.count, Post.count, post2.reload.topic_id] }
+    end
+  end
 
   it "moves posts to an existing topic" do
     result =

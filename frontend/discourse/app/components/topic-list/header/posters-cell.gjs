@@ -1,15 +1,15 @@
 import { i18n } from "discourse-i18n";
-import SortableColumn from "./sortable-column";
+import SortableColumn from "./sortable-column.gjs";
 
 const PostersCell = <template>
   <SortableColumn
-    @order="posters"
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name="posters"
-    @screenreaderOnly={{true}}
     aria-label={{i18n "category.sort_options.posters"}}
+    @activeOrder={{@activeOrder}}
+    @ascending={{@ascending}}
+    @changeSort={{@changeSort}}
+    @name="posters"
+    @order="posters"
+    @screenreaderOnly={{true}}
   />
 </template>;
 

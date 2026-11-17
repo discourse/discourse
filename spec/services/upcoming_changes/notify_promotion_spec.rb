@@ -60,6 +60,24 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       it { is_expected.to fail_a_policy(:meets_or_exceeds_status) }
     end
 
+    context "when remove_and_replace_uncategorized is promoted" do
+      let!(:uncategorized) { Category.find(SiteSetting.uncategorized_category_id) }
+      let(:setting_name) { :remove_and_replace_uncategorized }
+      let(:changes_already_notified_about_promotion) do
+        UpcomingChangeEvent.change_names_with_event(:admins_notified_automatic_promotion)
+      end
+
+      it "snapshots the site state before dispatching the change" do
+        expect(result).to run_successfully
+        expect(
+          UpcomingChangeEvent.find_by(
+            event_type: :automatically_promoted,
+            upcoming_change_name: setting_name,
+          ).event_data,
+        ).to include("uncategorized_category_id" => uncategorized.id)
+      end
+    end
+
     context "when the change is owned by a plugin that is not configurable" do
       let(:setting_name) { :enable_experimental_sample_plugin_feature }
 
@@ -102,6 +120,34 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
                   upcoming_change_name: :enable_upload_debug_mode,
                 ).count
               }
+      end
+    end
+
+    context "when the change dependencies are not met" do
+      let(:setting_name) { :set_locale_from_cookie }
+
+      before do
+        SiteSetting.allow_user_locale = false
+        mock_upcoming_change_metadata(
+          set_locale_from_cookie: {
+            impact: "feature,all_members",
+            status: :stable,
+          },
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:change_dependencies_met) }
+
+      it "does not notify admins, record a promotion, or trigger an enabled event" do
+        events = nil
+
+        expect {
+          events = DiscourseEvent.track_events(:upcoming_change_enabled) { result }
+        }.to not_change { Notification.count }.and(not_change { UpcomingChangeEvent.count }).and(
+          not_change { UserHistory.count },
+        )
+
+        expect(events).to be_empty
       end
     end
 

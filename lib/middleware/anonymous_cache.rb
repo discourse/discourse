@@ -120,11 +120,16 @@ module Middleware
       # rubocop:enable Lint/BooleanSymbol
 
       def key_locale
-        if locale = Discourse.anonymous_locale(@request)
-          locale
-        else
-          "" # No need to key, it is the same for all anon users
+        locale = Discourse.anonymous_locale(@request).to_s
+
+        # Crawler pages at a locale param URL also depend on the locale the plain URL serves.
+        # A blank param still skips the other locale sources, so check for the key.
+        if ContentLocalization.crawler_locale_param_enabled? &&
+             @request.params.key?(Discourse::LOCALE_PARAM)
+          locale += "|#{Discourse.anonymous_locale(@request, include_param: false)}"
         end
+
+        locale
       end
 
       # rubocop:disable Lint/BooleanSymbol
@@ -387,7 +392,7 @@ module Middleware
       return @app.call(env) if defined?(@@disabled) && @@disabled
 
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
-           env[Rack::RACK_INPUT].read(1).present?
+           !env[Rack::RACK_INPUT].read(1).nil?
         return 413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []
       end
 

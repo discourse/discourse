@@ -184,7 +184,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update ApiKey#last_used_at" do
+      it "does not update ApiKey#last_used_at" do
         api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
         params = { "HTTP_API_KEY" => api_key.key }
 
@@ -251,7 +251,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
     after { user.clear_last_seen_cache!(@orig) }
 
-    it "should not update last seen for suspended users" do
+    it "does not update last seen for suspended users" do
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       u = provider2.current_user
       u.reload
@@ -277,7 +277,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update User#last_seen_at" do
+      it "does not update User#last_seen_at" do
         provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
         u = provider2.current_user
         u.reload
@@ -286,7 +286,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
 
     describe "when impersonating another user" do
-      it "should not update User#last_seen_at" do
+      it "does not update User#last_seen_at" do
         old_timestamp = 1.week.ago
         user.update!(last_seen_at: old_timestamp)
         User.any_instance.stubs(:is_impersonating).returns(true)
@@ -298,7 +298,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    it "should not cache an invalid user when Rails hasn't set `path_parameters` on the request yet" do
+    it "does not cache an invalid user before Rails sets the request's path_parameters" do
       SiteSetting.login_required = true
       user = Fabricate(:user)
       api_key = ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user)
@@ -394,12 +394,12 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
   end
 
-  it "should update last seen for non ajax" do
+  it "updates last seen for non-AJAX requests" do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
 
-  it "should update ajax reqs with discourse visible" do
+  it "updates last seen for AJAX requests with Discourse visible" do
     expect(
       provider(
         "/topic/anything/goes",
@@ -410,7 +410,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     ).to eq(true)
   end
 
-  it "should not update last seen for ajax calls without Discourse-Present header" do
+  it "does not update last seen for AJAX requests without the Discourse-Present header" do
     expect(
       provider(
         "/topic/anything/goes",
@@ -420,7 +420,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     ).to eq(false)
   end
 
-  it "should update last seen for API calls with Discourse-Present header" do
+  it "updates last seen for API calls with the Discourse-Present header" do
     api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
     params = {
       :method => "POST",
@@ -749,7 +749,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
       after { Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 
-      it "should not update ApiKey#last_used_at" do
+      it "does not update ApiKey#last_used_at" do
         params = { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
 
         good_provider = provider("/", params)
@@ -787,6 +787,82 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
         3.times { provider("/", params).current_user }
 
         expect { provider("/", params).current_user }.to raise_error(RateLimiter::LimitExceeded)
+      end
+    end
+  end
+
+  describe "html application layout access" do
+    let(:env_key) { Auth::DefaultCurrentUserProvider::HTML_LAYOUT_DISALLOWED_ENV }
+
+    def api_key_with_scopes(*scopes)
+      ApiKey
+        .create!(user_id: user.id, created_by_id: -1)
+        .tap do |api_key|
+          scopes.each do |resource, action|
+            ApiKeyScope.create!(api_key_id: api_key.id, resource:, action:)
+          end
+        end
+    end
+
+    def user_api_key(*scope_names)
+      Fabricate(
+        :user_api_key,
+        user: user,
+        scopes: scope_names.map { |name| UserApiKeyScope.new(name:) },
+      )
+    end
+
+    def api_key_env(api_key)
+      { "REQUEST_METHOD" => "GET", "HTTP_API_KEY" => api_key.key }
+    end
+
+    def user_api_key_env(api_key)
+      { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
+    end
+
+    it "disallows the application layout for an API key with granular scopes" do
+      test_provider = provider("/t/1/posts.json", api_key_env(api_key_with_scopes(%w[topics read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to eq(true)
+    end
+
+    it "allows the application layout for an API key without scopes" do
+      test_provider = provider("/", api_key_env(api_key_with_scopes))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "allows the application layout for a read-only API key" do
+      test_provider = provider("/", api_key_env(api_key_with_scopes(%w[global read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "allows the application layout for an API key that includes global read access" do
+      test_provider =
+        provider("/", api_key_env(api_key_with_scopes(%w[topics read], %w[global read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "disallows the application layout for a user API key without the read or write scopes" do
+      test_provider =
+        provider("/notifications.json", user_api_key_env(user_api_key("notifications")))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to eq(true)
+    end
+
+    it "allows the application layout for a user API key with the read or write scope" do
+      %w[read write].each do |scope_name|
+        test_provider = provider("/", user_api_key_env(user_api_key(scope_name)))
+
+        expect(test_provider.current_user.id).to eq(user.id)
+        expect(test_provider.env[env_key]).to be_nil
       end
     end
   end
@@ -833,7 +909,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
     end
 
-    it "should work when the current user was cached by a different provider instance" do
+    it "logs off a user cached by another provider instance" do
       user_provider = TestProvider.new(env)
       expect(user_provider.current_user).to eq(user)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_present
@@ -843,7 +919,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
     end
 
-    it "should trigger user_logged_out event" do
+    it "triggers the user_logged_out event" do
       event_triggered_user = nil
       event_handler = Proc.new { |user| event_triggered_user = user.id }
       DiscourseEvent.on(:user_logged_out, &event_handler)

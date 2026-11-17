@@ -9,7 +9,7 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
-import Slot from "./slot";
+import Slot from "./slot.gjs";
 
 const DEFAULT_SLOTS = 6;
 
@@ -23,9 +23,9 @@ const DEFAULT_SLOTS = 6;
  * @property {string} [Args.inputMode] - The inputmode attribute for the hidden input (defaults to "numeric")
  * @property {string} [Args.autocomplete] - The autocomplete attribute for the hidden input (defaults to "one-time-code")
  * @property {boolean} [Args.autoFocus] - Focus the input automatically unless disabled or on iOS
- * @property {function(string): string} [Args.normalizeInput] - Callback used to normalize typed or pasted input
- * @property {function(string): void} [Args.onChange] - Callback fired when the input value changes
- * @property {function(string): void} [Args.onFill] - Callback fired when all slots become filled
+ * @property {(value: string) => string} [Args.normalizeInput] - Callback used to normalize typed or pasted input
+ * @property {(value: string) => void} [Args.onChange] - Callback fired when the input value changes
+ * @property {(value: string) => void} [Args.onFill] - Callback fired when all slots become filled
  * @property {number} [Args.groupSize] - Adds a visual separator after every groupSize slots
  *
  */
@@ -71,6 +71,15 @@ export default class DOTP extends Component {
     return this.slots + Math.floor((this.slots - 1) / this.groupSize);
   }
 
+  get isFilled() {
+    return this.otp.every((char) => !isBlank(char));
+  }
+
+  get value() {
+    return this.otp.join("");
+  }
+
+  /** @param {string} value */
   normalizeInput(value) {
     if (this.args.normalizeInput) {
       return this.args.normalizeInput(value);
@@ -79,6 +88,7 @@ export default class DOTP extends Component {
     return value.replace(/[^0-9]/g, "");
   }
 
+  /** @param {number} index */
   @action
   showSeparator(index) {
     return (
@@ -88,14 +98,7 @@ export default class DOTP extends Component {
     );
   }
 
-  get isFilled() {
-    return this.otp.every((char) => !isBlank(char));
-  }
-
-  get value() {
-    return this.otp.join("");
-  }
-
+  /** @param {HTMLInputElement} element */
   @action
   focusInput(element) {
     if (!this.autoFocus) {
@@ -224,36 +227,36 @@ export default class DOTP extends Component {
       <div class="d-otp-group">
         {{#each this.otp as |char index|}}
           <Slot
-            @index={{index}}
             @char={{char}}
+            @index={{index}}
             @isFocused={{this.isFocusedSlot index}}
           />
           {{#if (this.showSeparator index)}}
-            <span class="d-otp-separator" aria-hidden="true">-</span>
+            <span aria-hidden="true" class="d-otp-separator">-</span>
           {{/if}}
         {{/each}}
       </div>
 
       <div class="d-otp-input-wrapper">
         <input
-          {{preventScrollOnFocus}}
-          inputmode={{this.inputMode}}
-          autocomplete={{this.autocomplete}}
-          spellcheck="false"
-          autocorrect="off"
+          aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
           autocapitalize="off"
-          data-slot="input-otp"
+          autocomplete={{this.autocomplete}}
+          autocorrect="off"
           class="d-otp-input"
+          data-slot="input-otp"
+          inputmode={{this.inputMode}}
           maxlength={{this.maxLength}}
+          spellcheck="false"
+          ...attributes
+          {{preventScrollOnFocus}}
           {{on "input" this.onInput}}
           {{on "select" this.onSelect}}
           {{on "keydown" this.onKeyDown}}
           {{on "focus" this.onFocus}}
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
-          aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
           {{didInsert this.focusInput}}
-          ...attributes
         />
       </div>
     </div>

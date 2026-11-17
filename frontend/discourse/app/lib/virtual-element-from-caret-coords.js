@@ -5,6 +5,14 @@ class VirtualElementFromCaretCoords {
     this.updateRect();
   }
 
+  get clientWidth() {
+    return this.rect.width;
+  }
+
+  get clientHeight() {
+    return this.rect.height;
+  }
+
   updateRect() {
     const [xOffset, yOffset] = this.offset;
     this.rect = {
@@ -29,14 +37,6 @@ class VirtualElementFromCaretCoords {
 
   getClientRects() {
     return [this.rect];
-  }
-
-  get clientWidth() {
-    return this.rect.width;
-  }
-
-  get clientHeight() {
-    return this.rect.height;
   }
 }
 

@@ -19,6 +19,10 @@ sq:
                 lt_1h: "< 1 orë"
                 gt_24h: "> 24 orë"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "U hoq"
+        tag_names: "Etiketat"
     notifications:
       alt:
         solved:
@@ -32,6 +36,12 @@ sq:
       confirm_solved_removal_cancel: "Anulo"
       shared_issue:
         label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Topic"
+            category: "Kategori"
     discourse_automation:
       triggerables:
         first_accepted_solution:

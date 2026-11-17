@@ -3,12 +3,13 @@ import DButton from "discourse/ui-kit/d-button";
 const SidebarSectionHeader = <template>
   {{#if @collapsable}}
     <DButton
-      @title="sidebar.toggle_section"
-      @action={{@toggleSectionDisplay}}
-      @forwardEvent={{true}}
       aria-controls={{@sidebarSectionContentId}}
       aria-expanded={{if @isExpanded "true" "false"}}
       class="sidebar-section-header sidebar-section-header-collapsable btn-transparent"
+      data-sidebar-keep-open
+      @action={{@toggleSectionDisplay}}
+      @forwardEvent={{true}}
+      @title="sidebar.toggle_section"
     >
       {{yield}}
     </DButton>

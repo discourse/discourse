@@ -97,6 +97,10 @@ module PageObjects
         visit(channel.url + "/info/settings")
       end
 
+      def visit_channel_preferences(channel)
+        visit(channel.url + "/info/preferences")
+      end
+
       def visit_channel_members(channel)
         visit(channel.url + "/info/members")
       end
@@ -166,16 +170,30 @@ module PageObjects
         has_no_css?(public_channel_selector(channel))
       end
 
-      def has_no_browse_page_button?
-        has_no_css?(".open-browse-page-btn")
+      def has_channels_heading?
+        has_css?(
+          ".c-routes.--channels > .c-navbar-container .c-navbar__title",
+          text: I18n.t("js.chat.chat_channels"),
+        )
+      end
+
+      def open_channel_list_options
+        trigger =
+          find(".c-routes.--channels > .c-navbar-container .chat-channel-list-options-button")
+        trigger.click
+        PageObjects::Components::DMenu.new(trigger, "chat-channel-list-options-menu")
+      end
+
+      def has_no_channel_list_options_button?
+        has_no_css?(".chat-channel-list-options-button")
       end
 
       def has_add_member_button?
-        has_css?(".c-channel-members__list-item.-add-member")
+        has_css?(".c-channel-members__add-member")
       end
 
       def has_no_add_member_button?
-        has_no_css?(".c-channel-members__list-item.-add-member")
+        has_no_css?(".c-channel-members__add-member")
       end
 
       private

@@ -19,9 +19,11 @@ de:
         countdown:
           passed: Datum liegt in der Vergangenheit
       title: Datum/Uhrzeit einfügen
+      edit_date: '%{date} bearbeiten'
       create:
         form:
           insert: Einfügen
+          save: Speichern
           format_description: "Format, mit dem das Datum dem Benutzer angezeigt wird. Verwende „Z” zum Anzeigen der Differenz zu UTC und „zz” für den Zeitzonen-Namen."
           timezones_title: Anzuzeigende Zeitzonen
           timezones_description: Zeitzonen werden verwendet, um Datumsangaben in der Vorschau und als Ausweichlösung anzuzeigen.

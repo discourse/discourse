@@ -1,8 +1,6 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { tagName } from "@ember-decorators/component";
 import CategoriesBoxesTopic from "discourse/components/categories-boxes-topic";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
@@ -12,10 +10,9 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-@tagName("")
 export default class CategoriesBoxesWithTopics extends Component {
   get anyLogos() {
-    return this.categories.some((c) => {
+    return this.args.categories.some((c) => {
       return !isEmpty(c.get("uploaded_logo.url"));
     });
   }
@@ -37,12 +34,12 @@ export default class CategoriesBoxesWithTopics extends Component {
       }}
       ...attributes
     >
-      {{#each this.categories as |c|}}
+      {{#each @categories as |c|}}
         <div
-          data-notification-level={{c.notificationLevelString}}
-          style={{categoryColorVariable c.color}}
           class="category category-box category-box-{{c.slug}}
             {{if c.isMuted 'muted'}}"
+          data-notification-level={{c.notificationLevelString}}
+          style={{categoryColorVariable c.color}}
         >
           <div class="category-box-inner">
             <div class="category-box-heading">

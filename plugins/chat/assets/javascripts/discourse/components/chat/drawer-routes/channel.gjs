@@ -15,11 +15,6 @@ export default class ChatDrawerRoutesChannel extends Component {
 
   @tracked isFiltering = false;
 
-  @action
-  toggleIsFiltering() {
-    this.isFiltering = !this.isFiltering;
-  }
-
   get canSearchChat() {
     return this.currentUser && this.siteSettings.chat_search_enabled;
   }
@@ -38,6 +33,11 @@ export default class ChatDrawerRoutesChannel extends Component {
     }
   }
 
+  @action
+  toggleIsFiltering() {
+    this.isFiltering = !this.isFiltering;
+  }
+
   <template>
     <div class="c-drawer-routes --channel">
       {{#if @model.channel}}
@@ -48,8 +48,8 @@ export default class ChatDrawerRoutesChannel extends Component {
             {{#if this.canSearchChat}}
               <a.Filter
                 @channel={{@model.channel}}
-                @onToggleFilter={{this.toggleIsFiltering}}
                 @isFiltering={{this.isFiltering}}
+                @onToggleFilter={{this.toggleIsFiltering}}
               />
             {{/if}}
 
@@ -65,11 +65,11 @@ export default class ChatDrawerRoutesChannel extends Component {
           <div class="chat-drawer-content">
             {{#each (array @model.channel) as |channel|}}
               <ChatChannel
-                @targetMessageId={{readonly @params.messageId}}
                 @channel={{channel}}
+                @disableKeystrokeCapture={{true}}
                 @isFiltering={{this.isFiltering}}
                 @onToggleFilter={{this.toggleIsFiltering}}
-                @disableKeystrokeCapture={{true}}
+                @targetMessageId={{readonly @params.messageId}}
               />
             {{/each}}
           </div>

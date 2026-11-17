@@ -25,11 +25,11 @@ module("Integration | Component | Header | Icons", function (hooks) {
     await render(
       <template>
         <Icons
-          @sidebarEnabled={{true}}
-          @toggleSearchMenu={{noop}}
-          @toggleNavigationMenu={{noop}}
-          @toggleUserMenu={{noop}}
           @searchButtonId={{SEARCH_BUTTON_ID}}
+          @sidebarEnabled={{true}}
+          @toggleNavigationMenu={{noop}}
+          @toggleSearchMenu={{noop}}
+          @toggleUserMenu={{noop}}
         />
       </template>
     );
@@ -40,16 +40,16 @@ module("Integration | Component | Header | Icons", function (hooks) {
         "it does not display when the search_experience setting is search_field"
       );
 
-    routerStub.value("admin.dashboard.general");
+    routerStub.value("admin.dashboard");
 
     await render(
       <template>
         <Icons
-          @sidebarEnabled={{true}}
-          @toggleSearchMenu={{noop}}
-          @toggleNavigationMenu={{noop}}
-          @toggleUserMenu={{noop}}
           @searchButtonId={{SEARCH_BUTTON_ID}}
+          @sidebarEnabled={{true}}
+          @toggleNavigationMenu={{noop}}
+          @toggleSearchMenu={{noop}}
+          @toggleUserMenu={{noop}}
         />
       </template>
     );
@@ -66,11 +66,11 @@ module("Integration | Component | Header | Icons", function (hooks) {
     await render(
       <template>
         <Icons
-          @sidebarEnabled={{true}}
-          @toggleSearchMenu={{noop}}
-          @toggleNavigationMenu={{noop}}
-          @toggleUserMenu={{noop}}
           @searchButtonId={{SEARCH_BUTTON_ID}}
+          @sidebarEnabled={{true}}
+          @toggleNavigationMenu={{noop}}
+          @toggleSearchMenu={{noop}}
+          @toggleUserMenu={{noop}}
         />
       </template>
     );
@@ -87,11 +87,11 @@ module("Integration | Component | Header | Icons", function (hooks) {
     await render(
       <template>
         <Icons
-          @sidebarEnabled={{true}}
-          @toggleSearchMenu={{noop}}
-          @toggleNavigationMenu={{noop}}
-          @toggleUserMenu={{noop}}
           @searchButtonId={{SEARCH_BUTTON_ID}}
+          @sidebarEnabled={{true}}
+          @toggleNavigationMenu={{noop}}
+          @toggleSearchMenu={{noop}}
+          @toggleUserMenu={{noop}}
         />
       </template>
     );
@@ -113,11 +113,11 @@ module("Integration | Component | Header | Icons", function (hooks) {
     await render(
       <template>
         <Icons
-          @sidebarEnabled={{true}}
-          @toggleSearchMenu={{noop}}
-          @toggleNavigationMenu={{noop}}
-          @toggleUserMenu={{noop}}
           @searchButtonId={{SEARCH_BUTTON_ID}}
+          @sidebarEnabled={{true}}
+          @toggleNavigationMenu={{noop}}
+          @toggleSearchMenu={{noop}}
+          @toggleUserMenu={{noop}}
         />
       </template>
     );
@@ -138,11 +138,11 @@ module("Integration | Component | Header | Icons", function (hooks) {
     await render(
       <template>
         <Icons
-          @sidebarEnabled={{true}}
-          @toggleSearchMenu={{noop}}
-          @toggleNavigationMenu={{noop}}
-          @toggleUserMenu={{noop}}
           @searchButtonId={{SEARCH_BUTTON_ID}}
+          @sidebarEnabled={{true}}
+          @toggleNavigationMenu={{noop}}
+          @toggleSearchMenu={{noop}}
+          @toggleUserMenu={{noop}}
         />
       </template>
     );

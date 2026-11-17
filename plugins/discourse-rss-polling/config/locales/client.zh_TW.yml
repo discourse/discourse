@@ -5,20 +5,105 @@
 # https://translate.discourse.org/
 
 zh_TW:
-  js:
+  admin_js:
     admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discourse RSS Polling"
+  js:
+    rss_polling:
+      title: RSS 輪詢
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: 建立 RSS 摘要
+            update_rss_polling_feed: 更新 RSS 摘要
+            destroy_rss_polling_feed: 刪除 RSS 摘要
+            enable_rss_polling_feed: 啟用 RSS 摘要
+            disable_rss_polling_feed: 停用 RSS 摘要
+            poll_rss_polling_feed: 立即輪詢 RSS 摘要
       rss_polling:
+        feed_settings: 摘要設定
+        discourse_settings: Discourse 設定
         author: 作者
         feed_url: 網址
+        feed_url_must_be_http: 請輸入以 http:// 或 https:// 開頭的有效摘要 URL。
         discourse_category: 分類
         discourse_tags: 標記
+        required_tags_hint: "此分類要求使用其中一個標籤，請新增一個，否則匯入的主題會被拒絕："
+        required_tag_error: '請從「%{tag_group}」群組新增至少 %{count} 個標籤，否則匯入的主題會被拒絕。'
+        feed_category_filter: 分類篩選器
+        feed_category_filter_description: 僅匯入摘要分類包含此文字的項目（不分大小寫）。留空即可匯入所有項目。
+        showing: "顯示 %{total} 個項目的前 %{count} 個。"
         feeds:
+          title: 摘要
+          nav_description: 管理匯入 Discourse 的 RSS/Atom 摘要。
+          description: 設定輪詢並匯入為主題的 RSS/Atom 摘要。
+          add: 新增摘要
+          add_header: 新增摘要
+          edit_header: 編輯摘要
+          empty: 您尚未設定任何摘要。
           edit: 編輯
           delete: 刪除
+          enable: 啟用摘要
+          disable: 停用摘要
+          back: 返回摘要列表
           save: 儲存
+          confirm_delete: "您確定要刪除此摘要嗎？"
+          delete_success: 摘要已刪除
+          save_success: 摘要已儲存
+          enable_success: 摘要已啟用
+          disable_success: 摘要已停用
         test:
+          button: 測試摘要
           title: 預覽
+          empty: 此摘要未傳回任何項目。
           dismiss: 忽略
+          would_import: 將會匯入
+          summary:
+            would_import: "將匯入 %{count} 個"
+            already_imported: "已匯入 %{count} 個"
+            skipped: "將略過 %{count} 個"
+          already_imported: "已匯入 — 輪詢將更新<a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>現有主題</a>。"
+          already_imported_plain: "已匯入 — 輪詢將更新現有主題。"
+          skip_reasons:
+            missing_content: 已略過 — 此項目沒有內容。
+            missing_title: 已略過 — 此項目沒有標題。
+            invalid_url: 已略過 — 此項目沒有可供匯入的有效連結。
+            category_filter_mismatch: "已略過 — 項目分類：%{categories}"
+            category_filter_mismatch_none: 已略過 — 此項目沒有分類。
+          errors:
+            fetch_failed: 無法擷取摘要。請確認 URL 正確且可存取。
+            parse_failed: 回應看起來不是有效的 RSS 或 Atom 摘要。
+            invalid_feed: 由於格式錯誤，無法讀取摘要。
+            blank_feed_url: 請輸入要測試的摘要 URL。
+            category_deleted: 此摘要匯入的分類已不存在。請編輯摘要並選擇新的分類。
+            unknown: 無法讀取此摘要。它可能暫時無法使用，或傳回了非預期內容。請測試摘要以進行診斷，或查看記錄了解詳情。
         status:
           enabled: 啟用
           disabled: 停用
+          disabled_note: 不會依排程輪詢
+        history:
+          recent: 最近的輪詢
+          show_older: "顯示較舊的 %{count} 筆"
+          poll_now: 立即輪詢
+          poll_now_dirty: 輪詢前請先儲存變更。
+          poll_now_disabled: 輪詢前請先啟用摘要。
+          poll_confirm: 立即輪詢會擷取此摘要並匯入或更新主題。要繼續嗎？
+          poll_started: 已開始輪詢，最新的嘗試很快就會顯示在此處。
+          empty: 此摘要尚未輪詢。
+          no_items: 這次輪詢未處理任何項目。
+          no_changes: 沒有變更
+          imported_count: "已匯入 %{count} 個"
+          updated_count: "已更新 %{count} 個"
+          skipped_count: "已略過 %{count} 個"
+          failed_count: "失敗 %{count} 個"
+          imported: "已匯入為新的<a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>主題</a>。"
+          imported_plain: "已匯入為新主題。"
+          updated: "已更新<a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>現有主題</a>。"
+          updated_plain: "已更新現有主題。"
+          failed: 匯入失敗。
+          failed_reasons:
+            import_rejected: "無法匯入 — 此項目沒有可供匯入的有效連結。"
+            import_error: "無法匯入：%{error}"

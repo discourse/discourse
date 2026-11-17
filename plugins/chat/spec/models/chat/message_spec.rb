@@ -116,6 +116,10 @@ describe Chat::Message do
             "value at `/0/type` is not one of: [\"informative\"]",
             "value at `/0/elements/0/type` is not one of: [\"category\"]",
             "object at `/0/elements/0` is missing required properties: title, color",
+            "value at `/0/type` is not one of: [\"confirmation\"]",
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+            "object at `/0` is missing required properties: title, question, parameters",
           ],
         )
       end
@@ -240,6 +244,15 @@ describe Chat::Message do
       expect(message.cooked).to match_html(
         %(<p><em class="chat-message-action">#{message.user.username} waves</em></p>),
       )
+    end
+
+    it "does not resolve a hashtag the author cannot see when the last editor can" do
+      category = Fabricate(:private_category, group: Fabricate(:group), name: "Secret Plans")
+      message.message = "##{category.slug}"
+      message.last_editor = Fabricate(:admin)
+      message.cook
+
+      expect(message.cooked).not_to include(category.name)
     end
   end
 
@@ -537,14 +550,14 @@ describe Chat::Message do
         <div class="chat-transcript-messages">
         <p>this is the first message</p></div>
         </div>
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
         <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <span title="#{msg2.created_at.iso8601}"></span></div>
+        <a href="/chat/c/-/#{chat_channel.id}/#{msg2.id}" title="#{msg2.created_at.iso8601}"></a></div>
         </div>
         <div class="chat-transcript-messages">
         <p>and another cool one</p></div>
@@ -602,6 +615,16 @@ describe Chat::Message do
     end
 
     it "supports onebox markdown plugin" do
+      cooked = described_class.cook("https://www.example.com")
+
+      expect(cooked).to eq(
+        "<p><a href=\"https://www.example.com\" class=\"onebox\" target=\"_blank\" rel=\"noopener nofollow ugc\">https://www.example.com</a></p>",
+      )
+    end
+
+    it "ignores max_oneboxes_per_post" do
+      SiteSetting.max_oneboxes_per_post = 0
+
       cooked = described_class.cook("https://www.example.com")
 
       expect(cooked).to eq(
@@ -814,6 +837,7 @@ describe Chat::Message do
 
   describe "blocking duplicate messages" do
     let(:message) { "this is duplicate" }
+
     fab!(:chat_channel)
     fab!(:user)
 

@@ -15,19 +15,30 @@ module JsonApiKit
 
       class_methods do
         def anchor(name, &condition)
-          self.declared_anchors = declared_anchors + [Declarations::Anchor.new(name, &condition)]
+          self.declared_anchors = declared_anchors + [adapter.anchor(name, &condition)]
         end
 
         def anchor_names = declared_anchors.map(&:name)
 
-        def anchored_by?(anchor_name:, ordering: {})
-          declared_anchors
-            .detect { it.name == anchor_name.to_s }
-            .then { it.nil? || it.locatable_in?(order(ordering)) }
+        def anchor_accepts?(anchoring)
+          declared_anchor(anchoring.name).try { it.accepts?(anchoring) } || false
         end
 
-        def anchors(guardian) = Declarations::Anchors.new(declared_anchors, guardian:)
+        def anchored_by?(anchor_name:, ordering:)
+          adapter.anchored_by?(self, anchor_name:, ordering:)
+        end
+
+        def anchors(guardian) = new(guardian:).anchors(guardian)
+
+        def anchor_declarations = declared_anchors
+
+        private
+
+        def declared_anchor(name) = declared_anchors.detect { it.name == name.to_s }
       end
+
+      delegate :anchor_names, :anchor_accepts?, :anchor_declarations, to: :class
+      delegate :anchors, :anchored_by?, :leading_sort_name, to: :adapter
     end
   end
 end

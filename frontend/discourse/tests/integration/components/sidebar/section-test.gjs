@@ -1,8 +1,11 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import {
   click,
   find,
+  focus,
   render,
+  rerender,
   settled,
   triggerEvent,
 } from "@ember/test-helpers";
@@ -53,14 +56,92 @@ function belowAllLinks() {
 module("Integration | Component | Sidebar | Section", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("inline header actions retain individual icons and callbacks", async function (assert) {
+    this.headerActions = [
+      {
+        id: "show",
+        icon: "eye",
+        title: "Show all",
+        action: () => assert.step("show"),
+      },
+      { id: "options", title: "Options", action: () => assert.step("options") },
+    ];
+    await render(
+      <template>
+        <Section
+          @headerActions={{this.headerActions}}
+          @headerActionsIcon="ellipsis-vertical"
+          @headerActionsInline={{true}}
+          @sectionName="test"
+        />
+      </template>
+    );
+    assert
+      .dom(".sidebar-section-header-button")
+      .exists({ count: 2 }, "both actions are separate buttons");
+    assert
+      .dom('[data-sidebar-action-id="show"] .d-icon-eye')
+      .exists("the action has its own icon");
+    assert
+      .dom('[data-sidebar-action-id="options"] .d-icon-ellipsis-vertical')
+      .exists("the shared icon remains a fallback");
+    await click('[data-sidebar-action-id="show"]');
+    await click('[data-sidebar-action-id="options"]');
+    assert.verifySteps(
+      ["show", "options"],
+      "each action runs its own callback"
+    );
+  });
+
+  test("inline actions retain focus when their state changes", async function (assert) {
+    const headerActions = tracked([
+      { id: "toggle", icon: "eye", title: "Show all", action() {} },
+    ]);
+    await render(
+      <template>
+        <Section
+          @headerActions={{headerActions.value}}
+          @headerActionsInline={{true}}
+          @sectionName="test"
+        />
+      </template>
+    );
+    await focus('[data-sidebar-action-id="toggle"]');
+    headerActions.value = [
+      { id: "toggle", icon: "eye-slash", title: "Apply filters", action() {} },
+    ];
+    await settled();
+    assert
+      .dom('[data-sidebar-action-id="toggle"]')
+      .isFocused("the updated action retains keyboard focus");
+    assert
+      .dom('[data-sidebar-action-id="toggle"] .d-icon-eye-slash')
+      .exists("the icon reflects the new state");
+  });
+
+  test("multiple header actions default to a dropdown", async function (assert) {
+    this.headerActions = [{ title: "First" }, { title: "Second" }];
+    await render(
+      <template>
+        <Section @headerActions={{this.headerActions}} @sectionName="test" />
+      </template>
+    );
+    assert
+      .dom(".sidebar-section-header-dropdown")
+      .exists("existing callers retain the dropdown");
+    assert
+      .dom(".sidebar-section-header-button")
+      .doesNotExist("inline buttons are opt-in");
+  });
+
   test("default displaySection value for section", async function (assert) {
     const template = <template>
       <Section
-        @sectionName="test"
+        @headerActions={{this.headerActions}}
+        @headerActionsIcon="plus"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}}
+        @sectionName="test"
       />
     </template>;
 
@@ -73,38 +154,40 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   });
 
   test("displaySection is dynamic based on argument", async function (assert) {
+    const displaySection = tracked(false);
+    const headerActions = [];
+
     const template = <template>
       <Section
-        @sectionName="test"
+        @displaySection={{displaySection.value}}
+        @headerActions={{headerActions}}
+        @headerActionsIcon="plus"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}}
-        @displaySection={{this.displaySection}}
+        @sectionName="test"
       />
     </template>;
 
-    this.displaySection = false;
-    this.headerActions = [];
     await render(template);
 
     assert
       .dom(".sidebar-section-wrapper")
       .doesNotExist("section is not displayed");
 
-    this.set("displaySection", true);
+    displaySection.value = true;
+    await rerender();
     assert.dom(".sidebar-section-wrapper").exists("section is displayed");
   });
 
   test("can expand and collapse content when section is collapsible", async function (assert) {
     const template = <template>
       <Section
-        @sectionName="test"
+        @collapsable={{true}}
+        @headerActions={{this.headerActions}}
+        @headerActionsIcon="plus"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}}
-        @collapsable={{true}}
+        @sectionName="test"
       />
     </template>;
 
@@ -134,10 +217,10 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
           @onLinkDrop={{this.onLinkDrop}}
+          @sectionName="test"
         >
           <li data-sidebar-custom-link="true">First link</li>
           <li data-sidebar-custom-link="true">Second link</li>
@@ -176,9 +259,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
+          @sectionName="test"
         />
       </template>
     );
@@ -199,9 +282,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
+          @sectionName="test"
         />
       </template>
     );
@@ -243,9 +326,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
+          @sectionName="test"
         />
       </template>
     );
@@ -272,10 +355,10 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{true}}
           @onLinkDrop={{this.onLinkDrop}}
+          @sectionName="test"
         />
       </template>
     );
@@ -296,10 +379,10 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     await render(
       <template>
         <Section
-          @sectionName="test"
           @headerLinkText="test header"
           @linkDropEnabled={{false}}
           @onLinkDrop={{this.onLinkDrop}}
+          @sectionName="test"
         />
       </template>
     );
@@ -317,11 +400,11 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   module("dragging over a collapsed section", function () {
     const collapsedSection = <template>
       <Section
-        @sectionName="test"
-        @headerLinkText="test header"
         @collapsable={{true}}
+        @headerLinkText="test header"
         @linkDropEnabled={{true}}
         @onLinkDrop={{@onLinkDrop}}
+        @sectionName="test"
       >
         <li data-sidebar-custom-link="true">First link</li>
         <li data-sidebar-custom-link="true">Second link</li>

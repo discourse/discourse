@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  js:
+    login:
+      microsoft_office365:
+        name: "Microsoft"
+        title: "使用 Microsoft 登入"

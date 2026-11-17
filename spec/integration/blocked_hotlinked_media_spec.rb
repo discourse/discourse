@@ -181,6 +181,7 @@ RSpec.describe "hotlinked media blocking" do
     before do
       SiteSetting.block_hotlinked_media = true
       SiteSetting.download_remote_images_to_local = true
+      Jobs::PullHotlinkedImages.any_instance.stubs(:available_disk_space).returns(100)
       Oneboxer.stubs(:onebox).returns("<aside class='onebox'><img src='#{hotlinked_url}'></aside>")
       Jobs.run_immediately!
     end

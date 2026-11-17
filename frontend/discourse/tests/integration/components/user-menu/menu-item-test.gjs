@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MenuItem from "discourse/components/user-menu/menu-item";
@@ -10,7 +11,7 @@ import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
-import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
+import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
@@ -53,9 +54,10 @@ module(
     setupRenderingTest(hooks);
 
     test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
-      this.set(
-        "item",
-        getNotification(this.currentUser, this.siteSettings, this.site)
+      this.item = getNotification(
+        this.currentUser,
+        this.siteSettings,
+        this.site
       );
       this.item.notification.read = false;
       await render(<template><MenuItem @item={{this.item}} /></template>);
@@ -74,18 +76,17 @@ module(
     });
 
     test("pushes the notification type name to the classList", async function (assert) {
-      this.set(
-        "item",
+      const item = tracked(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(<template><MenuItem @item={{this.item}} /></template>);
+      await render(<template><MenuItem @item={{item.value}} /></template>);
       assert.dom("li").hasClass("mentioned");
 
-      this.set(
-        "item",
-        getNotification(this.currentUser, this.siteSettings, this.site, {
-          notification_type: NOTIFICATION_TYPES.private_message,
-        })
+      item.value = getNotification(
+        this.currentUser,
+        this.siteSettings,
+        this.site,
+        { notification_type: NOTIFICATION_TYPES.private_message }
       );
       await settled();
 
@@ -427,8 +428,7 @@ module(
 function getMessage(overrides = {}, siteSettings, site) {
   const message = deepMerge(
     cloneJSON(
-      PrivateMessagesFixture["/topics/private-messages/eviltrout.json"]
-        .topic_list.topics[0]
+      UserMenuFixtures["/u/:username/user-menu-private-messages"].topics[0]
     ),
     overrides
   );
@@ -457,48 +457,35 @@ module(
         .dom("li.message .item-description b")
         .hasText("safe", "fancy title is not escaped");
     });
+
+    test("item label is the last poster's name when prioritizing full names", async function (assert) {
+      this.siteSettings.prioritize_full_name_in_ux = true;
+      const item = getMessage({}, this.siteSettings, this.site);
+
+      await render(<template><MenuItem @item={{item}} /></template>);
+
+      assert.dom("li.message .item-label").hasText("Mix Tape");
+    });
+
+    test("item is unread when the message has unread posts", async function (assert) {
+      const item = getMessage(
+        { unread_posts: 3 },
+        this.siteSettings,
+        this.site
+      );
+
+      await render(<template><MenuItem @item={{item}} /></template>);
+
+      assert.dom("li.message").hasClass("unread");
+    });
   }
 );
 
 function getBookmark(overrides = {}, siteSettings, site) {
   const bookmark = deepMerge(
-    {
-      id: 6,
-      created_at: "2022-08-05T06:09:39.559Z",
-      updated_at: "2022-08-05T06:11:27.246Z",
-      name: "",
-      reminder_at: "2022-08-05T06:10:42.223Z",
-      reminder_at_ics_start: "20220805T061042Z",
-      reminder_at_ics_end: "20220805T071042Z",
-      pinned: false,
-      title: "Test poll topic hello world",
-      fancy_title: "Test poll topic hello world",
-      excerpt: "poll",
-      bookmarkable_id: 1009,
-      bookmarkable_type: "Post",
-      bookmarkable_url: "http://localhost:3000/t/this-bookmarkable-url/227/1",
-      tags: [],
-      tags_descriptions: {},
-      truncated: true,
-      topic_id: 227,
-      linked_post_number: 1,
-      deleted: false,
-      hidden: false,
-      category_id: 1,
-      closed: false,
-      archived: false,
-      archetype: "regular",
-      highest_post_number: 45,
-      last_read_post_number: 31,
-      bumped_at: "2022-04-21T15:14:37.359Z",
-      slug: "test-poll-topic-hello-world",
-      user: {
-        id: 1,
-        username: "somebody",
-        name: "Mr. Somebody",
-        avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png",
-      },
-    },
+    cloneJSON(
+      UserMenuFixtures["/u/:username/user-menu-bookmarks"].bookmarks[0]
+    ),
     overrides
   );
 
@@ -515,7 +502,7 @@ module(
       await render(<template><MenuItem @item={{item}} /></template>);
       assert
         .dom("li.bookmark a")
-        .hasAttribute("href", /\/t\/this-bookmarkable-url\/227\/1$/);
+        .hasAttribute("href", /\/t\/test-poll-topic-hello-world\/227\/1$/);
     });
 
     test("item label is the bookmarked post author", async function (assert) {

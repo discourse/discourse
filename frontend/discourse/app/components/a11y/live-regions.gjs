@@ -34,20 +34,20 @@ export default class A11yLiveRegions extends Component {
 
   <template>
     <div
-      id="a11y-announcements-polite"
-      class="sr-only"
-      role="status"
-      aria-live="polite"
       aria-atomic="true"
+      aria-live="polite"
+      class="sr-only"
+      id="a11y-announcements-polite"
+      role="status"
     >
       {{this.politeMessage}}
     </div>
     <div
-      id="a11y-announcements-assertive"
-      class="sr-only"
-      role="alert"
-      aria-live="assertive"
       aria-atomic="true"
+      aria-live="assertive"
+      class="sr-only"
+      id="a11y-announcements-assertive"
+      role="alert"
     >
       {{this.assertiveMessage}}
     </div>

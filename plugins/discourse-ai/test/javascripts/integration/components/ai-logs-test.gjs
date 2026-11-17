@@ -72,13 +72,13 @@ module("Integration | Component | ai-logs new-log banner", function (hooks) {
       response({ logs: [LOG], meta: { has_more: false } })
     );
 
-    this.set("model", {
+    this.model = {
       logs: [LOG],
       meta: { has_more: false },
       models: [],
       features: [],
-    });
-    this.set("queryParams", {});
+    };
+    this.queryParams = {};
   });
 
   test("surfaces new logs in a banner and loads them on click", async function (assert) {
@@ -196,11 +196,11 @@ module("Integration | Component | ai-logs new-log banner", function (hooks) {
       pollQuery = request.queryParams;
       return response({ new_logs_count: 0 });
     });
-    this.set("queryParams", {
+    this.queryParams = {
       period: "hour",
       outcome: "failed",
       search: "topic:424242",
-    });
+    };
 
     await render(
       <template>
@@ -238,12 +238,12 @@ module("Integration | Component | ai-logs new-log banner", function (hooks) {
       pollQuery = request.queryParams;
       return response({ new_logs_count: 0 });
     });
-    this.set("model", {
+    this.model = {
       logs: [],
       meta: { has_more: false, max_id: 987 },
       models: [],
       features: [],
-    });
+    };
 
     await render(
       <template>
@@ -294,5 +294,35 @@ module("Integration | Component | ai-logs new-log banner", function (hooks) {
       [],
       "the destroyed component leaves no timer behind"
     );
+  });
+});
+
+module("Integration | Component | AiLogs", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.owner.unregister("service:router");
+    this.owner.register("service:router", RouterStub);
+  });
+
+  test("offers incomplete outcome filters", async function (assert) {
+    const model = {
+      logs: [],
+      meta: { has_more: false },
+      models: [],
+      features: [],
+    };
+    const queryParams = {};
+    await render(
+      <template>
+        <AiLogs @model={{model}} @queryParams={{queryParams}} />
+      </template>
+    );
+    assert
+      .dom('.d-filter-controls__dropdown--outcome option[value="empty"]')
+      .hasText("Empty response", "empty completions can be filtered");
+    assert
+      .dom('.d-filter-controls__dropdown--outcome option[value="truncated"]')
+      .hasText("Truncated", "truncated completions can be filtered");
   });
 });

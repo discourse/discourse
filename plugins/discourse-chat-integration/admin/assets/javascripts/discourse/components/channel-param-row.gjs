@@ -52,10 +52,10 @@ export default class ChannelParamRow extends Component {
       </td>
       <td>
         <input
-          {{on "input" this.updateValue}}
-          value={{get @channel.data @param.key}}
-          type="text"
           name="param-{{@param.key}}"
+          type="text"
+          value={{get @channel.data @param.key}}
+          {{on "input" this.updateValue}}
         />
 
         <DInputTip @validation={{this.validation}} />

@@ -25,7 +25,9 @@ class OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
   end
 
   def callback_phase
-    super
+    response = super
+    raise env["omniauth.error"] if env["omniauth.error"].is_a?(Faraday::Error)
+    response
   rescue Faraday::Error => e
     detail =
       if e.is_a?(Faraday::TimeoutError)
@@ -33,7 +35,7 @@ class OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
       else
         "failed"
       end
-    Rails.logger.warn("OAuth2 Basic: token request #{detail}: #{e.class} #{e.message}")
+    Rails.logger.warn("OAuth2 Basic: token request #{detail}: #{e.class}")
     fail!(:oauth2_basic_request_failed, e)
   end
 
@@ -44,7 +46,13 @@ class OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
   def recurse(obj, keys)
     return nil if !obj
     k = keys.shift
-    result = obj.respond_to?(k) ? obj.send(k) : obj[k]
+    # Configured paths may only traverse response data, never invoke Ruby methods.
+    result =
+      if obj.is_a?(::OAuth2::AccessToken)
+        k == "params" ? obj.params : obj[k]
+      elsif obj.is_a?(Hash)
+        obj[k]
+      end
     keys.empty? ? result : recurse(result, keys)
   end
 end

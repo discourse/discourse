@@ -12,7 +12,7 @@ module DiscourseWorkflows
             color: "yellow",
           },
           group: "discourse_triggers",
-          events: [:user_badge_granted],
+          event: :user_badge_granted,
           output_contracts: [{ schema: Schema::BADGE_GRANTED_SCHEMA }],
           properties: {
             badge_id: {
@@ -58,7 +58,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { user: serialize_user(@user), badge: badge_data }
+          { user: serialize_user(@user), badge: serialize_badge }
         end
 
         def matches?(trigger_ctx)
@@ -68,7 +68,7 @@ module DiscourseWorkflows
 
         private
 
-        def badge_data
+        def serialize_badge
           {
             id: @badge.id,
             name: @badge.name,

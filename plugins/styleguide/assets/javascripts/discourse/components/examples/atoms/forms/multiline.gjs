@@ -5,23 +5,23 @@ export default <template>
     <form.Row as |row|>
       <row.Col @size={{6}}>
         <form.Field
-          @title="Username"
           @name="username"
-          @validation="required"
+          @title="Username"
           @type="input"
+          @validation="required"
           as |field|
         >
           <field.Control />
         </form.Field>
       </row.Col>
       <row.Col @size={{6}}>
-        <form.Field @title="Email" @name="email" @type="input" as |field|>
+        <form.Field @name="email" @title="Email" @type="input" as |field|>
           <field.Control />
         </form.Field>
       </row.Col>
 
       <row.Col @size={{12}}>
-        <form.Field @title="Address" @name="address" @type="input" as |field|>
+        <form.Field @name="address" @title="Address" @type="input" as |field|>
           <field.Control />
         </form.Field>
       </row.Col>

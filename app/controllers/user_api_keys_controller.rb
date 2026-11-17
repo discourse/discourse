@@ -79,11 +79,11 @@ class UserApiKeysController < ApplicationController
 
     raise Discourse::InvalidAccess unless meets_tl?
 
-    scopes = params[:scopes].split(",")
+    scopes = params[:scopes].split(",").uniq
     expires_at = requested_expires_at(parse_expires_in_seconds!)
 
     @client = UserApiKeyClient.new(client_id: params[:client_id]) if @client.blank?
-    @client.application_name = params[:application_name] if params[:application_name].present?
+    @client.application_name = params[:application_name] if @client.new_record?
     @client.save! if @client.new_record? || @client.changed?
 
     # destroy any old keys the user had with the client
@@ -425,7 +425,9 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless meets_tl?
 
     otp_payload = one_time_password(parsed_public_key, current_user.username)
-    redirect_path = "#{params[:auth_redirect]}?oneTimePassword=#{CGI.escape(otp_payload)}"
+    uri = URI.parse(params[:auth_redirect])
+    uri.query = [uri.query, "oneTimePassword=#{CGI.escape(otp_payload)}"].compact.join("&")
+    redirect_path = uri.to_s
 
     respond_to do |format|
       format.html { redirect_to(redirect_path, allow_other_host: true) }
@@ -494,7 +496,7 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    application_name = params[:application_name] || @client&.application_name
+    application_name = @client&.application_name || params[:application_name]
     scopes = params[:scopes]
     expires_at = requested_expires_at(expires_in_seconds)
 

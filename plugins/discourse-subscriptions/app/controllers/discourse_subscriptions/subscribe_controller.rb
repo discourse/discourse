@@ -111,8 +111,7 @@ module DiscourseSubscriptions
             :status
           ] == "incomplete"
         else
-          coupon_id = promo_code[:coupon][:id] if promo_code && promo_code[:coupon] &&
-            promo_code[:coupon][:id]
+          promo_code_id = promo_code[:id] if promo_code
 
           invoice_params = { customer: customer[:id] }
           if SiteSetting.discourse_subscriptions_enable_automatic_tax
@@ -124,7 +123,7 @@ module DiscourseSubscriptions
             {
               customer: customer[:id],
               price: params[:plan],
-              discounts: [{ coupon: coupon_id }],
+              discounts: [{ promotion_code: promo_code_id }],
               invoice: invoice[:id],
             },
             stripe_request_opts,

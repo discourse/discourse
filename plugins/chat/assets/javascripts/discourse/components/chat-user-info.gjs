@@ -37,13 +37,14 @@ export default class ChatUserInfo extends Component {
   <template>
     {{#if @user}}
       <ChatUserAvatar
-        @user={{@user}}
+        @ariaHidden={{this.interactive}}
         @avatarSize={{this.avatarSize}}
         @interactive={{this.interactive}}
+        @user={{@user}}
       />
 
       {{#if this.interactive}}
-        <a href={{this.userPath}} data-user-card={{@user.username}}>
+        <a data-user-card={{@user.username}} href={{this.userPath}}>
           <ChatUserDisplayName @user={{@user}} />
         </a>
       {{else}}
@@ -53,8 +54,8 @@ export default class ChatUserInfo extends Component {
       {{#if this.showStatus}}
         <div class="user-status" {{this.trackUserStatus @user}}>
           <DUserStatusMessage
-            @status={{@user.status}}
             @showDescription={{this.showStatusDescription}}
+            @status={{@user.status}}
           />
         </div>
       {{/if}}

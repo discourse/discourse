@@ -9,13 +9,13 @@ export default <template>
     <div class="db-section__metric-label">{{@label}}
       {{#if @tooltip}}
         <DTooltip
-          class="db-section__info"
-          @identifier={{concat "site-traffic-explorer-" @name "-tooltip"}}
-          @icon="far-circle-question"
           aria-label={{i18n
             "admin.site_traffic_explorer.metric_information"
             metric=@label
           }}
+          class="db-section__info"
+          @icon="far-circle-question"
+          @identifier={{concat "site-traffic-explorer-" @name "-tooltip"}}
         >
           <:content>{{@tooltip}}</:content>
         </DTooltip>

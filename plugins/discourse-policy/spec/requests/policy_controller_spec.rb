@@ -328,111 +328,131 @@ describe DiscoursePolicy::PolicyController do
     end
   end
 
-  describe "wiki policy edits" do
+  describe "policy validation" do
     fab!(:admin)
-    fab!(:editor, :user)
-    fab!(:policy_group, :group)
-    fab!(:policy_creator_group, :group)
+    fab!(:editor, :trust_level_4)
+    fab!(:audience_group, :group)
     fab!(:target_group, :group)
-    fab!(:private_category) { Fabricate(:private_category, group: target_group) }
-    fab!(:private_topic) { Fabricate(:topic, category: private_category, user: admin) }
-    fab!(:private_post) do
-      Fabricate(:post, topic: private_topic, user: admin, raw: "Restricted group content")
-    end
-    let(:policy_post) { create_post(user: admin, raw: <<~MD) }
-          [policy group=#{policy_group.name}]
-          Accept this policy
-          [/policy]
-        MD
-    let(:policy_post_with_target_group) { create_post(user: admin, raw: <<~MD) }
-          [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
-          Accept this policy
-          [/policy]
-        MD
+    fab!(:post) { Fabricate(:post, user: admin, raw: "Original content") }
 
     before do
-      policy_group.add(editor)
-      policy_creator_group.add(editor)
-      SiteSetting.policy_enabled = true
-      SiteSetting.create_policy_allowed_groups = "1|2|#{policy_creator_group.id}"
-      editor.change_trust_level!(TrustLevel[1])
-      SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
-      policy_post.update!(wiki: true)
+      audience_group.add(editor)
+      target_group.add_owner(admin)
     end
 
-    it "prevents wiki editors from granting themselves access through a policy target group" do
+    it "prevents a policy editor from redirecting a group grant to themselves" do
+      SiteSetting.create_policy_allowed_groups = "#{audience_group.id}"
+      policy_post = create_post(user: admin, raw: <<~MD)
+        [policy group=#{group.name} add-users-to-group=#{target_group.name}]
+        I agree
+        [/policy]
+      MD
+      original_raw = policy_post.raw
+
       sign_in(editor)
-      get "/posts/#{private_post.id}.json"
-      inaccessible_status = response.status
-      inaccessible_body = response.body
-
-      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
-                [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
-                Accept this policy
-                [/policy]
-              MD
-
-      edit_status = response.status
-      edit_errors = response.parsed_body["errors"]
-
-      put "/policy/accept.json", params: { post_id: policy_post.id }
-      accept_status = response.status
-      accept_body = response.body
-
-      get "/posts/#{private_post.id}.json"
-      restricted_status = response.status
-      restricted_body = response.body
+      put "/posts/#{policy_post.id}.json",
+          params: {
+            post: {
+              raw: original_raw.sub("group=#{group.name}", "groups=#{audience_group.name}"),
+            },
+          }
 
       aggregate_failures do
-        expect(inaccessible_status).to eq(403)
-        expect(inaccessible_body).not_to include(private_post.raw)
-        expect(edit_status).to eq(422)
-        expect(edit_errors).to include(I18n.t("discourse_policy.errors.no_policy_permission"))
-        expect(accept_status).to eq(200), accept_body
-        expect(target_group.user_ids).not_to include(editor.id)
-        expect(restricted_status).to eq(403)
-        expect(restricted_body).not_to include(private_post.raw)
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.no_policy_permission"),
+        )
+        expect(policy_post.reload.raw).to eq(original_raw)
+
+        put "/policy/accept.json", params: { post_id: policy_post.id }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.user_missing"),
+        )
+        expect(target_group.users.exists?(editor.id)).to eq(false)
       end
     end
 
-    it "does not grant wiki editors access through a blockquoted policy" do
+    it "keeps the previous policy when processing an edit fails" do
+      SiteSetting.create_policy_allowed_groups = "#{audience_group.id}"
+      policy_post = create_post(user: admin, raw: <<~MD)
+        [policy group=#{group.name} add-users-to-group=#{target_group.name}]
+        I agree
+        [/policy]
+      MD
+
+      Jobs.run_later!
       sign_in(editor)
       put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
-                [quote="someone, post:1, topic:1"]
-                [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
-                Accept this policy
-                [/policy]
-                [/quote]
-              MD
+        [policy group=#{audience_group.name} renew=2147483648]
+        I agree
+        [/policy]
+      MD
 
       expect(response.status).to eq(200)
 
-      put "/policy/accept.json", params: { post_id: policy_post.id }
-      accept_status = response.status
+      expect { Jobs::ProcessPost.new.execute(post_id: policy_post.id, cook: true) }.to raise_error(
+        ActiveModel::RangeError,
+      )
 
-      get "/posts/#{private_post.id}.json"
-      restricted_status = response.status
+      put "/policy/accept.json", params: { post_id: policy_post.id }
 
       aggregate_failures do
-        expect(target_group.user_ids).not_to include(editor.id)
-        expect(accept_status).not_to eq(200)
-        expect(restricted_status).to eq(403)
+        expect(response.status).to eq(422)
+        expect(policy_post.reload.post_policy.groups).to contain_exactly(group)
+        expect(target_group.users.exists?(editor.id)).to eq(false)
       end
     end
 
-    it "allows wiki editors to modify policy text without changing an inaccessible target group" do
-      policy_post_with_target_group.update!(wiki: true)
-      sign_in(editor)
+    it "rejects an HTML policy from an editor without policy permissions" do
+      raw = <<~HTML
+        <div class="policy" data-group="#{audience_group.name}" data-add-users-to-group="#{target_group.name}">
+        I agree
+        </div>
+      HTML
 
-      put "/posts/#{policy_post_with_target_group.id}.json", params: { post: { raw: <<~MD } }
-                [policy group=#{policy_group.name} add-users-to-group=#{target_group.name}]
-                Updated policy text
-                [/policy]
-              MD
+      sign_in(editor)
+      put "/posts/#{post.id}.json", params: { post: { raw: raw } }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("discourse_policy.errors.no_policy_permission"),
+      )
+      expect(post.reload.raw).to eq("Original content")
+      expect(post.post_policy).to be_nil
+    end
+  end
+
+  describe "wiki policy posts" do
+    fab!(:admin)
+
+    let(:policy_post) { create_post(user: admin, raw: raw) }
+
+    it "rejects making a policy post a wiki while allowing quoted policy markup" do
+      sign_in(admin)
+
+      put "/posts/#{policy_post.id}/wiki.json", params: { wiki: "true" }
+
+      aggregate_failures do
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.policy_cannot_be_wiki"),
+        )
+        expect(policy_post.reload).not_to be_wiki
+      end
+
+      quoted_policy_post = create_post(user: admin, raw: <<~MD)
+        [quote="someone, post:1, topic:1"]
+        #{raw}
+        [/quote]
+      MD
+
+      put "/posts/#{quoted_policy_post.id}/wiki.json", params: { wiki: "true" }
 
       aggregate_failures do
         expect(response.status).to eq(200)
-        expect(response.parsed_body["post"]["raw"]).to include("Updated policy text")
+        expect(response.body).to be_blank
+        expect(quoted_policy_post.reload).to be_wiki
       end
     end
   end

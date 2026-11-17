@@ -49,7 +49,8 @@ class DiscourseAi::Completions::ConverseMessageProcessor
               :output_tokens,
               :cache_read_input_tokens,
               :cache_write_input_tokens,
-              :output_thinking
+              :output_thinking,
+              :stop_reason
 
   def initialize(streaming_mode:, partial_tool_calls: false, output_thinking: false)
     @streaming_mode = streaming_mode
@@ -58,6 +59,14 @@ class DiscourseAi::Completions::ConverseMessageProcessor
     @partial_tool_calls = partial_tool_calls
     @output_thinking = output_thinking
     @thinking = nil
+  end
+
+  def output_limit_reached
+    @stop_reason == "max_tokens"
+  end
+
+  def reasoning_tokens
+    nil
   end
 
   def to_tool_calls
@@ -144,7 +153,7 @@ class DiscourseAi::Completions::ConverseMessageProcessor
         @current_tool_call = nil
       end
     when :message_stop
-      # nothing to do
+      @stop_reason = parsed[:stop_reason]
     when :metadata
       usage = parsed[:usage]
       if usage
@@ -166,6 +175,7 @@ class DiscourseAi::Completions::ConverseMessageProcessor
     parsed = JSON.parse(payload, symbolize_names: true) if payload.is_a?(String)
 
     result = []
+    @stop_reason = parsed[:stop_reason]
     content = parsed.dig(:output, :message, :content)
 
     if content.is_a?(Array)

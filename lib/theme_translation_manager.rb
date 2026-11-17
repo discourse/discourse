@@ -4,6 +4,69 @@ class ThemeTranslationManager
   include ActiveModel::Serialization
   attr_reader :key, :default, :theme
 
+  SITE_TEXT_ID_PATTERN = /\Ajs\.theme_translations\.(-?\d+)\.(.+)\z/
+
+  def self.find_site_text(id, locale:)
+    match = SITE_TEXT_ID_PATTERN.match(id)
+    return unless match
+
+    I18n.with_locale(locale) do
+      theme = Theme.includes(:locale_fields, :theme_translation_overrides).find_by(id: match[1])
+      theme&.translations&.find { |entry| entry.key == match[2] }
+    end
+  end
+
+  def self.search_site_texts(
+    query,
+    locale:,
+    theme: nil,
+    overridden: false,
+    outdated: false,
+    untranslated: false,
+    only_selected_locale: false
+  )
+    regexp = I18n::Backend::DiscourseI18n.create_search_regexp(query)
+    themes = Theme.includes(:locale_fields, :theme_translation_overrides)
+    themes = themes.where(id: theme.id) if theme
+    I18n.with_locale(locale) do
+      themes.flat_map do |selected_theme|
+        english_entries = I18n.with_locale(:en) { selected_theme.translations.to_a.index_by(&:key) }
+        translated_keys = locale_translation_keys(selected_theme, locale:) if untranslated
+        selected_theme.translations.filter_map do |entry|
+          next if overridden && !entry.has_record?
+          if untranslated &&
+               (
+                 entry.default_locale == locale.to_s || entry.has_record? ||
+                   translated_keys.include?(entry.key)
+               )
+            next
+          end
+          if outdated && !%w[outdated invalid_interpolation_keys].include?(entry.db_record&.status)
+            next
+          end
+
+          record = entry.site_text
+          if regexp.match?(record[:id]) || regexp.match?(record[:value])
+            record
+          elsif (english_value = english_entries[entry.key]&.value) && regexp.match?(english_value)
+            record[:value] = english_value unless only_selected_locale
+            record
+          end
+        end
+      end
+    end
+  end
+
+  def self.locale_translation_keys(theme, locale:)
+    field = theme.locale_fields.find { |candidate| candidate.name == locale.to_s }
+    data = field&.raw_translation_data&.fetch(locale.to_sym, {}) || {}
+    list_from_hash(locale:, hash: data, theme:).map(&:key).to_set
+  rescue ThemeTranslationParser::InvalidYaml
+    Set.new
+  end
+
+  private_class_method :locale_translation_keys
+
   def self.list_from_hash(locale:, hash:, theme:, parent_keys: [])
     hash
       .map do |key, value|
@@ -24,6 +87,37 @@ class ThemeTranslationManager
     @theme = theme
   end
 
+  def default_locale
+    ThemeTranslationOverride.new(theme:, locale: @locale, translation_key: key).default_locale
+  end
+
+  def site_text
+    override = db_record
+    source = override || ThemeTranslationOverride.new(theme:, locale: @locale, translation_key: key)
+    source_default = source.current_default
+    status = override&.status || "up_to_date"
+    {
+      id: "js.theme_translations.#{theme.id}.#{key}",
+      value: value,
+      status: status,
+      old_default: override&.original_translation,
+      new_default: source_default,
+      default_text: source_default,
+      default_locale: source.default_locale,
+      overridden: has_record?,
+      can_revert: has_record?,
+      interpolation_keys: source.interpolation_keys,
+    }
+  end
+
+  def revert!
+    theme.with_lock do
+      theme.theme_translation_overrides.reload
+      db_record&.destroy!
+      theme.theme_translation_overrides.reset
+    end
+  end
+
   def value
     has_record? ? db_record.value : default
   end
@@ -42,6 +136,8 @@ class ThemeTranslationManager
       end
       record.value
     end
+  ensure
+    theme.theme_translation_overrides.reset
   end
 
   def db_record

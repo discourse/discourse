@@ -18,4 +18,22 @@ module("Unit | Service | Toasts", function (hooks) {
 
     assert.true(this.toasts.activeToasts.length < 2);
   });
+
+  test("key option replaces the toast sharing that key", function (assert) {
+    this.toasts.show({ key: "penalty", data: { text: "first" } });
+    this.toasts.show({ key: "other", data: { text: "untouched" } });
+    this.toasts.show({ key: "penalty", data: { text: "second" } });
+
+    assert.deepEqual(
+      this.toasts.activeToasts.map((toast) => toast.options.data.text),
+      ["untouched", "second"]
+    );
+  });
+
+  test("toasts without a key stack", function (assert) {
+    this.toasts.show({ data: { text: "first" } });
+    this.toasts.show({ data: { text: "second" } });
+
+    assert.strictEqual(this.toasts.activeToasts.length, 2);
+  });
 });

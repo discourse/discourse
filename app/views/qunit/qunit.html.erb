@@ -7,6 +7,16 @@
     <meta name="color-scheme" content="light dark">
 
     <%- if @has_test_bundle %>
+      <%# Browsers may ignore an import map that appears after any module script has started loading %>
+      <%= render "layouts/plugin_js",
+        opts: {
+          include_disabled: true,
+          include_admin_asset: true,
+          include_test_assets_for: @testing_plugins,
+          only: @required_plugins
+        }
+      %>
+
       <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
@@ -29,15 +39,6 @@
 
       <%= preload_script "test-support" %>
 
-      <%= render "layouts/plugin_js",
-        opts: {
-          include_disabled: true,
-          include_admin_asset: true,
-          include_test_assets_for: @testing_plugins,
-          only: @required_plugins
-        }
-      %>
-
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
       <%= fake_preload_data %>
@@ -53,7 +54,7 @@
       <link rel="canonical" href="/">
 
       <style>
-        <%= File.read("#{Rails.root}/frontend/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
+        <%= File.read(VendoredAssets.path("qunit/qunit.css")).html_safe %>
 
         #ember-testing * {
           -webkit-transition: none !important;

@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
-import PostVotingCommentComposer from "./post-voting-comment-composer";
+import PostVotingCommentComposer from "./post-voting-comment-composer.gjs";
 
 export default class PostVotingCommentsMenuComposer extends Component {
   @service siteSettings;
@@ -53,17 +53,17 @@ export default class PostVotingCommentsMenuComposer extends Component {
     />
 
     <DButton
+      class="btn-primary btn-small post-voting-comments__composer-submit"
       @action={{this.saveComment}}
       @disabled={{this.submitDisabled}}
       @icon="reply"
       @label="post_voting.post.post_voting_comment.submit"
-      class="btn-primary btn-small post-voting-comments__composer-submit"
     />
 
     <DButton
+      class="btn-transparent btn-small post-voting-comments__composer-cancel"
       @action={{@onCancel}}
       @label="post_voting.post.post_voting_comment.cancel"
-      class="btn-transparent btn-small post-voting-comments__composer-cancel"
     />
   </template>
 }

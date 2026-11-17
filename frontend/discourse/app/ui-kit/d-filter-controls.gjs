@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { resettableTracked } from "discourse/lib/tracked-tools";
@@ -14,19 +15,56 @@ import DiscourseURL, {
   applyQueryParams,
   searchParamsFromPath,
 } from "discourse/lib/url";
-import { and, eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
 
 const ResetButton = <template>
   <DButton
-    @icon="arrow-rotate-left"
-    @label="filter_controls.reset"
-    @action={{@action}}
     class="btn-default d-filter-controls__reset"
+    @action={{@action}}
+    @ariaLabel="filter_controls.reset"
+    @disabled={{@disabled}}
+    @icon="arrow-rotate-left"
+    @label={{@label}}
+    @title="filter_controls.reset"
   />
+</template>;
+
+const SortMenu = <template>
+  <DMenu
+    @ariaLabel={{i18n "filter_controls.sort_trigger_label" sort=@label}}
+    @icon="arrow-down-wide-short"
+    @identifier="d-filter-controls-sort"
+    @label={{if @showLabel @label}}
+    @modalForMobile={{true}}
+    @placement="bottom-end"
+    @title={{i18n "filter_controls.sort_trigger_label" sort=@label}}
+    @triggerClass="btn-default d-filter-controls__sort-trigger"
+  >
+    <:content as |menu|>
+      <DDropdownMenu as |dropdown|>
+        <dropdown.subheader>
+          {{i18n "filter_controls.sort_label"}}
+        </dropdown.subheader>
+        {{#each @options as |option|}}
+          <dropdown.item>
+            <DButton
+              aria-current={{if (eq option.value @value) "true"}}
+              class="btn-transparent d-filter-controls__sort-option"
+              data-sort={{option.value}}
+              @action={{fn @onChange menu.close option.value}}
+              @suffixIcon={{if (eq option.value @value) "check"}}
+              @translatedLabel={{option.label}}
+            />
+          </dropdown.item>
+        {{/each}}
+      </DDropdownMenu>
+    </:content>
+  </DMenu>
 </template>;
 
 /**
@@ -35,12 +73,19 @@ const ResetButton = <template>
  * client: provide searchableProps and filterFn in dropdownOptions
  * server: provide onTextFilterChange or onDropdownFilterChange callbacks
  *
+ * The inlineFilters block places controls beside the search input, outside the drawer.
+ *
  * @component DFilterControls
  * @param {Array} array - The dataset to display
  * @param {Array} [searchableProps] - Property names to search for client-side text filtering, can be dot-separated
  *                                for nested properties (e.g. "user.name")
  * @param {Array|Object} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]. Or, if you
  *                                   want multiple dropdowns, format is: { dropdown1: [...], dropdown2: [...] }
+ * @param {Array} [sortOptions] - Sort menu options. Format: [{value, label, compareFn?}]. The menu shows with
+ *                                 two or more options. Reset leaves the sort in place, as it isn't a filter
+ * @param {String} [defaultSort] - Default sort value, defaults to the first option
+ * @param {String} [sortQueryParam] - Query param that holds a non-default sort
+ * @param {Function} [onSortChange] - Callback for sort changes. Omit compareFn to sort on the server
  * @param {String} [inputPlaceholder] - Placeholder text for search input
  * @param {String|Object} [defaultDropdownValue="all"] - Default dropdown value(s). For single dropdown: "all",
  *                                                       for multiple: { dropdown1: "all", dropdown2: "all" }
@@ -60,6 +105,7 @@ const ResetButton = <template>
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  * @param {Function} [onFilterDropdownsToggle] - Callback fired when the dropdown drawer is opened or
  *                                               closed, receiving the new expanded state as a boolean
+ * @param {String} [toggleLabel] - Optional translated label for the filter drawer button.
  * @param {Boolean} [additionalFiltersActive=false] - Whether filters rendered in the additionalFilters block are active.
  *                                                     The block renders alongside the dropdowns, sharing the drawer
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
@@ -68,11 +114,13 @@ const ResetButton = <template>
  */
 
 export default class DFilterControls extends Component {
+  @service capabilities;
   @service router;
 
   @tracked dropdownFilter = "all";
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
+  @resettableTracked sort = this.initialSortValue;
   @resettableTracked textFilter = this.initialTextFilterValue;
 
   dropdownFilters = trackedObject();
@@ -119,6 +167,19 @@ export default class DFilterControls extends Component {
     return this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
   }
 
+  get initialSortValue() {
+    const fromUrl =
+      this.args.sortQueryParam && this.showFilters
+        ? this.#validatedUrlValue(
+            this.currentSearchParams,
+            this.args.sortQueryParam,
+            this.sortOptions
+          )
+        : null;
+
+    return fromUrl ?? this.defaultSort;
+  }
+
   get currentSearchParams() {
     // router.currentURL, unlike window.location, is also correct under the
     // test environment's mock location
@@ -131,13 +192,6 @@ export default class DFilterControls extends Component {
         this.args.dropdownFilterQueryParams) &&
       !("dropdownValue" in this.args)
     );
-  }
-
-  #validatedUrlValue(params, paramName, options) {
-    const value = params.get(paramName);
-    return value !== null && options.some((option) => option.value === value)
-      ? value
-      : null;
   }
 
   get array() {
@@ -161,6 +215,22 @@ export default class DFilterControls extends Component {
     return this.args.dropdownOptions || [];
   }
 
+  get sortOptions() {
+    return this.args.sortOptions ?? [];
+  }
+
+  get defaultSort() {
+    return this.args.defaultSort ?? this.sortOptions[0]?.value;
+  }
+
+  get showSort() {
+    return this.sortOptions.length > 1;
+  }
+
+  get sortLabel() {
+    return this.sortOptions.find((option) => option.value === this.sort)?.label;
+  }
+
   get showDropdownFilterToggle() {
     return (
       this.args.showDropdownFilterToggle ??
@@ -181,14 +251,6 @@ export default class DFilterControls extends Component {
   // state; with no drawer to hide behind they render on their own
   get showStandaloneAdditionalFilters() {
     return !this.showDropdownFilterToggle;
-  }
-
-  get showFilterResetButton() {
-    return (
-      this.showResetButton &&
-      !this.showDropdownFilterToggle &&
-      this.hasActiveFilters
-    );
   }
 
   get showTextFilter() {
@@ -242,7 +304,7 @@ export default class DFilterControls extends Component {
     const hasExternalCallbacks =
       this.args.onTextFilterChange || this.args.onDropdownFilterChange;
     if (hasExternalCallbacks) {
-      return filtered;
+      return this.#sorted(filtered);
     }
 
     if (this.textFilter.length > 0) {
@@ -280,16 +342,22 @@ export default class DFilterControls extends Component {
       }
     }
 
-    return filtered;
+    return this.#sorted(filtered);
+  }
+
+  get singleDropdownLabel() {
+    return this.dropdownOptions.find(
+      (option) => option.value === this.defaultDropdownValue
+    )?.label;
   }
 
   /**
    * Allows searchable props in the format user.name, this function gets the
    * nested value based on a dot-separated path.
    *
-   * @param {Object} obj - The object to get value from
+   * @param {object} obj - The object to get value from
    * @param {String} path - The property path (e.g. "user.name")
-   * @returns {*} The value at the path
+   * @returns {unknown} The value at the path
    */
   getNestedValue(obj, path) {
     return path.split(".").reduce((current, key) => current?.[key], obj);
@@ -310,12 +378,6 @@ export default class DFilterControls extends Component {
     const options = this.dropdownOptions[key] || [];
     return options.find((option) => option.value === this.defaultValue(key))
       ?.label;
-  }
-
-  get singleDropdownLabel() {
-    return this.dropdownOptions.find(
-      (option) => option.value === this.defaultDropdownValue
-    )?.label;
   }
 
   @action
@@ -429,6 +491,20 @@ export default class DFilterControls extends Component {
   }
 
   @action
+  onSortChange(close, value) {
+    this.sort = value;
+
+    if (this.args.sortQueryParam) {
+      this.updateQueryParams({
+        [this.args.sortQueryParam]: value === this.defaultSort ? null : value,
+      });
+    }
+
+    this.args.onSortChange?.(value);
+    close();
+  }
+
+  @action
   async resetFilters() {
     this.textFilter = "";
 
@@ -471,6 +547,21 @@ export default class DFilterControls extends Component {
     this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
   }
 
+  #sorted(items) {
+    const compareFn = this.sortOptions.find(
+      (option) => option.value === this.sort
+    )?.compareFn;
+
+    return compareFn ? items.sort(compareFn) : items;
+  }
+
+  #validatedUrlValue(params, paramName, options) {
+    const value = params.get(paramName);
+    return value !== null && options.some((option) => option.value === value)
+      ? value
+      : null;
+  }
+
   <template>
     {{yield to="aboveFilters"}}
 
@@ -490,31 +581,50 @@ export default class DFilterControls extends Component {
           @dropdownValue
         }}
       >
-        {{#if (or this.showTextFilter this.showDropdownFilterToggle)}}
+        {{#if
+          (or this.showTextFilter this.showSort this.showDropdownFilterToggle)
+        }}
           <div class="d-filter-controls__inputs">
             {{#if this.showTextFilter}}
               <DFilterInput
+                class="d-filter-controls__input"
                 placeholder={{@inputPlaceholder}}
                 @filterAction={{this.onTextFilterChange}}
-                @value={{this.textFilter}}
-                class="d-filter-controls__input"
                 @icons={{hash left="magnifying-glass"}}
+                @value={{this.textFilter}}
+              />
+            {{/if}}
+
+            {{yield to="inlineFilters"}}
+
+            {{#if this.showSort}}
+              <SortMenu
+                @label={{this.sortLabel}}
+                @onChange={{this.onSortChange}}
+                @options={{this.sortOptions}}
+                @showLabel={{this.capabilities.viewport.sm}}
+                @value={{this.sort}}
               />
             {{/if}}
 
             {{#if this.showDropdownFilterToggle}}
               <DButton
+                aria-expanded={{if this.showFilterDropdowns "true" "false"}}
                 class="btn-default d-filter-controls__toggle-filters"
+                @action={{this.toggleFilters}}
                 @icon={{if
                   this.showDropdownFilter
                   "filter-circle-xmark"
                   "filter"
                 }}
                 @title="filter_controls.toggle"
-                @action={{this.toggleFilters}}
+                @translatedLabel={{@toggleLabel}}
               />
-              {{#if (and this.showResetButton this.hasActiveFilters)}}
-                <ResetButton @action={{this.resetFilters}} />
+              {{#if this.showResetButton}}
+                <ResetButton
+                  @action={{this.resetFilters}}
+                  @disabled={{not this.hasActiveFilters}}
+                />
               {{/if}}
             {{/if}}
           </div>
@@ -525,9 +635,7 @@ export default class DFilterControls extends Component {
             {{#if this.hasMultipleDropdowns}}
               {{#each-in this.dropdownOptions as |key options|}}
                 <DNativeSelect
-                  @value={{get this.dropdownFilters key}}
-                  @includeNone={{false}}
-                  @onChange={{fn this.onDropdownFilterChange key}}
+                  aria-label={{this.dropdownLabel key}}
                   class={{dConcatClass
                     "d-filter-controls__dropdown"
                     (concat "d-filter-controls__dropdown--" key)
@@ -538,8 +646,10 @@ export default class DFilterControls extends Component {
                       "--active"
                     )
                   }}
-                  aria-label={{this.dropdownLabel key}}
                   data-dropdown-key={{key}}
+                  @includeNone={{false}}
+                  @onChange={{fn this.onDropdownFilterChange key}}
+                  @value={{get this.dropdownFilters key}}
                   as |select|
                 >
                   {{#each options as |option|}}
@@ -549,11 +659,9 @@ export default class DFilterControls extends Component {
                   {{/each}}
                 </DNativeSelect>
               {{/each-in}}
-            {{else}}
+            {{else if this.dropdownOptions.length}}
               <DNativeSelect
-                @value={{this.dropdownFilter}}
-                @includeNone={{false}}
-                @onChange={{this.onDropdownFilterChange}}
+                aria-label={{this.singleDropdownLabel}}
                 class={{dConcatClass
                   "d-filter-controls__dropdown"
                   (unless
@@ -561,7 +669,9 @@ export default class DFilterControls extends Component {
                     "--active"
                   )
                 }}
-                aria-label={{this.singleDropdownLabel}}
+                @includeNone={{false}}
+                @onChange={{this.onDropdownFilterChange}}
+                @value={{this.dropdownFilter}}
                 as |select|
               >
                 {{#each this.dropdownOptions as |option|}}
@@ -584,8 +694,11 @@ export default class DFilterControls extends Component {
           </div>
         {{/if}}
 
-        {{#if this.showFilterResetButton}}
-          <ResetButton @action={{this.resetFilters}} />
+        {{#if (and this.showResetButton (not this.showDropdownFilterToggle))}}
+          <ResetButton
+            @action={{this.resetFilters}}
+            @disabled={{not this.hasActiveFilters}}
+          />
         {{/if}}
 
         {{yield to="actions"}}
@@ -603,7 +716,10 @@ export default class DFilterControls extends Component {
             <p>{{@noResultsMessage}}</p>
           {{/if}}
           {{#if this.showResetButton}}
-            <ResetButton @action={{this.resetFilters}} />
+            <ResetButton
+              @action={{this.resetFilters}}
+              @label="filter_controls.reset"
+            />
           {{/if}}
         </div>
       {{/if}}

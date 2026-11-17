@@ -102,6 +102,34 @@ export default function migrate(settings) {
 }
 ```
 
+### Move a text setting to a theme translation
+
+Use `helpers.migrateSettingToTranslation(settingName, translationKey)` when replacing a string setting with a theme translation:
+
+```js
+// filename: 0002-migrate-heading.js
+export default function migrate(settings, helpers) {
+  helpers.migrateSettingToTranslation("heading_text", "homepage.heading");
+  return settings;
+}
+```
+
+Remove `heading_text` from `settings.yml` and declare the destination in `locales/en.yml` in the same update:
+
+```yaml
+en:
+  homepage:
+    heading: ""
+```
+
+The helper moves a saved setting into an English theme translation override and removes the setting. English is the fallback locale for other languages, so visitors keep seeing the saved text until a translation for their locale is supplied. A locale file that declares the same key, even with an empty value, hides that saved English text for its locale. This also applies to locale files added in future updates.
+
+- The helper reads from the `settings` map passed to the migration. Only saved settings are migrated. If the old setting had a non-empty default, use that default in `en.yml` so sites without a saved value keep their text.
+- The setting value must be a string and the destination must be a declared text key. Empty strings are preserved.
+- Existing English overrides, including empty ones, are not overwritten. If multiple migrations target the same key, the first migrated value wins.
+- The runner stages translation changes without writing to the database. Discourse saves them in the same transaction as the settings and migration records; a failed update rolls everything back.
+- The migration log retains the deleted setting's value. Reverting the theme code does not move translation overrides back into settings.
+
 ### Execution and Error Handling
 
 Migrations run automatically during theme installation and updates. They execute only once; if a migration is altered after successful execution, it will not run again. If a migration fails, the update process stops, and an error message of what went wrong is provided.

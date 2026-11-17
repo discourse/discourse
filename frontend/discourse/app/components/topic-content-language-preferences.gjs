@@ -14,12 +14,12 @@ export default class TopicContentLanguagePreferences extends Component {
 
   <template>
     <DButton
-      @icon="language"
-      @title="content_localization.preferences.title"
-      @action={{this.openPreferences}}
       class="btn-default topic-content-language-preferences no-text"
       data-test-content-language-preferences
       ...attributes
+      @action={{this.openPreferences}}
+      @icon="language"
+      @title="content_localization.preferences.title"
     />
   </template>
 }

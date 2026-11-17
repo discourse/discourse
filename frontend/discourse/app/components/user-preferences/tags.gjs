@@ -1,9 +1,13 @@
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+function updateTags(model, field, tags) {
+  model.set(field, tags);
+}
 
 const Tags = <template>
   {{#if @siteSettings.tagging_enabled}}
@@ -14,11 +18,12 @@ const Tags = <template>
         <label>{{dIcon "d-watching" class="icon watching"}}
           {{i18n "user.watched_tags"}}</label>
         <TagChooser
-          @tags={{@model.watched_tags}}
           @blockedTags={{@selectedTags}}
           @everyTag={{true}}
-          @unlimitedTagCount={{true}}
+          @onChange={{fn updateTags @model "watched_tags"}}
           @options={{hash allowAny=false}}
+          @tags={{@model.watched_tags}}
+          @unlimitedTagCount={{true}}
         />
       </div>
 
@@ -28,11 +33,12 @@ const Tags = <template>
         <label>{{dIcon "d-tracking" class="icon tracking"}}
           {{i18n "user.tracked_tags"}}</label>
         <TagChooser
-          @tags={{@model.tracked_tags}}
           @blockedTags={{@selectedTags}}
           @everyTag={{true}}
-          @unlimitedTagCount={{true}}
+          @onChange={{fn updateTags @model "tracked_tags"}}
           @options={{hash allowAny=false}}
+          @tags={{@model.tracked_tags}}
+          @unlimitedTagCount={{true}}
         />
       </div>
 
@@ -44,11 +50,12 @@ const Tags = <template>
         <label>{{dIcon "d-watching-first" class="icon watching-first-post"}}
           {{i18n "user.watched_first_post_tags"}}</label>
         <TagChooser
-          @tags={{@model.watching_first_post_tags}}
           @blockedTags={{@selectedTags}}
           @everyTag={{true}}
-          @unlimitedTagCount={{true}}
+          @onChange={{fn updateTags @model "watching_first_post_tags"}}
           @options={{hash allowAny=false}}
+          @tags={{@model.watching_first_post_tags}}
+          @unlimitedTagCount={{true}}
         />
       </div>
 
@@ -60,24 +67,25 @@ const Tags = <template>
         <label>{{dIcon "d-muted" class="icon muted"}}
           {{i18n "user.muted_tags"}}</label>
         <TagChooser
-          @tags={{@model.muted_tags}}
           @blockedTags={{@selectedTags}}
           @everyTag={{true}}
-          @unlimitedTagCount={{true}}
+          @onChange={{fn updateTags @model "muted_tags"}}
           @options={{hash allowAny=false}}
+          @tags={{@model.muted_tags}}
+          @unlimitedTagCount={{true}}
         />
       </div>
       <div class="instructions">{{i18n "user.muted_tags_instructions"}}</div>
     </div>
 
     <PluginOutlet
-      @name="user-preferences-tags"
       @connectorTagName="div"
+      @name="user-preferences-tags"
       @outletArgs={{lazyHash model=@model save=@save}}
     />
     <PluginOutlet
-      @name="user-custom-controls"
       @connectorTagName="div"
+      @name="user-custom-controls"
       @outletArgs={{lazyHash model=@model}}
     />
   {{/if}}

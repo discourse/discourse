@@ -13,6 +13,25 @@
   }
 
   &__container {
+    display: inline-flex;
+    position: relative;
+
+    .avatar-flair {
+      --avatar-flair-size: 45%;
+      position: absolute;
+      inset-inline-end: -10%;
+      bottom: -10%;
+      color: var(--primary);
+
+      &.rounded {
+        --avatar-flair-size: 50%;
+      }
+
+      .d-icon {
+        color: inherit;
+      }
+    }
+
     .chat-user-presence-flair {
       box-sizing: border-box;
       position: absolute;

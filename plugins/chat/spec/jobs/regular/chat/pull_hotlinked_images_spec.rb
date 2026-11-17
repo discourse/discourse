@@ -67,6 +67,35 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect(message.upload_references).to be_empty
     end
 
+    # a racing job can insert the row between our download and our insert; the
+    # upload we just created has no other reference, so the row has to claim it
+    it "claims the download when a racing job already recorded a failure" do
+      stub_image_size
+      message = fabricate_chat_message("![longcat](#{image_url})")
+      record =
+        Chat::MessageHotlinkedMedia.create!(
+          chat_message: message,
+          url: Chat::MessageHotlinkedMedia.normalize_src(image_url),
+          status: :download_failed,
+        )
+      # the pull reads its map before the racing row lands
+      Chat::Message.any_instance.stubs(:hotlinked_media).returns(Chat::MessageHotlinkedMedia.none)
+
+      described_class.new.execute(chat_message_id: message.id)
+
+      record.reload
+      expect(record).to be_downloaded
+      expect(record.upload).to eq(Upload.last)
+      expect(Chat::MessageHotlinkedMedia.where(chat_message_id: message.id).count).to eq(1)
+    end
+
+    it "does not run the disk space check when there is nothing to download" do
+      message = fabricate_chat_message("just text")
+      DiskSpace.expects(:percent_free).never
+
+      described_class.new.execute(chat_message_id: message.id)
+    end
+
     it "records terminal failures without changing the message or retrying" do
       raw = "![broken](#{broken_image_url})"
       message = fabricate_chat_message(raw)
@@ -249,6 +278,29 @@ describe Jobs::Chat::PullHotlinkedImages do
           }
           expect(message.reload.hotlinked_media).to be_empty
         end
+        expect(WebMock).not_to have_requested(:get, /amazonaws\.com/)
+      end
+
+      # the downloader signs our own S3 path for anything shaped like a secure
+      # upload URL, so a foreign host serving that path must be rejected too
+      it "does not rehost a secure upload path served by another host" do
+        global_setting :allow_unsecure_chat_uploads, true
+        SiteSetting.chat_allow_uploads = true
+        foreign_url =
+          "https://attacker.example/secure-uploads/original/1X/1234567890abcdef1234567890abcdef12345678.png"
+        stub_request(:get, foreign_url).to_return(
+          body: gif,
+          headers: {
+            "Content-Type" => "image/gif",
+          },
+        )
+        stub_image_size
+        message = fabricate_chat_message("![](#{foreign_url})")
+
+        expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
+          Upload.count
+        }
+        expect(message.reload.hotlinked_media).to be_empty
         expect(WebMock).not_to have_requested(:get, /amazonaws\.com/)
       end
     end

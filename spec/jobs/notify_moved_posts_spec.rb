@@ -23,7 +23,7 @@ RSpec.describe Jobs::NotifyMovedPosts do
       Notification.where(notification_type: Notification.types[:moved_post])
     end
 
-    it "should create two notifications" do
+    it "creates two notifications" do
       expect {
         Jobs::NotifyMovedPosts.new.execute(post_ids: [p1.id, p2.id, p3.id], moved_by_id: admin.id)
       }.to change(moved_post_notifications, :count).by(2)

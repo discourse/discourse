@@ -1,7 +1,7 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import LazyVideo from "../discourse/components/lazy-video";
+import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
 
 module("Component | LazyVideo", function (hooks) {
   setupRenderingTest(hooks);
@@ -86,20 +86,20 @@ module("Component | LazyVideo", function (hooks) {
   });
 
   test("accepts an optional onLoadedVideo callback function", async function (assert) {
-    this.set("foo", 1);
-    this.set("onLoadedVideo", () => this.set("foo", 2));
+    let foo = 1;
+    const onLoadedVideo = () => (foo = 2);
 
     await render(
       <template>
         <LazyVideo
+          @onLoadedVideo={{onLoadedVideo}}
           @videoAttributes={{this.attributes}}
-          @onLoadedVideo={{this.onLoadedVideo}}
         />
       </template>
     );
-    assert.strictEqual(this.foo, 1);
+    assert.strictEqual(foo, 1);
 
     await click(".video-thumbnail.youtube");
-    assert.strictEqual(this.foo, 2);
+    assert.strictEqual(foo, 2);
   });
 });

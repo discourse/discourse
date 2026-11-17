@@ -48,6 +48,19 @@ describe "Simplified Category Creation" do
         expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
         expect(page).to have_current_path("/new-category/general")
       end
+
+      it "keeps the category type tab open when collapsing advanced settings" do
+        category_page.visit_new_category
+        category_type_card.find_type_card("mock_type").click
+        find(".edit-category-mock_type a").click
+        category_page.toggle_advanced_settings
+        expect(page).to have_css(".edit-category-security")
+
+        category_page.toggle_advanced_settings
+
+        expect(page).to have_no_css(".edit-category-security")
+        expect(page).to have_current_path("/new-category/mock_type")
+      end
     end
   end
 
@@ -106,6 +119,27 @@ describe "Simplified Category Creation" do
       category_page.save_settings
 
       expect(category.reload.category_groups.map(&:group_id)).to include(group.id)
+    end
+
+    it "shows a warning instead of visibility options for a special category" do
+      category.set_permissions(staff: :full)
+      category.save!
+      SiteSetting.staff_category_id = category.id
+
+      category_page.visit_general(category)
+
+      expect(page).to have_content(I18n.t("js.category.special_warning"))
+      expect(page).to have_no_css("input.form-kit__control-radio[value='group_restricted']")
+
+      form.field("name").fill_in("Renamed staff")
+      category_page.save_settings
+
+      expect(category.reload.name).to eq("Renamed staff")
+
+      category_page.visit_security(category)
+
+      expect(page).to have_content(I18n.t("js.category.special_warning"))
+      expect(page).to have_no_content(I18n.t("js.category.permissions.specific_groups_have_access"))
     end
 
     it "shows error when color is invalid" do

@@ -7,7 +7,6 @@ import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
 import { debounce } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
-import { and, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -143,12 +142,12 @@ export default class AssistantItem extends Component {
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <li
       class={{dConcatClass @typeClass "search-menu-assistant-item"}}
+      data-usage={{@usage}}
       {{on "keydown" this.onKeydown}}
       {{on "click" this.onClick}}
-      data-usage={{@usage}}
     >
       <a class={{dConcatClass @typeClass "search-link"}} href={{this.href}}>
-        <span class="search-icon-wrapper" aria-label={{i18n "search.title"}}>
+        <span aria-label={{i18n "search.title"}} class="search-icon-wrapper">
           {{dIcon (or @icon "magnifying-glass")}}
         </span>
         <span class="search-item-wrapper">

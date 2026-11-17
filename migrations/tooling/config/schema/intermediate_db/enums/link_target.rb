@@ -8,4 +8,7 @@ Migrations::Tooling::Schema.enum :link_target do
   value :tag, 5
   value :group, 6
   value :badge, 7
+  value :site, 8
+  value :category_tag, 9
+  value :tag_intersection, 10
 end

@@ -1,9 +1,12 @@
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
-import { walkScope, WORKFLOW_VARIABLE_MIME } from "../expression-context";
-import { dragSource } from "./drag-source";
-import { parseReference, referenceLabel } from "./reference-label";
-import { propertyAccessor, referencePickerData } from "./reference-properties";
+import { walkScope, WORKFLOW_VARIABLE_MIME } from "../expression-context.js";
+import { dragSource } from "./drag-source.js";
+import { parseReference, referenceLabel } from "./reference-label.js";
+import {
+  propertyAccessor,
+  referencePickerData,
+} from "./reference-properties.js";
 
 // Delay before a selected pill's second click opens the dropdown, so a
 // double-click (which edits) isn't misread as two single clicks.

@@ -4,7 +4,8 @@ module DiscourseWorkflows
   module Nodes
     module PostCreated
       class V1 < NodeType
-        TOPIC_TYPE_OPTIONS = %w[all topics personal_messages].freeze
+        POST_TYPE_OPTIONS = %w[regular whisper].freeze
+        DEFAULT_POST_TYPE = "regular"
 
         description(
           name: "trigger:post_created",
@@ -14,7 +15,7 @@ module DiscourseWorkflows
             color: "indigo",
           },
           group: "discourse_triggers",
-          events: [:post_created],
+          event: :post_created,
           output_contracts: [
             {
               schema:
@@ -26,12 +27,7 @@ module DiscourseWorkflows
             },
           ],
           properties: {
-            topic_type: {
-              type: :options,
-              required: true,
-              default: "topics",
-              options: TOPIC_TYPE_OPTIONS,
-            },
+            **TOPIC_TYPE_FILTER_PROPERTIES,
             group_inbox_id: {
               type: :integer,
               required: false,
@@ -53,34 +49,13 @@ module DiscourseWorkflows
                 none: "discourse_workflows.post_created.group_inbox_id_placeholder",
               },
             },
-            category_ids: {
-              type: :array,
-              required: false,
-              ui: {
-                control: :category,
-                multiple: true,
-              },
+            post_type: {
+              type: :options,
+              required: true,
+              default: DEFAULT_POST_TYPE,
+              options: POST_TYPE_OPTIONS,
             },
-            include_subcategories: {
-              type: :boolean,
-              required: false,
-              default: true,
-              ui: {
-                control: :checkbox,
-              },
-              display_options: {
-                show: {
-                  category_ids: [{ condition: { exists: true } }],
-                },
-              },
-            },
-            tag_names: {
-              type: :string,
-              required: false,
-              ui: {
-                control: :tags,
-              },
-            },
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
           },
         )
 
@@ -102,63 +77,36 @@ module DiscourseWorkflows
         end
 
         def valid?
-          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
-            !@opts&.dig(:skip_workflows)
+          return false if @post.blank?
+          return false if @post.topic.blank?
+          return false if @opts&.dig(:skip_workflows)
+
+          POST_TYPE_OPTIONS.include?(post_type_name)
         end
 
         def output
-          { post: post_data(@post), topic: topic_data(@post.topic), user: user_data(@post.user) }
+          {
+            post: serialize_post(@post),
+            topic: serialize_topic_list_item(@post.topic),
+            user: serialize_user(@post.user),
+          }
         end
 
         def matches?(trigger_ctx)
           topic = @post.topic
+          post_type = trigger_ctx.get_node_parameter("post_type").presence || DEFAULT_POST_TYPE
 
-          matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type", "topics")) &&
-            matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id")) &&
-            matches_category_ids?(
-              topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) &&
-            matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+          return false if post_type != post_type_name
+          return false if !matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type"))
+          return false if !matches_topic_filters?(topic, trigger_ctx)
+
+          matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id"))
         end
 
         private
 
-        def post_data(post)
-          serialize_post(post)
-        end
-
-        def user_data(user)
-          serialize_user(user)
-        end
-
-        def matches_topic_type?(topic, topic_type)
-          case topic_type.presence || "topics"
-          when "all"
-            true
-          when "topics"
-            !topic.private_message?
-          when "personal_messages"
-            topic.private_message?
-          else
-            false
-          end
-        end
-
-        def matches_group_inbox?(topic, group_id)
-          return true if group_id.blank?
-          return false if !topic.private_message?
-
-          topic.allowed_groups.exists?(id: group_id.to_i)
-        end
-
-        def matches_tags?(topic, tag_names)
-          tag_names.empty? || (topic_tag_names(topic) & tag_names).any?
-        end
-
-        def topic_tag_names(topic)
-          @topic_tag_names ||= topic.tags.pluck(:name)
+        def post_type_name
+          ::Post.types.key(@post.post_type).to_s
         end
       end
     end

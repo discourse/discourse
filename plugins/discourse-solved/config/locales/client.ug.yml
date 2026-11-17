@@ -19,6 +19,10 @@ ug:
                 lt_1h: "< 1 سائەت"
                 gt_24h: "> 24 سائەت"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "چىقىرىۋېتىلدى"
+        tag_names: "بەلگە"
     notifications:
       alt:
         solved:
@@ -35,6 +39,12 @@ ug:
     topic_statuses:
       solved:
         help: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "تېما"
+            category: "سەھىپە"
     discourse_automation:
       triggerables:
         first_accepted_solution:

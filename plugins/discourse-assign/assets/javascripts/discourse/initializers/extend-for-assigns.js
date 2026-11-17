@@ -4,21 +4,20 @@ import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
-import AssignButton from "../components/assign-button";
-import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
-import EditTopicAssignments from "../components/modal/edit-topic-assignments";
-import PostAssignmentsDisplay from "../components/post-assignments-display";
-import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
+import AssignButton from "../components/assign-button.gjs";
+import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user.gjs";
+import EditTopicAssignments from "../components/modal/edit-topic-assignments.gjs";
+import PostAssignmentsDisplay from "../components/post-assignments-display.gjs";
+import TopicLevelAssignMenu from "../components/topic-level-assign-menu.js";
 import {
   assignedToGroupPath,
   assignedToPostPath,
   assignedToUserPath,
-} from "../lib/url";
-import { extendTopicModel } from "../models/topic";
+} from "../lib/url.js";
+import { extendTopicModel } from "../models/topic.js";
 
 const DEPENDENT_KEYS = [
   "topic.assigned_to_user",
@@ -415,27 +414,7 @@ function initialize(api) {
       )}">${escapeExpression(name)}</span></${tagName}>`;
     };
 
-    // is there's one assignment just return the tag
-    if (assignedTo.length === 1) {
-      return createTagHtml(assignedTo[0]);
-    }
-
-    // join multiple assignments with a separator
-    let result = "";
-    assignedTo.forEach((assignment, index) => {
-      result += createTagHtml(assignment);
-
-      // add separator if not the last tag
-      if (index < assignedTo.length - 1) {
-        const separator = applyValueTransformer("tag-separator", ",", {
-          topic,
-          index,
-        });
-        result += `<span class="discourse-tags__tag-separator">${separator}</span>`;
-      }
-    });
-
-    return result;
+    return assignedTo.map((assignment) => createTagHtml(assignment));
   });
 
   api.addModelSaveProperty("group", "assignable_level");
@@ -621,6 +600,14 @@ export default {
     }
 
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-assigned",
+        route: "userActivity.assigned",
+        label: "discourse_assign.assigned",
+        icon: "user-plus",
+        displayed: ({ currentUser }) => currentUser?.can_assign_globally,
+      });
+
       const currentUser = container.lookup("service:current-user");
       if (currentUser?.can_assign_globally) {
         api.modifyClass(

@@ -1,6 +1,10 @@
 import { run } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import {
+  isRateLimitError,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -28,13 +32,21 @@ export default class ScreenTrack extends Service {
 
   _ajaxFailures = 0;
   _consolidatedTimings = [];
+
+  /** @type {number | null} */
   _lastTick = null;
+
+  /** @type {number | null} */
   _lastScrolled = null;
   _lastFlush = 0;
   _timings = new Map();
   _totalTimings = new Map();
   _topicTime = 0;
+
+  /** @type {number[] | null} */
   _onscreen = null;
+
+  /** @type {number[] | null} */
   _readOnscreen = null;
   _readPosts = new Set();
   _inProgress = false;
@@ -45,6 +57,14 @@ export default class ScreenTrack extends Service {
   }
 
   start(topicId, topicController) {
+    if (
+      topicController?.get("model.deleted") ||
+      topicController?.get("topic.deleted")
+    ) {
+      this.stop();
+      return;
+    }
+
     if (this._topicId && this._topicId !== topicId) {
       this.tick();
       this.flush();
@@ -141,7 +161,7 @@ export default class ScreenTrack extends Service {
       this._consolidatedTimings.push({ timings, topicTime, topicId });
     }
 
-    const highestRead = parseInt(Object.keys(timings).lastObject, 10);
+    const highestRead = parseInt(Object.keys(timings).at(-1), 10);
     const cachedHighestRead = this.highestReadFromCache(topicId);
 
     if (!cachedHighestRead || cachedHighestRead < highestRead) {
@@ -190,7 +210,7 @@ export default class ScreenTrack extends Service {
         },
       });
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -200,7 +220,7 @@ export default class ScreenTrack extends Service {
         this._topicController.readPosts(topicId, postNumbers);
 
         const cachedHighestRead = this.highestReadFromCache(topicId);
-        if (cachedHighestRead && cachedHighestRead <= postNumbers.lastObject) {
+        if (cachedHighestRead && cachedHighestRead <= postNumbers.at(-1)) {
           resetHighestReadCache(topicId);
         }
       }
@@ -208,14 +228,21 @@ export default class ScreenTrack extends Service {
       this.appEvents.trigger("topic:timings-sent", data);
     } catch (e) {
       if (e.jqXHR && ALLOWED_AJAX_FAILURES.includes(e.jqXHR.status)) {
-        const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
-        this._ajaxFailures += 1;
+        let delay;
 
-        if (delay) {
-          this._blockSendingToServerTill = Date.now() + delay;
-          // we did not send to the server, got to re-queue it
-          this.consolidateTimings(timings, topicTime, topicId);
+        if (isRateLimitError(e)) {
+          delay = rateLimitWaitSeconds(e) * 1000;
+        } else {
+          delay =
+            AJAX_FAILURE_DELAYS[
+              Math.min(this._ajaxFailures, AJAX_FAILURE_DELAYS.length - 1)
+            ];
+          this._ajaxFailures += 1;
         }
+
+        this._blockSendingToServerTill = Date.now() + delay;
+        // we did not send to the server, got to re-queue it
+        this.consolidateTimings(timings, topicTime, topicId);
       }
 
       if (window.console && window.console.warn && e.jqXHR) {
@@ -256,17 +283,17 @@ export default class ScreenTrack extends Service {
       stream && // Sanity check
       stream.hasNoFilters && // The stream is not filtered (by username or summary)
       !stream.canAppendMore && // We are at the end of the stream
-      stream.posts.lastObject && // The last post exists
-      stream.posts.lastObject.read && // The last post is read
+      stream.posts.at(-1) && // The last post exists
+      stream.posts.at(-1).read && // The last post is read
       stream.gaps && // The stream has gaps
-      !!stream.gaps.after[stream.posts.lastObject.id] && // Stream ends with a gap
+      !!stream.gaps.after[stream.posts.at(-1).id] && // Stream ends with a gap
       stream.topic.last_read_post_number !==
-        stream.posts.lastObject.post_number +
-          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`) // The last post in the gap has not been marked read
+        stream.posts.at(-1).post_number +
+          stream.get(`gaps.after.${stream.posts.at(-1).id}.length`) // The last post in the gap has not been marked read
     ) {
       newTimings[
-        stream.posts.lastObject.post_number +
-          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`)
+        stream.posts.at(-1).post_number +
+          stream.get(`gaps.after.${stream.posts.at(-1).id}.length`)
       ] = 1;
     }
 

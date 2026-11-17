@@ -27,6 +27,7 @@ module Chat
       validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
     end
 
+    policy :no_silenced_user
     model :thread
     policy :can_view_channel
     policy :can_edit_thread
@@ -35,6 +36,10 @@ module Chat
     step :publish_metadata
 
     private
+
+    def no_silenced_user(guardian:)
+      !guardian.is_silenced?
+    end
 
     def fetch_thread(params:)
       Chat::Thread.find_by(id: params.thread_id)

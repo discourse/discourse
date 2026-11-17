@@ -1,9 +1,6 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
-import CampaignBanner from "../../components/campaign-banner";
+import Component from "@glimmer/component";
+import CampaignBanner from "../../components/campaign-banner.gjs";
 
-@tagName("")
 export default class SubscriptionsCampaignSidebar extends Component {
   static shouldRender(args, context) {
     const { siteSettings } = context;

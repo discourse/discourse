@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import AiSplitTopicSuggester from "../../components/ai-split-topic-suggester";
-import { showPostAIHelper } from "../../lib/show-ai-helper";
+import AiSplitTopicSuggester from "../../components/ai-split-topic-suggester.gjs";
+import { showPostAIHelper } from "../../lib/show-ai-helper.js";
 
 export default class AiTagSuggestion extends Component {
   static shouldRender(args, context) {
@@ -13,11 +13,11 @@ export default class AiTagSuggestion extends Component {
   <template>
     {{#if this.siteSettings.ai_embeddings_enabled}}
       <AiSplitTopicSuggester
-        @selectedPosts={{@outletArgs.selectedPosts}}
-        @mode="suggest_tags"
-        @updateAction={{@outletArgs.updateTags}}
-        @currentValue={{@outletArgs.tags}}
         @categoryId={{@outletArgs.categoryId}}
+        @currentValue={{@outletArgs.tags}}
+        @mode="suggest_tags"
+        @selectedPosts={{@outletArgs.selectedPosts}}
+        @updateAction={{@outletArgs.updateTags}}
       />
     {{/if}}
   </template>

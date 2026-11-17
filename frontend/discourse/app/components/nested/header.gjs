@@ -36,19 +36,19 @@ export default class NestedHeader extends Component {
       {{#if @editingTopic}}
         <div class="edit-topic-title">
           <TopicTitleEditor
+            @buffered={{@buffered}}
             @bufferedTitle={{@buffered.title}}
             @model={{@topic}}
-            @buffered={{@buffered}}
           />
 
           <TopicMetadata
             @buffered={{@buffered}}
-            @model={{@topic}}
-            @showCategoryChooser={{@showCategoryChooser}}
             @canEditTags={{@canEditTags}}
             @minimumRequiredTags={{@minimumRequiredTags}}
-            @onSave={{@finishedEditingTopic}}
+            @model={{@topic}}
             @onCancel={{@cancelEditingTopic}}
+            @onSave={{@finishedEditingTopic}}
+            @showCategoryChooser={{@showCategoryChooser}}
             @topicCategoryChanged={{@topicCategoryChanged}}
             @topicTagsChanged={{@topicTagsChanged}}
           />
@@ -57,9 +57,9 @@ export default class NestedHeader extends Component {
         <h1 class="nested-view__title">
           <TopicStatus @topic={{@topic}} />
           <a
+            class="fancy-title"
             href={{@topic.url}}
             {{on "click" @startEditingTopic}}
-            class="fancy-title"
           >
             {{trustHTML @topic.fancyTitle~}}
             {{~#if @topic.details.can_edit~}}
@@ -69,11 +69,11 @@ export default class NestedHeader extends Component {
             {{~/if}}
           </a>
         </h1>
-        <TopicCategory @topic={{@topic}} class="topic-category" />
+        <TopicCategory class="topic-category" @topic={{@topic}} />
       {{/if}}
       <PluginOutlet
-        @name="topic-title"
         @connectorTagName="div"
+        @name="topic-title"
         @outletArgs={{lazyHash model=@topic}}
       />
     </div>

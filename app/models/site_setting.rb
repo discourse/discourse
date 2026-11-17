@@ -24,6 +24,7 @@ class SiteSetting < ActiveRecord::Base
     interface
     legal
     localization
+    mcp
     navigation
     notifications
     permalinks
@@ -144,6 +145,33 @@ class SiteSetting < ActiveRecord::Base
   setup_deprecated_methods
   client_settings << :available_locales
 
+  SEEDED_CATEGORY_SETTINGS = %i[
+    general_category_id
+    meta_category_id
+    staff_category_id
+    uncategorized_category_id
+  ]
+
+  def self.ensure_consistency!
+    current.each do |name, value|
+      next if !dangling_category?(name, value)
+
+      reason = I18n.t("staff_action_logs.site_setting.missing_category_reset", category_id: value)
+      set_and_log(name, defaults[name], Discourse.system_user, reason)
+      if name.to_sym == :uncategorized_category_id
+        set_and_log(:allow_uncategorized_topics, false, Discourse.system_user, reason)
+      end
+    end
+  end
+
+  def self.dangling_category?(name, value)
+    type = type_supervisor.get_type(name)
+    return false if type != :category && !SEEDED_CATEGORY_SETTINGS.include?(name.to_sym)
+
+    value.to_i > 0 && !Category.exists?(value.to_i)
+  end
+  private_class_method :dangling_category?
+
   def self.available_locales
     LocaleSiteSetting.values.to_json
   end
@@ -221,7 +249,7 @@ class SiteSetting < ActiveRecord::Base
     return true if setting.blank?
 
     host = URI.parse(src).host
-    !setting.split("|").include?(host)
+    !HostnameNormalizer.any_equivalent?(host, setting.split("|"))
   rescue URI::Error
     true
   end
@@ -366,6 +394,18 @@ class SiteSetting < ActiveRecord::Base
     invite_code.present?
   end
   client_settings << :require_invite_code
+
+  def self.site_logo_dimensions
+    %i[logo logo_dark logo_small logo_small_dark mobile_logo mobile_logo_dark].each_with_object(
+      {},
+    ) do |name, dimensions|
+      upload = public_send(name)
+      if upload && upload.width.to_i > 0 && upload.height.to_i > 0
+        dimensions[full_cdn_url(upload.url)] = { width: upload.width, height: upload.height }
+      end
+    end
+  end
+  client_settings << :site_logo_dimensions
 
   %i[
     site_logo_url

@@ -31,9 +31,7 @@ RSpec.describe DiscourseAi::Summarization::RegenerateSummaries do
       end
 
       context "when too many topics are provided" do
-        let(:params) do
-          { params: { topic_ids: 31.times.map { Fabricate(:topic).id }, type: type } }
-        end
+        let(:params) { { params: { topic_ids: (1..31).to_a, type: type } } }
 
         it { is_expected.to fail_a_contract }
       end

@@ -53,26 +53,26 @@ export default class DSmallUserList extends Component {
         ...attributes
       >
         <span
+          aria-atomic="true"
+          aria-live="polite"
           class="small-user-list-content"
           role="list"
-          aria-live="polite"
-          aria-atomic="true"
         >
           {{#if this.shouldShow}}
             {{#each this.users key="username" as |user|}}
               {{#if user.unknown}}
                 <div
-                  title={{i18n "post.unknown_user"}}
                   class="unknown"
                   role="listitem"
+                  title={{i18n "post.unknown_user"}}
                 ></div>
               {{else}}
                 <a
+                  aria-hidden="false"
                   class="trigger-user-card"
                   data-user-card={{user.username}}
-                  title={{user.username}}
-                  aria-hidden="false"
                   role="listitem"
+                  title={{user.username}}
                 >
                   {{dBoundAvatarTemplate user.template "tiny"}}
                 </a>

@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module Post
       class V1 < NodeType
-        OPERATIONS = %w[create edit get list].freeze
+        OPERATIONS = %w[create edit get list delete recover].freeze
         STATUS_OPTIONS = %w[
           any
           open
@@ -20,7 +20,26 @@ module DiscourseWorkflows
         POST_TYPE_OPTIONS = %w[regular all first reply moderator_action small_action whisper].freeze
         ORDER_OPTIONS = %w[latest oldest latest_topic oldest_topic likes].freeze
         DEFAULT_LIMIT = 30
+        DEFAULTS = {
+          "operation" => "create",
+          "whisper" => false,
+          "bypass_permission_checks" => false,
+          "include_raw" => true,
+          "include_cooked" => false,
+          "body_character_limit" => 0,
+          "post_type" => "regular",
+          "status" => "any",
+          "order" => "latest",
+          "limit" => DEFAULT_LIMIT,
+          "offset" => 0,
+        }.freeze
         MAX_LIMIT = 800
+        REPLY_TO_POST_JOIN = <<~SQL
+          LEFT JOIN posts reply_posts
+            ON reply_posts.topic_id = posts.topic_id
+            AND reply_posts.post_number = posts.reply_to_post_number
+            AND reply_posts.deleted_at IS NULL
+        SQL
 
         def self.list_string_property(control: nil, hidden: false)
           property = {
@@ -135,7 +154,7 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: %w[edit get],
+                  operation: %w[edit get delete recover],
                 },
               },
             },
@@ -305,19 +324,7 @@ module DiscourseWorkflows
                 },
               },
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-              display_options: {
-                show: {
-                  operation: %w[get list],
-                },
-              },
-            },
+            **actor_property(display_options: { show: { operation: %w[get list delete recover] } }),
           },
         )
 
@@ -334,46 +341,9 @@ module DiscourseWorkflows
         private
 
         def config_for(exec_ctx, item_index)
-          {
-            "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "create"),
-            "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
-            "raw" => exec_ctx.get_node_parameter("raw", item_index),
-            "reply_to_post_number" =>
-              exec_ctx.get_node_parameter("reply_to_post_number", item_index),
-            "whisper" => exec_ctx.get_node_parameter("whisper", item_index, default: false),
-            "bypass_permission_checks" =>
-              exec_ctx.get_node_parameter("bypass_permission_checks", item_index, default: false),
-            "post_id" => exec_ctx.get_node_parameter("post_id", item_index),
-            "editor_username" => exec_ctx.get_node_parameter("editor_username", item_index),
-            "include_raw" => exec_ctx.get_node_parameter("include_raw", item_index, default: true),
-            "include_cooked" =>
-              exec_ctx.get_node_parameter("include_cooked", item_index, default: false),
-            "body_character_limit" =>
-              exec_ctx.get_node_parameter("body_character_limit", item_index, default: 0),
-            "query" => exec_ctx.get_node_parameter("query", item_index),
-            "created_after" => exec_ctx.get_node_parameter("created_after", item_index),
-            "created_before" => exec_ctx.get_node_parameter("created_before", item_index),
-            "topic_created_after" => exec_ctx.get_node_parameter("topic_created_after", item_index),
-            "topic_created_before" =>
-              exec_ctx.get_node_parameter("topic_created_before", item_index),
-            "categories" => exec_ctx.get_node_parameter("categories", item_index),
-            "exclude_categories" => exec_ctx.get_node_parameter("exclude_categories", item_index),
-            "exact_category_match" =>
-              exec_ctx.get_node_parameter("exact_category_match", item_index),
-            "tags" => exec_ctx.get_node_parameter("tags", item_index),
-            "exclude_tags" => exec_ctx.get_node_parameter("exclude_tags", item_index),
-            "topics" => exec_ctx.get_node_parameter("topics", item_index),
-            "usernames" => exec_ctx.get_node_parameter("usernames", item_index),
-            "groups" => exec_ctx.get_node_parameter("groups", item_index),
-            "post_type" => exec_ctx.get_node_parameter("post_type", item_index, default: "regular"),
-            "status" => exec_ctx.get_node_parameter("status", item_index, default: "any"),
-            "keywords" => exec_ctx.get_node_parameter("keywords", item_index),
-            "topic_keywords" => exec_ctx.get_node_parameter("topic_keywords", item_index),
-            "order" => exec_ctx.get_node_parameter("order", item_index, default: "latest"),
-            "limit" => exec_ctx.get_node_parameter("limit", item_index, default: DEFAULT_LIMIT),
-            "offset" => exec_ctx.get_node_parameter("offset", item_index, default: 0),
-            "advanced_filter" => exec_ctx.get_node_parameter("advanced_filter", item_index),
-          }
+          Hash.new do |config, key|
+            config[key] = exec_ctx.get_node_parameter(key, item_index, default: DEFAULTS[key])
+          end
         end
 
         def execute_with_config(exec_ctx, config, item_index)
@@ -386,6 +356,10 @@ module DiscourseWorkflows
             wrap(get_post(exec_ctx, config, item_index))
           when "list"
             list_posts(exec_ctx, config, item_index).map { |data| wrap(data) }
+          when "delete"
+            wrap(delete_post(exec_ctx, config, item_index))
+          when "recover"
+            wrap(recover_post(exec_ctx, config, item_index))
           else
             raise_node_error!(
               I18n.t(
@@ -410,7 +384,7 @@ module DiscourseWorkflows
 
           {
             post:
-              exec_ctx.serialize_post(
+              serialize_post(
                 post,
                 guardian: actor.guardian,
                 include_raw: true,
@@ -425,7 +399,7 @@ module DiscourseWorkflows
 
           {
             post:
-              exec_ctx.serialize_post(
+              serialize_post(
                 post,
                 guardian: editor.guardian,
                 include_raw: true,
@@ -434,20 +408,34 @@ module DiscourseWorkflows
           }
         end
 
+        def delete_post(exec_ctx, config, item_index)
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          post = exec_ctx.destroy_post(user: actor, post_id: config["post_id"])
+
+          { post: serialize_post(post, guardian: actor.guardian) }
+        end
+
+        def recover_post(exec_ctx, config, item_index)
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          post = exec_ctx.recover_post(user: actor, post_id: config["post_id"])
+
+          { post: serialize_post(post, guardian: actor.guardian) }
+        end
+
         def get_post(exec_ctx, config, item_index)
           post = ::Post.find(config["post_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
 
-          { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
+          { post: serialized_post(post, guardian: actor.guardian, config: config) }
         end
 
         def list_posts(exec_ctx, config, item_index)
-          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = exec_ctx.actor_from_parameter("actor_username", item_index).guardian
           limit = bounded_integer(config["limit"], default: DEFAULT_LIMIT, min: 1, max: MAX_LIMIT)
           offset = bounded_integer(config["offset"], default: 0, min: 0)
           query = query_from_config(config)
-          filter = PostsFilter.new(query, guardian: actor.guardian, limit: limit, offset: offset)
+          filter = PostsFilter.new(query, guardian:, limit: limit, offset: offset)
 
           if filter.invalid_filters.present?
             raise_node_error!(
@@ -458,15 +446,18 @@ module DiscourseWorkflows
             )
           end
 
-          posts = filter.search.includes(:user, topic: %i[category tags])
-          posts.map do |post|
-            { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
-          end
+          posts =
+            filter
+              .search
+              .joins(REPLY_TO_POST_JOIN)
+              .select("posts.*, reply_posts.id AS reply_to_post_id")
+              .preload(:user, :reply_to_user, :uploads, topic: %i[category tags])
+          posts.map { |post| { post: serialized_post(post, guardian:, config:) } }
         end
 
-        def serialized_post(exec_ctx, post, guardian:, config:)
+        def serialized_post(post, guardian:, config:)
           data =
-            exec_ctx.serialize_post(
+            serialize_post(
               post,
               guardian: guardian,
               include_raw: config["include_raw"],

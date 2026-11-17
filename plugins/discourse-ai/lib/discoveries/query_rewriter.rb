@@ -12,13 +12,20 @@ module DiscourseAi
       ].freeze
 
       Result =
-        Struct.new(:keyword_query, :semantic_query, :original_query_locale, keyword_init: true)
+        Struct.new(
+          :keyword_query,
+          :semantic_query,
+          :original_query_locale,
+          :failed,
+          keyword_init: true,
+        )
 
-      def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
+      def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil, feature_context: {})
         @user = user
         @ai_agent = ai_agent
         @llm_model = llm_model
         @cancel_manager = cancel_manager
+        @feature_context = feature_context
       end
 
       def call(query)
@@ -48,7 +55,9 @@ module DiscourseAi
           )
         output = nil
 
-        bot.reply(context) { |partial, _, type| output = partial if type == :structured_output }
+        bot.reply(context, llm_args: { feature_context: @feature_context }) do |partial, _, type|
+          output = partial if type == :structured_output
+        end
 
         Result.new(
           keyword_query:
@@ -71,6 +80,7 @@ module DiscourseAi
           keyword_query: original_query,
           semantic_query: original_query,
           original_query_locale: @user.effective_locale,
+          failed: true,
         )
       end
 

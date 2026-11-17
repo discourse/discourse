@@ -17,12 +17,22 @@ module PageObjects
         find("#{SELECTOR} [data-reaction-filter=#{reaction}]").click
       end
 
+      def has_no_filters?
+        page.has_no_css?("#{SELECTOR} [data-reaction-filter]")
+      end
+
       def has_user?(username)
         page.has_css?("#{SELECTOR} .users-popup__name[data-user-card=#{username}]")
       end
 
       def has_no_user?(username)
         page.has_no_css?("#{SELECTOR} .users-popup__name[data-user-card=#{username}]")
+      end
+
+      def has_user_reaction_icon?(user, icon)
+        page.has_css?(
+          "#{SELECTOR} .users-popup__item:has(.users-popup__name[data-user-card='#{user.username}']) .users-popup__reaction.d-icon-#{icon}",
+        )
       end
     end
   end

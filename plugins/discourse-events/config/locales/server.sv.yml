@@ -15,8 +15,8 @@ sv:
       event_started:
         title: Händelsen startad
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Den semesterregion som du angav finns inte."
-    discourse_calendar_enable_holiday_failed: "Denna semester kunde inte aktiveras, den är redan aktiverad eller den är inte inaktiverad."
+    discourse_events_holiday_region_invalid: "Den semesterregion som du angav finns inte."
+    discourse_events_enable_holiday_failed: "Denna semester kunde inte aktiveras, den är redan aktiverad eller den är inte inaktiverad."
     discourse_post_event_bulk_invite_succeeded:
       title: "Evenemang - Massinbjudan lyckades"
       subject_template: "Massinbjudan har bearbetats framgångsrikt"
@@ -32,6 +32,8 @@ sv:
         `` text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Händelsepåminnelse"
   site_settings:
     displayed_invitees_limit: "Begränsar antalet inbjudna som visas för ett evenemang."
     display_post_event_date_on_topic_title: "Visar datumet för evenemanget efter ämnesrubriken."
@@ -48,7 +50,13 @@ sv:
     working_day_end_hour: "Sluttid för arbetsdagens timmar."
     close_to_working_day_hours_extension: "Ställ in förlängningstid i arbetsdagstimmar för att markera tidszonerna."
     events_calendar_categories: "Visa en evenemangskalender högst upp i en kategori."
-  discourse_calendar:
+  discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} är på väg att börja"
+        ongoing: "%{title} pågår"
+        after: "%{title} har avslutats"
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "Dag"
@@ -78,7 +86,6 @@ sv:
           raw_invitees_length: "Ett evenemang är begränsat till %{count} användare/grupper."
           raw_invitees:
             only_group: "För ett evenemang godkänns endast gruppnamn."
-          ends_at_before_starts_at: "Ett evenemang kan inte avslutas innan det börjar."
           start_must_be_present_and_a_valid_date: "Ett evenemang kräver ett giltigt startdatum."
           end_must_be_a_valid_date: "Slutdatumet måste vara ett giltigt datum."
           invalid_timezone: "Tidszonen känns inte igen."

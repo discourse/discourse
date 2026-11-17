@@ -2,6 +2,9 @@
 
 describe DiscourseAi::PostImageCaptionsController do
   fab!(:admin)
+  fab!(:post_author) { Fabricate(:user, trust_level: 4) }
+  fab!(:translator, :user)
+  fab!(:localizers, :group)
   fab!(:upload) do
     UploadCreator.new(
       file_from_fixtures(
@@ -10,10 +13,10 @@ describe DiscourseAi::PostImageCaptionsController do
         Rails.root.join("plugins/discourse-ai/spec/fixtures").to_s,
       ),
       "caption-image.jpg",
-    ).create_for(admin.id)
+    ).create_for(post_author.id)
   end
   fab!(:post) do
-    Fabricate(:post, user: admin, raw: "![user supplied|200x200](#{upload.short_url})")
+    Fabricate(:post, user: post_author, raw: "![user supplied|200x200](#{upload.short_url})")
   end
 
   before do
@@ -83,13 +86,129 @@ describe DiscourseAi::PostImageCaptionsController do
       )
     end
 
-    it "requires permission to edit the post" do
-      sign_in(Fabricate(:user))
-      store_caption("A generated description")
+    it "allows delegated translators to edit translated captions", :aggregate_failures do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.content_localization_allowed_groups = localizers.id.to_s
+      localizers.add(translator)
+      store_caption("翻訳前の説明", locale: "ja")
+      sign_in(translator)
+
+      get "/discourse-ai/post-image-captions/#{post.id}.json", params: { locale: "ja" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["captions"]).to contain_exactly(
+        { "base62_sha1" => upload.base62_sha1, "description" => "翻訳前の説明" },
+      )
+
+      put "/discourse-ai/post-image-captions/#{post.id}/#{upload.base62_sha1}.json",
+          params: {
+            description: "翻訳後の説明",
+            locale: "ja",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include(
+        "base62_sha1" => upload.base62_sha1,
+        "description" => "翻訳後の説明",
+      )
+      expect(
+        AiPostImageCaption.find_by(
+          post_id: post.id,
+          base62_sha1: upload.base62_sha1,
+          locale: "ja",
+        ).description,
+      ).to eq("翻訳後の説明")
+
+      store_caption("The original description")
 
       get "/discourse-ai/post-image-captions/#{post.id}.json"
 
       expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+
+      put "/discourse-ai/post-image-captions/#{post.id}/#{upload.base62_sha1}.json",
+          params: {
+            description: "An unauthorized original description",
+          }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(
+        AiPostImageCaption.find_by(
+          post_id: post.id,
+          base62_sha1: upload.base62_sha1,
+          locale: DiscourseAi::PostImageCaptions.original_locale(post),
+        ).description,
+      ).to eq("The original description")
+    end
+
+    it "rejects non-scalar original locales from delegated translators", :aggregate_failures do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.content_localization_allowed_groups = localizers.id.to_s
+      localizers.add(translator)
+      original_locale = DiscourseAi::PostImageCaptions.original_locale(post)
+      store_caption("The original description", locale: original_locale)
+      sign_in(translator)
+
+      expect(translator.guardian.can_edit?(post)).to eq(false)
+      expect(translator.guardian.can_localize_post?(post)).to eq(true)
+
+      get "/discourse-ai/post-image-captions/#{post.id}.json", params: { locale: [original_locale] }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+
+      put "/discourse-ai/post-image-captions/#{post.id}/#{upload.base62_sha1}.json",
+          params: {
+            description: "An unauthorized original description",
+            locale: [original_locale],
+          }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(
+        AiPostImageCaption.find_by(
+          post_id: post.id,
+          base62_sha1: upload.base62_sha1,
+          locale: original_locale,
+        ).description,
+      ).to eq("The original description")
+    end
+
+    it "rejects translated captions for source editors without localization permission",
+       :aggregate_failures do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.content_localization_allowed_groups = localizers.id.to_s
+      SiteSetting.content_localization_allow_author_localization = false
+      store_caption("The translated description", locale: "ja")
+      sign_in(post_author)
+
+      expect(post_author.guardian.can_edit?(post)).to eq(true)
+      expect(post_author.guardian.can_localize_post?(post)).to eq(false)
+
+      get "/discourse-ai/post-image-captions/#{post.id}.json", params: { locale: "ja" }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+
+      put "/discourse-ai/post-image-captions/#{post.id}/#{upload.base62_sha1}.json",
+          params: {
+            description: "An unauthorized translated description",
+            locale: "ja",
+          }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(
+        AiPostImageCaption.find_by(
+          post_id: post.id,
+          base62_sha1: upload.base62_sha1,
+          locale: "ja",
+        ).description,
+      ).to eq("The translated description")
     end
   end
 

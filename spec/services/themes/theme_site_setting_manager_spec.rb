@@ -43,6 +43,12 @@ RSpec.describe Themes::ThemeSiteSettingManager do
       end
     end
 
+    context "when the theme can't be edited" do
+      before { allow(guardian).to receive(:can_edit_theme?).with(theme).and_return(false) }
+
+      it { is_expected.to fail_a_policy(:can_edit_theme) }
+    end
+
     context "when creating a new theme site setting" do
       it { is_expected.to run_successfully }
 
@@ -72,7 +78,7 @@ RSpec.describe Themes::ThemeSiteSettingManager do
         ).to(false)
       end
 
-      it "should publish changes to clients for client site settings" do
+      it "publishes client site-setting changes" do
         message = MessageBus.track_publish("/client_settings") { result }.first
         expect(message.data).to eq(
           { name: :enable_welcome_banner, scoped_to: { theme_id: theme.id }, value: false },
@@ -121,7 +127,7 @@ RSpec.describe Themes::ThemeSiteSettingManager do
         ).to(false)
       end
 
-      it "should publish changes to clients for client site settings" do
+      it "publishes client site-setting changes" do
         message = MessageBus.track_publish("/client_settings") { result }.first
         expect(message.data).to eq(
           { name: :enable_welcome_banner, scoped_to: { theme_id: theme.id }, value: false },
@@ -173,7 +179,7 @@ RSpec.describe Themes::ThemeSiteSettingManager do
         ).to(true)
       end
 
-      it "should publish changes to clients for client site settings" do
+      it "publishes client site-setting changes" do
         message = MessageBus.track_publish("/client_settings") { result }.first
         expect(message.data).to eq(
           { name: :enable_welcome_banner, scoped_to: { theme_id: theme.id }, value: true },

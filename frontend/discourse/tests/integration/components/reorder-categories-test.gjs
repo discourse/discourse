@@ -165,5 +165,10 @@ module("Integration | Component | ReorderCategories", function (hooks) {
       .dom("tr:nth-child(4) .badge-category__name")
       .hasText("foo-child-child");
     assert.dom("tr:nth-child(5) .badge-category__name").hasText("baz");
+
+    await click("tr:nth-child(1) button.move-down");
+    await click(document.activeElement);
+
+    assert.dom("tr:nth-child(5) .badge-category__name").hasText("bar");
   });
 });

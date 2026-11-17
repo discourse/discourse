@@ -39,28 +39,28 @@ export default class SecurityKeyForm extends Component {
     <div id="security-key">
       {{#if @passkeysEnabled}}
         <DButton
+          class="btn-large btn-primary"
+          id="passkey-authenticate-button"
           @action={{@passkeyAction}}
           @icon="user"
           @label="login.use_passkey"
-          id="passkey-authenticate-button"
-          class="btn-large btn-primary"
         />
       {{/if}}
       {{#if this.showSecurityKeyButton}}
         <DButton
+          class="btn-large {{if @passkeysEnabled 'btn-default' 'btn-primary'}}"
+          id="security-key-authenticate-button"
           @action={{this.securityKeyAction}}
           @icon="key"
           @label={{this.securityKeyLabel}}
-          id="security-key-authenticate-button"
-          class="btn-large {{if @passkeysEnabled 'btn-default' 'btn-primary'}}"
         />
       {{/if}}
       <p>
         {{#if @otherMethodAllowed}}
           <a
-            {{on "click" this.useAnotherMethod}}
-            href
             class="toggle-second-factor-method"
+            href
+            {{on "click" this.useAnotherMethod}}
           >{{i18n "login.security_key_alternative"}}</a>
         {{/if}}
       </p>

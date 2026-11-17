@@ -67,6 +67,32 @@ RSpec.describe DiscourseAi::Rag::DocumentSourceRefresher do
     expect(UploadReference.exists?(target: agent, upload_id: pending_upload.id)).to eq(true)
   end
 
+  it "uploads and digests non-ASCII Markdown fetched as binary data" do
+    stub_request(:get, source.url).to_return(
+      status: 200,
+      headers: {
+        "Content-Type" => "text/markdown; charset=utf-8",
+      },
+      body: "Knowledge — café\nTruncated: \xE2".b,
+    )
+
+    expect { described_class.refresh(source) }.to change(Jobs::DigestRagUpload.jobs, :size).by(1)
+
+    source.reload
+    expect(source.last_error).to be_nil
+    expect(source.pending_upload).to be_present
+
+    Jobs::DigestRagUpload.new.execute(
+      upload_id: source.pending_upload_id,
+      target_id: agent.id,
+      target_type: "AiAgent",
+    )
+
+    fragment = RagDocumentFragment.find_by!(target: agent, upload_id: source.pending_upload_id)
+    expect(fragment.fragment).to eq("Knowledge — café\nTruncated: �")
+    expect(JSON.parse(fragment.metadata)).to eq("source_url" => source.url)
+  end
+
   it "retains existing content and retries later when refresh fails" do
     upload = Fabricate(:upload)
     source.update_columns(upload_id: upload.id)

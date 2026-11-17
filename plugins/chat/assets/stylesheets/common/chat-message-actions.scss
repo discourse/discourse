@@ -7,7 +7,7 @@
   z-index: z("composer", "content");
 
   .-user-info-hidden & {
-    top: -0.25em;
+    top: -2em;
   }
 
   &.is-size-full {
@@ -120,6 +120,14 @@
           }
         }
       }
+    }
+
+    &:first-child .select-kit-header:not(:hover) {
+      border-left-color: var(--primary-300);
+    }
+
+    &:first-child .select-kit-header {
+      border-radius: var(--d-border-radius);
     }
 
     .select-kit-row {

@@ -18,6 +18,9 @@ module DiscourseAi
         user_id
         request_tokens
         response_tokens
+        completion_state
+        reasoning_tokens
+        stop_reason
         created_at
         topic_id
         post_id
@@ -45,6 +48,7 @@ module DiscourseAi
         post_id
         request_tokens
         response_tokens
+        completion_state
         response_status
         duration_msecs
       ].freeze
@@ -58,13 +62,7 @@ module DiscourseAi
         end
         logs =
           logs
-            .select(
-              *LIST_COLUMNS,
-              Arel.sql("request_attempts IS NOT NULL AS has_retries"),
-              Arel.sql(
-                "CASE WHEN #{AiApiAuditLog::SUCCESS_CONDITION} THEN 'successful' ELSE 'failed' END AS outcome",
-              ),
-            )
+            .select(*LIST_COLUMNS, Arel.sql("request_attempts IS NOT NULL AS has_retries"))
             .order(id: :desc)
             .limit(limit + 1)
             .preload(:user, :llm_model)
@@ -330,6 +328,10 @@ module DiscourseAi
           scope.successful_requests
         when "failed"
           scope.failed_requests
+        when "empty"
+          scope.empty_responses
+        when "truncated"
+          scope.truncated_responses
         else
           raise Discourse::InvalidParameters.new(:outcome)
         end

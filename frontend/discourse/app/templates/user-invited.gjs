@@ -9,19 +9,19 @@ export default <template>
     <div class="user-navigation user-navigation-secondary">
       <DHorizontalOverflowNav @ariaLabel="User secondary - invites">
         <DNavItem
+          @i18nLabel={{@controller.pendingLabel}}
           @route="userInvited.show"
           @routeParam="pending"
-          @i18nLabel={{@controller.pendingLabel}}
         />
         <DNavItem
+          @i18nLabel={{@controller.expiredLabel}}
           @route="userInvited.show"
           @routeParam="expired"
-          @i18nLabel={{@controller.expiredLabel}}
         />
         <DNavItem
+          @i18nLabel={{@controller.redeemedLabel}}
           @route="userInvited.show"
           @routeParam="redeemed"
-          @i18nLabel={{@controller.redeemedLabel}}
         />
       </DHorizontalOverflowNav>
     </div>

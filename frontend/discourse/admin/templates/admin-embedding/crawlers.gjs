@@ -4,33 +4,33 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageSubheader
-    @titleLabel={{i18n "admin.embedding.crawlers"}}
     @descriptionLabel={{i18n "admin.embedding.crawlers_description"}}
+    @titleLabel={{i18n "admin.embedding.crawlers"}}
   />
 
-  <Form @onSubmit={{@controller.save}} @data={{@controller.formData}} as |form|>
+  <Form @data={{@controller.formData}} @onSubmit={{@controller.save}} as |form|>
     <form.Field
+      @format="large"
       @name="allowed_embed_selectors"
       @title={{i18n "admin.embedding.allowed_embed_selectors"}}
-      @format="large"
       @type="input"
       as |field|
     >
       <field.Control placeholder="article, #story, .post" />
     </form.Field>
     <form.Field
+      @format="large"
       @name="blocked_embed_selectors"
       @title={{i18n "admin.embedding.blocked_embed_selectors"}}
-      @format="large"
       @type="input"
       as |field|
     >
       <field.Control placeholder=".ad-unit, header" />
     </form.Field>
     <form.Field
+      @format="large"
       @name="allowed_embed_classnames"
       @title={{i18n "admin.embedding.allowed_embed_classnames"}}
-      @format="large"
       @type="input"
       as |field|
     >

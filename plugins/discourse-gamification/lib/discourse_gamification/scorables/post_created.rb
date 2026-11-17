@@ -2,6 +2,10 @@
 
 module DiscourseGamification
   class PostCreated < Scorable
+    def self.supports_category_scoping?
+      true
+    end
+
     def self.category_filter(leaderboard: nil)
       return "" if scorable_category_list(leaderboard:).empty?
 

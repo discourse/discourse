@@ -18,7 +18,9 @@ require_relative "lib/discourse_events/configuration/upcoming_events_default_vie
 enabled_site_setting :discourse_events_enabled
 
 register_svg_icon "calendar-days"
+register_asset "stylesheets/common/event-calendar-prompt.scss"
 register_asset "stylesheets/common/full-calendar-ext.scss"
+register_asset "stylesheets/common/calendar-placeholder.scss"
 register_asset "stylesheets/common/discourse-calendar.scss"
 register_asset "stylesheets/common/discourse-calendar-holidays.scss"
 register_asset "stylesheets/common/discourse-post-event.scss"
@@ -131,8 +133,6 @@ module ::DiscourseEvents
         reference_message_id: message.id,
       )
 
-      return if !SiteSetting.chat_pinned_messages
-
       Chat::PinMessage.call(
         guardian:,
         params: {
@@ -226,12 +226,40 @@ require_relative "lib/discourse_events/livestream/allowed_hosts_validator"
 require_relative "lib/discourse_events/livestream/topic_extension"
 require_relative "lib/discourse_events/livestream/chat_channel_extension"
 require_relative "lib/discourse_events/livestream/zoom_url_parser"
-
 Dir
   .glob(File.expand_path("../lib/discourse_events/configuration/*.rb", __FILE__))
   .each { |f| require(f) }
 
+event_schema_markup =
+  lambda do |controller|
+    topic_view = controller.instance_variable_get(:@topic_view)
+    result =
+      DiscourseEvents::Events::BuildSchemaMarkup.call(
+        params: {
+          topic_id: topic_view&.topic&.id,
+        },
+        guardian: controller.guardian,
+      )
+    result[:html] if result.success?
+  end
+
+register_html_builder("server:before-head-close", &event_schema_markup)
+register_html_builder("server:before-head-close-crawler", &event_schema_markup)
+
 after_initialize do
+  UserOption.prepend DiscourseEvents::UserOptionExtension
+  UserUpdater::OPTION_ATTR.push(:event_reminder_preference)
+  add_to_serializer(:user_option, :event_reminder_preference) { object.event_reminder_preference }
+
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      [
+        DiscourseWorkflows::Nodes::EventEnded::V1,
+        DiscourseWorkflows::Nodes::EventParticipationChanged::V1,
+      ]
+    end
+  end
+
   reloadable_patch do
     register_category_type(DiscourseEvents::Categories::Types::Events)
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
@@ -278,15 +306,19 @@ after_initialize do
 
   # DISCOURSE POST EVENT
 
-  require_relative "jobs/regular/discourse_post_event/bulk_invite"
+  require_relative "app/jobs/regular/discourse_post_event_bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
+  require_relative "jobs/regular/discourse_post_event/warm_event_onebox"
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
+  require_relative "jobs/regular/discourse_post_event/warm_recording_onebox"
+  require_relative "jobs/regular/discourse_post_event/publish_livestream_chat_transcript"
   require_relative "lib/discourse_events/events/chat_channel_sync"
   require_relative "lib/discourse_events/events/email_renderer"
   require_relative "lib/discourse_events/events/excerpt"
   require_relative "lib/discourse_events/events/finder"
   require_relative "lib/discourse_events/events/onebox_data"
+  require_relative "lib/discourse_events/events/onebox_occurrence"
   require_relative "lib/discourse_events/events/parser"
   require_relative "lib/discourse_events/events/validator"
   require_relative "lib/discourse_events/events/export_csv_controller_extension"
@@ -294,9 +326,12 @@ after_initialize do
   require_relative "lib/discourse_events/events/guardian_extensions"
   require_relative "lib/discourse_events/events/post_extension"
   require_relative "lib/discourse_events/events/topic_extension"
+  require_relative "lib/discourse_events/events/topics_filter"
   require_relative "lib/discourse_events/events/rrule_generator"
   require_relative "lib/discourse_events/events/rrule_configurator"
   require_relative "lib/discourse_events/events/web_hook_extension"
+
+  DiscourseEvents::Events::TopicsFilter.register(self)
 
   ::ActionController::Base.prepend_view_path File.expand_path("../app/views", __FILE__)
 
@@ -354,15 +389,41 @@ after_initialize do
 
   TopicView.on_preload do |topic_view|
     if SiteSetting.discourse_post_event_enabled
-      topic_view.instance_variable_set(:@posts, topic_view.posts.includes(event: :image_upload))
+      topic_view.instance_variable_set(
+        :@posts,
+        topic_view.posts.includes(event: [:image_upload, :event_dates, { event_hosts: :user }]),
+      )
     end
+  end
+
+  add_to_serializer(
+    :topic_view,
+    :discourse_post_event_first_post_event,
+    include_condition: -> do
+      first_post = object.topic.first_post
+      event = first_post&.event
+
+      Array(object.posts).none? { |post| post.post_number == 1 } && event.present? &&
+        event.deleted_at.nil? && scope.can_see?(first_post)
+    end,
+  ) do
+    first_post = object.topic.first_post
+    event =
+      DiscourseEvents::Events::Event.includes(:image_upload, { event_hosts: :user }).find_by(
+        id: first_post.id,
+      )
+
+    DiscourseEvents::Events::EventSerializer.new(event, scope: scope, root: false).as_json
   end
 
   add_to_serializer(
     :post,
     :event,
     include_condition: -> do
-      SiteSetting.discourse_post_event_enabled && !object.nil? && !object.deleted_at.present?
+      next false if !SiteSetting.discourse_post_event_enabled || !object || object.deleted_at
+
+      event = object.event
+      !scope.anonymous? || !event&.livestream? || scope.can_see_livestream_event?(event)
     end,
   ) { DiscourseEvents::Events::EventSerializer.new(object.event, scope: scope, root: false) }
 
@@ -400,19 +461,37 @@ after_initialize do
       end
   end
 
-  on(:post_created) do |post|
-    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id })
+  add_to_serializer(
+    :post,
+    :event_onebox_occurrences,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled && event_onebox_occurrences.present?
+    end,
+  ) do
+    @event_onebox_occurrences ||=
+      DiscourseEvents::Events::OneboxOccurrence.for_cooked(object.cooked)
+  end
+
+  sync_event_from_post = ->(post) do
+    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id }) do |result|
+      on_failure do
+        Rails.logger.error("Failed to sync event from post #{post.id}: #{result.inspect_steps}")
+      end
+    end
     post.association(:event).reload
-    if SiteSetting.discourse_post_event_enabled && post.event
-      WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+  end
+
+  on(:post_created) do |post|
+    sync_event_from_post.call(post)
+    if SiteSetting.discourse_post_event_enabled
+      DiscourseEvents::Events::Event.handle_post_event_webhooks(post, nil)
     end
   end
 
   on(:post_edited) do |post|
     event_before = post.event
     had_image_before = event_before&.image_upload_id.present?
-    DiscourseEvents::Events::Event::SyncFromPost.call(params: { post_id: post.id })
-    post.association(:event).reload
+    sync_event_from_post.call(post)
 
     if SiteSetting.discourse_post_event_enabled
       if post.event&.image_upload_id
@@ -440,6 +519,7 @@ after_initialize do
   end
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
 
   add_to_serializer(
     :topic_view,
@@ -462,15 +542,18 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_starts_at,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_starts_at
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT) &&
+        object.event_starts_at
     end,
   ) { object.event_starts_at }
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT
 
   add_to_serializer(
     :topic_view,
@@ -491,15 +574,18 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_ends_at,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_ends_at
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT) &&
+        object.event_ends_at
     end,
   ) { object.event_ends_at }
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY
 
   add_to_serializer(
     :topic_view,
@@ -520,11 +606,13 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_all_day,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_all_day
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY) &&
+        object.event_all_day
     end,
   ) { object.event_all_day }
 
@@ -554,13 +642,6 @@ after_initialize do
   require_relative "jobs/scheduled/delete_expired_event_posts"
   require_relative "jobs/scheduled/monitor_event_dates"
   require_relative "jobs/scheduled/update_holiday_usernames"
-  require_relative "lib/discourse_events/calendar/extractor"
-  require_relative "lib/discourse_events/calendar/validator"
-  require_relative "lib/discourse_events/calendar/event_validator"
-  require_relative "lib/discourse_events/group_timezones/extractor"
-  require_relative "lib/discourse_events/holidays/finder"
-  require_relative "lib/discourse_events/holidays/status"
-  require_relative "lib/discourse_events/holidays/users_on_holiday"
 
   register_post_custom_field_type(DiscourseEvents::CALENDAR_CUSTOM_FIELD, :string)
   register_post_custom_field_type(DiscourseEvents::GROUP_TIMEZONES_CUSTOM_FIELD, :json)
@@ -766,6 +847,10 @@ after_initialize do
   on(:reduce_cooked) do |fragment, post|
     if SiteSetting.discourse_post_event_enabled
       fragment
+        .css(".discourse-event-onebox")
+        .each { |node| DiscourseEvents::Events::OneboxOccurrence.new(node).apply! }
+
+      fragment
         .css(".discourse-post-event")
         .each do |event_node|
           event_node.replace(DiscourseEvents::Events::EmailRenderer.render(event_node, post))
@@ -786,6 +871,7 @@ after_initialize do
 
   on(:user_destroyed) do |user|
     DiscourseEvents::Events::Invitee.where(user_id: user.id).destroy_all
+    DiscourseEvents::Events::EventHost.where(user_id: user.id).delete_all
   end
 
   on(:user_removed_from_group) do |user, group|
@@ -931,12 +1017,38 @@ after_initialize do
     :chat_channel_id,
     include_condition: -> do
       event = object.topic.first_post&.event
-      event&.livestream? && object.topic.topic_chat_channel.present? &&
-        (scope.is_admin? || event.can_access_livestream_chat?(scope.user))
+      topic_chat_channel = object.topic.topic_chat_channel
+      next false if !event&.livestream? || !topic_chat_channel
+
+      if scope.anonymous?
+        event.can_access_livestream_chat?(nil) &&
+          scope.can_preview_anonymous_public_chat_channel?(topic_chat_channel.chat_channel)
+      else
+        scope.is_admin? || event.can_access_livestream_chat?(scope.user)
+      end
     end,
   ) { object.topic.topic_chat_channel.chat_channel_id }
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
+  add_to_serializer(:topic_view, :livestream_chat_active) do
+    !!object.topic.first_post&.event&.livestream_chat_active?
+  end
+
+  on(:discourse_post_event_event_ended) do |event, event_date|
+    if event.livestream?
+      Jobs.enqueue(:publish_livestream_chat_transcript, event_date_id: event_date.id)
+    end
+  end
+
+  # Any status set since the event closed the chat is deliberate, so a resumed
+  # event leaves it be.
+  on(:chat_channel_status_change) do |channel:, **|
+    DiscourseEvents::Livestream::TopicChatChannel.where(
+      chat_channel_id: channel.id,
+      closed_on_event_end: true,
+    ).update_all(closed_on_event_end: false)
+  end
 
   add_to_serializer(
     :topic_view,
@@ -977,6 +1089,7 @@ after_initialize do
       event = topic&.first_post&.event
 
       return false if !event
+      return false if scope.anonymous? && !scope.can_see_livestream_event?(event)
 
       event.livestream? &&
         event.can_access_livestream_chat?(scope.user, group_names: livestream_user_group_names)
@@ -1012,6 +1125,9 @@ after_initialize do
   end
 
   on(:discourse_calendar_post_event_invitee_status_changed) do |invitee|
+    # Withdrawing leaves no attendance to sync, and the record is already gone.
+    next if invitee.destroyed?
+
     topic = invitee.event.post.topic
     topic_chat_channel = topic.topic_chat_channel
 
@@ -1032,4 +1148,34 @@ after_initialize do
 
     DiscourseEvents::Livestream.publish_livestream_chat_status(membership, user: user) if membership
   end
+end
+
+after_initialize do
+  require_relative "lib/discourse_events/mcp_tools"
+  register_mcp_tool(
+    "discourse_calendar_event_list",
+    title: "List events",
+    description: "Lists upcoming events whose posts are visible to the authenticated user.",
+    implementation: DiscourseEvents::McpTools::ListEvents,
+    input_schema: {
+      type: "object",
+      properties: {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+      },
+      additionalProperties: false,
+    },
+    output_schema: DiscourseEvents::McpTools::ListEvents::OUTPUT_SCHEMA,
+    required_scopes: DiscourseEvents::McpTools::ListEvents::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> do
+      SiteSetting.discourse_events_enabled && SiteSetting.discourse_post_event_enabled
+    end,
+  )
 end

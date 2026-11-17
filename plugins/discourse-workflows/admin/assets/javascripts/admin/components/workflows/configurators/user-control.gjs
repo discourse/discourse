@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 function usernamesFromValue(value) {
   if (Array.isArray(value)) {
@@ -37,17 +37,17 @@ export default class UserControl extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <UserChooser
-        @value={{this.value}}
         @onChange={{this.handleChange}}
         @options={{hash maximum=this.maximum excludeCurrentUser=false}}
+        @value={{this.value}}
       />
     </ExpressionWrapper>
   </template>

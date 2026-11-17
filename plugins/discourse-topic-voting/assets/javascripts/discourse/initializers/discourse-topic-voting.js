@@ -7,6 +7,15 @@ export default {
 
   initialize() {
     withPluginApi((api) => {
+      api.addUserNavSidebarLink("activity", {
+        name: "activity-votes",
+        route: "userActivity.votes",
+        label: "topic_voting.vote_title_plural",
+        icon: "check-to-slot",
+        displayed: ({ siteSettings }) =>
+          siteSettings.topic_voting_show_votes_on_profile,
+      });
+
       api.replaceIcon("topic_voting.voting_closed", "lock");
 
       api.registerNotificationTypeRenderer(

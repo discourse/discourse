@@ -1,4 +1,5 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, rerender, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DTooltips from "discourse/float-kit/components/d-tooltips";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -27,39 +28,54 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     assert.dom(".name").hasText("Evil Trout");
   });
 
+  test("names disabled", async function (assert) {
+    this.siteSettings.enable_names = false;
+    this.siteSettings.prioritize_username_in_ux = false;
+    this.currentUser.name = "Evil Trout";
+
+    await render(<template><DUserInfo @user={{this.currentUser}} /></template>);
+
+    assert.dom(".username").hasText("eviltrout");
+    assert.dom(".name").doesNotExist();
+  });
+
   test("includeLink", async function (assert) {
+    const includeLink = tracked(true);
+
     await render(
       <template>
         <DUserInfo
+          @includeLink={{includeLink.value}}
           @user={{this.currentUser}}
-          @includeLink={{this.includeLink}}
         />
       </template>
     );
 
-    this.set("includeLink", true);
     assert.dom(`.name-line a[href="/u/${this.currentUser.username}"]`).exists();
 
-    this.set("includeLink", false);
+    includeLink.value = false;
+    await rerender();
     assert
       .dom(`.name-line a[href="/u/${this.currentUser.username}"]`)
       .doesNotExist();
   });
 
   test("includeAvatar", async function (assert) {
+    const includeAvatar = tracked(true);
+
     await render(
       <template>
         <DUserInfo
+          @includeAvatar={{includeAvatar.value}}
           @user={{this.currentUser}}
-          @includeAvatar={{this.includeAvatar}}
         />
       </template>
     );
 
-    this.set("includeAvatar", true);
     assert.dom(".user-image").exists();
 
-    this.set("includeAvatar", false);
+    includeAvatar.value = false;
+    await rerender();
     assert.dom(".user-image").doesNotExist();
   });
 
@@ -69,7 +85,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @showStatus={{true}} @user={{this.currentUser}} />
       </template>
     );
 
@@ -81,7 +97,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @showStatus={{true}} @user={{this.currentUser}} />
       </template>
     );
 
@@ -94,7 +110,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{false}} />
+        <DUserInfo @showStatus={{false}} @user={{this.currentUser}} />
       </template>
     );
 
@@ -116,7 +132,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @showStatus={{true}} @user={{this.currentUser}} />
       </template>
     );
 
@@ -132,9 +148,9 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     await render(
       <template>
         <DUserInfo
-          @user={{this.currentUser}}
           @showStatus={{true}}
           @showStatusDescription={{true}}
+          @user={{this.currentUser}}
         />
       </template>
     );
@@ -150,7 +166,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} /><DTooltips
+        <DUserInfo @showStatus={{true}} @user={{this.currentUser}} /><DTooltips
         />
       </template>
     );

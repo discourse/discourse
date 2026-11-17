@@ -16,11 +16,11 @@ export default class AiBotChatsTab extends Component {
   <template>
     {{#if this.showTab}}
       <DNavigationItem
-        @route="discourse-ai-bot-conversations"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-ai-bot-chats"
+        @ariaCurrentContext="subNav"
+        @route="discourse-ai-bot-conversations"
       >
-        {{dIcon "robot"}}
+        {{dIcon "discobot"}}
         <span>{{i18n "discourse_ai.bot_chats.tab_label"}}</span>
       </DNavigationItem>
     {{/if}}

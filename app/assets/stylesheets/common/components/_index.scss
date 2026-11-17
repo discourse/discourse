@@ -2,6 +2,7 @@
 @import "autocomplete";
 @import "badges";
 @import "banner";
+@import "code-editor";
 @import "d-breadcrumbs";
 @import "d-page-header";
 @import "d-stat-tiles";
@@ -26,6 +27,7 @@
 @import "docked-composer";
 @import "d-toggle-switch";
 @import "d-virtual-list";
+@import "d-avatar-flair";
 @import "date-input";
 @import "date-picker";
 @import "date-range-picker";
@@ -38,7 +40,11 @@
 @import "feature-topic-modal";
 @import "file-size-input";
 @import "footer-nav";
+@import "mobile-tab-bar";
+@import "mobile-tab-bar-header";
+@import "mobile-tab-bar-topics";
 @import "form-template-field";
+@import "global-notice";
 @import "group-member-dropdown";
 @import "group-selector";
 @import "groups-form-membership-fields";
@@ -76,6 +82,7 @@
 @import "topic-map";
 @import "topic-query-filter";
 @import "user-card";
+@import "category-card";
 @import "user-info";
 @import "user-status-message";
 @import "user-status-picker";

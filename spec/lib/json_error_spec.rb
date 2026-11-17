@@ -3,7 +3,7 @@
 RSpec.shared_examples "a generic error" do
   let(:result) { creator.create_errors_json(obj) }
 
-  it "should have a result object" do
+  it "includes a result object" do
     expect(result).to be_present
   end
 
@@ -37,10 +37,18 @@ RSpec.describe JsonError do
     it "returns the string in the error format" do
       expect(creator.create_errors_json("test error")).to eq(errors: ["test error"])
     end
+
+    it "preserves the errors array when skipping the client error prefix" do
+      expect(creator.create_errors_json("test error", skip_error_prefix: true)).to eq(
+        errors: ["test error"],
+        skip_error_prefix: true,
+      )
+    end
   end
 
   describe "an activerecord object with errors" do
     let(:invalid_user) { User.new }
+
     it "returns the errors correctly" do
       expect(invalid_user).not_to be_valid
       result = creator.create_errors_json(invalid_user)

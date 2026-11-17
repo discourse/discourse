@@ -1,10 +1,11 @@
+import type { DisabledItems } from "discourse/ui-kit/-internals/cursor/item-scope";
+import type { Orientation } from "discourse/ui-kit/-internals/cursor/navigation";
 import type {
   DRovingFocusArgs,
-  DRovingFocusDisabledItems,
   DRovingFocusEntry,
   DRovingFocusStrategy,
-  Orientation,
-} from "./types";
+  DRovingFocusTabStopAnchor,
+} from "./types.ts";
 
 /**
  * {@link DRovingFocusArgs} with every default resolved, so no consumer of a configuration has to
@@ -22,6 +23,7 @@ export interface DRovingFocusConfig {
   onRegisterApi: DRovingFocusArgs["onRegisterApi"];
   wrap: boolean;
   tabStop: boolean;
+  tabStopAnchor: DRovingFocusTabStopAnchor;
   restoreLostFocus: boolean;
   activeClass: string | null;
   itemsKey: unknown;
@@ -29,7 +31,7 @@ export interface DRovingFocusConfig {
   controllerElement: HTMLElement | string | null | undefined;
   entryFocus: DRovingFocusEntry;
   fallbackSkipsMarked: boolean;
-  disabledItems: DRovingFocusDisabledItems;
+  disabledItems: DisabledItems;
   onCrossAxis: DRovingFocusArgs["onCrossAxis"];
   typeAhead: boolean;
 }
@@ -51,6 +53,7 @@ export function normalizeConfig(named: DRovingFocusArgs): DRovingFocusConfig {
     onRegisterApi: named.onRegisterApi,
     wrap: named.wrap ?? false,
     tabStop: named.tabStop ?? true,
+    tabStopAnchor: named.tabStopAnchor ?? "focus",
     restoreLostFocus: named.restoreLostFocus ?? true,
     activeClass: named.activeClass ?? null,
     // This read is load-bearing even though the value is never consulted: consuming the

@@ -39,18 +39,16 @@ class SystemMessage
           I18n.t("system_messages.#{type}.text_body_template", params)
         end
 
+    if key = params[:body_suffix_key]
+      paragraph = I18n.with_locale(@recipient.effective_locale) { I18n.t(key, params) }
+      raw = "#{raw.rstrip}\n\n#{paragraph}"
+    end
+
     if from_system
       user = Discourse.system_user
     else
       user = Discourse.site_contact_user
-      target_group_names =
-        (
-          if Group.exists?(name: SiteSetting.site_contact_group_name)
-            SiteSetting.site_contact_group_name
-          else
-            nil
-          end
-        )
+      target_group_names = Discourse.site_contact_group&.name
     end
 
     post_creator_args = [

@@ -29,11 +29,11 @@ module("Integration | Helper | body-class and html-class", function (hooks) {
   });
 
   test("Dynamic classes", async function (assert) {
-    this.set("dynamic", "bar");
-    await render(<template>{{bodyClass this.dynamic}}</template>);
+    const dynamic = tracked("bar");
+    await render(<template>{{bodyClass dynamic.value}}</template>);
     assert.dom(document.body).hasClass("bar");
 
-    this.set("dynamic", "baz");
+    dynamic.value = "baz";
     await settled();
     assert.dom(document.body).hasClass("baz");
     assert
@@ -42,13 +42,11 @@ module("Integration | Helper | body-class and html-class", function (hooks) {
   });
 
   test("HTML and body classes", async function (assert) {
-    const state = new (class {
-      @tracked condition = false;
-    })();
+    const condition = tracked(false);
 
     await render(
       <template>
-        {{#if state.condition}}
+        {{#if condition.value}}
           {{bodyClass "my-class" "persistent-class"}}
           {{htmlClass "my-class"}}
         {{else}}
@@ -60,14 +58,14 @@ module("Integration | Helper | body-class and html-class", function (hooks) {
     assert.dom(document.documentElement).doesNotHaveClass("my-class");
     assert.dom(document.body).hasClass("persistent-class");
 
-    state.condition = true;
+    condition.value = true;
     await settled();
 
     assert.dom(document.body).hasClass("my-class");
     assert.dom(document.documentElement).hasClass("my-class");
     assert.dom(document.body).hasClass("persistent-class");
 
-    state.condition = false;
+    condition.value = false;
     await settled();
 
     assert.dom(document.body).doesNotHaveClass("my-class");

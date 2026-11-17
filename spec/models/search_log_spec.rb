@@ -187,7 +187,7 @@ RSpec.describe SearchLog, type: :model do
     end
   end
 
-  describe ".log" do
+  describe ".log crawler detection" do
     it "flags an anonymous search from a known crawler user agent" do
       _status, id =
         SearchLog.log(
@@ -262,12 +262,19 @@ RSpec.describe SearchLog, type: :model do
     let(:session_id) { SecureRandom.hex(16) }
     let(:crawler_score) { CrawlerScorer::BOT_SCORE_THRESHOLD + 1 }
 
+    before { freeze_time }
+
     def flag!
       described_class.flag_likely_crawlers!(window_start: 1.hour.ago, window_end: Time.now)
     end
 
-    it "flags a search made from a session scored as a likely crawler" do
-      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+    it "flags recent searches using older session scores" do
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        score: crawler_score,
+        created_at: 2.hours.ago,
+      )
       log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
 
       flag!
@@ -275,21 +282,59 @@ RSpec.describe SearchLog, type: :model do
       expect(log.reload.likely_crawler).to eq(true)
     end
 
-    it "leaves a search whose session was scored below the crawler threshold" do
-      Fabricate(
-        :browser_pageview_event,
-        session_id: session_id,
-        score: CrawlerScorer::BOT_SCORE_THRESHOLD,
-      )
-      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
+    it "updates older searches when their session's score changes" do
+      event =
+        Fabricate(
+          :browser_pageview_event,
+          session_id: session_id,
+          score: crawler_score,
+          created_at: 30.minutes.ago,
+        )
+      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 2.hours.ago)
 
+      flag!
+      expect(log.reload.likely_crawler).to eq(true)
+
+      event.update!(score: CrawlerScorer::BOT_SCORE_THRESHOLD)
       flag!
 
       expect(log.reload.likely_crawler).to eq(false)
     end
 
+    it "keeps a search flagged while any pageview in its session qualifies" do
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        score: crawler_score,
+        created_at: 2.hours.ago,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        score: 0,
+        created_at: 30.minutes.ago,
+      )
+      log =
+        Fabricate(
+          :search_log,
+          user: nil,
+          session_id: session_id,
+          likely_crawler: true,
+          created_at: 30.minutes.ago,
+        )
+
+      flag!
+
+      expect(log.reload.likely_crawler).to eq(true)
+    end
+
     it "leaves a search that carries no session" do
-      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        score: crawler_score,
+        created_at: 30.minutes.ago,
+      )
       log = Fabricate(:search_log, user: nil, session_id: nil, created_at: 30.minutes.ago)
 
       flag!
@@ -297,17 +342,31 @@ RSpec.describe SearchLog, type: :model do
       expect(log.reload.likely_crawler).to eq(false)
     end
 
-    it "leaves a search whose session has no scored pageviews at all" do
-      Fabricate(:browser_pageview_event, session_id: SecureRandom.hex(16), score: crawler_score)
-      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 30.minutes.ago)
+    it "preserves existing flags for sessions without retained scores" do
+      unscored = Fabricate(:browser_pageview_event, score: nil, created_at: 30.minutes.ago)
+      logs =
+        [session_id, unscored.session_id].map do |unscored_session_id|
+          Fabricate(
+            :search_log,
+            user: nil,
+            session_id: unscored_session_id,
+            likely_crawler: true,
+            created_at: 30.minutes.ago,
+          )
+        end
 
       flag!
 
-      expect(log.reload.likely_crawler).to eq(false)
+      expect(logs.map { |log| log.reload.likely_crawler }).to eq([true, true])
     end
 
     it "flags a logged-in search whose session is scored as a likely crawler" do
-      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
+      Fabricate(
+        :browser_pageview_event,
+        session_id: session_id,
+        score: crawler_score,
+        created_at: 30.minutes.ago,
+      )
       log =
         Fabricate(
           :search_log,
@@ -322,13 +381,22 @@ RSpec.describe SearchLog, type: :model do
       expect(log.reload.likely_crawler).to eq(true)
     end
 
-    it "leaves searches outside the window alone" do
-      Fabricate(:browser_pageview_event, session_id: session_id, score: crawler_score)
-      log = Fabricate(:search_log, user: nil, session_id: session_id, created_at: 5.hours.ago)
+    it "preserves sessions with no pageviews or searches in the window" do
+      logs =
+        [crawler_score, 0].map do |score|
+          event = Fabricate(:browser_pageview_event, score: score, created_at: 2.hours.ago)
+          Fabricate(
+            :search_log,
+            user: nil,
+            session_id: event.session_id,
+            likely_crawler: score == 0,
+            created_at: 2.hours.ago,
+          )
+        end
 
       flag!
 
-      expect(log.reload.likely_crawler).to eq(false)
+      expect(logs.map { |log| log.reload.likely_crawler }).to eq([false, true])
     end
   end
 
@@ -364,7 +432,7 @@ RSpec.describe SearchLog, type: :model do
   end
 
   describe ".term_details" do
-    it "should only use the date for the period" do
+    it "uses only the date for the period" do
       time = Time.utc(2019, 5, 23, 18, 15, 30)
       freeze_time(time)
 
@@ -418,14 +486,15 @@ RSpec.describe SearchLog, type: :model do
       ).to eq(1)
     end
 
-    it "returns non-staff and anonymous searches minus crawlers with the human_only search type" do
+    it "returns non-staff and anonymous browser searches minus crawlers with the human_only search type" do
       SiteSetting.improved_crawler_detection = true
       member = Fabricate(:user)
       Fabricate(:search_log, term: "ruby", user: member)
       Fabricate(:search_log, term: "ruby", user: Fabricate(:admin))
       Fabricate(:search_log, term: "ruby", user: Fabricate(:moderator))
+      Fabricate(:search_log, term: "ruby", user: nil, session_id: "browser-session")
       Fabricate(:search_log, term: "ruby", user: nil)
-      Fabricate(:search_log, term: "ruby", user: nil, crawler: true)
+      Fabricate(:search_log, term: "ruby", user: nil, session_id: "browser-session", crawler: true)
 
       expect(
         SearchLog.term_details("ruby", :weekly, :human_only)[:data].sum { |point| point[:y] },
@@ -442,6 +511,7 @@ RSpec.describe SearchLog, type: :model do
         ip_address: "127.0.0.1",
         user_agent:
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        session_id: "browser-session",
         **opts,
       )
     end
@@ -487,10 +557,17 @@ RSpec.describe SearchLog, type: :model do
       expect(results.map { |trend| [trend.term, trend.searches] }).to eq([["ruby", 1]])
     end
 
-    it "returns non-staff and anonymous searches minus crawlers with the human_only search type" do
+    it "returns non-staff and anonymous browser searches minus crawlers with the human_only search type" do
       SiteSetting.improved_crawler_detection = true
       Fabricate(:search_log, term: "admin-search", user: Fabricate(:admin))
-      Fabricate(:search_log, term: "crawler-search", user: nil, crawler: true)
+      Fabricate(:search_log, term: "sessionless-search", user: nil)
+      Fabricate(
+        :search_log,
+        term: "crawler-search",
+        user: nil,
+        session_id: "browser-session",
+        crawler: true,
+      )
 
       results = SearchLog.trending(:all, :human_only).to_a
 
@@ -511,7 +588,7 @@ RSpec.describe SearchLog, type: :model do
   end
 
   describe "clean_up" do
-    it "will remove old logs" do
+    it "removes old logs" do
       SearchLog.log(term: "jawa", search_type: :header, ip_address: "127.0.0.1")
       SearchLog.log(term: "jedi", search_type: :header, ip_address: "127.0.0.1")
       SearchLog.log(term: "rey", search_type: :header, ip_address: "127.0.0.1")

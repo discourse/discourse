@@ -45,9 +45,9 @@ module("Integration | ui-kit | DVirtualList | viewport", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @viewportClass="my-scroller"
           as |item|
         >
@@ -80,9 +80,9 @@ module("Integration | ui-kit | DVirtualList | viewport", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @viewportLabel="Search results"
           as |item|
         >
@@ -123,9 +123,9 @@ module("Integration | ui-kit | DVirtualList | viewport", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -157,9 +157,9 @@ module("Integration | ui-kit | DVirtualList | viewport", function (hooks) {
         </style>
         <h2 id="results-heading">Results</h2>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @viewportLabelledBy="results-heading"
           as |item|
         >
@@ -195,11 +195,11 @@ module("Integration | ui-kit | DVirtualList | viewport", function (hooks) {
           }
         </style>
         <DVirtualList
+          data-container="yes"
+          @estimateSize={{estimate}}
           @items={{items}}
           @key="id"
-          @estimateSize={{estimate}}
           @viewportClass="my-scroller"
-          data-container="yes"
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>

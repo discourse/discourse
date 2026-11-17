@@ -98,7 +98,7 @@ body:not(.has-full-page-chat, .wizard) {
         > *:not(
             .experimental-screen,
             .activate-account,
-            .discourse-kanban-board-viewer
+            .discourse-boards-board-viewer
           ) {
           box-sizing: border-box;
           max-width: 1000px;
@@ -110,9 +110,8 @@ body:not(.has-full-page-chat, .wizard) {
   }
 }
 
-body.has-admin-changes-banner #main-outlet-wrapper #main-outlet {
-  // makes space so save banner doesn't overlap content
-  padding-bottom: 6em;
+body.d-floating-control-bar-visible #main-outlet-wrapper #main-outlet {
+  padding-bottom: var(--d-floating-control-bar-clearance);
 }
 
 @include viewport.until(sm) {

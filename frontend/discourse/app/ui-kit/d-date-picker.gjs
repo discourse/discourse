@@ -11,10 +11,26 @@ const DATE_FORMAT = "YYYY-MM-DD";
 
 @classNames("date-picker-wrapper")
 export default class DDatePicker extends Component {
+  /** @type {import("moment").Moment | Date | string | null | undefined} */
   value = null;
+
+  /** @type {Date | null | undefined} */
   minDate = null;
+
+  /** @type {Date | null | undefined} */
   maxDate = null;
+
+  /** @type {{ setDate: (date: Date | string | null, preventOnSelect?: boolean) => void, destroy: () => void } | (HTMLInputElement & { hide: () => void, destroy: () => void }) | null} */
   _picker = null;
+
+  @computed("_placeholder")
+  get placeholder() {
+    return this._placeholder || i18n("dates.placeholder");
+  }
+
+  set placeholder(value) {
+    this.set("_placeholder", value);
+  }
 
   @computed("site.mobileView")
   get inputType() {
@@ -78,7 +94,7 @@ export default class DDatePicker extends Component {
   _handleSelection(value) {
     const formattedDate = moment(value).format(DATE_FORMAT);
 
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 
@@ -95,27 +111,19 @@ export default class DDatePicker extends Component {
     }
   }
 
-  @computed("_placeholder")
-  get placeholder() {
-    return this._placeholder || i18n("dates.placeholder");
-  }
-
-  set placeholder(value) {
-    this.set("_placeholder", value);
-  }
-
+  /** @returns {{ defaultDate?: Date | string | null, setDefaultDate?: boolean, minDate?: Date | null, maxDate?: Date | null } | null} */
   _opts() {
     return null;
   }
 
   <template>
     <Input
-      @type={{this.inputType}}
+      autocomplete="off"
       class="date-picker"
       placeholder={{this.placeholder}}
-      @value={{this.value}}
-      autocomplete="off"
       ...attributes
+      @type={{this.inputType}}
+      @value={{this.value}}
     />
   </template>
 }

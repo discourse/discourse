@@ -1,10 +1,10 @@
 import MobileNav from "discourse/components/mobile-nav";
 
 export default <template>
-  <MobileNav @desktopClass="nav nav-pills user-nav" class="main-nav">
+  <MobileNav class="main-nav" @desktopClass="nav nav-pills user-nav">
     {{#each @navItems key="name" as |navItem|}}
       <li>
-        <a href={{navItem.href}} class={{if navItem.styleGuideActive "active"}}>
+        <a class={{if navItem.styleGuideActive "active"}} href={{navItem.href}}>
           {{navItem.displayName}}
         </a>
       </li>

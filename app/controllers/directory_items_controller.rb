@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class DirectoryItemsController < ApplicationController
-  PAGE_SIZE = 50
-  PAGE_LIMIT = 10
-
-  before_action :set_groups_exclusion, if: -> { params[:exclude_groups].present? }
+  PAGE_SIZE = DirectoryItemsQuery::PAGE_SIZE
+  PAGE_LIMIT = DirectoryItemsQuery::PAGE_LIMIT
 
   def index
     discourse_expires_in 1.minute
@@ -16,108 +14,31 @@ class DirectoryItemsController < ApplicationController
     period = params.require(:period)
     period_type = DirectoryItem.period_types[period.to_sym]
     raise Discourse::InvalidAccess.new(:period_type) unless period_type
-    result = DirectoryItem.where(period_type: period_type).includes(user: :user_custom_fields)
-
-    if params[:group]
-      group = Group.find_by(name: params[:group])
-      raise Discourse::InvalidParameters.new(:group) if group.blank?
-      guardian.ensure_can_see_group_and_members!(group)
-
-      result = result.includes(user: :groups).where(users: { groups: { id: group.id } })
-    else
-      result = result.includes(user: :primary_group)
-    end
-
-    result = apply_exclude_groups_filter(result)
-
-    if params[:exclude_usernames]
-      result =
-        result
-          .references(:user)
-          .where.not(users: { username: params[:exclude_usernames].split(",") })
-    end
-
-    default_order = DirectoryColumn.automatic_column_names.first
-    order = params[:order] || default_order
-    dir = params[:asc] ? "ASC" : "DESC"
-    active_directory_column_names = DirectoryColumn.active_column_names
-    if active_directory_column_names.include?(order.to_sym)
-      result = result.order("directory_items.#{order} #{dir}, directory_items.id")
-    elsif order == "username"
-      result = result.order("users.#{order} #{dir}, directory_items.id")
-    else
-      # Ordering by user field value
-      user_field_scope = guardian.is_staff? ? UserField.all : UserField.public_fields
-      user_field = user_field_scope.find_by(name: order)
-      if user_field
-        result =
-          result
-            .references(:user)
-            .joins(
-              "LEFT OUTER JOIN user_custom_fields ON user_custom_fields.user_id = users.id AND user_custom_fields.name = 'user_field_#{user_field.id}'",
-            )
-            .order(
-              "user_custom_fields.name = 'user_field_#{user_field.id}' ASC, user_custom_fields.value #{dir}",
-            )
-      else
-        result = result.order("directory_items.#{default_order} #{dir}, directory_items.id")
-      end
-    end
-
-    result = result.includes(:user_stat) if period_type == DirectoryItem.period_types[:all]
     page = fetch_int_from_params(:page, default: 0, max: PAGE_LIMIT)
-
-    user_ids = nil
-    if params[:name].present?
-      opts = {
-        include_staged_users: true,
-        user_directory_search: true,
-        limit: 200,
-        search_custom_fields: true,
-      }
-      user_ids = UserSearch.new(params[:name], opts).search.pluck(:id)
-      if user_ids.present?
-        # Add the current user if we have at least one other match
-        user_ids << current_user.id if current_user && result.dup.where(user_id: user_ids).exists?
-        result = result.where(user_id: user_ids)
-      else
-        result = result.where("false")
-      end
-    end
-
-    if params[:username]
-      user_id = User.where(username_lower: params[:username].to_s.downcase).pick(:id)
-      if user_id
-        result = result.where(user_id: user_id)
-      else
-        result = result.where("false")
-      end
-    end
-
     limit = fetch_limit_from_params(default: PAGE_SIZE, max: PAGE_SIZE)
-
-    result_count = result.count
-    result = result.limit(limit).offset(limit * page).to_a
+    begin
+      query_result =
+        DirectoryItemsQuery.new(user: current_user, guardian:).call(
+          period_type:,
+          group_name: params[:group],
+          exclude_group_names: params[:exclude_groups]&.split("|"),
+          exclude_usernames: params[:exclude_usernames]&.split(","),
+          order: params[:order],
+          ascending: params[:asc].present?,
+          name: params[:name],
+          username: params[:username],
+          page:,
+          limit:,
+          prioritize_user: true,
+        )
+    rescue DirectoryItemsQuery::GroupNotFound
+      raise Discourse::InvalidParameters.new(:group)
+    end
 
     more_params = params.slice(:period, :order, :asc, :group, :user_field_ids, :name).permit!
     more_params[:page] = page + 1
     load_more_uri = URI.parse(directory_items_path(more_params))
     load_more_directory_items_json = "#{load_more_uri.path}.json?#{load_more_uri.query}"
-
-    # Put yourself at the top of the first page
-    if result.present? && current_user.present? && page == 0 && !params[:group].present?
-      position = result.index { |r| r.user_id == current_user.id }
-
-      # Don't show the record unless you're not in the top positions already
-      if (position || 10) >= 10
-        unless @users_in_exclude_groups&.include?(current_user.id)
-          your_item = DirectoryItem.where(period_type: period_type, user_id: current_user.id).first
-          result.insert(0, your_item) if your_item
-        end
-      end
-    end
-
-    last_updated_at = DirectoryItem.last_updated_at(period_type)
 
     serializer_opts = {}
     if params[:user_field_ids]
@@ -142,34 +63,19 @@ class DirectoryItemsController < ApplicationController
       serializer_opts[:plugin_column_ids] = params[:plugin_column_ids]&.split("|")&.map(&:to_i)
     end
 
-    serializer_opts[:attributes] = active_directory_column_names
+    serializer_opts[:attributes] = query_result.active_column_names
     serializer_opts[:searchable_fields] = UserField.where(searchable: true) if serializer_opts[
       :user_custom_field_map
     ].present?
 
-    serialized = serialize_data(result, DirectoryItemSerializer, serializer_opts)
+    serialized = serialize_data(query_result.items, DirectoryItemSerializer, serializer_opts)
     render_json_dump(
       directory_items: serialized,
       meta: {
-        last_updated_at: last_updated_at,
-        total_rows_directory_items: result_count,
+        last_updated_at: query_result.last_updated_at,
+        total_rows_directory_items: query_result.total,
         load_more_directory_items: load_more_directory_items_json,
       },
     )
-  end
-
-  private
-
-  def set_groups_exclusion
-    @exclude_group_names = params[:exclude_groups].split("|")
-    groups = Group.where(name: @exclude_group_names)
-    groups = groups.select { |g| guardian.can_see_group_and_members?(g) }
-    @exclude_group_ids = groups.map(&:id)
-    @users_in_exclude_groups = GroupUser.where(group_id: @exclude_group_ids).pluck(:user_id)
-  end
-
-  def apply_exclude_groups_filter(result)
-    result = result.where.not(user_id: @users_in_exclude_groups) if params[:exclude_groups]
-    result
   end
 end

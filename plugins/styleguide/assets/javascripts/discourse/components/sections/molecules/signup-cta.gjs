@@ -1,9 +1,9 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import SignupCtaExample from "../../examples/molecules/signup-cta";
+import SignupCtaExample from "../../examples/molecules/signup-cta.gjs";
 import signupCtaSource from "../../examples/molecules/signup-cta?source=file";
 
 export default <template>
-  <StyleguideExample @title="<SignupCta>" @code={{signupCtaSource}}>
+  <StyleguideExample @code={{signupCtaSource}} @title="<SignupCta>">
     <SignupCtaExample />
   </StyleguideExample>
 </template>

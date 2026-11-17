@@ -32,7 +32,10 @@ class CustomEmoji::Action::ParseImportManifest < Service::ActionBase
 
   def parse_manifest
     CSV.parse(
-      reader.read_entry(MANIFEST_FILENAME, max_bytes: MAX_MANIFEST_BYTES, required: true),
+      reader
+        .read_entry(MANIFEST_FILENAME, max_bytes: MAX_MANIFEST_BYTES, required: true)
+        .force_encoding(Encoding::UTF_8)
+        .delete_prefix(Encodings::BOM),
       headers: true,
     )
   end

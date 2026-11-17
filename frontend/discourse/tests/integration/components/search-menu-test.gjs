@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import Service from "@ember/service";
 import {
   click,
   fillIn,
@@ -12,6 +13,8 @@ import { module, test } from "qunit";
 import SearchMenu, {
   DEFAULT_TYPE_FILTER,
 } from "discourse/components/search-menu";
+import TagResult from "discourse/components/search-menu/results/type/tag";
+import { defaultRenderTag, replaceTagRenderer } from "discourse/lib/render-tag";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -22,6 +25,66 @@ import { i18n } from "discourse-i18n";
 // menu panel separate from the search input.
 module("Integration | Component | SearchMenu", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("tag results preserve IDs and localized names through search translation", async function (assert) {
+    pretender.get("/search/query", () =>
+      response({
+        tags: [{ id: 123, name: "猫", slug: "cat" }],
+        grouped_search_result: { term: "cat", more_tags: false },
+      })
+    );
+
+    await render(
+      <template>
+        <SearchMenu @location="test" @searchInputId="icon-search-input" />
+      </template>
+    );
+    await click("#icon-search-input");
+    await fillIn("#icon-search-input", "cat");
+
+    assert
+      .dom(".search-result-tag span.discourse-tag")
+      .hasAttribute("data-tag-id", "123")
+      .hasAttribute("data-tag-name", "猫")
+      .hasText("猫")
+      .doesNotHaveAttribute("href");
+  });
+
+  test("tag results continue to support names without IDs", async function (assert) {
+    this.result = "cat";
+
+    await render(<template><TagResult @result={{this.result}} /></template>);
+
+    assert
+      .dom("span.discourse-tag")
+      .doesNotHaveAttribute("data-tag-id")
+      .hasAttribute("data-tag-name", "cat")
+      .hasText("cat");
+  });
+
+  test("tag results preserve name inputs for custom tag renderers", async function (assert) {
+    this.result = { id: 123, name: "猫", slug: "cat" };
+    let input;
+    let options;
+    replaceTagRenderer((tag, params) => {
+      input = tag;
+      options = params;
+      return '<span class="custom-tag">Custom tag</span>';
+    });
+
+    try {
+      await render(<template><TagResult @result={{this.result}} /></template>);
+
+      assert.strictEqual(input, "猫");
+      assert.propContains(options, { tagId: 123, tagName: "span" });
+      assert
+        .dom(".custom-tag")
+        .hasText("Custom tag")
+        .doesNotHaveAttribute("data-tag-id");
+    } finally {
+      replaceTagRenderer(defaultRenderTag);
+    }
+  });
 
   test("rendering standalone", async function (assert) {
     pretender.get("/search/query", (request) => {
@@ -70,6 +133,9 @@ module("Integration | Component | SearchMenu", function (hooks) {
     assert
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
+    assert
+      .dom("#icon-search-input")
+      .isFocused("search results keep input focus");
 
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
@@ -122,16 +188,14 @@ module("Integration | Component | SearchMenu", function (hooks) {
   });
 
   test("@hideResults closes the menu and keeps it closed", async function (assert) {
-    const state = new (class {
-      @tracked hidden = false;
-    })();
+    const hidden = tracked(false);
 
     await render(
       <template>
         <SearchMenu
+          @hideResults={{hidden.value}}
           @location="test"
           @searchInputId="icon-search-input"
-          @hideResults={{state.hidden}}
         />
       </template>
     );
@@ -139,7 +203,7 @@ module("Integration | Component | SearchMenu", function (hooks) {
     await click("#icon-search-input");
     assert.dom(".menu-panel").exists("menu opens from the input");
 
-    state.hidden = true;
+    hidden.value = true;
     await settled();
     assert
       .dom(".menu-panel")
@@ -150,7 +214,7 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .dom(".menu-panel")
       .doesNotExist("menu cannot open while results are hidden");
 
-    state.hidden = false;
+    hidden.value = false;
     await settled();
     assert
       .dom(".menu-panel")
@@ -170,15 +234,13 @@ module("Integration | Component | SearchMenu", function (hooks) {
   });
 
   test("updates when the input placeholder changes", async function (assert) {
-    const state = new (class {
-      @tracked placeholder = "search.title";
-    })();
+    const placeholder = tracked("search.title");
 
     await render(
       <template>
         <SearchMenu
           @location="test"
-          @searchInputPlaceholder={{state.placeholder}}
+          @searchInputPlaceholder={{placeholder.value}}
         />
       </template>
     );
@@ -188,7 +250,7 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .hasAttribute("placeholder", i18n("search.title"))
       .hasAttribute("aria-label", i18n("search.title"));
 
-    state.placeholder = "welcome_banner.search_placeholder";
+    placeholder.value = "welcome_banner.search_placeholder";
     await settled();
 
     assert
@@ -248,5 +310,72 @@ module("Integration | Component | SearchMenu", function (hooks) {
       .exists(
         "PM context button reappears after selecting 'in:messages' suggestion"
       );
+  });
+  test("announces the outcome of a submitted search, but not suggestions", async function (assert) {
+    const announcements = [];
+    this.owner.register(
+      "service:a11y",
+      class extends Service {
+        announce(message, priority) {
+          announcements.push({ message, priority });
+        }
+      }
+    );
+
+    pretender.get("/search/query", (request) => {
+      if (request.queryParams.term === "nothing") {
+        return response({ grouped_search_result: {} });
+      }
+      if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
+        return response({
+          users: searchFixtures["search/query"]["users"],
+          grouped_search_result:
+            searchFixtures["search/query"]["grouped_search_result"],
+        });
+      }
+      return response(searchFixtures["search/query"]);
+    });
+
+    await render(
+      <template>
+        <SearchMenu @location="test" @searchInputId="icon-search-input" />
+      </template>
+    );
+
+    await click("#icon-search-input");
+    await fillIn("#icon-search-input", "test");
+
+    assert.deepEqual(announcements, [], "suggestions while typing are silent");
+
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.strictEqual(
+      announcements.length,
+      1,
+      "a submitted search is announced"
+    );
+    assert.strictEqual(announcements[0].priority, "polite");
+    assert.true(
+      /^\d+ results? found\.$/.test(announcements[0].message),
+      "with the number of results shown"
+    );
+
+    await fillIn("#icon-search-input", "nothing");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.deepEqual(
+      announcements.at(-1),
+      { message: i18n("search.no_results"), priority: "polite" },
+      "an empty search says so"
+    );
+
+    await fillIn("#icon-search-input", "a");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
+
+    assert.deepEqual(
+      announcements.at(-1),
+      { message: i18n("search.too_short"), priority: "polite" },
+      "a term too short to search says why"
+    );
   });
 });

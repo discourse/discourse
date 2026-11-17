@@ -9,6 +9,7 @@ import ListSetting from "discourse/select-kit/components/list-setting";
 const TOKEN_SEPARATOR = "|";
 
 export default class SettingFieldCompactList extends Component {
+  /** @type {Array<string | { name: string, value: string }> | null} */
   @tracked createdChoices = null;
 
   get hasEnumChoices() {
@@ -57,15 +58,15 @@ export default class SettingFieldCompactList extends Component {
   <template>
     <@field.Control>
       <ListSetting
-        @value={{this.settingValue}}
         @choices={{this.choices}}
-        @settingName={{@definition.key}}
+        @mandatoryValues={{@definition.mandatory_values}}
         @nameProperty={{if this.hasEnumChoices "name"}}
-        @valueProperty={{if this.hasEnumChoices "value"}}
         @onChange={{this.onChange}}
         @onChangeChoices={{this.onChangeChoices}}
         @options={{hash allowAny=this.allowAny}}
-        @mandatoryValues={{@definition.mandatory_values}}
+        @settingName={{@definition.key}}
+        @value={{this.settingValue}}
+        @valueProperty={{if this.hasEnumChoices "value"}}
       />
     </@field.Control>
   </template>

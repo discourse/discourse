@@ -30,10 +30,10 @@ export default class SeparatorExample extends Component {
         class="styleguide-drag-and-drop__divider"
         @axis="horizontal"
         @label={{i18n "styleguide.sections.drag_and_drop.separator_label"}}
-        @value={{this.width}}
-        @min={{MIN}}
         @max={{MAX}}
+        @min={{MIN}}
         @onResize={{this.onResize}}
+        @value={{this.width}}
       />
 
       <div class="styleguide-drag-and-drop__pane --grow">

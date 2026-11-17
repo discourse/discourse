@@ -218,6 +218,26 @@ RSpec.describe DiscourseWorkflows::Executor do
         end
       end
     end
+
+    it "fails the execution when scheduling the resume fails after the wait was saved" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
+          g.chain "trigger-1", "wait-1"
+        end
+      workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+      allow(Jobs).to receive(:enqueue_in).and_raise("boom")
+
+      execution = described_class.new(workflow, "trigger-1", {}).run
+
+      expect(execution.reload).to have_attributes(
+        status: "error",
+        error: "boom",
+        waiting_until: nil,
+      )
+    end
   end
 
   describe ".resume" do

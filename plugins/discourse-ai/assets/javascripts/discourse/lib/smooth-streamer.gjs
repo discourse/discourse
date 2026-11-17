@@ -27,14 +27,6 @@ export default class SmoothStreamer {
   }
 
   /**
-   * Retrieves the appropriate text: either the animated stream or the full realtime text.
-   * @returns {string}
-   */
-  get renderedText() {
-    return this.isStreaming ? this.streamedText : this.realtimeText;
-  }
-
-  /**
    * Retrieves the current realtime text.
    * @returns {string}
    */
@@ -48,6 +40,14 @@ export default class SmoothStreamer {
    */
   set realtimeText(value) {
     this.setRealtimeText(value);
+  }
+
+  /**
+   * Retrieves the appropriate text: either the animated stream or the full realtime text.
+   * @returns {string}
+   */
+  get renderedText() {
+    return this.isStreaming ? this.streamedText : this.realtimeText;
   }
 
   /**

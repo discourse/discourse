@@ -4,9 +4,9 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <LinkTo
-    @route="adminPlugins.show.explorer.new"
-    @model="discourse-data-explorer"
     class="de-cta"
+    @model="discourse-data-explorer"
+    @route="adminPlugins.show.explorer.new"
   >
     <div class="de-cta__text">
       <span class="de-cta__title">

@@ -1,31 +1,23 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ChangesBanner from "discourse/admin/components/changes-banner";
-import { gt } from "discourse/truth-helpers";
+import { trustHTML } from "@ember/template";
+import DFloatingControlBar from "discourse/ui-kit/d-floating-control-bar";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteSettingsChangesBanner extends Component {
   @service siteSettingChangeTracker;
-
-  @action
-  async save() {
-    await this.siteSettingChangeTracker.save();
-  }
-
-  @action
-  discard() {
-    this.siteSettingChangeTracker.discard();
-  }
 
   get dirtyCount() {
     return this.siteSettingChangeTracker.count;
   }
 
   get bannerLabel() {
-    return i18n("admin.site_settings.dirty_banner", {
-      count: this.dirtyCount,
-    });
+    return trustHTML(
+      i18n("admin.site_settings.dirty_banner", {
+        count: this.dirtyCount,
+      })
+    );
   }
 
   get saveLabel() {
@@ -40,14 +32,24 @@ export default class AdminSiteSettingsChangesBanner extends Component {
     });
   }
 
+  @action
+  async save() {
+    await this.siteSettingChangeTracker.save();
+  }
+
+  @action
+  discard() {
+    this.siteSettingChangeTracker.discard();
+  }
+
   <template>
     {{#if (gt this.dirtyCount 0)}}
-      <ChangesBanner
-        @bannerLabel={{this.bannerLabel}}
-        @saveLabel={{this.saveLabel}}
+      <DFloatingControlBar
         @discardLabel={{this.discardLabel}}
-        @save={{this.save}}
-        @discard={{this.discard}}
+        @label={{this.bannerLabel}}
+        @onDiscard={{this.discard}}
+        @onSave={{this.save}}
+        @saveLabel={{this.saveLabel}}
       />
     {{/if}}
   </template>

@@ -7,8 +7,8 @@ on:
       - main
 
 concurrency:
-  group: linting-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -87,6 +87,10 @@ jobs:
             if: ${{ !cancelled() }}
             run: pnpm lint:types
 
+          - name: TypeScript language server
+            if: ${{ !cancelled() }}
+            run: pnpm --dir=frontend/discourse-types test
+
           - name: Prettier
             if: ${{ !cancelled() }}
             run: |
@@ -97,6 +101,10 @@ jobs:
             if: ${{ !cancelled() }}
             run: pnpm lint:css
 
+          - name: Vendored icon sprites
+            if: ${{ !cancelled() }}
+            run: bin/rake svgicons:check
+
           - name: English locale lint (core)
             if: ${{ !cancelled() }}
             run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
@@ -104,3 +112,7 @@ jobs:
           - name: English locale lint (core plugins)
             if: ${{ !cancelled() }}
             run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
+
+          - name: Upcoming changes lint
+            if: ${{ !cancelled() }}
+            run: bundle exec ruby script/upcoming_changes_lint.rb config/site_settings.yml "plugins/*/config/settings.yml"

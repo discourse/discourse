@@ -3,14 +3,35 @@
 module DiscourseRewind
   module Action
     class TopWords < BaseReport
-      STEMMER_WORKAROUNDS = {
-        "discour" => "discourse",
-        "discours" => "discourse",
-        "topical" => "topic",
-        "topically" => "topic",
-        "categori" => "category",
-        "categor" => "category",
-      }.freeze
+      IGNORED_WORDS = %w[
+        com
+        org
+        net
+        io
+        dev
+        co
+        uk
+        http
+        https
+        www
+        github
+        gitlab
+        google
+        youtube
+        twitter
+        slack
+        discord
+        drive
+      ].freeze
+      SIMPLE_TS_CONFIG = "simple"
+      WORD_PATTERN = "^[^[:digit:][:punct:][:space:]]{2,}$"
+      WORD_COUNT = 5
+      CANDIDATE_COUNT = 100
+      QUOTES_REGEX = "\\[quote[^\\]]*\\](?:[^\\[]|\\[(?!/quote\\]))*\\[/quote\\]"
+      CODE_REGEX = "```(?:[^`]|`(?!``))*```|`[^`]*`"
+      LINKS_REGEX = "https?://[^\\s]+"
+      STRIPPED_RAW_TSVECTOR_SQL =
+        "to_tsvector('#{SIMPLE_TS_CONFIG}', regexp_replace(raw, '#{QUOTES_REGEX}|#{CODE_REGEX}|#{LINKS_REGEX}', ' ', 'g'))"
 
       FakeData = {
         data: [
@@ -26,97 +47,71 @@ module DiscourseRewind
       def call
         return FakeData if should_use_fake_data?
 
-        words = word_query
+        data = word_query.map { |row| { word: row.original_word, score: row.ndoc + row.nentry } }
 
-        word_score =
-          words
-            .map do |word_data|
-              # Little cheat, since sometimes the stemming process uses words
-              # that we wouldn't normally use, especially for discourse-specific
-              # terms like "discourse" and "topic".
-              if STEMMER_WORKAROUNDS.key?(word_data.original_word)
-                word_data.original_word = STEMMER_WORKAROUNDS[word_data.original_word]
-              end
+        { data:, identifier: "top-words" }
+      end
 
-              { word: word_data.original_word, score: word_data.ndoc + word_data.nentry }
-            end
-            .sort_by! { |w| -w[:score] }
-            .take(5)
+      private
 
-        { data: word_score, identifier: "top-words" }
+      def own_search_data_sql
+        <<~SQL.squish
+          ts_filter(
+            post_search_data.search_data,
+            CASE WHEN topics.user_id = #{user.id} AND posts.post_number = 1 THEN '{a,d}' ELSE '{d}' END::"char"[]
+          )
+        SQL
+      end
+
+      def segmented_search_data?
+        Search.ts_config == SIMPLE_TS_CONFIG &&
+          (Search.segment_chinese? || Search.segment_japanese?)
       end
 
       def word_query
-        DB.query(<<~SQL, user_id: user.id, date_start: date.first, date_end: date.last)
+        posts = self.class.publicly_visible_posts.where(user_id: user.id, created_at: date)
+        stem = "strip(to_tsvector('#{Search.ts_config}', #{Search.wrap_unaccent("word")}))"
+        lex_join = segmented_search_data? ? "LEFT JOIN" : "INNER JOIN"
+
+        DB.query(<<~SQL)
           WITH popular_words AS (
             SELECT
-              *
+              word, ndoc, nentry
             FROM
-              ts_stat(
-                $INNERSQL$
-                  SELECT
-                    search_data
-                  FROM
-                    post_search_data
-                  INNER JOIN
-                    posts ON posts.id = post_search_data.post_id
-                  WHERE
-                    posts.user_id = :user_id
-                    AND posts.created_at BETWEEN :date_start AND :date_end
-                $INNERSQL$
-              ) AS search_data
-            WHERE LENGTH(word) >= 2
-            AND word ~ '^[a-zA-Z]+$'
-            AND word NOT IN (
-               'com', 'org', 'net', 'io', 'dev', 'co', 'uk', 'http', 'https',
-               'www', 'github', 'gitlab', 'google', 'youtube', 'twitter',
-               'slack', 'discord', 'drive'
-             )
-            ORDER BY
-              nentry DESC,
-              ndoc DESC,
-              word
-            LIMIT
-              100
-          ), lex AS (
-            SELECT
-              DISTINCT ON (lexeme) to_tsvector('english', word) as lexeme,
-              word as original_word
-            FROM
-              ts_stat ($INNERSQL$
-                SELECT
-                  to_tsvector('simple',
-                    regexp_replace(raw, 'https?://[^\\s]+', ' ', 'g')
-                  )
-                FROM
-                  posts AS p
-                WHERE
-                  p.user_id = :user_id
-                  AND p.created_at BETWEEN :date_start AND :date_end
+              ts_stat($INNERSQL$
+                #{posts.joins(:post_search_data).select(own_search_data_sql).to_sql}
               $INNERSQL$)
-            WHERE LENGTH(word) >= 2
-            AND word ~ '^[a-zA-Z]+$'
-          ), ranked_words AS (
-            SELECT
-              popular_words.*, lex.original_word,
-              ROW_NUMBER() OVER (PARTITION BY word ORDER BY LENGTH(original_word) DESC) AS rn
+            WHERE
+              word ~ '#{WORD_PATTERN}'
+              AND word NOT IN (
+                SELECT unnest(tsvector_to_array(strip(to_tsvector('#{Search.ts_config}', ignored))))
+                FROM unnest(ARRAY[#{IGNORED_WORDS.map { |word| "'#{word}'" }.join(", ")}]) AS ignored
+              )
+            ORDER BY
+              nentry DESC, ndoc DESC, word
+            LIMIT #{CANDIDATE_COUNT}
+          ), lex AS (
+            SELECT DISTINCT ON (stem)
+              #{stem} AS stem,
+              word AS original_word
             FROM
-              popular_words
-            INNER JOIN
-              lex ON lex.lexeme @@ to_tsquery('english', popular_words.word)
+              ts_stat($INNERSQL$
+                #{posts.select(STRIPPED_RAW_TSVECTOR_SQL).to_sql}
+              $INNERSQL$)
+            WHERE
+              word ~ '#{WORD_PATTERN}'
+            ORDER BY
+              stem, nentry DESC, word
           )
           SELECT
-            word,
-            ndoc,
-            nentry,
-            original_word
+            ndoc, nentry, COALESCE(original_word, popular_words.word) AS original_word
           FROM
-            ranked_words
-          WHERE
-            rn = 1
+            popular_words
+          #{lex_join}
+            lex ON lex.stem = strip(to_tsvector('#{SIMPLE_TS_CONFIG}', popular_words.word))
           ORDER BY
-            ndoc + nentry DESC
-          LIMIT 10
+            ndoc + nentry DESC, popular_words.word
+          LIMIT #{WORD_COUNT}
         SQL
       end
     end

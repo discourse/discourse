@@ -23,6 +23,10 @@ ko:
                 lt_1h: "< 1시간"
                 gt_24h: "> 24시간"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "제거됨"
+        tag_names: "태그"
     notifications:
       alt:
         solved:
@@ -57,6 +61,11 @@ ko:
         statuses:
           solved: "해결되다"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "글"
+            category: "카테고리"
       web_hooks:
         solved_event:
           group_name: "해결 된 이벤트"

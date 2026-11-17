@@ -6,18 +6,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import CategoryControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/category-control";
 
-class TestField {
-  @tracked value;
-
-  constructor(value) {
-    this.value = value;
-  }
-
-  set(newValue) {
-    this.value = newValue;
-  }
-}
-
 function regularCategories() {
   return Category.list().filter(
     (category) => !category.isUncategorizedCategory
@@ -30,7 +18,7 @@ module(
     setupRenderingTest(hooks);
 
     test("stores one category id string by default", async function (assert) {
-      this.field = new TestField("");
+      this.field = tracked("");
 
       await render(
         <template>
@@ -50,7 +38,7 @@ module(
     });
 
     test("stores an array of category ids when configured as multiple", async function (assert) {
-      this.field = new TestField([]);
+      this.field = tracked([]);
       this.schema = { type: "array", ui: { multiple: true } };
 
       await render(
@@ -78,7 +66,7 @@ module(
 
     test("hydrates selected categories from stored ids", async function (assert) {
       const category = regularCategories()[0];
-      this.field = new TestField([category.id]);
+      this.field = tracked([category.id]);
       this.schema = { type: "array", ui: { multiple: true } };
 
       await render(
@@ -103,7 +91,7 @@ module(
 
     test("ignores non-numeric stored entries when hydrating", async function (assert) {
       const category = regularCategories()[0];
-      this.field = new TestField(["=$json.category_ids", category.id]);
+      this.field = tracked(["=$json.category_ids", category.id]);
       this.schema = { type: "array", ui: { multiple: true } };
 
       await render(

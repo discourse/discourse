@@ -19,13 +19,13 @@ RSpec.describe S3Inventory do
     inventory.stubs(:cleanup!)
   end
 
-  it "should raise error if an inventory file is not found" do
+  it "raises an error when an inventory file is missing" do
     inventory.s3_client.stub_responses(:list_objects, contents: [])
     output = capture_stdout { inventory.backfill_etags_and_list_missing }
     expect(output).to eq("Failed to list inventory from S3\n")
   end
 
-  it "should forward custom s3 options to the S3Helper when initializing" do
+  it "forwards custom S3 options to S3Helper during initialization" do
     inventory =
       S3Inventory.new(
         :upload,
@@ -75,7 +75,7 @@ RSpec.describe S3Inventory do
       inventory.expects(:inventory_date).times(2).returns(Time.now)
     end
 
-    it "should display missing uploads correctly" do
+    it "displays missing uploads correctly" do
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
       expect(output).to eq(
@@ -84,7 +84,7 @@ RSpec.describe S3Inventory do
       expect(Discourse.stats.get("missing_s3_uploads")).to eq(6)
     end
 
-    it "should detect when a url match exists with a different etag" do
+    it "detects a URL match with a different ETag" do
       upload_with_differing_tag_1 = Upload.find_by(etag: "defcaac0b4aca535c284e95f30d608d0")
       upload_with_differing_tag_1.update_columns(etag: "somethingelse")
 
@@ -140,7 +140,7 @@ RSpec.describe S3Inventory do
     end
   end
 
-  it "should backfill etags to uploads table correctly" do
+  it "backfills ETags in the uploads table" do
     files = [
       [
         "#{Discourse.store.absolute_base_url}/uploads/default/original/1X/0184537a4f419224404d013414e913a4f56018f2.jpg",
@@ -176,7 +176,7 @@ RSpec.describe S3Inventory do
       BackupMetadata.update_last_restore_date(Time.now)
     end
 
-    it "should run if inventory files are at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date" do
+    it "runs when inventory files are old enough relative to the last restore" do
       inventory.s3_client.stub_responses(
         :list_objects_v2,
         {
@@ -196,7 +196,7 @@ RSpec.describe S3Inventory do
       capture_stdout { inventory.backfill_etags_and_list_missing }
     end
 
-    it "should not run if inventory files are not at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date and reset stats count" do
+    it "does not run for newer inventory files and resets the statistics count" do
       Discourse.stats.set("missing_s3_uploads", 2)
 
       inventory.s3_client.stub_responses(
@@ -220,7 +220,7 @@ RSpec.describe S3Inventory do
     end
   end
 
-  it "should work when passed preloaded data" do
+  it "uses preloaded data when provided" do
     freeze_time
 
     CSV.foreach(csv_filename, headers: false) do |row|

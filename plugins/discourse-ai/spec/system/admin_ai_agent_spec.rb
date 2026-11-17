@@ -14,6 +14,41 @@ RSpec.describe "Admin AI agent configuration" do
     sign_in(admin)
   end
 
+  it "shows the post illustrator's automatic tools instead of a stored selection" do
+    image_tool =
+      Fabricate(
+        :ai_tool,
+        name: "Image generator",
+        parameters: [{ name: "prompt", type: "string", description: "Prompt" }],
+        script: "function invoke() { upload.create(); chain.setCustomRaw(); }",
+      )
+    illustrator_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::PostIllustrator]
+
+    visit "/admin/plugins/discourse-ai/ai-agents/#{illustrator_id}/edit"
+
+    expect(page).to have_css(".ai-automatic-image-tools")
+    expect(page).to have_link(
+      image_tool.name,
+      href: "/admin/plugins/discourse-ai/ai-tools/#{image_tool.id}/edit",
+    )
+    expect(form).to have_no_field_with_name("tools")
+  end
+
+  it "lets admins require uploaded document search on every reply" do
+    agent = Fabricate(:ai_agent)
+    agent_editor_page.visit_edit(agent)
+    agent_editor_page.select_tool("SearchUploadedDocuments")
+    agent_editor_page.select_tool("SearchUploadedDocuments", forced: true)
+    form.field("forced_tool_count").select(-1)
+    form.submit
+
+    expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+    agent_editor_page.visit_edit(agent)
+
+    expect(agent_editor_page).to have_forced_tool("Search Uploaded Documents")
+    expect(page).to have_select("Forced tool strategy", selected: "Apply to all replies")
+  end
+
   it "allows creation of a agent" do
     visit "/admin/plugins/discourse-ai/ai-agents"
 
@@ -96,7 +131,7 @@ RSpec.describe "Admin AI agent configuration" do
     expect(parent.reload.subagent_ids).to eq([])
   end
 
-  it "will not allow deletion or editing of system agents" do
+  it "prevents deletion or editing of system agents" do
     visit "/admin/plugins/discourse-ai/ai-agents/#{DiscourseAi::Agents::Agent.system_agents.values.first}/edit"
     expect(page).not_to have_selector(".ai-agent-editor__delete")
     expect(form.field("system_prompt")).to be_disabled
@@ -176,6 +211,7 @@ RSpec.describe "Admin AI agent configuration" do
     agent_editor_page.visit_edit(source_agent).duplicate
 
     expect(agent_editor_page).to have_no_agent_user
+    form.field("enabled").toggle
 
     form.submit
 
@@ -215,7 +251,7 @@ RSpec.describe "Admin AI agent configuration" do
     expect(agent_editor_page).to have_floating_actions
   end
 
-  it "will enable agent right away when you click on enable but does not save side effects" do
+  it "enables the agent immediately without saving other edits" do
     agent = Fabricate(:ai_agent, enabled: false)
 
     visit "/admin/plugins/discourse-ai/ai-agents/#{agent.id}/edit"

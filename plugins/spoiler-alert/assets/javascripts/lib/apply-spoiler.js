@@ -1,3 +1,4 @@
+import { REVEAL_EVENT } from "discourse/lib/highlight-html";
 import { i18n } from "discourse-i18n";
 
 const INTERACTIVE_SELECTOR = [
@@ -96,6 +97,8 @@ export default function applySpoiler(element) {
   element.addEventListener("click", (event) => {
     toggleSpoiler(event, element);
   });
+
+  element.addEventListener(REVEAL_EVENT, () => _setSpoilerVisible(element));
 
   element.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {

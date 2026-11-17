@@ -8,6 +8,10 @@ sl:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Spodletelo"
         reports:
           filters:
             sort_by:
@@ -38,6 +42,13 @@ sl:
       ai_decoded_transcript:
         type: "Tip"
         error: "napaka"
+      discourse_workflows:
+        classify:
+          text: "Besedilo"
+          upload_ids: "Slike"
+          name: "Ime"
+          type: "Tip"
+          type_score: "Ocena"
       ai_tool_approval:
         loading: "Nalagam..."
         tool: "Dejanje"
@@ -49,22 +60,24 @@ sl:
       llm_selector:
         none: "Brez"
       features:
-        disabled: "(onemogočeno)"
-        groups: "Skupine:"
+        table:
+          status: "Status"
+          enabled: "Vključeno"
+          groups: "Skupine"
+        chatbot:
+          places:
+            personal_messages: "Osebna sporočila"
+            chat_direct_messages: "Sporočila klepeta"
+            none: "Ni na voljo"
         no_agent: "Ni nastavljeno"
         no_groups: "Brez"
         edit: "Nastavitve"
-        expand_list:
-          one: "(%{count} več)"
-          two: "(%{count} več)"
-          few: "(%{count} več)"
-          other: "(%{count} več)"
-        collapse_list: "(manj)"
         nav:
           enabled: "Vključeno"
         filters:
-          all: "Vsi"
           reset: "Ponastavi"
+        sentiment:
+          enabled: "Vključeno"
         search:
           name: "Išči"
         image_caption:
@@ -77,7 +90,18 @@ sl:
       layout:
         table: "Tabela"
       translations:
-        category_scope: "Kategorije"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            label: "Osebna sporočila"
+            choices:
+              none: "Brez"
+              all: "Vsi"
+          content_localization_language_switcher:
+            choices:
+              none: "Nihče"
+              all: "Vsi"
         model_progress:
           detail:
             columns:
@@ -92,6 +116,8 @@ sl:
               title: "Kategorije"
             tag:
               title: "Oznake"
+        admin_actions:
+          enabled: "Vključeno"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -116,6 +142,8 @@ sl:
             other: "%{count} prispevkov"
       spam:
         short_title: "Neželeno"
+        no_llm_selected: "Brez"
+        no_decision_model_selected: "Brez"
         last_seven_days: "Zadnjih 7 dni"
         enable: "Omogoči"
         test_modal:
@@ -133,8 +161,6 @@ sl:
         successful: "Uspešno"
         failed: "Spodletelo"
         unknown: "Neznano"
-        topic_id: "ID teme"
-        post_id: "ID prispevka"
         time: "Čas"
         when: "Kdaj"
         request: "Zahteva"
@@ -145,8 +171,7 @@ sl:
         post_short: "Prispevek %{id}"
         duration: "Trajanje"
         actions: "Akcije"
-        filters:
-          title: "Filtri"
+        view_details: "Podrobnosti"
         periods:
           day: "Zadnjih 24 ur"
           week: "Zadnjih 7 dni"
@@ -203,6 +228,11 @@ sl:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Vdelovanje"
+      decision_models:
+        no_preset: "Brez"
+        display_name: "Ime"
+        edit: "Uredi"
+        delete: "Izbriši"
       mcp_servers:
         name: "Ime"
         description: "Opis"
@@ -214,6 +244,14 @@ sl:
         delete: "Izbriši"
         tools_modal:
           required: "Zahtevano"
+      models:
+        name: "Ime"
+        type: "Tip"
+        edit: "Uredi"
+        types:
+          embedding: "Vdelovanje"
+        filters:
+          all: "Vse vrste"
       llms:
         display_name: "Ime"
         vision_modes:
@@ -264,6 +302,14 @@ sl:
         providers:
           google: "Google"
           fake: "Po meri"
+      ai_artifact:
+        editor:
+          version: "Verzija"
+          default: "Privzeto"
+          apply: "Uporabi"
+        share: "Deli"
+        filter_all: "Vsi"
+        filter_standalone: "Samostojni"
       ai_bot:
         debug_ai_modal:
           duration_label: "Trajanje:"
@@ -286,9 +332,20 @@ sl:
             category: "Kategorija"
           table:
             total_count: "Skupaj"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
+        tabs:
+          topics: "Tem"
+          messages: "Zasebna sporočila"
       discobot_discoveries:
-        regular_results: "Tem"
-        collapse: "Skrči"
-        tooltip:
-          actions:
-            disable: "Onemogoči"
+        legacy:
+          regular_results: "Tem"
+          collapse: "Skrči"
+          tooltip:
+            actions:
+              disable: "Onemogoči"
+        search_messages: "Zasebna sporočila"

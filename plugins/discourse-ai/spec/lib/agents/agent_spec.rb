@@ -6,10 +6,6 @@ module FakeExternalPlugin
       { name: "fake_external_tool", description: "A fake tool", parameters: [] }
     end
 
-    def self.custom?
-      true
-    end
-
     def self.name
       "fake_external_tool"
     end
@@ -283,7 +279,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
   end
 
   describe "available agents" do
-    it "includes all agents by default" do
+    it "includes enabled agents by default" do
       Group.refresh_automatic_groups!
 
       SiteSetting.ai_google_custom_search_api_key = "abc"
@@ -305,12 +301,16 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
-        DiscourseAi::Agents::AskAiQueryRewriter,
-        DiscourseAi::Agents::AskAiSynthesis,
         DiscourseAi::Agents::GithubHelper,
         DiscourseAi::Agents::Researcher,
         DiscourseAi::Agents::SettingsExplorer,
         DiscourseAi::Agents::SqlHelper,
+      )
+
+      expect(agents).not_to include(
+        DiscourseAi::Agents::AskAiQueryRewriter,
+        DiscourseAi::Agents::AskAiSynthesis,
+        DiscourseAi::Agents::AskAiReporter,
       )
 
       # it should allow staff access to WebArtifactCreator
@@ -325,13 +325,17 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
-        DiscourseAi::Agents::AskAiQueryRewriter,
-        DiscourseAi::Agents::AskAiSynthesis,
         DiscourseAi::Agents::GithubHelper,
         DiscourseAi::Agents::Researcher,
         DiscourseAi::Agents::SettingsExplorer,
         DiscourseAi::Agents::SqlHelper,
         DiscourseAi::Agents::WebArtifactCreator,
+      )
+
+      expect(admin_agents).not_to include(
+        DiscourseAi::Agents::AskAiQueryRewriter,
+        DiscourseAi::Agents::AskAiSynthesis,
+        DiscourseAi::Agents::AskAiReporter,
       )
 
       # omits agents if key is missing
@@ -354,8 +358,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
-        DiscourseAi::Agents::AskAiQueryRewriter,
-        DiscourseAi::Agents::AskAiSynthesis,
         DiscourseAi::Agents::GithubHelper,
       )
 
@@ -376,8 +378,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
-        DiscourseAi::Agents::AskAiQueryRewriter,
-        DiscourseAi::Agents::AskAiSynthesis,
         DiscourseAi::Agents::GithubHelper,
       )
     end
@@ -421,52 +421,70 @@ RSpec.describe DiscourseAi::Agents::Agent do
       DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
         entry[:value][:module_name] == :test_module
       end
+      DiscoursePluginRegistry._raw_external_ai_tools.reject! do |entry|
+        entry[:plugin] == fake_plugin
+      end
       # remove fake entries from the registry
       reset_external_registry!
     end
 
-    it "adds the external agent to system_agents" do
-      register_fake_feature
+    it "registers standalone tools without an agent" do
+      DiscourseAi.register_tools([FakeExternalPlugin::FakeExternalTool], plugin: fake_plugin)
+
+      expect(described_class.external_tools).to include(FakeExternalPlugin::FakeExternalTool)
+      expect(AiAgent.new(tools: ["FakeExternalTool"]).class_instance.new.tools).to eq(
+        [FakeExternalPlugin::FakeExternalTool],
+      )
+    end
+
+    it "raises when two plugins register tools with the same class name" do
+      impostor = Class.new(DiscourseAi::Agents::Tools::Tool)
+      impostor.define_singleton_method(:to_s) { "OtherPlugin::FakeExternalTool" }
+      DiscourseAi.register_tools(
+        [FakeExternalPlugin::FakeExternalTool, impostor],
+        plugin: fake_plugin,
+      )
+
+      2.times do
+        expect { described_class.external_tools }.to raise_error(
+          ArgumentError,
+          /FakeExternalTool.*already registered/,
+        )
+      end
+    end
+
+    it "raises when a tool name normalises to a built-in tool" do
+      %w[OtherPlugin::SearchTool OtherPlugin::Tags].each do |name|
+        reset_external_registry!
+        impostor = Class.new(DiscourseAi::Agents::Tools::Tool)
+        impostor.define_singleton_method(:to_s) { name }
+        DiscourseAi.register_tools([impostor], plugin: fake_plugin)
+
+        expect { described_class.external_tools }.to raise_error(
+          ArgumentError,
+          /#{name.demodulize}.*built-in/,
+        )
+
+        DiscoursePluginRegistry._raw_external_ai_tools.reject! do |entry|
+          entry[:plugin] == fake_plugin
+        end
+      end
+    end
+
+    it "registers an external agent once under a stable id, with its tools" do
+      register_fake_feature(feature: :feature_one)
+      register_fake_feature(feature: :feature_two)
 
       expected_id = described_class.external_agent_id(FakeExternalAgent)
       expect(described_class.system_agents[FakeExternalAgent]).to eq(expected_id)
-    end
-
-    it "makes the external agent discoverable by ID" do
-      register_fake_feature
-
-      expected_id = described_class.external_agent_id(FakeExternalAgent)
       expect(described_class.system_agents_by_id[expected_id]).to eq(FakeExternalAgent)
-    end
-
-    it "registers external tools for name-based lookup" do
-      register_fake_feature
-
-      expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
-        FakeExternalPlugin::FakeExternalTool,
-      )
-    end
-
-    it "rebuilds external tool lookup when the cache is partially reset" do
-      register_fake_feature
-
-      expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
-        FakeExternalPlugin::FakeExternalTool,
-      )
+      expect(FakeExternalAgent.new.available_tools).to include(FakeExternalPlugin::FakeExternalTool)
 
       described_class.instance_variable_set(:@external_tools_by_name, nil)
 
       expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
         FakeExternalPlugin::FakeExternalTool,
       )
-    end
-
-    it "includes external tools in the agent's available_tools" do
-      register_fake_feature
-
-      instance = FakeExternalAgent.new
-      tool_names = instance.available_tools.map { |t| t.signature[:name] }
-      expect(tool_names).to include("fake_external_tool")
     end
 
     it "lets an external agent opt into a bot user" do
@@ -480,27 +498,10 @@ RSpec.describe DiscourseAi::Agents::Agent do
       expect(default.can_have_bot_user?).to eq(false)
     end
 
-    it "produces one agent entry when two features share the same agent_klass" do
-      register_fake_feature(feature: :feature_one)
-      register_fake_feature(feature: :feature_two)
-
-      matching = described_class.system_agents.select { |klass, _| klass == FakeExternalAgent }
-      expect(matching.size).to eq(1)
-    end
-
     it "does not overwrite a builtin agent when registered as an external agent_klass" do
       builtin_id = described_class.system_agents[DiscourseAi::Agents::SqlHelper]
 
-      DiscoursePluginRegistry.register_external_ai_feature(
-        {
-          module_name: :test_module,
-          feature: :sql_feature,
-          agent_klass: DiscourseAi::Agents::SqlHelper,
-          enabled_by_setting: nil,
-        },
-        fake_plugin,
-      )
-      reset_external_registry!
+      register_fake_feature(feature: :sql_feature, agent_klass: DiscourseAi::Agents::SqlHelper)
 
       expect(described_class.system_agents[DiscourseAi::Agents::SqlHelper]).to eq(builtin_id)
     end

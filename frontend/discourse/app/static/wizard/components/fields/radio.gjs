@@ -45,12 +45,12 @@ export default class Radio extends Component {
               @outletArgs={{lazyHash disabled=choice.disabled}}
             >
               <input
-                type="radio"
-                name={{@field.id}}
-                value={{choice.id}}
+                checked={{choice.selected}}
                 class="wizard-container__radio"
                 disabled={{choice.disabled}}
-                checked={{choice.selected}}
+                name={{@field.id}}
+                type="radio"
+                value={{choice.id}}
                 {{on "change" (withEventValue this.selectionChanged)}}
               />
               <span class="wizard-container__radio-label">

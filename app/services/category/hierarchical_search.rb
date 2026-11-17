@@ -11,7 +11,9 @@ class Category::HierarchicalSearch
 
     validates :page, numericality: { greater_than: 0 }
 
-    after_validation { self.term = term.to_s.strip }
+    after_validation do
+      self.term = term.to_s.strip[0, CategoriesController::MAX_CATEGORY_SEARCH_TERM_LENGTH].rstrip
+    end
 
     def limit = CategoriesController::MAX_CATEGORIES_LIMIT
     def offset = (page - 1) * limit

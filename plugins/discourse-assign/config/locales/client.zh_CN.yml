@@ -7,6 +7,11 @@
 zh_CN:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            assign:
+              assign: "分配/取消分配主题或帖子。"
       site_settings:
         categories:
           discourse_assign: "Discourse Assign"
@@ -202,10 +207,15 @@ zh_CN:
       node_unavailable:
         requires_assign: "需要启用 Assign 插件"
       nodes:
+        "action:assign_topic": "分配主题或帖子"
+        "action:check_assignment": "检查分配"
         "trigger:assigned": "已指定"
         "trigger:unassigned": "已取消指定"
       node_descriptions:
+        "action:assign_topic": "分配或取消分配主题或帖子"
+        "action:check_assignment": "检查用户或用户组是否已分配给某个主题或帖子"
         "trigger:assigned": "指定话题或帖子时触发"
+        "trigger:unassigned": "当主题或帖子未被分配时触发"
       assign_topic:
         resource: "资源"
         resources:
@@ -220,6 +230,7 @@ zh_CN:
         assignee: "受理人"
         replace_existing: "替换现有任务"
       check_assignment:
+        target_type: "目标类型"
         target_types:
           topic: "话题"
           post: "帖子"

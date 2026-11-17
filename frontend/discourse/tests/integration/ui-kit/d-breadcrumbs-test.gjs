@@ -1,5 +1,7 @@
+import Service from "@ember/service";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { setPrefix } from "discourse/lib/get-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DBreadcrumbsContainer from "discourse/ui-kit/d-breadcrumbs-container";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
@@ -12,8 +14,8 @@ module("Integration | ui-kit | DBreadcrumbs", function (hooks) {
     await render(
       <template>
         <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-        <DBreadcrumbsItem @path="/about" @label={{i18n "about.simple_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
+        <DBreadcrumbsItem @label={{i18n "about.simple_title"}} @path="/about" />
       </template>
     );
 
@@ -26,10 +28,10 @@ module("Integration | ui-kit | DBreadcrumbs", function (hooks) {
     await render(
       <template>
         <DBreadcrumbsContainer
-          @additionalLinkClasses="some-class"
           @additionalItemClasses="other-class"
+          @additionalLinkClasses="some-class"
         />
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       </template>
     );
 
@@ -45,9 +47,9 @@ module("Integration | ui-kit | DBreadcrumbs", function (hooks) {
     await render(
       <template>
         <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @path="/admin" @label="Admin" />
-        <DBreadcrumbsItem @path="/admin/backups" @label="Backups" />
-        <DBreadcrumbsItem @path="/admin/backups/logs" @label="Logs" />
+        <DBreadcrumbsItem @label="Admin" @path="/admin" />
+        <DBreadcrumbsItem @label="Backups" @path="/admin/backups" />
+        <DBreadcrumbsItem @label="Logs" @path="/admin/backups/logs" />
       </template>
     );
 
@@ -60,11 +62,55 @@ module("Integration | ui-kit | DBreadcrumbs", function (hooks) {
       <template>
         <DBreadcrumbsContainer />
         <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       </template>
     );
 
     assert.dom(".d-breadcrumbs").exists({ count: 2 });
     assert.dom(".d-breadcrumbs .d-breadcrumbs__item").exists({ count: 2 });
+  });
+
+  module("an item without @route or @path", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.owner.unregister("service:router");
+      this.owner.register(
+        "service:router",
+        class extends Service {
+          currentURL = "/admin/plugins/gadgets";
+        }
+      );
+    });
+
+    test("links to the current page", async function (assert) {
+      await render(
+        <template>
+          <DBreadcrumbsContainer />
+          <DBreadcrumbsItem @label="Admin" @path="/admin" />
+          <DBreadcrumbsItem @label="Gadgets" />
+        </template>
+      );
+
+      assert
+        .dom(".d-breadcrumbs li:first-child .d-breadcrumbs__link")
+        .hasAttribute("href", "/admin", "an item with @path links there");
+      assert
+        .dom(".d-breadcrumbs li:last-child .d-breadcrumbs__link")
+        .hasAttribute("href", "/admin/plugins/gadgets");
+    });
+
+    test("links to the current page on a subfolder install", async function (assert) {
+      setPrefix("/forum");
+
+      await render(
+        <template>
+          <DBreadcrumbsContainer />
+          <DBreadcrumbsItem @label="Gadgets" />
+        </template>
+      );
+
+      assert
+        .dom(".d-breadcrumbs .d-breadcrumbs__link")
+        .hasAttribute("href", "/forum/admin/plugins/gadgets");
+    });
   });
 });

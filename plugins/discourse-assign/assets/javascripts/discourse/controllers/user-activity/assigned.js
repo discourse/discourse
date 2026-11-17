@@ -7,11 +7,20 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
+import {
+  assignedListQueryParams,
+  assignedListRequestParams,
+} from "../../lib/assigned-list-query-params.js";
 
 export default class UserActivityAssigned extends UserTopicsList {
   @controller user;
 
-  queryParams = ["order", "ascending", "search"];
+  queryParams = [
+    "order",
+    "ascending",
+    "search",
+    ...Object.keys(assignedListQueryParams()),
+  ];
   order = "";
   ascending = false;
   search = "";
@@ -31,22 +40,18 @@ export default class UserActivityAssigned extends UserTopicsList {
     );
   }
 
-  _setSearchTerm(searchTerm) {
-    this.set("search", searchTerm);
-    this.refreshModel();
-  }
-
   refreshModel() {
     this.set("loading", true);
-    this.store
-      .findFiltered("topicList", {
-        filter: this.model.filter,
-        params: {
-          order: this.order,
-          ascending: this.ascending,
-          search: this.search,
-        },
-      })
+
+    const params = assignedListRequestParams(this, {
+      ...this.model.params,
+      order: this.order,
+      ascending: this.ascending,
+      search: this.search,
+    });
+
+    return this.store
+      .findFiltered("topicList", { filter: this.model.filter, params })
       .then((result) => this.set("model", result))
       .finally(() => {
         this.set("loading", false);
@@ -67,5 +72,10 @@ export default class UserActivityAssigned extends UserTopicsList {
   @action
   onChangeFilter(value) {
     discourseDebounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
+  }
+
+  _setSearchTerm(searchTerm) {
+    this.set("search", searchTerm);
+    this.refreshModel();
   }
 }

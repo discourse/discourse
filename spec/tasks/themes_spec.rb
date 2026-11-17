@@ -229,7 +229,7 @@ RSpec.describe "tasks/themes" do
 
     after { `rm -fr #{initial_repo}` }
 
-    it "should retain a theme's settings and not update the theme when a theme's setting fails to save" do
+    it "preserves the theme and its settings when a setting fails to save" do
       theme.update_setting(:some_setting, "some setting value")
 
       migration_content = <<~JS
@@ -280,7 +280,7 @@ RSpec.describe "tasks/themes" do
       expect(theme.settings[:string_setting].value).to eq("default value")
     end
 
-    it "should not update the theme if a theme setting migration fails during the update" do
+    it "preserves the theme when a setting migration fails during the update" do
       migration_content = <<~JS
       export default function migrate(settings) {
         throw "error";
@@ -306,6 +306,17 @@ RSpec.describe "tasks/themes" do
       expect(theme.remote_theme.commits_behind).to eq(0)
       expect(theme.remote_theme.remote_version).to eq(original_remote_version)
       expect(theme.remote_theme.local_version).to eq(original_local_version)
+    end
+
+    it "skips placeholders whose installation hasn't been finished" do
+      placeholder = Fabricate(:theme_with_remote_url, name: "private-theme")
+
+      stdout = nil
+      stderr = capture_stderr { stdout = capture_stdout { invoke_rake_task("themes:update") } }
+
+      expect(stderr).to be_blank
+      expect(stdout).to include("skipping, installation not finished")
+      expect(placeholder.remote_theme.reload.local_version).to be_nil
     end
   end
 end

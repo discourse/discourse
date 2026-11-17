@@ -4,13 +4,13 @@ const callbacks = [];
 
 /**
  * @typedef {Object} OnBeforeCategoryTypesChangeContext
- * @property {Object[]} nextTypes - Normalized category type objects after the empty-to-discussion rule
+ * @property {import("discourse/services/category-type-chooser").CategoryType[]} nextTypes - Normalized category type objects after the empty-to-discussion rule
  *   (id, name, description, icon).
- * @property {Object[]} previousTypes - Snapshot of the selection before this change (shallow-copied
+ * @property {import("discourse/services/category-type-chooser").CategoryType[]} previousTypes - Snapshot of the selection before this change (shallow-copied
  *   array, same object references as before).
- * @property {object} category - The category being edited.
- * @property {Object} form - The Form API object for the edit category form.
- * @property {Object} [transientData] - Transient data from the Form wrapper, when available.
+ * @property {import("discourse/models/category").default} category - The category being edited.
+ * @property {{ set: (name: string, value: unknown) => Promise<void>, setProperties: (values: Record<string, unknown>) => Promise<void> } & Record<string, unknown>} form - The Form API object for the edit category form.
+ * @property {Record<string, unknown>} [transientData] - Transient data from the Form wrapper, when available.
  */
 
 /**

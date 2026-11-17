@@ -110,15 +110,33 @@ module PrettyText
       end
     end
 
-    def hashtag_lookup(slug, cooking_user_id, types_in_priority_order)
-      # Missing or invalid user IDs cook with anonymous permissions. Callers that
-      # need wider access must pass an explicit trusted user_id.
-      cooking_user = User.find_by(id: cooking_user_id)
-
+    def hashtag_lookup(slug, cooking_user_ids, types_in_priority_order)
       types_in_priority_order =
         types_in_priority_order.select do |type|
           HashtagAutocompleteService.data_source_types.include?(type)
         end
+
+      cooking_user_ids = [cooking_user_ids] if !cooking_user_ids.is_a?(Array)
+
+      found_hashtags =
+        cooking_user_ids.uniq.map do |cooking_user_id|
+          lookup_hashtag(slug, cooking_user_id, types_in_priority_order)
+        end
+
+      found_hashtags.first if found_hashtags.uniq.size == 1
+    end
+
+    def get_current_user(user_id)
+      return unless user_id.is_a?(Integer)
+      { staff: User.where(id: user_id).where("moderator OR admin").exists? }
+    end
+
+    private
+
+    def lookup_hashtag(slug, cooking_user_id, types_in_priority_order)
+      # Missing or invalid user IDs cook with anonymous permissions. Callers that
+      # need wider access must pass an explicit trusted user_id.
+      cooking_user = User.find_by(id: cooking_user_id)
 
       result =
         HashtagAutocompleteService.new(Guardian.new(cooking_user)).lookup(
@@ -134,11 +152,6 @@ module PrettyText
         end
       end
       found_hashtag
-    end
-
-    def get_current_user(user_id)
-      return unless user_id.is_a?(Integer)
-      { staff: User.where(id: user_id).where("moderator OR admin").exists? }
     end
   end
 end

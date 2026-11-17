@@ -5,7 +5,7 @@ class EmbedController < ApplicationController
 
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
-  before_action :prepare_embeddable, except: [:info]
+  before_action :prepare_embeddable, except: %i[info status]
   before_action :ensure_api_request, only: [:info]
 
   layout "embed"
@@ -120,6 +120,8 @@ class EmbedController < ApplicationController
       @reply_count = 0 if @reply_count < 0
       @posts_left = @reply_count - SiteSetting.embed_post_limit if @reply_count >
         SiteSetting.embed_post_limit
+
+      discourse_expires_in 1.minute
     elsif embed_url.present?
       Jobs.enqueue(
         :retrieve_topic,
@@ -127,10 +129,26 @@ class EmbedController < ApplicationController
         embed_url: embed_url,
         referer: request.env["HTTP_REFERER"],
       )
+      response.headers["Cache-Control"] = "no-cache"
       render "loading"
     end
+  end
 
-    discourse_expires_in 1.minute
+  def status
+    embed_url = params.require(:embed_url)
+
+    unless EmbeddableHost.url_allowed?(embed_url)
+      raise Discourse::InvalidAccess.new("invalid embed host")
+    end
+
+    topic_id = TopicEmbed.topic_id_for_embed(embed_url)
+    topic = topic_id.present? ? Topic.find_by(id: topic_id) : nil
+    topic_id = nil if topic.nil? || !guardian.can_see?(topic)
+
+    # Short shared cache so a burst of concurrent pollers (thundering herd) is
+    # served from the anonymous response cache instead of the database.
+    discourse_expires_in 2.seconds
+    render json: { topic_id: topic_id }
   end
 
   def info

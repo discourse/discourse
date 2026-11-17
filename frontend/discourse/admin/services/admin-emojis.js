@@ -7,7 +7,7 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
-import { triggerBlobDownload } from "discourse/lib/download-blob";
+import { deliverBlobDownload } from "discourse/lib/download-blob";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Session from "discourse/models/session";
@@ -73,7 +73,7 @@ export default class AdminEmojis extends Service {
         return;
       }
 
-      triggerBlobDownload(await response.blob(), {
+      await deliverBlobDownload(await response.blob(), {
         fallbackFilename: "emojis.zip",
         contentDisposition: response.headers.get("Content-Disposition"),
       });

@@ -6,27 +6,27 @@ export default <template>
   <div class="current-style {{if @controller.maximized 'maximized'}}">
     <div class="wrapper">
       <AdminThemeEditor
-        @theme={{@controller.model}}
-        @editRouteName={{@controller.editRouteName}}
-        @showRouteName={{@controller.showRouteName}}
-        @currentTargetName={{@controller.currentTargetName}}
-        @fieldName={{@controller.fieldName}}
-        @fieldAdded={{@controller.fieldAdded}}
-        @maximized={{@controller.maximized}}
-        @goBack={{@controller.goBack}}
-        @save={{@controller.save}}
         class="editor-container"
+        @currentTargetName={{@controller.currentTargetName}}
+        @editRouteName={{@controller.editRouteName}}
+        @fieldAdded={{@controller.fieldAdded}}
+        @fieldName={{@controller.fieldName}}
+        @goBack={{@controller.goBack}}
+        @maximized={{@controller.maximized}}
+        @save={{@controller.save}}
+        @showRouteName={{@controller.showRouteName}}
+        @theme={{@controller.model}}
       />
 
       <div class="admin-footer">
         <div class="status-actions">
           {{#unless @controller.model.changed}}
             <a
+              class="preview-link"
               href={{@controller.previewUrl}}
               rel="noopener noreferrer"
-              title={{i18n "admin.customize.explain_preview"}}
-              class="preview-link"
               target="_blank"
+              title={{i18n "admin.customize.explain_preview"}}
             >
               {{i18n "admin.customize.preview"}}
             </a>
@@ -35,10 +35,10 @@ export default <template>
 
         <div class="buttons">
           <DButton
+            class="btn-primary save-theme"
             @action={{@controller.save}}
             @disabled={{@controller.saveDisabled}}
             @translatedLabel={{@controller.saveButtonText}}
-            class="btn-primary save-theme"
           />
         </div>
       </div>

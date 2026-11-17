@@ -29,10 +29,10 @@ export default class GroupNavigation extends Component {
       {{#each @tabs as |tab|}}
         <li>
           <LinkTo
-            @route={{tab.route}}
-            @model={{@group}}
-            title={{tab.message}}
             class={{tab.name}}
+            title={{tab.message}}
+            @model={{@group}}
+            @route={{tab.route}}
           >
             {{#if tab.icon}}
               {{dIcon tab.icon}}
@@ -47,9 +47,9 @@ export default class GroupNavigation extends Component {
         </li>
       {{/each}}
       <PluginOutlet
+        @connectorTagName="li"
         @name="group-reports-nav-item"
         @outletArgs={{lazyHash group=@group}}
-        @connectorTagName="li"
       />
     </DHorizontalOverflowNav>
   </template>

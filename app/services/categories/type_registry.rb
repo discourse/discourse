@@ -87,6 +87,12 @@ module Categories
         end
       end
 
+      # Every category is a discussion category unless configured otherwise,
+      # so that type never has a count of its own.
+      def configured_counts
+        counts.except(Categories::Types::Discussion.type_id)
+      end
+
       def non_discussion_category_ids
         types
           .values

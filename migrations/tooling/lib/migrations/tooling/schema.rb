@@ -151,6 +151,11 @@ module Migrations
 
         raise ConfigError, "Table '#{table_name}' is already configured" if find_table(table_name)
 
+        if ignored_tables&.all_other_tables?
+          raise ConfigError,
+                "Table '#{table_name}' is already ignored via `all_other_tables` in ignored.rb"
+        end
+
         ActiveRecord::Base.with_connection do |connection|
           if connection.tables.exclude?(table_name)
             raise ConfigError, "Table '#{table_name}' does not exist in the database"

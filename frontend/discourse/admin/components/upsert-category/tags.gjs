@@ -38,53 +38,53 @@ export default class UpsertCategoryTags extends Component {
       @type="input-number"
       as |field|
     >
-      <field.Control min="0" id="category-minimum-tags" />
+      <field.Control id="category-minimum-tags" min="0" />
     </@form.Field>
 
     <@form.Field
+      @format="max"
       @name="allowed_tags"
       @title={{if
         @category.id
         (i18n "category.tags_allowed_tags" categoryName=@category.name)
         (i18n "category.tags_allowed_tags_new_category")
       }}
-      @format="max"
       @type="tag-chooser"
       as |field|
     >
       <field.Control
-        @showAllTags={{true}}
         @excludeSynonyms={{true}}
-        @unlimited={{true}}
         @placeholder="category.tags_placeholder"
+        @showAllTags={{true}}
+        @unlimited={{true}}
       />
     </@form.Field>
 
     <@form.Container
       @direction="column"
+      @format="full"
       @optional={{true}}
       @title={{if
         @category.id
         (i18n "category.tags_allowed_tag_groups" categoryName=@category.name)
         (i18n "category.tags_allowed_tag_groups_new_category")
       }}
-      @format="full"
     >
       <TagGroupChooser
         @id="category-allowed-tag-groups"
-        @tagGroups={{this.allowedTagGroups}}
         @onChange={{this.onAllowedTagGroupsChange}}
+        @tagGroups={{this.allowedTagGroups}}
       />
-      <LinkTo @route="tagGroups" class="manage-tag-groups">
+      <LinkTo class="manage-tag-groups" @route="tagGroups">
         {{i18n "category.manage_tag_groups_link"}}
       </LinkTo>
     </@form.Container>
 
     <@form.Field
+      @disabled={{this.disableAllowGlobalTags}}
+      @format="max"
       @name="allow_global_tags"
       @title={{i18n "category.allow_global_tags_label"}}
-      @format="max"
-      @disabled={{this.disableAllowGlobalTags}}
       @type="checkbox"
       as |field|
     >
@@ -102,8 +102,8 @@ export default class UpsertCategoryTags extends Component {
             <collection.Field
               @name="min_count"
               @title={{i18n "category.required_tag_group.min_count"}}
-              @validation="required"
               @type="input-number"
+              @validation="required"
               as |field|
             >
               <field.Control min="1" />
@@ -114,18 +114,18 @@ export default class UpsertCategoryTags extends Component {
             <collection.Field
               @name="name"
               @title={{i18n "category.required_tag_group.tag_group"}}
-              @validation="required"
               @type="custom"
+              @validation="required"
               as |field|
             >
               <field.Control>
                 <TagGroupChooser
-                  @tagGroups={{if field.value (array field.value) (array)}}
                   @onChange={{fn this.onTagGroupFieldChange field}}
                   @options={{hash
                     maximum=1
                     filterPlaceholder="category.required_tag_group.placeholder"
                   }}
+                  @tagGroups={{if field.value (array field.value) (array)}}
                 />
               </field.Control>
             </collection.Field>
@@ -134,9 +134,9 @@ export default class UpsertCategoryTags extends Component {
           <row.Col @size={{1}}>
             <@form.Button
               class="btn-danger delete-required-tag-group"
+              @action={{fn collection.remove index}}
               @icon="trash-can"
               @title="category.required_tag_group.delete"
-              @action={{fn collection.remove index}}
             />
           </row.Col>
         </@form.Row>
@@ -144,13 +144,13 @@ export default class UpsertCategoryTags extends Component {
 
       <@form.Button
         class="btn-default add-required-tag-group"
-        @icon="plus"
-        @label="category.required_tag_group.add"
         @action={{fn
           @form.addItemToCollection
           "required_tag_groups"
           (hash min_count=1)
         }}
+        @icon="plus"
+        @label="category.required_tag_group.add"
       />
     </@form.Section>
   </template>

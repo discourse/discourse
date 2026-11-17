@@ -296,6 +296,10 @@ module Discourse
     end
   end
 
+  # When scoped API credentials ask for the HTML application layout
+  class ScopedApiKeyHtmlNotAllowed < StandardError
+  end
+
   # When something they want is not found
   class NotFound < StandardError
     attr_reader :status
@@ -329,6 +333,11 @@ module Discourse
 
   # When read-only mode is enabled
   class ReadOnly < StandardError
+  end
+
+  # Raised when the site is archived (site_archived setting) and a write is
+  # attempted from an action not declared with `allow_when_archived`.
+  class SiteArchived < StandardError
   end
 
   # Cross site request forgery
@@ -377,29 +386,35 @@ module Discourse
   def self.activate_plugins!
     @plugins = []
     @plugins_by_name = {}
-    Plugin::Instance
-      .find_all("#{Rails.root.join("plugins")}")
-      .each do |p|
-        v = p.metadata.required_version || Discourse::VERSION::STRING
-        if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
-          p.activate!
-          @plugins << p
-          @plugins_by_name[p.name] = p
+    plugins =
+      Plugin::Instance
+        .find_all("#{Rails.root.join("plugins")}")
+        .select do |p|
+          v = p.metadata.required_version || Discourse::VERSION::STRING
+          next true if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
 
-          # The plugin directory name and metadata name should match, but that
-          # is not always the case
-          dir_name = p.path.split("/")[-2]
-          if p.name != dir_name
-            STDERR.puts "Plugin name is '#{p.name}', but plugin directory is named '#{dir_name}'"
-            # Plugins are looked up by directory name in SiteSettingExtension
-            # because SiteSetting.load_settings uses directory name as plugin
-            # name. We alias the two names just to make sure the look up works
-            @plugins_by_name[dir_name] = p
-          end
-        else
           STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
+          false
         end
+
+    PluginGem.activate_gemfiles(plugins)
+
+    plugins.each do |p|
+      p.activate!
+      @plugins << p
+      @plugins_by_name[p.name] = p
+
+      # The plugin directory name and metadata name should match, but that
+      # is not always the case
+      dir_name = p.path.split("/")[-2]
+      if p.name != dir_name
+        STDERR.puts "Plugin name is '#{p.name}', but plugin directory is named '#{dir_name}'"
+        # Plugins are looked up by directory name in SiteSettingExtension
+        # because SiteSetting.load_settings uses directory name as plugin
+        # name. We alias the two names just to make sure the look up works
+        @plugins_by_name[dir_name] = p
       end
+    end
     DiscourseEvent.trigger(:after_plugin_activation)
   end
 
@@ -495,6 +510,8 @@ module Discourse
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
+    request_path = args[:request]&.path&.delete_prefix(Discourse.base_path)&.delete_prefix("/")
+
     assets = []
 
     plugins.each do |plugin|
@@ -508,6 +525,8 @@ module Discourse
             importmap_name: "discourse/plugins/#{plugin.name}",
             external_plugin_imports:
               Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
+            route_bundle:
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "main", request_path),
           }
         end
       end
@@ -530,6 +549,8 @@ module Discourse
             type_module: true,
             external_plugin_imports:
               Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
+            route_bundle:
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "admin", request_path),
           }
         end
       end
@@ -840,6 +861,11 @@ module Discourse
 
             @mutex.synchronize do
               @dbs.each do |db|
+                if !RailsMultisite::ConnectionManagement.has_db?(db)
+                  @dbs.delete(db)
+                  next
+                end
+
                 RailsMultisite::ConnectionManagement.with_connection(db) do
                   @dbs.delete(db) if !Discourse.redis.expire(key, ttl)
                 end
@@ -989,6 +1015,11 @@ module Discourse
     user ||= system_user || User.admins.real.order(:id).first
   end
 
+  # A global override bypasses the write-time name-to-id conversion.
+  def self.site_contact_group
+    Group.find_by_id_or_name(SiteSetting.site_contact_group_name)
+  end
+
   SYSTEM_USER_ID = -1
 
   def self.system_user
@@ -1031,15 +1062,14 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
+    DiscourseVips.before_fork
+
     if GlobalSetting.mini_racer_single_threaded
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
     else
       # V8 does not support forking, make sure all contexts are disposed
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
     end
-
-    # get rid of rubbish so we don't share it
-    Process.warmup
   end
 
   # Called in web worker processes after fork to apply worker-specific
@@ -1070,6 +1100,8 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
+
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
@@ -1312,7 +1344,7 @@ module Discourse
         ActionviewPrecompiler.precompile
       end,
       Thread.new do
-        LetterAvatar.image_magick_version
+        LetterAvatar.version
         LetterAvatar.cleanup_old
       end,
       Thread.new { SvgSprite.core_svgs },
@@ -1357,8 +1389,8 @@ module Discourse
     Theme.expire_site_cache!
   end
 
-  def self.anonymous_locale(request)
-    locale = request.params[LOCALE_PARAM] if SiteSetting.set_locale_from_param
+  def self.anonymous_locale(request, include_param: true)
+    locale = request.params[LOCALE_PARAM] if include_param && SiteSetting.set_locale_from_param
     locale ||= locale_from_cookie(request)
     locale ||=
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header

@@ -6,7 +6,9 @@ RSpec.describe Chat::FlagMessage do
     it { is_expected.to validate_presence_of(:message_id) }
 
     it do
-      is_expected.to validate_inclusion_of(:flag_type_id).in_array(ReviewableScore.types.values)
+      eligible_flag_type_ids = Flag.enabled.applicable_to("Chat::Message").ids
+
+      is_expected.to validate_inclusion_of(:flag_type_id).in_array(eligible_flag_type_ids)
     end
   end
 
@@ -54,6 +56,30 @@ RSpec.describe Chat::FlagMessage do
           payload: {
             "message_cooked" => message_1.cooked,
           },
+        )
+      end
+    end
+
+    context "when the message was already flagged by the user" do
+      fab!(:current_user, :admin)
+
+      before { described_class.call(params:, **dependencies) }
+
+      it { is_expected.to fail_a_step(:flag_message) }
+    end
+
+    context "when the companion PM can't be created" do
+      fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+      let(:flag_type_id) { ReviewableScore.types[:notify_user] }
+      let(:message) { "Please review your message" }
+
+      before { message_1.user.user_option.update!(allow_private_messages: false) }
+
+      it "fails with the PM error" do
+        expect(result).to fail_a_step(:flag_message)
+        expect(result["result.step.flag_message"].error).to include(
+          I18n.t(:not_accepting_pms, username: message_1.user.username),
         )
       end
     end

@@ -1,15 +1,15 @@
 import { concat } from "@ember/helper";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import BlockExample from "../../examples/atoms/shortcut/block";
+import BlockExample from "../../examples/atoms/shortcut/block.gjs";
 import blockSource from "../../examples/atoms/shortcut/block?source=file";
-import KeyboardGateExample from "../../examples/atoms/shortcut/keyboard-gate";
+import KeyboardGateExample from "../../examples/atoms/shortcut/keyboard-gate.gjs";
 import keyboardGateSource from "../../examples/atoms/shortcut/keyboard-gate?source=file";
-import KeycapsExample from "../../examples/atoms/shortcut/keycaps";
+import KeycapsExample from "../../examples/atoms/shortcut/keycaps.gjs";
 import keycapsSource from "../../examples/atoms/shortcut/keycaps?source=file";
-import SpellingsExample from "../../examples/atoms/shortcut/spellings";
+import SpellingsExample from "../../examples/atoms/shortcut/spellings.gjs";
 import spellingsSource from "../../examples/atoms/shortcut/spellings?source=file";
-import StringFormExample from "../../examples/atoms/shortcut/string-form";
+import StringFormExample from "../../examples/atoms/shortcut/string-form.gjs";
 import stringFormSource from "../../examples/atoms/shortcut/string-form?source=file";
 
 const KEY = "styleguide.sections.shortcut";
@@ -20,50 +20,50 @@ export default <template>
   </p>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".keycaps_example")}}
-    @description={{i18n (concat KEY ".keycaps_description")}}
-    @note={{i18n (concat KEY ".keycaps_note")}}
-    @kind="component"
     @code={{keycapsSource}}
+    @description={{i18n (concat KEY ".keycaps_description")}}
+    @kind="component"
+    @note={{i18n (concat KEY ".keycaps_note")}}
+    @title={{i18n (concat KEY ".keycaps_example")}}
   >
     <KeycapsExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".block_example")}}
-    @description={{i18n (concat KEY ".block_description")}}
-    @tryThis={{i18n (concat KEY ".block_try_this")}}
-    @note={{i18n (concat KEY ".block_note")}}
-    @kind="component"
     @code={{blockSource}}
+    @description={{i18n (concat KEY ".block_description")}}
+    @kind="component"
+    @note={{i18n (concat KEY ".block_note")}}
+    @title={{i18n (concat KEY ".block_example")}}
+    @tryThis={{i18n (concat KEY ".block_try_this")}}
   >
     <BlockExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".string_form_example")}}
-    @description={{i18n (concat KEY ".string_form_description")}}
-    @tryThis={{i18n (concat KEY ".string_form_try_this")}}
     @code={{stringFormSource}}
+    @description={{i18n (concat KEY ".string_form_description")}}
+    @title={{i18n (concat KEY ".string_form_example")}}
+    @tryThis={{i18n (concat KEY ".string_form_try_this")}}
   >
     <StringFormExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".spellings_example")}}
+    @code={{spellingsSource}}
     @description={{i18n (concat KEY ".spellings_description")}}
     @note={{i18n (concat KEY ".spellings_note")}}
-    @code={{spellingsSource}}
+    @title={{i18n (concat KEY ".spellings_example")}}
   >
     <SpellingsExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".keyboard_gate_example")}}
-    @description={{i18n (concat KEY ".keyboard_gate_description")}}
-    @tryThis={{i18n (concat KEY ".keyboard_gate_try_this")}}
-    @note={{i18n (concat KEY ".keyboard_gate_note")}}
     @code={{keyboardGateSource}}
+    @description={{i18n (concat KEY ".keyboard_gate_description")}}
+    @note={{i18n (concat KEY ".keyboard_gate_note")}}
+    @title={{i18n (concat KEY ".keyboard_gate_example")}}
+    @tryThis={{i18n (concat KEY ".keyboard_gate_try_this")}}
   >
     <KeyboardGateExample />
   </StyleguideExample>

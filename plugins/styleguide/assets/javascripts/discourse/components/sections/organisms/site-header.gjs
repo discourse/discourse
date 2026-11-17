@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { inject as controller } from "@ember/controller";
-import SiteHeaderExample from "../../examples/organisms/site-header";
+import SiteHeaderExample from "../../examples/organisms/site-header.gjs";
 import siteHeaderSource from "../../examples/organisms/site-header?source=file";
-import SiteHeaderInTopicExample from "../../examples/organisms/site-header-in-topic";
+import SiteHeaderInTopicExample from "../../examples/organisms/site-header-in-topic.gjs";
 import siteHeaderInTopicSource from "../../examples/organisms/site-header-in-topic?source=file";
-import StyleguideExample from "../../styleguide-example";
+import StyleguideExample from "../../styleguide-example.gjs";
 
 export default class SiteHeaderStyleguideExample extends Component {
   @controller application;
@@ -14,13 +14,13 @@ export default class SiteHeaderStyleguideExample extends Component {
   }
 
   <template>
-    <StyleguideExample @title="site header" @code={{siteHeaderSource}}>
+    <StyleguideExample @code={{siteHeaderSource}} @title="site header">
       <SiteHeaderExample @sidebarEnabled={{this.sidebarEnabled}} />
     </StyleguideExample>
 
     <StyleguideExample
-      @title="site header - in topic - scrolled"
       @code={{siteHeaderInTopicSource}}
+      @title="site header - in topic - scrolled"
     >
       <SiteHeaderInTopicExample
         @sidebarEnabled={{this.sidebarEnabled}}

@@ -66,4 +66,22 @@ RSpec.describe BackupRestore::BackupFileHandler do
       location: BackupLocationSiteSetting::LOCAL,
     )
   end
+
+  it "rejects archives with unsupported file types" do
+    archive = File.join(BackupRestore::LocalBackupStore.base_directory, "symlinks.tar.gz")
+    FileUtils.mkdir_p(File.dirname(archive))
+
+    Dir.mktmpdir do |dir|
+      File.write(File.join(dir, "dump.sql"), "SELECT 1;")
+      File.symlink("dump.sql", File.join(dir, "link"))
+      Discourse::Utils.execute_command("tar", "-czf", archive, "-C", dir, ".")
+    end
+
+    Dir.mktmpdir do |root|
+      handler = described_class.new(logger, "symlinks.tar.gz", "default", root_tmp_directory: root)
+      expect { handler.decompress }.to raise_error(/unsupported file types/)
+    end
+  ensure
+    FileUtils.rm_f(archive)
+  end
 end

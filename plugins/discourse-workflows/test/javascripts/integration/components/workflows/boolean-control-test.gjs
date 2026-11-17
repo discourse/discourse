@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { click, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
@@ -38,27 +39,25 @@ module("Integration | Component | workflows boolean control", function (hooks) {
   });
 
   test("renders toggle in plain mode", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: false },
-      formApi: null,
-      schema: { type: "boolean", ui: { expression: true } },
-      registerApi: (api) => this.set("formApi", api),
-    });
+    const configuration = { enabled: false };
+    const schema = { type: "boolean", ui: { expression: true } };
+    const formApi = tracked(null);
+    const registerApi = (api) => (formApi.value = api);
 
     await render(
       <template>
         <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
+          @data={{configuration}}
+          @onRegisterApi={{registerApi}}
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{formApi.value}}
             @label="Enabled"
-            @schema={{this.schema}}
+            @schema={{schema}}
           />
         </Form>
       </template>
@@ -71,27 +70,25 @@ module("Integration | Component | workflows boolean control", function (hooks) {
   });
 
   test("switches to expression mode", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: false },
-      formApi: null,
-      schema: { type: "boolean", ui: { expression: true } },
-      registerApi: (api) => this.set("formApi", api),
-    });
+    const configuration = { enabled: false };
+    const schema = { type: "boolean", ui: { expression: true } };
+    const formApi = tracked(null);
+    const registerApi = (api) => (formApi.value = api);
 
     await render(
       <template>
         <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
+          @data={{configuration}}
+          @onRegisterApi={{registerApi}}
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{formApi.value}}
             @label="Enabled"
-            @schema={{this.schema}}
+            @schema={{schema}}
           />
         </Form>
       </template>
@@ -103,31 +100,29 @@ module("Integration | Component | workflows boolean control", function (hooks) {
 
     assert.dom(".form-kit__control-toggle").doesNotExist();
     assert.dom(".workflows-variable-input").exists();
-    assert.strictEqual(this.formApi.get("enabled"), "=false");
+    assert.strictEqual(formApi.value.get("enabled"), "=false");
   });
 
   test("switches true values to expression mode", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: true },
-      formApi: null,
-      schema: { type: "boolean", ui: { expression: true } },
-      registerApi: (api) => this.set("formApi", api),
-    });
+    const configuration = { enabled: true };
+    const schema = { type: "boolean", ui: { expression: true } };
+    const formApi = tracked(null);
+    const registerApi = (api) => (formApi.value = api);
 
     await render(
       <template>
         <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
+          @data={{configuration}}
+          @onRegisterApi={{registerApi}}
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{formApi.value}}
             @label="Enabled"
-            @schema={{this.schema}}
+            @schema={{schema}}
           />
         </Form>
       </template>
@@ -138,31 +133,29 @@ module("Integration | Component | workflows boolean control", function (hooks) {
     );
 
     assert.dom(".workflows-variable-input").exists();
-    assert.strictEqual(this.formApi.get("enabled"), "=true");
+    assert.strictEqual(formApi.value.get("enabled"), "=true");
   });
 
   test("switches back to plain mode", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: false },
-      formApi: null,
-      schema: { type: "boolean", ui: { expression: true } },
-      registerApi: (api) => this.set("formApi", api),
-    });
+    const configuration = { enabled: false };
+    const schema = { type: "boolean", ui: { expression: true } };
+    const formApi = tracked(null);
+    const registerApi = (api) => (formApi.value = api);
 
     await render(
       <template>
         <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
+          @data={{configuration}}
+          @onRegisterApi={{registerApi}}
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{formApi.value}}
             @label="Enabled"
-            @schema={{this.schema}}
+            @schema={{schema}}
           />
         </Form>
       </template>
@@ -177,31 +170,29 @@ module("Integration | Component | workflows boolean control", function (hooks) {
 
     assert.dom(".form-kit__control-toggle").exists();
     assert.dom(".workflows-variable-input").doesNotExist();
-    assert.false(this.formApi.get("enabled"));
+    assert.false(formApi.value.get("enabled"));
   });
 
   test("converts literal expressions back to plain booleans", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: "={{ true }}" },
-      formApi: null,
-      schema: { type: "boolean", ui: { expression: true } },
-      registerApi: (api) => this.set("formApi", api),
-    });
+    const configuration = { enabled: "={{ true }}" };
+    const schema = { type: "boolean", ui: { expression: true } };
+    const formApi = tracked(null);
+    const registerApi = (api) => (formApi.value = api);
 
     await render(
       <template>
         <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
+          @data={{configuration}}
+          @onRegisterApi={{registerApi}}
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{formApi.value}}
             @label="Enabled"
-            @schema={{this.schema}}
+            @schema={{schema}}
           />
         </Form>
       </template>
@@ -212,24 +203,22 @@ module("Integration | Component | workflows boolean control", function (hooks) {
     );
 
     assert.true(
-      this.formApi.get("enabled"),
+      formApi.value.get("enabled"),
       "unwraps the literal instead of discarding it"
     );
   });
 
   test("renders in expression mode when value starts with =", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: "=true" },
-      schema: { type: "boolean", ui: { expression: true } },
-    });
+    this.configuration = { enabled: "=true" };
+    this.schema = { type: "boolean", ui: { expression: true } };
 
     await render(
       <template>
         <Form @data={{this.configuration}} as |form transientData|>
           <BooleanControl
-            @form={{form}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
             @label="Enabled"
             @schema={{this.schema}}
           />
@@ -242,27 +231,25 @@ module("Integration | Component | workflows boolean control", function (hooks) {
   });
 
   test("renders plain toggle without mode control when expressions disabled", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: false },
-      formApi: null,
-      schema: { type: "boolean", no_data_expression: true },
-      registerApi: (api) => this.set("formApi", api),
-    });
+    const configuration = { enabled: false };
+    const schema = { type: "boolean", no_data_expression: true };
+    const formApi = tracked(null);
+    const registerApi = (api) => (formApi.value = api);
 
     await render(
       <template>
         <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
+          @data={{configuration}}
+          @onRegisterApi={{registerApi}}
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{formApi.value}}
             @label="Enabled"
-            @schema={{this.schema}}
+            @schema={{schema}}
           />
         </Form>
       </template>
@@ -280,34 +267,32 @@ module("Integration | Component | workflows boolean control", function (hooks) {
     await dropVariable({ id: "enabled" });
 
     assert.false(
-      this.formApi.get("enabled"),
+      formApi.value.get("enabled"),
       "ignores a dropped variable instead of storing an expression"
     );
     assert.dom(".form-kit__control-toggle").exists("stays a plain toggle");
   });
 
   test("dropping a variable on the plain toggle switches to expression mode", async function (assert) {
-    this.setProperties({
-      configuration: { enabled: false },
-      formApi: null,
-      schema: { type: "boolean", ui: { expression: true } },
-      registerApi: (api) => this.set("formApi", api),
-    });
+    const configuration = { enabled: false };
+    const schema = { type: "boolean", ui: { expression: true } };
+    const formApi = tracked(null);
+    const registerApi = (api) => (formApi.value = api);
 
     await render(
       <template>
         <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
+          @data={{configuration}}
+          @onRegisterApi={{registerApi}}
           as |form transientData|
         >
           <BooleanControl
-            @form={{form}}
-            @formApi={{this.formApi}}
             @configuration={{transientData}}
             @fieldName="enabled"
+            @form={{form}}
+            @formApi={{formApi.value}}
             @label="Enabled"
-            @schema={{this.schema}}
+            @schema={{schema}}
           />
         </Form>
       </template>
@@ -322,7 +307,7 @@ module("Integration | Component | workflows boolean control", function (hooks) {
     await dropVariable({ id: "enabled" });
 
     assert.strictEqual(
-      this.formApi.get("enabled"),
+      formApi.value.get("enabled"),
       "={{ $json.enabled }}",
       "stores the dropped variable as an expression, prefixed with the item path"
     );

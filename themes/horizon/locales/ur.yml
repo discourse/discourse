@@ -7,14 +7,14 @@
 ur:
   solved: "حل شدہ"
   unsolved: "غیر حل شدہ"
-  posted: "پوسٹ کیا"
+  posted: "نشر کیا"
   by_username: "@%{username} کی تخلیق"
-  replied: "جواب دیا"
+  replied: "نے جواب دیا"
   vote_count:
     one: "%{count} ووٹ"
     other: "%{count} ووٹ"
   like_count:
-    one: "%{count} پسند"
+    one: "%{count} پسندیدگی"
     other: "%{count} پسندیدگیاں"
   reply_count:
     one: "%{count} جواب"

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    lti_enabled: 啟用 LTI 1.3 身分驗證
+    lti_authorization_endpoint: LTI 平台的授權端點
+    lti_client_ids: 此工具的用戶端 ID
+    lti_platform_issuer_id: LTI 平台的簽發者 ID，通常是包含 https:// 的 URL
+    lti_platform_public_key: LTI 平台的公開金鑰
+    lti_email_verified: 若平台提供的電子郵件地址已通過驗證，請啟用此設定。

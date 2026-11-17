@@ -119,6 +119,7 @@ class TopicQuery
   self.results_filter_callbacks = []
 
   attr_accessor :options, :user, :guardian
+  attr_reader :invalid_filters
 
   def self.add_custom_filter(key, &blk)
     @custom_filters ||= {}
@@ -146,6 +147,7 @@ class TopicQuery
     @options = options.dup
     @user = user
     @guardian = options[:guardian] || Guardian.new(@user)
+    @invalid_filters = []
   end
 
   def joined_topic_user(list = nil)
@@ -305,29 +307,36 @@ class TopicQuery
   end
 
   def list_filter
-    topics_filter =
-      TopicsFilter.new(
-        guardian: @guardian,
-        scope: latest_results(include_muted: false, skip_ordering: true),
-        loaded_topic_users_reference: @guardian.authenticated?,
-      )
-
-    results = topics_filter.filter_from_query_string(@options[:q])
-
-    if !topics_filter.topic_notification_levels.include?(NotificationLevels.all[:muted])
-      results = remove_muted_topics(results, @user)
+    query = @options[:q]
+    if @user&.unified_new_enabled? && %w[new new-topics new-replies].include?(@options[:subset])
+      query = "#{query} in:#{@options[:subset]}"
     end
-
+    results, topics_filter = filter_results(query)
+    @invalid_filters = topics_filter.invalid_filters
     results = apply_ordering(results) if results.order_values.empty?
 
-    create_list(
-      :filter,
-      {
-        include_filter_option_info: @options[:include_filter_option_info].to_s != "false",
-        unordered: topics_filter.topic_ids.present?,
-      },
-      results,
-    )
+    list =
+      create_list(
+        :filter,
+        {
+          include_filter_option_info: @options[:include_filter_option_info].to_s != "false",
+          unordered: topics_filter.topic_ids.present?,
+        },
+        results,
+      )
+
+    if @user&.unified_new_enabled?
+      candidate_ids = TopicTrackingState.report(@user).map(&:topic_id)
+      list.filter_new_topic_ids =
+        if candidate_ids.empty?
+          []
+        else
+          matches, = filter_results
+          matches.where(id: candidate_ids).except(:limit, :offset, :order).distinct.pluck(:id)
+        end
+    end
+
+    list
   end
 
   def list_read
@@ -459,8 +468,7 @@ class TopicQuery
     col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
 
     list.where("tu.last_read_post_number < topics.#{col_name}").where(
-      "COALESCE(tu.notification_level, :regular) >= :tracking",
-      regular: TopicUser.notification_levels[:regular],
+      "tu.notification_level >= :tracking",
       tracking: TopicUser.notification_levels[:tracking],
     )
   end
@@ -918,11 +926,18 @@ class TopicQuery
       result = result.where("topics.id in (?)", options[:topic_ids]).references(:topics)
     end
 
-    if search = options[:search].presence
-      result =
-        result.where(
-          "topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(term: search.to_s)})",
-        )
+    if (search = options[:search].presence) && search.length >= SiteSetting.min_search_term_length
+      result = result.where(<<~SQL, visible_post_types: Topic.visible_post_types(@guardian.user))
+            topics.id IN (
+              SELECT pp.topic_id
+              FROM post_search_data pd
+              JOIN posts pp ON pp.id = pd.post_id
+              WHERE pd.search_data @@ #{Search.ts_query(term: search.to_s)}
+                AND NOT pp.hidden
+                AND pp.deleted_at IS NULL
+                AND pp.post_type IN (:visible_post_types)
+            )
+          SQL
     end
 
     if state = options[:state]
@@ -1328,6 +1343,23 @@ class TopicQuery
   end
 
   private
+
+  def filter_results(query = @options[:q])
+    topics_filter =
+      TopicsFilter.new(
+        guardian: @guardian,
+        scope: latest_results(include_muted: false, skip_ordering: true),
+        loaded_topic_users_reference: @guardian.authenticated?,
+      )
+
+    results = topics_filter.filter_from_query_string(query)
+
+    if !topics_filter.topic_notification_levels.include?(NotificationLevels.all[:muted])
+      results = remove_muted_topics(results, @user)
+    end
+
+    [results, topics_filter]
+  end
 
   def apply_max_age_limit(results, options)
     if @user

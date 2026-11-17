@@ -15,9 +15,9 @@ export default class ComboBoxFilterableExample extends Component {
   <template>
     <ComboBox
       @content={{@categories}}
-      @value={{this.value}}
-      @options={{hash filterable=true}}
       @onChange={{this.onChange}}
+      @options={{hash filterable=true}}
+      @value={{this.value}}
     />
   </template>
 }

@@ -3,14 +3,14 @@ import { registerDestructor } from "@ember/destroyable";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { trackedMap } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
-import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { SCROLLED_DOWN, SCROLLED_UP } from "./scroll-direction";
+import { SCROLLED_DOWN, SCROLLED_UP } from "./scroll-direction.js";
 
 const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 
 @disableImplicitInjections
 export default class Header extends Service {
+  @service mobileTabBar;
   @service scrollDirection;
   @service site;
 
@@ -54,18 +54,6 @@ export default class Header extends Service {
     }
   }
 
-  get topic() {
-    deprecated(
-      "`.topic` is deprecated in service:header. Use `.topicInfo` or `.topicInfoVisible` instead.",
-      {
-        id: "discourse.header-service-topic",
-        since: "3.3.0.beta4-dev",
-      }
-    );
-
-    return this.topicInfoVisible ? this.topicInfo : null;
-  }
-
   /**
    * Indicates whether topic info should be displayed
    * in the header.
@@ -74,6 +62,11 @@ export default class Header extends Service {
   get topicInfoVisible() {
     if (!this.topicInfo) {
       return false;
+    }
+
+    // With the tab bar, a titled page keeps its title in the header
+    if (this.mobileTabBar.isTitledPage) {
+      return true;
     }
 
     // The latch is only honored while actively scrolling down — this
@@ -96,6 +89,16 @@ export default class Header extends Service {
     }
 
     return true;
+  }
+
+  get headerButtonsHidden() {
+    const buttonsToHide = new Set();
+    this.#hiders.forEach((buttons) => {
+      buttons.forEach((button) => {
+        buttonsToHide.add(button);
+      });
+    });
+    return Array.from(buttonsToHide);
   }
 
   registerHider(ref, buttons) {
@@ -123,16 +126,6 @@ export default class Header extends Service {
     registerDestructor(ref, () => {
       this.#hiders.delete(ref);
     });
-  }
-
-  get headerButtonsHidden() {
-    const buttonsToHide = new Set();
-    this.#hiders.forEach((buttons) => {
-      buttons.forEach((button) => {
-        buttonsToHide.add(button);
-      });
-    });
-    return Array.from(buttonsToHide);
   }
 
   /**

@@ -28,7 +28,7 @@ module DiscourseWorkflows
       def webhook_url
         if execution_id.present?
           DiscourseWorkflows::WaitingExecution.webhook_url_with_signature(
-            execution_id: execution_id,
+            execution_id:,
             signature: token,
             suffix: webhook_suffix,
           )
@@ -43,15 +43,15 @@ module DiscourseWorkflows
       def webhook_request
         DiscourseWorkflows::WebhookRequest.new(
           method: http_method,
-          path: path,
-          headers: headers,
+          path:,
+          headers:,
           params: path_params,
           query: query_params,
-          body: body,
-          raw_body: raw_body,
+          body:,
+          raw_body:,
           ip: remote_ip,
-          ips: ips,
-          webhook_url: webhook_url,
+          ips:,
+          webhook_url:,
         )
       end
     end
@@ -73,6 +73,9 @@ module DiscourseWorkflows
     only_if(:resuming_execution) do
       model :waiting_node
       policy :valid_http_method
+      model :webhook_nodes, :waiting_webhook_nodes
+      model :authenticated_nodes, :filter_authenticated_nodes
+      model :request_allowed_nodes, :filter_request_allowed_nodes
 
       only_if(:async_resume?) do
         step :enqueue_async_resume
@@ -160,11 +163,21 @@ module DiscourseWorkflows
       return [] unless workflow
       return [] unless trigger_node
 
-      [PublishedTrigger.new(workflow: workflow, workflow_version: nil, trigger_node: trigger_node)]
+      [PublishedTrigger.new(workflow:, workflow_version: nil, trigger_node:)]
     end
 
     def fetch_waiting_node(waiting_execution:)
       waiting_execution.find_waiting_node
+    end
+
+    def waiting_webhook_nodes(waiting_execution:, waiting_node:)
+      [
+        PublishedTrigger.new(
+          workflow: waiting_execution.workflow,
+          workflow_version: nil,
+          trigger_node: waiting_node,
+        ),
+      ]
     end
 
     def valid_http_method(waiting_node:, params:)
@@ -172,7 +185,7 @@ module DiscourseWorkflows
     end
 
     def async_resume?(waiting_node:)
-      wait_node_response_mode(waiting_node) == Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
+      node_response_mode(waiting_node) == Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
     end
 
     def sync_resume?(waiting_node:)
@@ -185,6 +198,7 @@ module DiscourseWorkflows
       Jobs.enqueue(
         Jobs::DiscourseWorkflows::ResumeWebhookWaiting,
         execution_id: waiting_execution.id,
+        resume_token: waiting_execution.resume_token,
         response_items: webhook_context.resume_items,
       )
     end
@@ -200,15 +214,15 @@ module DiscourseWorkflows
         DiscourseWorkflows::WaitingExecution.resume_claimed(
           claimed_execution,
           webhook_context.resume_items,
-          webhook_context: webhook_context,
+          webhook_context:,
         )
       {
-        execution: execution,
+        execution:,
         response_mode: parameters["response_mode"],
         response_code: parameters["response_code"],
         response_data: parameters["response_data"],
         response_parameters: parameters,
-        webhook_context: webhook_context,
+        webhook_context:,
       }
     end
 
@@ -239,14 +253,10 @@ module DiscourseWorkflows
       node = workflow_version.nodes.find { |candidate| candidate["name"] == webhook.node_name }
       return nil unless node
 
-      PublishedTrigger.new(
-        workflow: workflow,
-        workflow_version: workflow_version,
-        trigger_node: node,
-      )
+      PublishedTrigger.new(workflow:, workflow_version:, trigger_node: node)
     end
 
-    def filter_authenticated_nodes(webhook_nodes:, params:)
+    def filter_authenticated_nodes(webhook_nodes:, params:, webhook_context:)
       credentials = preload_auth_credentials(webhook_nodes)
       authenticated = []
       failure_reasons = []
@@ -255,8 +265,9 @@ module DiscourseWorkflows
         result =
           Webhook::Action::AuthenticateNode.call(
             node: published_trigger.trigger_node,
-            params: params,
-            credentials: credentials,
+            params:,
+            credentials:,
+            request: webhook_context.request,
           )
 
         if result == Webhook::Action::AuthenticateNode::AUTHENTICATED
@@ -309,7 +320,7 @@ module DiscourseWorkflows
     def enqueue_async_workflows(request_allowed_nodes:, webhook_context:)
       request_allowed_nodes.each do |published_trigger|
         node = published_trigger.trigger_node
-        response_mode = trigger_node_response_mode(node)
+        response_mode = node_response_mode(node)
         next unless response_mode == Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
 
         DiscourseWorkflows::TriggerDispatcher.enqueue(
@@ -324,22 +335,22 @@ module DiscourseWorkflows
       request_allowed_nodes.each do |published_trigger|
         node = published_trigger.trigger_node
         parameters = NodeData.parameters(node)
-        response_mode = trigger_node_response_mode(node)
+        response_mode = node_response_mode(node)
         next if response_mode == Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
 
         execution =
           DiscourseWorkflows::TriggerDispatcher.execute(
             published_trigger,
             trigger_data: webhook_context.request.item_json,
-            webhook_context: webhook_context,
+            webhook_context:,
           )
         first ||= {
-          execution: execution,
-          response_mode: response_mode,
+          execution:,
+          response_mode:,
           response_code: parameters["response_code"],
           response_data: parameters["response_data"],
           response_parameters: parameters,
-          webhook_context: webhook_context,
+          webhook_context:,
         }
       end
       first
@@ -359,7 +370,7 @@ module DiscourseWorkflows
           execution_mode: :manual,
           draft_execution: true,
           workflow_snapshot: claimed_webhook_test_listener.workflow_snapshot,
-          webhook_context: webhook_context,
+          webhook_context:,
         )
       execution =
         Executor.new(
@@ -370,12 +381,12 @@ module DiscourseWorkflows
         ).run
 
       {
-        execution: execution,
-        response_mode: trigger_node_response_mode(node),
+        execution:,
+        response_mode: node_response_mode(node),
         response_code: parameters["response_code"],
         response_data: parameters["response_data"],
         response_parameters: parameters,
-        webhook_context: webhook_context,
+        webhook_context:,
       }
     end
 
@@ -407,12 +418,7 @@ module DiscourseWorkflows
       end
     end
 
-    def wait_node_response_mode(waiting_node)
-      NodeData.parameters(waiting_node)["response_mode"] ||
-        Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
-    end
-
-    def trigger_node_response_mode(node)
+    def node_response_mode(node)
       NodeData.parameters(node)["response_mode"] || Schemas::Webhook::RESPONSE_MODE_ON_RECEIVED
     end
 

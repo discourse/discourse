@@ -16,8 +16,8 @@ export default <template>
     {{#each POSITIONS key="state" as |position|}}
       <div class="styleguide-drag-and-drop__swatch">
         <div
-          data-drop-target
           class={{dConcatClass "styleguide-drag-and-drop__box" position.state}}
+          data-drop-target
         >
           {{i18n
             (concat

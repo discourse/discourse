@@ -131,6 +131,16 @@ describe DiscourseGithubPlugin::GithubBadges do
       expect(staged_user.badges.first).to eq(nil)
     end
 
+    it "only counts commits from the configured repos" do
+      DiscourseGithubPlugin::GithubBadges.committer_badges.each { it.update!(enabled: true) }
+      SiteSetting.github_badges_repos = "https://github.com/org/repo1.git"
+
+      DiscourseGithubPlugin::GithubBadges.grant!
+
+      expect(bronze_user.reload.badges).to be_present
+      expect(bronze_user_repo_2.reload.badges).to be_empty
+    end
+
     it "does not update user title if badge is not allowed to be used as a title" do
       DiscourseGithubPlugin::GithubBadges.grant!
       silver_committer_badge =

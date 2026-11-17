@@ -21,7 +21,7 @@ module Chat
     #   include_missing_memberships.
     def self.call(channel_ids:, user_id:, include_missing_memberships: false, include_read: true)
       # The CTE picks the candidate channel set up front and resolves the
-      # static per-channel filters (chatable_type, threading_enabled, muted,
+      # static per-channel filters (threading_enabled, muted, and
       # last_read_message_id) into columns. The three LATERAL aggregates then
       # run once per candidate, instead of three correlated subqueries each
       # joining tables that explode with the user's full membership lists.
@@ -36,7 +36,6 @@ module Chat
             memberships.chat_channel_id,
             memberships.last_read_message_id,
             memberships.muted,
-            chat_channels.chatable_type,
             chat_channels.threading_enabled
           FROM user_chat_channel_memberships AS memberships
           INNER JOIN chat_channels ON chat_channels.id = memberships.chat_channel_id
@@ -72,25 +71,24 @@ module Chat
                 AND cm.deleted_at IS NULL
             )
             +
-            -- (3) DM channel + threading disabled: thread replies the user is
-            -- a member of and hasn't read. Only fires for DM channels with
-            -- threading off (auto-enrolled DM threads).
+            -- (3) Thread replies that render inline in the channel stream,
+            -- meaning every reply in a non-forced thread while the channel has
+            -- threading disabled (see Chat::MessagesQuery). Such threads have
+            -- no pane of their own, so Chat::ThreadUnreadsQuery ignores them
+            -- and they are counted here instead, against the channel's own
+            -- read marker, for every member the stream shows them to.
             (
               SELECT COUNT(*)
-              FROM chat_messages cm
-              INNER JOIN chat_threads ct ON ct.id = cm.thread_id
-              INNER JOIN user_chat_thread_memberships uctm
-                      ON uctm.thread_id = cm.thread_id
-                     AND uctm.user_id = :user_id
-              WHERE lc.chatable_type = 'DirectMessage'
+              FROM chat_threads ct
+              INNER JOIN chat_messages cm
+                      ON cm.thread_id = ct.id
+                     AND cm.deleted_at IS NULL
+              WHERE ct.channel_id = lc.chat_channel_id
                 AND NOT lc.threading_enabled
-                AND cm.chat_channel_id = lc.chat_channel_id
-                AND cm.thread_id IS NOT NULL
+                AND NOT ct.force
                 AND cm.id != ct.original_message_id
                 AND cm.id > COALESCE(lc.last_read_message_id, 0)
-                AND cm.id > COALESCE(uctm.last_read_message_id, 0)
                 AND cm.user_id != :user_id
-                AND cm.deleted_at IS NULL
             ) AS cnt
         ) unread_calc ON true
         LEFT JOIN LATERAL (
@@ -105,8 +103,14 @@ module Chat
             AND NOT n.read
             AND (n.data::json->>'chat_channel_id')::bigint = lc.chat_channel_id
             AND (
-              ((cm.thread_id IS NULL OR cm.id = ct.original_message_id)
+              -- Mentions on a message in the channel stream, including replies
+              -- that render inline, are read via the channel's marker. Piece
+              -- (3) of unread_count above draws the same line.
+              ((cm.thread_id IS NULL
+                 OR cm.id = ct.original_message_id
+                 OR (NOT lc.threading_enabled AND NOT ct.force))
                 AND cm.id > COALESCE(lc.last_read_message_id, 0))
+              -- Mentions inside a thread pane are read via the thread's marker.
               OR (cm.thread_id IS NOT NULL
                 AND uctm.id IS NOT NULL
                 AND cm.id > COALESCE(uctm.last_read_message_id, 0))

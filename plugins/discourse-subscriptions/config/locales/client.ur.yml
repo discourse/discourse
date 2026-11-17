@@ -5,7 +5,13 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse اشتراکات"
   site_settings:
+    discourse_subscriptions_enabled: Discourse اشتراکات کے پلگ اِن کو فعال کریں
     discourse_subscriptions_extra_nav_subscribe: پرائمری نیویگیشن میں سبسکرائب بٹن دکھائیں
     discourse_subscriptions_campaign_type: چلانے کے لیے مہم کی قسم منتخب کریں (سبسکرائبرز یا ماہانہ جمع شدہ رقم)۔
   js:
@@ -20,7 +26,15 @@ ur:
         user_activity:
           payments: ادائیگیاں
       campaign:
+        title: ہمارا ساتھ تعاون کریں
         success_title: کامیابی!
+        subscribers: شرکاء
+        raised: اکھٹا ہوئے
+        button: تعاون
+        recent_contributors: حالیہ حمایتی
+        goal: ہم نے اپنے ہدف کو چھو لیا
+        supporter: حمایتی
+        supporters: حمایتی
         confirm_creation: |-
           <p>جاری رکھنے سے یہ چیزیں بنائی جائیں گی:</p>
 
@@ -37,6 +51,7 @@ ur:
             week: ہفتہ وار
             month: ماہانہ
             year: سالانہ
+        payment_button: اشتراک
       user:
         payments:
           created_at: بنایا گیا

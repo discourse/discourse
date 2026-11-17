@@ -33,6 +33,10 @@ nl:
         remove: "Deze like verwijderen"
         cant_remove: "Je kunt je like niet meer verwijderen"
         unauthenticated: "Registreer of meld je aan om dit bericht te liken"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Toegevoegd"
+        changes_removed: "Verwijderd"
     notifications:
       reaction_1_user_multiple_posts:
         one: "heeft gereageerd op %{count} van je berichten"

@@ -25,6 +25,9 @@ Migrations::Tooling::Schema.table :embed_quotes do
   add_column :quoted_user_id, :numeric
   add_column :quoted_username, :text
   add_column :quoted_name, :text
+  # The verbatim source snippet, restored unchanged when the importer cannot
+  # map the embed to a destination record (the round-trip fallback).
+  add_column :original_markdown, :text
 
   index :owner_type, :owner_id
 end

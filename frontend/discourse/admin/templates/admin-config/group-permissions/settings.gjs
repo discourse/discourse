@@ -5,28 +5,28 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @hideTabs={{true}}
-    @titleLabel={{i18n "admin.config.group_permissions.title"}}
     @descriptionLabel={{i18n
       "admin.config.group_permissions.header_description"
     }}
+    @hideTabs={{true}}
+    @titleLabel={{i18n "admin.config.group_permissions.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/group-permissions"
         @label={{i18n "admin.config.group_permissions.title"}}
+        @path="/admin/config/group-permissions"
       />
     </:breadcrumbs>
   </DPageHeader>
 
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
-      @showBreadcrumb={{false}}
-      @area="group_permissions"
-      @path="/admin/config/group-permissions"
-      @filter={{@controller.filter}}
       @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+      @area="group_permissions"
+      @filter={{@controller.filter}}
+      @path="/admin/config/group-permissions"
+      @showBreadcrumb={{false}}
     />
   </div>
 </template>

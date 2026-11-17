@@ -1,4 +1,6 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
@@ -15,7 +17,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
       this.site = Site.current();
       this.originalCategories = this.site.categories;
     });
@@ -39,6 +41,44 @@ module(
       assert.strictEqual(
         this.subject.header().label(),
         "Parent Category, Sub Category"
+      );
+    });
+
+    test("selected choices show only the category's own badge by default", async function (assert) {
+      const value = [Category.findById(1002)];
+
+      await render(
+        <template>
+          <MultipleCategoriesSelector @categories={{value}} />
+        </template>
+      );
+      await this.subject.expand();
+
+      assert
+        .dom(".selected-choice-category .badge-category__name")
+        .exists({ count: 1 }, "no ancestor badge is added to the chip")
+        .hasText("Sub Category", "the chip shows the selected category");
+    });
+
+    test("selected choices include ancestor badges when showAncestorsInSelectedChoice is set", async function (assert) {
+      const value = [Category.findById(1002)];
+
+      await render(
+        <template>
+          <MultipleCategoriesSelector
+            @categories={{value}}
+            @options={{hash showAncestorsInSelectedChoice=true}}
+          />
+        </template>
+      );
+      await this.subject.expand();
+
+      assert.deepEqual(
+        findAll(".selected-choice-category .badge-category__name").map((el) =>
+          el.textContent.trim()
+        ),
+        ["Parent Category", "Sub Category"],
+        "the parent badge precedes the sub-category badge in the chip"
       );
     });
 
@@ -108,14 +148,14 @@ module(
     });
 
     test("selecting +subcategories adds the full descendant tree", async function (assert) {
-      this.set("value", []);
-      this.set("onChange", (categories) => this.set("value", categories));
+      const value = tracked([]);
+      const onChange = (categories) => (value.value = categories);
 
       await render(
         <template>
           <MultipleCategoriesSelector
-            @categories={{this.value}}
-            @onChange={{this.onChange}}
+            @categories={{value.value}}
+            @onChange={{onChange}}
           />
         </template>
       );

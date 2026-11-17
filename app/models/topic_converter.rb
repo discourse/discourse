@@ -21,6 +21,13 @@ class TopicConverter
           .where.not(id: SiteSetting.uncategorized_category_id)
           .first
 
+      # PostRevisor skips a disallowed category change without failing, which
+      # would otherwise publish the message in the default category.
+      if !Guardian.new(@user).can_move_topic_to_category?(@category)
+        @topic.errors.add(:base, I18n.t("category.errors.move_topic_to_category_disallowed"))
+        raise ActiveRecord::Rollback
+      end
+
       revised =
         PostRevisor.new(@topic.first_post, @topic).revise!(
           @user,
@@ -70,6 +77,7 @@ class TopicConverter
 
       raise ActiveRecord::Rollback if !revised || !@topic.valid?
 
+      PublishedPage.unpublish!(@user, @topic) if @topic.published_page
       add_allowed_users
       update_post_uploads_secure_status
       add_small_action("private_topic") unless @silent

@@ -38,14 +38,16 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    let fieldName, node, nodeParameters;
+
     hooks.beforeEach(function () {
       this.siteSettings.data_explorer_ai_queries_enabled = true;
       this.siteSettings.discourse_ai_enabled = true;
       this.queryState = new QueryState("SELECT 1");
-      this.node = { type: "action:sql" };
-      this.nodeParameters = { operation: "raw" };
       this.schema = { control_options: { lang: "sql" } };
-      this.fieldName = "query";
+      fieldName = tracked("query");
+      node = tracked({ type: "action:sql" });
+      nodeParameters = tracked({ operation: "raw" });
 
       pretender.post(
         "/admin/plugins/discourse-data-explorer/queries/generate.json",
@@ -62,10 +64,10 @@ module(
         <template>
           <DataExplorerWorkflowAiQuery
             @field={{context.queryState}}
-            @fieldName={{context.fieldName}}
+            @fieldName={{fieldName.value}}
+            @node={{node.value}}
+            @nodeParameters={{nodeParameters.value}}
             @schema={{context.schema}}
-            @node={{context.node}}
-            @nodeParameters={{context.nodeParameters}}
           />
         </template>
       );
@@ -86,27 +88,27 @@ module(
         .dom(".query-ai-prompt__regenerate")
         .hasText("Generate query", "offers to regenerate existing SQL");
 
-      this.set("nodeParameters", { operation: "queries" });
+      nodeParameters.value = { operation: "queries" };
       await settled();
       assert
         .dom(".data-explorer-workflow-ai-query")
         .doesNotExist("does not render for saved queries");
 
-      this.set("nodeParameters", { operation: "raw" });
-      this.set("fieldName", "code");
+      nodeParameters.value = { operation: "raw" };
+      fieldName.value = "code";
       await settled();
       assert
         .dom(".data-explorer-workflow-ai-query")
         .doesNotExist("does not render for unrelated code fields");
 
-      this.set("fieldName", "query");
-      this.set("node", { type: "action:code" });
+      fieldName.value = "query";
+      node.value = { type: "action:code" };
       await settled();
       assert
         .dom(".data-explorer-workflow-ai-query")
         .doesNotExist("does not render for unrelated code nodes");
 
-      this.set("node", { type: "action:sql" });
+      node.value = { type: "action:sql" };
       this.siteSettings.discourse_ai_enabled = false;
       await settled();
       assert

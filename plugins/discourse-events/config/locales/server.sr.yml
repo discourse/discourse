@@ -9,7 +9,7 @@ sr:
     currently_away:
       labels:
         username: Korisničko Ime
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Dan"

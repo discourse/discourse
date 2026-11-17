@@ -9,10 +9,7 @@ ar:
     chat_separate_sidebar_mode: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة."
     chat_enabled: "تفعيل الدردشة."
     chat_pinned_messages: "تفعيل الرسائل المثبتة في قنوات الدردشة."
-    enable_new_chat_reactions_popup: "فعِّل النافذة المنبثقة المُعاد تصميمها للتفاعلات على رسائل الدردشة، والتي تعرض المتفاعلين مع تمرير لا نهائي وتجربة أصلية على الجوَّال."
     enable_public_channels: "تفعيل القنوات العامة حسب الفئات."
-    chat_allowed_groups: "يمكن للمستخدمين في هذه المجموعات الدردشة، باستثناء المستخدمين المجهولين الذين يمكنهم عرض الدردشة فقط عند إضافتهم إلى هذا الإعداد. لاحظ أن المسؤولين والمشرفين يمكنهم دائمًا الوصول إلى الدردشة‎."
-    chat_channel_retention_days: "سيتم الاحتفاظ برسائل الدردشة في القنوات العادية لهذا العدد من الأيام. اضبط القيمة على '0' للاحتفاظ بالرسائل إلى الأبد."
     chat_dm_retention_days: "سيتم الاحتفاظ برسائل الدردشة في قنوات الدردشة الشخصية لهذا العدد من الأيام. اضبط القيمة على '0' للاحتفاظ بالرسائل إلى الأبد."
     chat_auto_silence_duration: "عدد الدقائق التي سيتم فيها كتم المستخدمين عندما يتجاوزون حد معدل إنشاء رسائل الدردشة. اضبط القيمة على '0' لإيقاف الكتم التلقائي."
     chat_allowed_messages_for_trust_level_0: "عدد الرسائل المسموح للمستخدمين من مستوى الثقة 0 بإرسالها خلال 30 ثانية. اضبط القيمة على '0' لإيقاف الحد."
@@ -63,7 +60,18 @@ ar:
 
         انتقل إلى القناة في %{channel_url} لإعادة المحاولة.
   chat:
+    design_wizard_homepage_name: "الدردشة"
     deleted_chat_username: تم الحذف
+    crawler:
+      directory_title: "قنوات الدردشة"
+      nav_title: "الدردشة"
+      thread_replies:
+        zero: "%{count} من الردود"
+        one: "رد واحد (%{count})"
+        two: "%{count} من الردود"
+        few: "%{count} من الردود"
+        many: "%{count} من الردود"
+        other: "%{count} من الردود"
     errors:
       users_cant_be_added_to_channel: "لا يمكن إضافة المستخدمين إلى هذه القناة."
       user_cant_be_removed_from_channel: "لا يمكن إزالة المستخدم من هذه القناة"
@@ -301,13 +309,10 @@ ar:
       default_deny_label: "الرفض"
     errors:
       send_chat_message:
-        invalid_params: "معلمات غير صالحة: %{errors}"
         channel_not_found: "لم يتم العثور على القناة: %{channel_id}"
-        failed: "فشل إرسال رسالة الدردشة."
       chat_approval:
         channel_not_found: "فشل إرسال رسالة الدردشة: لم يتم العثور على القناة %{channel_id}."
         invalid_params: "فشل إرسال رسالة الدردشة: %{errors}"
-        failed: "فشل إرسال رسالة الدردشة: %{steps}"
         timeout_must_be_positive: "يجب أن تكون مدة المهلة الزمنية بالدقائق أكبر من 0."
   reviewable_score_types:
     needs_review:

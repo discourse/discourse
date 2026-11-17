@@ -26,12 +26,12 @@ class TextSentinel
     TextSentinel.new(text, min_entropy: entropy)
   end
 
-  def self.title_sentinel(text)
+  def self.title_sentinel(text, min_length: SiteSetting.min_topic_title_length)
     entropy =
-      if SiteSetting.min_topic_title_length > SiteSetting.title_min_entropy
+      if min_length > SiteSetting.title_min_entropy
         SiteSetting.title_min_entropy
       else
-        (SiteSetting.min_topic_title_length.to_f * ENTROPY_SCALE).to_i
+        (min_length.to_f * ENTROPY_SCALE).to_i
       end
     TextSentinel.new(text, min_entropy: entropy, max_word_length: SiteSetting.title_max_word_length)
   end

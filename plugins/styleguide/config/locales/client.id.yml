@@ -21,6 +21,12 @@ id:
           title: "Masukan Tanggal/Waktu"
         menus:
           title: "Menu"
+        context_menu:
+          actions:
+            delete: "Hapus"
+        reorderable_list:
+          table_type: "Tipe"
+          cross_list_primary: "Utama"
         toasts:
           title: "Toast"
         font_scale:
@@ -72,6 +78,16 @@ id:
           title: "Topik Lainnya"
         post_menu:
           title: "Menu Post"
+        roving_focus:
+          toolbar:
+            copy: "Salin"
+          adjacent:
+            field: "Cari"
+            open: "Buka"
+          combobox:
+            never: "Tidak pernah"
+          tree:
+            select: "Pilih"
         modal:
           title: "Modal"
           header: "Judul Modal"

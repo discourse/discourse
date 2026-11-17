@@ -2,12 +2,12 @@ import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { LanguageSupport, LRLanguage } from "@codemirror/language";
 import { parseMixed } from "@lezer/common";
 import { styleTags, tags as t } from "@lezer/highlight";
-import { parser } from "./expression";
+import { parser } from "./expression.js";
 import {
   CloseExpression,
   Expression,
   OpenExpression,
-} from "./expression.terms";
+} from "./expression.terms.js";
 
 const mixedParser = parser.configure({
   props: [

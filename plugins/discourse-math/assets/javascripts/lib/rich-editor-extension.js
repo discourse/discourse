@@ -7,7 +7,7 @@ import MathBlockPreview from "../discourse/components/math-block-preview";
 import {
   buildDiscourseMathOptions,
   renderMathInElement,
-} from "./math-renderer";
+} from "./math-renderer.js";
 
 const LANGUAGE = "latex";
 

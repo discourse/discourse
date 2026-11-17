@@ -1,6 +1,14 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import {
+  click,
+  find,
+  render,
+  rerender,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import Section from "discourse/components/sidebar/section";
 import SectionLink from "discourse/components/sidebar/section-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -30,9 +38,9 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
   test("custom class attribute for link", async function (assert) {
     const template = <template>
       <SectionLink
+        @linkClass="123 abc"
         @linkName="Test Meta"
         @route="discovery.latest"
-        @linkClass="123 abc"
       />
     </template>;
 
@@ -49,7 +57,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
 
   test("target attribute for link", async function (assert) {
     const template = <template>
-      <SectionLink @linkName="test" @href="https://discourse.org" />
+      <SectionLink @href="https://discourse.org" @linkName="test" />
     </template>;
     await render(template);
 
@@ -59,7 +67,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
   test("target attribute for link when user set external links in new tab", async function (assert) {
     this.currentUser.user_option.external_links_in_new_tab = true;
     const template = <template>
-      <SectionLink @linkName="test" @href="https://discourse.org" />
+      <SectionLink @href="https://discourse.org" @linkName="test" />
     </template>;
     await render(template);
 
@@ -71,10 +79,10 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
 
     const template = <template>
       <SectionLink
-        @linkName="test"
-        @route="discovery.latest"
         @hoverType="icon"
         @hoverValue="ellipsis-vertical"
+        @linkName="test"
+        @route="discovery.latest"
       />
     </template>;
 
@@ -87,25 +95,186 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     assert.dom(".sidebar-section-link-wrapper").hasClass("--hovering");
   });
 
-  test("hover action is not rendered on touch devices", async function (assert) {
+  test("hover action is not rendered on touch devices with a narrow viewport", async function (assert) {
     setTouch(this.owner, true);
+    sinon
+      .stub(this.owner.lookup("service:capabilities"), "viewport")
+      .value({ sm: false });
 
     const template = <template>
       <SectionLink
-        @linkName="test"
-        @route="discovery.latest"
         @hoverType="icon"
         @hoverValue="ellipsis-vertical"
+        @linkName="test"
+        @route="discovery.latest"
       />
     </template>;
 
     await render(template);
 
-    assert.dom(".sidebar-section-hover-button").doesNotExist();
+    assert
+      .dom(".sidebar-section-hover-button")
+      .doesNotExist("does not clutter the narrow layout with a button");
+  });
+
+  test("hover action is rendered on touch devices with a wide viewport, without the hovering state", async function (assert) {
+    setTouch(this.owner, true);
+
+    const template = <template>
+      <SectionLink
+        @hoverType="icon"
+        @hoverValue="ellipsis-vertical"
+        @linkName="test"
+        @route="discovery.latest"
+      />
+    </template>;
+
+    await render(template);
+
+    assert
+      .dom(".sidebar-section-hover-button")
+      .exists("the button is rendered without needing hover");
 
     await triggerEvent(".sidebar-section-link-wrapper", "mouseenter");
 
-    assert.dom(".sidebar-section-link-wrapper").doesNotHaveClass("--hovering");
+    assert
+      .dom(".sidebar-section-link-wrapper")
+      .doesNotHaveClass("--hovering", "emulated hover does not set the state");
+  });
+
+  test("the homepage preserves sidebar scrolling when active links render or reactivate", async function (assert) {
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => "/");
+    const active = tracked(true);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <div style="height: 600px"></div>
+          <SectionLink
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{active.value}}
+          />
+          <div style="height: 600px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    assert.strictEqual(scroller.scrollTop, 0, "a fresh load stays at the top");
+
+    active.value = false;
+    await rerender();
+    scroller.scrollTop = 100;
+    active.value = true;
+    await rerender();
+
+    assert.strictEqual(
+      scroller.scrollTop,
+      100,
+      "reactivation preserves the existing scroll position"
+    );
+  });
+
+  test("returning home reveals an active link above the visible area", async function (assert) {
+    const currentURL = tracked("/categories");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => currentURL.value);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <SectionLink
+            @currentWhen={{true}}
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{true}}
+          />
+          <div style="height: 1200px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    scroller.scrollTop = 500;
+    currentURL.value = "/";
+    await rerender();
+
+    assert.dom("a.active").exists("the homepage link stays highlighted");
+    assert.true(scroller.scrollTop < 500, "returning home scrolls upward");
+    assert.true(
+      find(".sidebar-section-link-wrapper").getBoundingClientRect().top >=
+        scroller.getBoundingClientRect().top - 1,
+      "the active link is visible below the top edge"
+    );
+
+    scroller.scrollTop = 100;
+    await rerender();
+
+    assert.strictEqual(
+      scroller.scrollTop,
+      100,
+      "manual scrolling is preserved"
+    );
+  });
+
+  test("leaving the homepage reveals a link that stays active", async function (assert) {
+    const currentURL = tracked("/");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => currentURL.value);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <div style="height: 600px"></div>
+          <SectionLink
+            @currentWhen={{true}}
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{true}}
+          />
+          <div style="height: 600px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    assert.dom("a.active").exists("the homepage link is active");
+    assert.strictEqual(scroller.scrollTop, 0, "home stays at the top");
+
+    currentURL.value = "/categories";
+    await rerender();
+
+    assert.dom("a.active").exists("the same link remains active");
+    assert.true(scroller.scrollTop > 0, "leaving home reveals the active link");
+
+    currentURL.value = "/";
+    await rerender();
+    scroller.scrollTop = 100;
+    await rerender();
+
+    assert.strictEqual(scroller.scrollTop, 100, "home allows manual scrolling");
+
+    currentURL.value = "/categories";
+    await rerender();
+
+    assert.true(
+      scroller.scrollTop > 100,
+      "leaving home reveals the link again"
+    );
   });
 
   test("scrollIntoView measures against the scrolling ancestor, not the window", async function (assert) {
@@ -227,6 +396,151 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
       document.querySelector(".test-scroller").scrollTop,
       0,
       "no scrolling happens when the link is already fully in view"
+    );
+  });
+  test("moving an active destination between sections preserves the current scroll position", async function (assert) {
+    const moved = tracked(false);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <ul style="height: 600px; margin: 0">
+            {{#unless moved.value}}
+              <SectionLink
+                @href="/latest"
+                @linkName="original"
+                @scrollIntoView={{true}}
+              />
+            {{/unless}}
+          </ul>
+          <ul style="height: 600px; margin: 0">
+            {{#if moved.value}}
+              <SectionLink
+                @href="/latest"
+                @linkName="moved"
+                @scrollIntoView={{true}}
+              />
+            {{/if}}
+          </ul>
+        </div>
+      </template>
+    );
+    const scroller = find(".sidebar-sections");
+    scroller.scrollTop = 100;
+
+    moved.value = true;
+    await rerender();
+
+    assert
+      .dom('[data-list-item-name="moved"]')
+      .exists("the destination moved into the other section");
+    assert.strictEqual(
+      scroller.scrollTop,
+      100,
+      "reinsertion does not reveal the moved link"
+    );
+
+    scroller.scrollTop = 300;
+    moved.value = false;
+    await rerender();
+
+    assert.strictEqual(
+      scroller.scrollTop,
+      300,
+      "rollback respects scrolling since the initial move"
+    );
+  });
+
+  test("new destinations and reactivated links are still revealed", async function (assert) {
+    const destinations = tracked(["/latest"]);
+    const active = tracked(true);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <div style="height: 600px"></div>
+          <ul>
+            {{#each destinations.value as |destination|}}
+              <SectionLink
+                @href={{destination}}
+                @linkName="destination"
+                @scrollIntoView={{active.value}}
+              />
+            {{/each}}
+          </ul>
+          <div style="height: 600px"></div>
+        </div>
+      </template>
+    );
+    const scroller = find(".sidebar-sections");
+    assert.true(scroller.scrollTop > 0, "the initial active link is revealed");
+
+    scroller.scrollTop = 0;
+    destinations.value = ["/top"];
+    await rerender();
+    assert.true(scroller.scrollTop > 0, "a different destination is revealed");
+
+    scroller.scrollTop = 0;
+    destinations.value = ["/latest"];
+    await rerender();
+    assert.true(
+      scroller.scrollTop > 0,
+      "returning to a previous destination reveals it again"
+    );
+
+    active.value = false;
+    await rerender();
+    scroller.scrollTop = 0;
+    active.value = true;
+    await rerender();
+    assert.true(
+      scroller.scrollTop > 0,
+      "reactivating an existing link reveals it"
+    );
+  });
+
+  test("expanding a section reveals its previously revealed active link", async function (assert) {
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <Section
+            @collapsable={{true}}
+            @headerLinkText="Test"
+            @sectionName="reveal-test"
+          >
+            <li style="height: 600px"></li>
+            <SectionLink
+              @href="/latest"
+              @linkName="destination"
+              @scrollIntoView={{true}}
+            />
+          </Section>
+          <div style="height: 600px"></div>
+        </div>
+      </template>
+    );
+    const scroller = find(".sidebar-sections");
+    assert.true(scroller.scrollTop > 0, "the initial link is revealed");
+
+    await click(".sidebar-section-header-collapsable");
+    assert
+      .dom('[data-list-item-name="destination"]')
+      .doesNotExist("collapsing removes the link");
+    scroller.scrollTop = 0;
+    await click(".sidebar-section-header-collapsable");
+
+    assert.true(
+      scroller.scrollTop > 0,
+      "explicit expansion reveals the link again"
     );
   });
 });

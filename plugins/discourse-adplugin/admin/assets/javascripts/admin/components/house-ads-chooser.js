@@ -22,12 +22,12 @@ export default class HouseAdsChooser extends MultiSelectComponent {
       .filter(Boolean);
   }
 
-  computeValues() {
-    return this.settingValue.split(this.tokenSeparator).filter(Boolean);
-  }
-
   @computed("choices")
   get content() {
     return makeArray(this.choices);
+  }
+
+  computeValues() {
+    return this.settingValue.split(this.tokenSeparator).filter(Boolean);
   }
 }

@@ -28,6 +28,11 @@ ru:
                 lt_1h: "< 1 час"
                 gt_24h: "> 24 часа"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Изменения"
+        changes_removed: "Отозваны"
+        tag_names: "Теги"
     notifications:
       alt:
         solved:
@@ -95,6 +100,11 @@ ru:
           solved: "Решённые"
           unsolved: "Нерешённые"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Тема"
+            category: "Категория"
       web_hooks:
         solved_event:
           group_name: "Событие решения вопроса"
