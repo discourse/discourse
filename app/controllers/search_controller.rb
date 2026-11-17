@@ -264,9 +264,7 @@ class SearchController < ApplicationController
       elsif "topic" == search_context[:type]
         context_obj = Topic.find_by(id: search_context[:id].to_i)
       elsif "tag" == search_context[:type]
-        if !DiscourseTagging.hidden_tag_names(guardian).include?(search_context[:id])
-          context_obj = Tag.where_name(search_context[:id]).first
-        end
+        context_obj = DiscourseTagging.visible_tags(guardian).where_name(search_context[:id]).first
       end
 
       type_filter = nil

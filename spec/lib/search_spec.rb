@@ -125,6 +125,87 @@ RSpec.describe Search do
         result = Search.execute(hidden_tag.name, guardian: Guardian.new(Fabricate(:user)))
         expect(result.tags).to contain_exactly()
       end
+
+      it "does not match posts through hidden tags for regular users" do
+        visible_tag = Fabricate(:tag)
+        topic.update!(tags: [hidden_tag, visible_tag])
+        SearchIndexer.index(topic, force: true)
+        staff_tag_group.update!(name: "secret-group")
+        synonym = Fabricate(:tag, target_tag: hidden_tag)
+        TagGroupMembership.where(tag: synonym).delete_all
+
+        [Guardian.new, Guardian.new(Fabricate(:user))].each do |guardian|
+          [
+            hidden_tag.name,
+            "tags:#{hidden_tag.name}",
+            "tags:#{hidden_tag.name}+#{visible_tag.name}",
+            "##{hidden_tag.name}",
+            "#secret-group",
+            synonym.name,
+            "tags:#{synonym.name}",
+            "##{synonym.name}",
+          ].each { |term| expect(Search.execute(term, guardian:).posts).to be_empty, term }
+        end
+
+        admin = Guardian.new(Fabricate(:admin))
+
+        ["tags:#{hidden_tag.name}", "##{hidden_tag.name}", "#secret-group"].each do |term|
+          expect(Search.execute(term, guardian: admin).posts).to contain_exactly(post), term
+        end
+      end
+
+      it "stops matching posts through tags restricted to private categories" do
+        tag = Fabricate(:tag)
+        topic.update!(tags: [tag])
+        SearchIndexer.index(topic, force: true)
+        Jobs::ReindexSearch.new.execute({})
+
+        expect(Search.execute(tag.name).posts).to contain_exactly(post)
+
+        CategoryTag.create!(category: Fabricate(:private_category, group: Fabricate(:group)), tag:)
+        Fabricate(:tag_group, name: "public-group", tags: [tag])
+        Jobs::ReindexSearch.new.execute({})
+
+        expect(Search.execute(tag.name).posts).to be_empty
+        expect(Search.execute("#public-group").posts).to be_empty
+      end
+
+      it "stops matching posts through tags turned into synonyms of hidden tags" do
+        tag = Fabricate(:tag)
+        topic.update!(tags: [tag])
+        SearchIndexer.index(topic, force: true)
+        Jobs::ReindexSearch.new.execute({})
+
+        DiscourseTagging.add_or_create_synonyms(hidden_tag, synonym_tag_ids: [tag.id])
+        TagGroupMembership.where(tag:).delete_all
+
+        expect(Search.execute(tag.name).posts).to be_empty
+      end
+
+      it "reindexes posts when tags become hidden or visible" do
+        tag = Fabricate(:tag)
+        synonym = Fabricate(:tag, target_tag: tag)
+        topic.update!(tags: [tag])
+        SearchIndexer.index(topic, force: true)
+        Jobs::ReindexSearch.new.execute({})
+
+        TagGroupMembership.create!(tag_group: staff_tag_group, tag: synonym)
+        Jobs::ReindexSearch.new.execute({})
+
+        expect(Search.execute(tag.name).posts).to contain_exactly(post)
+        expect(Search.execute(synonym.name).posts).to be_empty
+
+        TagGroupMembership.create!(tag_group: staff_tag_group, tag: tag)
+        SearchIndexer.queue_tags_posts_reindex([tag.id])
+
+        expect(Search.execute(tag.name).posts).to be_empty
+
+        TagGroupMembership.where(tag: [tag, synonym]).delete_all
+        Jobs::ReindexSearch.new.execute({})
+
+        expect(Search.execute(tag.name).posts).to contain_exactly(post)
+        expect(Search.execute(synonym.name).posts).to contain_exactly(post)
+      end
     end
 
     context "with accents" do

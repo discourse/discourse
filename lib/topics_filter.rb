@@ -921,12 +921,15 @@ class TopicsFilter
   # Accepts an array of tag names and returns an array of resolved tag IDs.
   # Synonym tags are resolved to their target tag ID.
   def tag_ids_from_tag_names(tag_names)
-    DiscourseTagging
-      .filter_visible(Tag, @guardian)
-      .where_name(tag_names)
-      .pluck(:id, :target_tag_id)
-      .map { |id, target_id| target_id || id }
-      .uniq
+    tag_ids =
+      DiscourseTagging
+        .filter_visible(Tag, @guardian)
+        .where_name(tag_names)
+        .pluck(:id, :target_tag_id)
+        .map { |id, target_id| target_id || id }
+        .uniq
+
+    DiscourseTagging.filter_visible(Tag.where(id: tag_ids), @guardian).pluck(:id)
   end
 
   def filter_tag_groups(values:)
@@ -935,7 +938,7 @@ class TopicsFilter
       tag_group_ids = TagGroup.visible(@guardian).where_name(tag_group_name).pluck(:id)
       exclude_clause = "NOT" if key_prefix == "-"
       filter =
-        "tags.id #{exclude_clause} IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))"
+        "tags.id #{exclude_clause} IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?) AND tag_id IN (#{DiscourseTagging.visible_tags(@guardian).select(:id).to_sql}))"
 
       query =
         if exclude_clause.present?

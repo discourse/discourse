@@ -1755,6 +1755,17 @@ RSpec.describe TopicsFilter do
             .pluck(:id),
         ).to eq([])
       end
+
+      it "ignores tags of the group restricted to categories the user can't see" do
+        CategoryTag.create!(category: Fabricate(:private_category, group:), tag: tag2)
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:#{tag_group.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+      end
     end
 
     describe "when filtering by tag_groups with special characters" do
