@@ -171,10 +171,12 @@ discourse_ai:
     allow_any: false
     refresh: true
     area: "ai-features/ai_helper"
+    format: "full"
   ai_helper_allowed_in_pm:
     default: false
     client: true
     area: "ai-features/ai_helper"
+    format: "full"
   post_ai_helper_allowed_groups:
     type: group_list
     list_type: compact
@@ -182,12 +184,14 @@ discourse_ai:
     allow_any: false
     refresh: true
     area: "ai-features/ai_helper"
+    format: "full"
   ai_helper_automatic_chat_thread_title:
     default: false
     area: "ai-features/ai_helper"
   ai_helper_automatic_chat_thread_title_delay:
     default: 5
     area: "ai-features/ai_helper"
+    unit: "minutes"
   ai_helper_enabled_features:
     client: true
     default: "suggestions|context_menu"
@@ -199,52 +203,62 @@ discourse_ai:
       - "suggestions"
       - "context_menu"
     area: "ai-features/ai_helper"
+    format: "full"
   ai_helper_proofreader_agent:
     default: "-22"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
   ai_helper_title_suggestions_agent:
     default: "-23"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
   ai_helper_explain_agent:
     default: "-24"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
   ai_helper_post_illustrator_agent:
     default: "-21"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
   ai_helper_smart_dates_agent:
     default: "-19"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
   ai_helper_translator_agent:
     default: "-25"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
   ai_helper_markdown_tables_agent:
     default: "-20"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
   ai_helper_custom_prompt_agent:
     default: "-18"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
   ai_image_caption_agent:
     default: "-26"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     validator: "DiscourseAi::Configuration::ImageCaptionAgentValidator"
     area: "ai-features/image_caption"
+    format: "large"
   ai_post_image_captions_enabled:
     default: false
     client: true
@@ -258,6 +272,7 @@ discourse_ai:
     default: 0
     min: 0
     area: "ai-features/image_caption"
+    unit: "posts"
   ai_post_image_captions_backfill_max_age_days:
     default: 30
     min: 1
@@ -268,6 +283,7 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+    format: "large"
 
   ai_embeddings_enabled:
     default: false
@@ -414,6 +430,7 @@ discourse_ai:
     list_type: compact
     default: ""
     area: "ai-features/summarization"
+    format: "full"
   ai_summary_gists_enabled:
     default: false
     client: true
@@ -468,12 +485,14 @@ discourse_ai:
     default: ""
     allow_any: false
     area: "ai-features/bot"
+    format: "full"
   ai_bot_allowed_groups:
     type: group_list
     list_type: compact
     default: "3|14" # 3: @staff, 14: @trust_level_4
     area: "ai-features/bot"
     disallowed_groups: "0" # everyone
+    format: "full"
   ai_bot_public_sharing_allowed_groups:
     client: false
     type: group_list
@@ -482,6 +501,7 @@ discourse_ai:
     allow_any: false
     refresh: true
     area: "ai-features/bot"
+    format: "full"
   ai_bot_add_to_header:
     default: false
     client: true
@@ -533,6 +553,7 @@ discourse_ai:
     disallowed_groups: "0"
     allow_any: false
     area: "ai-features/search"
+    format: "full"
   ai_ask_ai_report_max_asks:
     default: 200
     min: 1
@@ -545,6 +566,7 @@ discourse_ai:
     disallowed_groups: "0"
     allow_any: false
     area: "ai-features/search"
+    format: "full"
   ai_ask_ai_summary_detail:
     default: "balanced"
     type: enum
@@ -609,6 +631,7 @@ discourse_ai:
     default: "3" # 3: @staff
     allow_any: false
     area: "ai-features/search"
+    format: "full"
   ai_ask_ai_external_sources:
     type: list
     list_type: compact
@@ -628,6 +651,7 @@ discourse_ai:
     allow_any: false
     refresh: true
     area: "ai-features/search"
+    format: "full"
   ai_automation_max_triage_per_minute:
     default: 60
     hidden: true
@@ -738,11 +762,13 @@ discourse_ai:
     enum: "CategoryScopeSiteSetting"
     client: false
     area: "ai-features/translation"
+    format: "large"
   ai_translation_categories:
     type: category_list
     default: ""
     client: false
     area: "ai-features/translation"
+    format: "full"
     depends_on:
       - ai_translation_category_scope
     depends_on_values:
