@@ -13,12 +13,23 @@ module CategoryGuardian
       (SiteSetting.moderators_manage_categories && is_moderator? && can_see_category?(category))
   end
 
+  def can_edit_category_as_group_moderator?(category)
+    category && category_group_moderator_can_edit_settings?(category.id) &&
+      can_see_category?(category)
+  end
+
+  def can_edit_categories_as_group_moderator?
+    SiteSetting.category_group_moderators_can_edit_categories && !is_staff? && !is_silenced? &&
+      moderated_category_ids.present?
+  end
+
   def can_edit_serialized_category?(category_id:, read_restricted:)
-    is_admin? ||
-      (
-        SiteSetting.moderators_manage_categories && is_moderator? &&
-          can_see_serialized_category?(category_id: category_id, read_restricted: read_restricted)
-      )
+    return true if is_admin?
+
+    can_edit =
+      (SiteSetting.moderators_manage_categories && is_moderator?) ||
+        category_group_moderator_can_edit_settings?(category_id)
+    can_edit && can_see_serialized_category?(category_id:, read_restricted:)
   end
 
   def can_delete_category?(category)
@@ -80,6 +91,10 @@ module CategoryGuardian
   end
 
   private
+
+  def category_group_moderator_can_edit_settings?(category_id)
+    can_edit_categories_as_group_moderator? && moderated_category_ids.include?(category_id)
+  end
 
   def secure_category_ids_set
     @secure_category_ids_set ||= secure_category_ids.to_set

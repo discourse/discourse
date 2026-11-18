@@ -247,7 +247,17 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    guardian.ensure_can_edit!(@category)
+    unless guardian.can_edit?(@category)
+      return(
+        json_result(@category, serializer: CategorySerializer) do |category|
+          attributes = params.permit(*CategoryUpdater::GROUP_MODERATOR_FIELDS)
+          if CategoryUpdater.update(guardian, category, attributes, as_group_moderator: true)
+            Category.preload_user_fields!(guardian, [category])
+            true
+          end
+        end
+      )
+    end
 
     json_result(@category, serializer: CategorySerializer) do |cat|
       category_params_for_log = category_params.dup

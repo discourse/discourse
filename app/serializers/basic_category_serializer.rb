@@ -22,6 +22,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :parent_category_id,
              :notification_level,
              :can_edit,
+             :can_edit_as_group_moderator,
              :topic_template,
              :topic_title_placeholder,
              :has_children,
@@ -76,7 +77,15 @@ class BasicCategorySerializer < ApplicationSerializer
   end
 
   def include_can_edit?
-    scope && scope.can_edit?(object)
+    scope && (scope.can_edit?(object) || include_can_edit_as_group_moderator?)
+  end
+
+  def can_edit_as_group_moderator
+    true
+  end
+
+  def include_can_edit_as_group_moderator?
+    scope&.can_edit_category_as_group_moderator?(object)
   end
 
   def notification_level

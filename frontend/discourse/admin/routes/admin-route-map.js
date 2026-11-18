@@ -1,5 +1,5 @@
 /* eslint-disable ember/route-path-style */
-export default function () {
+function mapStaffRoutes() {
   this.route("admin", function () {
     this.route("dashboard", { path: "/" });
     this.route("adminSiteTraffic", {
@@ -479,6 +479,13 @@ export default function () {
     this.route("setup");
     this.route("tabs", { path: "/:tab" });
   });
+}
+
+export default function () {
+  const setupData = document.getElementById("data-discourse-setup")?.dataset;
+  if (setupData?.categoryEditorOnly !== "true") {
+    mapStaffRoutes.call(this);
+  }
 
   this.route("editCategory", { path: "/c/*slug/edit" }, function () {
     this.route("tabs", { path: "/:tab" });

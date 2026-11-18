@@ -49,15 +49,26 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
     >
 
       <:actions>
-        <DToggleSwitch
-          class="category-show-advanced-tabs-toggle"
-          @label="category.show_advanced"
-          @state={{@controller.showAdvancedTabs}}
-          {{on "click" @controller.toggleAdvancedTabs}}
-        />
+        {{#unless @controller.model.can_edit_as_group_moderator}}
+          <DToggleSwitch
+            class="category-show-advanced-tabs-toggle"
+            @label="category.show_advanced"
+            @state={{@controller.showAdvancedTabs}}
+            {{on "click" @controller.toggleAdvancedTabs}}
+          />
+        {{/unless}}
       </:actions>
       <:tabs>
-        {{#if @controller.showAdvancedTabs}}
+        {{#if @controller.model.can_edit_as_group_moderator}}
+          {{#each @controller.groupModeratorTabs as |tab|}}
+            <EditCategoryTab
+              @panels={{@controller.panels}}
+              @params={{@controller.parentParams}}
+              @selectedTab={{@controller.selectedTab}}
+              @tab={{tab}}
+            />
+          {{/each}}
+        {{else if @controller.showAdvancedTabs}}
           <EditCategoryTab
             @panels={{@controller.panels}}
             @params={{@controller.parentParams}}

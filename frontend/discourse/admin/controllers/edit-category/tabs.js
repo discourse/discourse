@@ -71,6 +71,12 @@ const SIMPLIFIED_FIELD_LIST = [
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 const DISCUSSION_TYPE_ID = "discussion";
+const GROUP_MODERATOR_TABS = [
+  "general",
+  "settings",
+  "images",
+  "topic-template",
+];
 
 /**
  * @typedef {Record<string, unknown> & { name?: string, style_type?: string, emoji?: string | null, icon?: string | null }} CategoryFormData
@@ -131,6 +137,10 @@ export default class EditCategoryTabsController extends Controller {
 
   get availableLocales() {
     return this.siteSettings.available_locales;
+  }
+
+  get groupModeratorTabs() {
+    return GROUP_MODERATOR_TABS;
   }
 
   get dynamicCategoryTypeTabs() {
@@ -262,6 +272,13 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   setSelectedTab(tab) {
+    if (
+      this.model.can_edit_as_group_moderator &&
+      !GROUP_MODERATOR_TABS.includes(tab)
+    ) {
+      tab = "general";
+    }
+
     if (tab !== "general") {
       this.showAdvancedTabs = true;
     }
@@ -383,17 +400,19 @@ export default class EditCategoryTabsController extends Controller {
     const { visibility, category_type_ids, ...categoryData } = data;
     this.model.setProperties(categoryData);
 
-    // Category serialization converts an empty permission list to staff-only access.
-    if (!this.model.permissions?.length) {
-      this.model.set("permissions", []);
-    }
+    let lostAccess = false;
+    if (!this.model.can_edit_as_group_moderator) {
+      // Category serialization converts an empty permission list to staff-only access.
+      if (!this.model.permissions?.length) {
+        this.model.set("permissions", []);
+      }
 
-    let lostAccess;
-    try {
-      lostAccess = await this.#wouldLoseAccess();
-    } catch (error) {
-      popupAjaxError(error);
-      return;
+      try {
+        lostAccess = await this.#wouldLoseAccess();
+      } catch (error) {
+        popupAjaxError(error);
+        return;
+      }
     }
 
     if (lostAccess) {
@@ -414,7 +433,9 @@ export default class EditCategoryTabsController extends Controller {
         Object.keys(this.model.categoryTypes ?? {})
       );
       const result = await this.model.save(category_type_ids);
-      const siteTextsChanged = await this._saveSiteTexts();
+      const siteTextsChanged =
+        !this.model.can_edit_as_group_moderator &&
+        (await this._saveSiteTexts());
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
 

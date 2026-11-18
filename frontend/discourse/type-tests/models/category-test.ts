@@ -113,6 +113,7 @@ interface ExpectedCategoryFields {
   parent_category_id?: number | null;
   notification_level?: number | null;
   can_edit?: boolean;
+  can_edit_as_group_moderator?: true;
   can_delete?: true;
   cannot_delete_reason?: string;
   is_special?: true;
