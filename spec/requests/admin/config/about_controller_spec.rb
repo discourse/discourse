@@ -94,8 +94,6 @@ describe Admin::Config::AboutController do
             your_organization: {
               company_name: "日本語会社",
               company_url: "https://example.com/ja",
-              governing_law: "日本法",
-              city_for_disputes: "東京",
             },
           }
 
