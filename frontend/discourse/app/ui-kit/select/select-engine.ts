@@ -41,11 +41,11 @@ import {
   applyLegacySelectKitOnChange,
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 import {
-  ItemDirectory,
   mergeContributions,
-  type SelectItem,
-  type SelectItemView,
-} from "./-internals/engine/select-item.ts";
+  ResolvedOptions,
+  type ResolvedOptionView,
+  type SelectResolvedOption,
+} from "./-internals/engine/resolved-option.ts";
 import SelectionUpdates, {
   type SelectionOrigin,
 } from "./-internals/engine/selection-updates.ts";
@@ -109,7 +109,7 @@ export interface SelectGroupInfo {
 
 /**
  * One held value, as the trigger, chips and strip list it: its stable `key`, its `value` and the
- * record it stands for. Its presentation is read from {@link SelectEngine#heldItem}.
+ * record it stands for. Its presentation is read from {@link SelectEngine#heldOption}.
  */
 export interface SelectHeldRow {
   readonly key: string;
@@ -137,10 +137,10 @@ export interface SelectRow {
   /** The option behind the row, with its settings. */
   option: SelectOption;
   /**
-   * What the row shows: its key's item, or for a row that stands for no value key, an item of
+   * What the row shows: its key's resolved option, or for a row that stands for no value key, a resolved option of
    * its own option. Absent on the rows that describe held records.
    */
-  item?: SelectItem;
+  resolved?: SelectResolvedOption;
   /** The group a boundary row belongs to; absent on every other row. */
   group?: SelectGroupInfo;
   /** Row state, centralized so the template and option component don't re-derive it. */
@@ -842,8 +842,8 @@ export default class SelectEngine {
   #legacyKinds: readonly string[];
   #valueResolver: ValueResolver;
 
-  /** The items every surface shows, one per value key, built over the record ledger. */
-  #items: ItemDirectory;
+  /** The resolved options every surface shows, one per value key, built over the record ledger. */
+  #resolved: ResolvedOptions;
 
   /**
    * The client list, read once while what the builder reads through tracking is unchanged, so a
@@ -903,7 +903,7 @@ export default class SelectEngine {
         this.#args.findOption(getValue(this.#extrasAtRest) ?? [], key)?.record,
       heldKeys: () => this.#selectionActions._selectedKeys,
     });
-    this.#items = new ItemDirectory({
+    this.#resolved = new ResolvedOptions({
       fields: () => ({
         labelField: this.#args.labelField,
         iconField: this.#args.iconField,
@@ -968,10 +968,12 @@ export default class SelectEngine {
       getAtMaximum: () => this.atMaximum,
       getTotal: () => this.total,
       viewRecord: (key, input) => this.#valueResolver.recordForView(key, input),
-      itemFor: (key, input) => this.itemFor(key, { kind: "list", input }),
-      peekItem: (key, input) => this.#items.peek(key, { kind: "list", input }),
-      rowItem: (input) => this.#items.rowItem(input),
-      keepItems: (keys) => {
+      resolvedOptionFor: (key, input) =>
+        this.resolvedOptionFor(key, { kind: "list", input }),
+      peekOption: (key, input) =>
+        this.#resolved.peek(key, { kind: "list", input }),
+      rowOption: (input) => this.#resolved.rowOption(input),
+      keepOptions: (keys) => {
         const shown = new Set(keys);
         const kept = new Set(keys);
         for (const key of this.#selectionActions._selectedKeys) {
@@ -979,7 +981,7 @@ export default class SelectEngine {
             kept.add(key);
           }
         }
-        this.#items.pruneList(kept, shown);
+        this.#resolved.pruneList(kept, shown);
       },
       noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
       canGrow: () => this.#source.mayGrow(),
@@ -1467,7 +1469,7 @@ export default class SelectEngine {
 
   /**
    * The held records as the trigger and chips list them, with no presentation; read each one's
-   * item through {@link heldItem}.
+   * resolved option through {@link heldOption}.
    *
    * @param records - The held records.
    */
@@ -1520,31 +1522,34 @@ export default class SelectEngine {
   }
 
   /**
-   * The item a view shows for a value key: the key-scope record with every source's settings
+   * The resolved option a view shows for a value key: the key-scope record with every source's settings
    * merged. `undefined` when no source knows the key and the view brought no input.
    *
    * @param key - A normalized key, as {@link SelectArgsView#valueKey} returns.
    * @param view - The surface asking.
    */
-  itemFor(key: string, view: SelectItemView): SelectItem | undefined {
+  resolvedOptionFor(
+    key: string,
+    view: ResolvedOptionView
+  ): SelectResolvedOption | undefined {
     if (!this.#valueResolver.recordForView(key, view.input)) {
       return undefined;
     }
-    return this.#items.itemFor(key, view);
+    return this.#resolved.resolvedOptionFor(key, view);
   }
 
   /**
-   * The item the held surfaces show for a held record: the key's record, with what every source
+   * The resolved option the held surfaces show for a held record: the key's record, with what every source
    * knows merged, and the held view's options outranking the rest. The record passed is the floor
    * when nothing else knows its key.
    *
    * @param record - A held record, resolved or not.
    */
   @bind
-  heldItem(record: SelectRecord): SelectItem {
+  heldOption(record: SelectRecord): SelectResolvedOption {
     const key = this.#args.valueKey(this.#args.recordValue(record));
     if (key == null) {
-      return this.#items.rowItem(selectOption(record));
+      return this.#resolved.rowOption(selectOption(record));
     }
     // A key the value does not hold yet, such as a pick being announced, is composed on demand.
     const input =
@@ -1553,7 +1558,7 @@ export default class SelectEngine {
         this.#heldInput(this.#args.recordValue(record)) ?? selectOption(record),
       ]).get(key) ??
       record;
-    return this.#items.itemFor(key, { kind: "held", input });
+    return this.#resolved.resolvedOptionFor(key, { kind: "held", input });
   }
 
   /**
@@ -1562,7 +1567,7 @@ export default class SelectEngine {
    */
   @bind
   listHidden(): void {
-    this.#items.forgetListInputs();
+    this.#resolved.forgetListInputs();
   }
 
   /**
@@ -1573,18 +1578,18 @@ export default class SelectEngine {
    */
   @bind
   heldRecord(record: SelectRecord): SelectRecord {
-    return this.heldItem(record).record;
+    return this.heldOption(record).record;
   }
 
   /**
-   * Whether a held record's item is unresolved now. A record the async data captured as a
+   * Whether a held record's resolved option is unresolved now. A record the async data captured as a
    * fallback stops being one once any source supplies its key's record.
    *
    * @param record - A held record, resolved or not.
    */
   @bind
   isHeldUnresolved(record: SelectRecord): boolean {
-    return this.heldItem(record).unresolved;
+    return this.heldOption(record).unresolved;
   }
 
   getRecordLabel(record: SelectRecord | null | undefined): string {
@@ -1602,7 +1607,7 @@ export default class SelectEngine {
    */
   @bind
   getSelectionLabel(record: SelectRecord | null | undefined): string {
-    return record ? this.heldItem(record).label : "";
+    return record ? this.heldOption(record).label : "";
   }
 
   getSingleSelectionLabel(value: SelectValue): string {
@@ -1865,7 +1870,7 @@ export default class SelectEngine {
   }
 
   /**
-   * Whether picking an entry is refused: the key's merged item is disabled. The view tier is the
+   * Whether picking an entry is refused: the key's merged resolved option is disabled. The view tier is the
    * row the list shows for the key while a list is shown, and the key's known option at rest
    * otherwise; then `@valueRecords`, the entry itself at pick tier, and the matching answer.
    */
@@ -1877,7 +1882,7 @@ export default class SelectEngine {
     }
     const ledger = this.#valueResolver.realRecordFor(key) ?? record;
     const view =
-      this.#items.listInput(key) ??
+      this.#resolved.listInput(key) ??
       this.#atRest([
         this.#args.findOption(this.#source.knownOptions(), key) ??
           selectOption(ledger),
@@ -1929,18 +1934,20 @@ export default class SelectEngine {
     const shown = this.listInputs(known, this.filter);
     const candidates = this.#listComposer.pasteOptions(shown);
     if (shown !== known) {
-      const keys = new Set(candidates.map(({ item }) => item.key));
+      const keys = new Set(candidates.map(({ resolved }) => resolved.key));
       candidates.push(
         ...this.#listComposer
           .pasteOptions(known)
-          .filter(({ item }) => item.key != null && !keys.has(item.key))
+          .filter(
+            ({ resolved }) => resolved.key != null && !keys.has(resolved.key)
+          )
       );
     }
-    return candidates.map(({ option, item }) => ({
+    return candidates.map(({ option, resolved }) => ({
       option,
-      key: item.key,
-      label: item.label,
-      record: item.record,
+      key: resolved.key,
+      label: resolved.label,
+      record: resolved.record,
     }));
   }
 

@@ -607,7 +607,7 @@ Named blocks control what the component renders: `:option`, `:selection`, `:sele
 **Supply a block only when an argument cannot express the content.** `@labelField` picks the
 field to display, `@iconField` (or an option's `icon` setting) draws a glyph before each option
 and held value, `@selectedIcon` marks the chosen option, `@icon` puts a glyph in the trigger,
-and `@texts` rewords the empty state (`noResults`). The select draws an item's icon itself, before
+and `@texts` rewords the empty state (`noResults`). The select draws an option's icon itself, before
 any block's content, so a block never draws it again. A block that reproduces one of those is not
 neutral: it costs behaviour (see `:selection` below) and it costs the reader a reason to look.
 
@@ -1439,7 +1439,7 @@ by mechanism.
   icon-only trigger on the button/static variants (`@iconOnly`, which needs `@icon` and a resolved
   `ariaLabel` text for the accessible name, and is ignored with a warning without either; drive
   `@icon` from `@value` for a selection-reactive glyph); the held
-  item's icon before its label when `@icon` is not set; caret swap
+  option's icon before its label when `@icon` is not set; caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); a trailing `@searchIcon` in a
   search field that is not the trigger (the `button` panel's field, the mobile modal's, and
   DSelectList's; never a desktop `typeahead` trigger, and `static` has no search); `@clearable`; `@disabled` /

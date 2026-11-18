@@ -25,7 +25,7 @@ function optionOf(entry: SelectOptionLike): SelectOption | undefined {
 
 /**
  * Whether an option is a kind that can become a value: not an action, not a drawn line. Whether
- * it is disabled is judged on the key's merged item instead.
+ * it is disabled is judged on the key's merged resolved option instead.
  */
 function isPickable(option: SelectOption | undefined): boolean {
   if (!option) {
@@ -87,7 +87,7 @@ export default class SelectionActions {
     /** The record a key stands for by `valueRecords`, the local source or the extras. */
     authorityRecord: (key: string) => SelectRecord | undefined;
     resolveOneSync: (value: SelectId) => SelectRecord | undefined;
-    /** Whether the key's merged item is disabled, with the pick's own input at pick tier. */
+    /** Whether the key's merged resolved option is disabled, with the pick's own input at pick tier. */
     isDisabledPick: (entry: SelectOptionLike) => boolean;
     applyLegacyOnChange: (
       value: SelectValue,

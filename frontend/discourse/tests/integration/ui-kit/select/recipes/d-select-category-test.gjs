@@ -1139,7 +1139,10 @@ module(
         const row = find("[role='option'][data-value='suggest']");
         assert
           .dom(".d-icon-discourse-sparkles", row)
-          .exists({ count: 1 }, "the row draws the item's icon once");
+          .exists(
+            { count: 1 },
+            "the row draws the resolved option's icon once"
+          );
         assert.dom(row).hasText("Suggest a category");
         assert.strictEqual(
           row.querySelector(".d-icon-discourse-sparkles").parentElement,

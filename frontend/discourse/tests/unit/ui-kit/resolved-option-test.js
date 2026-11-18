@@ -3,10 +3,10 @@ import { trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
-  isSelectItem,
-  ItemDirectory,
-  SelectItem,
-} from "discourse/ui-kit/select/-internals/engine/select-item";
+  isResolvedOption,
+  ResolvedOptions,
+  SelectResolvedOption,
+} from "discourse/ui-kit/select/-internals/engine/resolved-option";
 import {
   entryRecord,
   recordOf,
@@ -20,7 +20,7 @@ function createDirectory(record, contributions = {}) {
     unresolved: false,
     fields: { labelField: "name" },
   };
-  const directory = new ItemDirectory({
+  const directory = new ResolvedOptions({
     fields: () => state.fields,
     valueOf: (entry) => entry.id,
     recordFor: () => ({
@@ -32,10 +32,10 @@ function createDirectory(record, contributions = {}) {
   return { directory, state };
 }
 
-module("Unit | ui-kit | select-item", function (hooks) {
+module("Unit | ui-kit | SelectResolvedOption", function (hooks) {
   setupTest(hooks);
 
-  test("item identity and branding come from injected sources", function (assert) {
+  test("resolved option identity and branding come from injected sources", function (assert) {
     const record = { id: 0, name: "Authoritative pear", disabled: true };
     const input = selectOption({ id: "copy", name: "View pear" });
     const key = `fruit:${record.id}`;
@@ -56,11 +56,11 @@ module("Unit | ui-kit | select-item", function (hooks) {
         return { view: input };
       },
     };
-    const item = new ItemDirectory(sources).itemFor(key, view);
+    const item = new ResolvedOptions(sources).resolvedOptionFor(key, view);
 
     assert.true(
-      item instanceof SelectItem,
-      "the directory builds a SelectItem"
+      item instanceof SelectResolvedOption,
+      "the directory builds a SelectResolvedOption"
     );
     assert.strictEqual(item.key, key, "the supplied key is retained");
     assert.strictEqual(
@@ -80,7 +80,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
       "disabled defaults to false even on this record"
     );
     assert.strictEqual(item.action, undefined, "an absent action is undefined");
-    assert.true(Object.isFrozen(item), "the item is frozen");
+    assert.true(Object.isFrozen(item), "the resolved option is frozen");
     assert.true(
       Object.isFrozen(item.properties),
       "explicit properties are frozen"
@@ -99,7 +99,10 @@ module("Unit | ui-kit | select-item", function (hooks) {
         `${method} receives the requesting key and view`
       );
     }
-    assert.true(isSelectItem(item), "the directory's item carries the brand");
+    assert.true(
+      isResolvedOption(item),
+      "the directory's resolved option carries the brand"
+    );
     const lookalike = {
       key: item.key,
       value: item.value,
@@ -116,12 +119,15 @@ module("Unit | ui-kit | select-item", function (hooks) {
       record,
       input,
       lookalike,
-      Object.create(SelectItem.prototype),
+      Object.create(SelectResolvedOption.prototype),
       null,
       undefined,
       key,
     ]) {
-      assert.false(isSelectItem(candidate), "only a built item has the brand");
+      assert.false(
+        isResolvedOption(candidate),
+        "only a built resolved option has the brand"
+      );
     }
   });
 
@@ -148,7 +154,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
 
     for (const tier of tiers) {
       const expected = contributions[tier].settings;
-      const item = directory.itemFor(record.id, view);
+      const item = directory.resolvedOptionFor(record.id, view);
       assert.deepEqual(
         item.properties,
         expected,
@@ -178,7 +184,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
     }
 
     assert.deepEqual(
-      directory.itemFor(record.id, view).properties,
+      directory.resolvedOptionFor(record.id, view).properties,
       {},
       "removed contributions leave no accumulated properties"
     );
@@ -193,7 +199,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
     const contributions = { view: viewInput, valueRecords, pick, answer };
     const { directory } = createDirectory(record, contributions);
     const view = { kind: "list", input: viewInput };
-    const item = directory.itemFor(record.id, view);
+    const item = directory.resolvedOptionFor(record.id, view);
 
     assert.deepEqual(
       item.properties,
@@ -207,7 +213,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
     );
     contributions.view = record;
     contributions.valueRecords = selectOption(record);
-    const bareHigher = directory.itemFor(record.id, view);
+    const bareHigher = directory.resolvedOptionFor(record.id, view);
     assert.deepEqual(
       bareHigher.properties,
       { ...answer.settings, ...pick.settings },
@@ -243,11 +249,11 @@ module("Unit | ui-kit | select-item", function (hooks) {
       answer: lower,
     });
     const view = { kind: "list", input: higher };
-    const before = directory.itemFor(record.id, view);
+    const before = directory.resolvedOptionFor(record.id, view);
     state.contributions.view = higher.with(
       Object.fromEntries(Object.keys(higher.settings).map((key) => [key, null]))
     );
-    const after = directory.itemFor(record.id, view);
+    const after = directory.resolvedOptionFor(record.id, view);
 
     assert.deepEqual(
       before.properties,
@@ -267,12 +273,12 @@ module("Unit | ui-kit | select-item", function (hooks) {
     assert.deepEqual(
       before.properties,
       higher.settings,
-      "the old item keeps its snapshot"
+      "the old resolved option keeps its snapshot"
     );
     assert.notStrictEqual(
       after,
       before,
-      "clearing effective properties creates an item"
+      "clearing effective properties creates a resolved option"
     );
   });
 
@@ -292,7 +298,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
       iconField: "icon",
       descriptionField: "details",
     };
-    const item = directory.itemFor(record.id, { kind: "held" });
+    const item = directory.resolvedOptionFor(record.id, { kind: "held" });
 
     assert.strictEqual(
       item.label,
@@ -322,17 +328,17 @@ module("Unit | ui-kit | select-item", function (hooks) {
     assert.strictEqual(
       item.label,
       String(record.count),
-      "the same item reads a new label field as a string"
+      "the same resolved option reads a new label field as a string"
     );
     assert.strictEqual(
       item.icon,
       record.alternateIcon,
-      "the same item reads a new icon field"
+      "the same resolved option reads a new icon field"
     );
     assert.strictEqual(
       item.description,
       record.alternateDetails,
-      "the same item reads a new description field"
+      "the same resolved option reads a new description field"
     );
     state.fields = { labelField: "name" };
     assert.strictEqual(
@@ -356,12 +362,12 @@ module("Unit | ui-kit | select-item", function (hooks) {
     const view = { kind: "held" };
 
     assert.strictEqual(
-      directory.itemFor(record.id, view).description,
+      directory.resolvedOptionFor(record.id, view).description,
       answer.settings.description,
       "an explicit answer beats the record"
     );
     state.contributions.view = empty;
-    const suppressed = directory.itemFor(record.id, view);
+    const suppressed = directory.resolvedOptionFor(record.id, view);
     assert.strictEqual(
       suppressed.description,
       undefined,
@@ -374,13 +380,13 @@ module("Unit | ui-kit | select-item", function (hooks) {
     );
     state.contributions.view = empty.with({ description: null });
     assert.strictEqual(
-      directory.itemFor(record.id, view).description,
+      directory.resolvedOptionFor(record.id, view).description,
       answer.settings.description,
       "null reveals the lower explicit description"
     );
     delete state.contributions.answer;
     assert.strictEqual(
-      directory.itemFor(record.id, view).description,
+      directory.resolvedOptionFor(record.id, view).description,
       record.details,
       "removing all explicit descriptions reveals derivation"
     );
@@ -396,7 +402,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
     state.fields.iconField = "glyph";
     const view = { kind: "held" };
 
-    const explicit = directory.itemFor(record.id, view);
+    const explicit = directory.resolvedOptionFor(record.id, view);
     assert.strictEqual(
       explicit.label,
       "Answer label",
@@ -405,18 +411,18 @@ module("Unit | ui-kit | select-item", function (hooks) {
     assert.strictEqual(explicit.icon, "clock", "an explicit icon wins");
 
     state.contributions.view = selectOption(record, { label: "", icon: "" });
-    const empty = directory.itemFor(record.id, view);
+    const empty = directory.resolvedOptionFor(record.id, view);
     assert.strictEqual(empty.label, "", "an empty label is shown as empty");
     assert.strictEqual(empty.icon, undefined, "an empty icon means none");
 
     delete state.contributions.view;
     delete state.contributions.answer;
-    const derived = directory.itemFor(record.id, view);
+    const derived = directory.resolvedOptionFor(record.id, view);
     assert.strictEqual(derived.label, record.name, "the label field derives");
     assert.strictEqual(derived.icon, record.glyph, "the icon field derives");
   });
 
-  test("unresolved items keep fallback labels and suppress derived details", function (assert) {
+  test("unresolved options keep fallback labels and suppress derived details", function (assert) {
     const record = { id: "missing", fallbackName: "Missing fruit" };
     const reads = { icon: 0, details: 0 };
     for (const field of Object.keys(reads)) {
@@ -435,7 +441,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
       descriptionField: "details",
     };
     const view = { kind: "held" };
-    const item = directory.itemFor(record.id, view);
+    const item = directory.resolvedOptionFor(record.id, view);
 
     assert.true(item.unresolved, "the unresolved source state is exposed");
     assert.strictEqual(
@@ -456,19 +462,19 @@ module("Unit | ui-kit | select-item", function (hooks) {
     );
     const answer = selectOption(record, { description: "Still resolving" });
     state.contributions.answer = answer;
-    const explicit = directory.itemFor(record.id, view);
+    const explicit = directory.resolvedOptionFor(record.id, view);
     assert.true(
       explicit.unresolved,
-      "an explicit description does not resolve the item"
+      "an explicit description does not resolve the resolved option"
     );
     assert.strictEqual(
       explicit.description,
       answer.settings.description,
-      "an unresolved item still shows an explicit description"
+      "an unresolved option still shows an explicit description"
     );
   });
 
-  test("explicit false enables a lower disabled item", function (assert) {
+  test("explicit false enables a lower disabled resolved option", function (assert) {
     const record = { id: "lime", name: "Lime" };
     const lower = selectOption(record, { disabled: true });
     const higher = selectOption(record, { disabled: false });
@@ -477,7 +483,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
       view: higher,
     });
     const view = { kind: "held" };
-    const enabled = directory.itemFor(record.id, view);
+    const enabled = directory.resolvedOptionFor(record.id, view);
 
     assert.strictEqual(
       enabled.disabled,
@@ -490,13 +496,13 @@ module("Unit | ui-kit | select-item", function (hooks) {
     );
     state.contributions.view = higher.with({ disabled: null });
     assert.strictEqual(
-      directory.itemFor(record.id, view).disabled,
+      directory.resolvedOptionFor(record.id, view).disabled,
       lower.settings.disabled,
       "clearing false reveals true"
     );
     state.contributions = {};
     assert.false(
-      directory.itemFor(record.id, view).disabled,
+      directory.resolvedOptionFor(record.id, view).disabled,
       "no explicit disabled means false"
     );
   });
@@ -523,7 +529,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
 
     for (const tier of tiers) {
       const input = contributions[tier];
-      const item = directory.itemFor(record.id, view);
+      const item = directory.resolvedOptionFor(record.id, view);
       assert.strictEqual(
         item.action,
         input.settings.onSelect,
@@ -545,7 +551,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
       assert.strictEqual(
         item.record,
         record,
-        "the callback's record does not replace the item record"
+        "the callback's record does not replace the resolved option record"
       );
       delete contributions[tier];
     }
@@ -555,13 +561,13 @@ module("Unit | ui-kit | select-item", function (hooks) {
       "one action runs per invocation"
     );
     assert.strictEqual(
-      directory.itemFor(record.id, view).action,
+      directory.resolvedOptionFor(record.id, view).action,
       undefined,
       "removing every callback removes the action"
     );
   });
 
-  test("equal settings reuse items and changed records replace them in each view", function (assert) {
+  test("equal settings reuse resolved options and changed records replace them in each view", function (assert) {
     const record = { id: "cherry", name: "Cherry" };
     for (const kind of ["list", "held"]) {
       const option = selectOption(record, {
@@ -570,11 +576,11 @@ module("Unit | ui-kit | select-item", function (hooks) {
       });
       const { directory, state } = createDirectory(record, { view: option });
       const view = { kind, input: option };
-      const original = directory.itemFor(record.id, view);
+      const original = directory.resolvedOptionFor(record.id, view);
       assert.strictEqual(
-        directory.itemFor(record.id, { ...view }),
+        directory.resolvedOptionFor(record.id, { ...view }),
         original,
-        `${kind} reuses an unchanged item`
+        `${kind} reuses an unchanged resolved option`
       );
       const equal = selectOption(record, { ...option.settings });
       state.contributions.view = equal;
@@ -584,12 +590,12 @@ module("Unit | ui-kit | select-item", function (hooks) {
         "the equal-settings option really is new"
       );
       assert.strictEqual(
-        directory.itemFor(record.id, { kind, input: equal }),
+        directory.resolvedOptionFor(record.id, { kind, input: equal }),
         original,
         `${kind} compares merged properties rather than option identity`
       );
       state.record = { ...record };
-      const replacement = directory.itemFor(record.id, view);
+      const replacement = directory.resolvedOptionFor(record.id, view);
       assert.notStrictEqual(
         replacement,
         original,
@@ -601,7 +607,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
         `${kind} exposes the replacement record`
       );
       assert.strictEqual(
-        directory.itemFor(record.id, view),
+        directory.resolvedOptionFor(record.id, view),
         replacement,
         `${kind} memoises the replacement`
       );
@@ -620,11 +626,11 @@ module("Unit | ui-kit | select-item", function (hooks) {
           [tier]: option,
         });
         const view = { kind, input: record };
-        const original = directory.itemFor(record.id, view);
+        const original = directory.resolvedOptionFor(record.id, view);
         state.contributions[tier] = option.with({
           description: `${tier} changed`,
         });
-        const changed = directory.itemFor(record.id, view);
+        const changed = directory.resolvedOptionFor(record.id, view);
         assert.notStrictEqual(
           changed,
           original,
@@ -638,10 +644,10 @@ module("Unit | ui-kit | select-item", function (hooks) {
         assert.strictEqual(
           original.description,
           option.settings.description,
-          "an earlier item's explicit properties remain unchanged"
+          "an earlier resolved option's explicit properties remain unchanged"
         );
         delete state.contributions[tier];
-        const removed = directory.itemFor(record.id, view);
+        const removed = directory.resolvedOptionFor(record.id, view);
         assert.notStrictEqual(
           removed,
           changed,
@@ -665,16 +671,16 @@ module("Unit | ui-kit | select-item", function (hooks) {
       answer,
     });
     const view = { kind: "list", input: winner };
-    const original = directory.itemFor(record.id, view);
+    const original = directory.resolvedOptionFor(record.id, view);
     state.contributions.answer = answer.with({ description: "Changed answer" });
 
     assert.strictEqual(
-      directory.itemFor(record.id, view),
+      directory.resolvedOptionFor(record.id, view),
       original,
-      "unchanged merged properties reuse the item despite a changed input"
+      "unchanged merged properties reuse the resolved option despite a changed input"
     );
     delete state.contributions.view;
-    const revealed = directory.itemFor(record.id, view);
+    const revealed = directory.resolvedOptionFor(record.id, view);
     assert.notStrictEqual(
       revealed,
       original,
@@ -687,7 +693,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
     );
   });
 
-  test("every changed merged setting replaces the memoised item", function (assert) {
+  test("every changed merged setting replaces the memoised resolved option", function (assert) {
     const record = { id: "mango", name: "Mango" };
     const settings = {
       description: "Original description",
@@ -708,10 +714,10 @@ module("Unit | ui-kit | select-item", function (hooks) {
         const option = selectOption(record, settings);
         const { directory, state } = createDirectory(record, { view: option });
         const view = { kind, input: option };
-        const original = directory.itemFor(record.id, view);
+        const original = directory.resolvedOptionFor(record.id, view);
         const changedInput = option.with({ [setting]: value });
         state.contributions.view = changedInput;
-        const changed = directory.itemFor(record.id, view);
+        const changed = directory.resolvedOptionFor(record.id, view);
         assert.notStrictEqual(
           changed,
           original,
@@ -726,7 +732,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
           ...changedInput.settings,
         });
         assert.strictEqual(
-          directory.itemFor(record.id, view),
+          directory.resolvedOptionFor(record.id, view),
           changed,
           `${kind} reuses equal ${setting} settings on a new option`
         );
@@ -739,22 +745,26 @@ module("Unit | ui-kit | select-item", function (hooks) {
     const { directory } = createDirectory(record);
     const listView = { kind: "list", input: record };
     const heldView = { kind: "held" };
-    const list = directory.itemFor(record.id, listView);
-    const held = directory.itemFor(record.id, heldView);
+    const list = directory.resolvedOptionFor(record.id, listView);
+    const held = directory.resolvedOptionFor(record.id, heldView);
 
-    assert.notStrictEqual(list, held, "views never share item identity");
+    assert.notStrictEqual(
+      list,
+      held,
+      "views never share resolved option identity"
+    );
     assert.strictEqual(
       list.record,
       held.record,
       "views still share the key-scope record"
     );
     assert.strictEqual(
-      directory.itemFor(record.id, listView),
+      directory.resolvedOptionFor(record.id, listView),
       list,
       "held lookup does not overwrite the list memo"
     );
     assert.strictEqual(
-      directory.itemFor(record.id, heldView),
+      directory.resolvedOptionFor(record.id, heldView),
       held,
       "list lookup does not overwrite the held memo"
     );
@@ -765,7 +775,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
       { id: "kept", name: "Kept fruit" },
       { id: "dropped", name: "Dropped fruit" },
     ];
-    const directory = new ItemDirectory({
+    const directory = new ResolvedOptions({
       fields: () => ({ labelField: "name" }),
       valueOf: (record) => record.id,
       recordFor: (key) => ({
@@ -776,14 +786,17 @@ module("Unit | ui-kit | select-item", function (hooks) {
     });
     const before = records.map((record) => ({
       record,
-      list: directory.itemFor(record.id, { kind: "list", input: record }),
-      held: directory.itemFor(record.id, { kind: "held" }),
+      list: directory.resolvedOptionFor(record.id, {
+        kind: "list",
+        input: record,
+      }),
+      held: directory.resolvedOptionFor(record.id, { kind: "held" }),
     }));
     const keep = new Set([records[0].id]);
     directory.pruneList(keep);
 
     for (const { record, list, held } of before) {
-      const after = directory.itemFor(record.id, {
+      const after = directory.resolvedOptionFor(record.id, {
         kind: "list",
         input: record,
       });
@@ -793,14 +806,17 @@ module("Unit | ui-kit | select-item", function (hooks) {
         "list identity survives exactly for keys in keep"
       );
       assert.strictEqual(
-        directory.itemFor(record.id, { kind: "held" }),
+        directory.resolvedOptionFor(record.id, { kind: "held" }),
         held,
-        "held items survive even when their list key is dropped"
+        "held resolved options survive even when their list key is dropped"
       );
     }
     directory.pruneList(new Set());
     assert.notStrictEqual(
-      directory.itemFor(records[0].id, { kind: "list", input: records[0] }),
+      directory.resolvedOptionFor(records[0].id, {
+        kind: "list",
+        input: records[0],
+      }),
       before[0].list,
       "an empty keep set also drops a formerly kept key"
     );
@@ -811,7 +827,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
     );
   });
 
-  test("building and memoising items never reads presentation fields", function (assert) {
+  test("building and memoising resolved options never reads presentation fields", function (assert) {
     const values = { name: "Nectarine", icon: "leaf", details: "Smooth skin" };
     const reads = Object.fromEntries(
       Object.keys(values).map((field) => [field, 0])
@@ -835,11 +851,11 @@ module("Unit | ui-kit | select-item", function (hooks) {
       descriptionField: "details",
     };
     const listView = { kind: "list", input: record };
-    const list = directory.itemFor(record.id, listView);
-    const held = directory.itemFor(record.id, { kind: "held" });
-    const row = directory.rowItem(rowRecord);
+    const list = directory.resolvedOptionFor(record.id, listView);
+    const held = directory.resolvedOptionFor(record.id, { kind: "held" });
+    const row = directory.rowOption(rowRecord);
     assert.strictEqual(
-      directory.itemFor(record.id, listView),
+      directory.resolvedOptionFor(record.id, listView),
       list,
       "a memo lookup also stays lazy"
     );
@@ -849,7 +865,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
     assert.deepEqual(
       reads,
       noReads,
-      "building list, held and row items reads no presentation"
+      "building list, held and row resolved options reads no presentation"
     );
     assert.strictEqual(list.label, values.name, "label derives when requested");
     assert.true(reads.name > noReads.name, "reading label reads its field");
@@ -876,7 +892,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
     );
   });
 
-  test("keyless row items use only their own input and memoise it", function (assert) {
+  test("keyless row resolved options use only their own input and memoise it", function (assert) {
     const shared = { id: "unrelated", name: "Shared fruit" };
     const record = {
       name: "Browse fruit",
@@ -902,9 +918,12 @@ module("Unit | ui-kit | select-item", function (hooks) {
       iconField: "icon",
       descriptionField: "details",
     };
-    const item = directory.rowItem(input);
+    const item = directory.rowOption(input);
 
-    assert.true(isSelectItem(item), "row items have the item brand");
+    assert.true(
+      isResolvedOption(item),
+      "row resolved options have the resolved option brand"
+    );
     assert.strictEqual(item.key, null, "a row input has no key");
     assert.strictEqual(item.record, record, "a row keeps its own input record");
     assert.false(
@@ -935,11 +954,11 @@ module("Unit | ui-kit | select-item", function (hooks) {
     assert.strictEqual(item.label, record.name, "the row derives its label");
     assert.strictEqual(item.icon, record.icon, "the row derives its icon");
     assert.strictEqual(
-      directory.rowItem(input),
+      directory.rowOption(input),
       item,
-      "the same input reuses its row item"
+      "the same input reuses its row resolved option"
     );
-    const bare = directory.rowItem(record);
+    const bare = directory.rowOption(record);
     assert.strictEqual(
       bare.record,
       record,
@@ -958,7 +977,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
       "two inputs over one record do not share the row memo"
     );
     assert.strictEqual(
-      directory.rowItem(record),
+      directory.rowOption(record),
       bare,
       "bare row inputs are memoised too"
     );
@@ -967,7 +986,7 @@ module("Unit | ui-kit | select-item", function (hooks) {
   test("a label cache tracks record field changes", function (assert) {
     const record = trackedObject({ id: "lemon", name: "Lemon" });
     const { directory } = createDirectory(record);
-    const item = directory.itemFor(record.id, { kind: "held" });
+    const item = directory.resolvedOptionFor(record.id, { kind: "held" });
     const computations = [];
     const label = createCache(() => {
       const value = item.label;
@@ -1003,15 +1022,15 @@ module("Unit | ui-kit | select-item", function (hooks) {
       "the cache actually recomputed after the field change"
     );
     assert.strictEqual(
-      directory.itemFor(record.id, { kind: "held" }),
+      directory.resolvedOptionFor(record.id, { kind: "held" }),
       item,
-      "a tracked label change needs no replacement item"
+      "a tracked label change needs no replacement resolved option"
     );
   });
 
   module("unresolved naming, pruning and unwrapping", function () {
     function directoryOver(state) {
-      return new ItemDirectory({
+      return new ResolvedOptions({
         fields: () => ({ labelField: "name" }),
         valueOf: (record) => record.id,
         recordFor: () => ({
@@ -1023,13 +1042,15 @@ module("Unit | ui-kit | select-item", function (hooks) {
       });
     }
 
-    test("an unresolved item's label follows the engine's fallback naming", function (assert) {
+    test("an unresolved option's label follows the engine's fallback naming", function (assert) {
       const state = {
         record: { id: 404, name: "404" },
         unresolved: true,
         unresolvedLabel: (record) => `Unknown item (${record.id})`,
       };
-      const item = directoryOver(state).itemFor("404", { kind: "held" });
+      const item = directoryOver(state).resolvedOptionFor("404", {
+        kind: "held",
+      });
       assert.strictEqual(
         item.label,
         state.unresolvedLabel(state.record),
@@ -1038,79 +1059,81 @@ module("Unit | ui-kit | select-item", function (hooks) {
 
       state.unresolvedLabel = () => undefined;
       assert.strictEqual(
-        directoryOver(state).itemFor("404", { kind: "held" }).label,
+        directoryOver(state).resolvedOptionFor("404", { kind: "held" }).label,
         state.record.name,
         "a fallback the rule does not name keeps its own label"
       );
     });
 
-    test("pruneHeld drops held items outside keep", function (assert) {
+    test("pruneHeld drops held resolved options outside keep", function (assert) {
       const state = { record: { id: 1, name: "One" }, unresolved: false };
       const directory = directoryOver(state);
-      const held = directory.itemFor("1", { kind: "held" });
-      const list = directory.itemFor("1", {
+      const held = directory.resolvedOptionFor("1", { kind: "held" });
+      const list = directory.resolvedOptionFor("1", {
         kind: "list",
         input: state.record,
       });
 
       directory.pruneHeld(new Set(["1"]));
       assert.strictEqual(
-        directory.itemFor("1", { kind: "held" }),
+        directory.resolvedOptionFor("1", { kind: "held" }),
         held,
-        "a kept key keeps its held item"
+        "a kept key keeps its held resolved option"
       );
 
       directory.pruneHeld(new Set());
       assert.notStrictEqual(
-        directory.itemFor("1", { kind: "held" }),
+        directory.resolvedOptionFor("1", { kind: "held" }),
         held,
-        "a dropped key builds a new held item"
+        "a dropped key builds a new held resolved option"
       );
       assert.strictEqual(
-        directory.itemFor("1", { kind: "list", input: state.record }),
+        directory.resolvedOptionFor("1", { kind: "list", input: state.record }),
         list,
         "the list memo is left alone"
       );
     });
 
-    test("an item's value follows its record's raw value", function (assert) {
+    test("a resolved option's value follows its record's raw value", function (assert) {
       const state = { record: { id: 7, name: "Seven" }, unresolved: false };
       const directory = directoryOver(state);
-      const item = directory.itemFor("7", { kind: "held" });
+      const item = directory.resolvedOptionFor("7", { kind: "held" });
       state.record.id = "7";
 
       assert.strictEqual(
-        directory.itemFor("7", { kind: "held" }).value,
+        directory.resolvedOptionFor("7", { kind: "held" }).value,
         "7",
-        "a raw value change that keeps the key shows on the item"
+        "a raw value change that keeps the key shows on the resolved option"
       );
       assert.strictEqual(item.value, "7", "the value is read when asked for");
     });
 
-    test("an item stands for its record wherever an entry is accepted", function (assert) {
+    test("a resolved option stands for its record wherever an entry is accepted", function (assert) {
       const state = { record: { id: 3, name: "Three" }, unresolved: false };
-      const item = directoryOver(state).itemFor("3", { kind: "held" });
+      const item = directoryOver(state).resolvedOptionFor("3", {
+        kind: "held",
+      });
 
       assert.strictEqual(
         recordOf(item),
         state.record,
-        "recordOf unwraps an item"
+        "recordOf unwraps a resolved option"
       );
       assert.strictEqual(
         entryRecord(item),
         state.record,
-        "entryRecord unwraps an item"
+        "entryRecord unwraps a resolved option"
       );
       const option = selectOption(item, { description: "Fresh" });
       assert.strictEqual(
         option.record,
         state.record,
-        "wrapping an item lists its record"
+        "wrapping a resolved option lists its record"
       );
       assert.deepEqual(
         option.settings,
         { description: "Fresh" },
-        "wrapping an item carries only the settings given"
+        "wrapping a resolved option carries only the settings given"
       );
     });
   });

@@ -6,18 +6,18 @@ import SelectEngine, {
 
 interface SelectionIconSignature {
   Args: {
-    /** The held record whose item's icon is drawn. */
+    /** The held record whose resolved option's icon is drawn. */
     record: SelectRecord;
     engine: SelectEngine;
   };
 }
 
 /**
- * A held item's icon, drawn before its label or selection block. It is decorative: the label
+ * A held resolved option's icon, drawn before its label or selection block. It is decorative: the label
  * beside it names the value.
  */
 const SelectionIcon: TemplateOnlyComponent<SelectionIconSignature> = <template>
-  {{#let (@engine.heldItem @record) as |held|}}
+  {{#let (@engine.heldOption @record) as |held|}}
     {{#if held.icon}}
       {{dIcon held.icon class="d-select__selection-icon"}}
     {{/if}}

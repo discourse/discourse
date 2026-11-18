@@ -3137,7 +3137,7 @@ module(
       container.innerHTML.indexOf(first) >= 0 &&
       container.innerHTML.indexOf(first) < container.innerHTML.indexOf(text);
 
-    test("a static trigger draws the held item's icon before its label", async function (assert) {
+    test("a static trigger draws the held resolved option's icon before its label", async function (assert) {
       await render(
         <template>
           <IconHost @options={{OPTIONS}} @value={{1}} @variant="static" />
@@ -3152,7 +3152,7 @@ module(
       assert.true(precedes(value, "d-icon-far-heart", "Apple"), "icon first");
     });
 
-    test("a button trigger draws the held item's icon", async function (assert) {
+    test("a button trigger draws the held resolved option's icon", async function (assert) {
       await render(
         <template>
           <IconHost @options={{OPTIONS}} @value={{1}} @variant="button" />
@@ -3163,7 +3163,7 @@ module(
       assert.dom(selectionIcons()[0]).hasClass("d-icon-far-heart");
     });
 
-    test("a held item without an icon draws none", async function (assert) {
+    test("a held resolved option without an icon draws none", async function (assert) {
       await render(
         <template>
           <IconHost @options={{OPTIONS}} @value={{2}} @variant="static" />
@@ -3174,7 +3174,7 @@ module(
       assert.strictEqual(selectionIcons().length, 0);
     });
 
-    test("@icon always wins over the held item's icon", async function (assert) {
+    test("@icon always wins over the held resolved option's icon", async function (assert) {
       await render(
         <template>
           <IconHost

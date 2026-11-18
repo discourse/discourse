@@ -160,7 +160,7 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
                   (and option.flags.groupFooter @hasGroupFooterBlock)
                 )
               )
-              option.item.icon
+              option.resolved.icon
             }}
             @limitId={{@limitId}}
             @locked={{@presenter.isLocked}}
@@ -181,26 +181,26 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
                 name, so the name never depends on what the block draws. }}
             {{#if (and option.flags.groupHeader @hasGroupHeaderBlock)}}
               <span class="sr-only">
-                {{~option.item.label~}}
+                {{~option.resolved.label~}}
               </span>
               <span aria-hidden="true">
                 {{~yield option.record (groupOf option) to="groupHeader"~}}
               </span>
             {{else if (and option.flags.groupFooter @hasGroupFooterBlock)}}
               <span class="sr-only">
-                {{~option.item.label~}}
+                {{~option.resolved.label~}}
               </span>
               <span aria-hidden="true">
                 {{~yield option.record (groupOf option) to="groupFooter"~}}
               </span>
             {{else if (or option.flags.groupHeader option.flags.groupFooter)}}
-              {{option.item.label}}
+              {{option.resolved.label}}
             {{else if @hasOptionBlock}}
               {{yield option.record option.option to="option"}}
             {{else if option.flags.create}}
-              {{@engine.text "createOption" (hash label=option.item.label)}}
+              {{@engine.text "createOption" (hash label=option.resolved.label)}}
             {{else}}
-              {{option.item.label}}
+              {{option.resolved.label}}
             {{/if}}
           </SelectOptionContent>
         {{else}}

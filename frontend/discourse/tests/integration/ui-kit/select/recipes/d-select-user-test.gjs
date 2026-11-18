@@ -663,7 +663,7 @@ module(
       assert.dom(row).hasText("Invite someone");
       assert
         .dom(".d-icon-envelope", row)
-        .exists({ count: 1 }, "the row draws the item's icon once");
+        .exists({ count: 1 }, "the row draws the resolved option's icon once");
     });
 
     test("an action row's record field named icon draws nothing", async function (assert) {

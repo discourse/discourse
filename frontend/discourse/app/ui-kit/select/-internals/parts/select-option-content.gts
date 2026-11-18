@@ -23,7 +23,7 @@ interface SelectOptionContentSignature {
     selectedIcon?: string;
     /** Omits the selection marker, for a list that never shows a held row. */
     hideSelectionMarker?: boolean;
-    /** The item's icon, drawn before its content; omitted when a group block draws the row. */
+    /** The resolved option's icon, drawn before its content; omitted when a group block draws the row. */
     icon?: string;
     /** Additional descriptions, such as the option's group header. */
     describedBy?: string;
@@ -83,16 +83,16 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
     return this.#resolveAttributes(this.args.engine, this.args.descriptor);
   }
 
-  /** The label the row's item shows. */
+  /** The label the row's resolved option shows. */
   get name(): string {
-    const { item, record } = this.args.descriptor;
-    return item ? item.label : this.args.engine.getRecordLabel(record);
+    const { resolved, record } = this.args.descriptor;
+    return resolved ? resolved.label : this.args.engine.getRecordLabel(record);
   }
 
-  /** The description the row's item shows, if any. */
+  /** The description the row's resolved option shows, if any. */
   get description(): string | undefined {
-    const { item, option } = this.args.descriptor;
-    return item ? item.description : option.description;
+    const { resolved, option } = this.args.descriptor;
+    return resolved ? resolved.description : option.description;
   }
 
   get describedBy(): string | undefined {
@@ -125,8 +125,8 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
   }
 
   /**
-   * Reuses the tracked computation while the row shows the same item through equal settings: an
-   * item is rebuilt only when what it shows changes, and the callback also reads the option.
+   * Reuses the tracked computation while the row shows the same resolved option through equal settings: a
+   * resolved option is rebuilt only when what it shows changes, and the callback also reads the option.
    */
   #resolveAttributes(
     engine: SelectEngine,
@@ -137,7 +137,7 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
       !previous ||
       previous.engine !== engine ||
       previous.descriptor.record !== descriptor.record ||
-      previous.descriptor.item !== descriptor.item ||
+      previous.descriptor.resolved !== descriptor.resolved ||
       !sameSettings(
         previous.descriptor.option.settings,
         descriptor.option.settings

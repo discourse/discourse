@@ -38,7 +38,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       assert.false(engine.serverPending, "a client source is never pending");
     });
 
-    test("projections and loader snapshots follow a live items thunk", function (assert) {
+    test("projections and loader snapshots follow a live options thunk", function (assert) {
       const source = trackedObject({
         options: [
           { id: 1, name: "Apple" },

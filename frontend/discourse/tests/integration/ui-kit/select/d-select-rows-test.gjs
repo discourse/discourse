@@ -1525,7 +1525,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
     return spy;
   }
 
-  test("renders explicit, derived and empty item presentation on value rows", async function (assert) {
+  test("renders explicit, derived and empty resolved option presentation on value rows", async function (assert) {
     const records = [
       {
         id: "explicit",
@@ -1611,7 +1611,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
       .hasAttribute("data-name", "Changed")
       .hasText(
         "Changed Changed detail",
-        "copy presentation reaches the rendered item"
+        "copy presentation reaches the rendered resolved option"
       );
     await dSelect().select("a");
     assert.strictEqual(
@@ -1798,7 +1798,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
       );
   });
 
-  test("loading skeleton labels follow explicit and canonical item labels", async function (assert) {
+  test("loading skeleton labels follow explicit and canonical resolved option labels", async function (assert) {
     const records = [
       { id: "a", name: "Canonical A" },
       { id: "b", name: "Canonical B" },
@@ -1834,7 +1834,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
           element.textContent.trim()
         ),
         ["Alias A", "Canonical B"],
-        "replacement skeletons retain item labels, rather than input record labels"
+        "replacement skeletons retain resolved option labels, rather than input record labels"
       );
     } finally {
       release?.();
@@ -1842,7 +1842,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
     }
   });
 
-  test("option attributes reuse equivalent items and recompute for item and placement changes", async function (assert) {
+  test("option attributes reuse equivalent resolved options and recompute for resolved option and placement changes", async function (assert) {
     const listed = { id: "a", name: "Local" };
     const record = { ...listed, name: "Canonical" };
     const other = { id: "b", name: "Other" };
@@ -1887,7 +1887,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
     assert.strictEqual(
       attributes.callCount,
       initial,
-      "equivalent rebuilt inputs reuse the item's attributes"
+      "equivalent rebuilt inputs reuse the resolved option's attributes"
     );
     await triggerKeyEvent('[role="combobox"]', "keydown", "Home");
     await triggerKeyEvent('[role="combobox"]', "keydown", "ArrowDown");
@@ -1901,24 +1901,24 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
     assert.strictEqual(
       attributes.callCount,
       initial,
-      "moving the active row does not change its item or placement"
+      "moving the active row does not change its resolved option or placement"
     );
     state.records = [selectOption(record, { description: "After" })];
     await settled();
     assert.strictEqual(
       attributes.callCount,
       initial + 1,
-      "a merged item property changes even though the input record and settings did not"
+      "a merged resolved option property changes even though the input record and settings did not"
     );
     assert
       .dom('[data-value="a"] .d-select__option-description')
-      .hasText("After", "the changed item reaches the row");
+      .hasText("After", "the changed resolved option reaches the row");
     state.options = [selectOption(listed, { position: "sticky" }), other];
     await settled();
     assert.strictEqual(
       attributes.callCount,
       initial + 2,
-      "placement invalidates attributes independently of item properties"
+      "placement invalidates attributes independently of resolved option properties"
     );
     assert
       .dom('[role="option"][data-value="a"]')
@@ -1928,7 +1928,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
     assert.strictEqual(
       attributes.callCount,
       initial + 2,
-      "equal placement and item do not invalidate the cache"
+      "equal placement and resolved option do not invalidate the cache"
     );
   });
 
@@ -2115,7 +2115,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
     );
   });
 
-  test("option attributes follow own settings when merged item presentation stays unchanged", async function (assert) {
+  test("option attributes follow own settings when merged resolved option presentation stays unchanged", async function (assert) {
     const record = { id: "a", name: "Apple" };
     const records = [selectOption(record, { description: "Detail" })];
     const state = trackedObject({ options: [record] });
@@ -2150,7 +2150,10 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
     );
     assert
       .dom('[data-value="a"] .d-select__option-description')
-      .hasText("Detail", "valueRecords supplies the merged item description");
+      .hasText(
+        "Detail",
+        "valueRecords supplies the merged resolved option description"
+      );
     assert
       .dom('[role="option"][data-value="a"]')
       .hasAttribute(
@@ -2172,7 +2175,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
     assert.strictEqual(
       attributes.callCount,
       2,
-      "changed own option settings recompute attributes even when the merged item is unchanged"
+      "changed own option settings recompute attributes even when the merged resolved option is unchanged"
     );
     assert.strictEqual(
       attributes.lastCall.args[1].option.description,
@@ -2188,7 +2191,10 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
       );
     assert
       .dom('[data-value="a"] .d-select__option-description')
-      .hasText("Detail", "the merged item description remains unchanged");
+      .hasText(
+        "Detail",
+        "the merged resolved option description remains unchanged"
+      );
 
     state.options = [selectOption(record, { description: "Detail" })];
     await settled();
@@ -2221,7 +2227,7 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
       .dom('[data-value="a"] .d-select__option-description')
       .hasText(
         "Detail",
-        "valueRecords continues supplying the item description"
+        "valueRecords continues supplying the resolved option description"
       );
   });
 });
@@ -2459,7 +2465,7 @@ module(
       assert.strictEqual(
         attributes.callCount,
         4,
-        "later filtering reuses the refreshed items' attributes"
+        "later filtering reuses the refreshed resolved options' attributes"
       );
     });
   }
@@ -2507,7 +2513,7 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
   }
 
   ["typeahead", "button", "static"].forEach((variant) => {
-    test(`${variant} single trigger updates item presentation outside held async data`, async function (assert) {
+    test(`${variant} single trigger updates resolved option presentation outside held async data`, async function (assert) {
       const record = { id: "a", name: "Record", detail: "Record detail" };
       const options = [selectOption(record, { label: "Source" })];
       const filterBy = () => true;
@@ -2546,11 +2552,17 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
       if (variant === "typeahead") {
         assert
           .dom(label)
-          .hasValue("Before", "the resting input shows the held item label");
+          .hasValue(
+            "Before",
+            "the resting input shows the held resolved option label"
+          );
       } else {
         assert
           .dom(label)
-          .hasText("Before", "the closed trigger shows the held item label");
+          .hasText(
+            "Before",
+            "the closed trigger shows the held resolved option label"
+          );
       }
       assert
         .dom("[role='listbox']")
@@ -2560,18 +2572,18 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
         .hasAttribute(
           "data-name",
           "Before",
-          "the trigger hook reads the held item"
+          "the trigger hook reads the held resolved option"
         );
       const engine = probedEngine();
       assert.strictEqual(
-        engine.heldItem?.(record)?.icon,
+        engine.heldOption?.(record)?.icon,
         "star",
         "the closed trigger carries the content icon"
       );
       assert.strictEqual(
-        engine.heldItem?.(record)?.description,
+        engine.heldOption?.(record)?.description,
         "Before detail",
-        "the held item carries the content description"
+        "the held resolved option carries the content description"
       );
       const runs = resolveSingle.callCount;
       assert.true(
@@ -2585,23 +2597,26 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
           .dom(label)
           .hasValue(
             "After",
-            "closed item presentation updates the resting input"
+            "closed resolved option presentation updates the resting input"
           );
       } else {
         assert
           .dom(label)
-          .hasText("After", "closed item presentation updates the trigger");
+          .hasText(
+            "After",
+            "closed resolved option presentation updates the trigger"
+          );
       }
       assert
         .dom(".d-select")
         .hasAttribute("data-name", "After", "the held hook updates too");
       assert.strictEqual(
-        engine.heldItem?.(record)?.record,
+        engine.heldOption?.(record)?.record,
         record,
-        "the held item retains the canonical record"
+        "the held resolved option retains the canonical record"
       );
       assert.strictEqual(
-        engine.heldItem?.(record)?.description,
+        engine.heldOption?.(record)?.description,
         "After detail",
         "content re-derives the description"
       );
@@ -2631,12 +2646,12 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
           "list activity never changes the held name"
         );
       assert.strictEqual(
-        engine.heldItem?.(record)?.icon,
+        engine.heldOption?.(record)?.icon,
         "star",
         "list activity never changes the held icon through control.filter"
       );
       assert.strictEqual(
-        engine.heldItem?.(record)?.description,
+        engine.heldOption?.(record)?.description,
         "After detail",
         "list activity never changes held detail"
       );
@@ -2681,17 +2696,24 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
     );
     assert
       .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
-      .hasText("Before a", "chips read the held item before opening");
+      .hasText(
+        "Before a",
+        "chips read the held resolved option before opening"
+      );
     assert
       .dom('.d-select__chip[data-value="b"]')
-      .hasAttribute("data-name", "Before b", "each chip has its item name");
+      .hasAttribute(
+        "data-name",
+        "Before b",
+        "each chip has its resolved option name"
+      );
     const runs = resolveMulti.callCount;
     assert.true(
       runs > 0,
       "the real multi held async-data boundary was exercised"
     );
     assert.strictEqual(
-      probedEngine().heldItem?.(records[0])?.icon,
+      probedEngine().heldOption?.(records[0])?.icon,
       "star",
       "chips carry the at-rest content icon"
     );
@@ -2715,10 +2737,10 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
       .hasAttribute(
         "data-name",
         "After a,After b",
-        "the trigger names every at-rest held item"
+        "the trigger names every at-rest held resolved option"
       );
     assert.strictEqual(
-      probedEngine().heldItem?.(records[0])?.icon,
+      probedEngine().heldOption?.(records[0])?.icon,
       "star",
       "typing leaves the held icon at rest"
     );
@@ -2729,7 +2751,7 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
     );
   });
 
-  test("compact chips strip and screen-reader list share current item labels", async function (assert) {
+  test("compact chips strip and screen-reader list share current resolved option labels", async function (assert) {
     const records = [
       { id: "a", name: "Record A" },
       { id: "b", name: "Record B" },
@@ -2767,11 +2789,14 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
     );
     assert
       .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
-      .hasText("Before a", "the visible compact chip reads its item");
+      .hasText(
+        "Before a",
+        "the visible compact chip reads its resolved option"
+      );
     assert.deepEqual(
       findAll("ul.sr-only li").map((element) => element.textContent.trim()),
       ["Before a", "Before b"],
-      "the held description includes the overflow item's label too"
+      "the held description includes the overflow resolved option's label too"
     );
     const descriptions = find(".d-select__input")
       .getAttribute("aria-describedby")
@@ -2785,14 +2810,18 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
       .dom('.d-select__strip-item[data-value="b"] .d-select__strip-label')
       .hasText(
         "Before b",
-        "the compact typeahead renders a strip for the overflow item"
+        "the compact typeahead renders a strip for the overflow resolved option"
       );
     const runs = resolveMulti.callCount;
     state.prefix = "After";
     await settled();
     assert
       .dom('.d-select__strip-item[data-value="a"]')
-      .hasAttribute("data-name", "After a", "strip names use the item");
+      .hasAttribute(
+        "data-name",
+        "After a",
+        "strip names use the resolved option"
+      );
     assert
       .dom('.d-select__strip-item[data-value="b"] .d-select__strip-label')
       .hasText("After b", "strip labels update outside held data");
@@ -2874,7 +2903,7 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
     );
   });
 
-  test("control.pending re-derives the closed trigger item without loading", async function (assert) {
+  test("control.pending re-derives the closed trigger resolved option without loading", async function (assert) {
     const record = { id: "a", name: "Record" };
     const records = [record];
     const load = sinon.spy(() => []);
@@ -2903,16 +2932,16 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
       .hasText("Held", "the trigger reads native content while closed");
     const engine = probedEngine();
     assert.strictEqual(
-      engine.heldItem?.(record)?.icon,
+      engine.heldOption?.(record)?.icon,
       "star",
-      "the closed item starts idle"
+      "the closed resolved option starts idle"
     );
     const gate = deferred();
     const updating = engine.update(() => gate.promise);
     try {
       await waitUntil(() => engine.pending);
       assert.strictEqual(
-        engine.heldItem?.(record)?.icon,
+        engine.heldOption?.(record)?.icon,
         "spinner",
         "pending invalidates content while closed"
       );
@@ -2924,7 +2953,7 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
       await settled();
     }
     assert.strictEqual(
-      engine.heldItem?.(record)?.icon,
+      engine.heldOption?.(record)?.icon,
       "star",
       "settling invalidates the view again"
     );
@@ -3016,7 +3045,7 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
           "the original answer is resolved"
         );
       assert.strictEqual(
-        probedEngine().heldItem?.(record)?.record,
+        probedEngine().heldOption?.(record)?.record,
         record,
         "the original request supplies the key's record"
       );
@@ -3031,8 +3060,8 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
         .onSecondCall()
         .returns(
           multiple
-            ? [selectOption(record, { label: "Recovered item" })]
-            : selectOption(record, { label: "Recovered item" })
+            ? [selectOption(record, { label: "Recovered resolved option" })]
+            : selectOption(record, { label: "Recovered resolved option" })
         );
       const resolveValue = multiple ? undefined : resolve;
       const resolveValues = multiple ? resolve : undefined;
@@ -3073,21 +3102,21 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
       assert
         .dom(multiple ? ".d-select__chip-label" : ".d-select__value")
         .hasText(
-          "Recovered item",
+          "Recovered resolved option",
           "the retried answer's explicit label reaches the held surface"
         );
       assert
         .dom(".d-select")
         .hasAttribute(
           "data-name",
-          "Recovered item",
-          "the retried item names the trigger"
+          "Recovered resolved option",
+          "the retried resolved option names the trigger"
         );
     });
   });
 
   [false, true].forEach((unresolved) => {
-    test(`announcer speaks the at-rest ${unresolved ? "unresolved" : "resolved"} item when a chip is removed under a live filter`, async function (assert) {
+    test(`announcer speaks the at-rest ${unresolved ? "unresolved" : "resolved"} option when a chip is removed under a live filter`, async function (assert) {
       disableClearA11yAnnouncementsInTests();
       const record = { id: "a", name: "Record name" };
       const options = unresolved
@@ -3123,7 +3152,7 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
         .dom("#a11y-announcements-polite")
         .hasText(
           probedEngine().text("optionRemoved", { item: "After" }),
-          "removal announces the current at-rest item, not the record or the query's row"
+          "removal announces the current at-rest resolved option, not the record or the query's row"
         );
       assert
         .dom(".d-select__chip")
@@ -3191,26 +3220,26 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
         .dom(`${selector} .d-select__unresolved`)
         .hasText(
           "Unavailable missing",
-          "the explicit item label stays inside unresolved markup"
+          "the explicit resolved option label stays inside unresolved markup"
         );
       assert
         .dom(surface === "trigger" ? ".d-select" : selector)
         .hasAttribute(
           "data-name",
           "Unavailable missing",
-          "unresolved surface hooks use item labels"
+          "unresolved surface hooks use resolved option labels"
         );
       assert
         .dom(".d-select")
         .hasAttribute(
           "data-unresolved",
           "true",
-          "an explicit item label never resolves a fallback"
+          "an explicit resolved option label never resolves a fallback"
         );
       const fallback = probedEngine().resolveSingleSync("missing");
       assert.true(
-        probedEngine().heldItem?.(fallback)?.unresolved,
-        "the surface shows the item's unresolved state"
+        probedEngine().heldOption?.(fallback)?.unresolved,
+        "the surface shows the resolved option's unresolved state"
       );
       const runs = heldData.callCount;
       const arrived = { id: "missing", name: "Arrived" };
@@ -3219,22 +3248,22 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
       assert
         .dom(`${selector} .d-select__unresolved`)
         .doesNotExist(
-          "the current item leaves the unresolved branch even though async data still holds the fallback"
+          "the current resolved option leaves the unresolved branch even though async data still holds the fallback"
         );
       assert
         .dom(selector)
         .includesText(
           "Available missing",
-          "the held surface reads the newly canonical item"
+          "the held surface reads the newly canonical resolved option"
         );
       assert
         .dom(".d-select")
         .doesNotHaveAttribute(
           "data-unresolved",
-          "the arriving page resolves the held item"
+          "the arriving page resolves the held resolved option"
         );
       assert.strictEqual(
-        probedEngine().heldItem?.(fallback)?.record,
+        probedEngine().heldOption?.(fallback)?.record,
         arrived,
         "the old descriptor's floor never replaces the page record"
       );
@@ -3444,7 +3473,7 @@ module(
             .hasAttribute(
               "aria-disabled",
               "true",
-              "the merged item disables the actual option"
+              "the merged resolved option disables the actual option"
             );
           if (gesture === "click") {
             await click('[role="option"][data-value="blocked"]');
@@ -3517,7 +3546,7 @@ module(
       assert.strictEqual(
         onChange.callCount,
         0,
-        "a closed programmatic pick consults the listed item"
+        "a closed programmatic pick consults the listed resolved option"
       );
       assert.deepEqual(state.value, [], "the parent value stays unchanged");
       assert.dom(".d-select__chip").doesNotExist("no refused chip appears");
@@ -3528,7 +3557,7 @@ module(
         .dom("#a11y-announcements-polite")
         .doesNotIncludeText(
           i18n("d_select.item_added", { item: blocked.name }),
-          "the canonical item is not announced as added"
+          "the canonical resolved option is not announced as added"
         );
       assert
         .dom("#a11y-announcements-polite")
@@ -4048,7 +4077,7 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
       .map((icon) => [...icon.classList].find((c) => c.startsWith("d-icon-")))
       .filter(Boolean);
 
-  test("a row draws its item's icon before its label", async function (assert) {
+  test("a row draws its resolved option's icon before its label", async function (assert) {
     const options = [
       selectOption({ id: 1, name: "Apple" }, { icon: "far-heart" }),
       { id: 2, name: "Banana" },
@@ -4075,10 +4104,10 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
     );
     assert
       .dom(".d-icon", find("[role='option'][data-value='2']"))
-      .doesNotExist("a row whose item has no icon draws none");
+      .doesNotExist("a row whose resolved option has no icon draws none");
   });
 
-  test("an option block's content follows the item's icon", async function (assert) {
+  test("an option block's content follows the resolved option's icon", async function (assert) {
     const options = [
       selectOption({ id: 1, name: "Apple" }, { icon: "far-heart" }),
     ];
@@ -4164,7 +4193,7 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
     assert.dom(".d-icon", label).doesNotExist("the label holds no icon");
   });
 
-  test("chips draw each held item's icon and never its description", async function (assert) {
+  test("chips draw each held resolved option's icon and never its description", async function (assert) {
     const options = [
       selectOption(
         { id: 1, name: "Apple" },
@@ -4191,7 +4220,7 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
       .hasText("Apple", "and never the description");
     assert
       .dom(".d-icon", banana.querySelector(".d-select__chip-label"))
-      .doesNotExist("a chip whose item has no icon draws none");
+      .doesNotExist("a chip whose resolved option has no icon draws none");
   });
 
   test("a chip's selection block follows the held icon", async function (assert) {
@@ -4237,7 +4266,7 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
     assert.dom(".d-select__chip-label").exists("the held value has a chip");
     assert
       .dom(".d-select__chip-label .d-icon")
-      .doesNotExist("an unresolved item derives no icon");
+      .doesNotExist("an unresolved option derives no icon");
   });
 
   test("a group action row draws its icon unless its group block draws the row", async function (assert) {
@@ -4290,7 +4319,7 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
       .doesNotExist("the block owns what the row shows");
   });
 
-  test("the selection strip draws each held item's icon", async function (assert) {
+  test("the selection strip draws each held resolved option's icon", async function (assert) {
     const cap = tracked(1);
     const options = [
       selectOption({ id: 1, name: "Apple" }, { icon: "far-heart" }),

@@ -6,50 +6,50 @@ import type {
 import {
   isSelectOption,
   recordOf,
-  registerItemRecord,
+  registerResolvedRecord,
   sameSettings,
   type SelectOptionLike,
   type SelectOptionSettings,
 } from "./select-option.ts";
 
-/** The record fields an item derives its presentation from. */
-export interface SelectItemFields {
+/** The record fields a resolved option derives its presentation from. */
+export interface ResolvedOptionFields {
   labelField: string;
   iconField?: string;
   descriptionField?: string;
 }
 
-/** Which surface asks for an item. Each keeps its own memo; the record is the same in both. */
-export type SelectItemView =
+/** Which surface asks for a resolved option. Each keeps its own memo; the record is the same in both. */
+export type ResolvedOptionView =
   | { kind: "list"; input: SelectOptionLike }
   | { kind: "held"; input?: SelectOptionLike };
 
 /** What each source knows about a key, as an input: a record or a record with settings. */
-export interface SelectItemContributions {
+export interface ResolvedOptionContributions {
   /** The requesting view's own input: the row's option, or the at-rest input. */
   view?: SelectOptionLike;
   valueRecords?: SelectOptionLike;
   /** The pick that put the key in the held value, while it is held. */
   pick?: SelectOptionLike;
-  /** The resolver answer, while its record is the item's record. */
+  /** The resolver answer, while its record is the resolved option's record. */
   answer?: SelectOptionLike;
 }
 
-/** What the engine provides an {@link ItemDirectory}. */
-export interface SelectItemSources {
-  fields(): SelectItemFields;
+/** What the engine provides an {@link ResolvedOptions}. */
+export interface ResolvedOptionSources {
+  fields(): ResolvedOptionFields;
   valueOf(record: SelectRecord): SelectId;
   /** The key-scope record, and whether it is the unresolved fallback. */
   recordFor(
     key: string,
-    view: SelectItemView
+    view: ResolvedOptionView
   ): { record: SelectRecord; unresolved: boolean };
   /** What each source knows about the key, given the record the key stands for. */
   contributions(
     key: string,
-    view: SelectItemView,
+    view: ResolvedOptionView,
     record: SelectRecord
-  ): SelectItemContributions;
+  ): ResolvedOptionContributions;
   /**
    * The engine's name for an unresolved record, or `undefined` to keep the record's own label
    * (a fallback a caller named already explains itself).
@@ -62,16 +62,16 @@ const PRECEDENCE = ["view", "valueRecords", "pick", "answer"] as const;
 
 const NO_PROPERTIES: Readonly<SelectOptionSettings> = Object.freeze({});
 
-type SelectItemAction = (control: SelectControl) => void;
+type ResolvedOptionAction = (control: SelectControl) => void;
 
 /**
  * One option as every surface shows it: one per value key, owned by the engine. Its explicit
  * properties are merged from every source that knows the key; what no source set is derived
- * from the record, and only when read, so building an item never reads presentation.
+ * from the record, and only when read, so building a resolved option never reads presentation.
  */
-export class SelectItem {
-  /** Whether a value is an item the engine built, as opposed to a look-alike object. */
-  static is(value: unknown): value is SelectItem {
+export class SelectResolvedOption {
+  /** Whether a value is a resolved option the engine built, as opposed to a look-alike object. */
+  static is(value: unknown): value is SelectResolvedOption {
     return typeof value === "object" && value !== null && #record in value;
   }
 
@@ -79,21 +79,21 @@ export class SelectItem {
   #record: SelectRecord;
   #unresolved: boolean;
   #properties: Readonly<SelectOptionSettings>;
-  #sources: SelectItemSources;
+  #sources: ResolvedOptionSources;
 
   constructor(init: {
     key: string | null;
     record: SelectRecord;
     unresolved: boolean;
     properties: Readonly<SelectOptionSettings>;
-    sources: SelectItemSources;
+    sources: ResolvedOptionSources;
   }) {
     this.#key = init.key;
     this.#record = init.record;
     this.#unresolved = init.unresolved;
     this.#properties = init.properties;
     this.#sources = init.sources;
-    registerItemRecord(this, init.record);
+    registerResolvedRecord(this, init.record);
     Object.freeze(this);
   }
 
@@ -164,8 +164,10 @@ export class SelectItem {
   }
 
   /** The winning `onSelect`, already bound to the record it was written for. */
-  get action(): SelectItemAction | undefined {
-    return (this.#properties.onSelect as SelectItemAction | null) ?? undefined;
+  get action(): ResolvedOptionAction | undefined {
+    return (
+      (this.#properties.onSelect as ResolvedOptionAction | null) ?? undefined
+    );
   }
 
   #derived(field: string | undefined): string | undefined {
@@ -177,39 +179,44 @@ export class SelectItem {
   }
 }
 
-/** Whether a value is an item the engine built. */
-export function isSelectItem(value: unknown): value is SelectItem {
-  return SelectItem.is(value);
+/** Whether a value is a resolved option the engine built. */
+export function isResolvedOption(
+  value: unknown
+): value is SelectResolvedOption {
+  return SelectResolvedOption.is(value);
 }
 
 /**
- * Builds and memoises the items for one engine. Every lookup re-reads the record and each
- * source's contribution, and returns the memoised item only while both are unchanged, so an
- * item's identity changes exactly when what it shows can.
+ * Builds and memoises the resolved options for one engine. Every lookup re-reads the record and each
+ * source's contribution, and returns the memoised resolved option only while both are unchanged, so a
+ * resolved option's identity changes exactly when what it shows can.
  */
-export class ItemDirectory {
-  #sources: SelectItemSources;
+export class ResolvedOptions {
+  #sources: ResolvedOptionSources;
   #memos = {
-    list: new Map<string, SelectItem>(),
-    held: new Map<string, SelectItem>(),
+    list: new Map<string, SelectResolvedOption>(),
+    held: new Map<string, SelectResolvedOption>(),
   };
-  #rows = new WeakMap<object, SelectItem>();
+  #rows = new WeakMap<object, SelectResolvedOption>();
 
-  /** The input each listed key was last built from, kept as long as its list item. */
+  /** The input each listed key was last built from, kept as long as its listed resolved option. */
   #listInputs = new Map<string, SelectOptionLike>();
 
-  constructor(sources: SelectItemSources) {
+  constructor(sources: ResolvedOptionSources) {
     this.#sources = sources;
   }
 
   /**
-   * The item for a value key, as a view sees it.
+   * The resolved option for a value key, as a view sees it.
    *
    * @param key - A normalized key.
    * @param view - The surface asking, which keeps its own memo.
    */
-  itemFor(key: string, view: SelectItemView): SelectItem {
-    const item = this.peek(key, view);
+  resolvedOptionFor(
+    key: string,
+    view: ResolvedOptionView
+  ): SelectResolvedOption {
+    const resolved = this.peek(key, view);
     if (view.kind === "list") {
       this.#listInputs.set(key, view.input);
     }
@@ -217,26 +224,26 @@ export class ItemDirectory {
     const cached = memo.get(key);
     if (
       cached &&
-      cached.record === item.record &&
-      cached.unresolved === item.unresolved &&
-      sameSettings(cached.properties, item.properties)
+      cached.record === resolved.record &&
+      cached.unresolved === resolved.unresolved &&
+      sameSettings(cached.properties, resolved.properties)
     ) {
       return cached;
     }
-    memo.set(key, item);
-    return item;
+    memo.set(key, resolved);
+    return resolved;
   }
 
   /**
-   * The item a view would show for a key, built afresh and never memoised, for reads such as
-   * matching that must not keep items alive.
+   * The resolved option a view would show for a key, built afresh and never memoised, for reads such as
+   * matching that must not keep resolved options alive.
    *
    * @param key - A normalized key.
    * @param view - The surface asking.
    */
-  peek(key: string, view: SelectItemView): SelectItem {
+  peek(key: string, view: ResolvedOptionView): SelectResolvedOption {
     const { record, unresolved } = this.#sources.recordFor(key, view);
-    return new SelectItem({
+    return new SelectResolvedOption({
       key,
       record,
       unresolved,
@@ -248,31 +255,31 @@ export class ItemDirectory {
   }
 
   /**
-   * The item for a row that stands for no value key: only its own input contributes.
+   * The resolved option for a row that stands for no value key: only its own input contributes.
    *
    * @param input - The row's record or option.
    */
-  rowItem(input: SelectOptionLike): SelectItem {
-    let item = this.#rows.get(input);
-    if (!item) {
+  rowOption(input: SelectOptionLike): SelectResolvedOption {
+    let resolved = this.#rows.get(input);
+    if (!resolved) {
       const record = recordOf(input) as SelectRecord;
-      item = new SelectItem({
+      resolved = new SelectResolvedOption({
         key: null,
         record,
         unresolved: false,
         properties: isSelectOption(input) ? input.settings : NO_PROPERTIES,
         sources: this.#sources,
       });
-      this.#rows.set(input, item);
+      this.#rows.set(input, resolved);
     }
-    return item;
+    return resolved;
   }
 
   /**
    * Drops the list memo's entries for keys outside `keep`, and the row inputs of keys the build
    * did not show.
    *
-   * @param keep - The keys whose list items stay memoised.
+   * @param keep - The keys whose listed resolved options stay memoised.
    * @param shown - The keys the build showed; `keep` when every kept key was shown.
    */
   pruneList(
@@ -304,14 +311,17 @@ export class ItemDirectory {
   /**
    * Drops the held memo's entries for keys outside `keep`.
    *
-   * @param keep - The keys whose held items stay memoised.
+   * @param keep - The keys whose held resolved options stay memoised.
    */
   pruneHeld(keep: ReadonlySet<string>): void {
     prune(this.#memos.held, keep);
   }
 }
 
-function prune(memo: Map<string, SelectItem>, keep: ReadonlySet<string>) {
+function prune(
+  memo: Map<string, SelectResolvedOption>,
+  keep: ReadonlySet<string>
+) {
   for (const key of [...memo.keys()]) {
     if (!keep.has(key)) {
       memo.delete(key);
@@ -321,7 +331,7 @@ function prune(memo: Map<string, SelectItem>, keep: ReadonlySet<string>) {
 
 /** Each property from the highest source that sets it; a source that is silent erases nothing. */
 export function mergeContributions(
-  contributions: SelectItemContributions
+  contributions: ResolvedOptionContributions
 ): Readonly<SelectOptionSettings> {
   let merged: Record<string, unknown> | undefined;
   for (const tier of PRECEDENCE) {

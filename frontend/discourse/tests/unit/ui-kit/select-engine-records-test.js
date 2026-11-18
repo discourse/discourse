@@ -37,9 +37,9 @@ function assertRecord(
   );
   for (const kind of ["list", "held"]) {
     assert.strictEqual(
-      engine.itemFor(String(record.id), { kind, input })?.record,
+      engine.resolvedOptionFor(String(record.id), { kind, input })?.record,
       record,
-      `the ${kind} item shares the lookup's record`
+      `the ${kind} resolved option shares the lookup's record`
     );
   }
 }
@@ -307,7 +307,8 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
     assertRecord(assert, engine, record, copy);
     for (const kind of ["list", "held"]) {
       assert.strictEqual(
-        engine.itemFor(onlyInView.id, { kind, input: onlyInView })?.record,
+        engine.resolvedOptionFor(onlyInView.id, { kind, input: onlyInView })
+          ?.record,
         onlyInView,
         `the ${kind} input supplies an otherwise unknown record`
       );
@@ -318,14 +319,16 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
       "reading the view never publishes a sighting"
     );
     assert.strictEqual(
-      engine.itemFor("absent", { kind: "held" }),
+      engine.resolvedOptionFor("absent", { kind: "held" }),
       undefined,
-      "an unknown key without an input has no item before resolution"
+      "an unknown key without an input has no resolved option before resolution"
     );
     const fallback = engine.resolveSelection(onlyInView.id);
     assert.strictEqual(
-      engine.itemFor(onlyInView.id, { kind: "list", input: onlyInView })
-        ?.record,
+      engine.resolvedOptionFor(onlyInView.id, {
+        kind: "list",
+        input: onlyInView,
+      })?.record,
       onlyInView,
       "a cached fallback never outranks a real view input"
     );
@@ -351,17 +354,20 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
         resolveValue,
       });
       const fallback = await engine.resolveSelection(real.id);
-      const unresolved = engine.itemFor(real.id, { kind: "held" });
+      const unresolved = engine.resolvedOptionFor(real.id, { kind: "held" });
       assert.strictEqual(
         unresolved.record,
         fallback,
-        "the item holds the fallback"
+        "the resolved option holds the fallback"
       );
-      assert.true(unresolved.unresolved, "the fallback item is unresolved");
+      assert.true(
+        unresolved.unresolved,
+        "the fallback resolved option is unresolved"
+      );
       assert.strictEqual(
         unresolved.label,
         engine.getSelectionLabel(fallback),
-        "the unresolved item uses the engine's fallback name"
+        "the unresolved option uses the engine's fallback name"
       );
 
       if (origin === "pick") {
@@ -375,8 +381,8 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
 
       assertRecord(assert, engine, real, fallback);
       assert.false(
-        engine.itemFor(real.id, { kind: "held" }).unresolved,
-        "the later real record clears the unresolved item state"
+        engine.resolvedOptionFor(real.id, { kind: "held" }).unresolved,
+        "the later real record clears the unresolved option state"
       );
       assert.strictEqual(
         resolveValue.callCount,
@@ -421,9 +427,9 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
         "a held real sighting survives reload"
       );
       assert.strictEqual(
-        engine.itemFor(record.id, { kind: "held" })?.record,
+        engine.resolvedOptionFor(record.id, { kind: "held" })?.record,
         record,
-        "the held item retains that same record"
+        "the held resolved option retains that same record"
       );
     }
     for (const [record, settings] of [
@@ -431,7 +437,7 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
       [pick, pickSettings],
     ]) {
       assert.strictEqual(
-        engine.itemFor(record.id, { kind: "held" }).description,
+        engine.resolvedOptionFor(record.id, { kind: "held" }).description,
         settings.description,
         "reload preserves real outcome properties"
       );
@@ -488,7 +494,7 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
     gate.resolve(selectOption(answer, answerSettings));
     await pending;
 
-    const held = engine.itemFor(answer.id, { kind: "held" });
+    const held = engine.resolvedOptionFor(answer.id, { kind: "held" });
     assert.strictEqual(
       held.record,
       answer,
@@ -506,12 +512,12 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
 
     state.records = [selectOption(provided, providedSettings)];
     assert.strictEqual(
-      engine.itemFor(answer.id, { kind: "held" }).description,
+      engine.resolvedOptionFor(answer.id, { kind: "held" }).description,
       providedSettings.description,
       "valueRecords settings beat the held pick's settings"
     );
     for (const kind of ["list", "held"]) {
-      const item = engine.itemFor(answer.id, {
+      const item = engine.resolvedOptionFor(answer.id, {
         kind,
         input: selectOption(viewRecord, viewSettings),
       });
@@ -552,13 +558,13 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
       });
       await engine.resolveSelection(answer.id);
       assert.strictEqual(
-        engine.itemFor(answer.id, { kind: "held" }).description,
+        engine.resolvedOptionFor(answer.id, { kind: "held" }).description,
         settings.description,
         "a matching answer's explicit description is visible"
       );
 
       state.rows = [local];
-      const item = engine.itemFor(answer.id, { kind: "held" });
+      const item = engine.resolvedOptionFor(answer.id, { kind: "held" });
       assert.strictEqual(item.record, local, "the local record takes the key");
       assert.strictEqual(
         item.description,
@@ -668,7 +674,7 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
     }
   });
 
-  for (const surface of ["resolveSingleSync", "itemFor"]) {
+  for (const surface of ["resolveSingleSync", "resolvedOptionFor"]) {
     for (const arrival of ["page", "answer"]) {
       test(`tracks ${arrival} sightings outside async data through ${surface}`, async function (assert) {
         const record = { id: "held", name: `Arriving ${arrival}` };
@@ -683,7 +689,7 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
           recomputes++;
           return surface === "resolveSingleSync"
             ? engine.resolveSingleSync(record.id)
-            : engine.itemFor(record.id, { kind: "held" })?.record;
+            : engine.resolvedOptionFor(record.id, { kind: "held" })?.record;
         });
         assert.strictEqual(
           getValue(lookup),
@@ -872,7 +878,7 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       state.records = [provided];
-      const item = engine.itemFor(provided.id, { kind: "held" });
+      const item = engine.resolvedOptionFor(provided.id, { kind: "held" });
       assert.strictEqual(item.record, provided, "valueRecords owns the key");
       assert.strictEqual(
         item.description,
@@ -903,7 +909,7 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
       await Promise.resolve(first).catch(() => {});
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      const item = engine.itemFor("r", { kind: "held" });
+      const item = engine.resolvedOptionFor("r", { kind: "held" });
       assert.strictEqual(item.record, record, "the retry owns the key");
       assert.strictEqual(
         item.description,
@@ -955,7 +961,7 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
       engine.setFilter("query");
       state.records = [answer];
 
-      const item = engine.itemFor("k", { kind: "held" });
+      const item = engine.resolvedOptionFor("k", { kind: "held" });
       assert.strictEqual(item.record, answer, "valueRecords brings it back");
       assert.strictEqual(
         item.description,
@@ -998,7 +1004,7 @@ module("Unit | ui-kit | SelectEngine | records", function (hooks) {
       record.id = "k";
       await pending;
 
-      const item = engine.itemFor("k", { kind: "held" });
+      const item = engine.resolvedOptionFor("k", { kind: "held" });
       assert.strictEqual(item.record, record, "the record answers for its key");
       assert.strictEqual(
         item.description,
@@ -1048,12 +1054,16 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
       record,
       "the synchronous surface returns the accepted record"
     );
-    const item = engine.itemFor(String(record.id), { kind: "held" });
-    assert.strictEqual(item?.record, record, "the held item shares the record");
+    const item = engine.resolvedOptionFor(String(record.id), { kind: "held" });
+    assert.strictEqual(
+      item?.record,
+      record,
+      "the held resolved option shares the record"
+    );
     assert.strictEqual(
       item?.description,
       description,
-      "the held item keeps this emit's input settings"
+      "the held resolved option keeps this emit's input settings"
     );
   }
 
@@ -1063,7 +1073,7 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
       record,
       "the unaccepted record is absent from the synchronous surface"
     );
-    const item = engine.itemFor(String(record.id), { kind: "held" });
+    const item = engine.resolvedOptionFor(String(record.id), { kind: "held" });
     assert.notStrictEqual(
       item?.record,
       record,
@@ -1265,7 +1275,7 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
         },
       });
       const held = createCache(() =>
-        engine.itemFor(record.id, { kind: "held" })
+        engine.resolvedOptionFor(record.id, { kind: "held" })
       );
       assert.strictEqual(
         getValue(held),
@@ -1501,8 +1511,8 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
       "the real pick outranks the fallback"
     );
     assert.false(
-      engine.itemFor(record.id, { kind: "held" }).unresolved,
-      "the held item is resolved"
+      engine.resolvedOptionFor(record.id, { kind: "held" }).unresolved,
+      "the held resolved option is resolved"
     );
   });
 
@@ -1556,7 +1566,7 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
         "leaving the held set drops the sighting without a filter reset"
       );
       assert.strictEqual(
-        engine.itemFor(record.id, { kind: "held" }),
+        engine.resolvedOptionFor(record.id, { kind: "held" }),
         undefined,
         "the held surface also forgets the dropped sighting"
       );
@@ -1852,7 +1862,7 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
           });
           engine.select(selectOption(picked, { description: "Old settings" }));
           assert.strictEqual(
-            engine.itemFor("a", { kind: "held" })?.record,
+            engine.resolvedOptionFor("a", { kind: "held" })?.record,
             picked,
             "the pick is accepted"
           );
@@ -1869,7 +1879,7 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
           );
           assert.true(resolveValue.calledOnce, "the resolver is asked again");
           assert.strictEqual(
-            engine.itemFor("a", { kind: "held" })?.description,
+            engine.resolvedOptionFor("a", { kind: "held" })?.description,
             undefined,
             "the old pick's settings are gone"
           );
@@ -1896,7 +1906,7 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
         "the superseded pick is not published when its value arrives late"
       );
       assert.strictEqual(
-        engine.itemFor(first.id, { kind: "held" })?.description,
+        engine.resolvedOptionFor(first.id, { kind: "held" })?.description,
         undefined,
         "the superseded pick's settings never show"
       );
@@ -1992,17 +2002,17 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
         "the row carries the key's one record"
       );
       assert.strictEqual(
-        row.item?.record,
+        row.resolved?.record,
         record,
-        "the item carries that same record"
+        "the resolved option carries that same record"
       );
       assert.strictEqual(
-        row.item?.label,
+        row.resolved?.label,
         "Row label",
         "the input supplies an explicit label"
       );
       assert.strictEqual(
-        row.item?.description,
+        row.resolved?.description,
         "Row detail",
         "the input supplies an explicit description"
       );
@@ -2038,12 +2048,12 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
       "a content copy never becomes the record"
     );
     assert.strictEqual(
-      row.item?.label,
+      row.resolved?.label,
       "Content label",
       "the changed label becomes explicit presentation"
     );
     assert.strictEqual(
-      row.item?.description,
+      row.resolved?.description,
       "Content detail",
       "the changed description becomes explicit presentation"
     );
@@ -2101,17 +2111,17 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
         "a legacy copy never becomes the record"
       );
       assert.strictEqual(
-        row.item?.label,
+        row.resolved?.label,
         "",
         "the copy can suppress the label"
       );
       assert.strictEqual(
-        row.item?.description,
+        row.resolved?.description,
         undefined,
         "the copy can suppress an earlier explicit description"
       );
       assert.strictEqual(
-        row.item?.properties.description,
+        row.resolved?.properties.description,
         "",
         "the empty override is retained explicitly"
       );
@@ -2155,12 +2165,12 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
       "the local record outranks the extra copy"
     );
     assert.strictEqual(
-      rows[0].item?.label,
+      rows[0].resolved?.label,
       "Extra",
       "the extra's explicit label wins"
     );
     assert.strictEqual(
-      rows[0].item?.description,
+      rows[0].resolved?.description,
       "Content detail",
       "an absent extra property preserves the content contribution"
     );
@@ -2341,7 +2351,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
     );
   });
 
-  test("paste matching uses item labels from settings and authoritative fields", function (assert) {
+  test("paste matching uses resolved option labels from settings and authoritative fields", function (assert) {
     const local = [
       { id: "a", name: "Local A" },
       { id: "b", name: "Local B" },
@@ -2364,7 +2374,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
     assert.deepEqual(
       pasted?.map((input) => input.record.id),
       ["a", "b"],
-      "matching follows explicit and derived item labels, including empty suppression"
+      "matching follows explicit and derived resolved option labels, including empty suppression"
     );
     const state = trackedObject({ value: [] });
     const onChange = sinon.spy((value) => (state.value = value));
@@ -2388,7 +2398,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
     );
   });
 
-  test("paste matching follows content and extra item labels", function (assert) {
+  test("paste matching follows content and extra resolved option labels", function (assert) {
     const record = { id: "a", name: "Original" };
     const extra = { id: "b", name: "Extra record" };
     customize((spec) =>
@@ -2407,7 +2417,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
         .parsePaste("CONTENT ALIAS | Extra alias")
         ?.map((input) => input.record.id),
       ["a", "b"],
-      "paste matches the same content and extra presentation as the displayed items"
+      "paste matches the same content and extra presentation as the displayed resolved options"
     );
     assert.deepEqual(
       engine.parsePaste("Original | Extra record"),
@@ -2496,17 +2506,17 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
         "an unaccepted pick cannot replace the row's record"
       );
       assert.strictEqual(
-        row.item?.record,
+        row.resolved?.record,
         fresh,
-        "the list item also forgets the stale pick"
+        "the listed resolved option also forgets the stale pick"
       );
       assert.strictEqual(
-        row.item?.label,
+        row.resolved?.label,
         "Fresh view",
         "the stale label never leaks"
       );
       assert.strictEqual(
-        row.item?.description,
+        row.resolved?.description,
         "Fresh detail",
         "the stale description never leaks"
       );
@@ -2577,7 +2587,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
         const [row] = engine.buildRows([source]);
 
         assert.strictEqual(
-          row.item?.[property],
+          row.resolved?.[property],
           expected[property],
           `the legacy copy's ${property} overrides the inherited source setting`
         );
@@ -2587,7 +2597,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
           "the legacy presentation keeps the canonical record"
         );
         assert.true(
-          row.item?.disabled,
+          row.resolved?.disabled,
           "the legacy copy retains unrelated source behavior"
         );
       } finally {
@@ -2726,7 +2736,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
     });
   }
 
-  test("same-key extras preserve item identity across unchanged builds", function (assert) {
+  test("same-key extras preserve resolved option identity across unchanged builds", function (assert) {
     const source = { id: "a", name: "Source" };
     const extra = { id: "a", name: "Extra" };
     const state = trackedObject({ extras: [extra] });
@@ -2736,7 +2746,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
     });
     const options = engine.loadOptions(engine.loadContext);
     const rows = engine.buildRows(options);
-    const item = rows[0]?.item;
+    const item = rows[0]?.resolved;
     assert.strictEqual(
       rows.length,
       1,
@@ -2755,23 +2765,23 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
 
     for (let build = 2; build <= 3; build++) {
       assert.strictEqual(
-        engine.buildRows(options)[0]?.item,
+        engine.buildRows(options)[0]?.resolved,
         item,
-        `unchanged build ${build} reuses the displayed extra item`
+        `unchanged build ${build} reuses the displayed extra resolved option`
       );
     }
 
     state.extras = [{ id: "a", name: "Changed extra" }];
-    const changed = engine.buildRows(options)[0]?.item;
+    const changed = engine.buildRows(options)[0]?.resolved;
     assert.notStrictEqual(
       changed,
       item,
-      "changed extra presentation replaces the item"
+      "changed extra presentation replaces the resolved option"
     );
     assert.strictEqual(
       changed?.label,
       "Changed extra",
-      "the new extra label reaches the item"
+      "the new extra label reaches the resolved option"
     );
     assert.strictEqual(
       changed?.record,
@@ -2779,9 +2789,9 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
       "the replacement extra keeps the canonical record"
     );
     assert.strictEqual(
-      engine.buildRows(options)[0]?.item,
+      engine.buildRows(options)[0]?.resolved,
       changed,
-      "the changed extra item is reused on the next unchanged build"
+      "the changed extra resolved option is reused on the next unchanged build"
     );
   });
 
@@ -2805,7 +2815,7 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
     const rows = engine.buildRows(options);
     assert.strictEqual(rows.length, 1, "content injects one displayed row");
     assert.strictEqual(
-      rows[0]?.item?.label,
+      rows[0]?.resolved?.label,
       "Apple",
       "the displayed content label is Apple"
     );
@@ -2852,12 +2862,12 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
     const [row] = engine.buildRows(engine.loadOptions(engine.loadContext));
 
     assert.strictEqual(
-      row?.item?.label,
+      row?.resolved?.label,
       "Content alias",
       "the visible extra preserves the source label with hideSelected"
     );
     assert.strictEqual(
-      row?.item?.description,
+      row?.resolved?.description,
       "Content detail",
       "the visible extra preserves the source description with hideSelected"
     );
@@ -2891,21 +2901,24 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
         `row ${record.id} uses the current local input`
       );
       assert.strictEqual(
-        row?.item?.record,
+        row?.resolved?.record,
         record,
-        `item ${record.id} uses the current local input`
+        `resolved option ${record.id} uses the current local input`
       );
       assertRecord(assert, engine, record, option, multiple);
       assert.strictEqual(
-        engine.itemFor(record.id, { kind: "list", input: option }),
-        row?.item,
-        `list item ${record.id} is reused across reads`
+        engine.resolvedOptionFor(record.id, { kind: "list", input: option }),
+        row?.resolved,
+        `listed resolved option ${record.id} is reused across reads`
       );
-      const held = engine.itemFor(record.id, { kind: "held", input: option });
+      const held = engine.resolvedOptionFor(record.id, {
+        kind: "held",
+        input: option,
+      });
       assert.strictEqual(
-        engine.itemFor(record.id, { kind: "held", input: option }),
+        engine.resolvedOptionFor(record.id, { kind: "held", input: option }),
         held,
-        `held item ${record.id} is reused within its own view`
+        `held resolved option ${record.id} is reused within its own view`
       );
     }
   }
@@ -2923,15 +2936,15 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
     for (const row of current.rows) {
       assert.strictEqual(
         row.record,
-        row.item.record,
-        `row ${row.value} and its item share a record within one build`
+        row.resolved.record,
+        `row ${row.value} and its resolved option share a record within one build`
       );
     }
     assertSnapshot(assert, engine, current);
   });
 
   for (const firstRead of ["list", "resolution"]) {
-    test(`reuse records and items with ${firstRead} read first`, function (assert) {
+    test(`reuse records and resolved options with ${firstRead} read first`, function (assert) {
       const engine = new SelectEngine({
         getValue: () => "a",
         options: () => [
@@ -2950,15 +2963,18 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
         "the first reader and the loaded snapshot share the local record"
       );
       assertSnapshot(assert, engine, before);
-      const held = engine.itemFor("a", { kind: "held", input: first });
+      const held = engine.resolvedOptionFor("a", {
+        kind: "held",
+        input: first,
+      });
 
       const rebuilt = engine.buildRows(before.options);
       const reread = snapshot(engine);
       for (let index = 0; index < before.rows.length; index++) {
         assert.strictEqual(
-          rebuilt[index].item,
-          before.rows[index].item,
-          "rebuilding the same snapshot keeps the list item"
+          rebuilt[index].resolved,
+          before.rows[index].resolved,
+          "rebuilding the same snapshot keeps the listed resolved option"
         );
         assert.strictEqual(
           reread.options[index].record,
@@ -2966,15 +2982,15 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
           "loading unchanged inputs keeps each record"
         );
         assert.strictEqual(
-          reread.rows[index].item,
-          before.rows[index].item,
-          "building a reread snapshot keeps each list item"
+          reread.rows[index].resolved,
+          before.rows[index].resolved,
+          "building a reread snapshot keeps each listed resolved option"
         );
       }
       assert.strictEqual(
-        engine.itemFor("a", { kind: "held", input: first }),
+        engine.resolvedOptionFor("a", { kind: "held", input: first }),
         held,
-        "list builds do not replace the held view's item"
+        "list builds do not replace the held view's resolved option"
       );
       assertSnapshot(assert, engine, reread);
     });
@@ -2989,7 +3005,7 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
     const view = createCache(() => snapshot(engine));
     const before = getValue(view);
     assert.strictEqual(
-      before.rows[0].item.label,
+      before.rows[0].resolved.label,
       "Before",
       "the initial label is drawn"
     );
@@ -3007,18 +3023,19 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
       "the changed builder produces a new record for the same key"
     );
     assert.strictEqual(
-      after.rows[0].item.label,
+      after.rows[0].resolved.label,
       "After",
-      "the refreshed item draws the new label"
+      "the refreshed resolved option draws the new label"
     );
     assertSnapshot(assert, engine, after);
     assert.notStrictEqual(
-      after.rows[0].item,
-      before.rows[0].item,
-      "the new record replaces the list item"
+      after.rows[0].resolved,
+      before.rows[0].resolved,
+      "the new record replaces the listed resolved option"
     );
     assert.strictEqual(
-      engine.itemFor("a", { kind: "held", input: before.options[0] }).record,
+      engine.resolvedOptionFor("a", { kind: "held", input: before.options[0] })
+        .record,
       after.options[0].record,
       "a retained held input also reads the new local record"
     );
@@ -3039,7 +3056,7 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
     state.label = "Before";
     const returned = getValue(view);
     assert.strictEqual(
-      returned.rows[0].item.label,
+      returned.rows[0].resolved.label,
       "Before",
       "returning to an earlier label still invalidates"
     );
@@ -3061,7 +3078,7 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
     const view = createCache(() => snapshot(engine));
     const before = getValue(view);
     assert.strictEqual(
-      before.rows[0].item.label,
+      before.rows[0].resolved.label,
       "Before",
       "the builder reads the resolved config"
     );
@@ -3074,7 +3091,7 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
       "a config dependency invalidates the consumer"
     );
     assert.strictEqual(
-      after.rows[0].item.label,
+      after.rows[0].resolved.label,
       "After",
       "the builder receives the refreshed config"
     );
@@ -3117,7 +3134,7 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
     source[0] = { id: "a", name: "Changed alpha" };
     const replaced = getValue(view);
     assert.strictEqual(
-      replaced.rows[0].item.label,
+      replaced.rows[0].resolved.label,
       "Changed alpha",
       "an in-place replacement refreshes the same key"
     );
@@ -3138,7 +3155,7 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
     assertSnapshot(assert, engine, removed);
   });
 
-  test("keep records and held items across filtering and reloads", function (assert) {
+  test("keep records and held resolved options across filtering and reloads", function (assert) {
     const engine = new SelectEngine({
       getValue: () => "a",
       options: () => [
@@ -3148,7 +3165,7 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
     });
     const before = snapshot(engine);
     const [alpha, beta] = before.options.map((option) => option.record);
-    const held = engine.itemFor("a", { kind: "held", input: alpha });
+    const held = engine.resolvedOptionFor("a", { kind: "held", input: alpha });
     engine.setFilter("alpha");
     const filtered = snapshot(engine);
 
@@ -3173,9 +3190,9 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
       "filtering does not rebuild the local record"
     );
     assert.strictEqual(
-      filtered.rows[0].item,
-      before.rows[0].item,
-      "filtering keeps the visible key's list item"
+      filtered.rows[0].resolved,
+      before.rows[0].resolved,
+      "filtering keeps the visible key's listed resolved option"
     );
     assert.strictEqual(
       engine.resolveSingleSync("b"),
@@ -3183,9 +3200,9 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
       "a filtered-out key still resolves to the same local record"
     );
     assert.strictEqual(
-      engine.itemFor("a", { kind: "held", input: alpha }),
+      engine.resolvedOptionFor("a", { kind: "held", input: alpha }),
       held,
-      "filtering keeps the held view's item"
+      "filtering keeps the held view's resolved option"
     );
 
     engine.reload();
@@ -3196,9 +3213,9 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
       "reload keeps unchanged builder inputs"
     );
     assert.strictEqual(
-      reloaded.rows[0].item,
-      before.rows[0].item,
-      "reload keeps the same list item"
+      reloaded.rows[0].resolved,
+      before.rows[0].resolved,
+      "reload keeps the same listed resolved option"
     );
     engine.setFilter("");
     const restored = snapshot(engine);
@@ -3290,7 +3307,7 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
   }
 
   for (const source of ["static array", "paged source"]) {
-    test(`caching leaves the ${source} record and item identities unchanged`, async function (assert) {
+    test(`caching leaves the ${source} record and resolved option identities unchanged`, async function (assert) {
       const alpha = { id: "a", name: "Alpha" };
       const beta = { id: "b", name: "Beta" };
       const options = [alpha, beta];
@@ -3310,9 +3327,9 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
           "the original source record is preserved"
         );
         assert.strictEqual(
-          rebuilt[index].item,
-          current.rows[index].item,
-          "an unchanged build reuses the list item"
+          rebuilt[index].resolved,
+          current.rows[index].resolved,
+          "an unchanged build reuses the listed resolved option"
         );
         assert.strictEqual(
           reread[index].record,
@@ -3377,7 +3394,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
     });
     await engine.resolveSelection(record.id);
     engine.select(selectOption(record, { label: "Pick" }));
-    const item = () => engine.heldItem?.(record);
+    const item = () => engine.heldOption?.(record);
     assert.strictEqual(
       item()?.label,
       "Pick",
@@ -3493,7 +3510,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       iconField: "glyph",
       descriptionField: "detail",
     });
-    const item = engine.heldItem?.(stale);
+    const item = engine.heldOption?.(stale);
     assert.strictEqual(
       item?.label,
       "Content copy",
@@ -3532,7 +3549,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       labelField: "title",
     });
     assert.strictEqual(
-      floorEngine.heldItem?.(floor)?.record,
+      floorEngine.heldOption?.(floor)?.record,
       floor,
       "the requesting record is the floor when the ledger knows nothing"
     );
@@ -3560,7 +3577,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       extraOptions: extras,
     });
     engine.setFilter("live");
-    const view = createCache(() => engine.heldItem?.(held));
+    const view = createCache(() => engine.heldOption?.(held));
     const before = getValue(view);
     assert.strictEqual(
       before?.label,
@@ -3599,7 +3616,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
     });
     local.setFilter("live");
     assert.strictEqual(
-      local.heldItem?.(held)?.label,
+      local.heldOption?.(held)?.label,
       "//held",
       "a complete local source also contributes only its held inputs to content"
     );
@@ -3622,7 +3639,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       options: [input],
       getValue: () => record.id,
     });
-    const before = engine.heldItem?.(record);
+    const before = engine.heldOption?.(record);
     assert.strictEqual(
       before?.label,
       "At rest",
@@ -3633,11 +3650,11 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       const [row] = engine.buildRows([input]);
       const listedLabel = query || "At rest";
       assert.strictEqual(
-        row.item.label,
+        row.resolved.label,
         listedLabel,
         "the list sees its own filter"
       );
-      const held = engine.heldItem?.(record);
+      const held = engine.heldOption?.(record);
       assert.strictEqual(
         held?.label,
         "At rest",
@@ -3659,7 +3676,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
         "the held memo survives list builds and typing"
       );
       assert.strictEqual(
-        row.item.record,
+        row.resolved.record,
         held?.record,
         "both views still share the record"
       );
@@ -3688,22 +3705,22 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       getValue: () => ["a", "b"],
     });
     assert.strictEqual(
-      engine.heldItem?.(records[1])?.label,
+      engine.heldOption?.(records[1])?.label,
       "Held B",
       "dropping a held input preserves its original presentation"
     );
     assert.strictEqual(
-      engine.heldItem?.(records[1])?.icon,
+      engine.heldOption?.(records[1])?.icon,
       "star",
       "the dropped input keeps its properties"
     );
     assert.strictEqual(
-      engine.heldItem?.(records[1])?.record,
+      engine.heldOption?.(records[1])?.record,
       records[1],
       "the dropped held record remains intact"
     );
     assert.strictEqual(
-      engine.heldItem?.(records[0])?.label,
+      engine.heldOption?.(records[0])?.label,
       "Content A",
       "surviving inputs receive content properties"
     );
@@ -3733,7 +3750,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       valueRecords: [record],
       getValue: () => record.id,
     });
-    const view = createCache(() => engine.heldItem?.(record));
+    const view = createCache(() => engine.heldOption?.(record));
     assert.strictEqual(
       getValue(view)?.icon,
       "star",
@@ -3802,7 +3819,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       iconField: "glyph",
       descriptionField: "detail",
     });
-    const empty = engine.heldItem?.(record);
+    const empty = engine.heldOption?.(record);
     assert.strictEqual(
       empty?.label,
       "",
@@ -3824,7 +3841,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       "an empty description remains explicit"
     );
     state.suppress = false;
-    const derived = engine.heldItem?.(record);
+    const derived = engine.heldOption?.(record);
     assert.strictEqual(
       derived?.label,
       "Derived",
@@ -3873,9 +3890,9 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
     });
     const before = getValue(data);
     assert.strictEqual(
-      engine.heldItem?.(record)?.label,
+      engine.heldOption?.(record)?.label,
       "Content Before",
-      "presentation is read through the held item outside data"
+      "presentation is read through the held resolved option outside data"
     );
     assert.strictEqual(
       before.resolved,
@@ -3888,19 +3905,19 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       "descriptors carry the record"
     );
     assert.strictEqual(
-      before.rows[0].item,
+      before.rows[0].resolved,
       undefined,
-      "descriptors do not capture an item"
+      "descriptors do not capture a resolved option"
     );
     state.label = "After";
     state.detail = "After detail";
     assert.strictEqual(
-      engine.heldItem?.(record)?.label,
+      engine.heldOption?.(record)?.label,
       "Content After",
       "held content re-derives presentation"
     );
     assert.strictEqual(
-      engine.heldItem?.(record)?.description,
+      engine.heldOption?.(record)?.description,
       "After detail",
       "record presentation updates outside data too"
     );
@@ -3916,7 +3933,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
     );
   });
 
-  test("unresolved items derive no icon or description and can be named by content", function (assert) {
+  test("unresolved options derive no icon or description and can be named by content", function (assert) {
     const state = trackedObject({ named: false });
     customize((spec) =>
       spec.content((options) =>
@@ -3940,8 +3957,11 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       }),
     });
     const fallback = engine.resolveSelection("missing");
-    const item = engine.heldItem?.(fallback);
-    assert.true(item?.unresolved, "the held item reports unresolved state");
+    const item = engine.heldOption?.(fallback);
+    assert.true(
+      item?.unresolved,
+      "the held resolved option reports unresolved state"
+    );
     assert.strictEqual(
       item?.label,
       "Missing record",
@@ -3950,21 +3970,24 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
     assert.strictEqual(
       item?.icon,
       undefined,
-      "an unresolved item never derives an icon"
+      "an unresolved option never derives an icon"
     );
     assert.strictEqual(
       item?.description,
       undefined,
-      "an unresolved item never derives a description"
+      "an unresolved option never derives a description"
     );
     state.named = true;
-    const named = engine.heldItem?.(fallback);
+    const named = engine.heldOption?.(fallback);
     assert.strictEqual(
       named?.label,
       "Unavailable choice",
-      "content can name the unresolved held item explicitly"
+      "content can name the unresolved held resolved option explicitly"
     );
-    assert.true(named?.unresolved, "naming the item never resolves its record");
+    assert.true(
+      named?.unresolved,
+      "naming the resolved option never resolves its record"
+    );
     assert.strictEqual(
       named?.record,
       fallback,
@@ -4004,13 +4027,13 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       "the retried data returns the real record"
     );
     assert.strictEqual(
-      engine.heldItem?.(recovered)?.label,
+      engine.heldOption?.(recovered)?.label,
       "Recovered",
       "the held view follows the retried result"
     );
     assert.false(
-      engine.heldItem?.(recovered)?.unresolved,
-      "the retried item is resolved"
+      engine.heldOption?.(recovered)?.unresolved,
+      "the retried resolved option is resolved"
     );
   });
 
@@ -4038,7 +4061,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
         isDestroyed: () => false,
       },
     });
-    const held = engine.heldItem?.(record);
+    const held = engine.heldOption?.(record);
     assert.strictEqual(
       held?.icon,
       "star",
@@ -4055,7 +4078,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
     );
     const [row] = engine.buildRows([record]);
     assert.strictEqual(
-      row.item.label,
+      row.resolved.label,
       "Legacy list",
       "the bridge is still active in the list"
     );
@@ -4065,7 +4088,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       "the legacy copy never replaces the shared record"
     );
     assert.strictEqual(
-      engine.heldItem?.(record)?.label,
+      engine.heldOption?.(record)?.label,
       "Record",
       "a list build cannot contaminate held presentation"
     );
@@ -4076,7 +4099,7 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
     );
   });
 
-  ["resolveSingleSync", "itemFor"].forEach((surface) => {
+  ["resolveSingleSync", "resolvedOptionFor"].forEach((surface) => {
     test(`isolation still lets ${surface} track page sightings for an unheld key`, async function (assert) {
       const held = { id: "held", name: "Held" };
       const floor = { id: "unheld", name: "Old list input" };
@@ -4091,7 +4114,8 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
       const read = () =>
         surface === "resolveSingleSync"
           ? engine.resolveSingleSync(floor.id)
-          : engine.itemFor(floor.id, { kind: "list", input: floor })?.record;
+          : engine.resolvedOptionFor(floor.id, { kind: "list", input: floor })
+              ?.record;
       const lookup = createCache(read);
       assert.strictEqual(
         getValue(lookup),
@@ -4198,9 +4222,9 @@ module("Unit | ui-kit | SelectEngine | disabled picks", function (hooks) {
           "a later parent value cannot publish a refused staged record"
         );
         assert.strictEqual(
-          engine.itemFor(record.id, { kind: "held" }),
+          engine.resolvedOptionFor(record.id, { kind: "held" }),
           undefined,
-          "no refused input survives as a held item"
+          "no refused input survives as a held resolved option"
         );
       });
     }
@@ -4251,7 +4275,7 @@ module("Unit | ui-kit | SelectEngine | disabled picks", function (hooks) {
       assert.strictEqual(
         onChange.firstCall?.args[1],
         record,
-        "an enabled merged item emits its record"
+        "an enabled merged resolved option emits its record"
       );
       const onBatchChange = sinon.spy();
       const batch = new SelectEngine({
@@ -4337,7 +4361,7 @@ module("Unit | ui-kit | SelectEngine | disabled picks", function (hooks) {
       "late parent acceptance cannot publish a refused record"
     );
     assert.strictEqual(
-      engine.itemFor(record.id, { kind: "held" }),
+      engine.resolvedOptionFor(record.id, { kind: "held" }),
       undefined,
       "neither disabled nor description properties were staged"
     );
@@ -4612,7 +4636,7 @@ module("Unit | ui-kit | SelectEngine | disabled picks", function (hooks) {
     );
     state.options = [];
     assert.true(
-      engine.heldItem(record).disabled,
+      engine.heldOption(record).disabled,
       "removing the list reveals the accepted pick's disabled state"
     );
 

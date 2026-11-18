@@ -4,7 +4,7 @@ import type {
   SelectControl,
   SelectRecord,
 } from "discourse/ui-kit/select/select-engine";
-import type { SelectItem } from "./select-item.ts";
+import type { SelectResolvedOption } from "./resolved-option.ts";
 
 /** Where an option sits: pinned at the top while the list scrolls, or after every other option. */
 export type SelectOptionPosition = "sticky" | "end";
@@ -71,10 +71,10 @@ const NO_SETTINGS = Object.freeze({});
 const BOUND_ACTIONS = new WeakSet<object>();
 
 /**
- * The record each engine-built item stands for. An item handed back as an entry means its record
+ * The record each engine-built resolved option stands for. A resolved option handed back as an entry means its record
  * and nothing more, so its merged properties are never stored again as one source's settings.
  */
-const ITEM_RECORDS = new WeakMap<object, object>();
+const RESOLVED_RECORDS = new WeakMap<object, object>();
 
 /** One entry the select lists: the record it stands for and the settings it was given. */
 class Option<T extends object> {
@@ -267,7 +267,7 @@ function build<T extends object>(
  * @param settings - What the option does; `undefined` keeps a setting and `null` clears it.
  */
 export function selectOption(
-  entry: SelectItem,
+  entry: SelectResolvedOption,
   settings?: SelectOptionSettings<SelectRecord>
 ): SelectOption<SelectRecord>;
 export function selectOption<T extends object>(
@@ -281,7 +281,7 @@ export function selectOption<T extends object>(
   if (Option.is(entry)) {
     return (entry as Option<T>).with(settings);
   }
-  if (ITEM_RECORDS.has(entry as object)) {
+  if (RESOLVED_RECORDS.has(entry as object)) {
     return build(recordOf(entry), settings, "value");
   }
   assert(
@@ -296,24 +296,26 @@ export function isSelectOption(value: unknown): value is SelectOption<object> {
   return Option.is(value);
 }
 
-/** The record behind a list entry, wrapped or not. An item stands for its record. */
-export function recordOf(entry: SelectItem): SelectRecord;
+/** The record behind a list entry, wrapped or not. A resolved option stands for its record. */
+export function recordOf(entry: SelectResolvedOption): SelectRecord;
 export function recordOf<T extends object>(entry: SelectOptionLike<T>): T;
 export function recordOf<T extends object>(entry: SelectOptionLike<T>): T {
   if (Option.is(entry)) {
     return (entry as Option<T>).record;
   }
-  return (ITEM_RECORDS.get(entry as object) as T | undefined) ?? (entry as T);
+  return (
+    (RESOLVED_RECORDS.get(entry as object) as T | undefined) ?? (entry as T)
+  );
 }
 
 /**
- * Marks an engine-built item as standing for its record. Internal to the select engine.
+ * Marks an engine-built resolved option as standing for its record. Internal to the select engine.
  *
- * @param item - The item.
+ * @param option - The resolved option.
  * @param record - The record it stands for.
  */
-export function registerItemRecord(item: object, record: object): void {
-  ITEM_RECORDS.set(item, record);
+export function registerResolvedRecord(option: object, record: object): void {
+  RESOLVED_RECORDS.set(option, record);
 }
 
 /**

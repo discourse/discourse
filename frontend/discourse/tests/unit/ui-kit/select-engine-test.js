@@ -471,7 +471,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
 
-    test("describeRecords carries keyed records while held items report unresolved state", function (assert) {
+    test("describeRecords carries keyed records while held resolved options report unresolved state", function (assert) {
       const engine = new SelectEngine();
 
       const [normal] = engine.describeRecords([{ id: 5, name: "Five" }]);
@@ -483,14 +483,14 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         "the raw item passes through"
       );
       assert.false(
-        engine.heldItem?.(normal.record)?.unresolved,
-        "the held item reports a resolved record"
+        engine.heldOption?.(normal.record)?.unresolved,
+        "the held resolved option reports a resolved record"
       );
 
       const [unresolved] = engine.describeRecords([engine.resolveSelection(9)]);
       assert.true(
-        engine.heldItem?.(unresolved.record)?.unresolved,
-        "the held item reports an unresolved fallback outside the descriptor"
+        engine.heldOption?.(unresolved.record)?.unresolved,
+        "the held resolved option reports an unresolved fallback outside the descriptor"
       );
     });
 
@@ -576,7 +576,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       assert.deepEqual(
         engine.filteredOptions.map((i) => i.record.id),
         [2],
-        "only the matching item enters the displayed list"
+        "only the matching resolved option enters the displayed list"
       );
       assert.deepEqual(
         engine.loadOptions(engine.loadContext).map((input) => input.record.id),

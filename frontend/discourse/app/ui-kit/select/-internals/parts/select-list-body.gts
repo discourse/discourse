@@ -80,7 +80,7 @@ function placeholderRows(
     ? items.map((row) => ({
         key: row.key,
         isSkeleton: true,
-        label: row.isSkeleton ? row.label : row.item?.label,
+        label: row.isSkeleton ? row.label : row.resolved?.label,
       }))
     : [{ key: engineKey("skeleton:empty"), isSkeleton: true }];
 }

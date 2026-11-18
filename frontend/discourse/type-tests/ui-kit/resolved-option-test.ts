@@ -1,5 +1,5 @@
 import { expectTypeOf } from "expect-type";
-import type { SelectItem } from "discourse/ui-kit/select/-internals/engine/select-item";
+import type { SelectResolvedOption } from "discourse/ui-kit/select/-internals/engine/resolved-option";
 import {
   entryRecord,
   recordOf,
@@ -8,9 +8,9 @@ import {
 } from "discourse/ui-kit/select/-internals/engine/select-option";
 import type { SelectRecord } from "discourse/ui-kit/select/select-engine";
 
-declare const item: SelectItem;
+declare const item: SelectResolvedOption;
 
-// An item handed back as an entry stands for its record, never for itself.
+// A resolved option handed back as an entry stands for its record, never for itself.
 expectTypeOf(recordOf(item)).toEqualTypeOf<SelectRecord>();
 expectTypeOf(entryRecord(item)).toEqualTypeOf<SelectRecord>();
 expectTypeOf(selectOption(item)).toEqualTypeOf<SelectOption<SelectRecord>>();

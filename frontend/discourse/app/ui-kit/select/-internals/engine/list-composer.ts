@@ -11,8 +11,8 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import type { SelectContentContext } from "./customizations.ts";
+import type { SelectResolvedOption } from "./resolved-option.ts";
 import { engineKey, groupIdentity, recordKey } from "./row-keys.ts";
-import type { SelectItem } from "./select-item.ts";
 import {
   engineOption,
   optionKind,
@@ -64,13 +64,16 @@ interface GroupedRows {
 
 type BoundaryKind = "none" | "text" | "action";
 
-/** Finds the list item for a key, given the option a row shows it through. */
-type ItemLookup = (key: string, input: SelectOption) => SelectItem | undefined;
+/** Finds the list's resolved option for a key, given the option a row shows it through. */
+type ResolvedLookup = (
+  key: string,
+  input: SelectOption
+) => SelectResolvedOption | undefined;
 
-/** An option paste can match, and the item it is listed as. */
+/** An option paste can match, and the resolved option it is listed as. */
 export interface PasteOption {
   option: SelectOption;
-  item: SelectItem;
+  resolved: SelectResolvedOption;
 }
 
 export default class ListComposer {
@@ -83,10 +86,10 @@ export default class ListComposer {
   #getAtMaximum: () => boolean;
   #getTotal: () => number | undefined;
   #viewRecord: (key: string, input: SelectOption) => SelectRecord | undefined;
-  #itemFor: ItemLookup;
-  #peekItem: ItemLookup;
-  #rowItem: (input: SelectOption) => SelectItem;
-  #keepItems: (keys: ReadonlySet<string>) => void;
+  #resolvedOptionFor: ResolvedLookup;
+  #peekOption: ResolvedLookup;
+  #rowOption: (input: SelectOption) => SelectResolvedOption;
+  #keepOptions: (keys: ReadonlySet<string>) => void;
   #getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
 
   /** Native content steps run before the compatibility bridge. */
@@ -122,14 +125,14 @@ export default class ListComposer {
     getTotal: () => number | undefined;
     /** The record a key stands for in the list, which a displayed copy never replaces. */
     viewRecord: (key: string, input: SelectOption) => SelectRecord | undefined;
-    /** The list item for a row's key, given the row's own option. */
-    itemFor: ItemLookup;
-    /** The same item built afresh and never memoised, for matching outside a build. */
-    peekItem: ItemLookup;
-    /** The item of a row that stands for no value key. */
-    rowItem: (input: SelectOption) => SelectItem;
-    /** Called after a build with the keys it showed, so other keys' items can be let go. */
-    keepItems: (keys: ReadonlySet<string>) => void;
+    /** The list's resolved option for a row's key, given the row's own option. */
+    resolvedOptionFor: ResolvedLookup;
+    /** The same resolved option built afresh and never memoised, for matching outside a build. */
+    peekOption: ResolvedLookup;
+    /** The resolved option of a row that stands for no value key. */
+    rowOption: (input: SelectOption) => SelectResolvedOption;
+    /** Called after a build with the keys it showed, so other keys' resolved options can be let go. */
+    keepOptions: (keys: ReadonlySet<string>) => void;
     getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
     /** Applies sealed per-select content declarations. */
     applyContent: (
@@ -152,10 +155,10 @@ export default class ListComposer {
     this.#isLockedValue = opts.isLockedValue;
     this.#getTotal = opts.getTotal;
     this.#viewRecord = opts.viewRecord;
-    this.#itemFor = opts.itemFor;
-    this.#peekItem = opts.peekItem;
-    this.#rowItem = opts.rowItem;
-    this.#keepItems = opts.keepItems;
+    this.#resolvedOptionFor = opts.resolvedOptionFor;
+    this.#peekOption = opts.peekOption;
+    this.#rowOption = opts.rowOption;
+    this.#keepOptions = opts.keepOptions;
     this.#getContentContext = opts.getContentContext;
     this.#applyContent = opts.applyContent;
     this.#applyLegacyContent = opts.applyLegacyContent;
@@ -182,16 +185,16 @@ export default class ListComposer {
     let options = this.#content(loaded);
     this.#noteVisible(options.length, rawCount);
 
-    // Every option now stands for its key's record, with its item; what content changed on a
+    // Every option now stands for its key's record, with its resolved option; what content changed on a
     // copy is kept as presentation.
-    const items = new Map<SelectOption, SelectItem>();
+    const byOption = new Map<SelectOption, SelectResolvedOption>();
     const originals = new Map<SelectOption, SelectOption>();
     const before = this.#byKey(loaded);
     const rawExtra = this.#wrapExtras(this.#snapshot());
-    // A source option an extra replaces never reaches a row, so it never claims the key's item.
-    const itemOf = this.#unlessShadowed(rawExtra, this.#itemFor);
+    // A source option an extra replaces never reaches a row, so it never claims the key's resolved option.
+    const resolvedOf = this.#unlessShadowed(rawExtra, this.#resolvedOptionFor);
     options = options.map((option) => {
-      const normalized = this.#normalize(option, before, items, itemOf);
+      const normalized = this.#normalize(option, before, byOption, resolvedOf);
       originals.set(normalized, option);
       return normalized;
     });
@@ -229,7 +232,7 @@ export default class ListComposer {
       options.map((option) => originals.get(option) ?? option)
     );
     const allExtra = rawExtra.map((extra) =>
-      this.#normalizeExtra(extra, listed, items, this.#itemFor)
+      this.#normalizeExtra(extra, listed, byOption, this.#resolvedOptionFor)
     );
     // One option per value: an extra option comes first, so it keeps its value.
     const extraKeys = new Set(
@@ -279,28 +282,28 @@ export default class ListComposer {
       rawCount,
       create,
       grouped,
-      items
+      byOption
     );
   }
 
   /**
    * The options a paste can match among `inputs`, listed as the list would show them now: after
-   * content steps, the legacy bridge and the extra options, each with its item. Built afresh, so
+   * content steps, the legacy bridge and the extra options, each with its resolved option. Built afresh, so
    * it never reflects a list built earlier.
    *
    * @param inputs - Options the source holds, as a list would be built from them.
    */
   pasteOptions(inputs: readonly SelectOption[]): PasteOption[] {
-    const items = new Map<SelectOption, SelectItem>();
+    const byOption = new Map<SelectOption, SelectResolvedOption>();
     const before = this.#byKey(inputs);
     const rawExtra = this.#wrapExtras(this.#snapshot());
-    const itemOf = this.#unlessShadowed(rawExtra, this.#peekItem);
+    const resolvedOf = this.#unlessShadowed(rawExtra, this.#peekOption);
     const options = this.#content(inputs).map((option) =>
-      this.#normalize(option, before, items, itemOf)
+      this.#normalize(option, before, byOption, resolvedOf)
     );
     const listed = this.#byKey(options);
     const extra = rawExtra.map((option) =>
-      this.#normalizeExtra(option, listed, items, this.#peekItem)
+      this.#normalizeExtra(option, listed, byOption, this.#peekOption)
     );
     const extraKeys = new Set(extra.map((option) => this.#keyOf(option)));
     return [
@@ -311,7 +314,7 @@ export default class ListComposer {
       }),
     ].map((option) => ({
       option,
-      item: items.get(option) ?? this.#rowItem(option),
+      resolved: byOption.get(option) ?? this.#rowOption(option),
     }));
   }
 
@@ -369,7 +372,7 @@ export default class ListComposer {
 
   /**
    * The held records as the trigger and chips list them: each with its key and value only, so
-   * held async data never reads presentation or list state. Surfaces read the item for a record
+   * held async data never reads presentation or list state. Surfaces read the resolved option for a record
    * outside the data.
    *
    * @param records - The held records.
@@ -505,13 +508,13 @@ export default class ListComposer {
     }
   }
 
-  /** An item lookup that skips the keys the given extra options take over. */
+  /** A resolved option lookup that skips the keys the given extra options take over. */
   #unlessShadowed(
     extra: readonly SelectOption[],
-    itemOf: ItemLookup
-  ): ItemLookup {
+    resolvedOf: ResolvedLookup
+  ): ResolvedLookup {
     const keys = new Set(extra.map((option) => this.#keyOf(option)));
-    return (key, input) => (keys.has(key) ? undefined : itemOf(key, input));
+    return (key, input) => (keys.has(key) ? undefined : resolvedOf(key, input));
   }
 
   #wrapExtras(snapshot: SelectSnapshot): SelectOption[] {
@@ -550,7 +553,7 @@ export default class ListComposer {
     inputCount: number,
     create: SelectOption | null,
     grouped: GroupedRows,
-    items: ReadonlyMap<SelectOption, SelectItem>
+    byOption: ReadonlyMap<SelectOption, SelectResolvedOption>
   ): readonly SelectRow[] {
     const total = this.#getTotal();
     // `aria-setsize` describes the complete set rather than the rendered rows, so a source that
@@ -582,7 +585,7 @@ export default class ListComposer {
     const described = Object.freeze(
       rows.map((placed, index) => {
         const row = this.#describe(placed, index, atMaximum);
-        row.item = this.#itemOf(placed, items, shown);
+        row.resolved = this.#resolvedOf(placed, byOption, shown);
         const group = {
           groupOrdinal: placed.stamp?.ordinal,
           groupText: placed.stamp?.text,
@@ -607,25 +610,25 @@ export default class ListComposer {
         };
       })
     );
-    this.#keepItems(shown);
+    this.#keepOptions(shown);
     return described;
   }
 
   /**
-   * The item a placed row shows: its key's, for an option that stands for a value, and its own
+   * The resolved option a placed row shows: its key's, for an option that stands for a value, and its own
    * option's for every row kind the engine builds.
    */
-  #itemOf(
+  #resolvedOf(
     placed: PlacedRow,
-    items: ReadonlyMap<SelectOption, SelectItem>,
+    byOption: ReadonlyMap<SelectOption, SelectResolvedOption>,
     shown: Set<string>
-  ): SelectItem {
-    const item = placed.boundary ? undefined : items.get(placed.option);
-    if (item?.key != null) {
-      shown.add(item.key);
-      return item;
+  ): SelectResolvedOption {
+    const resolved = placed.boundary ? undefined : byOption.get(placed.option);
+    if (resolved?.key != null) {
+      shown.add(resolved.key);
+      return resolved;
     }
-    return this.#rowItem(placed.option);
+    return this.#rowOption(placed.option);
   }
 
   /** Content steps, then the compatibility bridge's legacy content. */
@@ -679,15 +682,15 @@ export default class ListComposer {
 
   /**
    * The option over the record its key stands for, so grouping, runs and every data edge read
-   * one record, and with the behaviour its item merged from every source. A copy a content step
+   * one record, and with the behaviour its resolved option merged from every source. A copy a content step
    * made contributes the presentation it changed from what it was made from: the listed option
    * of its key, or the key's record when none was listed. The copy's own settings outrank that.
    */
   #normalize(
     option: SelectOption,
     before: ReadonlyMap<string, SelectOption>,
-    items: Map<SelectOption, SelectItem>,
-    itemOf: ItemLookup
+    byOption: Map<SelectOption, SelectResolvedOption>,
+    resolvedOf: ResolvedLookup
   ): SelectOption {
     const key = this.#keyOf(option);
     if (key == null || optionKind(option) !== "value") {
@@ -695,24 +698,24 @@ export default class ListComposer {
     }
     const record = this.#viewRecord(key, option) ?? option.record;
     const made = before.get(key)?.record ?? record;
-    return this.#withItem(
+    return this.#withResolved(
       key,
       this.#onRecord(record, option, made),
-      items,
-      itemOf
+      byOption,
+      resolvedOf
     );
   }
 
   /**
    * An extra option over its key's record. It takes the slot of a listed option with its key,
-   * whose item properties it keeps wherever it is silent; placement stays its own. Like a content
+   * whose resolved option properties it keeps wherever it is silent; placement stays its own. Like a content
    * copy, a different record of that key contributes the presentation it shows differently.
    */
   #normalizeExtra(
     extra: SelectOption,
     listed: ReadonlyMap<string, SelectOption>,
-    items: Map<SelectOption, SelectItem>,
-    itemOf: ItemLookup
+    byOption: Map<SelectOption, SelectResolvedOption>,
+    resolvedOf: ResolvedLookup
   ): SelectOption {
     const key = this.#keyOf(extra);
     if (key == null || optionKind(extra) !== "value") {
@@ -731,32 +734,32 @@ export default class ListComposer {
           : this.#args.changedPresentation(record, extra.record);
       view = selectOption(record, { ...kept, ...changed, ...extra.settings });
     }
-    return this.#withItem(key, view, items, itemOf);
+    return this.#withResolved(key, view, byOption, resolvedOf);
   }
 
   /**
-   * Looks the view's item up and returns the option the row acts through: the view, carrying
-   * the disabled state and action the item merged.
+   * Looks the view's resolved option up and returns the option the row acts through: the view, carrying
+   * the disabled state and action the resolved option merged.
    */
-  #withItem(
+  #withResolved(
     key: string,
     view: SelectOption,
-    items: Map<SelectOption, SelectItem>,
-    itemOf: ItemLookup
+    byOption: Map<SelectOption, SelectResolvedOption>,
+    resolvedOf: ResolvedLookup
   ): SelectOption {
-    const item = itemOf(key, view);
-    if (!item) {
+    const resolved = resolvedOf(key, view);
+    if (!resolved) {
       return view;
     }
     const acting =
-      item.disabled === view.disabled &&
-      item.action === (view.settings.onSelect ?? undefined)
+      resolved.disabled === view.disabled &&
+      resolved.action === (view.settings.onSelect ?? undefined)
         ? view
         : view.with({
-            disabled: item.disabled ? true : null,
-            onSelect: item.action ?? null,
+            disabled: resolved.disabled ? true : null,
+            onSelect: resolved.action ?? null,
           });
-    items.set(acting, item);
+    byOption.set(acting, resolved);
     return acting;
   }
 
