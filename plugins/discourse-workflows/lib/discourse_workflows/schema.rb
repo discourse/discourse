@@ -56,7 +56,6 @@ module DiscourseWorkflows
         "category_id": { "type": ["integer", "null"] },
         "user_id": { "type": "integer" },
         "username": { "type": ["string", "null"], "description": "Username of the topic author" },
-        "image_uploads": { "type": "array", "x-optional": true, "items": { "type": "object", "properties": { "id": { "type": "integer" }, "short_url": { "type": "string" } } } },
         "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" },
         "tags": {
           "type": "array",
@@ -114,6 +113,18 @@ module DiscourseWorkflows
         "score": { "type": ["number", "null"] },
         "tags": { "type": "array", "items": { "type": "string" } },
         "upload_ids": { "type": "array", "items": { "type": "integer" } },
+        "image_uploads": {
+          "type": "array",
+          "x-optional": true,
+          "description": "Visible image uploads, included with cooked content",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "short_url": { "type": "string" }
+            }
+          }
+        },
         "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" }
       }
     JSON

@@ -532,7 +532,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
         "username" => user.username,
         "raw" => "Visible post body",
       )
-      expect(result["post"]).not_to have_key("cooked")
+      expect(result["post"]).not_to include("cooked", "image_uploads")
     end
 
     it "pairs visible image upload IDs with their short URLs" do
@@ -546,16 +546,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
         target: post,
       )
 
-      result =
-        execute_node(
-          configuration: {
-            "operation" => "get",
-            "post_id" => post.id.to_s,
-            "include_cooked" => true,
-          },
-          item: item,
-        )
+      config = { "operation" => "get", "post_id" => post.id.to_s, "include_cooked" => true }
+      result = execute_node(configuration: config, item: item)
 
+      expect(result).to match_node_output_schema(described_class, configuration: config)
       expect(result["post"]["image_uploads"]).to contain_exactly(
         { "id" => first_image.id, "short_url" => first_image.short_url },
         { "id" => second_image.id, "short_url" => second_image.short_url },
