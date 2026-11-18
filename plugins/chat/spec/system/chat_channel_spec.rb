@@ -2,6 +2,7 @@
 
 RSpec.describe "Chat channel" do
   fab!(:current_user, :user)
+  fab!(:admin)
   fab!(:history_authors) { Fabricate.times(2, :user) }
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, use_service: true, chat_channel: channel_1) }
@@ -12,7 +13,7 @@ RSpec.describe "Chat channel" do
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
 
   before do
-    chat_system_bootstrap
+    chat_system_bootstrap(admin)
     channel_1.add(current_user)
     sign_in(current_user)
   end
