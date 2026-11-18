@@ -243,14 +243,9 @@
       pointer-events: none;
     }
 
-    // we have a custom focus indicator via .selected
-    // we can remove the native one
-    .title:focus {
-      outline: none;
-    }
-
     .title:focus-visible {
-      outline: none;
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: 2px;
     }
   }
 
