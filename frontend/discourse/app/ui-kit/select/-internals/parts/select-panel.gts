@@ -15,10 +15,10 @@ import SelectionStrip from "discourse/ui-kit/select/-internals/parts/selection-s
 import type WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import SelectEngine, {
   type SelectGroupInfo,
+  SelectHeldRow,
   SelectLoadRequest,
   type SelectOption,
   SelectRecord,
-  SelectRow,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -95,8 +95,8 @@ interface SelectPanelSignature<State> {
       value: unknown,
       request?: SelectLoadRequest
     ) =>
-      | readonly SelectRow[]
-      | Promise<readonly SelectRow[] | undefined>
+      | readonly SelectHeldRow[]
+      | Promise<readonly SelectHeldRow[] | undefined>
       | undefined;
     /** Returns navigation from the held strip to the query input. */
     returnToInput?: () => void;

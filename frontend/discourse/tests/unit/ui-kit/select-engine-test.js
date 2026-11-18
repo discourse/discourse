@@ -471,7 +471,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
 
-    test("describeRecords normalizes records and reflects unresolved fallbacks", function (assert) {
+    test("describeRecords carries keyed records while held items report unresolved state", function (assert) {
       const engine = new SelectEngine();
 
       const [normal] = engine.describeRecords([{ id: 5, name: "Five" }]);
@@ -482,12 +482,15 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         "Five",
         "the raw item passes through"
       );
-      assert.false(normal.flags.unresolved, "a normal item is not unresolved");
+      assert.false(
+        engine.heldItem?.(normal.record)?.unresolved,
+        "the held item reports a resolved record"
+      );
 
       const [unresolved] = engine.describeRecords([engine.resolveSelection(9)]);
       assert.true(
-        unresolved.flags.unresolved,
-        "an unresolved fallback's flag is reflected, not hardcoded false"
+        engine.heldItem?.(unresolved.record)?.unresolved,
+        "the held item reports an unresolved fallback outside the descriptor"
       );
     });
 

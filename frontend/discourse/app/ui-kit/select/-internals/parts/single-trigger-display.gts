@@ -101,26 +101,29 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         trigger opens the overlay (DMenu's trigger-root click; onShow focuses the input).
         On mobile the query input lives in the modal (below), so tapping the trigger opens
         it there. }}
-      {{#unless @editing}}
-        {{#if @presenter.isMobileTypeahead}}
-          <span class="d-select__presentation">
-            {{#if (or @pending @engine.hasValue)}}
-              <DAsyncContent
-                @asyncData={{@resolveSelection}}
-                @context={{@value}}
-              >
-                <:loading>
+      {{! The held value's resolve stays mounted while the query is edited, so typing never
+        aborts it; only what it shows is hidden. }}
+      {{#if @presenter.isMobileTypeahead}}
+        {{#if (or @pending @engine.hasValue)}}
+          <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
+            <:loading>
+              {{#unless @editing}}
+                <span class="d-select__presentation">
                   {{~#if @hasSelectionLoadingBlock~}}
                     {{yield to="selectionLoading"}}
                   {{~else~}}
                     <DSkeleton @variant="text" @width="8ch" />
                   {{~/if~}}
-                </:loading>
-                <:content as |selected|>
+                </span>
+              {{/unless}}
+            </:loading>
+            <:content as |selected|>
+              {{#unless @editing}}
+                <span class="d-select__presentation">
                   {{#if selected}}
-                    {{#if (@engine.isUnresolvedRecord selected)}}
+                    {{#if (@engine.isHeldUnresolved selected)}}
                       {{#if @hasUnresolvedBlock}}
-                        {{yield selected to="unresolved"}}
+                        {{yield (@engine.heldRecord selected) to="unresolved"}}
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
@@ -128,7 +131,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield selected to="selection"}}
+                      {{yield (@engine.heldRecord selected) to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}
@@ -136,50 +139,64 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                       />
                     {{/if}}
                   {{/if}}
-                </:content>
-              </DAsyncContent>
-            {{else if @placeholder}}
+                </span>
+              {{/unless}}
+            </:content>
+          </DAsyncContent>
+        {{else if @placeholder}}
+          {{#unless @editing}}
+            <span class="d-select__presentation">
               <span class="d-select__placeholder">
                 {{@placeholder}}
               </span>
-            {{/if}}
-          </span>
-        {{else if @hasSelectionBlock}}
-          {{#if (or @pending (and @engine.hasValue (not @triggerFocused)))}}
-            <span class="d-select__presentation" id={{@selectionId}}>
-              <DAsyncContent
-                @asyncData={{@resolveSelection}}
-                @context={{@value}}
-              >
-                <:loading>
+            </span>
+          {{/unless}}
+        {{/if}}
+      {{else if @hasSelectionBlock}}
+        {{#if (or @pending @engine.hasValue)}}
+          <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
+            <:loading>
+              {{#if (and (not @editing) (or @pending (not @triggerFocused)))}}
+                <span class="d-select__presentation" id={{@selectionId}}>
                   {{~#if @hasSelectionLoadingBlock~}}
                     {{yield to="selectionLoading"}}
                   {{~else~}}
                     <DSkeleton @variant="text" @width="8ch" />
                   {{~/if~}}
-                </:loading>
-                <:content as |selected|>
+                </span>
+              {{/if}}
+            </:loading>
+            <:content as |selected|>
+              {{#if (and (not @editing) (or @pending (not @triggerFocused)))}}
+                <span class="d-select__presentation" id={{@selectionId}}>
                   {{#if selected}}
-                    {{#if (@engine.isUnresolvedRecord selected)}}
+                    {{#if (@engine.isHeldUnresolved selected)}}
                       {{#if @hasUnresolvedBlock}}
-                        {{yield selected to="unresolved"}}
+                        {{yield (@engine.heldRecord selected) to="unresolved"}}
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
                           @record={{selected}}
                         />
                       {{/if}}
+                    {{else if @hasSelectionBlock}}
+                      {{yield (@engine.heldRecord selected) to="selection"}}
                     {{else}}
-                      {{yield selected to="selection"}}
+                      <SelectionLabel
+                        @engine={{@engine}}
+                        @record={{selected}}
+                      />
                     {{/if}}
                   {{/if}}
-                </:content>
-              </DAsyncContent>
-            </span>
-          {{/if}}
-        {{else if (or @pending @engine.hasValue)}}
-          <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
-            <:loading>
+                </span>
+              {{/if}}
+            </:content>
+          </DAsyncContent>
+        {{/if}}
+      {{else if (or @pending @engine.hasValue)}}
+        <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
+          <:loading>
+            {{#unless @editing}}
               <span class="d-select__presentation">
                 {{#if @hasSelectionLoadingBlock}}
                   {{yield to="selectionLoading"}}
@@ -187,11 +204,11 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                   <DSkeleton @variant="text" @width="8ch" />
                 {{/if}}
               </span>
-            </:loading>
-            <:content></:content>
-          </DAsyncContent>
-        {{/if}}
-      {{/unless}}
+            {{/unless}}
+          </:loading>
+          <:content></:content>
+        </DAsyncContent>
+      {{/if}}
       {{#if @presenter.isDesktopTypeahead}}
         <ComboboxQueryInput
           aria-busy={{if @pending "true"}}
@@ -252,14 +269,14 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         <:content as |selected|>
           {{#if selected}}
             <span class="d-select__value">
-              {{#if (@engine.isUnresolvedRecord selected)}}
+              {{#if (@engine.isHeldUnresolved selected)}}
                 {{#if @hasUnresolvedBlock}}
-                  {{yield selected to="unresolved"}}
+                  {{yield (@engine.heldRecord selected) to="unresolved"}}
                 {{else}}
                   <SelectionLabel @engine={{@engine}} @record={{selected}} />
                 {{/if}}
               {{else if @hasSelectionBlock}}
-                {{yield selected to="selection"}}
+                {{yield (@engine.heldRecord selected) to="selection"}}
               {{else}}
                 <SelectionLabel @engine={{@engine}} @record={{selected}} />
               {{/if}}

@@ -22,8 +22,8 @@ import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
+  SelectHeldRow,
   SelectRecord,
-  SelectRow,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -90,7 +90,7 @@ interface MultiChipsSignature {
     /** Whether the consumer supplied custom markup for a held value that cannot be resolved. */
     hasUnresolvedBlock: boolean;
     /** The held values' chip descriptors, resolved once by the host and shared with its description. */
-    selection: TrackedAsyncData<readonly SelectRow[] | undefined>;
+    selection: TrackedAsyncData<readonly SelectHeldRow[] | undefined>;
     /** Composes the component and consumer description ids. */
     composeDescribedBy: (
       ...ids: Array<string | undefined | false>
@@ -243,13 +243,13 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   }
 
   /** Converts a held record's id to its chip attribute value. */
-  chipValue(chip: SelectRow): string {
+  chipValue(chip: SelectHeldRow): string {
     return String(chip.value ?? "");
   }
 
   /** Whether a held chip is locked, read live because chip descriptors are cached per value. */
   @action
-  isLockedChip(chip: SelectRow): boolean {
+  isLockedChip(chip: SelectHeldRow): boolean {
     return this.args.engine.isLockedValue(chip.value);
   }
 
@@ -277,7 +277,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   /** Keeps removal focus inside the field; native button activation returns to the input. */
   @action
   handleChipKeydown(
-    chip: SelectRow,
+    chip: SelectHeldRow,
     index: number,
     event: KeyboardEvent
   ): void {
@@ -327,7 +327,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
 
   /** Focuses the input before removal so an unmounted button cannot drop focus to the body. */
   @action
-  removeSelected(chip: SelectRow, event?: MouseEvent): void {
+  removeSelected(chip: SelectHeldRow, event?: MouseEvent): void {
     event?.stopPropagation();
     if (this.args.presenter.isLocked || this.isLockedChip(chip)) {
       return;
@@ -433,9 +433,12 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     class="d-select__chip-label"
                     id="{{this.chipIdPrefix}}-{{index}}-label"
                   >
-                    {{#if chip.flags.unresolved}}
+                    {{#if (@engine.isHeldUnresolved chip.record)}}
                       {{#if @hasUnresolvedBlock}}
-                        {{yield chip.record to="unresolved"}}
+                        {{yield
+                          (@engine.heldRecord chip.record)
+                          to="unresolved"
+                        }}
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
@@ -443,7 +446,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield chip.record to="selection"}}
+                      {{yield (@engine.heldRecord chip.record) to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}

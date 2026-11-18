@@ -2458,3 +2458,948 @@ module(
     });
   }
 );
+
+module("Integration | ui-kit | select | DSelect held view", function (hooks) {
+  setupRenderingTest(hooks);
+
+  let trackedObject;
+  let withPluginApi;
+  let EngineProbe;
+  let probedEngine;
+  let A11yLiveRegions;
+  let disableClearA11yAnnouncementsInTests;
+  hooks.before(async function () {
+    ({ trackedObject } = await import("@ember/reactive/collections"));
+    ({ withPluginApi } = await import("discourse/lib/plugin-api"));
+    ({ EngineProbe, probedEngine } =
+      await import("discourse/tests/helpers/d-select-hosts"));
+    ({ default: A11yLiveRegions } =
+      await import("discourse/components/a11y/live-regions"));
+    ({ disableClearA11yAnnouncementsInTests } =
+      await import("discourse/services/a11y"));
+  });
+
+  function customize(setup) {
+    withPluginApi((api) =>
+      api.registerValueTransformer("select-customizations", ({ value }) =>
+        value.forAll(setup)
+      )
+    );
+  }
+
+  /** Wrap the bound action callback; action accessors cannot be spied on as methods. */
+  function spyOnHeldData(host, name) {
+    const spy = sinon.spy(host[name]);
+    Object.defineProperty(host, name, { configurable: true, value: spy });
+    return spy;
+  }
+
+  function deferred() {
+    let resolve;
+    const promise = new Promise((res) => (resolve = res));
+    return { promise, resolve };
+  }
+
+  ["typeahead", "button", "static"].forEach((variant) => {
+    test(`${variant} single trigger updates item presentation outside held async data`, async function (assert) {
+      const record = { id: "a", name: "Record", detail: "Record detail" };
+      const options = [selectOption(record, { label: "Source" })];
+      const filterBy = () => true;
+      const state = trackedObject({ label: "Before" });
+      customize((spec) =>
+        spec.content((inputs, { filter, control }) =>
+          inputs.map((option) =>
+            option.with({
+              label: filter || state.label,
+              icon: control.filter ? "xmark" : "star",
+              description: `${state.label} detail`,
+            })
+          )
+        )
+      );
+      let resolveSingle;
+      class Probe extends EngineProbe {
+        constructor() {
+          super(...arguments);
+          resolveSingle = spyOnHeldData(this.host, "resolveSingle");
+        }
+      }
+      await render(
+        <template>
+          <Probe
+            @debounce={{false}}
+            @filterBy={{filterBy}}
+            @options={{options}}
+            @value="a"
+            @variant={{variant}}
+          />
+        </template>
+      );
+      const label =
+        variant === "typeahead" ? ".d-select__input" : ".d-select__value";
+      if (variant === "typeahead") {
+        assert
+          .dom(label)
+          .hasValue("Before", "the resting input shows the held item label");
+      } else {
+        assert
+          .dom(label)
+          .hasText("Before", "the closed trigger shows the held item label");
+      }
+      assert
+        .dom("[role='listbox']")
+        .doesNotExist("the held view runs while closed");
+      assert
+        .dom(".d-select")
+        .hasAttribute(
+          "data-name",
+          "Before",
+          "the trigger hook reads the held item"
+        );
+      const engine = probedEngine();
+      assert.strictEqual(
+        engine.heldItem?.(record)?.icon,
+        "star",
+        "the closed trigger carries the content icon"
+      );
+      assert.strictEqual(
+        engine.heldItem?.(record)?.description,
+        "Before detail",
+        "the held item carries the content description"
+      );
+      const runs = resolveSingle.callCount;
+      assert.true(
+        runs > 0,
+        "the actual single held async-data boundary was exercised"
+      );
+      state.label = "After";
+      await settled();
+      if (variant === "typeahead") {
+        assert
+          .dom(label)
+          .hasValue(
+            "After",
+            "closed item presentation updates the resting input"
+          );
+      } else {
+        assert
+          .dom(label)
+          .hasText("After", "closed item presentation updates the trigger");
+      }
+      assert
+        .dom(".d-select")
+        .hasAttribute("data-name", "After", "the held hook updates too");
+      assert.strictEqual(
+        engine.heldItem?.(record)?.record,
+        record,
+        "the held item retains the canonical record"
+      );
+      assert.strictEqual(
+        engine.heldItem?.(record)?.description,
+        "After detail",
+        "content re-derives the description"
+      );
+      assert.strictEqual(
+        resolveSingle.callCount,
+        runs,
+        "presentation never re-runs single held async data"
+      );
+      const query = variant === "static" ? "" : "query";
+      if (query) {
+        await dSelect().search(query);
+      } else {
+        await dSelect().open();
+      }
+      const listedLabel = query || "After";
+      assert
+        .dom('[role="option"][data-value="a"]')
+        .hasText(
+          `${listedLabel} After detail`,
+          "the list content sees its own filter"
+        );
+      assert
+        .dom(".d-select")
+        .hasAttribute(
+          "data-name",
+          "After",
+          "list activity never changes the held name"
+        );
+      assert.strictEqual(
+        engine.heldItem?.(record)?.icon,
+        "star",
+        "list activity never changes the held icon through control.filter"
+      );
+      assert.strictEqual(
+        engine.heldItem?.(record)?.description,
+        "After detail",
+        "list activity never changes held detail"
+      );
+      await dSelect().close();
+    });
+  });
+
+  test("chips update and keep at-rest properties while typing without rerunning held async data", async function (assert) {
+    const records = [
+      { id: "a", name: "Record A" },
+      { id: "b", name: "Record B" },
+    ];
+    const state = trackedObject({ label: "Before" });
+    const filterBy = () => true;
+    customize((spec) =>
+      spec.content((inputs, { filter, control }) =>
+        inputs.map((option) =>
+          option.with({
+            label: `${filter || state.label} ${option.record.id}`,
+            icon: control.filter ? "xmark" : "star",
+          })
+        )
+      )
+    );
+    let resolveMulti;
+    class Probe extends EngineProbe {
+      constructor() {
+        super(...arguments);
+        resolveMulti = spyOnHeldData(this.host, "resolveMulti");
+      }
+    }
+    await render(
+      <template>
+        <Probe
+          @debounce={{false}}
+          @filterBy={{filterBy}}
+          @multiple={{true}}
+          @options={{records}}
+          @value={{array "a" "b"}}
+        />
+      </template>
+    );
+    assert
+      .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
+      .hasText("Before a", "chips read the held item before opening");
+    assert
+      .dom('.d-select__chip[data-value="b"]')
+      .hasAttribute("data-name", "Before b", "each chip has its item name");
+    const runs = resolveMulti.callCount;
+    assert.true(
+      runs > 0,
+      "the real multi held async-data boundary was exercised"
+    );
+    assert.strictEqual(
+      probedEngine().heldItem?.(records[0])?.icon,
+      "star",
+      "chips carry the at-rest content icon"
+    );
+    state.label = "After";
+    await settled();
+    assert
+      .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
+      .hasText("After a", "closed chips follow content dependencies");
+    assert
+      .dom('.d-select__chip[data-value="b"]')
+      .hasAttribute("data-name", "After b", "chip names update outside data");
+    await dSelect().search("query");
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasText("query a", "the list has live content properties");
+    assert
+      .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
+      .hasText("After a", "typing leaves held labels at rest");
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "After a,After b",
+        "the trigger names every at-rest held item"
+      );
+    assert.strictEqual(
+      probedEngine().heldItem?.(records[0])?.icon,
+      "star",
+      "typing leaves the held icon at rest"
+    );
+    assert.strictEqual(
+      resolveMulti.callCount,
+      runs,
+      "neither presentation nor typing re-runs held async data"
+    );
+  });
+
+  test("compact chips strip and screen-reader list share current item labels", async function (assert) {
+    const records = [
+      { id: "a", name: "Record A" },
+      { id: "b", name: "Record B" },
+    ];
+    const state = trackedObject({ prefix: "Before" });
+    const filterBy = () => true;
+    customize((spec) =>
+      spec.content((inputs, { filter }) =>
+        inputs.map((option) =>
+          option.with({
+            label: `${filter || state.prefix} ${option.record.id}`,
+          })
+        )
+      )
+    );
+    let resolveMulti;
+    class Probe extends EngineProbe {
+      constructor() {
+        super(...arguments);
+        resolveMulti = spyOnHeldData(this.host, "resolveMulti");
+      }
+    }
+    await render(
+      <template>
+        <Probe
+          @debounce={{false}}
+          @filterBy={{filterBy}}
+          @maxVisibleChips={{1}}
+          @multiple={{true}}
+          @options={{records}}
+          @value={{array "a" "b"}}
+          @variant="typeahead"
+        />
+      </template>
+    );
+    assert
+      .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
+      .hasText("Before a", "the visible compact chip reads its item");
+    assert.deepEqual(
+      findAll("ul.sr-only li").map((element) => element.textContent.trim()),
+      ["Before a", "Before b"],
+      "the held description includes the overflow item's label too"
+    );
+    const descriptions = find(".d-select__input")
+      .getAttribute("aria-describedby")
+      .split(/\s+/);
+    assert.true(
+      descriptions.includes(find("ul.sr-only").id),
+      "the combobox actually references the held list"
+    );
+    await dSelect().open();
+    assert
+      .dom('.d-select__strip-item[data-value="b"] .d-select__strip-label')
+      .hasText(
+        "Before b",
+        "the compact typeahead renders a strip for the overflow item"
+      );
+    const runs = resolveMulti.callCount;
+    state.prefix = "After";
+    await settled();
+    assert
+      .dom('.d-select__strip-item[data-value="a"]')
+      .hasAttribute("data-name", "After a", "strip names use the item");
+    assert
+      .dom('.d-select__strip-item[data-value="b"] .d-select__strip-label')
+      .hasText("After b", "strip labels update outside held data");
+    assert.deepEqual(
+      findAll("ul.sr-only li").map((element) => element.textContent.trim()),
+      ["After a", "After b"],
+      "the screen-reader held list updates outside data"
+    );
+    await dSelect().search("query");
+    assert
+      .dom('.d-select__strip-item[data-value="b"] .d-select__strip-label')
+      .hasText("After b", "typing cannot change strip presentation");
+    assert.strictEqual(
+      resolveMulti.callCount,
+      runs,
+      "the strip and screen-reader list do not rerun held async data"
+    );
+  });
+
+  test("content dropping two held inputs leaves their chips and values intact", async function (assert) {
+    const records = [
+      { id: "a", name: "Record A" },
+      { id: "b", name: "Record B" },
+      { id: "c", name: "Record C" },
+    ];
+    const options = records.map((record) =>
+      selectOption(record, { label: `Held ${record.id}` })
+    );
+    const state = trackedObject({ drop: false });
+    customize((spec) =>
+      spec.content((inputs) =>
+        inputs
+          .filter((option) => !state.drop || option.record.id === "c")
+          .map((option) =>
+            option.with({ label: `Content ${option.record.id}` })
+          )
+      )
+    );
+    const onChange = sinon.spy();
+    await render(
+      <template>
+        <EngineProbe
+          @multiple={{true}}
+          @onChange={{onChange}}
+          @options={{options}}
+          @value={{array "a" "b"}}
+        />
+      </template>
+    );
+    assert
+      .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
+      .hasText("Content a", "held content runs before opening");
+    await dSelect().open();
+    state.drop = true;
+    await settled();
+    assert
+      .dom('[role="option"]')
+      .exists(
+        { count: 1 },
+        "the step really drops both held rows from the list"
+      );
+    assert
+      .dom(".d-select__chip")
+      .exists({ count: 2 }, "neither held chip is dropped");
+    for (const key of ["a", "b"]) {
+      assert
+        .dom(`.d-select__chip[data-value="${key}"] .d-select__chip-label`)
+        .hasText(
+          `Held ${key}`,
+          "a dropped input falls back to its own properties"
+        );
+    }
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "a,b", "content never removes held values");
+    assert.true(
+      onChange.notCalled,
+      "a presentation change emits no selection change"
+    );
+  });
+
+  test("control.pending re-derives the closed trigger item without loading", async function (assert) {
+    const record = { id: "a", name: "Record" };
+    const records = [record];
+    const load = sinon.spy(() => []);
+    customize((spec) =>
+      spec.content((inputs, { control }) =>
+        inputs.map((option) =>
+          option.with({
+            label: "Held",
+            icon: control.pending ? "spinner" : "star",
+          })
+        )
+      )
+    );
+    await render(
+      <template>
+        <EngineProbe
+          @load={{load}}
+          @value="a"
+          @valueRecords={{records}}
+          @variant="button"
+        />
+      </template>
+    );
+    assert
+      .dom(".d-select__value")
+      .hasText("Held", "the trigger reads native content while closed");
+    const engine = probedEngine();
+    assert.strictEqual(
+      engine.heldItem?.(record)?.icon,
+      "star",
+      "the closed item starts idle"
+    );
+    const gate = deferred();
+    const updating = engine.update(() => gate.promise);
+    try {
+      await waitUntil(() => engine.pending);
+      assert.strictEqual(
+        engine.heldItem?.(record)?.icon,
+        "spinner",
+        "pending invalidates content while closed"
+      );
+      assert.dom('[role="listbox"]').doesNotExist("the control stays closed");
+      assert.true(load.notCalled, "the at-rest view starts no paged load");
+    } finally {
+      gate.resolve();
+      await updating;
+      await settled();
+    }
+    assert.strictEqual(
+      engine.heldItem?.(record)?.icon,
+      "star",
+      "settling invalidates the view again"
+    );
+  });
+
+  [false, true].forEach((multiple) => {
+    test(`typing with a paged source never aborts a pending ${multiple ? "batch" : "single"} resolve`, async function (assert) {
+      const record = { id: "a", name: "Answer" };
+      const gate = deferred();
+      const resolve = sinon.spy(() => gate.promise);
+      const resolveValue = multiple ? undefined : resolve;
+      const resolveValues = multiple ? resolve : undefined;
+      const value = multiple ? ["a"] : "a";
+      const load = sinon.spy((filter) => [
+        { id: "page", name: filter || "Page" },
+      ]);
+      customize((spec) =>
+        spec.content((inputs, { filter }) =>
+          inputs.map((option) =>
+            option.with({ label: filter || "Held answer" })
+          )
+        )
+      );
+      const rendering = render(
+        <template>
+          <EngineProbe
+            @debounce={{false}}
+            @load={{load}}
+            @multiple={{multiple}}
+            @resolveValue={{resolveValue}}
+            @resolveValues={{resolveValues}}
+            @value={{value}}
+            @variant="typeahead"
+          />
+        </template>
+      );
+      let opening;
+      let typing;
+      try {
+        await waitUntil(() => resolve.called && find(".d-select"));
+        opening = dSelect().open();
+        await waitUntil(() => find('[role="option"][data-value="page"]'));
+        const signal = resolve.firstCall.args[1].signal;
+        typing = dSelect().search("query");
+        await waitUntil(
+          () =>
+            find('[role="option"][data-value="page"]')?.dataset.name === "query"
+        );
+        assert.false(
+          signal.aborted,
+          "typing and accepting a query page never abort held resolution"
+        );
+        assert.strictEqual(
+          resolve.callCount,
+          1,
+          "typing never starts a second held request"
+        );
+        assert.true(
+          load.args.some(([filter]) => filter === "query"),
+          "a real paged query ran while the held value was pending"
+        );
+      } finally {
+        gate.resolve(multiple ? [record] : record);
+        await rendering;
+        await opening;
+        await typing;
+        await settled();
+      }
+      if (multiple) {
+        assert
+          .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
+          .hasText(
+            "Held answer",
+            "the original resolve settles into the at-rest chip"
+          );
+      } else {
+        await dSelect().close();
+        assert
+          .dom(".d-select__input")
+          .hasValue(
+            "Held answer",
+            "the original resolve settles into the resting trigger"
+          );
+      }
+      assert
+        .dom(".d-select")
+        .doesNotHaveAttribute(
+          "data-unresolved",
+          "the original answer is resolved"
+        );
+      assert.strictEqual(
+        probedEngine().heldItem?.(record)?.record,
+        record,
+        "the original request supplies the key's record"
+      );
+    });
+
+    test(`reload retries an unresolved ${multiple ? "chip" : "trigger"} and replaces its fallback`, async function (assert) {
+      const record = { id: "a", name: "Recovered record" };
+      const resolve = sinon
+        .stub()
+        .onFirstCall()
+        .returns(multiple ? [] : undefined)
+        .onSecondCall()
+        .returns(
+          multiple
+            ? [selectOption(record, { label: "Recovered item" })]
+            : selectOption(record, { label: "Recovered item" })
+        );
+      const resolveValue = multiple ? undefined : resolve;
+      const resolveValues = multiple ? resolve : undefined;
+      const value = multiple ? ["a"] : "a";
+      const options = [];
+      await render(
+        <template>
+          <EngineProbe
+            @multiple={{multiple}}
+            @options={{options}}
+            @resolveValue={{resolveValue}}
+            @resolveValues={{resolveValues}}
+            @value={{value}}
+            @variant="button"
+          />
+        </template>
+      );
+      assert
+        .dom(".d-select")
+        .hasAttribute(
+          "data-unresolved",
+          "true",
+          "the first answer is an unresolved fallback"
+        );
+      probedEngine().reload();
+      await settled();
+      assert.strictEqual(
+        resolve.callCount,
+        2,
+        "reload eviction retries the mounted held async data"
+      );
+      assert
+        .dom(".d-select")
+        .doesNotHaveAttribute(
+          "data-unresolved",
+          "the retried record clears unresolved state"
+        );
+      assert
+        .dom(multiple ? ".d-select__chip-label" : ".d-select__value")
+        .hasText(
+          "Recovered item",
+          "the retried answer's explicit label reaches the held surface"
+        );
+      assert
+        .dom(".d-select")
+        .hasAttribute(
+          "data-name",
+          "Recovered item",
+          "the retried item names the trigger"
+        );
+    });
+  });
+
+  [false, true].forEach((unresolved) => {
+    test(`announcer speaks the at-rest ${unresolved ? "unresolved" : "resolved"} item when a chip is removed under a live filter`, async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const record = { id: "a", name: "Record name" };
+      const options = unresolved
+        ? [{ id: "b", name: "Other" }]
+        : [record, { id: "b", name: "Other" }];
+      const resolveValues = () => [];
+      const filterBy = () => true;
+      const state = trackedObject({ value: ["a"], label: "Before" });
+      const onChange = (value) => (state.value = value);
+      customize((spec) =>
+        spec.content((inputs, { filter }) =>
+          inputs.map((option) => option.with({ label: filter || state.label }))
+        )
+      );
+      await render(
+        <template>
+          <EngineProbe
+            @debounce={{false}}
+            @filterBy={{filterBy}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{options}}
+            @resolveValues={{resolveValues}}
+            @value={{state.value}}
+          /><A11yLiveRegions />
+        </template>
+      );
+      state.label = "After";
+      await settled();
+      await dSelect().search("query");
+      await dSelect().remove("a");
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText(
+          probedEngine().text("optionRemoved", { item: "After" }),
+          "removal announces the current at-rest item, not the record or the query's row"
+        );
+      assert
+        .dom(".d-select__chip")
+        .doesNotExist("the real chip removal occurred");
+    });
+  });
+
+  ["trigger", "chips", "strip"].forEach((surface) => {
+    test(`${surface} keeps the unresolved branch until a page supplies its record`, async function (assert) {
+      const multiple = surface !== "trigger";
+      const value = multiple ? ["missing", "other"] : "missing";
+      const variant = multiple ? "typeahead" : "button";
+      const records = [{ id: "other", name: "Other" }];
+      let page = [];
+      const load = () => page;
+      const resolveValue = () => undefined;
+      const resolveValues = () => [];
+      customize((spec) =>
+        spec.content((inputs) =>
+          inputs.map((option) =>
+            option.with({
+              label:
+                option.record.name === "Arrived"
+                  ? "Available missing"
+                  : `Unavailable ${option.record.id}`,
+            })
+          )
+        )
+      );
+      let heldData;
+      class Probe extends EngineProbe {
+        constructor() {
+          super(...arguments);
+          heldData = spyOnHeldData(
+            this.host,
+            multiple ? "resolveMulti" : "resolveSingle"
+          );
+        }
+      }
+      await render(
+        <template>
+          <Probe
+            @debounce={{false}}
+            @load={{load}}
+            @maxVisibleChips={{1}}
+            @multiple={{multiple}}
+            @resolveValue={{resolveValue}}
+            @resolveValues={{resolveValues}}
+            @value={{value}}
+            @valueRecords={{records}}
+            @variant={{variant}}
+          />
+        </template>
+      );
+      if (multiple) {
+        await dSelect().open();
+      }
+      const selector =
+        surface === "trigger"
+          ? ".d-select__value"
+          : surface === "chips"
+            ? '.d-select__chip[data-value="missing"]'
+            : '.d-select__strip-item[data-value="missing"]';
+      assert
+        .dom(`${selector} .d-select__unresolved`)
+        .hasText(
+          "Unavailable missing",
+          "the explicit item label stays inside unresolved markup"
+        );
+      assert
+        .dom(surface === "trigger" ? ".d-select" : selector)
+        .hasAttribute(
+          "data-name",
+          "Unavailable missing",
+          "unresolved surface hooks use item labels"
+        );
+      assert
+        .dom(".d-select")
+        .hasAttribute(
+          "data-unresolved",
+          "true",
+          "an explicit item label never resolves a fallback"
+        );
+      const fallback = probedEngine().resolveSingleSync("missing");
+      assert.true(
+        probedEngine().heldItem?.(fallback)?.unresolved,
+        "the surface shows the item's unresolved state"
+      );
+      const runs = heldData.callCount;
+      const arrived = { id: "missing", name: "Arrived" };
+      page = [arrived];
+      await dSelect().search("query");
+      assert
+        .dom(`${selector} .d-select__unresolved`)
+        .doesNotExist(
+          "the current item leaves the unresolved branch even though async data still holds the fallback"
+        );
+      assert
+        .dom(selector)
+        .includesText(
+          "Available missing",
+          "the held surface reads the newly canonical item"
+        );
+      assert
+        .dom(".d-select")
+        .doesNotHaveAttribute(
+          "data-unresolved",
+          "the arriving page resolves the held item"
+        );
+      assert.strictEqual(
+        probedEngine().heldItem?.(fallback)?.record,
+        arrived,
+        "the old descriptor's floor never replaces the page record"
+      );
+      assert.strictEqual(
+        heldData.callCount,
+        runs,
+        "page presentation refreshes outside held async data"
+      );
+    });
+  });
+
+  ["trigger", "chips", "strip"].forEach((surface) => {
+    test(`${surface} custom blocks receive the current record after a fallback gains a page record`, async function (assert) {
+      const multiple = surface !== "trigger";
+      const value = multiple ? ["missing", "other"] : "missing";
+      const variant = multiple ? "typeahead" : "button";
+      const records = [{ id: "other", name: "Other" }];
+      const arrived = { id: "missing", name: "Arrived" };
+      const updated = { id: "missing", name: "Updated" };
+      const yielded = new Map();
+      const showRecord = (branch, record) => {
+        yielded.set(`${branch}:${record.id}`, record);
+        return record.name;
+      };
+      let page = [];
+      const load = () => page;
+      const resolveValue = () => undefined;
+      const resolveValues = () => [];
+      const createUnresolvedRecord = (id) => ({ id, name: "Fallback" });
+      customize((spec) =>
+        spec.content((inputs) =>
+          inputs.map((option) =>
+            option.with({ label: `Display ${option.record.name}` })
+          )
+        )
+      );
+      await render(
+        <template>
+          <DSelect
+            @createUnresolvedRecord={{createUnresolvedRecord}}
+            @debounce={{false}}
+            @load={{load}}
+            @maxVisibleChips={{1}}
+            @multiple={{multiple}}
+            @resolveValue={{resolveValue}}
+            @resolveValues={{resolveValues}}
+            @value={{value}}
+            @valueRecords={{records}}
+            @variant={{variant}}
+          >
+            <:selection as |record|>
+              <span class="held-block__selection">{{showRecord
+                  "selection"
+                  record
+                }}</span>
+            </:selection>
+            <:unresolved as |record|>
+              <span class="held-block__unresolved">{{showRecord
+                  "unresolved"
+                  record
+                }}</span>
+            </:unresolved>
+          </DSelect>
+        </template>
+      );
+      if (surface === "strip") {
+        await dSelect().open();
+      }
+      const selector =
+        surface === "trigger"
+          ? ".d-select__value"
+          : surface === "chips"
+            ? '.d-select .d-select__chip[data-value="missing"]'
+            : '.d-select__strip-item[data-value="missing"]';
+      const nameSelector = surface === "trigger" ? ".d-select" : selector;
+      assert
+        .dom(`${selector} .held-block__unresolved`)
+        .hasText(
+          "Fallback",
+          "the unresolved block receives the fallback record"
+        );
+      assert.strictEqual(
+        yielded.get("unresolved:missing")?.id,
+        "missing",
+        "the unresolved block receives the held key"
+      );
+      assert
+        .dom(nameSelector)
+        .hasAttribute(
+          "data-name",
+          "Display Fallback",
+          "the surface name uses content presentation rather than the block's record name"
+        );
+
+      page = [arrived];
+      await dSelect().search("first");
+      assert
+        .dom(`${selector} .held-block__unresolved`)
+        .doesNotExist(
+          "the page record takes the surface out of the unresolved branch"
+        );
+      assert
+        .dom(`${selector} .held-block__selection`)
+        .hasText(
+          "Arrived",
+          "the selection block renders the current page record's name"
+        );
+      assert.strictEqual(
+        yielded.get("selection:missing"),
+        arrived,
+        "the selection block receives the actual page record rather than a fallback or a presentation copy"
+      );
+      assert
+        .dom(nameSelector)
+        .hasAttribute(
+          "data-name",
+          "Display Arrived",
+          "the surface name and block follow the same key's record"
+        );
+
+      page = [updated];
+      await dSelect().search("second");
+      assert
+        .dom(`${selector} .held-block__selection`)
+        .hasText(
+          "Updated",
+          "the resolved block also follows a later replacement record"
+        );
+      assert.strictEqual(
+        yielded.get("selection:missing"),
+        updated,
+        "the block keeps receiving the current record after the branch has already changed"
+      );
+    });
+  });
+
+  test("adding the first chip announces the native content label", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+    const record = { id: "a", name: "Raw" };
+    const options = [record];
+    const state = trackedObject({ value: [] });
+    const onChange = (value) => (state.value = value);
+    customize((spec) =>
+      spec.content((inputs) =>
+        inputs.map((option) => option.with({ label: "Pretty" }))
+      )
+    );
+    await render(
+      <template>
+        <DSelect
+          @multiple={{true}}
+          @onChange={{onChange}}
+          @options={{options}}
+          @value={{state.value}}
+        /><A11yLiveRegions />
+      </template>
+    );
+    assert.dom(".d-select__chip").doesNotExist("the multi-select starts empty");
+    await dSelect().open();
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasText("Pretty", "native content names the option before it is held");
+    await dSelect().select("a");
+    assert
+      .dom('.d-select__chip[data-value="a"] .d-select__chip-label')
+      .hasText("Pretty", "the newly held chip shows the content label");
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        i18n("d_select.item_added", { item: "Pretty" }),
+        "adding the first held value announces the same content label as its chip"
+      );
+  });
+});

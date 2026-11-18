@@ -3,6 +3,7 @@ import { assert, warn } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
 import type SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
 import type {
+  SelectHeldRow,
   SelectId,
   SelectRecord,
   SelectRow,
@@ -315,26 +316,74 @@ export default class ListComposer {
   }
 
   /**
-   * Rows for held records, as the trigger and chips draw them.
+   * The held options as they stand at rest, by key: native content steps over the held inputs,
+   * then the extras at rest over what content made. Each input already stands for its key's
+   * record, which nothing here replaces: what a copy shows differently is kept as presentation,
+   * and an input a step drops is kept as it was, because it is still held. The legacy bridge
+   * never runs here.
+   *
+   * @param inputs - One option per held key, over the key's record.
+   * @param context - The content context at rest: an empty filter and an at-rest control.
+   * @param extras - The extras at rest, wrapped.
+   */
+  heldOptions(
+    inputs: readonly SelectOption[],
+    context: SelectContentContext,
+    extras: readonly SelectOption[]
+  ): Map<string, SelectOption> {
+    const held = this.#byKey(inputs);
+    const out = new Map<string, SelectOption>();
+    for (const option of this.#applyContent([...inputs], context)) {
+      const key = this.#keyOf(option);
+      const input = key == null ? undefined : held.get(key);
+      if (!input || out.has(key!) || optionKind(option) !== "value") {
+        continue;
+      }
+      out.set(key!, this.#onRecord(input.record, option, input.record));
+    }
+    for (const [key, input] of held) {
+      if (!out.has(key)) {
+        out.set(key, input);
+      }
+    }
+    for (const extra of extras) {
+      const key = this.#keyOf(extra);
+      const base = key == null ? undefined : out.get(key);
+      if (!base || optionKind(extra) !== "value") {
+        continue;
+      }
+      const kept: Record<string, unknown> = { ...base.settings };
+      delete kept.position;
+      delete kept.divider;
+      const changed =
+        extra.record === base.record
+          ? undefined
+          : this.#args.changedPresentation(base.record, extra.record);
+      out.set(
+        key!,
+        selectOption(base.record, { ...kept, ...changed, ...extra.settings })
+      );
+    }
+    return out;
+  }
+
+  /**
+   * The held records as the trigger and chips list them: each with its key and value only, so
+   * held async data never reads presentation or list state. Surfaces read the item for a record
+   * outside the data.
    *
    * @param records - The held records.
-   * @param isUnresolved - Whether a record is the engine's fallback for an unresolved value.
    */
-  describeRecords(
-    records: SelectRecord[],
-    isUnresolved: (record: SelectRecord) => boolean
-  ): readonly SelectRow[] {
+  describeRecords(records: SelectRecord[]): readonly SelectHeldRow[] {
     return Object.freeze(
-      // Never cap-disabled: these describe the held selection for the trigger, and the cap only
-      // ever closes off options that are *not* selected.
       records.map((record, index) => {
-        const row = this.#describe(
-          { option: selectOption(record) },
-          index,
-          false
-        );
-        row.flags.unresolved = isUnresolved(record);
-        return row;
+        const value = this.#args.recordValue(record);
+        const key = this.#args.valueKey(value);
+        return Object.freeze({
+          key: key == null ? engineKey(`row:${index}`) : recordKey(key),
+          value,
+          record,
+        });
       })
     );
   }
@@ -592,6 +641,24 @@ export default class ListComposer {
     return this.#applyLegacyContent(options);
   }
 
+  /**
+   * `option` over `record`, with what it shows differently from `made` as presentation its own
+   * settings outrank.
+   */
+  #onRecord(
+    record: SelectRecord,
+    option: SelectOption,
+    made: SelectRecord
+  ): SelectOption {
+    const changed =
+      option.record === made
+        ? undefined
+        : this.#args.changedPresentation(made, option.record);
+    return record === option.record && !changed
+      ? option
+      : selectOption(record, { ...changed, ...option.settings });
+  }
+
   /** The first option listed for each key. */
   #byKey(options: readonly SelectOption[]): Map<string, SelectOption> {
     const byKey = new Map<string, SelectOption>();
@@ -628,15 +695,12 @@ export default class ListComposer {
     }
     const record = this.#viewRecord(key, option) ?? option.record;
     const made = before.get(key)?.record ?? record;
-    const changed =
-      option.record === made
-        ? undefined
-        : this.#args.changedPresentation(made, option.record);
-    const view =
-      record === option.record && !changed
-        ? option
-        : selectOption(record, { ...changed, ...option.settings });
-    return this.#withItem(key, view, items, itemOf);
+    return this.#withItem(
+      key,
+      this.#onRecord(record, option, made),
+      items,
+      itemOf
+    );
   }
 
   /**

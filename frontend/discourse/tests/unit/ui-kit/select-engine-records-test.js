@@ -3,6 +3,7 @@ import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import SelectEngine, {
   selectOption,
 } from "discourse/ui-kit/select/select-engine";
@@ -3326,4 +3327,803 @@ module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
       );
     });
   }
+});
+
+module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
+  setupTest(hooks);
+  setupLegacyBridgeCallbacks(hooks);
+
+  let withPluginApi;
+  hooks.before(async function () {
+    ({ withPluginApi } = await import("discourse/lib/plugin-api"));
+  });
+
+  function customize(setup) {
+    withPluginApi((api) =>
+      api.registerValueTransformer("select-customizations", ({ value }) =>
+        value.forAll(setup)
+      )
+    );
+  }
+
+  test("merges complementary sources and derives precedence afresh", async function (assert) {
+    const record = { id: "a", name: "Record" };
+    const state = trackedObject({
+      value: null,
+      records: [],
+      options: [],
+      content: false,
+      extras: [],
+    });
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) =>
+          state.content ? option.with({ label: "Content" }) : option
+        )
+      )
+    );
+    const engine = new SelectEngine({
+      getValue: () => state.value,
+      onChange: (value) => (state.value = value),
+      options: () => state.options,
+      getValueRecords: () => state.records,
+      extraOptions: () => state.extras,
+      resolveValue: () =>
+        selectOption(record, {
+          label: "Answer",
+          icon: "reply",
+          description: "Answer detail",
+        }),
+    });
+    await engine.resolveSelection(record.id);
+    engine.select(selectOption(record, { label: "Pick" }));
+    const item = () => engine.heldItem?.(record);
+    assert.strictEqual(
+      item()?.label,
+      "Pick",
+      "the pick beats the matching answer"
+    );
+    assert.strictEqual(
+      item()?.icon,
+      "reply",
+      "the pick does not erase the answer's icon"
+    );
+    assert.strictEqual(
+      item()?.description,
+      "Answer detail",
+      "the matching answer complements the pick"
+    );
+
+    state.records = [selectOption(record, { label: "Provided" })];
+    assert.strictEqual(
+      item()?.label,
+      "Provided",
+      "valueRecords beats the pick"
+    );
+    state.options = [selectOption(record, { label: "Source", icon: "star" })];
+    assert.strictEqual(
+      item()?.label,
+      "Source",
+      "the held source input beats valueRecords"
+    );
+    state.content = true;
+    assert.strictEqual(
+      item()?.label,
+      "Content",
+      "native content beats the source"
+    );
+    assert.strictEqual(
+      item()?.icon,
+      "star",
+      "content keeps a complementary source icon"
+    );
+    state.extras = [
+      selectOption({ id: "a", name: "Extra copy" }, { label: "Extra" }),
+    ];
+    assert.strictEqual(
+      item()?.label,
+      "Extra",
+      "at-rest extras beat native content"
+    );
+    assert.strictEqual(
+      item()?.record,
+      record,
+      "no contribution replaces the key's record"
+    );
+    assert.strictEqual(
+      item()?.description,
+      "Answer detail",
+      "a silent higher source never erases a property"
+    );
+
+    state.extras = [];
+    assert.strictEqual(
+      item()?.label,
+      "Content",
+      "removing an extra reveals content"
+    );
+    state.content = false;
+    assert.strictEqual(
+      item()?.label,
+      "Source",
+      "removing content reveals the source"
+    );
+    state.options = [];
+    assert.strictEqual(
+      item()?.label,
+      "Provided",
+      "removing the source reveals valueRecords"
+    );
+    state.records = [];
+    assert.strictEqual(
+      item()?.label,
+      "Pick",
+      "removing valueRecords reveals the held pick"
+    );
+    assert.strictEqual(
+      item()?.icon,
+      "reply",
+      "removed source properties do not accumulate"
+    );
+  });
+
+  test("copies add presentation but retain the ledger record and the requesting floor", function (assert) {
+    const record = Object.freeze({
+      id: "a",
+      title: "Canonical",
+      glyph: "star",
+      detail: "Canonical detail",
+    });
+    const stale = { ...record, title: "Stale" };
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) => ({
+          ...option.record,
+          title: "Content copy",
+          glyph: "heart",
+          detail: "Content detail",
+        }))
+      )
+    );
+    const engine = new SelectEngine({
+      getValue: () => record.id,
+      valueRecords: [record],
+      options: [],
+      labelField: "title",
+      iconField: "glyph",
+      descriptionField: "detail",
+    });
+    const item = engine.heldItem?.(stale);
+    assert.strictEqual(
+      item?.label,
+      "Content copy",
+      "changed copy fields become explicit properties"
+    );
+    assert.strictEqual(
+      item?.icon,
+      "heart",
+      "the copied icon is carried without rendering"
+    );
+    assert.strictEqual(
+      item?.description,
+      "Content detail",
+      "the copied description becomes a property"
+    );
+    assert.strictEqual(
+      item?.record,
+      record,
+      "the authoritative record beats the passed stale floor and the content copy"
+    );
+    assert.strictEqual(
+      engine.resolveSelection(record.id),
+      record,
+      "the data edge still returns that record"
+    );
+    assert.strictEqual(
+      record.title,
+      "Canonical",
+      "content never mutates the record"
+    );
+
+    const floor = { id: "floor", title: "Floor" };
+    const floorEngine = new SelectEngine({
+      options: [],
+      getValue: () => floor.id,
+      labelField: "title",
+    });
+    assert.strictEqual(
+      floorEngine.heldItem?.(floor)?.record,
+      floor,
+      "the requesting record is the floor when the ledger knows nothing"
+    );
+  });
+
+  test("runs over held inputs at an empty filter without loading or consuming pages", async function (assert) {
+    const held = { id: "held", name: "Held" };
+    const page = { id: "page", name: "Unheld page" };
+    const load = sinon.spy(() => [page]);
+    const content = sinon.spy((options, { filter, control }) =>
+      options.map((option) =>
+        option.with({
+          label: `${filter}/${control.filter}/${options.map((input) => input.record.id).join(",")}`,
+        })
+      )
+    );
+    const extras = sinon.spy(({ filter }) => [
+      selectOption(held, { icon: filter === "" ? "star" : "xmark" }),
+    ]);
+    customize((spec) => spec.content(content));
+    const engine = new SelectEngine({
+      getValue: () => held.id,
+      valueRecords: [held],
+      load,
+      extraOptions: extras,
+    });
+    engine.setFilter("live");
+    const view = createCache(() => engine.heldItem?.(held));
+    const before = getValue(view);
+    assert.strictEqual(
+      before?.label,
+      "//held",
+      "both filters are empty and only held inputs reach content"
+    );
+    assert.strictEqual(before?.icon, "star", "extras use an empty filter too");
+    assert.true(
+      load.notCalled,
+      "reading the closed held view never starts a load"
+    );
+    const contentRuns = content.callCount;
+    await engine.loadOptions(engine.loadContext);
+    assert.strictEqual(
+      getValue(view),
+      before,
+      "an unrelated page does not invalidate the held view"
+    );
+    assert.strictEqual(
+      content.callCount,
+      contentRuns,
+      "the held view never consumes the paged accumulator"
+    );
+    assert.strictEqual(
+      load.callCount,
+      1,
+      "only the explicit list request loaded"
+    );
+    assert.true(
+      extras.args.every(([snapshot]) => snapshot.filter === ""),
+      "every held extras evaluation is at rest"
+    );
+    const local = new SelectEngine({
+      options: [held, page],
+      getValue: () => held.id,
+    });
+    local.setFilter("live");
+    assert.strictEqual(
+      local.heldItem?.(held)?.label,
+      "//held",
+      "a complete local source also contributes only its held inputs to content"
+    );
+  });
+
+  test("typing cannot borrow live list properties or its memo", function (assert) {
+    const record = { id: "a", name: "Record" };
+    const input = selectOption(record, { description: "Source detail" });
+    customize((spec) =>
+      spec.content((options, { filter, control }) =>
+        options.map((option) =>
+          option.with({
+            label: filter || "At rest",
+            icon: control.filter ? "xmark" : "star",
+          })
+        )
+      )
+    );
+    const engine = new SelectEngine({
+      options: [input],
+      getValue: () => record.id,
+    });
+    const before = engine.heldItem?.(record);
+    assert.strictEqual(
+      before?.label,
+      "At rest",
+      "held content is available before a list build"
+    );
+    for (const query of ["first", "second", ""]) {
+      engine.setFilter(query);
+      const [row] = engine.buildRows([input]);
+      const listedLabel = query || "At rest";
+      assert.strictEqual(
+        row.item.label,
+        listedLabel,
+        "the list sees its own filter"
+      );
+      const held = engine.heldItem?.(record);
+      assert.strictEqual(
+        held?.label,
+        "At rest",
+        "typing never changes the held label"
+      );
+      assert.strictEqual(
+        held?.icon,
+        "star",
+        "typing never changes the held icon"
+      );
+      assert.strictEqual(
+        held?.description,
+        "Source detail",
+        "typing never changes complementary properties"
+      );
+      assert.strictEqual(
+        held,
+        before,
+        "the held memo survives list builds and typing"
+      );
+      assert.strictEqual(
+        row.item.record,
+        held?.record,
+        "both views still share the record"
+      );
+    }
+  });
+
+  test("retains inputs dropped by a native content step", function (assert) {
+    const records = [
+      { id: "a", name: "Keep" },
+      { id: "b", name: "Dropped" },
+    ];
+    const options = [
+      records[0],
+      selectOption(records[1], { label: "Held B", icon: "star" }),
+    ];
+    customize((spec) =>
+      spec.content((inputs) =>
+        inputs
+          .filter((option) => option.record.id !== "b")
+          .map((option) => option.with({ label: "Content A" }))
+      )
+    );
+    const engine = new SelectEngine({
+      options,
+      multiple: true,
+      getValue: () => ["a", "b"],
+    });
+    assert.strictEqual(
+      engine.heldItem?.(records[1])?.label,
+      "Held B",
+      "dropping a held input preserves its original presentation"
+    );
+    assert.strictEqual(
+      engine.heldItem?.(records[1])?.icon,
+      "star",
+      "the dropped input keeps its properties"
+    );
+    assert.strictEqual(
+      engine.heldItem?.(records[1])?.record,
+      records[1],
+      "the dropped held record remains intact"
+    );
+    assert.strictEqual(
+      engine.heldItem?.(records[0])?.label,
+      "Content A",
+      "surviving inputs receive content properties"
+    );
+    assert.deepEqual(
+      engine.buildRows(options).map((row) => row.value),
+      ["a"],
+      "the same step really removes B from the list"
+    );
+  });
+
+  test("re-derives tracked content and control.pending while closed", async function (assert) {
+    const record = { id: "a", name: "Record" };
+    const state = trackedObject({ label: "Before" });
+    customize((spec) =>
+      spec.content((options, { control }) =>
+        options.map((option) =>
+          option.with({
+            label: state.label,
+            icon: control.pending ? "spinner" : "star",
+          })
+        )
+      )
+    );
+    const load = sinon.spy(() => []);
+    const engine = new SelectEngine({
+      load,
+      valueRecords: [record],
+      getValue: () => record.id,
+    });
+    const view = createCache(() => engine.heldItem?.(record));
+    assert.strictEqual(
+      getValue(view)?.icon,
+      "star",
+      "closed content reads idle control state"
+    );
+    state.label = "After";
+    assert.strictEqual(
+      getValue(view)?.label,
+      "After",
+      "tracked content dependencies invalidate the held view"
+    );
+    const gate = deferred();
+    const updating = engine.update(() => gate.promise);
+    try {
+      assert.true(engine.pending, "the update is pending");
+      assert.strictEqual(
+        getValue(view)?.icon,
+        "spinner",
+        "pending invalidates the closed view"
+      );
+      assert.true(load.notCalled, "pending presentation starts no list load");
+    } finally {
+      gate.resolve();
+      await updating;
+    }
+    assert.strictEqual(
+      getValue(view)?.icon,
+      "star",
+      "settling invalidates the closed view again"
+    );
+    assert.strictEqual(
+      getValue(view)?.record,
+      record,
+      "presentation updates retain the record"
+    );
+  });
+
+  test("respects empty properties and null removal without retaining old content", function (assert) {
+    const record = {
+      id: "a",
+      title: "Derived",
+      glyph: "star",
+      detail: "Derived detail",
+    };
+    const state = trackedObject({ suppress: true });
+    const input = selectOption(record, {
+      label: "Source",
+      icon: "heart",
+      description: "Source detail",
+    });
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) =>
+          option.with({
+            label: state.suppress ? "" : null,
+            icon: state.suppress ? "" : null,
+            description: state.suppress ? "" : null,
+          })
+        )
+      )
+    );
+    const engine = new SelectEngine({
+      options: [input],
+      getValue: () => record.id,
+      labelField: "title",
+      iconField: "glyph",
+      descriptionField: "detail",
+    });
+    const empty = engine.heldItem?.(record);
+    assert.strictEqual(
+      empty?.label,
+      "",
+      "an explicit empty label suppresses the field"
+    );
+    assert.strictEqual(
+      empty?.properties.icon,
+      "",
+      "the empty icon property is retained explicitly"
+    );
+    assert.strictEqual(
+      empty?.icon,
+      undefined,
+      "an empty icon carries no drawable icon"
+    );
+    assert.strictEqual(
+      empty?.properties.description,
+      "",
+      "an empty description remains explicit"
+    );
+    state.suppress = false;
+    const derived = engine.heldItem?.(record);
+    assert.strictEqual(
+      derived?.label,
+      "Derived",
+      "null removes the source's explicit label"
+    );
+    assert.strictEqual(
+      derived?.icon,
+      "star",
+      "null restores derivation through iconField"
+    );
+    assert.strictEqual(
+      derived?.description,
+      "Derived detail",
+      "null restores derivation through descriptionField"
+    );
+  });
+
+  test("leaves resolution and descriptors independent of presentation", function (assert) {
+    const state = trackedObject({ label: "Before", detail: "Before detail" });
+    const record = {
+      id: "a",
+      get name() {
+        return state.label;
+      },
+      get detail() {
+        return state.detail;
+      },
+    };
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) =>
+          option.with({ label: `Content ${state.label}` })
+        )
+      )
+    );
+    const engine = new SelectEngine({
+      options: [record],
+      getValue: () => record.id,
+      descriptionField: "detail",
+    });
+    let runs = 0;
+    const data = createCache(() => {
+      runs++;
+      const resolved = engine.resolveSelection(record.id);
+      return { resolved, rows: engine.describeRecords([resolved]) };
+    });
+    const before = getValue(data);
+    assert.strictEqual(
+      engine.heldItem?.(record)?.label,
+      "Content Before",
+      "presentation is read through the held item outside data"
+    );
+    assert.strictEqual(
+      before.resolved,
+      record,
+      "resolveSelection returns the record only"
+    );
+    assert.strictEqual(
+      before.rows[0].record,
+      record,
+      "descriptors carry the record"
+    );
+    assert.strictEqual(
+      before.rows[0].item,
+      undefined,
+      "descriptors do not capture an item"
+    );
+    state.label = "After";
+    state.detail = "After detail";
+    assert.strictEqual(
+      engine.heldItem?.(record)?.label,
+      "Content After",
+      "held content re-derives presentation"
+    );
+    assert.strictEqual(
+      engine.heldItem?.(record)?.description,
+      "After detail",
+      "record presentation updates outside data too"
+    );
+    assert.strictEqual(
+      getValue(data),
+      before,
+      "presentation leaves held async data intact"
+    );
+    assert.strictEqual(
+      runs,
+      1,
+      "neither presentation read enters the data computation"
+    );
+  });
+
+  test("unresolved items derive no icon or description and can be named by content", function (assert) {
+    const state = trackedObject({ named: false });
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) =>
+          state.named
+            ? { ...option.record, name: "Unavailable choice" }
+            : option
+        )
+      )
+    );
+    const engine = new SelectEngine({
+      options: [],
+      getValue: () => "missing",
+      iconField: "glyph",
+      descriptionField: "detail",
+      createUnresolvedRecord: (id) => ({
+        id,
+        name: "Missing record",
+        glyph: "star",
+        detail: "Must not derive",
+      }),
+    });
+    const fallback = engine.resolveSelection("missing");
+    const item = engine.heldItem?.(fallback);
+    assert.true(item?.unresolved, "the held item reports unresolved state");
+    assert.strictEqual(
+      item?.label,
+      "Missing record",
+      "a caller-named fallback keeps its name"
+    );
+    assert.strictEqual(
+      item?.icon,
+      undefined,
+      "an unresolved item never derives an icon"
+    );
+    assert.strictEqual(
+      item?.description,
+      undefined,
+      "an unresolved item never derives a description"
+    );
+    state.named = true;
+    const named = engine.heldItem?.(fallback);
+    assert.strictEqual(
+      named?.label,
+      "Unavailable choice",
+      "content can name the unresolved held item explicitly"
+    );
+    assert.true(named?.unresolved, "naming the item never resolves its record");
+    assert.strictEqual(
+      named?.record,
+      fallback,
+      "content never replaces the unresolved fallback"
+    );
+  });
+
+  test("reload eviction invalidates held resolution and retries an unresolved value", async function (assert) {
+    const record = { id: "a", name: "Recovered" };
+    const resolveValue = sinon
+      .stub()
+      .onFirstCall()
+      .returns(undefined)
+      .onSecondCall()
+      .returns(record);
+    const engine = new SelectEngine({
+      options: [],
+      getValue: () => record.id,
+      resolveValue,
+    });
+    const selection = createCache(() => engine.resolveSelection(record.id));
+    const fallback = await getValue(selection);
+    assert.true(
+      engine.isUnresolvedRecord(fallback),
+      "the first attempt is unresolved"
+    );
+    engine.reload();
+    const recovered = await getValue(selection);
+    assert.strictEqual(
+      resolveValue.callCount,
+      2,
+      "evicting a fallback retries held async data"
+    );
+    assert.strictEqual(
+      recovered,
+      record,
+      "the retried data returns the real record"
+    );
+    assert.strictEqual(
+      engine.heldItem?.(recovered)?.label,
+      "Recovered",
+      "the held view follows the retried result"
+    );
+    assert.false(
+      engine.heldItem?.(recovered)?.unresolved,
+      "the retried item is resolved"
+    );
+  });
+
+  test("excludes legacy content while the list still applies it", async function (assert) {
+    const { getOwner } = await import("@ember/owner");
+    const record = { id: "a", name: "Record" };
+    const legacy = sinon.spy((_facade, records) =>
+      records.map((entry) => ({ ...entry, name: "Legacy list" }))
+    );
+    withPluginApi((api) =>
+      api.modifySelectKit("held-view").replaceContent(legacy)
+    );
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) => option.with({ icon: "star" }))
+      )
+    );
+    const engine = new SelectEngine({
+      kind: "held-view",
+      options: [record],
+      getValue: () => record.id,
+      legacy: {
+        owner: getOwner(this),
+        getElement: () => document.createElement("div"),
+        isDestroyed: () => false,
+      },
+    });
+    const held = engine.heldItem?.(record);
+    assert.strictEqual(
+      held?.icon,
+      "star",
+      "native content runs on the held view"
+    );
+    assert.strictEqual(
+      held?.label,
+      "Record",
+      "legacy presentation never enters the held view"
+    );
+    assert.true(
+      legacy.notCalled,
+      "reading held content never invokes the legacy bridge"
+    );
+    const [row] = engine.buildRows([record]);
+    assert.strictEqual(
+      row.item.label,
+      "Legacy list",
+      "the bridge is still active in the list"
+    );
+    assert.strictEqual(
+      row.record,
+      held?.record,
+      "the legacy copy never replaces the shared record"
+    );
+    assert.strictEqual(
+      engine.heldItem?.(record)?.label,
+      "Record",
+      "a list build cannot contaminate held presentation"
+    );
+    assert.strictEqual(
+      legacy.callCount,
+      1,
+      "only the list invokes legacy content"
+    );
+  });
+
+  ["resolveSingleSync", "itemFor"].forEach((surface) => {
+    test(`isolation still lets ${surface} track page sightings for an unheld key`, async function (assert) {
+      const held = { id: "held", name: "Held" };
+      const floor = { id: "unheld", name: "Old list input" };
+      const arrived = { id: "unheld", name: "Arrived" };
+      const updated = { id: "unheld", name: "Updated" };
+      let page = [arrived];
+      const engine = new SelectEngine({
+        getValue: () => held.id,
+        valueRecords: [held],
+        load: () => page,
+      });
+      const read = () =>
+        surface === "resolveSingleSync"
+          ? engine.resolveSingleSync(floor.id)
+          : engine.itemFor(floor.id, { kind: "list", input: floor })?.record;
+      const lookup = createCache(read);
+      assert.strictEqual(
+        getValue(lookup),
+        surface === "resolveSingleSync" ? undefined : floor,
+        "the tracked reader starts without a page sighting"
+      );
+
+      await engine.loadOptions(engine.loadContext);
+      assert.strictEqual(
+        read(),
+        arrived,
+        "an uncached reader sees the first page record for the unheld key"
+      );
+      assert.strictEqual(
+        getValue(lookup),
+        arrived,
+        "the first page sighting refreshes the cached reader of the unheld key"
+      );
+
+      page = [updated];
+      engine.setFilter("next");
+      await engine.loadOptions(engine.loadContext);
+      assert.strictEqual(
+        getValue(lookup),
+        updated,
+        "a later page refreshes the same cached reader with the replacement record"
+      );
+      assert.strictEqual(
+        engine.value,
+        held.id,
+        "the page key was never added to the held value"
+      );
+    });
+  });
 });

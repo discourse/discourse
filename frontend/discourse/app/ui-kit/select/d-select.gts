@@ -46,10 +46,10 @@ import type {
   SelectCoreTexts,
   SelectEngineInit,
   SelectGroupInfo,
+  SelectHeldRow,
   SelectKindTexts,
   SelectOption,
   SelectRecord as SelectRecordModel,
-  SelectRow,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -587,7 +587,7 @@ export default class DSelect extends Component<DSelectSignature> {
    * Separate lookups race: one landing re-renders the other, which aborts its own request.
    */
   @cached
-  get heldSelection(): TrackedAsyncData<readonly SelectRow[] | undefined> {
+  get heldSelection(): TrackedAsyncData<readonly SelectHeldRow[] | undefined> {
     return new TrackedAsyncData(this.host.resolveMulti(this.args.value));
   }
 

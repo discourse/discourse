@@ -98,6 +98,19 @@ export default class ValueResolver {
 
   #revision = new LedgerRevision();
 
+  /**
+   * One revision per key a reader asked about while the key is not held, so a page sighting
+   * refreshes that key's readers without dirtying held views that read other keys. A held key's
+   * readers follow the shared revision instead, so values that come and go leave nothing here.
+   */
+  #keyRevisions = new Map<string, LedgerRevision>();
+
+  /** Whether a revision advance is already scheduled for outcomes written during a render. */
+  #advanceScheduled = false;
+
+  /** Bumped when fallbacks are evicted, the one change held async data must re-run for. */
+  #evictions = new LedgerRevision();
+
   #pending = new Map<string, PendingResolution>();
 
   /** The engine's fallbacks for values that could not be resolved; only its own copies. */
@@ -128,6 +141,7 @@ export default class ValueResolver {
     | Promise<SelectRecord[]>
     | undefined {
     this.#observe();
+    void this.#evictions.value;
     if (!this.#args.multiple) {
       const single = this.#args.singleValue(value);
       if (single == null) {
@@ -175,6 +189,7 @@ export default class ValueResolver {
     if (this.#fallbacks.size) {
       this.#fallbacks.clear();
       this.#revision.value++;
+      this.#evictions.value++;
     }
   }
 
@@ -204,6 +219,13 @@ export default class ValueResolver {
         this.#answers.delete(key);
       }
     }
+    // Readers of a dropped key's revision re-read through the shared revision bumped below.
+    for (const key of [...this.#keyRevisions.keys()]) {
+      if (!kept(key)) {
+        this.#keyRevisions.delete(key);
+        pruned = true;
+      }
+    }
     for (const key of [...this.#fallbacks.keys()]) {
       if (!kept(key)) {
         this.#fallbacks.delete(key);
@@ -223,10 +245,18 @@ export default class ValueResolver {
    */
   sightPage(accepted: ReadonlyMap<string, SelectOptionLike>): void {
     this.#observe();
+    const held = this.#heldKeys();
+    let touchesHeld = false;
     for (const [key, option] of accepted) {
       this.#record(key, entryRecord(option));
+      touchesHeld ||= held.has(key);
+      const keyRevision = this.#keyRevisions.get(key);
+      if (keyRevision) {
+        keyRevision.value++;
+      }
     }
-    if (accepted.size) {
+    // Held surfaces read the shared revision, so only a held key's sighting advances it.
+    if (touchesHeld) {
       this.#revision.value++;
     }
   }
@@ -304,6 +334,7 @@ export default class ValueResolver {
       return undefined;
     }
     void this.#revision.value;
+    this.#observeKey(key);
     return this.#recordFor(key);
   }
 
@@ -319,6 +350,7 @@ export default class ValueResolver {
     input: SelectOptionLike | undefined
   ): SelectRecord | undefined {
     void this.#revision.value;
+    this.#observeKey(key);
     this.#observe();
     return (
       this.#realRecord(key) ??
@@ -508,12 +540,33 @@ export default class ValueResolver {
     resolved: ReadonlyMap<string, SelectOptionLike>
   ): void {
     this.#observe();
+    let written = false;
     values.forEach((value, index) => {
       const key = this.#args.valueKey(value);
       const record = records[index];
       if (key != null && record) {
         this.#accept(key, record, resolved.get(key));
+        written = true;
       }
+    });
+    if (written) {
+      this.#advanceLater();
+    }
+  }
+
+  /**
+   * Advances the revision once the code that wrote an outcome has finished, outside any render
+   * or tracked computation. A reader that rendered before the outcome was written, such as the
+   * root's unresolved marker, then sees it, as it would an async answer.
+   */
+  #advanceLater(): void {
+    if (this.#advanceScheduled) {
+      return;
+    }
+    this.#advanceScheduled = true;
+    queueMicrotask(() => {
+      this.#advanceScheduled = false;
+      this.#revision.value++;
     });
   }
 
@@ -607,6 +660,22 @@ export default class ValueResolver {
       this.#picks.delete(key);
       this.#answers.delete(key);
     }
+  }
+
+  /**
+   * Consumes a key's own revision, creating it on first read, unless the key is held. A reader
+   * re-reads when the key's held state changes, because the held value is tracked.
+   */
+  #observeKey(key: string): void {
+    if (this.#heldKeys().has(key)) {
+      return;
+    }
+    let keyRevision = this.#keyRevisions.get(key);
+    if (!keyRevision) {
+      keyRevision = new LedgerRevision();
+      this.#keyRevisions.set(key, keyRevision);
+    }
+    void keyRevision.value;
   }
 
   /** The key a record names now, which an edit in place can change. */

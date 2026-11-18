@@ -17,10 +17,10 @@ import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/cus
 import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-list-body";
 import SelectEngine, {
   type SelectEngineInit,
+  type SelectHeldRow,
   type SelectLoadRequest,
   type SelectOptionLike,
   type SelectRecord as SelectRecordModel,
-  type SelectRow,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -349,8 +349,8 @@ export default class SelectHost {
     value: unknown,
     opts?: SelectLoadRequest
   ):
-    | readonly SelectRow[]
-    | Promise<readonly SelectRow[] | undefined>
+    | readonly SelectHeldRow[]
+    | Promise<readonly SelectHeldRow[] | undefined>
     | undefined {
     const resolved = this.engine.resolveSelection(value as SelectValue, opts);
     if (resolved == null) {

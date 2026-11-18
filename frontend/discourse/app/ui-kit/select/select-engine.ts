@@ -16,6 +16,7 @@ import ListComposer from "discourse/ui-kit/select/-internals/engine/list-compose
 import SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
 import {
   type SelectOption,
+  selectOption,
   type SelectOptionLike,
 } from "discourse/ui-kit/select/-internals/engine/select-option";
 import {
@@ -102,6 +103,16 @@ export interface SelectGroupInfo {
   readonly key: SelectId;
   /** Whether the boundary is an action option rather than text. */
   readonly action: boolean;
+}
+
+/**
+ * One held value, as the trigger, chips and strip list it: its stable `key`, its `value` and the
+ * record it stands for. Its presentation is read from {@link SelectEngine#heldItem}.
+ */
+export interface SelectHeldRow {
+  readonly key: string;
+  readonly value: SelectId;
+  readonly record: SelectRecord;
 }
 
 /**
@@ -736,9 +747,15 @@ export interface SelectEngineInit {
 /** The {@link SelectControl} an engine hands out, frozen and guarded against a destroyed select. */
 class EngineControl implements SelectControl {
   #engine: SelectEngine;
+  #atRest: boolean;
 
-  constructor(engine: SelectEngine) {
+  /**
+   * @param engine - The engine it controls.
+   * @param atRest - Whether it reports an empty filter, for content that runs at rest.
+   */
+  constructor(engine: SelectEngine, atRest = false) {
     this.#engine = engine;
+    this.#atRest = atRest;
     Object.freeze(this);
   }
 
@@ -747,7 +764,7 @@ class EngineControl implements SelectControl {
   }
 
   get filter(): string {
-    return this.#engine.filter;
+    return this.#atRest ? "" : this.#engine.filter;
   }
 
   get pending(): boolean {
@@ -832,6 +849,12 @@ export default class SelectEngine {
    */
   #localInputs = createCache(() => localOptions(this.#args));
 
+  /**
+   * The held options at rest, by key, re-derived when the held records or anything native
+   * content reads changes, and never by typing.
+   */
+  #heldView = createCache(() => this.#composeHeldView());
+
   /** The extras at rest, built for an empty query and rebuilt when what they read changes. */
   #extrasAtRest = createCache(() => this.#listComposer.extraOptionsAtRest());
   #selectionActions: SelectionActions;
@@ -839,6 +862,7 @@ export default class SelectEngine {
   #listComposer: ListComposer;
   #source!: SelectSource;
   #control: SelectControl;
+  #atRestControl: SelectControl;
   #getLoadContext: () => SelectEngineInit["loadContext"];
   #onReloadList?: () => void;
   #requestContextQuery?: string;
@@ -866,6 +890,7 @@ export default class SelectEngine {
     this.#onReloadList = opts.onReloadList;
     this.#args = new SelectArgsView(opts);
     this.#control = new EngineControl(this);
+    this.#atRestControl = new EngineControl(this, true);
     this.#valueResolver = new ValueResolver({
       args: this.#args,
       localRecord: (key) =>
@@ -896,7 +921,9 @@ export default class SelectEngine {
       unresolvedLabel: (record) =>
         this.isCustomUnresolvedRecord(record)
           ? undefined
-          : this.getSelectionLabel(record),
+          : this.text("unresolvedValue", {
+              value: String(record[this.#args.valueField] ?? ""),
+            }),
     });
     this.#selectionActions = new SelectionActions({
       args: this.#args,
@@ -1435,15 +1462,14 @@ export default class SelectEngine {
   }
 
   /**
-   * Rows for held records, as the trigger and chips draw them.
+   * The held records as the trigger and chips list them, with no presentation; read each one's
+   * item through {@link heldItem}.
    *
    * @param records - The held records.
    */
   @bind
-  describeRecords(records: SelectRecord[]): readonly SelectRow[] {
-    return this.#listComposer.describeRecords(records, (record) =>
-      this.isUnresolvedRecord(record)
-    );
+  describeRecords(records: SelectRecord[]): readonly SelectHeldRow[] {
+    return this.#listComposer.describeRecords(records);
   }
 
   /**
@@ -1503,6 +1529,51 @@ export default class SelectEngine {
     return this.#items.itemFor(key, view);
   }
 
+  /**
+   * The item the held surfaces show for a held record: the key's record, with what every source
+   * knows merged, and the held view's options outranking the rest. The record passed is the floor
+   * when nothing else knows its key.
+   *
+   * @param record - A held record, resolved or not.
+   */
+  @bind
+  heldItem(record: SelectRecord): SelectItem {
+    const key = this.#args.valueKey(this.#args.recordValue(record));
+    if (key == null) {
+      return this.#items.rowItem(selectOption(record));
+    }
+    // A key the value does not hold yet, such as a pick being announced, is composed on demand.
+    const input =
+      getValue(this.#heldView)?.get(key) ??
+      this.#atRest([
+        this.#heldInput(this.#args.recordValue(record)) ?? selectOption(record),
+      ]).get(key) ??
+      record;
+    return this.#items.itemFor(key, { kind: "held", input });
+  }
+
+  /**
+   * The record a held key stands for now, which a block receives instead of the record the held
+   * async data captured, so a record that arrives later reaches the block too.
+   *
+   * @param record - A held record, resolved or not.
+   */
+  @bind
+  heldRecord(record: SelectRecord): SelectRecord {
+    return this.heldItem(record).record;
+  }
+
+  /**
+   * Whether a held record's item is unresolved now. A record the async data captured as a
+   * fallback stops being one once any source supplies its key's record.
+   *
+   * @param record - A held record, resolved or not.
+   */
+  @bind
+  isHeldUnresolved(record: SelectRecord): boolean {
+    return this.heldItem(record).unresolved;
+  }
+
   getRecordLabel(record: SelectRecord | null | undefined): string {
     return selectRecordLabel(record, this.#args.labelField);
   }
@@ -1518,16 +1589,7 @@ export default class SelectEngine {
    */
   @bind
   getSelectionLabel(record: SelectRecord | null | undefined): string {
-    if (
-      record &&
-      this.isUnresolvedRecord(record) &&
-      !this.isCustomUnresolvedRecord(record)
-    ) {
-      return this.text("unresolvedValue", {
-        value: String(record[this.#args.valueField] ?? ""),
-      });
-    }
-    return this.getRecordLabel(record);
+    return record ? this.heldItem(record).label : "";
   }
 
   getSingleSelectionLabel(value: SelectValue): string {
@@ -1535,7 +1597,7 @@ export default class SelectEngine {
       return "";
     }
 
-    return this.getRecordLabel(this.#valueResolver.resolveOneSync(value));
+    return this.getSelectionLabel(this.#valueResolver.resolveOneSync(value));
   }
 
   /**
@@ -1756,6 +1818,54 @@ export default class SelectEngine {
   @bind
   requestClose(): void {
     this.#args.requestClose?.();
+  }
+
+  /** One input per held key, over the key's record, through native content and the extras at rest. */
+  #composeHeldView(): Map<string, SelectOption> {
+    const inputs: SelectOption[] = [];
+    for (const value of this.#selectionActions._valueArray) {
+      const input = this.#heldInput(value);
+      if (input) {
+        inputs.push(input);
+      }
+    }
+    return this.#atRest(inputs);
+  }
+
+  /**
+   * The at-rest input for a value: its listed option over the key's record, the record alone
+   * when it is not listed, or nothing when no record is known.
+   */
+  #heldInput(value: SelectId): SelectOption | undefined {
+    const key = this.#args.valueKey(value);
+    const record =
+      key == null ? undefined : this.#valueResolver.resolveOneSync(value);
+    if (!record) {
+      return undefined;
+    }
+    const listed = this.#args.isAsync
+      ? undefined
+      : this.#args.findOption(this.#localOptions(), key!);
+    return listed?.record === record
+      ? listed
+      : selectOption(record, listed?.settings);
+  }
+
+  /** The inputs as they stand at rest, by key. */
+  #atRest(inputs: SelectOption[]): Map<string, SelectOption> {
+    if (!inputs.length) {
+      return new Map();
+    }
+    return this.#listComposer.heldOptions(
+      inputs,
+      {
+        filter: "",
+        value: this.value,
+        ...this.#extensionContext(),
+        control: this.#atRestControl,
+      },
+      getValue(this.#extrasAtRest) ?? []
+    );
   }
 
   /** The client list, empty for a server source. */

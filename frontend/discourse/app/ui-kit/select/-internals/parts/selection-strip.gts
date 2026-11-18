@@ -19,9 +19,9 @@ import dRovingFocus, {
 } from "discourse/ui-kit/modifiers/d-roving-focus";
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
+  SelectHeldRow,
   SelectLoadRequest,
   SelectRecord,
-  SelectRow,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -36,8 +36,8 @@ interface SelectionStripSignature {
       value: unknown,
       request?: SelectLoadRequest
     ) =>
-      | readonly SelectRow[]
-      | Promise<readonly SelectRow[] | undefined>
+      | readonly SelectHeldRow[]
+      | Promise<readonly SelectHeldRow[] | undefined>
       | undefined;
     /** Whether mutation is disabled. */
     locked: boolean;
@@ -84,7 +84,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
   /** Scrolls a chip added since the last render into the strip's view, so a pick is seen. */
   revealAdded = createModifier<{
     Element: HTMLElement;
-    Args: { Positional: [chips: readonly SelectRow[] | undefined] };
+    Args: { Positional: [chips: readonly SelectHeldRow[] | undefined] };
   }>((element, [chips = []]) => {
     const previous = this.#keys;
     this.#keys = new Set(chips.map((chip) => chip.key));
@@ -132,7 +132,11 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
 
   /** Handles removal keys before the roving group's activation handler. */
   @action
-  handleKeydown(chip: SelectRow, index: number, event: KeyboardEvent): void {
+  handleKeydown(
+    chip: SelectHeldRow,
+    index: number,
+    event: KeyboardEvent
+  ): void {
     if (event.isComposing) {
       return;
     }
@@ -156,23 +160,23 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
 
   /** Pointer activation preserves focus; assistive activation restores a neighbor. */
   @action
-  removeSelected(chip: SelectRow, index: number, event: MouseEvent): void {
+  removeSelected(chip: SelectHeldRow, index: number, event: MouseEvent): void {
     event.stopPropagation();
     this.#remove(chip, index, document.activeElement === event.currentTarget);
   }
 
   /** Converts a held item's id to its attribute value. */
-  chipValue(chip: SelectRow): string {
+  chipValue(chip: SelectHeldRow): string {
     return String(chip.value ?? "");
   }
 
   /** Whether a held item is locked, read live because its descriptor is resolved once. */
   @action
-  isLockedChip(chip: SelectRow): boolean {
+  isLockedChip(chip: SelectHeldRow): boolean {
     return this.args.engine.isLockedValue(chip.value);
   }
 
-  #remove(chip: SelectRow, index: number, restoreFocus: boolean): void {
+  #remove(chip: SelectHeldRow, index: number, restoreFocus: boolean): void {
     if (this.args.locked || this.isLockedChip(chip)) {
       return;
     }
@@ -279,9 +283,12 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                     class="d-select__strip-label"
                     id="{{this.idPrefix}}-{{index}}-label"
                   >
-                    {{#if chip.flags.unresolved}}
+                    {{#if (@engine.isHeldUnresolved chip.record)}}
                       {{#if @hasUnresolvedBlock}}
-                        {{yield chip.record to="unresolved"}}
+                        {{yield
+                          (@engine.heldRecord chip.record)
+                          to="unresolved"
+                        }}
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
@@ -289,7 +296,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield chip.record to="selection"}}
+                      {{yield (@engine.heldRecord chip.record) to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}

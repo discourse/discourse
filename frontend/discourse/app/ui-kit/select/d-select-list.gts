@@ -30,11 +30,11 @@ import StaticOptionList from "discourse/ui-kit/select/-internals/parts/static-op
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
   SelectCoreTexts,
+  SelectHeldRow,
   SelectKindTexts,
   SelectLoadRequest,
   SelectOption,
   SelectRecord,
-  SelectRow,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -262,7 +262,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
   }
 
   @cached
-  get heldSelection(): TrackedAsyncData<readonly SelectRow[] | undefined> {
+  get heldSelection(): TrackedAsyncData<readonly SelectHeldRow[] | undefined> {
     return new TrackedAsyncData(this.resolveHeld(this.args.value));
   }
 
@@ -301,8 +301,8 @@ export default class DSelectList extends Component<DSelectListSignature> {
     value: unknown,
     opts?: SelectLoadRequest
   ):
-    | readonly SelectRow[]
-    | Promise<readonly SelectRow[] | undefined>
+    | readonly SelectHeldRow[]
+    | Promise<readonly SelectHeldRow[] | undefined>
     | undefined {
     if (this.multiple) {
       return this.host.resolveMulti(value, opts);
