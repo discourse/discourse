@@ -535,6 +535,33 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(result["post"]).not_to have_key("cooked")
     end
 
+    it "pairs visible image upload IDs with their short URLs" do
+      post = Fabricate(:post, user: user)
+      first_image = Fabricate(:upload)
+      second_image = Fabricate(:upload)
+      SiteSetting.authorized_extensions = "png|mp4"
+      video = Fabricate(:video_upload)
+      UploadReference.ensure_exist!(
+        upload_ids: [second_image.id, video.id, first_image.id],
+        target: post,
+      )
+
+      result =
+        execute_node(
+          configuration: {
+            "operation" => "get",
+            "post_id" => post.id.to_s,
+            "include_cooked" => true,
+          },
+          item: item,
+        )
+
+      expect(result["post"]["image_uploads"]).to contain_exactly(
+        { "id" => first_image.id, "short_url" => first_image.short_url },
+        { "id" => second_image.id, "short_url" => second_image.short_url },
+      )
+    end
+
     it "truncates selected body fields for get and list operations" do
       raw = "abcdefghijklmnopqrstuvwxyz" * 2
       post = Fabricate(:post, user: user, raw: raw, post_number: 1)

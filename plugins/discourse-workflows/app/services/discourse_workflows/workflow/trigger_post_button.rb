@@ -8,9 +8,13 @@ module DiscourseWorkflows
       attribute :workflow_id, :integer
       attribute :trigger_node_id, :string
       attribute :post_id, :integer
+      attribute :client_id, :string
+      attribute :request_id, :string
 
       validates :trigger_node_id, presence: true
       validates :post_id, presence: true
+      validates :client_id, length: { maximum: 64 }, allow_nil: true
+      validates :request_id, format: { with: /\A[0-9a-f-]{36}\z/ }, allow_nil: true
     end
 
     model :published_trigger
@@ -62,11 +66,17 @@ module DiscourseWorkflows
       )
     end
 
-    def enqueue_workflow(published_trigger:, post:, guardian:)
+    def enqueue_workflow(published_trigger:, post:, guardian:, params:)
       DiscourseWorkflows::TriggerDispatcher.enqueue(
         published_trigger,
         trigger_data: NodeData.node_type(published_trigger.trigger_node).new(post).output,
         user_id: guardian.user.id,
+        post_button_feedback:
+          (
+            if params.client_id.present? && params.request_id.present?
+              { client_id: params.client_id, request_id: params.request_id }
+            end
+          ),
       )
     end
   end
