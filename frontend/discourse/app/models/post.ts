@@ -728,7 +728,14 @@ export default class Post extends RestModel {
   }
 
   get canToggleLike() {
+    if (this.likesRestrictedByGroup) {
+      return !!this.likeAction?.can_undo;
+    }
     return !!this.likeAction?.get("canToggle");
+  }
+
+  get likesRestrictedByGroup() {
+    return this.currentUser?.post_likes_restricted === true;
   }
 
   get filteredRepliesPostNumber() {
@@ -782,6 +789,10 @@ export default class Post extends RestModel {
   }
 
   get showLike() {
+    if (this.likesRestrictedByGroup) {
+      return this.liked;
+    }
+
     if (
       !this.currentUser ||
       (this.topic?.get("archived") && this.user_id !== this.currentUser.id)

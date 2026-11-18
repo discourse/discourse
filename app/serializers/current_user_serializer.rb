@@ -59,6 +59,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_create_category,
              :can_create_group,
              :link_posting_access,
+             :post_likes_restricted,
              :external_id,
              :associated_account_ids,
              :top_category_ids,
@@ -153,6 +154,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def link_posting_access
     scope.link_posting_access
+  end
+
+  def include_post_likes_restricted?
+    scope.post_likes_restricted?
+  end
+
+  def post_likes_restricted
+    true
   end
 
   def can_create_topic

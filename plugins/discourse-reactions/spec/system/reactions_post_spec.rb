@@ -19,6 +19,23 @@ describe "Reactions | Post reactions" do
     sign_in(current_user)
   end
 
+  it "allows removing the current reaction without offering new reactions for users outside the allowed groups" do
+    SiteSetting.like_allowed_groups = Fabricate(:group).id.to_s
+    SiteSetting.discourse_reactions_excluded_from_like = "laughing"
+    reaction = Fabricate(:reaction, post: post_2, reaction_value: "laughing")
+    Fabricate(:reaction_user, reaction:, user: current_user, post: post_2)
+
+    visit post_2.url
+    reactions_button.hover_like_button(post_2.id)
+    expect(reactions_button).to have_no_expanded_reactions_picker(post_2.id)
+
+    reactions_button.click_like_button(post_2.id)
+    expect(page).to have_no_css(
+      "#discourse-reactions-actions-#{post_2.id}-right .discourse-reactions-reaction-button",
+    )
+    expect(DiscourseReactions::ReactionUser.exists?(user: current_user, post: post_2)).to eq(false)
+  end
+
   context "when topic is archived" do
     fab!(:unliked_post) { Fabricate(:post, topic:) }
 

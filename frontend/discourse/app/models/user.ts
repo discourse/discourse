@@ -291,6 +291,7 @@ export interface UserFields {
   last_posted_at?: string | null;
   last_seen_at?: string | null;
   link_posting_access?: string;
+  post_likes_restricted?: true;
   locale?: string | null;
   login_method?: string | null;
   mailing_list_posts_per_day?: number;

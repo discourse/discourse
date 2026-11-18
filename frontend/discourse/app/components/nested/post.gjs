@@ -561,7 +561,7 @@ export default class NestedPost extends Component {
     const post = this.args.post;
     const likeAction = post.likeAction;
 
-    if (likeAction?.canToggle) {
+    if (post.canToggleLike) {
       try {
         await likeAction.togglePromise(post);
       } catch (e) {
