@@ -130,6 +130,13 @@
     width: 100%;
     padding-bottom: var(--space-2);
     border-bottom: 0.5px solid var(--content-border-color);
+
+    &:has(.user-notifications-type-filter) {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+    }
   }
 }
 
