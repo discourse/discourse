@@ -824,8 +824,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       fab!(:admin)
-      let(:post) { Fabricate(:post) }
-      let!(:reviewable) { PostActionCreator.spam(user, post).reviewable }
+      fab!(:post)
+      fab!(:reviewable) { PostActionCreator.spam(user, post).reviewable }
 
       before do
         freeze_time
@@ -1430,8 +1430,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   end
 
   describe "#perform_delete_and_agree_replies" do
-    let(:flagged_post) { Fabricate(:reviewable_flagged_post) }
-    let!(:reply) { create_reply(flagged_post.target) }
+    fab!(:flagged_post, :reviewable_flagged_post)
+    fab!(:reply) { create_reply(flagged_post.target) }
 
     before { flagged_post.target.update(reply_count: 1) }
 
@@ -1480,8 +1480,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "#perform_unsilence_user" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
     let(:guardian) { Guardian.new(moderator) }
 
     it "is offered whenever the author is currently silenced" do
@@ -1540,8 +1540,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "penalty_effect" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
     let(:guardian) { Guardian.new(moderator) }
 
     def effect_for(action_id)
@@ -1611,8 +1611,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "#author_penalties" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
-
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
     it "is empty when the author has no penalty" do
       expect(reviewable.author_penalties).to eq([])

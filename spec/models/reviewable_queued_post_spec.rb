@@ -34,7 +34,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   end
 
   describe "creating a post" do
-    let!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
     let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
 
     context "when creating" do
@@ -551,7 +551,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     context "when updating an existing reviewable" do
-      let!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
+      fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
       let(:user_stats) { reviewable.target_created_by.user_stat }
 
       context "when status changes from 'pending' to something else" do
@@ -791,7 +791,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     context "when the dsa_reporting_enabled site setting is enabled" do
-      let(:reviewable) { Fabricate(:reviewable_queued_post) }
+      fab!(:reviewable, :reviewable_queued_post)
 
       before do
         freeze_time
