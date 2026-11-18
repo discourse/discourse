@@ -138,6 +138,40 @@ RSpec.describe DiscourseGamification::LikeReceived do
 end
 
 RSpec.describe DiscourseGamification::LikeGiven do
+  it "caps given likes separately for each user and day" do
+    leaderboard = Fabricate(:gamification_leaderboard)
+    first_liker, second_liker = Fabricate.times(2, :user)
+    category = Fabricate(:category)
+    SiteSetting.scorable_categories = category.id.to_s
+    SiteSetting.gamification_like_given_daily_cap = 2
+    SiteSetting.like_given_score_value = 3
+    topic = Fabricate(:topic, category:)
+    first_day = Time.utc(2024, 1, 1)
+    second_day = first_day + 1.day
+
+    posts = Fabricate.times(4, :post, topic:)
+    posts
+      .first(3)
+      .each { |post| Fabricate(:post_action, user: first_liker, post:, created_at: first_day) }
+    Fabricate(:post_action, user: first_liker, post: posts.last, created_at: second_day)
+    Fabricate(:post_action, user: second_liker, post: posts.first, created_at: first_day)
+    unscorable_post = Fabricate(:post)
+    Fabricate(:post_action, user: first_liker, post: unscorable_post, created_at: second_day)
+
+    DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+      leaderboard,
+      since_date: first_day.to_date,
+      only_subclass: described_class,
+    )
+
+    scores = DiscourseGamification::GamificationLeaderboardScore.where(leaderboard:)
+    expect(scores.pluck(:user_id, :date, :score)).to contain_exactly(
+      [first_liker.id, first_day.to_date, 6],
+      [first_liker.id, second_day.to_date, 3],
+      [second_liker.id, first_day.to_date, 3],
+    )
+  end
+
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :post, user: other_user)
