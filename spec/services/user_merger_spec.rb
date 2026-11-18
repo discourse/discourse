@@ -208,6 +208,19 @@ RSpec.describe UserMerger do
       expect(Draft.discarded.where(user_id: target_user.id, draft_key: key).count).to eq(1)
     end
 
+    it "keeps a moved draft current when the target's sequence for its key is behind" do
+      key = "#{Draft::EXISTING_TOPIC}25"
+      DraftSequence.next!(target_user, key)
+      3.times { DraftSequence.next!(source_user, key) }
+      create_draft(source_user, key, { reply: "draft by alice1" }.to_json)
+
+      merge_users!
+
+      sequence = DraftSequence.current(target_user, key)
+      expect(current_target_user_draft(key)).to eq({ reply: "draft by alice1" }.to_json)
+      expect(Draft.set(target_user, key, sequence, { reply: "edited" }.to_json)).to eq(sequence + 1)
+    end
+
     it "moves discarded drafts even when the target has a draft with the same key" do
       key = "#{Draft::EXISTING_TOPIC}23"
       create_draft(source_user, key, { reply: "discarded by alice1" }.to_json)
