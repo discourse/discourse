@@ -19,7 +19,7 @@ export default {
           route: "adminPlugins.show.live-rooms",
         },
         {
-          label: "live.admin.dashboard_title",
+          label: "live.admin.reports_title",
           route: "adminPlugins.show.live-dashboard",
         },
         {
