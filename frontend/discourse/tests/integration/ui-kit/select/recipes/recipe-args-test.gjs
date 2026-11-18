@@ -9,6 +9,7 @@ import {
   MULTI_RECIPE_ARGS,
   RECIPE_ARGS,
 } from "discourse/ui-kit/select/recipes/-internals/recipe-args";
+import DSelectBadge from "discourse/ui-kit/select/recipes/badges/d-select-badge";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectCategoryFilter from "discourse/ui-kit/select/recipes/categories/d-select-category-filter";
 import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
@@ -84,6 +85,7 @@ const RECIPES = [
     component: DSelectCategoryFilter,
     single: true,
   },
+  { name: "DSelectBadge", component: DSelectBadge, single: true },
 ];
 
 /** A chip's remove button, locked or not. */

@@ -1418,6 +1418,17 @@ option follows the permissions after a divider; picking it closes the list and c
 `@onRemove` instead of changing the value. A permission picker is named "Permission" unless the
 call site names it; the access control names each row's picker after its grantee.
 
+#### Badge recipe
+
+**`DSelectBadge`** (kind `select-badge`) picks one badge from a list the caller already holds.
+`@options` takes badge records (or options of them), `@value` and `@onChange` use the badge's id,
+and `@noneOption` emits `null`. Each badge shows its uploaded image, or else its icon, before its
+name, in the list and in the trigger; class-style icon names such as `fa-certificate` are
+converted. The recipe draws both in its own `:option` and `:selection` blocks, because the select
+has no notion of an image, and sizes both with `--d-select-badge-glyph-size` (`1em` by default) so
+a list mixing them lines up. Like any `:selection` block, the glyph is hidden while a typeahead
+trigger is focused. A call site's own `:option` or `:selection` block replaces the recipe's.
+
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 
