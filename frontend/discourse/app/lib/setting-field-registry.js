@@ -59,7 +59,7 @@ function typeKeyFor({ type, subtype, list_type }) {
 }
 
 const TEXT_INPUT = { ...ROW, type: "input", adminReady: true };
-const CUSTOM_CONTROL = { ...ROW, type: "custom", adminReady: true };
+export const CUSTOM_CONTROL = { ...ROW, type: "custom", adminReady: true };
 
 registerSettingFieldType("default", { ...ROW, type: "input" });
 registerSettingFieldType("string", TEXT_INPUT);

@@ -459,6 +459,51 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.strictEqual(body.test_categories, "");
   });
 
+  for (const [type, saved] of [
+    ["list", "a|b"],
+    ["value_list", "a\nb"],
+    ["url_list", "a\nb"],
+  ]) {
+    test(`a ${type} setting saves the added value in its wire format`, async function (assert) {
+      let body;
+      pretender.put("/admin/site_settings/test_values", (request) => {
+        body = parsePostData(request.requestBody);
+        return response(200, {});
+      });
+
+      await renderSetting({ setting: "test_values", value: "a", type });
+
+      const adder = selectKit(".form-kit__field .value-list .select-kit");
+      await adder.expand();
+      await adder.fillInFilter("b");
+      await adder.keyboard("Enter");
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_values, saved);
+    });
+  }
+
+  test("a simple list setting saves the typed values as a pipe-delimited value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_simple", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_simple",
+      value: "a",
+      type: "list",
+      list_type: "simple",
+    });
+
+    await fillIn(".form-kit__field .add-value-input", "b");
+    await click(".form-kit__field .add-value-btn");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_simple, "a|b");
+  });
+
   test("a date setting saves the picked date", async function (assert) {
     let body;
     pretender.put("/admin/site_settings/test_date", (request) => {
