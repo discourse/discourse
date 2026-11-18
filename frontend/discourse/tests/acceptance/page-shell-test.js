@@ -77,6 +77,9 @@ acceptance("Page shell | regions", function (needs) {
     assert
       .dom(toggle)
       .hasAttribute("aria-expanded", "true", "Context starts open");
+    assert
+      .dom(".page-shell__header-context select")
+      .hasValue("overview", "The Context selector is visible above the panel");
 
     await click(toggle);
 
@@ -84,6 +87,9 @@ acceptance("Page shell | regions", function (needs) {
       .dom(toggle)
       .hasAttribute("aria-expanded", "false", "The button reports closed");
     assert.dom("#page-shell-context").doesNotExist("The panel closes");
+    assert
+      .dom(".page-shell__header-context select")
+      .doesNotExist("The Context selector closes with the panel");
 
     await click(toggle);
 

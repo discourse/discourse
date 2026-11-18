@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { on } from "@ember/modifier";
 import { service } from "@ember/service";
 import PageShellControls from "discourse/components/page-shell/controls";
 import PageShellPanelSeparator from "discourse/components/page-shell/panel-separator";
@@ -59,6 +58,27 @@ export default class PageShell extends Component {
           {{yield to="beforeBody"}}
         </div>
         {{yield to="navigation"}}
+        {{#if
+          (and
+            this.pageShell.hasContextPanel
+            (not (eq this.contextPresentation "hidden"))
+          )
+        }}
+          <aside
+            aria-label={{i18n "page_shell.context"}}
+            class="page-shell__context"
+            id="page-shell-context"
+            inert={{if this.pageShell.closingPanels.context true}}
+          >
+            {{#if (eq this.pageShell.context "open")}}
+              <PageShellPanelSeparator @panel="context" />
+            {{/if}}
+            <div class="page-shell__context-content">
+              <h2>{{i18n "page_shell.context"}}</h2>
+              <p>{{i18n "page_shell.context_description"}}</p>
+            </div>
+          </aside>
+        {{/if}}
         <main class="page-shell__main" id="main-outlet">
           {{yield to="beforeMain"}}
           <div class="page-shell__main-content">
@@ -76,39 +96,6 @@ export default class PageShell extends Component {
             {{/if}}
           </div>
         </footer>
-        {{#if
-          (and
-            this.pageShell.hasContextPanel
-            (not (eq this.contextPresentation "hidden"))
-          )
-        }}
-          <aside
-            aria-label={{i18n "page_shell.context"}}
-            class="page-shell__context"
-            data-presentation={{this.contextPresentation}}
-            id="page-shell-context"
-            inert={{if this.pageShell.closingPanels.context true}}
-          >
-            {{#if (eq this.pageShell.context "open")}}
-              <PageShellPanelSeparator @panel="context" />
-            {{/if}}
-            <div class="page-shell__context-content">
-              {{#if (eq this.contextPresentation "rail")}}
-                <button
-                  class="btn btn-flat"
-                  title={{i18n "page_shell.expand_context"}}
-                  type="button"
-                  {{on "click" this.pageShell.openContext}}
-                >
-                  {{i18n "page_shell.expand"}}
-                </button>
-              {{else}}
-                <h2>{{i18n "page_shell.context"}}</h2>
-                <p>{{i18n "page_shell.context_description"}}</p>
-              {{/if}}
-            </div>
-          </aside>
-        {{/if}}
         {{yield to="composer"}}
       </div>
     {{else}}

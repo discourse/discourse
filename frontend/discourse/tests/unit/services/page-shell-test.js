@@ -63,7 +63,7 @@ module("Unit | Service | page shell", function (hooks) {
 
     assert.strictEqual(shell.navigation, "open");
     assert.strictEqual(shell.navigationWidth, 400);
-    assert.strictEqual(shell.context, "rail");
+    assert.strictEqual(shell.context, "open");
     assert.strictEqual(shell.contextWidth, 300);
   });
 
