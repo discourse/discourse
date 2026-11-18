@@ -129,6 +129,7 @@ en:
         close: "Close chat"
         unavailable_title: "Zoinks!"
         unavailable: "Chat is unavailable right now."
+        disabled_for_group_call: "Chat is disabled for calls with more than two people. Your direct messages remain private."
         empty_title: "No chat yet"
         empty_body: "Send a message to get the conversation started."
         composer_placeholder: "Message the room…"

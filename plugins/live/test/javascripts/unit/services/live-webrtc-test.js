@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import Site from "discourse/models/site";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 import { setPeerTimingForTesting } from "discourse/plugins/live/discourse/lib/live/peer-manager";
 
 // Park the service's wall-clock timers far outside any test's window so a
@@ -99,6 +100,7 @@ class LiveRoomsStub extends Service {
 }
 
 class ToastsStub extends Service {
+  defaults = [];
   errors = [];
 
   error(options) {
@@ -106,7 +108,10 @@ class ToastsStub extends Service {
   }
 
   success() {}
-  default() {}
+
+  default(options) {
+    this.defaults.push(options);
+  }
 }
 
 class FakeRTCPeerConnection {
@@ -568,6 +573,30 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     globalThis.RTCIceCandidate = this.originalRTCIceCandidate;
     globalThis.RTCSessionDescription = this.originalRTCSessionDescription;
     globalThis.MediaStream = this.originalMediaStream;
+  });
+
+  test("notifies call participants when the private chat is disconnected", async function (assert) {
+    await this.subject.join(this.room);
+    const toasts = this.owner.lookup("service:toasts");
+
+    this.rooms.emit(this.room.id, { type: "chat_disabled" });
+    await waitUntil(() => toasts.defaults.length === 1);
+
+    assert.strictEqual(
+      toasts.defaults[0].data.message,
+      i18n("live.chat.disabled_for_group_call"),
+      "explains why chat disappeared and that DMs remain private"
+    );
+
+    this.subject.leave(this.room, { keepLocalStream: true });
+    this.rooms.emit(this.room.id, { type: "chat_disabled" });
+    await wait(0);
+
+    assert.strictEqual(
+      toasts.defaults.length,
+      1,
+      "participants who have left the call receive no further notice"
+    );
   });
 
   test("file transfer size follows the current site setting in binary MiB", function (assert) {

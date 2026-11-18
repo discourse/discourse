@@ -2005,6 +2005,11 @@ export default class LiveWebrtcService extends Service {
       );
     } else if (payload.type === "kicked") {
       this.#handleKicked(roomId);
+    } else if (payload.type === "chat_disabled") {
+      this.toasts.default({
+        duration: 8000,
+        data: { message: i18n("live.chat.disabled_for_group_call") },
+      });
     } else if (payload.type === "room_updated") {
       this.#handleRoomUpdated(roomId);
     } else if (payload.type === "recording") {
