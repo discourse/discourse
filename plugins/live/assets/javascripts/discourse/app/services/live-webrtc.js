@@ -4,6 +4,7 @@ import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
+import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
@@ -16,7 +17,10 @@ import {
   collectPeers,
   probeIceServers,
 } from "../../lib/live/connection-diagnostics.js";
-import { fileTransferMaxSize } from "../../lib/live/file-transfer-limits.js";
+import {
+  fileTransferMaxSize,
+  isAuthorizedFileName,
+} from "../../lib/live/file-transfer-limits.js";
 import FileTransferManager from "../../lib/live/file-transfer-manager.js";
 import HeartbeatManager from "../../lib/live/heartbeat-manager.js";
 import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker.js";
@@ -187,11 +191,20 @@ export default class LiveWebrtcService extends Service {
       isSendAllowed: (roomId, userId) =>
         this.#canInitiateFileTransfer(roomId, userId),
       isReceiveAllowed: (roomId, userId) => this.canReceiveFile(roomId, userId),
+      isFileTypeAllowed: (name, { roomId, userId, direction }) =>
+        direction === "outgoing"
+          ? this.canSendFileType(name)
+          : isAuthorizedFileName(
+              name,
+              this.#participant(roomId, userId)?.can_send_staff_file_types ===
+                true,
+              this.siteSettings
+            ),
     });
 
     this.#peerManager = new PeerManager({
-      onFileChannel: (roomId, userId, channel) =>
-        this.#fileTransfers.attach(roomId, userId, channel),
+      onFileChannel: (roomId, userId, channel, getMaxMessageSize) =>
+        this.#fileTransfers.attach(roomId, userId, channel, getMaxMessageSize),
       getIceServers: () => this.iceServers,
       getIceTransportPolicy: () => this.iceTransportPolicy,
       getLocalStream: () => this.localStream,
@@ -789,6 +802,14 @@ export default class LiveWebrtcService extends Service {
     return (
       this.#canInitiateFileTransfer(roomId, userId) &&
       this.#fileTransfers.canSend(roomId, userId)
+    );
+  }
+
+  canSendFileType(name) {
+    return isAuthorizedFileName(
+      name,
+      !!this.currentUser?.staff,
+      this.siteSettings
     );
   }
 
@@ -1650,8 +1671,20 @@ export default class LiveWebrtcService extends Service {
     return !!(
       this.currentUser?.live_can_send_files &&
       self?.can_send_files !== false &&
+      authorizesOneOrMoreExtensions(
+        !!this.currentUser.staff,
+        this.siteSettings
+      ) &&
       this.#fileTransferEligible(roomId, userId)
     );
+  }
+
+  #participant(roomId, userId) {
+    return this.liveRooms
+      ?.roomById(roomId)
+      ?.active_participants?.find(
+        (participant) => Number(participant.id) === Number(userId)
+      );
   }
 
   #fileTransferEligible(roomId, userId) {

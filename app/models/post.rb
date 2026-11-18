@@ -698,7 +698,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, message_options: {})
     return if hidden?
 
     reason ||=
@@ -743,24 +743,18 @@ class Post < ActiveRecord::Base
         **Dsa::AppealInstructions.message_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason:
-          I18n.t(
-            "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path,
-            default: PostActionType.names[post_action_type_id],
-          ),
+        **message_options,
       }
 
       message = custom_message
       message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
 
-      Jobs.enqueue_in(
-        5.seconds,
-        :send_system_message,
-        user_id: user.id,
+      ModerationNotice.enqueue(
+        delay: 5.seconds,
+        user: user,
         message_type: message.to_s,
         message_options: options,
+        post_action_type_id:,
       )
     end
 

@@ -95,6 +95,7 @@ export default class ChatThread extends Component {
     this.messagesManager.clear();
     if (this.currentUser) {
       this.args.thread.draft =
+        this.args.initialDraft ||
         this.chatDraftsManager.get(
           this.args.thread.channel?.id,
           this.args.thread.id

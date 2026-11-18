@@ -474,6 +474,8 @@ module DiscourseMcp
                 type: "string",
                 minLength: 1,
                 maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+                description:
+                  "Emoji shortcode name without surrounding colons, for example dog or paw_prints. Colon-wrapped names are normalized.",
               },
               icon: {
                 type: "string",
@@ -529,6 +531,8 @@ module DiscourseMcp
                 type: "string",
                 minLength: 1,
                 maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+                description:
+                  "Emoji shortcode name without surrounding colons, for example dog or paw_prints. Colon-wrapped names are normalized.",
               },
               icon: {
                 type: "string",
@@ -1251,7 +1255,8 @@ module DiscourseMcp
         registry,
         "discourse_update_topic",
         title: "Update topic",
-        description: "Updates fields on a topic when the user may edit it.",
+        description:
+          "Updates title, category, tags, or featured link when the user may edit the topic. Omit unchanged fields. To close or reopen, use discourse_set_topic_closed; to pin or unpin, use discourse_set_topic_pin.",
         implementation: Tools::UpdateTopic,
         input_schema:
           object_schema(
@@ -1664,6 +1669,107 @@ module DiscourseMcp
     def register_moderation_tools(registry)
       register_tool(
         registry,
+        "discourse_set_topic_pin",
+        title: "Set topic pin",
+        description:
+          "Pins a topic in its category, pins it globally, or unpins it. Uses normal topic pin permissions and status-change behavior. Category/global pins remain until unpinned; this replaces any existing pin expiration. Returns persisted pin state. Use this tool rather than update_topic for pinning.",
+        implementation: Tools::SetTopicPin,
+        input_schema:
+          object_schema(
+            {
+              topic_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              mode: {
+                type: "string",
+                enum: %w[category global unpin],
+              },
+            },
+            required: %w[topic_id mode],
+          ),
+        annotations: WRITE,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_set_topic_closed",
+        title: "Close or reopen topic",
+        description:
+          "Closes a topic with closed=true or reopens it with closed=false. Uses normal topic moderation permissions, status-change posts, timers, and staff logging. Returns persisted closed and archived state. Does not change archived status. Use this tool, not update_topic, to close or reopen topics.",
+        implementation: Tools::SetTopicClosed,
+        input_schema:
+          object_schema(
+            { topic_id: { type: "integer", minimum: 1 }, closed: { type: "boolean" } },
+            required: %w[topic_id closed],
+          ),
+        annotations: WRITE,
+        risk: :moderation,
+      )
+      {
+        "suspend" => Tools::SuspendUser,
+        "unsuspend" => Tools::UnsuspendUser,
+        "silence" => Tools::SilenceUser,
+        "unsilence" => Tools::UnsilenceUser,
+      }.each do |operation, implementation|
+        restriction = %w[suspend silence].include?(operation)
+        properties = {
+          username: {
+            type: "string",
+            minLength: 1,
+            maxLength: 255,
+          },
+          confirm: {
+            type: "boolean",
+            const: true,
+            description:
+              "Caller attests this specific moderation action was requested. This argument is not an interactive approval flow.",
+          },
+        }
+        required = %w[username confirm]
+        if restriction
+          properties.merge!(
+            duration_days: {
+              type: "integer",
+              minimum: 1,
+              maximum: Tools::UserModerationSupport::MAX_DURATION_DAYS,
+            },
+            reason: {
+              type: "string",
+              minLength: 1,
+              maxLength: 300,
+            },
+            message: {
+              type: "string",
+              maxLength: 2000,
+              description:
+                "Optional explanation for the user. Standard site moderation notices and audit logging still apply.",
+            },
+          )
+          required.concat(%w[duration_days reason])
+        end
+        description =
+          case operation
+          when "suspend"
+            "Suspends a user, blocking login until the requested duration ends. Requires staff permissions, explicit confirmation, duration and reason. Does not deactivate the account or delete posts. Uses standard suspension audit/notification behavior; independent of reviewable status."
+          when "silence"
+            "Silences a user for the requested duration, restricting posting while preserving login. Requires staff permissions, explicit confirmation, duration and reason. Uses standard silence audit/notification behavior without deleting posts; independent of reviewable status."
+          else
+            "Removes the user's #{operation == "unsuspend" ? "suspension" : "silence"} using standard staff permission checks and audit/notification behavior. Requires explicit confirmation. Returns verified current state; already-clear restrictions are a no-op."
+          end
+        register_tool(
+          registry,
+          "discourse_#{operation}_user",
+          title: "#{operation.capitalize} user",
+          description: description,
+          implementation: implementation,
+          input_schema: object_schema(properties, required: required),
+          annotations: restriction ? DESTRUCTIVE : WRITE,
+          risk: :moderation,
+        )
+      end
+      register_tool(
+        registry,
         "discourse_get_review_queue_count",
         title: "Get review queue count",
         description:
@@ -2001,6 +2107,37 @@ module DiscourseMcp
     def register_theme_tools(registry)
       register_tool(
         registry,
+        "discourse_set_theme_code",
+        title: "Set theme code",
+        description:
+          "Preferred tool for inline theme code. First get_theme and copy code_revision into expected_code_revision. Supply plain css and/or javascript strings; no field arrays, upload IDs, or numeric types. CSS replaces common/common.scss; JavaScript replaces javascripts/discourse/api-initializers/mcp-theme-code.js and should import { apiInitializer } from discourse/lib/api and export default apiInitializer((api) => { ... }). Each input accepts at most 65,536 characters. Omitted inputs remain unchanged; empty strings remove these managed files. Does not attach/enable a component. Checks compilation and rejects a code revision that has changed since your read. The revision check coordinates edits through this tool; it does not prevent concurrent edits through other interfaces. Read the returned verification; saved code is not browser-verified.",
+        implementation: Tools::SetThemeCode,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              expected_code_revision: {
+                type: "string",
+                pattern: "^[0-9a-f]{64}$",
+              },
+              css: {
+                type: "string",
+                maxLength: 65_536,
+              },
+              javascript: {
+                type: "string",
+                maxLength: 65_536,
+              },
+            },
+            required: %w[theme_id expected_code_revision],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
         "discourse_get_theme",
         title: "Get theme",
         description:
@@ -2026,6 +2163,8 @@ module DiscourseMcp
           value: {
             type: "string",
             maxLength: 1_000_000,
+            description:
+              "Inline source code or text for this field. Put CSS, SCSS, JavaScript, HTML, and YAML source here. An empty string removes an existing inline field.",
           },
           type: {
             type: "string",
@@ -2034,10 +2173,14 @@ module DiscourseMcp
           type_id: {
             type: "integer",
             minimum: 0,
+            description:
+              "Advanced numeric field type. Prefer type or allow inference from name and target.",
           },
           upload_id: {
             type: "integer",
             minimum: 1,
+            description:
+              "An existing upload ID returned by an upload tool. Only valid with type theme_upload_var or theme_screenshot_upload_var. Omit value when supplying upload_id. For inline source code, use value and omit upload_id.",
           },
         },
         required: %w[name target],
@@ -2048,7 +2191,7 @@ module DiscourseMcp
         "discourse_create_theme",
         title: "Create theme",
         description:
-          "Creates a theme or theme component with optional HTML, SCSS, and settings fields.",
+          "Creates theme metadata or a component. For additive styling use component:true, then attach with update_theme parent_theme_ids; enabled alone does not apply it. Standalone themes do not affect the default theme unless made default or selected by a user. For inline CSS/JavaScript prefer creating without fields, then discourse_set_theme_code using the returned code_revision. theme_fields is an advanced file/asset interface; do not invent upload IDs.",
         implementation: Tools::CreateTheme,
         input_schema:
           object_schema(
@@ -2090,7 +2233,7 @@ module DiscourseMcp
         "discourse_update_theme",
         title: "Update theme",
         description:
-          "Updates attributes and fields on a theme when the authenticated user may edit it.",
+          "Updates theme metadata, component relationships, or advanced files/assets when the authenticated user may edit it. Set component:true to convert an existing non-default theme in place, preserving its ID and code; conversion removes incompatible relationships and resets palette/user-selectability. Attach components using parent_theme_ids (full replacement list); child_theme_ids also replaces the full list, so preserve existing components. enabled alone does not attach a component. Prefer discourse_set_theme_code for inline CSS/JavaScript; it chooses canonical paths and checks revision and compilation.",
         implementation: Tools::UpdateTheme,
         input_schema:
           object_schema(
@@ -2113,6 +2256,11 @@ module DiscourseMcp
               },
               user_selectable: {
                 type: "boolean",
+              },
+              component: {
+                type: "boolean",
+                description:
+                  "Convert in place between theme and component. The default theme cannot be converted.",
               },
               enabled: {
                 type: "boolean",

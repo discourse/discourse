@@ -16,6 +16,10 @@ class LiveWebrtcStub extends Service {
     return this.available;
   }
 
+  canSendFileType(name) {
+    return !name.endsWith(".exe");
+  }
+
   sendFile(...args) {
     if (this.sendError) {
       throw this.sendError;
@@ -47,6 +51,23 @@ module("Integration | Component | LiveSendFileModal", function (hooks) {
     assert
       .dom(".live-send-file-modal")
       .doesNotExist("sending closes the picker");
+  });
+
+  test("rejects unauthorized file types before calling transport", async function (assert) {
+    await triggerEvent("input[type=file]", "change", {
+      files: [new File(["x"], "tool.exe")],
+    });
+    assert.dom("[role=alert]").includesText("You can't send this type of file");
+    assert.strictEqual(this.webrtc.calls.length, 0);
+    assert.dom(".live-send-file-modal").exists();
+  });
+
+  test("lists allowed types and restricts the picker to them", async function (assert) {
+    const siteSettings = this.owner.lookup("service:site-settings");
+    assert
+      .dom(".live-send-file-modal__allowed-types")
+      .includesText(siteSettings.authorized_extensions.split("|")[0]);
+    assert.dom("input[type=file]").hasAttribute("accept", /(^|,)\.jpg(,|$)/);
   });
 
   test("rejects oversized selections before calling transport", async function (assert) {

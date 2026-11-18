@@ -23,6 +23,15 @@ Rosters are re-broadcast at least once a minute, so removing someone from a
 sender group stops their new transfers within about a minute, on both their own
 client and their recipients', without a reload.
 
+Allowed file types follow the upload extension settings: `authorized_extensions`
+for everyone, plus `authorized_extensions_for_staff` when the sender is staff.
+The sender's list applies on both ends: the picker refuses other types, and the
+receiver rejects offers whose filename extension the sender's list does not
+allow, using the server-attested `can_send_staff_file_types` roster flag rather
+than channel metadata. A `*` in the applicable list allows any file. When
+neither list authorizes anything for the sender, **Send file…** is hidden. Like
+uploads, only the filename extension is checked, not the file contents.
+
 ## Sending and receiving
 
 1. Join a mesh room and wait for the connection to the recipient to open.
@@ -90,10 +99,16 @@ client and their recipients', without a reload.
   physical disk-space guarantee or quota reservation; other tabs and browser
   activity can change availability, so write/close failures still cancel safely
   and clean up partial files.
-- Received bytes are written incrementally. A bounded **256 KiB** streaming
+- Received bytes are written incrementally. A bounded **8 MiB** streaming
   window and receiver acknowledgements after disk writes limit outstanding data
   rather than buffering a full file in memory. This window does not grow when the
-  configured per-file maximum is raised. Temporary receive disk reservations are
+  configured per-file maximum is raised. Throughput is capped at roughly one
+  window per network round trip, which is why the window is this large. The
+  sender picks the chunk size from the connection's SCTP message size limit
+  (up to 256 KiB per message, 64 KiB when the limit is unknown) and announces it
+  in the offer; it keeps at most about 1 MiB queued in the data channel and
+  resumes on the channel's low-buffer event. Chunks that queue up behind a
+  disk write are written together, up to 1 MiB at a time. Temporary receive disk reservations are
   limited to **2× the current configured per-file maximum** (200 MiB by default),
   including initializing, active, completed, and retiring files until deletion.
   Browser storage quotas still apply, even when the configured limit is higher.
@@ -104,7 +119,7 @@ client and their recipients', without a reload.
 - Offers are rate limited by the receiver to **5 per sender** and **20 in
   total** per rolling minute. Excess offers are rejected without being listed.
   Senders apply the same per-recipient limit locally and explain the refusal.
-  Receiver acknowledgements are coalesced to one per 64 KiB (or whenever the
+  Receiver acknowledgements are coalesced to one per 1 MiB (or whenever the
   write queue drains), and progress re-renders only on whole-percent changes.
 - A temporarily ineligible peer (for example while the roster is catching up)
   or a congested control channel fails only the affected transfer; the data

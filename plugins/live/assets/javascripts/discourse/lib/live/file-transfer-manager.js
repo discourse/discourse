@@ -6,14 +6,25 @@ import {
   MAX_CONFIGURED_FILE_SIZE,
 } from "./file-transfer-limits.js";
 
-export const CHUNK_SIZE = 16 * 1024;
-export const RECEIVE_WINDOW = 256 * 1024;
-const HIGH_WATER = 256 * 1024;
+const HEADER_SIZE = 36;
+export const MAX_CHUNK_SIZE = 256 * 1024 - HEADER_SIZE;
+const MIN_CHUNK_SIZE = 16 * 1024 - HEADER_SIZE;
+// Used when the transport does not report its message size limit.
+export const CHUNK_SIZE = 64 * 1024 - HEADER_SIZE;
+// Throughput is capped near one window per round trip, so this is sized for
+// relayed links while still bounding what a peer can make us hold in memory.
+export const RECEIVE_WINDOW = 8 * 1024 * 1024;
+export const HIGH_WATER = 1024 * 1024;
+const LOW_WATER = 256 * 1024;
+// Covers a channel that closes, or never fires the event, while we wait.
+const DRAIN_POLL_MS = 250;
+const READ_AHEAD = 1024 * 1024;
+const WRITE_BATCH = 1024 * 1024;
 const ID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const TERMINAL = new Set(["completed", "rejected", "cancelled", "failed"]);
 const MAX_ENTRIES = 100;
-const ACK_INTERVAL = 64 * 1024;
+const ACK_INTERVAL = 1024 * 1024;
 const DISCARD_RETRY_DELAYS = [5_000, 30_000, 120_000];
 export const OFFER_RATE_LIMIT = Object.freeze({
   perPeer: 5,
@@ -35,6 +46,7 @@ export default class FileTransferManager {
   #timeout;
   #sendAllowed;
   #receiveAllowed;
+  #fileTypeAllowed;
   #openSink;
   #getMaxFileSize;
   #estimateStorage;
@@ -50,6 +62,7 @@ export default class FileTransferManager {
     isEligible,
     isSendAllowed = isEligible,
     isReceiveAllowed = isEligible,
+    isFileTypeAllowed = () => true,
     openReceiveSink: openSink = openReceiveSink,
     timeoutMs = 120_000,
     getMaxFileSize = () => DEFAULT_MAX_FILE_SIZE,
@@ -61,6 +74,7 @@ export default class FileTransferManager {
     this.#timeout = timeoutMs;
     this.#sendAllowed = isSendAllowed;
     this.#receiveAllowed = isReceiveAllowed;
+    this.#fileTypeAllowed = isFileTypeAllowed;
     this.#openSink = openSink;
     this.#getMaxFileSize = getMaxFileSize;
     this.#estimateStorage = estimateStorage;
@@ -68,14 +82,16 @@ export default class FileTransferManager {
     this.#now = now;
   }
 
-  attach(roomId, userId, channel) {
+  attach(roomId, userId, channel, getMaxMessageSize = () => undefined) {
     this.disconnect(roomId, userId);
     const key = this.#key(roomId, userId);
-    const peer = { roomId, userId, channel, key };
+    const peer = { roomId, userId, channel, key, getMaxMessageSize };
     this.#peers.set(key, peer);
     this.channelsRevision++;
     channel.onopen = () => this.channelsRevision++;
     channel.binaryType = "arraybuffer";
+    channel.bufferedAmountLowThreshold = LOW_WATER;
+    channel.onbufferedamountlow = () => peer.drained?.();
     channel.onmessage = ({ data }) => {
       try {
         // Roster updates can lag the data channel, so ineligibility ends the
@@ -115,7 +131,12 @@ export default class FileTransferManager {
     if (
       !this.canSend(roomId, userId) ||
       !(file instanceof Blob) ||
-      !this.#validMetadata(file.name, file.size)
+      !this.#validMetadata(file.name, file.size) ||
+      !this.#fileTypeAllowed(file.name, {
+        roomId,
+        userId,
+        direction: "outgoing",
+      })
     ) {
       throw new Error("File transfer is unavailable or file is invalid");
     }
@@ -130,12 +151,15 @@ export default class FileTransferManager {
       crypto.randomUUID(),
       file.name,
       file.size,
-      "outgoing"
+      "outgoing",
+      this.#chunkSizeFor(peer)
     );
     transfer.file = file;
+    transfer.header = new TextEncoder().encode(transfer.entry.id);
     this.#control(peer, "offer", transfer.entry.id, {
       name: file.name,
       size: file.size,
+      chunkSize: transfer.chunkSize,
     });
     return transfer.entry.id;
   }
@@ -149,7 +173,7 @@ export default class FileTransferManager {
     ) {
       return;
     }
-    if (!this.#validMetadata(t.entry.name, t.entry.size)) {
+    if (!this.#validIncoming(t.peer, t.entry.name, t.entry.size)) {
       this.reject(id);
       return;
     }
@@ -184,7 +208,7 @@ export default class FileTransferManager {
       if (
         !this.#eligible(t.peer.roomId, t.peer.userId) ||
         !this.#receiveAllowed(t.peer.roomId, t.peer.userId) ||
-        !this.#validMetadata(t.entry.name, t.entry.size)
+        !this.#validIncoming(t.peer, t.entry.name, t.entry.size)
       ) {
         this.cancel(id);
         return;
@@ -204,7 +228,7 @@ export default class FileTransferManager {
       if (
         !this.#eligible(t.peer.roomId, t.peer.userId) ||
         !this.#receiveAllowed(t.peer.roomId, t.peer.userId) ||
-        !this.#validMetadata(t.entry.name, t.entry.size)
+        !this.#validIncoming(t.peer, t.entry.name, t.entry.size)
       ) {
         this.cancel(id);
         return;
@@ -275,6 +299,7 @@ export default class FileTransferManager {
     if (peer) {
       this.channelsRevision++;
       peer.channel.onopen = null;
+      peer.channel.onbufferedamountlow = null;
       peer.channel.onmessage =
         peer.channel.onclose =
         peer.channel.onerror =
@@ -413,7 +438,34 @@ export default class FileTransferManager {
     );
   }
 
-  #create(peer, id, name, size, direction) {
+  // The largest frame the transport accepts, so each send is one message.
+  #chunkSizeFor(peer) {
+    const limit = peer.getMaxMessageSize();
+    const chunkSize = limit > 0 ? limit - HEADER_SIZE : CHUNK_SIZE;
+    return Math.min(MAX_CHUNK_SIZE, Math.max(MIN_CHUNK_SIZE, chunkSize));
+  }
+
+  #validChunkSize(chunkSize) {
+    return (
+      Number.isSafeInteger(chunkSize) &&
+      chunkSize >= MIN_CHUNK_SIZE &&
+      chunkSize <= MAX_CHUNK_SIZE
+    );
+  }
+
+  // Incoming files are checked against the sender's allowed types, not ours.
+  #validIncoming(peer, name, size) {
+    return (
+      this.#validMetadata(name, size) &&
+      this.#fileTypeAllowed(name, {
+        roomId: peer.roomId,
+        userId: peer.userId,
+        direction: "incoming",
+      })
+    );
+  }
+
+  #create(peer, id, name, size, direction, chunkSize) {
     const entry = {
       id,
       roomId: peer.roomId,
@@ -429,6 +481,7 @@ export default class FileTransferManager {
     const t = {
       peer,
       entry,
+      chunkSize,
       offset: 0,
       acknowledged: 0,
       lastAck: 0,
@@ -517,6 +570,7 @@ export default class FileTransferManager {
     clearTimeout(t.timer);
     this.#active.delete(t.peer.key);
     t.file = null;
+    t.buffer = null;
     t.queue = [];
     if (status === "completed" && t.sink) {
       this.#retained.set(t.entry.id, t.sink);
@@ -561,12 +615,12 @@ export default class FileTransferManager {
     if (typeof data !== "string") {
       if (
         !(data instanceof ArrayBuffer) ||
-        data.byteLength <= 36 ||
-        data.byteLength > CHUNK_SIZE + 36
+        data.byteLength <= HEADER_SIZE ||
+        data.byteLength > MAX_CHUNK_SIZE + HEADER_SIZE
       ) {
         throw new Error("Invalid frame");
       }
-      const id = new TextDecoder().decode(new Uint8Array(data, 0, 36));
+      const id = new TextDecoder().decode(new Uint8Array(data, 0, HEADER_SIZE));
       if (!t || t.entry.id !== id) {
         return; // Unrequested or stale bytes are never retained.
       }
@@ -577,14 +631,15 @@ export default class FileTransferManager {
         t.entry.direction !== "incoming" ||
         !this.#receiveAllowed(peer.roomId, peer.userId) ||
         t.busy ||
-        t.pendingBytes + data.byteLength - 36 > RECEIVE_WINDOW ||
-        data.byteLength - 36 !== Math.min(CHUNK_SIZE, t.entry.size - t.received)
+        t.pendingBytes + data.byteLength - HEADER_SIZE > RECEIVE_WINDOW ||
+        data.byteLength - HEADER_SIZE !==
+          Math.min(t.chunkSize, t.entry.size - t.received)
       ) {
         throw new Error("Unexpected bytes or receive window exceeded");
       }
       // Explicit bounded queue, including the currently writing frame. Never
       // append peer-controlled chunks to an unbounded promise chain.
-      const chunk = data.slice(36);
+      const chunk = new Uint8Array(data, HEADER_SIZE);
       t.received += chunk.byteLength;
       t.pendingBytes += chunk.byteLength;
       t.queue.push(chunk);
@@ -603,7 +658,7 @@ export default class FileTransferManager {
     ) {
       throw new Error("Invalid control");
     }
-    const { type, id, name, size } = message;
+    const { type, id, name, size, chunkSize } = message;
     if (type === "offer") {
       if (!this.#withinOfferLimit(this.#incomingOffers, peer.userId)) {
         this.#control(peer, "reject", id);
@@ -619,12 +674,13 @@ export default class FileTransferManager {
         incomingCount >= 4 ||
         !this.#hasRoom() ||
         this.transfers.some((entry) => entry.id === id) ||
-        !this.#validMetadata(name, size)
+        !this.#validChunkSize(chunkSize) ||
+        !this.#validIncoming(peer, name, size)
       ) {
         this.#control(peer, "reject", id);
         return;
       }
-      this.#create(peer, id, name, size, "incoming");
+      this.#create(peer, id, name, size, "incoming", chunkSize);
       return;
     }
     if (!t || t.entry.id !== id) {
@@ -652,7 +708,7 @@ export default class FileTransferManager {
         message.offset > t.offset ||
         message.offset <= t.acknowledged ||
         (message.offset !== t.entry.size &&
-          message.offset % CHUNK_SIZE !== 0) ||
+          message.offset % t.chunkSize !== 0) ||
         t.sentComplete
       ) {
         throw new Error("Invalid receive acknowledgement");
@@ -685,6 +741,40 @@ export default class FileTransferManager {
     }
   }
 
+  // One disk write per chunk is the receive bottleneck on fast links, so
+  // whatever queued up behind the previous write goes out together.
+  #takeBatch(queue) {
+    let size = queue[0].byteLength;
+    let count = 1;
+    while (
+      count < queue.length &&
+      size + queue[count].byteLength <= WRITE_BATCH
+    ) {
+      size += queue[count++].byteLength;
+    }
+    const chunks = queue.splice(0, count);
+    if (count === 1) {
+      return chunks[0];
+    }
+    const batch = new Uint8Array(size);
+    let position = 0;
+    for (const chunk of chunks) {
+      batch.set(chunk, position);
+      position += chunk.byteLength;
+    }
+    return batch;
+  }
+
+  #drained(peer) {
+    return new Promise((resolve) => {
+      const timer = setTimeout(resolve, DRAIN_POLL_MS);
+      peer.drained = () => {
+        clearTimeout(timer);
+        resolve();
+      };
+    });
+  }
+
   async #write(t) {
     if (t.writing) {
       return;
@@ -692,7 +782,7 @@ export default class FileTransferManager {
     t.writing = true;
     try {
       while (this.#isActive(t) && t.queue.length) {
-        const chunk = t.queue.shift();
+        const chunk = this.#takeBatch(t.queue);
         await t.sink.write(chunk);
         if (!this.#isActive(t)) {
           return;
@@ -777,34 +867,50 @@ export default class FileTransferManager {
           this.#control(t.peer, "complete", t.entry.id);
           return;
         }
+        const length = Math.min(t.chunkSize, t.entry.size - t.offset);
         if (
-          t.offset === t.entry.size ||
-          t.offset - t.acknowledged >= RECEIVE_WINDOW
+          length === 0 ||
+          t.offset - t.acknowledged + length > RECEIVE_WINDOW
         ) {
           return;
         }
         if (t.peer.channel.bufferedAmount > HIGH_WATER) {
-          await new Promise((resolve) => setTimeout(resolve, 25));
+          await this.#drained(t.peer);
           continue;
         }
-        const bytes = await t.file
-          .slice(t.offset, t.offset + CHUNK_SIZE)
-          .arrayBuffer();
-        if (!this.#isActive(t)) {
-          return;
+        if (!t.buffer || t.bufferOffset === t.buffer.byteLength) {
+          // A whole number of chunks, so only the file's last frame is short.
+          const readSize =
+            t.chunkSize * Math.max(1, Math.floor(READ_AHEAD / t.chunkSize));
+          const end = Math.min(t.entry.size, t.offset + readSize);
+          const buffer = new Uint8Array(
+            await t.file.slice(t.offset, end).arrayBuffer()
+          );
+          if (!this.#isActive(t)) {
+            return;
+          }
+          if (
+            !this.#eligible(t.peer.roomId, t.peer.userId) ||
+            !this.#sendAllowed(t.peer.roomId, t.peer.userId)
+          ) {
+            this.cancel(t.entry.id);
+            return;
+          }
+          if (buffer.byteLength !== end - t.offset) {
+            throw new Error("File changed while sending");
+          }
+          t.buffer = buffer;
+          t.bufferOffset = 0;
         }
-        if (
-          !this.#eligible(t.peer.roomId, t.peer.userId) ||
-          !this.#sendAllowed(t.peer.roomId, t.peer.userId)
-        ) {
-          this.cancel(t.entry.id);
-          return;
-        }
-        const frame = new Uint8Array(36 + bytes.byteLength);
-        frame.set(new TextEncoder().encode(t.entry.id));
-        frame.set(new Uint8Array(bytes), 36);
+        const frame = new Uint8Array(HEADER_SIZE + length);
+        frame.set(t.header);
+        frame.set(
+          t.buffer.subarray(t.bufferOffset, t.bufferOffset + length),
+          HEADER_SIZE
+        );
+        t.bufferOffset += length;
         // Set the offset before sending: test transports may deliver immediately.
-        t.offset += bytes.byteLength;
+        t.offset += length;
         t.peer.channel.send(frame.buffer);
         this.#arm(t);
         // Continue only while the bounded receive window has space.

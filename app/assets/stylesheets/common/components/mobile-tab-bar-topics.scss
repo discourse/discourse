@@ -73,12 +73,30 @@ html.mobile-tab-bar-visible
   position: fixed;
   right: 0;
   left: 0;
-  justify-content: center;
+
+  // Centers the progress on the screen whatever outlets add beside it
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
   margin: 0;
+
+  > * {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  > #topic-progress-wrapper {
+    grid-column: 2;
+  }
   bottom: calc(
-    var(--footer-nav-height) + env(safe-area-inset-bottom) +
-      var(--composer-height, 0px) + var(--mobile-tab-bar-views-gap)
+    var(--mobile-tab-bar-current-height) +
+      var(--mobile-tab-bar-composer-offset) + var(--mobile-tab-bar-views-gap)
   );
+  transition: bottom 200ms ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 
   #topic-progress-wrapper {
     position: relative;

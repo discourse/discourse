@@ -694,8 +694,9 @@ html.mobile-tab-bar-visible .ai-bot-conversations-index {
     border-top: 1px solid var(--content-border-color);
   }
 
-  // Lets long titles trim to the row rather than widen it
-  .sidebar-section-link {
+  // Lets long titles trim to the row rather than widen it. Through the
+  // wrapper, to outweigh core's rounded links whichever loads last
+  .sidebar-section-link-wrapper .sidebar-section-link {
     min-width: 0;
     height: auto;
     min-height: 2.75rem;

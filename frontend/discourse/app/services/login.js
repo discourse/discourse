@@ -16,6 +16,14 @@ export default class LoginService extends Service {
     );
   }
 
+  get showInvitationGate() {
+    return (
+      this.siteSettings.invite_only &&
+      !this.siteSettings.enable_discourse_connect &&
+      this.isOnlyOneExternalLoginMethod
+    );
+  }
+
   get externalLoginMethods() {
     return findAll();
   }

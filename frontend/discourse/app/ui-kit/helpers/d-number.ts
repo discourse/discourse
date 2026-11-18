@@ -1,10 +1,38 @@
+/* eslint-disable prefer-const -- Preserve the original JavaScript emit for this types-only port. */
 import { trustHTML } from "@ember/template";
 import { number as numberFormatter } from "discourse/lib/formatter";
 import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
-export default function dNumber(orig, params = {}) {
-  orig = Math.round(parseFloat(orig));
+/**
+ * Renders a number in a span, shortened by the number formatter, with the full
+ * number as its title.
+ *
+ * @param orig - The number. Values that do not parse as a number count as 0.
+ * @param params - The options.
+ * @returns The span.
+ */
+export default function dNumber(
+  orig: number | string | null | undefined,
+  params: {
+    /** A translation key for the title, given the number and its count. */
+    numberKey?: string;
+
+    /** Classes added after `number`. */
+    class?: string;
+
+    /** Leaves out the title. */
+    noTitle?: boolean;
+
+    /** The largest number shown, with a `+` after it. */
+    maxDisplay?: number;
+
+    /** The aria label. */
+    ariaLabel?: string;
+  } = {}
+) {
+  // `parseFloat` converts any value to a string first.
+  orig = Math.round(parseFloat(orig as string));
   if (isNaN(orig)) {
     orig = 0;
   }
@@ -13,7 +41,8 @@ export default function dNumber(orig, params = {}) {
   if (params.numberKey) {
     title = i18n(params.numberKey, {
       number: title,
-      count: parseInt(orig, 10),
+      // `parseInt` converts any value to a string first.
+      count: parseInt(orig as unknown as string, 10),
     });
   }
 

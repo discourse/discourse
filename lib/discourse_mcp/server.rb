@@ -271,6 +271,8 @@ module DiscourseMcp
       complete_result(**result.symbolize_keys)
     rescue ActiveRecord::RecordInvalid => error
       raise ToolError, error.record.errors.full_messages.join(", ")
+    rescue ActiveRecord::RecordNotSaved => error
+      raise ToolError, error.message
     rescue Discourse::InvalidParameters
       raise ToolError, "The operation parameters are invalid"
     end
