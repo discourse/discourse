@@ -558,11 +558,19 @@ module("Integration | Component | SiteSetting", function (hooks) {
     });
 
     assert.dom(".form-kit__control-password").doesNotExist();
+    assert
+      .dom(".value[data-index='0'] .secret")
+      .hasAttribute("type", "password");
     assert.dom(".new-value-input.secret").hasAttribute("type", "password");
 
-    await click(".form-kit__field .setting-toggle-secret");
+    await click(".value[data-index='0'] .secret-value-list__reveal");
 
-    assert.dom(".new-value-input.secret").hasAttribute("type", "text");
+    assert
+      .dom(".value[data-index='0'] .secret")
+      .hasAttribute("type", "text", "the toggle reveals its own row");
+    assert
+      .dom(".new-value-input.secret")
+      .hasAttribute("type", "password", "other rows stay masked");
 
     await click(".form-kit__field .add-value-btn");
 
