@@ -1000,6 +1000,40 @@ CREATE TABLE public.ai_posts_embeddings (
 
 
 --
+-- Name: ai_reviewable_suggestions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_reviewable_suggestions (
+    id bigint NOT NULL,
+    reviewable_id bigint NOT NULL,
+    decision_model_id bigint NOT NULL,
+    action_name character varying NOT NULL,
+    confidence double precision NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_reviewable_suggestions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_reviewable_suggestions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_reviewable_suggestions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_reviewable_suggestions_id_seq OWNED BY public.ai_reviewable_suggestions.id;
+
+
+--
 -- Name: ai_secrets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14519,6 +14553,13 @@ ALTER TABLE ONLY public.ai_post_image_captions ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: ai_reviewable_suggestions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_reviewable_suggestions ALTER COLUMN id SET DEFAULT nextval('public.ai_reviewable_suggestions_id_seq'::regclass);
+
+
+--
 -- Name: ai_secrets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17111,6 +17152,14 @@ ALTER TABLE ONLY public.ai_moderation_settings
 
 ALTER TABLE ONLY public.ai_post_image_captions
     ADD CONSTRAINT ai_post_image_captions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_reviewable_suggestions ai_reviewable_suggestions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_reviewable_suggestions
+    ADD CONSTRAINT ai_reviewable_suggestions_pkey PRIMARY KEY (id);
 
 
 --
@@ -21547,6 +21596,13 @@ CREATE UNIQUE INDEX index_ai_moderation_settings_on_setting_type ON public.ai_mo
 --
 
 CREATE UNIQUE INDEX index_ai_posts_embeddings_on_model_strategy_post ON public.ai_posts_embeddings USING btree (model_id, strategy_id, post_id);
+
+
+--
+-- Name: index_ai_reviewable_suggestions_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_reviewable_suggestions_on_reviewable_id ON public.ai_reviewable_suggestions USING btree (reviewable_id);
 
 
 --
@@ -26609,6 +26665,14 @@ ALTER TABLE ONLY public.user_profiles
 
 
 --
+-- Name: ai_reviewable_suggestions fk_rails_d1e9158c31; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_reviewable_suggestions
+    ADD CONSTRAINT fk_rails_d1e9158c31 FOREIGN KEY (reviewable_id) REFERENCES public.reviewables(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ask_ai_report_subject_asks fk_rails_e54eb07de5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -26664,6 +26728,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261117234001'),
+('20261117200926'),
 ('20261113163304'),
 ('20261113130002'),
 ('20261113090951'),

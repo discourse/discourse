@@ -587,6 +587,15 @@ en:
             automation: "Automation"
             agents: "Agents"
 
+        review_queue:
+          name: "Review queue suggestions"
+          description: "Uses a decision model to suggest staff actions for new review items"
+          add_model: "Add a decision model"
+          no_models: "Add a decision model to start generating review queue suggestions."
+          reviewable_action: "Suggest a review action"
+          setting_groups:
+            settings: "Settings"
+
         image_caption:
           name: "Image Caption"
           description: "Generates AI captions for post images and makes them available to readers and assistive technology"
