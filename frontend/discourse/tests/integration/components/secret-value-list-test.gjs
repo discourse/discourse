@@ -1,5 +1,12 @@
 import { tracked } from "@glimmer/tracking";
-import { blur, click, fillIn, focus, render } from "@ember/test-helpers";
+import {
+  blur,
+  click,
+  fillIn,
+  focus,
+  render,
+  settled,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SecretValueList from "discourse/admin/components/secret-value-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -211,6 +218,41 @@ module("Integration | Component | SecretValueList", function (hooks) {
 
     assert
       .dom(firstSecret)
-      .hasAttribute("type", "password", "masks every row after a removal");
+      .hasAttribute(
+        "type",
+        "password",
+        "a removed row's reveal is not inherited"
+      );
+  });
+
+  test("a reveal follows its entry when the values are restored", async function (assert) {
+    const original = "firstKey|FirstValue\nsecondKey|secondValue";
+    const values = tracked(original);
+    const setValidationMessage = () => {};
+    const changeValueCallback = (newValues) => (values.value = newValues);
+
+    await render(
+      <template>
+        <SecretValueList
+          @changeValueCallback={{changeValueCallback}}
+          @isSecret={{true}}
+          @setValidationMessage={{setValidationMessage}}
+          @values={{values.value}}
+        />
+      </template>
+    );
+
+    await click(".values .value[data-index='0'] .remove-value-btn");
+    await click(".value[data-index='0'] .secret-value-list__reveal");
+
+    values.value = original;
+    await settled();
+
+    assert
+      .dom(".value[data-index='0'] .secret")
+      .hasAttribute("type", "password", "the restored entry stays masked");
+    assert
+      .dom(".value[data-index='1'] .secret")
+      .hasAttribute("type", "text", "the revealed entry stays revealed");
   });
 });

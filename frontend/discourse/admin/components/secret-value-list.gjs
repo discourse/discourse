@@ -12,7 +12,7 @@ import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 const INPUT_DELIMITER = "\n";
-const NEW_ENTRY = "new";
+const NEW_ENTRY = Symbol("new entry");
 
 const RevealToggle = <template>
   <DButton
@@ -72,7 +72,7 @@ export default class SecretValueList extends Component {
 
   @action
   removeValue(value) {
-    this.#revealedEntries.clear();
+    this.#revealedEntries.delete(value.key);
     this.#removeValue(value);
   }
 
@@ -179,14 +179,14 @@ export default class SecretValueList extends Component {
               />
               <Input
                 class="value-input secret"
-                @type={{if (this.isMasked index) "password" "text"}}
+                @type={{if (this.isMasked value.key) "password" "text"}}
                 @value={{value.secret}}
                 {{on "focusout" (fn this.changeSecret index)}}
               />
               {{#if @isSecret}}
                 <RevealToggle
-                  @masked={{this.isMasked index}}
-                  @onToggle={{fn this.toggleReveal index}}
+                  @masked={{this.isMasked value.key}}
+                  @onToggle={{fn this.toggleReveal value.key}}
                 />
               {{/if}}
             </div>
