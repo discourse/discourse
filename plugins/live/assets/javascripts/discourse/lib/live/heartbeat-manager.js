@@ -13,11 +13,21 @@ export default class HeartbeatManager {
   #isActiveRoom;
   #buildPayload;
   #onExpelled;
+  #intervalMs;
+  #timeoutMs;
 
-  constructor({ isActiveRoom, buildPayload, onExpelled }) {
+  constructor({
+    isActiveRoom,
+    buildPayload,
+    onExpelled,
+    intervalMs = HEARTBEAT_INTERVAL_MS,
+    timeoutMs = intervalMs,
+  }) {
     this.#isActiveRoom = isActiveRoom;
     this.#buildPayload = buildPayload;
     this.#onExpelled = onExpelled;
+    this.#intervalMs = intervalMs;
+    this.#timeoutMs = timeoutMs;
   }
 
   start(roomId) {
@@ -25,7 +35,7 @@ export default class HeartbeatManager {
       return;
     }
 
-    const timer = setInterval(() => this.#beat(roomId), HEARTBEAT_INTERVAL_MS);
+    const timer = setInterval(() => this.#beat(roomId), this.#intervalMs);
     this.#timers.set(roomId, timer);
   }
 
@@ -62,6 +72,12 @@ export default class HeartbeatManager {
       await ajax(`/live/rooms/${roomId}/heartbeat`, {
         type: "POST",
         data: this.#buildPayload(roomId),
+        // A beat that never reaches the server (offline, connection reset,
+        // stalled socket) must still settle: `ajax` leaves unsent requests
+        // pending by default, which would hold the in-flight guard and
+        // silence every later beat for the rest of the call.
+        ignoreUnsent: false,
+        timeout: this.#timeoutMs,
       });
 
       liveLog.info(`[live] heartbeat sent for room ${roomId}`);
