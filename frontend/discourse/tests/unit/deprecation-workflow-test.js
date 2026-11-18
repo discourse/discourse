@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import DeprecationWorkflow, {
   DiscourseDeprecationWorkflow,
 } from "discourse/deprecation-workflow";
+import * as environment from "discourse/lib/environment";
 
 module("Unit | deprecation-workflow", function (hooks) {
   setupTest(hooks);
@@ -454,7 +455,7 @@ module("Unit | deprecation-workflow", function (hooks) {
     const ID = "discourse.select-kit-rollout.modify-class";
 
     nestedHooks.afterEach(function () {
-      DeprecationWorkflow.setEnvironment(undefined);
+      DeprecationWorkflow.setEnvironment(environment);
     });
 
     test("throws in development", function (assert) {
@@ -490,7 +491,7 @@ module("Unit | deprecation-workflow", function (hooks) {
     const ID = "discourse.select-kit-rollout.legacy-render";
 
     nestedHooks.afterEach(function () {
-      DeprecationWorkflow.setEnvironment(undefined);
+      DeprecationWorkflow.setEnvironment(environment);
     });
 
     test("logs in development without throwing", function (assert) {
@@ -517,7 +518,7 @@ module("Unit | deprecation-workflow", function (hooks) {
     ];
 
     nestedHooks.afterEach(function () {
-      DeprecationWorkflow.setEnvironment(undefined);
+      DeprecationWorkflow.setEnvironment(environment);
     });
 
     test("are reported in every environment, without notifying admins", function (assert) {

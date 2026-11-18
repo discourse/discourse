@@ -9,6 +9,7 @@ import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { _INTERNAL_SOURCE_KEY, apiInitializer } from "discourse/lib/api";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
+import * as environment from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MIGRATED_SELECT_KIT_MODULES } from "discourse/lib/select-kit-modify-class-deprecation";
 import selectKitCompatModules from "discourse/select-kit/compat-modules";
@@ -418,7 +419,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
         MIGRATED_SELECT_KIT_MODULES.add(path)
       );
       STATIC_KEYS.forEach((key) => delete ComboBox[key]);
-      DeprecationWorkflow.setEnvironment(undefined);
+      DeprecationWorkflow.setEnvironment(environment);
       enableRaiseOnDeprecation();
     });
 
