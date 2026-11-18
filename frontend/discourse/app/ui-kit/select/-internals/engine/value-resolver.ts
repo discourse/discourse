@@ -1,6 +1,7 @@
 import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
+import { next } from "@ember/runloop";
 import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectId,
@@ -555,16 +556,16 @@ export default class ValueResolver {
   }
 
   /**
-   * Advances the revision once the code that wrote an outcome has finished, outside any render
-   * or tracked computation. A reader that rendered before the outcome was written, such as the
-   * root's unresolved marker, then sees it, as it would an async answer.
+   * Advances the revision in the next run loop, so the write never lands inside the render or
+   * tracked computation that wrote the outcome. A reader that rendered before the outcome was
+   * written, such as the root's unresolved marker, then sees it, as it would an async answer.
    */
   #advanceLater(): void {
     if (this.#advanceScheduled) {
       return;
     }
     this.#advanceScheduled = true;
-    queueMicrotask(() => {
+    next(() => {
       this.#advanceScheduled = false;
       this.#revision.value++;
     });
