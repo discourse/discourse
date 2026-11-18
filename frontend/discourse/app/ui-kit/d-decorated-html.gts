@@ -3,7 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { untrack } from "@glimmer/validator";
 import { trackedArray } from "@ember/reactive/collections";
 import { cancel, next } from "@ember/runloop";
-import { isHTMLSafe, trustHTML } from "@ember/template";
+import { isHTMLSafe, type TrustedHTML, trustHTML } from "@ember/template";
+import type { ComponentLike, HelperLike } from "@glint/template";
 import helperFn from "discourse/helpers/helper-fn";
 import {
   isProduction,
@@ -14,8 +15,28 @@ import { manuallyTrack } from "discourse/lib/tracked-tools";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
-/** @type {Symbol} Default decorator type used when no specific type is provided */
-export const NON_STREAM_HTML_DECORATOR = Symbol("non-stream");
+/** Default decorator type used when no specific type is provided */
+export const NON_STREAM_HTML_DECORATOR: unique symbol = Symbol("non-stream");
+
+/** The type a decorator is registered under, such as `NON_STREAM_HTML_DECORATOR`. */
+export type HtmlDecoratorType = symbol | string;
+
+/**
+ * A function that decorates an element. It can return a cleanup function, which
+ * `applyHtmlDecorators` collects.
+ */
+export type HtmlDecorator = (
+  element: HTMLElement,
+  helper: DecorateHtmlHelper | typeof NULL_HELPER
+) => unknown;
+
+/** A component that `helper.renderGlimmer` queued to render into an element. */
+interface RenderGlimmerInfo {
+  element: Element;
+  component: ComponentLike<{ Args: { data: unknown } }>;
+  data: unknown;
+  append: boolean;
+}
 
 /** Helper object for contexts without a post/model. Use with `applyHtmlDecorators`. */
 export const NULL_HELPER = Object.freeze({
@@ -28,70 +49,125 @@ export const NULL_HELPER = Object.freeze({
   },
 });
 
-/** @type {Object.<Symbol|string, Function[]>} Storage for HTML decorators organized by type */
-let htmlDecorators = {};
+/** Storage for HTML decorators organized by type */
+let htmlDecorators: Record<HtmlDecoratorType, HtmlDecorator[]> = {};
 
 /**
  * Gets or initializes an array of HTML decorators for a specific type
  *
- * @param {Symbol|string} [type] - The decorator type to get decorators for. If not provided,
- *                                defaults to NON_STREAM_HTML_DECORATOR
- * @returns {Function[]} An array of decorator functions for the specified type
+ * @param type - The decorator type to get decorators for. If not provided,
+ *               defaults to NON_STREAM_HTML_DECORATOR
+ * @returns An array of decorator functions for the specified type
  * @example
  * const decorators = getHtmlDecoratorsForType(myDecoratorType);
  * // Returns existing decorators array or initializes a new one
  */
-function getHtmlDecoratorsForType(type) {
+function getHtmlDecoratorsForType(type?: HtmlDecoratorType) {
   return (htmlDecorators[type ?? NON_STREAM_HTML_DECORATOR] ||= []);
 }
 
 /**
  * Registers a new HTML decorator function for a specific type of decoration.
  *
- * @param {Function} decorator - The decorator function to register. It receives two parameters:
- *                              1. element: HTMLElement to be decorated
- *                              2. options: Object containing decoration options
- *                              The decorator can optionally return a cleanup function.
- * @param {Symbol|string} [type=NON_STREAM_HTML_DECORATOR] - The type of decorator to register.
- *                                                       When not provided, defaults to NON_STREAM_HTML_DECORATOR (non-stream).
- * @returns {void}
+ * @param decorator - The decorator function to register. It receives two parameters:
+ *                    1. element: HTMLElement to be decorated
+ *                    2. options: Object containing decoration options
+ *                    The decorator can optionally return a cleanup function.
+ * @param type - The type of decorator to register.
+ *               When not provided, defaults to NON_STREAM_HTML_DECORATOR (non-stream).
  * @example
+ * ```js
  * registerHtmlDecorator((element, options) => {
  *   element.classList.add('decorated');
  *   return () => element.classList.remove('decorated'); // Cleanup function
  * });
+ * ```
  */
-export function registerHtmlDecorator(decorator, type) {
+export function registerHtmlDecorator(
+  decorator: HtmlDecorator,
+  type?: HtmlDecoratorType
+) {
   getHtmlDecoratorsForType(type).push(decorator);
 }
 
 /**
  * Applies registered HTML decorators to a DOM element and returns their cleanup functions.
  *
- * @param {HTMLElement} element - The DOM element to apply decorators to
- * @param {DecorateHtmlHelper | typeof NULL_HELPER} helper - Helper object passed to each decorator. Use NULL_HELPER for contexts without a model.
- * @param {Symbol|string} [type=NON_STREAM_HTML_DECORATOR] - The type of decorators to apply.
- * @returns {Function[]} Array of cleanup functions from decorators that returned them.
+ * @param element - The DOM element to apply decorators to
+ * @param helper - Helper object passed to each decorator. Use NULL_HELPER for contexts without a model.
+ * @param type - The type of decorators to apply. Defaults to NON_STREAM_HTML_DECORATOR.
+ * @returns Array of cleanup functions from decorators that returned them.
  */
-export function applyHtmlDecorators(element, helper, type) {
+export function applyHtmlDecorators(
+  element: HTMLElement,
+  helper: DecorateHtmlHelper | typeof NULL_HELPER,
+  type?: HtmlDecoratorType
+) {
   return getHtmlDecoratorsForType(type)
     .map((decorator) => {
       return decorator(element, helper);
     })
-    .filter((fn) => typeof fn === "function");
+    .filter((fn): fn is () => void => typeof fn === "function");
 }
 
 /**
  * Clears all registered HTML decorators
  *
  * USE ONLY FOR TESTING PURPOSES
- *
- * @returns {void}
  */
 export function resetHtmlDecorators() {
   if (isTesting()) {
     htmlDecorators = {};
   }
+}
+
+/** The named arguments of the `decoratedContent` helper. */
+interface DecoratedContentArgs {
+  decorateArgs?: Record<string, unknown>;
+}
+
+/**
+ * TODO(typescript-pending): helperFn returns an untyped Helper class; drop the cast
+ * when helperFn takes a typed callback.
+ */
+type DecoratedContentHelper = HelperLike<{
+  Args: { Named: DecoratedContentArgs };
+  Return: HTMLDivElement;
+}>;
+
+interface DDecoratedHtmlSignature {
+  Args: {
+    /** The HTML content to render. It must be wrapped with `trustHTML`. */
+    html?: TrustedHTML | null;
+
+    /**
+     * A custom decorator function. When provided, you're responsible for calling
+     * `applyHtmlDecorators` if needed.
+     */
+    decorate?: (
+      element: HTMLElement,
+      helper: DecorateHtmlHelper,
+      decorateArgs: Record<string, unknown> | undefined
+    ) => void;
+
+    /** Additional arguments passed to the decorate function. Changing them re-renders. */
+    decorateArgs?: Record<string, unknown>;
+
+    /** A model object, such as a post, passed to decorators as `helper.model`. */
+    model?: unknown;
+
+    /** A context object passed to decorators as `helper.context`. */
+    context?: unknown;
+
+    /** A CSS class name for the wrapper div. */
+    className?: string;
+
+    /** The id attribute of the wrapper div. */
+    id?: string;
+
+    /** Whether to defer replacing the content until a pointer activation finishes. */
+    preservePointerTarget?: boolean;
+  };
 }
 
 /**
@@ -100,21 +176,10 @@ export function resetHtmlDecorators() {
  * When no custom `@decorate` function is provided, registered HTML decorators
  * (via `api.decorateCookedElement`) are automatically applied. This handles
  * common cases like hashtag icons, mentions, and other cooked content decorations.
- *
- * @component DecoratedHtml
- * @param {SafeString} html - The HTML content to render (must be wrapped with htmlSafe)
- * @param {Function} [decorate] - Custom decorator function receiving (element, helper, decorateArgs).
- *                                When provided, you're responsible for calling applyHtmlDecorators if needed.
- * @param {Object} [decorateArgs] - Additional arguments passed to the decorate function
- * @param {Object} [model] - Model object (e.g., post) passed to decorators via helper.model
- * @param {Object} [context] - Context object passed to decorators via helper.context
- * @param {string} [className] - CSS class name for the wrapper div
- * @param {string} [id] - ID attribute for the wrapper div
- * @param {boolean} [preservePointerTarget] - Defer replacement until a pointer activation finishes.
  */
-export default class DDecoratedHtml extends Component {
-  renderGlimmerInfos = trackedArray();
-  decoratedContent = helperFn(({ decorateArgs }) => {
+export default class DDecoratedHtml extends Component<DDecoratedHtmlSignature> {
+  renderGlimmerInfos = trackedArray<RenderGlimmerInfo>();
+  decoratedContent = helperFn(({ decorateArgs }: DecoratedContentArgs) => {
     // Releasing a deferred render must consume the latest arguments.
     manuallyTrack(this._pointerRevision);
     if (this.#pressedElement) {
@@ -163,12 +228,12 @@ export default class DDecoratedHtml extends Component {
     document.adoptNode(cookedDiv);
 
     return cookedDiv;
-  });
-  #htmlHelper;
+  }) as unknown as DecoratedContentHelper;
+  #htmlHelper: DecorateHtmlHelper | undefined;
   #renderDeferred = false;
-  #pressedElement;
-  #pointerListeners;
-  #pointerReleaseTimer;
+  #pressedElement: HTMLDivElement | undefined;
+  #pointerListeners: AbortController | undefined;
+  #pointerReleaseTimer: ReturnType<typeof next> | undefined;
   #releasePointer = () => {
     cancel(this.#pointerReleaseTimer);
     this.#pointerReleaseTimer = undefined;
@@ -183,7 +248,7 @@ export default class DDecoratedHtml extends Component {
   @tracked _pointerRevision = 0;
 
   willDestroy() {
-    super.willDestroy(...arguments);
+    super.willDestroy();
     this.#releasePointer();
     this.#htmlHelper?.teardown();
     this.#htmlHelper = undefined;
@@ -221,11 +286,10 @@ export default class DDecoratedHtml extends Component {
    * This is used to ensure components added using `renderGlimmer` are only rendered in the same document, preventing
    * rendering errors that otherwise would crash the application.
    *
-   * @param {Object} info - Object containing element information
-   * @param {Element} info.element - The DOM element to check
-   * @returns {boolean} True if element belongs to current document, false otherwise
+   * @param info - Object containing element information, including the DOM element to check
+   * @returns True if element belongs to current document, false otherwise
    */
-  isElementInDocument(info) {
+  isElementInDocument(info: RenderGlimmerInfo) {
     const result = info.element.ownerDocument === document;
 
     if (!isProduction() && !result) {
@@ -240,7 +304,7 @@ export default class DDecoratedHtml extends Component {
     return result;
   }
 
-  #holdElement(event, element) {
+  #holdElement(event: PointerEvent, element: HTMLDivElement) {
     if (event.button !== 0 || event.isPrimary === false) {
       return;
     }
@@ -248,7 +312,7 @@ export default class DDecoratedHtml extends Component {
     this.#pressedElement = element;
     this.#pointerListeners = new AbortController();
     const options = { capture: true, signal: this.#pointerListeners.signal };
-    const afterClick = (releaseEvent) => {
+    const afterClick = (releaseEvent: PointerEvent) => {
       if (releaseEvent.pointerId !== event.pointerId) {
         return;
       }
@@ -301,11 +365,19 @@ export default class DDecoratedHtml extends Component {
 }
 
 class DecorateHtmlHelper {
-  #renderGlimmerInfos;
-  #model;
-  #context;
+  #renderGlimmerInfos: RenderGlimmerInfo[];
+  #model: unknown;
+  #context: unknown;
 
-  constructor({ renderGlimmerInfos, model, context }) {
+  constructor({
+    renderGlimmerInfos,
+    model,
+    context,
+  }: {
+    renderGlimmerInfos: RenderGlimmerInfo[];
+    model: unknown;
+    context: unknown;
+  }) {
     this.#renderGlimmerInfos = renderGlimmerInfos;
     this.#model = model;
     this.#context = context;
@@ -323,29 +395,32 @@ class DecorateHtmlHelper {
    * Renders a Glimmer component into a specified target HTML element with provided data.
    * Handles deprecation warnings if invalid parameters are passed.
    *
-   * @template T
-   * @param {Element} targetElement The HTML element where the Glimmer component should be rendered. Must be a valid DOM element.
-   * @param {import("@glint/template").ComponentLike<{ Args: { data: T } }>} component The Glimmer component object to render. Should not have a name of "factory" to avoid deprecation warnings.
-   * @param {T} [data] The data to be passed to the Glimmer component as `@data`.
-   * @param {{ append?: boolean }} [opts={}] Additional options for rendering. Supports an `append` boolean property that defaults to `true` to determine if the content should be appended to the target element.
-   * @return {void}
+   * @param targetElement - The HTML element where the Glimmer component should be rendered. Must be a valid DOM element.
+   * @param component - The Glimmer component object to render. Should not have a name of "factory" to avoid deprecation warnings.
+   * @param data - The data to be passed to the Glimmer component as `@data`.
+   * @param opts - Additional options for rendering. Supports an `append` boolean property that defaults to `true` to determine if the content should be appended to the target element.
    */
-  renderGlimmer(targetElement, component, data, opts = {}) {
+  renderGlimmer<T>(
+    targetElement: Element,
+    component: ComponentLike<{ Args: { data: T } }>,
+    data?: T,
+    opts: { append?: boolean } = {}
+  ) {
     if (!(targetElement instanceof Element)) {
       throw new Error(
         "Invalid `targetElement` passed to `helper.renderGlimmer`. `targetElement` must be a valid HTML element."
       );
     }
 
-    if (component.name === "factory") {
+    if ((component as { name?: string }).name === "factory") {
       throw new Error(
         "Invalid `component` passed to `helper.renderGlimmer`. `component` must be a valid Glimmer component. If using a template compiled via ember-cli-htmlbars, replace it with the `<template>...</template>` syntax."
       );
     }
 
-    const info = {
+    const info: RenderGlimmerInfo = {
       element: targetElement,
-      component,
+      component: component as RenderGlimmerInfo["component"],
       data,
       append: opts.append ?? true,
     };

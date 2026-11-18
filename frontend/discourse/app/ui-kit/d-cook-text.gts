@@ -1,21 +1,52 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import type { TrustedHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { cook } from "discourse/lib/text";
 
-export default class DCookText extends Component {
-  @service siteSettings;
+/** The site settings this component reads. */
+type SiteSettings = {
+  max_oneboxes_per_post: number;
+  secure_uploads: boolean;
+};
 
-  /** @type {import("@ember/template").TrustedHTML | null} */
-  @tracked cooked = null;
+interface DCookTextSignature {
+  Args: {
+    /** The Markdown to cook and render. It is cooked again whenever it changes. */
+    rawText: string;
 
-  constructor(owner, args) {
+    /** Whether to load the oneboxes in the cooked text. */
+    paintOneboxes?: boolean;
+
+    /** The id of the topic the text belongs to, sent with onebox requests. */
+    topicId?: number;
+
+    /** The id of the category the text belongs to, sent with onebox requests. */
+    categoryId?: number;
+
+    /** Options for resolving the short upload URLs in the cooked text. */
+    opts?: object;
+
+    /** Called with the height of the rendered text, in pixels, after it is cooked. */
+    onOffsetHeightCalculated?: (offsetHeight: number | undefined) => void;
+  };
+
+  Element: HTMLDivElement;
+}
+
+export default class DCookText extends Component<DCookTextSignature> {
+  @service declare siteSettings: SiteSettings;
+
+  @tracked cooked: TrustedHTML | null = null;
+
+  constructor(owner: Owner, args: DCookTextSignature["Args"]) {
     super(owner, args);
     this.loadCookedText();
   }
@@ -34,7 +65,7 @@ export default class DCookText extends Component {
   }
 
   @action
-  calculateOffsetHeight(element) {
+  calculateOffsetHeight(element: HTMLElement | undefined) {
     if (!this.args.onOffsetHeightCalculated) {
       return;
     }
@@ -43,7 +74,7 @@ export default class DCookText extends Component {
   }
 
   @action
-  buildOneboxes(element) {
+  buildOneboxes(element: HTMLElement) {
     if (this.args.paintOneboxes && this.cooked !== null) {
       loadOneboxes(
         element,
@@ -57,7 +88,7 @@ export default class DCookText extends Component {
   }
 
   @action
-  resolveShortUrls(element) {
+  resolveShortUrls(element: HTMLElement) {
     resolveAllShortUrls(ajax, this.siteSettings, element, this.args.opts);
   }
 
