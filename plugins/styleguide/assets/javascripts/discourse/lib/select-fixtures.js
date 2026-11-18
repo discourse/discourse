@@ -525,7 +525,10 @@ export function notificationLevels(onManage) {
     level("tracking", "d-tracking"),
     level("watching", "d-watching"),
     level("mentions", "at", { disabled: true }),
-    level("manage", "gear", { onSelect: onManage }),
+    selectOption(
+      { level: "manage", title: t("manage") },
+      { description: t("manage_description"), icon: "gear", onSelect: onManage }
+    ),
   ];
 }
 

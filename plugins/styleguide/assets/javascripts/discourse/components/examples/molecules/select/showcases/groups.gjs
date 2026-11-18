@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import { USER_GROUPS } from "../../../../../lib/select-fixtures.js";
@@ -24,6 +23,7 @@ export default class GroupsSelectExample extends Component {
 
   <template>
     <DSelect
+      @iconField="icon"
       @identifier="sg-groups"
       @labelField="fullName"
       @multiple={{true}}
@@ -38,7 +38,6 @@ export default class GroupsSelectExample extends Component {
     >
       <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dIcon option.record.icon}}
           <span class="select-examples__primary">{{option.label}}</span>
           {{#if option.record.automatic}}
             <span class="select-showcases__pill">

@@ -63,7 +63,7 @@ export default class ReviewersSelectExample extends Component {
 
       <:unresolved as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{option.label}}
+          {{option.record.name}}
         </span>
       </:unresolved>
 

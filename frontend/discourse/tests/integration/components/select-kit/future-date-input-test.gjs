@@ -271,6 +271,55 @@ module(
           .includesText(formatTime(this.shortcuts.tomorrow()));
       });
 
+      test("draws each shortcut's icon once, before its name", async function (assert) {
+        await render(<template><DFutureDateInput /></template>);
+        await dSelect(".future-date-input .d-select").open();
+
+        const row = document.querySelector(
+          "[role='option'][data-value='tomorrow']"
+        );
+        assert.strictEqual(
+          row.querySelectorAll(".d-icon").length,
+          1,
+          "the row draws one icon"
+        );
+        assert
+          .dom(row.querySelector(".d-icon"))
+          .hasClass("d-icon-calendar-day", "it is the shortcut's icon");
+        assert.true(
+          row.innerHTML.indexOf("d-icon-calendar-day") <
+            row.innerHTML.indexOf(i18n("time_shortcut.tomorrow")),
+          "the icon comes before the name"
+        );
+        assert
+          .dom("[role='option'][data-value='custom'] .d-icon")
+          .exists({ count: 1 }, "Custom has its own icon");
+      });
+
+      test("shows the held shortcut's icon in the trigger until a term is typed", async function (assert) {
+        await render(
+          <template>
+            <DFutureDateInput />
+            <button class="elsewhere" type="button">Elsewhere</button>
+          </template>
+        );
+        const trigger = ".future-date-input .d-select__trigger";
+        assert
+          .dom(`${trigger} .d-icon:not(.d-select__caret)`)
+          .doesNotExist("nothing held, no icon besides the caret");
+
+        await dSelect(".future-date-input .d-select").select("tomorrow");
+        await click(".elsewhere");
+        assert
+          .dom(`${trigger} .d-icon-calendar-day`)
+          .exists({ count: 1 }, "the held shortcut's icon is drawn once");
+
+        await fillIn(`${trigger} [role='combobox']`, "two");
+        assert
+          .dom(`${trigger} .d-icon-calendar-day`)
+          .doesNotExist("a typed term replaces the held icon");
+      });
+
       test("right-aligns the held date in the trigger", async function (assert) {
         await render(
           <template>

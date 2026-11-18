@@ -20,7 +20,6 @@ import { removeAccents } from "discourse/lib/utilities";
 import FutureDateInputSelector from "discourse/select-kit/components/future-date-input-selector";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -69,21 +68,6 @@ export default class DFutureDateInput extends Component {
   @computed("includeDateTime", "isCustom")
   get displayDateAndTimePicker() {
     return this.includeDateTime && this.isCustom;
-  }
-
-  @computed("shortcuts", "selection")
-  get heldIcon() {
-    return this.shortcuts.find((shortcut) => shortcut.id === this.selection)
-      ?.icon;
-  }
-
-  @computed("shortcuts")
-  get shortcutOptions() {
-    return this.shortcuts.map((shortcut) =>
-      shortcut.timeFormatted
-        ? selectOption(shortcut, { description: shortcut.timeFormatted })
-        : shortcut
-    );
   }
 
   @computed("_date")
@@ -224,11 +208,12 @@ export default class DFutureDateInput extends Component {
               class="future-date-input__select"
               @ariaLabelledBy={{if this.displayLabel this.labelId}}
               @clearable={{this.clearable}}
+              @descriptionField="timeFormatted"
               @filterBy={{this.filterShortcut}}
-              @icon={{this.heldIcon}}
+              @iconField="icon"
               @identifier="future-date-input"
               @onChange={{this.onChangeShortcut}}
-              @options={{this.shortcutOptions}}
+              @options={{this.shortcuts}}
               @texts={{hash
                 ariaLabel=this.ariaLabel
                 placeholder=(i18n "time_shortcut.select_timeframe")
@@ -238,22 +223,14 @@ export default class DFutureDateInput extends Component {
             >
               <:selection as |option|>
                 <span class="future-date-input__selection">
-                  {{option.record.name}}
-                  {{#if option.record.timeFormatted}}
+                  {{option.label}}
+                  {{#if option.description}}
                     <span class="future-date-input__selection-date">
-                      {{option.record.timeFormatted}}
+                      {{option.description}}
                     </span>
                   {{/if}}
                 </span>
               </:selection>
-              <:option as |option|>
-                <span class="future-date-input__option">
-                  {{#if option.record.icon}}
-                    {{dIcon option.record.icon}}
-                  {{/if}}
-                  {{option.record.name}}
-                </span>
-              </:option>
             </DSelect>
           {{else}}
             {{! TODO (select-kit-replacement-cleanup) }}

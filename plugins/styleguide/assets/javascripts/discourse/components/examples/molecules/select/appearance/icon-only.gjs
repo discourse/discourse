@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
@@ -42,6 +41,7 @@ export default class IconOnlySelectExample extends Component {
     <div class="select-examples__alignment">
       <DSelect
         @icon={{this.icon}}
+        @iconField="icon"
         @iconOnly={{true}}
         @identifier="sg-icon-only"
         @onChange={{this.onChange}}
@@ -51,14 +51,7 @@ export default class IconOnlySelectExample extends Component {
         }}
         @value={{this.value}}
         @variant="static"
-      >
-        <:option as |option|>
-          <span class="select-examples__row select-examples__row--glyph">
-            {{dIcon option.record.icon}}
-            <span class="select-examples__primary">{{option.label}}</span>
-          </span>
-        </:option>
-      </DSelect>
+      />
       <p
         class="select-examples__aligned --{{this.value}}"
         data-alignment={{this.value}}

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { USER_GROUPS } from "../../../../../lib/select-fixtures.js";
 
@@ -15,25 +14,13 @@ export default class ChipIconsSelectExample extends Component {
 
   <template>
     <DSelect
+      @iconField="icon"
       @identifier="sg-chip-icons"
       @labelField="fullName"
       @multiple={{true}}
       @onChange={{this.onChange}}
       @options={{USER_GROUPS}}
       @value={{this.value}}
-    >
-      <:option as |option|>
-        <span class="select-examples__row">
-          {{dIcon option.record.icon}}
-          <span class="select-examples__primary">{{option.label}}</span>
-        </span>
-      </:option>
-      <:selection as |option|>
-        <span class="select-examples__chip">
-          {{dIcon option.record.icon}}
-          {{option.label}}
-        </span>
-      </:selection>
-    </DSelect>
+    />
   </template>
 }

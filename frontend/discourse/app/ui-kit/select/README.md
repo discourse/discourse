@@ -66,9 +66,13 @@ const options = [
 
 An option's settings are what it does beyond standing for its record:
 
+- `label`: the option's name, in place of the record's `@labelField`. `""` names it nothing.
+- `icon`: a glyph drawn before the option's name, in place of the record's `@iconField`. `""`
+  draws none.
 - `disabled`: the option is listed and reachable with the arrow keys, but can't be picked.
 - `description`: secondary text drawn under the option's name and referenced through
-  `aria-describedby`, never part of its name.
+  `aria-describedby`, never part of its name. It replaces the record's `@descriptionField`, and
+  `""` draws none.
 - `position`: `"sticky"` or `"end"` (see [Position](#position)).
 - `divider`: `"before"` or `"after"` (see [Dividers](#dividers)).
 - `onSelect(control, record)`: makes the option an action. Picking it runs the callback with
@@ -169,6 +173,61 @@ extraOptions(snapshot, config) {
   ];
 }
 ```
+
+## One resolved option per value
+
+Several sources can describe the same value: the list, `@valueRecords`, a pick, a resolver's
+answer. The select merges what they say into one **resolved option** per value key, and every
+surface shows that one: the row, the trigger, the chips, the selection strip and every block
+(`SelectResolvedOption`). The data edges hand back its record: `@onChange`, the change
+customizations, `onReconfirm`, `allowCreate` and the legacy payload. The none option, the create
+option, text group headers and footers, and dividers stand for no value key, so each row of those
+kinds resolves on its own.
+
+### Which record a value stands for
+
+One record answers for each key, wherever it is read. The first rule that knows the key wins:
+
+1. `@valueRecords`: the caller holds these values, so its records are authoritative.
+2. The local source (`@options`, or its builder), which is current and complete.
+3. The extra options at an empty filter, such as an "All" entry.
+4. The latest sighting: a pick once it is accepted, a resolver's answer, or any record on a
+   loaded page. The newest wins.
+5. The asking view's own option, for a key only a content step or a query-scoped extra adds.
+6. The unresolved fallback.
+
+A content step's output adds properties to held values but never their record, so a held value
+only a content step adds still needs `@valueRecords` or a resolver. A copy of a record, from a
+content step or a legacy customization, never replaces it either; a copy's changed label, icon
+or description reaches the resolved option as an explicit property. A caller that needs a rich
+held record before the list loads passes it through `@valueRecords`.
+
+### What it shows
+
+`label`, `icon` and `description` are presentation. An explicit setting from any source wins,
+and the sources complement each other: one that leaves a setting out erases nothing another set.
+On a conflict the list wins, then `@valueRecords`, then the held pick, then the resolver's answer.
+Within the list, `@extraOptions` win over a content step's output, which wins over the source.
+Without an explicit setting, each is read from the record through `@labelField`, `@iconField` or
+`@descriptionField`. `@iconField` and `@descriptionField` have no default, so a record's `icon`
+or `description` field draws nothing until it is named. An unresolved value derives no icon or
+description, and its label follows the select's fallback naming.
+
+`disabled` and `onSelect` are behaviour of the value, merged the same way. `position` and
+`divider` place a row, so they come from that row's own option. A disabled value can't be picked
+from anywhere: a click, Enter, a paste, `control.select` or `control.selectMany`, and the
+compatibility bridge's `select`. A held disabled value can still be re-confirmed and removed.
+
+### The list and the held values
+
+Content steps run in two views. The **list view** runs them on the displayed options under the
+current query, and their output is not filtered by it. The **held view** runs them at an empty
+filter over the held values, so what a step adds to a held value (an icon, a label) reaches the
+closed trigger and the chips. It never starts a load, and typing never changes what the held
+values show. Legacy content customizations run in the list view only.
+
+Default filtering matches the label before content steps run: an explicit `label` setting on
+the source's option, then `@labelField`. An explicit `@filterBy` still receives records.
 
 ## Creating options
 
@@ -1452,9 +1511,9 @@ by mechanism.
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
   icon-only trigger on the button/static variants (`@iconOnly`, which needs `@icon` and a resolved
-  `ariaLabel` text for the accessible name, and is ignored with a warning without either; drive
-  `@icon` from `@value` for a selection-reactive glyph); the held
-  option's icon before its label when `@icon` is not set; caret swap
+  `ariaLabel` text for the accessible name, and is ignored with a warning without either); the
+  held option's icon (from `@iconField` or its `icon` setting) before its label when `@icon` is
+  not set, hidden while a typed term shows; caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); a trailing `@searchIcon` in a
   search field that is not the trigger (the `button` panel's field, the mobile modal's, and
   DSelectList's; never a desktop `typeahead` trigger, and `static` has no search); `@clearable`; `@disabled` /

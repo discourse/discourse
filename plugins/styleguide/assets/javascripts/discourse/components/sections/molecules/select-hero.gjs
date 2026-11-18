@@ -139,6 +139,7 @@ export default class SelectHero extends Component {
             {{i18n "styleguide.sections.select.hero.notifications"}}
           </span>
           <DSelect
+            @iconField="icon"
             @identifier="sg-hero-notifications"
             @labelField="title"
             @onChange={{this.updateNotification}}
@@ -149,20 +150,7 @@ export default class SelectHero extends Component {
             @value={{this.notificationValue}}
             @valueField="level"
             @variant="static"
-          >
-            {{! The icon is how a level is recognised at a glance; it is the same in both
-            surfaces because both are a single line here. }}
-            <:selection as |option|>
-              <span class="select-examples__row select-examples__row--glyph">
-                {{dIcon option.record.icon}}{{option.label}}
-              </span>
-            </:selection>
-            <:option as |option|>
-              <span class="select-examples__row select-examples__row--glyph">
-                {{dIcon option.record.icon}}{{option.label}}
-              </span>
-            </:option>
-          </DSelect>
+          />
         </div>
       </div>
     </section>

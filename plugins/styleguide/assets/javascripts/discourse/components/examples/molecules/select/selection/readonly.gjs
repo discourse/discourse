@@ -18,6 +18,7 @@ export default class ReadonlySelectExample extends Component {
 
   <template>
     <DSelect
+      @iconField="icon"
       @identifier="sg-readonly"
       @labelField="title"
       @onChange={{this.onChange}}

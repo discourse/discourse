@@ -14,11 +14,13 @@ usually owns lookup and search. Most recipe bugs come from re-implementing one o
 
 Do all of this before the first line of recipe code, and note what you found:
 
-1. **The engine.** Read "Options and records" and "What the engine already does" (under
-   Recipes) in `frontend/discourse/app/ui-kit/select/README.md`, then the argument docs in
-   `d-select.gts` for anything you plan to rely on. The select lists **options**; your data are
-   **records**, handed back as they are; how the select is set up is its **config**. Name the
-   recipe's own inputs by their domain (`group`, `tag`, `category`), never "record" or "item".
+1. **The engine.** Read "Options and records", "One resolved option per value" and "What the
+   engine already does" (under Recipes) in `frontend/discourse/app/ui-kit/select/README.md`,
+   then the argument docs in `d-select.gts` for anything you plan to rely on. The select lists
+   **options**; your data are **records**, handed back as they are; how the select is set up is
+   its **config**. What it shows for each value is the **resolved option** its blocks receive.
+   Name the recipe's own inputs by their domain (`group`, `tag`, `category`), never "record" or
+   "item".
 2. **The domain model.** Read the model's statics and getters, not only its fields. For
    categories that is `frontend/discourse/app/models/category.ts` (`findById`, `findByIds`,
    `findByIdsOrLoad`, `asyncFindByIds`, `findUncategorized`, `search`, `searchCategories`,
@@ -61,7 +63,9 @@ Each of these means existing code is being re-implemented. Use the alternative, 
 | Hiding held options (`@hideSelected`) to match the old component | Keep held options listed and selected, for assistive technology |
 | Behaviour written into a record's fields (`disabled`, `description`, `sticky`, `onSelect`), or a copy made to add them (`{ ...record, disabled: true }`) | `selectOption(record, settings)`, or `option.with(settings)` in a content step. A record's fields are data and never change what its option does |
 | Projecting a caller's records into new objects only to rename fields or add a description | List the caller's records as they are, with `@valueField`/`@labelField` and a `description` setting, so `option.record` is what the caller passed. A recipe that must build its own record carries the caller's settings over with `selectOption(ownRecord, option.settings)` |
-| Reading `option.name` (or any record field) off an option in a content step, group builder or block | `option.record.name`; an option is not its record, and JavaScript gives `undefined` without a warning |
+| Reading `option.name` (or any record field) off an option in a content step, group builder or block | `option.record.name`; an option is not its record, and JavaScript gives `undefined` without a warning. In a block, read what the select shows from the resolved option instead (`option.label`, `option.icon`, `option.description`), so `label` and `icon` settings and `@labelField` apply |
+| Drawing an option's icon in a block (`{{dIcon option.record.icon}}`), an `actionIcon` helper, or an `@icon` getter that follows the held value | `@iconField`, or an `icon` setting: the select draws the icon in rows, chips, the strip and the trigger |
+| A block whose body only reproduces the label, icon or description | No block: `@labelField`, `@iconField`, `@descriptionField` or a setting |
 
 A recipe may still need code of its own: its domain's rules, labels and record shape, and genuinely
 new helpers (for example decoding a transformed description). Those are fine once the survey

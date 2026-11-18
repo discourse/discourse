@@ -19,6 +19,7 @@ export default class DisabledSelectExample extends Component {
   <template>
     <DSelect
       @disabled={{true}}
+      @iconField="icon"
       @identifier="sg-disabled"
       @labelField="title"
       @onChange={{this.onChange}}

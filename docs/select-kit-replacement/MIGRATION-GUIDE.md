@@ -95,8 +95,8 @@ Shipped on this branch, behind `enable_new_select_controls`.
 - Styles that target `.future-date-input-selector`, `.future-date-input-selector-header`,
   `-row`, `-icons` or `-datetime`. With the flag on, the select is `.future-date-input__select`
   (a `.d-select` with `@identifier="future-date-input"`, which its list carries as
-  `data-identifier`); rows are `.future-date-input__option`, and the trigger's date is
-  `.future-date-input__selection-date`.
+  `data-identifier`); rows are the select's own `[role="option"]` rows with their icon drawn as
+  `.d-select__option-icon`, and the trigger's date is `.future-date-input__selection-date`.
 - Tests that open it through select-kit (`selectKit(".future-date-input-selector")`,
   `.future-date-input-selector-header`). Use the `DSelect` test helper on
   `.future-date-input .d-select`.
