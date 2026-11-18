@@ -75,8 +75,8 @@ RSpec.describe TopicsController do
   describe "#wordpress" do
     before { sign_in(moderator) }
 
-    fab!(:p1) { Fabricate(:post_with_cooked_content, user: moderator) }
-    fab!(:p2) { Fabricate(:post_with_cooked_content, topic: p1.topic, user: moderator) }
+    fab!(:p1) { Fabricate(:post, user: moderator) }
+    fab!(:p2) { Fabricate(:post, topic: p1.topic, user: moderator) }
 
     it "returns the JSON in the format our wordpress plugin needs" do
       SiteSetting.external_system_avatars_url = ""
@@ -132,8 +132,8 @@ RSpec.describe TopicsController do
     end
 
     describe "moving to a new topic" do
-      fab!(:p1) { Fabricate(:post_with_cooked_content, user: user, post_number: 1) }
-      let(:p2) { Fabricate(:post_with_cooked_content, user: user, post_number: 2, topic: p1.topic) }
+      fab!(:p1) { Fabricate(:post, user: user, post_number: 1) }
+      let(:p2) { Fabricate(:post, user: user, post_number: 2, topic: p1.topic) }
       let(:topic) { p1.topic }
 
       it "raises an error without post_ids" do
@@ -154,13 +154,13 @@ RSpec.describe TopicsController do
         sign_in(moderator)
         p2 =
           Fabricate(
-            :post_with_cooked_content,
+            :post,
             user: post_author1,
             topic: topic,
             post_number: 2,
             post_type: Post.types[:whisper],
           )
-        p3 = Fabricate(:post_with_cooked_content, user: post_author2, topic: topic, post_number: 3)
+        p3 = Fabricate(:post, user: post_author2, topic: topic, post_number: 3)
 
         post "/t/#{topic.id}/move-posts.json", params: { title: "blah", post_ids: [p2.id, p3.id] }
         expect(response.status).to eq(422)
@@ -171,9 +171,7 @@ RSpec.describe TopicsController do
       end
 
       context "with success" do
-        fab!(:p2) do
-          Fabricate(:post_with_cooked_content, user: user, post_number: 2, topic: p1.topic)
-        end
+        fab!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: p1.topic) }
 
         before { sign_in(admin) }
 
@@ -269,14 +267,8 @@ RSpec.describe TopicsController do
 
       it "moves the child posts too" do
         sign_in(moderator)
-        p1 = Fabricate(:post_with_cooked_content, topic: topic, user: moderator)
-        p2 =
-          Fabricate(
-            :post_with_cooked_content,
-            topic: topic,
-            user: moderator,
-            reply_to_post_number: p1.post_number,
-          )
+        p1 = Fabricate(:post, topic: topic, user: moderator)
+        p2 = Fabricate(:post, topic: topic, user: moderator, reply_to_post_number: p1.post_number)
         PostReply.create(post_id: p1.id, reply_post_id: p2.id)
 
         post "/t/#{topic.id}/move-posts.json",
@@ -303,8 +295,8 @@ RSpec.describe TopicsController do
         Fabricate(:category_moderation_group, category:, group: group_user.group)
       end
       fab!(:topic) { Fabricate(:topic, category: category, user: post_author1) }
-      fab!(:p1) { Fabricate(:post_with_cooked_content, user: user, post_number: 1, topic: topic) }
-      fab!(:p2) { Fabricate(:post_with_cooked_content, user: user, post_number: 2, topic: topic) }
+      fab!(:p1) { Fabricate(:post, user: user, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: topic) }
 
       before do
         sign_in(user)
@@ -373,8 +365,7 @@ RSpec.describe TopicsController do
           restricted_category =
             Fabricate(:private_category, group: Fabricate(:group), user: post_author1)
           restricted_topic = Fabricate(:topic, category: restricted_category, user: post_author1)
-          restricted_post =
-            Fabricate(:post_with_cooked_content, topic: restricted_topic, user: post_author1)
+          restricted_post = Fabricate(:post, topic: restricted_topic, user: post_author1)
           restricted_reviewable =
             Fabricate(
               :reviewable_flagged_post,
@@ -473,9 +464,7 @@ RSpec.describe TopicsController do
         )
       end
       fab!(:private_topic) { Fabricate(:topic, category: private_category, user: post_author1) }
-      fab!(:private_post) do
-        Fabricate(:post_with_cooked_content, topic: private_topic, user: post_author2)
-      end
+      fab!(:private_post) { Fabricate(:post, topic: private_topic, user: post_author2) }
 
       before do
         GroupUser.create!(group: read_only_group, user: trust_level_4)
@@ -507,9 +496,9 @@ RSpec.describe TopicsController do
     describe "moving to an existing topic" do
       before { sign_in(moderator) }
 
-      fab!(:p1) { Fabricate(:post_with_cooked_content, user: moderator) }
+      fab!(:p1) { Fabricate(:post, user: moderator) }
       fab!(:topic) { p1.topic }
-      fab!(:p2) { Fabricate(:post_with_cooked_content, user: moderator, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: moderator, topic: topic) }
 
       context "with success" do
         it "moves the post and emits the merge event" do
@@ -533,9 +522,7 @@ RSpec.describe TopicsController do
         describe "moving a post to a restricted topic" do
           fab!(:post_author) { Fabricate(:user, last_seen_at: 1.minute.ago) }
           fab!(:source_topic) { Fabricate(:topic, user: post_author) }
-          fab!(:source_post) do
-            Fabricate(:post_with_cooked_content, topic: source_topic, user: post_author)
-          end
+          fab!(:source_post) { Fabricate(:post, topic: source_topic, user: post_author) }
           fab!(:restricted_destination_category) do
             Fabricate(:private_category, group: Group[:staff], user: post_author1)
           end
@@ -573,12 +560,8 @@ RSpec.describe TopicsController do
         describe "moving a post to a topic in a read-restricted category" do
           fab!(:reader) { Fabricate(:user, refresh_auto_groups: true) }
           fab!(:source_topic) { Fabricate(:topic, user: post_author1) }
-          fab!(:source_op) do
-            Fabricate(:post_with_cooked_content, topic: source_topic, user: post_author1)
-          end
-          fab!(:source_reply) do
-            Fabricate(:post_with_cooked_content, topic: source_topic, user: post_author1)
-          end
+          fab!(:source_op) { Fabricate(:post, topic: source_topic, user: post_author1) }
+          fab!(:source_reply) { Fabricate(:post, topic: source_topic, user: post_author1) }
           fab!(:restricted_category) do
             Fabricate(:private_category, group: Group[:staff], user: post_author1)
           end
@@ -633,7 +616,7 @@ RSpec.describe TopicsController do
       end
 
       context "with failure" do
-        fab!(:p2) { Fabricate(:post_with_cooked_content, user: moderator) }
+        fab!(:p2) { Fabricate(:post, user: moderator) }
         it "returns JSON with a false success" do
           post "/t/#{topic.id}/move-posts.json", params: { post_ids: [p2.id] }
 
@@ -695,9 +678,7 @@ RSpec.describe TopicsController do
         end
       end
       fab!(:source_topic) { Fabricate(:topic, user: post_author1) }
-      fab!(:source_post) do
-        Fabricate(:post_with_cooked_content, topic: source_topic, user: trust_level_4)
-      end
+      fab!(:source_post) { Fabricate(:post, topic: source_topic, user: trust_level_4) }
       fab!(:dest_topic_in_readonly) do
         Fabricate(:topic, category: readonly_category, user: post_author1)
       end
@@ -730,8 +711,8 @@ RSpec.describe TopicsController do
 
     describe "moving to a new message" do
       fab!(:message) { pm }
-      fab!(:p1) { Fabricate(:post_with_cooked_content, user: user, post_number: 1, topic: message) }
-      fab!(:p2) { Fabricate(:post_with_cooked_content, user: user, post_number: 2, topic: message) }
+      fab!(:p1) { Fabricate(:post, user: user, post_number: 1, topic: message) }
+      fab!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: message) }
 
       it "raises an error without post_ids" do
         sign_in(moderator)
@@ -829,9 +810,7 @@ RSpec.describe TopicsController do
 
       fab!(:evil_trout)
       fab!(:message) { pm }
-      fab!(:p2) do
-        Fabricate(:post_with_cooked_content, user: evil_trout, post_number: 2, topic: message)
-      end
+      fab!(:p2) { Fabricate(:post, user: evil_trout, post_number: 2, topic: message) }
 
       fab!(:dest_message) do
         Fabricate(
@@ -898,7 +877,7 @@ RSpec.describe TopicsController do
     end
 
     describe "merging into another topic" do
-      fab!(:p1) { Fabricate(:post_with_cooked_content, user: user) }
+      fab!(:p1) { Fabricate(:post, user: user) }
       fab!(:topic) { p1.topic }
 
       it "requires a destination before merging all posts" do
@@ -942,12 +921,8 @@ RSpec.describe TopicsController do
         Fabricate(:category_moderation_group, category:, group: group_user.group)
       end
       fab!(:topic) { Fabricate(:topic, category: category, user: post_author1) }
-      fab!(:p1) do
-        Fabricate(:post_with_cooked_content, user: post_author1, post_number: 1, topic: topic)
-      end
-      fab!(:p2) do
-        Fabricate(:post_with_cooked_content, user: post_author2, post_number: 2, topic: topic)
-      end
+      fab!(:p1) { Fabricate(:post, user: post_author1, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: post_author2, post_number: 2, topic: topic) }
 
       before do
         sign_in(user)
@@ -999,14 +974,9 @@ RSpec.describe TopicsController do
 
     describe "merging into another message" do
       fab!(:message) { Fabricate(:private_message_topic, user: user, recipient: user_2) }
-      fab!(:p1) { Fabricate(:post_with_cooked_content, topic: message, user: trust_level_4) }
+      fab!(:p1) { Fabricate(:post, topic: message, user: trust_level_4) }
       fab!(:p2) do
-        Fabricate(
-          :post_with_cooked_content,
-          topic: message,
-          reply_to_post_number: p1.post_number,
-          user: user,
-        )
+        Fabricate(:post, topic: message, reply_to_post_number: p1.post_number, user: user)
       end
 
       fab!(:dest_message) do
@@ -1064,7 +1034,7 @@ RSpec.describe TopicsController do
     end
 
     describe "error handling" do
-      fab!(:p1) { Fabricate(:post_with_cooked_content, user: user) }
+      fab!(:p1) { Fabricate(:post, user: user) }
       fab!(:topic) { p1.topic }
 
       it "returns a JSON error when move_posts raises RecordInvalid" do
@@ -1109,8 +1079,8 @@ RSpec.describe TopicsController do
 
     describe "changing ownership" do
       fab!(:user_a, :user)
-      fab!(:p1) { Fabricate(:post_with_cooked_content, user: post_author1, topic: topic) }
-      fab!(:p2) { Fabricate(:post_with_cooked_content, user: post_author2, topic: topic) }
+      fab!(:p1) { Fabricate(:post, user: post_author1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: post_author2, topic: topic) }
 
       describe "moderator signed in" do
         let!(:editor) { sign_in(moderator) }
@@ -1174,7 +1144,7 @@ RSpec.describe TopicsController do
         it "works with deleted users" do
           deleted_user = user
           t2 = Fabricate(:topic, user: deleted_user)
-          p3 = Fabricate(:post_with_cooked_content, topic: t2, user: deleted_user)
+          p3 = Fabricate(:post, topic: t2, user: deleted_user)
 
           UserDestroyer.new(editor).destroy(
             deleted_user,
@@ -1289,13 +1259,11 @@ RSpec.describe TopicsController do
           )
         end
         fab!(:private_topic) { Fabricate(:topic, category: private_category, user: post_author1) }
-        fab!(:private_post) do
-          Fabricate(:post_with_cooked_content, topic: private_topic, user: post_author1)
-        end
+        fab!(:private_post) { Fabricate(:post, topic: private_topic, user: post_author1) }
 
         fab!(:pm_user, :user)
         fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_user, recipient: user_2) }
-        fab!(:pm_post) { Fabricate(:post_with_cooked_content, topic: pm_topic, user: pm_user) }
+        fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_user) }
 
         describe "moderator signed in" do
           before do
@@ -1346,9 +1314,7 @@ RSpec.describe TopicsController do
           fab!(:visible_pm_topic) do
             Fabricate(:private_message_topic, user: user, recipient: user_2)
           end
-          fab!(:visible_pm_post) do
-            Fabricate(:post_with_cooked_content, topic: visible_pm_topic, user: user)
-          end
+          fab!(:visible_pm_post) { Fabricate(:post, topic: visible_pm_topic, user: user) }
 
           before do
             SiteSetting.change_post_ownership_allowed_groups = "#{group_user.group_id}"
@@ -1410,21 +1376,9 @@ RSpec.describe TopicsController do
       let!(:old_timestamp) { Time.zone.now }
       let!(:new_timestamp) { old_timestamp - 1.day }
       let!(:topic) { Fabricate(:topic, created_at: old_timestamp, user: post_author1) }
-      let!(:p1) do
-        Fabricate(
-          :post_with_cooked_content,
-          user: post_author1,
-          topic: topic,
-          created_at: old_timestamp,
-        )
-      end
+      let!(:p1) { Fabricate(:post, user: post_author1, topic: topic, created_at: old_timestamp) }
       let!(:p2) do
-        Fabricate(
-          :post_with_cooked_content,
-          user: post_author2,
-          topic: topic,
-          created_at: old_timestamp + 1.day,
-        )
+        Fabricate(:post, user: post_author2, topic: topic, created_at: old_timestamp + 1.day)
       end
 
       it "updates post timestamps and records the change in the staff log" do
@@ -1738,7 +1692,7 @@ RSpec.describe TopicsController do
     it "does not delete timings for a topic the user cannot see" do
       private_category = Fabricate(:private_category, group: Fabricate(:group), user: post_author1)
       private_topic = Fabricate(:topic, category: private_category, user: post_author1)
-      private_post = Fabricate(:post_with_cooked_content, topic: private_topic, user: post_author1)
+      private_post = Fabricate(:post, topic: private_topic, user: post_author1)
       PostTiming.create!(
         topic: private_topic,
         user: user,
@@ -1829,9 +1783,7 @@ RSpec.describe TopicsController do
 
     context "when logged in" do
       fab!(:user_topic) { Fabricate(:topic, user: user) }
-      fab!(:user_post) do
-        Fabricate(:post_with_cooked_content, user: user, topic: user_topic, post_number: 2)
-      end
+      fab!(:user_post) { Fabricate(:post, user: user, topic: user_topic, post_number: 2) }
 
       before do
         sign_in(user)
@@ -1892,7 +1844,7 @@ RSpec.describe TopicsController do
       fab!(:topic) { Fabricate(:topic, user: user, deleted_at: Time.now, deleted_by: moderator) }
       fab!(:post) do
         Fabricate(
-          :post_with_cooked_content,
+          :post,
           user: user,
           topic: topic,
           post_number: 1,
@@ -1909,13 +1861,7 @@ RSpec.describe TopicsController do
         end
 
         it "raises an exception when only the user's own deleted reply survives" do
-          Fabricate(
-            :post_with_cooked_content,
-            topic: topic,
-            user: user,
-            post_number: 2,
-            user_deleted: true,
-          )
+          Fabricate(:post, topic: topic, user: user, post_number: 2, user_deleted: true)
           sign_in(user)
 
           put "/t/#{topic.id}/recover.json"
@@ -1957,7 +1903,7 @@ RSpec.describe TopicsController do
       end
       fab!(:private_post) do
         Fabricate(
-          :post_with_cooked_content,
+          :post,
           topic: private_topic,
           user: post_author1,
           post_number: 1,
@@ -1996,7 +1942,7 @@ RSpec.describe TopicsController do
 
     describe "when logged in" do
       fab!(:topic) { Fabricate(:topic, user: user, created_at: 48.hours.ago) }
-      fab!(:post) { Fabricate(:post_with_cooked_content, topic: topic, user: user, post_number: 1) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
       describe "without access" do
         it "raises an exception when the user doesn't have permission to delete the topic" do
@@ -2037,7 +1983,7 @@ RSpec.describe TopicsController do
     end
 
     describe "force destroy" do
-      let!(:post) { Fabricate(:post_with_cooked_content, topic: topic, user: user, post_number: 1) }
+      let!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
       before do
         SiteSetting.can_permanently_delete = true
@@ -2084,7 +2030,7 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(403)
 
-        other_post = Fabricate(:post_with_cooked_content, topic: topic, user: user, post_number: 3)
+        other_post = Fabricate(:post, topic: topic, user: user, post_number: 3)
         PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
@@ -2102,9 +2048,7 @@ RSpec.describe TopicsController do
         Fabricate(:category_moderation_group, category: private_category, group: group_user.group)
       end
       fab!(:private_topic) { Fabricate(:topic, category: private_category, user: post_author1) }
-      fab!(:private_post) do
-        Fabricate(:post_with_cooked_content, topic: private_topic, user: user, post_number: 1)
-      end
+      fab!(:private_post) { Fabricate(:post, topic: private_topic, user: user, post_number: 1) }
 
       before do
         SiteSetting.enable_category_group_moderation = true
@@ -2129,7 +2073,7 @@ RSpec.describe TopicsController do
   end
 
   describe "#id_for_slug" do
-    fab!(:topic) { Fabricate(:post_with_cooked_content, user: post_author1).topic }
+    fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
     it "resolves visible slugs and rejects private or missing topics" do
       get "/t/id_for/#{topic.slug}.json"
@@ -2193,7 +2137,7 @@ RSpec.describe TopicsController do
     describe "when logged in" do
       fab!(:topic) { Fabricate(:topic, user: user) }
 
-      fab!(:first_post) { Fabricate(:post_with_cooked_content, user: post_author1, topic: topic) }
+      fab!(:first_post) { Fabricate(:post, user: post_author1, topic: topic) }
 
       before do
         SiteSetting.editing_grace_period = 0
@@ -2279,7 +2223,7 @@ RSpec.describe TopicsController do
 
       it "does not allow a regular user to convert a private message to a public topic" do
         private_message = Fabricate(:private_message_topic, user: user, recipient: user_2)
-        Fabricate(:post_with_cooked_content, topic: private_message, user: user)
+        Fabricate(:post, topic: private_message, user: user)
         victim_reply = Fabricate(:post, topic: private_message, user: user_2, raw: "private reply")
 
         sign_in(post_author2)
@@ -2939,9 +2883,7 @@ RSpec.describe TopicsController do
 
     describe "featured links" do
       fab!(:link_topic) { Fabricate(:topic, user: trust_level_1) }
-      fab!(:link_post) do
-        Fabricate(:post_with_cooked_content, user: post_author1, topic: link_topic)
-      end
+      fab!(:link_post) { Fabricate(:post, user: post_author1, topic: link_topic) }
 
       before { sign_in(trust_level_1) }
 
@@ -3092,7 +3034,7 @@ RSpec.describe TopicsController do
 
   describe "#show" do
     fab!(:private_topic) { pm }
-    fab!(:topic) { Fabricate(:post_with_cooked_content, user: post_author1).topic }
+    fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
     it "serves a cached public topic after a restricted category move until its 60-second TTL expires" do
       global_setting :anon_cache_store_threshold, 1
@@ -3192,7 +3134,7 @@ RSpec.describe TopicsController do
       # we no longer require a topic be visible to perform url correction
       # if you need to properly hide a topic for users use a secure category
       # or a PM
-      Fabricate(:post_with_cooked_content, user: post_author1, topic: invisible_topic)
+      Fabricate(:post, user: post_author1, topic: invisible_topic)
 
       get "/t/#{invisible_topic.id}.json", params: { slug: invisible_topic.slug }
       expect(response.status).to eq(200)
@@ -3265,8 +3207,8 @@ RSpec.describe TopicsController do
 
     it "does not expose links from hidden posts in topic details to non-staff viewers" do
       test_topic = Fabricate(:topic, user: post_author1)
-      visible_post = Fabricate(:post_with_cooked_content, topic: test_topic, user: post_author1)
-      hidden_post = Fabricate(:post_with_cooked_content, topic: test_topic, user: post_author1)
+      visible_post = Fabricate(:post, topic: test_topic, user: post_author1)
+      hidden_post = Fabricate(:post, topic: test_topic, user: post_author1)
 
       Fabricate(
         :topic_link,
@@ -3305,7 +3247,7 @@ RSpec.describe TopicsController do
     end
 
     it "does not expose links from unlisted topics to anonymous viewers" do
-      public_post = Fabricate(:post_with_cooked_content, user: post_author1)
+      public_post = Fabricate(:post, user: post_author1)
       public_topic = public_post.topic
       public_source_topic = Fabricate(:topic, user: post_author1, title: "Public source topic")
       public_source_post =
@@ -3350,7 +3292,7 @@ RSpec.describe TopicsController do
     it "does not expose linkbacks from hidden or whisper source posts to non-staff viewers" do
       SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
 
-      public_post = Fabricate(:post_with_cooked_content, user: post_author1)
+      public_post = Fabricate(:post, user: post_author1)
       public_topic = public_post.topic
       link_url =
         "#{Discourse.base_url_no_prefix}#{public_topic.relative_url(public_post.post_number)}"
@@ -3400,12 +3342,12 @@ RSpec.describe TopicsController do
     end
 
     it "does not expose hidden post link counts", :aggregate_failures do
-      first_post = Fabricate(:post_with_cooked_content, user: post_author1)
+      first_post = Fabricate(:post, user: post_author1)
       test_topic = first_post.topic
-      visible_post = Fabricate(:post_with_cooked_content, topic: test_topic, user: post_author1)
+      visible_post = Fabricate(:post, topic: test_topic, user: post_author1)
       hidden_post =
         Fabricate(
-          :post_with_cooked_content,
+          :post,
           topic: test_topic,
           user: post_author1,
           hidden: true,
@@ -3469,14 +3411,12 @@ RSpec.describe TopicsController do
 
     context "with paginated posts" do
       fab!(:paginated_topic) { Fabricate(:topic, user: post_author1) }
-      fab!(:posts) do
-        Fabricate.times(2, :post_with_cooked_content, topic: paginated_topic, user: post_author1)
-      end
+      fab!(:posts) { Fabricate.times(2, :post, topic: paginated_topic, user: post_author1) }
 
       before { TopicView.stubs(:chunk_size).returns(2) }
 
       it "redirects over-range pages to the last page, preserving the locale" do
-        Fabricate(:post_with_cooked_content, topic: paginated_topic, user: post_author1)
+        Fabricate(:post, topic: paginated_topic, user: post_author1)
         Topic.reset_highest(paginated_topic.id)
 
         get paginated_topic.relative_url, params: { page: 5 }
@@ -3498,12 +3438,7 @@ RSpec.describe TopicsController do
 
       it "uses the viewer-visible post count to find the last page" do
         SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
-        Fabricate(
-          :post_with_cooked_content,
-          topic: paginated_topic,
-          user: moderator,
-          post_type: Post.types[:whisper],
-        )
+        Fabricate(:post, topic: paginated_topic, user: moderator, post_type: Post.types[:whisper])
         Topic.reset_highest(paginated_topic.id)
 
         get "#{paginated_topic.relative_url}.json", params: { page: 2 }
@@ -3573,7 +3508,7 @@ RSpec.describe TopicsController do
       end
 
       it "keeps private messages on the topic route" do
-        Fabricate(:post_with_cooked_content, topic: pm, user: pm.user)
+        Fabricate(:post, topic: pm, user: pm.user)
         sign_in(pm.user)
 
         get pm.relative_url
@@ -3605,8 +3540,8 @@ RSpec.describe TopicsController do
       Group.user_trust_level_change!(post_author1.id, post_author1.trust_level)
       user2 = post_author2
       user3 = post_author3
-      Fabricate(:post_with_cooked_content, topic: topic, user: user2)
-      Fabricate(:post_with_cooked_content, topic: topic, user: user3)
+      Fabricate(:post, topic: topic, user: user2)
+      Fabricate(:post, topic: topic, user: user3)
       group = Fabricate(:group)
       user2.update!(primary_group: group)
       user3.update!(flair_group: group)
@@ -3631,8 +3566,8 @@ RSpec.describe TopicsController do
       user5 = post_author5
       user4.update!(flair_group: group2)
       user5.update!(primary_group: group2)
-      Fabricate(:post_with_cooked_content, topic: topic, user: user4)
-      Fabricate(:post_with_cooked_content, topic: topic, user: user5)
+      Fabricate(:post, topic: topic, user: user4)
+      Fabricate(:post, topic: topic, user: user5)
 
       second_request_queries =
         track_sql_queries do
@@ -3677,8 +3612,7 @@ RSpec.describe TopicsController do
         3.times do
           Fabricate(
             :post_localization,
-            post:
-              Fabricate(:post_with_cooked_content, topic: topic, user: post_author1, locale: "ja"),
+            post: Fabricate(:post, topic: topic, user: post_author1, locale: "ja"),
             locale: "en",
           )
         end
@@ -4254,9 +4188,7 @@ RSpec.describe TopicsController do
         json["post_stream"]["posts"].map { |post| post["id"] }
       end
 
-      fab!(:replies) do
-        Fabricate.times(3, :post_with_cooked_content, user: post_author1, topic: topic)
-      end
+      fab!(:replies) { Fabricate.times(3, :post, user: post_author1, topic: topic) }
 
       let(:post_ids) { [topic.first_post.id, *replies.map(&:id)] }
 
@@ -4360,12 +4292,12 @@ RSpec.describe TopicsController do
     end
 
     context "with a branching reply tree" do
-      fab!(:first_post) { Fabricate(:post_with_cooked_content, user: post_author1) }
+      fab!(:first_post) { Fabricate(:post, user: post_author1) }
       fab!(:topic) { first_post.topic }
-      fab!(:root_reply) { Fabricate(:post_with_cooked_content, topic: topic, user: post_author2) }
+      fab!(:root_reply) { Fabricate(:post, topic: topic, user: post_author2) }
       fab!(:direct_reply) do
         Fabricate(
-          :post_with_cooked_content,
+          :post,
           topic: topic,
           user: post_author3,
           reply_to_post_number: root_reply.post_number,
@@ -4373,7 +4305,7 @@ RSpec.describe TopicsController do
       end
       fab!(:sibling_reply) do
         Fabricate(
-          :post_with_cooked_content,
+          :post,
           topic: topic,
           user: post_author4,
           reply_to_post_number: root_reply.post_number,
@@ -4381,18 +4313,16 @@ RSpec.describe TopicsController do
       end
       fab!(:nested_reply) do
         Fabricate(
-          :post_with_cooked_content,
+          :post,
           topic: topic,
           user: post_author5,
           reply_to_post_number: direct_reply.post_number,
         )
       end
-      fab!(:other_root_reply) do
-        Fabricate(:post_with_cooked_content, topic: topic, user: post_author5)
-      end
+      fab!(:other_root_reply) { Fabricate(:post, topic: topic, user: post_author5) }
       fab!(:other_child_reply) do
         Fabricate(
-          :post_with_cooked_content,
+          :post,
           topic: topic,
           user: post_author4,
           reply_to_post_number: other_root_reply.post_number,
@@ -4521,8 +4451,8 @@ RSpec.describe TopicsController do
     end
 
     describe "topic_noindex modifier" do
-      fab!(:first_post) { Fabricate(:post_with_cooked_content, topic: topic, user: post_author1) }
-      fab!(:second_post) { Fabricate(:post_with_cooked_content, topic: topic, user: post_author1) }
+      fab!(:first_post) { Fabricate(:post, topic: topic, user: post_author1) }
+      fab!(:second_post) { Fabricate(:post, topic: topic, user: post_author1) }
 
       let(:plugin) { Plugin::Instance.new }
       let(:modifier_args) { [] }
@@ -4591,7 +4521,7 @@ RSpec.describe TopicsController do
     end
 
     context "when `enable_user_status` site setting is enabled" do
-      fab!(:post) { Fabricate(:post_with_cooked_content, user: post_author1) }
+      fab!(:post) { Fabricate(:post, user: post_author1) }
       fab!(:topic) { post.topic }
       fab!(:post2) do
         Fabricate(
@@ -4855,9 +4785,7 @@ RSpec.describe TopicsController do
     end
 
     context "with multiple chunks of posts" do
-      fab!(:replies) do
-        Fabricate.times(3, :post_with_cooked_content, topic: topic, user: post_author1)
-      end
+      fab!(:replies) { Fabricate.times(3, :post, topic: topic, user: post_author1) }
 
       before { TopicView.stubs(:chunk_size).returns(2) }
 
@@ -4941,14 +4869,10 @@ RSpec.describe TopicsController do
   end
 
   describe "#post_ids" do
-    fab!(:post) { Fabricate(:post_with_cooked_content, user: post_author1) }
+    fab!(:post) { Fabricate(:post, user: post_author1) }
     fab!(:topic) { post.topic }
-    fab!(:post2) do
-      Fabricate(:post_with_cooked_content, user: post_author2, topic:, percent_rank: 0.2)
-    end
-    fab!(:post3) do
-      Fabricate(:post_with_cooked_content, user: post_author3, topic:, percent_rank: 0.5)
-    end
+    fab!(:post2) { Fabricate(:post, user: post_author2, topic:, percent_rank: 0.2) }
+    fab!(:post3) { Fabricate(:post, user: post_author3, topic:, percent_rank: 0.5) }
 
     before { TopicView.stubs(:chunk_size).returns(1) }
 
@@ -4986,7 +4910,7 @@ RSpec.describe TopicsController do
   end
 
   describe "#posts" do
-    fab!(:post) { Fabricate(:post_with_cooked_content, user: post_author1) }
+    fab!(:post) { Fabricate(:post, user: post_author1) }
     fab!(:topic) { post.topic }
 
     after { Discourse.redis.flushdb }
@@ -5013,7 +4937,7 @@ RSpec.describe TopicsController do
       post.user.update!(name: "Hidden Reply Target")
       reply =
         Fabricate(
-          :post_with_cooked_content,
+          :post,
           topic: topic,
           user: post_author2,
           reply_to_post_number: post.post_number,
@@ -5033,9 +4957,8 @@ RSpec.describe TopicsController do
     end
 
     it "applies username and summary filters" do
-      post2 =
-        Fabricate(:post_with_cooked_content, user: post_author2, topic: topic, percent_rank: 0.2)
-      Fabricate(:post_with_cooked_content, user: post_author3, topic: topic)
+      post2 = Fabricate(:post, user: post_author2, topic: topic, percent_rank: 0.2)
+      Fabricate(:post, user: post_author3, topic: topic)
       TopicView.stubs(:chunk_size).returns(2)
 
       get "/t/#{topic.id}/posts.json",
@@ -5117,7 +5040,7 @@ RSpec.describe TopicsController do
   end
 
   describe "#feed" do
-    fab!(:topic) { Fabricate(:post_with_cooked_content, user: post_author1).topic }
+    fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
     it "renders the rss feed with crawler headers and sanitized links" do
       get "/t/foo/#{topic.id}.rss"
@@ -5448,7 +5371,7 @@ RSpec.describe TopicsController do
         source_category = Fabricate(:category, tags: [restricted_tag])
         destination_category = Fabricate(:category, tags: [Fabricate(:tag, name: "other-tag")])
         topic_with_tag = Fabricate(:topic, category: source_category, tags: [restricted_tag])
-        Fabricate(:post_with_cooked_content, topic: topic_with_tag)
+        Fabricate(:post, topic: topic_with_tag)
 
         put "/topics/bulk.json",
             params: {
@@ -5752,7 +5675,7 @@ RSpec.describe TopicsController do
     it "removes bookmarks with reminders from non-first posts" do
       sign_in(user)
       topic = Fabricate(:topic_with_op, user: user)
-      reply = Fabricate(:post_with_cooked_content, topic: topic, user: user)
+      reply = Fabricate(:post, topic: topic, user: user)
       Fabricate(:bookmark, user: user, bookmarkable: topic.first_post)
       Fabricate(:bookmark, user: user, bookmarkable: reply)
 
@@ -6428,7 +6351,7 @@ RSpec.describe TopicsController do
         create_post(raw: "This is the first post :)", title: "This is a test title I am making yay")
       second_post = create_post(raw: "This is second post", topic: first_post.topic)
       third_post = first_post.topic.add_small_action(first_post.user, "autobumped")
-      random_post = Fabricate(:post_with_cooked_content, user: post_author1)
+      random_post = Fabricate(:post, user: post_author1)
 
       get "/t/#{first_post.topic_id}/excerpts.json",
           params: {
@@ -6483,7 +6406,7 @@ RSpec.describe TopicsController do
 
     describe "converting public topic to private message" do
       fab!(:topic) { Fabricate(:topic, user: user) }
-      fab!(:post) { Fabricate(:post_with_cooked_content, user: user, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       it "enforces permission and the PM recipient cap" do
         sign_in(user)
@@ -6491,8 +6414,8 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
 
         SiteSetting.max_allowed_message_recipients = 2
-        Fabricate(:post_with_cooked_content, topic: topic, user: post_author1, post_number: 2)
-        Fabricate(:post_with_cooked_content, topic: topic, user: post_author2, post_number: 3)
+        Fabricate(:post, topic: topic, user: post_author1, post_number: 2)
+        Fabricate(:post, topic: topic, user: post_author2, post_number: 3)
 
         sign_in(admin)
         put "/t/#{topic.id}/convert-topic/private.json"
@@ -6536,7 +6459,7 @@ RSpec.describe TopicsController do
 
     describe "converting private message to public topic" do
       fab!(:topic) { Fabricate(:private_message_topic, user: user, recipient: post_author1) }
-      fab!(:post) { Fabricate(:post_with_cooked_content, user: post_author1, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
 
       it "requires permission and a visible destination category" do
         sign_in(user)
@@ -6548,7 +6471,7 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
 
         own_message = Fabricate(:private_message_topic, user: moderator, recipient: post_author1)
-        Fabricate(:post_with_cooked_content, user: moderator, topic: own_message)
+        Fabricate(:post, user: moderator, topic: own_message)
         private_category = Fabricate(:private_category, group: Fabricate(:group))
 
         put "/t/#{own_message.id}/convert-topic/public.json?category_id=#{private_category.id}"
@@ -6583,7 +6506,7 @@ RSpec.describe TopicsController do
             recipient: post_author1,
             title: existing_topic.title,
           )
-        Fabricate(:post_with_cooked_content, user: user, topic: conflicting_pm)
+        Fabricate(:post, user: user, topic: conflicting_pm)
 
         put "/t/#{conflicting_pm.id}/convert-topic/public.json?category_id=#{category.id}"
 
@@ -6636,7 +6559,7 @@ RSpec.describe TopicsController do
   end
 
   describe "#timings" do
-    fab!(:post_1) { Fabricate(:post_with_cooked_content, user: post_author1, topic: topic) }
+    fab!(:post_1) { Fabricate(:post, user: post_author1, topic: topic) }
 
     before do
       # admins
@@ -6644,12 +6567,7 @@ RSpec.describe TopicsController do
     end
 
     let(:whisper) do
-      Fabricate(
-        :post_with_cooked_content,
-        user: post_author1,
-        topic: topic,
-        post_type: Post.types[:whisper],
-      )
+      Fabricate(:post, user: post_author1, topic: topic, post_type: Post.types[:whisper])
     end
 
     it "ignores invalid timing values for users and staff" do
@@ -6690,7 +6608,7 @@ RSpec.describe TopicsController do
     it "does not record timings for a topic the user cannot see" do
       private_category = Fabricate(:private_category, group: Fabricate(:group))
       private_topic = Fabricate(:topic, category: private_category, user: post_author1)
-      private_post = Fabricate(:post_with_cooked_content, topic: private_topic, user: post_author1)
+      private_post = Fabricate(:post, topic: private_topic, user: post_author1)
 
       sign_in(user)
       post "/t/#{private_post.topic_id}/timings.json",
@@ -7221,7 +7139,7 @@ RSpec.describe TopicsController do
           .update!(notification_level: NotificationLevels.all[:watching])
 
         notification_pm = Fabricate(:private_message_topic, user: admin, recipient: post_author1)
-        Fabricate(:post_with_cooked_content, topic: notification_pm, user: admin)
+        Fabricate(:post, topic: notification_pm, user: admin)
         Notification.delete_all
         Jobs.run_immediately!
         post "/t/#{notification_pm.id}/invite-group.json", params: { group: "admins" }
@@ -7231,7 +7149,7 @@ RSpec.describe TopicsController do
         expect(Notification.count).to be > 0
 
         quiet_pm = Fabricate(:private_message_topic, user: admin, recipient: post_author1)
-        Fabricate(:post_with_cooked_content, topic: quiet_pm, user: admin)
+        Fabricate(:post, topic: quiet_pm, user: admin)
         Notification.delete_all
         post "/t/#{quiet_pm.id}/invite-group.json",
              params: {
@@ -7251,7 +7169,7 @@ RSpec.describe TopicsController do
 
       before do
         pm.allowed_users << inviter
-        Fabricate(:post_with_cooked_content, topic: pm, user: post_author2)
+        Fabricate(:post, topic: pm, user: post_author2)
         group.add(victim)
         group
           .group_users
@@ -7275,7 +7193,7 @@ RSpec.describe TopicsController do
         ).to eq(0)
 
         staff_pm = Fabricate(:private_message_topic, user: admin, recipient: post_author1)
-        Fabricate(:post_with_cooked_content, topic: staff_pm, user: post_author2)
+        Fabricate(:post, topic: staff_pm, user: post_author2)
         sign_in(admin)
         Notification.delete_all
         post "/t/#{staff_pm.id}/invite-group.json", params: { group: group.name }
@@ -7374,7 +7292,7 @@ RSpec.describe TopicsController do
           expect(draft_topic.reload.shared_draft.category_id).to eq(other_cat.id)
 
           own_topic = Fabricate(:topic, category: category, user: shared_drafts_member)
-          Fabricate(:post_with_cooked_content, topic: own_topic, user: shared_drafts_member)
+          Fabricate(:post, topic: own_topic, user: shared_drafts_member)
 
           put "/t/#{own_topic.id}/shared-draft.json", params: { category_id: category.id }
 
@@ -7393,7 +7311,7 @@ RSpec.describe TopicsController do
       fab!(:topic) do
         Fabricate(:topic, user: post_author1, category: shared_drafts_category, visible: false)
       end
-      fab!(:post) { Fabricate(:post_with_cooked_content, user: post_author1, topic: topic) }
+      fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
 
       it "forbids anonymous and regular users" do
         put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
@@ -7423,7 +7341,7 @@ RSpec.describe TopicsController do
           restricted_group.add(moderator)
           restricted_topic =
             Fabricate(:topic, user: post_author1, category: shared_drafts_category, visible: false)
-          Fabricate(:post_with_cooked_content, user: post_author1, topic: restricted_topic)
+          Fabricate(:post, user: post_author1, topic: restricted_topic)
           Fabricate(:shared_draft, topic: restricted_topic, category: category)
 
           messages =
@@ -7444,7 +7362,7 @@ RSpec.describe TopicsController do
 
           shared_draft_topic =
             Fabricate(:topic, user: post_author1, category: shared_drafts_category, visible: false)
-          Fabricate(:post_with_cooked_content, user: post_author1, topic: shared_draft_topic)
+          Fabricate(:post, user: post_author1, topic: shared_draft_topic)
           Fabricate(:shared_draft, topic: shared_draft_topic, category: category)
 
           put "/t/#{shared_draft_topic.id}/publish.json",
@@ -7472,8 +7390,7 @@ RSpec.describe TopicsController do
 
           denied_topic =
             Fabricate(:topic, user: post_author1, category: shared_drafts_category, visible: false)
-          denied_post =
-            Fabricate(:post_with_cooked_content, user: post_author1, topic: denied_topic)
+          denied_post = Fabricate(:post, user: post_author1, topic: denied_topic)
           Fabricate(:shared_draft, topic: denied_topic, category: category)
           topic_timer =
             Fabricate(
@@ -7501,9 +7418,7 @@ RSpec.describe TopicsController do
       context "when the topic is not a shared draft" do
         fab!(:destination_cat, :category)
         fab!(:own_topic) { Fabricate(:topic, category: category, user: shared_drafts_member) }
-        fab!(:own_post) do
-          Fabricate(:post_with_cooked_content, topic: own_topic, user: shared_drafts_member)
-        end
+        fab!(:own_post) { Fabricate(:post, topic: own_topic, user: shared_drafts_member) }
 
         before do
           SiteSetting.editing_grace_period = 0
@@ -7551,7 +7466,7 @@ RSpec.describe TopicsController do
     end
 
     it "renders posts without preloaded data when a browser requests the crawler layout" do
-      post = Fabricate(:post_with_cooked_content, topic: topic, user: post_author1)
+      post = Fabricate(:post, topic: topic, user: post_author1)
 
       get topic.relative_url,
           headers: {
@@ -7597,7 +7512,7 @@ RSpec.describe TopicsController do
       fab!(:participant) { Fabricate(:user, refresh_auto_groups: true) }
       fab!(:pm_tag, :tag)
       fab!(:pm) { Fabricate(:private_message_topic, user: user, recipient: participant) }
-      fab!(:pm_post) { Fabricate(:post_with_cooked_content, topic: pm, user: user) }
+      fab!(:pm_post) { Fabricate(:post, topic: pm, user: user) }
 
       before do
         SiteSetting.tagging_enabled = true
@@ -7629,7 +7544,7 @@ RSpec.describe TopicsController do
       fab!(:page_1_posts) do
         Fabricate.times(
           4,
-          :post_with_cooked_content,
+          :post,
           user: post_author2,
           topic: topic,
           created_at: page1_time,
@@ -7640,7 +7555,7 @@ RSpec.describe TopicsController do
       fab!(:page_2_posts) do
         Fabricate.times(
           4,
-          :post_with_cooked_content,
+          :post,
           user: post_author3,
           topic: topic,
           created_at: page2_time,
@@ -7651,7 +7566,7 @@ RSpec.describe TopicsController do
       fab!(:page_3_posts) do
         Fabricate.times(
           2,
-          :post_with_cooked_content,
+          :post,
           user: post_author3,
           topic: topic,
           created_at: page3_time,
@@ -8045,7 +7960,7 @@ RSpec.describe TopicsController do
 
     it "lets administrators, moderators and TL4 users reset to the last post timestamp" do
       timestamp = 1.day.ago
-      Fabricate(:post_with_cooked_content, user: post_author1, topic: topic, created_at: timestamp)
+      Fabricate(:post, user: post_author1, topic: topic, created_at: timestamp)
 
       [admin, moderator, trust_level_4].each do |acting_user|
         sign_in(acting_user)
@@ -8072,20 +7987,8 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
         expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
 
-        post1 =
-          Fabricate(
-            :post_with_cooked_content,
-            user: post_author1,
-            topic: topic,
-            created_at: 2.days.ago,
-          )
-        _post2 =
-          Fabricate(
-            :post_with_cooked_content,
-            user: post_author1,
-            topic: topic,
-            created_at: 1.day.ago,
-          )
+        post1 = Fabricate(:post, user: post_author1, topic: topic, created_at: 2.days.ago)
+        _post2 = Fabricate(:post, user: post_author1, topic: topic, created_at: 1.day.ago)
 
         put "/t/#{topic.id}/reset-bump-date/#{post1.id}.json"
         expect(response.status).to eq(200)

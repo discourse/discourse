@@ -1,22 +1,32 @@
 # frozen_string_literal: true
 
 Fabricator(:post) do
+  transient cook_content: false, skip_post_validation: false
+
   user { Fabricate(:user, refresh_auto_groups: true) }
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
   post_type Post.types[:regular]
 
-  # Fabrication bypasses PostCreator, for performance reasons, where the counts are updated so we have to handle this manually here.
+  before_create do |post, transients|
+    stock_body =
+      post.raw == "Hello world" && post.cook_method == Post.cook_methods[:regular] &&
+        post.cooking_options.blank?
+    post.cooked ||= "<p>Hello world</p>" if stock_body && !transients[:cook_content]
+
+    if (stock_body || transients[:skip_post_validation]) && post.skip_validation.nil? &&
+         post.user_id.present? && post.topic_id.present?
+      post.skip_validation = true
+      transients[:restore_post_validation] = true
+    end
+  end
+
+  after_create do |post, transients|
+    post.skip_validation = nil if transients[:restore_post_validation]
+  end
+
+  # Fabrication saves directly, bypassing PostCreator's counter updates.
   after_create { |post, _transients| UserStatCountUpdater.increment!(post) }
-end
-
-# Use for structural fixtures, not content-processing or validation scenarios.
-Fabricator(:post_with_cooked_content, from: :post) do
-  raw "Hello world"
-  cooked "<p>Hello world</p>"
-  skip_validation true
-
-  after_create { |post| post.skip_validation = false }
 end
 
 Fabricator(:post_with_long_raw_content, from: :post) do
