@@ -16,15 +16,24 @@ export default class SidebarWrapper extends Component {
         "sidebar-wrapper"
         (if this.pageShell.enabled "page-shell__navigation")
       }}
+      inert={{if this.pageShell.closingPanels.navigation true}}
       role={{if this.pageShell.enabled "complementary"}}
     >
-      {{#if @showSidebar}}
+      {{#if
+        (or @showSidebar (eq this.pageShell.closingPanels.navigation "open"))
+      }}
         <Sidebar @toggleSidebar={{@toggleSidebar}} />
-        {{#if this.pageShell.enabled}}
+        {{#if (and this.pageShell.enabled @showSidebar)}}
           <PageShellPanelSeparator @panel="navigation" />
         {{/if}}
       {{else if
-        (and this.pageShell.enabled (eq this.pageShell.navigation "rail"))
+        (and
+          this.pageShell.enabled
+          (or
+            (eq this.pageShell.navigation "rail")
+            (eq this.pageShell.closingPanels.navigation "rail")
+          )
+        )
       }}
         <button
           class="btn btn-flat"

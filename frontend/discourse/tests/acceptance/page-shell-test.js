@@ -69,4 +69,35 @@ acceptance("Page shell | regions", function (needs) {
     assert.dom(`${shell} > .powered-by-discourse`).doesNotExist();
     assert.dom("main, [role=main]").exists({ count: 1 });
   });
+
+  test("the header button opens and closes Context", async function (assert) {
+    await visit("/");
+
+    const toggle = "#toggle-context-panel";
+    assert
+      .dom(toggle)
+      .hasAttribute("aria-expanded", "true", "Context starts open");
+
+    await click(toggle);
+
+    assert
+      .dom(toggle)
+      .hasAttribute("aria-expanded", "false", "The button reports closed");
+    assert.dom("#page-shell-context").doesNotExist("The panel closes");
+
+    await click(toggle);
+
+    assert
+      .dom(toggle)
+      .hasAttribute("aria-expanded", "true", "The button reports open");
+    assert.dom("#page-shell-context").exists("The panel reopens");
+  });
+
+  test("Preferences has no header Context button", async function (assert) {
+    await visit("/u/eviltrout/preferences/tracking");
+
+    assert
+      .dom("#toggle-context-panel")
+      .doesNotExist("Preferences offers no Context panel to open");
+  });
 });
