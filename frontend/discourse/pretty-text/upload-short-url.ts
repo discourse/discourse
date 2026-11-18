@@ -51,12 +51,16 @@ export function lookupCachedUploadUrl(
 
 export const MISSING = "missing";
 
+// The server rejects requests with more short urls than this.
+const MAX_SHORT_URLS_PER_REQUEST = 1000;
+
 /**
  * Looks up the urls of uploads on the server and caches them. A short url the
  * server doesn't find is cached as `MISSING`.
  *
- * @param urls - The short urls to look up. Empty ones are skipped.
- * @param ajax - The function that makes the request.
+ * @param urls - The short urls to look up. Empty and repeated ones are
+ *   skipped.
+ * @param ajax - The function that makes the requests.
  * @returns The uploads the server found, or `undefined` when there is
  *   nothing to look up.
  */
@@ -64,15 +68,26 @@ export function lookupUncachedUploadUrls(
   urls: (string | null | undefined)[],
   ajax: typeof discourseAjax
 ) {
-  urls = urls.filter(Boolean);
-  if (urls.length === 0) {
+  const shortUrls = [...new Set(urls.filter((url): url is string => !!url))];
+  if (shortUrls.length === 0) {
     return;
   }
 
-  return ajax<UploadLookup[]>("/uploads/lookup-urls", {
-    type: "POST",
-    data: { short_urls: urls },
-  }).then((uploads) => {
+  const requests = [];
+  for (let i = 0; i < shortUrls.length; i += MAX_SHORT_URLS_PER_REQUEST) {
+    requests.push(
+      ajax<UploadLookup[]>("/uploads/lookup-urls", {
+        type: "POST",
+        data: {
+          short_urls: shortUrls.slice(i, i + MAX_SHORT_URLS_PER_REQUEST),
+        },
+      })
+    );
+  }
+
+  return Promise.all(requests).then((batches) => {
+    const uploads = batches.flat();
+
     uploads.forEach((upload) => {
       cacheShortUploadUrl(upload.short_url, {
         url: upload.url,
@@ -80,8 +95,7 @@ export function lookupUncachedUploadUrls(
       });
     });
 
-    // The empty urls were filtered out.
-    (urls as string[]).forEach((url) =>
+    shortUrls.forEach((url) =>
       cacheShortUploadUrl(url, {
         url: lookupCachedUploadUrl(url).url || MISSING,
         short_path: lookupCachedUploadUrl(url).short_path || MISSING,
