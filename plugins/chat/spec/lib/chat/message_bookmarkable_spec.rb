@@ -77,10 +77,7 @@ describe Chat::MessageBookmarkable do
       end
       fab!(:reply) { Fabricate(:chat_message, chat_channel: threading_channel, thread: thread) }
 
-      before do
-        threading_channel.add(user)
-        original_message.trash!
-      end
+      before { original_message.trash! }
 
       it "returns the bookmark for staff" do
         admin = Fabricate(:admin)
