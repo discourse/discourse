@@ -1019,6 +1019,19 @@ RSpec.describe UploadsController do
       expect(result[0]["short_path"]).to eq(upload.short_path)
     end
 
+    it "rejects an oversized batch instead of scanning uploads for each short_url" do
+      sign_in(user)
+
+      short_urls = Array.new(1001) { |i| "upload://scanme#{i}" }
+
+      queries =
+        track_sql_queries { post "/uploads/lookup-urls.json", params: { short_urls: short_urls } }
+
+      expect(response.status).to eq(413)
+      filename_scans = queries.count { |sql| sql.include?("original_filename LIKE") }
+      expect(filename_scans).to eq(0)
+    end
+
     describe "secure uploads" do
       let(:upload) { Fabricate(:upload_s3, secure: true) }
 

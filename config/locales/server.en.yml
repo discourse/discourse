@@ -5635,6 +5635,9 @@ en:
 
   upload:
     edit_reason: "downloaded local copies of images"
+    too_many_short_urls:
+      one: "Can't look up more than %{count} URL in a single request."
+      other: "Can't look up more than %{count} URLs in a single request."
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     images_only: "Sorry, you can only upload images for this setting."
     pasted_image_filename: "Pasted image"
