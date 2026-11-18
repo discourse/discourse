@@ -78,17 +78,28 @@ describe "Topic page" do
   end
 
   context "with a post containing a code block" do
-    before { Fabricate(:post, topic: topic, raw: <<~RAW) }
-      this a code block
-      ```
-      echo "hello world"
-      ```
+    let!(:code_post) { Fabricate(:post, topic: topic, raw: <<~RAW) }
+        this a code block
+        ```
+        echo "hello world"
+        ```
       RAW
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:code_block_post) { PageObjects::Components::Post.new(code_post.post_number) }
 
     it "includes the copy button" do
       visit("/t/#{topic.slug}/#{topic.id}")
 
       expect(page).to have_css(".codeblock-button-wrapper")
+    end
+
+    it "leaves room for the copy button in left-to-right code on an RTL site", mobile: true do
+      SiteSetting.default_locale = "ar"
+      SiteSetting.support_mixed_text_direction = true
+
+      topic_page.visit_topic(topic)
+
+      expect(code_block_post).to have_ltr_code_copy_padding_in_rtl_interface
     end
   end
 
