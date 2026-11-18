@@ -34,6 +34,8 @@ register_homepage(
 )
 
 after_initialize do
+  register_problem_check ProblemCheck::BlogNotReady
+
   if defined?(Rack::MiniProfiler)
     %w[/blog-highlight/ /blog/blog-highlight/].each do |path|
       Rack::MiniProfiler.config.skip_paths << "#{Discourse.base_path}#{path}"
@@ -96,6 +98,15 @@ after_initialize do
         end
     end
     @blog_publication
+  end
+
+  on(:site_setting_changed) do |name|
+    name = name.to_sym
+    if %i[blog_category blog_publisher_groups].include?(name)
+      Blog::AddPublishersToPublicCategory.call
+    end
+    next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
+    Blog::EnsureDraftsCategory.call(options: { create_missing: false })
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

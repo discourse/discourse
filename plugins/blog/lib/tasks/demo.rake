@@ -26,22 +26,12 @@ namespace :blog do
   task demo: :environment do
     abort "Demo content is only available in development" unless Rails.env.development?
     admin = Blog::DemoUsers.admin
-    blog = Category.find_by(id: SiteSetting.blog_category) || Category.find_by(slug: "blog")
-    unless blog
-      blog = Category.new(name: "Blog", slug: "blog", user: admin)
-      blog.set_permissions(everyone: :create_post, staff: :full)
-      blog.save!
+    drafts = Blog::EnsureDraftsCategory.call![:category]
+    public_category = Blog::EnsurePublicCategory.call
+    if public_category.failure?
+      abort(Blog::Readiness.new.error || "The blog category could not be created")
     end
-    drafts =
-      Category.find_by(id: SiteSetting.blog_drafts_category) ||
-        Category.find_by(slug: "blog-drafts")
-    unless drafts
-      drafts = Category.new(name: "Blog editorial", slug: "blog-drafts", user: admin)
-      drafts.set_permissions(staff: :full)
-      drafts.save!
-    end
-    SiteSetting.blog_category = blog.id
-    SiteSetting.blog_drafts_category = drafts.id
+    blog = public_category[:category]
     SiteSetting.blog_title = "Fieldnotes"
     SiteSetting.blog_description =
       "Ideas in progress, things we’ve learned, and conversations worth having."
