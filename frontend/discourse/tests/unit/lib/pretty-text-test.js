@@ -112,6 +112,20 @@ module("Unit | Utility | pretty-text", function (hooks) {
     );
   });
 
+  test("the AI attribute labels a bbcode quote", function (assert) {
+    assert.cooked(
+      "[quote ai]\nQuoted text\n[/quote]",
+      `<aside class="quote no-group">\n<blockquote data-ai-generated="true">\n${aiBadge}<p>Quoted text</p>\n</blockquote>\n</aside>`,
+      "a bare quote gets the label"
+    );
+
+    assert.cooked(
+      '[quote="sam, post:1, topic:2" ai]\nQuoted text\n[/quote]',
+      `<aside class="quote no-group" data-username="sam" data-post="1" data-topic="2">\n<div class="title">\n<div class="quote-controls"></div>\n sam:</div>\n<blockquote data-ai-generated="true">\n${aiBadge}<p>Quoted text</p>\n</blockquote>\n</aside>`,
+      "a quote with a source gets the label"
+    );
+  });
+
   test("buildOptions", function (assert) {
     assert.true(
       build({ siteSettings: { enable_emoji: true } }).options.discourse.features

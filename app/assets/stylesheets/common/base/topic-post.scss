@@ -793,7 +793,8 @@ blockquote {
   }
 }
 
-blockquote > .ai-badge {
+blockquote > .ai-badge,
+blockquote > .post__contents-cooked-quote > .ai-badge {
   float: inline-end;
   margin-inline-start: 0.75em;
 }
@@ -814,6 +815,7 @@ pre[data-code-ai="true"] {
   .codeblock-button-wrapper {
     align-items: center;
     padding-inline-end: 1rem;
+    padding-top: calc(1.5 * var(--space-1));
 
     > .ai-badge {
       margin-inline-start: 0.5rem;

@@ -410,6 +410,7 @@ ur:
         share_modal:
           copy: "کاپی"
         conversations:
+          tab_label: "مصنوعی ذہانت"
           today: "آج"
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"

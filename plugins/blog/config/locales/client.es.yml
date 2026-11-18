@@ -57,7 +57,11 @@ es:
         edit: Editar
         status: Estado
         replies: Respuestas
+        title: Título
+        page: Página
+      all: Todo
       drafts: Borradores
+      pages: Páginas
       preview: Vista previa
       unpublish: Despublicar
       appearance_link: Aspecto

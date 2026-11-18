@@ -2869,6 +2869,7 @@ hr:
         size_too_small: "%{provided_file_size} je manje od minimalno dopuštene vrijednosti %{min_file_size}"
     emoji_picker:
       filter_placeholder: Traži emotikone
+      no_results: "Nema rezultata"
       smileys_&_emotion: Smajlići i emotikoni
       people_&_body: Ljudi i tijelo
       animals_&_nature: Životinje i priroda
@@ -2903,6 +2904,10 @@ hr:
       emoji: "Emoji :)"
       more_emoji: "više…"
       options: "Mogućnosti"
+      ai_content:
+        code: "Šifra"
+        quote: "Citat"
+        details: "Detalji"
       whisper: "šapat"
       unlist: "neobjavljeno"
       add_warning: "Ovo je službeno upozorenje."
@@ -5052,6 +5057,16 @@ hr:
       forward: "Naprijed"
       share: "Dijeli"
       dismiss: "Skloni"
+    mobile_tab_bar:
+      new_topic: "Nova tema"
+      create: "Stvorite"
+      more: "Više"
+      back: "Natrag"
+      topics: "Tema"
+      drafts:
+        one: "Skice (%{count})"
+        few: "Skice (%{count})"
+        other: "Skice (%{count})"
     safe_mode:
       enabled: "Omogućen je siguran način rada, da biste izašli iz sigurnog načina rada, zatvorite ovaj prozor preglednika"
     theme_preview_notice: "Trenutno pregledavate temu, zatvorite ovu karticu ili prozor preglednika da biste se vratili na uobičajenu konfiguraciju web stranice."
@@ -6316,8 +6331,6 @@ hr:
           company_name: "Ime"
           company_url: "Web stranica"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Mjerodavno pravo i nadležnost"
-          city_for_disputes_placeholder: "Grad"
           extra_groups:
             groups: "Grupe"
             order: "Redoslijed sortiranja"

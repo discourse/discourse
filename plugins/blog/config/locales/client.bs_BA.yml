@@ -45,6 +45,8 @@ bs_BA:
         edit: Izmijeni
         status: Status
         replies: Odgovori
+        title: Naslov
+      all: Sve
       drafts: Skice
       preview: Pregled
       appearance_link: Izgled

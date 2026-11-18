@@ -312,6 +312,7 @@ en:
       title: "AI"
       dsa_classification:
         suggest: "Suggest with AI"
+        suggested_by_ai: "Suggested by AI"
         updated: "Classification updated"
         no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
@@ -1921,8 +1922,9 @@ en:
 
       ai_bot:
         title: "AI bot"
-        agent: "Agent:"
-        llm: "Model:"
+        agent_menu_heading: "Agent"
+        model_menu_heading: "Language model"
+        manage_language_models: "Manage language models"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
         try_again: "Try again"
@@ -2003,7 +2005,7 @@ en:
             body: "Get answers from AI, and keep your conversations here to come back to later."
           header: "What can I help with?"
           submit: "Submit question"
-          disclaimer: "Generative AI can make mistakes. Verify important information."
+          disclaimer: "AI can make mistakes. Verify important information."
           placeholder: "Ask a question..."
           new: "New Question"
           min_input_length_message:

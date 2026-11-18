@@ -89,7 +89,7 @@ export default class extends DiscourseRoute {
       } else {
         router.replaceWith("discovery.login-required");
       }
-    } else if (isOnlyOneExternalLoginMethod) {
+    } else if (isOnlyOneExternalLoginMethod && !this.login.showInvitationGate) {
       if (redirect) {
         singleExternalLogin();
         return new Promise(() => {}); // Prevents the transition from completing

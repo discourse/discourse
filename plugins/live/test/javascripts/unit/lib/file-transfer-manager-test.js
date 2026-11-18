@@ -7,6 +7,8 @@ import {
 import FileTransferManager, {
   CHUNK_SIZE,
   FileTransferRateLimitError,
+  HIGH_WATER,
+  MAX_CHUNK_SIZE,
   RECEIVE_WINDOW,
 } from "discourse/plugins/live/discourse/lib/live/file-transfer-manager";
 
@@ -52,6 +54,9 @@ class TestSink {
 
 // Fake sinks should not depend on the test browser's real origin quota, and
 // only the rate-limit tests should be bound by offer limits.
+// The most whole chunks the sender may have unacknowledged.
+const WINDOW_CHUNKS = Math.floor(RECEIVE_WINDOW / CHUNK_SIZE);
+
 function createManager(options) {
   return new FileTransferManager({
     estimateStorage: async () => undefined,
@@ -96,7 +101,14 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       return id;
     };
     this.message = (channel, type, id, extra = {}) =>
-      channel.onmessage({ data: JSON.stringify({ type, id, ...extra }) });
+      channel.onmessage({
+        data: JSON.stringify({
+          type,
+          id,
+          ...(type === "offer" ? { chunkSize: CHUNK_SIZE } : {}),
+          ...extra,
+        }),
+      });
   });
   hooks.afterEach(function () {
     this.sender.destroy();
@@ -177,20 +189,20 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
 
   test("backpressure stops reads and cancellation stops the pump", async function (assert) {
     const id = await this.offer();
-    this.a.bufferedAmount = RECEIVE_WINDOW + 1;
+    this.a.bufferedAmount = HIGH_WATER + 1;
     await this.receiver.accept(id);
     await Promise.resolve();
     assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
     this.sender.cancel(id);
     this.a.bufferedAmount = 0;
-    await new Promise((resolve) => setTimeout(resolve, 40));
+    await new Promise((resolve) => setTimeout(resolve, 300));
     assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
     assert.strictEqual(this.sender.transfers[0].status, "cancelled");
   });
 
   test("control-channel congestion fails the transfer instead of queuing cancellation", async function (assert) {
     const id = await this.offer();
-    this.a.bufferedAmount = 1024 * 1024;
+    this.a.bufferedAmount = HIGH_WATER * 2 + 1;
     await this.receiver.accept(id);
     this.sender.cancel(id);
     assert.strictEqual(this.sender.transfers[0].status, "failed");
@@ -206,9 +218,9 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
   test("congestion while refusing an offer leaves an unrelated transfer running", async function (assert) {
     const id = await this.offer();
     // Hold the sender's bytes back so the receive stays in progress.
-    this.a.bufferedAmount = 1024 * 1024;
+    this.a.bufferedAmount = HIGH_WATER * 2 + 1;
     await this.receiver.accept(id);
-    this.b.bufferedAmount = 1024 * 1024;
+    this.b.bufferedAmount = HIGH_WATER * 2 + 1;
     this.message(this.b, "offer", crypto.randomUUID(), { name: "x", size: 1 });
     assert.strictEqual(this.receiver.transfers[0].status, "transferring");
     assert.strictEqual(this.b.readyState, "open");
@@ -386,17 +398,67 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
 
   test("backpressure resumes once the channel buffer drains", async function (assert) {
     const id = await this.offer("resumed");
-    this.a.bufferedAmount = RECEIVE_WINDOW + 1;
+    this.a.bufferedAmount = HIGH_WATER + 1;
     await this.receiver.accept(id);
     await Promise.resolve();
     assert.false(this.a.sent.some((data) => data instanceof ArrayBuffer));
     this.a.bufferedAmount = 0;
-    await waitUntil(() => this.sender.transfers[0].status === "completed");
+    this.a.onbufferedamountlow();
+    await waitUntil(() => this.sender.transfers[0].status === "completed", {
+      timeout: 200,
+      timeoutMessage: "the drain event resumes without waiting for the poll",
+    });
     assert.strictEqual(
       await (
         await this.receiver.getReceivedFile(this.receiver.transfers[0].id)
       ).text(),
       "resumed"
+    );
+  });
+
+  test("chunks are sized to the transport's message limit", async function (assert) {
+    for (const [limit, expected] of [
+      [128 * 1024, 128 * 1024 - 36],
+      [Infinity, MAX_CHUNK_SIZE],
+      [1024, 16 * 1024 - 36],
+      [0, CHUNK_SIZE],
+    ]) {
+      const channel = new Channel();
+      this.sender.attach(1, 5, channel, () => limit);
+      this.sender.send(1, 5, new File(["x"], "x.txt"));
+      assert.strictEqual(JSON.parse(channel.sent[0]).chunkSize, expected);
+    }
+  });
+
+  test("offers with an invalid chunk size are rejected", async function (assert) {
+    for (const chunkSize of [undefined, 1024, MAX_CHUNK_SIZE + 1, 65536.5]) {
+      const id = crypto.randomUUID();
+      this.message(this.b, "offer", id, { name: "x", size: 1, chunkSize });
+      assert.deepEqual(JSON.parse(this.b.sent.at(-1)), { type: "reject", id });
+    }
+    assert.deepEqual(this.receiver.transfers, []);
+  });
+
+  test("chunks queued behind a slow write reach the disk in one batch", async function (assert) {
+    const contents = "x".repeat(CHUNK_SIZE * 5 + 3);
+    const id = await this.offer(contents);
+    await this.receiver.accept(id);
+    const write = deferred();
+    const sizes = [];
+    this.sinks[0].write = (chunk) => {
+      sizes.push(chunk.byteLength);
+      this.sinks[0].chunks.push(chunk);
+      return write.promise;
+    };
+    await waitUntil(
+      () => this.a.sent.filter((d) => d instanceof ArrayBuffer).length === 6
+    );
+    write.resolve();
+    await waitUntil(() => this.sender.transfers[0].status === "completed");
+    assert.deepEqual(sizes, [CHUNK_SIZE, CHUNK_SIZE * 4 + 3]);
+    assert.strictEqual(
+      await (await this.receiver.getReceivedFile(id)).text(),
+      contents
     );
   });
 
@@ -707,7 +769,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     await new Promise((resolve) => setTimeout(resolve, 30));
     assert.strictEqual(
       this.a.sent.filter((d) => d instanceof ArrayBuffer).length,
-      RECEIVE_WINDOW / CHUNK_SIZE
+      WINDOW_CHUNKS
     );
     assert.false(
       this.b.sent.some(
@@ -719,7 +781,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     await waitUntil(
       () =>
         this.a.sent.filter((d) => d instanceof ArrayBuffer).length ===
-        RECEIVE_WINDOW / CHUNK_SIZE + 1
+        WINDOW_CHUNKS + 1
     );
     await waitUntil(() =>
       this.a.sent.some(
@@ -743,7 +805,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     this.sinks[0].write = () => write.promise;
     const frame = new Uint8Array(36 + CHUNK_SIZE);
     frame.set(new TextEncoder().encode(id));
-    for (let i = 0; i <= RECEIVE_WINDOW / CHUNK_SIZE; i++) {
+    for (let i = 0; i <= WINDOW_CHUNKS; i++) {
       this.b.onmessage({ data: frame.buffer });
     }
     assert.strictEqual(this.receiver.transfers[0].status, "failed");
@@ -1043,9 +1105,11 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
     });
 
     test("already persisted bytes are not reserved a second time", async function (assert) {
-      // Fill one write window, then pause the sender before the last byte.
-      this.estimate = { quota: RECEIVE_WINDOW + 10, usage: 0 };
-      const id = await this.offer("x".repeat(RECEIVE_WINDOW + 1));
+      // Fill one write window, then pause the sender before the last chunk.
+      const windowBytes = WINDOW_CHUNKS * CHUNK_SIZE;
+      const size = windowBytes + CHUNK_SIZE;
+      this.estimate = { quota: size + 10, usage: 0 };
+      const id = await this.offer("x".repeat(size));
       const send = this.b.send.bind(this.b);
       this.b.send = (data) => {
         if (JSON.parse(data).type !== "ack") {
@@ -1053,8 +1117,12 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
         }
       };
       await this.receiver.accept(id);
-      await waitUntil(() => this.receiver.transfers[0].progress > 0.99);
-      this.estimate = { quota: RECEIVE_WINDOW + 6, usage: RECEIVE_WINDOW };
+      await waitUntil(
+        () =>
+          this.sinks[0]?.chunks.reduce((sum, c) => sum + c.byteLength, 0) ===
+          windowBytes
+      );
+      this.estimate = { quota: size + 5, usage: windowBytes };
       const channel = new Channel();
       this.receiver.attach(1, 3, channel);
       const second = crypto.randomUUID();

@@ -46,6 +46,7 @@ function createQuoteNodeView({ getContext }) {
       this.dom.className = "quote";
 
       this.contentDOM = document.createElement("blockquote");
+      this.#renderAi(node);
       this.dom.append(this.contentDOM);
 
       this.#render(node);
@@ -55,6 +56,7 @@ function createQuoteNodeView({ getContext }) {
       // update() also fires for content edits; the header depends only on markup
       if (!this.node.sameMarkup(node)) {
         this.#render(node);
+        this.#renderAi(node);
       }
 
       this.node = node;
@@ -84,6 +86,14 @@ function createQuoteNodeView({ getContext }) {
 
       if (this.#title) {
         this.dom.insertBefore(this.#title, this.contentDOM);
+      }
+    }
+
+    #renderAi(node) {
+      if (node.attrs.ai) {
+        this.contentDOM.setAttribute("data-ai-generated", "true");
+      } else {
+        this.contentDOM.removeAttribute("data-ai-generated");
       }
     }
 
@@ -153,6 +163,7 @@ const extension = {
         postNumber: { default: null },
         topicId: { default: null },
         full: { default: null },
+        ai: { default: false },
       },
       parseDOM: [
         {
@@ -165,6 +176,10 @@ const extension = {
               postNumber: dom.getAttribute("data-post"),
               topicId: dom.getAttribute("data-topic"),
               full: dom.getAttribute("data-full"),
+              ai:
+                dom
+                  .querySelector(":scope > blockquote")
+                  ?.getAttribute("data-ai-generated") === "true",
             };
           },
         },
@@ -182,7 +197,11 @@ const extension = {
           ]);
         }
 
-        domSpec.push(["blockquote", 0]);
+        domSpec.push([
+          "blockquote",
+          node.attrs.ai ? { "data-ai-generated": "true" } : {},
+          0,
+        ]);
 
         return domSpec;
       },
@@ -205,14 +224,20 @@ const extension = {
     },
     quote_header_close() {},
     quote_controls: { ignore: true },
-    bbcode_open(state, token) {
+    bbcode_open(state, token, tokens, i) {
       if (token.tag === "aside") {
+        let j = i + 1;
+        while (tokens[j] && tokens[j].type !== "bbcode_open") {
+          j++;
+        }
+
         state.openNode(state.schema.nodes.quote, {
           username: token.attrGet("data-username"),
           displayName: token.attrGet("data-display-name"),
           postNumber: token.attrGet("data-post"),
           topicId: token.attrGet("data-topic"),
           full: token.attrGet("data-full"),
+          ai: tokens[j]?.attrGet("data-ai-generated") === "true",
         });
         return true;
       }
@@ -245,7 +270,8 @@ const extension = {
       });
     },
     quote(state, node) {
-      const { username, displayName, postNumber, topicId, full } = node.attrs;
+      const { username, displayName, postNumber, topicId, full, ai } =
+        node.attrs;
       const postNumberParam = postNumber ? `, post:${postNumber}` : "";
       const topicIdParam = topicId ? `, topic:${topicId}` : "";
       const fullParam = full === "true" ? `, full:true` : "";
@@ -256,7 +282,7 @@ const extension = {
         ? `="${name}${postNumberParam}${topicIdParam}${fullParam}${usernameParam}"`
         : "";
 
-      state.write(`[quote${quoteValue}]\n`);
+      state.write(`[quote${quoteValue}${ai ? " ai" : ""}]\n`);
       state.renderContent(node);
       state.write("[/quote]\n\n");
     },
@@ -283,7 +309,11 @@ const extension = {
           if (!decorationsByDoc.has(doc)) {
             const badges = [];
             doc.descendants((node, pos) => {
-              if (node.type.name === "blockquote" && node.attrs.ai) {
+              if (
+                (node.type.name === "blockquote" ||
+                  node.type.name === "quote") &&
+                node.attrs.ai
+              ) {
                 badges.push(Decoration.widget(pos + 1, createAiBadge));
               }
             });

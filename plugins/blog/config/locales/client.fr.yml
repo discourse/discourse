@@ -57,7 +57,11 @@ fr:
         edit: Modifier
         status: Statut
         replies: Réponses
+        title: Titre
+        page: Page
+      all: Tout
       drafts: Brouillons
+      pages: Pages
       preview: Aperçu
       unpublish: Annuler la publication
       appearance_link: Apparence

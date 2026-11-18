@@ -142,11 +142,6 @@ lv:
           zero: "%{count} dienas"
           one: "%{count} diena"
           other: "%{count} dienas"
-      emoji_picker:
-        objects: "Priekšmeti"
-        activities: "Aktivitātes"
-        flags: "Sūdzības"
-        symbols: "Simboli"
       thread:
         title: "Virsraksts"
         replies:

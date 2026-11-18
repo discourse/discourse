@@ -522,11 +522,6 @@ nl:
   too_many_mentions_newuser:
     one: "Sorry, nieuwe gebruikers kunnen slechts één andere gebruiker noemen in een bericht."
     other: "Sorry, nieuwe gebruikers kunnen maximaal %{count} gebruikers noemen in een bericht."
-  no_embedded_media_allowed_group: "Sorry, je kunt geen media-items insluiten in een bericht."
-  no_embedded_media_allowed: "Sorry, nieuwe gebruikers kunnen geen media-items insluiten in berichten."
-  too_many_embedded_media:
-    one: "Sorry, nieuwe gebruikers kunnen slechts één ingesloten media-item in een bericht plaatsen."
-    other: "Sorry, nieuwe gebruikers kunnen slechts %{count} ingesloten media-items in een bericht plaatsen."
   no_attachments_allowed: "Sorry, nieuwe gebruikers kunnen geen bijlagen toevoegen aan berichten."
   too_many_attachments:
     one: "Sorry, nieuwe gebruikers kunnen slechts één bijlage toevoegen aan een bericht."
@@ -2448,8 +2443,6 @@ nl:
     automatically_clean_unused_tags: "Verwijder dagelijks automatisch tags die niet worden gebruikt in topics of persoonlijke berichten."
     default_watched_precedence_over_muted: "Informeer gebruikers over topics in categorieën of tags die ze observeren en die ook horen bij een topic dat ze hebben gedempt."
     company_name: "Naam van je bedrijf of organisatie."
-    governing_law: "Geef het rechtsgebied op dat de juridische aspecten van de site beheerst, inclusief de Gebruiksvoorwaarden en het Privacybeleid. Dit is meestal het land of de staat waar het bedrijf dat de site beheert is geregistreerd of zaken doet."
-    city_for_disputes: "Geef de plaats op die wordt gebruikt als rechtsgebied voor het oplossen van geschillen met betrekking tot het gebruik van dit forum. Deze informatie wordt meestal opgenomen in juridische documenten zoals de Gebruiksvoorwaarden van het forum."
     shared_drafts_category: "Schakel de functie Gedeelde concepten in door een categorie voor topicconcepten aan te geven. Topics in deze categorie worden onderdrukt in topiclijsten voor medewerkers."
     shared_drafts_allowed_groups: "Sta gebruikers in deze groepen toe gedeelde concepten te bekijken en te bewerken."
     push_notifications_prompt: "Geef een toestemmingsbanner voor pushmeldingen weer. Deze instelling zorgt ervoor dat gebruikers om toestemming worden gevraagd voor het sturen van pushmeldingen. Deze vraag wordt alleen weergegeven als pushmeldingen nog niet zijn ingeschakeld, worden ondersteund door het apparaat van de gebruiker en de gebruiker een bericht heeft geplaatst of een progressieve webapp (PWA) gebruikt. De vraag wordt niet meer weergegeven als de gebruiker deze al heeft gesloten of toestemming heeft gegeven/geweigerd."

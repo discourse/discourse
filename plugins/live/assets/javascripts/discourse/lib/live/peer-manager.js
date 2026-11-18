@@ -322,7 +322,12 @@ export default class PeerManager {
         id: 0,
         ordered: true,
       });
-      this.#onFileChannel(roomId, remoteUserId, channel);
+      this.#onFileChannel(
+        roomId,
+        remoteUserId,
+        channel,
+        () => pc.sctp?.maxMessageSize
+      );
     }
 
     const localStream = this.#getLocalStream();

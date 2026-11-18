@@ -1714,6 +1714,7 @@ uk:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "ШІ"
           header: "Чим я можу допомогти?"
           submit: "Надішліть запитання"
           disclaimer: "Генеративний ШІ може помилятися. Перевіряйте важливу інформацію."

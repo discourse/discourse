@@ -104,8 +104,6 @@ after_initialize do
           new_relations << PostPolicyGroup.new(post_policy_id: post_policy.id, group_id: id)
         end
 
-        post_policy.post_policy_groups = new_relations
-
         renew_days = policy["data-renew"]
         if renew_days.to_i > 0 || PostPolicy.renew_intervals.keys.include?(renew_days)
           post_policy.renew_days =
@@ -170,7 +168,10 @@ after_initialize do
             post.custom_fields[DiscoursePolicy::HAS_POLICY] = true
             post.save_custom_fields
           end
-          post_policy.save!
+          PostPolicy.transaction do
+            post_policy.post_policy_groups = new_relations
+            post_policy.save!
+          end
         end
       end
     end

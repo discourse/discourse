@@ -56,7 +56,11 @@ hu:
         edit: Szerkesztés
         status: Állapot
         replies: Válaszok
+        title: Cím
+        page: Oldal
+      all: Összes
       drafts: Vázlatok
+      pages: Oldalak
       preview: Előnézet
       unpublish: Közzététel visszavonása
       appearance_link: Megjelenés

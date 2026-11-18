@@ -51,6 +51,8 @@ hy:
         edit: Խմբագրել
         status: Ստատուս
         replies: Պատասխաններ
+        title: Վերնագիր
+      all: Բոլոր
       drafts: Սևագրեր
       preview: Նախադիտում
       unpublish: Հրապարակումը չեղարկել

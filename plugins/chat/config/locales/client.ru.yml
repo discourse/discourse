@@ -715,19 +715,6 @@ ru:
         notify_moderators: "Это сообщение требует внимания персонала по причине, не указанной выше."
       flagging:
         action: "Пожаловаться на сообщение"
-      emoji_picker:
-        favorites: "Часто используемые"
-        smileys_&_emotion: "Смайлики и эмоции"
-        objects: "Объекты"
-        people_&_body: "Люди и части тел"
-        travel_&_places: "Путешествия и места"
-        animals_&_nature: "Животные и природа"
-        food_&_drink: "Еда и напитки"
-        activities: "Деятельность"
-        flags: "Флаги"
-        symbols: "Символы"
-        search_placeholder: "Поиск по названию эмодзи и псевдониму…"
-        no_results: "Нет результатов"
       thread:
         title: "Название"
         view_thread: Просмотреть цепочку

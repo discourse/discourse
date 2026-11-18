@@ -49,6 +49,8 @@ nb_NO:
         edit: Rediger
         status: Status
         replies: Svar
+        title: Tittel
+      all: Alle
       drafts: Utkast
       preview: Forhåndsvis
       unpublish: Avpubliser

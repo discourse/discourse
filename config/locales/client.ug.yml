@@ -2960,6 +2960,9 @@ ug:
         size_too_small: "%{provided_file_size} چوڭلۇقى ئەڭ كىچىك قىممەت %{min_file_size} تىن كىچىك"
     emoji_picker:
       filter_placeholder: چىراي ئىپادە ئىزدە
+      search_placeholder: "چىراي ئىپادە ئىسمى ۋە لەقىمى بىلەن ئىزدەيدۇ…"
+      no_results: "نەتىجە يوق"
+      favorites: "دائىم ئىشلىتىدىغان"
       smileys_&_emotion: چىراي ئىپادە ۋە تۇيغۇ
       people_&_body: ئادەم ۋە بەدەن
       animals_&_nature: ھايۋان ۋە تەبىئەت
@@ -3007,6 +3010,10 @@ ug:
       emoji: "چىراي ئىپادە :)"
       more_emoji: "تېخىمۇ كۆپ…"
       options: "تاللانما"
+      ai_content:
+        code: "كود"
+        quote: "نەقىل"
+        details: "تەپسىلاتى"
       whisper: "پىچىر"
       unlist: "تىزىلمىدى"
       add_warning: "بۇ رەسمىي ئاگاھلاندۇرۇش."
@@ -5167,6 +5174,15 @@ ug:
       forward: "ئالدى"
       share: "ھەمبەھىر"
       dismiss: "پەرۋا قىلما"
+    mobile_tab_bar:
+      new_topic: "يېڭى تېما"
+      create: "قۇر"
+      more: "تېخىمۇ كۆپ"
+      back: "كەينى"
+      topics: "تېما"
+      drafts:
+        one: "دەسلەپكى نۇسخا (%{count})"
+        other: "دەسلەپكى نۇسخا (%{count})"
     safe_mode:
       enabled: "بىخەتەر ھالەت قوزغىتىلغان، بىخەتەر ھالەتتىن چېكىنىشتە بۇ توركۆرگۈ كۆزنىكىنى تاقايدۇ"
     theme_preview_notice: "سىز ھازىر بىر ئۆرنەكنى ئالدىن كۆزىتىۋاتىسىز، بۇ توركۆرگۈ بەتكۈچى ياكى كۆزنىكىنى تاقىسىڭىز ئادەتتىكى تور بېكەت سەپلىمىسىگە قايتىسىز."
@@ -6685,14 +6701,6 @@ ug:
           company_name: "ئىسمى"
           company_url: "تور بېكەت"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "باشقۇرۇش قانۇنى"
-          governing_law_placeholder: "ئۆلكە، ئىشتات ياكى دۆلەت"
-          governing_law_help: |
-            تور بېكەتنىڭ قانۇنىي ماددىلىرىنىڭ ئەدلىيە تەۋەلىكى بەلگىلىنىدۇ، ئادەتتە شىركەت تىزىملاتقان جاي ياكى تىجارەت قىلىدىغان جاينى كۆرسىتىدۇ.
-          city_for_disputes: "تالاش-تارتىشتىكى شەھەر"
-          city_for_disputes_placeholder: "شەھەر"
-          city_for_disputes_help: |
-            بۇ مۇنبەرگە مۇناسىۋەتلىك قانۇن ماجىرالىرىنى ھەل قىلىدىغان شەھەر بەلگىلىنىدۇ.
           extra_groups:
             heading: "گۇرۇپپا تىزىمى"
             description: "ھەققىدە بېتىدە كۆرسىتىدىغان قوشۇمچە گۇرۇپپا."

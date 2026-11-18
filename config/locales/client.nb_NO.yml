@@ -2421,6 +2421,10 @@ nb_NO:
       emoji: "Emoji :)"
       more_emoji: "mer…"
       options: "Alternativer"
+      ai_content:
+        code: "Kode"
+        quote: "Sitat"
+        details: "Detaljer"
       whisper: "hvisk"
       unlist: "skjult"
       add_warning: "Dette er en offisiell advarsel."
@@ -4221,6 +4225,14 @@ nb_NO:
       forward: "Videresend"
       share: "Del"
       dismiss: "Avslå"
+    mobile_tab_bar:
+      create: "Opprett"
+      more: "Mer"
+      back: "Forrige"
+      topics: "Emner"
+      drafts:
+        one: "Utkast (%{count})"
+        other: "Utkast (%{count})"
     safe_mode:
       enabled: "Sikkert modus er påskrudd, for å skru av sikkert modus, lukk dette nettleservinduet"
     image_removed: "(bilde fjernet)"

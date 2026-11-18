@@ -2744,6 +2744,9 @@ fi:
         size_too_small: "%{provided_file_size} on pienempi kuin pienin sallittu %{min_file_size}"
     emoji_picker:
       filter_placeholder: Hae emojia
+      search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
+      no_results: "Ei tuloksia"
+      favorites: "Usein käytetyt"
       smileys_&_emotion: Hymiöt ja tunteet
       people_&_body: Ihmiset ja kehot
       animals_&_nature: Eläimet ja luonto
@@ -2780,6 +2783,10 @@ fi:
       emoji: "Emoji :)"
       more_emoji: "lisää…"
       options: "Asetukset"
+      ai_content:
+        code: "Koodi"
+        quote: "Lainaa"
+        details: "Tiedot"
       whisper: "kuiskaus"
       unlist: "listaamaton"
       add_warning: "Tämä on virallinen varoitus."
@@ -3842,6 +3849,7 @@ fi:
         clear_all: "Tyhjennä kaikki"
         actions: "Joukkotoiminnot"
     post:
+      ai_generated: "Tekoäly"
       confirm_delete: "Oletko varma, että haluat poistaa tämän viestin?"
       quote_reply: "Lainaa"
       quote_reply_shortcut: "Lainaus (tai paina q)"
@@ -4816,6 +4824,15 @@ fi:
       forward: "Seuraava"
       share: "Jaa"
       dismiss: "Sulje"
+    mobile_tab_bar:
+      new_topic: "Uusi ketju"
+      create: "Luo"
+      more: "Lisää"
+      back: "Takaisin"
+      topics: "Aiheet"
+      drafts:
+        one: "Luonnokset (%{count})"
+        other: "Luonnokset (%{count})"
     safe_mode:
       enabled: "Vikasietotila on käytössä, poistu vikasietotilasta sulkemalla selainikkuna"
     theme_preview_notice: "Esikatselet parhaillaan teemaa, sulje tämä selaimen välilehti tai ikkuna palataksesi normaaliin sivuston määritykseen."
@@ -6271,14 +6288,6 @@ fi:
           company_name: "Nimi"
           company_url: "Verkkosivusto"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Sovellettava lainsäädäntö"
-          governing_law_placeholder: "Maakunta, osavaltio tai maa"
-          governing_law_help: |
-            Määritä sivuston laillisten ehtojen lainkäyttöalue, yleensä missä yritys on rekisteröity tai missä se toimii.
-          city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
-          city_for_disputes_placeholder: "Kaupunki"
-          city_for_disputes_help: |
-            Määritä kaupunki tähän foorumiin liittyvien oikeudellisten riitojen ratkaisemiseksi.
           extra_groups:
             heading: "Ryhmälistaus"
             description: "Lisäryhmät, jotka näytetään Tietoja-sivulla."

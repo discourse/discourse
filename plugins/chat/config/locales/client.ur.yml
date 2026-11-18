@@ -478,12 +478,6 @@ ur:
       flags:
         notify_user: "اس شخص سے براہِ راست اور ذاتی طور پر ان کے پیغام کے بارے میں بات کریں۔"
         notify_moderators: "اس پیغام پر عملے کی توجہ کی ضرورت ہے کسی اور وجہ سے جو اوپر درج نہیں۔"
-      emoji_picker:
-        objects: "اشیاء"
-        activities: "سرگرمیاں"
-        flags: "فلَیگز"
-        symbols: "علامات"
-        no_results: "کوئی نتائج نہیں"
       thread:
         title: "عنوان"
         replies:

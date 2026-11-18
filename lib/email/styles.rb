@@ -205,21 +205,22 @@ module Email
 
       @fragment.css("aside.quote blockquote > p").each { |p| p["style"] = "padding: 0;" }
 
-      # Convert all `aside.quote` tags to `blockquote`s
+      # Convert all `aside.quote` tags to `blockquote`s, innermost first because
+      # converting a quote rebuilds its children from a copy
       @fragment
         .css("aside.quote")
-        .each do |n|
+        .reverse_each do |n|
           original_node = n.dup
           original_node.search("div.quote-controls").remove
           blockquote =
             (
-              if original_node.css("blockquote").inner_html.strip.start_with?("<p")
-                original_node.css("blockquote").inner_html
+              if original_node.css("> blockquote").inner_html.strip.start_with?("<p")
+                original_node.css("> blockquote").inner_html
               else
-                "<p style='padding: 0;'>#{original_node.css("blockquote").inner_html}</p>"
+                "<p style='padding: 0;'>#{original_node.css("> blockquote").inner_html}</p>"
               end
             )
-          n.inner_html = original_node.css("div.title").inner_html + blockquote
+          n.inner_html = original_node.css("> div.title").inner_html + blockquote
           n.name = "blockquote"
         end
 

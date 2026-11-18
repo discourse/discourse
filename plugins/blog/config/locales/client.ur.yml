@@ -55,7 +55,11 @@ ur:
         edit: ترمیم کریں
         status: حیثیت
         replies: جوابات
+        title: عنوان
+        page: صفحه
+      all: تمام
       drafts: مسودات
+      pages: صفحات
       preview: جھلک دیکھیں
       unpublish: اشاعت نہ کریں
       appearance_link: ظاہری شکل

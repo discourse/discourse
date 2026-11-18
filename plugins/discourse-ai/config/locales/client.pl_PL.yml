@@ -2018,6 +2018,8 @@ pl_PL:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
+          new_conversation: "Nowa rozmowa AI"
           homepage_option: "Rozmowy botów AI"
           preview:
             title: "Zaloguj się, aby zadać pytanie"

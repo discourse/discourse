@@ -67,6 +67,7 @@ module DiscourseMcp
       register_write_tools(registry)
       register_moderation_tools(registry)
       register_report_tools(registry)
+      register_webhook_tools(registry)
       register_site_setting_tools(registry)
       register_theme_tools(registry)
       register_theme_management_tools(registry)
@@ -152,6 +153,218 @@ module DiscourseMcp
             required: %w[report_type],
           ),
         annotations: READ_ONLY,
+        risk: :administration,
+      )
+    end
+
+    def register_webhook_tools(registry)
+      id = { type: "integer", minimum: 1 }
+      boolean = { type: "boolean" }
+      ids = { type: "array", maxItems: 100, uniqueItems: true, items: id }
+      fingerprint = { type: "string", minLength: 64, maxLength: 64, pattern: "^[a-f0-9]{64}$" }
+      pagination = {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: Tools::WebHookSupport::PAGE_LIMIT,
+        },
+        offset: {
+          type: "integer",
+          minimum: 0,
+          maximum: 1_000_000,
+        },
+      }
+      identity = { webhook_id: id, expected_destination_fingerprint: fingerprint }
+      attributes = {
+        payload_url: {
+          type: "string",
+          minLength: 1,
+          maxLength: 2_048,
+        },
+        content_type: {
+          type: "string",
+          enum: %w[application/json application/x-www-form-urlencoded],
+        },
+        secret: {
+          type: "string",
+          maxLength: 1_024,
+        },
+        active: boolean,
+        verify_certificate: boolean,
+        wildcard_web_hook: boolean,
+        event_type_ids: ids,
+        category_ids: ids,
+        tag_ids: ids,
+        group_ids: ids,
+        confirm_activate: boolean,
+        confirm_wildcard: boolean,
+        confirm_insecure_http: boolean,
+        confirm_disable_tls_verification: boolean,
+      }
+      register_tool(
+        registry,
+        "discourse_list_webhooks",
+        title: "List webhooks",
+        description:
+          "Lists administrator-only webhook configurations, ordered by ID. Destination paths, queries, URL credentials, and signing secrets are omitted. Use the returned destination fingerprint for mutations. Relationship ID lists are capped at 100 and report truncation. include_catalog returns available event types and content types.",
+        implementation: Tools::ListWebhooks,
+        input_schema:
+          object_schema(
+            pagination.merge(
+              active: boolean,
+              delivery_status: {
+                type: "string",
+                enum: %w[inactive failed successful disabled],
+              },
+              include_catalog: boolean,
+            ),
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_get_webhook",
+        title: "Get webhook",
+        description:
+          "Reads safe webhook configuration for administrators. Returns destination origin and fingerprint, never the complete URL or signing secret. Relationship IDs are capped at 100 and report truncation.",
+        implementation: Tools::GetWebhook,
+        input_schema:
+          object_schema({ webhook_id: id, include_catalog: boolean }, required: %w[webhook_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_list_webhook_events",
+        title: "List webhook events",
+        description:
+          "Lists administrator-only delivery history, newest first. Headers and bodies are omitted by default. include_content requires confirm_sensitive_content=true and mcp:private-messages:read because delivery bodies may contain private messages. Returns bounded JSON previews with current-configuration credential filtering; other sensitive forum or destination data may remain. Non-JSON and oversized bodies are omitted. content_limit bounds each preview.",
+        implementation: Tools::ListWebhookEvents,
+        defer: true,
+        input_schema:
+          object_schema(
+            pagination.merge(
+              webhook_id: id,
+              status: {
+                type: "string",
+                enum: %w[all successful failed],
+              },
+              include_content: boolean,
+              confirm_sensitive_content: boolean,
+              content_limit: {
+                type: "integer",
+                minimum: 100,
+                maximum: Tools::WebHookSupport::MAX_CONTENT_LENGTH,
+              },
+            ),
+            required: %w[webhook_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_webhook",
+        title: "Create webhook",
+        description:
+          "Creates an administrator-only webhook, inactive with TLS verification enabled by default. Requires confirm_external_delivery=true. Activation, wildcard subscriptions, HTTP destinations, and disabling TLS verification each need their corresponding explicit confirmation. Select active event type IDs from the live catalog; wildcard and explicit event subscriptions cannot be combined.",
+        implementation: Tools::CreateWebhook,
+        defer: true,
+        input_schema:
+          object_schema(
+            attributes.merge(confirm_external_delivery: boolean),
+            required: %w[payload_url content_type confirm_external_delivery],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_webhook",
+        title: "Update webhook",
+        description:
+          "Partially updates an administrator-only webhook after checking its current destination fingerprint and active state. Requires confirm_update=true. Omitted fields are preserved. Relationship arrays replace their complete selections and require confirm_scope_replacement=true when changed. Clearing the signing secret requires confirm_clear_secret=true. Retargeting an active hook also requires confirm_external_delivery=true. Risky configuration changes require the same confirmations as creation. Clearing relationship arrays removes those delivery filters.",
+        implementation: Tools::UpdateWebhook,
+        defer: true,
+        input_schema:
+          object_schema(
+            attributes.merge(identity).merge(
+              expected_active: boolean,
+              confirm_external_delivery: boolean,
+              confirm_update: boolean,
+              confirm_scope_replacement: boolean,
+              confirm_clear_secret: boolean,
+            ),
+            required: %w[
+              webhook_id
+              expected_destination_fingerprint
+              expected_active
+              confirm_update
+            ],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_webhook",
+        title: "Delete webhook",
+        description:
+          "Deletes an administrator-only webhook and its delivery history. Requires confirm_delete=true and the current destination fingerprint. This cannot be undone.",
+        implementation: Tools::DeleteWebhook,
+        defer: true,
+        input_schema:
+          object_schema(
+            identity.merge(confirm_delete: boolean),
+            required: %w[webhook_id expected_destination_fingerprint confirm_delete],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_ping_webhook",
+        title: "Ping webhook",
+        description:
+          "Queues a ping using the existing webhook delivery job and retry behavior, including for an inactive webhook. Requires confirm_external_request=true and the current destination fingerprint. Enqueue success does not mean delivery succeeded; inspect delivery history for the outcome.",
+        implementation: Tools::PingWebhook,
+        input_schema:
+          object_schema(
+            identity.merge(confirm_external_request: boolean),
+            required: %w[webhook_id expected_destination_fingerprint confirm_external_request],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_redeliver_webhook_event",
+        title: "Redeliver webhook event",
+        description:
+          "Makes one administrator-authorized redelivery attempt using the original stored headers and payload and the existing outbound SSRF protection. Requires confirm_redelivery=true, the current destination fingerprint, and expected_event_status. The event must belong to this webhook and must not be a ping or already queued for redelivery. May send private forum data to an external destination; no bulk redelivery or automatic retry is performed. In-progress native attempts block overlapping calls. A call after completion is a new attempt, so do not retry automatically after a timeout.",
+        implementation: Tools::RedeliverWebhookEvent,
+        defer: true,
+        input_schema:
+          object_schema(
+            identity.merge(
+              event_id: id,
+              expected_event_status: {
+                type: "integer",
+                minimum: -1,
+                maximum: 999,
+              },
+              confirm_redelivery: boolean,
+            ),
+            required: %w[
+              webhook_id
+              event_id
+              expected_destination_fingerprint
+              expected_event_status
+              confirm_redelivery
+            ],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
         risk: :administration,
       )
     end

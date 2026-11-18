@@ -20,6 +20,14 @@ export default class CategoryTypeCards extends Component {
   @service composer;
   @service router;
 
+  get sortedTypes() {
+    return [...this.args.types].sort(
+      (a, b) =>
+        Number(b.available) - Number(a.available) ||
+        a.name.localeCompare(b.name)
+    );
+  }
+
   @action
   selectType(type) {
     this.categoryTypeChooser.choose(type, this.args.counts[type.id]);
@@ -37,7 +45,7 @@ export default class CategoryTypeCards extends Component {
   <template>
     <div class="category-type-cards">
       <div class="category-type-cards__list">
-        {{#each @types as |type|}}
+        {{#each this.sortedTypes as |type|}}
           <div
             class={{dConcatClass
               "category-type-cards__card"

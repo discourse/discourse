@@ -31,12 +31,6 @@ export default class MobileTabBar extends Service {
   /** The section the current page belongs to, if any. */
   @tracked sectionTabKey = MAIN_PANEL;
 
-  /** Whether the current page sits below its section's top level. */
-  @tracked isNestedPage = false;
-
-  /** Whether the current page puts its own title in the header. */
-  @tracked isTitledPage = false;
-
   @tracked draftCount = this.currentUser?.draft_count ?? 0;
 
   /**
@@ -47,6 +41,10 @@ export default class MobileTabBar extends Service {
    */
   @tracked viewsSlot = null;
 
+  // Kept up to date while the bar is off too, as resizing into the mobile
+  // view turns it on without a route change
+  #nestedPage = tracked(false);
+  #titledPage = tracked(false);
   #lastURLs = new Map();
   #parentURLs = new Map();
 
@@ -74,6 +72,16 @@ export default class MobileTabBar extends Service {
       // Visitors to a private site have only the login page to see
       (!!this.currentUser || !this.siteSettings.login_required)
     );
+  }
+
+  /** Whether the current page sits below its section's top level. */
+  get isNestedPage() {
+    return this.enabled && this.#nestedPage.value;
+  }
+
+  /** Whether the current page puts its own title in the header. */
+  get isTitledPage() {
+    return this.enabled && this.#titledPage.value;
   }
 
   /** @returns {Array<Object>} The tabs, in the order the bar shows them. */
@@ -198,7 +206,11 @@ export default class MobileTabBar extends Service {
   routeDidChange() {
     const route = this.router.currentRoute;
 
-    if (!this.enabled || !route || LOADING_ROUTE.test(route.name)) {
+    if (
+      !this.siteSettings.mobile_footer_navigation ||
+      !route ||
+      LOADING_ROUTE.test(route.name)
+    ) {
       return;
     }
 
@@ -208,8 +220,8 @@ export default class MobileTabBar extends Service {
     // so each tab still returns to where its section was left
     if (!owner) {
       this.sectionTabKey = null;
-      this.isNestedPage = false;
-      this.isTitledPage = false;
+      this.#nestedPage.value = false;
+      this.#titledPage.value = false;
       return;
     }
 
@@ -217,12 +229,13 @@ export default class MobileTabBar extends Service {
 
     const url = this.router.currentURL;
     const tab = this.#tab(this.sectionTabKey);
-    this.isNestedPage = !!tab?.isNestedRoute?.(route);
-    this.isTitledPage =
-      this.isNestedPage && (tab?.showsTitleInHeader?.(route) ?? true);
+    const nested = !!tab?.isNestedRoute?.(route);
+    this.#nestedPage.value = nested;
+    this.#titledPage.value =
+      nested && (tab?.showsTitleInHeader?.(route) ?? true);
     this.#lastURLs.set(this.sectionTabKey, url);
 
-    if (!this.isNestedPage) {
+    if (!nested) {
       this.#parentURLs.set(this.sectionTabKey, url);
     }
   }
