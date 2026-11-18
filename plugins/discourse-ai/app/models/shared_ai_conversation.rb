@@ -118,11 +118,8 @@ class SharedAiConversation < ActiveRecord::Base
     end
   end
 
-  def publishes_artifact?(artifact)
-    context.any? do |context_post|
-      artifact_ids = context_post["artifact_ids"]
-      artifact_ids.is_a?(Array) && artifact_ids.include?(artifact.id)
-    end
+  def publishes_artifact?(artifact_id)
+    context.any? { |post| Array(post["artifact_ids"]).include?(artifact_id) }
   end
 
   def target_topic(with_deleted: false)
@@ -225,6 +222,15 @@ class SharedAiConversation < ActiveRecord::Base
           username: include_usernames ? post.user&.username : nil,
         }.compact
       end
+
+    referenced_ids = mapped_posts.flat_map { |post| post[:artifact_ids] }.uniq
+    publishable_ids =
+      if referenced_ids.empty?
+        []
+      else
+        AiArtifact.where(id: referenced_ids, post_id: topic.posts.select(:id)).pluck(:id)
+      end
+    mapped_posts.each { |post| post[:artifact_ids] &= publishable_ids }
 
     response_model_names = mapped_posts.filter_map { |post| post[:llm_name] }.uniq
     llm_name =

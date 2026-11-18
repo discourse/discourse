@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::AiBot::ArtifactsController do
+RSpec.describe DiscourseAi::AiBot::ArtifactsController do
   fab!(:user)
   fab!(:topic) { Fabricate(:private_message_topic, user: user) }
   fab!(:post) { Fabricate(:post, user: user, topic: topic) }
@@ -22,15 +22,16 @@ describe DiscourseAi::AiBot::ArtifactsController do
     Nokogiri.HTML5(html).at_css("iframe")["srcdoc"]
   end
 
+  let(:sharing_model) { Fabricate(:llm_model) }
+  let(:sharing_bot_user) { Fabricate(:ai_agent, default_llm: sharing_model).ensure_user! }
+
   def share_topic_publicly(topic)
-    llm_model = Fabricate(:llm_model)
-    bot_user = Fabricate(:ai_agent, default_llm: llm_model).ensure_user!
-    toggle_enabled_bots(bots: [llm_model])
-    SiteSetting.ai_bot_enabled = true
+    toggle_enabled_bots(bots: [sharing_model])
     SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
     Group.user_trust_level_change!(user.id, user.trust_level)
     topic.topic_allowed_users.where.not(user_id: user.id).delete_all
-    topic.topic_allowed_users.create!(user: bot_user)
+    topic.topic_allowed_users.find_or_create_by!(user: sharing_bot_user)
+
     SharedAiConversation.share_conversation(user, topic)
   end
 
@@ -222,9 +223,7 @@ describe DiscourseAi::AiBot::ArtifactsController do
     end
 
     it "returns a public source name to guests and hides a trashed source" do
-      post.update_columns(
-        cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
-      )
+      post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
       share_topic_publicly(topic)
       path = "/discourse-ai/ai-bot/artifacts/#{artifact.id}/metadata.json"
 
@@ -357,11 +356,9 @@ describe DiscourseAi::AiBot::ArtifactsController do
       end
     end
 
-    context "with public artifact" do
+    context "with a shared conversation artifact" do
       before do
-        post.update_columns(
-          cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
-        )
+        post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
         share_topic_publicly(topic)
       end
 
@@ -379,9 +376,128 @@ describe DiscourseAi::AiBot::ArtifactsController do
       end
     end
 
-    it "hides a private artifact whose public flag has no conversation share" do
-      artifact.update!(metadata: { public: true })
+    it "keeps shared artifacts accessible after upload security rebakes their source" do
+      enable_secure_uploads
+      upload = Fabricate(:secure_upload_s3, user: user, access_control_post: post)
+      stub_upload(upload)
+      post.update!(raw: "[image](#{upload.short_url})\n\n[ai-artifact id=\"#{artifact.id}\"]")
+      conversation = share_topic_publicly(topic)
+      shared_post = conversation.context.find { |context_post| context_post["id"] == post.id }
+      expect(shared_post["artifact_ids"]).to eq([artifact.id])
+      expect(Nokogiri::HTML5.fragment(shared_post["cooked"]).at_css("iframe")["src"]).to eq(
+        artifact.url,
+      )
+      expect(upload.reload.secure?).to eq(true)
 
+      get artifact.url
+      expect(response.status).to eq(200)
+      expect(parse_srcdoc(response.body)).to include(artifact.html)
+
+      Jobs::SharedConversationAdjustUploadSecurity.new.execute(conversation_id: conversation.id)
+
+      expect(upload.reload.secure?).to eq(false)
+      expect(conversation.reload.publicly_visible?).to eq(true)
+      shared_post = conversation.context.find { |context_post| context_post["id"] == post.id }
+      expect(shared_post["artifact_ids"]).to eq([artifact.id])
+      shared_html = Nokogiri::HTML5.fragment(shared_post["cooked"])
+      expect(shared_html.at_css(".ai-artifact")["data-ai-artifact-id"]).to eq(artifact.id.to_s)
+      expect(shared_html.css("iframe")).to be_empty
+
+      get artifact.url
+      expect(response.status).to eq(200)
+      expect(parse_srcdoc(response.body)).to include(artifact.html)
+    end
+
+    it "requires legacy conversation artifacts to be shared again" do
+      post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      conversation = share_topic_publicly(topic)
+      conversation.update!(
+        context: conversation.context.map { |context_post| context_post.except("artifact_ids") },
+      )
+      expect(conversation.publicly_visible?).to eq(true)
+
+      get artifact.url
+      expect(response.status).to eq(404)
+      get AiArtifact.embed_url(artifact.id)
+      expect(response.status).to eq(404)
+
+      sign_in(user)
+      get artifact.url
+      expect(response.status).to eq(200)
+      SharedAiConversation.share_conversation(user, topic)
+      delete "/session/#{user.username}.json"
+
+      get artifact.url
+      expect(response.status).to eq(200)
+      expect(parse_srcdoc(response.body)).to include(artifact.html)
+    end
+
+    it "does not restore artifact permissions when the share is refreshed during upload rebaking" do
+      post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      conversation = share_topic_publicly(topic)
+      get artifact.url
+      expect(response.status).to eq(200)
+
+      allow_any_instance_of(TopicUploadSecurityManager).to receive(:run) do
+        post.update!(raw: "The artifact was removed before sharing again.")
+        SharedAiConversation.share_conversation(user, topic)
+        [post]
+      end
+
+      Jobs::SharedConversationAdjustUploadSecurity.new.execute(conversation_id: conversation.id)
+
+      expect(conversation.reload.publicly_visible?).to eq(true)
+      get artifact.url
+      expect(response.status).to eq(404)
+    end
+
+    it "does not fail if the conversation is unshared during upload rebaking" do
+      post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      conversation = share_topic_publicly(topic)
+      allow_any_instance_of(TopicUploadSecurityManager).to receive(:run) do
+        SharedAiConversation.destroy_conversation(conversation)
+        [post]
+      end
+
+      Jobs::SharedConversationAdjustUploadSecurity.new.execute(conversation_id: conversation.id)
+
+      expect(SharedAiConversation.exists?(conversation.id)).to eq(false)
+      get artifact.url
+      expect(response.status).to eq(404)
+    end
+
+    it "does not fail if the source topic is trashed during upload rebaking" do
+      post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      conversation = share_topic_publicly(topic)
+      allow_any_instance_of(TopicUploadSecurityManager).to receive(:run) do
+        topic.trash!
+        [post]
+      end
+
+      Jobs::SharedConversationAdjustUploadSecurity.new.execute(conversation_id: conversation.id)
+
+      get artifact.url
+      expect(response.status).to eq(404)
+    end
+
+    it "publishes explicitly referenced artifacts even when their source is outside the share window" do
+      artifact_post = Fabricate(:post, topic: topic, user: user)
+      artifact.update!(post: artifact_post)
+      post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      share_topic_publicly(topic)
+      conversation = SharedAiConversation.share_conversation(user, topic, max_posts: 1)
+      expect(conversation.publicly_visible?).to eq(true)
+      expect(conversation.context.map { |context_post| context_post["id"] }).not_to include(
+        artifact_post.id,
+      )
+
+      get artifact.url
+      expect(response.status).to eq(200)
+      get AiArtifact.embed_url(artifact.id)
+      expect(response.status).to eq(200)
+
+      artifact_post.trash!
+      expect(conversation.reload.publicly_visible?).to eq(true)
       get artifact.url
       expect(response.status).to eq(404)
     end
@@ -389,69 +505,45 @@ describe DiscourseAi::AiBot::ArtifactsController do
     it "does not publish a moved artifact through an existing destination share" do
       artifact_post = Fabricate(:post, topic: topic, user: user)
       artifact.update!(post: artifact_post)
-      artifact_post.update_columns(
-        cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
-      )
+      artifact_post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
       share_topic_publicly(topic)
-      get artifact.url
-      expect(response.status).to eq(200)
-      expect(parse_srcdoc(response.body)).to include(artifact.html)
+
       destination = Fabricate(:private_message_topic, user: user)
       Fabricate(:post, topic: destination, user: user)
       destination_share = share_topic_publicly(destination)
-      PostMover.new(topic, Discourse.system_user, [artifact_post.id]).to_topic(destination.id)
+      PostMover.new(topic, Fabricate(:admin), [artifact_post.id]).to_topic(destination.id)
+      expect(destination_share.reload.publicly_visible?).to eq(true)
+      expect(artifact.reload.public?).to eq(true)
 
-      get "/discourse-ai/ai-bot/shared-ai-conversations/#{destination_share.share_key}.json"
-      expect(response.status).to eq(200)
       get artifact.url
       expect(response.status).to eq(404)
-      get "/discourse-ai/ai-bot/artifacts/#{artifact.id}/metadata.json"
-      expect(response.status).to eq(404)
-      get "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json"
-      expect(response.status).to eq(404)
+
+      SharedAiConversation.share_conversation(user, destination)
+      get artifact.url
+      expect(response.status).to eq(200)
+      expect(parse_srcdoc(response.body)).to include(artifact.html)
     end
 
-    it "does not publish an unreferenced artifact when its source post is moved and shared again" do
-      artifact_post = Fabricate(:post, topic: topic, user: user, cooked: "<p>Private source 猫</p>")
+    it "does not republish an unreferenced moved artifact when its destination is shared" do
+      artifact_post = Fabricate(:post, topic: topic, user: user)
       artifact.update!(post: artifact_post)
-      Fabricate(
-        :post,
-        topic: topic,
-        user: user,
-        cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
-      )
+      Fabricate(:post, topic: topic, user: user, raw: "[ai-artifact id=\"#{artifact.id}\"]")
       original_share = share_topic_publicly(topic)
-      get artifact.url
-      expect(response.status).to eq(200)
-      original_share.update!(
-        context:
-          original_share.context.map do |context_post|
-            context_post.except("artifact_ids").merge(
-              "cooked" =>
-                context_post["cooked"].gsub(Discourse.base_url, "https://old.example.com"),
-            )
-          end,
-      )
-      get artifact.url
-      expect(response.status).to eq(404)
 
-      SharedAiConversation.share_conversation(user, topic)
       get artifact.url
       expect(response.status).to eq(200)
 
       destination = Fabricate(:private_message_topic, user: user)
       Fabricate(:post, topic: destination, user: user)
-      PostMover.new(topic, Discourse.system_user, [artifact_post.id]).to_topic(destination.id)
+      PostMover.new(topic, Fabricate(:admin), [artifact_post.id]).to_topic(destination.id)
       SharedAiConversation.destroy_conversation(original_share)
       destination_share = share_topic_publicly(destination)
       expect(destination_share.publicly_visible?).to eq(true)
       expect(artifact.reload.public?).to eq(true)
-      expect(
-        destination_share.context.flat_map { |context_post| context_post["artifact_ids"] },
-      ).not_to include(artifact.id)
 
-      artifact.update!(html: "<p>Private edit 猫</p>")
-      version = artifact.create_new_version(html: "<p>Private saved version 猫</p>")
+      private_html = "<p>Private update after the original publication was revoked</p>"
+      artifact.update!(html: private_html)
+      version = artifact.create_new_version(html: private_html)
 
       [
         artifact.url,
@@ -465,77 +557,89 @@ describe DiscourseAi::AiBot::ArtifactsController do
         expect(response.status).to eq(404), "Expected #{url} to be private"
       end
 
-      destination_share.update!(
-        context:
-          destination_share.context.map { |context_post| context_post.except("artifact_ids") },
-      )
-      get artifact.url
-      expect(response.status).to eq(404)
-
       sign_in(user)
       get artifact.url
       expect(response.status).to eq(200)
-      expect(parse_srcdoc(response.body)).to include(artifact.html)
+      expect(parse_srcdoc(response.body)).to include(private_html)
     end
 
-    it "checks saved artifact IDs without parsing cooked HTML" do
+    it "does not activate cross-topic references when their artifact source is later moved" do
       artifact_post = Fabricate(:post, topic: topic, user: user)
       artifact.update!(post: artifact_post)
-      Fabricate(
-        :post,
-        topic: topic,
-        user: user,
-        cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
-      )
-      share = share_topic_publicly(topic)
-      allow(Nokogiri::HTML5).to receive(:fragment).and_call_original
+      Fabricate(:post, topic: topic, user: user, raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      original_share = share_topic_publicly(topic)
+      destination = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: destination, user: user, raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      destination_share = share_topic_publicly(destination)
+      expect(destination_share.publicly_visible?).to eq(true)
 
-      expect(share.publishes_artifact?(artifact)).to eq(true)
-      share.update!(context: share.context.map { |post| post.except("artifact_ids") })
-      expect(share.publishes_artifact?(artifact)).to eq(false)
-      expect(Nokogiri::HTML5).not_to have_received(:fragment)
+      PostMover.new(topic, Fabricate(:admin), [artifact_post.id]).to_topic(destination.id)
+      SharedAiConversation.destroy_conversation(original_share)
+      artifact.update!(html: "<p>Private update after the move and revocation</p>")
 
       get artifact.url
       expect(response.status).to eq(404)
+      get AiArtifact.embed_url(artifact.id)
+      expect(response.status).to eq(404)
+
+      SharedAiConversation.share_conversation(user, destination)
+      get artifact.url
+      expect(response.status).to eq(200)
+      expect(parse_srcdoc(response.body)).to include(artifact.html)
     end
 
-    it "revokes access to moved artifacts and later edits when a conversation is unshared" do
+    it "revokes anonymous access to moved artifacts and edits made after unsharing" do
       artifact_post = Fabricate(:post, topic: topic, user: user)
       artifact.update!(post: artifact_post)
-      artifact_post.update_columns(
-        cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
-      )
+      artifact_post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
       conversation = share_topic_publicly(topic)
+      expect(conversation.publicly_visible?).to eq(true)
 
       get artifact.url
       expect(response.status).to eq(200)
       expect(parse_srcdoc(response.body)).to include(artifact.html)
+      get "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json"
+      expect(response.status).to eq(200)
 
       destination = Fabricate(:private_message_topic, user: user)
-      PostMover.new(topic, Discourse.system_user, [artifact_post.id]).to_topic(destination.id)
+      admin = Fabricate(:admin)
+      PostMover.new(topic, admin, [artifact_post.id]).to_topic(destination.id)
       expect(artifact_post.reload.topic_id).to eq(destination.id)
+      expect(Guardian.new.can_see?(artifact_post)).to eq(false)
 
       sign_in(user)
       delete "/discourse-ai/ai-bot/shared-ai-conversations/#{conversation.share_key}.json"
       expect(response.status).to eq(200)
 
-      admin = Fabricate(:admin)
       sign_in(admin)
-      private_html = "<p>Private update 猫</p>"
+      private_html = "<p>Private content added after revocation</p>"
       put "/admin/plugins/discourse-ai/ai-artifacts/#{artifact.id}.json",
-          params: { ai_artifact: { html: private_html } }.to_json,
-          headers: {
-            "CONTENT_TYPE" => "application/json",
+          params: {
+            ai_artifact: {
+              html: private_html,
+            },
           }
       expect(response.status).to eq(200)
       expect(artifact.reload.html).to eq(private_html)
+      version = artifact.create_new_version(html: private_html)
       delete "/session/#{admin.username}.json"
       expect(response.status).to eq(302)
 
-      get artifact.url
+      get "/session/current.json"
       expect(response.status).to eq(404)
-      get "/discourse-ai/ai-bot/artifacts/#{artifact.id}/metadata.json"
+      get "/discourse-ai/ai-bot/shared-ai-conversations/#{conversation.share_key}.json"
       expect(response.status).to eq(404)
+
+      [
+        artifact.url,
+        AiArtifact.url(artifact.id, version.version_number),
+        "/discourse-ai/ai-bot/artifacts/#{artifact.id}/metadata.json",
+        "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json",
+      ].each do |url|
+        get url
+        expect(response.status).to eq(404), "Expected #{url} to be private"
+        expect(response.body).not_to include(private_html)
+      end
 
       sign_in(user)
       get artifact.url
@@ -544,15 +648,6 @@ describe DiscourseAi::AiBot::ArtifactsController do
     end
 
     it "hides artifacts and future versions when their conversation share is invalidated" do
-      llm_model = Fabricate(:llm_model, name: "artifact-sharing-model")
-      bot_user = Fabricate(:ai_agent, default_llm: llm_model).ensure_user!
-      toggle_enabled_bots(bots: [llm_model])
-      SiteSetting.ai_bot_enabled = true
-      SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
-      Group.user_trust_level_change!(user.id, user.trust_level)
-
-      topic.topic_allowed_users.where.not(user_id: user.id).delete_all
-      topic.topic_allowed_users.create!(user: bot_user)
       post.update_columns(
         cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
       )
@@ -567,7 +662,7 @@ describe DiscourseAi::AiBot::ArtifactsController do
           public: true,
         )
 
-      shared_conversation = SharedAiConversation.share_conversation(user, topic)
+      shared_conversation = share_topic_publicly(topic)
       expect(shared_conversation.publicly_visible?).to eq(true)
       expect(artifact.reload.public?).to eq(true)
 

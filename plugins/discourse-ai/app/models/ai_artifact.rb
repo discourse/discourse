@@ -112,12 +112,7 @@ class AiArtifact < ActiveRecord::Base
     source_post = Post.find_by(id: post_id)
     return false if source_post.blank? || source_post.topic.blank?
 
-    shared_conversation = SharedAiConversation.find_by(target: source_post.topic) if public?
-    if public? && shared_conversation&.publicly_visible? &&
-         shared_conversation.context.any? { |context_post| context_post["id"] == source_post.id } &&
-         shared_conversation.publishes_artifact?(self)
-      return true
-    end
+    return true if public? && covered_by_public_conversation_share?(source_post)
 
     guardian.can_see?(source_post)
   end
@@ -134,14 +129,18 @@ class AiArtifact < ActiveRecord::Base
     return true if Guardian.new(nil).can_see?(source_post)
     return false if !public?
 
-    conversation = SharedAiConversation.find_by(target: topic)
-    conversation&.publicly_visible? &&
-      conversation.context.any? { |context_post| context_post["id"] == source_post.id } &&
-      conversation.publishes_artifact?(self)
+    covered_by_public_conversation_share?(source_post)
   end
 
   def public?
     metadata&.dig("public") == true
+  end
+
+  private
+
+  def covered_by_public_conversation_share?(source_post)
+    conversation = SharedAiConversation.find_by(target: source_post.topic)
+    conversation&.publishes_artifact?(id) && conversation.publicly_visible?
   end
 end
 

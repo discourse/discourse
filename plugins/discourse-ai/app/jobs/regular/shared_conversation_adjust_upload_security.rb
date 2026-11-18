@@ -29,27 +29,18 @@ module Jobs
         rebaked_posts = TopicUploadSecurityManager.new(topic).run
 
         if rebaked_posts.any?
-          conversation.with_lock do
-            posts_by_id =
-              Post
-                .with_deleted
-                .where(id: rebaked_posts.map(&:id))
-                .select(:id, :cooked)
-                .index_by(&:id)
+          SharedAiConversation.transaction do
+            conversation = SharedAiConversation.lock.find_by(id: conversation_id)
+            next if !conversation
+
             new_context =
               conversation.context.map do |context_post|
-                if (rebaked_post = posts_by_id[context_post["id"]])
-                  artifact_ids = []
-                  context_post["cooked"] = SharedAiConversation.cook_artifacts(
-                    rebaked_post,
-                    artifact_ids: artifact_ids,
-                  )
-                  context_post["artifact_ids"] = Array(context_post["artifact_ids"]) & artifact_ids
-                end
+                rebaked_post = rebaked_posts.find { |p| p.id == context_post["id"] }
+                context_post["cooked"] = rebaked_post.cooked if rebaked_post
                 context_post
               end
 
-            conversation.update!(context: new_context)
+            conversation.update(context: new_context)
           end
         end
       end
