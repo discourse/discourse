@@ -132,7 +132,8 @@ describe "Composer - Drafts" do
 
       expect(discard_draft_modal).to be_closed
       expect(composer).to be_closed
-      expect(Draft.where(user: current_user).count).to eq(0)
+      expect(Draft.live.where(user: current_user).count).to eq(0)
+      expect(Draft.discarded.where(user: current_user).count).to eq(1)
     end
 
     context "when only a title and category is specified" do

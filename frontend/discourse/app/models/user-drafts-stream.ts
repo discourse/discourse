@@ -15,12 +15,18 @@ import UserDraft, {
   type UserDraftFields,
 } from "discourse/models/user-draft";
 
+type WireDraft = Omit<UserDraftFields, "data" | "post_number"> & {
+  data: string;
+  post_number?: number | null;
+};
+
 export default class UserDraftsStream extends RestModel {
   declare user?: User;
 
   limit = 30;
   loading = false;
   hasMore = false;
+  discarded = false;
 
   content: UserDraft[] | null = null;
 
@@ -45,7 +51,7 @@ export default class UserDraftsStream extends RestModel {
   remove(draft: UserDraft) {
     this.set(
       "content",
-      this.content!.filter((item) => item.draft_key !== draft.draft_key)
+      this.content!.filter((item) => item.id !== draft.id)
     );
   }
 
@@ -60,42 +66,35 @@ export default class UserDraftsStream extends RestModel {
 
     this.set("loading", true);
 
-    const url = `/drafts.json?offset=${this.content!.length}&limit=${this.limit}`;
+    const path = this.discarded ? "/discarded_drafts.json" : "/drafts.json";
+    const url = `${path}?offset=${this.content!.length}&limit=${this.limit}`;
     return ajax(url)
       .then(
         (
           result:
             | {
-                drafts?: (Omit<UserDraftFields, "data" | "post_number"> & {
-                  data: string;
-                  post_number?: number | null;
-                })[];
+                drafts?: WireDraft[];
+                discarded_drafts?: WireDraft[];
                 categories?: Parameters<Site["updateCategory"]>[0][];
               }
             | null
             | undefined
         ) => {
-          if (!result) {
+          const drafts = this.discarded
+            ? result?.discarded_drafts
+            : result?.drafts;
+          if (!drafts) {
             return;
           }
 
-          if (!result.drafts) {
-            return;
-          }
-
-          result.categories?.forEach((category) =>
+          result?.categories?.forEach((category) =>
             Site.current().updateCategory(category)
           );
 
-          // The endpoint returns an array without size; preserve its undefined numeric comparison.
-          this.set(
-            "hasMore",
-            (result.drafts as typeof result.drafts & { size?: number }).size! >=
-              this.limit
-          );
+          this.set("hasMore", drafts.length >= this.limit);
 
           // Each wire object is mutated in place: parse data first, then hydrate its derived fields.
-          const promises = (result.drafts as unknown as UserDraftFields[]).map(
+          const promises = (drafts as unknown as UserDraftFields[]).map(
             (draft) => {
               draft.data = JSON.parse(
                 draft.data as unknown as string

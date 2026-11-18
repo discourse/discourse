@@ -306,7 +306,24 @@ class UserMerger
     update_user_id(:developers)
 
     update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
-    update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
+    # one statement per state so each uses its partial index
+    Draft
+      .live
+      .where(user_id: @source_user.id)
+      .where.not(draft_key: Draft.live.where(user_id: @target_user.id).select(:draft_key))
+      .update_all(user_id: @target_user.id)
+    Draft.discarded.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    # A moved draft ahead of the target's sequence for its key would be hidden and reject saves.
+    DB.exec(<<~SQL, target_user_id: @target_user.id)
+      UPDATE draft_sequences s
+         SET sequence = d.sequence
+        FROM drafts d
+       WHERE d.user_id = :target_user_id
+         AND d.deleted_at IS NULL
+         AND s.user_id = d.user_id
+         AND s.draft_key = d.draft_key
+         AND s.sequence < d.sequence
+    SQL
 
     update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
 

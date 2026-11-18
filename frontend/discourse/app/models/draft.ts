@@ -15,10 +15,14 @@ export interface DraftSaveResponse {
 }
 
 export default class Draft extends EmberObject {
-  static clear(key: string, sequence: number): Promise<{ success: "OK" }> {
+  static clear(
+    key: string,
+    sequence: number,
+    { permanent = false }: { permanent?: boolean } = {}
+  ): Promise<{ success: "OK" }> {
     return ajax(`/drafts/${key}.json`, {
       type: "DELETE",
-      data: { draft_key: key, sequence },
+      data: { draft_key: key, sequence, permanent },
     });
   }
 
@@ -35,6 +39,16 @@ export default class Draft extends EmberObject {
       type: "DELETE",
       data: { draft_keys, sequences },
     });
+  }
+
+  static restoreDiscarded(
+    id: number
+  ): Promise<{ draft: string; draft_sequence: number }> {
+    return ajax(`/discarded_drafts/${id}/restore.json`, { type: "PUT" });
+  }
+
+  static destroyDiscarded(id: number): Promise<void> {
+    return ajax(`/discarded_drafts/${id}.json`, { type: "DELETE" });
   }
 
   static get(key: string): Promise<DraftGetResponse> {

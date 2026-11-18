@@ -23,7 +23,9 @@ interface ExpectedUserDraftData {
 }
 
 interface ExpectedUserDraftFields {
+  id: number;
   created_at: string;
+  deleted_at: string | null;
   draft_key: string;
   sequence: number;
   draft_username: string;
@@ -122,6 +124,7 @@ expectTypeOf(draft.typeTestPluginRating).not.toBeAny();
 expectTypeOf(draft.titleHtml).toEqualTypeOf<TrustedHTML>();
 expectTypeOf(draft.titleHtml).not.toBeAny();
 expectTypeOf(draft.editableDraft).toEqualTypeOf<boolean>();
+expectTypeOf(draft.discarded).toEqualTypeOf<boolean>();
 expectTypeOf(draft.userUrl).toEqualTypeOf<string>();
 expectTypeOf(draft.postUrl).toEqualTypeOf<string | undefined>();
 expectTypeOf(draft.draftType).toEqualTypeOf<string | false>();

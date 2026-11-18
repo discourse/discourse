@@ -29,7 +29,10 @@ export interface UserDraftData {
  * drafts stream derives from it before calling `create`.
  */
 export interface UserDraftFields {
+  id: number;
   created_at: string;
+  /** Set when the draft was discarded and can still be restored. */
+  deleted_at: string | null;
   draft_key: string;
   sequence: number;
   /** The drafter. */
@@ -80,6 +83,10 @@ export default class UserDraft extends RestModel {
 
   get titleHtml() {
     return dReplaceEmoji(this.get("title"));
+  }
+
+  get discarded(): boolean {
+    return !!this.deleted_at;
   }
 
   @computed("draft_username")

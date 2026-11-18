@@ -195,6 +195,45 @@ RSpec.describe UserMerger do
       expect(DraftSequence.where(user_id: source_user.id).count).to eq(0)
       expect(Draft.where(user_id: source_user.id).count).to eq(0)
     end
+
+    it "moves a live draft when the target only has a discarded one with the same key" do
+      key = "#{Draft::EXISTING_TOPIC}21"
+      create_draft(target_user, key, { reply: "discarded by alice" }.to_json)
+      Draft.clear(target_user, key, DraftSequence.current(target_user, key))
+      create_draft(source_user, key, { reply: "draft by alice1" }.to_json)
+
+      merge_users!
+
+      expect(current_target_user_draft(key)).to eq({ reply: "draft by alice1" }.to_json)
+      expect(Draft.discarded.where(user_id: target_user.id, draft_key: key).count).to eq(1)
+    end
+
+    it "keeps a moved draft current when the target's sequence for its key is behind" do
+      key = "#{Draft::EXISTING_TOPIC}25"
+      DraftSequence.next!(target_user, key)
+      3.times { DraftSequence.next!(source_user, key) }
+      create_draft(source_user, key, { reply: "draft by alice1" }.to_json)
+
+      merge_users!
+
+      sequence = DraftSequence.current(target_user, key)
+      expect(current_target_user_draft(key)).to eq({ reply: "draft by alice1" }.to_json)
+      expect(Draft.set(target_user, key, sequence, { reply: "edited" }.to_json)).to eq(sequence + 1)
+    end
+
+    it "moves discarded drafts even when the target has a draft with the same key" do
+      key = "#{Draft::EXISTING_TOPIC}23"
+      create_draft(source_user, key, { reply: "discarded by alice1" }.to_json)
+      Draft.clear(source_user, key, DraftSequence.current(source_user, key))
+      create_draft(target_user, key, { reply: "draft by alice" }.to_json)
+
+      merge_users!
+
+      expect(Draft.discarded.where(user_id: target_user.id, draft_key: key).pluck(:data)).to eq(
+        [{ reply: "discarded by alice1" }.to_json],
+      )
+      expect(current_target_user_draft(key)).to eq({ reply: "draft by alice" }.to_json)
+    end
   end
 
   it "updates email logs" do

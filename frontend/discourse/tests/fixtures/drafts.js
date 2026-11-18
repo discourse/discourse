@@ -7,6 +7,7 @@ const draftsFixtures = {
   "/drafts.json": {
     drafts: [
       {
+        id: 1,
         excerpt: "A fun new topic for testing drafts. ",
         truncated: true,
         created_at: "2018-07-22T22:20:14.608Z",
@@ -24,6 +25,7 @@ const draftsFixtures = {
         archetype: null,
       },
       {
+        id: 2,
         excerpt:
           "The last reply to this topic was 6 months ago. Your reply will bump the topic to the top of its list",
         truncated: true,
@@ -43,6 +45,7 @@ const draftsFixtures = {
         archetype: "regular",
       },
       {
+        id: 3,
         excerpt: "here goes a reply to a PM.",
         created_at: "2018-07-20T16:58:47.433Z",
         draft_key: "topic_93",

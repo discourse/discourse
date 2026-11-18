@@ -7,3 +7,24 @@
     grid-row-start: 2;
   }
 }
+
+.user-drafts-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5em 1em;
+  margin-bottom: 1em;
+  font-size: var(--font-down-1);
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--primary-medium);
+  }
+}

@@ -69,12 +69,13 @@ module DiscourseWorkflows
 
     private
 
-    # A cleared draft is re-created with a new id, so the next post starts over.
+    # A cleared draft is re-created with a new id, so the next post starts over. A restored
+    # draft keeps its id, so phrases that fired before it was discarded don't fire again.
     def draft_id
       return @draft_id if defined?(@draft_id)
 
       @draft_id =
-        ::Draft.where(user_id: @snapshot.user.id, draft_key: @snapshot.draft_key).pick(:id)
+        ::Draft.live.where(user_id: @snapshot.user.id, draft_key: @snapshot.draft_key).pick(:id)
     end
   end
 end

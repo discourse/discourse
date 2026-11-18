@@ -165,7 +165,7 @@ export default class ComposerActionStateService extends Service {
     const snapshot = this.snapshot;
 
     this.#clearUnsupportedToggles(options);
-    await this.composer.destroyDraft();
+    await this.composer.destroyDraft({ permanent: true });
     this.composer.close();
     this.#restoreSnapshot(snapshot);
     await this.composer.open({

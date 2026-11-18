@@ -120,6 +120,7 @@ export default function () {
         });
         this.route("pending");
         this.route("drafts");
+        this.route("discardedDrafts", { path: "drafts/discarded" });
         this.route("read");
       }
     );

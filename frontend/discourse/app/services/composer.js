@@ -1444,7 +1444,7 @@ export default class ComposerService extends Service {
             }
           }
 
-          return this.destroyDraft().then(() => {
+          return this.destroyDraft({ permanent: true }).then(() => {
             this.close();
             return result;
           });
@@ -1470,7 +1470,7 @@ export default class ComposerService extends Service {
 
         if (result.responseJson.route_to) {
           // TODO: await this:
-          this.destroyDraft();
+          this.destroyDraft({ permanent: true });
           this.composerActionState.clear();
           if (result.responseJson.message) {
             return this.dialog.alert({
@@ -1787,7 +1787,7 @@ export default class ComposerService extends Service {
       .join(",");
   }
 
-  async destroyDraft() {
+  async destroyDraft({ permanent = false } = {}) {
     const key = this.get("model.draftKey");
     if (!key) {
       return;
@@ -1795,10 +1795,10 @@ export default class ComposerService extends Service {
 
     if (this._saveDraftPromise) {
       await this._saveDraftPromise;
-      return this.destroyDraft();
+      return this.destroyDraft({ permanent });
     }
 
-    await Draft.clear(key, this.get("model.draftSequence"));
+    await Draft.clear(key, this.get("model.draftSequence"), { permanent });
     this.appEvents.trigger("draft:destroyed", key);
   }
 

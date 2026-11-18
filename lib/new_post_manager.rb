@@ -311,6 +311,9 @@ class NewPostManager
           reason: reason,
           force_review: true,
         )
+        if @args[:advance_draft] && @args[:draft_key].present?
+          DraftSequence.next!(@user, @args[:draft_key])
+        end
       else
         reviewable.errors.full_messages.each { |msg| errors << msg }
       end

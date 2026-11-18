@@ -158,6 +158,31 @@ RSpec.describe NewPostManager do
       end
     end
 
+    context "when the post is enqueued from a draft" do
+      before do
+        SiteSetting.approve_post_count = 100
+        topic.user.trust_level = 0
+      end
+
+      it "advances the draft so it is not kept as discarded" do
+        Draft.set(user, topic.draft_key, 0, { reply: "this is new post content" }.to_json)
+        manager =
+          NewPostManager.new(
+            user,
+            raw: "this is new post content",
+            topic_id: topic.id,
+            draft_key: topic.draft_key,
+            advance_draft: true,
+          )
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(DraftSequence.current(user, topic.draft_key)).to eq(1)
+        expect(Draft.where(user: user)).to be_empty
+      end
+    end
+
     context "with a high approval post count and TL1" do
       before do
         SiteSetting.approve_post_count = 100

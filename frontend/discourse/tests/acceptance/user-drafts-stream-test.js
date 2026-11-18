@@ -2,9 +2,11 @@ import { click, visit } from "@ember/test-helpers";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Drafts", function (needs) {
   needs.user();
+  needs.settings({ discarded_drafts_retention_days: 7 });
 
   test("Stream", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
@@ -16,6 +18,12 @@ acceptance("User Drafts", function (needs) {
 
     await click(".user-stream-item:first-child .remove-draft");
     assert.dom(".dialog-header").exists();
+    assert
+      .dom(".dialog-body")
+      .hasText(
+        i18n("drafts.discarded.restore_hint", { count: 7 }),
+        "says the draft can be restored"
+      );
 
     await click(".dialog-footer .btn-danger");
     assert

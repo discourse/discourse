@@ -13,7 +13,18 @@ class Draft < ActiveRecord::Base
 
   after_commit :update_draft_count, on: %i[create destroy]
 
+  scope :live, -> { where(deleted_at: nil) }
+  scope :discarded, -> { where.not(deleted_at: nil) }
+  # The purge job runs daily, so expired rows can linger until it does.
+  scope :restorable,
+        -> do
+          discarded.where("deleted_at > ?", SiteSetting.discarded_drafts_retention_days.days.ago)
+        end
+
   class OutOfSequence < StandardError
+  end
+
+  class RestoreConflict < StandardError
   end
 
   def self.set(user, key, sequence, data, owner = nil, force_save: false)
@@ -26,12 +37,14 @@ class Draft < ActiveRecord::Base
     end
 
     # this is called a lot so we should micro optimize here
-    draft_id, current_owner, current_sequence = DB.query_single(<<~SQL, user_id: user.id, key: key)
+    draft_id, current_owner, draft_row_sequence, current_sequence =
+      DB.query_single(<<~SQL, user_id: user.id, key: key)
       WITH draft AS (
-        SELECT id, owner FROM drafts
+        SELECT id, owner, sequence FROM drafts
         WHERE
           user_id = :user_id AND
-          draft_key = :key
+          draft_key = :key AND
+          deleted_at IS NULL
       ),
       draft_sequence AS (
         SELECT sequence
@@ -44,6 +57,7 @@ class Draft < ActiveRecord::Base
       SELECT
         (SELECT id FROM draft),
         (SELECT owner FROM draft),
+        (SELECT sequence FROM draft),
         (SELECT sequence FROM draft_sequence)
     SQL
 
@@ -55,40 +69,64 @@ class Draft < ActiveRecord::Base
       sequence = current_sequence if force_save
       sequence += 1
 
-      # we need to keep upping our sequence on every save
-      # if we do not do that there are bad race conditions
-      DraftSequence.upsert(
-        { sequence: sequence, draft_key: key, user_id: user.id },
-        unique_by: %i[user_id draft_key],
-      )
+      update_params = {
+        id: draft_id,
+        sequence: sequence,
+        data: data,
+        owner: owner || current_owner,
+        draft_row_sequence: draft_row_sequence,
+        force_save: force_save,
+      }
 
-      DB.exec(<<~SQL, id: draft_id, sequence: sequence, data: data, owner: owner || current_owner)
-        UPDATE drafts
-           SET sequence = :sequence
-             , data = :data
-             , revisions = revisions + 1
-             , owner = :owner
-             , updated_at = CURRENT_TIMESTAMP
-         WHERE id = :id
-      SQL
+      Draft.transaction(requires_new: true) do
+        # we need to keep upping our sequence on every save
+        # if we do not do that there are bad race conditions
+        DraftSequence.upsert(
+          { sequence: sequence, draft_key: key, user_id: user.id },
+          unique_by: %i[user_id draft_key],
+        )
+
+        updated = DB.exec(<<~SQL, update_params)
+          UPDATE drafts
+             SET sequence = :sequence
+               , data = :data
+               , revisions = revisions + 1
+               , owner = :owner
+               , updated_at = CURRENT_TIMESTAMP
+           WHERE id = :id
+             AND deleted_at IS NULL
+             AND (:force_save OR sequence = :draft_row_sequence)
+        SQL
+
+        # Another save, a discard or a restore changed the draft since this save read it. The
+        # row's own sequence is the token because it can be ahead of `draft_sequences`.
+        raise Draft::OutOfSequence if updated == 0
+      end
     elsif sequence != current_sequence
       raise Draft::OutOfSequence
     else
       opts = { user_id: user.id, draft_key: key, data: data, sequence: sequence, owner: owner }
 
+      # Until the post-deploy migration drops the full unique index, a discarded row with the
+      # same key is the conflict target and gets overwritten, losing that discarded copy.
       draft_id = DB.query_single(<<~SQL, opts).first
         INSERT INTO drafts (user_id, draft_key, data, sequence, owner, created_at, updated_at)
         VALUES (:user_id, :draft_key, :data, :sequence, :owner, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        ON CONFLICT (user_id, draft_key) DO
+        ON CONFLICT (user_id, draft_key) WHERE deleted_at IS NULL DO
         UPDATE
         SET
           sequence = :sequence,
           data = :data,
           revisions = drafts.revisions + 1,
           owner = :owner,
-          updated_at = CURRENT_TIMESTAMP
+          updated_at = CURRENT_TIMESTAMP,
+          deleted_at = NULL
+        WHERE drafts.sequence <= :sequence
         RETURNING id
       SQL
+
+      # a draft restored since the sequence was read is newer than this save
+      raise Draft::OutOfSequence if !draft_id
 
       UserStat.update_draft_count(user.id)
     end
@@ -111,7 +149,7 @@ class Draft < ActiveRecord::Base
       WITH draft AS (
         SELECT data, sequence
         FROM drafts
-        WHERE draft_key = :draft_key AND user_id = :user_id
+        WHERE draft_key = :draft_key AND user_id = :user_id AND deleted_at IS NULL
       ),
       draft_sequence AS (
         SELECT sequence
@@ -131,7 +169,7 @@ class Draft < ActiveRecord::Base
     data if current_sequence == draft_sequence
   end
 
-  def self.clear(user, key, sequence)
+  def self.clear(user, key, sequence, permanent: false)
     if !user || !user.id || !User.human_user_id?(user.id)
       raise StandardError.new("user not present")
     end
@@ -142,7 +180,111 @@ class Draft < ActiveRecord::Base
     raise Draft::OutOfSequence.new("bad draft sequence") if sequence != current_sequence
 
     # corrupt data is not a reason not to leave data
-    Draft.where(user_id: user.id, draft_key: key).destroy_all
+    discard!(user.id, key, permanent: permanent)
+  end
+
+  # Discarded drafts are kept for `discarded_drafts_retention_days` so users can restore them,
+  # unless the caller knows the content was posted and nothing is lost.
+  def self.discard!(user_id, draft_keys, permanent: false)
+    drafts = Draft.live.where(user_id: user_id, draft_key: draft_keys).to_a
+    return 0 if drafts.empty?
+
+    recoverable, disposable = permanent ? [[], drafts] : drafts.partition(&:recoverable?)
+
+    Draft.transaction do
+      Draft.live.where(id: recoverable.map(&:id)).update_all(deleted_at: Time.zone.now)
+      # a concurrent discard may have made one of these restorable since it was loaded
+      if disposable.any?
+        deleted_ids = DB.query_single(<<~SQL, ids: disposable.map(&:id))
+          DELETE FROM drafts WHERE id IN (:ids) AND deleted_at IS NULL RETURNING id
+        SQL
+        UploadReference.where(target_type: "Draft", target_id: deleted_ids).delete_all
+      end
+      evict_excess_discarded!(user_id) if recoverable.any?
+    end
+
+    UserStat.update_draft_count(user_id)
+    drafts.size
+  end
+
+  def self.purge_discarded!
+    cutoff = SiteSetting.discarded_drafts_retention_days.days.ago
+
+    Draft
+      .discarded
+      .where("deleted_at <= ?", cutoff)
+      .in_batches(of: 1000) { |batch| delete_discarded!(batch.ids, cutoff: cutoff) }
+  end
+
+  # Discarded rows don't count towards `max_drafts_per_user`, so cap them at the same number
+  # to keep a single user from growing the table without bound.
+  def self.evict_excess_discarded!(user_id)
+    excess_ids =
+      Draft
+        .discarded
+        .where(user_id: user_id)
+        .order(deleted_at: :desc, id: :desc)
+        .offset(SiteSetting.max_drafts_per_user)
+        .pluck(:id)
+
+    delete_discarded!(excess_ids)
+  end
+
+  def self.delete_discarded!(ids, cutoff: nil)
+    return if ids.empty?
+
+    # rows go first so a draft restored meanwhile keeps its upload references
+    purged_ids = DB.query_single(<<~SQL, ids: ids, cutoff: cutoff)
+      DELETE FROM drafts WHERE id IN (:ids) AND deleted_at IS NOT NULL
+      #{"AND deleted_at <= :cutoff" if cutoff}
+      RETURNING id
+    SQL
+    UploadReference.where(target_type: "Draft", target_id: purged_ids).delete_all
+  end
+
+  private_class_method :evict_excess_discarded!, :delete_discarded!
+
+  def restore!
+    Draft.transaction(requires_new: true) do
+      # Invalidate saves from browsers still editing a previously discarded version.
+      sequence = DB.query_single(<<~SQL, user_id: user_id, draft_key: draft_key).first
+        INSERT INTO draft_sequences (user_id, draft_key, sequence)
+        VALUES (:user_id, :draft_key, 1)
+        ON CONFLICT (user_id, draft_key) DO UPDATE
+        SET sequence = draft_sequences.sequence + 1
+        RETURNING sequence
+      SQL
+
+      # A live row from before the previous sequence is hidden from the user, so it can't block.
+      Draft
+        .live
+        .where(user_id: user_id, draft_key: draft_key)
+        .where("sequence < ?", sequence - 1)
+        .destroy_all
+
+      count =
+        Draft
+          .discarded
+          .where(id: id)
+          .where.not(Draft.live.where(user_id: user_id, draft_key: draft_key).arel.exists)
+          .update_all(deleted_at: nil, sequence: sequence, updated_at: Time.zone.now)
+      if count == 0
+        raise ActiveRecord::RecordNotFound if !Draft.exists?(id: id)
+        raise RestoreConflict
+      end
+
+      UserStat.update_draft_count(user_id)
+      reload
+    end
+  rescue ActiveRecord::RecordNotUnique
+    raise RestoreConflict
+  end
+
+  def recoverable?
+    return false if SiteSetting.discarded_drafts_retention_days == 0
+
+    content = parsed_data
+    content.is_a?(Hash) && (content["reply"].present? || content["title"].present?)
   end
 
   def display_user
@@ -222,6 +364,7 @@ class Draft < ActiveRecord::Base
 
     stream =
       Draft
+        .live
         .where(user_id: user_id)
         .where(<<~SQL)
           sequence >= COALESCE(
@@ -242,7 +385,7 @@ class Draft < ActiveRecord::Base
   end
 
   def self.cleanup!
-    Draft.where(<<~SQL).in_batches(of: 100).destroy_all
+    Draft.live.where(<<~SQL).in_batches(of: 100).destroy_all
       sequence < (
         SELECT MAX(s.sequence)
           FROM draft_sequences s
@@ -253,7 +396,11 @@ class Draft < ActiveRecord::Base
 
     # remove old drafts
     delete_drafts_older_than_n_days = SiteSetting.delete_drafts_older_than_n_days.days.ago
-    Draft.where("updated_at < ?", delete_drafts_older_than_n_days).in_batches(of: 100).destroy_all
+    Draft
+      .live
+      .where("updated_at < ?", delete_drafts_older_than_n_days)
+      .in_batches(of: 100)
+      .destroy_all
 
     UserStat.update_draft_count
   end
@@ -351,6 +498,7 @@ end
 #
 #  id         :integer          not null, primary key
 #  data       :text             not null
+#  deleted_at :datetime
 #  draft_key  :string           not null
 #  owner      :string
 #  revisions  :integer          default(1), not null
@@ -361,5 +509,7 @@ end
 #
 # Indexes
 #
-#  index_drafts_on_user_id_and_draft_key  (user_id,draft_key) UNIQUE
+#  idx_drafts_on_deleted_at                  (deleted_at) WHERE (deleted_at IS NOT NULL)
+#  idx_drafts_on_user_id_and_draft_key_live  (user_id,draft_key) UNIQUE WHERE (deleted_at IS NULL)
+#  idx_drafts_on_user_id_discarded           (user_id) WHERE (deleted_at IS NOT NULL)
 #

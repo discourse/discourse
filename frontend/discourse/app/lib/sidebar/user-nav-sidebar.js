@@ -86,6 +86,7 @@ const ACTIVITY_LINKS = [
   {
     name: "activity-drafts",
     route: "userActivity.drafts",
+    currentWhen: "userActivity.drafts userActivity.discardedDrafts",
     label: "drafts.label",
     icon: "pencil",
     displayed: ({ controller }) => controller?.showDrafts,
@@ -564,11 +565,11 @@ function resolveLink(link, context) {
     count: viewingSelf && link.count ? link.count(context) : 0,
     showCount: context.currentUser?.sidebarShowCountOfNewItems,
     // `<LinkTo>` marks a route-backed link active by itself; an href link has
-    // to report it. Left undefined otherwise, since a boolean here would also
-    // override the router's answer for the route-backed ones.
+    // to report it. Route-backed links keep their own route list, since a
+    // boolean here would also override the router's answer for them.
     currentWhen: href
       ? !!context.router.currentURL?.startsWith(withoutPrefix(href))
-      : undefined,
+      : link.currentWhen,
     href,
     models: [context.user.username, ...(link.routeParams || [])],
     text:

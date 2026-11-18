@@ -151,7 +151,22 @@ export default class PostListItem extends Component {
           <ExpandPost @item={{@post}} />
         {{/unless}}
 
-        {{#if @post.editableDraft}}
+        {{#if @post.discarded}}
+          <div class="user-stream-item-draft-actions">
+            <DButton
+              class="btn-default restore-draft"
+              @action={{fn @resumeDraft @post}}
+              @icon="arrow-rotate-left"
+              @title="drafts.restore"
+            />
+            <DButton
+              class="btn-danger remove-draft"
+              @action={{fn @removeDraft @post}}
+              @icon="trash-can"
+              @title="drafts.delete_permanently"
+            />
+          </div>
+        {{else if @post.editableDraft}}
           <div class="user-stream-item-draft-actions">
             <DButton
               class="btn-default resume-draft"
