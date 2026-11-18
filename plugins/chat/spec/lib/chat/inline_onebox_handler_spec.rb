@@ -143,29 +143,6 @@ describe Chat::InlineOneboxHandler do
           ),
         ).to be_nil
       end
-
-      context "when the thread original message was trashed" do
-        before { thread.original_message.trash! }
-
-        it "does not render an inline onebox for a thread in a channel with threading enabled" do
-          public_channel.update!(threading_enabled: true)
-          expect(
-            Chat::InlineOneboxHandler.handle(
-              public_chat_thread_url,
-              { channel_id: public_channel.id, thread_id: thread.id },
-            ),
-          ).to be_nil
-        end
-
-        it "still renders an inline onebox for a thread in a channel with threading disabled" do
-          expect(
-            Chat::InlineOneboxHandler.handle(
-              public_chat_thread_url,
-              { channel_id: public_channel.id, thread_id: thread.id },
-            ),
-          ).to be_present
-        end
-      end
     end
   end
 

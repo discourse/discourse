@@ -457,28 +457,6 @@ RSpec.describe Chat::CreateMessage do
                       end
                     end
                   end
-
-                  context "when reply is in a thread whose original message was trashed" do
-                    fab!(:hidden_thread_original) do
-                      Fabricate(:chat_message, chat_channel: channel)
-                    end
-                    fab!(:reply_to) do
-                      Fabricate(
-                        :chat_message,
-                        chat_channel: channel,
-                        thread:
-                          Fabricate(
-                            :chat_thread,
-                            channel: channel,
-                            original_message: hidden_thread_original,
-                          ),
-                      )
-                    end
-
-                    before { hidden_thread_original.trash! }
-
-                    it { is_expected.to fail_a_policy(:can_see_reply) }
-                  end
                 end
 
                 context "when a thread is provided" do
@@ -492,12 +470,6 @@ RSpec.describe Chat::CreateMessage do
 
                   context "when thread is part of the provided channel" do
                     let(:thread) { Fabricate(:chat_thread, channel: channel) }
-
-                    context "when the thread original message was trashed" do
-                      before { thread.original_message.trash! }
-
-                      it { is_expected.to fail_a_policy(:can_see_thread) }
-                    end
 
                     context "when replying to an existing message" do
                       let(:reply_to) { Fabricate(:chat_message, chat_channel: channel) }

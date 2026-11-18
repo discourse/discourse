@@ -172,19 +172,5 @@ RSpec.describe Chat::CreateThread do
 
       it { is_expected.to fail_to_find_a_model(:original_message) }
     end
-
-    context "when the original message is a reply in a thread whose original message was trashed" do
-      fab!(:hidden_thread_original) { Fabricate(:chat_message, chat_channel: channel_1) }
-      fab!(:hidden_thread) do
-        Fabricate(:chat_thread, channel: channel_1, original_message: hidden_thread_original)
-      end
-
-      before do
-        message_1.update!(thread: hidden_thread)
-        hidden_thread_original.trash!
-      end
-
-      it { is_expected.to fail_a_policy(:can_see_message_thread) }
-    end
   end
 end

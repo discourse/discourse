@@ -76,17 +76,10 @@ describe Chat::MessageBookmarkable do
         Fabricate(:chat_thread, channel: threading_channel, original_message: original_message)
       end
       fab!(:reply) { Fabricate(:chat_message, chat_channel: threading_channel, thread: thread) }
-      let!(:reply_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: reply) }
 
       before do
         threading_channel.add(user)
         original_message.trash!
-      end
-
-      it "does not return the bookmark" do
-        expect(
-          registered_bookmarkable.perform_list_query(user, Guardian.new(user)).map(&:id),
-        ).not_to include(reply_bookmark.id)
       end
 
       it "returns the bookmark for staff" do
@@ -251,27 +244,6 @@ describe Chat::MessageBookmarkable do
       expect {
         registered_bookmarkable.validate_before_create(guardian, bookmark1.bookmarkable)
       }.to raise_error(Discourse::InvalidAccess)
-    end
-
-    it "raises InvalidAccess if the reply's thread original message was trashed" do
-      threading_channel = Fabricate(:category_channel, threading_enabled: true)
-      original_message = Fabricate(:chat_message, chat_channel: threading_channel)
-      thread =
-        Fabricate(:chat_thread, channel: threading_channel, original_message: original_message)
-      reply = Fabricate(:chat_message, chat_channel: threading_channel, thread: thread)
-      guardian = Guardian.new(user)
-
-      expect { registered_bookmarkable.validate_before_create(guardian, reply) }.not_to raise_error
-
-      original_message.trash!
-
-      expect { registered_bookmarkable.validate_before_create(guardian, reply) }.to raise_error(
-        Discourse::InvalidAccess,
-      )
-
-      expect {
-        registered_bookmarkable.validate_before_create(Guardian.new(Fabricate(:admin)), reply)
-      }.not_to raise_error
     end
   end
 

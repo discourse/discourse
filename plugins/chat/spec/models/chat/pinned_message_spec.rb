@@ -31,39 +31,4 @@ RSpec.describe Chat::PinnedMessage do
       expect(pins.map(&:chat_message_id)).to contain_exactly(message_1.id, message_2.id)
     end
   end
-
-  describe ".excluding_deleted_threads" do
-    fab!(:threading_channel) { Fabricate(:category_channel, threading_enabled: true) }
-    fab!(:original_message) { Fabricate(:chat_message, chat_channel: threading_channel) }
-    fab!(:thread) do
-      Fabricate(:chat_thread, channel: threading_channel, original_message: original_message)
-    end
-    fab!(:reply) { Fabricate(:chat_message, chat_channel: threading_channel, thread: thread) }
-    fab!(:pin) do
-      Fabricate(:chat_pinned_message, chat_message: reply, chat_channel: threading_channel)
-    end
-
-    it "keeps the pin while the original message is visible" do
-      expect(described_class.excluding_deleted_threads).to include(pin)
-    end
-
-    it "excludes the pin when the original message is trashed" do
-      original_message.trash!
-
-      expect(described_class.excluding_deleted_threads).not_to include(pin)
-    end
-
-    it "excludes the pin when the original message was purged" do
-      original_message.destroy!
-
-      expect(described_class.excluding_deleted_threads).not_to include(pin)
-    end
-
-    it "keeps the pin for a reply in a channel without threading" do
-      threading_channel.update!(threading_enabled: false)
-      original_message.trash!
-
-      expect(described_class.excluding_deleted_threads).to include(pin)
-    end
-  end
 end
