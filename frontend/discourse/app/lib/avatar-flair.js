@@ -37,14 +37,21 @@ export default function autoGroupFlairForUser(site, user) {
     return _autoGroupFlair[AUTO_GROUPS.staff.id];
   }
 
-  let trustLevel = user.trust_level || user.trustLevel;
-
+  const trustLevel = user.trust_level || user.trustLevel;
   if (trustLevel) {
-    for (let i = trustLevel; i >= 0; i--) {
-      const group = AUTO_GROUPS[`trust_level_${i}`];
-      if (group && _autoGroupFlair[group.id]) {
-        return _autoGroupFlair[group.id];
-      }
+    return trustLevelGroupFlair(site, trustLevel);
+  }
+}
+
+export function trustLevelGroupFlair(site, trustLevel) {
+  if (!_autoGroupFlair) {
+    initializeAutoGroupFlair(site);
+  }
+
+  for (let level = trustLevel; level >= 0; level--) {
+    const group = AUTO_GROUPS[`trust_level_${level}`];
+    if (group && _autoGroupFlair[group.id]) {
+      return _autoGroupFlair[group.id];
     }
   }
 }

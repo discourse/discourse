@@ -2684,6 +2684,7 @@ en:
 
     simultaneous_uploads: "Maximum number of files that can be dragged & dropped in the composer"
 
+    automatically_apply_trust_level_group_flair: "Show the highest available trust level group flair for members who have no selected group flair."
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
     default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
 

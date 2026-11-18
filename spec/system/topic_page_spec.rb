@@ -12,6 +12,19 @@ describe "Topic page" do
     <p id="test-last-cooked-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat risus. Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan. Vestibulum feugiat mi vitae turpis tempor dignissim.</p>
     HTML
 
+  it "shows the configured trust level flair for an author without a selected flair" do
+    SiteSetting.automatically_apply_trust_level_group_flair = true
+    Group.find(Group::AUTO_GROUPS[:trust_level_1]).update!(flair_icon: "heart")
+    author = topic.first_post.user
+    author.change_trust_level!(TrustLevel[1])
+    sign_in(admin)
+
+    visit topic.url
+
+    expect(page).to have_css(".topic-post[data-post-number='1'] .topic-avatar .d-icon-heart")
+    expect(author.reload.flair_group_id).to be_nil
+  end
+
   it "allows TOC anchor navigation" do
     visit("/t/#{topic.slug}/#{topic.id}")
 

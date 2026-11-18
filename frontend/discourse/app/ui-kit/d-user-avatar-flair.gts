@@ -1,9 +1,15 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import autoGroupFlairForUser, {
+  trustLevelGroupFlair,
+} from "discourse/lib/avatar-flair";
 import type Site from "discourse/models/site";
 import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import { i18n } from "discourse-i18n";
+
+type SiteSettings = {
+  automatically_apply_trust_level_group_flair: boolean;
+};
 
 /** The flair attributes of a user, such as a `User` model. */
 export interface DUserAvatarFlairUser {
@@ -12,6 +18,10 @@ export interface DUserAvatarFlairUser {
 
   /** The id of the group whose flair the user shows. */
   flair_group_id?: number | null;
+
+  /** The member's current trust level. */
+  trust_level?: number | null;
+  trustLevel?: number | null;
 
   /** The name of the flair group. */
   flair_name?: string | null;
@@ -35,15 +45,16 @@ interface DUserAvatarFlairSignature {
 
 export default class DUserAvatarFlair extends Component<DUserAvatarFlairSignature> {
   @service declare site: Site;
+  @service declare siteSettings: SiteSettings;
 
   get flair() {
     const user = this.args.user;
 
-    if (!user || !user.flair_group_id) {
+    if (!user) {
       return;
     }
 
-    if (user.flair_url || user.flair_bg_color) {
+    if (user.flair_group_id && (user.flair_url || user.flair_bg_color)) {
       return {
         flairName: user.flair_name,
         flairUrl: user.flair_url,
@@ -52,7 +63,19 @@ export default class DUserAvatarFlair extends Component<DUserAvatarFlairSignatur
       };
     }
 
-    const autoFlairAttrs = autoGroupFlairForUser(this.site, user);
+    let autoFlairAttrs;
+    if (user.flair_group_id) {
+      autoFlairAttrs = autoGroupFlairForUser(this.site, user);
+    } else if (
+      this.siteSettings.automatically_apply_trust_level_group_flair &&
+      !this.isBot
+    ) {
+      const trustLevel = user.trust_level ?? user.trustLevel;
+      if (Number.isInteger(trustLevel)) {
+        autoFlairAttrs = trustLevelGroupFlair(this.site, trustLevel);
+      }
+    }
+
     if (autoFlairAttrs) {
       return {
         flairName: autoFlairAttrs.flair_name,
