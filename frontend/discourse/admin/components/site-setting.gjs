@@ -28,6 +28,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
+import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
@@ -36,7 +37,8 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const FORM_KIT_NAME_SEPARATORS = /[.-]/g;
-const DEFAULT_TYPE = "string";
+const TEXT_FIELD_TYPES = ["input", "input-email", "textarea", "password"];
+const TEXT_TYPE_CLASS = "string";
 
 export default class SiteSettingComponent extends Component {
   @service modal;
@@ -51,7 +53,6 @@ export default class SiteSettingComponent extends Component {
 
   /** @type {string | null | undefined} */
   @tracked progress = null;
-  updateExistingUsers = null;
   trackChanges = true;
   linkableSetting = false;
 
@@ -248,7 +249,11 @@ export default class SiteSettingComponent extends Component {
   }
 
   get typeClass() {
-    return (this.type ?? DEFAULT_TYPE).replace(/_/g, "-");
+    const { type } = resolveSettingFieldType(this.definition);
+
+    return TEXT_FIELD_TYPES.includes(type)
+      ? TEXT_TYPE_CLASS
+      : this.type.replace(/_/g, "-");
   }
 
   get setting() {
@@ -515,14 +520,6 @@ export default class SiteSettingComponent extends Component {
   }
 
   @action
-  changeValueCallback(value) {
-    this.buffered.set("value", value);
-    if (isSettingValueTrue(value)) {
-      this.adminSiteSettingStore.reveal(this.setting.setting);
-    }
-  }
-
-  @action
   registerFormApi(api) {
     this.formApi = api;
   }
@@ -535,7 +532,11 @@ export default class SiteSettingComponent extends Component {
       return;
     }
 
-    this.changeValueCallback(wireValue);
+    this.buffered.set("value", wireValue);
+
+    if (isSettingValueTrue(wireValue)) {
+      this.adminSiteSettingStore.reveal(this.setting.setting);
+    }
   }
 
   toWire(value) {

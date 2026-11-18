@@ -13,7 +13,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const BACKGROUND_SIZE_COVER_SETTINGS = ["welcome_banner_image"];
 
@@ -140,16 +140,11 @@ export default class SettingFieldUpload extends Component {
   }
 
   get disabled() {
-    return (
-      this.args.field.disabled ||
-      this.notAllowed ||
-      this.uppyUpload?.uploading ||
-      this.uppyUpload?.processing
-    );
+    return this.args.field.disabled || this.notAllowed || this.isUploading;
   }
 
   get disabledReason() {
-    if (this.disabled && this.notAllowed) {
+    if (this.notAllowed) {
       return i18n("post.errors.no_uploads_authorized");
     }
   }
@@ -203,18 +198,18 @@ export default class SettingFieldUpload extends Component {
   }
 
   get isUploading() {
-    return this.uppyUpload?.uploading || this.uppyUpload?.processing;
+    return this.uppyUpload.uploading || this.uppyUpload.processing;
   }
 
   get uploadStatusLabel() {
-    if (this.uppyUpload?.processing) {
+    if (this.uppyUpload.processing) {
       return i18n("upload_selector.processing");
     }
     return `${i18n("upload_selector.uploading")} ${this.uppyUpload.uploadProgress}%`;
   }
 
   get progressBarStyle() {
-    const progress = this.uppyUpload?.processing
+    const progress = this.uppyUpload.processing
       ? 100
       : this.uppyUpload.uploadProgress || 0;
     return trustHTML(`width: ${progress}%`);
@@ -232,11 +227,10 @@ export default class SettingFieldUpload extends Component {
     }
 
     if (this.args.definition.max_file_size_kb) {
-      const sizeKb = this.args.definition.max_file_size_kb;
-      const size =
-        sizeKb >= 1024 ? `${(sizeKb / 1024).toFixed(1)} MB` : `${sizeKb} KB`;
       parts.push(
-        i18n("admin.site_settings.upload_restrictions.max_size", { size })
+        i18n("admin.site_settings.upload_restrictions.max_size", {
+          size: I18n.toHumanSize(this.args.definition.max_file_size_kb * 1024),
+        })
       );
     }
 

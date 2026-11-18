@@ -29,7 +29,7 @@ export function registerSettingFieldType(type, entry) {
 }
 
 export function resolveSettingFieldType(definition) {
-  return REGISTRY[typeKeyFor(definition)] ?? REGISTRY.default;
+  return REGISTRY[typeKeyFor(definition)];
 }
 
 export function settingFieldValidation(definition) {

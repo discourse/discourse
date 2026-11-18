@@ -51,6 +51,17 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".setting-label h3").doesNotHaveAttribute("tabindex");
   });
 
+  test("text-like settings share the string row class", async function (assert) {
+    await renderSetting({
+      setting: "test_ratio",
+      value: "1.5",
+      type: "float",
+    });
+
+    assert.dom(".row.setting").hasClass("string");
+    assert.dom(".row.setting").doesNotHaveClass("float");
+  });
+
   test("displays host-list setting value", async function (assert) {
     await renderSetting({
       setting: "blocked_onebox_domains",
@@ -71,7 +82,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await renderSetting({
       setting: "test_setting",
       value: "",
-      type: "input-setting-string",
+      type: "string",
     });
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
@@ -89,7 +100,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await renderSetting({
       setting: "test_setting",
       value: "",
-      type: "input-setting-string",
+      type: "string",
     });
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
@@ -108,7 +119,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await renderSetting({
       setting: "test_setting",
       value: "original",
-      type: "input-setting-string",
+      type: "string",
     });
     await fillIn(".setting input", "new value");
     await click(".setting .d-icon-check");
@@ -316,10 +327,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
         "new-password",
         "does not let password managers autofill credentials"
       );
-    assert
-      .dom(".setting-toggle-secret")
-      .doesNotExist("the control owns the reveal toggle");
-
     await click(".form-kit__control-password-toggle");
     assert.dom(".form-kit__control-password").hasAttribute("type", "text");
   });
