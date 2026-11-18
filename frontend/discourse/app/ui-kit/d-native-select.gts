@@ -9,8 +9,11 @@ import { i18n } from "discourse-i18n";
 
 export const NO_VALUE_OPTION = "__NONE__";
 
-/** The value of an option or a selection: a string, a number, or none. */
-export type DNativeSelectValue = string | number | null | undefined;
+/**
+ * The value of an option or a selection: a string, a number, a boolean, or none. The
+ * select compares and reports values as strings.
+ */
+export type DNativeSelectValue = string | number | boolean | null | undefined;
 
 function optionValue(value: DNativeSelectValue) {
   return isNone(value) ? NO_VALUE_OPTION : String(value);
