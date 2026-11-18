@@ -93,10 +93,11 @@ class Draft < ActiveRecord::Base
                , owner = :owner
                , updated_at = CURRENT_TIMESTAMP
            WHERE id = :id
+             AND deleted_at IS NULL
              AND (:force_save OR sequence <= :read_sequence)
         SQL
 
-        # another save or a restore moved the draft past the sequence this save read
+        # another save, a discard or a restore moved the draft past the sequence this save read
         raise Draft::OutOfSequence if updated == 0
       end
     elsif sequence != current_sequence
@@ -189,9 +190,14 @@ class Draft < ActiveRecord::Base
     recoverable, disposable = permanent ? [[], drafts] : drafts.partition(&:recoverable?)
 
     Draft.transaction do
-      Draft.where(id: recoverable.map(&:id)).update_all(deleted_at: Time.zone.now)
-      UploadReference.where(target_type: "Draft", target_id: disposable.map(&:id)).delete_all
-      Draft.where(id: disposable.map(&:id)).delete_all
+      Draft.live.where(id: recoverable.map(&:id)).update_all(deleted_at: Time.zone.now)
+      # a concurrent discard may have made one of these restorable since it was loaded
+      if disposable.any?
+        deleted_ids = DB.query_single(<<~SQL, ids: disposable.map(&:id))
+          DELETE FROM drafts WHERE id IN (:ids) AND deleted_at IS NULL RETURNING id
+        SQL
+        UploadReference.where(target_type: "Draft", target_id: deleted_ids).delete_all
+      end
       evict_excess_discarded!(user_id) if recoverable.any?
     end
 
@@ -246,6 +252,13 @@ class Draft < ActiveRecord::Base
         SET sequence = draft_sequences.sequence + 1
         RETURNING sequence
       SQL
+
+      # A live row from before the previous sequence is hidden from the user, so it can't block.
+      Draft
+        .live
+        .where(user_id: user_id, draft_key: draft_key)
+        .where("sequence < ?", sequence - 1)
+        .destroy_all
 
       count =
         Draft

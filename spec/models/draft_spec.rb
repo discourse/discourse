@@ -422,6 +422,43 @@ RSpec.describe Draft do
       expect(Draft.discarded.where(user: user)).to exist
     end
 
+    it "keeps a draft restorable when a permanent clear loaded it before a discard" do
+      Draft.set(user, key, 0, content)
+      sequence = DraftSequence.current(user, key)
+
+      discarded = false
+      allow(Draft).to receive(:transaction).and_wrap_original do |original, *args, **kwargs, &block|
+        if !discarded
+          discarded = true
+          Draft.live.where(user: user, draft_key: key).update_all(deleted_at: Time.zone.now)
+        end
+        original.call(*args, **kwargs, &block)
+      end
+
+      Draft.clear(user, key, sequence, permanent: true)
+
+      expect(Draft.discarded.where(user: user, draft_key: key)).to exist
+    end
+
+    it "rejects a save into a draft discarded after the save read it" do
+      sequence = Draft.set(user, key, 0, content)
+
+      discarded = false
+      allow(DB).to receive(:query_single).and_wrap_original do |original, *args, **kwargs|
+        result = original.call(*args, **kwargs)
+        if !discarded
+          discarded = true
+          Draft.live.where(user: user, draft_key: key).update_all(deleted_at: Time.zone.now)
+        end
+        result
+      end
+
+      expect { Draft.set(user, key, sequence, { reply: "late" }.to_json) }.to raise_error(
+        Draft::OutOfSequence,
+      )
+      expect(Draft.discarded.find_by(user: user, draft_key: key).data).to eq(content)
+    end
+
     describe "#restore!" do
       it "brings the draft back with a new sequence" do
         Draft.set(user, key, 0, content)
@@ -530,6 +567,23 @@ RSpec.describe Draft do
         Draft.find(stale.id).restore!
 
         expect { stale.restore! }.to raise_error(Draft::RestoreConflict)
+      end
+
+      it "replaces a live draft the user can no longer see" do
+        Draft.set(user, key, 0, content)
+        discard(user, key)
+        discarded = Draft.discarded.find_by!(user: user, draft_key: key)
+        Draft.set(user, key, 0, { reply: "autosave racing the post" }.to_json)
+        # posting bumped the sequence after the autosave read it
+        DraftSequence.upsert(
+          { user_id: user.id, draft_key: key, sequence: 1 },
+          unique_by: %i[user_id draft_key],
+        )
+
+        discarded.restore!
+
+        expect(Draft.get(user, key, DraftSequence.current(user, key))).to eq(content)
+        expect(Draft.live.where(user: user, draft_key: key).count).to eq(1)
       end
 
       it "refuses to replace a live draft with the same key" do
