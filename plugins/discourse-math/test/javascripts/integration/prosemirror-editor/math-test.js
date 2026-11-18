@@ -158,17 +158,58 @@ module(
       );
     });
 
-    test("escapes bare dollar signs when serializing block math", async function (assert) {
+    test("preserves multi-line block math nested in a list", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      const markdown = "* $$\n  a\n    b\n  $$";
+      const [editorClass] = await setupRichEditor(assert, markdown);
+
+      assert.strictEqual(editorClass.value, markdown);
+      assert.strictEqual(
+        editorClass.view.state.doc.textContent,
+        "a\n  b",
+        "the source has no list indent"
+      );
+    });
+
+    test("preserves multi-line block math nested in a blockquote", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      const markdown = "> $$\n> a\n> b\n> $$";
+      const [editorClass] = await setupRichEditor(assert, markdown);
+
+      assert.strictEqual(editorClass.value, markdown);
+      assert.strictEqual(
+        editorClass.view.state.doc.textContent,
+        "a\nb",
+        "the source has no quote markers"
+      );
+    });
+
+    test("keeps dollar signs in block math as written", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      await testMarkdown(
+        assert,
+        "$$\n\\text{if $x>0$}\n$$",
+        () => {},
+        "$$\n\\text{if $x>0$}\n$$"
+      );
+    });
+
+    test("escapes a source line that would close the block", async function (assert) {
       this.siteSettings.discourse_math_enabled = true;
 
       const [editorClass] = await setupRichEditor(assert, BLOCK_MARKDOWN);
       const { view } = editorClass;
 
       await toggleSource(view);
-      view.dispatch(view.state.tr.insertText("$", view.state.selection.from));
+      view.dispatch(
+        view.state.tr.insertText("\n  $$ ", view.state.selection.from)
+      );
       await settled();
 
-      assert.strictEqual(editorClass.value, "$$\nE=mc^2\\$\n$$");
+      assert.strictEqual(editorClass.value, "$$\nE=mc^2\n  \\$\\$ \n$$");
     });
 
     test("edits inline math via modal", async function (assert) {

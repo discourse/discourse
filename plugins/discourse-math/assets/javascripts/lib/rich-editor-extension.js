@@ -263,7 +263,15 @@ const extension = {
       },
       math_block(state, node) {
         state.write("$$\n");
-        state.text(escapeDelimiter(node.textContent, "$"), false);
+        // the block content is not unescaped, so only escape a line that
+        // would otherwise close the block
+        state.text(
+          node.textContent.replace(
+            /^([ \t]*)\$\$([ \t]*)$/gm,
+            (_, before, after) => `${before}\\$\\$${after}`
+          ),
+          false
+        );
         // the closing fence needs its own write to pick up the block prefix,
         // or the block loses it inside a blockquote
         state.ensureNewLine();
