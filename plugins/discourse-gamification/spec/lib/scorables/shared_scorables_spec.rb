@@ -101,6 +101,52 @@ RSpec.shared_examples "No Score Value" do
 end
 
 RSpec.describe DiscourseGamification::LikeReceived do
+  it "caps received likes separately for each author, liker, and day" do
+    leaderboard = Fabricate(:gamification_leaderboard)
+    first_author, second_author, first_liker, second_liker = Fabricate.times(4, :user)
+    category = Fabricate(:category)
+    SiteSetting.scorable_categories = category.id.to_s
+    SiteSetting.gamification_like_received_per_user_daily_cap = 2
+    SiteSetting.like_received_score_value = 3
+    topic = Fabricate(:topic, category:)
+    first_day = Time.utc(2024, 1, 1)
+    second_day = first_day + 1.day
+
+    first_author_posts = Fabricate.times(4, :post, user: first_author, topic:)
+    first_author_posts
+      .first(3)
+      .each { |post| Fabricate(:post_action, user: first_liker, post:, created_at: first_day) }
+    Fabricate(
+      :post_action,
+      user: second_liker,
+      post: first_author_posts.first,
+      created_at: first_day,
+    )
+    Fabricate(
+      :post_action,
+      user: first_liker,
+      post: first_author_posts.last,
+      created_at: second_day,
+    )
+    second_author_post = Fabricate(:post, user: second_author, topic:)
+    Fabricate(:post_action, user: first_liker, post: second_author_post, created_at: first_day)
+    unscorable_post = Fabricate(:post, user: first_author)
+    Fabricate(:post_action, user: first_liker, post: unscorable_post, created_at: second_day)
+
+    DiscourseGamification::GamificationLeaderboardScore.calculate_scores(
+      leaderboard,
+      since_date: first_day.to_date,
+      only_subclass: described_class,
+    )
+
+    scores = DiscourseGamification::GamificationLeaderboardScore.where(leaderboard:)
+    expect(scores.pluck(:user_id, :date, :score)).to contain_exactly(
+      [first_author.id, first_day.to_date, 9],
+      [first_author.id, second_day.to_date, 3],
+      [second_author.id, first_day.to_date, 3],
+    )
+  end
+
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :post, user: current_user)
