@@ -150,4 +150,59 @@ RSpec.describe "AI bot conversation creation" do
 
     expect(response.status).to eq(403)
   end
+
+  context "when the agent researches a topic with a tag that only staff can see" do
+    subject(:prompt_content) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [research_call, "Research findings", "The topic has one tag.", "Topic tags"],
+      ) do |_, _, prompts|
+        Jobs::CreateAiReply.new.execute(reply_job_args)
+        prompts.flat_map(&:messages).map { |message| message[:content].to_s }.join("\n")
+      end
+    end
+
+    fab!(:public_tag) { Fabricate(:tag, name: "public-tag") }
+    fab!(:staff_tag) { Fabricate(:tag, name: "staff-tag") }
+    fab!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [staff_tag.name])
+    end
+    fab!(:tagged_post) { Fabricate(:post, topic: Fabricate(:topic, tags: [public_tag, staff_tag])) }
+    fab!(:agent) do
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        allow_personal_messages: true,
+        tools: ["Researcher"],
+      )
+    end
+
+    let(:research_call) do
+      DiscourseAi::Completions::ToolCall.new(
+        id: "research-1",
+        name: "researcher",
+        parameters: {
+          filter: "topic:#{tagged_post.topic_id}",
+          goals: "List the tags of the topic",
+        },
+      )
+    end
+    let(:reply_job_args) { Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys }
+
+    before do
+      post "/discourse-ai/ai-bot/conversations.json",
+           params: {
+             raw: "Which tags does topic #{tagged_post.topic_id} have?",
+             target_username: llm_model.reload.user.username,
+             ai_agent_id: agent.id,
+           }
+    end
+
+    it "omits the tag from the content sent to the LLM" do
+      expect(prompt_content).not_to include(staff_tag.name)
+    end
+
+    it "keeps the public tag in the content sent to the LLM" do
+      expect(prompt_content).to include(public_tag.name)
+    end
+  end
 end
