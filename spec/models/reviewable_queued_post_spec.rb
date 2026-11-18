@@ -270,6 +270,27 @@ RSpec.describe ReviewableQueuedPost, type: :model do
             SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
           end
 
+          it "includes the guideline between the revision reason and feedback" do
+            rule = {
+              "ground" => "Keep topics distinct",
+              "explanation" => "Use the existing discussion.",
+            }
+            reviewable.perform(
+              moderator,
+              :revise_and_reject_post,
+              revise_reason: "Duplicate",
+              revise_feedback: "Please reply in the original topic.",
+              dsa_classification: {
+                community_rule: rule,
+                category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY,
+              },
+            )
+
+            expect(Post.last.raw).to include(
+              "Reason: Duplicate\n\nMore specifically, your post violated the following community guideline: **Keep topics distinct**. Use the existing discussion.\n\nFeedback: Please reply in the original topic.",
+            )
+          end
+
           it "includes appeal instructions in the feedback message" do
             reviewable.perform(
               moderator,

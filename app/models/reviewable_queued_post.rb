@@ -226,6 +226,16 @@ class ReviewableQueuedPost < Reviewable
       edit_instructions: I18n.t(edit_instructions_key, locale: target_created_by.effective_locale),
     }
 
+    paragraph =
+      ReviewableModerationActions.rule_paragraph(
+        classification: notice_classification(args),
+        locale: target_created_by.effective_locale,
+        key: "system_messages.moderation_reason",
+      )
+    pm_translation_args[:reason] = [pm_translation_args[:reason], paragraph].compact_blank.join(
+      "\n\n",
+    ) if paragraph
+
     SystemMessage.create(
       target_created_by,
       (

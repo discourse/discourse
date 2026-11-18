@@ -116,7 +116,14 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_user(performed_by, args, &)
-    delete_user(target_user, delete_opts, performed_by) if target_user
+    if target_user
+      delete_user(
+        target_user,
+        delete_opts,
+        performed_by,
+        notice_paragraph: account_notice_paragraph(args),
+      )
+    end
     create_result(:success, :rejected, [], false, &)
   end
 
@@ -124,7 +131,14 @@ module ReviewableActionBuilder
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    delete_user(target_user, delete_options, performed_by) if target_user
+    if target_user
+      delete_user(
+        target_user,
+        delete_options,
+        performed_by,
+        notice_paragraph: account_notice_paragraph(args),
+      )
+    end
     create_result(:success, :rejected, [], false, &)
   end
 
@@ -164,6 +178,15 @@ module ReviewableActionBuilder
 
   private
 
+  def moderation_action(performed_by:, args:)
+    ReviewableModerationActions.new(
+      post:,
+      reviewable_id: id,
+      performed_by:,
+      classification: notice_classification(args),
+    )
+  end
+
   def perform_penalty(performed_by:, args:, penalty_type:)
     guardian = args[:guardian] || Guardian.new(performed_by)
     service = penalty_type == "suspend" ? User::Suspend : User::Silence
@@ -176,7 +199,20 @@ module ReviewableActionBuilder
         reviewable_id: id,
       )
 
-    service.call(guardian:, params: penalty_params, options: { raise_on_failure: true }) do
+    notice_paragraph = account_notice_paragraph(args)
+    post_options =
+      if target_type == "Post" && notice_classification(args)
+        ReviewableModerationActions.message_options(classification: notice_classification(args))
+      end
+    service.call(
+      guardian:,
+      params: penalty_params,
+      options: {
+        raise_on_failure: true,
+        notice_paragraph:,
+        post_message_options: post_options || {},
+      },
+    ) do
       on_success { result = create_result(:success) }
       on_failed_contract { |contract| result.errors = contract.errors }
       on_model_not_found(:user) { raise Discourse::NotFound }
@@ -199,12 +235,26 @@ module ReviewableActionBuilder
     }
   end
 
-  def delete_user(user, delete_options, performed_by)
+  def notice_classification(args)
+    args[:dsa_classification] unless potentially_illegal?
+  end
+
+  def account_notice_paragraph(args)
+    classification = notice_classification(args)
+    return unless classification
+
+    ReviewableModerationActions.rule_paragraph(
+      classification:,
+      locale: target_user&.effective_locale,
+    )
+  end
+
+  def delete_user(user, delete_options, performed_by, notice_paragraph:)
     email = user.email
 
     UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: id))
 
-    message = UserNotifications.account_deleted(email, self)
+    message = UserNotifications.account_deleted(email, self, notice_paragraph:)
     Email::Sender.new(message, :account_deleted).send
   end
 

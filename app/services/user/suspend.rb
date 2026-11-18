@@ -25,7 +25,11 @@ class User::Suspend
               allow_blank: true
   end
 
-  options { attribute :raise_on_failure, :boolean, default: false }
+  options do
+    attribute :raise_on_failure, :boolean, default: false
+    attribute :notice_paragraph, :string
+    attribute :post_message_options, default: -> { {} }
+  end
 
   model :user
   policy :not_suspended_already, class_name: User::Policy::NotAlreadySuspended
@@ -52,6 +56,7 @@ class User::Suspend
   def suspend(guardian:, users:, params:, options:)
     context[:full_reason] = User::Action::SuspendAll.call(
       users:,
+      notice_paragraph: options.notice_paragraph,
       actor: guardian.user,
       params:,
       raise_on_failure: options.raise_on_failure,
@@ -66,6 +71,7 @@ class User::Suspend
     User::Action::TriggerPostAction.call(
       guardian:,
       post:,
+      message_options: options.post_message_options,
       params:,
       raise_on_failure: options.raise_on_failure,
     )

@@ -218,6 +218,10 @@ module Email
         body = @opts[:body].dup
       end
 
+      body = "#{body.rstrip}\n\n#{@template_args[:body_suffix]}" if @template_args[
+        :body_suffix
+      ].present?
+
       if key = @template_args[:body_suffix_key]
         paragraph = I18n.t(key, @template_args)
         body = "#{body.rstrip}\n\n#{paragraph}"

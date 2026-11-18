@@ -628,6 +628,77 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(Post.last.topic.allowed_users).to match_array(baseline.topic.allowed_users)
       end
 
+      let(:account_paragraph) do
+        "The moderator applied the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}"
+      end
+
+      it "includes the rule in the reviewed author's silence message and email" do
+        other_user = Fabricate(:user)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::CriticalUserEmail.clear
+
+        reviewable.perform(
+          moderator,
+          :agree_and_silence,
+          reason: "Personal attack",
+          silenced_till: 2.days.from_now,
+          other_user_ids: [other_user.id],
+          dsa_classification: classification,
+        )
+
+        notices = Topic.where(archetype: Archetype.private_message)
+        expect(notices.private_messages_for_user(post.user).last.first_post.raw).to end_with(
+          "#{account_paragraph}\n\nTo appeal this decision, contact appeals@example.com",
+        )
+        expect(notices.private_messages_for_user(other_user).last.first_post.raw).not_to include(
+          rule["ground"],
+        )
+
+        Jobs::CriticalUserEmail.jobs.each do |job|
+          Jobs::CriticalUserEmail.new.perform(job["args"].first)
+        end
+        emails = ActionMailer::Base.deliveries.index_by { |email| email.to.first }
+        expect(emails.fetch(post.user.email).text_part.body.decoded).to include(
+          rule["ground"],
+          rule["explanation"],
+        )
+        expect(emails.fetch(other_user.email).text_part.body.decoded).not_to include(rule["ground"])
+      end
+
+      it "includes the rule in both notices when suspending the author and deleting their post" do
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::CriticalUserEmail.clear
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          reason: "Personal attack",
+          suspend_until: 2.days.from_now,
+          post_action: "delete",
+          dsa_classification: classification,
+        )
+
+        Jobs::CriticalUserEmail.new.perform(Jobs::CriticalUserEmail.jobs.sole["args"].first)
+        expect(ActionMailer::Base.deliveries.last.text_part.body.decoded).to include(
+          rule["ground"],
+          rule["explanation"],
+        )
+        Jobs::SendSystemMessage.new.perform(Jobs::SendSystemMessage.jobs.sole["args"].first)
+        expect(Post.last.raw).to include(paragraph)
+      end
+
+      it "includes the rule in the account deletion email" do
+        reviewable = PostActionCreator.spam(user, post).reviewable
+        email_address = post.user.email
+
+        reviewable.perform(moderator, :delete_user, dsa_classification: classification)
+
+        email = ActionMailer::Base.deliveries.last
+        expect(email.to).to eq([email_address])
+        expect(email.text_part.body.decoded).to include(rule["ground"], rule["explanation"])
+      end
+
       it "adds the selected rule and explanation to the hiding notice for agree_and_hide" do
         baseline = existing_notice(type: :post_hidden)
         reviewable = PostActionCreator.inappropriate(user, post).reviewable

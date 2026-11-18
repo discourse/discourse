@@ -283,6 +283,33 @@ RSpec.describe ReviewableUser, type: :model do
   describe "#perform" do
     fab!(:reviewable)
 
+    it "includes the selected guideline in the rejection email for a suspect account" do
+      enable_dsa_reporting
+      SiteSetting.must_approve_users = true
+      reviewable = Fabricate(:suspect_user_reviewable, target: user)
+      address = user.email
+      rule = { "ground" => "No promotions", "explanation" => "Advertising is prohibited." }
+
+      reviewable.perform(
+        admin,
+        :delete_user,
+        send_email: true,
+        reject_reason: "Repeated spam",
+        dsa_classification: {
+          community_rule: rule,
+          category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY,
+        },
+      )
+
+      email = ActionMailer::Base.deliveries.last
+      expect(email.to).to eq([address])
+      expect(email.text_part.body.decoded).to include(
+        "Repeated spam",
+        rule["ground"],
+        rule["explanation"],
+      )
+    end
+
     it "rejects a registration without creating a statement when classification is supplied" do
       enable_dsa_reporting
       reviewable = Fabricate(:reviewable_user, target: Fabricate(:user, approved: false))

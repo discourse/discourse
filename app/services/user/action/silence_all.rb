@@ -3,6 +3,7 @@
 class User::Action::SilenceAll < Service::ActionBase
   option :users, []
   option :actor
+  option :notice_paragraph, default: -> { nil }
   option :params
   option :raise_on_failure, default: -> { false }
 
@@ -18,6 +19,7 @@ class User::Action::SilenceAll < Service::ActionBase
     users.map do |user|
       next if raise_on_failure && user.silenced?
 
+      paragraph = notice_paragraph if user.id == params.user_id
       UserSilencer
         .new(
           user,
@@ -26,6 +28,7 @@ class User::Action::SilenceAll < Service::ActionBase
           keep_posts: true,
           silenced_till:,
           reason:,
+          notice_paragraph: paragraph,
           post_id:,
           reviewable_id:,
         )
@@ -39,6 +42,7 @@ class User::Action::SilenceAll < Service::ActionBase
             type: "account_silenced",
             user_id: user.id,
             user_history_id: silencer.user_history.id,
+            notice_paragraph: paragraph,
           )
         end
     rescue => err
