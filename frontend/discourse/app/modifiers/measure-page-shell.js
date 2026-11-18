@@ -98,6 +98,10 @@ export default class MeasurePageShell extends Modifier {
           "data-constrained-context",
           availableWidth - minimumContextWidth < minimumMainWidth
         );
+        element.toggleAttribute(
+          "data-cannot-open-context",
+          availableWidth - PANEL_LIMITS.context.minWidth < minimumMainWidth
+        );
         const { left, right, width } = content.getBoundingClientRect();
         const inlineStart =
           styles.direction === "rtl"

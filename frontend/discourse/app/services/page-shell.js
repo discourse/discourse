@@ -1,6 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import discourseDebounce from "discourse/lib/debounce";
 import EmbedMode from "discourse/lib/embed-mode";
 
 const STORAGE_KEY = "page-shell-panels";
@@ -54,10 +56,19 @@ export default class PageShell extends Service {
   @tracked navigationMaxWidth = PANEL_LIMITS.navigation.maxWidth;
   @tracked contextMaxWidth = Math.max(200, Math.min(1000, window.innerWidth));
   @tracked compactLogo = false;
+  @tracked closingPanels = {};
+  @tracked animatingPanels = false;
+
+  #animationTimer;
 
   constructor() {
     super(...arguments);
     this.#load();
+  }
+
+  willDestroy() {
+    cancel(this.#animationTimer);
+    super.willDestroy(...arguments);
   }
 
   get effectiveNavigationWidth() {
@@ -90,16 +101,21 @@ export default class PageShell extends Service {
     const choices = {
       width: ["centered", "full"],
       resize: ["content", "grow"],
-      navigation: ["open", "rail", "hidden"],
-      context: ["open", "rail", "hidden"],
       footer: ["content", "row", "off"],
     };
 
-    if (choices[name]?.includes(value)) {
+    if (name === "navigation" || name === "context") {
+      if (!PANEL_MODES.includes(value)) {
+        return;
+      }
+      this.#setPanelMode(name, value);
+    } else if (choices[name]?.includes(value)) {
+      this.#stopPanelAnimation();
       this[name] = value;
     } else if (name === "navigationWidth" || name === "contextWidth") {
       const size = Number(value);
       if (Number.isFinite(size)) {
+        this.#stopPanelAnimation();
         const maximum =
           name === "contextWidth"
             ? this.contextMaxWidth
@@ -138,20 +154,64 @@ export default class PageShell extends Service {
 
   @action
   toggleNavigation() {
-    this.navigation = this.navigation === "open" ? "hidden" : "open";
+    this.#setPanelMode(
+      "navigation",
+      this.navigation === "open" ? "hidden" : "open"
+    );
     this.#save();
   }
 
   @action
   openNavigation() {
-    this.navigation = "open";
+    this.#setPanelMode("navigation", "open");
     this.#save();
   }
 
   @action
   openContext() {
-    this.context = "open";
+    this.#setPanelMode("context", "open");
     this.#save();
+  }
+
+  @action
+  toggleContext() {
+    this.#setPanelMode("context", this.context === "open" ? "hidden" : "open");
+    this.#save();
+  }
+
+  #setPanelMode(panel, mode) {
+    const previousMode = this[panel];
+    if (previousMode === mode) {
+      return;
+    }
+
+    if (
+      this.width === "centered" &&
+      window.matchMedia("(prefers-reduced-motion: no-preference)").matches
+    ) {
+      this.closingPanels = {
+        ...this.closingPanels,
+        [panel]: mode === "hidden" ? previousMode : undefined,
+      };
+      this.animatingPanels = true;
+      this.#animationTimer = discourseDebounce(
+        this,
+        this.#stopPanelAnimation,
+        250
+      );
+    }
+
+    this[panel] = mode;
+  }
+
+  #stopPanelAnimation() {
+    if (!this.animatingPanels) {
+      return;
+    }
+
+    cancel(this.#animationTimer);
+    this.animatingPanels = false;
+    this.closingPanels = {};
   }
 
   #load() {

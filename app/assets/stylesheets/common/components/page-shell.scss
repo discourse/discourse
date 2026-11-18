@@ -97,6 +97,17 @@ body.has-page-shell {
     min-block-size: max(0px, 100dvh - var(--_page-shell-document-offset, 0px));
     align-content: start;
 
+    @media (prefers-reduced-motion: no-preference) {
+      &[data-animating-panels][data-width="centered"] {
+        transition: grid-template-columns var(--d-sidebar-animation-time)
+          var(--d-sidebar-animation-ease);
+
+        .page-shell__separator {
+          visibility: hidden;
+        }
+      }
+    }
+
     &[data-width="full"] {
       --_page-shell-inline-offset: 0px;
       --_page-shell-main-track: minmax(0, 1fr);
@@ -213,6 +224,7 @@ body.has-page-shell {
         .contents {
           display: grid;
           grid-template-columns: subgrid;
+          grid-template-rows: 1fr;
           grid-column: 1 / -1;
           grid-template-areas: none;
           gap: 0;
@@ -222,11 +234,18 @@ body.has-page-shell {
       }
     }
 
+    .page-shell__header .header-sidebar-toggle button > .d-icon,
+    .page-shell__header .d-header-icons button > .d-icon {
+      font-size: 1.125rem;
+      inline-size: 1em;
+    }
+
     .page-shell__header-start {
       grid-column: 1;
       grid-row: 1;
       display: flex;
       align-items: center;
+      gap: var(--space-2);
       min-inline-size: 0;
       inline-size: max-content;
       max-inline-size: var(--_page-shell-navigation-max-width);
@@ -335,7 +354,7 @@ body.has-page-shell {
       background: var(--d-sidebar-background);
     }
 
-    &[data-navigation="hidden"]::before {
+    &[data-navigation="hidden"]:not([data-closing-navigation])::before {
       display: none;
     }
 
@@ -356,7 +375,8 @@ body.has-page-shell {
       overflow: hidden;
     }
 
-    &[data-navigation="hidden"] .page-shell__navigation {
+    &[data-navigation="hidden"]:not([data-closing-navigation])
+      .page-shell__navigation {
       display: none;
     }
 
@@ -374,6 +394,7 @@ body.has-page-shell {
       min-inline-size: 0;
       border-inline-start: 1px solid var(--d-comp-PageShell-color-border);
       background: var(--d-comp-PageShell-color-background);
+      overflow: clip;
 
       > * {
         grid-area: panel;
@@ -427,6 +448,10 @@ body.has-page-shell {
       }
     }
 
+    &[data-cannot-open-context] .page-shell__context-toggle {
+      display: none;
+    }
+
     &[data-constrained-context] {
       --_page-shell-context-track-width: 0px;
       --_page-shell-context-reference-width: 0px;
@@ -451,7 +476,8 @@ body.has-page-shell {
       box-sizing: border-box;
     }
 
-    &[data-context="rail"] .page-shell__context-content {
+    .page-shell__context[data-presentation="rail"]
+      .page-shell__context-content {
       padding: var(--space-1);
       overflow-wrap: anywhere;
     }
@@ -567,7 +593,8 @@ body.has-page-shell {
       --_page-shell-context-track-width: 0px;
       --_page-shell-context-reference-width: 0px;
 
-      .page-shell__context {
+      .page-shell__context,
+      .page-shell__context-toggle {
         display: none;
       }
     }
