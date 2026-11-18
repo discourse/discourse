@@ -23,6 +23,17 @@ export default class InterfaceColor extends Service {
     return this.selectorAvailable && this.colorModeIsDark;
   }
 
+  /** A media query that matches while the site is shown in dark colors. */
+  get darkMediaQuery() {
+    if (this.session.defaultColorSchemeIsDark || this.darkModeForced) {
+      return "all";
+    }
+    if (!this.session.darkModeAvailable || this.lightModeForced) {
+      return "none";
+    }
+    return "(prefers-color-scheme: dark)";
+  }
+
   get selectorAvailable() {
     return (
       this.session.darkModeAvailable && !this.session.defaultColorSchemeIsDark

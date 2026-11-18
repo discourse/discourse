@@ -1,6 +1,9 @@
 import { module, test } from "qunit";
 import sinon from "sinon";
-import { buildGifPickHandler } from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
+import {
+  buildChatPickerSelectHandler,
+  buildGifPickHandler,
+} from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
 
 function setupDraft() {
   const channelDraft = { resetDraft: sinon.spy() };
@@ -119,5 +122,43 @@ module("Unit | Lib | buildGifPickHandler", function () {
       channelDraft.resetDraft.called,
       "draft preserved so the user can retry"
     );
+  });
+});
+
+module("Unit | Lib | buildChatPickerSelectHandler", function () {
+  test("inserts an emoji into the composer", function (assert) {
+    const api = { sendChatMessage: sinon.stub().resolves() };
+    const composer = {
+      context: "channel",
+      draft: setupDraft().draft,
+      onSelectEmoji: sinon.spy(),
+    };
+
+    buildChatPickerSelectHandler({ api, composer, currentUser: { id: 1 } })(
+      "grinning",
+      { id: "emoji" }
+    );
+
+    assert.true(composer.onSelectEmoji.calledOnceWith("grinning"));
+    assert.true(api.sendChatMessage.notCalled);
+  });
+
+  test("sends any other tab's value as a thread message", async function (assert) {
+    const api = { sendChatMessage: sinon.stub().resolves() };
+    const { draft, threadDraft } = setupDraft();
+    const composer = { context: "thread", draft, onSelectEmoji: sinon.spy() };
+
+    await buildChatPickerSelectHandler({
+      api,
+      composer,
+      currentUser: { id: 1 },
+    })("![g](u)", { id: "gifs" });
+
+    assert.deepEqual(api.sendChatMessage.firstCall.args, [
+      7,
+      { message: "![g](u)", threadId: 13, inReplyToId: null },
+    ]);
+    assert.true(threadDraft.resetDraft.calledOnce);
+    assert.true(composer.onSelectEmoji.notCalled);
   });
 });

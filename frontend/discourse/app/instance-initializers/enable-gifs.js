@@ -11,6 +11,10 @@ export default {
 
     withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
+        if (siteSettings.enable_composer_picker_and_rich_chat) {
+          return;
+        }
+
         if (!toolbar.context?.composerEvents) {
           return;
         }
