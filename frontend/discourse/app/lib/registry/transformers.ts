@@ -27,7 +27,6 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "post-stream-update-from-json",
   "search-menu-clear-recent-searches",
   "search-menu-clear-search",
-  "suggest-dsa-classification",
   "topic-controller:finished-editing",
   "topic-list-item-click",
   "topic-update-from-json",

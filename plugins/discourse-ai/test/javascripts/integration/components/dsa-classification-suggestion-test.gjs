@@ -1,4 +1,10 @@
-import { click, render, waitFor, waitUntil } from "@ember/test-helpers";
+import {
+  click,
+  getContext,
+  render,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DsaModeration from "discourse/components/dsa-moderation";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -7,6 +13,7 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import initializer from "discourse/plugins/discourse-ai/discourse/api-initializers/ai-dsa-classification";
 
 const endpoint = "/discourse-ai/ai-moderation/dsa-classifications/42/suggest";
 const rule = "[data-name='community_rule']";
@@ -19,6 +26,7 @@ function renderForm(
     { id: "abuse", ground: "Be civil" },
   ]
 ) {
+  initializer.initialize(getContext().owner);
   const options = {
     community_rules: communityRules,
     categories: [
@@ -103,6 +111,26 @@ module(
         .dom(`${category} ${hint}`)
         .hasText("Suggested by AI", "labels the suggestion");
       assert.dom(`${rule} ${hint}`).doesNotExist("leaves the rule unlabeled");
+    });
+
+    test("applies a suggested rule alongside manual guidance for the category", async function (assert) {
+      pretender.post(endpoint, () => response({ community_rule: "spam" }));
+      await renderForm();
+      assert
+        .dom(".dsa-classification-select")
+        .hasText("No spam", "applies the suggested rule");
+      assert
+        .dom(`${rule} ${hint}`)
+        .hasText("Suggested by AI", "attributes the rule");
+      assert
+        .dom(`${category} select`)
+        .hasValue("other", "keeps the default category");
+      assert
+        .dom(`${category} ${hint}`)
+        .includesText(
+          "Review the selected category.",
+          "shows the category guidance"
+        );
     });
 
     test("clears each inline error when its field changes", async function (assert) {

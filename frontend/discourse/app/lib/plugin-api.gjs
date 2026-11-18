@@ -2336,6 +2336,35 @@ class _PluginApi {
   }
 
   /**
+   * Supply suggestions when a moderator opens a reviewable action with DSA classification.
+   * Register one provider during plugin initialization when suggestions are available.
+   * Core displays loadingLabel while suggest(reviewableId) is pending. Return a value
+   * and attribution label to prefill a dropdown, or an errorLabel to guide manual
+   * selection. Omitted fields keep their selections. Core ignores the sole community
+   * rule and clears each hint when its field changes. If the promise rejects, core
+   * preserves the selections and shows a generic error on each eligible field.
+   *
+   * @param {import("discourse/services/reviewable-dsa-suggestions").ReviewableDsaSuggestionProvider} provider
+   * @example
+   * ```js
+   * api.registerReviewableDsaSuggestionProvider({
+   *   loadingLabel: i18n("my_plugin.generating"),
+   *   async suggest(reviewableId) {
+   *     const category = await suggestCategory(reviewableId);
+   *     return {
+   *       category: { value: category, label: i18n("my_plugin.suggested") },
+   *       communityRule: { errorLabel: i18n("my_plugin.choose_rule") },
+   *     };
+   *   },
+   * });
+   * ```
+   */
+  registerReviewableDsaSuggestionProvider(provider) {
+    this.container.lookup("service:reviewable-dsa-suggestions").provider =
+      provider;
+  }
+
+  /**
    * Registers a mapping between a JavaScript modal component class and a server-side reviewable
    * action, which is registered via `actions.add` and `build_actions`.
    *

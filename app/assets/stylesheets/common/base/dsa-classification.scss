@@ -113,3 +113,12 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
     min-width: 0;
   }
 }
+
+.dsa-loading-hint {
+  font-style: italic;
+
+  .d-icon-spinner {
+    color: var(--tertiary);
+    animation: spin 1s linear infinite;
+  }
+}

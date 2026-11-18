@@ -5,13 +5,27 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+function loadingHint(label) {
+  return <template>
+    <span class="dsa-loading-hint">{{dIcon "spinner"}} {{label}}</span>
+  </template>;
+}
+
+function outcomeHint(outcome) {
+  return <template>
+    {{#if outcome.errorLabel}}{{dIcon "triangle-exclamation"}}
+      {{outcome.errorLabel}}{{else}}{{dIcon "discourse-sparkles"}}
+      {{outcome.label}}{{/if}}
+  </template>;
+}
 
 const Help = <template>
   <DTooltip
@@ -142,6 +156,8 @@ const Footer = <template>
 </template>;
 
 export default class DsaModeration extends Component {
+  @service reviewableDsaSuggestions;
+
   @tracked fieldHints = {};
   @tracked statusMessage;
   @tracked classificationStep = false;
@@ -243,32 +259,45 @@ export default class DsaModeration extends Component {
 
   @action
   async suggestClassification() {
-    if (!this.reviewableId) {
+    const provider = this.reviewableDsaSuggestions.provider;
+    if (!this.reviewableId || !provider) {
       return;
     }
 
-    const suggestion = applyBehaviorTransformer(
-      "suggest-dsa-classification",
-      () => null,
-      {
-        reviewableId: this.reviewableId,
-        communityRules: this.options.community_rules,
-      }
-    );
-    if (!suggestion) {
-      return;
-    }
-
-    this.pendingFieldHints = suggestion.pendingFieldHints ?? {};
-    this.statusMessage = suggestion.loadingMessage;
+    const suggestRule = this.options.community_rules.length > 1;
+    const pending = loadingHint(provider.loadingLabel);
+    this.pendingFieldHints = {
+      community_rule: suggestRule && pending,
+      category: pending,
+    };
+    this.statusMessage = provider.loadingLabel;
     try {
-      const { values, fieldHints, message } = await suggestion.result;
+      const { communityRule, category } = await provider.suggest(
+        this.reviewableId
+      );
       if (!this.isDestroying) {
-        if (values) {
-          await this.#setClassification(values);
-        }
-        this.fieldHints = fieldHints;
-        this.statusMessage = message;
+        const rule = suggestRule && communityRule;
+        await this.#setClassification({
+          ...(rule?.value && { community_rule: rule.value }),
+          ...(category?.value && { category: category.value }),
+        });
+        this.fieldHints = {
+          community_rule: rule && outcomeHint(rule),
+          category: category && outcomeHint(category),
+        };
+        this.statusMessage = [rule?.errorLabel, category?.errorLabel]
+          .filter(Boolean)
+          .join(" ");
+      }
+    } catch {
+      if (!this.isDestroying) {
+        const errorLabel = i18n("generic_error");
+        const hint = outcomeHint({ errorLabel });
+        this.fieldHints = {
+          community_rule: suggestRule && hint,
+          category: hint,
+        };
+        this.statusMessage = errorLabel;
       }
     } finally {
       if (!this.isDestroying) {
