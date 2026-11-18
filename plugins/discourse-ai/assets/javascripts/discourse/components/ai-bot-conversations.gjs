@@ -476,7 +476,8 @@ export default class AiBotConversations extends Component {
             {{didInsert this.registerFileInput}}
           />
         </div>
-
+      </:default>
+      <:controls>
         <AiAgentLlmSelector
           @agentName={{@controller.agent}}
           @llmName={{@controller.llm}}
@@ -484,9 +485,9 @@ export default class AiBotConversations extends Component {
           @setAgentId={{this.setAgentId}}
           @setLlmId={{this.setLlmId}}
           @setTargetRecipient={{this.setTargetRecipient}}
-          @showLabels={{true}}
+          @showMenuHeadings={{true}}
         />
-      </:default>
+      </:controls>
       <:footer>
         {{#if this.showUploadsContainer}}
           <div class="ai-bot-conversations__uploads-container">
