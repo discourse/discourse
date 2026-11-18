@@ -1,10 +1,44 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
+import type RouterService from "@ember/routing/router-service";
 import { service } from "@ember/service";
 import { makeArray } from "discourse/lib/helpers";
 
-export default class DNavigationItem extends Component {
-  @service router;
+interface DNavigationItemSignature {
+  Args: {
+    /** The route the item links to. */
+    route: string;
+
+    /** The models of `@route`. */
+    models?: unknown[];
+
+    /** The model of `@route`, used when there is no `@models`. */
+    model?: unknown;
+
+    /**
+     * Which level of a nested navigation the item belongs to. A `parentNav` item is
+     * the current page while one of its child routes is current, and a `subNav` item
+     * of the current route is the current location.
+     */
+    ariaCurrentContext?: "parentNav" | "subNav";
+
+    /** Classes added to the item. */
+    class?: string;
+
+    /** The title of the item, shown on hover. */
+    title?: string;
+  };
+
+  Element: HTMLLIElement;
+
+  Blocks: {
+    /** The link text. */
+    default: [];
+  };
+}
+
+export default class DNavigationItem extends Component<DNavigationItemSignature> {
+  @service declare router: RouterService;
 
   get ariaCurrent() {
     // when there are multiple levels of navigation
@@ -13,7 +47,7 @@ export default class DNavigationItem extends Component {
     if (
       this.args.ariaCurrentContext === "parentNav" &&
       this.router.currentRouteName !== this.args.route && // not the current route
-      this.router.currentRoute.parent.name.includes(this.args.route) // but is the current parent route
+      this.router.currentRoute?.parent?.name.includes(this.args.route) // but is the current parent route
     ) {
       return "page";
     }

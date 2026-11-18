@@ -1,10 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import type Evented from "@ember/object/evented";
+import type Owner from "@ember/owner";
+import type RouterService from "@ember/routing/router-service";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import type { ComponentLike } from "@glint/template";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { bind } from "discourse/lib/decorators";
+import type Site from "discourse/models/site";
 import DBreadcrumbsContainer from "discourse/ui-kit/d-breadcrumbs-container";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
@@ -13,6 +17,7 @@ import {
   DangerButton,
   DefaultActionListItem,
   DefaultButton,
+  type DPageActions,
   PrimaryButton,
   WrappedActionListItem,
   WrappedButton,
@@ -21,20 +26,76 @@ import { i18n } from "discourse-i18n";
 
 const HEADLESS_ACTIONS = ["new", "edit"];
 
-export default class DPageHeader extends Component {
-  @service site;
-  @service router;
+interface DPageHeaderSignature {
+  Args: {
+    /** The title, when there is no `title` block. */
+    titleLabel?: string;
+
+    /** A description shown under the title. Its markup is rendered. */
+    descriptionLabel?: string;
+
+    /** A URL linked after the description. */
+    learnMoreUrl?: string;
+
+    /** Whether to render the `drawer` block. */
+    showDrawer?: boolean;
+
+    /** Whether to hide the tabs. */
+    hideTabs?: boolean;
+
+    /**
+     * Whether to show the header. Without it, the header hides on admin pages
+     * that create or edit a record.
+     */
+    shouldDisplay?: boolean;
+
+    /** Whether to collapse the actions into a menu on mobile. Defaults to `true`. */
+    collapseActionsOnMobile?: boolean;
+
+    /** A component rendered with the actions, when there is no `actions` block. */
+    headerActionComponent?: ComponentLike<{ Args: { actions: DPageActions } }>;
+  };
+
+  Element: HTMLDivElement;
+
+  Blocks: {
+    /** Breadcrumbs added after the base ones. */
+    breadcrumbs: [];
+
+    /** The title. */
+    title: [];
+
+    /** The page actions. */
+    actions: [actions: DPageActions];
+
+    /** Content shown in a drawer under the description. */
+    drawer: [];
+
+    /** The navigation tabs. */
+    tabs: [];
+  };
+}
+
+export default class DPageHeader extends Component<DPageHeaderSignature> {
+  @service declare site: Site;
+  @service declare router: RouterService;
 
   @tracked shouldDisplay = true;
 
-  constructor() {
-    super(...arguments);
-    this.router.on("routeDidChange", this, this.#checkIfShouldDisplay);
+  constructor(owner: Owner, args: DPageHeaderSignature["Args"]) {
+    super(owner, args);
+    // TODO(typescript-pending): the router service types only the two-argument `on`;
+    // remove the cast when it declares the target form `Evented` supports.
+    (this.router as unknown as Evented).on(
+      "routeDidChange",
+      this,
+      this.#checkIfShouldDisplay
+    );
     this.#checkIfShouldDisplay();
   }
 
   willDestroy() {
-    super.willDestroy(...arguments);
+    super.willDestroy();
     this.router.off("routeDidChange", this, this.#checkIfShouldDisplay);
   }
 
@@ -42,13 +103,16 @@ export default class DPageHeader extends Component {
     return this.site.mobileView && this.args.collapseActionsOnMobile !== false;
   }
 
-  @bind
   #checkIfShouldDisplay() {
     if (this.args.shouldDisplay !== undefined) {
       return (this.shouldDisplay = this.args.shouldDisplay);
     }
 
-    const currentPath = this.router._router.currentPath;
+    // TODO(typescript-pending): the private router has no public type; remove the cast
+    // when the current path comes from a public API.
+    const currentPath = (
+      this.router as unknown as { _router: { currentPath?: string } }
+    )._router.currentPath;
     if (!currentPath) {
       return (this.shouldDisplay = true);
     }

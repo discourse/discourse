@@ -1,18 +1,53 @@
 /* You might be looking for navigation-item. */
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
+import type RouterService from "@ember/routing/router-service";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import type Session from "discourse/models/session";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
-export default class DNavItem extends Component {
-  @service router;
-  @service session;
+interface DNavItemSignature {
+  Args: {
+    /** The translation key of the label. */
+    label?: string;
+
+    /** The label, already translated. It takes precedence over `@label`. */
+    i18nLabel?: string;
+
+    /** The ID of an icon shown before the label. */
+    icon?: string;
+
+    /** The route the item links to. */
+    route?: string;
+
+    /** The model of `@route`. It also decides whether the item is active. */
+    routeParam?: string;
+
+    /**
+     * Whether the item is active: a boolean, or a space-separated list of the route
+     * names it is active for.
+     */
+    currentWhen?: boolean | string;
+
+    /** The URL the item links to, when it has no `@route`. */
+    path?: string;
+
+    /** Classes added to the item. */
+    class?: string;
+  };
+
+  Element: HTMLLIElement;
+}
+
+export default class DNavItem extends Component<DNavItemSignature> {
+  @service declare router: RouterService;
+  @service declare session: Session;
 
   get contents() {
     const text = this.args.i18nLabel || i18n(this.args.label);
@@ -23,7 +58,12 @@ export default class DNavItem extends Component {
   }
 
   get active() {
-    if (!this.args.route || !this.router.currentRoute) {
+    if (!this.args.route) {
+      return;
+    }
+
+    const { currentRoute } = this.router;
+    if (!currentRoute) {
       return;
     }
 
@@ -34,27 +74,25 @@ export default class DNavItem extends Component {
       } else if (typeof currentWhen === "string") {
         return currentWhen
           .split(" ")
-          .some((route) => route === this.router.currentRoute.name);
+          .some((route) => route === currentRoute.name);
       } else {
         return false;
       }
     }
 
     if (this.args.routeParam) {
-      if (this.router.currentRoute.name === "adminConfig.login.plugin-tab") {
-        return (
-          this.router.currentRoute.params.wildcard === this.args.routeParam
-        );
+      const params = currentRoute.params ?? {};
+
+      if (currentRoute.name === "adminConfig.login.plugin-tab") {
+        return params.wildcard === this.args.routeParam;
       }
 
-      if (this.router.currentRoute.params.filter) {
-        return this.router.currentRoute.params.filter === this.args.routeParam;
+      if (params.filter) {
+        return params.filter === this.args.routeParam;
       }
 
-      if (this.router.currentRoute.params.field_name) {
-        return (
-          this.router.currentRoute.params.field_name === this.args.routeParam
-        );
+      if (params.field_name) {
+        return params.field_name === this.args.routeParam;
       }
 
       return this.router.isActive(this.args.route, this.args.routeParam);

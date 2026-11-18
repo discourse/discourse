@@ -5,7 +5,42 @@ import { schedule } from "@ember/runloop";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class DTableHeaderToggle extends Component {
+interface DTableHeaderToggleSignature {
+  Args: {
+    /** The field the column sorts by. With `@translated`, it is also the label. */
+    field: string;
+
+    /** The translation key of the label. It is used with `@automatic` or `@translated`. */
+    labelKey?: string;
+
+    /** Whether to label the column from `@labelKey` instead of using `@field` as the key. */
+    automatic?: boolean;
+
+    /** Whether `@field` is already a translated label. */
+    translated?: boolean;
+
+    /** The field the table is sorted by. */
+    order?: string;
+
+    /** Whether the table is sorted in ascending order. */
+    asc?: boolean | null;
+
+    /** The ID of an icon shown before the label. */
+    icon?: string;
+
+    /** Called with the field and the new direction, `true` for ascending, when the column is toggled. */
+    onToggle?: (field: string, asc: true | null) => void;
+  };
+
+  Element: HTMLDivElement;
+
+  Blocks: {
+    /** Content rendered before the label. */
+    default: [];
+  };
+}
+
+export default class DTableHeaderToggle extends Component<DTableHeaderToggleSignature> {
   get id() {
     return `table-header-toggle-${this.args.field.replace(/\s/g, "")}`;
   }
@@ -88,7 +123,7 @@ export default class DTableHeaderToggle extends Component {
   }
 
   @action
-  keyPress(event) {
+  keyPress(event: KeyboardEvent) {
     if (event.key === "Enter") {
       this.toggleProperties();
     }
