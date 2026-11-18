@@ -20,6 +20,7 @@ class Admin::UsersController < Admin::StaffController
                   deactivate
                   silence
                   unsilence
+                  slow_mode
                   trust_level
                   trust_level_lock
                   add_group
@@ -422,6 +423,18 @@ class Admin::UsersController < Admin::StaffController
       end
       on_failed_policy(:can_silence_all_users) { raise Discourse::InvalidAccess.new }
     end
+  end
+
+  def slow_mode
+    guardian.ensure_can_set_user_slow_mode!(@user)
+    state =
+      UserSlowMode.update!(
+        @user,
+        guardian:,
+        seconds: params.require(:seconds),
+        ends_at: params[:ends_at],
+      )
+    render json: { user_slow_mode: state }
   end
 
   def unsilence

@@ -636,6 +636,25 @@ export default <template>
       </div>
     </div>
 
+    {{#if @controller.model.can_set_user_slow_mode}}
+      <div class="display-row">
+        <div class="field">{{i18n "admin.user.slow_mode.title"}}</div>
+        <div class="value">{{i18nYesNo @controller.model.user_slow_mode}}</div>
+        <div class="controls">
+          <DButton
+            class="user-slow-mode"
+            @action={{@controller.showSlowModeModal}}
+            @icon="clock"
+            @label={{if
+              @controller.model.user_slow_mode
+              "admin.user.slow_mode.change"
+              "admin.user.slow_mode.set"
+            }}
+          />
+        </div>
+      </div>
+    {{/if}}
+
     {{#if @controller.model.silenced}}
       <div class="display-row highlight-danger silence-info">
         <div class="field">{{i18n "admin.user.silenced_by"}}</div>

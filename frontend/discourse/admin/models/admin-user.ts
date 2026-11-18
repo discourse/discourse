@@ -46,6 +46,8 @@ export interface AdminUserFields extends UserFields {
   can_deactivate?: boolean;
   can_approve?: boolean;
   can_change_trust_level?: boolean;
+  can_set_user_slow_mode?: true;
+  user_slow_mode?: { seconds: number; ends_at: string | null } | null;
   ip_address?: string | null;
   registration_ip_address?: string | null;
   include_ip?: boolean | null;

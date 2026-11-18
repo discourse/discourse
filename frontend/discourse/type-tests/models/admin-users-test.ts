@@ -84,6 +84,10 @@ expectTypeOf(admin.manual_locked_trust_level).toEqualTypeOf<
 expectTypeOf(admin.secondary_emails).toEqualTypeOf<string[] | undefined>();
 // List rows omit the detail fields, and details omit the list capabilities.
 expectTypeOf(admin.can_be_suspended).toEqualTypeOf<boolean | undefined>();
+expectTypeOf(admin.can_set_user_slow_mode).toEqualTypeOf<true | undefined>();
+expectTypeOf(admin.user_slow_mode).toEqualTypeOf<
+  { seconds: number; ends_at: string | null } | null | undefined
+>();
 expectTypeOf(admin.bounce_score).toEqualTypeOf<number | undefined>();
 expectTypeOf(admin.reset_bounce_score_after).toEqualTypeOf<
   string | null | undefined

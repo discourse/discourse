@@ -2514,6 +2514,8 @@ end
 #  suspended_till            :datetime
 #  title                     :string
 #  trust_level               :integer          not null
+#  user_slow_mode_seconds    :integer          default(0), not null
+#  user_slow_mode_until      :datetime
 #  username                  :string(60)       not null
 #  username_lower            :string(60)       not null
 #  views                     :integer          default(0), not null

@@ -14190,7 +14190,9 @@ CREATE TABLE public.users (
     flair_group_id integer,
     last_seen_reviewable_id integer,
     required_fields_version integer,
-    seen_notification_id bigint DEFAULT 0 NOT NULL
+    seen_notification_id bigint DEFAULT 0 NOT NULL,
+    user_slow_mode_seconds integer DEFAULT 0 NOT NULL,
+    user_slow_mode_until timestamp(6) without time zone
 );
 
 
@@ -26816,6 +26818,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261118230947'),
 ('20261118215054'),
 ('20261118184327'),
 ('20261118184323'),
