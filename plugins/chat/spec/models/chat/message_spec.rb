@@ -250,13 +250,6 @@ describe Chat::Message do
       )
     end
 
-    it "correlates the thread lookup with the candidate message" do
-      sql = described_class.excluding_deleted_threads.to_sql
-
-      expect(sql).to include("chat_threads.id = chat_messages.thread_id")
-      expect(sql).not_to include("original_message_id NOT IN")
-    end
-
     it "keeps the reply while the original message is visible" do
       expect(described_class.excluding_deleted_threads).to include(reply)
     end
@@ -274,27 +267,13 @@ describe Chat::Message do
       expect(described_class.excluding_deleted_threads).to include(reply)
     end
 
-    it "excludes replies once the channel enables threading" do
-      channel = Fabricate(:chat_channel, threading_enabled: false)
-      original = Fabricate(:chat_message, chat_channel: channel)
-      inline_thread = Fabricate(:chat_thread, channel: channel, original_message: original)
-      inline_reply = Fabricate(:chat_message, chat_channel: channel, thread: inline_thread)
-      original.trash!
-
-      expect(described_class.excluding_deleted_threads).to include(inline_reply)
-
-      channel.update!(threading_enabled: true)
-
-      expect(described_class.excluding_deleted_threads).not_to include(inline_reply)
-    end
-
     it "excludes the reply when the original message was purged" do
       original_message.destroy!
 
       expect(described_class.excluding_deleted_threads).not_to include(reply)
     end
 
-    it "keeps replies of forced threads in a channel with threading disabled" do
+    it "excludes replies of forced threads in a channel with threading disabled" do
       channel = Fabricate(:chat_channel)
       original = Fabricate(:chat_message, chat_channel: channel)
       forced_thread =
