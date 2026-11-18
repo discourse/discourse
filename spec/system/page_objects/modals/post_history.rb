@@ -27,6 +27,18 @@ module PageObjects
         revision_numbers.find("strong:nth-child(3)")
       end
 
+      def has_revision_arrows_inside_controls?
+        has_css?("#{footer_selector} #revision-controls button", count: 4) do |button|
+          button.evaluate_script(<<~JS)
+            (() => {
+              const arrow = this.getBoundingClientRect();
+              const controls = this.closest("#revision-controls").getBoundingClientRect();
+              return arrow.left >= controls.left && arrow.right <= controls.right;
+            })()
+          JS
+        end
+      end
+
       def open_visibility_menu
         footer.find(".revision-visibility__trigger").click
         self
