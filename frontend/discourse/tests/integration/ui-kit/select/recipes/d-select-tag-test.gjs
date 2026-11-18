@@ -25,6 +25,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import { paste as pasteTags } from "discourse/tests/helpers/qunit-helpers";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import I18n, { i18n } from "discourse-i18n";
 
 const ROWS = [
@@ -197,6 +198,66 @@ module(
         assert.dom(".mini .d-select").hasClass("mini-tag-chooser");
         await click(".default .d-select__trigger");
         assert.true(optionNamed("bug").classList.contains("x-select-tag"));
+      });
+
+      test("an action row draws its icon property once", async function (assert) {
+        stubSearch();
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-tag", (spec) =>
+              spec.content((options) => [
+                selectOption(
+                  { id: "suggest", name: "Suggest tags" },
+                  {
+                    icon: "discourse-sparkles",
+                    position: "sticky",
+                    onSelect() {},
+                  }
+                ),
+                ...options,
+              ])
+            );
+          })
+        );
+
+        await render(<template><SelectTagHost @multiple={{true}} /></template>);
+        await click(".d-select__trigger");
+
+        const row = find("[role='option'][data-value='suggest']");
+        assert.dom(row).hasText("Suggest tags");
+        assert
+          .dom(".d-icon-discourse-sparkles", row)
+          .exists({ count: 1 }, "the row draws the item's icon once");
+      });
+
+      test("an action row's record field named icon draws nothing", async function (assert) {
+        stubSearch();
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-tag", (spec) =>
+              spec.content((options) => [
+                selectOption(
+                  {
+                    id: "suggest",
+                    name: "Suggest tags",
+                    icon: "discourse-sparkles",
+                  },
+                  { position: "sticky", onSelect() {} }
+                ),
+                ...options,
+              ])
+            );
+          })
+        );
+
+        await render(<template><SelectTagHost @multiple={{true}} /></template>);
+        await click(".d-select__trigger");
+
+        const row = find("[role='option'][data-value='suggest']");
+        assert.dom(row).hasText("Suggest tags");
+        assert
+          .dom(".d-icon-discourse-sparkles", row)
+          .doesNotExist("only the icon property is drawn");
       });
 
       test("emits tag objects and accepts held names", async function (assert) {

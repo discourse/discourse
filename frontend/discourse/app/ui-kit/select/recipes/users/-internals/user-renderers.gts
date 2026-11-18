@@ -37,11 +37,6 @@ function isType(record: SelectRecord, type: UserPickType): boolean {
   return record.type === type;
 }
 
-/** Narrows optional action icons at the rendering boundary. */
-function actionIcon(record: SelectRecord): string | undefined {
-  return typeof record.icon === "string" ? record.icon : undefined;
-}
-
 /** The status emoji drawn after a user, when the picker shows statuses. */
 function statusEmoji(record: SelectRecord): string | undefined {
   return typeof record.statusEmoji === "string"
@@ -77,11 +72,6 @@ export const UserOption: TOC<{
   };
 }> = <template>
   {{#if @option.action}}
-    {{#let (actionIcon @record) as |icon|~}}
-      {{#if icon~}}
-        {{dIcon icon}}
-      {{~/if}}
-    {{~/let}}
     {{recordName @record}}
   {{else if (isType @record "user")}}
     <span class="d-user-option">

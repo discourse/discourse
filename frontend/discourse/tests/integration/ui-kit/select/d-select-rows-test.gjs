@@ -4038,3 +4038,279 @@ module(
     });
   }
 );
+
+module("Integration | ui-kit | select | DSelect icons", function (hooks) {
+  setupRenderingTest(hooks);
+
+  const noop = () => {};
+  const iconOf = (element) =>
+    [...element.querySelectorAll(":scope > .d-icon, :scope > * > .d-icon")]
+      .map((icon) => [...icon.classList].find((c) => c.startsWith("d-icon-")))
+      .filter(Boolean);
+
+  test("a row draws its item's icon before its label", async function (assert) {
+    const options = [
+      selectOption({ id: 1, name: "Apple" }, { icon: "far-heart" }),
+      { id: 2, name: "Banana" },
+    ];
+
+    await render(
+      <template>
+        <DSelect @onChange={{noop}} @options={{options}} @value={{null}} />
+      </template>
+    );
+    await dSelect().open();
+
+    const row = find("[role='option'][data-value='1']");
+    assert.strictEqual(
+      row.querySelector(".d-icon-far-heart")?.parentElement,
+      row,
+      "the icon is the row's own"
+    );
+    assert.dom(row).hasText("Apple");
+    assert.true(
+      row.innerHTML.indexOf("d-icon-far-heart") <
+        row.innerHTML.indexOf("Apple"),
+      "the icon precedes the label"
+    );
+    assert
+      .dom(".d-icon", find("[role='option'][data-value='2']"))
+      .doesNotExist("a row whose item has no icon draws none");
+  });
+
+  test("an option block's content follows the item's icon", async function (assert) {
+    const options = [
+      selectOption({ id: 1, name: "Apple" }, { icon: "far-heart" }),
+    ];
+
+    await render(
+      <template>
+        <DSelect @onChange={{noop}} @options={{options}} @value={{null}}>
+          <:option as |record|>
+            <span class="custom-row">{{record.name}}</span>
+          </:option>
+        </DSelect>
+      </template>
+    );
+    await dSelect().open();
+
+    const row = find("[role='option'][data-value='1']");
+    assert.deepEqual(iconOf(row), ["d-icon-far-heart"], "drawn once");
+    assert
+      .dom(".custom-row", row)
+      .hasText("Apple", "the block still draws the label");
+    assert.true(
+      row.innerHTML.indexOf("d-icon-far-heart") <
+        row.innerHTML.indexOf("custom-row"),
+      "the icon precedes the block's content"
+    );
+  });
+
+  test("@iconField derives the icon and an explicit empty icon draws none", async function (assert) {
+    const options = [
+      { id: 1, name: "Apple", glyph: "far-heart" },
+      selectOption({ id: 2, name: "Banana", glyph: "star" }, { icon: "" }),
+      { id: 3, name: "Cherry" },
+    ];
+
+    await render(
+      <template>
+        <DSelect
+          @iconField="glyph"
+          @onChange={{noop}}
+          @options={{options}}
+          @value={{null}}
+        />
+      </template>
+    );
+    await dSelect().open();
+
+    assert.deepEqual(
+      iconOf(find("[role='option'][data-value='1']")),
+      ["d-icon-far-heart"],
+      "the field names the icon"
+    );
+    assert
+      .dom(".d-icon", find("[role='option'][data-value='2']"))
+      .doesNotExist("an empty explicit icon clears the derived one");
+    assert
+      .dom(".d-icon", find("[role='option'][data-value='3']"))
+      .doesNotExist("a record without the field draws none");
+  });
+
+  test("a described row keeps its icon out of the label it is named by", async function (assert) {
+    const options = [
+      selectOption(
+        { id: 1, name: "Apple" },
+        { icon: "far-heart", description: "Crisp" }
+      ),
+    ];
+
+    await render(
+      <template>
+        <DSelect @onChange={{noop}} @options={{options}} @value={{null}} />
+      </template>
+    );
+    await dSelect().open();
+
+    const row = find("[role='option'][data-value='1']");
+    assert.strictEqual(
+      row.querySelector(".d-icon-far-heart")?.parentElement,
+      row,
+      "the icon sits in the row, beside its content"
+    );
+    const label = document.getElementById(row.getAttribute("aria-labelledby"));
+    assert.dom(label).hasText("Apple");
+    assert.dom(".d-icon", label).doesNotExist("the label holds no icon");
+  });
+
+  test("chips draw each held item's icon and never its description", async function (assert) {
+    const options = [
+      selectOption(
+        { id: 1, name: "Apple" },
+        { icon: "far-heart", description: "Crisp" }
+      ),
+      { id: 2, name: "Banana" },
+    ];
+
+    await render(
+      <template>
+        <DSelect
+          @multiple={{true}}
+          @onChange={{noop}}
+          @options={{options}}
+          @value={{array 1 2}}
+        />
+      </template>
+    );
+
+    const [apple, banana] = findAll(".d-select__chip");
+    assert.dom(".d-icon-far-heart", apple).exists("the chip draws the icon");
+    assert
+      .dom(".d-select__chip-label", apple)
+      .hasText("Apple", "and never the description");
+    assert
+      .dom(".d-icon", banana.querySelector(".d-select__chip-label"))
+      .doesNotExist("a chip whose item has no icon draws none");
+  });
+
+  test("a chip's selection block follows the held icon", async function (assert) {
+    const options = [
+      selectOption({ id: 1, name: "Apple" }, { icon: "far-heart" }),
+    ];
+
+    await render(
+      <template>
+        <DSelect
+          @multiple={{true}}
+          @onChange={{noop}}
+          @options={{options}}
+          @value={{array 1}}
+        >
+          <:selection as |record|>
+            <span class="custom-chip">{{record.name}}</span>
+          </:selection>
+        </DSelect>
+      </template>
+    );
+
+    const label = find(".d-select__chip-label");
+    assert.deepEqual(iconOf(label), ["d-icon-far-heart"], "drawn once");
+    assert.dom(".custom-chip", label).hasText("Apple");
+  });
+
+  test("an unresolved chip draws no icon", async function (assert) {
+    const options = [];
+
+    await render(
+      <template>
+        <DSelect
+          @iconField="glyph"
+          @multiple={{true}}
+          @onChange={{noop}}
+          @options={{options}}
+          @value={{array 99}}
+        />
+      </template>
+    );
+
+    assert.dom(".d-select__chip-label").exists("the held value has a chip");
+    assert
+      .dom(".d-select__chip-label .d-icon")
+      .doesNotExist("an unresolved item derives no icon");
+  });
+
+  test("a group action row draws its icon unless its group block draws the row", async function (assert) {
+    const options = [{ id: 1, name: "Apple", section: "fruit" }];
+    const groupFooter = (key) =>
+      selectOption(
+        { id: `more-${key}`, name: "More fruit" },
+        { icon: "plus", onSelect() {} }
+      );
+
+    await render(
+      <template>
+        <div class="plain">
+          <DSelect
+            @groupBy="section"
+            @groupFooter={{groupFooter}}
+            @onChange={{noop}}
+            @options={{options}}
+            @value={{null}}
+            @variant="static"
+          />
+        </div>
+        <div class="drawn">
+          <DSelect
+            @groupBy="section"
+            @groupFooter={{groupFooter}}
+            @onChange={{noop}}
+            @options={{options}}
+            @value={{null}}
+            @variant="static"
+          >
+            <:groupFooter>
+              <span class="custom-footer">More</span>
+            </:groupFooter>
+          </DSelect>
+        </div>
+      </template>
+    );
+
+    await dSelect(".plain .d-select").open();
+    assert
+      .dom(".plain .d-select__option.--action-footer .d-icon-plus")
+      .exists({ count: 1 }, "the engine draws the footer's icon");
+    await dSelect(".plain .d-select").close();
+
+    await dSelect(".drawn .d-select").open();
+    assert.dom(".drawn .custom-footer").exists("the block draws the row");
+    assert
+      .dom(".drawn .d-select__option.--action-footer .d-icon")
+      .doesNotExist("the block owns what the row shows");
+  });
+
+  test("the selection strip draws each held item's icon", async function (assert) {
+    const cap = tracked(1);
+    const options = [
+      selectOption({ id: 1, name: "Apple" }, { icon: "far-heart" }),
+      selectOption({ id: 2, name: "Banana" }, { icon: "star" }),
+    ];
+
+    await render(
+      <template>
+        <CompactStripHost
+          @cap={{cap}}
+          @options={{options}}
+          @value={{array 1 2}}
+        />
+      </template>
+    );
+    await click(".d-select__input");
+
+    const strip = find(".d-select__strip");
+    assert.dom(strip).exists("overflow shows the strip");
+    assert.dom(".d-icon-far-heart", strip).exists();
+    assert.dom(".d-icon-star", strip).exists();
+  });
+});

@@ -261,6 +261,10 @@
   overflow-wrap: anywhere;
 }
 
+.d-select__selection-icon {
+  margin-inline-end: 0.25em;
+}
+
 .d-select__listbox {
   list-style: none;
   margin: 0;
@@ -380,6 +384,10 @@
     visibility: visible;
     color: var(--primary-medium);
   }
+}
+
+.d-select__option-icon {
+  flex: none;
 }
 
 .d-select__option.--selected .d-select__option-selected-icon {

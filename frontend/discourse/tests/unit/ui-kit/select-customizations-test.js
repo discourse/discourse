@@ -1796,5 +1796,28 @@ module(
         "an ambiguous key translates only the copy's own fields"
       );
     });
+
+    test("a legacy row's icon field becomes its option's icon", function (assert) {
+      const rows = optionsFromLegacyRows(
+        [],
+        [
+          { id: 1, name: "Iconed", icon: "far-heart" },
+          { id: 2, name: "Cleared", icon: "" },
+          { id: 3, name: "Plain" },
+        ],
+        new SelectArgsView({})
+      );
+
+      assert.strictEqual(rows[0].settings.icon, "far-heart", "a row's icon");
+      assert.strictEqual(
+        rows[1].settings.icon,
+        "",
+        "an empty icon is kept, so it clears one the input had"
+      );
+      assert.false(
+        "icon" in rows[2].settings,
+        "a row without the field sets none"
+      );
+    });
   }
 );

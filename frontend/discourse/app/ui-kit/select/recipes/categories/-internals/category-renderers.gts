@@ -1,7 +1,6 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { CategoryRecord } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
   type SelectOption,
@@ -44,11 +43,6 @@ function categoryModel(
 /** Narrows shortcut and action labels for templates. */
 function name(record: SelectRecord): string {
   return String(record.name ?? "");
-}
-
-/** Narrows optional action icons at the rendering boundary. */
-function actionIcon(record: SelectRecord): string | undefined {
-  return typeof record.icon === "string" ? record.icon : undefined;
 }
 
 /** Topic counts are confined to options. */
@@ -95,11 +89,6 @@ export const CategoryBadge: TemplateOnlyComponent<{
         topicCount=(topicCount category @counts @countSubcategories)
       }}
     {{else}}
-      {{#let (actionIcon @record) as |icon|~}}
-        {{#if icon~}}
-          {{dIcon icon}}
-        {{~/if}}
-      {{~/let}}
       {{name @record}}
     {{/if}}
   {{/let}}

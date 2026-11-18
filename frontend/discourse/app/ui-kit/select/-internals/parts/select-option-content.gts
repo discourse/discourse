@@ -23,6 +23,8 @@ interface SelectOptionContentSignature {
     selectedIcon?: string;
     /** Omits the selection marker, for a list that never shows a held row. */
     hideSelectionMarker?: boolean;
+    /** The item's icon, drawn before its content; omitted when a group block draws the row. */
+    icon?: string;
     /** Additional descriptions, such as the option's group header. */
     describedBy?: string;
     /** Stable id of the limit message describing cap-disabled options. */
@@ -198,6 +200,9 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
             (if @descriptor.flags.selected "far-square-check" "far-square")
             class="d-select__option-selected-icon --checkbox"
           }}
+        {{/if}}
+        {{#if @icon}}
+          {{dIcon @icon class="d-select__option-icon"}}
         {{/if}}
         {{#if this.description}}
           <span class="d-select__option-content">

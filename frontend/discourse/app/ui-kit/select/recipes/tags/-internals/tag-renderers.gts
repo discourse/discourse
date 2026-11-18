@@ -1,6 +1,5 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   renderSelectText,
   type SelectConfig,
@@ -60,11 +59,6 @@ export function tagRecordName(record: SelectRecord): string {
     : String(record.name ?? "");
 }
 
-/** Narrows optional action icons at the rendering boundary. */
-function actionIcon(record: SelectRecord): string | undefined {
-  return typeof record.icon === "string" ? record.icon : undefined;
-}
-
 /** Default option content shared with forwarding recipes. */
 export const TagOption: TemplateOnlyComponent<{
   Args: {
@@ -77,11 +71,6 @@ export const TagOption: TemplateOnlyComponent<{
   };
 }> = <template>
   {{#if @option.action}}
-    {{#let (actionIcon @record) as |icon|~}}
-      {{#if icon~}}
-        {{dIcon icon}}
-      {{~/if}}
-    {{~/let}}
     {{tagRecordName @record}}
   {{else if @option.create}}
     {{rowText @config "createOption" (createValues @record)}}

@@ -153,6 +153,15 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             @descriptor={{option}}
             @engine={{@engine}}
             @hideSelectionMarker={{@hideSelectionMarker}}
+            @icon={{if
+              (not
+                (or
+                  (and option.flags.groupHeader @hasGroupHeaderBlock)
+                  (and option.flags.groupFooter @hasGroupFooterBlock)
+                )
+              )
+              option.item.icon
+            }}
             @limitId={{@limitId}}
             @locked={{@presenter.isLocked}}
             @multiple={{@multiple}}

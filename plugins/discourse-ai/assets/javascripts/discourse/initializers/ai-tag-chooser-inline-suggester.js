@@ -202,10 +202,10 @@ function initInlineTagSuggester(api) {
                 selectOption(
                   {
                     id: EXIT_ID,
-                    icon: "xmark",
                     name: i18n("discourse_ai.ai_helper.suggestions"),
                   },
                   {
+                    icon: "xmark",
                     position: "sticky",
                     onSelect(control) {
                       stopSuggesting();
@@ -223,10 +223,10 @@ function initInlineTagSuggester(api) {
               selectOption(
                 {
                   id: SUGGEST_ID,
-                  icon: "discourse-sparkles",
                   name: i18n("discourse_ai.ai_helper.suggest"),
                 },
                 {
+                  icon: "discourse-sparkles",
                   position: "sticky",
                   onSelect(control) {
                     state.suggesting = true;

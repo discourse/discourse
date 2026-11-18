@@ -1120,6 +1120,40 @@ module(
             value.forKind("select-category", (spec) =>
               spec.content((options) => [
                 selectOption(
+                  { id: "suggest", name: "Suggest a category" },
+                  {
+                    icon: "discourse-sparkles",
+                    position: "sticky",
+                    onSelect() {},
+                  }
+                ),
+                ...options,
+              ])
+            );
+          })
+        );
+
+        await render(<template><Host @multiple={{false}} /></template>);
+        await select().open();
+
+        const row = find("[role='option'][data-value='suggest']");
+        assert
+          .dom(".d-icon-discourse-sparkles", row)
+          .exists({ count: 1 }, "the row draws the item's icon once");
+        assert.dom(row).hasText("Suggest a category");
+        assert.strictEqual(
+          row.querySelector(".d-icon-discourse-sparkles").parentElement,
+          row,
+          "the icon sits beside the label in the row"
+        );
+      });
+
+      test("an action row's record field named icon is data and draws nothing", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) => {
+            value.forKind("select-category", (spec) =>
+              spec.content((options) => [
+                selectOption(
                   {
                     id: "suggest",
                     name: "Suggest a category",
@@ -1137,15 +1171,10 @@ module(
         await select().open();
 
         const row = find("[role='option'][data-value='suggest']");
+        assert.dom(row).hasText("Suggest a category");
         assert
           .dom(".d-icon-discourse-sparkles", row)
-          .exists("the row draws the item's icon");
-        assert.dom(row).hasText("Suggest a category");
-        assert.strictEqual(
-          row.querySelector(".d-icon-discourse-sparkles").parentElement,
-          row,
-          "the icon sits beside the label in the row"
-        );
+          .doesNotExist("only the icon property is drawn");
       });
 
       test("a description keeps the gap between a row's ancestor badges", async function (assert) {

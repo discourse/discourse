@@ -173,9 +173,9 @@ function initInlineCategorySuggester(api) {
                 {
                   id: SUGGEST_ID,
                   name: i18n("discourse_ai.ai_helper.choose"),
-                  icon: "discourse-sparkles",
                 },
                 {
+                  icon: "discourse-sparkles",
                   position: "sticky",
                   // Looked up on use: resolving them at boot would pin them before tests can stub them.
                   onSelect: (select) =>

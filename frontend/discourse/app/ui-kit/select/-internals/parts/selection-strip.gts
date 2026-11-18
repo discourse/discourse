@@ -17,6 +17,7 @@ import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import dRovingFocus, {
   type DRovingFocusApi,
 } from "discourse/ui-kit/modifiers/d-roving-focus";
+import SelectionIcon from "discourse/ui-kit/select/-internals/parts/selection-icon";
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
   SelectHeldRow,
@@ -283,6 +284,10 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                     class="d-select__strip-label"
                     id="{{this.idPrefix}}-{{index}}-label"
                   >
+                    <SelectionIcon
+                      @engine={{@engine}}
+                      @record={{chip.record}}
+                    />
                     {{#if (@engine.isHeldUnresolved chip.record)}}
                       {{#if @hasUnresolvedBlock}}
                         {{yield

@@ -47,9 +47,12 @@ function legacySettings(
   if (row.sticky) {
     settings.position = "sticky";
   }
-  // An empty description is kept: it clears one the row's input had.
+  // An empty description or icon is kept: it clears one the row's input had.
   if (typeof row.description === "string") {
     settings.description = row.description;
+  }
+  if (typeof row.icon === "string") {
+    settings.icon = row.icon;
   }
   return settings;
 }

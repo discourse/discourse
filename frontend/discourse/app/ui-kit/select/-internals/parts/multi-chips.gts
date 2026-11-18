@@ -20,6 +20,7 @@ import dRovingFocus, {
 import type VariantPresenter from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
+import SelectionIcon from "discourse/ui-kit/select/-internals/parts/selection-icon";
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
   SelectHeldRow,
@@ -433,6 +434,10 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     class="d-select__chip-label"
                     id="{{this.chipIdPrefix}}-{{index}}-label"
                   >
+                    <SelectionIcon
+                      @engine={{@engine}}
+                      @record={{chip.record}}
+                    />
                     {{#if (@engine.isHeldUnresolved chip.record)}}
                       {{#if @hasUnresolvedBlock}}
                         {{yield

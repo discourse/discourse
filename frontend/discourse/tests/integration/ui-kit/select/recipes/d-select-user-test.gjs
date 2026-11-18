@@ -640,6 +640,58 @@ module(
       assert.dom("[role='option'] [role='button']").doesNotExist();
     });
 
+    test("an action row draws its icon property once", async function (assert) {
+      stubUserSearch();
+      withPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forKind("select-user", (spec) =>
+            spec.content((options) => [
+              selectOption(
+                { id: "invite", name: "Invite someone" },
+                { icon: "envelope", position: "sticky", onSelect() {} }
+              ),
+              ...options,
+            ])
+          )
+        )
+      );
+
+      await render(<template><DSelectUser /></template>);
+      await new DSelect().open();
+
+      const row = find("[role='option'][data-value='invite']");
+      assert.dom(row).hasText("Invite someone");
+      assert
+        .dom(".d-icon-envelope", row)
+        .exists({ count: 1 }, "the row draws the item's icon once");
+    });
+
+    test("an action row's record field named icon draws nothing", async function (assert) {
+      stubUserSearch();
+      withPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forKind("select-user", (spec) =>
+            spec.content((options) => [
+              selectOption(
+                { id: "invite", name: "Invite someone", icon: "envelope" },
+                { position: "sticky", onSelect() {} }
+              ),
+              ...options,
+            ])
+          )
+        )
+      );
+
+      await render(<template><DSelectUser /></template>);
+      await new DSelect().open();
+
+      const row = find("[role='option'][data-value='invite']");
+      assert.dom(row).hasText("Invite someone");
+      assert
+        .dom(".d-icon-envelope", row)
+        .doesNotExist("only the icon property is drawn");
+    });
+
     test("sends search options from the call site and from customizations", async function (assert) {
       const requests = stubUserSearch();
       withPluginApi((api) =>

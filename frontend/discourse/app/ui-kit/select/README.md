@@ -605,8 +605,10 @@ Named blocks control what the component renders: `:option`, `:selection`, `:sele
 `:footer` and `:error`.
 
 **Supply a block only when an argument cannot express the content.** `@labelField` picks the
-field to display, `@selectedIcon` marks the chosen option, `@icon` puts a glyph in the trigger,
-and `@texts` rewords the empty state (`noResults`). A block that reproduces one of those is not
+field to display, `@iconField` (or an option's `icon` setting) draws a glyph before each option
+and chip, `@selectedIcon` marks the chosen option, `@icon` puts a glyph in the trigger,
+and `@texts` rewords the empty state (`noResults`). The select draws an item's icon itself, before
+any block's content, so a block never draws it again. A block that reproduces one of those is not
 neutral: it costs behaviour (see `:selection` below) and it costs the reader a reason to look.
 
 ### What each block replaces
