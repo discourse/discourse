@@ -522,7 +522,7 @@ export default class EditCategoryTabsController extends Controller {
             this.router.transitionTo("discovery.categories");
           })
           .catch(() => {
-            this.displayErrors([i18n("category.delete_error")]);
+            this.dialog.alert(i18n("category.delete_error"));
           })
           .finally(() => {
             this.set("deleting", false);
