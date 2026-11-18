@@ -40,6 +40,7 @@ export default class DiscobotDiscoveries extends Service {
   @tracked answerable = null;
   @tracked errorMessage = "";
   @tracked discoveryTitle = "";
+  @tracked cachedAnswerAt = null;
   @tracked suggestedFollowUp = "";
   @tracked recentAsks = [];
 
@@ -132,6 +133,7 @@ export default class DiscobotDiscoveries extends Service {
     this.smoothStreamer.updateResult(update, "ai_discover_reply");
 
     if (update.done) {
+      this.cachedAnswerAt = update.cached_at ?? null;
       const message =
         update.answerable === false
           ? i18n("discourse_ai.discobot_discoveries.no_answer")
@@ -151,6 +153,7 @@ export default class DiscobotDiscoveries extends Service {
     this.answerable = null;
     this.errorMessage = "";
     this.discoveryTitle = "";
+    this.cachedAnswerAt = null;
     this.suggestedFollowUp = "";
     this.smoothStreamer.resetStreaming();
   }
@@ -214,6 +217,7 @@ export default class DiscobotDiscoveries extends Service {
       classifyIntent,
       deferIfPrecise,
       deferredAskLogId,
+      freshAnswer,
     } = {}
   ) {
     const normalizedQuery = query?.trim();
@@ -259,6 +263,7 @@ export default class DiscobotDiscoveries extends Service {
           ...(classifyIntent && { classify_intent: true }),
           ...(deferIfPrecise && { defer_if_precise: true }),
           ...(deferredAskLogId && { deferred_ask_log_id: deferredAskLogId }),
+          ...(freshAnswer && { fresh_answer: true }),
         },
       });
 
@@ -337,10 +342,12 @@ export default class DiscobotDiscoveries extends Service {
   }
 
   #noteAsking(query) {
-    this.a11y.announce(
-      i18n("discourse_ai.discobot_discoveries.asking"),
-      "polite"
-    );
+    if (this.loadingDiscoveries) {
+      this.a11y.announce(
+        i18n("discourse_ai.discobot_discoveries.asking"),
+        "polite"
+      );
+    }
     this.rememberAsk(query);
   }
 }

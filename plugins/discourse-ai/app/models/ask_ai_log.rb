@@ -49,6 +49,7 @@ end
 #
 #  id                          :bigint           not null, primary key
 #  answer                      :text
+#  answer_deferred_reason      :string
 #  answer_requested_at         :datetime
 #  answer_title                :text
 #  ask_answer_seen_after_ms    :integer
@@ -69,6 +70,8 @@ end
 #  ask_trigger                 :string           default(""), not null
 #  ask_trigger_reason          :string           default(""), not null
 #  asked_at                    :datetime         not null
+#  cache_evictions             :integer          default(0), not null
+#  cache_hit                   :boolean          default(FALSE), not null
 #  candidate_post_ids          :bigint           default([]), not null, is an Array
 #  failure_stage               :integer
 #  keyword_query               :text
