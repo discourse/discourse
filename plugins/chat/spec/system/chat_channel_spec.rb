@@ -2,6 +2,7 @@
 
 RSpec.describe "Chat channel" do
   fab!(:current_user, :user)
+  fab!(:history_authors) { Fabricate.times(2, :user) }
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, use_service: true, chat_channel: channel_1) }
 
@@ -14,6 +15,17 @@ RSpec.describe "Chat channel" do
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)
+  end
+
+  def fabricate_message_history(count)
+    Array.new(count) do |index|
+      # Alternate authors to keep adjacent messages ungrouped for scrolling tests.
+      Fabricate(
+        :chat_message,
+        chat_channel: channel_1,
+        user: history_authors[index % history_authors.length],
+      )
+    end
   end
 
   context "when has unread threads" do
@@ -76,7 +88,7 @@ RSpec.describe "Chat channel" do
 
   context "when sending a message" do
     context "with lots of messages" do
-      before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
+      before { fabricate_message_history(50) }
 
       it "loads most recent messages" do
         unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
@@ -130,7 +142,7 @@ RSpec.describe "Chat channel" do
   end
 
   context "when clicking the arrow button" do
-    before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
+    before { fabricate_message_history(50) }
 
     it "jumps to the bottom of the channel" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
@@ -150,7 +162,7 @@ RSpec.describe "Chat channel" do
   context "when returning to a channel where last read is not last message" do
     it "scrolls to the correct last read message" do
       channel_1.membership_for(current_user).update!(last_read_message: message_1)
-      messages = Fabricate.times(50, :chat_message, chat_channel: channel_1)
+      messages = fabricate_message_history(50)
       chat_page.visit_channel(channel_1)
 
       expect(page).to have_css("[data-id='#{messages.first.id}']")
@@ -159,7 +171,7 @@ RSpec.describe "Chat channel" do
   end
 
   context "when a new message is created" do
-    before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
+    before { fabricate_message_history(50) }
 
     it "holds it behind the scroll-to-bottom arrow while newer history is unloaded" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
@@ -380,7 +392,7 @@ RSpec.describe "Chat channel" do
   end
 
   context "when scrolling" do
-    before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
+    before { fabricate_message_history(50) }
 
     it "resets the active message" do
       chat_page.visit_channel(channel_1)
