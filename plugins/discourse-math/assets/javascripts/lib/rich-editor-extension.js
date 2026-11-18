@@ -3,7 +3,7 @@ import { previewSourceNode } from "discourse/lib/composer/preview-block";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import MathEditModal from "discourse/plugins/discourse-math/discourse/components/modal/math-edit";
-import MathBlockPreview from "../discourse/components/math-block-preview";
+import MathBlockPreview from "../discourse/components/math-block-preview.gjs";
 import {
   buildDiscourseMathOptions,
   renderMathInElement,
