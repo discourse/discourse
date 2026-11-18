@@ -474,10 +474,6 @@ ja:
   no_mentions_allowed_newuser: "新規ユーザーは他のユーザーをメンションできません。"
   too_many_mentions_newuser:
     other: "新規ユーザーは投稿につき %{count} 人のユーザーしかメンションできません。"
-  no_embedded_media_allowed_group: "投稿にメディア項目を埋め込むことはできません。"
-  no_embedded_media_allowed: "新規ユーザーは投稿にメディア項目を埋め込むことはできません。"
-  too_many_embedded_media:
-    other: "新規ユーザーは、ポストにつき %{count} 個のメディア項目しか埋め込めません。"
   no_attachments_allowed: "新規ユーザーは投稿に添付ファイルを追加できません。"
   too_many_attachments:
     other: "新規ユーザーは投稿につき %{count} 個のファイルしか添付できません。"

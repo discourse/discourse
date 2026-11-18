@@ -509,11 +509,6 @@ fi:
   too_many_mentions_newuser:
     one: "Uudet käyttäjät voivat mainita viestissä vain yhden muun käyttäjän."
     other: "Uudet käyttäjät voivat mainita viestissä vain %{count} käyttäjää."
-  no_embedded_media_allowed_group: "Et voi upottaa mediaobjekteja viesteihin."
-  no_embedded_media_allowed: "Uudet käyttäjät eivät voi upottaa mediaobjekteja viesteihin."
-  too_many_embedded_media:
-    one: "Uudet käyttäjät voivat upottaa vain yhden mediaobjektin viesteihin."
-    other: "Uudet käyttäjät voivat upottaa vain %{count} mediaobjektia viesteihin."
   no_attachments_allowed: "Uudet käyttäjät eivät voi liittää liitteitä viesteihin."
   too_many_attachments:
     one: "Uudet käyttäjät voivat liittää vain yhden liitteen viestiin."

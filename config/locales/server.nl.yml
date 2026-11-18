@@ -522,11 +522,6 @@ nl:
   too_many_mentions_newuser:
     one: "Sorry, nieuwe gebruikers kunnen slechts één andere gebruiker noemen in een bericht."
     other: "Sorry, nieuwe gebruikers kunnen maximaal %{count} gebruikers noemen in een bericht."
-  no_embedded_media_allowed_group: "Sorry, je kunt geen media-items insluiten in een bericht."
-  no_embedded_media_allowed: "Sorry, nieuwe gebruikers kunnen geen media-items insluiten in berichten."
-  too_many_embedded_media:
-    one: "Sorry, nieuwe gebruikers kunnen slechts één ingesloten media-item in een bericht plaatsen."
-    other: "Sorry, nieuwe gebruikers kunnen slechts %{count} ingesloten media-items in een bericht plaatsen."
   no_attachments_allowed: "Sorry, nieuwe gebruikers kunnen geen bijlagen toevoegen aan berichten."
   too_many_attachments:
     one: "Sorry, nieuwe gebruikers kunnen slechts één bijlage toevoegen aan een bericht."

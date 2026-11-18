@@ -584,13 +584,6 @@ sk:
     few: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     many: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     other: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
-  no_embedded_media_allowed_group: "Ľutujeme, do príspevku nemôžete vložiť mediálne položky."
-  no_embedded_media_allowed: "Je nám ľúto, ale noví používatelia nemôžu vkladať mediálne položky do príspevkov."
-  too_many_embedded_media:
-    one: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba jednu vloženú mediálnu položku."
-    few: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba %{count} vložených mediálnych položiek."
-    many: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba %{count} vložených mediálnych položiek."
-    other: "Je nám ľúto, ale noví používatelia môžu do príspevku vložiť len %{count} vložené mediálne položky."
   no_attachments_allowed: "Ľutujeme, noví používatelia nemôžu vkladať prílohy do príspevkov."
   too_many_attachments:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku."

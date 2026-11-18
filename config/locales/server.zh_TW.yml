@@ -506,10 +506,6 @@ zh_TW:
   no_mentions_allowed_newuser: "抱歉，新使用者無法提及其他使用者。"
   too_many_mentions_newuser:
     other: "很抱歉，新使用者每篇貼文最多只能提及 %{count} 位其他使用者。"
-  no_embedded_media_allowed_group: "抱歉，您無法在貼文中嵌入媒體項目。"
-  no_embedded_media_allowed: "抱歉，新使用者無法在貼文中嵌入媒體項目。"
-  too_many_embedded_media:
-    other: "抱歉，新使用者在一篇貼文中最多只能放入 %{count} 個嵌入式媒體項目。"
   no_attachments_allowed: "抱歉，新使用者不能在貼文中上傳附件。"
   too_many_attachments:
     other: "很抱歉，新使用者每篇貼文最多只能加入 %{count} 個附件。"

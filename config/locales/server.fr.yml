@@ -541,11 +541,6 @@ fr:
   too_many_mentions_newuser:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un même message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un même message."
-  no_embedded_media_allowed_group: "Nous sommes désolés, vous ne pouvez pas inclure des éléments multimédias dans une publication."
-  no_embedded_media_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas inclure de médias dans leurs messages."
-  too_many_embedded_media:
-    one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure qu'un seul média dans leurs messages."
-    other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure que %{count} médias dans leurs messages."
   no_attachments_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
   too_many_attachments:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent ajouter qu'un seul fichier dans leurs messages."

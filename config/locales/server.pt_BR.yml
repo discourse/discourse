@@ -517,11 +517,6 @@ pt_BR:
   too_many_mentions_newuser:
     one: "Desculpe, usuários(as) novos(as) podem mencionar apenas um(a) usuário(as) em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem mencionar apenas %{count} usuários(as) em uma postagem."
-  no_embedded_media_allowed_group: "Desculpe, não é possível incorporar itens de mídia nesta postagem."
-  no_embedded_media_allowed: "Desculpe, novos(as) usuários(as) não podem incorporar itens de mídia em postagens."
-  too_many_embedded_media:
-    one: "Desculpe, novos(as) usuários(as) só podem inserir um item de mídia incorporado em uma postagem."
-    other: "Desculpe, novos(as) usuários(as) só podem inserir %{count} item de mídia incorporado em uma postagem."
   no_attachments_allowed: "Desculpe, novos(as) usuários(as) não podem inserir anexos nas postagens."
   too_many_attachments:
     one: "Desculpe, novos(as) usuários(as) podem inserir apenas %{count} anexo em uma postagem."
