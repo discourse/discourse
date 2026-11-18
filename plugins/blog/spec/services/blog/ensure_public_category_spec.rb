@@ -57,6 +57,22 @@ RSpec.describe Blog::EnsurePublicCategory do
         expect(SiteSetting.blog_category.to_i).to eq(category.id)
       end
 
+      it "explains what the category holds" do
+        expect(result[:category].topic.first_post.raw).to eq(
+          I18n.t("blog.categories.public_description"),
+        )
+      end
+
+      it "leaves deleted publisher groups out of the permissions" do
+        SiteSetting.blog_publisher_groups =
+          "#{publishers.id}|#{Fabricate(:group).tap(&:destroy!).id}"
+
+        expect(result[:category].category_groups.pluck(:group_id)).to contain_exactly(
+          Group::AUTO_GROUPS[:everyone],
+          publishers.id,
+        )
+      end
+
       it "logs the creation" do
         result
         expect(

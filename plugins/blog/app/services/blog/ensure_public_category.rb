@@ -21,7 +21,7 @@ class Blog::EnsurePublicCategory
   private
 
   def fetch_category
-    Blog::ManagedCategories.public_category
+    Category.find_by(id: Blog::ManagedCategories.stored_category_id(:blog_category))
   end
 
   def category_missing(category:)
@@ -37,6 +37,7 @@ class Blog::EnsurePublicCategory
     Category.create(
       name:,
       slug: Blog::ManagedCategories.available_slug(name),
+      description: Blog::ManagedCategories.public_category_description,
       user: Discourse.system_user,
       permissions: Blog::ManagedCategories.public_permissions,
     )

@@ -33,7 +33,7 @@ class Blog::EnsureDraftsCategory
   def fetch_category
     Category
       .where.not(id: [SiteSetting.blog_category.to_i, SiteSetting.shared_drafts_category.to_i])
-      .find_by(id: SiteSetting.blog_drafts_category)
+      .find_by(id: Blog::ManagedCategories.stored_category_id(:blog_drafts_category))
   end
 
   def category_missing(category:)
@@ -49,6 +49,7 @@ class Blog::EnsureDraftsCategory
     Category.create(
       name:,
       slug: Blog::ManagedCategories.available_slug(name),
+      description: Blog::ManagedCategories.drafts_category_description,
       user: Discourse.system_user,
       permissions: Blog::ManagedCategories.drafts_permissions,
     )

@@ -21,14 +21,14 @@ class Blog::AddPublishersToPublicCategory
   def publishers_lack_access(category:)
     return if category.category_groups.empty?
     granted = category.category_groups.where(permission_type: CategoryGroup.permission_types[:full])
-    (SiteSetting.blog_publisher_groups_map - granted.pluck(:group_id)).any?
+    (Blog::ManagedCategories.publisher_group_ids - granted.pluck(:group_id)).any?
   end
 
   def grant_publishers_access(category:)
     full = CategoryGroup.permission_types[:full]
     permissions = category.category_groups.pluck(:group_id, :permission_type).to_h
     category.set_permissions(
-      permissions.merge(SiteSetting.blog_publisher_groups_map.index_with { full }),
+      permissions.merge(Blog::ManagedCategories.publisher_group_ids.index_with { full }),
     )
     category.save!
   end

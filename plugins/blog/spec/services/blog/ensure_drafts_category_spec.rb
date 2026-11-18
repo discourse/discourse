@@ -69,6 +69,40 @@ RSpec.describe Blog::EnsureDraftsCategory do
         expect { described_class.call }.not_to change { Category.count }
         expect(described_class.call[:category]).to eq(result[:category])
       end
+
+      it "explains that the blog manages the category" do
+        expect(result[:category].topic.first_post.raw).to eq(
+          I18n.t("blog.categories.drafts_description"),
+        )
+      end
+    end
+
+    context "when a role setting still lists a deleted group" do
+      before { editors.destroy! }
+
+      it "leaves the deleted group out of the permissions" do
+        expect(result[:category].category_groups.pluck(:group_id)).to contain_exactly(
+          contributors.id,
+          publishers.id,
+        )
+      end
+    end
+
+    context "when another process has stored a category this process has not seen yet" do
+      fab!(:stored) { Fabricate(:private_category, group: contributors) }
+
+      before do
+        SiteSetting.provider.save(
+          :blog_drafts_category,
+          stored.id.to_s,
+          SiteSetting.types[:category],
+        )
+      end
+
+      it "uses the stored category instead of creating another" do
+        expect { result }.not_to change { Category.count }
+        expect(result[:category]).to eq(stored)
+      end
     end
 
     context "when the default name is taken" do

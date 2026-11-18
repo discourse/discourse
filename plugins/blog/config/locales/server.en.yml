@@ -1,4 +1,7 @@
 en:
+  dashboard:
+    problem:
+      blog_not_ready: "The blog cannot publish articles. %{reason} <a href='%{base_path}/admin/site_settings/category/all_results?filter=%{setting}'>Review the setting</a>"
   site_settings:
     blog_contributor_groups: Groups that can write and submit their own blog drafts. These groups can see the private drafts category. This does not grant forum staff privileges.
     blog_editor_groups: Groups that can edit and submit any blog draft they can see. These groups can see the private drafts category. Publication requires the publisher role.
@@ -109,7 +112,9 @@ en:
     not_found_body: It may have moved, returned to drafts, or not been published yet.
     categories:
       public: Blog
+      public_description: Discussions of published blog articles. Each article gets a topic here when it is published, and anyone can reply.
       drafts: Blog drafts
+      drafts_description: Drafts of blog articles, managed by the blog. Only the blog contributor, editor and publisher groups can see this category, and any other access is removed. Change those groups in the blog settings.
     errors:
       private_site:
         The blog requires a public site with secure uploads disabled.

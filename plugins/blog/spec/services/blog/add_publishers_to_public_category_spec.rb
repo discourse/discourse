@@ -95,6 +95,14 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
         }
         expect(result).to run_successfully
       end
+
+      it "ignores deleted groups still listed in the publisher setting" do
+        deleted = Fabricate(:group).tap(&:destroy!)
+        SiteSetting.blog_publisher_groups = "#{publishers.id}|#{other_publishers.id}|#{deleted.id}"
+
+        expect { result }.not_to change { blog_category.reload.category_groups.count }
+        expect(result).to run_successfully
+      end
     end
   end
 end
