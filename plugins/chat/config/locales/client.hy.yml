@@ -148,11 +148,6 @@ hy:
         short:
           one: "%{count} օր"
           other: "%{count} օր"
-      emoji_picker:
-        objects: "Օբյեկտներ"
-        activities: "Ակտիվություն"
-        flags: "Դրոշակներ"
-        symbols: "Նշաններ"
       thread:
         title: "Վերնագիր"
         replies:

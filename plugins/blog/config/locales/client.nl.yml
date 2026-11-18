@@ -57,7 +57,11 @@ nl:
         edit: Bewerken
         status: Status
         replies: Antwoorden
+        title: Titel
+        page: Pagina
+      all: Alles
       drafts: Concepten
+      pages: Pagina's
       preview: Voorbeeld
       unpublish: Depubliceren
       appearance_link: Vormgeving

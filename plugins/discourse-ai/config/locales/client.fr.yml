@@ -1433,6 +1433,7 @@ fr:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "IA"
           header: "En quoi puis-je aider ?"
           submit: "Envoyer une question"
           disclaimer: "L'IA générative peut commettre des erreurs. Vérifiez les informations importantes."

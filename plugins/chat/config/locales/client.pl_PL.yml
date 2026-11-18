@@ -47,6 +47,7 @@ pl_PL:
           many: "%{formatted_number} wiadomości czatu"
           other: "%{formatted_number} wiadomości czatu"
     chat:
+      new_chat: "Nowy czat"
       homepage_option: "Kanał czatu"
       edit_category:
         tab_title: "Czat"
@@ -683,6 +684,7 @@ pl_PL:
         short_title: Szukaj
         title: Wyszukaj czat
         aria_label: "Przejdź do wyszukiwania czatu"
+        channel_aria_label: "Wyszukaj ten kanał"
         no_results: "Brak wyników wyszukiwania"
         sort:
           relevance: "Trafność"
@@ -820,19 +822,6 @@ pl_PL:
         action: "Oflaguj wiadomość"
       anonymous_flagging:
         description: "Aby zgłosić nielegalną treść, skontaktuj się z <a href='mailto:%{email}?subject=Nielegalne treści: %{channel_title}&body=Ta wiadomość na czacie %{url} zawiera nielegalne treści.'>%{email}</a>"
-      emoji_picker:
-        favorites: "Często używane"
-        smileys_&_emotion: "Buźki i emocje"
-        objects: "Obiekty"
-        people_&_body: "Ludzie i ciało"
-        travel_&_places: "Podróże i miejsca"
-        animals_&_nature: "Zwierzęta i przyroda"
-        food_&_drink: "Jedzenie i picie"
-        activities: "Aktywności"
-        flags: "Flagi"
-        symbols: "Symbolika"
-        search_placeholder: "Szukaj według nazwy emoji i aliasu..."
-        no_results: "Brak wyników"
       thread:
         title: "Tytuł"
         view_thread: Zobacz wątek

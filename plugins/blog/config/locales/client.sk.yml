@@ -55,7 +55,11 @@ sk:
         edit: Upraviť
         status: Stav
         replies: Odpovede
+        title: Názov
+        page: Stránka
+      all: Všetky
       drafts: Koncepty
+      pages: Stránky
       preview: Náhľad
       unpublish: Zrušenie zverejnenia
       appearance_link: Vzhľad

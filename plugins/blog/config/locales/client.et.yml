@@ -47,6 +47,8 @@ et:
         edit: Muuda
         status: Staatus
         replies: Vastused
+        title: Pealkiri
+      all: Kõik
       drafts: Mustandid
       preview: Eelvaade
       unpublish: Tühista avaldamine

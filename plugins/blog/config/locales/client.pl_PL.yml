@@ -57,6 +57,7 @@ pl_PL:
         retry_reference: Załaduj ponownie odniesienie do tworzenia
         working_preview_hint: Podgląd niezapisanych zmian bez ich zapisywania i aktywowania. Zmiana strony lub przykładowego artykułu aktualizuje podgląd.
         preview_article_unavailable: Podgląd artykułu wymaga opublikowanego artykułu.
+        preview_page_unavailable: Podgląd strony wymaga opublikowanej, samodzielnej strony.
         preview_page: Strona do podglądu
         preview_home: Strona główna
         preview_archive: Archiwum
@@ -68,6 +69,7 @@ pl_PL:
         template_layout: Układ witryny
         template_index: Strona główna i archiwum
         template_article: Artykuł
+        template_page: Samodzielna strona
         template_about: O stronie
         template_not_found: Nie znaleziono strony
         code_warning: "Dodawaj tylko kod, któremu ufasz: działa on z uprawnieniami autora bloga i jest publicznie dostępny do pobrania. Nigdy nie działa w uwierzytelnionych podglądach w społeczności."
@@ -214,13 +216,14 @@ pl_PL:
           cover: obraz okładki
           co_authors: współautorzy
           featured: wyróżniona flaga
+          page: samodzielna strona
           tags: tagi
           published_at: data publikacji
         show_diff: Pokaż różnicę
         hide_diff: Ukryj różnice
         diff_error: Zmiana jest zbyt duża, aby wyświetlić ją jako różnicę. Zamiast tego użyj podglądu.
         settings: Ustawienia artykułu
-        settings_hint: Ścieżka, fragment, okładka, wyszukiwanie, współautorzy, data, wyróżnione
+        settings_hint: Ścieżka, fragment, okładka, wyszukiwanie, współautorzy, data, wyróżnione, strona
         feedback:
           none: Brak jeszcze prywatnych opinii
           show: Pokaż opinie
@@ -294,24 +297,26 @@ pl_PL:
       editor_title: Edytor bloga
       editor_description: Szkice pozostają prywatne do momentu ich opublikowania. Edytuj artykuł, aby go opublikować, zaplanować lub poprawić.
       editor_table:
-        article: Artykuł
         edit: Edytuj
         status: Status
         published: Opublikowany
         replies: Odpowiedzi
+        title: Tytuł
         edits_pending: Oczekujące edycje
         edits_need_approval: Edycje wymagają zatwierdzenia
         more_actions: Więcej działań
+        page: Strona
         preview_changes: Podgląd zmian
         view_on_blog: Zobacz na blogu
       new_draft: Nowy szkic
       settings: Konfiguruj ustawienia bloga
-      all: Wszystkie artykuły
+      all: Wszystkie
       drafts: Szkice
       published: Opublikowany
       visit_blog: Odwiedź blog
       public_discussion: Dyskusja publiczna
       not_published: Nie na blogu
+      pages: Strony
       preview: Podgląd
       load_more: Załaduj więcej
       unpublish_confirm: Usunąć ten artykuł z bloga? Temat i odpowiedzi na niego pozostaną publiczne w społeczności. Istniejących kopii w kanałach i wyszukiwarkach nie da się przywrócić.
@@ -324,6 +329,8 @@ pl_PL:
       cover_hint: Wyświetlany nad artykułem i używany do podglądu kart i linków. Pozostaw puste, aby użyć pierwszego obrazu w artykule.
       cover_alt: Tekst alternatywny obrazu okładki
       cover_alt_hint: Opisuje obraz okładki dla osób, które go nie widzą.
+      page: Samodzielna strona
+      page_hint: Dla stron takich jak „O nas”, „Kontakt” czy „Prywatność”. Pominięte na listach artykułów i w kanale, wyświetlane bez podpisu, daty, tagów i dyskusji.
       co_authors: Współautorzy
       co_authors_hint: Podane obok autora w podpisie i wymienione na ich własnych stronach autorskich.
       meta_description: Metaopis

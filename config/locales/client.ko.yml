@@ -2085,6 +2085,8 @@ ko:
       to: 끝
     emoji_picker:
       filter_placeholder: 이모티콘 검색
+      search_placeholder: "이모티콘 이름과 별칭으로 검색..."
+      no_results: "결과 없음"
       smileys_&_emotion: 웃는 얼굴과 감정
       people_&_body: 사람 및 몸
       animals_&_nature: 동물 및 자연
@@ -2115,6 +2117,10 @@ ko:
     composer:
       emoji: "이모티콘 :)"
       options: "옵션"
+      ai_content:
+        code: "코드"
+        quote: "인용하기"
+        details: "세부 정보"
       whisper: "귓속말"
       unlist: "목록에서 제외됨"
       add_warning: "공식 경고입니다."
@@ -3679,6 +3685,14 @@ ko:
       forward: "앞으로 가기"
       share: "공유"
       dismiss: "읽음으로 표시"
+    mobile_tab_bar:
+      new_topic: "새 글"
+      create: "만들기"
+      more: "더 보기"
+      back: "뒤로"
+      topics: "글"
+      drafts:
+        other: "임시 보관함 (%{count})"
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"

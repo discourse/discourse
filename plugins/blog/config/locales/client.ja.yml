@@ -57,7 +57,10 @@ ja:
         edit: 編集
         status: ステータス
         replies: 返信
+        title: タイトル
+      all: すべて
       drafts: 下書き
+      pages: ページ
       preview: プレビュー
       unpublish: 公開を取り消す
       appearance_link: 外観

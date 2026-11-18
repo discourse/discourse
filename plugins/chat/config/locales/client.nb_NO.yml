@@ -153,11 +153,6 @@ nb_NO:
         short:
           one: "%{count} dag"
           other: "%{count} dager"
-      emoji_picker:
-        objects: "Objekter"
-        activities: "Aktiviteter"
-        flags: "Flagg"
-        symbols: "Symboler"
       thread:
         title: "Tittel"
         replies:

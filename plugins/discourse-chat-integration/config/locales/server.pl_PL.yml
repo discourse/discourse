@@ -64,6 +64,7 @@ pl_PL:
   dashboard:
     problem:
       channel_errors: "Niektóre kanały integracji czatu zawierają błędy. Odwiedź <a href='%{base_path}/admin/plugins/discourse-chat-integration'>sekcję integracji czatu</a> , aby dowiedzieć się więcej."
+      telegram_webhook_secret_missing: "Polecenia ukośnika w Telegramie przestały działać, ponieważ zmienił się token dostępu do Telegramu lub integracja z czatem została wyłączona. Wyłącz dostawcę Telegramu i skonfiguruj go ponownie w <a href='%{base_path}/admin/plugins/discourse-chat-integration'>sekcji integracji z czatem</a>."
   discourse_automation:
     scriptables:
       send_slack_message:
