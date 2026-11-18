@@ -60,13 +60,14 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
-import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const FORM_KIT_NAME_SEPARATORS = /[.-]/g;
 
 const TYPE_COMPONENTS = {
   bool: SettingBool,
@@ -360,14 +361,16 @@ export default class SiteSettingComponent extends Component {
   }
 
   get useFormKit() {
-    return (
-      this.trackChanges && resolveSettingFieldType(this.definition).adminReady
-    );
+    return true;
+  }
+
+  get fieldName() {
+    return this.definition.key.replace(FORM_KIT_NAME_SEPARATORS, "_");
   }
 
   get formKitData() {
     return (this.#formKitData ??= {
-      [this.setting.setting]: this.fromWire(this.setting.buffered.get("value")),
+      [this.fieldName]: this.fromWire(this.buffered.get("value")),
     });
   }
 
@@ -480,7 +483,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   applyFormValue(wireValue) {
-    const name = this.setting.setting;
+    const name = this.fieldName;
 
     if (this.toWire(this.formApi.get(name)) !== wireValue) {
       this.formApi.set(name, this.fromWire(wireValue));
@@ -814,6 +817,7 @@ export default class SiteSettingComponent extends Component {
                 @disabled={{this.isDisabled}}
                 @form={{form}}
                 @format="full"
+                @name={{this.fieldName}}
                 @showControlTitle={{false}}
                 @showDescription={{false}}
                 @showTitle={{false}}
