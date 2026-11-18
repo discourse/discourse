@@ -185,10 +185,10 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
-    it "refuses an endpoint registered by another account" do
+    it "moves an endpoint registered by another user to the current user" do
       other_user = Fabricate(:user)
       subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
-      existing = PushSubscription.create!(user: other_user, data: subscription.to_json)
+      PushSubscription.create!(user: other_user, data: subscription.to_json)
 
       post "/push_notifications/subscribe.json",
            params: {
@@ -196,9 +196,9 @@ RSpec.describe PushNotificationController do
              send_confirmation: false,
            }
 
-      expect(response.status).to eq(409)
-      expect(user.push_subscriptions).to be_empty
-      expect(other_user.push_subscriptions.reload).to contain_exactly(existing)
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions.count).to eq(1)
+      expect(other_user.push_subscriptions.reload).to be_empty
     end
 
     it "updates rotated keys on the user's existing subscription" do

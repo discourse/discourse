@@ -444,6 +444,23 @@ RSpec.describe PushNotificationPusher do
         end.to raise_error(RateLimiter::LimitExceeded)
       end
 
+      it "keeps the current owner when a takeover is rate limited" do
+        RateLimiter.enable
+        endpoint = "https://fcm.googleapis.com/fcm/send/shared"
+        owner = Fabricate(:user)
+        PushNotificationPusher.subscribe(
+          owner,
+          { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
+          "false",
+        )
+        PushNotificationPusher::SUBSCRIBE_RATE_LIMIT_PER_HOUR.times do |index|
+          subscribe("https://fcm.googleapis.com/fcm/send/#{index}")
+        end
+
+        expect { subscribe(endpoint) }.to raise_error(RateLimiter::LimitExceeded)
+        expect(owner.push_subscriptions.count).to eq(1)
+      end
+
       it "keeps error tracking when the owner re-registers the same endpoint" do
         subscribe("https://fcm.googleapis.com/fcm/send/token")
         user.push_subscriptions.sole.update!(error_count: 2, first_error_at: 3.days.ago)
@@ -453,17 +470,20 @@ RSpec.describe PushNotificationPusher do
         expect(user.push_subscriptions.sole.error_count).to eq(2)
       end
 
-      it "refuses an endpoint another account registered" do
+      it "starts error tracking afresh when another user takes over the endpoint" do
         endpoint = "https://fcm.googleapis.com/fcm/send/shared"
-        owner = Fabricate(:user)
-        PushNotificationPusher.subscribe(
-          owner,
-          { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } },
-          "false",
+        PushSubscription.create!(
+          user: Fabricate(:user),
+          data: { endpoint: endpoint, keys: { p256dh: "old", auth: "old" } }.to_json,
+          error_count: 2,
+          first_error_at: 3.days.ago,
         )
 
-        expect { subscribe(endpoint) }.to raise_error(PushNotificationPusher::EndpointTaken)
-        expect(PushSubscription.with_endpoint(endpoint).pluck(:user_id)).to eq([owner.id])
+        subscribe(endpoint)
+
+        expect(
+          PushSubscription.where("data::jsonb ->> 'endpoint' = ?", endpoint).sole,
+        ).to have_attributes(user_id: user.id, error_count: 0, first_error_at: nil)
       end
     end
 
@@ -581,7 +601,6 @@ RSpec.describe PushNotificationPusher, ".subscribe" do
       expect(first_inserting.pop(timeout: 5)).to eq(true)
       threads << Thread.new do
         subscribe(second_user)
-      rescue PushNotificationPusher::EndpointTaken
       ensure
         second_done << true
       end
@@ -595,6 +614,6 @@ RSpec.describe PushNotificationPusher, ".subscribe" do
       PushSubscription.skip_callback(:initialize, :after, pause_first)
     end
 
-    expect(PushSubscription.with_endpoint(endpoint).pluck(:user_id)).to eq([first_user_id])
+    expect(PushSubscription.with_endpoint(endpoint).pluck(:user_id)).to eq([second_user.id])
   end
 end

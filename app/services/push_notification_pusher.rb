@@ -10,9 +10,6 @@ class PushNotificationPusher
   MAX_UNTRUSTED_ERRORS = 2
   SUBSCRIBE_RATE_LIMIT_PER_HOUR = 10
 
-  class EndpointTaken < StandardError
-  end
-
   def self.push(user, payload)
     message = nil
     I18n.with_locale(user.effective_locale) do
@@ -136,9 +133,8 @@ class PushNotificationPusher
     subscription =
       DistributedMutex.synchronize("push_subscription_#{Digest::SHA1.hexdigest(endpoint)}") do
         PushSubscription.transaction do
-          # Knowing an endpoint doesn't prove control of the browser, so it stays with
-          # its account; a browser that switched accounts registers a fresh one.
-          raise EndpointTaken if by_endpoint.where.not(user_id: user.id).exists?
+          # a browser endpoint delivers to whoever is signed in there now
+          by_endpoint.where.not(user_id: user.id).delete_all
 
           existing = by_endpoint.where(user_id: user.id).order(id: :desc).first
           if existing
