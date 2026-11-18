@@ -362,6 +362,8 @@ class Auth::DefaultCurrentUserProvider
 
     user.grant_moderation!
     StaffActionLogger.new(Discourse.system_user).log_grant_moderation(user)
+
+    DiscoursePluginRegistry.first_admin_bootstrap.each { |callback| callback.call(user) }
   end
 
   def log_off_user(session, cookie_jar, push_subscription: nil)
