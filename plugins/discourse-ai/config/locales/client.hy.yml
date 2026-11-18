@@ -70,7 +70,6 @@ hy:
         no_groups: "Ոչ մի"
         edit: "Կարգավորումներ"
         filters:
-          all: "Բոլոր"
           reset: "Վերահաստատե;"
         search:
           name: "Որոնում"

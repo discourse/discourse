@@ -606,6 +606,29 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
     expect(DiscourseWorkflows::AiAuthoringSession.count).to eq(0)
   end
 
+  it "is long running and reports progress while the workflow is generated" do
+    SiteSetting.discourse_workflows_ai_authoring_enabled = true
+    SiteSetting.discourse_workflows_workflow_authoring_agent = Fabricate(:ai_agent).id
+    fake_bot = double
+    allow(fake_bot).to receive(:reply).and_return([])
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+    allow_any_instance_of(Jobs::DiscourseWorkflows::AuthorWithAi).to receive(
+      :execute,
+    ).and_call_original
+    progress = []
+
+    tool.invoke { |message| progress << message }
+
+    expect(described_class.long_running?).to eq(true)
+    expect(progress.first(3)).to eq(
+      [
+        I18n.t("discourse_workflows.admin_assistant.generating_progress"),
+        I18n.t("discourse_workflows.ai.progress.loading_context"),
+        I18n.t("discourse_workflows.ai.progress.planning"),
+      ],
+    )
+  end
+
   it "does not forward secret-bearing requests to workflow authoring" do
     expect_any_instance_of(Jobs::DiscourseWorkflows::AuthorWithAi).not_to receive(:execute)
 

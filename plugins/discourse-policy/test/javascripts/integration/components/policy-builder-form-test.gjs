@@ -23,9 +23,9 @@ module(
         { id: 100, name: "team" },
       ];
 
-      this.set("data", { reminder: null, version: 1 });
-      this.set("onRegisterApi", (api) => (this.formApi = api));
-      this.set("onSubmit", (data) => (this.submittedData = data));
+      this.data = { reminder: null, version: 1 };
+      this.onRegisterApi = (api) => (this.formApi = api);
+      this.onSubmit = (data) => (this.submittedData = data);
     });
 
     test("submits form data", async function (assert) {
@@ -129,8 +129,8 @@ module(
     });
 
     test("does not submit invalid form data", async function (assert) {
-      this.set("data", { version: 1 });
-      this.set("onSubmit", () => (this.submitted = true));
+      this.data = { version: 1 };
+      this.onSubmit = () => (this.submitted = true);
       this.submitted = false;
 
       await render(

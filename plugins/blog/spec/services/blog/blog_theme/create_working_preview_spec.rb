@@ -99,5 +99,24 @@ RSpec.describe Blog::BlogTheme::CreateWorkingPreview do
         expect(result.preview_path).to eq(publication.path)
       end
     end
+
+    context "when previewing a standalone page" do
+      let(:params) { attributes.merge(page: "page") }
+
+      it { is_expected.to fail_to_find_a_model(:preview_path) }
+
+      it "previews the newest published page" do
+        Blog::Publication.create!(
+          topic:,
+          discussion_topic: topic,
+          path: "/privacy",
+          published: true,
+          published_at: 1.day.ago,
+          page: true,
+        )
+
+        expect(result.preview_path).to eq("/privacy")
+      end
+    end
   end
 end

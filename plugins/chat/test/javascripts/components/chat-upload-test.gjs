@@ -76,7 +76,7 @@ module("Component | ChatUpload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with an image", async function (assert) {
-    this.set("upload", IMAGE_FIXTURE);
+    this.upload = IMAGE_FIXTURE;
 
     await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
@@ -103,7 +103,7 @@ module("Component | ChatUpload", function (hooks) {
   });
 
   test("with a video", async function (assert) {
-    this.set("upload", VIDEO_FIXTURE);
+    this.upload = VIDEO_FIXTURE;
 
     await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
@@ -119,7 +119,7 @@ module("Component | ChatUpload", function (hooks) {
   });
 
   test("with a audio", async function (assert) {
-    this.set("upload", AUDIO_FIXTURE);
+    this.upload = AUDIO_FIXTURE;
 
     await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
@@ -135,7 +135,7 @@ module("Component | ChatUpload", function (hooks) {
   });
 
   test("non image upload", async function (assert) {
-    this.set("upload", TXT_FIXTURE);
+    this.upload = TXT_FIXTURE;
 
     await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
@@ -157,13 +157,13 @@ module("Component | ChatUpload", function (hooks) {
     });
 
     test("uses the CDN for image src and data-large-src", async function (assert) {
-      this.set("upload", {
+      this.upload = {
         ...IMAGE_FIXTURE,
         url: "https://test.s3-us-west-1.amazonaws.com/site/original.jpg",
         thumbnail: {
           url: "https://test.s3-us-west-1.amazonaws.com/site/thumbnail.jpg",
         },
-      });
+      };
 
       await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
@@ -184,10 +184,10 @@ module("Component | ChatUpload", function (hooks) {
     });
 
     test("uses the CDN for video sources", async function (assert) {
-      this.set("upload", {
+      this.upload = {
         ...VIDEO_FIXTURE,
         url: "https://test.s3-us-west-1.amazonaws.com/site/video.mp4",
-      });
+      };
 
       await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
@@ -201,10 +201,10 @@ module("Component | ChatUpload", function (hooks) {
     });
 
     test("uses the CDN for audio sources", async function (assert) {
-      this.set("upload", {
+      this.upload = {
         ...AUDIO_FIXTURE,
         url: "https://test.s3-us-west-1.amazonaws.com/site/song.mp3",
-      });
+      };
 
       await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
@@ -218,10 +218,10 @@ module("Component | ChatUpload", function (hooks) {
     });
 
     test("uses the CDN for attachment hrefs", async function (assert) {
-      this.set("upload", {
+      this.upload = {
         ...TXT_FIXTURE,
         url: "https://test.s3-us-west-1.amazonaws.com/site/file.txt",
-      });
+      };
 
       await render(<template><ChatUpload @upload={{this.upload}} /></template>);
 
@@ -245,10 +245,10 @@ module("Component | ChatUpload", function (hooks) {
     });
 
     test("adds timestamp parameter for Safari", async function (assert) {
-      this.set("upload", {
+      this.upload = {
         ...VIDEO_FIXTURE,
         url: "https://example.com/video.mp4",
-      });
+      };
       mockCapabilities.isSafari = true;
 
       await render(<template><ChatUpload @upload={{this.upload}} /></template>);
@@ -263,10 +263,10 @@ module("Component | ChatUpload", function (hooks) {
     });
 
     test("does not add timestamp parameter for other browsers", async function (assert) {
-      this.set("upload", {
+      this.upload = {
         ...VIDEO_FIXTURE,
         url: "https://example.com/video.mp4",
-      });
+      };
       mockCapabilities.isSafari = false;
 
       await render(<template><ChatUpload @upload={{this.upload}} /></template>);

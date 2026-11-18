@@ -49,6 +49,7 @@ module DiscourseAi
 
           @partial_tool_calls = partial_tool_calls
           @output_thinking = output_thinking
+          @feature_name = feature_name
           @streaming_mode = block_given?
 
           if block_given? && disable_streaming?
@@ -208,7 +209,7 @@ module DiscourseAi
             end
           rescue Aws::BedrockRuntime::Errors::ServiceError => e
             log.response_status = e.context&.http_response&.status_code if log
-            Rails.logger.error("#{self.class.name}: #{e.class}: #{e.message}")
+            log_provider_error("#{self.class.name}: #{e.class}: #{e.message}")
             raise CompletionFailed, e.message
           ensure
             should_log = log && (call_status != :cancelled || partials_raw.present?)

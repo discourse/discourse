@@ -811,19 +811,6 @@ lt:
         action: "Pažymėti pranešimą"
       anonymous_flagging:
         description: "Norėdami pranešti apie neteisėtą turinį, susisiekite su <a href='mailto:%{email}?subject=Illegal content: %{channel_title}&body=This chat message %{url} contains illegal content.'>%{email}</a>"
-      emoji_picker:
-        favorites: "Dažnai naudojamas"
-        smileys_&_emotion: "Šypsenėlės ir emocijos"
-        objects: "Objektai"
-        people_&_body: "Žmonės ir kūno dalys"
-        travel_&_places: "Kelionės ir vietos"
-        animals_&_nature: "Gyvūnai ir gamta"
-        food_&_drink: "Maistas ir gėrimai"
-        activities: "Veikla"
-        flags: "Pažymėk!"
-        symbols: "Simboliai"
-        search_placeholder: "Ieškoti pagal jaustuko pavadinimą ir slapyvardį..."
-        no_results: "Nėra rezultatų"
       thread:
         title: "Antraštė"
         view_thread: Peržiūrėti temą

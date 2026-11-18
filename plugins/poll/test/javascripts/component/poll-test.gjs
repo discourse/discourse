@@ -42,58 +42,56 @@ module("Component | Poll", function (hooks) {
   });
 
   test("valid ranks with which you can vote", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-        polls_votes: {
-          poll: [
-            {
-              digest: "1f972d1df351de3ce35a787c89faad29",
-              rank: 1,
-            },
-            {
-              digest: "d7ebc3a9beea2e680815a1e4f57d6db6",
-              rank: 2,
-            },
-            {
-              digest: "6c986ebcde3d5822a6e91a695c388094",
-              rank: 3,
-            },
-          ],
-        },
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "ranked_choice",
-        status: "open",
-        results: "on_close",
-        options: [
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+      polls_votes: {
+        poll: [
           {
-            id: "1f972d1df351de3ce35a787c89faad29",
-            html: "this",
-            votes: 0,
+            digest: "1f972d1df351de3ce35a787c89faad29",
             rank: 1,
           },
           {
-            id: "d7ebc3a9beea2e680815a1e4f57d6db6",
-            html: "that",
-            votes: 0,
+            digest: "d7ebc3a9beea2e680815a1e4f57d6db6",
             rank: 2,
           },
           {
-            id: "6c986ebcde3d5822a6e91a695c388094",
-            html: "other",
-            votes: 0,
+            digest: "6c986ebcde3d5822a6e91a695c388094",
             rank: 3,
           },
         ],
-        voters: 0,
-        chart_type: "bar",
-      }),
+      },
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "ranked_choice",
+      status: "open",
+      results: "on_close",
+      options: [
+        {
+          id: "1f972d1df351de3ce35a787c89faad29",
+          html: "this",
+          votes: 0,
+          rank: 1,
+        },
+        {
+          id: "d7ebc3a9beea2e680815a1e4f57d6db6",
+          html: "that",
+          votes: 0,
+          rank: 2,
+        },
+        {
+          id: "6c986ebcde3d5822a6e91a695c388094",
+          html: "other",
+          votes: 0,
+          rank: 3,
+        },
+      ],
+      voters: 0,
+      chart_type: "bar",
     });
 
     await render(
@@ -132,42 +130,40 @@ module("Component | Poll", function (hooks) {
   });
 
   test("invalid ranks with which you cannot vote", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "ranked_choice",
+      status: "open",
+      results: "always",
+      options: [
+        {
+          id: "1f972d1df351de3ce35a787c89faad29",
+          html: "this",
+          votes: 0,
+          rank: 0,
         },
-        user_id: 29,
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "ranked_choice",
-        status: "open",
-        results: "always",
-        options: [
-          {
-            id: "1f972d1df351de3ce35a787c89faad29",
-            html: "this",
-            votes: 0,
-            rank: 0,
-          },
-          {
-            id: "d7ebc3a9beea2e680815a1e4f57d6db6",
-            html: "that",
-            votes: 0,
-            rank: 0,
-          },
-          {
-            id: "6c986ebcde3d5822a6e91a695c388094",
-            html: "other",
-            votes: 0,
-            rank: 0,
-          },
-        ],
-        voters: 0,
-        chart_type: "bar",
-      }),
+        {
+          id: "d7ebc3a9beea2e680815a1e4f57d6db6",
+          html: "that",
+          votes: 0,
+          rank: 0,
+        },
+        {
+          id: "6c986ebcde3d5822a6e91a695c388094",
+          html: "other",
+          votes: 0,
+          rank: 0,
+        },
+      ],
+      voters: 0,
+      chart_type: "bar",
     });
 
     await render(
@@ -202,26 +198,24 @@ module("Component | Poll", function (hooks) {
   });
 
   test("shows vote", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "regular",
-        status: "closed",
-        results: "always",
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 1,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "regular",
+      status: "closed",
+      results: "always",
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 1,
+      chart_type: "bar",
     });
 
     await render(
@@ -233,26 +227,24 @@ module("Component | Poll", function (hooks) {
   });
 
   test("does not show results after voting when results are to be shown only on closed", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "regular",
-        status: "open",
-        results: "on_close",
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes" },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no" },
-        ],
-        voters: 1,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "regular",
+      status: "open",
+      results: "on_close",
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes" },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no" },
+      ],
+      voters: 1,
+      chart_type: "bar",
     });
 
     await render(
@@ -264,33 +256,31 @@ module("Component | Poll", function (hooks) {
   });
 
   test("does not render an empty ranked choice outcome to a non-staff voter on staff_only polls", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-        polls_votes: {
-          poll: [
-            { digest: "1f972d1df351de3ce35a787c89faad29", rank: 1 },
-            { digest: "d7ebc3a9beea2e680815a1e4f57d6db6", rank: 2 },
-          ],
-        },
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "ranked_choice",
-        status: "open",
-        results: "staff_only",
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "this", rank: 1 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "that", rank: 2 },
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+      polls_votes: {
+        poll: [
+          { digest: "1f972d1df351de3ce35a787c89faad29", rank: 1 },
+          { digest: "d7ebc3a9beea2e680815a1e4f57d6db6", rank: 2 },
         ],
-        voters: 1,
-        chart_type: "bar",
-        // no ranked_choice_outcome — the server withholds it from non-staff
-      }),
+      },
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "ranked_choice",
+      status: "open",
+      results: "staff_only",
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "this", rank: 1 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "that", rank: 2 },
+      ],
+      voters: 1,
+      chart_type: "bar",
+      // no ranked_choice_outcome — the server withholds it from non-staff
     });
 
     await render(
@@ -315,26 +305,24 @@ module("Component | Poll", function (hooks) {
   });
 
   test("can vote", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "regular",
-        status: "open",
-        results: "always",
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 0,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "regular",
+      status: "open",
+      results: "always",
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 0,
+      chart_type: "bar",
     });
 
     await render(
@@ -356,27 +344,25 @@ module("Component | Poll", function (hooks) {
   });
 
   test("cannot vote if not member of the right group", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "regular",
-        status: "open",
-        results: "always",
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 0,
-        chart_type: "bar",
-        groups: "foo",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "regular",
+      status: "open",
+      results: "always",
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 0,
+      chart_type: "bar",
+      groups: "foo",
     });
 
     await render(
@@ -396,31 +382,29 @@ module("Component | Poll", function (hooks) {
   });
 
   test("keeps the voting view after the poll component is re-rendered", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-        polls_votes: {
-          poll: ["1f972d1df351de3ce35a787c89faad29"],
-        },
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "multiple",
-        status: "open",
-        results: "always",
-        min: 1,
-        max: 2,
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 1,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+      polls_votes: {
+        poll: ["1f972d1df351de3ce35a787c89faad29"],
+      },
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "multiple",
+      status: "open",
+      results: "always",
+      min: 1,
+      max: 2,
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 1,
+      chart_type: "bar",
     });
 
     await render(
@@ -449,28 +433,26 @@ module("Component | Poll", function (hooks) {
   });
 
   test("keeps an uncommitted selection after the poll component is re-rendered", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "multiple",
-        status: "open",
-        results: "always",
-        min: 1,
-        max: 2,
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 0,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "multiple",
+      status: "open",
+      results: "always",
+      min: 1,
+      max: 2,
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 0,
+      chart_type: "bar",
     });
 
     await render(
@@ -499,32 +481,30 @@ module("Component | Poll", function (hooks) {
   });
 
   test("ignores a stale hidden-results toggle on a closed poll", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-        polls_votes: {
-          poll: ["1f972d1df351de3ce35a787c89faad29"],
-        },
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "multiple",
-        status: "closed",
-        results: "always",
-        min: 1,
-        max: 2,
-        showResultsToggle: false,
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 1,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+      polls_votes: {
+        poll: ["1f972d1df351de3ce35a787c89faad29"],
+      },
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "multiple",
+      status: "closed",
+      results: "always",
+      min: 1,
+      max: 2,
+      showResultsToggle: false,
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 1,
+      chart_type: "bar",
     });
 
     await render(
@@ -538,32 +518,30 @@ module("Component | Poll", function (hooks) {
   });
 
   test("does not mutate the saved vote when toggling an uncast option", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-        polls_votes: {
-          poll: ["1f972d1df351de3ce35a787c89faad29"],
-        },
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "multiple",
-        status: "open",
-        results: "always",
-        min: 1,
-        max: 2,
-        showResultsToggle: false,
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 1,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+      polls_votes: {
+        poll: ["1f972d1df351de3ce35a787c89faad29"],
+      },
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "multiple",
+      status: "open",
+      results: "always",
+      min: 1,
+      max: 2,
+      showResultsToggle: false,
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 1,
+      chart_type: "bar",
     });
 
     await render(
@@ -582,42 +560,40 @@ module("Component | Poll", function (hooks) {
   });
 
   test("keeps a ranked-choice selection after the poll component is re-rendered", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "ranked_choice",
+      status: "open",
+      results: "always",
+      options: [
+        {
+          id: "1f972d1df351de3ce35a787c89faad29",
+          html: "this",
+          votes: 0,
+          rank: 0,
         },
-        user_id: 29,
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "ranked_choice",
-        status: "open",
-        results: "always",
-        options: [
-          {
-            id: "1f972d1df351de3ce35a787c89faad29",
-            html: "this",
-            votes: 0,
-            rank: 0,
-          },
-          {
-            id: "d7ebc3a9beea2e680815a1e4f57d6db6",
-            html: "that",
-            votes: 0,
-            rank: 0,
-          },
-          {
-            id: "6c986ebcde3d5822a6e91a695c388094",
-            html: "other",
-            votes: 0,
-            rank: 0,
-          },
-        ],
-        voters: 0,
-        chart_type: "bar",
-      }),
+        {
+          id: "d7ebc3a9beea2e680815a1e4f57d6db6",
+          html: "that",
+          votes: 0,
+          rank: 0,
+        },
+        {
+          id: "6c986ebcde3d5822a6e91a695c388094",
+          html: "other",
+          votes: 0,
+          rank: 0,
+        },
+      ],
+      voters: 0,
+      chart_type: "bar",
     });
 
     await render(
@@ -647,28 +623,26 @@ module("Component | Poll", function (hooks) {
   });
 
   test("keeps an uncommitted selection across a server poll refresh and re-render", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-      }),
-      poll: trackedObject({
-        name: "poll",
-        type: "multiple",
-        status: "open",
-        results: "always",
-        min: 1,
-        max: 2,
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 0,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = trackedObject({
+      name: "poll",
+      type: "multiple",
+      status: "open",
+      results: "always",
+      min: 1,
+      max: 2,
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 0,
+      chart_type: "bar",
     });
 
     await render(
@@ -707,27 +681,25 @@ module("Component | Poll", function (hooks) {
   });
 
   test("voting on a multiple poll with no min attribute", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-        user_id: 29,
-      }),
-      poll: EmberObject.create({
-        name: "poll",
-        type: "multiple",
-        status: "open",
-        results: "always",
-        max: 2,
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 0,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: {
+        archived: false,
+      },
+      user_id: 29,
+    });
+    this.poll = EmberObject.create({
+      name: "poll",
+      type: "multiple",
+      status: "open",
+      results: "always",
+      max: 2,
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+      voters: 0,
+      chart_type: "bar",
     });
     await render(
       <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>

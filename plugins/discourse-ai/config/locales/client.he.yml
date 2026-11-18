@@ -256,7 +256,6 @@ he:
         nav:
           enabled: "פעיל"
         filters:
-          all: "הכול"
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
           reset: "איפוס"
         no_automations: "אין אוטומציות עדיין"
@@ -995,6 +994,7 @@ he:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "בינה מלאכותית"
           header: "איך אפשר לעזור?"
           submit: "הגשת שאלה"
           disclaimer: "בינה מלאכותית מחוללת עלולה לשגות. כדאי לאמת פרטים חשובים."

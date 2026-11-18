@@ -86,7 +86,6 @@ ko:
         nav:
           enabled: "활성화"
         filters:
-          all: "모두"
           reset: "리셋"
         sentiment:
           enabled: "활성화"

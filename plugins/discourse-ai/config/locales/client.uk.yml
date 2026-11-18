@@ -354,7 +354,6 @@ uk:
           enabled: "Включено"
           not_enabled: "Не увімкнено"
         filters:
-          all: "Всі"
           no_results: "Не знайдено об'єктів, що відповідають вашим фільтрам."
           reset: "Скинути"
         no_automations: "Автоматизації поки що немає"
@@ -1715,6 +1714,7 @@ uk:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "ШІ"
           header: "Чим я можу допомогти?"
           submit: "Надішліть запитання"
           disclaimer: "Генеративний ШІ може помилятися. Перевіряйте важливу інформацію."

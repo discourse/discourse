@@ -57,7 +57,11 @@ tr_TR:
         edit: Düzenle
         status: Durum
         replies: Yanıtlar
+        title: Başlık
+        page: Sayfa
+      all: Tümü
       drafts: Taslaklar
+      pages: Sayfa
       preview: Ön izle
       unpublish: Yayından kaldır
       appearance_link: Görünüm

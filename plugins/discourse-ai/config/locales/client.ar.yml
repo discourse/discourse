@@ -335,7 +335,6 @@ ar:
           enabled: "مفعَّلة"
           not_enabled: "غير مفعَّل"
         filters:
-          all: "الكل"
           no_results: "لا توجد ميزات تتوافق مع معايير التصفية المحدَّدة."
           reset: "إعادة التعيين"
         no_automations: "لا يوجد أتمتة حتى الآن"
@@ -1565,6 +1564,7 @@ ar:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "الذكاء الاصطناعي"
           header: "بماذا يمكنني المساعدة؟"
           submit: "إرسال السؤال"
           disclaimer: "يمكن للذكاء الاصطناعي التوليدي ارتكاب أخطاء. تحقق من المعلومات المهمة."

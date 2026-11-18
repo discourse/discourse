@@ -1044,6 +1044,7 @@ cs:
         suspect_user: "Jedná se o uživatelský spam?"
         approve_post: "Schválit tento příspěvek?"
         approve_topic: "Schválit toto téma?"
+        something_wrong_with_post: "Je na tomto příspěvku něco špatně?"
       types:
         reviewable_flagged_post:
           title: "Nahlášený příspěvek"
@@ -2673,6 +2674,7 @@ cs:
       no_results: "Žádné výsledky"
       search: "Vyhledat..."
       label: "Vyberte možnosti"
+      remove_item: "Odstranit %{name}"
     d_otp:
       screen_reader:
         one: Zadejte číslo
@@ -3119,6 +3121,9 @@ cs:
         size_too_small: "%{provided_file_size} je menší než minimální povolená hodnota %{min_file_size}"
     emoji_picker:
       filter_placeholder: Hledat emoji
+      search_placeholder: "Hledat podle názvu emoji a aliasu..."
+      no_results: "Žádné výsledky"
+      favorites: "Často používané"
       smileys_&_emotion: Smajlíky a emoce
       people_&_body: Lidé a tělo
       animals_&_nature: Zvířata a příroda
@@ -3160,6 +3165,10 @@ cs:
       emoji: "Smajlíky :)"
       more_emoji: "více…"
       options: "Možnosti"
+      ai_content:
+        code: "Kód"
+        quote: "Citovat"
+        details: "Podrobnosti"
       whisper: "šeptat"
       unlist: "skryto"
       add_warning: "Toto je oficiální varování."
@@ -5597,6 +5606,17 @@ cs:
       forward: "Vpřed"
       share: "Sdílet"
       dismiss: "Označit jako přečtené"
+    mobile_tab_bar:
+      new_topic: "Nové téma"
+      create: "Vytvořit"
+      more: "Více"
+      back: "Zpět"
+      topics: "Témata"
+      drafts:
+        one: "Koncepty (%{count})"
+        few: "Koncepty (%{count})"
+        many: "Koncepty (%{count})"
+        other: "Koncepty (%{count})"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavřete toto okno prohlížeče"
     theme_preview_notice: "V současné době prohlížíte náhled motivu, zavřete tuto kartu nebo okno prohlížeče a vraťte se do normální konfigurace webu."
@@ -7210,14 +7230,6 @@ cs:
           company_name: "Jméno"
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Rozhodné právo"
-          governing_law_placeholder: "Provincie, stát nebo země"
-          governing_law_help: |
-            Uveďte jurisdikci pro právní podmínky webu, obvykle tam, kde je společnost registrována nebo kde působí.
-          city_for_disputes: "Město pro spory"
-          city_for_disputes_placeholder: "Město"
-          city_for_disputes_help: |
-            Uveďte město pro řešení právních sporů souvisejících s tímto fórem.
           extra_groups:
             heading: "Seznam skupin"
             description: "Další skupiny, které se zobrazují na stránce O tomto webu."

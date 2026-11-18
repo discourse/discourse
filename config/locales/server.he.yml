@@ -545,12 +545,6 @@ he:
     one: "משתמשים חדשים יכולים להזכיר רק משתמש אחד בפוסט, עמך הסליחה."
     two: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
     other: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
-  no_embedded_media_allowed_group: "אין לך אפשרות להטמיע פריטי מדיה בפוסט הזה, עמך הסליחה."
-  no_embedded_media_allowed: "משתמשים חדשים לא יכולים להטמיע פריטי מדיה בפוסטים, עמך הסליחה."
-  too_many_embedded_media:
-    one: "משתמשים חדשים יכולים להוסיף רק פריט מדיה אחד מוטמע לפוסט, עמך הסליחה."
-    two: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
-    other: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
   no_attachments_allowed: "משתמשים חדשים לא יכולים להוסיף קבצים לפוסטים, עמך הסליחה."
   too_many_attachments:
     one: "משתמשים חדשים יכולים לצרף רק קובץ אחד לפוסט, עמך הסליחה."
@@ -2477,8 +2471,6 @@ he:
     automatically_clean_unused_tags: "למחוק אוטומטית תגיות שאין בהן שימוש באף נושא או הודעה פרטית על בסיס יומי."
     default_watched_precedence_over_muted: "להודיע למשתמשים על נושאים בקטגוריות או תגיות שהם עוקבים אחריהם שגם שייכים לכאלה שהשתיקו"
     company_name: "שם החברה או הארגון שלך."
-    governing_law: "ציון תחום השיפוט שאחראי על ההיבטים המשפטיים של האתר, לרבות תנאי השירות ומדיניות הפרטיות. בדרך כלל מדובר במדינה או המחוז שבהם רשומה החברה שמפעילה את האתר או המקום העיקרי ממנו היא עושה עסקים."
-    city_for_disputes: "ציון העיר שתשמש כתחום השיפוט ליישוב מחלוקות שקשורות בשימוש בפורום הזה. המידע הזה בדרך כלל מופיע במסמכים הרשמיים כגון תנאי השירות של הפורום."
     shared_drafts_category: "הפעלת תכונת הטיוטות המשותפות על ידי הקצאת קטגוריה שתשמש לטובת טיוטות לנושאים. נושאים בקטגוריה זו יוסתרו מרשימות הנושאים לחברי הסגל."
     shared_drafts_allowed_groups: "לאפשר למשתמשים בקבוצות האלו לראות ולערוך טיוטות משותפות"
     push_notifications_prompt: "הצגת כרזת הסכמת משתמש להתראות בדחיפה („פושים”). הגדרה זו מפעילה חלונית המבקשת מהמשתמשים הרשאה לשלוח להם הודעות בדחיפה. הוא מופיע רק כאשר הודעות דחיפה אינן מופעלות כבר, נתמכות על ידי מכשיר המשתמש והמשתמש פרסם הודעה או משתמש ביישומון אינטרנט מתקדם (PWA). ההנחיה לא תוצג שוב אם המשתמש כבר ביטל אותה או העניק/דחה הרשאה."
@@ -2590,9 +2582,27 @@ he:
       content_localization_locale_limit: "מספר השפות הנתמכות לא יכול לחרוג מעבר ל־%{max}."
       s3_credentials_required_for_video_conversion: "יש לספק פרטי גישה ל־S3 להמרת וידאו. נא להגדיר מפתחות גישה ל־S3 ולהפעיל פרופיל IAM."
     keywords:
+      about_banner_image: "תמונת כרזה"
+      about_page_extra_groups: "רשימת קבוצות"
+      about_page_extra_groups_initial_members: "חברים בהרחבה"
+      about_page_extra_groups_order: "סדר מיון"
+      about_page_extra_groups_show_description: "כולל התיאור"
       clean_up_inactive_users_after_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
+      company_url: "אתר"
+      extended_site_description: "תיאור קהילה"
+      large_icon: "סמל מרובע"
+      logo: "לוגו עיקרי"
+      logo_dark: "לוגו עיקרי כהה"
+      logo_small: "לוגו קטן"
+      logo_small_dark: "לוגו קטן כהה"
       navigation_menu: "סרגל צד|כותרת נפתחת|כותרת מתרחבת"
       purge_unactivated_users_grace_period_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
+      short_site_description: "כותרת הקהילה"
+      site_contact_group_name: "קבוצת הקשר באתר"
+      site_contact_username: "שם איש או אשת הקשר באתר"
+      site_description: "תקציר קהילה"
+      title: "שם הקהילה"
+      welcome_banner_image: "תמונת רקע"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4976,6 +4986,10 @@ he:
       no_context:
         watched_word: "הפוסט הזה כלל מילים במעקב. נא לפנות אל %{link} לפרטים נוספים."
     actions:
+      answer_yes:
+        title: "כן"
+      answer_no:
+        title: "לא"
       agree:
         title: "כן"
       agree_and_keep:

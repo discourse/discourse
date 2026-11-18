@@ -21,6 +21,7 @@ blog:
     type: category
     default: ""
     client: true
+    hidden: true
   blog_title:
     default: "The blog"
   blog_description:

@@ -145,7 +145,7 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
   test("delete button calls changeValueCallback with null", async function (assert) {
     const setting = { setting: "logo" };
     let callbackValue = "not called";
-    this.set("handleChange", (value) => (callbackValue = value));
+    this.handleChange = (value) => (callbackValue = value);
 
     await render(
       <template>

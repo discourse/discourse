@@ -73,7 +73,6 @@ bg:
         nav:
           enabled: "Да е включен"
         filters:
-          all: "Всички"
           reset: "Нулиране"
         sentiment:
           enabled: "Да е включен"

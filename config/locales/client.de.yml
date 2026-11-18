@@ -1048,6 +1048,7 @@ de:
         suspect_user: "Ist dieser Benutzer ein Spammer?"
         approve_post: "Diesen Beitrag genehmigen?"
         approve_topic: "Dieses Thema genehmigen?"
+        something_wrong_with_post: "Stimmt etwas mit diesem Beitrag nicht?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
@@ -2320,6 +2321,7 @@ de:
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
         invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
+        invited_via_link_without_key: "Link (%{count} / %{max} eingelöst)"
         generating_link: "Link wird generiert …"
         groups: "Gruppen"
         topic: "Thema"
@@ -2631,6 +2633,7 @@ de:
       no_results: "Keine Ergebnisse"
       search: "Suchen …"
       label: "Optionen auswählen"
+      remove_item: "%{name} entfernen"
     d_otp:
       screen_reader:
         one: Gib eine Zahl ein
@@ -3074,6 +3077,9 @@ de:
         size_too_small: "%{provided_file_size} ist kleiner als erlaubtes Minimum von %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emoji suchen
+      search_placeholder: "Nach Emoji-Namen und -Alias suchen …"
+      no_results: "Keine Ergebnisse"
+      favorites: "Häufig verwendet"
       smileys_&_emotion: Smileys und Emotion
       people_&_body: Menschen und Körper
       animals_&_nature: Tiere und Natur
@@ -3203,6 +3209,10 @@ de:
       emoji: "Emoji :)"
       more_emoji: "mehr …"
       options: "Optionen"
+      ai_content:
+        code: "Code"
+        quote: "Zitieren"
+        details: "Details"
       whisper: "flüstern"
       unlist: "unsichtbar"
       add_warning: "Dies ist eine offizielle Warnung."
@@ -4571,6 +4581,7 @@ de:
         actions: "Massenaktionen"
     post:
       accessible_heading: "Beitrag von %{username} %{date}"
+      ai_generated: "KI"
       heading_anchor: "Link zur Überschrift"
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
@@ -5783,6 +5794,15 @@ de:
       forward: "Vorwärts"
       share: "Teilen"
       dismiss: "Schließen"
+    mobile_tab_bar:
+      new_topic: "Neues Thema"
+      create: "Erstellen"
+      more: "Mehr"
+      back: "Zurück"
+      topics: "Themen"
+      drafts:
+        one: "Entwürfe (%{count})"
+        other: "Entwürfe (%{count})"
     safe_mode:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
     theme_preview_notice: "Du siehst gerade eine Vorschau eines Themes. Schließe diese Browser-Registerkarte oder dieses Fenster, um zur normalen Konfiguration deiner Website zurückzukehren."
@@ -7613,14 +7633,6 @@ de:
           company_name_placeholder: "Beispiel GmbH"
           company_url: "Website"
           company_url_placeholder: "https://beispiel-gmbh.com"
-          governing_law: "Anzuwendendes Recht"
-          governing_law_placeholder: "Provinz, Bundesland oder Land"
-          governing_law_help: |
-            Gib den Gerichtsstand für die rechtlichen Bestimmungen der Website an. In der Regel ist das der Ort, an dem das Unternehmen registriert oder tätig ist.
-          city_for_disputes: "Stadt für Rechtsstreitigkeiten"
-          city_for_disputes_placeholder: "Stadt"
-          city_for_disputes_help: |
-            Gib die Stadt für die Beilegung von Rechtsstreitigkeiten im Zusammenhang mit diesem Forum an.
           extra_groups:
             heading: "Gruppenauflistung"
             description: "Zusätzliche Gruppen, die auf der Seite „Über uns“ angezeigt werden."

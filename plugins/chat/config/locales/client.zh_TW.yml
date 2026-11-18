@@ -691,19 +691,6 @@ zh_TW:
         notify_moderators: "由于上面未列出的另一個原因，此消息需要管理人員加以注意。"
       flagging:
         action: "檢舉消息"
-      emoji_picker:
-        favorites: "常用"
-        smileys_&_emotion: "笑臉和情感"
-        objects: "物件"
-        people_&_body: "人和身體"
-        travel_&_places: "旅行和地點"
-        animals_&_nature: "動物和自然"
-        food_&_drink: "食品和飲料"
-        activities: "活動"
-        flags: "檢舉"
-        symbols: "符號"
-        search_placeholder: "按表情符號名稱和別名搜尋…"
-        no_results: "沒有結果"
       thread:
         title: "標題"
         view_thread: 查看消息串

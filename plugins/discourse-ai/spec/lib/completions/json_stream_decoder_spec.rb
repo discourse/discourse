@@ -46,4 +46,21 @@ describe DiscourseAi::Completions::JsonStreamDecoder do
 
     expect(results.flatten.compact).to eq([{ hello: "world" }, { foo: "bar" }, { baz: "qux" }])
   end
+
+  it "handles streams that omit the space after data:" do
+    stream = <<~TEXT.split("|")
+      data:{"hel|lo": "world"}
+
+      data:{"foo": "bar"}
+
+      data:{"ba|z": "qux"|}
+
+      data:[DONE]
+    TEXT
+
+    results = []
+    stream.each { |chunk| results << (decoder << chunk) }
+
+    expect(results.flatten.compact).to eq([{ hello: "world" }, { foo: "bar" }, { baz: "qux" }])
+  end
 end

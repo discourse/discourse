@@ -82,6 +82,8 @@ class DiscoursePluginRegistry
   define_register :category_update_param_with_callback, Hash
   define_register :bot_creation_params, Hash
 
+  define_filtered_register :first_admin_bootstrap
+
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
 
@@ -99,6 +101,7 @@ class DiscoursePluginRegistry
   define_filtered_register :category_list_topics_preloader_associations
   define_filtered_register :user_cards_preloaded_custom_fields
   define_filtered_register :user_cards_preloaders
+  define_filtered_register :preloaded_data_callbacks
 
   define_filtered_register :api_parameter_routes
   define_filtered_register :api_key_scope_mappings

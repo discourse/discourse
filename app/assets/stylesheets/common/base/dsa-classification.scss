@@ -113,3 +113,7 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
     min-width: 0;
   }
 }
+
+.dsa-classification-footer:not([hidden]) {
+  display: contents;
+}

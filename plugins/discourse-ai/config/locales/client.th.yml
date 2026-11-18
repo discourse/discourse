@@ -67,8 +67,6 @@ th:
             none: "ถูกใช้แล้ว"
         no_groups: "ไม่มี"
         edit: "การตั้งค่า"
-        filters:
-          all: "ทั้งหมด"
         search:
           name: "ค้นหา"
         image_caption:

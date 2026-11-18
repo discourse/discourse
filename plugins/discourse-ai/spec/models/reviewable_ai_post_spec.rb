@@ -25,6 +25,23 @@ describe ReviewableAiPost do
       actions
     end
 
+    it "requests classification for restrictions on the post or its author" do
+      target.update!(reply_count: 1)
+      actions = reviewable_actions(Fabricate(:admin).guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_hide",
+        "agree_and_silence",
+        "agree_and_suspend",
+        "delete_and_agree",
+        "delete_and_ignore",
+        "delete_and_agree_replies",
+        "delete_and_ignore_replies",
+        "delete_user",
+        "delete_user_block",
+      )
+    end
+
     context "when the reviewable isn't pending" do
       before { reviewable.status = Reviewable.statuses[:rejected] }
 
@@ -72,7 +89,9 @@ describe ReviewableAiPost do
 
           expect(actions.has?(:agree_and_hide)).to eq(false)
           expect(actions.has?(:agree_and_keep)).to eq(false)
-          expect(actions.has?(:agree_and_keep_hidden)).to eq(true)
+          expect(
+            actions.to_a.select(&:dsa_classification_required).map(&:server_action),
+          ).to include("agree_and_keep_hidden")
         end
 
         it "has the disagree and restore action" do

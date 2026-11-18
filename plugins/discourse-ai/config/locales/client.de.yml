@@ -338,7 +338,6 @@ de:
           enabled: "Aktiviert"
           not_enabled: "Nicht aktiviert"
         filters:
-          all: "Gesamt"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
@@ -1434,6 +1433,7 @@ de:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "KI"
           header: "Wie kann ich helfen?"
           submit: "Frage abschicken"
           disclaimer: "Generative KI kann Fehler machen. Überprüfe wichtige Informationen."

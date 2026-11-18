@@ -281,7 +281,6 @@ pt_BR:
         nav:
           enabled: "Ativados"
         filters:
-          all: "Tudo"
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."
           reset: "Redefinir"
         no_automations: "Ainda não há nenhuma automação"
@@ -1101,6 +1100,7 @@ pt_BR:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "IA"
           header: "Como posso ajudar?"
           submit: "Enviar pergunta"
           disclaimer: "A IA generativa pode cometer erros. Confira as informações principais."

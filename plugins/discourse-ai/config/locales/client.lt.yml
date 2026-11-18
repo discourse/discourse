@@ -194,7 +194,6 @@ lt:
         nav:
           enabled: "Galimas"
         filters:
-          all: "Visi"
           reset: "Atstatyti"
         sentiment:
           emotion: "Emocija"
@@ -618,6 +617,7 @@ lt:
         bot_names:
           claude-2: "Claude 2"
         conversations:
+          tab_label: "AI"
           today: "Šiandien"
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"

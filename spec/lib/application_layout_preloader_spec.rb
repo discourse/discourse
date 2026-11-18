@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ApplicationLayoutPreloader do
-  subject do
+  subject(:preloader) do
     described_class.new(
       guardian: guardian,
       theme_id: theme_id,
@@ -89,6 +89,76 @@ RSpec.describe ApplicationLayoutPreloader do
           "visiblePlugins",
         )
       end
+    end
+  end
+
+  describe "plugin preloaded data" do
+    let(:guardian) { Guardian.new }
+    let(:plugin) { Plugin::Instance.new(Plugin::Metadata.parse("# name: sample-plugin")) }
+
+    around do |example|
+      registrations = DiscoursePluginRegistry._raw_preloaded_data_callbacks.dup
+      example.run
+    ensure
+      DiscoursePluginRegistry._raw_preloaded_data_callbacks.replace(registrations)
+    end
+
+    it "passes the request guardian and serializes namespaced values safely" do
+      plugin.register_preloaded_data("site") do |request_guardian|
+        { anonymous: request_guardian.anonymous?, content: "</script>" }
+      end
+
+      data = preloader.preloaded_data
+
+      expect(JSON.parse(data["sample-plugin:site"])).to eq(
+        "anonymous" => true,
+        "content" => "</script>",
+      )
+      expect(data["sample-plugin:site"]).not_to include("</")
+      expect(JSON.parse(data["site"])).to have_key("categories")
+    end
+
+    it "passes the authenticated request guardian" do
+      user = Fabricate(:user)
+      plugin.register_preloaded_data("user") { |request_guardian| request_guardian.user&.id }
+      preloader =
+        described_class.new(
+          guardian: user.guardian,
+          theme_id: nil,
+          theme_target: :desktop,
+          login_method: nil,
+        )
+
+      expect(JSON.parse(preloader.preloaded_data["sample-plugin:user"])).to eq(user.id)
+    end
+
+    it "omits nil values and preserves false values" do
+      plugin.register_preloaded_data("omitted") { nil }
+      plugin.register_preloaded_data("visible") { false }
+
+      data = preloader.preloaded_data
+
+      expect(data).not_to have_key("sample-plugin:omitted")
+      expect(JSON.parse(data["sample-plugin:visible"])).to eq(false)
+    end
+
+    it "keeps matching keys from different plugins separate" do
+      other_plugin = Plugin::Instance.new(Plugin::Metadata.parse("# name: other-plugin"))
+      plugin.register_preloaded_data("visibility") { true }
+      other_plugin.register_preloaded_data("visibility") { false }
+
+      data = preloader.preloaded_data
+
+      expect(JSON.parse(data["sample-plugin:visibility"])).to eq(true)
+      expect(JSON.parse(data["other-plugin:visibility"])).to eq(false)
+    end
+
+    it "does not evaluate callbacks from disabled plugins" do
+      plugin.enabled_site_setting(:discourse_sample_plugin_enabled)
+      SiteSetting.discourse_sample_plugin_enabled = false
+      plugin.register_preloaded_data("disabled") { raise "Disabled callback was evaluated" }
+
+      expect(preloader.preloaded_data).not_to have_key("sample-plugin:disabled")
     end
   end
 

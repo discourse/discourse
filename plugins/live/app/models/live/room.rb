@@ -134,6 +134,10 @@ module Live
       public? ? Live.public_room_message_bus_targets : { user_ids: member_ids }
     end
 
+    def direct_call_chat?
+      ephemeral? && chat_channel&.direct_message_channel?
+    end
+
     def chat_linked?
       chat_channel_id.present?
     end
@@ -204,7 +208,7 @@ module Live
       channel = chat_channel
       if channel.nil?
         errors.add(:chat_channel_id, "must reference an existing chat channel")
-      elsif !channel.threading_enabled?
+      elsif !direct_call_chat? && !channel.threading_enabled?
         errors.add(:chat_channel_id, "must have threading enabled")
       end
     end

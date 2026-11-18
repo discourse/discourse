@@ -74,7 +74,6 @@ sq:
         nav:
           enabled: "Aktivizuar"
         filters:
-          all: "Të gjitha"
           reset: "Rivendosni"
         sentiment:
           enabled: "Aktivizuar"

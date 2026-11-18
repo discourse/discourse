@@ -11,6 +11,22 @@ RSpec.describe SiteSerializer do
     ]
   end
 
+  describe "#live_file_transfers_available" do
+    def available
+      described_class.new(Site.new(user.guardian), scope: user.guardian, root: false).as_json[
+        :live_file_transfers_available
+      ]
+    end
+
+    it "is false by default and reflects configuration without exposing group ids" do
+      expect(available).to eq(false)
+      SiteSetting.live_file_transfer_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      expect(available).to eq(true)
+      SiteSetting.live_enabled = false
+      expect(available).to be_nil # Plugin fields are omitted when Live is disabled.
+    end
+  end
+
   describe "#live_video_available" do
     it "is true when either capability has groups" do
       SiteSetting.live_video_allowed_groups = ""

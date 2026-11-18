@@ -144,9 +144,11 @@ module(
 
     // Defect 1: frontend/discourse/float-kit/lib/d-menu-instance.ts:127 ignores a virtual trigger's focus target.
     test("pointer-oracle: closing a virtual-trigger menu resolves focusTarget at close time", async function (assert) {
+      const replaceTarget = tracked(false);
+
       await render(
         <template>
-          {{#if this.replaceTarget}}
+          {{#if replaceTarget.value}}
             <button class="focus-target" type="button">Replacement target</button>
           {{else}}
             <button class="focus-target" type="button">Original target</button>
@@ -173,7 +175,7 @@ module(
         );
 
       await focus(".close-menu");
-      this.set("replaceTarget", true);
+      replaceTarget.value = true;
       await settled();
 
       const replacementTarget = find(".focus-target");

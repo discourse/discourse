@@ -330,10 +330,6 @@ ko:
   no_mentions_allowed_newuser: "신규 사용자는 다른 사용자를 멘션할 수 없습니다."
   too_many_mentions_newuser:
     other: "신규 사용자는 게시물에서 %{count}명의 사용자만 멘션할 수 있습니다."
-  no_embedded_media_allowed_group: "죄송합니다. 게시물에 미디어 항목을 포함할 수 없습니다."
-  no_embedded_media_allowed: "신규 사용자는 게시물에 미디어 항목을 임베드할 수 없습니다."
-  too_many_embedded_media:
-    other: "신규 사용자는 게시물에 미디어 항목을 %{count}개만 임베드할 수 있습니다."
   no_attachments_allowed: "신규 사용자는 게시물에 파일을 첨부할 수 없습니다."
   too_many_attachments:
     other: "신규 사용자는 게시물에 %{count}개의 파일만 첨부할 수 있습니다."
@@ -1841,6 +1837,9 @@ ko:
       markdown_linkify_tlds: "'*' 값을 포함할 수 없습니다."
       search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese'를 비활성화해야 합니다."
       search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
+    keywords:
+      company_url: "웹 사이트"
+      title: "커뮤니티 이름"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3655,6 +3654,10 @@ ko:
       links:
         category: 카테고리 설정
     actions:
+      answer_yes:
+        title: "예"
+      answer_no:
+        title: "아니오"
       agree:
         title: "예"
       agree_and_keep_deleted:

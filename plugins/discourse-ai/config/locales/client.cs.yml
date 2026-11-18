@@ -97,7 +97,6 @@ cs:
         nav:
           enabled: "Zapnuto"
         filters:
-          all: "Vše"
           reset: "obnovit výchozí"
         sentiment:
           sentiment: "Sentiment"

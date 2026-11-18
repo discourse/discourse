@@ -174,23 +174,21 @@ module("Component | ParamInput", function (hooks) {
       }
 
       test(testName.join(" "), async function (assert) {
-        this.setProperties({
-          param_info: [
-            {
-              identifier: testcase.type,
-              type: testcase.type,
-              default: config.default ?? null,
-              nullable: config.nullable,
-            },
-          ],
-          initialValues: config.initial
-            ? { [testcase.type]: config.initial }
-            : {},
-          onRegisterApi: ({ submit, allNormalized }) => {
-            this.submit = submit;
-            this.allNormalized = allNormalized;
+        this.param_info = [
+          {
+            identifier: testcase.type,
+            type: testcase.type,
+            default: config.default ?? null,
+            nullable: config.nullable,
           },
-        });
+        ];
+        this.initialValues = config.initial
+          ? { [testcase.type]: config.initial }
+          : {};
+        this.onRegisterApi = ({ submit, allNormalized }) => {
+          this.submit = submit;
+          this.allNormalized = allNormalized;
+        };
 
         await render(
           <template>
@@ -252,20 +250,18 @@ module("Component | ParamInput", function (hooks) {
   }
 
   test("empty form will reject submit", async function (assert) {
-    this.setProperties({
-      param_info: [
-        {
-          identifier: "string",
-          type: "string",
-          default: null,
-          nullable: false,
-        },
-      ],
-      initialValues: {},
-      onRegisterApi: ({ submit }) => {
-        this.submit = submit;
+    this.param_info = [
+      {
+        identifier: "string",
+        type: "string",
+        default: null,
+        nullable: false,
       },
-    });
+    ];
+    this.initialValues = {};
+    this.onRegisterApi = ({ submit }) => {
+      this.submit = submit;
+    };
 
     await render(
       <template>
@@ -287,20 +283,18 @@ module("Component | ParamInput", function (hooks) {
   });
 
   test("async normalization", async function (assert) {
-    this.setProperties({
-      param_info: [
-        {
-          identifier: "category_id",
-          type: "category_id",
-          default: "support",
-          nullable: false,
-        },
-      ],
-      initialValues: {},
-      onRegisterApi: (paramInputApi) => {
-        this.paramInputApi = paramInputApi;
+    this.param_info = [
+      {
+        identifier: "category_id",
+        type: "category_id",
+        default: "support",
+        nullable: false,
       },
-    });
+    ];
+    this.initialValues = {};
+    this.onRegisterApi = (paramInputApi) => {
+      this.paramInputApi = paramInputApi;
+    };
 
     await render(
       <template>
@@ -320,18 +314,16 @@ module("Component | ParamInput", function (hooks) {
   });
 
   test("show error message when default value is invalid", async function (assert) {
-    this.setProperties({
-      param_info: [
-        {
-          identifier: "group_id",
-          type: "group_id",
-          default: "invalid_group_name",
-          nullable: false,
-        },
-      ],
-      initialValues: {},
-      onRegisterApi: () => {},
-    });
+    this.param_info = [
+      {
+        identifier: "group_id",
+        type: "group_id",
+        default: "invalid_group_name",
+        nullable: false,
+      },
+    ];
+    this.initialValues = {};
+    this.onRegisterApi = () => {};
 
     await render(
       <template>
@@ -350,22 +342,20 @@ module("Component | ParamInput", function (hooks) {
   });
 
   test("date initial values reject native-only formats", async function (assert) {
-    this.setProperties({
-      param_info: [
-        {
-          identifier: "date",
-          type: "date",
-          default: null,
-          nullable: false,
-        },
-      ],
-      initialValues: {
-        date: "01/19/2038",
+    this.param_info = [
+      {
+        identifier: "date",
+        type: "date",
+        default: null,
+        nullable: false,
       },
-      onRegisterApi: ({ submit }) => {
-        this.submit = submit;
-      },
-    });
+    ];
+    this.initialValues = {
+      date: "01/19/2038",
+    };
+    this.onRegisterApi = ({ submit }) => {
+      this.submit = submit;
+    };
 
     await render(
       <template>
@@ -382,36 +372,34 @@ module("Component | ParamInput", function (hooks) {
   });
 
   test("date, time, datetime with initial value in other formats", async function (assert) {
-    this.setProperties({
-      param_info: [
-        {
-          identifier: "date",
-          type: "date",
-          default: null,
-          nullable: false,
-        },
-        {
-          identifier: "time",
-          type: "time",
-          default: null,
-          nullable: false,
-        },
-        {
-          identifier: "datetime",
-          type: "datetime",
-          default: null,
-          nullable: false,
-        },
-      ],
-      initialValues: {
-        date: "19 January 2038",
-        time: "3:15 am",
-        datetime: "19 January 2038 3:15 am",
+    this.param_info = [
+      {
+        identifier: "date",
+        type: "date",
+        default: null,
+        nullable: false,
       },
-      onRegisterApi: ({ submit }) => {
-        this.submit = submit;
+      {
+        identifier: "time",
+        type: "time",
+        default: null,
+        nullable: false,
       },
-    });
+      {
+        identifier: "datetime",
+        type: "datetime",
+        default: null,
+        nullable: false,
+      },
+    ];
+    this.initialValues = {
+      date: "19 January 2038",
+      time: "3:15 am",
+      datetime: "19 January 2038 3:15 am",
+    };
+    this.onRegisterApi = ({ submit }) => {
+      this.submit = submit;
+    };
 
     await render(
       <template>

@@ -2627,6 +2627,7 @@ lt:
         redeemed_tab_with_count: "Atstatyta (%{count})"
         invited_via: "Kvietimas"
         invited_via_link: "nuoroda %{key} (%{count} / %{max} panaudota)"
+        invited_via_link_without_key: "nuoroda (%{count} / %{max} atkurta)"
         generating_link: "Generuojama nuoroda..."
         groups: "Grupės"
         topic: "Tema"
@@ -2968,6 +2969,7 @@ lt:
       no_results: "Nėra rezultatų"
       search: "Paieška…"
       label: "Pasirinkite variantus"
+      remove_item: "Pašalinti %{name}"
     d_otp:
       screen_reader:
         one: Įveskite skaičių
@@ -3507,6 +3509,9 @@ lt:
         size_too_small: "%{provided_file_size} yra mažesnis nei leistinas minimalus %{min_file_size}"
     emoji_picker:
       filter_placeholder: Ieškoti jaustukų
+      search_placeholder: "Ieškoti pagal jaustuko pavadinimą ir slapyvardį..."
+      no_results: "Nėra rezultatų"
+      favorites: "Dažnai naudojamas"
       smileys_&_emotion: Šypsenėlės ir emocijos
       people_&_body: Žmonės ir kūnas
       animals_&_nature: Gyvūnai ir gamta
@@ -3643,6 +3648,10 @@ lt:
       emoji: "Jaustukai :)"
       more_emoji: "daugiau…"
       options: "Nustatymai"
+      ai_content:
+        code: "Kodas"
+        quote: "Citata"
+        details: "Detalės"
       whisper: "viešai nematoma žinutė"
       unlist: "neįtraukta į sąrašą"
       add_warning: "Tai oficialus įspėjimas."
@@ -5276,6 +5285,7 @@ lt:
         actions: "Masiniai veiksmai"
     post:
       accessible_heading: "Įrašas, kurį parašė %{username} %{date}"
+      ai_generated: "AI"
       heading_anchor: "Antraštės nuoroda"
       confirm_delete: "Ar tikrai norite ištrinti šį įrašą?"
       quote_reply: "Citata"
@@ -5434,6 +5444,7 @@ lt:
         upload_not_authorized: "Atsiprašome, failas, kurį bandote įkelti, nėra autorizuotas (įgalioti plėtiniai: %{authorized_extensions})."
         no_uploads_authorized: "Atsiprašome, nėra leidimo įkelti jokių failų."
         image_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti nuotraukų."
+        media_upload_not_allowed: "Atsiprašome, jums neleidžiama įkelti paveikslėlių, vaizdo įrašų ar garso įrašų."
         attachment_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti priedų."
         attachment_download_requires_login: "Atsiprašome, bet jūs turite būti prisijungęs, kad galėtumėt atsisiųsti priedus."
       cancel_composer:
@@ -6635,6 +6646,17 @@ lt:
       forward: "Persiųsti"
       share: "Dalintis"
       dismiss: "Praleisti"
+    mobile_tab_bar:
+      new_topic: "Nauja tema"
+      create: "Sukurti"
+      more: "Daugiau"
+      back: "Atgal"
+      topics: "Temos"
+      drafts:
+        one: "Juodraščiai (%{count})"
+        few: "Juodraščiai (%{count})"
+        many: "Juodraščiai (%{count})"
+        other: "Juodraščiai (%{count})"
     safe_mode:
       enabled: "Saugus režimas įjungtas, norėdami išeiti iš saugaus režimo uždarykite šį naršyklės langą"
     theme_preview_notice: "Šiuo metu peržiūrite temą, uždarykite šį naršyklės skirtuką arba langą, kad grįžtumėte į įprastą svetainės konfigūraciją."
@@ -7931,24 +7953,94 @@ lt:
             few: "Filtravimas pagal %{count} įrašo URL"
             many: "Filtravimas pagal %{count} įrašo URL"
             other: "Filtravimas pagal %{count} įrašo URL"
+          referrer:
+            one: "Filtravimas pagal %{count} nukreipimo nuorodą"
+            few: "Filtravimas pagal %{count} nukreipimo nuorodas"
+            many: "Filtravimas pagal %{count} nukreipimo nuorodų"
+            other: "Filtravimas pagal %{count} nukreipimo nuorodų"
+          country:
+            one: "Filtravimas pagal %{count} šalį"
+            few: "Filtravimas pagal %{count} šalis"
+            many: "Filtravimas pagal %{count} šalių"
+            other: "Filtravimas pagal %{count} šalių"
+          network:
+            one: "Filtravimas pagal %{count} tinklą"
+            few: "Filtravimas pagal %{count} tinklus"
+            many: "Filtravimas pagal %{count} tinklų"
+            other: "Filtravimas pagal %{count} tinklų"
+          browser:
+            one: "Filtravimas pagal %{count} naršyklę"
+            few: "Filtravimas pagal %{count} naršykles"
+            many: "Filtravimas pagal %{count} naršyklių"
+            other: "Filtravimas pagal %{count} naršyklių"
           language:
             one: "Filtruojama %{count} kalba"
             few: "Filtruojamos %{count} kalbos"
             many: "Filtruojama %{count} kalbų"
             other: "Filtruojama %{count} kalbų"
+          ip:
+            one: "Filtravimas pagal %{count} IP adresą"
+            few: "Filtravimas pagal %{count} IP adresus"
+            many: "Filtravimas pagal %{count} IP adresų"
+            other: "Filtravimas pagal %{count} IP adresų"
+        remove_filter_value: "Pašalinti %{value}"
+        clear_all: "Išvalyti viską"
         apply: "Kandidatuoti"
         apply_filters: "Taikyti filtrus"
+        filter_by:
+          one: "Filtruoti pagal %{label}, %{count} puslapio peržiūrą"
+          few: "Filtruoti pagal %{label}, %{count} puslapio peržiūras"
+          many: "Filtruoti pagal %{label}, %{count} puslapio peržiūrų"
+          other: "Filtruoti pagal %{label}, %{count} puslapio peržiūrų"
+        remove_filter: "Pašalinti filtrą %{filter}"
         view_more: "Žiūrėti daugiau"
+        no_dimension_data: "Šiam suskirstymui duomenų nėra."
+        direct_or_unknown: "Tiesioginis / nežinomas"
         cards:
+          acquisition: "Įsigijimas"
+          pages: "Puslapiai"
           visitors: "Lankytojai"
         dimensions:
+          referrers: "Srauto šaltiniai"
+          countries: "Šalys"
+          networks: "Tinklai"
+          top_urls: "Populiariausi URL adresai"
+          entry_urls: "Pradinis URL"
+          browsers: "Naršyklės"
           languages: "Kalbos"
+          ip_addresses: "IP adresai"
         filters:
+          traffic_type: "Srauto tipas"
+          top_url: "Populiariausias URL"
+          entry_url: "Pradinis URL"
+          referrer: "Srauto šaltinis"
+          country: "Šalis"
+          network: "Tinklas"
           browser: "Naršyklė"
           language: "Kalba"
           ip: "IP adresas"
+        headline:
+          one: "%{formatted_count} puslapio peržiūra"
+          few: "%{formatted_count} puslapio peržiūros"
+          many: "%{formatted_count} puslapio peržiūrų"
+          other: "%{formatted_count} puslapio peržiūrų"
+        metrics:
+          distinct_sessions:
+            label: "Atskiros sesijos"
+          logged_in_share:
+            label: "Prisijungusių dalis"
+          bounce_rate:
+            label: "Atšokimo rodiklis"
+          average_session_duration:
+            label: "Vidutinė sesijos trukmė"
         series:
+          logged_in_human: "Prisijungę"
           anonymous_human: "Anonimas"
+          likely_crawler: "Tikėtini paieškos robotai"
+        partial:
+          retention: "Puslapio peržiūrų duomenys iki %{date} nebepasiekiami, todėl šie rezultatai apima tik dalį pasirinkto datos intervalo."
+          pageview_limit: "Rezultatai apima naujausias %{limit} puslapio peržiūras, pradedant %{date} nuo %{time}. Ankstesnės puslapio peržiūros pasirinktame datų diapazone neįtraukiamos."
+          combined: "Rezultatai apima naujausias %{limit} puslapio peržiūras, pradedant %{pageviewLimitDate} nuo %{pageviewLimitTime}. Ankstesnės puslapio peržiūros pasirinktame datų diapazone neįtrauktos; puslapio peržiūrų duomenys iki %{date} nebepasiekiami."
       dashboard:
         title: "Suvestinė"
         version: "Versija"
@@ -7961,14 +8053,34 @@ lt:
         updates_available: "Yra atnaujinimų."
         version_check_pending: "Panašu, kad neseniai atnaujinai. Puiku!"
         commit_on_github: "Peržiūrėti commit %{sha} GitHub"
+        commits_ahead:
+          one: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomas pakeitimas"
+          few: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomi pakeitimai"
+          many: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomų pakeitimų"
+          other: "Nuo šios leidimų serijos pradžios vykdomas %{count} papildomų pakeitimų"
         dismiss_notice: "Ignoruoti"
+        site_advice:
+          title:
+            one: "%{count} užklausa reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            few: "%{count} užklausos reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            many: "%{count} užklausų reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
+            other: "%{count} užklausų reikalauja jūsų dėmesio, atsižvelgiant į jūsų svetainės konfigūraciją"
         new_features:
+          title: "Kas naujo?"
+          subtitle: "Nuolat išleidžiame naujų funkcijų ir patobulinimų. Šiame puslapyje aptariami svarbiausi aspektai, tačiau galite spustelėti „Sužinokite daugiau“, kad pamatytumėte išsamias leidimo pastabas."
+          no_new_features_found: "Sraute nėra elementų arba pasirinktas filtras nerado jokių rezultatų. Ankstesnius naujų funkcijų pranešimus galite peržiūrėti <a href='%{url}' target='_blank'>„Discourse Releases“ svetainėje</a>."
+          no_new_features_error: "Įkeliant kanalą įvyko klaida. Ankstesnius naujų funkcijų pranešimus galite peržiūrėti <a href='%{url}' target='_blank'>„Discourse Releases“ svetainėje</a>."
           learn_more: "Sužinoti daugiau..."
         refresh_problems: "Atnaujinti"
         space_used: "%{usedSize} panaudota"
         space_used_and_free: "%{usedSize} (%{freeSize} nemokama)"
         uploads: "Įkėlimai"
         backups: "Atsarginės kopijos"
+        backup_count:
+          one: "%{count} atsarginė kopija %{location}"
+          few: "%{count} atsarginės kopijos %{location}"
+          many: "%{count} atsarginių kopijų %{location}"
+          other: "%{count} atsarginių kopijų %{location}"
         lastest_backup: "Naujausi: %{date}"
         whats_new_in_discourse: Kas naujo Discourse?
         report_filter_any: "bet kuris"
@@ -7977,9 +8089,18 @@ lt:
         exception_error: Atsiprašome, vykdant užklausą įvyko klaida
         too_many_requests: Jūs atlikote šį veiksmą per daug kartų. Prašome palaukti prieš bandydami dar kartą.
         not_found_error: Atsiprašome, ši ataskaita neegzistuoja
+        custom_date_range: Pasirinktas datų intervalas
+        loading: "Įkeliamas prietaisų skydelis…"
+        fetch_error: "Nepavyko įkelti prietaisų skydelio. Pabandykite atnaujinti puslapį."
+        stable: "stabilus"
         sections:
+          highlights:
+            title: "Svarbiausi dalykai"
           reports:
             title: "Pranešimai"
+            fetch_error: "Nepavyko įkelti ataskaitų. Pabandykite atnaujinti puslapį."
+          traffic:
+            title: "Svetainės srautas"
           engagement:
             title: "Įsitraukimas"
             fetch_error: "Nepavyko įkelti įsitraukimo. Pabandykite atnaujinti puslapį."
@@ -8056,9 +8177,9 @@ lt:
             headline:
               titles:
                 engagement_up: "Įsitraukimas pasirinktu laikotarpiu išaugo"
-                stickiness_and_daily_engagement_increased: "Per nagrinėjamą laikotarpį padidėjo vartotojų lojalumas ir kasdienis aktyvumas"
-                stickiness_and_new_signups_increased: "Per nagrinėjamą laikotarpį padidėjo vartotojų lojalumas ir naujų vartotojų skaičius"
-                stickiness_increased: "Pasirinktu laikotarpiu padidėjo vartotojų lojalumas"
+                stickiness_and_daily_engagement_increased: "Per nagrinėjamą laikotarpį padidėjo vartotojų sugrįžtamumo rodiklis ir kasdienis aktyvumas"
+                stickiness_and_new_signups_increased: "Per nagrinėjamą laikotarpį padidėjo vartotojų sugrįžtamumo rodiklis ir naujų vartotojų skaičius"
+                stickiness_increased: "Pasirinktu laikotarpiu padidėjo vartotojų sugrįžtamumo rodiklis"
                 daily_engagement_and_new_signups_increased: "Pasirinktu laikotarpiu išaugo kasdienis įsitraukimas ir naujų registracijų skaičius"
                 daily_engagement_increased: "Per nagrinėjamą laikotarpį kasdienis aktyvumas padidėjo"
                 new_signups_increased: "Per nagrinėjamą laikotarpį padaugėjo naujų registracijų"
@@ -8067,35 +8188,214 @@ lt:
                 engagement_steady: "Įsitraukimas pasirinktu laikotarpiu yra pastovus"
                 insufficient_activity: "Dar nepakanka aktyvumo, kad būtų galima apibendrinti įsitraukimą."
               summaries:
-                all_metrics_improved: "Padidėjo aktyvumas, kasdienis įsitraukimas ir naujų narių skaičius – tai rodo, kad vis daugiau narių prisijungia prie jūsų bendruomenės ir joje aktyviai dalyvauja."
-                stickiness_and_daily_engagement_up_new_signups_down: "Vartotojų lojalumas ir kasdienis aktyvumas didėja, tačiau naujų registracijų skaičius mažėja."
-                stickiness_and_daily_engagement_up_new_signups_flat: "Vartotojų lojalumas ir kasdienis aktyvumas didėja, tačiau naujų registracijų skaičius nesikeičia."
-                stickiness_and_daily_engagement_up: "Padidėjo vartotojų lojalumas ir kasdienis aktyvumas."
-                stickiness_and_new_signups_up_daily_engagement_down: "Vartotojų lojalumas ir naujų vartotojų skaičius didėja, tačiau kasdienis aktyvumas mažėja."
-                stickiness_up_daily_engagement_and_new_signups_down: "Vartotojų lojalumas padidėjo, tačiau kasdienis aktyvumas ir naujų vartotojų registracijų skaičius sumažėjo."
+                all_metrics_improved: "Padidėjo sugrįžtamumo rodiklis, kasdienis įsitraukimas ir naujų narių skaičius – tai rodo, kad vis daugiau narių prisijungia prie jūsų bendruomenės ir joje aktyviai dalyvauja."
+                stickiness_and_daily_engagement_up_new_signups_down: "Vartotojų sugrįžtamumo rodiklis ir kasdienis aktyvumas didėja, tačiau naujų registracijų skaičius mažėja."
+                stickiness_and_daily_engagement_up_new_signups_flat: "Vartotojų sugrįžtamumo rodiklis ir kasdienis aktyvumas didėja, tačiau naujų registracijų skaičius nesikeičia."
+                stickiness_and_daily_engagement_up: "Padidėjo vartotojų sugrįžtamumo rodiklis ir kasdienis aktyvumas."
+                stickiness_and_new_signups_up_daily_engagement_down: "Vartotojų sugrįžtamumo rodiklis ir naujų vartotojų skaičius didėja, tačiau kasdienis aktyvumas mažėja."
+                stickiness_up_daily_engagement_and_new_signups_down: "Vartotojų sugrįžtamumo rodiklis padidėjo, tačiau kasdienis aktyvumas ir naujų vartotojų registracijų skaičius sumažėjo."
+                stickiness_up_daily_engagement_down: "Vartotojų sugrįžtamumo rodiklis didėja, tačiau kasdienis aktyvumas mažėja."
+                stickiness_and_new_signups_up_daily_engagement_flat: "Vartotojų sugrįžtamumo rodiklis ir naujų vartotojų skaičius auga, tačiau kasdienis aktyvumas nesikeičia."
+                stickiness_up_new_signups_down: "Vartotojų sugrįžtamumo rodiklis padidėjo, tačiau naujų registracijų skaičius sumažėjo."
+                stickiness_up_daily_engagement_and_new_signups_flat: "Vartotojų sugrįžtamumo rodiklis didėja, tačiau kasdienis aktyvumas ir naujų vartotojų skaičius nesikeičia."
+                stickiness_up_daily_engagement_flat: "Lankytojų sugrįžtamumo rodiklis didėja, tačiau kasdienis aktyvumas nesikeičia."
+                stickiness_and_new_signups_up: "Vartotojų sugrįžtamumo rodiklis ir naujų vartotojų skaičius didėja."
+                stickiness_up_new_signups_flat: "Lankytojų sugrįžtamumo rodiklis padidėjo, tačiau naujų registracijų skaičius nesikeičia."
+                stickiness_up: "Sugrįžtamumo rodiklis padidėjo."
+                daily_engagement_and_new_signups_up_stickiness_down: "Dienos įsitraukimas ir naujų registracijų skaičius išaugo, tačiau sugrįžtamumo rodiklis sumažėjo."
+                daily_engagement_up_stickiness_and_new_signups_down: "Kasdienis įsitraukimas padidėjo, tačiau sumažėjo sugrįžtamumo rodiklis ir naujų registracijų skaičius."
+                daily_engagement_up_stickiness_down: "Kasdienis įsitraukimas padidėjo, bet sugrįžtamumo rodiklis sumažėjo."
+                new_signups_up_stickiness_and_daily_engagement_down: "Naujų registracijų daugėja, bet mažėja sugrįžtamumo rodiklis ir kasdienis įsitraukimas."
+                all_metrics_down: "Sugrįžtamumo rodiklis, kasdienis įsitraukimas ir naujų registracijų skaičius sumažėjo."
+                stickiness_and_daily_engagement_down_new_signups_steady: "Sugrįžtamumo rodiklis ir kasdienis įsitraukimas sumažėjo, tačiau naujų registracijų skaičius išlieka stabilus."
+                stickiness_and_daily_engagement_down: "Sugrįžtamumo rodiklis ir kasdienis įsitraukimas sumažėjo."
+                new_signups_up_stickiness_down: "Naujų registracijų daugėja, bet sugrįžtamumo rodiklis mažėja."
+                stickiness_and_new_signups_down_daily_engagement_steady: "Sugrįžtamumo rodiklis ir naujų registracijų skaičius sumažėjo, tačiau kasdienis įsitraukimas išlieka stabilus."
+                stickiness_down_daily_engagement_and_new_signups_steady: "Sugrįžtamumo rodiklis sumažėjo, tačiau kasdienis įsitraukimas ir naujų registracijų skaičius išlieka stabilūs."
+                stickiness_down_daily_engagement_steady: "Sugrįžtamumo rodiklis sumažėjo, tačiau kasdienis įsitraukimas išlieka stabilus."
+                stickiness_and_new_signups_down: "Sugrįžtamumo rodiklis ir naujų registracijų skaičius sumažėjo."
+                stickiness_down_new_signups_steady: "Sugrįžtamumo rodiklis sumažėjo, tačiau naujų registracijų skaičius išlieka stabilus."
+                stickiness_down: "Sugrįžtamumo rodiklis sumažėjo."
+                daily_engagement_and_new_signups_up_stickiness_flat: "Kasdienis įsitraukimas ir naujų registracijų skaičius išaugo, tačiau sugrįžtamumo rodiklis nekito."
+                daily_engagement_up_new_signups_down: "Kasdienis įsitraukimas padidėjo, bet naujų registracijų sumažėjo."
+                daily_engagement_up_stickiness_and_new_signups_flat: "Kasdienis įsitraukimas padidėjo, tačiau sugrįžtamumo rodiklis ir naujų registracijų skaičius nepakito."
+                daily_engagement_up_stickiness_flat: "Kasdienis įsitraukimas padidėjo, bet sugrįžtamumo rodiklis nekito."
+                new_signups_up_daily_engagement_down: "Naujų registracijų daugėja, bet kasdienis aktyvumas mažėja."
+                daily_engagement_and_new_signups_down_stickiness_steady: "Kasdienis įsitraukimas ir naujų registracijų skaičius sumažėjo, tačiau sugrįžtamumo rodiklis išlieka stabilus."
+                daily_engagement_down_stickiness_and_new_signups_steady: "Kasdienis įsitraukimas sumažėjo, tačiau sugrįžtamumo rodiklis ir naujų registracijų skaičius išlieka stabilūs."
+                daily_engagement_down_stickiness_steady: "Kasdienis įsitraukimas sumažėjo, tačiau sugrįžtamumo rodiklis išlieka stabilus."
+                new_signups_up_stickiness_and_daily_engagement_flat: "Naujų registracijų daugėja, tačiau sugrįžtamumo rodiklis ir kasdienis įsitraukimas yra nepastovus."
+                new_signups_down_stickiness_and_daily_engagement_steady: "Naujų registracijų sumažėjo, tačiau sugrįžtamumo rodiklis ir kasdienis įsitraukimas išlieka stabilūs."
+                all_metrics_steady: "Jokių reikšmingų pokyčių, susijusių su sugrįžtamumo rodikliu, kasdieniu įsitraukimu ar naujų registracijų skaičiumi."
+                stickiness_and_daily_engagement_steady: "Nėra reikšmingų pokyčių sugrįžtamumo rodiklio ir kasdienio įsitraukimo srityse."
+                new_signups_up_stickiness_flat: "Naujų registracijų daugėja, bet sugrįžtamumo rodiklis išlieka nepakitęs."
+                new_signups_down_stickiness_steady: "Naujų registracijų sumažėjo, tačiau sugrįžtamumo rodiklis išlieka stabilus."
+                stickiness_and_new_signups_steady: "Jokių reikšmingų pokyčių, susijusių su sugrįžtamumo rodikliu ir naujų registracijų skaičiumi."
+                stickiness_steady: "Sugrįžtamumo rodiklis reikšmingai nepakito."
+                daily_engagement_and_new_signups_up: "Kasdienis įsitraukimas ir naujų registracijų skaičius auga."
+                daily_engagement_up_new_signups_flat: "Kasdienis įsitraukimas išaugo, bet naujų registracijų skaičius nepakito."
+                daily_engagement_up: "Kasdienis įsitraukimas išaugo."
+                daily_engagement_and_new_signups_down: "Kasdienis įsitraukimas ir naujų registracijų skaičius sumažėjo."
+                daily_engagement_down_new_signups_steady: "Kasdienis įsitraukimas sumažėjo, tačiau naujų registracijų skaičius išlieka stabilus."
+                daily_engagement_down: "Kasdienis įsitraukimas sumažėjo."
+                new_signups_up_daily_engagement_flat: "Naujų registracijų daugėja, bet kasdienis įsitraukimas pastovus."
+                new_signups_down_daily_engagement_steady: "Naujų registracijų sumažėjo, tačiau kasdienis aktyvumas išlieka stabilus."
+                daily_engagement_and_new_signups_steady: "Jokių reikšmingų pokyčių kasdieniame įsitraukime ir naujų registracijų skaičiuje."
+                daily_engagement_steady: "Kasdienio aktyvumo srityje nepastebima jokių reikšmingų pokyčių."
+                new_signups_up: "Naujų registracijų skaičius išaugo."
+                new_signups_down: "Naujų registracijų skaičius sumažėjo."
+                new_signups_steady: "Naujų registracijų skaičius iš esmės nepasikeitė."
+                insufficient_activity: "Pasirinkite ilgesnį datų intervalą arba grįžkite, kai jūsų bendruomenė bus aktyvesnė."
+              cta:
+                dau_mau: "Peržiūrėkite veiklą pagal kategorijas, kad pamatytumėte, kurioms jūsų bendruomenės sritims gali reikėti jūsų dėmesio."
+                daily_engaged_users: "Išnagrinėkite narių skaičiaus mažėjimą, kad nustatytumėte, kurie nariai nustojo aktyviai dalyvauti."
+                new_signups: "Peržiūrėkite savo svetainės srauto duomenis, kad suprastumėte, kaip srauto modeliai gali turėti įtakos jūsų registracijoms šiuo laikotarpiu."
+              metrics:
+                new_signups: "Naujos registracijos"
+                dau_mau: "DAU / MAU sugrįžtamumo rodiklis"
+                daily_engaged_users: "Įsitraukta kasdien"
           search:
             title: "Paieška"
+            fetch_error: "Nepavyko įkelti paieškos duomenų. Pabandykite atnaujinti puslapį."
+            logging_disabled: 'Paieškos sekimas išjungtas, todėl paieškos duomenys nerenkami. Įjunkite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">paieškos užklausų žurnalą,</a> kad pradėtumėte jį rinkti.'
+            logging_disabled_moderator: "Paieškos sekimas išjungtas, todėl paieškos duomenys nerenkami. Paprašykite administratoriaus įjungti žurnalo paieškos užklausas, kad būtų pradėtas rinkti žurnalas."
+            headline:
+              titles:
+                insufficient_activity: "Kol kas nepakanka paieškos aktyvumo, kad būtų galima apibendrinti."
+                searches_increased_no_result_rate_declined: "Pasirinktu laikotarpiu paieškų padaugėjo, o rezultatų nerasta – sumažėjo."
+                searches_increased: "Bendras paieškų skaičius pasirinktu laikotarpiu padidėjo"
+                no_result_rate_decreased: "Pasirinktu laikotarpiu sumažėjo rezultatų negavusių asmenų skaičius"
+                searches_decreased_no_result_rate_increased: "Pasirinktu laikotarpiu paieškų sumažėjo, o rezultatų nerasta – padaugėjo."
+                searches_decreased: "Bendras paieškų skaičius pasirinktu laikotarpiu sumažėjo"
+                no_result_rate_increased: "Per nagrinėjamą laikotarpį padidėjo atvejų, kai nebuvo gautas rezultatas, skaičius"
+                search_steady: "Paieškos skaičius per pasirinktą laikotarpį išlieka stabilus"
+              summaries:
+                insufficient_activity: "Pasirinkite ilgesnį datų intervalą arba grįžkite, kai nariai bus daugiau ieškoję."
+                searches_up_results_improved: "Nariai jūsų bendruomenėje atlieka daugiau paieškų ir dažniau randa tai, ko ieško."
+                searches_up_no_result_rate_up: "Nariai atlieka daugiau paieškų jūsų bendruomenėje, tačiau paieškų be rezultatų procentas padidėjo."
+                searches_up_no_result_rate_flat: "Nariai atlieka daugiau paieškų jūsų bendruomenėje, tačiau paieškų be rezultatų rodiklis išlieka stabilus."
+                results_improved_searches_down: "Nariai randa tai, ko ieško, o bendras paieškų skaičius sumažėjo."
+                results_improved_searches_steady: "Nariai randa tai, ko ieško, o bendras paieškų skaičius nesikeičia."
+                searches_down_results_worsened: "Nariai jūsų bendruomenėje atlieka mažiau paieškų ir rečiau randa tai, ko jiems reikia."
+                searches_down_no_result_rate_flat: "Jūsų bendruomenės nariai atlieka mažiau paieškų, tačiau paieškų be rezultatų rodiklis išlieka stabilus."
+                results_worsened_searches_steady: "Nariai rečiau randa tai, ko jiems reikia, o bendras paieškų skaičius išlieka stabilus."
+                searches_and_no_result_rate_steady: "Bendras paieškų skaičius ir paieškų be rezultatų rodiklis iš esmės nepasikeitė."
+                searches_up: "Jūsų bendruomenės nariai atlieka vis daugiau paieškų."
+                searches_down: "Nariai jūsų bendruomenėje atlieka mažiau paieškų."
+                searches_steady: "Bendras paieškų skaičius reikšmingai nepakito."
+                results_worsened: "Nariai ne taip dažnai randa tai, ko jiems reikia."
+                results_improved: "Nariai vis dažniau randa tai, ko ieško."
+                no_result_rate_steady: "Reikšmingų pokyčių rezultatų negavusių asmenų dažnyje nėra."
+              cta:
+                content_gaps: "Peržiūrėkite turinio spragas, kad pamatytumėte, ko trūksta."
+            kpi:
+              total_searches:
+                label: "Iš viso paieškų"
+                tooltip: "Jūsų bendruomenėje atliktų paieškų skaičius."
+              no_result_rate:
+                label: "Rezultatų nebuvimo rodiklis"
+                tooltip: "Paieškų, kai nariai nespustelėjo jokio rezultato, procentas (0 % CTR). Tai rodo, kad nariai gali ieškoti turinio, kurio jūsų bendruomenėje nėra."
             table:
+              term: "Paieškos terminas"
               searches: "Paieškos"
               status: "Statusas"
+            trending:
+              title: "Populiariausios paieškos"
+              tooltip: "Populiariausios paieškos frazės jūsų bendruomenėje."
+              empty: "Šiuo laikotarpiu paieškų neatlikta."
+            content_gaps:
+              title: "Turinio spragos"
+              empty: "Šiuo laikotarpiu turinio spragų nėra."
+              badge:
+                no_match: "Nėra atitikmens"
+                no_match_tooltip: "Paieškos terminai, kurių paspaudimų rodiklis (CTR) yra 0 %."
+                poor_match: "Prastas atitikimuo"
+                poor_match_tooltip: "Paieškos terminai, kurių paspaudimų rodiklis (CTR) yra nuo 1 iki 20 %."
           system:
             title: "Sistema"
+            storage: "Sandėliavimas"
             status: "Statusas"
+            fetch_error: "Nepavyko įkelti sistemos informacijos. Pabandykite atnaujinti puslapį."
+            commits:
+              one: "+%{count} commit"
+              few: "+%{count} commit"
+              many: "+%{count} commit"
+              other: "+%{count} commit"
+            view_on_github: "Peržiūrėti „GitHub“"
+            update_check_failed: "Atnaujinimų patikra nepavyko – įsitikinkite, kad „Sidekiq“ veikia."
+            update_available: "Atnaujinimas pasiekiamas: %{version}"
+            space_free: "%{size} laisva"
+            backups_size:
+              one: "%{size} atsarginė kopija (%{count})"
+              few: "%{size} atsarginės kopijos (%{count})"
+              many: "%{size} atsarginės kopijos (%{count})"
+              other: "%{size} atsarginės kopijos (%{count})"
+            uploads_size: "%{size} įkėlimai"
+            latest_backup: "Naujausia atsarginė kopija %{date}"
+            manage_backups: "Tvarkyti atsargines kopijas"
             discourse_updated: "Discourse atnaujinta"
         reports_section:
           header_action: "Redaguoti"
+          description: "Prisekite standartines ataskaitas arba duomenų naršyklės užklausas, kad galėtumėte sekti, kas svarbu jūsų bendruomenei."
+          add: "Pridėti ataskaitą"
+          remove: "Pašalinti ataskaitą"
           no_data: "Nėra rodomų duomenų"
+          report_error: "Nepavyko įkelti šios ataskaitos"
           modal:
+            title: "Tvarkyti ataskaitas"
+            search_placeholder: "Paieškos ataskaitos"
+            counter: "Pridėtos %{count} / %{max} ataskaitos"
             enabled_heading: "Galimas"
             all_heading: "Visi pranešimai"
             apply: "Kandidatuoti"
+            enable: "Įjungti %{title}"
+            disable: "Išjungti %{title}"
+            move_up: "Perkelti %{title} aukštyn"
+            move_down: "Perkelti %{title} žemyn"
+            footer_note: "Šie pakeitimai bus taikomi visiems vartotojams."
         configure:
+          button: "Konfigūruoti"
           tooltip: "Konfigūruokite, kaip ši suvestinė bus rodoma visiems šios svetainės nariams."
           menu_title: "Konfigūruoti suvestinę"
+          reorder_up: "Perkelti %{label} aukštyn"
+          reorder_down: "Perkelti %{label} žemyn"
+          drag_handle: "Vilkite, kad pakeistumėte tvarką %{label}"
           toggle_visibility: "Rodyti %{label} suvestinėje"
+        highlights:
+          kpi:
+            dau_mau:
+              label: "DAU / MAU sugrįžtamumo rodiklis"
+              tooltip: 'Mėnesinių aktyvių vartotojų, kurie grįžo į bendruomenę, dalis. Tai rodo, kiek „įklimpusi“ yra jūsų bendruomenė, atsižvelgiant į tai, kaip dažnai žmonės grįžta.'
         site_traffic:
+          kpi:
+            direct_traffic:
+              label: "Tiesioginis srautas"
+              tooltip: "Tų puslapio peržiūrų dalis, kurios buvo atliktos tiesiogiai jūsų bendruomenėje, pavyzdžiui, įvedus URL adresą arba pasinaudojus naršyklės žymėmis."
+            bounce_rate:
+              label: "Atšokimo rodiklis"
+              tooltip: "Sesijų, kurių metu buvo peržiūrėtas tik vienas puslapis ir kurių trukmė buvo mažesnė nei 10 sekundžių, dalis."
+            average_session_duration:
+              label: "Vidutinė sesijos trukmė"
+              tooltip: "Vidutinis laikas, kurį lankytojai praleido jūsų bendruomenėje per pasirinktą laikotarpį."
+            session_metrics:
+              empty_tooltip: "Rodoma, kai už šį laikotarpį užregistruojami apsilankymai."
+          top_countries:
+            title: "Populiariausios šalys"
+            empty: "Šio laikotarpio šalies duomenų nėra."
+            error: "Nepavyko įkelti populiariausių šalių. Pabandykite atnaujinti puslapį."
+          top_referrers:
+            title: "Populiariausi nuorodų šaltiniai"
+            empty: "Šiuo laikotarpiu nėra duomenų apie nuorodų šaltinius."
+            error: "Nepavyko įkelti populiariausių nuorodų šaltinių. Pabandykite atnaujinti puslapį."
+          top_entry_urls:
+            title: "Populiariausi pradiniai URL adresai"
+            empty: "Šiam laikotarpiui nėra pradinių URL adresų duomenų."
+            error: "Nepavyko įkelti populiariausių pradinių URL adresų. Pabandykite atnaujinti puslapį."
           series:
+            logged_in: "Prisijungęs"
             anonymous: "Anonimas"
+            embedded: "Įterptieji puslapių peržiūrų skaičiai"
+            crawlers: "Paieškos robotai"
           crawler_learn_more: "Sužinoti daugiau"
         reports:
           trend_title: "%{percent} pokytis. Šiuo metu %{current}, buvo %{prev} ankstesniame laikotarpyje."
@@ -8912,6 +9212,8 @@ lt:
             all_search_types: "Visi paieškos tipai"
             header: "Viršus"
             click_through_only: "Viskas (tik spustelėjus)"
+            non_staff_only: "Vartotojai, nepriklausantys personalui"
+            human_only: "Išskyrus darbuotojus ir paieškos robotus"
       watched_words:
         search: "paieška"
         clear_filter: "Išvalyti"
@@ -9452,19 +9754,23 @@ lt:
         confirm_delete: "Ar tikrai nori ištrinti šį šeimininką?"
         title: "Įterpimai"
         edit: "Redaguoti"
-        crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        crawlers: "Paieškos robotų konfigūracija"
+        crawlers_description: "Kai „Discourse“ kuria temas jūsų įrašams, jei nėra RSS / ATOM sklaidos kanalo, sistema bandys išanalizuoti jūsų turinį iš HTML. Kartais gali būti sudėtinga išgauti jūsų turinį, todėl suteikiame galimybę nurodyti CSS taisykles, kad būtų lengviau jį išgauti."
         embed_by_username: "Vartotojo vardas skirtas temų sukūrimui"
         embed_post_limit: "Maksimalus įterpiamų įrašų skaičius"
         embed_truncate: "Truncate the embedded posts"
         embed_unlisted: "Importuotos temos nebus įtrauktos į sąrašą, kol nebus gautas atsakymas."
-        allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
-        blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
+        allowed_embed_selectors: "CSS parinkiklis elementams, kurie leidžiami įterpimuose"
+        blocked_embed_selectors: "CSS parinkiklis elementams, kurie pašalinami iš įterptųjų failų"
         allowed_embed_classnames: "Leidžiamos CSS klasės"
         save: "Išsaugoti"
+        crawler_settings_saved: "Paieškos robotų nustatymai išsaugoti"
         host_form:
           save: "Išsaugoti"
         nav:
+          hosts: "Prieglobos serveris"
           settings: "Nustatymai"
+          crawlers: "Paieškos robotai"
       permalink:
         title: "Laikinos Nuorodos"
         description: "Peradresavimai taikyti URL, kurių forumas nežino."

@@ -86,11 +86,13 @@ export const UserOption: TOC<{
           <span class="d-user-option__name">{{fullName @record}}</span>
         {{~/if~}}
       </span>
-      {{#if (statusEmoji @record)}}
-        <span class="d-user-option__status">
-          {{~dEmoji (statusEmoji @record) alt="" skipTitle=true~}}
-        </span>
-      {{/if}}
+      {{#let (statusEmoji @record) as |emoji|}}
+        {{#if emoji}}
+          <span class="d-user-option__status">
+            {{~dEmoji emoji alt="" skipTitle=true~}}
+          </span>
+        {{/if}}
+      {{/let}}
       {{#if (disabledReason @record @option)}}
         <span class="d-user-option__reason">
           {{~dIcon "ban"~}}

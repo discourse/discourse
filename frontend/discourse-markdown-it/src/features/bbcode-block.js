@@ -67,8 +67,9 @@ const QUOTATION_MARKS_WITH_MATCH = QUOTATION_MARKS.map(
 const BBCODE_CLOSING_TAG_REGEXP = /^\[\/([-\w]+)\]/i;
 
 // Old case where we supported attributes without quotation marks
+// The value class already accepts leading whitespace.
 const BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP = new RegExp(
-  `^\\[(quote|details)=(\\s*[^${QUOTATION_MARKS.join("")}].+?)\\]`,
+  `^\\[(quote|details)=([^${QUOTATION_MARKS.join("")}].+?)\\]`,
   "i"
 );
 

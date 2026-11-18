@@ -222,7 +222,11 @@ module DiscourseEvents
 
       def self.split_reminder(reminder)
         parts = reminder.strip.split(".")
-        parts.reverse if parts.size.between?(2, 3)
+        return if !parts.size.between?(2, 3)
+
+        unit, value, type = parts.reverse
+        unit = "#{unit}s" if %w[minute hour day week].include?(unit)
+        [unit, value, type]
       end
 
       def self.reminder_offset(reminder)

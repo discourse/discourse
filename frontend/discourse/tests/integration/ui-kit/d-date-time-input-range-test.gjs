@@ -11,7 +11,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
+    this.state = { from: DEFAULT_DATE_TIME, to: null };
 
     await render(
       <template>
@@ -30,9 +30,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
   });
 
   test("picking an end equal to start pushes the end an hour later", async function (assert) {
-    this.setProperties({
-      state: { from: DEFAULT_DATE_TIME, to: moment("2019-01-29 16:45") },
-    });
+    this.state = { from: DEFAULT_DATE_TIME, to: moment("2019-01-29 16:45") };
 
     await render(
       <template>
@@ -54,9 +52,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
   });
 
   test("moving the start onto the end pushes the end an hour later", async function (assert) {
-    this.setProperties({
-      state: { from: DEFAULT_DATE_TIME, to: moment("2019-01-29 15:45") },
-    });
+    this.state = { from: DEFAULT_DATE_TIME, to: moment("2019-01-29 15:45") };
 
     await render(
       <template>
@@ -82,9 +78,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
   });
 
   test("a single-day range stays intact when times are hidden", async function (assert) {
-    this.setProperties({
-      state: { from: moment("2019-01-29"), to: null },
-    });
+    this.state = { from: moment("2019-01-29"), to: null };
 
     await render(
       <template>
@@ -108,9 +102,7 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
   });
 
   test("the to date picker is bounded by the from date", async function (assert) {
-    this.setProperties({
-      state: { from: DEFAULT_DATE_TIME, to: moment("2019-01-30 16:45") },
-    });
+    this.state = { from: DEFAULT_DATE_TIME, to: moment("2019-01-30 16:45") };
 
     await render(
       <template>
@@ -132,12 +124,10 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
   });
 
   test("timezone support", async function (assert) {
-    this.setProperties({
-      state: {
-        from: moment.tz(DEFAULT_DATE_TIME_STRING, "Europe/Paris"),
-        to: null,
-      },
-    });
+    this.state = {
+      from: moment.tz(DEFAULT_DATE_TIME_STRING, "Europe/Paris"),
+      to: null,
+    };
 
     await render(
       <template>
@@ -162,5 +152,29 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
       this.state.to.toString(),
       "Tue Jan 29 2019 19:15:00 GMT+0100"
     );
+  });
+
+  test("@clearable and @toTimeFirst apply to the end input", async function (assert) {
+    await render(
+      <template>
+        <DDateTimeInputRange
+          @clearable={{true}}
+          @from={{DEFAULT_DATE_TIME}}
+          @to={{DEFAULT_DATE_TIME}}
+          @toTimeFirst={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".from .clear-date-time")
+      .doesNotExist("the start cannot be cleared");
+    assert.dom(".to .clear-date-time").exists("the end can be cleared");
+    assert
+      .dom(".from > :first-child")
+      .hasClass("d-date-input", "the start shows its date first");
+    assert
+      .dom(".to > :first-child")
+      .hasClass("time-input", "the end shows its time first");
   });
 });

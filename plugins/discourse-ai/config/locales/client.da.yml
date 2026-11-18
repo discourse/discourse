@@ -85,7 +85,6 @@ da:
         nav:
           enabled: "Aktiveret"
         filters:
-          all: "Alle"
           reset: "Nulstil"
         sentiment:
           enabled: "Aktiveret"

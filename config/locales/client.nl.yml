@@ -975,6 +975,7 @@ nl:
         suspect_user: "Is deze gebruiker een spammer?"
         approve_post: "Dit bericht goedkeuren?"
         approve_topic: "Dit topic goedkeuren?"
+        something_wrong_with_post: "Is er iets mis met dit bericht?"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
@@ -2522,6 +2523,7 @@ nl:
       no_results: "Geen resultaten"
       search: "Zoeken…"
       label: "Selecteer opties"
+      remove_item: "%{name} verwijderen"
     d_otp:
       screen_reader:
         one: Vul een getal in
@@ -2933,6 +2935,9 @@ nl:
         size_too_small: "%{provided_file_size} is kleiner dan de minimaal vereiste %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emoji zoeken
+      search_placeholder: "Zoek op emojinaam en -alias..."
+      no_results: "Geen resultaten"
+      favorites: "Veel gebruikt"
       smileys_&_emotion: Smileys en emoji's
       people_&_body: Mensen en lichaam
       animals_&_nature: Dieren en natuur
@@ -2985,6 +2990,10 @@ nl:
       emoji: "Emoji :)"
       more_emoji: "meer…"
       options: "Opties"
+      ai_content:
+        code: "Code"
+        quote: "Citeren"
+        details: "Details"
       whisper: "fluisteren"
       unlist: "onzichtbaar"
       add_warning: "Dit is een officiële waarschuwing."
@@ -4242,6 +4251,7 @@ nl:
         actions: "Bulkacties"
     post:
       accessible_heading: "geplaatst door %{username} %{date}"
+      ai_generated: "AI"
       heading_anchor: "Koptekstlink"
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"
@@ -5352,6 +5362,15 @@ nl:
       forward: "Volgende"
       share: "Delen"
       dismiss: "Sluiten"
+    mobile_tab_bar:
+      new_topic: "Nieuw topic"
+      create: "Maken"
+      more: "Meer"
+      back: "Terug"
+      topics: "Topics"
+      drafts:
+        one: "Concepten (%{count})"
+        other: "Concepten (%{count})"
     safe_mode:
       enabled: "Veilige modus is ingeschakeld; sluit dit browservenster om de veilige modus te verlaten"
     theme_preview_notice: "Je bekijkt momenteel een themavoorbeeld. Sluit dit browsertabblad of -venster om terug te gaan naar je normale siteconfiguratie."
@@ -6957,14 +6976,6 @@ nl:
           company_name: "Naam"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Toepasselijk recht"
-          governing_law_placeholder: "Provincie, staat of land"
-          governing_law_help: |
-            Geef aan onder welk rechtsgebied de juridische voorwaarden van de site vallen. Dit is doorgaans het rechtsgebied waar het bedrijf is gevestigd of actief is.
-          city_for_disputes: "Plaats voor geschillen"
-          city_for_disputes_placeholder: "Plaats"
-          city_for_disputes_help: |
-            Geef de plaats op waar juridische geschillen met betrekking tot dit forum worden afgehandeld.
           extra_groups:
             heading: "Groepsvermelding"
             description: "Extra groepen om weer te geven op de Over-pagina."

@@ -232,6 +232,18 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
     open_ai_mock.stub_raw(response)
   end
 
+  it "still logs provider failures for other AI features" do
+    stub_request(:post, model.url).to_return(status: 401, body: "Invalid API key")
+    logger =
+      track_log_messages do
+        expect do
+          model.to_llm.generate("Hello", user: user, feature_name: "summarize")
+        end.to raise_error(DiscourseAi::Completions::Endpoints::Base::CompletionFailed)
+      end
+
+    expect(logger.errors).to include("#{described_class.name}: status: 401 - body: Invalid API key")
+  end
+
   it "resets stop reasons, usage, and an unfinished decoder across retried streaming attempts" do
     response = instance_double(Net::HTTPResponse, code: "200")
     reads = 0

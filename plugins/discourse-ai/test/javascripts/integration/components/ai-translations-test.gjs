@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { click, find, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -190,6 +191,7 @@ module("Integration | Component | AiTranslations", function (hooks) {
     let resolveFirstRequest;
     let detailRequestCount = 0;
     let translationEnabled = true;
+    const model = tracked(this.model);
 
     pretender.get(
       "/admin/plugins/discourse-ai/ai-translations/progress/post.json",
@@ -213,14 +215,16 @@ module("Integration | Component | AiTranslations", function (hooks) {
       return response({});
     });
     this.owner.lookup("service:router").refresh = () => {
-      this.set("model", {
-        ...this.model,
+      model.value = {
+        ...model.value,
         translation_enabled: translationEnabled,
         enabled: translationEnabled,
-      });
+      };
     };
 
-    await render(<template><AiTranslations @model={{this.model}} /></template>);
+    await render(
+      <template><AiTranslations @model={{model.value}} /></template>
+    );
 
     find(
       ".ai-translation-model-progress-overview-card[data-target-type='post']"
@@ -470,19 +474,22 @@ module("Integration | Component | AiTranslations", function (hooks) {
   });
 
   test("toggling generation preserves unsaved form edits across model replacement", async function (assert) {
+    const model = tracked(this.model);
     this.owner.lookup("service:router").refresh = () => {
-      this.set("model", {
-        ...this.model,
+      model.value = {
+        ...model.value,
         translation_enabled: false,
         enabled: false,
-        formData: { ...this.model.formData },
-        settings: refreshSettings(this.model.settings, this.model.formData),
-      });
+        formData: { ...model.value.formData },
+        settings: refreshSettings(model.value.settings, model.value.formData),
+      };
     };
     pretender.put("/admin/site_settings/ai_translation_enabled", () =>
       response({})
     );
-    await render(<template><AiTranslations @model={{this.model}} /></template>);
+    await render(
+      <template><AiTranslations @model={{model.value}} /></template>
+    );
     await form().field("ai_translation_backfill_hourly_rate").fillIn(75);
     await click("[role='switch']");
     assert
@@ -499,24 +506,27 @@ module("Integration | Component | AiTranslations", function (hooks) {
     const updates = [];
     this.model.translation_enabled = false;
     this.model.enabled = false;
+    const model = tracked(this.model);
     this.owner.lookup("service:router").refresh = () => {
       const formData = {
-        ...this.model.formData,
+        ...model.value.formData,
         ai_translation_backfill_start_date: date,
       };
-      this.set("model", {
-        ...this.model,
+      model.value = {
+        ...model.value,
         translation_enabled: true,
         enabled: true,
         formData,
-        settings: refreshSettings(this.model.settings, formData),
-      });
+        settings: refreshSettings(model.value.settings, formData),
+      };
     };
     pretender.put("/admin/site_settings/:name", (request) => {
       updates.push(request.params.name);
       return response({});
     });
-    await render(<template><AiTranslations @model={{this.model}} /></template>);
+    await render(
+      <template><AiTranslations @model={{model.value}} /></template>
+    );
     await form().field("ai_translation_backfill_hourly_rate").fillIn(75);
     await click("[role='switch']");
     assert
@@ -539,18 +549,21 @@ module("Integration | Component | AiTranslations", function (hooks) {
   });
 
   test("retains rejected drafts and inline errors when a save refreshes the model", async function (assert) {
+    const model = tracked(this.model);
     this.owner.lookup("service:router").refresh = () => {
-      this.set("model", {
-        ...this.model,
-        formData: { ...this.model.formData },
-        settings: refreshSettings(this.model.settings, this.model.formData),
-      });
+      model.value = {
+        ...model.value,
+        formData: { ...model.value.formData },
+        settings: refreshSettings(model.value.settings, model.value.formData),
+      };
     };
     pretender.put(
       "/admin/site_settings/ai_translation_backfill_hourly_rate",
       () => response(422, { errors: ["Invalid rate"] })
     );
-    await render(<template><AiTranslations @model={{this.model}} /></template>);
+    await render(
+      <template><AiTranslations @model={{model.value}} /></template>
+    );
     await form().field("ai_translation_backfill_hourly_rate").fillIn(75);
     await form().submit();
     assert.form().hasErrors(
@@ -801,11 +814,14 @@ module("Integration | Component | AiTranslations", function (hooks) {
     // The AI flag is on and locales are saved, but no model is configured, so
     // the server does not consider translations ready.
     this.model.enabled = false;
+    const model = tracked(this.model);
     this.owner.lookup("service:router").refresh = () => {
-      this.set("model", { ...this.model, enabled: false });
+      model.value = { ...model.value, enabled: false };
     };
 
-    await render(<template><AiTranslations @model={{this.model}} /></template>);
+    await render(
+      <template><AiTranslations @model={{model.value}} /></template>
+    );
     assert
       .dom("[role='switch']")
       .hasAttribute("aria-checked", "true", "the AI flag is on");
@@ -830,16 +846,20 @@ module("Integration | Component | AiTranslations", function (hooks) {
   });
 
   test("resyncs the switch and progress when a refresh replaces the model", async function (assert) {
-    await render(<template><AiTranslations @model={{this.model}} /></template>);
+    const model = tracked(this.model);
+
+    await render(
+      <template><AiTranslations @model={{model.value}} /></template>
+    );
     assert
       .dom("[role='switch']")
       .hasAttribute("aria-checked", "true", "starts enabled");
 
-    this.set("model", {
-      ...this.model,
+    model.value = {
+      ...model.value,
       translation_enabled: false,
       enabled: false,
-    });
+    };
     await settled();
 
     assert
@@ -849,11 +869,11 @@ module("Integration | Component | AiTranslations", function (hooks) {
       .dom(".ai-translations__overview")
       .doesNotExist("the progress panel follows the replaced model");
 
-    this.set("model", {
-      ...this.model,
+    model.value = {
+      ...model.value,
       translation_enabled: true,
       enabled: true,
-    });
+    };
     await settled();
 
     assert

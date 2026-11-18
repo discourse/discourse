@@ -1,4 +1,5 @@
 <header class="discourse-journal__intro">
+  {% if page.author %}<img class="discourse-journal__author-avatar" src="{{ page.author.avatar_url }}" alt="" width="96" height="96">{% endif %}
   <h1>{{ page.heading }}</h1>
   {% if page.description_html != blank %}<div class="discourse-journal__description">{{ page.description_html }}</div>{% endif %}
 </header>
@@ -24,8 +25,8 @@
         <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
         <p class="discourse-journal__excerpt">{{ article.excerpt }}</p>
         <div class="discourse-journal__byline">
-          <span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>
-          <div><strong>{{ article.author }}</strong><div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
+          {% if article.author %}<span class="discourse-journal__avatar" aria-hidden="true">{{ article.author | slice: 0 | upcase }}</span>{% endif %}
+          <div>{% if article.author %}<strong>{% for author in article.authors %}<a href="{{ author.url }}">{{ author.name }}</a>{{ author.separator }}{% endfor %}</strong>{% endif %}<div><time datetime="{{ article.published_at }}">{{ article.date }}</time> · {{ article.reading_time }}</div></div>
         </div>
         <a class="discourse-journal__replies" href="{{ article.url }}#discussion">{{ article.replies_label }} ↗</a>
       </div>

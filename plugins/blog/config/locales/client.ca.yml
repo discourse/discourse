@@ -48,6 +48,8 @@ ca:
         edit: Edita
         status: Estat
         replies: Respostes
+        title: Títol
+      all: Tots
       drafts: Esborranys
       preview: Previsualitza
       appearance_link: Aparença

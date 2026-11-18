@@ -817,6 +817,7 @@ da:
           title: "Alting"
       context_question:
         delimiter: "eller"
+        something_wrong_with_post: "Er der noget galt med dette indlæg?"
       types:
         reviewable_flagged_post:
           title: "Markeret indlæg"
@@ -1860,6 +1861,7 @@ da:
         redeemed_tab_with_count: "Indløst (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} indløst)"
+        invited_via_link_without_key: "link (%{count} / %{max} indløst)"
         groups: "Grupper"
         topic: "Emne"
         sent: "Oprettet/Senest Sendt"
@@ -2402,6 +2404,7 @@ da:
       to: Til
     emoji_picker:
       filter_placeholder: Søg efter humørikon
+      no_results: "Ingen resultater"
       smileys_&_emotion: Smilys og følelser
       people_&_body: Mennesker og krop
       animals_&_nature: Dyr og natur
@@ -2435,6 +2438,10 @@ da:
       emoji: "Emoji :)"
       more_emoji: "mere…"
       options: "Indstillinger"
+      ai_content:
+        code: "Kode"
+        quote: "Citér"
+        details: "Detaljer"
       whisper: "hvisken"
       unlist: "Ikke listede"
       add_warning: "Dette er en officiel advarsel."
@@ -4143,6 +4150,15 @@ da:
       forward: "Fremad"
       share: "Del"
       dismiss: "Skjul"
+    mobile_tab_bar:
+      new_topic: "Nyt emne"
+      create: "Opret"
+      more: "Flere"
+      back: "Tilbage"
+      topics: "Emner"
+      drafts:
+        one: "Kladder (%{count})"
+        other: "Kladder (%{count})"
     safe_mode:
       enabled: "Sikker tilstand er slået til - for at forlade sikker tilstand, så luk dette browservindue"
     image_removed: "(billede fjernet)"
@@ -5139,10 +5155,6 @@ da:
           your_organization: "Din organisation"
           company_name: "Navn"
           company_url: "Hjemmeside"
-          governing_law: "Gældende lov"
-          governing_law_placeholder: "Provins, stat eller land"
-          city_for_disputes: "By for tvister"
-          city_for_disputes_placeholder: "By"
           extra_groups:
             groups: "Grupper"
           locale_selector:

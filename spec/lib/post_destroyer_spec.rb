@@ -1447,6 +1447,19 @@ RSpec.describe PostDestroyer do
       reviewable_reply
     end
 
+    it "deletes hidden descendants when performed by a moderator" do
+      hidden_reply = Fabricate(:post, topic: post.topic, hidden: true)
+      PostReply.create!(post: reply, reply: hidden_reply)
+      PostDestroyer.delete_with_replies(reporter, post)
+      expect(
+        Post
+          .with_deleted
+          .where(id: [post.id, reply.id, hidden_reply.id])
+          .where.not(deleted_at: nil)
+          .pluck(:id),
+      ).to contain_exactly(post.id, reply.id, hidden_reply.id)
+    end
+
     context "when deferring reply flags" do
       let(:defer_reply_flags) { true }
 
@@ -1462,6 +1475,59 @@ RSpec.describe PostDestroyer do
       it "approves flagged replies" do
         delete_with_replies
         expect(reviewable_reply.reload).to be_approved
+      end
+
+      it "uses the flagged reply's own notice title when notifications for replies removed with a parent are disabled" do
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = false
+        Jobs::SendSystemMessage.clear
+
+        PostDestroyer.delete_with_replies(
+          reporter,
+          post,
+          post.reviewable_flag.id,
+          defer_reply_flags: false,
+          message_options: {
+            message_title: "Parent moderation decision",
+          },
+        )
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        parent_notice = notices.find { |notice| notice["user_id"] == post.user_id }
+        Jobs::SendSystemMessage.new.perform(parent_notice)
+        expect(Post.last.topic.title).to eq("Parent moderation decision")
+
+        reply_notice = notices.find { |notice| notice["user_id"] == reply.user_id }
+        Jobs::SendSystemMessage.new.perform(reply_notice)
+        expect(Post.last.topic.title).to eq(
+          I18n.t("system_messages.flags_agreed_and_post_deleted.subject_template"),
+        )
+      end
+
+      it "uses the flagged reply's own notice title when no parent reviewable ID is passed" do
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+        Jobs::SendSystemMessage.clear
+
+        PostDestroyer.delete_with_replies(
+          reporter,
+          post,
+          defer_reply_flags: false,
+          message_options: {
+            message_title: "Parent moderation decision",
+          },
+        )
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        parent_notice = notices.find { |notice| notice["user_id"] == post.user_id }
+        Jobs::SendSystemMessage.new.perform(parent_notice)
+        expect(Post.last.topic.title).to eq("Parent moderation decision")
+
+        reply_notice = notices.find { |notice| notice["user_id"] == reply.user_id }
+        Jobs::SendSystemMessage.new.perform(reply_notice)
+        expect(Post.last.topic.title).to eq(
+          I18n.t("system_messages.flags_agreed_and_post_deleted.subject_template"),
+        )
       end
     end
   end

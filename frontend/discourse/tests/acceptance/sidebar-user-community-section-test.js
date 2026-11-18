@@ -51,9 +51,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert
-      .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
-      )
+      .dom(".sidebar-more-section-content")
       .exists("additional section links are displayed");
 
     assert
@@ -69,9 +67,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
 
     assert
-      .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
-      )
+      .dom(".sidebar-more-section-content")
       .doesNotExist("additional section links are hidden");
   });
 
@@ -949,7 +945,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content .sidebar-section-link[data-link-name='review']"
+        ".sidebar-more-section-content .sidebar-section-link[data-link-name='review']"
       )
       .exists("review link is displayed in the more drawer");
 
@@ -975,7 +971,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content .sidebar-section-link[data-link-name='review']"
+        ".sidebar-more-section-content .sidebar-section-link[data-link-name='review']"
       )
       .doesNotExist("review link is not displayed in the more drawer");
   });

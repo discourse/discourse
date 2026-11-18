@@ -221,7 +221,6 @@ fi:
         nav:
           enabled: "Käytössä"
         filters:
-          all: "Kaikki"
           no_results: "Suodattimiasi vastaavia ominaisuuksia ei löydy."
           reset: "Palauta"
         no_automations: "Automaatioita ei ole vielä"
@@ -938,6 +937,7 @@ fi:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "Tekoäly"
           header: "Miten voin auttaa?"
           submit: "Lähetä kysymys"
           disclaimer: "Generatiivinen tekoäly voi tehdä virheitä. Tarkista tärkeät tiedot."

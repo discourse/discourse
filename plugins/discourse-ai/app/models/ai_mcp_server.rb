@@ -243,7 +243,38 @@ class AiMcpServer < ActiveRecord::Base
       oauth_last_authorized_at: Time.zone.now,
       oauth_last_refreshed_at: Time.zone.now,
       oauth_last_error: nil,
+      last_health_status: "unknown",
+      last_health_error: nil,
     )
+  end
+
+  # Returns whether anything was written, so callers can avoid repeating side effects.
+  # The comparison happens in the UPDATE so concurrent or stale instances agree on that.
+  def record_health_error!(message)
+    attributes = {
+      last_health_status: "error",
+      last_health_error: message.to_s.truncate(1000),
+      last_checked_at: Time.zone.now,
+    }
+    written =
+      self
+        .class
+        .where(id: id)
+        .where(
+          "last_health_status IS DISTINCT FROM 'error' OR last_health_error IS DISTINCT FROM ?",
+          attributes[:last_health_error],
+        )
+        .update_all(attributes)
+        .positive?
+
+    if written
+      assign_attributes(attributes)
+      clear_attribute_changes(attributes.keys)
+    else
+      reload
+    end
+
+    written
   end
 
   def mark_oauth_refresh_failed!(message)

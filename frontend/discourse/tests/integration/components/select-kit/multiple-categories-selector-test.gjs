@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -16,7 +17,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
       this.site = Site.current();
       this.originalCategories = this.site.categories;
     });
@@ -148,14 +149,14 @@ module(
     });
 
     test("selecting +subcategories adds the full descendant tree", async function (assert) {
-      this.set("value", []);
-      this.set("onChange", (categories) => this.set("value", categories));
+      const value = tracked([]);
+      const onChange = (categories) => (value.value = categories);
 
       await render(
         <template>
           <MultipleCategoriesSelector
-            @categories={{this.value}}
-            @onChange={{this.onChange}}
+            @categories={{value.value}}
+            @onChange={{onChange}}
           />
         </template>
       );

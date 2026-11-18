@@ -56,7 +56,11 @@ it:
         edit: Modifica
         status: Stato
         replies: Risposte
+        title: Titolo
+        page: Pagina
+      all: Tutte
       drafts: Bozze
+      pages: Pagine
       preview: Anteprima
       unpublish: Annulla pubblicazione
       appearance_link: Aspetto

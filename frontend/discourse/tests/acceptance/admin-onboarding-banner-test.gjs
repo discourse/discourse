@@ -284,6 +284,27 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isChecked();
   });
 
+  test("the minimized progress counts a category created away from the banner", async function (assert) {
+    this.container
+      .lookup("service:key-value-store")
+      .set({ key: "onboarding_step_select_theme", value: true });
+
+    await visit("/");
+    await click(".admin-onboarding-banner .btn-minimize");
+    assert
+      .dom(".admin-onboarding-banner__subtitle")
+      .hasText("1 of 3 steps completed");
+
+    await visit("/new-category");
+    await fillIn("input.category-name", "testing");
+    await click("#save-category");
+    await visit("/");
+
+    assert
+      .dom(".admin-onboarding-banner__subtitle")
+      .hasText("2 of 3 steps completed");
+  });
+
   test("it finishes onboarding when `create_category` is the last step done", async function (assert) {
     const keyValueStore = this.container.lookup("service:key-value-store");
     keyValueStore.set({ key: "onboarding_step_select_theme", value: true });

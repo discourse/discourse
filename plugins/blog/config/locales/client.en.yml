@@ -51,6 +51,7 @@ en:
         retry_reference: Reload authoring reference
         working_preview_hint: Preview your unsaved changes without saving or activating them. Changing the page or sample article updates the preview.
         preview_article_unavailable: Article previews need a published article.
+        preview_page_unavailable: Page previews need a published standalone page.
         preview_page: Page to preview
         preview_home: Homepage
         preview_archive: Archive
@@ -62,6 +63,7 @@ en:
         template_layout: Site layout
         template_index: Homepage and archive
         template_article: Article
+        template_page: Standalone page
         template_about: About page
         template_not_found: Not found page
         code_warning:
@@ -205,14 +207,17 @@ en:
           excerpt: excerpt
           meta_description: meta description
           canonical_url: canonical URL
+          cover: cover image
+          co_authors: co-authors
           featured: featured flag
+          page: standalone page
           tags: tags
           published_at: publication date
         show_diff: Show diff
         hide_diff: Hide diff
         diff_error: The change is too large to show as a diff. Use Preview instead.
         settings: Article settings
-        settings_hint: Path, excerpt, search, date, featured
+        settings_hint: Path, excerpt, cover, search, co-authors, date, featured, page
         feedback:
           none: No private feedback yet
           show: Show feedback
@@ -284,24 +289,26 @@ en:
       editor_title: Blog editor
       editor_description: Drafts stay private until you publish them. Edit an article to publish, schedule, or correct it.
       editor_table:
-        article: Article
         edit: Edit
         status: Status
         published: Published
         replies: Replies
+        title: Title
         edits_pending: Edits pending
         edits_need_approval: Edits need approval
         more_actions: More actions
+        page: Page
         preview_changes: Preview changes
         view_on_blog: View on blog
       new_draft: New draft
       settings: Configure blog settings
-      all: All articles
+      all: All
       drafts: Drafts
       published: Published
       visit_blog: Visit blog
       public_discussion: Public discussion
       not_published: Not on the blog
+      pages: Pages
       preview: Preview
       load_more: Load more
       unpublish_confirm:
@@ -322,6 +329,21 @@ en:
       excerpt_hint:
         A short introduction for article cards and search previews. Leave
         blank to generate an excerpt from the article.
+      cover: Cover image
+      cover_hint:
+        Shown above the article and used for its card and link previews. Leave
+        blank to use the first image in the article.
+      cover_alt: Cover image alt text
+      cover_alt_hint:
+        Describes the cover image for people who can't see it.
+      page: Standalone page
+      page_hint:
+        For pages like About, Contact or Privacy. Left out of the article lists
+        and the feed, and shown without a byline, date, tags or discussion.
+      co_authors: Co-authors
+      co_authors_hint:
+        Credited beside the author in the byline, and listed on their own
+        author pages.
       meta_description: Meta description
       meta_description_hint:
         The summary search engines and link previews show. Leave blank to use

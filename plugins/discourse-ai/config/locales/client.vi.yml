@@ -149,7 +149,6 @@ vi:
         nav:
           enabled: "Đã bật"
         filters:
-          all: "Tất cả"
           reset: "Cài lại"
         sentiment:
           emotion: "Cảm xúc (Emotion)"

@@ -75,7 +75,6 @@ gl:
         nav:
           enabled: "Activado"
         filters:
-          all: "Todas"
           reset: "Restabelecer"
         sentiment:
           enabled: "Activado"

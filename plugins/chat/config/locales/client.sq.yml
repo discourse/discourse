@@ -167,8 +167,6 @@ sq:
         short:
           one: "%{count} ditë"
           other: "%{count} ditë"
-      emoji_picker:
-        flags: "Sinjalizime"
       thread:
         title: "Titulli"
         replies:

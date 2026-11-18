@@ -144,19 +144,57 @@ module DiscourseAi
         def invoke
           current_server = server
           current_context = context || DiscourseAi::Agents::BotContext.new(messages: [])
+          if current_context.mcp_failure_limit_reached?
+            return error_response(I18n.t("discourse_ai.mcp_servers.errors.failure_limit"))
+          end
 
           protocol_version = current_context.mcp_protocol_version_for(self.class.server_id)
           client = DiscourseAi::Mcp::Client.new(current_server, protocol_version: protocol_version)
           result = invoke_with_session(client, current_context)
 
-          return error_response(normalize_content(result)) if result["isError"]
+          return failure_response(current_context, normalize_content(result)) if result["isError"]
 
+          current_context.record_mcp_success(
+            server_id: self.class.server_id,
+            tool_name: self.class.tool_name,
+            arguments: parameters,
+          )
           { result: normalize_content(result) }
-        rescue DiscourseAi::Mcp::HeaderMapper::InvalidArgumentError => error
-          error_response(error.message)
+        rescue DiscourseAi::Mcp::Client::AuthorizationError => error
+          record_connection_failure(error)
+          failure_response(
+            current_context,
+            I18n.t("discourse_ai.mcp_servers.errors.reconnect_required"),
+          )
+        rescue DiscourseAi::Mcp::Client::ConnectionBlockedError => error
+          record_connection_failure(error)
+          failure_response(
+            current_context,
+            I18n.t("discourse_ai.mcp_servers.errors.connection_failed"),
+          )
+        rescue DiscourseAi::Mcp::Client::Error => error
+          failure_response(current_context, error.message)
         end
 
         private
+
+        def failure_response(current_context, message)
+          current_context&.record_mcp_failure(
+            server_id: self.class.server_id,
+            tool_name: self.class.tool_name,
+            arguments: parameters,
+            message: message,
+          )
+          error_response(message)
+        end
+
+        def record_connection_failure(error)
+          return if !server.record_health_error!(error.message)
+
+          Rails.logger.warn(
+            "MCP server #{self.class.server_id} tool #{self.class.tool_name.inspect} failed: #{error.message}",
+          )
+        end
 
         def invoke_with_session(client, current_context)
           initialize_and_store(client, current_context) if client.protocol_version.blank?

@@ -122,4 +122,35 @@ describe "Secure uploads" do
     expect(upload.secure).to eq(true)
     expect(upload.access_control_post).to eq(post)
   end
+
+  it "does not declassify a secure upload when the owning private post is edited after a later public profile reference" do
+    upload = create_upload
+
+    stub_presign_upload_get(upload)
+    post =
+      create_post(
+        title: "Secure upload post",
+        raw: "This is a new post <img src=\"#{upload.url}\" />",
+        category: secure_category,
+        user: user,
+      )
+    upload.reload
+    expect(upload.secure).to eq(true)
+    expect(upload.access_control_post).to eq(post)
+
+    attacker = Fabricate(:user)
+    attacker.user_profile.update!(bio_raw: "sneaky reference [img](#{upload.short_url})")
+    expect(upload.reload.upload_references.where(target_type: "UserProfile").count).to eq(1)
+    expect(upload.secure).to eq(true)
+
+    PostRevisor.new(post).revise!(
+      user,
+      { raw: "This is a new post <img src=\"#{upload.url}\" /> with an edit" },
+      force_new_version: true,
+    )
+
+    upload.reload
+    expect(upload.secure).to eq(true)
+    expect(upload.access_control_post).to eq(post)
+  end
 end

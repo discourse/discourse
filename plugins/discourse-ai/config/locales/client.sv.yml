@@ -78,7 +78,6 @@ sv:
         nav:
           enabled: "Aktiverad"
         filters:
-          all: "Alla"
           reset: "Återställ"
         sentiment:
           enabled: "Aktiverad"

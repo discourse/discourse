@@ -50,6 +50,7 @@ export const PALETTE_MODES = Object.freeze({
  * preview reloads required by a different asset build.
  */
 export default class DesignWizardService extends Service {
+  @service appEvents;
   @service capabilities;
   @service keyValueStore;
   @service router;
@@ -564,7 +565,10 @@ export default class DesignWizardService extends Service {
         } else {
           // a wizard finished after its caller was torn down must still mark
           // the step complete
-          await completeOnboardingStep(this.keyValueStore, SELECT_THEME_STEP);
+          await completeOnboardingStep(
+            { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
+            SELECT_THEME_STEP
+          );
         }
       }
 

@@ -1,4 +1,29 @@
 import { performEmojiUnescape } from "pretty-text/emoji";
+import { aiBadgeAllowList, renderAiBadge } from "../ai-badge.js";
+
+export const AI_QUOTE_MARKER = "[!AI]";
+
+function markAiBlockquote(state, line, _endLine, silent) {
+  const quote = state.tokens.at(-1);
+  if (
+    silent ||
+    quote?.type !== "blockquote_open" ||
+    quote.map[0] !== line ||
+    state.sCount[line] - state.blkIndent >= 4
+  ) {
+    return false;
+  }
+
+  const start = state.bMarks[line] + state.tShift[line];
+  const text = state.src.slice(start, state.eMarks[line]).trimEnd();
+  if (text !== AI_QUOTE_MARKER) {
+    return false;
+  }
+
+  quote.attrSet("data-ai-generated", "true");
+  state.line = line + 1;
+  return true;
+}
 
 const rule = {
   tag: "quote",
@@ -167,7 +192,13 @@ const rule = {
       state.push("quote_header_close", "div", -1);
     }
 
-    state.push("bbcode_open", "blockquote", 1);
+    token = state.push("bbcode_open", "blockquote", 1);
+
+    if (attrs.ai === "") {
+      token.attrs = [["data-ai-generated", "true"]];
+      token = state.push("html_inline", "", 0);
+      token.content = renderAiBadge(state.md);
+    }
   },
 
   after(state) {
@@ -187,14 +218,32 @@ export function setup(helper) {
 
   helper.registerPlugin((md) => {
     md.block.bbcode.ruler.push("quotes", rule);
+    md.block.ruler.before("heading", "ai_blockquote", markAiBlockquote);
+
+    const renderOpen = md.renderer.rules.blockquote_open;
+    md.renderer.rules.blockquote_open = (tokens, idx, options, env, slf) => {
+      const open = renderOpen
+        ? renderOpen(tokens, idx, options, env, slf)
+        : slf.renderToken(tokens, idx, options);
+      return tokens[idx].attrGet("data-ai-generated") === "true"
+        ? open + renderAiBadge(md)
+        : open;
+    };
   });
 
-  helper.allowList(["img[class=avatar]", "img[loading=lazy]"]);
+  helper.allowList([
+    "img[class=avatar]",
+    "img[loading=lazy]",
+    "blockquote[data-ai-generated=true]",
+    ...aiBadgeAllowList,
+  ]);
   helper.allowList({
     custom(tag, name, value) {
       if (tag === "aside" && name === "class") {
+        // The value is still encoded here, so `&` has to be rejected: a
+        // reference like `&#32;` is decoded into a class separator later.
         return (
-          value === "quote no-group" || !!/^quote group\-(.+)$/.exec(value)
+          value === "quote no-group" || /^quote group-[^\s&]+$/.test(value)
         );
       }
     },

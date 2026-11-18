@@ -793,6 +793,8 @@ sl:
     suppress_uncategorized_badge: "Ne prikaži značke za nerazvrščene teme na seznamih tem."
     skip_auto_delete_reply_likes: "Pri samodejnem brisanju starih odgovorov preskočite brisanje objav s tem ali večjim številom všečkov."
     default_other_skip_new_user_tips: "Preskoči namige in značke za nove uporabnike."
+    keywords:
+      company_url: "spletna stran"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -2071,6 +2073,10 @@ sl:
         few: "%{count} sekunde"
         other: "%{count} sekund"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Ja"
       agree_and_suspend:

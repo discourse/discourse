@@ -76,7 +76,7 @@ export const TagOption: TemplateOnlyComponent<{
     {{rowText @config "createOption" (createValues @record)}}
   {{else}}
     <span class="d-tag-option">
-      {{dDiscourseTag @record.name noHref=true tagName="span"}}
+      {{dDiscourseTag (tagRecordName @record) noHref=true tagName="span"}}
       {{#if @record.count}}
         {{#let
           (rowText @config "tagCountBadge" (countValues @record))
@@ -111,5 +111,5 @@ export const TagSelection: TemplateOnlyComponent<{
     record: SelectRecord;
   };
 }> = <template>
-  {{dDiscourseTag @record.name noHref=true tagName="span"}}
+  {{dDiscourseTag (tagRecordName @record) noHref=true tagName="span"}}
 </template>;

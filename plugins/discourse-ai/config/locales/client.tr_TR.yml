@@ -311,7 +311,6 @@ tr_TR:
         nav:
           enabled: "Etkin mi"
         filters:
-          all: "Tümü"
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
         no_automations: "Henüz otomasyon yok"
@@ -1302,6 +1301,7 @@ tr_TR:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "YZ"
           header: "Nasıl yardımcı olabilirim?"
           submit: "Soru gönder"
           disclaimer: "Üretken YZ, hata yapabilir. Önemli bilgileri doğrulayın."

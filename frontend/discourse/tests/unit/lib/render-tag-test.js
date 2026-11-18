@@ -1,6 +1,13 @@
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import renderTag from "discourse/lib/render-tag";
+import sinon from "sinon";
+import renderTag, {
+  defaultRenderTag,
+  replaceTagRenderer,
+} from "discourse/lib/render-tag";
+import User from "discourse/models/user";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | render-tag", function (hooks) {
   setupTest(hooks);
@@ -8,7 +15,7 @@ module("Unit | Utility | render-tag", function (hooks) {
   test("defaultRenderTag", function (assert) {
     assert.strictEqual(
       renderTag("foo", { description: "foo description" }),
-      "<a href='/tag/foo'  data-tag-name=foo class='discourse-tag simple'>foo</a>",
+      `<a href='/tag/foo'  data-tag-name="foo" class='discourse-tag simple'>foo</a>`,
       "does not expose the description as a tooltip"
     );
   });
@@ -16,7 +23,7 @@ module("Unit | Utility | render-tag", function (hooks) {
   test("defaultRenderTag encodes legacy tag links with periods", function (assert) {
     assert.strictEqual(
       renderTag("node.js"),
-      "<a href='/tag/node%2Ejs'  data-tag-name=node.js class='discourse-tag simple'>node.js</a>"
+      `<a href='/tag/node%2Ejs'  data-tag-name="node.js" class='discourse-tag simple'>node.js</a>`
     );
   });
 
@@ -83,6 +90,88 @@ module("Unit | Utility | render-tag", function (hooks) {
       .doesNotHaveAttribute("onclick");
   });
 
+  test("renderTag keeps tag names inside data-tag-name", function (assert) {
+    const name = `bug" onmouseover="alert(1)`;
+    const div = document.createElement("div");
+
+    div.innerHTML = renderTag({ id: 42, name, slug: "bug" });
+
+    assert
+      .dom("a", div)
+      .hasAttribute("data-tag-name", name, "preserves the complete tag name")
+      .doesNotHaveAttribute("onmouseover", "adds no event handler");
+  });
+
+  test("renderTag keeps slug content inside the href attribute", function (assert) {
+    const slug = `../foo\\bar?x#%' onclick='alert(1)' title='"<>&amp;`;
+    const div = document.createElement("div");
+
+    div.innerHTML = renderTag({ id: 42, name: "foo", slug });
+
+    assert.dom(div).hasText("foo", "preserves the tag label");
+    assert.dom("a", div).exists({ count: 1 }, "renders one link");
+    assert
+      .dom("a", div)
+      .hasAttribute(
+        "href",
+        `/tag/..%2Ffoo%5Cbar%3Fx%23%25'%20onclick%3D'alert(1)'%20title%3D'%22%3C%3E%26amp%3B/42`,
+        "encodes the complete slug as URL data"
+      );
+    assert
+      .dom("a", div)
+      .doesNotHaveAttribute("onclick", "does not introduce an event handler");
+    assert
+      .dom("a", div)
+      .doesNotHaveAttribute("title", "does not introduce another attribute");
+  });
+
+  test("renderTag preserves object tag destinations", function (assert) {
+    const div = document.createElement("div");
+
+    div.innerHTML = renderTag({ id: 42, name: "Foo", slug: "custom-slug" });
+
+    assert
+      .dom("a", div)
+      .hasAttribute("href", "/tag/custom-slug/42", "uses the custom slug");
+    assert.dom("a", div).hasText("Foo", "preserves the visible name");
+
+    div.innerHTML = renderTag({ id: 42, slug: "" });
+
+    assert
+      .dom("a", div)
+      .hasAttribute("href", "/tag/42-tag/42", "uses the fallback slug");
+  });
+
+  test("renderTag escapes legacy URLs once", function (assert) {
+    const div = document.createElement("div");
+
+    div.innerHTML = renderTag("Rock&Roll's");
+
+    assert
+      .dom("a", div)
+      .hasAttribute(
+        "href",
+        "/tag/rock&roll's",
+        "preserves legacy URL characters"
+      );
+    assert.dom("a", div).hasText("Rock&Roll's", "preserves the visible name");
+  });
+
+  test("renderTag escapes message tag URLs once", function (assert) {
+    sinon.stub(User, "current").returns({ username: "alice" });
+    const div = document.createElement("div");
+
+    div.innerHTML = renderTag("Rock&Roll's", { isPrivateMessage: true });
+
+    assert
+      .dom("a", div)
+      .hasAttribute(
+        "href",
+        "/u/alice/messages/tags/rock&roll's",
+        "preserves the message tag destination"
+      );
+  });
+
   test("renderTag with extraClass", function (assert) {
     const result = renderTag("foo", {
       extraClass: "ins del",
@@ -100,5 +189,87 @@ module("Unit | Utility | render-tag", function (hooks) {
     assert.true(link.classList.contains("simple"), "has default simple class");
     assert.true(link.classList.contains("ins"), "has ins class");
     assert.true(link.classList.contains("del"), "has del class");
+  });
+
+  module("defaultRenderTag options", function () {
+    test("renders another element without a link", function (assert) {
+      assert.strictEqual(
+        renderTag("foo", { tagName: "span" }),
+        `<span data-tag-name="foo" class='discourse-tag simple'>foo</span>`
+      );
+    });
+
+    test("leaves out the link with noHref", function (assert) {
+      assert.strictEqual(
+        renderTag("foo", { noHref: true }),
+        `<a data-tag-name="foo" class='discourse-tag simple'>foo</a>`
+      );
+    });
+
+    test("escapes and lowercases the name", function (assert) {
+      assert.strictEqual(
+        renderTag("Foo<b>"),
+        `<a href='/tag/foo&lt;b&gt;'  data-tag-name="foo&lt;b&gt;" class='discourse-tag simple'>Foo&lt;b&gt;</a>`
+      );
+    });
+
+    test("links a tag object by its slug and id", function (assert) {
+      assert.strictEqual(
+        renderTag({ id: 7, name: "foo", slug: "foo-slug" }),
+        `<a href='/tag/foo-slug/7'  data-tag-id='7' data-tag-name="foo" class='discourse-tag simple'>foo</a>`
+      );
+      assert.strictEqual(
+        renderTag({ id: 7, name: "foo" }),
+        `<a href='/tag/7-tag/7'  data-tag-id='7' data-tag-name="foo" class='discourse-tag simple'>foo</a>`,
+        "builds a slug without one"
+      );
+    });
+
+    test("links private message tags to the user's messages", function (assert) {
+      const user = logIn(getOwner(this));
+
+      assert.strictEqual(
+        renderTag("foo", { isPrivateMessage: true }),
+        `<a href='/u/${user.username}/messages/tags/foo'  data-tag-name="foo" class='discourse-tag simple'>foo</a>`
+      );
+      assert.strictEqual(
+        renderTag("foo", { pmOnly: true, tagsForUser: "gizmo" }),
+        `<a href='/u/gizmo/messages/tags/foo'  data-tag-name="foo" class='discourse-tag simple'>foo</a>`,
+        "uses the given user"
+      );
+    });
+
+    test("uses the given style, extra class and size", function (assert) {
+      assert.strictEqual(
+        renderTag("foo", { style: "box", extraClass: "gizmo", size: "large" }),
+        `<a href='/tag/foo'  data-tag-name="foo" class='discourse-tag box gizmo large'>foo</a>`
+      );
+    });
+
+    test("adds no style class without a tag style", function (assert) {
+      getOwner(this).lookup("service:site-settings").tag_style = "";
+
+      assert.strictEqual(
+        renderTag("foo"),
+        `<a href='/tag/foo'  data-tag-name="foo" class='discourse-tag'>foo</a>`
+      );
+    });
+
+    test("shows the escaped display name and the count", function (assert) {
+      assert.strictEqual(
+        renderTag("foo", { displayName: "Foo <b>", count: 3 }),
+        `<a href='/tag/foo'  data-tag-name="foo" class='discourse-tag simple'>Foo &lt;b&gt;</a> <span class='discourse-tag-count'>x3</span>`
+      );
+    });
+
+    test("replaceTagRenderer replaces the renderer", function (assert) {
+      try {
+        replaceTagRenderer((tag, params) => `${tag}:${params.size}`);
+
+        assert.strictEqual(renderTag("foo", { size: "large" }), "foo:large");
+      } finally {
+        replaceTagRenderer(defaultRenderTag);
+      }
+    });
   });
 });

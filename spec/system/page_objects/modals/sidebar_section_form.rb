@@ -288,7 +288,7 @@ module PageObjects
       end
 
       def primary_links_wrapper
-        find(".sidebar-section-form__links-wrapper")
+        find(".sidebar-section-form__links-wrapper:not(.--secondary)")
       end
     end
   end

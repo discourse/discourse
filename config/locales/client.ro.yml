@@ -889,6 +889,7 @@ ro:
           title: "Tot"
       context_question:
         delimiter: "sau"
+        something_wrong_with_post: "Este ceva în neregulă cu acest articol?"
       types:
         reviewable_flagged_post:
           title: "Articol semnalat"
@@ -2048,6 +2049,7 @@ ro:
       no_results: "Fără rezultate"
       search: "Caută…"
       label: "Selectează opțiuni"
+      remove_item: "Înlătură %{name}"
     d_otp:
       screen_reader:
         one: Introduceți un număr
@@ -2293,6 +2295,7 @@ ro:
         size_too_small: "%{provided_file_size} este mai mică decât valoarea minimă permisă %{min_file_size}"
     emoji_picker:
       filter_placeholder: Caută emoji
+      no_results: "Fără rezultate"
       objects: Obiecte
       flags: Semnalări
       recent: Folosite recent
@@ -2305,6 +2308,10 @@ ro:
     composer:
       emoji: "Emoji :)"
       options: "Opțiuni"
+      ai_content:
+        code: "Cod"
+        quote: "Citează"
+        details: "Detalii"
       whisper: "discret"
       unlist: "nelistat"
       add_warning: "Aceasta este o avertizare oficială."
@@ -3758,6 +3765,16 @@ ro:
       back: "Înapoi"
       share: "Distribuie"
       dismiss: "Înlătură"
+    mobile_tab_bar:
+      new_topic: "Subiect nou"
+      create: "Creează"
+      more: "Mai multe"
+      back: "Înapoi"
+      topics: "Discuții"
+      drafts:
+        one: "Ciorne (%{count})"
+        few: "Ciorne (%{count})"
+        other: "Ciorne (%{count})"
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
     theme_preview_notice: "Momentan previzualizezi o temă, închide această filă sau fereastră de navigator pentru a reveni la configurația normală a site-ului."
@@ -4700,12 +4717,6 @@ ro:
           company_name: "Nume"
           company_url: "Site web"
           company_url_placeholder: "https://example-co.com"
-          governing_law_placeholder: "Provincie, stat sau țară"
-          governing_law_help: |
-            Specifică jurisdicția pentru termenii legali ai site-ului, de obicei locul în care compania este înregistrată sau își desfășoară activitatea.
-          city_for_disputes_placeholder: "Oraș"
-          city_for_disputes_help: |
-            Specifică orașul pentru soluționarea litigiilor legale legate de acest forum.
           extra_groups:
             heading: "Listare grup"
             description: "Grupuri suplimentare de afișat pe pagina „Despre”."

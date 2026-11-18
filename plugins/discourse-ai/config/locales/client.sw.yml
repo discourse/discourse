@@ -70,7 +70,6 @@ sw:
         nav:
           enabled: "Imeruhusiwa"
         filters:
-          all: "Yote"
           reset: "Weka/Anzisha Upya"
         sentiment:
           enabled: "Imeruhusiwa"

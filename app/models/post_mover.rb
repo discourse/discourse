@@ -244,6 +244,11 @@ class PostMover
     min_created_at = posts.first.created_at
     moved_posts = destination_posts.drop_while { |post| post.created_at <= min_created_at }
 
+    # Inserting posts before existing destination posts renumbers them, which can
+    # displace the first post and change the topic owner. Reply rights on the
+    # destination do not cover that, so require move rights on it.
+    @guardian.ensure_can_move_posts!(destination_topic) if moved_posts.present?
+
     # if no post in destination_topic was created after posts.first it's equal to sequential
     if moved_posts.empty?
       initial_post_number = destination_topic.max_post_number + 1

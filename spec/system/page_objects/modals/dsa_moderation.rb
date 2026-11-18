@@ -104,18 +104,6 @@ module PageObjects
         within(full_modal_selector) { has_no_button?("Cancel", exact: true) }
       end
 
-      def has_disabled_classification_fields?
-        rule =
-          (
-            if SiteSetting.enable_new_select_controls
-              "[data-name='community_rule'] [role='combobox']:disabled"
-            else
-              ".dsa-classification-select:disabled"
-            end
-          )
-        within(full_modal_selector) { has_css?(rule) && has_select?("Category", disabled: true) }
-      end
-
       def has_disabled_button?(label)
         within(full_modal_selector) { has_button?(label, exact: true, disabled: true) }
       end
@@ -144,6 +132,17 @@ module PageObjects
 
       def has_confirmation_prompt?(message)
         within(full_modal_selector) { has_text?(message, normalize_ws: true) }
+      end
+
+      def has_field_hint?(field, text)
+        has_css?(
+          "#{full_modal_selector} [data-name='#{field}'] .form-kit__container-help-text",
+          text:,
+        )
+      end
+
+      def has_no_field_hint?(field)
+        has_no_css?("#{full_modal_selector} [data-name='#{field}'] .form-kit__container-help-text")
       end
 
       def has_selected_rule?(ground)

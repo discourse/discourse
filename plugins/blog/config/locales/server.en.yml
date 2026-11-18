@@ -1,21 +1,24 @@
 en:
+  dashboard:
+    problem:
+      blog_not_ready: "The blog cannot publish articles. %{reason} <a href='%{base_path}/admin/site_settings/category/all_results?filter=%{setting}'>Review the setting</a>"
+      blog_not_ready_without_setting: "The blog cannot publish articles. %{reason}"
   site_settings:
-    blog_contributor_groups: Groups that can write and submit their own blog drafts. Also grant these groups access to the private drafts category. This does not grant forum staff privileges.
-    blog_editor_groups: Groups that can edit and submit any blog draft they can see. Also grant access to the private drafts category. Publication requires the publisher role.
-    blog_publisher_groups: Groups that can approve, publish, withdraw, and schedule blog revisions they can see. Publishers may approve their own work. Also grant access to the private drafts category and permission to create topics in the public blog category. Administrators always retain access.
-    blog_enabled: "A blog built on your community. Write and review articles with your editorial team, publish them under /blog with their own design, and let readers discuss each article in a linked topic. Configure the blog and drafts categories after enabling it."
+    blog_contributor_groups: Groups that can write and submit their own blog drafts. These groups can see the private drafts category. This does not grant forum staff privileges.
+    blog_editor_groups: Groups that can edit and submit any blog draft they can see. These groups can see the private drafts category. Publication requires the publisher role.
+    blog_publisher_groups: Groups that can approve, publish, withdraw, and schedule blog revisions they can see. Publishers may approve their own work. These groups can see the private drafts category and start topics in the public blog category. Administrators always retain access.
+    blog_enabled: "A blog built on your community. Write and review articles with your editorial team, publish them under /blog with their own design, and let readers discuss each article in a linked topic."
     blog_url:
       Serve the blog from its own HTTPS origin, without a trailing slash
       or path, instead of /blog on this site. It must differ from the discussion hostname. Configure this hostname
       as an alias of this site at the proxy and database connection.
     blog_category:
-      The single public category whose explicitly published
-      topics appear on the blog. Subcategories are not included. A topic is never
-      published merely by being in this category.
+      The public category that holds a discussion for each published article.
+      Leave it empty to have a category created when the first article is published.
+      Subcategories are not included. A topic is never published merely by being in this category.
     blog_drafts_category:
-      A separate private category for editorial drafts.
-      Restrict membership to editors. Publishing copies only the approved article into a separate discussion in {{setting:blog_category}}. Editorial topics and replies stay private.
-      Upload URLs are not private when secure uploads are disabled.
+      The private category for editorial drafts. It is created and managed by the blog,
+      and only the blog role groups can see it. Upload URLs are not private when secure uploads are disabled.
     blog_title:
       The blog name displayed in navigation, page titles, and
       feeds.
@@ -31,10 +34,16 @@ en:
     blog_posts_per_page:
       Number of articles shown on each homepage or archive
       page.
+    keywords:
+      blog_about: "about page"
+      blog_description: "tagline"
+      blog_path_format: "address format|custom format"
+      blog_title: "blog name"
   activerecord:
     attributes:
       blog/publication:
         canonical_url: Canonical URL
+        co_author_ids: Co-authors
   blog:
     home: Home
     continue_reading: Continue reading
@@ -71,6 +80,9 @@ en:
     footer: Written in Discourse. Open for conversation.
     from_the_blog: Notes from the community
     tagged: Filed under %{tag}
+    author: Author
+    author_separator: ", "
+    last_author_separator: " and "
     search: Search
     search_placeholder: Search article titles and excerpts
     featured: Featured
@@ -99,19 +111,27 @@ en:
     join_community: Join the community
     not_found_title: This page is not available
     not_found_body: It may have moved, returned to drafts, or not been published yet.
+    categories:
+      public: Blog
+      public_description: Discussions of published blog articles. Each article gets a topic here when it is published, and anyone can reply.
+      drafts: Blog drafts
+      drafts_description: Drafts of blog articles, managed by the blog. Only the blog contributor, editor and publisher groups can see this category, and other groups added to it are removed. Change those groups in the blog settings.
     errors:
       private_site:
         The blog requires a public site with secure uploads disabled.
         Draft text stays private, but uploaded files are not access-controlled without
         secure uploads.
       anonymous_uploads: "The blog requires anonymous upload downloads. Disable prevent_anons_from_downloading_files before publishing or sharing reviews."
-      category: Choose one public Blog category in the blog site settings.
-      drafts_category:
-        Choose a separate private drafts category accessible only to configured editorial groups or staff, distinct from the core shared drafts category.
+      category: The blog category must be public. Choose a public category in the blog settings, or clear the setting to have one created when the first article is published.
+      category_unavailable: The public blog category could not be created. Try again, or choose one in the blog settings.
+      drafts_category_unavailable: The private drafts category could not be prepared. Try again.
+      drafts_category_public: The blog drafts category is open to everyone, so editorial work is paused. Remove the “everyone” group in that category's security settings.
+      category_name_taken: "A category named “%{name}” already exists, so the blog cannot create its own. Choose the public blog category in the blog settings."
       published_page:
         Unpublish this topic from page publishing before publishing
         it on the blog.
       path_taken: is reserved or already belongs to another article
+      co_authors_invalid: "must be up to %{count} different active users, not including the article's author"
       canonical_url_invalid: must be a full http or https address
       path_format: "Start the format with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used, and the first segment cannot be a reserved blog address such as /tag."
       future_date:

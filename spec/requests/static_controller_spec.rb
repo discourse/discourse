@@ -330,6 +330,26 @@ RSpec.describe StaticController do
       )
     end
 
+    it "includes dimensions for the login logo and its dark variant" do
+      SiteSetting.login_required = true
+      SiteSetting.logo = Fabricate(:upload, width: 600, height: 200)
+      SiteSetting.logo_dark = Fabricate(:upload, width: 500, height: 150)
+      Fabricate(
+        :theme,
+        color_scheme: ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]),
+      )
+
+      get "/login"
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body.at_css(".site-logo").attributes.transform_values(&:value),
+      ).to include("src" => SiteSetting.site_logo_url, "width" => "600", "height" => "200")
+      expect(
+        response.parsed_body.at_css(".logo-container source").attributes.transform_values(&:value),
+      ).to include("srcset" => SiteSetting.site_logo_dark_url, "width" => "500", "height" => "150")
+    end
+
     context "when login_required is enabled" do
       before { SiteSetting.login_required = true }
 

@@ -34,7 +34,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   end
 
   describe "creating a post" do
-    let!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
     let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
 
     context "when creating" do
@@ -129,6 +129,81 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
           result = reviewable.perform(moderator, :approve_post)
           expect(result.success?).to eq(true)
+        end
+
+        context "when the author is silenced" do
+          let(:author) { reviewable.target_created_by }
+
+          it "unsilences the author when a staff member approves" do
+            UserSilencer.silence(author, admin, reason: "unrelated")
+
+            reviewable.perform(moderator, :approve_post)
+
+            expect(author.reload).not_to be_silenced
+          end
+
+          context "with a category group moderator" do
+            fab!(:group_user)
+
+            let(:category_moderator) { group_user.user }
+
+            before do
+              SiteSetting.enable_category_group_moderation = true
+              Fabricate(:category_moderation_group, category:, group: group_user.group)
+              reviewable.update!(category:)
+            end
+
+            it "lifts the auto-silence triggered by the queued post" do
+              UserSilencer.auto_silence(
+                author,
+                Discourse.system_user,
+                keep_posts: true,
+                reviewable_id: reviewable.id,
+              )
+
+              reviewable.perform(category_moderator, :approve_post)
+
+              expect(author.reload).not_to be_silenced
+            end
+
+            it "keeps an unrelated silence" do
+              UserSilencer.silence(author, admin, reason: "unrelated")
+
+              result = reviewable.perform(category_moderator, :approve_post)
+
+              expect(result.success?).to eq(true)
+              expect(author.reload).to be_silenced
+            end
+
+            it "keeps a silence imposed by staff rejecting the queued post" do
+              reviewable.perform(
+                admin,
+                :reject_and_silence,
+                reason: "spam",
+                silenced_till: 2.days.from_now,
+              )
+
+              result = reviewable.reload.perform(category_moderator, :approve_post)
+
+              expect(result.success?).to eq(true)
+              expect(author.reload).to be_silenced
+            end
+
+            it "keeps a silence imposed after the auto-silence" do
+              UserSilencer.auto_silence(
+                author,
+                Discourse.system_user,
+                keep_posts: true,
+                reviewable_id: reviewable.id,
+              )
+              author.update!(silenced_till: nil)
+              UserSilencer.silence(author, admin, reason: "unrelated")
+
+              reviewable.perform(category_moderator, :approve_post)
+
+              expect(author.reload).to be_silenced
+            end
+          end
         end
 
         it "logs a staff action linked to the reviewable" do
@@ -476,7 +551,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     context "when updating an existing reviewable" do
-      let!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
+      fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
       let(:user_stats) { reviewable.target_created_by.user_stat }
 
       context "when status changes from 'pending' to something else" do
@@ -716,7 +791,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     context "when the dsa_reporting_enabled site setting is enabled" do
-      let(:reviewable) { Fabricate(:reviewable_queued_post) }
+      fab!(:reviewable, :reviewable_queued_post)
 
       before do
         freeze_time

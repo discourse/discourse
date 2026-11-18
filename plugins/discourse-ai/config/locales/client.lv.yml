@@ -73,7 +73,6 @@ lv:
         nav:
           enabled: "Ieslēgts"
         filters:
-          all: "Visi"
           reset: "Atlikt"
         sentiment:
           enabled: "Ieslēgts"

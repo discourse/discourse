@@ -312,6 +312,7 @@ en:
       title: "AI"
       dsa_classification:
         suggest: "Suggest with AI"
+        suggested_by_ai: "Suggested by AI"
         updated: "Classification updated"
         no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
@@ -585,6 +586,15 @@ en:
             enabled_features: "Enabled Features"
             automation: "Automation"
             agents: "Agents"
+
+        review_queue:
+          name: "Review queue suggestions"
+          description: "Uses a decision model to suggest staff actions for new review items"
+          add_model: "Add a decision model"
+          no_models: "Add a decision model to start generating review queue suggestions."
+          reviewable_action: "Suggest a review action"
+          setting_groups:
+            settings: "Settings"
 
         image_caption:
           name: "Image Caption"
@@ -1912,8 +1922,9 @@ en:
 
       ai_bot:
         title: "AI bot"
-        agent: "Agent:"
-        llm: "Model:"
+        agent_menu_heading: "Agent"
+        model_menu_heading: "Language model"
+        manage_language_models: "Manage language models"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
         try_again: "Try again"
@@ -1986,13 +1997,15 @@ en:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
+          new_conversation: "New AI conversation"
           homepage_option: "AI bot conversations"
           preview:
             title: "Log in to ask a question"
             body: "Get answers from AI, and keep your conversations here to come back to later."
           header: "What can I help with?"
           submit: "Submit question"
-          disclaimer: "Generative AI can make mistakes. Verify important information."
+          disclaimer: "AI can make mistakes. Verify important information."
           placeholder: "Ask a question..."
           new: "New Question"
           min_input_length_message:

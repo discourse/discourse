@@ -614,6 +614,7 @@ bg:
           title: "Всичко"
       context_question:
         delimiter: "или"
+        something_wrong_with_post: "Има ли нещо нередно с тази публикация?"
       types:
         reviewable_flagged_post:
           title: "Маркирана публикация"
@@ -2115,6 +2116,10 @@ bg:
     composer:
       emoji: "Емошънка :)"
       options: "Опции"
+      ai_content:
+        code: "Код"
+        quote: "Цитат"
+        details: "Детайли"
       whisper: "шепот"
       unlist: "скрити"
       add_warning: "Това е официално предупреждение."
@@ -3381,6 +3386,14 @@ bg:
       back: "Назад"
       share: "Споделяне"
       dismiss: "Отмени"
+    mobile_tab_bar:
+      create: "Създай"
+      more: "Повече"
+      back: "Назад"
+      topics: "Теми"
+      drafts:
+        one: "Чернови (%{count})"
+        other: "Чернови (%{count})"
     pause_notifications:
       label: "Пауза на известията"
       options:

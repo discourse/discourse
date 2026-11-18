@@ -62,7 +62,6 @@ be:
           groups: "Груп"
         edit: "Налады"
         filters:
-          all: "усе"
           reset: "скінуць"
         search:
           name: "Пошук"

@@ -90,6 +90,7 @@ const DISCUSSION_TYPE_ID = "discussion";
  * @property {boolean} isDirty
  */
 export default class EditCategoryTabsController extends Controller {
+  @service appEvents;
   @service currentUser;
   @service dialog;
   @service site;
@@ -130,6 +131,12 @@ export default class EditCategoryTabsController extends Controller {
 
   get availableLocales() {
     return this.siteSettings.available_locales;
+  }
+
+  get dynamicCategoryTypeTabs() {
+    return Object.values(this.model.categoryTypes ?? {}).filter(
+      (type) => type.id !== "discussion" && type.visible
+    );
   }
 
   get baseTitle() {
@@ -413,7 +420,10 @@ export default class EditCategoryTabsController extends Controller {
 
       // awaited ahead of the reloads below, which would cancel the audit write
       if (isNew && this.currentUser?.show_site_owner_onboarding) {
-        await completeOnboardingStep(this.keyValueStore, CREATE_CATEGORY_STEP);
+        await completeOnboardingStep(
+          { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
+          CREATE_CATEGORY_STEP
+        );
       }
 
       if (lostAccess) {
@@ -540,7 +550,10 @@ export default class EditCategoryTabsController extends Controller {
     const primaryTab = registeredEditCategoryTabs.find(
       (tab) => tab.id === this.selectedTab && tab.primary
     );
-    if (primaryTab) {
+    if (
+      primaryTab ||
+      this.dynamicCategoryTypeTabs.some((type) => type.id === this.selectedTab)
+    ) {
       return;
     }
 

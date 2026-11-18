@@ -62,7 +62,9 @@ export default class DsaModerationDetails extends Component {
       <form.Field
         @disabled={{@disabled}}
         @format="full"
+        @helpText={{@fieldHints.community_rule}}
         @name="community_rule"
+        @onSet={{@onFieldSet}}
         @title={{i18n "dsa_statements.rule"}}
         @tooltip={{i18n "dsa_statements.rule_help"}}
         @type="custom"
@@ -99,7 +101,9 @@ export default class DsaModerationDetails extends Component {
       <form.Field
         @disabled={{@disabled}}
         @format="full"
+        @helpText={{@fieldHints.category}}
         @name="category"
+        @onSet={{@onFieldSet}}
         @title={{i18n "dsa_statements.category"}}
         @tooltip={{component CategoryHelp}}
         @type="select"

@@ -312,7 +312,7 @@ class Topic < ActiveRecord::Base
   belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
 
-  after_update :clear_page_not_found_topics_cache, if: :moved_to_read_restricted_category?
+  after_update :clear_page_not_found_topics_cache, if: :access_became_restricted?
   after_save :regenerate_og_image
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -2329,8 +2329,9 @@ class Topic < ActiveRecord::Base
 
   private
 
-  def moved_to_read_restricted_category?
-    saved_change_to_category_id? && category&.read_restricted?
+  def access_became_restricted?
+    (saved_change_to_category_id? && category&.read_restricted?) ||
+      (saved_change_to_archetype? && private_message?)
   end
 
   def invite_to_private_message(invited_by, target_user, guardian)

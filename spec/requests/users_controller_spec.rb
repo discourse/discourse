@@ -3210,7 +3210,7 @@ RSpec.describe UsersController do
 
             invites = response.parsed_body["invites"]
             expect(invites.size).to eq(1)
-            expect(invites.first).to include("id" => invite.id)
+            expect(invites.first).to include("id" => invite.id, "invite_key" => invite.invite_key)
             expect(response.parsed_body["can_see_invite_details"]).to eq(true)
           end
 
@@ -3252,6 +3252,105 @@ RSpec.describe UsersController do
 
             get "/u/#{inviter.username}/invited/pending.json"
             expect(response.status).to eq(403)
+          end
+        end
+
+        context "when viewing another user's pending invites as a moderator" do
+          fab!(:inviting_admin, :admin)
+
+          it "does not expose the invite key or link" do
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["can_see_invite_details"]).to eq(true)
+
+            invite_json = response.parsed_body["invites"].first
+            expect(invite_json).to include("id" => invite.id)
+            expect(invite_json).not_to include("invite_key", "link")
+          end
+
+          it "still shows the invite key and link to admins" do
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+
+            sign_in(Fabricate(:admin))
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+
+            expect(response.status).to eq(200)
+
+            invite_json = response.parsed_body["invites"].first
+            expect(invite_json).to include(
+              "id" => invite.id,
+              "invite_key" => invite.invite_key,
+              "link" => invite.link,
+            )
+          end
+
+          it "cannot mint a moderator account by redeeming a harvested staff invite" do
+            Fabricate(
+              :invite,
+              invited_by: inviting_admin,
+              email: nil,
+              max_redemptions_allowed: 1,
+              moderator: true,
+              expires_at: 1.month.from_now,
+              emailed_status: Invite.emailed_status_types[:not_required],
+            )
+            accomplice = Fabricate(:user)
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+            harvested_key = response.parsed_body["invites"].first["invite_key"]
+
+            sign_in(accomplice)
+            # A withheld key is unredeemable; use an unknown key so the request stays routable.
+            put "/invites/show/#{harvested_key.presence || "withheld"}.json"
+
+            expect(accomplice.reload.moderator?).to eq(false)
+          end
+
+          it "cannot join an owners-only group by redeeming a harvested group invite" do
+            group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+            category = Fabricate(:private_category, group: group)
+            topic = Fabricate(:topic, category: category)
+            invite =
+              Fabricate(
+                :invite,
+                invited_by: inviting_admin,
+                email: nil,
+                max_redemptions_allowed: 1,
+                expires_at: 1.month.from_now,
+                emailed_status: Invite.emailed_status_types[:not_required],
+              )
+            InvitedGroup.create!(invite: invite, group: group)
+
+            sign_in(moderator)
+            get "/u/#{inviting_admin.username}/invited/pending.json"
+            harvested_key = response.parsed_body["invites"].first["invite_key"]
+
+            # A withheld key is unredeemable; use an unknown key so the request stays routable.
+            put "/invites/show/#{harvested_key.presence || "withheld"}.json"
+
+            expect(GroupUser.where(user: moderator, group: group)).to be_empty
+            expect(moderator.reload.guardian.can_see?(topic)).to eq(false)
           end
         end
       end
@@ -6339,6 +6438,17 @@ RSpec.describe UsersController do
           Fabricate(:post, user: admin, topic: topic, post_type: Post.types[:whisper])
         end
 
+        it "excludes hidden posts from another viewer's topic post count" do
+          Fabricate(:post, user: admin, topic: topic, hidden: true)
+          get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("user", "topic_post_count", topic.id.to_s)).to eq(1)
+
+          sign_in(admin)
+          get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
+          expect(response.parsed_body.dig("user", "topic_post_count", topic.id.to_s)).to eq(3)
+        end
+
         it "includes only visible posts" do
           get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
           topic_post_count = response.parsed_body.dig("user", "topic_post_count")
@@ -6507,6 +6617,8 @@ RSpec.describe UsersController do
       end
 
       it "sanitizes suspension and silencing reasons" do
+        SiteSetting.hide_suspension_reasons = false
+        SiteSetting.hide_silencing_reasons = false
         payload = "public <img src=x onerror=alert(1)> reason"
         penalized_user = Fabricate(:user)
         penalized_user.user_stat.update!(post_count: 1)
@@ -9222,18 +9334,15 @@ RSpec.describe UsersController do
 
       TopicUser.change(user.id, hidden_post.topic_id, total_msecs_viewed: 1)
       hidden_post.update!(hidden: true)
+      TopicUser.change(user.id, topic.id, total_msecs_viewed: 1)
 
       sign_in(user)
 
       get "/u/#{user.username}/bookmarks.json"
       expect(response.status).to eq(200)
-      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
-      hidden_post_response = bookmark_list.find { |item| item["id"] == hidden_post_bookmark.id }
-
-      expect(hidden_post_response).to be_present
-      expect(hidden_post_response).not_to have_key("excerpt")
-      expect(hidden_post_response).not_to have_key("truncated")
-      expect(hidden_post_response).not_to have_key("cooked")
+      bookmark_list = response.parsed_body.fetch("user_bookmark_list").fetch("bookmarks")
+      expect(bookmark_list.pluck("id")).to contain_exactly(bookmark.id)
+      expect(hidden_post_bookmark.reload).to be_persisted
       expect(response.body).not_to include(hidden_post.raw)
     end
 

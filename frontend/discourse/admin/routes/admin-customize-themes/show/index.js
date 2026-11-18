@@ -1,6 +1,12 @@
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import hasTranslatableFields from "discourse/admin/lib/has-translatable-fields";
+import {
+  settingAnchorId,
+  settingNameFromFragment,
+} from "discourse/admin/lib/setting-anchor";
+import discourseLater from "discourse/lib/later";
 import { scrollTop } from "discourse/lib/scroll-top";
 import { selectControl } from "discourse/lib/select-control";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -9,11 +15,13 @@ import { i18n } from "discourse-i18n";
 export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
   @service dialog;
 
+  #arrivalSetting = null;
+
   async model() {
     return this.modelFor("adminCustomizeThemes.show");
   }
 
-  setupController(controller, model) {
+  setupController(controller, model, transition) {
     super.setupController(...arguments);
 
     const parentController = this.controllerFor("adminCustomizeThemes");
@@ -29,11 +37,40 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
       parentThemesSaved: false,
       userLocale: parentController.get("model.extras.locale"),
     });
+
+    const translationsLocale =
+      model.translations_locale || parentController.get("model.extras.locale");
+
+    if (
+      (model.settings?.some((setting) =>
+        hasTranslatableFields(setting.objects_schema)
+      ) ||
+        (model.locale && model.locale !== translationsLocale)) &&
+      !controller.translations?.some(
+        (translation) => translation.hasPendingChanges
+      )
+    ) {
+      controller.updateLocale(controller.locale);
+    }
+
+    // Fresh page loads only: in-app hash links are scrolled by DiscourseURL,
+    // and later transitions would see a stale hash.
+    this.#arrivalSetting = transition?.from
+      ? null
+      : settingNameFromFragment(window.location.hash);
   }
 
   @action
   didTransition() {
-    scrollTop();
+    const name = this.#arrivalSetting;
+    this.#arrivalSetting = null;
+    if (!name) {
+      scrollTop();
+      return;
+    }
+
+    // After route-scroll-manager, which resets the scroll position in afterRender.
+    next(() => this.#arriveAtSetting(name));
   }
 
   @action
@@ -85,6 +122,26 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
         },
       });
     }
+  }
+
+  #arriveAtSetting(name) {
+    const row = document.getElementById(settingAnchorId(name));
+    if (!row) {
+      return;
+    }
+
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    row.scrollIntoView({
+      block: "center",
+      behavior: reduce ? "auto" : "smooth",
+    });
+    const heading = row.querySelector(".setting-label h3");
+    heading?.setAttribute("tabindex", "-1");
+    heading?.focus({ preventScroll: true });
+    row.classList.add("--highlighted");
+    discourseLater(() => row.classList.remove("--highlighted"), 2000);
   }
 
   #leave(transition) {

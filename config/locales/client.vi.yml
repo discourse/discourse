@@ -2342,6 +2342,7 @@ vi:
       no_results: "Không có kết quả"
       search: "Tìm kiếm…"
       label: "Chọn tùy chọn"
+      remove_item: "Xóa %{name}"
     d_otp:
       screen_reader:
         other: Nhập %{count} số
@@ -2733,6 +2734,9 @@ vi:
         size_too_small: "%{provided_file_size} nhỏ hơn mức tối thiểu cho phép %{min_file_size}"
     emoji_picker:
       filter_placeholder: Tìm kiếm emoji
+      search_placeholder: "Tìm theo tên emoji và viết tắt..."
+      no_results: "Không có kết quả"
+      favorites: "Được sử dụng gần đây"
       smileys_&_emotion: Biểu tượng mặt cười và cảm xúc
       people_&_body: Con người và Cơ thể
       animals_&_nature: Động vật và thiên nhiên
@@ -2777,6 +2781,10 @@ vi:
       emoji: "Emoji :)"
       more_emoji: "thêm nữa…"
       options: "Lựa chọn"
+      ai_content:
+        code: "Mã"
+        quote: "Trích dẫn"
+        details: "Chi tiết"
       whisper: "nói chuyện"
       unlist: "không công khai"
       add_warning: "Đây là một cảnh báo chính thức"
@@ -4852,6 +4860,14 @@ vi:
       forward: "Chuyển tiếp"
       share: "Chia sẻ"
       dismiss: "Hủy bỏ"
+    mobile_tab_bar:
+      new_topic: "Chủ đề mới"
+      create: "Tạo"
+      more: "Thêm"
+      back: "Quay lại"
+      topics: "Các chủ đề"
+      drafts:
+        other: "Bản nháp (%{count})"
     safe_mode:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
     theme_preview_notice: "Bạn hiện đang xem trước một theme. Hãy đóng tab hoặc cửa sổ trình duyệt này để quay lại cấu hình trang web bình thường của bạn."
@@ -6419,14 +6435,6 @@ vi:
           company_name: "Tên"
           company_url: "Trang web"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Luật áp dụng"
-          governing_law_placeholder: "Tỉnh, Thành phố hoặc Quốc gia"
-          governing_law_help: |
-            Xác định phạm vi pháp lý áp dụng cho các điều khoản của trang web, thông thường là nơi công ty đăng ký hoặc hoạt động.
-          city_for_disputes: "Thành phố giải quyết tranh chấp"
-          city_for_disputes_placeholder: "Thành phố"
-          city_for_disputes_help: |
-            Hãy nêu rõ thành phố nơi giải quyết các tranh chấp pháp lý liên quan đến diễn đàn này.
           extra_groups:
             heading: "Danh sách nhóm"
             description: "Thêm các nhóm bổ sung để hiển thị trên trang Giới thiệu."

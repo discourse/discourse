@@ -14,6 +14,7 @@ uk:
     about: Про
     community: Спільнота
     preview: Попередній перегляд
+    author: Автор
     search: Пошук
     replies:
       one: "%{count} відповідь"

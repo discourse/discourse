@@ -73,7 +73,6 @@ bs_BA:
         nav:
           enabled: "Omogućen"
         filters:
-          all: "Sve"
           reset: "Resetovati"
         sentiment:
           enabled: "Omogućen"

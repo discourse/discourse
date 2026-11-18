@@ -56,7 +56,11 @@ cs:
         edit: Upravit
         status: Stav
         replies: Odpovědi
+        title: Název
+        page: Stránka
+      all: Vše
       drafts: Koncepty
+      pages: Stránek
       preview: Náhled
       unpublish: Zrušit publikování
       appearance_link: Vzhled

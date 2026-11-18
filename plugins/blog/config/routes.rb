@@ -18,6 +18,7 @@ Blog::Engine.routes.draw do
   post "/admin/plugins/blog/themes/:id/activate" => "themes#activate"
   post "/admin/plugins/blog/themes/:id/pull" => "themes#pull"
   get "/blog-editor" => "editor#index"
+  post "/blog-editor/drafts-category" => "editor#drafts_category"
   get "/blog-editor/preview/:topic_id" => "editor#preview"
   get "/blog-editor/publications/:topic_id" => "editor#show"
   get "/blog-editor/publications/:topic_id/changes" => "editor#changes"

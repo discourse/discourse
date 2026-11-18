@@ -586,13 +586,6 @@ cs:
     few: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatele v příspěvku."
     many: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku."
     other: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku."
-  no_embedded_media_allowed_group: "Je nám líto, ale do příspěvku nelze vkládat média."
-  no_embedded_media_allowed: "Litujeme, noví uživatelé nemohou do příspěvků vkládat média"
-  too_many_embedded_media:
-    one: "Litujeme, ale noví uživatelé mohou do příspěvku vložit pouze jeden mediální prvek."
-    few: "Litujeme, ale noví uživatelé mohou do příspěvku vložit pouze %{count} mediální prvky."
-    many: "Litujeme, ale noví uživatelé mohou do příspěvku vložit pouze %{count} mediálních prvků."
-    other: "Litujeme, ale noví uživatelé mohou do příspěvku vložit pouze %{count} mediální prvky."
   no_attachments_allowed: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
   too_many_attachments:
     one: "Bohužel, noví uživatelé mohou do příspěvku vložit jen jednu přílohu."
@@ -2358,7 +2351,25 @@ cs:
       staged_users_disabled: "Než toto nastavení povolíte, musíte nejprve povolit „předběžně založené uživatele“."
       delete_rejected_email_after_days: "Toto nastavení nemůže být nižší než nastavení delete_email_logs_after_days nebo vyšší než %{max}."
     keywords:
+      about_banner_image: "obrázek (banner)"
+      about_page_extra_groups: "seznam skupin"
+      about_page_extra_groups_initial_members: "viditelní členové"
+      about_page_extra_groups_order: "řazení"
+      about_page_extra_groups_show_description: "zahrnout popis"
+      company_url: "webová stránka"
+      extended_site_description: "popis komunity"
+      large_icon: "čtvercová ikona"
+      logo: "primární logo"
+      logo_dark: "primární tmavé logo"
+      logo_small: "malé logo"
+      logo_small_dark: "malé tmavé logo"
       navigation_menu: "postranní panel|rozbalovací nabídka v záhlaví"
+      short_site_description: "titulek komunity"
+      site_contact_group_name: "kontaktní skupina webu"
+      site_contact_username: "kontaktní osoba webu"
+      site_description: "souhrnný popis komunity"
+      title: "název komunity"
+      welcome_banner_image: "obrázek pozadí"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -4444,6 +4455,10 @@ cs:
       no_context:
         watched_word: "Tento příspěvek obsahoval sledované slovo. Více informací naleznete v %{link}."
     actions:
+      answer_yes:
+        title: "Ano"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Ano"
       agree_and_keep:

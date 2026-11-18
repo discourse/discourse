@@ -806,19 +806,6 @@ ar:
         notify_moderators: "تتطلَّب هذه الرسالة انتباه فريق العمل لسبب آخر غير مُدرَج أعلاه."
       flagging:
         action: "الإبلاغ عن الرسالة"
-      emoji_picker:
-        favorites: "المستخدمة بشكلٍ متكرر"
-        smileys_&_emotion: "الرموز التعبيرية"
-        objects: "الأشياء"
-        people_&_body: "الأشخاص والجسم"
-        travel_&_places: "السفر والأماكن"
-        animals_&_nature: "الحيوانات والطبيعة"
-        food_&_drink: "الطعام والشراب"
-        activities: "الأنشطة"
-        flags: "البلاغات"
-        symbols: "الرموز"
-        search_placeholder: "البحث باسم الرمز التعبيري والاسم المستعار..."
-        no_results: "لا توجد نتائج"
       thread:
         title: "العنوان"
         view_thread: عرض سلسلة الدردشة

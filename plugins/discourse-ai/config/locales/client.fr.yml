@@ -338,7 +338,6 @@ fr:
           enabled: "Activé"
           not_enabled: "Non activé"
         filters:
-          all: "Tout"
           no_results: "Aucune fonctionnalité correspondant à vos filtres n'a été trouvée."
           reset: "Réinitialiser"
         no_automations: "Il n'y a pas encore d'automatisations"
@@ -1434,6 +1433,7 @@ fr:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "IA"
           header: "En quoi puis-je aider ?"
           submit: "Envoyer une question"
           disclaimer: "L'IA générative peut commettre des erreurs. Vérifiez les informations importantes."

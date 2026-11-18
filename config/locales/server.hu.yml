@@ -516,11 +516,6 @@ hu:
   too_many_mentions_newuser:
     one: "Sajnáljuk, de az új felhasználók csak egy felhasználót említhetnek meg."
     other: "Sajnáljuk, de az új felhasználók csak %{count} felhasználót említhetnek meg."
-  no_embedded_media_allowed_group: "Sajnáljuk, nem ágyazhat be médiaelemeket egy bejegyzésbe."
-  no_embedded_media_allowed: "Sajnáljuk, az új felhasználók nem ágyazhatnak be médiaelemeket a bejegyzésekbe."
-  too_many_embedded_media:
-    one: "Sajnáljuk, az új felhasználók csak egy beágyazott médiaelemet helyezhetnek el egy bejegyzésben."
-    other: "Sajnáljuk, az új felhasználók csak %{count} beágyazott médiaelemet helyezhetnek el egy bejegyzésben."
   no_attachments_allowed: "Sajnáljuk, de az új felhasználók nem adhatnak mellékleteket egy bejegyzéshez."
   too_many_attachments:
     one: "Sajnáljuk, de az új felhasználók csak egy mellékletet adhatnak egy bejegyzéshez."
@@ -2417,8 +2412,6 @@ hu:
     automatically_clean_unused_tags: "Naponta automatikusan törölje azokat a címkéket, amelyeket nem használ semmilyen témában vagy személyes üzenetben."
     default_watched_precedence_over_muted: "Értesítés küldése a felhasználóknak azokról a figyelt kategóriákba vagy címkékhez tartozó témákról, amelyek egyúttal elnémított kategóriához vagy címkéhez is tartoznak."
     company_name: "Cége vagy szervezet neve."
-    governing_law: "Adja meg azt a joghatóságot, amely szabályozza a webhely jogi vonatkozásait, beleértve a Szolgáltatási feltételeket és az Adatvédelmi irányelveket. Ez általában az az ország vagy állam, ahol a webhelyet üzemeltető vállalat be van jegyezve vagy üzleti tevékenységet folytat."
-    city_for_disputes: "Adja meg azt a várost, amely a fórum használatával kapcsolatos viták rendezésének joghatósága alá tartozik. Ezt az információt általában jogi dokumentumok tartalmazzák, például a fórum használati feltételei."
     shared_drafts_category: "A Megosztott vázlatok funkció engedélyezése egy kategória kijelölésével a téma vázlatok számára. Az ebben a kategóriában lévő témák el lesznek rejtve a személyzeti felhasználók téma listáiból."
     shared_drafts_allowed_groups: "Engedélyezze, hogy az e csoportokhoz tartozó felhasználók láthassák és szerkeszthessék a megosztott piszkozatokat."
     push_notifications_prompt: "Felhasználói hozzájárulási sáv megjelenítése a push értesítésekhez. Ez a beállítás egy felkérést jelenít meg, amely engedélyt kér a felhasználóktól push értesítések küldésére. Ez csak akkor jelenik meg, ha a push értesítések még nincsenek engedélyezve, a felhasználó eszköze támogatja azokat, és a felhasználó vagy már írt bejegyzést, vagy Progresszív Web Alkalmazást (PWA) használ. A felkérés nem jelenik meg újra, ha a felhasználó már elutasította, vagy megadta/megtagadta az engedélyt."
@@ -2548,10 +2541,28 @@ hu:
       mediaconvert_output_subdirectory_required: "A MediaConvert kimeneti alkönyvtárának megadása kötelező."
       s3_credentials_required_for_video_conversion: "S3 hitelesítő adatok szükségesek a videókonvertáláshoz. Kérjük, konfigurálja az S3 hozzáférési kulcsokat, vagy engedélyezze az IAM profilt."
     keywords:
+      about_banner_image: "banner kép"
+      about_page_extra_groups: "csoportos felsorolás"
+      about_page_extra_groups_initial_members: "bővített tagok"
+      about_page_extra_groups_order: "rendezési sorrend"
+      about_page_extra_groups_show_description: "leírás hozzáadása"
       clean_up_inactive_users_after_days: "deaktiválva|inaktív|nem aktivált"
+      company_url: "weboldal"
+      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      extended_site_description: "közösség leírása"
+      large_icon: "négyzet alakú ikon"
+      logo: "elsődleges logó"
+      logo_dark: "elsődleges sötét logó"
+      logo_small: "kis logó"
+      logo_small_dark: "kis sötét logó"
       navigation_menu: "oldalsáv|lenyíló fejléc"
       purge_unactivated_users_grace_period_days: "deaktiválva|inaktív|nem aktivált"
-      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      short_site_description: "közösségi cím"
+      site_contact_group_name: "webhely kapcsolattartó csoportja"
+      site_contact_username: "a webhely kapcsolattartójának neve"
+      site_description: "közösségi összefoglaló"
+      title: "közösség neve"
+      welcome_banner_image: "háttérkép"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4848,6 +4859,10 @@ hu:
       no_context:
         watched_word: "Ez a bejegyzés egy Figyelt szót tartalmazott. További információért ellenőrizze a(z) %{link} oldalt."
     actions:
+      answer_yes:
+        title: "Igen"
+      answer_no:
+        title: "Nem"
       agree:
         title: "Igen"
       agree_and_keep:

@@ -47,7 +47,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     hooks.afterEach(function () {
@@ -144,7 +144,7 @@ module(
     });
 
     test("changing date/time updates the input correctly", async function (assert) {
-      this.set("input", moment("2032-01-01 11:10"));
+      this.input = moment("2032-01-01 11:10");
 
       await render(
         <template>

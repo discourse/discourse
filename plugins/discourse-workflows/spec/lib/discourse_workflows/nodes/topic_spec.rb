@@ -57,7 +57,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
       end
 
-      expect(options.length).to eq(described_class::CUSTOM_FIELD_OPTIONS_LIMIT)
+      expect(options.length).to eq(DiscourseWorkflows::Nodes::CustomFieldNames::OPTIONS_LIMIT)
     end
   end
 

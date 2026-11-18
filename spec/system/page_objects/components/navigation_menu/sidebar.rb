@@ -26,7 +26,7 @@ module PageObjects
         end
 
         def has_no_customize_community_section_button?
-          community_section.has_no_button?('[data-list-item-name="customize"]')
+          page.has_no_button?(I18n.t("js.sidebar.sections.community.edit_section.sidebar"))
         end
 
         def click_topics_button
@@ -34,18 +34,16 @@ module PageObjects
         end
 
         def click_customize_community_section_button
-          community_section.click_button(
-            I18n.t("js.sidebar.sections.community.edit_section.sidebar"),
-          )
+          page.click_button(I18n.t("js.sidebar.sections.community.edit_section.sidebar"))
 
-          expect(community_section).to have_no_css(".sidebar-more-section-content")
+          expect(page).to have_no_css(".sidebar-more-section-content")
 
           PageObjects::Modals::SidebarSectionForm.new
         end
 
         def click_community_section_more_button
           community_section.click_button(class: "sidebar-more-section-trigger")
-          expect(community_section).to have_css(".sidebar-more-section-content")
+          expect(page).to have_css(".sidebar-more-section-content")
           self
         end
 

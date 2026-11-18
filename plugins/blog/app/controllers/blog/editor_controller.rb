@@ -65,6 +65,25 @@ module ::Blog
       render json: serialize_publication(find_editable_publication)
     end
 
+    def drafts_category
+      EnsureDraftsCategory.call do
+        on_success do |category:|
+          Category.preload_user_fields!(guardian, [category])
+          render json: SiteCategorySerializer.new(category, scope: guardian, root: false)
+        end
+        on_model_errors(:category) { |category| raise ActiveRecord::RecordInvalid.new(category) }
+        on_model_not_found(:category) { |result| raise result.exception if result.exception }
+        on_failed_policy(:category_private) do
+          render_json_error I18n.t("blog.errors.drafts_category_public"),
+                            status: :unprocessable_entity
+        end
+        on_failure do
+          render_json_error I18n.t("blog.errors.drafts_category_unavailable"),
+                            status: :unprocessable_entity
+        end
+      end
+    end
+
     def update
       Publication::UpdateMetadata.call(
         service_params.deep_merge(params: { metadata: metadata_params }),
@@ -81,6 +100,10 @@ module ::Blog
           raise ActiveRecord::RecordInvalid.new(publication)
         end
         on_failed_policy(:can_edit_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_use_cover_upload) { raise Discourse::InvalidAccess }
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
@@ -100,6 +123,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(policy.reason)
         end
         on_failed_step(:submit_current_draft) { raise Discourse::InvalidAccess }
+        on_failed_step(:ensure_public_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_failed_step(:approve_current_draft) do |step|
           raise Discourse::InvalidParameters.new(step.error)
         end
@@ -151,6 +177,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_model_errors(:publication) do |publication|
           raise ActiveRecord::RecordInvalid.new(publication)
         end
@@ -170,6 +199,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_model_errors(:publication) do |publication|
           raise ActiveRecord::RecordInvalid.new(publication)
         end
@@ -256,6 +288,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_model_not_found(:publication) { raise Discourse::NotFound }
         on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
         on_failed_policy(:blog_ready) do |policy|
@@ -314,7 +349,18 @@ module ::Blog
     def metadata_params
       params
         .require(:publication)
-        .permit(:path, :excerpt, :featured, :published_at, :meta_description, :canonical_url)
+        .permit(
+          :path,
+          :excerpt,
+          :featured,
+          :published_at,
+          :meta_description,
+          :canonical_url,
+          :cover_upload_id,
+          :cover_alt,
+          :co_authors,
+          :page,
+        )
         .to_h
     end
   end

@@ -4,13 +4,59 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import getURL from "discourse/lib/get-url";
 import { slugify } from "discourse/lib/utilities";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const AGENT_SELECTOR_KEY = "ai_agent_selector_id";
 const LEGACY_LLM_SELECTOR_KEY = "ai_llm_selector_id";
 const LLM_SELECTOR_KEY = "ai_llm_selector_model_id";
+const HEADING_COLLECTION = "HEADING_COLLECTION";
+
+const MenuHeading = <template>
+  <div class="agent-llm-selector__menu-heading">
+    <span>{{@collection.content.label}}</span>
+    {{#if @collection.content.settingsPath}}
+      <a
+        aria-label={{@collection.content.settingsLabel}}
+        class="agent-llm-selector__menu-settings"
+        href={{getURL @collection.content.settingsPath}}
+        title={{@collection.content.settingsLabel}}
+      >{{dIcon "wrench"}}</a>
+    {{/if}}
+  </div>
+</template>;
+
+class AgentLlmDropdown extends DropdownSelectBox {
+  init() {
+    super.init(...arguments);
+
+    if (this.menuHeading) {
+      this.prependCollection(HEADING_COLLECTION);
+    }
+  }
+
+  click(event) {
+    // Let Discourse's root click interceptor route the settings link.
+    if (!event.target.closest(".agent-llm-selector__menu-settings")) {
+      super.click(event);
+    }
+  }
+
+  modifyComponentForCollection(identifier) {
+    if (identifier === HEADING_COLLECTION) {
+      return MenuHeading;
+    }
+  }
+
+  modifyContentForCollection(identifier) {
+    if (identifier === HEADING_COLLECTION) {
+      return this.menuHeading;
+    }
+  }
+}
 
 export default class AiAgentLlmSelector extends Component {
   @service currentUser;
@@ -19,6 +65,7 @@ export default class AiAgentLlmSelector extends Component {
   @tracked allowLLMSelector = true;
   @tracked llm;
 
+  #agentId = tracked(undefined);
   #preferredLlmId;
 
   constructor() {
@@ -36,11 +83,11 @@ export default class AiAgentLlmSelector extends Component {
   }
 
   get value() {
-    return this._value;
+    return this.#agentId.value;
   }
 
   set value(newValue) {
-    this._value = newValue;
+    this.#agentId.value = newValue;
     this.keyValueStore.setItem(AGENT_SELECTOR_KEY, newValue);
     this.args.setAgentId(newValue);
     this.setAllowLLMSelector();
@@ -75,7 +122,7 @@ export default class AiAgentLlmSelector extends Component {
   }
 
   get selectedAgent() {
-    return this.enabledAgents.find((agent) => agent.id === this._value);
+    return this.enabledAgents.find((agent) => agent.id === this.value);
   }
 
   get botOptions() {
@@ -96,6 +143,30 @@ export default class AiAgentLlmSelector extends Component {
     return (this.currentUser.ai_available_llm_models || [])
       .map((model) => ({ id: model.id, name: model.display_name }))
       .sort((first, second) => first.name.localeCompare(second.name));
+  }
+
+  get agentMenuHeading() {
+    if (this.args.showMenuHeadings) {
+      return {
+        label: i18n("discourse_ai.ai_bot.agent_menu_heading"),
+        settingsLabel: i18n("discourse_ai.ai_agent.manage_agents"),
+        settingsPath: this.currentUser.admin
+          ? "/admin/plugins/discourse-ai/ai-agents"
+          : null,
+      };
+    }
+  }
+
+  get llmMenuHeading() {
+    if (this.args.showMenuHeadings) {
+      return {
+        label: i18n("discourse_ai.ai_bot.model_menu_heading"),
+        settingsLabel: i18n("discourse_ai.ai_bot.manage_language_models"),
+        settingsPath: this.currentUser.admin
+          ? "/admin/plugins/discourse-ai/ai-models"
+          : null,
+      };
+    }
   }
 
   get showAgentSelector() {
@@ -187,7 +258,7 @@ export default class AiAgentLlmSelector extends Component {
     if (!this.botOptions.some((agent) => agent.id === agentId)) {
       agentId = attrAgentId === undefined ? this.botOptions[0].id : null;
     }
-    this._value = agentId;
+    this.#agentId.value = agentId;
     this.setAllowLLMSelector();
     next(() => this.args.setAgentId(agentId));
   }
@@ -258,17 +329,16 @@ export default class AiAgentLlmSelector extends Component {
     <div class="agent-llm-selector">
       {{#if this.showAgentSelector}}
         <div class="agent-llm-selector__selection-wrapper gpt-agent">
-          {{#if @showLabels}}
-            <label>{{i18n "discourse_ai.ai_bot.agent"}}</label>
-          {{/if}}
-          <DropdownSelectBox
+          <AgentLlmDropdown
             class="agent-llm-selector__agent-dropdown"
             @content={{this.botOptions}}
+            @menuHeading={{this.agentMenuHeading}}
             @onChange={{this.changeAgent}}
             @options={{hash
               customStyle=true
               filterable=this.filterable
-              icon=(if @showLabels "angle-down" "robot")
+              icon=(if @showMenuHeadings "angle-down" "robot")
+              mobilePlacementStrategy=(if @showMenuHeadings "fixed")
             }}
             @value={{this.value}}
           />
@@ -276,16 +346,15 @@ export default class AiAgentLlmSelector extends Component {
       {{/if}}
       {{#if this.showLLMSelector}}
         <div class="agent-llm-selector__selection-wrapper llm-selector">
-          {{#if @showLabels}}
-            <label>{{i18n "discourse_ai.ai_bot.llm"}}</label>
-          {{/if}}
-          <DropdownSelectBox
+          <AgentLlmDropdown
             class="agent-llm-selector__llm-dropdown"
             @content={{this.llmOptions}}
+            @menuHeading={{this.llmMenuHeading}}
             @onChange={{this.changeLlm}}
             @options={{hash
               customStyle=true
-              icon=(if @showLabels "angle-down" "globe")
+              icon=(if @showMenuHeadings "angle-down" "globe")
+              mobilePlacementStrategy=(if @showMenuHeadings "fixed")
             }}
             @value={{this.currentLlm}}
           />

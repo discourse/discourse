@@ -219,6 +219,7 @@ module PrettyText
     opt_input[:forceQuoteLink] = opts[:force_quote_link] if opts[:force_quote_link]
     opt_input[:oneboxLimit] = opts[:onebox_limit] if opts[:onebox_limit]
     opt_input[:userId] = opts[:user_id].to_i if opts[:user_id]
+    opt_input[:hashtagUserIds] = opts[:hashtag_user_ids] if opts[:hashtag_user_ids].present?
     # keeps any HTML from the input, so only for input that is already safe
     opt_input[:disableSanitizer] = true if opts[:sanitize] == false
 
@@ -360,7 +361,7 @@ module PrettyText
     allowlist = []
 
     domains = SiteSetting.exclude_rel_nofollow_domains
-    allowlist = domains.split("|") if domains.present?
+    allowlist = HostnameNormalizer.normalize_list(domains) if domains.present?
 
     site_uri = nil
     doc
@@ -373,10 +374,10 @@ module PrettyText
           uri = URI(UrlHelper.encode_component(href))
           site_uri ||= URI(Discourse.base_url)
 
+          host = HostnameNormalizer.normalize(uri.host)
           same_domain =
-            !uri.host.present? || uri.host == site_uri.host ||
-              uri.host.ends_with?(".#{site_uri.host}") ||
-              allowlist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
+            !uri.host.present? || HostnameNormalizer.within?(host, site_uri.host) ||
+              allowlist.any? { |u| HostnameNormalizer.within?(host, u) }
 
           l["rel"] = "noopener nofollow ugc" if add_nofollow && !same_domain
         rescue URI::Error

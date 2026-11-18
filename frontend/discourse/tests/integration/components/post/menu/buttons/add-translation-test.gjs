@@ -31,7 +31,7 @@ module(
       });
 
       this.post = post;
-      this.set("post", post);
+      this.post = post;
 
       // positive case for menu to always show
       this.siteSettings.content_localization_enabled = true;

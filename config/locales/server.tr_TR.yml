@@ -522,11 +522,6 @@ tr_TR:
   too_many_mentions_newuser:
     one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
-  no_embedded_media_allowed_group: "Maalesef bir gönderiye medya ögesi ekleyemezsiniz."
-  no_embedded_media_allowed: "Üzgünüz, yeni kullanıcılar medya ögelerini gönderilere gömemez."
-  too_many_embedded_media:
-    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece 1 görüntü gömebilirler."
-    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} görüntü gömebilirler."
   no_attachments_allowed: "Üzgünüz, yeni kullanıcılar gönderilere ek koyamaz."
   too_many_attachments:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye yalnızca bir ek koyabilir."
@@ -2448,8 +2443,6 @@ tr_TR:
     automatically_clean_unused_tags: "Herhangi bir konuda veya kişisel mesajda kullanılmayan etiketleri günlük olarak otomatik olarak silin."
     default_watched_precedence_over_muted: "Kullanıcılara, izledikleri kategoriler veya etiketlerdeki, sessize aldıkları kategorilere de ait olan konular hakkında bildirimde bulunun."
     company_name: "Şirketinizin veya kuruluşunuzun adı."
-    governing_law: "Hizmet Koşulları ve Gizlilik Politikası da dâhil olmak üzere sitenin hukuki yönlerini düzenleyen yargı bölgesini belirtin. Bu genellikle siteyi işleten şirketin kayıtlı olduğu veya faaliyet gösterdiği ülke veya eyalettir."
-    city_for_disputes: "Bu forumun kullanımıyla ilgili herhangi bir anlaşmazlığın çözümünde yargı yetkisi olarak kullanılacak şehri belirtin. Bu bilgi genellikle forumun Hizmet Koşulları gibi yasal belgelerde yer alır."
     shared_drafts_category: "Konu taslakları için bir kategori belirleyerek Paylaşılan Taslaklar özelliğini etkinleştirin. Bu kategorideki konular, personel kullanıcılar için konu listelerinden bastırılır."
     shared_drafts_allowed_groups: "Bu gruplardaki kullanıcıların Paylaşılan Taslakları görmesine ve düzenlemesine izin verin."
     push_notifications_prompt: "Anında bildirimler için kullanıcı izni banner'ını gösterin. Bu ayar, kullanıcılardan kendilerine anlık bildirim gönderme izni isteyen bir istemi tetikler. Yalnızca anlık bildirimler henüz etkinleştirilmediğinde, kullanıcının cihazı tarafından desteklendiğinde ve kullanıcı bir gönderi yayınladığında veya Progresif Web Uygulaması (PWA) kullandığında görünür. Kullanıcı zaten reddetmişse veya izin vermişse/reddetmişse istem bir daha gösterilmez."
@@ -2587,10 +2580,29 @@ tr_TR:
       mediaconvert_output_subdirectory_required: "MediaConvert çıktı alt dizini gereklidir."
       s3_credentials_required_for_video_conversion: "Video dönüştürme için S3 giriş bilgileri gereklidir. Lütfen S3 erişim anahtarlarını yapılandırın veya IAM profilini etkinleştirin."
     keywords:
+      about_banner_image: "banner görüntüsü"
+      about_page_extra_groups: "grup listesi"
+      about_page_extra_groups_initial_members: "genişletilmiş üyeler"
+      about_page_extra_groups_order: "sıralama düzeni"
+      about_page_extra_groups_show_description: "açıklamayı dâhil et"
       clean_up_inactive_users_after_days: "devre dışı|etkin değil|etkinliği kaldırıldı"
+      company_url: "web sitesi"
+      default_composition_mode: "rte|zengin metin|besteci|markdown|zengin düzenleyici"
+      embed_full_app: "tam uygulama modu"
+      extended_site_description: "topluluk açıklaması"
+      large_icon: "kare simge"
+      logo: "birincil logo"
+      logo_dark: "birincil logo koyu"
+      logo_small: "küçük logo"
+      logo_small_dark: "küçük logo koyu"
       navigation_menu: "kenar çubuğu|başlık açılır menüsü"
       purge_unactivated_users_grace_period_days: "devre dışı|etkin değil|etkinliği kaldırıldı"
-      default_composition_mode: "rte|zengin metin|besteci|markdown|zengin düzenleyici"
+      short_site_description: "topluluk başlığı"
+      site_contact_group_name: "site iletişim grubu"
+      site_contact_username: "site iletişim adı"
+      site_description: "topluluk özeti"
+      title: "topluluk adı"
+      welcome_banner_image: "arka plan görüntüsü"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ornek.com"
@@ -5057,6 +5069,10 @@ tr_TR:
       no_context:
         watched_word: "Bu gönderide bir İzlenen Kelime yer alıyor. Daha fazlası için %{link} bölümüne bakın."
     actions:
+      answer_yes:
+        title: "Evet"
+      answer_no:
+        title: "Hayır"
       agree:
         title: "Evet"
       agree_and_keep:

@@ -109,20 +109,20 @@ RSpec.describe Bookmark do
     end
 
     describe "#count_per_day" do
-      let(:category) { Fabricate(:category) }
-      let(:topic_in_category) { Fabricate(:topic, category: category) }
+      fab!(:category)
+      fab!(:topic_in_category) { Fabricate(:topic, category: category) }
 
-      let!(:bookmark1) { Fabricate(:bookmark, created_at: 1.day.ago) }
-      let!(:bookmark2) { Fabricate(:bookmark, created_at: 2.days.ago) }
-      let!(:bookmark3) { Fabricate(:bookmark, created_at: 3.days.ago) }
-      let!(:bookmark4) do
+      fab!(:bookmark1) { Fabricate(:bookmark, created_at: 1.day.ago) }
+      fab!(:bookmark2) { Fabricate(:bookmark, created_at: 2.days.ago) }
+      fab!(:bookmark3) { Fabricate(:bookmark, created_at: 3.days.ago) }
+      fab!(:bookmark4) do
         Fabricate(
           :bookmark,
           bookmarkable: Fabricate(:post, topic: topic_in_category),
           created_at: 3.days.ago,
         )
       end
-      let!(:bookmark5) { Fabricate(:bookmark, created_at: 40.days.ago) }
+      fab!(:bookmark5) { Fabricate(:bookmark, created_at: 40.days.ago) }
 
       it "gets the count of bookmarks grouped by date within the last 30 days by default" do
         expect(Bookmark.count_per_day).to eq(
@@ -168,6 +168,16 @@ RSpec.describe Bookmark do
         last_bookmark = Fabricate(:bookmark, user: user)
         SiteSetting.max_bookmarks_per_user = 2
         expect { last_bookmark.clear_reminder! }.not_to raise_error
+      end
+
+      it "counts retained inaccessible bookmarks toward the quota" do
+        hidden_post = Fabricate(:post, hidden: true)
+        hidden_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_post)
+        SiteSetting.max_bookmarks_per_user = 1
+        expect { Fabricate(:bookmark, user: user) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(hidden_bookmark.reload).to be_persisted
+        hidden_bookmark.destroy!
+        expect { Fabricate(:bookmark, user: user) }.to change { user.bookmarks.count }.by(1)
       end
 
       it "gets the bookmark limit error when creating a new bookmark over the limit" do

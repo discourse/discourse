@@ -99,7 +99,6 @@ ug:
         nav:
           enabled: "قوزغىتىلدى"
         filters:
-          all: "ھەممىسى"
           reset: "ئەسلىگە قايتۇر"
         sentiment:
           enabled: "قوزغىتىلدى"

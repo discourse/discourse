@@ -40,12 +40,12 @@ acceptance("Blog themes and identity", function (needs) {
     pretender.get("/admin/plugins/blog/theme-authoring.json", () =>
       response({
         templates: Object.fromEntries(
-          ["layout", "index", "article", "about", "not_found"].map((name) => [
-            `template_${name}`,
-            "<h1>{{ site.title }}</h1>",
-          ])
+          ["layout", "index", "article", "page", "about", "not_found"].map(
+            (name) => [`template_${name}`, "<h1>{{ site.title }}</h1>"]
+          )
         ),
         articles: [{ id: 1, title: "Published sample" }],
+        has_page: false,
         variables: {
           site: { title: "Example blog" },
           article: {
@@ -380,6 +380,14 @@ acceptance("Blog themes and identity", function (needs) {
         "mobile preview has its own viewport"
       );
 
+    await fillControl('select[aria-label="Page to preview"]', "page");
+    assert
+      .dom(".blog-theme-preview__empty")
+      .hasText(
+        "Page previews need a published standalone page.",
+        "a page preview explains that it needs a published page"
+      );
+
     assert.deepEqual(
       previewedPages,
       ["index", "article"],
@@ -452,7 +460,7 @@ acceptance("Blog themes and identity", function (needs) {
     await visit("/admin/plugins/blog/themes/candidate/edit");
     assert
       .dom(".blog-theme-editor__tabs .nav-pills > li")
-      .exists({ count: 6 }, "design and every template have a tab");
+      .exists({ count: 7 }, "design and every template have a tab");
     assert
       .dom(".blog-theme-editor__state")
       .doesNotExist("the design tab needs no template state");

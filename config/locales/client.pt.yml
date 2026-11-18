@@ -875,6 +875,7 @@ pt:
         is_this_post: "Isto é %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "ou"
         something_else_wrong: "Há algum problema com este %{reviewable_type}?"
+        something_wrong_with_post: "Existe algo de errado com esta publicação?"
       types:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
@@ -2061,6 +2062,7 @@ pt:
         redeemed_tab_with_count: "Resgatados (%{count})"
         invited_via: "Convite"
         invited_via_link: "link %{key} (%{count} / %{max} resgatado)"
+        invited_via_link_without_key: "link (%{count} / %{max} resgatados)"
         groups: "Grupos"
         topic: "Tópico"
         sent: "Criado/Último Enviado"
@@ -2345,6 +2347,7 @@ pt:
       no_results: "Sem resultados"
       search: "Pesquisar…"
       label: "Selecionar opções"
+      remove_item: "Remover %{name}"
     d_otp:
       screen_reader:
         one: Insira um número
@@ -2746,6 +2749,7 @@ pt:
         size_too_small: "%{provided_file_size} é menor do que o mínimo permitido %{min_file_size}"
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
+      no_results: "Sem resultados"
       smileys_&_emotion: Smileys e Emojis
       people_&_body: Pessoas e Corpo
       animals_&_nature: Animais e Natureza
@@ -2780,6 +2784,10 @@ pt:
       emoji: "Emoji :)"
       more_emoji: "mais…"
       options: "Opções"
+      ai_content:
+        code: "Código"
+        quote: "Citar"
+        details: "Detalhes"
       whisper: "susurro"
       unlist: "não listado"
       add_warning: "Este é um aviso oficial."
@@ -3700,6 +3708,7 @@ pt:
         select_all: "Selecionar tudo"
         clear_all: "Limpar tudo"
     post:
+      ai_generated: "IA"
       confirm_delete: "Tem a certeza que deseja eliminar esta publicação?"
       quote_reply: "Citar"
       quote_reply_shortcut: "Citar (ou pressione q)"
@@ -4477,6 +4486,15 @@ pt:
       forward: "Avançar"
       share: "Partilhar"
       dismiss: "Marcar como visto"
+    mobile_tab_bar:
+      new_topic: "Novo tópico"
+      create: "Criar"
+      more: "Mais"
+      back: "Anterior"
+      topics: "Tópicos"
+      drafts:
+        one: "Rascunhos (%{count})"
+        other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
     image_removed: "(imagem removida)"
