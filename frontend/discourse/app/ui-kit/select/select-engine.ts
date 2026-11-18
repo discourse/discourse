@@ -826,6 +826,12 @@ export default class SelectEngine {
   /** The items every surface shows, one per value key, built over the record ledger. */
   #items: ItemDirectory;
 
+  /**
+   * The client list, read once while what the builder reads through tracking is unchanged, so a
+   * builder that allocates its records still gives each key one record.
+   */
+  #localInputs = createCache(() => localOptions(this.#args));
+
   /** The extras at rest, built for an empty query and rebuilt when what they read changes. */
   #extrasAtRest = createCache(() => this.#listComposer.extraOptionsAtRest());
   #selectionActions: SelectionActions;
@@ -865,7 +871,7 @@ export default class SelectEngine {
       localRecord: (key) =>
         this.#args.isAsync
           ? undefined
-          : this.#args.findOption(localOptions(this.#args), key)?.record,
+          : this.#args.findOption(this.#localOptions(), key)?.record,
       extraRecord: (key) =>
         this.#args.findOption(getValue(this.#extrasAtRest) ?? [], key)?.record,
       heldKeys: () => this.#selectionActions._selectedKeys,
@@ -965,7 +971,7 @@ export default class SelectEngine {
         })
       : new LocalSource({
           filtered: () => this.filteredOptions,
-          all: () => localOptions(this.#args),
+          all: () => this.#localOptions(),
         });
     this.#customizations = new SelectCustomizations(
       {
@@ -1225,8 +1231,11 @@ export default class SelectEngine {
     // mutating it would corrupt what the engine itself reads next. Matches `buildRows`, which
     // also yields a frozen projection.
     return Object.freeze([
-      ...filterLocal(this.#args, this.#state.filter, (option) =>
-        this.#authorityRecordOf(option)
+      ...filterLocal(
+        this.#args,
+        this.#state.filter,
+        (option) => this.#authorityRecordOf(option),
+        this.#localOptions()
       ),
     ]);
   }
@@ -1383,7 +1392,7 @@ export default class SelectEngine {
     if (this.#args.isAsync) {
       return options;
     }
-    if (filter === this.#state.filter && options === localOptions(this.#args)) {
+    if (filter === this.#state.filter && options === this.#localOptions()) {
       return this.filteredOptions;
     }
     return filterLocal(
@@ -1747,6 +1756,11 @@ export default class SelectEngine {
   @bind
   requestClose(): void {
     this.#args.requestClose?.();
+  }
+
+  /** The client list, empty for a server source. */
+  #localOptions(): readonly SelectOption[] {
+    return getValue(this.#localInputs) ?? [];
   }
 
   /** The authoritative record an option's key stands for, or the option's own. */

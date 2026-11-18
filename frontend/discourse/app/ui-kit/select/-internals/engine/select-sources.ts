@@ -42,13 +42,13 @@ export function localOptions(args: SelectArgsView): readonly SelectOption[] {
  * @param args - The engine's args.
  * @param filter - The query.
  * @param recordOf - The record an option's key stands for.
- * @param options - The options to filter; the whole client list by default.
+ * @param options - The options to filter.
  */
 export function filterLocal(
   args: SelectArgsView,
   filter: string,
   recordOf: (option: SelectOption) => SelectRecord,
-  options: readonly SelectOption[] = localOptions(args)
+  options: readonly SelectOption[]
 ): readonly SelectOption[] {
   if (!filter) {
     return options;

@@ -2219,3 +2219,242 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
       );
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect local inputs",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    let trackedObject;
+    let withPluginApi;
+    let recordOf;
+    hooks.before(async function () {
+      ({ trackedObject } = await import("@ember/reactive/collections"));
+      ({ withPluginApi } = await import("discourse/lib/plugin-api"));
+      ({ recordOf } = await import("discourse/ui-kit/select/select-engine"));
+    });
+
+    [false, true].forEach((multiple) => {
+      test(`share one record between ${multiple ? "chips" : "the trigger"} and list blocks and refresh together`, async function (assert) {
+        const state = trackedObject({ label: "Before" });
+        const options = () => [
+          { id: "a", name: state.label },
+          { id: "b", name: "Other" },
+        ];
+        const value = multiple ? ["a"] : "a";
+        const variant = multiple ? "typeahead" : "button";
+        const selections = new Map();
+        const listed = new Map();
+        const showSelection = (input) => {
+          const record = recordOf(input);
+          selections.set(record.id, record);
+          return record.name;
+        };
+        const showOption = (input) => {
+          const record = recordOf(input);
+          listed.set(record.id, record);
+          return record.name;
+        };
+        await render(
+          <template>
+            <DSelect
+              @multiple={{multiple}}
+              @options={{options}}
+              @value={{value}}
+              @variant={{variant}}
+            >
+              <:selection as |item|>
+                <span class="local-inputs__selection">{{showSelection
+                    item
+                  }}</span>
+              </:selection>
+              <:option as |item|>
+                <span class="local-inputs__option">{{showOption item}}</span>
+              </:option>
+            </DSelect>
+          </template>
+        );
+        assert
+          .dom(".local-inputs__selection")
+          .hasText("Before", "the held surface renders before opening");
+        const before = selections.get("a");
+        await dSelect().open();
+        assert
+          .dom('[role="option"][data-value="a"]')
+          .hasAttribute("data-name", "Before");
+        assert.strictEqual(
+          listed.get("a"),
+          before,
+          "the list block and the held block receive the same local record"
+        );
+        await dSelect().close();
+        await dSelect().open();
+        assert.strictEqual(
+          listed.get("a"),
+          before,
+          "reopening retains the local record"
+        );
+        assert.strictEqual(
+          selections.get("a"),
+          before,
+          "reopening retains the held record"
+        );
+
+        state.label = "After";
+        await settled();
+        const after = selections.get("a");
+        assert
+          .dom(".local-inputs__selection")
+          .hasText(
+            "After",
+            "the held block refreshes from the tracked builder"
+          );
+        assert
+          .dom('[role="option"][data-value="a"] .local-inputs__option')
+          .hasText("After", "the open list block refreshes too");
+        assert
+          .dom('[role="option"][data-value="a"]')
+          .hasAttribute(
+            "data-name",
+            "After",
+            "the row's public label follows the new record"
+          );
+        assert
+          .dom(".d-select")
+          .hasAttribute(
+            "data-name",
+            "After",
+            "the root's held label follows the new record"
+          );
+        assert
+          .dom(multiple ? '.d-select__chip[data-value="a"]' : ".d-select")
+          .hasAttribute(
+            "data-name",
+            "After",
+            "the held surface's public label follows the new record"
+          );
+        assert.notStrictEqual(
+          after,
+          before,
+          "the tracked change replaces the held record"
+        );
+        assert.strictEqual(
+          listed.get("a"),
+          after,
+          "the refreshed list and held blocks share the new record"
+        );
+        await dSelect().close();
+        await dSelect().open();
+        assert.strictEqual(
+          listed.get("a"),
+          after,
+          "later list reads retain the refreshed record"
+        );
+        assert.strictEqual(
+          selections.get("a"),
+          after,
+          "later held reads retain the refreshed record"
+        );
+      });
+    });
+
+    test("reuse option attributes across filtering until a builder dependency changes", async function (assert) {
+      const state = trackedObject({ prefix: "Alpha" });
+      const options = () => [
+        { id: "a", name: `${state.prefix} A` },
+        { id: "b", name: `${state.prefix} B` },
+      ];
+      const attributes = sinon.spy((attrs, { record }) => {
+        attrs.title = record.name;
+      });
+      withPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forAll((spec) => spec.optionAttributes(attributes))
+        )
+      );
+      await render(
+        <template>
+          <DSelect
+            @debounce={{false}}
+            @options={{options}}
+            @variant="typeahead"
+          />
+        </template>
+      );
+      await dSelect().open();
+      assert.strictEqual(
+        attributes.callCount,
+        2,
+        "each initial row evaluates its attributes once"
+      );
+      assert
+        .dom('[role="option"][data-value="a"]')
+        .hasAttribute(
+          "title",
+          "Alpha A",
+          "the customization draws the initial record"
+        );
+      const original = attributes.firstCall.args[1].record;
+
+      await dSelect().search("alpha");
+      assert
+        .dom('[role="option"]')
+        .exists({ count: 2 }, "the query keeps both keys displayed");
+      assert.strictEqual(
+        attributes.callCount,
+        2,
+        "filtering unchanged local inputs reuses cached option attributes"
+      );
+      await triggerKeyEvent('[role="combobox"]', "keydown", "Home");
+      await triggerKeyEvent('[role="combobox"]', "keydown", "ArrowDown");
+      await triggerKeyEvent('[role="combobox"]', "keydown", "ArrowDown");
+      assert
+        .dom('[role="option"].--active')
+        .hasAttribute("data-value", "b", "navigation changes the active row");
+      assert.strictEqual(
+        attributes.callCount,
+        2,
+        "navigation also retains the cached attributes"
+      );
+
+      state.prefix = "Alpha refreshed";
+      await settled();
+      assert.strictEqual(
+        attributes.callCount,
+        4,
+        "a tracked builder change recomputes each row's attributes once"
+      );
+      assert
+        .dom('[role="option"][data-value="a"]')
+        .hasAttribute(
+          "title",
+          "Alpha refreshed A",
+          "the first row uses its refreshed record"
+        );
+      assert
+        .dom('[role="option"][data-value="b"]')
+        .hasAttribute(
+          "title",
+          "Alpha refreshed B",
+          "the second row uses its refreshed record"
+        );
+      const refreshed = attributes
+        .getCalls()
+        .findLast((call) => call.args[1].record.id === "a").args[1].record;
+      assert.notStrictEqual(
+        refreshed,
+        original,
+        "attribute callbacks receive the new local record"
+      );
+      await dSelect().search("alpha refreshed");
+      assert
+        .dom('[role="option"]')
+        .exists({ count: 2 }, "the next query still displays both keys");
+      assert.strictEqual(
+        attributes.callCount,
+        4,
+        "later filtering reuses the refreshed items' attributes"
+      );
+    });
+  }
+);

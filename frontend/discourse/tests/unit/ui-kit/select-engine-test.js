@@ -901,20 +901,30 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
 
-    test("an item that lands later supersedes an earlier fallback", function (assert) {
-      let items = [];
-      const engine = new SelectEngine({ options: () => items });
+    test("local records arriving through tracked state supersede an earlier fallback", function (assert) {
+      const state = trackedObject({ options: [] });
+      const engine = new SelectEngine({ options: () => state.options });
 
       assert.true(
         engine.isUnresolvedRecord(engine.resolveSelection(3)),
         "an id absent from the list starts as a fallback"
       );
 
-      items = [{ id: 3, name: "Landed" }];
+      const landed = { id: 3, name: "Landed" };
+      state.options = [landed];
       assert.strictEqual(
-        engine.resolveSelection(3)?.name,
-        "Landed",
-        "the client list is consulted again once it supplies the id"
+        engine.resolveSelection(3),
+        landed,
+        "a tracked local arrival replaces the fallback with the actual record"
+      );
+      assert.strictEqual(
+        engine.resolveSingleSync(3),
+        landed,
+        "the synchronous lookup also uses the arriving record"
+      );
+      assert.false(
+        engine.isUnresolvedRecord(landed),
+        "the arriving record is resolved"
       );
     });
 

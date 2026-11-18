@@ -1,5 +1,5 @@
 import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
-import { trackedObject } from "@ember/reactive/collections";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -15,14 +15,22 @@ function deferred() {
   return { promise, resolve };
 }
 
-function assertRecord(assert, engine, record, input = record) {
+function assertRecord(
+  assert,
+  engine,
+  record,
+  input = record,
+  multiple = false
+) {
   assert.strictEqual(
     engine.resolveSingleSync(record.id),
     record,
     "the synchronous lookup returns the key's record"
   );
   assert.strictEqual(
-    engine.resolveSelection(record.id),
+    multiple
+      ? engine.resolveSelection([record.id])[0]
+      : engine.resolveSelection(record.id),
     record,
     "selection resolves synchronously to the same record"
   );
@@ -2857,4 +2865,465 @@ module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
 
     assert.true(onSelect.calledOnce, "the visible extra still runs its action");
   });
+});
+
+module("Unit | ui-kit | SelectEngine | local inputs", function (hooks) {
+  setupTest(hooks);
+
+  function snapshot(engine) {
+    const options = engine.loadOptions(engine.loadContext);
+    return {
+      options,
+      rows: engine.buildRows(engine.listInputs(options, engine.filter)),
+    };
+  }
+
+  function assertSnapshot(assert, engine, current, multiple = false) {
+    for (const option of current.options) {
+      const record = option.record;
+      const row = current.rows.find(
+        (candidate) => candidate.value === record.id
+      );
+      assert.strictEqual(
+        row?.record,
+        record,
+        `row ${record.id} uses the current local input`
+      );
+      assert.strictEqual(
+        row?.item?.record,
+        record,
+        `item ${record.id} uses the current local input`
+      );
+      assertRecord(assert, engine, record, option, multiple);
+      assert.strictEqual(
+        engine.itemFor(record.id, { kind: "list", input: option }),
+        row?.item,
+        `list item ${record.id} is reused across reads`
+      );
+      const held = engine.itemFor(record.id, { kind: "held", input: option });
+      assert.strictEqual(
+        engine.itemFor(record.id, { kind: "held", input: option }),
+        held,
+        `held item ${record.id} is reused within its own view`
+      );
+    }
+  }
+
+  test("use one record per key within a list build", function (assert) {
+    const engine = new SelectEngine({
+      options: () => [
+        { id: "a", name: "Alpha" },
+        { id: "b", name: "Beta" },
+      ],
+    });
+    const current = snapshot(engine);
+
+    assert.strictEqual(current.rows.length, 2, "both keys produce a row");
+    for (const row of current.rows) {
+      assert.strictEqual(
+        row.record,
+        row.item.record,
+        `row ${row.value} and its item share a record within one build`
+      );
+    }
+    assertSnapshot(assert, engine, current);
+  });
+
+  for (const firstRead of ["list", "resolution"]) {
+    test(`reuse records and items with ${firstRead} read first`, function (assert) {
+      const engine = new SelectEngine({
+        getValue: () => "a",
+        options: () => [
+          { id: "a", name: "Alpha" },
+          { id: "b", name: "Beta" },
+        ],
+      });
+      const first =
+        firstRead === "list"
+          ? engine.loadOptions(engine.loadContext)[0].record
+          : engine.resolveSingleSync("a");
+      const before = snapshot(engine);
+      assert.strictEqual(
+        before.options[0].record,
+        first,
+        "the first reader and the loaded snapshot share the local record"
+      );
+      assertSnapshot(assert, engine, before);
+      const held = engine.itemFor("a", { kind: "held", input: first });
+
+      const rebuilt = engine.buildRows(before.options);
+      const reread = snapshot(engine);
+      for (let index = 0; index < before.rows.length; index++) {
+        assert.strictEqual(
+          rebuilt[index].item,
+          before.rows[index].item,
+          "rebuilding the same snapshot keeps the list item"
+        );
+        assert.strictEqual(
+          reread.options[index].record,
+          before.options[index].record,
+          "loading unchanged inputs keeps each record"
+        );
+        assert.strictEqual(
+          reread.rows[index].item,
+          before.rows[index].item,
+          "building a reread snapshot keeps each list item"
+        );
+      }
+      assert.strictEqual(
+        engine.itemFor("a", { kind: "held", input: first }),
+        held,
+        "list builds do not replace the held view's item"
+      );
+      assertSnapshot(assert, engine, reread);
+    });
+  }
+
+  test("refresh all surfaces when a tracked builder field changes", function (assert) {
+    const state = trackedObject({ label: "Before", unrelated: 0 });
+    const engine = new SelectEngine({
+      getValue: () => "a",
+      options: () => [{ id: "a", name: state.label }],
+    });
+    const view = createCache(() => snapshot(engine));
+    const before = getValue(view);
+    assert.strictEqual(
+      before.rows[0].item.label,
+      "Before",
+      "the initial label is drawn"
+    );
+
+    state.label = "After";
+    const after = getValue(view);
+    assert.notStrictEqual(
+      after,
+      before,
+      "the builder's tracked read invalidates its consumer"
+    );
+    assert.notStrictEqual(
+      after.options[0].record,
+      before.options[0].record,
+      "the changed builder produces a new record for the same key"
+    );
+    assert.strictEqual(
+      after.rows[0].item.label,
+      "After",
+      "the refreshed item draws the new label"
+    );
+    assertSnapshot(assert, engine, after);
+    assert.notStrictEqual(
+      after.rows[0].item,
+      before.rows[0].item,
+      "the new record replaces the list item"
+    );
+    assert.strictEqual(
+      engine.itemFor("a", { kind: "held", input: before.options[0] }).record,
+      after.options[0].record,
+      "a retained held input also reads the new local record"
+    );
+
+    state.unrelated++;
+    assert.strictEqual(
+      getValue(view),
+      after,
+      "state the builder does not read leaves the consumer cached"
+    );
+    assertSnapshot(assert, engine, snapshot(engine));
+    assert.strictEqual(
+      engine.resolveSingleSync("a"),
+      after.options[0].record,
+      "an unrelated change keeps the current record"
+    );
+
+    state.label = "Before";
+    const returned = getValue(view);
+    assert.strictEqual(
+      returned.rows[0].item.label,
+      "Before",
+      "returning to an earlier label still invalidates"
+    );
+    assert.notStrictEqual(
+      returned.options[0].record,
+      before.options[0].record,
+      "a later generation does not resurrect an older record with equal fields"
+    );
+    assertSnapshot(assert, engine, returned);
+  });
+
+  test("refresh when the builder reads changed config", function (assert) {
+    const state = trackedObject({ prefix: "Before" });
+    const engine = new SelectEngine({
+      kind: "local-inputs",
+      getKindConfig: () => ({ prefix: state.prefix }),
+      options: (config) => [{ id: "a", name: config.prefix }],
+    });
+    const view = createCache(() => snapshot(engine));
+    const before = getValue(view);
+    assert.strictEqual(
+      before.rows[0].item.label,
+      "Before",
+      "the builder reads the resolved config"
+    );
+
+    state.prefix = "After";
+    const after = getValue(view);
+    assert.notStrictEqual(
+      after,
+      before,
+      "a config dependency invalidates the consumer"
+    );
+    assert.strictEqual(
+      after.rows[0].item.label,
+      "After",
+      "the builder receives the refreshed config"
+    );
+    assert.notStrictEqual(
+      after.options[0].record,
+      before.options[0].record,
+      "the new config produces a new record"
+    );
+    assertSnapshot(assert, engine, after);
+    assertSnapshot(assert, engine, snapshot(engine));
+  });
+
+  test("follow tracked collection edits without retaining removed keys", function (assert) {
+    const source = trackedArray([{ id: "a", name: "Alpha" }]);
+    const engine = new SelectEngine({
+      options: () => source.map((record) => ({ ...record })),
+    });
+    const view = createCache(() => snapshot(engine));
+    const before = getValue(view);
+    assert.deepEqual(
+      before.rows.map((row) => row.value),
+      ["a"],
+      "the builder reads the initial collection"
+    );
+
+    source.push({ id: "b", name: "Beta" });
+    const appended = getValue(view);
+    assert.deepEqual(
+      appended.rows.map((row) => row.value),
+      ["a", "b"],
+      "an in-place append invalidates the allocating builder"
+    );
+    assert.notStrictEqual(
+      appended.options[0].record,
+      before.options[0].record,
+      "the new builder result replaces even an existing key's record"
+    );
+    assertSnapshot(assert, engine, appended);
+
+    source[0] = { id: "a", name: "Changed alpha" };
+    const replaced = getValue(view);
+    assert.strictEqual(
+      replaced.rows[0].item.label,
+      "Changed alpha",
+      "an in-place replacement refreshes the same key"
+    );
+    assertSnapshot(assert, engine, replaced);
+
+    source.splice(0, 1);
+    const removed = getValue(view);
+    assert.deepEqual(
+      removed.rows.map((row) => row.value),
+      ["b"],
+      "an in-place removal changes membership"
+    );
+    assert.strictEqual(
+      engine.resolveSingleSync("a"),
+      undefined,
+      "a removed local key is not retained in the lookup"
+    );
+    assertSnapshot(assert, engine, removed);
+  });
+
+  test("keep records and held items across filtering and reloads", function (assert) {
+    const engine = new SelectEngine({
+      getValue: () => "a",
+      options: () => [
+        { id: "a", name: "Alpha" },
+        { id: "b", name: "Beta" },
+      ],
+    });
+    const before = snapshot(engine);
+    const [alpha, beta] = before.options.map((option) => option.record);
+    const held = engine.itemFor("a", { kind: "held", input: alpha });
+    engine.setFilter("alpha");
+    const filtered = snapshot(engine);
+
+    assert.deepEqual(
+      filtered.rows.map((row) => row.value),
+      ["a"],
+      "the query changes displayed membership"
+    );
+    assert.strictEqual(
+      engine.total,
+      1,
+      "the query changes the displayed total"
+    );
+    assert.strictEqual(
+      engine.loadedCount,
+      1,
+      "the query changes the displayed loaded count"
+    );
+    assert.strictEqual(
+      filtered.rows[0].record,
+      alpha,
+      "filtering does not rebuild the local record"
+    );
+    assert.strictEqual(
+      filtered.rows[0].item,
+      before.rows[0].item,
+      "filtering keeps the visible key's list item"
+    );
+    assert.strictEqual(
+      engine.resolveSingleSync("b"),
+      beta,
+      "a filtered-out key still resolves to the same local record"
+    );
+    assert.strictEqual(
+      engine.itemFor("a", { kind: "held", input: alpha }),
+      held,
+      "filtering keeps the held view's item"
+    );
+
+    engine.reload();
+    const reloaded = snapshot(engine);
+    assert.strictEqual(
+      reloaded.rows[0].record,
+      alpha,
+      "reload keeps unchanged builder inputs"
+    );
+    assert.strictEqual(
+      reloaded.rows[0].item,
+      before.rows[0].item,
+      "reload keeps the same list item"
+    );
+    engine.setFilter("");
+    const restored = snapshot(engine);
+    assert.deepEqual(
+      restored.rows.map((row) => row.value),
+      ["a", "b"],
+      "clearing the query restores both keys"
+    );
+    assertSnapshot(assert, engine, restored);
+    assert.strictEqual(
+      restored.options[1].record,
+      beta,
+      "a hidden key returns with its original record"
+    );
+  });
+
+  for (const multiple of [false, true]) {
+    test(`share ${multiple ? "multi" : "single"} change records with rows and resolution`, function (assert) {
+      const state = trackedObject({ label: "Before" });
+      const onChange = sinon.spy();
+      const engine = new SelectEngine({
+        multiple,
+        getValue: () => (multiple ? ["a"] : null),
+        onChange,
+        options: () => [
+          { id: "a", name: `${state.label} alpha` },
+          { id: "b", name: `${state.label} beta` },
+        ],
+      });
+      const current = snapshot(engine);
+      const [alpha, beta] = current.options.map((option) => option.record);
+      engine.select(current.rows[1].option);
+
+      assert.true(onChange.calledOnce, "an enabled pick emits once");
+      assert.deepEqual(
+        onChange.firstCall.args[0],
+        multiple ? ["a", "b"] : "b",
+        "the pick emits the expected values"
+      );
+      const payload = onChange.firstCall.args[1];
+      const expected = multiple ? [alpha, beta] : [beta];
+      const emitted = multiple ? payload : [payload];
+      for (const [index, record] of expected.entries()) {
+        assert.strictEqual(
+          emitted[index],
+          record,
+          `onChange receives local record ${record.id} from the loaded input`
+        );
+      }
+      const resolved = engine.resolveSelection(multiple ? ["a", "b"] : "b");
+      const resolvedRecords = multiple ? resolved : [resolved];
+      for (const [index, record] of expected.entries()) {
+        assert.strictEqual(
+          resolvedRecords[index],
+          record,
+          `selection resolution returns local record ${record.id} synchronously`
+        );
+      }
+      assertSnapshot(assert, engine, current, multiple);
+
+      state.label = "After";
+      const refreshed = snapshot(engine);
+      const [nextAlpha, nextBeta] = refreshed.options.map(
+        (option) => option.record
+      );
+      assert.notStrictEqual(
+        nextBeta,
+        beta,
+        "the tracked change replaces the record before the next pick"
+      );
+      engine.select(refreshed.rows[1].option);
+      assert.strictEqual(
+        onChange.callCount,
+        2,
+        "the refreshed enabled pick emits again"
+      );
+      const nextPayload = onChange.lastCall.args[1];
+      const nextExpected = multiple ? [nextAlpha, nextBeta] : [nextBeta];
+      const nextEmitted = multiple ? nextPayload : [nextPayload];
+      for (const [index, record] of nextExpected.entries()) {
+        assert.strictEqual(
+          nextEmitted[index],
+          record,
+          `the later onChange emits refreshed local record ${record.id}`
+        );
+      }
+      assertSnapshot(assert, engine, refreshed, multiple);
+    });
+  }
+
+  for (const source of ["static array", "paged source"]) {
+    test(`caching leaves the ${source} record and item identities unchanged`, async function (assert) {
+      const alpha = { id: "a", name: "Alpha" };
+      const beta = { id: "b", name: "Beta" };
+      const options = [alpha, beta];
+      const load = sinon.spy(() => options);
+      const engine = new SelectEngine({
+        ...(source === "static array" ? { options } : { load }),
+      });
+      const loaded = await engine.loadOptions(engine.loadContext);
+      const current = { options: loaded, rows: engine.buildRows(loaded) };
+      assertSnapshot(assert, engine, current);
+      const rebuilt = engine.buildRows(loaded);
+      const reread = await engine.loadOptions(engine.loadContext);
+      for (let index = 0; index < options.length; index++) {
+        assert.strictEqual(
+          current.rows[index].record,
+          options[index],
+          "the original source record is preserved"
+        );
+        assert.strictEqual(
+          rebuilt[index].item,
+          current.rows[index].item,
+          "an unchanged build reuses the list item"
+        );
+        assert.strictEqual(
+          reread[index].record,
+          options[index],
+          "a repeated load preserves the original record"
+        );
+      }
+      assert.strictEqual(
+        load.callCount,
+        source === "static array" ? 0 : 1,
+        "reads and builds do not introduce extra page requests"
+      );
+    });
+  }
 });
