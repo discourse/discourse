@@ -43,6 +43,13 @@ module SiteIconManager
       fallback_to_sketch: true,
       resize_required: true,
     },
+    manifest_maskable_icon: {
+      width: 512,
+      height: 512,
+      settings: %i[manifest_maskable_icon],
+      fallback_to_sketch: false,
+      resize_required: true,
+    },
     favicon: {
       width: 32,
       height: 32,

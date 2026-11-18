@@ -78,7 +78,9 @@ describe "Admin Logo Page" do
   end
 
   describe "mobile section" do
-    let(:mobile_section_logos) { %i[mobile_logo mobile_logo_dark manifest_icon apple_touch_icon] }
+    let(:mobile_section_logos) do
+      %i[mobile_logo mobile_logo_dark manifest_icon manifest_maskable_icon apple_touch_icon]
+    end
 
     it "can upload images and dark versions" do
       logo_page.visit

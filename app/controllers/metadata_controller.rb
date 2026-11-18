@@ -113,15 +113,11 @@ class MetadataController < ApplicationController
     }
 
     logo = SiteSetting.site_manifest_icon_url
-    if logo.present?
-      icon_entry = {
-        src: UrlHelper.absolute(logo),
-        sizes: "512x512",
-        type: MiniMime.lookup_by_filename(logo)&.content_type || "image/png",
-      }
-      manifest[:icons] << icon_entry.dup
-      icon_entry[:purpose] = "maskable"
-      manifest[:icons] << icon_entry
+    manifest[:icons] << manifest_icon_entry(logo) if logo.present?
+
+    maskable_logo = SiteIconManager.manifest_maskable_icon_url.presence || logo
+    if maskable_logo.present?
+      manifest[:icons] << manifest_icon_entry(maskable_logo).merge(purpose: "maskable")
     end
 
     SiteSetting
@@ -152,5 +148,13 @@ class MetadataController < ApplicationController
     end
 
     manifest
+  end
+
+  def manifest_icon_entry(url)
+    {
+      src: UrlHelper.absolute(url),
+      sizes: "512x512",
+      type: MiniMime.lookup_by_filename(url)&.content_type || "image/png",
+    }
   end
 end
