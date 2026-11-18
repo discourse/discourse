@@ -5,7 +5,35 @@ import { deepEqual } from "discourse/lib/object";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-export default class DTapTile extends Component {
+/** The id of a tile, also used in its element id. */
+export type DTapTileId = string | number;
+
+interface DTapTileSignature<T extends DTapTileId> {
+  Args: {
+    /** The id of this tile. */
+    tileId: T;
+
+    /** The id of the selected tile, usually yielded by `DTapTileGrid`. */
+    activeTile?: DTapTileId | null;
+
+    /** Called with this tile's id when it is clicked or Enter is pressed on it. */
+    onChange: (tileId: T) => void;
+
+    /** The ID of an icon shown before the content. */
+    icon?: string;
+  };
+
+  Element: HTMLDivElement;
+
+  Blocks: {
+    /** The content of the tile. */
+    default: [];
+  };
+}
+
+export default class DTapTile<T extends DTapTileId> extends Component<
+  DTapTileSignature<T>
+> {
   get active() {
     return deepEqual(this.args.activeTile, this.args.tileId);
   }
@@ -16,7 +44,7 @@ export default class DTapTile extends Component {
   }
 
   @action
-  keyDown(e) {
+  keyDown(e: KeyboardEvent) {
     if (e.key === "Enter") {
       e.stopPropagation();
       this.args.onChange(this.args.tileId);
