@@ -354,6 +354,7 @@ export default class WindowedListCoordinator {
     this.#listboxApi = null;
     this.#listboxRoving = null;
     this.#jumpTimer = undefined;
+    this.#engine.listHidden();
   }
 
   /** Cancels cursor work without releasing a list that remains mounted. */

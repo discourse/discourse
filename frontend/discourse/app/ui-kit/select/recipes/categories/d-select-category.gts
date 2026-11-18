@@ -30,6 +30,7 @@ import {
   type SelectLoadRequest,
   type SelectOption,
   selectOption,
+  type SelectRecord,
   type SelectSnapshot,
   type SelectTexts,
   type SelectValue,
@@ -80,8 +81,11 @@ interface DSelectCategorySignature {
     scope?: CategoryValue;
     /** Lists the same one-level-up family's tree first while browsing. */
     prioritize?: CategoryValue;
-    /** Category ids offered only as disabled rows, described as read-only. */
-    disabledCategories?: number | string | readonly (number | string)[];
+    /**
+     * Categories a new topic cannot be posted in: listed at the top as read-only, marked and
+     * described so, and never chosen.
+     */
+    readOnlyCategories?: number | string | readonly (number | string)[];
     /** Categories never offered; a held one stays selected. */
     exclude?: readonly (number | string)[];
     /** The picker's texts, over its defaults: the engine's, `readOnlyDescription` and `familyFooter`. */
@@ -148,9 +152,9 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     return this.args.multiple ? ids : (ids[0] ?? null);
   }
 
-  get #disabledIds(): number[] {
+  get #readOnlyIds(): number[] {
     return makeArray(
-      this.args.disabledCategories as number | string | (number | string)[]
+      this.args.readOnlyCategories as number | string | (number | string)[]
     ).map(Number);
   }
 
@@ -164,7 +168,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
   /** Ports the single chooser's empty header. */
   get #singlePlaceholder() {
     return (
-      (!this.#disabledIds.length && this.#uncategorized
+      (!this.#readOnlyIds.length && this.#uncategorized
         ? Category.findUncategorized()?.name
         : undefined) || i18n("category.choose")
     );
@@ -177,7 +181,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       scope: this.args.scope,
       prioritize: this.args.prioritize,
       exclude: this.args.exclude,
-      disabledCategories: this.args.disabledCategories,
+      readOnlyCategories: this.args.readOnlyCategories,
       uncategorized: this.#uncategorized,
       subcategories: this.args.subcategories,
       descriptions: this.args.descriptions,
@@ -201,7 +205,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       ...[this.args.scope, this.args.prioritize].map((value) =>
         this.#idOf(value)
       ),
-      ...this.#disabledIds,
+      ...this.#readOnlyIds,
     ].filter((id) => id != null);
     return continueWith(Category.findByIdsOrLoad(ids), () =>
       // The scope's family root may be a parent the first lookup did not cover.
@@ -236,17 +240,17 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     const roots = Category.findByIds(root == null ? [] : [root]).filter(
       this.#categoryAllowed()
     );
-    const disabled = Category.findByIds(this.#disabledIds).filter((category) =>
+    const readOnly = Category.findByIds(this.#readOnlyIds).filter((category) =>
       Category.matchesSearch(category, snapshot.filter)
     );
     const descriptions = this.args.descriptions ?? !this.args.multiple;
     const readOnlyDescription =
       renderSelectText(config, "readOnlyDescription") || undefined;
-    return [...new Set([...roots, ...disabled])].map((category) => {
+    return [...new Set([...roots, ...readOnly])].map((category) => {
       const option = selectOption(categoryRecord(category), {
         description: descriptions ? categoryDescription(category) : undefined,
       });
-      return disabled.includes(category)
+      return readOnly.includes(category)
         ? option.with({
             disabled: true,
             description: readOnlyDescription ?? null,
@@ -286,9 +290,29 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
     );
   }
 
+  /** Whether a listed category is one the topic cannot be posted in. */
+  @action
+  isReadOnly(record: SelectRecord): boolean {
+    return this.#readOnlyIds.includes(Number(record.id));
+  }
+
   @action
   onChange(value: SelectValue) {
-    const ids = makeArray(value) as (number | string)[];
+    // A read-only category may never have loaded, so the select cannot know it is disabled:
+    // drop what it adds, and forward the rest only if anything else changed.
+    const readOnly = new Set(this.#readOnlyIds);
+    const held = new Set(makeArray(this.selectedIds).map(Number));
+    const picked = makeArray(value) as (number | string)[];
+    const ids = picked.filter(
+      (id) => !readOnly.has(Number(id)) || held.has(Number(id))
+    );
+    if (
+      ids.length < picked.length &&
+      (!this.args.multiple ||
+        (ids.length === held.size && ids.every((id) => held.has(Number(id)))))
+    ) {
+      return;
+    }
     const result = this.args.emit === "ids" ? ids : Category.findByIds(ids);
     this.args.onChange?.(this.args.multiple ? result : (result[0] ?? null));
   }
@@ -345,7 +369,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       rejectCategoryIds: [
         ...new Set([
           ...(this.args.exclude ?? []).map(Number),
-          ...this.#disabledIds,
+          ...this.#readOnlyIds,
         ]),
       ],
       treeOrder: query ? undefined : this.#treeOrder,
@@ -375,10 +399,10 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       const descendants: Category[] =
         await Category.asyncFindDescendants(category);
       const allowed = this.#categoryAllowed();
-      const locked = new Set(this.#disabledIds);
+      const readOnly = new Set(this.#readOnlyIds);
       scope.selectMany(
         descendants
-          .filter((child) => !locked.has(child.id!) && allowed(child))
+          .filter((child) => !readOnly.has(child.id!) && allowed(child))
           .map((child) => categoryRecord(child))
       );
     });
@@ -432,6 +456,7 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
             @ancestors={{true}}
             @counts={{true}}
             @option={{option}}
+            @readOnly={{this.isReadOnly record}}
             @record={{record}}
           />
         {{/if}}

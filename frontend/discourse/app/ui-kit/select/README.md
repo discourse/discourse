@@ -1189,9 +1189,11 @@ The category family has two recipes:
     with several lists passes each list only the categories the other lists hold.
   - `@scope` and `@prioritize` are the composer's rules. While browsing, they act one level up:
     the category's parent and that parent's children.
-  - `@disabledCategories` are shown only as disabled options at the top, described as read-only,
-    and stay listed while a search matches them. The composer passes the category a new topic
-    started from but cannot be posted in.
+  - `@readOnlyCategories` are categories a new topic cannot be posted in. They are shown at the
+    top as disabled options with the read-only marker and note, and stay listed while a search
+    matches them. A pick of one is refused, even when the category has not loaded. The composer
+    passes the category a new topic started from. A category disabled for any other reason is
+    not marked read-only.
   - The `placeholder` text is the trigger text with no value; it never names the control.
     In single mode, `@noneOption` adds a selectable "none" option instead, worded by the
     `noneLabel` text.

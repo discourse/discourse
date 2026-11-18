@@ -15,6 +15,7 @@ import SelectCustomizations, {
 import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
 import SelectArgsView from "discourse/ui-kit/select/-internals/engine/select-args";
 import {
+  recordOf,
   type SelectOption,
   selectOption,
   type SelectOptionLike,
@@ -41,6 +42,7 @@ import {
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 import {
   ItemDirectory,
+  mergeContributions,
   type SelectItem,
   type SelectItemView,
 } from "./-internals/engine/select-item.ts";
@@ -941,6 +943,7 @@ export default class SelectEngine {
       stagePicks: (picks) => this.#valueResolver.stage(picks),
       authorityRecord: (key) => this.#valueResolver.authorityRecord(key),
       resolveOneSync: (value) => this.#valueResolver.resolveOneSync(value),
+      isDisabledPick: (entry) => this.#isDisabledPick(entry),
       applyLegacyOnChange: (value, payload) =>
         applyLegacySelectKitOnChange(this, value, payload),
     });
@@ -969,13 +972,14 @@ export default class SelectEngine {
       peekItem: (key, input) => this.#items.peek(key, { kind: "list", input }),
       rowItem: (input) => this.#items.rowItem(input),
       keepItems: (keys) => {
+        const shown = new Set(keys);
         const kept = new Set(keys);
         for (const key of this.#selectionActions._selectedKeys) {
           if (key != null) {
             kept.add(key);
           }
         }
-        this.#items.pruneList(kept);
+        this.#items.pruneList(kept, shown);
       },
       noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
       canGrow: () => this.#source.mayGrow(),
@@ -1553,6 +1557,15 @@ export default class SelectEngine {
   }
 
   /**
+   * Tells the engine no list is shown, because it closed or its listbox unmounted, so a pick is
+   * judged at rest again rather than by rows the reader can no longer see.
+   */
+  @bind
+  listHidden(): void {
+    this.#items.forgetListInputs();
+  }
+
+  /**
    * The record a held key stands for now, which a block receives instead of the record the held
    * async data captured, so a record that arrives later reaches the block too.
    *
@@ -1849,6 +1862,32 @@ export default class SelectEngine {
     return listed?.record === record
       ? listed
       : selectOption(record, listed?.settings);
+  }
+
+  /**
+   * Whether picking an entry is refused: the key's merged item is disabled. The view tier is the
+   * row the list shows for the key while a list is shown, and the key's known option at rest
+   * otherwise; then `@valueRecords`, the entry itself at pick tier, and the matching answer.
+   */
+  #isDisabledPick(entry: SelectOptionLike): boolean {
+    const record = recordOf(entry) as SelectRecord;
+    const key = this.#args.valueKey(this.#args.recordValue(record));
+    if (key == null) {
+      return !!mergeContributions({ pick: entry }).disabled;
+    }
+    const ledger = this.#valueResolver.realRecordFor(key) ?? record;
+    const view =
+      this.#items.listInput(key) ??
+      this.#atRest([
+        this.#args.findOption(this.#source.knownOptions(), key) ??
+          selectOption(ledger),
+      ]).get(key);
+    return !!mergeContributions({
+      view,
+      valueRecords: this.#args.valueRecordEntryFor(key),
+      pick: entry,
+      answer: this.#valueResolver.answerFor(key, ledger),
+    }).disabled;
   }
 
   /** The inputs as they stand at rest, by key. */

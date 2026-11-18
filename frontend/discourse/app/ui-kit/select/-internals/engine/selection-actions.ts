@@ -23,14 +23,16 @@ function optionOf(entry: SelectOptionLike): SelectOption | undefined {
   return isSelectOption(entry) ? (entry as SelectOption) : undefined;
 }
 
-/** Whether an option can become a value: not disabled, not an action, not a drawn line. */
+/**
+ * Whether an option is a kind that can become a value: not an action, not a drawn line. Whether
+ * it is disabled is judged on the key's merged item instead.
+ */
 function isPickable(option: SelectOption | undefined): boolean {
   if (!option) {
     return true;
   }
   const kind = optionKind(option);
   return (
-    !option.disabled &&
     !option.action &&
     kind !== "text-header" &&
     kind !== "text-footer" &&
@@ -59,6 +61,7 @@ export default class SelectionActions {
   #stagePicks: (picks: readonly StagedPick[]) => void;
   #authorityRecord: (key: string) => SelectRecord | undefined;
   #resolveOneSync: (value: SelectId) => SelectRecord | undefined;
+  #isDisabledPick: (entry: SelectOptionLike) => boolean;
   #applyLegacyOnChange: (
     value: SelectValue,
     payload: SelectRecord | SelectRecord[] | null
@@ -84,6 +87,8 @@ export default class SelectionActions {
     /** The record a key stands for by `valueRecords`, the local source or the extras. */
     authorityRecord: (key: string) => SelectRecord | undefined;
     resolveOneSync: (value: SelectId) => SelectRecord | undefined;
+    /** Whether the key's merged item is disabled, with the pick's own input at pick tier. */
+    isDisabledPick: (entry: SelectOptionLike) => boolean;
     applyLegacyOnChange: (
       value: SelectValue,
       payload: SelectRecord | SelectRecord[] | null
@@ -102,6 +107,7 @@ export default class SelectionActions {
     this.#stagePicks = opts.stagePicks;
     this.#authorityRecord = opts.authorityRecord;
     this.#resolveOneSync = opts.resolveOneSync;
+    this.#isDisabledPick = opts.isDisabledPick;
     this.#applyLegacyOnChange = opts.applyLegacyOnChange;
     this.#getExtensionContext = opts.getExtensionContext;
     this.#runChange = opts.runChange;
@@ -343,7 +349,7 @@ export default class SelectionActions {
       !option?.action
     );
     this.#onIntent(origin);
-    if (this.#args.locked || option?.disabled) {
+    if (this.#args.locked) {
       return;
     }
     const record = entryRecord(entry);
@@ -360,6 +366,10 @@ export default class SelectionActions {
       if (!this.#args.multiple && this.#args.closeOnSelect) {
         this.#args.requestClose?.();
       }
+      return;
+    }
+    // A held value can still be re-confirmed and deselected; only adding it is refused.
+    if (this.#isDisabledPick(entry)) {
       return;
     }
     // The record is known to be unselected here, so this rejects genuine additions only. It is
@@ -413,6 +423,10 @@ export default class SelectionActions {
       }
       if (this.isSelected(record) || seen.has(key)) {
         held++;
+        continue;
+      }
+      // Refused before its key is claimed, so a later eligible input for the key still counts.
+      if (this.#isDisabledPick(entry)) {
         continue;
       }
       seen.add(key);

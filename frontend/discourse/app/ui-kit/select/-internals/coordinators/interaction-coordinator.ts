@@ -319,6 +319,7 @@ export default class InteractionCoordinator {
     }
     this.#capturedFilter = null;
     this.#resetQueryOnClose();
+    this.#engine.listHidden();
     this.#announcer.releaseSession();
     if (wasExpanded) {
       this.session++;

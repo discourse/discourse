@@ -463,7 +463,7 @@ module("Unit | ui-kit | selectOption", function (hooks) {
     );
   });
 
-  test("control select unwraps options and bare records carry no settings", function (assert) {
+  test("a bare record whose listed option is disabled is refused", function (assert) {
     const fruit = { id: "apple", name: "Apple", disabled: true, onSelect() {} };
     const option = selectOption(fruit, { disabled: true });
     const { engine, changes } = createEngine({ options: [option] });
@@ -477,16 +477,11 @@ module("Unit | ui-kit | selectOption", function (hooks) {
     engine.control.select(fruit);
 
     assert.deepEqual(
-      changes.map(([value]) => value),
-      [fruit.id],
-      "explicitly passing a bare record selects it"
+      changes,
+      [],
+      "passing a bare record cannot bypass the key's listed disabled state"
     );
-    assert.strictEqual(
-      changes[0][1],
-      fruit,
-      "onChange receives the original record"
-    );
-    const pear = { id: "pear", name: "Pear" };
+    const pear = { id: "pear", name: "Pear", disabled: true, onSelect() {} };
     engine.control.select(selectOption(pear));
     assert.strictEqual(
       changes.at(-1)[0],

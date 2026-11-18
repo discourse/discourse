@@ -68,7 +68,7 @@ export const CategoryBadge: TemplateOnlyComponent<{
   Args: {
     /** Resolved category or a named shortcut. */
     record: SelectRecord;
-    /** The option drawn, which says whether it's an action or disabled; absent in the selection. */
+    /** The option drawn, which says whether it's an action; absent in the selection. */
     option?: SelectOption;
     /** Includes the category's ancestor badges. */
     ancestors?: boolean;
@@ -78,6 +78,8 @@ export const CategoryBadge: TemplateOnlyComponent<{
     countSubcategories?: boolean;
     /** Draws a family footer: the action row's own category, marked as including subcategories. */
     family?: boolean;
+    /** Marks the category as one the topic cannot be posted in. */
+    readOnly?: boolean;
   };
 }> = <template>
   {{#let (categoryModel @record @option @family) as |category|}}
@@ -89,7 +91,7 @@ export const CategoryBadge: TemplateOnlyComponent<{
         decorativeEmoji=true
         hasSubcategories=@family
         hideParent=true
-        readOnly=@option.disabled
+        readOnly=@readOnly
         topicCount=(topicCount category @counts @countSubcategories)
       }}
     {{else}}

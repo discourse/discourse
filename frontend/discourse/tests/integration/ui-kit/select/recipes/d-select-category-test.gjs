@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import {
   click,
   find,
@@ -173,7 +174,6 @@ class Host extends Component {
   <template>
     <DSelectCategory
       @descriptions={{@descriptions}}
-      @disabledCategories={{@disabledCategories}}
       @emit={{@emit}}
       @exclude={{@exclude}}
       @legacyKind={{@legacyKind}}
@@ -182,6 +182,7 @@ class Host extends Component {
       @onChange={{this.onChange}}
       @permission={{@permission}}
       @prioritize={{@prioritize}}
+      @readOnlyCategories={{@readOnlyCategories}}
       @scope={{@scope}}
       @selectDescendants={{@selectDescendants}}
       @showAncestors={{@showAncestors}}
@@ -615,9 +616,9 @@ module(
         await render(
           <template>
             <DSelectCategory
-              @disabledCategories={{null}}
               @permission="create"
               @prioritize={{null}}
+              @readOnlyCategories={{null}}
               @scope={{null}}
             />
           </template>
@@ -663,10 +664,10 @@ module(
         await render(
           <template>
             <Host
-              @disabledCategories={{9600}}
               @multiple={{false}}
               @onChange={{onChange}}
               @permission="create"
+              @readOnlyCategories={{9600}}
               @scope={{2}}
             />
           </template>
@@ -678,6 +679,9 @@ module(
         assert
           .dom(".d-select__option-description", optionFor(9600))
           .hasText(i18n("category_row.read_only_description"));
+        assert
+          .dom(".read-only", optionFor(9600))
+          .exists("its badge carries the read-only marker");
 
         await click(optionFor(9600));
         assert.false(onChange.called, "it cannot be picked");
@@ -690,6 +694,43 @@ module(
         );
         await select().search("announce");
         assert.deepEqual(optionValues(), ["9600"]);
+      });
+
+      test("a category disabled for another reason is not presented as read-only", async function (assert) {
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forAll((spec) =>
+              spec.content((options) =>
+                options.map((option) =>
+                  option.record.id === 2
+                    ? option.with({ disabled: true })
+                    : option
+                )
+              )
+            )
+          )
+        );
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <Host @multiple={{false}} @onChange={{onChange}} />
+          </template>
+        );
+        await select().open();
+
+        assert.dom(optionFor(2)).hasAttribute("aria-disabled", "true");
+        assert
+          .dom(".read-only", optionFor(2))
+          .doesNotExist("a disabled category has no read-only marker");
+        assert
+          .dom(".d-select__option-description", optionFor(2))
+          .doesNotIncludeText(
+            i18n("category_row.read_only_description"),
+            "nor the read-only note"
+          );
+        await click(optionFor(2));
+        assert.false(onChange.called, "it still cannot be picked");
       });
 
       test("@noneOption adds a selectable row that clears the value", async function (assert) {
@@ -809,7 +850,7 @@ module(
 
         await render(
           <template>
-            <Host @disabledCategories={{9600}} @multiple={{false}} />
+            <Host @multiple={{false}} @readOnlyCategories={{9600}} />
           </template>
         );
         await select().open();
@@ -827,8 +868,8 @@ module(
         await render(
           <template>
             <Host
-              @disabledCategories={{9600}}
               @multiple={{false}}
+              @readOnlyCategories={{9600}}
               @texts={{hash readOnlyDescription=""}}
             />
           </template>
@@ -940,7 +981,7 @@ module(
 
         await render(
           <template>
-            <Host @disabledCategories={{2}} @multiple={{false}} />
+            <Host @multiple={{false}} @readOnlyCategories={{2}} />
           </template>
         );
 
@@ -1482,7 +1523,7 @@ module(
       test("a disabled category gets no footer", async function (assert) {
         await render(
           <template>
-            <Host @disabledCategories={{1001}} @multiple={{true}} />
+            <Host @multiple={{true}} @readOnlyCategories={{1001}} />
           </template>
         );
         await select().open();
@@ -1729,9 +1770,9 @@ module(
         await render(
           <template>
             <Host
-              @disabledCategories={{3}}
               @multiple={{false}}
               @permission="create"
+              @readOnlyCategories={{3}}
               @scope={{2}}
             />
           </template>
@@ -2245,7 +2286,7 @@ module(
         });
         await render(
           <template>
-            <DSelectCategory @disabledCategories={{9900}} @multiple={{true}} />
+            <DSelectCategory @multiple={{true}} @readOnlyCategories={{9900}} />
           </template>
         );
         await dSelect().open();
@@ -2319,9 +2360,9 @@ module(
         await render(
           <template>
             <DSelectCategory
-              @disabledCategories={{9900}}
               @multiple={{true}}
               @permission="create"
+              @readOnlyCategories={{9900}}
               @scope={{2}}
             />
           </template>
@@ -2616,6 +2657,232 @@ module(
           disableVirtualization();
         }
       });
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | recipes | DSelectCategory | disabled picks",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const multiple of [false, true]) {
+      test(`a closed ${multiple ? "multi" : "single"} recipe refuses an unloaded disabled id without loading`, async function (assert) {
+        Site.current().set("lazy_load_categories", true);
+        const loaded = Category.findById(2);
+        Site.current().set("categories", [loaded]);
+        Site.current().set("loadedCategoryIds", new Set([loaded.id]));
+        const requests = [];
+        pretender.get("/categories/find", (request) => {
+          requests.push(request.url);
+          return response({ categories: [] });
+        });
+        pretender.post("/categories/search", (request) => {
+          requests.push(request.url);
+          return response({
+            categories_count: 0,
+            categories: [],
+            ancestors: [],
+          });
+        });
+        let control;
+        withPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forAll((spec) =>
+              spec.config((_config, context) => {
+                control = context.control;
+              })
+            )
+          )
+        );
+        const initial = multiple ? [loaded.id] : loaded.id;
+        const state = trackedObject({ value: initial });
+        const onChange = sinon.spy((value) => (state.value = value));
+        await render(
+          <template>
+            <DSelectCategory
+              @emit="ids"
+              @multiple={{multiple}}
+              @onChange={{onChange}}
+              @readOnlyCategories="9900"
+              @value={{state.value}}
+              @variant="button"
+            />
+          </template>
+        );
+        assert.strictEqual(
+          Category.findById(9900),
+          undefined,
+          "the disabled category really is unloaded"
+        );
+        assert
+          .dom('[role="listbox"]')
+          .doesNotExist("the recipe has never been opened");
+        assert.deepEqual(
+          requests,
+          [],
+          "mounting with a locally held category needs no request"
+        );
+
+        control.select({ id: 9900, name: "Unloaded disabled category" });
+        await settled();
+
+        assert.strictEqual(
+          onChange.callCount,
+          0,
+          "the recipe refuses a disabled id even without a loaded extra"
+        );
+        assert.deepEqual(
+          state.value,
+          initial,
+          "the caller keeps its previous value"
+        );
+        assert.deepEqual(
+          requests,
+          [],
+          "the refused pick starts neither category resolution nor a list load"
+        );
+        assert.strictEqual(
+          Category.findById(9900),
+          undefined,
+          "refusal never materializes the disabled category"
+        );
+        assert
+          .dom('[role="listbox"]')
+          .doesNotExist("the recipe remains closed");
+      });
+    }
+
+    test("a held unloaded disabled category still resolves its name while closed", async function (assert) {
+      Site.current().set("lazy_load_categories", true);
+      Site.current().set("categories", [Category.findById(2)]);
+      Site.current().set("loadedCategoryIds", new Set([2]));
+      const remote = {
+        id: 9900,
+        name: "Remote read only",
+        slug: "remote-read-only",
+        permission: null,
+      };
+      const finds = [];
+      const searches = [];
+      pretender.get("/categories/find", (request) => {
+        finds.push([request.queryParams.ids].flat().map(Number));
+        return response({ categories: [remote] });
+      });
+      pretender.post("/categories/search", (request) => {
+        searches.push(request.url);
+        return response({ categories_count: 0, categories: [], ancestors: [] });
+      });
+      const onChange = sinon.spy();
+      assert.strictEqual(
+        Category.findById(remote.id),
+        undefined,
+        "the held category starts unloaded"
+      );
+      await render(
+        <template>
+          <DSelectCategory
+            @emit="ids"
+            @onChange={{onChange}}
+            @readOnlyCategories={{9900}}
+            @value={{9900}}
+            @variant="button"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".d-select__value")
+        .includesText(
+          remote.name,
+          "the real held category name replaces the unresolved fallback"
+        );
+      assert.deepEqual(
+        finds,
+        [[remote.id]],
+        "held resolution still fetches the disabled category by id"
+      );
+      assert.deepEqual(
+        searches,
+        [],
+        "resolving a held name never browses the list"
+      );
+      assert
+        .dom(".d-select")
+        .doesNotHaveAttribute(
+          "data-unresolved",
+          "disabled does not make a held category unresolved"
+        );
+      assert
+        .dom('[role="listbox"]')
+        .doesNotExist("the named held category stays closed");
+      assert.strictEqual(
+        onChange.callCount,
+        0,
+        "resolving a held name is not a pick"
+      );
+    });
+
+    test("a closed empty multi recipe keeps the enabled id from a mixed unloaded-disabled batch", async function (assert) {
+      Site.current().set("lazy_load_categories", true);
+      const enabled = Category.findById(2);
+      Site.current().set("categories", [enabled]);
+      Site.current().set("loadedCategoryIds", new Set([enabled.id]));
+      let control;
+      withPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forAll((spec) =>
+            spec.config((_config, context) => {
+              control = context.control;
+            })
+          )
+        )
+      );
+      const state = trackedObject({ value: [] });
+      const onChange = sinon.spy((value) => (state.value = value));
+      await render(
+        <template>
+          <DSelectCategory
+            @emit="ids"
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @readOnlyCategories="9900"
+            @value={{state.value}}
+            @variant="button"
+          />
+        </template>
+      );
+      assert.strictEqual(
+        Category.findById(9900),
+        undefined,
+        "the disabled id has no loaded category"
+      );
+      assert.deepEqual(
+        state.value,
+        [],
+        "the caller starts with an empty multi value"
+      );
+      assert
+        .dom('[role="listbox"]')
+        .doesNotExist("the recipe has never opened");
+
+      control.selectMany([{ id: 9900 }, { id: enabled.id }]);
+      await settled();
+
+      assert.deepEqual(
+        onChange.firstCall?.args[0],
+        [enabled.id],
+        "the mixed batch emits only the enabled id"
+      );
+      assert.strictEqual(onChange.callCount, 1, "the batch emits one change");
+      assert.deepEqual(
+        state.value,
+        [enabled.id],
+        "the caller accepts the enabled id from the batch"
+      );
+      assert
+        .dom('[role="listbox"]')
+        .doesNotExist("the batch leaves the recipe closed");
     });
   }
 );

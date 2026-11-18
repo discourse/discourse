@@ -195,6 +195,9 @@ export class ItemDirectory {
   };
   #rows = new WeakMap<object, SelectItem>();
 
+  /** The input each listed key was last built from, kept as long as its list item. */
+  #listInputs = new Map<string, SelectOptionLike>();
+
   constructor(sources: SelectItemSources) {
     this.#sources = sources;
   }
@@ -207,6 +210,9 @@ export class ItemDirectory {
    */
   itemFor(key: string, view: SelectItemView): SelectItem {
     const item = this.peek(key, view);
+    if (view.kind === "list") {
+      this.#listInputs.set(key, view.input);
+    }
     const memo = this.#memos[view.kind];
     const cached = memo.get(key);
     if (
@@ -263,12 +269,36 @@ export class ItemDirectory {
   }
 
   /**
-   * Drops the list memo's entries for keys outside `keep`.
+   * Drops the list memo's entries for keys outside `keep`, and the row inputs of keys the build
+   * did not show.
    *
    * @param keep - The keys whose list items stay memoised.
+   * @param shown - The keys the build showed; `keep` when every kept key was shown.
    */
-  pruneList(keep: ReadonlySet<string>): void {
+  pruneList(
+    keep: ReadonlySet<string>,
+    shown: ReadonlySet<string> = keep
+  ): void {
     prune(this.#memos.list, keep);
+    for (const key of [...this.#listInputs.keys()]) {
+      if (!shown.has(key)) {
+        this.#listInputs.delete(key);
+      }
+    }
+  }
+
+  /**
+   * The input the list last built a key's row from, while the key is still listed.
+   *
+   * @param key - A normalized key.
+   */
+  listInput(key: string): SelectOptionLike | undefined {
+    return this.#listInputs.get(key);
+  }
+
+  /** Forgets every listed key's input, once no list is shown. */
+  forgetListInputs(): void {
+    this.#listInputs.clear();
   }
 
   /**
@@ -290,7 +320,7 @@ function prune(memo: Map<string, SelectItem>, keep: ReadonlySet<string>) {
 }
 
 /** Each property from the highest source that sets it; a source that is silent erases nothing. */
-function mergeContributions(
+export function mergeContributions(
   contributions: SelectItemContributions
 ): Readonly<SelectOptionSettings> {
   let merged: Record<string, unknown> | undefined;

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedObject as trackedState } from "@ember/reactive/collections";
 import {
   click,
   fillIn,
@@ -14,7 +15,12 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import SelectLiveRegions, {
+  IDLE_ANNOUNCEMENT,
+} from "discourse/components/a11y/live-regions";
 import { forceMobile } from "discourse/lib/mobile";
+import { withPluginApi as withSelectPluginApi } from "discourse/lib/plugin-api";
+import { disableClearA11yAnnouncementsInTests as retainA11yAnnouncements } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
@@ -3403,3 +3409,632 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
       );
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect disabled picks",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const source of ["list", "valueRecords"]) {
+      for (const gesture of ["click", "keyboard Enter"]) {
+        test(`${gesture} refuses a row disabled by ${source}`, async function (assert) {
+          const blocked = { id: "blocked", name: "Blocked" };
+          const enabled = { id: "enabled", name: "Enabled" };
+          const disabled = selectOption(blocked, { disabled: true });
+          const options = [enabled, source === "list" ? disabled : blocked];
+          const records = source === "valueRecords" ? [disabled] : [];
+          const state = trackedState({ value: [] });
+          const onChange = sinon.spy((value) => (state.value = value));
+          retainA11yAnnouncements();
+          await render(
+            <template>
+              <DSelect
+                @multiple={{true}}
+                @onChange={{onChange}}
+                @options={{options}}
+                @value={{state.value}}
+                @valueRecords={{records}}
+                @variant="typeahead"
+              /><SelectLiveRegions />
+            </template>
+          );
+          await dSelect().open();
+          assert
+            .dom('[role="option"][data-value="blocked"]')
+            .hasAttribute(
+              "aria-disabled",
+              "true",
+              "the merged item disables the actual option"
+            );
+          if (gesture === "click") {
+            await click('[role="option"][data-value="blocked"]');
+          } else {
+            assert
+              .dom("input.d-select__input")
+              .exists("the rendered typeahead supplies the keyboard target");
+            await triggerKeyEvent(
+              "input.d-select__input",
+              "keydown",
+              "ArrowDown"
+            );
+            assert
+              .dom('[role="option"][data-value="blocked"]')
+              .hasClass(
+                "--active",
+                "keyboard navigation reaches the disabled row"
+              );
+            await triggerKeyEvent("input.d-select__input", "keydown", "Enter");
+          }
+          assert.strictEqual(
+            onChange.callCount,
+            0,
+            "activating the disabled row emits nothing"
+          );
+          assert.deepEqual(state.value, [], "the value stays unchanged");
+          assert.dom(".d-select__chip").doesNotExist("no chip is added");
+          assert.dom('[role="listbox"]').exists("refusal leaves the list open");
+          assert
+            .dom("#a11y-announcements-polite")
+            .doesNotIncludeText(
+              i18n("d_select.item_added", { item: blocked.name }),
+              "refusal never announces an addition"
+            );
+        });
+      }
+    }
+
+    test("a closed control.select leaves no chip or add announcement", async function (assert) {
+      const blocked = { id: "blocked", name: "Blocked" };
+      const options = [selectOption(blocked, { disabled: true })];
+      const state = trackedState({ value: [] });
+      const onChange = sinon.spy((value) => (state.value = value));
+      let control;
+      withSelectPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forAll((spec) =>
+            spec.config((_config, context) => {
+              control = context.control;
+            })
+          )
+        )
+      );
+      retainA11yAnnouncements();
+      await render(
+        <template>
+          <DSelect
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{options}}
+            @value={{state.value}}
+            @variant="typeahead"
+          /><SelectLiveRegions />
+        </template>
+      );
+
+      control.select({ ...blocked, name: "Programmatic copy" });
+      await settled();
+
+      assert.strictEqual(
+        onChange.callCount,
+        0,
+        "a closed programmatic pick consults the listed item"
+      );
+      assert.deepEqual(state.value, [], "the parent value stays unchanged");
+      assert.dom(".d-select__chip").doesNotExist("no refused chip appears");
+      assert
+        .dom('[role="listbox"]')
+        .doesNotExist("the pick never opens the list");
+      assert
+        .dom("#a11y-announcements-polite")
+        .doesNotIncludeText(
+          i18n("d_select.item_added", { item: blocked.name }),
+          "the canonical item is not announced as added"
+        );
+      assert
+        .dom("#a11y-announcements-polite")
+        .doesNotIncludeText(
+          i18n("d_select.item_added", { item: "Programmatic copy" }),
+          "the passed copy is not announced as added"
+        );
+    });
+
+    for (const parser of ["default", "custom"]) {
+      test(`${parser} multi paste drops refused inputs before the cap`, async function (assert) {
+        const blocked = { id: "blocked", name: "Blocked" };
+        const a = { id: "a", name: "A" };
+        const b = { id: "b", name: "B" };
+        const c = { id: "c", name: "C" };
+        const options = [blocked, a, b, c];
+        const records = [selectOption(blocked, { disabled: true })];
+        const parsePaste =
+          parser === "custom"
+            ? () => [
+                blocked,
+                blocked,
+                selectOption(a, { disabled: true }),
+                a,
+                a,
+                b,
+                c,
+              ]
+            : undefined;
+        const state = trackedState({ value: [] });
+        const onChange = sinon.spy((value) => (state.value = value));
+        retainA11yAnnouncements();
+        await render(
+          <template>
+            <DSelect
+              @maximum={{2}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @options={{options}}
+              @parsePaste={{parsePaste}}
+              @value={{state.value}}
+              @valueRecords={{records}}
+              @variant="typeahead"
+            /><SelectLiveRegions />
+          </template>
+        );
+        assert
+          .dom("input.d-select__input")
+          .exists("the typeahead has a native paste target");
+        const data = new DataTransfer();
+        data.setData("text/plain", "Blocked | Blocked | A | A | B | C");
+        const event = new ClipboardEvent("paste", {
+          clipboardData: data,
+          bubbles: true,
+          cancelable: true,
+        });
+        find("input.d-select__input").dispatchEvent(event);
+        await settled();
+
+        assert.deepEqual(
+          state.value,
+          ["a", "b"],
+          "refused inputs leave capacity for later eligible keys"
+        );
+        assert.true(
+          event.defaultPrevented,
+          "the real paste handler consumes the batch"
+        );
+        assert.strictEqual(
+          onChange.callCount,
+          1,
+          "paste emits one combined change"
+        );
+        assert.deepEqual(
+          onChange.firstCall?.args[1],
+          [a, b],
+          "the payload contains only accepted records"
+        );
+        assert.deepEqual(
+          onChange.firstCall?.args[2]?.origin?.bulk,
+          { added: 2, held: 1, limit: 1 },
+          "refused inputs do not inflate held or cap counts"
+        );
+        assert
+          .dom('.d-select__chip[data-value="blocked"]')
+          .doesNotExist("the refused key has no chip");
+        assert
+          .dom(".d-select__chip")
+          .exists({ count: 2 }, "both eligible values are held");
+        assert
+          .dom("#a11y-announcements-polite")
+          .doesNotIncludeText(
+            blocked.name,
+            "the batch announcement never names the refused input"
+          );
+      });
+    }
+
+    test("an entirely refused custom paste emits and announces no addition", async function (assert) {
+      const blocked = { id: "blocked", name: "Blocked" };
+      const options = [selectOption(blocked, { disabled: true })];
+      const parsePaste = () => [blocked, { ...blocked }];
+      const state = trackedState({ value: [] });
+      const onChange = sinon.spy((value) => (state.value = value));
+      retainA11yAnnouncements();
+      await render(
+        <template>
+          <DSelect
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{options}}
+            @parsePaste={{parsePaste}}
+            @value={{state.value}}
+            @variant="typeahead"
+          /><SelectLiveRegions />
+        </template>
+      );
+      assert
+        .dom("input.d-select__input")
+        .exists("the typeahead supplies the paste target");
+      const data = new DataTransfer();
+      data.setData("text/plain", "Blocked | Blocked");
+      find("input.d-select__input").dispatchEvent(
+        new ClipboardEvent("paste", {
+          clipboardData: data,
+          bubbles: true,
+          cancelable: true,
+        })
+      );
+      await settled();
+
+      assert.strictEqual(
+        onChange.callCount,
+        0,
+        "an all-refused batch emits nothing"
+      );
+      assert.deepEqual(state.value, [], "the value remains empty");
+      assert
+        .dom(".d-select__chip")
+        .doesNotExist("no chip survives the refused paste");
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText(
+          IDLE_ANNOUNCEMENT,
+          "a fully refused paste announces neither an addition nor a held or capped input"
+        );
+    });
+
+    test("a held disabled chip remains removable", async function (assert) {
+      const record = { id: "held", name: "Held" };
+      const options = [selectOption(record, { disabled: true })];
+      const state = trackedState({ value: [record.id] });
+      const onChange = sinon.spy((value) => (state.value = value));
+      await render(
+        <template>
+          <DSelect
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{options}}
+            @value={{state.value}}
+            @variant="typeahead"
+          />
+        </template>
+      );
+      assert
+        .dom('.d-select__chip[data-value="held"] .d-select__chip-remove')
+        .exists(
+          "disabled describes additions, so the held chip still offers removal"
+        );
+      await click('.d-select__chip[data-value="held"] .d-select__chip-remove');
+      assert.deepEqual(
+        state.value,
+        [],
+        "removing the disabled held value succeeds"
+      );
+      assert.strictEqual(onChange.callCount, 1, "removal emits once");
+      assert.dom(".d-select__chip").doesNotExist("the chip is removed");
+    });
+
+    for (const { gesture, disabled } of [
+      { gesture: "click", disabled: false },
+      { gesture: "control.select", disabled: false },
+      { gesture: "control.select", disabled: true },
+    ]) {
+      test(`${gesture} ${disabled ? "refuses a query-disabled row and accepts" : "accepts a query-enabled row and refuses"} it after closing`, async function (assert) {
+        const record = { id: "query", name: "Query row" };
+        const options = [record];
+        const state = trackedState({ value: [] });
+        const onChange = sinon.spy((value) => (state.value = value));
+        let control;
+        withSelectPluginApi((api) =>
+          api.registerValueTransformer("select-customizations", ({ value }) =>
+            value.forAll((spec) => {
+              spec.config((_config, context) => {
+                control = context.control;
+              });
+              spec.content((inputs, { filter }) =>
+                inputs.map((option) =>
+                  option.with({
+                    disabled: filter === "query" ? disabled : !disabled,
+                  })
+                )
+              );
+            })
+          )
+        );
+        await render(
+          <template>
+            <DSelect
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @options={{options}}
+              @value={{state.value}}
+              @variant="typeahead"
+            />
+          </template>
+        );
+        await dSelect().search("query");
+        if (disabled) {
+          assert
+            .dom('[role="option"][data-value="query"]')
+            .hasAttribute(
+              "aria-disabled",
+              "true",
+              "the query disables the row"
+            );
+        } else {
+          assert
+            .dom('[role="option"][data-value="query"]')
+            .exists("the query lists the row")
+            .doesNotHaveAttribute("aria-disabled", "the query enables the row");
+        }
+
+        if (gesture === "click") {
+          await dSelect().select(record.id);
+        } else {
+          control.select(record);
+          await settled();
+        }
+
+        assert.strictEqual(
+          onChange.callCount,
+          disabled ? 0 : 1,
+          "picking follows the row's displayed disabled state"
+        );
+        assert.deepEqual(
+          state.value,
+          disabled ? [] : [record.id],
+          "the caller holds exactly the pick permitted by the query"
+        );
+        if (disabled) {
+          assert
+            .dom(".d-select__chip")
+            .doesNotExist("the refused pick adds no chip");
+        } else {
+          assert
+            .dom('.d-select__chip[data-value="query"]')
+            .exists("the accepted pick adds its chip");
+        }
+
+        control.deselect(record);
+        await settled();
+        await dSelect().close();
+        onChange.resetHistory();
+        assert.dom('[role="listbox"]').doesNotExist("the list is closed");
+        assert
+          .dom("input.d-select__input")
+          .hasValue("", "closing resets the query");
+
+        control.select(record);
+        await settled();
+
+        assert.strictEqual(
+          onChange.callCount,
+          disabled ? 1 : 0,
+          "a closed pick follows the opposite at-rest disabled state"
+        );
+        assert.deepEqual(
+          state.value,
+          disabled ? [record.id] : [],
+          "the old list cannot decide a pick after the query resets"
+        );
+        assert
+          .dom('[role="listbox"]')
+          .doesNotExist("the control pick stays closed");
+      });
+    }
+
+    test("a closed control.select refuses a source option disabled after the empty-query list closes", async function (assert) {
+      const record = { id: "changed", name: "Changed row" };
+      const enabled = selectOption(record, { disabled: false });
+      const state = trackedState({ value: [], options: [enabled] });
+      const onChange = sinon.spy((value) => (state.value = value));
+      let control;
+      withSelectPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forAll((spec) =>
+            spec.config((_config, context) => {
+              control = context.control;
+            })
+          )
+        )
+      );
+      await render(
+        <template>
+          <DSelect
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{state.options}}
+            @value={{state.value}}
+            @variant="typeahead"
+          />
+        </template>
+      );
+      await dSelect().open();
+      assert
+        .dom("input.d-select__input")
+        .hasValue("", "the list is built for the empty query");
+      assert
+        .dom('[role="option"][data-value="changed"]')
+        .exists("the empty query lists the source option")
+        .doesNotHaveAttribute("aria-disabled", "the listed row is enabled");
+
+      await dSelect().close();
+      state.options = [enabled.with({ disabled: true })];
+      await settled();
+      assert.dom('[role="listbox"]').doesNotExist("the list stays closed");
+      assert
+        .dom("input.d-select__input")
+        .hasValue("", "closing leaves the same empty query");
+
+      control.select(record);
+      await settled();
+
+      assert.strictEqual(
+        onChange.callCount,
+        0,
+        "the closed pick consults the newly disabled source option"
+      );
+      assert.deepEqual(state.value, [], "the parent value stays empty");
+      assert
+        .dom(".d-select__chip")
+        .doesNotExist("the refused pick adds no chip");
+      assert
+        .dom('[role="listbox"]')
+        .doesNotExist("the refused control pick keeps the list closed");
+    });
+
+    test("the displayed row follows the live query and accepts a click while its load is pending", async function (assert) {
+      const record = { id: "query", name: "Query row" };
+      const state = trackedState({ value: [] });
+      const onChange = sinon.spy((value) => (state.value = value));
+      let release;
+      const pending = new Promise((resolve) => {
+        release = () => resolve([record]);
+      });
+      let pendingStarted = false;
+      const load = (filter) => {
+        if (filter === "qu") {
+          pendingStarted = true;
+          return pending;
+        }
+        return Promise.resolve([record]);
+      };
+      withSelectPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forAll((spec) => {
+            spec.content((inputs, { filter }) =>
+              inputs.map((option) =>
+                option.with({
+                  disabled: !filter,
+                  label: filter ? `Results for ${filter}` : "At rest",
+                })
+              )
+            );
+          })
+        )
+      );
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{state.value}}
+            @variant="typeahead"
+          />
+        </template>
+      );
+      await dSelect().open();
+      assert
+        .dom('[role="option"][data-value="query"]')
+        .hasAttribute("aria-disabled", "true", "the at-rest row is disabled");
+      await dSelect().search("q");
+      assert
+        .dom('[role="option"][data-value="query"]')
+        .hasAttribute("data-name", "Results for q", "q's results are displayed")
+        .doesNotHaveAttribute("aria-disabled", "the query enables the row");
+
+      const typing = fillIn("input.d-select__input", "qu");
+      try {
+        await waitUntil(() => pendingStarted);
+        assert
+          .dom("input.d-select__input")
+          .hasValue("qu", "the live input has advanced to qu");
+        assert
+          .dom('[role="option"][data-value="query"]')
+          .hasAttribute(
+            "data-name",
+            "Results for qu",
+            "the retained row reflects the live query while qu is pending"
+          )
+          .doesNotHaveAttribute(
+            "aria-disabled",
+            "the displayed row stays enabled"
+          );
+
+        // The test helper would wait for the pending load before clicking.
+        find('[role="option"][data-value="query"]').click();
+
+        assert.strictEqual(
+          onChange.callCount,
+          1,
+          "clicking the displayed enabled row emits one selection"
+        );
+        assert.deepEqual(
+          state.value,
+          [record.id],
+          "the parent holds the selected value while qu is pending"
+        );
+        assert.deepEqual(
+          onChange.firstCall?.args[1],
+          [record],
+          "the accepted selection supplies the record to the parent"
+        );
+      } finally {
+        release();
+        await typing;
+      }
+      assert
+        .dom('.d-select__chip[data-value="query"]')
+        .exists("the accepted displayed row adds its chip");
+    });
+
+    test("control.select uses the at-rest view after minChars unmounts the list without closing", async function (assert) {
+      const a = { id: "a", name: "Apple" };
+      const options = [a];
+      const state = trackedState({ value: [] });
+      const onChange = sinon.spy((value) => (state.value = value));
+      let control;
+      withSelectPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) =>
+          value.forAll((spec) => {
+            spec.config((_config, context) => {
+              control = context.control;
+            });
+            spec.content((inputs, { filter }) =>
+              inputs.map((option) => option.with({ disabled: filter !== "ap" }))
+            );
+          })
+        )
+      );
+      await render(
+        <template>
+          <DSelect
+            @minChars={{2}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @options={{options}}
+            @value={{state.value}}
+            @variant="typeahead"
+          />
+        </template>
+      );
+      await dSelect().search("ap");
+      assert
+        .dom('[role="option"][data-value="a"]')
+        .exists("the qualifying query lists A")
+        .doesNotHaveAttribute("aria-disabled", "the query enables A");
+
+      await fillIn("input.d-select__input", "");
+
+      assert
+        .dom("input.d-select__input")
+        .hasValue("", "the query is cleared")
+        .hasAttribute("aria-expanded", "true", "the menu remains open");
+      assert.dom(".d-select__panel").exists("the panel remains mounted");
+      assert
+        .dom(".d-select__min-chars")
+        .exists("the minimum query hint replaces the list");
+      assert
+        .dom('[role="listbox"]')
+        .doesNotExist("clearing below minChars unmounts the listbox");
+
+      control.select(a);
+      await settled();
+
+      assert.strictEqual(
+        onChange.callCount,
+        0,
+        "the at-rest disabled state refuses A once its listbox unmounts"
+      );
+      assert.deepEqual(state.value, [], "the parent value remains empty");
+      assert
+        .dom(".d-select__chip")
+        .doesNotExist("the refused pick adds no chip");
+    });
+  }
+);

@@ -4127,3 +4127,640 @@ module("Unit | ui-kit | SelectEngine | held view", function (hooks) {
     });
   });
 });
+
+module("Unit | ui-kit | SelectEngine | disabled picks", function (hooks) {
+  setupTest(hooks);
+  setupLegacyBridgeCallbacks(hooks);
+
+  let withPluginApi;
+  hooks.before(async function () {
+    ({ withPluginApi } = await import("discourse/lib/plugin-api"));
+  });
+
+  function appendLegacyContent(callback) {
+    withPluginApi((api) =>
+      api.modifySelectKit("disabled-picks-bridge").appendContent(callback)
+    );
+  }
+
+  const paths = {
+    "engine.select": (engine, input) => engine.select(input),
+    "engine.toggle": (engine, input) => engine.toggle(input),
+    "engine.activate": (engine, input) => engine.activate(input),
+    "engine.selectMany": (engine, input) => engine.selectMany([input]),
+    "control.select": (engine, input) => engine.control.select(input),
+    "control.selectMany": (engine, input) => engine.control.selectMany([input]),
+    "scope.select": (engine, input) =>
+      engine.update((scope) => scope.select(input)),
+    "scope.selectMany": (engine, input) =>
+      engine.update((scope) => scope.selectMany([input])),
+  };
+
+  for (const source of ["list", "valueRecords"]) {
+    for (const [path, pick] of Object.entries(paths)) {
+      test(`${path} refuses a bare record disabled by ${source} without staging it`, async function (assert) {
+        const record = { id: "blocked", name: "Unaccepted record" };
+        const authority = { id: record.id, name: "Authoritative record" };
+        const disabled = selectOption(authority, { disabled: true });
+        const state = trackedObject({
+          value: [],
+          options: source === "list" ? [disabled] : [],
+          records: source === "valueRecords" ? [disabled] : [],
+        });
+        const onChange = sinon.spy((value) => (state.value = value));
+        const engine = new SelectEngine({
+          multiple: true,
+          options: () => state.options,
+          getValueRecords: () => state.records,
+          getValue: () => state.value,
+          onChange,
+        });
+
+        await pick(engine, record);
+
+        assert.strictEqual(
+          onChange.callCount,
+          0,
+          "a merged disabled pick emits nothing"
+        );
+        assert.deepEqual(state.value, [], "the controlled value stays empty");
+        state.options = [];
+        state.records = [];
+        assert.strictEqual(
+          engine.resolveSingleSync(record.id),
+          undefined,
+          "refusal leaves no accepted sighting after its source disappears"
+        );
+        state.value = [record.id];
+        assert.strictEqual(
+          engine.resolveSingleSync(record.id),
+          undefined,
+          "a later parent value cannot publish a refused staged record"
+        );
+        assert.strictEqual(
+          engine.itemFor(record.id, { kind: "held" }),
+          undefined,
+          "no refused input survives as a held item"
+        );
+      });
+    }
+
+    test(`single selectMany continues after a bare record disabled by ${source}`, function (assert) {
+      const blocked = { id: "blocked", name: "Blocked" };
+      const enabled = { id: "enabled", name: "Enabled" };
+      const disabled = selectOption(blocked, { disabled: true });
+      const onChange = sinon.spy();
+      const engine = new SelectEngine({
+        options: source === "list" ? [disabled, enabled] : [enabled],
+        valueRecords: source === "valueRecords" ? [disabled] : [],
+        onChange,
+      });
+
+      engine.control.selectMany([blocked, enabled]);
+
+      assert.strictEqual(
+        onChange.firstCall?.args[0],
+        enabled.id,
+        "the first eligible input wins instead of terminating at a refused key"
+      );
+      assert.strictEqual(onChange.callCount, 1, "single mode emits once");
+      assert.strictEqual(
+        onChange.firstCall?.args[1],
+        enabled,
+        "the accepted payload stays a record"
+      );
+    });
+
+    test(`an explicit enabled ${source} outranks disabled pick settings`, function (assert) {
+      const record = { id: "enabled", name: "Enabled" };
+      const enabled = selectOption(record, { disabled: false });
+      const onChange = sinon.spy();
+      const engine = new SelectEngine({
+        options: source === "list" ? [enabled] : [],
+        valueRecords: source === "valueRecords" ? [enabled] : [],
+        onChange,
+      });
+
+      engine.control.select(selectOption(record, { disabled: true }));
+
+      assert.strictEqual(
+        onChange.firstCall?.args[0],
+        record.id,
+        "pick settings contribute below the explicit source state"
+      );
+      assert.strictEqual(
+        onChange.firstCall?.args[1],
+        record,
+        "an enabled merged item emits its record"
+      );
+      const onBatchChange = sinon.spy();
+      const batch = new SelectEngine({
+        multiple: true,
+        options: source === "list" ? [enabled] : [],
+        valueRecords: source === "valueRecords" ? [enabled] : [],
+        onChange: onBatchChange,
+      });
+      batch.control.selectMany([selectOption(record, { disabled: true })]);
+      assert.deepEqual(
+        onBatchChange.firstCall?.args[0],
+        [record.id],
+        "batch eligibility also uses merged precedence instead of the raw disabled wrapper"
+      );
+      assert.deepEqual(
+        onBatchChange.firstCall?.args[1],
+        [record],
+        "the enabled batch emits records only"
+      );
+    });
+
+    test(`legacy selectKit.select respects ${source} for both value-only and supplied-record calls`, function (assert) {
+      const record = { id: "blocked", name: "Blocked" };
+      const disabled = selectOption(record, { disabled: true });
+      let selectKit;
+      appendLegacyContent((component) => {
+        selectKit = component.selectKit;
+        return [];
+      });
+      const onChange = sinon.spy();
+      const engine = new SelectEngine({
+        kind: "disabled-picks-bridge",
+        options: source === "list" ? [disabled] : [],
+        valueRecords: source === "valueRecords" ? [disabled] : [],
+        onChange,
+      });
+      engine.buildRows(engine.loadOptions());
+
+      selectKit.select(record.id);
+      assert.strictEqual(
+        onChange.callCount,
+        0,
+        "a value-only legacy pick cannot bypass disabled"
+      );
+      selectKit.select(record.id, { ...record, name: "Legacy copy" });
+      assert.strictEqual(
+        onChange.callCount,
+        0,
+        "a supplied legacy record cannot bypass disabled"
+      );
+      assert.strictEqual(
+        engine.value,
+        null,
+        "the legacy pick leaves the value unchanged"
+      );
+    });
+  }
+
+  test("own pick settings refuse an otherwise unknown key without leaving properties or a staged record", function (assert) {
+    const record = { id: "blocked", name: "Blocked" };
+    const state = trackedObject({ value: null });
+    const onChange = sinon.spy((value) => (state.value = value));
+    const engine = new SelectEngine({
+      options: [],
+      getValue: () => state.value,
+      onChange,
+    });
+
+    engine.control.select(
+      selectOption(record, { disabled: true, description: "Refused input" })
+    );
+
+    assert.strictEqual(
+      onChange.callCount,
+      0,
+      "the pick's own disabled state refuses an unknown key"
+    );
+    assert.strictEqual(state.value, null, "the value is unchanged");
+    state.value = record.id;
+    assert.strictEqual(
+      engine.resolveSingleSync(record.id),
+      undefined,
+      "late parent acceptance cannot publish a refused record"
+    );
+    assert.strictEqual(
+      engine.itemFor(record.id, { kind: "held" }),
+      undefined,
+      "neither disabled nor description properties were staged"
+    );
+  });
+
+  test("a listed disabled state outranks an explicitly enabled pick", function (assert) {
+    const record = { id: "blocked", name: "Blocked" };
+    const onChange = sinon.spy();
+    const engine = new SelectEngine({
+      options: [selectOption(record, { disabled: true })],
+      onChange,
+    });
+
+    engine.control.select(selectOption(record, { disabled: false }));
+
+    assert.strictEqual(
+      onChange.callCount,
+      0,
+      "an explicit pick-tier false cannot override list-tier true"
+    );
+  });
+
+  test("re-confirming a held disabled option still resolves the authoritative record and closes", function (assert) {
+    const record = { id: "held", name: "Authoritative" };
+    const copy = { id: record.id, name: "Pick copy" };
+    const disabled = selectOption(copy, { disabled: true });
+    const onReconfirm = sinon.spy();
+    const requestClose = sinon.spy();
+    const onChange = sinon.spy();
+    const engine = new SelectEngine({
+      options: [record],
+      valueRecords: [selectOption(record, { disabled: true })],
+      getValue: () => record.id,
+      closeOnSelect: true,
+      onReconfirm,
+      requestClose,
+      onChange,
+    });
+
+    engine.control.select(disabled);
+
+    assert.strictEqual(
+      onReconfirm.callCount,
+      1,
+      "disabled is checked after re-confirm"
+    );
+    assert.strictEqual(
+      onReconfirm.firstCall?.args[0],
+      record,
+      "re-confirm receives the key's authoritative record"
+    );
+    assert.true(
+      onReconfirm.firstCall?.args[1]?.programmatic,
+      "re-confirm keeps its programmatic origin"
+    );
+    assert.strictEqual(
+      requestClose.callCount,
+      1,
+      "single re-confirm still requests close"
+    );
+    assert.strictEqual(
+      onChange.callCount,
+      0,
+      "re-confirm is never an addition"
+    );
+    assert.strictEqual(
+      engine.value,
+      record.id,
+      "re-confirm keeps the held value"
+    );
+  });
+
+  test("a held disabled option can be toggled off and explicitly deselected", function (assert) {
+    const record = { id: "held", name: "Held" };
+    const disabled = selectOption(record, { disabled: true });
+    const state = trackedObject({ value: [record.id] });
+    const onChange = sinon.spy((value) => (state.value = value));
+    const engine = new SelectEngine({
+      multiple: true,
+      options: [disabled],
+      getValue: () => state.value,
+      onChange,
+    });
+
+    engine.toggle(disabled);
+    assert.deepEqual(
+      state.value,
+      [],
+      "toggle deselects before checking disabled additions"
+    );
+    state.value = [record.id];
+    engine.control.deselect(disabled);
+    assert.deepEqual(
+      state.value,
+      [],
+      "explicit deselection also remains available"
+    );
+    assert.strictEqual(
+      onChange.callCount,
+      2,
+      "each removal emits exactly once"
+    );
+  });
+
+  test("merged refusals consume neither batch capacity nor duplicate counts", function (assert) {
+    const blocked = { id: 1, name: "Blocked" };
+    const a = { id: 2, name: "A" };
+    const b = { id: 3, name: "B" };
+    const c = { id: 4, name: "C" };
+    const onChange = sinon.spy();
+    const engine = new SelectEngine({
+      multiple: true,
+      maximum: 2,
+      options: [selectOption(blocked, { disabled: true }), a, b, c],
+      onChange,
+    });
+
+    engine.control.selectMany([blocked, { ...blocked, id: "1" }, a, b, c]);
+
+    assert.deepEqual(
+      onChange.firstCall?.args[0],
+      [2, 3],
+      "refused inputs leave both slots for later eligible inputs"
+    );
+    assert.deepEqual(
+      onChange.firstCall?.args[1],
+      [a, b],
+      "only accepted records reach the payload"
+    );
+    assert.deepEqual(
+      onChange.firstCall?.args[2]?.origin?.bulk,
+      { added: 2, held: 0, limit: 1 },
+      "refused duplicates count as neither held nor capped inputs"
+    );
+    assert.strictEqual(onChange.callCount, 1, "the batch emits once");
+  });
+
+  test("refused wrappers and actions do not reserve their key against a later eligible batch input", function (assert) {
+    const a = { id: 1, name: "A" };
+    const b = { id: 2, name: "B" };
+    const c = { id: 3, name: "C" };
+    const onSelect = sinon.spy();
+    const onChange = sinon.spy();
+    const engine = new SelectEngine({ multiple: true, maximum: 2, onChange });
+
+    engine.control.selectMany([
+      selectOption(a, { disabled: true }),
+      selectOption(a, { onSelect }),
+      a,
+      { ...a, id: "1" },
+      b,
+      c,
+    ]);
+
+    assert.deepEqual(
+      onChange.firstCall?.args[0],
+      [1, 2],
+      "the later bare record is eligible after refused same-key inputs"
+    );
+    assert.deepEqual(
+      onChange.firstCall?.args[1],
+      [a, b],
+      "accepted records keep their identity and order"
+    );
+    assert.deepEqual(
+      onChange.firstCall?.args[2]?.origin?.bulk,
+      { added: 2, held: 1, limit: 1 },
+      "only an accepted duplicate and an eligible excess input count"
+    );
+    assert.strictEqual(
+      onSelect.callCount,
+      0,
+      "selectMany never activates action options"
+    );
+  });
+
+  test("engine.activate retains the existing action activation rule", function (assert) {
+    const onSelect = sinon.spy();
+    const onChange = sinon.spy();
+    const engine = new SelectEngine({ onChange });
+    const record = { id: "action", name: "Action" };
+    const option = selectOption(record, { disabled: true, onSelect });
+
+    engine.activate(option);
+
+    assert.strictEqual(
+      onSelect.callCount,
+      1,
+      "engine activation still runs an action's callback even with disabled settings"
+    );
+    assert.strictEqual(
+      onSelect.firstCall?.args[0],
+      engine.control,
+      "the callback receives the live control"
+    );
+    assert.strictEqual(
+      onSelect.firstCall?.args[1],
+      record,
+      "the callback receives its bound record"
+    );
+    assert.strictEqual(onChange.callCount, 0, "actions never become values");
+  });
+
+  test("a matching resolver answer refuses a bare pick", async function (assert) {
+    const record = { id: "answer", name: "Resolved disabled" };
+    const onChange = sinon.spy();
+    const engine = new SelectEngine({
+      options: [],
+      resolveValue: () => selectOption(record, { disabled: true }),
+      onChange,
+    });
+    await engine.resolveSelection(record.id);
+
+    engine.control.select(record);
+
+    assert.strictEqual(
+      onChange.callCount,
+      0,
+      "the matching answer contributes disabled to a bare pick"
+    );
+    assert.strictEqual(
+      engine.value,
+      null,
+      "the answer is known but never picked"
+    );
+  });
+
+  test("pick settings outrank a matching resolver answer", async function (assert) {
+    const record = { id: "answer", name: "Resolved disabled" };
+    const onChange = sinon.spy();
+    const engine = new SelectEngine({
+      options: [],
+      resolveValue: () => selectOption(record, { disabled: true }),
+      onChange,
+    });
+    await engine.resolveSelection(record.id);
+
+    engine.control.select(selectOption(record, { disabled: false }));
+
+    assert.strictEqual(
+      onChange.firstCall?.args[0],
+      record.id,
+      "explicit pick-tier false outranks answer-tier true"
+    );
+    assert.strictEqual(
+      onChange.firstCall?.args[1],
+      record,
+      "the enabled pick still emits the resolved record"
+    );
+  });
+
+  test("held pick state survives source removal without blocking re-confirm or deselection", function (assert) {
+    const record = { id: "held", name: "Held" };
+    const state = trackedObject({
+      value: null,
+      options: [selectOption(record, { disabled: false })],
+    });
+    const onChange = sinon.spy((value) => (state.value = value));
+    const onReconfirm = sinon.spy();
+    const engine = new SelectEngine({
+      options: () => state.options,
+      getValue: () => state.value,
+      onChange,
+      onReconfirm,
+    });
+
+    engine.control.select(selectOption(record, { disabled: true }));
+    assert.strictEqual(
+      state.value,
+      record.id,
+      "the explicit enabled list permits the lower-tier disabled pick"
+    );
+    state.options = [];
+    assert.true(
+      engine.heldItem(record).disabled,
+      "removing the list reveals the accepted pick's disabled state"
+    );
+
+    engine.control.select(record);
+    assert.strictEqual(
+      onReconfirm.callCount,
+      1,
+      "merged held-pick disabled state does not block re-confirm"
+    );
+    assert.strictEqual(
+      onReconfirm.firstCall?.args[0],
+      record,
+      "re-confirm keeps the accepted record"
+    );
+    engine.control.deselect(record);
+    assert.strictEqual(
+      state.value,
+      null,
+      "a disabled held pick can still be deselected"
+    );
+    assert.strictEqual(
+      onChange.callCount,
+      2,
+      "only the initial enabled addition and the removal emit"
+    );
+  });
+
+  function registerLegacyContent(content, callback) {
+    withPluginApi((api) =>
+      api.modifySelectKit("disabled-picks-bridge")[content](callback)
+    );
+  }
+
+  for (const content of ["replaceContent", "appendContent"]) {
+    for (const path of ["selectKit.select", "control.select"]) {
+      test(`${path} refuses a row shown disabled by legacy ${content}`, function (assert) {
+        const blocked = { id: "blocked", name: "Blocked" };
+        const enabled = { id: "enabled", name: "Enabled" };
+        let selectKit;
+        registerLegacyContent(content, (component, records) => {
+          selectKit = component.selectKit;
+          return content === "replaceContent"
+            ? records.map((record) =>
+                record.id === blocked.id
+                  ? { ...record, disabled: true }
+                  : record
+              )
+            : [{ ...blocked, disabled: true }];
+        });
+        const state = trackedObject({ value: null });
+        const onChange = sinon.spy((value) => (state.value = value));
+        const engine = new SelectEngine({
+          kind: "disabled-picks-bridge",
+          options:
+            content === "replaceContent" ? [blocked, enabled] : [enabled],
+          getValue: () => state.value,
+          onChange,
+        });
+        const rows = engine.buildRows(engine.loadOptions());
+        assert.true(
+          rows.find((row) => row.value === blocked.id)?.flags.disabled,
+          "the built list shows the legacy row disabled"
+        );
+
+        if (path === "selectKit.select") {
+          selectKit.select(blocked.id);
+        } else {
+          engine.control.select(blocked);
+        }
+
+        assert.strictEqual(
+          onChange.callCount,
+          0,
+          "a pick of the displayed legacy disabled key emits nothing"
+        );
+        assert.strictEqual(state.value, null, "the caller's value stays empty");
+
+        if (path === "selectKit.select") {
+          selectKit.select(enabled.id);
+        } else {
+          engine.control.select(enabled);
+        }
+        assert.strictEqual(
+          onChange.callCount,
+          1,
+          "the same API still permits the enabled row"
+        );
+        assert.strictEqual(
+          state.value,
+          enabled.id,
+          "the caller accepts only the enabled key"
+        );
+      });
+    }
+  }
+
+  test("a held key omitted by the last build cannot enable an immediate pick after deselection", function (assert) {
+    const a = { id: "a", name: "A" };
+    const b = { id: "b", name: "B" };
+    const state = trackedObject({ value: [a.id] });
+    const onChange = sinon.spy((value) => (state.value = value));
+    const engine = new SelectEngine({
+      multiple: true,
+      options: [a, b],
+      getValue: () => state.value,
+      onChange,
+    });
+    const firstRows = engine.buildRows([selectOption(a, { disabled: false })]);
+    assert.deepEqual(
+      firstRows.map((row) => row.value),
+      [a.id],
+      "the first build shows the held A"
+    );
+    assert.false(firstRows[0].flags.disabled, "A's first row is enabled");
+
+    const lastRows = engine.buildRows([selectOption(b, { disabled: false })]);
+    assert.deepEqual(
+      lastRows.map((row) => row.value),
+      [b.id],
+      "the last build shows only B while A remains held"
+    );
+
+    engine.control.deselect(a);
+    engine.control.select(selectOption(a, { disabled: true }));
+
+    assert.strictEqual(
+      onChange.callCount,
+      1,
+      "only deselection emits; A's omitted row cannot enable the immediate disabled pick"
+    );
+    assert.deepEqual(state.value, [], "A stays deselected");
+    assert.deepEqual(
+      onChange.firstCall?.args[0],
+      [],
+      "the emitted change removes A"
+    );
+
+    engine.control.select(selectOption(b, { disabled: true }));
+
+    assert.deepEqual(
+      state.value,
+      [b.id],
+      "B's enabled row from the last build still outranks its disabled pick input"
+    );
+    assert.strictEqual(
+      onChange.callCount,
+      2,
+      "only removal and B's addition emit"
+    );
+  });
+});
