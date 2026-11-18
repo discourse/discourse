@@ -25,10 +25,10 @@ module("Unit | Service | page shell", function (hooks) {
     assert.strictEqual(this.stored(), undefined, "loading writes nothing");
   });
 
-  test("imports the legacy hidden sidebar when nothing is saved", function (assert) {
+  test("imports the legacy hidden sidebar as a rail when nothing is saved", function (assert) {
     this.store.setItem("sidebar-hidden", "true");
 
-    assert.strictEqual(this.shell().navigation, "hidden");
+    assert.strictEqual(this.shell().navigation, "rail");
     assert.strictEqual(this.stored(), undefined, "loading writes nothing");
   });
 
@@ -101,22 +101,27 @@ module("Unit | Service | page shell", function (hooks) {
     assert.strictEqual(this.stored(), undefined);
   });
 
-  test("navigation mode keeps the legacy hidden sidebar in step", function (assert) {
-    this.input("navigation", "hidden");
-    assert.strictEqual(this.store.getItem("sidebar-hidden"), "true");
+  test("a saved hidden Navigation preference loads as a rail", function (assert) {
+    this.store.setObject({
+      key: STORAGE_KEY,
+      value: {
+        version: 1,
+        navigation: { mode: "hidden", width: 320 },
+      },
+    });
 
-    this.input("navigation", "rail");
-    assert.strictEqual(
-      this.store.getItem("sidebar-hidden"),
-      undefined,
-      "a rail is a visible sidebar in the legacy layout"
-    );
+    assert.strictEqual(this.shell().navigation, "rail");
+    assert.strictEqual(this.shell().navigationWidth, 320);
+  });
+
+  test("the navigation toggle switches between open and rail", function (assert) {
+    this.shell().toggleNavigation();
+    assert.strictEqual(this.stored().navigation.mode, "rail");
+    assert.strictEqual(this.store.getItem("sidebar-hidden"), "true");
 
     this.shell().toggleNavigation();
     assert.strictEqual(this.stored().navigation.mode, "open");
-    this.shell().toggleNavigation();
-    assert.strictEqual(this.stored().navigation.mode, "hidden");
-    assert.strictEqual(this.store.getItem("sidebar-hidden"), "true");
+    assert.strictEqual(this.store.getItem("sidebar-hidden"), undefined);
   });
 
   test("clamping context to the available space keeps the saved width", function (assert) {

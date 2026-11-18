@@ -8,7 +8,10 @@ import EmbedMode from "discourse/lib/embed-mode";
 const STORAGE_KEY = "page-shell-panels";
 const STORAGE_VERSION = 1;
 const LEGACY_HIDDEN_KEY = "sidebar-hidden";
-const PANEL_MODES = ["open", "rail", "hidden"];
+const PANEL_MODES = {
+  navigation: ["open", "rail"],
+  context: ["open", "hidden"],
+};
 const PANEL_FIELDS = [
   "navigation",
   "context",
@@ -30,11 +33,11 @@ export const PANEL_LIMITS = {
  */
 function parsePanelPreference(name, stored, fallbackMode = "open") {
   const { defaultWidth, minWidth, maxWidth } = PANEL_LIMITS[name];
-  const mode =
-    PANEL_MODES.includes(stored?.mode) &&
-    (name === "navigation" || stored.mode !== "rail")
-      ? stored.mode
-      : fallbackMode;
+  const storedMode =
+    name === "navigation" && stored?.mode === "hidden" ? "rail" : stored?.mode;
+  const mode = PANEL_MODES[name].includes(storedMode)
+    ? storedMode
+    : fallbackMode;
   const width =
     typeof stored?.width === "number" && Number.isFinite(stored.width)
       ? Math.round(Math.max(minWidth, Math.min(stored.width, maxWidth)))
@@ -60,7 +63,7 @@ export default class PageShell extends Service {
   @tracked navigationMaxWidth = PANEL_LIMITS.navigation.maxWidth;
   @tracked contextMaxWidth = Math.max(200, Math.min(1000, window.innerWidth));
   @tracked compactLogo = false;
-  @tracked closingPanels = {};
+  @tracked closingContext = false;
   @tracked animatingPanels = false;
 
   #animationTimer;
@@ -109,10 +112,7 @@ export default class PageShell extends Service {
     };
 
     if (name === "navigation" || name === "context") {
-      if (
-        !PANEL_MODES.includes(value) ||
-        (name === "context" && value === "rail")
-      ) {
+      if (!PANEL_MODES[name].includes(value)) {
         return;
       }
       this.#setPanelMode(name, value);
@@ -163,14 +163,8 @@ export default class PageShell extends Service {
   toggleNavigation() {
     this.#setPanelMode(
       "navigation",
-      this.navigation === "open" ? "hidden" : "open"
+      this.navigation === "open" ? "rail" : "open"
     );
-    this.#save();
-  }
-
-  @action
-  openNavigation() {
-    this.#setPanelMode("navigation", "open");
     this.#save();
   }
 
@@ -190,10 +184,9 @@ export default class PageShell extends Service {
       this.width === "centered" &&
       window.matchMedia("(prefers-reduced-motion: no-preference)").matches
     ) {
-      this.closingPanels = {
-        ...this.closingPanels,
-        [panel]: mode === "hidden" ? previousMode : undefined,
-      };
+      if (panel === "context") {
+        this.closingContext = mode === "hidden";
+      }
       this.animatingPanels = true;
       this.#animationTimer = discourseDebounce(
         this,
@@ -212,7 +205,7 @@ export default class PageShell extends Service {
 
     cancel(this.#animationTimer);
     this.animatingPanels = false;
-    this.closingPanels = {};
+    this.closingContext = false;
   }
 
   #load() {
@@ -223,7 +216,7 @@ export default class PageShell extends Service {
     // Without a saved shell preference, start from the legacy sidebar choice.
     const navigationFallback =
       !stored && this.keyValueStore.getItem(LEGACY_HIDDEN_KEY)
-        ? "hidden"
+        ? "rail"
         : "open";
     const navigation = parsePanelPreference(
       "navigation",
@@ -249,7 +242,7 @@ export default class PageShell extends Service {
     });
 
     // Keeps the legacy layout's choice in step while the shell can be turned off.
-    if (this.navigation === "hidden") {
+    if (this.navigation === "rail") {
       this.keyValueStore.setItem(LEGACY_HIDDEN_KEY, "true");
     } else {
       this.keyValueStore.removeItem(LEGACY_HIDDEN_KEY);

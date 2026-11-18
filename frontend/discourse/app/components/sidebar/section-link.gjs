@@ -40,6 +40,7 @@ export function isHex(input) {
 export default class SectionLink extends Component {
   @service capabilities;
   @service currentUser;
+  @service pageShell;
   @service router;
   @service sidebarState;
 
@@ -101,6 +102,15 @@ export default class SectionLink extends Component {
       this.isExternal
       ? "_blank"
       : "_self";
+  }
+
+  get title() {
+    return (
+      this.args.title ??
+      (this.pageShell.enabled && this.pageShell.navigation === "rail"
+        ? this.args.content
+        : undefined)
+    );
   }
 
   get isExternal() {
@@ -263,7 +273,7 @@ export default class SectionLink extends Component {
             href={{@href}}
             rel="noopener noreferrer"
             target={{this.target}}
-            title={{@title}}
+            title={{this.title}}
           >
             <SectionLinkPrefix
               @prefixBadge={{@prefixBadge}}
@@ -329,7 +339,7 @@ export default class SectionLink extends Component {
             class={{this.linkClass}}
             data-link-name={{@linkName}}
             draggable={{if @suppressNativeDrag false}}
-            title={{@title}}
+            title={{this.title}}
             @current-when={{this.resolvedCurrentWhen}}
             @models={{this.models}}
             @query={{or @query (hash)}}
