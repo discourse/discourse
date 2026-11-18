@@ -261,21 +261,25 @@ export function autoUpdatingRelativeAge(
  * Formats "Until" and a time, for today, or a date.
  *
  * @param untilDate - The end date.
- * @param timezone - The timezone to show it in.
- * @param locale - The locale of the time format.
+ * @param timezone - The timezone to show it in. Without one, it is shown in UTC.
+ * @param locale - The locale of the time format. Without one, the current locale
+ *   is used.
  * @returns The formatted text.
  */
 export function until(
   untilDate: DateInput,
-  timezone: string,
-  locale: string
+  timezone?: string | null,
+  locale?: string | null
 ): string {
-  const untilMoment = moment.tz(untilDate as MomentInput, timezone);
-  const now = moment.tz(timezone);
+  // `moment.tz` falls back to UTC without a zone, but its types require one.
+  const untilMoment = timezone
+    ? moment.tz(untilDate as MomentInput, timezone)
+    : moment.utc(untilDate as MomentInput);
+  const now = timezone ? moment.tz(timezone) : moment.utc();
 
   let untilFormatted;
   if (now.isSame(untilMoment, "day")) {
-    const localeData = moment.localeData(locale);
+    const localeData = moment.localeData(locale ?? undefined);
     untilFormatted = untilMoment.format(localeData.longDateFormat("LT"));
   } else {
     untilFormatted = untilMoment.format(i18n("dates.long_no_year_no_time"));

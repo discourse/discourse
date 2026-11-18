@@ -8,6 +8,7 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import { relativeAge } from "discourse/lib/formatter";
 import DiscourseURL from "discourse/lib/url";
+import type A11yService from "discourse/services/a11y";
 import DButton from "discourse/ui-kit/d-button";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
 import DUserLink from "discourse/ui-kit/d-user-link";
@@ -16,8 +17,54 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
-export default class DPostAccordionItem extends Component {
-  @service a11y;
+/** A post shown in a post accordion, such as a `Post` model. */
+export interface DPostAccordionPost {
+  id: number;
+  topic_id: number;
+  post_number: number;
+  username: string;
+  name?: string | null;
+  avatar_template: string;
+  cooked?: string | null;
+  url: string;
+  created_at: string;
+}
+
+interface DPostAccordionItemSignature {
+  Args: {
+    /** The post to show. */
+    post: DPostAccordionPost;
+
+    /** Whether the post is expanded. */
+    isExpanded?: boolean;
+
+    /** Called to expand or collapse the post. */
+    onToggleExpanded: () => void;
+
+    /** How many lines of a collapsed post to show. */
+    linesDisplayed?: number | string;
+
+    /** State passed to the post decorators. */
+    decoratorState?: unknown;
+
+    /** Whether the accordion has an `itemMetadata` block to render. */
+    hasItemMetadataBlock?: boolean;
+
+    /** Whether the accordion has a `beforeItemContent` block to render. */
+    hasBeforeItemContentBlock?: boolean;
+  };
+
+  Blocks: {
+    /** The metadata of the post, in place of its author and date. */
+    itemMetadata: [post: DPostAccordionPost];
+
+    /** Content shown before the post's content. */
+    beforeItemContent: [post: DPostAccordionPost];
+  };
+}
+
+export default class DPostAccordionItem extends Component<DPostAccordionItemSignature> {
+  @service declare a11y: A11yService;
 
   @tracked measured = false;
   @tracked isOverflowing = false;
@@ -61,8 +108,8 @@ export default class DPostAccordionItem extends Component {
   }
 
   @action
-  onClickHeader(event) {
-    if (event.target.closest("a")) {
+  onClickHeader(event: MouseEvent) {
+    if ((event.target as Element).closest("a")) {
       return;
     }
 
@@ -74,7 +121,7 @@ export default class DPostAccordionItem extends Component {
   }
 
   @action
-  checkOverflow(entries) {
+  checkOverflow(entries: ResizeObserverEntry[]) {
     if (!this.args.isExpanded) {
       this.isOverflowing = false;
       this.measured = true;

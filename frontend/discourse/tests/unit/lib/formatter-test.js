@@ -556,6 +556,19 @@ module("Unit | Utility | formatter | until", function (hooks) {
 
     assert.strictEqual(result, `Until: ${untilTbilisi}`);
   });
+
+  test("shows the time in UTC without a timezone", function (assert) {
+    this.clock = fakeTime("2100-01-01 12:00:00.000Z", "Asia/Tbilisi");
+    const result = until("2100-01-01 13:00:00.000Z", undefined, "en");
+    assert.strictEqual(result, "Until: 1:00 PM", "UTC, not the local time");
+  });
+
+  test("uses the current locale without a locale", function (assert) {
+    const timezone = "UTC";
+    this.clock = fakeTime("2100-01-01 12:00:00.000Z", timezone);
+    const result = until("2100-01-01 13:00:00.000Z", timezone, undefined);
+    assert.strictEqual(result, "Until: 1:00 PM");
+  });
 });
 
 module("Unit | Utility | formatter | dates", function (hooks) {
