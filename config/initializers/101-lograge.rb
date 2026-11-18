@@ -88,6 +88,9 @@ if DiscourseLograge.enabled?
         {}
       end
 
+      params_formatter =
+        TruncateLogsFormatter.new(log_line_max_chars: GlobalSetting.log_line_max_chars)
+
       config.lograge.custom_options =
         lambda do |event|
           exceptions = %w[controller action format id]
@@ -103,7 +106,7 @@ if DiscourseLograge.enabled?
           end
 
           output = {
-            params: params.to_query.truncate(4.kilobytes),
+            params: params_formatter.call(params.to_query),
             database: RailsMultisite::ConnectionManagement.current_db,
           }
 
