@@ -1344,14 +1344,14 @@ module(
         .exists("the cancel button is shown");
     });
 
-    test("clearing the input field keeps the cancel button and the validation error shown", async function (assert) {
+    test("clearing the input field keeps the cancel button and clears the validation error", async function (assert) {
       await renderMaxImageSizeSetting("1000");
 
       await fillIn(".file-size-input", "100");
       assert.dom(".form-kit__errors").exists();
 
       await fillIn(".file-size-input", "");
-      assert.dom(".form-kit__errors").exists();
+      assert.dom(".form-kit__errors").doesNotExist();
       assert.dom(".setting-controls__ok").exists("the save button is shown");
       assert
         .dom(".setting-controls__cancel")
