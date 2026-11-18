@@ -112,7 +112,9 @@ class NewPostManager
 
     return :staged if SiteSetting.approve_unless_staged? && user.staged?
 
-    return :category if post_needs_approval_in_its_category?(manager)
+    if approval_reason = topic_or_category_approval_reason(manager)
+      return approval_reason
+    end
 
     unless user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
       return :contains_media if contains_embedded_media?(manager.args)
@@ -127,21 +129,29 @@ class NewPostManager
     Post.new(raw: args[:raw], topic_id: args[:topic_id]).embedded_media_count.positive?
   end
 
-  def self.post_needs_approval_in_its_category?(manager)
+  def self.topic_or_category_approval_reason(manager)
     guardian = manager.user.guardian
 
     if manager.args[:topic_id].present?
       topic = Topic.find_by(id: manager.args[:topic_id])
-      return false unless topic&.category
+      return unless topic&.category
 
-      guardian.reply_posting_review_required?(topic.category) && !guardian.can_review_topic?(topic)
+      requires_topic_approval =
+        SiteSetting.enable_topic_reply_approval && topic.regular? && topic.reply_approval_required?
+      requires_category_approval = guardian.reply_posting_review_required?(topic.category)
+      if (!requires_topic_approval && !requires_category_approval) ||
+           guardian.can_review_topic?(topic)
+        return
+      end
+
+      requires_topic_approval ? :topic_reply_approval : :category
     elsif manager.args[:category].present?
       category = Category.find(manager.args[:category])
 
-      guardian.topic_posting_review_required?(category) &&
-        !guardian.is_category_group_moderator?(category)
-    else
-      false
+      if guardian.topic_posting_review_required?(category) &&
+           !guardian.is_category_group_moderator?(category)
+        :category
+      end
     end
   end
 

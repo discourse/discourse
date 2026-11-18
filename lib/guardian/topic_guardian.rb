@@ -23,6 +23,11 @@ module TopicGuardian
     can_perform_action_available_to_group_moderators?(topic)
   end
 
+  def can_set_topic_reply_approval?(topic)
+    SiteSetting.enable_topic_reply_approval && topic&.regular? && can_review_topic?(topic) &&
+      can_see_topic?(topic)
+  end
+
   def can_create_shared_draft?
     SiteSetting.shared_drafts_enabled? && can_see_shared_draft?
   end

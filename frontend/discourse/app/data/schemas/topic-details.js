@@ -26,6 +26,8 @@ export const TopicDetailsSchema = withDefaults({
       "can_edit_tags",
       "can_publish_page",
       "can_close_topic",
+      "can_set_reply_approval",
+      "reply_approval_required",
       "can_archive_topic",
       "can_split_merge_topic",
       "can_edit_staff_notes",

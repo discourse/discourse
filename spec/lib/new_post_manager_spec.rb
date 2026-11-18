@@ -18,6 +18,52 @@ RSpec.describe NewPostManager do
     end
   end
 
+  describe "topic reply approval" do
+    before do
+      topic.update!(reply_approval_required: true)
+      SiteSetting.enable_topic_reply_approval = true
+    end
+
+    it "queues replies only in the selected topic" do
+      result = described_class.new(user, raw: "This reply needs review", topic_id: topic.id).perform
+
+      expect(result).to be_success
+      expect(result.reviewable.topic).to eq(topic)
+      expect(result.reviewable.reviewable_scores.sole.reason).to eq("topic_reply_approval")
+      expect(result.post).to be_nil
+
+      other_topic = Fabricate(:topic, category: topic.category)
+      result =
+        described_class.new(user, raw: "This other topic is open", topic_id: other_topic.id).perform
+
+      expect(result).to be_success
+      expect(result.post.topic).to eq(other_topic)
+    end
+
+    it "publishes replies normally while the site setting is disabled" do
+      SiteSetting.enable_topic_reply_approval = false
+
+      result = described_class.new(user, raw: "This reply is public", topic_id: topic.id).perform
+
+      expect(result).to be_success
+      expect(result.post.topic).to eq(topic)
+    end
+
+    it "allows a moderator to post a reply without approval" do
+      moderator = Fabricate(:moderator)
+
+      result =
+        described_class.new(
+          moderator,
+          raw: "This is a moderation reply",
+          topic_id: topic.id,
+        ).perform
+
+      expect(result).to be_success
+      expect(result.post.topic).to eq(topic)
+    end
+  end
+
   describe "default action for private messages" do
     fab!(:other_user, :user)
 

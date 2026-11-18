@@ -99,6 +99,7 @@ export default class TopicAdminMenu extends Component {
       this.currentUser?.canSetTopicTimer ||
       this.details?.can_archive_topic ||
       this.details?.can_close_topic ||
+      this.details?.can_set_reply_approval ||
       this.details?.can_split_merge_topic
     );
   }
@@ -130,6 +131,7 @@ export default class TopicAdminMenu extends Component {
       (showsMultiSelect ||
         showsDeleteOrRecover ||
         this.details?.can_close_topic ||
+        this.details?.can_set_reply_approval ||
         showsPin ||
         showsArchive ||
         this.details?.can_toggle_topic_visibility ||
@@ -166,6 +168,21 @@ export default class TopicAdminMenu extends Component {
   async onExtraButtonAction(buttonAction) {
     await this.dMenu.close();
     buttonAction?.();
+  }
+
+  @action
+  async toggleReplyApproval() {
+    await this.dMenu.close();
+    const enabled = !this.details.reply_approval_required;
+    try {
+      await ajax(`/t/${this.args.topic.id}/reply-approval`, {
+        type: "PUT",
+        data: { enabled },
+      });
+      this.details.set("reply_approval_required", enabled);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   @action
@@ -263,6 +280,20 @@ export default class TopicAdminMenu extends Component {
                     @topic.closed
                     "topic.actions.open"
                     "topic.actions.close"
+                  }}
+                />
+              </dropdown.item>
+            {{/if}}
+
+            {{#if this.details.can_set_reply_approval}}
+              <dropdown.item class="topic-admin-reply-approval">
+                <DButton
+                  @action={{this.toggleReplyApproval}}
+                  @icon="list-check"
+                  @label={{if
+                    this.details.reply_approval_required
+                    "topic.actions.stop_requiring_reply_approval"
+                    "topic.actions.require_reply_approval"
                   }}
                 />
               </dropdown.item>

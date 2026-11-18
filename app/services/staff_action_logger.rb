@@ -256,6 +256,18 @@ class StaffActionLogger
     )
   end
 
+  def log_topic_reply_approval(topic)
+    previous, current = topic.saved_change_to_reply_approval_required
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:topic_reply_approval_changed],
+        topic_id: topic.id,
+        previous_value: previous.to_s,
+        new_value: current.to_s,
+      ),
+    )
+  end
+
   def log_topic_slow_mode(topic, opts = {})
     raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
 

@@ -2099,6 +2099,7 @@ CREATE TABLE public.topics (
     visibility_reason_id integer,
     locale character varying(20),
     og_image_upload_id bigint,
+    reply_approval_required boolean DEFAULT false NOT NULL,
     CONSTRAINT has_category_id CHECK (((category_id IS NOT NULL) OR ((archetype)::text <> 'regular'::text))),
     CONSTRAINT pm_has_no_category CHECK (((category_id IS NULL) OR ((archetype)::text <> 'private_message'::text)))
 );
@@ -26816,6 +26817,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261118225837'),
 ('20261118215054'),
 ('20261118184327'),
 ('20261118184323'),

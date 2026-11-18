@@ -18,6 +18,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
       can_edit_tags
       can_publish_page
       can_close_topic
+      can_set_reply_approval
       can_archive_topic
       can_split_merge_topic
       can_edit_staff_notes
@@ -36,6 +37,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     :notifications_reason_id,
     *can_attributes,
     :can_remove_self_id,
+    :reply_approval_required,
     :participants,
     :allowed_users,
   )
@@ -98,6 +100,18 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   # Explicitly returning a `false` value is required to update the client UI.
   def can_edit
     scope.can_edit?(object.topic)
+  end
+
+  def include_can_set_reply_approval?
+    scope.can_set_topic_reply_approval?(object.topic)
+  end
+
+  def include_reply_approval_required?
+    include_can_set_reply_approval?
+  end
+
+  def reply_approval_required
+    object.topic.reply_approval_required?
   end
 
   def include_can_review_topic?

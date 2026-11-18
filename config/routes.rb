@@ -1668,6 +1668,7 @@ Discourse::Application.routes.draw do
     put "t/:slug/:topic_id" => "topics#update", :constraints => { topic_id: /\d+/ }
     put "t/:slug/:topic_id/status" => "topics#status", :constraints => { topic_id: /\d+/ }
     put "t/:topic_id/status" => "topics#status", :constraints => { topic_id: /\d+/ }
+    put "t/:topic_id/reply-approval" => "topics#reply_approval", :constraints => { topic_id: /\d+/ }
     put "t/:topic_id/clear-pin" => "topics#clear_pin", :constraints => { topic_id: /\d+/ }
     put "t/:topic_id/re-pin" => "topics#re_pin", :constraints => { topic_id: /\d+/ }
     put "t/:topic_id/mute" => "topics#mute", :constraints => { topic_id: /\d+/ }
