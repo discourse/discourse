@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { trustHTML } from "@ember/template";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import lazyHash from "discourse/helpers/lazy-hash";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -83,18 +83,11 @@ const Body = <template>
     {{#if @flow.hasActionDetails}}
       <div hidden={{not @flow.showContinue}}>{{yield}}</div>
     {{/if}}
-    <div hidden={{@flow.showContinue}}>
-      {{#if @flow.reviewableId}}
-        <PluginOutlet
-          @name="dsa-classification-before-fields"
-          @outletArgs={{lazyHash
-            communityRules=@flow.options.community_rules
-            loading=@flow.isUpdatingClassification
-            reviewableId=@flow.reviewableId
-            updateClassification=@flow.updateClassification
-          }}
-        />
-      {{/if}}
+    <div
+      hidden={{@flow.showContinue}}
+      {{didInsert @flow.suggestClassification}}
+    >
+      <span class="sr-only" role="status">{{@flow.statusMessage}}</span>
       <DsaModerationDetails
         @disabled={{@flow.isUpdatingClassification}}
         @fieldHints={{or @flow.pendingFieldHints @flow.fieldHints}}
@@ -131,16 +124,6 @@ const Footer = <template>
       @translatedLabel={{@submitLabel}}
     />
   {{/if}}
-  {{#if (and @flow.enabled (not @flow.showContinue) @flow.reviewableId)}}
-    <PluginOutlet
-      @name="dsa-classification-footer"
-      @outletArgs={{lazyHash
-        disabled=(or @disabled @flow.isUpdatingClassification)
-        reviewableId=@flow.reviewableId
-        updateClassification=@flow.updateClassification
-      }}
-    />
-  {{/if}}
   {{#if @flow.showBack}}
     <DButton
       class="btn-flat"
@@ -160,6 +143,7 @@ const Footer = <template>
 
 export default class DsaModeration extends Component {
   @tracked fieldHints = {};
+  @tracked statusMessage;
   @tracked classificationStep = false;
   @tracked pendingFieldHints = null;
 
@@ -258,24 +242,33 @@ export default class DsaModeration extends Component {
   }
 
   @action
-  async updateClassification(load, hint, pendingFieldHints = {}) {
-    if (this.isUpdatingClassification) {
+  async suggestClassification() {
+    if (!this.reviewableId) {
       return;
     }
 
-    this.pendingFieldHints = pendingFieldHints;
+    const suggestion = applyBehaviorTransformer(
+      "suggest-dsa-classification",
+      () => null,
+      {
+        reviewableId: this.reviewableId,
+        communityRules: this.options.community_rules,
+      }
+    );
+    if (!suggestion) {
+      return;
+    }
+
+    this.pendingFieldHints = suggestion.pendingFieldHints;
+    this.statusMessage = suggestion.loadingMessage;
     try {
-      const { community_rule, category, fieldHints } = await load();
+      const { values, fieldHints, message } = await suggestion.result;
       if (!this.isDestroying) {
-        const values = {
-          ...(community_rule && { community_rule }),
-          ...(category && { category }),
-        };
-        await this.#setClassification(values);
-        this.fieldHints = fieldHints ?? {
-          community_rule: community_rule && hint,
-          category: category && hint,
-        };
+        if (values) {
+          await this.#setClassification(values);
+        }
+        this.fieldHints = fieldHints;
+        this.statusMessage = message;
       }
     } finally {
       if (!this.isDestroying) {
