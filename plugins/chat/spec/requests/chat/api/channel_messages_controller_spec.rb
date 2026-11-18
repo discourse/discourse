@@ -25,6 +25,32 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         )
       end
 
+      context "when a reply's original message is trashed in a channel with threading disabled" do
+        fab!(:original_message) do
+          Fabricate(:chat_message, chat_channel: channel, message: "inline original message")
+        end
+        fab!(:thread) do
+          Fabricate(:chat_thread, channel: channel, original_message: original_message)
+        end
+        fab!(:reply) do
+          Fabricate(
+            :chat_message,
+            chat_channel: channel,
+            thread: thread,
+            message: "inline reply message",
+          )
+        end
+
+        it "still lists the reply in the channel timeline" do
+          original_message.trash!
+
+          get "/chat/api/channels/#{channel.id}/messages"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(reply.id)
+        end
+      end
+
       context "as anonymous user" do
         before do
           delete "/session/#{current_user.username}.json"
@@ -408,6 +434,106 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
         expect(response).to have_http_status(:ok)
         expect(messages).to be_empty
+      end
+    end
+
+    context "when the channel does not use threads" do
+      before { channel.update!(threading_enabled: false) }
+
+      context "when replying to a reply whose original message was trashed" do
+        fab!(:original_message) do
+          Fabricate(:chat_message, chat_channel: channel, message: "inline original message")
+        end
+        fab!(:thread) do
+          Fabricate(:chat_thread, channel: channel, original_message: original_message)
+        end
+        fab!(:reply) do
+          Fabricate(
+            :chat_message,
+            chat_channel: channel,
+            thread: thread,
+            message: "inline reply message",
+          )
+        end
+
+        before { original_message.trash! }
+
+        it "creates the message" do
+          expect {
+            post "/chat/#{channel.id}.json", params: params.merge(in_reply_to_id: reply.id)
+          }.to change { channel.chat_messages.count }.by(1)
+
+          expect(response.status).to eq(200)
+        end
+      end
+    end
+
+    context "when the message is a reply in a thread whose original message was trashed" do
+      fab!(:threading_channel) { Fabricate(:category_channel, threading_enabled: true) }
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: threading_channel, message: "thread original secret")
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: threading_channel, original_message: original_message)
+      end
+      fab!(:hidden_reply) do
+        Fabricate(
+          :chat_message,
+          chat_channel: threading_channel,
+          thread: thread,
+          message: "thread reply secret",
+        )
+      end
+
+      before do
+        threading_channel.add(current_user)
+        threading_channel.add(admin)
+        original_message.trash!
+      end
+
+      fab!(:admin, :admin)
+
+      it "does not create the message or publish the hidden reply as in_reply_to" do
+        published =
+          MessageBus.track_publish("/chat/#{threading_channel.id}/thread/#{thread.id}") do
+            expect {
+              post "/chat/#{threading_channel.id}.json",
+                   params: params.merge(in_reply_to_id: hidden_reply.id)
+            }.not_to change { threading_channel.chat_messages.count }
+          end
+
+        expect(response.status).to eq(404)
+        expect(published).to be_empty
+      end
+
+      it "does not create the message when the hidden thread is supplied directly" do
+        expect {
+          post "/chat/#{threading_channel.id}.json", params: params.merge(thread_id: thread.id)
+        }.not_to change { threading_channel.chat_messages.count }
+
+        expect(response.status).to eq(404)
+      end
+
+      it "allows a chat moderator to reply to the hidden reply" do
+        sign_in(admin)
+
+        post "/chat/#{threading_channel.id}.json",
+             params: params.merge(in_reply_to_id: hidden_reply.id)
+
+        expect(response.status).to eq(200)
+        expect(threading_channel.chat_messages.count).to eq(2)
+      end
+
+      it "returns 404 for a chat moderator when the thread original message was purged" do
+        original_message.destroy!
+        sign_in(admin)
+
+        expect {
+          post "/chat/#{threading_channel.id}.json",
+               params: params.merge(in_reply_to_id: hidden_reply.id)
+        }.not_to change { threading_channel.chat_messages.count }
+
+        expect(response.status).to eq(404)
       end
     end
 

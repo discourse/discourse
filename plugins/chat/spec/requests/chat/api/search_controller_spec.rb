@@ -187,6 +187,237 @@ RSpec.describe Chat::Api::SearchController do
           expect(response.status).to eq(200)
         end
 
+        context "when the message is a reply in a thread whose original message was trashed" do
+          fab!(:thread_channel) { Fabricate(:chat_channel, threading_enabled: true) }
+          fab!(:thread_original_message) do
+            Fabricate(
+              :chat_message,
+              chat_channel: thread_channel,
+              message: "thread original message",
+            )
+          end
+          fab!(:thread) do
+            Fabricate(
+              :chat_thread,
+              channel: thread_channel,
+              original_message: thread_original_message,
+            )
+          end
+          fab!(:thread_reply) do
+            Fabricate(
+              :chat_message,
+              chat_channel: thread_channel,
+              thread: thread,
+              message: "zebra thread reply",
+            )
+          end
+
+          before do
+            thread_channel.add(current_user)
+            thread.update!(replies_count: 1)
+            SearchIndexer.index(thread_reply, force: true)
+          end
+
+          it "does not return the reply" do
+            get "/chat/api/search.json", params: { query: "zebra", channel_id: thread_channel.id }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(thread_reply.id)
+
+            thread_original_message.trash!
+
+            get "/chat/api/search.json", params: { query: "zebra", channel_id: thread_channel.id }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).not_to include(
+              thread_reply.id,
+            )
+          end
+        end
+
+        context "when the message is a reply in a thread in a channel with threading disabled" do
+          fab!(:inline_original_message) do
+            Fabricate(:chat_message, chat_channel: channel, message: "inline original message")
+          end
+          fab!(:inline_thread) do
+            Fabricate(:chat_thread, channel: channel, original_message: inline_original_message)
+          end
+          fab!(:inline_reply) do
+            Fabricate(
+              :chat_message,
+              chat_channel: channel,
+              thread: inline_thread,
+              message: "zebra inline reply",
+            )
+          end
+
+          before { SearchIndexer.index(inline_reply, force: true) }
+
+          it "returns the reply after the original message is trashed" do
+            get "/chat/api/search.json", params: { query: "zebra", channel_id: channel.id }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(inline_reply.id)
+
+            inline_original_message.trash!
+
+            get "/chat/api/search.json", params: { query: "zebra", channel_id: channel.id }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(inline_reply.id)
+          end
+        end
+
+        context "when searching without a channel_id" do
+          fab!(:thread_channel) { Fabricate(:chat_channel, threading_enabled: true) }
+          fab!(:thread_original_message) do
+            Fabricate(
+              :chat_message,
+              chat_channel: thread_channel,
+              message: "thread original message",
+            )
+          end
+          fab!(:thread) do
+            Fabricate(
+              :chat_thread,
+              channel: thread_channel,
+              original_message: thread_original_message,
+            )
+          end
+          fab!(:thread_reply) do
+            Fabricate(
+              :chat_message,
+              chat_channel: thread_channel,
+              thread: thread,
+              message: "zebra threaded reply",
+            )
+          end
+          fab!(:inline_original_message) do
+            Fabricate(:chat_message, chat_channel: channel, message: "inline original message")
+          end
+          fab!(:inline_thread) do
+            Fabricate(:chat_thread, channel: channel, original_message: inline_original_message)
+          end
+          fab!(:inline_reply) do
+            Fabricate(
+              :chat_message,
+              chat_channel: channel,
+              thread: inline_thread,
+              message: "zebra inline reply",
+            )
+          end
+
+          before do
+            thread_channel.add(current_user)
+            SearchIndexer.index(thread_reply, force: true)
+            SearchIndexer.index(inline_reply, force: true)
+          end
+
+          it "hides replies of deleted threads but keeps replies of channels with threading disabled" do
+            thread_original_message.trash!
+            inline_original_message.trash!
+
+            get "/chat/api/search.json", params: { query: "zebra" }
+
+            expect(response.status).to eq(200)
+            ids = response.parsed_body["messages"].map { |m| m["id"] }
+            expect(ids).not_to include(thread_reply.id)
+            expect(ids).to include(inline_reply.id)
+          end
+
+          it "returns replies of deleted threads to staff" do
+            admin = Fabricate(:admin)
+            thread_channel.add(admin)
+            thread_original_message.trash!
+            sign_in(admin)
+
+            get "/chat/api/search.json", params: { query: "zebra" }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(thread_reply.id)
+          end
+
+          it "hides replies of threads whose original message was purged" do
+            thread_original_message.destroy!
+
+            get "/chat/api/search.json", params: { query: "zebra" }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).not_to include(
+              thread_reply.id,
+            )
+          end
+
+          it "returns replies of threads whose original message was purged to staff" do
+            admin = Fabricate(:admin)
+            thread_channel.add(admin)
+            thread_original_message.destroy!
+            sign_in(admin)
+
+            get "/chat/api/search.json", params: { query: "zebra" }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(thread_reply.id)
+          end
+        end
+
+        context "when a category moderator searches a channel they moderate and globally" do
+          fab!(:thread_channel) do
+            Fabricate(:category_channel, chatable: channel.chatable, threading_enabled: true)
+          end
+          fab!(:thread_original_message) do
+            Fabricate(
+              :chat_message,
+              chat_channel: thread_channel,
+              message: "thread original message",
+            )
+          end
+          fab!(:thread) do
+            Fabricate(
+              :chat_thread,
+              channel: thread_channel,
+              original_message: thread_original_message,
+            )
+          end
+          fab!(:thread_reply) do
+            Fabricate(
+              :chat_message,
+              chat_channel: thread_channel,
+              thread: thread,
+              message: "zebra threaded reply",
+            )
+          end
+
+          before do
+            SiteSetting.enable_category_group_moderation = true
+            category_moderators = Fabricate(:group, users: [current_user])
+            Fabricate(
+              :category_moderation_group,
+              category: channel.chatable,
+              group: category_moderators,
+            )
+            thread_channel.add(current_user)
+            SearchIndexer.index(thread_reply, force: true)
+            thread_original_message.trash!
+          end
+
+          it "returns the reply when scoped to the moderated channel" do
+            get "/chat/api/search.json", params: { query: "zebra", channel_id: thread_channel.id }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(thread_reply.id)
+          end
+
+          it "does not return the reply from a global search" do
+            get "/chat/api/search.json", params: { query: "zebra" }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["messages"].map { |m| m["id"] }).not_to include(
+              thread_reply.id,
+            )
+          end
+        end
+
         context "when channel_id refers to a readonly category channel" do
           fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
           fab!(:readonly_channel) do

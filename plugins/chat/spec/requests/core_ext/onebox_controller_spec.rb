@@ -72,4 +72,142 @@ RSpec.describe OneboxController do
     expect(response.status).to eq(200)
     expect(response.body).not_to include(restricted_message.message)
   end
+
+  describe "a thread whose original message was trashed" do
+    fab!(:thread_channel) { Fabricate(:category_channel, threading_enabled: true) }
+    fab!(:original_message) do
+      Fabricate(
+        :chat_message,
+        chat_channel: thread_channel,
+        user: direct_message_user_1,
+        message: "thread original secret",
+      )
+    end
+    fab!(:thread) do
+      Fabricate(
+        :chat_thread,
+        channel: thread_channel,
+        original_message: original_message,
+        title: "thread title secret",
+      )
+    end
+    fab!(:reply) do
+      Fabricate(
+        :chat_message,
+        chat_channel: thread_channel,
+        user: direct_message_user_1,
+        thread: thread,
+        message: "thread reply secret",
+      )
+    end
+
+    before { thread.update!(replies_count: 1) }
+
+    it "does not onebox the reply" do
+      get "/onebox.json", params: { url: "#{Discourse.base_url}#{reply.url}", refresh: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("thread reply secret")
+
+      original_message.trash!
+
+      get "/onebox.json", params: { url: "#{Discourse.base_url}#{reply.url}", refresh: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("thread reply secret")
+    end
+
+    it "does not onebox the thread card" do
+      get "/onebox.json",
+          params: {
+            url: "#{Discourse.base_url}#{thread.relative_url}",
+            refresh: "true",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("thread title secret")
+
+      original_message.trash!
+
+      get "/onebox.json",
+          params: {
+            url: "#{Discourse.base_url}#{thread.relative_url}",
+            refresh: "true",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("thread title secret")
+    end
+  end
+
+  describe "a reply in a channel with threading disabled" do
+    fab!(:inline_channel, :category_channel)
+    fab!(:original_message) do
+      Fabricate(
+        :chat_message,
+        chat_channel: inline_channel,
+        user: direct_message_user_1,
+        message: "inline original secret",
+      )
+    end
+    fab!(:thread) do
+      Fabricate(:chat_thread, channel: inline_channel, original_message: original_message)
+    end
+    fab!(:reply) do
+      Fabricate(
+        :chat_message,
+        chat_channel: inline_channel,
+        user: direct_message_user_1,
+        thread: thread,
+        message: "inline reply secret",
+      )
+    end
+
+    it "still oneboxes the reply after the original message is trashed" do
+      original_message.trash!
+
+      get "/onebox.json", params: { url: "#{Discourse.base_url}#{reply.url}", refresh: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("inline reply secret")
+    end
+  end
+
+  describe "a reply in a forced thread of a channel with threading disabled" do
+    fab!(:inline_channel, :category_channel)
+    fab!(:original_message) do
+      Fabricate(
+        :chat_message,
+        chat_channel: inline_channel,
+        user: direct_message_user_1,
+        message: "forced original secret",
+      )
+    end
+    fab!(:thread) do
+      Fabricate(
+        :chat_thread,
+        channel: inline_channel,
+        original_message: original_message,
+        force: true,
+      )
+    end
+    fab!(:reply) do
+      Fabricate(
+        :chat_message,
+        chat_channel: inline_channel,
+        user: direct_message_user_1,
+        thread: thread,
+        message: "forced reply secret",
+      )
+    end
+
+    it "does not onebox the reply after the original message is trashed" do
+      original_message.trash!
+
+      get "/onebox.json", params: { url: "#{Discourse.base_url}#{reply.url}", refresh: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("forced reply secret")
+    end
+  end
 end

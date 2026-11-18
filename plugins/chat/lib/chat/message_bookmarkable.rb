@@ -27,10 +27,15 @@ module Chat
           ],
         )
 
-      user
-        .bookmarks_of_type(Chat::Message.polymorphic_name)
-        .joins(joins)
-        .where("chat_messages.chat_channel_id IN (?)", accessible_channel_ids)
+      bookmarks =
+        user
+          .bookmarks_of_type(Chat::Message.polymorphic_name)
+          .joins(joins)
+          .where("chat_messages.chat_channel_id IN (?)", accessible_channel_ids)
+
+      return bookmarks if guardian.is_staff?
+
+      bookmarks.merge(Chat::Message.excluding_deleted_threads)
     end
 
     def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
@@ -38,7 +43,8 @@ module Chat
     end
 
     def self.validate_before_create(guardian, bookmarkable)
-      if bookmarkable.blank? || !guardian.can_join_chat_channel?(bookmarkable.chat_channel)
+      if bookmarkable.blank? || !guardian.can_join_chat_channel?(bookmarkable.chat_channel) ||
+           !guardian.can_see_chat_message_thread?(bookmarkable)
         raise Discourse::InvalidAccess
       end
     end

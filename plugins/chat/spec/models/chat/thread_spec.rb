@@ -232,6 +232,25 @@ RSpec.describe Chat::Thread do
     end
   end
 
+  describe "#effective?" do
+    fab!(:thread, :chat_thread)
+
+    it "is true when the channel has threading enabled" do
+      expect(thread.effective?).to eq(true)
+    end
+
+    it "is false when the channel has threading disabled and the thread is not forced" do
+      thread.channel.update!(threading_enabled: false)
+      expect(thread.effective?).to eq(false)
+    end
+
+    it "is true when the thread is forced" do
+      thread.channel.update!(threading_enabled: false)
+      thread.update!(force: true)
+      expect(thread.effective?).to eq(true)
+    end
+  end
+
   describe "custom fields" do
     fab!(:channel, :category_channel)
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }

@@ -488,6 +488,195 @@ RSpec.describe Chat::ChatController do
       [/chat]
       EXPECTED
     end
+
+    context "when the messages are replies in a thread whose original message was trashed" do
+      fab!(:thread_channel) do
+        Fabricate(:category_channel, chatable: category, threading_enabled: true)
+      end
+      fab!(:original_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: thread_channel,
+          user: other_user,
+          message: "thread original secret",
+        )
+      end
+      fab!(:thread) do
+        Fabricate(
+          :chat_thread,
+          channel: thread_channel,
+          original_message: original_message,
+          title: "thread title secret",
+        )
+      end
+      fab!(:reply) do
+        Fabricate(
+          :chat_message,
+          chat_channel: thread_channel,
+          user: other_user,
+          thread: thread,
+          message: "thread reply secret",
+        )
+      end
+
+      before { thread.update!(replies_count: 1) }
+
+      it "does not quote the reply" do
+        sign_in(user)
+        post "/chat/#{thread_channel.id}/quote.json", params: { message_ids: [reply.id] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["markdown"]).to include("thread reply secret")
+
+        original_message.trash!(admin)
+
+        post "/chat/#{thread_channel.id}/quote.json", params: { message_ids: [reply.id] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["markdown"]).to be_blank
+      end
+
+      it "quotes the reply for a chat moderator" do
+        original_message.trash!(admin)
+        sign_in(admin)
+
+        post "/chat/#{thread_channel.id}/quote.json", params: { message_ids: [reply.id] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["markdown"]).to include("thread reply secret")
+      end
+
+      it "quotes the surviving reply for a chat moderator when the original was purged" do
+        original_message.destroy!
+        sign_in(admin)
+
+        post "/chat/#{thread_channel.id}/quote.json", params: { message_ids: [reply.id] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["markdown"]).to include("thread reply secret")
+      end
+
+      it "quotes only the visible messages of a mixed selection" do
+        visible_message =
+          Fabricate(
+            :chat_message,
+            chat_channel: thread_channel,
+            user: other_user,
+            message: "visible message",
+          )
+        original_message.trash!(admin)
+        sign_in(user)
+
+        post "/chat/#{thread_channel.id}/quote.json",
+             params: {
+               message_ids: [reply.id, visible_message.id],
+             }
+
+        expect(response.status).to eq(200)
+        markdown = response.parsed_body["markdown"]
+        expect(markdown).to include("visible message")
+        expect(markdown).not_to include("thread reply secret")
+      end
+    end
+
+    context "when the messages are replies in a thread in a channel with threading disabled" do
+      fab!(:original_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          user: other_user,
+          message: "inline original message",
+        )
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: channel, original_message: original_message)
+      end
+      fab!(:reply) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          user: other_user,
+          thread: thread,
+          message: "inline reply secret",
+        )
+      end
+
+      it "still quotes the reply after the original message is trashed" do
+        sign_in(user)
+        original_message.trash!(admin)
+
+        post "/chat/#{channel.id}/quote.json", params: { message_ids: [reply.id] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["markdown"]).to include("inline reply secret")
+      end
+    end
+
+    context "when the messages are replies in a direct message thread" do
+      fab!(:original_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_chat_channel,
+          user: other_user,
+          message: "dm original message",
+        )
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: dm_chat_channel, original_message: original_message)
+      end
+      fab!(:reply) do
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_chat_channel,
+          user: other_user,
+          thread: thread,
+          message: "dm reply secret",
+        )
+      end
+
+      it "still quotes the reply after the original message is trashed" do
+        sign_in(user)
+        original_message.trash!(admin)
+
+        post "/chat/#{dm_chat_channel.id}/quote.json", params: { message_ids: [reply.id] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["markdown"]).to include("dm reply secret")
+      end
+    end
+
+    context "when the messages are replies in a forced thread in a channel with threading disabled" do
+      fab!(:original_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          user: other_user,
+          message: "forced original message",
+        )
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: channel, original_message: original_message, force: true)
+      end
+      fab!(:reply) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          user: other_user,
+          thread: thread,
+          message: "forced reply secret",
+        )
+      end
+
+      it "does not quote the reply after the original message is trashed" do
+        sign_in(user)
+        original_message.trash!(admin)
+
+        post "/chat/#{channel.id}/quote.json", params: { message_ids: [reply.id] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["markdown"]).not_to include("forced reply secret")
+      end
+    end
   end
 
   describe "#respond" do

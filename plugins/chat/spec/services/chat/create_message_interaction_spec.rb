@@ -73,6 +73,22 @@ RSpec.describe Chat::CreateMessageInteraction do
       it { is_expected.to fail_a_policy(:can_interact_with_message) }
     end
 
+    context "when the message is a reply in a thread whose original message was trashed" do
+      fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+      fab!(:original_message) { Fabricate(:chat_message, chat_channel: channel) }
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: channel, original_message: original_message)
+      end
+
+      before do
+        channel.add(current_user)
+        message.update!(chat_channel: channel, thread: thread)
+        original_message.trash!
+      end
+
+      it { is_expected.to fail_a_policy(:can_interact_with_message) }
+    end
+
     context "when the action doesn’t exist" do
       before { params[:action_id] = "yyy" }
 
