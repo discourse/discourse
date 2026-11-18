@@ -447,11 +447,14 @@ export default class DFilterControls extends Component {
     }
 
     const searchParam = this.args.textFilterQueryParam;
-    const params =
-      searchParam && this.#searchDebounce
-        ? { [searchParam]: this.textFilter, ...updates }
-        : updates;
-    DiscourseURL.replaceState(applyQueryParams(this.router.currentURL, params));
+    if (searchParam && this.#searchDebounce && !(searchParam in updates)) {
+      cancel(this.#searchDebounce);
+      updates = { [searchParam]: this.textFilter, ...updates };
+    }
+
+    DiscourseURL.replaceState(
+      applyQueryParams(this.router.currentURL, updates)
+    );
   }
 
   @action
