@@ -11,7 +11,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
     this.value = 1023;
     this.max = 4096;
     this.onChangeSize = () => {};
-    this.setValidationMessage = () => {};
 
     await render(
       <template>
@@ -19,7 +18,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
           class="file-size-input-test"
           @max="4096"
           @onChangeSize={{this.onChangeSize}}
-          @setValidationMessage={{this.setValidationMessage}}
           @sizeValueKB={{readonly this.value}}
         />
       </template>
@@ -36,7 +34,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
   test("file size unit is mb when the starting value is 1mb or more", async function (assert) {
     this.value = 1024;
     this.onChangeSize = () => {};
-    this.setValidationMessage = () => {};
 
     await render(
       <template>
@@ -44,7 +41,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
           class="file-size-input-test"
           @max="4096"
           @onChangeSize={{this.onChangeSize}}
-          @setValidationMessage={{this.setValidationMessage}}
           @sizeValueKB={{readonly this.value}}
         />
       </template>
@@ -61,7 +57,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
   test("file size unit is gb when the starting value is 1gb or more", async function (assert) {
     this.value = 1024 * 1024;
     this.onChangeSize = () => {};
-    this.setValidationMessage = () => {};
 
     await render(
       <template>
@@ -69,7 +64,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
           class="file-size-input-test"
           @max="4096"
           @onChangeSize={{this.onChangeSize}}
-          @setValidationMessage={{this.setValidationMessage}}
           @sizeValueKB={{readonly this.value}}
         />
       </template>
@@ -87,7 +81,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
     this.value = 4096;
     this.max = 8192;
     this.onChangeSize = () => {};
-    this.setValidationMessage = () => {};
 
     await render(
       <template>
@@ -95,7 +88,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
           class="file-size-input-test"
           @max="4096"
           @onChangeSize={{this.onChangeSize}}
-          @setValidationMessage={{this.setValidationMessage}}
           @sizeValueKB={{readonly this.value}}
         />
       </template>
@@ -149,10 +141,8 @@ module("Integration | Component | FileSizeInput", function (hooks) {
     const value = 4096;
     const max = 8192;
     const min = 2048;
-    const onChangeSize = () => {};
-
     let message;
-    const setValidationMessage = (newMessage) => {
+    const onChangeSize = (_size, newMessage) => {
       message = newMessage;
     };
 
@@ -163,7 +153,6 @@ module("Integration | Component | FileSizeInput", function (hooks) {
           @max={{max}}
           @min={{min}}
           @onChangeSize={{onChangeSize}}
-          @setValidationMessage={{setValidationMessage}}
           @sizeValueKB={{readonly value}}
         />
       </template>
@@ -181,7 +170,7 @@ module("Integration | Component | FileSizeInput", function (hooks) {
 
     assert.strictEqual(
       message,
-      null,
+      undefined,
       "The message is cleared when the input is less than the max"
     );
 

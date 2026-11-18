@@ -77,30 +77,28 @@ export default class FileSizeInput extends Component {
         break;
     }
 
-    this.args.onChangeSize(sizeInKB);
-
-    if (sizeInKB > this.args.max) {
-      this.args.setValidationMessage(
-        i18n("file_size_input.error.size_too_large", {
-          provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
-          max_file_size: I18n.toHumanSize(this.args.max * 1024),
-        })
-      );
-    } else if (sizeInKB < this.args.min) {
-      this.args.setValidationMessage(
-        i18n("file_size_input.error.size_too_small", {
-          provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
-          min_file_size: I18n.toHumanSize(this.args.min * 1024),
-        })
-      );
-    } else {
-      this.args.setValidationMessage(null);
-    }
+    this.args.onChangeSize(sizeInKB, this.#validationMessage(sizeInKB));
   }
 
   @action
   onFileSizeUnitChange(newUnit) {
     this.unit = newUnit;
+  }
+
+  #validationMessage(sizeInKB) {
+    if (sizeInKB > this.args.max) {
+      return i18n("file_size_input.error.size_too_large", {
+        provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
+        max_file_size: I18n.toHumanSize(this.args.max * 1024),
+      });
+    }
+
+    if (sizeInKB < this.args.min) {
+      return i18n("file_size_input.error.size_too_small", {
+        provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
+        min_file_size: I18n.toHumanSize(this.args.min * 1024),
+      });
+    }
   }
 
   <template>
