@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import discourseDebounce from "discourse/lib/debounce";
@@ -124,24 +124,27 @@ export default class DFilterControls extends Component {
   @resettableTracked textFilter = this.initialTextFilterValue;
 
   dropdownFilters = trackedObject();
+  #searchSeed = tracked(this.#linkedSearch);
+  #searchDebounce;
 
   constructor() {
     super(...arguments);
 
     this.applyDropdownValues();
 
-    if (this.hasUrlOwnedDropdowns) {
-      // keep URL-owned dropdowns in sync across real transitions (e.g. a
+    if (this.#hasUrlOwnedFilters) {
+      // keep URL-owned filters in sync across real transitions (e.g. a
       // same-route link with different params); our own replaceState writes
       // don't fire this event, so user selections are never reverted
-      this.router.on("routeDidChange", this.applyDropdownsFromUrl);
+      this.router.on("routeDidChange", this.applyFiltersFromRoute);
     }
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this.hasUrlOwnedDropdowns) {
-      this.router.off("routeDidChange", this.applyDropdownsFromUrl);
+    cancel(this.#searchDebounce);
+    if (this.#hasUrlOwnedFilters) {
+      this.router.off("routeDidChange", this.applyFiltersFromRoute);
     }
   }
 
@@ -150,21 +153,8 @@ export default class DFilterControls extends Component {
       return "";
     }
 
-    // reading router.currentURL makes this getter re-evaluate on transitions,
-    // so same-route links carrying the query param re-seed the input
-    const fromUrl =
-      this.args.textFilterQueryParam && this.showFilters
-        ? this.currentSearchParams.get(this.args.textFilterQueryParam)
-        : null;
-
-    if (fromUrl !== null) {
-      // verbatim: this value round-trips through our own URL writes while the
-      // user is typing, so any normalization here would rewrite the input
-      // mid-edit and jump the caret
-      return fromUrl;
-    }
-
-    return this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
+    const seed = this.showFilters ? this.#searchSeed.value : null;
+    return seed ?? (this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "");
   }
 
   get initialSortValue() {
@@ -192,6 +182,15 @@ export default class DFilterControls extends Component {
         this.args.dropdownFilterQueryParams) &&
       !("dropdownValue" in this.args)
     );
+  }
+
+  get #linkedSearch() {
+    const param = this.args.textFilterQueryParam;
+    return param ? this.currentSearchParams.get(param) : null;
+  }
+
+  get #hasUrlOwnedFilters() {
+    return this.args.textFilterQueryParam || this.hasUrlOwnedDropdowns;
   }
 
   get array() {
@@ -381,6 +380,17 @@ export default class DFilterControls extends Component {
   }
 
   @action
+  applyFiltersFromRoute() {
+    cancel(this.#searchDebounce);
+    this.#searchDebounce = undefined;
+    this.#searchSeed.value = this.#linkedSearch;
+    if (this.args.textFilterQueryParam) {
+      this.textFilter = this.initialTextFilterValue;
+    }
+    this.applyDropdownsFromUrl();
+  }
+
+  @action
   applyDropdownsFromUrl() {
     if (!this.showFilters || !this.hasUrlOwnedDropdowns) {
       return;
@@ -430,16 +440,16 @@ export default class DFilterControls extends Component {
     }
   }
 
-  syncTextFilterQueryParam() {
-    this.updateQueryParams({
-      [this.args.textFilterQueryParam]: this.textFilter,
-    });
-  }
-
   updateQueryParams(updates) {
     // no currentURL means the router isn't live (e.g. rendering tests)
     if (!this.showFilters || !this.router.currentURL) {
       return;
+    }
+
+    const searchParam = this.args.textFilterQueryParam;
+    if (searchParam && this.#searchDebounce && !(searchParam in updates)) {
+      cancel(this.#searchDebounce);
+      updates = { [searchParam]: this.textFilter, ...updates };
     }
 
     DiscourseURL.replaceState(
@@ -451,9 +461,7 @@ export default class DFilterControls extends Component {
   onTextFilterChange(event) {
     this.textFilter = event.target?.value || "";
 
-    if (this.args.textFilterQueryParam) {
-      discourseDebounce(this, this.syncTextFilterQueryParam, INPUT_DELAY);
-    }
+    this.#scheduleSearchSync();
 
     this.args.onTextFilterChange?.(event);
   }
@@ -507,6 +515,9 @@ export default class DFilterControls extends Component {
   @action
   async resetFilters() {
     this.textFilter = "";
+    if (this.#searchDebounce) {
+      this.#scheduleSearchSync();
+    }
 
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownFilters).forEach((key) => {
@@ -545,6 +556,18 @@ export default class DFilterControls extends Component {
   toggleFilters() {
     this.showFilterDropdowns = !this.showFilterDropdowns;
     this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
+  }
+
+  #scheduleSearchSync() {
+    if (this.args.textFilterQueryParam) {
+      this.#searchSeed.value ??= this.initialTextFilterValue;
+      this.#searchDebounce = discourseDebounce(
+        this,
+        this.updateQueryParams,
+        {},
+        INPUT_DELAY
+      );
+    }
   }
 
   #sorted(items) {
