@@ -524,18 +524,10 @@
 
     td.hex {
       width: 160px;
-
-      .color-picker {
-        display: inline-flex;
-      }
     }
 
     td.actions {
       width: 200px;
-    }
-
-    .color-picker input {
-      margin-bottom: 0;
     }
 
     th.overridden {

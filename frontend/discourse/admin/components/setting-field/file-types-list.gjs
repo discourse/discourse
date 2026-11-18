@@ -24,6 +24,12 @@ const IMAGE_TYPES = [
 const VIDEO_TYPES = ["mov", "mp4", "webm", "m4v", "3gp", "ogv", "avi", "mpeg"];
 const AUDIO_TYPES = ["mp3", "ogg", "m4a", "wav", "aac", "flac"];
 const DOCUMENT_TYPES = ["txt", "pdf", "doc", "docx", "csv"];
+const DEFAULT_TYPES = {
+  image: IMAGE_TYPES,
+  video: VIDEO_TYPES,
+  audio: AUDIO_TYPES,
+  document: DOCUMENT_TYPES,
+};
 const TOKEN_SEPARATOR = "|";
 const IMAGE_TYPES_STRING = IMAGE_TYPES.join(", ");
 const VIDEO_TYPES_STRING = VIDEO_TYPES.join(", ");
@@ -70,22 +76,7 @@ export default class SettingFieldFileTypesList extends Component {
 
   @action
   insertDefaultTypes(category) {
-    let types;
-    switch (category) {
-      case "image":
-        types = IMAGE_TYPES;
-        break;
-      case "video":
-        types = VIDEO_TYPES;
-        break;
-      case "audio":
-        types = AUDIO_TYPES;
-        break;
-      case "document":
-        types = DOCUMENT_TYPES;
-        break;
-    }
-
+    const types = DEFAULT_TYPES[category];
     const oldTypes = this.settingValue;
     const newTypes = uniqueItemsFromArray([...oldTypes, ...types]);
     const diffTypes = newTypes.filter((type) => !oldTypes.includes(type));

@@ -5,6 +5,8 @@ import Form from "discourse/components/form";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
+const LOGO = { key: "logo", type: "upload", label: "Upload" };
+
 function renderUpload(definition, value, onSet) {
   const data = { [definition.key]: value };
 
@@ -21,9 +23,7 @@ module("Integration | Component | SettingField | Upload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with image file shows preview and lightbox", async function (assert) {
-    const definition = { key: "logo", type: "upload", label: "Upload" };
-
-    await renderUpload(definition, "/images/logo.png");
+    await renderUpload(LOGO, "/images/logo.png");
 
     assert.dom(".file-uploader").hasClass("has-file", "file present");
     assert.dom(".file-uploader").hasClass("has-image", "image file detected");
@@ -83,9 +83,7 @@ module("Integration | Component | SettingField | Upload", function (hooks) {
   });
 
   test("without file shows upload control", async function (assert) {
-    const definition = { key: "logo", type: "upload", label: "Upload" };
-
-    await renderUpload(definition, "");
+    await renderUpload(LOGO, "");
 
     assert.dom(".file-uploader").hasClass("no-file", "empty state styling");
     assert.dom(".d-icon-upload").exists("can upload file");
@@ -95,9 +93,7 @@ module("Integration | Component | SettingField | Upload", function (hooks) {
   });
 
   test("accepts only images by default", async function (assert) {
-    const definition = { key: "logo", type: "upload", label: "Upload" };
-
-    await renderUpload(definition, "");
+    await renderUpload(LOGO, "");
 
     assert
       .dom("[id$='__input']")
@@ -126,9 +122,9 @@ module("Integration | Component | SettingField | Upload", function (hooks) {
   test("delete button sets the field to null", async function (assert) {
     const definition = { key: "logo", type: "upload", label: "Upload" };
     let callbackValue = "not called";
-    this.handleChange = (_name, value) => (callbackValue = value);
+    const handleChange = (_name, value) => (callbackValue = value);
 
-    await renderUpload(definition, "/images/logo.png", this.handleChange);
+    await renderUpload(definition, "/images/logo.png", handleChange);
 
     await click(".btn-danger");
 
@@ -158,9 +154,7 @@ module("Integration | Component | SettingField | Upload", function (hooks) {
   });
 
   test("does not show restrictions for default image uploads", async function (assert) {
-    const definition = { key: "logo", type: "upload", label: "Upload" };
-
-    await renderUpload(definition, "");
+    await renderUpload(LOGO, "");
 
     assert
       .dom(".file-uploader__restrictions")
