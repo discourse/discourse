@@ -784,6 +784,34 @@ module("Integration | Component | SiteSetting", function (hooks) {
       .includesText("Internationalization / localization");
   });
 
+  test("a topic setting saves the picked topic id", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_topic", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    pretender.get("/search/query", () =>
+      response({
+        topics: [{ id: 42, title: "Moderator guide" }],
+        posts: [{ id: 1, topic_id: 42 }],
+      })
+    );
+
+    await renderSetting({
+      setting: "test_topic",
+      value: "",
+      type: "topic",
+    });
+
+    const topics = selectKit(".form-kit__field .topic-chooser");
+    await topics.expand();
+    await topics.fillInFilter("guide");
+    await topics.selectRowByValue(42);
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_topic, "42");
+  });
+
   test("a datetime setting saves the local time as UTC", async function (assert) {
     let body;
     pretender.put("/admin/site_settings/test_datetime", (request) => {
