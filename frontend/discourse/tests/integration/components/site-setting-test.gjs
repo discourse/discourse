@@ -565,14 +565,38 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".new-value-input.secret").hasAttribute("type", "text");
 
     await click(".form-kit__field .add-value-btn");
+
+    assert
+      .dom(".form-kit__field .form-kit__errors")
+      .hasText(i18n("admin.site_settings.secret_list.invalid_input"));
+
+    await fillIn(".form-kit__field .new-value-input.key", "k1");
+    await fillIn(".form-kit__field .new-value-input.secret", "s2");
     await click(".form-kit__field .add-value-btn");
 
     assert
       .dom(".form-kit__field .form-kit__errors")
       .hasText(
-        i18n("admin.site_settings.secret_list.invalid_input"),
-        "a repeated rejection shows the message once"
+        i18n("admin.site_settings.secret_list.already_exists", { key: "k1" }),
+        "a new rejection replaces the previous message"
       );
+  });
+
+  test("a secret list setting shows its key and value placeholders", async function (assert) {
+    await renderSetting({
+      setting: "test_secrets",
+      value: "",
+      type: "list",
+      list_type: "secret",
+      placeholder: { key: "www.example.com", value: "a secret" },
+    });
+
+    assert
+      .dom(".form-kit__field .new-value-input.key")
+      .hasAttribute("placeholder", "www.example.com");
+    assert
+      .dom(".form-kit__field .new-value-input.secret")
+      .hasAttribute("placeholder", "a secret");
   });
 
   test("cancelling a secret list setting clears its invalid input error", async function (assert) {

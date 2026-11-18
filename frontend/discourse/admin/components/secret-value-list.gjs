@@ -167,12 +167,12 @@ export default class SecretValueList extends Component {
       <div class="value">
         <DTextField
           class="new-value-input key"
-          @placeholder={{this.setting.placeholder.key}}
+          @placeholder={{@placeholder.key}}
           @value={{this.newKey}}
         />
         <Input
           class="new-value-input secret"
-          placeholder={{this.setting.placeholder.value}}
+          placeholder={{@placeholder.value}}
           @type={{if @isSecret "password" "text"}}
           @value={{this.newSecret}}
         />

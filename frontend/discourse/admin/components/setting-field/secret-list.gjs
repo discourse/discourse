@@ -23,6 +23,7 @@ export default class SettingFieldSecretList extends Component {
       <SecretValueList
         @changeValueCallback={{@field.set}}
         @isSecret={{this.isMasked}}
+        @placeholder={{@definition.placeholder}}
         @setValidationMessage={{fn showFieldError @field}}
         @values={{@field.value}}
       />

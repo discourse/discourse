@@ -1,5 +1,7 @@
 export default function showFieldError(field, message) {
-  if (!message || field.error?.messages.includes(message)) {
+  field.removeError();
+
+  if (!message) {
     return;
   }
 
