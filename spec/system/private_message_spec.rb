@@ -60,4 +60,35 @@ describe "Private Message" do
       expect(composer.button_label).to have_text(I18n.t("js.composer.create_topic"))
     end
   end
+
+  context "when staff can add badge holders as recipients" do
+    fab!(:moderator)
+    fab!(:badge)
+    fab!(:badge_holder, :user)
+    fab!(:other_recipient, :user)
+
+    before do
+      SiteSetting.enable_badge_holder_pm_recipients = true
+      Fabricate(:user_badge, badge:, user: badge_holder)
+      sign_in(moderator)
+    end
+
+    it "adds badge holders to the draft alongside manually selected recipients" do
+      visit "/new-topic"
+      composer.open_composer_actions
+      composer.select_action_by_id("create_private_message")
+      composer.select_pm_user(other_recipient.username)
+
+      find(".composer-add-badge-holders").click
+      badge_picker = PageObjects::Components::SelectKit.new(".pm-badge-holder-picker .combo-box")
+      badge_picker.select_row_by_value(badge.id)
+      expect do
+        within(".pm-badge-holder-picker") { click_button I18n.t("js.composer.add_badge_holders") }
+        expect(page).to have_no_css(".pm-badge-holder-picker")
+      end.not_to change { Topic.where(archetype: Archetype.private_message).count }
+
+      recipients = PageObjects::Components::SelectKit.new("#private-message-users")
+      expect(recipients).to have_selected_names(other_recipient.username, badge_holder.username)
+    end
+  end
 end
