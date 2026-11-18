@@ -2172,8 +2172,6 @@ RSpec.describe SessionController do
       SiteSetting.discourse_connect_url = @sso_url
       SiteSetting.discourse_connect_secret = @sso_secret
       SiteSetting.enable_discourse_connect = true
-
-      Fabricate(:admin)
     end
 
     let(:headers) { { host: Discourse.current_hostname } }
@@ -2712,7 +2710,7 @@ RSpec.describe SessionController do
     end
 
     context "when an invitation is used" do
-      let(:invite) { Fabricate(:invite, email: invite_email, invited_by: Fabricate(:admin)) }
+      let(:invite) { Fabricate(:invite, email: invite_email, invited_by: admin) }
       let(:invite_email) { nil }
 
       def login_with_sso(email: "bob@bob.com")
