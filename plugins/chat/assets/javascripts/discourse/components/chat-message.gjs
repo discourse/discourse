@@ -270,8 +270,8 @@ export default class ChatMessage extends Component {
     return (
       !this.threadContext &&
       this.threadingEnabled &&
-      this.args.message?.thread &&
-      this.args.message?.thread.preview.replyCount > 0
+      this.args.message?.isOriginalThreadMessage &&
+      this.args.message?.thread?.preview?.replyCount > 0
     );
   }
 
