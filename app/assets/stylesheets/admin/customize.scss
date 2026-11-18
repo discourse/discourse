@@ -317,8 +317,9 @@
       margin-top: 18px;
       min-height: 35px;
 
-      .input-setting-textarea {
+      .form-kit__control-textarea {
         height: unset;
+        min-height: unset;
       }
     }
 

@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
@@ -14,39 +13,8 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import "discourse/admin/lib/setting-field-types";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
-import SettingBool from "discourse/admin/components/site-settings/bool";
-import SettingCategory from "discourse/admin/components/site-settings/category";
-import SettingCategoryList from "discourse/admin/components/site-settings/category-list";
-import SettingColor from "discourse/admin/components/site-settings/color";
-import SettingCompactList from "discourse/admin/components/site-settings/compact-list";
-import SettingDate from "discourse/admin/components/site-settings/date";
-import SettingDatetime from "discourse/admin/components/site-settings/datetime";
 import Description from "discourse/admin/components/site-settings/description";
-import SettingEmojiList from "discourse/admin/components/site-settings/emoji-list";
-import SettingEnum from "discourse/admin/components/site-settings/enum";
-import SettingFileSizeRestriction from "discourse/admin/components/site-settings/file-size-restriction";
-import SettingFileTypesList from "discourse/admin/components/site-settings/file-types-list";
-import SettingFontList from "discourse/admin/components/site-settings/font-list";
-import SettingGroup from "discourse/admin/components/site-settings/group";
-import SettingGroupList from "discourse/admin/components/site-settings/group-list";
-import SettingHostList from "discourse/admin/components/site-settings/host-list";
-import SettingIcon from "discourse/admin/components/site-settings/icon";
-import SettingInteger from "discourse/admin/components/site-settings/integer";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
-import SettingList from "discourse/admin/components/site-settings/list";
-import SettingLocaleEnum from "discourse/admin/components/site-settings/locale-enum";
-import SettingLocaleList from "discourse/admin/components/site-settings/locale-list";
-import SettingNamedList from "discourse/admin/components/site-settings/named-list";
-import SettingSecretList from "discourse/admin/components/site-settings/secret-list";
-import SettingSimpleList from "discourse/admin/components/site-settings/simple-list";
-import SettingString from "discourse/admin/components/site-settings/string";
-import SettingTagGroupList from "discourse/admin/components/site-settings/tag-group-list";
-import SettingTagList from "discourse/admin/components/site-settings/tag-list";
-import SettingTopic from "discourse/admin/components/site-settings/topic";
-import SettingUpload from "discourse/admin/components/site-settings/upload";
-import SettingUploadedImageList from "discourse/admin/components/site-settings/uploaded-image-list";
-import SettingUrlList from "discourse/admin/components/site-settings/url-list";
-import SettingValueList from "discourse/admin/components/site-settings/value-list";
 import { settingAnchorId } from "discourse/admin/lib/setting-anchor";
 import SiteSetting, {
   isSettingValueTrue,
@@ -68,39 +36,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const FORM_KIT_NAME_SEPARATORS = /[.-]/g;
-
-const TYPE_COMPONENTS = {
-  bool: SettingBool,
-  date: SettingDate,
-  datetime: SettingDatetime,
-  integer: SettingInteger,
-  enum: SettingEnum,
-  list: SettingList,
-  url_list: SettingUrlList,
-  host_list: SettingHostList,
-  category_list: SettingCategoryList,
-  value_list: SettingValueList,
-  category: SettingCategory,
-  uploaded_image_list: SettingUploadedImageList,
-  compact_list: SettingCompactList,
-  secret_list: SettingSecretList,
-  upload: SettingUpload,
-  group_list: SettingGroupList,
-  group: SettingGroup,
-  tag_list: SettingTagList,
-  tag_group_list: SettingTagGroupList,
-  color: SettingColor,
-  simple_list: SettingSimpleList,
-  emoji_list: SettingEmojiList,
-  named_list: SettingNamedList,
-  file_size_restriction: SettingFileSizeRestriction,
-  file_types_list: SettingFileTypesList,
-  font_list: SettingFontList,
-  locale_list: SettingLocaleList,
-  locale_enum: SettingLocaleEnum,
-  topic: SettingTopic,
-  icon: SettingIcon,
-};
+const DEFAULT_TYPE = "string";
 
 export default class SiteSettingComponent extends Component {
   @service modal;
@@ -109,9 +45,6 @@ export default class SiteSettingComponent extends Component {
   @service siteSettingChangeTracker;
   @service messageBus;
   @service site;
-
-  /** @type {boolean | null | undefined} */
-  @tracked isSecret = null;
 
   /** @type {"enqueued" | "completed" | null} */
   @tracked status = null;
@@ -129,7 +62,6 @@ export default class SiteSettingComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.isSecret = this.setting?.secret;
 
     if (this.canSubscribeToSettingsJobs) {
       this.messageBus.subscribe(
@@ -177,10 +109,6 @@ export default class SiteSettingComponent extends Component {
     return this.site.user_themes.find((theme) => theme.default);
   }
 
-  get resolvedComponent() {
-    return TYPE_COMPONENTS[this.componentType] ?? SettingString;
-  }
-
   @dependentKeyCompat
   get buffered() {
     return this.setting.buffered;
@@ -201,7 +129,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get displayDescription() {
-    return this.componentType !== "bool";
+    return this.type !== "bool";
   }
 
   get formInlineDescription() {
@@ -320,8 +248,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get typeClass() {
-    const componentType = this.componentType;
-    return componentType.replace(/\_/g, "-");
+    return (this.type ?? DEFAULT_TYPE).replace(/_/g, "-");
   }
 
   get setting() {
@@ -342,11 +269,6 @@ export default class SiteSettingComponent extends Component {
     );
   }
 
-  get componentType() {
-    const type = this.type;
-    return type in TYPE_COMPONENTS ? type : "string";
-  }
-
   get type() {
     const setting = this.setting;
     if (setting.type === "list" && setting.list_type) {
@@ -360,10 +282,6 @@ export default class SiteSettingComponent extends Component {
     return this.setting.definition;
   }
 
-  get useFormKit() {
-    return true;
-  }
-
   get fieldName() {
     return this.definition.key.replace(FORM_KIT_NAME_SEPARATORS, "_");
   }
@@ -372,11 +290,6 @@ export default class SiteSettingComponent extends Component {
     return (this.#formKitData ??= {
       [this.fieldName]: this.fromWire(this.buffered.get("value")),
     });
-  }
-
-  get allowAny() {
-    const anyValue = this.setting?.anyValue;
-    return anyValue !== false;
   }
 
   get bufferedValues() {
@@ -650,11 +563,6 @@ export default class SiteSettingComponent extends Component {
   }
 
   @action
-  setValidationMessage(message) {
-    this.setting.validationMessage = message;
-  }
-
-  @action
   cancel() {
     this.dirtySettings.forEach((setting) => {
       setting.rollback();
@@ -682,11 +590,6 @@ export default class SiteSettingComponent extends Component {
   }
 
   @action
-  toggleSecret() {
-    this.isSecret = !this.isSecret;
-  }
-
-  @action
   setDefaultValues() {
     this.buffered.set(
       "value",
@@ -702,16 +605,6 @@ export default class SiteSettingComponent extends Component {
       return deepEqual(a, b);
     } else {
       return a?.toString() === b?.toString();
-    }
-  }
-
-  @action
-  async _handleKeydown(event) {
-    if (
-      event.key === "Enter" &&
-      event.target.classList.contains("input-setting-string")
-    ) {
-      await this.save();
     }
   }
 
@@ -802,41 +695,27 @@ export default class SiteSettingComponent extends Component {
           <Description @description={{this.setting.description}} />
           <JobStatus @progress={{this.progress}} @status={{this.status}} />
         {{else}}
-          {{#if this.useFormKit}}
-            <Form
-              @data={{this.formKitData}}
-              @onRegisterApi={{this.registerFormApi}}
-              @onSet={{this.onFormSet}}
-              @onSubmit={{this.update}}
-              {{didUpdate this.syncFormValue this.buffered.value}}
-              {{linkifySettingLinks this.formInlineDescription}}
-              as |form|
-            >
-              <SettingDefinitionField
-                @definition={{this.definition}}
-                @disabled={{this.isDisabled}}
-                @form={{form}}
-                @format="full"
-                @name={{this.fieldName}}
-                @showControlTitle={{false}}
-                @showDescription={{false}}
-                @showTitle={{false}}
-              />
-            </Form>
-            {{this.preview}}
-          {{else}}
-            <this.resolvedComponent
-              @allowAny={{this.allowAny}}
-              @changeValueCallback={{this.changeValueCallback}}
+          <Form
+            @data={{this.formKitData}}
+            @onRegisterApi={{this.registerFormApi}}
+            @onSet={{this.onFormSet}}
+            @onSubmit={{this.update}}
+            {{didUpdate this.syncFormValue this.buffered.value}}
+            {{linkifySettingLinks this.formInlineDescription}}
+            as |form|
+          >
+            <SettingDefinitionField
+              @definition={{this.definition}}
               @disabled={{this.isDisabled}}
-              @isSecret={{this.isSecret}}
-              @preview={{this.preview}}
-              @setting={{this.setting}}
-              @setValidationMessage={{this.setValidationMessage}}
-              @value={{this.buffered.value}}
-              {{on "keydown" this._handleKeydown}}
+              @form={{form}}
+              @format="full"
+              @name={{this.fieldName}}
+              @showControlTitle={{false}}
+              @showDescription={{false}}
+              @showTitle={{false}}
             />
-          {{/if}}
+          </Form>
+          {{this.preview}}
           <SettingValidationMessage
             @message={{this.setting.validationMessage}}
           />
@@ -905,15 +784,6 @@ export default class SiteSettingComponent extends Component {
           />
         </div>
       {{else if (and this.groupedOverridden this.canUpdate (not @inline))}}
-        {{#if (and this.setting.secret (not this.useFormKit))}}
-          <DButton
-            class="btn-default setting-toggle-secret"
-            @action={{this.toggleSecret}}
-            @ariaLabel="admin.settings.unmask"
-            @icon={{if this.isSecret "far-eye" "far-eye-slash"}}
-          />
-        {{/if}}
-
         <DButton
           class="btn-default undo setting-controls__undo"
           @action={{this.resetDefault}}

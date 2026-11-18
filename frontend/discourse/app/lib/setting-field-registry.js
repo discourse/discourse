@@ -63,32 +63,24 @@ function typeKeyFor({ type, subtype, list_type }) {
   return "default";
 }
 
-const TEXT_INPUT = { ...ROW, type: "input", adminReady: true };
-export const CUSTOM_CONTROL = { ...ROW, type: "custom", adminReady: true };
+export const CUSTOM_CONTROL = { ...ROW, type: "custom" };
 
 registerSettingFieldType("default", { ...ROW, type: "input" });
-registerSettingFieldType("string", TEXT_INPUT);
-registerSettingFieldType("float", TEXT_INPUT);
-registerSettingFieldType("username", TEXT_INPUT);
 registerSettingFieldType("textarea", {
   ...ROW,
   type: "textarea",
-  adminReady: true,
 });
 registerSettingFieldType("email", {
   ...ROW,
   type: "input-email",
-  adminReady: true,
 });
 registerSettingFieldType("date", {
   ...ROW,
   type: "input-date",
-  adminReady: true,
 });
 registerSettingFieldType("password", {
   ...ROW,
   type: "password",
-  adminReady: true,
 });
 registerSettingFieldType("radio-group", {
   ...ROW,
@@ -98,25 +90,21 @@ registerSettingFieldType("radio-group", {
 registerSettingFieldType("enum", {
   ...ROW,
   type: "select",
-  adminReady: true,
   renderer: EnumControl,
 });
 registerSettingFieldType("locale_enum", {
   ...ROW,
   type: "select",
-  adminReady: true,
   renderer: LocaleEnumControl,
 });
 registerSettingFieldType("icon", {
   ...ROW,
   type: "icon",
-  adminReady: true,
   renderer: IconControl,
 });
 registerSettingFieldType("color", {
   ...ROW,
   type: "color",
-  adminReady: true,
   renderer: ColorControl,
 });
 registerSettingFieldType("category", {
@@ -171,13 +159,11 @@ registerSettingFieldType("bool", {
   ...INLINE,
   type: "checkbox",
   includeDescription: false,
-  adminReady: true,
   renderer: BoolControl,
 });
 registerSettingFieldType("integer", {
   ...INLINE,
   type: "input-number",
-  adminReady: true,
   renderer: IntegerControl,
 });
 registerSettingFieldType("duration", {
