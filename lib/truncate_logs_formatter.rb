@@ -19,9 +19,13 @@ class TruncateLogsFormatter < ::ActiveSupport::Logger::SimpleFormatter
         args[3]
       end
 
-    if message.length > @log_line_max_chars
+    self.class.truncate(message, max_chars: @log_line_max_chars)
+  end
+
+  def self.truncate(message, max_chars:)
+    if message.length > max_chars
       newlines = message.length - message.chomp.length
-      "#{message[0, @log_line_max_chars]}...(truncated)#{"\n" * newlines}"
+      "#{message[0, max_chars]}...(truncated)#{"\n" * newlines}"
     else
       message
     end
