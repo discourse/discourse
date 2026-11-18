@@ -79,21 +79,21 @@ export default class TagsSelectExample extends Component {
       @valueField="slug"
       @variant="button"
     >
-      <:option as |tag config option|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
           {{dIcon (if option.create "plus" "tag")}}
           <span class="select-examples__primary">
             {{#if option.create}}
               {{i18n
                 "styleguide.sections.select.showcases.tags.create"
-                tag=tag.label
+                tag=option.label
               }}
             {{else}}
-              {{tag.label}}
+              {{option.label}}
             {{/if}}
           </span>
           {{#unless option.create}}
-            <span class="select-examples__meta">{{tag.count}}</span>
+            <span class="select-examples__meta">{{option.record.count}}</span>
           {{/unless}}
         </span>
       </:option>

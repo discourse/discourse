@@ -12,8 +12,8 @@ import {
 import {
   renderSelectText,
   type SelectConfig,
-  type SelectOption,
   type SelectRecord,
+  type SelectResolvedOption,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -67,8 +67,8 @@ export const UserOption: TOC<{
   Args: {
     /** The record, whose `type` says what it is. */
     record: SelectRecord;
-    /** The option drawn, which says whether it's an action or disabled. */
-    option?: SelectOption;
+    /** The resolved option drawn, which says whether it's an action or disabled. */
+    option?: SelectResolvedOption;
   };
 }> = <template>
   {{#if @option.action}}

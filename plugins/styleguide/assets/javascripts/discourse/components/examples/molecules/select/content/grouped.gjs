@@ -34,10 +34,10 @@ export default class GroupedSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:groupHeader as |group|>
+      <:groupHeader as |option|>
         <span class="select-examples__group-header">
           {{dIcon "language"}}
-          {{group.label}}
+          {{option.label}}
         </span>
       </:groupHeader>
     </DSelect>

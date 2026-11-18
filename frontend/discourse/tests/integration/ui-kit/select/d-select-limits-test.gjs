@@ -52,11 +52,11 @@ class MultiLimitsStaticHost extends Component {
       @value={{this.value}}
       @variant="static"
     >
-      <:selection as |item|>
-        {{~item.name~}}
+      <:selection as |option|>
+        {{~option.record.name~}}
       </:selection>
-      <:option as |item|>
-        {{~item.name~}}
+      <:option as |option|>
+        {{~option.record.name~}}
       </:option>
     </DSelect>
   </template>
@@ -91,11 +91,11 @@ class ReactiveMaximumHost extends Component {
       @value={{this.value}}
       @variant="static"
     >
-      <:selection as |item|>
-        {{~item.name~}}
+      <:selection as |option|>
+        {{~option.record.name~}}
       </:selection>
-      <:option as |item|>
-        {{~item.name~}}
+      <:option as |option|>
+        {{~option.record.name~}}
       </:option>
       <:footer>
         <button

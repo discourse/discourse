@@ -11,8 +11,7 @@ import type { SelectListModifiers } from "discourse/ui-kit/select/-internals/par
 import SelectOptionRow from "discourse/ui-kit/select/-internals/parts/select-option-row";
 import SelectEngine, {
   type SelectGroupInfo,
-  type SelectOption,
-  SelectRecord as SelectRecordModel,
+  type SelectResolvedOption,
 } from "discourse/ui-kit/select/select-engine";
 
 interface WindowedOptionListSignature {
@@ -59,22 +58,20 @@ interface WindowedOptionListSignature {
   Blocks: {
     /** Custom markup for an option. */
     option?: [
-      /** The record the option stands for. */
-      record: SelectRecordModel,
-      /** The option, with its settings. */
-      option: SelectOption,
+      /** The option the row shows, as the select resolved it. */
+      option: SelectResolvedOption,
     ];
     /** Custom markup for a group header. */
     groupHeader?: [
-      /** The header's record. */
-      record: SelectRecordModel,
+      /** The header's resolved option: the action option, or one carrying the text's label. */
+      option: SelectResolvedOption,
       /** The group the header belongs to. */
       group: SelectGroupInfo,
     ];
     /** Custom markup for a group footer. */
     groupFooter?: [
-      /** The footer's record. */
-      record: SelectRecordModel,
+      /** The footer's resolved option, like the header's. */
+      option: SelectResolvedOption,
       /** The group the footer belongs to. */
       group: SelectGroupInfo,
     ];
@@ -164,14 +161,14 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
           @presenter={{@presenter}}
           @selectedIcon={{@selectedIcon}}
         >
-          <:option as |record option|>
-            {{~yield record option to="option"~}}
+          <:option as |option|>
+            {{~yield option to="option"~}}
           </:option>
-          <:groupHeader as |record group|>
-            {{~yield record group to="groupHeader"~}}
+          <:groupHeader as |option group|>
+            {{~yield option group to="groupHeader"~}}
           </:groupHeader>
-          <:groupFooter as |record group|>
-            {{~yield record group to="groupFooter"~}}
+          <:groupFooter as |option group|>
+            {{~yield option group to="groupFooter"~}}
           </:groupFooter>
           <:skeleton>
             {{~yield to="skeleton"~}}

@@ -48,11 +48,11 @@ class MultiHost extends Component {
       @texts={{hash placeholder="Add some"}}
       @value={{this.value}}
     >
-      <:selection as |item|>
-        {{~item.name~}}
+      <:selection as |option|>
+        {{~option.record.name~}}
       </:selection>
-      <:option as |item|>
-        {{~item.name~}}
+      <:option as |option|>
+        {{~option.record.name~}}
       </:option>
     </DSelect>
   </template>

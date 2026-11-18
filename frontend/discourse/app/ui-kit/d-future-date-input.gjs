@@ -236,22 +236,22 @@ export default class DFutureDateInput extends Component {
               @value={{this.selection}}
               @variant="typeahead"
             >
-              <:selection as |shortcut|>
+              <:selection as |option|>
                 <span class="future-date-input__selection">
-                  {{shortcut.name}}
-                  {{#if shortcut.timeFormatted}}
+                  {{option.record.name}}
+                  {{#if option.record.timeFormatted}}
                     <span class="future-date-input__selection-date">
-                      {{shortcut.timeFormatted}}
+                      {{option.record.timeFormatted}}
                     </span>
                   {{/if}}
                 </span>
               </:selection>
-              <:option as |shortcut|>
+              <:option as |option|>
                 <span class="future-date-input__option">
-                  {{#if shortcut.icon}}
-                    {{dIcon shortcut.icon}}
+                  {{#if option.record.icon}}
+                    {{dIcon option.record.icon}}
                   {{/if}}
-                  {{shortcut.name}}
+                  {{option.record.name}}
                 </span>
               </:option>
             </DSelect>

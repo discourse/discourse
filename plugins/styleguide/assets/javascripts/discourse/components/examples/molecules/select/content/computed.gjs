@@ -72,12 +72,14 @@ export default class ComputedSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:option as |zone|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          <span class="select-examples__timezone-offset">{{zone.offset}}</span>
-          <span class="select-examples__primary">{{zone.name}}</span>
+          <span
+            class="select-examples__timezone-offset"
+          >{{option.record.offset}}</span>
+          <span class="select-examples__primary">{{option.label}}</span>
           <span class="select-examples__meta">
-            {{localTimeIn zone.timeZone this.now}}
+            {{localTimeIn option.record.timeZone this.now}}
           </span>
         </span>
       </:option>

@@ -27,8 +27,8 @@ import {
 } from "discourse/ui-kit/select/recipes/topics/-internals/topic-values";
 import type {
   SelectConfig,
-  SelectOption,
   SelectRecord,
+  SelectResolvedOption,
   SelectTexts,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -73,13 +73,12 @@ interface DSelectTopicListSignature {
   Blocks: {
     /** Custom option content. */
     option?: [
-      /** The topic. */ record: SelectRecord,
+      /** The option the row shows, as the select resolved it. */ option: SelectResolvedOption,
       /** Resolved config. */ config: SelectConfig,
-      /** The option itself, with its settings. */ option: SelectOption,
     ];
     /** Custom held-chip content. */
     selection?: [
-      /** The held topic. */ record: SelectRecord,
+      /** The held option, as the select resolved it. */ option: SelectResolvedOption,
       /** Resolved config. */ config: SelectConfig,
     ];
   };
@@ -174,18 +173,18 @@ export default class DSelectTopicList extends Component<DSelectTopicListSignatur
       @value={{@value}}
       @valueRecords={{this.valueRecords}}
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
+          {{yield option config to="option"}}
         {{else}}
-          <TopicOption @record={{record}} />
+          <TopicOption @record={{option.record}} />
         {{/if}}
       </:option>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else}}
-          <TopicSelection @record={{record}} />
+          <TopicSelection @record={{option.record}} />
         {{/if}}
       </:selection>
     </DSelectList>

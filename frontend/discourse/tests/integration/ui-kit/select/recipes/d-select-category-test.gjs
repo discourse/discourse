@@ -200,13 +200,13 @@ module(
     setupRenderingTest(hooks);
 
     module("kind and values", function () {
-      test("the item block receives each row's state", async function (assert) {
+      test("the option block receives each row's resolved option", async function (assert) {
         await render(
           <template>
             <DSelectCategory>
-              <:option as |item options row|>
-                <span class="custom-row {{if row 'has-row'}}">
-                  {{~item.name~}}
+              <:option as |option|>
+                <span class="custom-row {{if option.label 'has-option'}}">
+                  {{~option.record.name~}}
                 </span>
               </:option>
             </DSelectCategory>
@@ -216,8 +216,8 @@ module(
 
         assert.dom(".custom-row").exists("the item block draws the rows");
         assert
-          .dom(".custom-row:not(.has-row)")
-          .doesNotExist("every row reaches it with its state");
+          .dom(".custom-row:not(.has-option)")
+          .doesNotExist("every row reaches it as its resolved option");
       });
 
       test("a category's emoji is decoration in rows and the selection", async function (assert) {

@@ -1102,7 +1102,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         assert.false(footer.flags.textBoundary, "it is not presentational");
         assert.deepEqual(
           footer.group,
-          { key: "Fruits", action: true },
+          { key: "Fruits" },
           "the row knows its group"
         );
         assert.deepEqual(

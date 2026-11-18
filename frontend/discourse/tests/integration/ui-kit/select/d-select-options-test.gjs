@@ -163,7 +163,7 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
     );
   });
 
-  test("mixed options yield record config and the actual option", async function (assert) {
+  test("mixed options yield each resolved option and the config", async function (assert) {
     const apple = { id: "apple", name: "Apple" };
     const pear = { id: "pear", name: "Pear" };
     const pearOption = selectOption(pear, {
@@ -172,20 +172,20 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
     });
     const options = [apple, pearOption];
     const seen = new Map();
-    const describe = (record, config, option) => {
-      seen.set(record.id, { record, config, option });
-      return record.name;
+    const describe = (option, config) => {
+      seen.set(option.record.id, { record: option.record, config, option });
+      return option.label;
     };
 
     await render(
       <template>
         <DSelect @options={{options}}>
-          <:option as |record config option|>
+          <:option as |option config|>
             <span
               class="fixture__option"
               data-disabled={{if option.disabled "yes" "no"}}
             >
-              {{describe record config option}}
+              {{describe option config}}
             </span>
           </:option>
         </DSelect>
@@ -209,15 +209,18 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
       pear,
       "wrapped records are yielded unchanged"
     );
-    assert.strictEqual(
-      seen.get(pear.id)?.option,
-      pearOption,
-      "the third parameter is the option itself"
+    assert.true(
+      seen.get(pear.id)?.option.disabled,
+      "the resolved option carries the input's disabled setting"
     );
     assert.strictEqual(
-      seen.get(apple.id)?.option.record,
-      apple,
-      "bare input is wrapped for the third parameter"
+      seen.get(pear.id)?.option.description,
+      pearOption.description,
+      "the resolved option carries the input's description"
+    );
+    assert.false(
+      seen.get(apple.id)?.option.disabled,
+      "a bare record resolves to an enabled option"
     );
     assert.true(
       Object.isFrozen(seen.get(pear.id)?.config ?? {}),
@@ -311,9 +314,9 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
     await render(
       <template>
         <DSelect @options={{options}} @value={{fruit.id}} @variant="button">
-          <:selection as |record config|><span
+          <:selection as |option config|><span
               class="fixture__single-selection"
-            >{{label record config}}</span></:selection>
+            >{{label option.record config}}</span></:selection>
         </DSelect>
       </template>
     );
@@ -360,8 +363,8 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
           @options={{options}}
           @value={{held.value}}
         >
-          <:selection as |record|><span class="fixture__selection">{{label
-                record
+          <:selection as |option|><span class="fixture__selection">{{label
+                option.record
               }}</span></:selection>
         </DSelect>
       </template>
@@ -445,12 +448,14 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
             @value={{held.value}}
             @variant="button"
           >
-            <:option as |record config option|><span
-                class="fixture__ordinary"
-              >{{label record config option}}</span></:option>
-            <:selection as |record|><span
+            <:option as |option config|><span class="fixture__ordinary">{{label
+                  option.record
+                  config
+                  option
+                }}</span></:option>
+            <:selection as |option|><span
                 class="fixture__held"
-              >{{record.name}}</span></:selection>
+              >{{option.record.name}}</span></:selection>
             <:unresolved><span class="fixture__unresolved"></span></:unresolved>
           </DSelect>
         </template>
@@ -494,12 +499,17 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
         pear,
         "the block gets the original record"
       );
-      for (const key of ["disabled", "action", "none", "create"]) {
+      for (const key of ["disabled", "create"]) {
         assert.false(
           observed?.option[key],
           `${key} stays false without settings`
         );
       }
+      assert.strictEqual(
+        observed?.option.action,
+        undefined,
+        "no action without settings"
+      );
       if (row) {
         await dSelect().select(pear.id);
       }
@@ -600,9 +610,9 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
           @options={{options}}
           @variant="static"
         >
-          <:option as |record config option|><span
+          <:option as |option|><span
               data-action={{if option.action "yes" "no"}}
-            >{{record.name}}</span></:option>
+            >{{option.record.name}}</span></:option>
         </DSelect>
       </template>
     );
@@ -755,10 +765,10 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
           @options={{options}}
           @value={{held.value}}
         >
-          <:option as |record config option|><span
+          <:option as |option|><span
               data-create={{if option.create "yes" "no"}}
-              data-none={{if option.none "yes" "no"}}
-            >{{record.name}}</span></:option>
+              data-keyed={{if option.key "yes" "no"}}
+            >{{option.record.name}}</span></:option>
         </DSelect>
       </template>
     );
@@ -771,8 +781,8 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
         "none reads as selected without a held value"
       );
     assert
-      .dom("[role='option'].--none [data-none='yes']")
-      .exists("the none option is visible to the block");
+      .dom("[role='option'].--none [data-keyed='no']")
+      .exists("the none option reaches the block as a keyless resolved option");
     await dSelect().select(apple.id);
     await dSelect().open();
     assert
@@ -828,9 +838,9 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
           @value={{fruit.id}}
           @variant="button"
         >
-          <:unresolved as |record config|><span
+          <:unresolved as |option config|><span
               class="fixture__fallback"
-            >{{label record config}}</span></:unresolved>
+            >{{label option.record config}}</span></:unresolved>
         </DSelect>
       </template>
     );
@@ -1019,9 +1029,9 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
     const headers = [];
     const footers = [];
     const drawnFooters = [];
-    const footerLabel = (record, config, group) => {
-      drawnFooters.push([record, config, group]);
-      return record.name;
+    const footerLabel = (option, config, group) => {
+      drawnFooters.push([option.record, config, group, option]);
+      return option.label;
     };
     const groupHeader = (key, entries, config) => {
       headers.push([key, entries, config]);
@@ -1043,9 +1053,9 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
           @onChange={{onChange}}
           @options={{options}}
         >
-          <:groupFooter as |record config group|><span
+          <:groupFooter as |option config group|><span
               class="fixture__footer"
-            >{{footerLabel record config group}}</span></:groupFooter>
+            >{{footerLabel option config group}}</span></:groupFooter>
         </DSelect>
       </template>
     );
@@ -1071,9 +1081,15 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
       apple.family,
       "group metadata is separate from the record"
     );
-    assert.true(
-      drawnFooters.at(-1)?.[2].action,
-      "group metadata identifies an action boundary"
+    assert.deepEqual(
+      Object.keys(drawnFooters.at(-1)?.[2] ?? {}),
+      ["key"],
+      "group metadata carries only the key"
+    );
+    assert.strictEqual(
+      typeof drawnFooters.at(-1)?.[3].action,
+      "function",
+      "the boundary's resolved option identifies the action"
     );
     for (const calls of [headers, footers]) {
       assert.true(calls.length > 0, "the builder is called");

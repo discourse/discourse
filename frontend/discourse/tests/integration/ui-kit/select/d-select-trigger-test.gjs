@@ -58,11 +58,11 @@ class FrameHost extends Component {
       @value={{this.value}}
       @variant={{@variant}}
     >
-      <:selection as |item|>
-        {{~item.name~}}
+      <:selection as |option|>
+        {{~option.record.name~}}
       </:selection>
-      <:option as |item|>
-        {{~item.name~}}
+      <:option as |option|>
+        {{~option.record.name~}}
       </:option>
     </DSelect>
   </template>
@@ -655,8 +655,8 @@ module(
               @options={{items}}
               @value={{1}}
             >
-              <:selection as |item|>
-                {{~item.name~}}
+              <:selection as |option|>
+                {{~option.record.name~}}
               </:selection>
             </DSelect>
           </div>
@@ -840,11 +840,11 @@ module(
             @value={{1}}
             @variant="static"
           >
-            <:selection as |item|>
-              {{~item.name~}}
+            <:selection as |option|>
+              {{~option.record.name~}}
             </:selection>
-            <:option as |item|>
-              {{~item.name~}}
+            <:option as |option|>
+              {{~option.record.name~}}
             </:option>
           </DSelect>
         </template>
@@ -3196,8 +3196,8 @@ module(
       await render(
         <template>
           <DSelect @options={{OPTIONS}} @value={{1}} @variant="static">
-            <:selection as |record|>
-              <span class="custom-selection">{{record.name}}</span>
+            <:selection as |option|>
+              <span class="custom-selection">{{option.record.name}}</span>
             </:selection>
           </DSelect>
         </template>
@@ -3283,8 +3283,8 @@ module(
       await render(
         <template>
           <DSelect @options={{OPTIONS}} @value={{1}} @variant="typeahead">
-            <:selection as |record|>
-              <span class="custom-selection">{{record.name}}</span>
+            <:selection as |option|>
+              <span class="custom-selection">{{option.record.name}}</span>
             </:selection>
           </DSelect>
         </template>

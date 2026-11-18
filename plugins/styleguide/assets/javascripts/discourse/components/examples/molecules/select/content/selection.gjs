@@ -32,39 +32,41 @@ export default class SelectionBlockSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:option as |person|>
-        <span class="select-examples__row select-examples__row--identity">
-          <svg
-            aria-hidden="true"
-            class="select-examples__avatar"
-            style={{person.avatarStyle}}
-            viewBox="0 0 48 48"
-          >
-            <use
-              href="/plugins/styleguide/images/avatar.svg#select-avatar"
-            ></use>
-          </svg>
-          <span class="select-examples__details">
-            <span class="select-examples__primary">{{person.name}}</span>
-            <span class="select-examples__secondary">
-              {{if person.title person.title (concat "@" person.username)}}
+      <:option as |option|>
+        {{#let option.record as |person|}}
+          <span class="select-examples__row select-examples__row--identity">
+            <svg
+              aria-hidden="true"
+              class="select-examples__avatar"
+              style={{person.avatarStyle}}
+              viewBox="0 0 48 48"
+            >
+              <use
+                href="/plugins/styleguide/images/avatar.svg#select-avatar"
+              ></use>
+            </svg>
+            <span class="select-examples__details">
+              <span class="select-examples__primary">{{option.label}}</span>
+              <span class="select-examples__secondary">
+                {{if person.title person.title (concat "@" person.username)}}
+              </span>
             </span>
           </span>
-        </span>
+        {{/let}}
       </:option>
-      <:selection as |person|>
+      <:selection as |option|>
         <span class="select-examples__row select-examples__row--glyph">
           <svg
             aria-hidden="true"
             class="select-examples__avatar --small"
-            style={{person.avatarStyle}}
+            style={{option.record.avatarStyle}}
             viewBox="0 0 48 48"
           >
             <use
               href="/plugins/styleguide/images/avatar.svg#select-avatar"
             ></use>
           </svg>
-          {{person.name}}
+          {{option.label}}
         </span>
       </:selection>
     </DSelect>

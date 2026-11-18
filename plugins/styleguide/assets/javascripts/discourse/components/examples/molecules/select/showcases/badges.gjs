@@ -85,22 +85,24 @@ export default class BadgesSelectExample extends Component {
       @value={{this.value}}
       @variant="button"
     >
-      <:selection as |badge|>
+      <:selection as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          <span class="select-showcases__badge-icon --{{badge.rarity}}">
-            {{dIconOrImage badge}}
+          <span class="select-showcases__badge-icon --{{option.record.rarity}}">
+            {{dIconOrImage option.record}}
           </span>
-          {{badge.name}}
+          {{option.label}}
         </span>
       </:selection>
 
-      <:option as |badge|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          <span class="select-showcases__badge-icon --{{badge.rarity}}">
-            {{dIconOrImage badge}}
+          <span class="select-showcases__badge-icon --{{option.record.rarity}}">
+            {{dIconOrImage option.record}}
           </span>
-          <span class="select-examples__primary">{{badge.name}}</span>
-          <span class="select-examples__meta">{{badge.grantLabel}}</span>
+          <span class="select-examples__primary">{{option.label}}</span>
+          <span
+            class="select-examples__meta"
+          >{{option.record.grantLabel}}</span>
         </span>
       </:option>
     </DSelect>

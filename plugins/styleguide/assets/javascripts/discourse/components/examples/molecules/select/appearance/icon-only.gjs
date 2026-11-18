@@ -52,10 +52,10 @@ export default class IconOnlySelectExample extends Component {
         @value={{this.value}}
         @variant="static"
       >
-        <:option as |alignment|>
+        <:option as |option|>
           <span class="select-examples__row select-examples__row--glyph">
-            {{dIcon alignment.icon}}
-            <span class="select-examples__primary">{{alignment.name}}</span>
+            {{dIcon option.record.icon}}
+            <span class="select-examples__primary">{{option.label}}</span>
           </span>
         </:option>
       </DSelect>

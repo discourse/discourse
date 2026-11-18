@@ -37,11 +37,11 @@ export default class TopicGlyphSelectExample extends Component {
       @value={{this.value}}
       @valueField="slug"
     >
-      <:option as |tag|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
           {{dIcon "tag"}}
-          <span class="select-examples__primary">{{tag.label}}</span>
-          <span class="select-examples__meta">{{tag.usesLabel}}</span>
+          <span class="select-examples__primary">{{option.label}}</span>
+          <span class="select-examples__meta">{{option.record.usesLabel}}</span>
         </span>
       </:option>
     </DSelect>

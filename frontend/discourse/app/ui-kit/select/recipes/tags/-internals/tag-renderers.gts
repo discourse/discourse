@@ -3,8 +3,8 @@ import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import {
   renderSelectText,
   type SelectConfig,
-  type SelectOption,
   type SelectRecord,
+  type SelectResolvedOption,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -66,8 +66,8 @@ export const TagOption: TemplateOnlyComponent<{
     record: SelectRecord;
     /** The select's resolved config, which carries its texts. */
     config?: SelectConfig;
-    /** The option drawn, which says whether it's an action or the create option; absent in the selection. */
-    option?: SelectOption;
+    /** The resolved option drawn, which says whether it's an action or the create option; absent in the selection. */
+    option?: SelectResolvedOption;
   };
 }> = <template>
   {{#if @option.action}}

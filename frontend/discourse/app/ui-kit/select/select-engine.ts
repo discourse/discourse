@@ -67,6 +67,9 @@ export {
 /** The frozen config snapshot recipes receive in their callbacks and blocks. */
 export type { SelectConfig };
 
+/** An option as the select resolved it from every source: what its blocks receive. */
+export type { SelectResolvedOption };
+
 /** What the select lists, and how a record is given settings. */
 export {
   recordOf,
@@ -103,8 +106,6 @@ export interface SelectRecord {
 export interface SelectGroupInfo {
   /** The group's key, as `groupBy` returned it. */
   readonly key: SelectId;
-  /** Whether the boundary is an action option rather than text. */
-  readonly action: boolean;
 }
 
 /**
@@ -138,9 +139,9 @@ export interface SelectRow {
   option: SelectOption;
   /**
    * What the row shows: its key's resolved option, or for a row that stands for no value key, a resolved option of
-   * its own option. Absent on the rows that describe held records.
+   * its own option.
    */
-  resolved?: SelectResolvedOption;
+  resolved: SelectResolvedOption;
   /** The group a boundary row belongs to; absent on every other row. */
   group?: SelectGroupInfo;
   /** Row state, centralized so the template and option component don't re-derive it. */

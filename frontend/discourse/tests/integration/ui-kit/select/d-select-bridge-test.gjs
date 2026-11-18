@@ -604,8 +604,8 @@ class AsyncUpdateSelectionHost extends Component {
       @texts={{hash placeholder="Pick one"}}
       @value={{this.value}}
     >
-      <:selection as |item|>
-        {{~item.name~}}
+      <:selection as |option|>
+        {{~option.record.name~}}
       </:selection>
     </DSelect>
   </template>
@@ -2012,8 +2012,8 @@ class SuggesterHost extends Component {
       @onChange={{this.onChange}}
       @value={{this.value}}
     >
-      <:selection as |item|>
-        {{~item.name~}}
+      <:selection as |option|>
+        {{~option.record.name~}}
       </:selection>
     </DSelect>
   </template>

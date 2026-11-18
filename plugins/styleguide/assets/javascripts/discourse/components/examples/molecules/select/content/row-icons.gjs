@@ -23,10 +23,10 @@ export default class RowIconsSelectExample extends Component {
       @options={{this.items}}
       @value={{this.value}}
     >
-      <:option as |visibility|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dIcon visibility.icon}}
-          <span class="select-examples__primary">{{visibility.title}}</span>
+          {{dIcon option.record.icon}}
+          <span class="select-examples__primary">{{option.label}}</span>
         </span>
       </:option>
     </DSelect>

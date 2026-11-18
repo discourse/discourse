@@ -180,18 +180,18 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
       @valueField={{this.valueField}}
       @variant={{@variant}}
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
+          {{yield option config to="option"}}
         {{else}}
-          <GroupOption @option={{option}} @record={{record}} />
+          <GroupOption @option={{option}} @record={{option.record}} />
         {{/if}}
       </:option>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else}}
-          {{recordName record}}
+          {{recordName option.record}}
         {{/if}}
       </:selection>
       <:footer as |state config|>

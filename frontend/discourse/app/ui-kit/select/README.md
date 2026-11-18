@@ -623,28 +623,43 @@ can render one; the component's retry is shown only when no block is supplied.
 
 `:option`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and
 `:footer` also yield the select's resolved config, so a recipe can render values extensions
-override (see [Recipes](#recipes)). It comes after the block's own values, and for `:option`
-and the group blocks before their third parameter.
+override (see [Recipes](#recipes)). It comes after the block's own values, and for the group
+blocks before the group.
 
-`:groupHeader` and `:groupFooter` draw every header and footer, text or action, and `:option`
-never receives one. They yield `(record, config, group)`. A text header's or footer's record
-carries its `label`; an action header's or footer's record is the one the builder's option
-stands for. `group.key` is the group's key and `group.action` tells an action header or footer
-from a text one, so one block can draw group-specific content for either kind.
-
-`:option` draws every other option, including the create option and action options such as a
-recipe's shortcuts, so a block that draws records must handle both. It yields
-`(record, config, option)`: `option.create` marks the create option, which should name what it
-creates, as the `createOption` text does, and `option.action` marks an action option. A recipe
-forwards all three parameters, so a caller's block can tell the options apart without knowing
-the recipe's record fields.
+`:option`, `:selection` and `:unresolved` yield `(option, config)`. The option is the resolved
+option: what the select made of every source that knows the value, the one the row, the chip and
+the trigger draw. Read what the select shows from it (`option.label`, `option.icon`,
+`option.description`) and the caller's data from `option.record`. A block that draws
+`option.record.name` instead of `option.label` ignores a `label` setting and `@labelField`. When
+a block reads several record fields, name the record once:
 
 ```gjs
-<:option as |record config option|>
+<:option as |option|>
+  {{#let option.record as |person|}}
+    {{option.label}}
+    <span class="meta">{{person.title}} · @{{person.username}}</span>
+  {{/let}}
+</:option>
+```
+
+`:groupHeader` and `:groupFooter` draw every header and footer, text or action, and `:option`
+never receives one. They yield `(option, config, group)`. A text header's or footer's option
+carries the builder's text as its `label`; an action header's or footer's option is the
+builder's option, resolved. `group.key` is the group's key, and `option.action` tells an action
+header or footer from a text one, so one block can draw group-specific content for either kind.
+
+`:option` draws every other option, including the create option and action options such as a
+recipe's shortcuts, so a block must handle both. `option.create` marks the create option, which
+should name what it creates, as the `createOption` text does, and `option.action` holds an action
+option's handler. A recipe forwards both parameters, so a caller's block can tell the options
+apart without knowing the recipe's record fields.
+
+```gjs
+<:option as |option config|>
   {{#if option.create}}
-    {{renderSelectText config "createOption" (hash label=record.name)}}
+    {{renderSelectText config "createOption" (hash label=option.label)}}
   {{else}}
-    {{record.name}}
+    {{option.label}}
   {{/if}}
 </:option>
 ```
@@ -1172,7 +1187,7 @@ against the ids the search sends (at most 100), so tags held by name are missing
 until their names resolve.
 
 The default tag option draws the create option with the `createOption` text (`d_select.create_item`). A custom
-`:option` block owns that wording too; its third parameter's `option.create` tells the create option from
+`:option` block owns that wording too; the yielded option's `create` tells the create option from
 existing tags.
 
 #### Category recipes

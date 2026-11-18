@@ -31,11 +31,11 @@ export class Host extends Component {
       @value={{this.value}}
       @variant={{@variant}}
     >
-      <:selection as |item|>
-        {{~item.name~}}
+      <:selection as |option|>
+        {{~option.record.name~}}
       </:selection>
-      <:option as |item|>
-        {{~item.name~}}
+      <:option as |option|>
+        {{~option.record.name~}}
       </:option>
     </DSelect>
   </template>
@@ -94,11 +94,11 @@ export class MultiLimitsHost extends Component {
       @texts={{hash placeholder="Pick some"}}
       @value={{this.value}}
     >
-      <:selection as |item|>
-        {{~item.name~}}
+      <:selection as |option|>
+        {{~option.record.name~}}
       </:selection>
-      <:option as |item|>
-        {{~item.name~}}
+      <:option as |option|>
+        {{~option.record.name~}}
       </:option>
     </DSelect>
   </template>

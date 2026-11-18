@@ -3,8 +3,8 @@ import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import type { CategoryRecord } from "discourse/ui-kit/select/recipes/categories/-internals/category-types";
 import {
-  type SelectOption,
   type SelectRecord,
+  type SelectResolvedOption,
 } from "discourse/ui-kit/select/select-engine";
 
 /** An option's description: the category's plain-text description, cut to 200 characters. */
@@ -23,12 +23,12 @@ export function categoryRecord(category: Category): CategoryRecord {
 }
 
 /**
- * The category a record renders as a badge. Action options render their icon and label instead,
- * except a family footer, which draws its own category.
+ * The category a record renders as a badge. Action options render their label instead, except a
+ * family footer, which draws its own category.
  */
 function categoryModel(
   record: SelectRecord,
-  option: SelectOption | undefined,
+  option: SelectResolvedOption | undefined,
   family?: boolean
 ): Category | undefined {
   if (option?.action && !family) {
@@ -62,8 +62,8 @@ export const CategoryBadge: TemplateOnlyComponent<{
   Args: {
     /** Resolved category or a named shortcut. */
     record: SelectRecord;
-    /** The option drawn, which says whether it's an action; absent in the selection. */
-    option?: SelectOption;
+    /** The resolved option drawn, which says whether it's an action; absent in the selection. */
+    option?: SelectResolvedOption;
     /** Includes the category's ancestor badges. */
     ancestors?: boolean;
     /** Displays topic counts on an option. */

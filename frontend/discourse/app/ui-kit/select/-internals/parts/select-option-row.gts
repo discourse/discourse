@@ -11,9 +11,7 @@ import WindowedListCoordinator, {
 import SelectOptionContent from "discourse/ui-kit/select/-internals/parts/select-option-content";
 import SelectEngine, {
   type SelectGroupInfo,
-  type SelectOption,
-  SelectRecord as SelectRecordModel,
-  selectRecordLabel,
+  type SelectResolvedOption,
   type SelectRow,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -57,22 +55,20 @@ interface SelectOptionRowSignature {
   Blocks: {
     /** Custom markup for an option. */
     option?: [
-      /** The record the option stands for. */
-      record: SelectRecordModel,
-      /** The option, with its settings. */
-      option: SelectOption,
+      /** The option the row shows, as the select resolved it. */
+      option: SelectResolvedOption,
     ];
     /** Custom markup for a group header, text or action. */
     groupHeader?: [
-      /** The header's record: the action option's, or `{ label }` for text. */
-      record: SelectRecordModel,
+      /** The header's resolved option: the action option, or one carrying the text's label. */
+      option: SelectResolvedOption,
       /** The group the header belongs to. */
       group: SelectGroupInfo,
     ];
     /** Custom markup for a group footer, text or action. */
     groupFooter?: [
-      /** The footer's record: the action option's, or `{ label }` for text. */
-      record: SelectRecordModel,
+      /** The footer's resolved option, like the header's. */
+      option: SelectResolvedOption,
       /** The group the footer belongs to. */
       group: SelectGroupInfo,
     ];
@@ -119,13 +115,13 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             >
               {{#if hasBlock}}
                 {{#if option.flags.groupFooter}}
-                  {{yield option.record (groupOf option) to="groupFooter"}}
+                  {{yield option.resolved (groupOf option) to="groupFooter"}}
                 {{else}}
-                  {{yield option.record (groupOf option) to="groupHeader"}}
+                  {{yield option.resolved (groupOf option) to="groupHeader"}}
                 {{/if}}
               {{/if}}
               <span hidden={{hasBlock}} id={{option.boundaryId}}>
-                {{selectRecordLabel option.record "label"}}
+                {{option.resolved.label}}
               </span>
             </li>
           {{/let}}
@@ -184,19 +180,19 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
                 {{~option.resolved.label~}}
               </span>
               <span aria-hidden="true">
-                {{~yield option.record (groupOf option) to="groupHeader"~}}
+                {{~yield option.resolved (groupOf option) to="groupHeader"~}}
               </span>
             {{else if (and option.flags.groupFooter @hasGroupFooterBlock)}}
               <span class="sr-only">
                 {{~option.resolved.label~}}
               </span>
               <span aria-hidden="true">
-                {{~yield option.record (groupOf option) to="groupFooter"~}}
+                {{~yield option.resolved (groupOf option) to="groupFooter"~}}
               </span>
             {{else if (or option.flags.groupHeader option.flags.groupFooter)}}
               {{option.resolved.label}}
             {{else if @hasOptionBlock}}
-              {{yield option.record option.option to="option"}}
+              {{yield option.resolved to="option"}}
             {{else if option.flags.create}}
               {{@engine.text "createOption" (hash label=option.resolved.label)}}
             {{else}}

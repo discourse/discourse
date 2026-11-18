@@ -478,22 +478,22 @@ export default class DSelectUser extends Component<DSelectUserSignature> {
       @value={{this.selectedValue}}
       @variant={{@variant}}
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
+          {{yield option config to="option"}}
         {{else}}
-          <UserOption @option={{option}} @record={{record}} />
+          <UserOption @option={{option}} @record={{option.record}} />
         {{/if}}
       </:option>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else}}
-          <UserSelection @config={{config}} @record={{record}} />
+          <UserSelection @config={{config}} @record={{option.record}} />
         {{/if}}
       </:selection>
-      <:unresolved as |record|>
-        <UserSelection @record={{record}} />
+      <:unresolved as |option|>
+        <UserSelection @record={{option.record}} />
       </:unresolved>
       <:footer as |state config|>
         {{yield state config to="footer"}}

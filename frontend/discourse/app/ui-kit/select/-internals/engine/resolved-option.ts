@@ -78,6 +78,7 @@ export class SelectResolvedOption {
   #key: string | null;
   #record: SelectRecord;
   #unresolved: boolean;
+  #create: boolean;
   #properties: Readonly<SelectOptionSettings>;
   #sources: ResolvedOptionSources;
 
@@ -85,12 +86,14 @@ export class SelectResolvedOption {
     key: string | null;
     record: SelectRecord;
     unresolved: boolean;
+    create?: boolean;
     properties: Readonly<SelectOptionSettings>;
     sources: ResolvedOptionSources;
   }) {
     this.#key = init.key;
     this.#record = init.record;
     this.#unresolved = init.unresolved;
+    this.#create = !!init.create;
     this.#properties = init.properties;
     this.#sources = init.sources;
     registerResolvedRecord(this, init.record);
@@ -115,6 +118,11 @@ export class SelectResolvedOption {
   /** Whether the record is the engine's fallback for a value it could not resolve. */
   get unresolved(): boolean {
     return this.#unresolved;
+  }
+
+  /** Whether this is the row that creates a value from the query. */
+  get create(): boolean {
+    return this.#create;
   }
 
   /** The explicit properties the sources set, merged by precedence. */
@@ -267,6 +275,7 @@ export class ResolvedOptions {
         key: null,
         record,
         unresolved: false,
+        create: isSelectOption(input) && input.create,
         properties: isSelectOption(input) ? input.settings : NO_PROPERTIES,
         sources: this.#sources,
       });

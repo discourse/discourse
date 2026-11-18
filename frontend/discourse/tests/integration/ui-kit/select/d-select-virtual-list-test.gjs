@@ -973,8 +973,8 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
           @groupHeader={{identityLabel}}
           @options={{GROUPED_ITEMS}}
         >
-          <:groupHeader as |item|>
-            <strong class="fancy-header">▸ {{item.label}} ◂</strong>
+          <:groupHeader as |option|>
+            <strong class="fancy-header">▸ {{option.record.label}} ◂</strong>
           </:groupHeader>
         </DSelect>
       </template>
@@ -1245,11 +1245,12 @@ module(
             @groupFooter={{bulk}}
             @options={{GROUPED_ITEMS}}
           >
-            <:option as |item|>
-              <span class="custom-item">{{item.name}}</span>
+            <:option as |option|>
+              <span class="custom-item">{{option.record.name}}</span>
             </:option>
-            <:groupFooter as |item|>
-              <span class="custom-footer">{{item.label}} + Subcategories</span>
+            <:groupFooter as |option|>
+              <span class="custom-footer">{{option.record.label}}
+                + Subcategories</span>
             </:groupFooter>
           </DSelect>
         </template>
@@ -1318,8 +1319,8 @@ module(
             @groupHeader={{bulk}}
             @options={{GROUPED_ITEMS}}
           >
-            <:option as |item|>
-              <span class="custom-item">{{item.name}}</span>
+            <:option as |option|>
+              <span class="custom-item">{{option.record.name}}</span>
             </:option>
             <:groupHeader>
               <span class="custom-header">Everything</span>
@@ -1353,8 +1354,8 @@ module(
             @groupHeader={{identityLabel}}
             @options={{GROUPED_ITEMS}}
           >
-            <:option as |item|>
-              <span class="custom-item">{{item.name}}</span>
+            <:option as |option|>
+              <span class="custom-item">{{option.record.name}}</span>
             </:option>
           </DSelect>
         </template>
@@ -1386,8 +1387,8 @@ module(
             @groupHeader={{identityLabel}}
             @options={{GROUPED_ITEMS}}
           >
-            <:groupFooter as |item|>
-              <em class="custom-footer">{{item.label}}!</em>
+            <:groupFooter as |option|>
+              <em class="custom-footer">{{option.record.label}}!</em>
             </:groupFooter>
           </DSelect>
         </template>

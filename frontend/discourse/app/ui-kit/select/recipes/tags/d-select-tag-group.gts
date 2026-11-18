@@ -143,18 +143,18 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @valueRecords={{this.valueRecords}}
       @variant={{@variant}}
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
+          {{yield option config to="option"}}
         {{else}}
-          {{tagRecordName record}}
+          {{tagRecordName option.record}}
         {{/if}}
       </:option>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else}}
-          {{tagRecordName record}}
+          {{tagRecordName option.record}}
         {{/if}}
       </:selection>
       <:footer as |state config|>

@@ -35,10 +35,10 @@ export default class ValueIconSelectExample extends Component {
       @valueField="level"
       @variant="static"
     >
-      <:option as |level|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dIcon level.icon}}
-          <span class="select-examples__primary">{{level.title}}</span>
+          {{dIcon option.record.icon}}
+          <span class="select-examples__primary">{{option.label}}</span>
         </span>
       </:option>
     </DSelect>

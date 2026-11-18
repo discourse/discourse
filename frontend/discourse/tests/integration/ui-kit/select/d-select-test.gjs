@@ -346,7 +346,8 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
           @texts={{hash placeholder="Pick one"}}
           @value={{1}}
         >
-          <:selection as |item|><strong>{{item.title}}</strong></:selection>
+          <:selection as |option|><strong
+            >{{option.record.title}}</strong></:selection>
         </DSelect>
       </template>
     );
@@ -2204,11 +2205,11 @@ module(
             @texts={{hash placeholder="Choose an option"}}
             @value={{1}}
           >
-            <:selection as |item|>
-              {{~item.name~}}
+            <:selection as |option|>
+              {{~option.record.name~}}
             </:selection>
-            <:option as |item|>
-              {{~item.name~}}
+            <:option as |option|>
+              {{~option.record.name~}}
             </:option>
           </DSelect>
         </template>
@@ -2984,11 +2985,11 @@ module(
             @value={{1}}
             @variant="static"
           >
-            <:selection as |item|>
-              {{~item.name~}}
+            <:selection as |option|>
+              {{~option.record.name~}}
             </:selection>
-            <:option as |item|>
-              {{~item.name~}}
+            <:option as |option|>
+              {{~option.record.name~}}
             </:option>
           </DSelect>
           <DSelect
@@ -2998,11 +2999,11 @@ module(
             @value={{1}}
             @variant="button"
           >
-            <:selection as |item|>
-              {{~item.name~}}
+            <:selection as |option|>
+              {{~option.record.name~}}
             </:selection>
-            <:option as |item|>
-              {{~item.name~}}
+            <:option as |option|>
+              {{~option.record.name~}}
             </:option>
           </DSelect>
         </template>
@@ -3036,11 +3037,11 @@ module(
             @value={{1}}
             @variant="button"
           >
-            <:selection as |item|>
-              {{~item.name~}}
+            <:selection as |option|>
+              {{~option.record.name~}}
             </:selection>
-            <:option as |item|>
-              {{~item.name~}}
+            <:option as |option|>
+              {{~option.record.name~}}
             </:option>
           </DSelect>
         </template>
@@ -3079,11 +3080,11 @@ module(
             @value={{1}}
             @variant="static"
           >
-            <:selection as |item|>
-              {{~item.name~}}
+            <:selection as |option|>
+              {{~option.record.name~}}
             </:selection>
-            <:option as |item|>
-              {{~item.name~}}
+            <:option as |option|>
+              {{~option.record.name~}}
             </:option>
           </DSelect>
         </template>
@@ -3172,11 +3173,11 @@ module(
             @options={{ITEMS}}
             @value={{this.value}}
           >
-            <:selection as |item|>
-              {{~item.name~}}
+            <:selection as |option|>
+              {{~option.record.name~}}
             </:selection>
-            <:option as |item|>
-              {{~item.name~}}
+            <:option as |option|>
+              {{~option.record.name~}}
             </:option>
           </DSelect>
         </template>

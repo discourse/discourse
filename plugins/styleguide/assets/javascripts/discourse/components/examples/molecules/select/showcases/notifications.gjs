@@ -48,17 +48,17 @@ export default class NotificationsSelectExample extends Component {
       @valueField="level"
       @variant="static"
     >
-      <:selection as |level|>
+      <:selection as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dIcon level.icon}}
-          {{level.title}}
+          {{dIcon option.record.icon}}
+          {{option.label}}
         </span>
       </:selection>
 
-      <:option as |level|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dIcon level.icon}}
-          <span class="select-examples__primary">{{level.title}}</span>
+          {{dIcon option.record.icon}}
+          <span class="select-examples__primary">{{option.label}}</span>
         </span>
       </:option>
     </DSelect>

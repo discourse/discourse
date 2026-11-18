@@ -274,24 +274,24 @@ export default class DSelectCategoryFilter extends Component<DSelectCategoryFilt
       @valueRecords={{this.valueRecords}}
       @variant="button"
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
+          {{yield option config to="option"}}
         {{else}}
           <CategoryBadge
             @ancestors={{not @parentCategory}}
             @counts={{true}}
             @countSubcategories={{@countSubcategories}}
             @option={{option}}
-            @record={{record}}
+            @record={{option.record}}
           />
         {{/if}}
       </:option>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else}}
-          <CategoryBadge @record={{record}} />
+          <CategoryBadge @record={{option.record}} />
         {{/if}}
       </:selection>
     </DSelect>

@@ -886,8 +886,8 @@ module(
             @kindConfig={{hash prefix="base"}}
             @options={{ITEMS}}
           >
-            <:option as |item options|>
-              {{~concat options.prefix " " item.name~}}
+            <:option as |option options|>
+              {{~concat options.prefix " " option.record.name~}}
             </:option>
           </DSelect>
         </template>
@@ -1107,16 +1107,16 @@ module(
               @value={{1}}
               @variant="static"
             >
-              <:option as |item options|>
+              <:option as |option options|>
                 <span class="x-item">{{options.prefix}}</span>
               </:option>
-              <:selection as |item options|>
+              <:selection as |option options|>
                 <span class="x-selection">{{options.prefix}}</span>
               </:selection>
-              <:groupHeader as |header options|>
+              <:groupHeader as |option options|>
                 <span class="x-header">{{options.prefix}}</span>
               </:groupHeader>
-              <:groupFooter as |footer options|>
+              <:groupFooter as |option options|>
                 <span class="x-group-footer">{{options.prefix}}</span>
               </:groupFooter>
               <:footer as |state options|>
@@ -1132,7 +1132,7 @@ module(
               @value={{99}}
               @variant="static"
             >
-              <:unresolved as |item options|>
+              <:unresolved as |option options|>
                 <span class="x-unresolved">{{options.prefix}}</span>
               </:unresolved>
             </DSelect>
@@ -1186,8 +1186,8 @@ module(
             @kindConfig={{hash prefix=prefix.value}}
             @options={{ITEMS}}
           >
-            <:option as |item options|>
-              {{~concat options.prefix " " item.name~}}
+            <:option as |option options|>
+              {{~concat options.prefix " " option.record.name~}}
             </:option>
           </DSelect>
         </template>
@@ -1220,8 +1220,8 @@ module(
               @kindConfig={{hash prefix=null}}
               @options={{ITEMS}}
             >
-              <:option as |item options|>
-                {{~concat options.prefix " " item.name~}}
+              <:option as |option options|>
+                {{~concat options.prefix " " option.record.name~}}
               </:option>
             </DSelect>
           </template>
@@ -1445,8 +1445,8 @@ module(
             @kindConfig={{hash prefix="base"}}
             @options={{ITEMS}}
           >
-            <:option as |item options|>
-              {{~concat options.prefix " " item.name~}}
+            <:option as |option options|>
+              {{~concat options.prefix " " option.record.name~}}
             </:option>
           </DSelect>
         </template>

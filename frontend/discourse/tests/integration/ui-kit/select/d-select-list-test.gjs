@@ -293,8 +293,12 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
             @options={{FRUIT}}
             @texts={{hash ariaLabel="Fruit"}}
           >
-            <:option as |item options row|>
-              {{~if row.create (concat "Create " item.name) item.name~}}
+            <:option as |option|>
+              {{~if
+                option.create
+                (concat "Create " option.record.name)
+                option.record.name
+              ~}}
             </:option>
           </DSelectList>
         </template>
@@ -320,8 +324,12 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
             @texts={{hash ariaLabel="Fruit"}}
             @virtualized={{false}}
           >
-            <:option as |item options row|>
-              {{~if row.create (concat "Create " item.name) item.name~}}
+            <:option as |option|>
+              {{~if
+                option.create
+                (concat "Create " option.record.name)
+                option.record.name
+              ~}}
             </:option>
           </DSelectList>
         </template>
@@ -417,9 +425,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       const held = tracked([]);
       const changes = [];
       const seen = new Map();
-      const label = (record, config, option) => {
-        seen.set(record.id, [record, config, option]);
-        return record.name;
+      const label = (option, config) => {
+        seen.set(option.record.id, [option.record, config, option]);
+        return option.label;
       };
       const onChange = (value, records) => {
         changes.push([value, records]);
@@ -434,9 +442,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
             @value={{held.value}}
             @virtualized={{false}}
           >
-            <:option as |record config option|><span
+            <:option as |option config|><span
                 class="fixture__list-option"
-              >{{label record config option}}</span></:option>
+              >{{label option config}}</span></:option>
           </DSelectList>
         </template>
       );
@@ -453,9 +461,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         "the list block yields a record"
       );
       assert.strictEqual(
-        seen.get(pear.id)?.[2],
-        options[1],
-        "the list block also yields the option"
+        seen.get(pear.id)?.[2].label,
+        pear.name,
+        "the list block yields the resolved option"
       );
       await dSelect().select(pear.id);
       assert.deepEqual(

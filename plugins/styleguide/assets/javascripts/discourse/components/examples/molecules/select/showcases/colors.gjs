@@ -68,25 +68,25 @@ export default class ColorsSelectExample extends Component {
       @value={{this.value}}
       @variant="button"
     >
-      <:selection as |scheme|>
+      <:selection as |option|>
         <span class="select-examples__row select-examples__row--glyph">
           <span aria-hidden="true" class="select-showcases__swatches">
-            {{#each scheme.swatches key="@index" as |swatch|}}
+            {{#each option.record.swatches key="@index" as |swatch|}}
               <span class="select-showcases__swatch" style={{swatch}}></span>
             {{/each}}
           </span>
-          {{scheme.name}}
+          {{option.label}}
         </span>
       </:selection>
 
-      <:option as |scheme|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
           <span aria-hidden="true" class="select-showcases__swatches">
-            {{#each scheme.swatches key="@index" as |swatch|}}
+            {{#each option.record.swatches key="@index" as |swatch|}}
               <span class="select-showcases__swatch" style={{swatch}}></span>
             {{/each}}
           </span>
-          <span class="select-examples__primary">{{scheme.name}}</span>
+          <span class="select-examples__primary">{{option.label}}</span>
         </span>
       </:option>
     </DSelect>

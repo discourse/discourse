@@ -58,7 +58,7 @@ export default class GroupFooterSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:groupFooter as |record config group|>
+      <:groupFooter as |option config group|>
         <span class="select-examples__group-footer">
           {{dIcon "user-plus"}}
           {{i18n

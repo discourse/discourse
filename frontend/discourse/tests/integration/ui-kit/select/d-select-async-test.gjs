@@ -614,11 +614,11 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await render(
       <template>
         <DSelect @load={{load}}>
-          <:selection as |item|>
-            {{~item.name~}}
+          <:selection as |option|>
+            {{~option.record.name~}}
           </:selection>
-          <:option as |item|>
-            {{~item.name~}}
+          <:option as |option|>
+            {{~option.record.name~}}
           </:option>
         </DSelect>
       </template>
@@ -704,8 +704,8 @@ module(
                 {{on "click" retry}}
               >go</button>
             </:error>
-            <:option as |item|>
-              {{~item.name~}}
+            <:option as |option|>
+              {{~option.record.name~}}
             </:option>
           </DSelect>
         </template>
@@ -802,8 +802,8 @@ module(
             @resolveValue={{resolveValue}}
             @value={{2}}
           >
-            <:selection as |item|>
-              {{~item.name~}}
+            <:selection as |option|>
+              {{~option.record.name~}}
             </:selection>
             <:selectionLoading><span
                 class="custom-selection-loading"
@@ -906,8 +906,8 @@ module(
             @resolveValues={{resolveNone}}
             @value={{array 2}}
           >
-            <:selection as |item|><span class="custom-selection">
-                {{~item.name~}}
+            <:selection as |option|><span class="custom-selection">
+                {{~option.record.name~}}
               </span></:selection>
           </DSelect>
         </template>,
@@ -918,11 +918,11 @@ module(
             @resolveValues={{resolveNone}}
             @value={{array 2}}
           >
-            <:selection as |item|><span class="custom-selection">
-                {{~item.name~}}
+            <:selection as |option|><span class="custom-selection">
+                {{~option.record.name~}}
               </span></:selection>
-            <:unresolved as |item|><span class="custom-unresolved">Missing
-                {{item.id~}}
+            <:unresolved as |option|><span class="custom-unresolved">Missing
+                {{option.record.id~}}
               </span></:unresolved>
           </DSelect>
         </template>,
@@ -936,8 +936,8 @@ module(
             @value={{2}}
             @variant="button"
           >
-            <:selection as |item|><span class="custom-selection">
-                {{~item.name~}}
+            <:selection as |option|><span class="custom-selection">
+                {{~option.record.name~}}
               </span></:selection>
           </DSelect>
         </template>,
@@ -948,11 +948,11 @@ module(
             @value={{2}}
             @variant="button"
           >
-            <:selection as |item|><span class="custom-selection">
-                {{~item.name~}}
+            <:selection as |option|><span class="custom-selection">
+                {{~option.record.name~}}
               </span></:selection>
-            <:unresolved as |item|><span class="custom-unresolved">Missing
-                {{item.id~}}
+            <:unresolved as |option|><span class="custom-unresolved">Missing
+                {{option.record.id~}}
               </span></:unresolved>
           </DSelect>
         </template>,
@@ -965,8 +965,8 @@ module(
             @resolveValues={{resolveNone}}
             @value={{2}}
           >
-            <:selection as |item|><span class="custom-selection">
-                {{~item.name~}}
+            <:selection as |option|><span class="custom-selection">
+                {{~option.record.name~}}
               </span></:selection>
           </DSelect>
         </template>,
@@ -976,11 +976,11 @@ module(
             @resolveValues={{resolveNone}}
             @value={{2}}
           >
-            <:selection as |item|><span class="custom-selection">
-                {{~item.name~}}
+            <:selection as |option|><span class="custom-selection">
+                {{~option.record.name~}}
               </span></:selection>
-            <:unresolved as |item|><span class="custom-unresolved">Missing
-                {{item.id~}}
+            <:unresolved as |option|><span class="custom-unresolved">Missing
+                {{option.record.id~}}
               </span></:unresolved>
           </DSelect>
         </template>,
@@ -994,8 +994,8 @@ module(
             @resolveValues={{resolveNone}}
             @value={{2}}
           >
-            <:selection as |item|><span class="custom-selection">
-                {{~item.name~}}
+            <:selection as |option|><span class="custom-selection">
+                {{~option.record.name~}}
               </span></:selection>
           </DSelect>
         </template>,
@@ -1005,11 +1005,11 @@ module(
             @resolveValues={{resolveNone}}
             @value={{2}}
           >
-            <:selection as |item|><span class="custom-selection">
-                {{~item.name~}}
+            <:selection as |option|><span class="custom-selection">
+                {{~option.record.name~}}
               </span></:selection>
-            <:unresolved as |item|><span class="custom-unresolved">Missing
-                {{item.id~}}
+            <:unresolved as |option|><span class="custom-unresolved">Missing
+                {{option.record.id~}}
               </span></:unresolved>
           </DSelect>
         </template>,

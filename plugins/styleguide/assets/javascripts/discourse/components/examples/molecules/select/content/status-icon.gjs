@@ -28,13 +28,13 @@ export default class StatusIconSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:option as |person|>
+      <:option as |option|>
         <span class="select-examples__row">
-          <span class="select-examples__primary">{{person.name}}</span>
-          {{#if person.status}}
+          <span class="select-examples__primary">{{option.label}}</span>
+          {{#if option.record.status}}
             <span class="select-examples__status">
               {{dIcon "circle-info"}}
-              <span class="sr-only">{{person.status}}</span>
+              <span class="sr-only">{{option.record.status}}</span>
             </span>
           {{/if}}
         </span>

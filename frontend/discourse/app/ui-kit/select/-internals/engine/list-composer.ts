@@ -584,8 +584,10 @@ export default class ListComposer {
     const shown = new Set<string>();
     const described = Object.freeze(
       rows.map((placed, index) => {
-        const row = this.#describe(placed, index, atMaximum);
-        row.resolved = this.#resolvedOf(placed, byOption, shown);
+        const row = {
+          ...this.#describe(placed, index, atMaximum),
+          resolved: this.#resolvedOf(placed, byOption, shown),
+        };
         const group = {
           groupOrdinal: placed.stamp?.ordinal,
           groupText: placed.stamp?.text,
@@ -798,7 +800,11 @@ export default class ListComposer {
     return engineOption("create", built.record, built.settings);
   }
 
-  #describe(placed: PlacedRow, index: number, atMaximum: boolean): SelectRow {
+  #describe(
+    placed: PlacedRow,
+    index: number,
+    atMaximum: boolean
+  ): Omit<SelectRow, "resolved"> {
     const { option, boundary } = placed;
     const kind = optionKind(option);
     const value = this.#args.recordValue(option.record);
@@ -816,9 +822,7 @@ export default class ListComposer {
       value,
       record: option.record,
       option,
-      group: boundary
-        ? Object.freeze({ key: boundary.group.key, action: boundary.action })
-        : undefined,
+      group: boundary ? Object.freeze({ key: boundary.group.key }) : undefined,
       flags: {
         selected,
         sticky: placed.divider
@@ -938,7 +942,8 @@ export default class ListComposer {
       return {
         option: engineOption(
           side === "header" ? "text-header" : "text-footer",
-          Object.freeze({ label: result })
+          Object.freeze({ label: result }),
+          { label: result }
         ),
         boundary: { side, group, action: false },
       };

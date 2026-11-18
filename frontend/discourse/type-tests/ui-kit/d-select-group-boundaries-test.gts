@@ -22,7 +22,7 @@ const nothing = () => null;
 const count = () => 3;
 
 // A builder returns text, an action option, or nothing, for a header and a footer alike; the
-// group blocks yield the boundary's record, the resolved config and the group.
+// group blocks yield the boundary's resolved option, the resolved config and the group.
 const Test = <template>
   <DSelect
     @groupBy="group"
@@ -30,14 +30,14 @@ const Test = <template>
     @groupHeader={{textHeader}}
     @options={{items}}
   >
-    <:groupHeader as |record config group|>
-      {{if group.action "action" "text"}}
+    <:groupHeader as |option config group|>
+      {{if option.action "action" "text"}}
       {{if group.key "keyed"}}
-      {{if record.label "labelled"}}
+      {{if option.label "labelled"}}
       {{renderSelectText config "placeholder"}}
     </:groupHeader>
-    <:groupFooter as |record config group|>
-      {{if group.action "action" "text"}}
+    <:groupFooter as |option config|>
+      {{if option.action "action" "text"}}
       {{renderSelectText config "placeholder"}}
     </:groupFooter>
   </DSelect>

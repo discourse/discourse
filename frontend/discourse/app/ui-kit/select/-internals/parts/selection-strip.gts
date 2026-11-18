@@ -22,7 +22,7 @@ import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-l
 import SelectEngine, {
   SelectHeldRow,
   SelectLoadRequest,
-  SelectRecord,
+  type SelectResolvedOption,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -59,9 +59,13 @@ interface SelectionStripSignature {
   };
   Blocks: {
     /** Consumer markup for a resolved held item. */
-    selection?: [/** The held item. */ item: SelectRecord];
+    selection?: [
+      /** The held option, as the select resolved it. */ option: SelectResolvedOption,
+    ];
     /** Consumer markup for an unavailable held item. */
-    unresolved?: [/** The fallback item. */ item: SelectRecord];
+    unresolved?: [
+      /** The held option the select could not resolve. */ option: SelectResolvedOption,
+    ];
   };
 }
 
@@ -291,7 +295,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                     {{#if (@engine.isHeldUnresolved chip.record)}}
                       {{#if @hasUnresolvedBlock}}
                         {{yield
-                          (@engine.heldRecord chip.record)
+                          (@engine.heldOption chip.record)
                           to="unresolved"
                         }}
                       {{else}}
@@ -301,7 +305,7 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield (@engine.heldRecord chip.record) to="selection"}}
+                      {{yield (@engine.heldOption chip.record) to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}

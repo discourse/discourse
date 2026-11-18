@@ -95,11 +95,11 @@ export default class SelectHero extends Component {
             @valueField="slug"
           >
             {{! A category is a badge, not a string — no argument can express it. }}
-            <:selection as |item|>
-              {{~dCategoryBadge item~}}
+            <:selection as |option|>
+              {{~dCategoryBadge option.record~}}
             </:selection>
-            <:option as |item|>
-              {{~dCategoryBadge item~}}
+            <:option as |option|>
+              {{~dCategoryBadge option.record~}}
             </:option>
           </DSelect>
         </div>
@@ -122,11 +122,13 @@ export default class SelectHero extends Component {
             @valueField="slug"
           >
             {{! No selection block: the chip is a tag name, which is exactly the default. }}
-            <:option as |item|>
+            <:option as |option|>
               <span class="select-examples__row select-examples__row--glyph">
                 {{dIcon "tag"}}
-                <span class="select-examples__primary">{{item.label}}</span>
-                <span class="select-examples__meta">{{item.countLabel}}</span>
+                <span class="select-examples__primary">{{option.label}}</span>
+                <span
+                  class="select-examples__meta"
+                >{{option.record.countLabel}}</span>
               </span>
             </:option>
           </DSelect>
@@ -150,14 +152,14 @@ export default class SelectHero extends Component {
           >
             {{! The icon is how a level is recognised at a glance; it is the same in both
             surfaces because both are a single line here. }}
-            <:selection as |item|>
+            <:selection as |option|>
               <span class="select-examples__row select-examples__row--glyph">
-                {{dIcon item.icon}}{{item.title}}
+                {{dIcon option.record.icon}}{{option.label}}
               </span>
             </:selection>
-            <:option as |item|>
+            <:option as |option|>
               <span class="select-examples__row select-examples__row--glyph">
-                {{dIcon item.icon}}{{item.title}}
+                {{dIcon option.record.icon}}{{option.label}}
               </span>
             </:option>
           </DSelect>

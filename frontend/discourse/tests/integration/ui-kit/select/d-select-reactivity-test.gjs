@@ -164,8 +164,8 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
           @value={{state.value}}
           @valueRecords={{state.valueRecords}}
         >
-          <:selection as |item|>
-            {{~item.name~}}
+          <:selection as |option|>
+            {{~option.record.name~}}
           </:selection>
         </DSelect>
         <DSelect

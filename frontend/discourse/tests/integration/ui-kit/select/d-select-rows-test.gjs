@@ -33,6 +33,7 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
+import DSelectList from "discourse/ui-kit/select/d-select-list";
 import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
@@ -850,8 +851,8 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
           @options={{options}}
           @valueField="code"
         >
-          <:option as |item|>
-            {{~concat "Use " item.text~}}
+          <:option as |option|>
+            {{~concat "Use " option.record.text~}}
           </:option>
         </DSelect>
       </template>
@@ -878,8 +879,12 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
           @createOption={{createOption}}
           @options={{ITEMS}}
         >
-          <:option as |item options row|>
-            {{~if row.create (concat "Create " item.name) item.name~}}
+          <:option as |option|>
+            {{~if
+              option.create
+              (concat "Create " option.record.name)
+              option.record.name
+            ~}}
           </:option>
         </DSelect>
       </template>
@@ -1044,7 +1049,8 @@ module(
             @value={{array 1}}
             @variant="static"
           >
-            <:option as |item|><strong>{{item.name}}</strong></:option>
+            <:option as |option|><strong
+              >{{option.record.name}}</strong></:option>
           </DSelect>
         </template>
       );
@@ -1501,13 +1507,10 @@ module("Integration | ui-kit | select | DSelect list view", function (hooks) {
   let trackedObject;
   let withPluginApi;
   let EngineProbe;
-  let DSelectList;
   hooks.before(async function () {
     ({ trackedObject } = await import("@ember/reactive/collections"));
     ({ withPluginApi } = await import("discourse/lib/plugin-api"));
     ({ EngineProbe } = await import("discourse/tests/helpers/d-select-hosts"));
-    ({ default: DSelectList } =
-      await import("discourse/ui-kit/select/d-select-list"));
   });
 
   function customize(setup) {
@@ -2275,13 +2278,15 @@ module(
               @value={{value}}
               @variant={{variant}}
             >
-              <:selection as |item|>
+              <:selection as |option|>
                 <span class="local-inputs__selection">{{showSelection
-                    item
+                    option.record
                   }}</span>
               </:selection>
-              <:option as |item|>
-                <span class="local-inputs__option">{{showOption item}}</span>
+              <:option as |option|>
+                <span class="local-inputs__option">{{showOption
+                    option.record
+                  }}</span>
               </:option>
             </DSelect>
           </template>
@@ -3314,16 +3319,16 @@ module("Integration | ui-kit | select | DSelect held view", function (hooks) {
             @valueRecords={{records}}
             @variant={{variant}}
           >
-            <:selection as |record|>
+            <:selection as |option|>
               <span class="held-block__selection">{{showRecord
                   "selection"
-                  record
+                  option.record
                 }}</span>
             </:selection>
-            <:unresolved as |record|>
+            <:unresolved as |option|>
               <span class="held-block__unresolved">{{showRecord
                   "unresolved"
-                  record
+                  option.record
                 }}</span>
             </:unresolved>
           </DSelect>
@@ -4115,8 +4120,8 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
     await render(
       <template>
         <DSelect @onChange={{noop}} @options={{options}} @value={{null}}>
-          <:option as |record|>
-            <span class="custom-row">{{record.name}}</span>
+          <:option as |option|>
+            <span class="custom-row">{{option.record.name}}</span>
           </:option>
         </DSelect>
       </template>
@@ -4236,8 +4241,8 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
           @options={{options}}
           @value={{array 1}}
         >
-          <:selection as |record|>
-            <span class="custom-chip">{{record.name}}</span>
+          <:selection as |option|>
+            <span class="custom-chip">{{option.record.name}}</span>
           </:selection>
         </DSelect>
       </template>
@@ -4343,3 +4348,239 @@ module("Integration | ui-kit | select | DSelect icons", function (hooks) {
     assert.dom(".d-icon-star", strip).exists();
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect block contract",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const noop = () => {};
+
+    test("an option block receives the row's resolved option and the config, and nothing else", async function (assert) {
+      const options = [
+        selectOption(
+          { id: 1, name: "Apple" },
+          { icon: "far-heart", label: "Shown apple" }
+        ),
+      ];
+
+      await render(
+        <template>
+          <DSelect
+            @icon="gear"
+            @onChange={{noop}}
+            @options={{options}}
+            @value={{null}}
+            @variant="static"
+          >
+            <:option as |option config extra|>
+              <span class="x-label">{{option.label}}</span>
+              <span class="x-key">{{option.key}}</span>
+              <span class="x-icon">{{option.icon}}</span>
+              <span class="x-name">{{option.record.name}}</span>
+              <span class="x-config">{{config.icon}}</span>
+              <span class="x-extra">{{if extra "extra" "none"}}</span>
+            </:option>
+          </DSelect>
+        </template>
+      );
+      await dSelect().open();
+
+      assert
+        .dom(".x-label")
+        .hasText("Shown apple", "the resolved option's label");
+      assert.dom(".x-key").hasText("1");
+      assert.dom(".x-icon").hasText("far-heart");
+      assert.dom(".x-name").hasText("Apple", "the record stays as passed");
+      assert.dom(".x-config").hasText("gear", "the resolved config");
+      assert.dom(".x-extra").hasText("none", "no third parameter");
+    });
+
+    test("a selection block receives the held resolved option and the config", async function (assert) {
+      const options = [
+        selectOption({ id: 1, name: "Apple" }, { label: "Shown apple" }),
+      ];
+
+      await render(
+        <template>
+          <DSelect
+            @onChange={{noop}}
+            @options={{options}}
+            @value={{1}}
+            @variant="static"
+          >
+            <:selection as |option config|>
+              <span class="x-label">{{option.label}}</span>
+              <span class="x-name">{{option.record.name}}</span>
+              <span class="x-config">{{if config "config" "none"}}</span>
+            </:selection>
+          </DSelect>
+        </template>
+      );
+
+      assert.dom(".x-label").hasText("Shown apple");
+      assert.dom(".x-name").hasText("Apple");
+      assert.dom(".x-config").hasText("config");
+    });
+
+    test("a chip's selection block receives its held resolved option", async function (assert) {
+      const options = [
+        selectOption({ id: 1, name: "Apple" }, { label: "Shown apple" }),
+      ];
+
+      await render(
+        <template>
+          <DSelect
+            @multiple={{true}}
+            @onChange={{noop}}
+            @options={{options}}
+            @value={{array 1}}
+          >
+            <:selection as |option|>
+              <span class="x-label">{{option.label}}</span>
+            </:selection>
+          </DSelect>
+        </template>
+      );
+
+      assert.dom(".d-select__chip .x-label").hasText("Shown apple");
+    });
+
+    test("an unresolved block receives the unresolved held option", async function (assert) {
+      const options = [];
+
+      await render(
+        <template>
+          <DSelect
+            @onChange={{noop}}
+            @options={{options}}
+            @value={{99}}
+            @variant="static"
+          >
+            <:unresolved as |option config|>
+              <span class="x-unresolved">{{if
+                  option.unresolved
+                  "yes"
+                  "no"
+                }}</span>
+              <span class="x-value">{{option.value}}</span>
+              <span class="x-config">{{if config "config" "none"}}</span>
+            </:unresolved>
+          </DSelect>
+        </template>
+      );
+
+      assert.dom(".x-unresolved").hasText("yes");
+      assert.dom(".x-value").hasText("99");
+      assert.dom(".x-config").hasText("config");
+    });
+
+    test("group blocks receive the boundary's resolved option, the config and the group's key", async function (assert) {
+      const options = [{ id: 1, name: "Apple", section: "fruit" }];
+      const groupHeader = (key) => `Header ${key}`;
+      const groupFooter = (key) =>
+        selectOption(
+          { id: `more-${key}`, name: "More fruit" },
+          { onSelect() {} }
+        );
+
+      await render(
+        <template>
+          <DSelect
+            @groupBy="section"
+            @groupFooter={{groupFooter}}
+            @groupHeader={{groupHeader}}
+            @onChange={{noop}}
+            @options={{options}}
+            @value={{null}}
+            @variant="static"
+          >
+            <:groupHeader as |option config group|>
+              <span class="x-header">{{option.label}}</span>
+              <span class="x-header-key">{{group.key}}</span>
+              <span class="x-header-config">{{if config "config" "none"}}</span>
+              <span class="x-header-action">{{if
+                  group.action
+                  "group-action"
+                  "none"
+                }}</span>
+            </:groupHeader>
+            <:groupFooter as |option config group|>
+              <span class="x-footer">{{option.label}}</span>
+              <span class="x-footer-key">{{group.key}}</span>
+              <span class="x-footer-action">{{if
+                  option.action
+                  "option-action"
+                  "none"
+                }}</span>
+            </:groupFooter>
+          </DSelect>
+        </template>
+      );
+      await dSelect().open();
+
+      assert.dom(".x-header").hasText("Header fruit");
+      assert.dom(".x-header-key").hasText("fruit");
+      assert.dom(".x-header-config").hasText("config");
+      assert
+        .dom(".x-header-action")
+        .hasText("none", "the group no longer says whether it is an action");
+      assert.dom(".x-footer").hasText("More fruit");
+      assert.dom(".x-footer-key").hasText("fruit");
+      assert
+        .dom(".x-footer-action")
+        .hasText("option-action", "the resolved option says it is an action");
+    });
+
+    test("the create row reaches the option block as a create option", async function (assert) {
+      const options = [{ id: 1, name: "Apple" }];
+      const createOption = (term) => ({ id: term, name: term });
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createOption={{createOption}}
+            @onChange={{noop}}
+            @options={{options}}
+            @value={{null}}
+          >
+            <:option as |option|>
+              <span class="x-row">{{if
+                  option.create
+                  "create"
+                  "plain"
+                }}:{{option.label}}</span>
+            </:option>
+          </DSelect>
+        </template>
+      );
+      await dSelect().open();
+      await dSelect().search("Kiwi");
+
+      assert
+        .dom(".d-select__option.--create .x-row")
+        .hasText("create:Kiwi", "the create row says so");
+    });
+
+    test("a list's option block receives the row's resolved option", async function (assert) {
+      const options = [
+        selectOption({ id: 1, name: "Apple" }, { label: "Shown apple" }),
+      ];
+
+      await render(
+        <template>
+          <DSelectList @onChange={{noop}} @options={{options}} @value={{null}}>
+            <:option as |option config extra|>
+              <span class="x-label">{{option.label}}</span>
+              <span class="x-extra">{{if extra "extra" "none"}}</span>
+            </:option>
+          </DSelectList>
+        </template>
+      );
+
+      assert.dom(".x-label").hasText("Shown apple");
+      assert.dom(".x-extra").hasText("none");
+    });
+  }
+);

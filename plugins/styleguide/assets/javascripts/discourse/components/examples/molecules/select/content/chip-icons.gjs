@@ -22,16 +22,16 @@ export default class ChipIconsSelectExample extends Component {
       @options={{USER_GROUPS}}
       @value={{this.value}}
     >
-      <:option as |group|>
+      <:option as |option|>
         <span class="select-examples__row">
-          {{dIcon group.icon}}
-          <span class="select-examples__primary">{{group.fullName}}</span>
+          {{dIcon option.record.icon}}
+          <span class="select-examples__primary">{{option.label}}</span>
         </span>
       </:option>
-      <:selection as |group|>
+      <:selection as |option|>
         <span class="select-examples__chip">
-          {{dIcon group.icon}}
-          {{group.fullName}}
+          {{dIcon option.record.icon}}
+          {{option.label}}
         </span>
       </:selection>
     </DSelect>

@@ -1,8 +1,8 @@
 import type { TOC } from "@ember/component/template-only";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type {
-  SelectOption,
   SelectRecord,
+  SelectResolvedOption,
 } from "discourse/ui-kit/select/select-engine";
 
 /** A group as the site and user search list it. */
@@ -22,7 +22,7 @@ export function recordName(record: SelectRecord): string {
 /** Why a disabled option can't be picked, when its record gives a reason. */
 export function disabledReason(
   record: SelectRecord,
-  option: SelectOption | undefined
+  option: SelectResolvedOption | undefined
 ): string | undefined {
   return option?.disabled && typeof record.disabledReason === "string"
     ? record.disabledReason
@@ -41,7 +41,7 @@ export const GroupOption: TOC<{
     /** The group's record. */
     record: SelectRecord;
     /** The option drawn; absent in the selection, which draws no reason. */
-    option?: SelectOption;
+    option?: SelectResolvedOption;
     /** Draws the group icon, which tells groups from users in a mixed list. */
     icon?: boolean;
   };

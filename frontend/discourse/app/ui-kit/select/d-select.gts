@@ -48,8 +48,7 @@ import type {
   SelectGroupInfo,
   SelectHeldRow,
   SelectKindTexts,
-  SelectOption,
-  SelectRecord as SelectRecordModel,
+  SelectResolvedOption,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -326,12 +325,10 @@ export interface DSelectSignature {
   Blocks: {
     /** Custom markup for an option and its resolved config snapshot. */
     option?: [
-      /** The record the option stands for. */
-      record: SelectRecordModel,
+      /** The option the row shows, as the select resolved it. */
+      option: SelectResolvedOption,
       /** Resolved core and recipe values. */
       config: SelectConfig,
-      /** The option itself: its settings, and `create` for the create option. */
-      option: SelectOption,
     ];
     /**
      * Custom markup for the selection; yields the resolved record. On the button/static
@@ -340,8 +337,8 @@ export interface DSelectSignature {
      * so the block is not a live-while-editing surface.
      */
     selection?: [
-      /** The resolved held record. */
-      record: SelectRecordModel,
+      /** The held option, as the select resolved it. */
+      option: SelectResolvedOption,
       /** Resolved core and recipe values. */
       config: SelectConfig,
     ];
@@ -357,8 +354,8 @@ export interface DSelectSignature {
      * the state is never lost in custom markup by accident.
      */
     unresolved?: [
-      /** The fallback for an unresolved held id. */
-      record: SelectRecordModel,
+      /** The held option the select could not resolve. */
+      option: SelectResolvedOption,
       /** Resolved core and recipe values. */
       config: SelectConfig,
     ];
@@ -368,8 +365,8 @@ export interface DSelectSignature {
      * engine supplies the row around it, and `:option` never receives it.
      */
     groupHeader?: [
-      /** The header's record. */
-      record: SelectRecordModel,
+      /** The header's resolved option: the action option, or one carrying the text's label. */
+      option: SelectResolvedOption,
       /** Resolved core and recipe values. */
       config: SelectConfig,
       /** The group: its `key`, and `action` when the header is an action option. */
@@ -377,8 +374,8 @@ export interface DSelectSignature {
     ];
     /** Draws a group footer of either kind, like `<:groupHeader>`. */
     groupFooter?: [
-      /** The footer's record. */
-      record: SelectRecordModel,
+      /** The footer's resolved option, like the header's. */
+      option: SelectResolvedOption,
       /** Resolved core and recipe values. */
       config: SelectConfig,
       /** The group: its `key`, and `action` when the footer is an action option. */
@@ -807,14 +804,14 @@ export default class DSelect extends Component<DSelectSignature> {
               @triggerChipsInteractive={{this.presenter.triggerChipsInteractive}}
               @value={{@value}}
             >
-              <:selection as |record|>
-                {{~yield record this.engine.config to="selection"~}}
+              <:selection as |option|>
+                {{~yield option this.engine.config to="selection"~}}
               </:selection>
               <:selectionLoading>
                 {{~yield to="selectionLoading"~}}
               </:selectionLoading>
-              <:unresolved as |record|>
-                {{~yield record this.engine.config to="unresolved"~}}
+              <:unresolved as |option|>
+                {{~yield option this.engine.config to="unresolved"~}}
               </:unresolved>
             </MultiChips>
           {{else}}
@@ -848,14 +845,14 @@ export default class DSelect extends Component<DSelectSignature> {
               @triggerFocused={{this.interaction.triggerFocused}}
               @value={{@value}}
             >
-              <:selection as |record|>
-                {{~yield record this.engine.config to="selection"~}}
+              <:selection as |option|>
+                {{~yield option this.engine.config to="selection"~}}
               </:selection>
               <:selectionLoading>
                 {{~yield to="selectionLoading"~}}
               </:selectionLoading>
-              <:unresolved as |record|>
-                {{~yield record this.engine.config to="unresolved"~}}
+              <:unresolved as |option|>
+                {{~yield option this.engine.config to="unresolved"~}}
               </:unresolved>
             </SingleTriggerDisplay>
           {{/if}}
@@ -991,11 +988,11 @@ export default class DSelect extends Component<DSelectSignature> {
                     @triggerChipsInteractive={{true}}
                     @value={{@value}}
                   >
-                    <:selection as |record|>
-                      {{~yield record this.engine.config to="selection"~}}
+                    <:selection as |option|>
+                      {{~yield option this.engine.config to="selection"~}}
                     </:selection>
-                    <:unresolved as |record|>
-                      {{~yield record this.engine.config to="unresolved"~}}
+                    <:unresolved as |option|>
+                      {{~yield option this.engine.config to="unresolved"~}}
                     </:unresolved>
                     <:selectionLoading>
                       {{~yield to="selectionLoading"~}}
@@ -1046,23 +1043,23 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{/if}}
               {{/if}}
             </:field>
-            <:option as |record config option|>
-              {{~yield record config option to="option"~}}
+            <:option as |option config|>
+              {{~yield option config to="option"~}}
             </:option>
-            <:groupHeader as |record config group|>
-              {{~yield record config group to="groupHeader"~}}
+            <:groupHeader as |option config group|>
+              {{~yield option config group to="groupHeader"~}}
             </:groupHeader>
-            <:groupFooter as |record config group|>
-              {{~yield record config group to="groupFooter"~}}
+            <:groupFooter as |option config group|>
+              {{~yield option config group to="groupFooter"~}}
             </:groupFooter>
             <:skeleton>
               {{~yield to="skeleton"~}}
             </:skeleton>
-            <:selection as |record config|>
-              {{~yield record config to="selection"~}}
+            <:selection as |option config|>
+              {{~yield option config to="selection"~}}
             </:selection>
-            <:unresolved as |record config|>
-              {{~yield record config to="unresolved"~}}
+            <:unresolved as |option config|>
+              {{~yield option config to="unresolved"~}}
             </:unresolved>
             <:empty>
               {{~yield to="empty"~}}

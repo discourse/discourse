@@ -448,28 +448,35 @@ export default class DSelectCategory extends Component<DSelectCategorySignature>
       @value={{this.selectedIds}}
       @variant={{@variant}}
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
+          {{yield option config to="option"}}
         {{else}}
           <CategoryBadge
             @ancestors={{true}}
             @counts={{true}}
             @option={{option}}
-            @readOnly={{this.isReadOnly record}}
-            @record={{record}}
+            @readOnly={{this.isReadOnly option.record}}
+            @record={{option.record}}
           />
         {{/if}}
       </:option>
-      <:groupFooter as |record|>
-        <CategoryBadge @counts={{true}} @family={{true}} @record={{record}} />
+      <:groupFooter as |option|>
+        <CategoryBadge
+          @counts={{true}}
+          @family={{true}}
+          @record={{option.record}}
+        />
       </:groupFooter>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else}}
           <span class="d-category-selection">
-            <CategoryBadge @ancestors={{@showAncestors}} @record={{record}} />
+            <CategoryBadge
+              @ancestors={{@showAncestors}}
+              @record={{option.record}}
+            />
           </span>
         {{/if}}
       </:selection>

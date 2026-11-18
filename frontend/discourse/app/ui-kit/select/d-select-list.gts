@@ -33,8 +33,8 @@ import type {
   SelectHeldRow,
   SelectKindTexts,
   SelectLoadRequest,
-  SelectOption,
   SelectRecord,
+  SelectResolvedOption,
   SelectTextWrapper,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -163,21 +163,19 @@ interface DSelectListSignature {
   Blocks: {
     /** Custom option content. */
     option?: [
-      /** The option's record. */ record: SelectRecord,
+      /** The option the row shows, as the select resolved it. */ option: SelectResolvedOption,
       /** Resolved config. */ config: SelectConfig,
-      /** The option itself: its settings, and `create` for the create option. */
-      option: SelectOption,
     ];
     /** Custom held-chip content. */
     selection?: [
-      /** Held record. */ record: SelectRecord,
+      /** The held option, as the select resolved it. */ option: SelectResolvedOption,
       /** Resolved config. */ config: SelectConfig,
     ];
     /** Stands in for each held chip while held values resolve. */
     selectionLoading?: [];
     /** Content for unavailable held values. */
     unresolved?: [
-      /** Fallback record. */ record: SelectRecord,
+      /** The held option the select could not resolve. */ option: SelectResolvedOption,
       /** Resolved config. */ config: SelectConfig,
     ];
     /** Custom no-results content for a nonempty query. */
@@ -444,25 +442,25 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @triggerChipsInteractive={{true}}
             @value={{@value}}
           >
-            <:selection as |record|>
-              {{~yield record this.engine.config to="selection"~}}
+            <:selection as |option|>
+              {{~yield option this.engine.config to="selection"~}}
             </:selection>
             <:selectionLoading>
               {{~yield to="selectionLoading"~}}
             </:selectionLoading>
-            <:unresolved as |record|>
-              {{~yield record this.engine.config to="unresolved"~}}
+            <:unresolved as |option|>
+              {{~yield option this.engine.config to="unresolved"~}}
             </:unresolved>
           </MultiChips>
         </:field>
-        <:option as |record config option|>
-          {{~yield record config option to="option"~}}
+        <:option as |option config|>
+          {{~yield option config to="option"~}}
         </:option>
-        <:selection as |record config|>
-          {{~yield record config to="selection"~}}
+        <:selection as |option config|>
+          {{~yield option config to="selection"~}}
         </:selection>
-        <:unresolved as |record config|>
-          {{~yield record config to="unresolved"~}}
+        <:unresolved as |option config|>
+          {{~yield option config to="unresolved"~}}
         </:unresolved>
         <:empty>
           {{~yield to="empty"~}}

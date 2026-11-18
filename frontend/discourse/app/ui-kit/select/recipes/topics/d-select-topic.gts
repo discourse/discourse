@@ -175,18 +175,21 @@ export default class DSelectTopic extends Component<DSelectTopicSignature> {
       @valueRecords={{this.valueRecords}}
       @variant={{@variant}}
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
+          {{yield option config to="option"}}
         {{else}}
-          <TopicOption @record={{record}} />
+          <TopicOption @record={{option.record}} />
         {{/if}}
       </:option>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else}}
-          <TopicSelection @record={{record}} @withCategory={{not @multiple}} />
+          <TopicSelection
+            @record={{option.record}}
+            @withCategory={{not @multiple}}
+          />
         {{/if}}
       </:selection>
       <:footer as |state config|>

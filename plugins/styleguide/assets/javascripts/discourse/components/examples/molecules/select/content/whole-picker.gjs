@@ -39,45 +39,47 @@ export default class WholePickerSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:groupHeader as |group|>
+      <:groupHeader as |option|>
         <span class="select-examples__group-header">
           {{dIcon "users"}}
-          {{group.label}}
+          {{option.label}}
         </span>
       </:groupHeader>
-      <:option as |person|>
-        <span class="select-examples__row select-examples__row--identity">
-          <svg
-            aria-hidden="true"
-            class="select-examples__avatar"
-            style={{person.avatarStyle}}
-            viewBox="0 0 48 48"
-          >
-            <use
-              href="/plugins/styleguide/images/avatar.svg#select-avatar"
-            ></use>
-          </svg>
-          <span class="select-examples__details">
-            <span class="select-examples__primary">{{person.name}}</span>
-            <span class="select-examples__secondary">
-              {{if person.status person.status person.title}}
+      <:option as |option|>
+        {{#let option.record as |person|}}
+          <span class="select-examples__row select-examples__row--identity">
+            <svg
+              aria-hidden="true"
+              class="select-examples__avatar"
+              style={{person.avatarStyle}}
+              viewBox="0 0 48 48"
+            >
+              <use
+                href="/plugins/styleguide/images/avatar.svg#select-avatar"
+              ></use>
+            </svg>
+            <span class="select-examples__details">
+              <span class="select-examples__primary">{{option.label}}</span>
+              <span class="select-examples__secondary">
+                {{if person.status person.status person.title}}
+              </span>
             </span>
           </span>
-        </span>
+        {{/let}}
       </:option>
-      <:selection as |person|>
+      <:selection as |option|>
         <span class="select-examples__row select-examples__row--glyph">
           <svg
             aria-hidden="true"
             class="select-examples__avatar --small"
-            style={{person.avatarStyle}}
+            style={{option.record.avatarStyle}}
             viewBox="0 0 48 48"
           >
             <use
               href="/plugins/styleguide/images/avatar.svg#select-avatar"
             ></use>
           </svg>
-          {{person.name}}
+          {{option.label}}
         </span>
       </:selection>
       <:footer as |state|>

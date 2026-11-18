@@ -36,22 +36,22 @@ export default class CategoriesSelectExample extends Component {
       @valueField="slug"
       @variant="button"
     >
-      <:selection as |category|>
-        {{dCategoryBadge category}}
+      <:selection as |option|>
+        {{dCategoryBadge option.record}}
       </:selection>
 
-      <:option as |category|>
+      <:option as |option|>
         <span class="select-showcases__category">
           <span class="select-showcases__category-status">
             {{dCategoryBadge
-              category
-              topicCount=category.topic_count
-              readOnly=category.read_restricted
+              option.record
+              topicCount=option.record.topic_count
+              readOnly=option.record.read_restricted
             }}
           </span>
-          {{#if category.description_excerpt}}
+          {{#if option.record.description_excerpt}}
             <span aria-hidden="true" class="select-showcases__category-desc">
-              {{category.description_excerpt}}
+              {{option.record.description_excerpt}}
             </span>
           {{/if}}
         </span>

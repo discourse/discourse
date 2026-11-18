@@ -345,12 +345,13 @@ module(
               @value={{value.value}}
               @variant="button"
             >
-              <:selection as |item|>
-                <span class="custom-selection">Selected {{item.name}}</span>
+              <:selection as |option|>
+                <span class="custom-selection">Selected
+                  {{option.record.name}}</span>
               </:selection>
-              <:option as |item options row|>
-                <span class="custom-item {{if row 'has-row'}}">Pick
-                  {{item.name}}</span>
+              <:option as |option|>
+                <span class="custom-item {{if option.label 'has-option'}}">Pick
+                  {{option.record.name}}</span>
               </:option>
               <:footer>
                 <span class="custom-footer">Footer</span>
@@ -374,8 +375,11 @@ module(
           .dom(".custom-item")
           .exists({ count: 2 }, "item blocks are forwarded");
         assert
-          .dom(".custom-item.has-row")
-          .exists({ count: 2 }, "the item block receives each row's state");
+          .dom(".custom-item.has-option")
+          .exists(
+            { count: 2 },
+            "the option block receives each row's resolved option"
+          );
         assert
           .dom(".custom-footer")
           .hasText("Footer", "footer block is forwarded");

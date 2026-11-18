@@ -590,18 +590,22 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
       @variant={{@variant}}
       {{this.resolveHeldNames}}
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
+          {{yield option config to="option"}}
         {{else}}
-          <TagOption @config={{config}} @option={{option}} @record={{record}} />
+          <TagOption
+            @config={{config}}
+            @option={{option}}
+            @record={{option.record}}
+          />
         {{/if}}
       </:option>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else}}
-          <TagSelection @record={{record}} />
+          <TagSelection @record={{option.record}} />
         {{/if}}
       </:selection>
       <:footer as |state config|>

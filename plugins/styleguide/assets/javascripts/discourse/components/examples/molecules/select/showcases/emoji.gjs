@@ -41,19 +41,19 @@ export default class EmojiSelectExample extends Component {
       @value={{this.value}}
       @variant="button"
     >
-      <:selection as |item|>
+      <:selection as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dEmoji item.name}}
-          {{item.name}}
+          {{dEmoji option.record.name}}
+          {{option.label}}
         </span>
       </:selection>
 
-      <:option as |item|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dEmoji item.name}}
-          <span class="select-examples__primary">{{item.name}}</span>
+          {{dEmoji option.record.name}}
+          <span class="select-examples__primary">{{option.label}}</span>
           <code aria-hidden="true" class="select-showcases__shortcode">
-            :{{item.name}}:
+            :{{option.record.name}}:
           </code>
         </span>
       </:option>

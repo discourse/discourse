@@ -36,16 +36,18 @@ export default class GroupsSelectExample extends Component {
       }}
       @value={{this.value}}
     >
-      <:option as |group|>
+      <:option as |option|>
         <span class="select-examples__row select-examples__row--glyph">
-          {{dIcon group.icon}}
-          <span class="select-examples__primary">{{group.fullName}}</span>
-          {{#if group.automatic}}
+          {{dIcon option.record.icon}}
+          <span class="select-examples__primary">{{option.label}}</span>
+          {{#if option.record.automatic}}
             <span class="select-showcases__pill">
               {{i18n "styleguide.sections.select.showcases.groups.automatic"}}
             </span>
           {{/if}}
-          <span class="select-examples__meta">{{group.memberLabel}}</span>
+          <span
+            class="select-examples__meta"
+          >{{option.record.memberLabel}}</span>
         </span>
       </:option>
     </DSelect>

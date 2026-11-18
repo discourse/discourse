@@ -24,7 +24,7 @@ import SelectionIcon from "discourse/ui-kit/select/-internals/parts/selection-ic
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
   SelectHeldRow,
-  SelectRecord,
+  type SelectResolvedOption,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -124,15 +124,15 @@ interface MultiChipsSignature {
   Blocks: {
     /** Custom markup for a selected record. */
     selection?: [
-      /** The resolved selected record. */
-      record: SelectRecord,
+      /** The held option, as the select resolved it. */
+      option: SelectResolvedOption,
     ];
     /** Custom markup shown in place of a selection while it resolves. */
     selectionLoading?: [];
     /** Custom markup for a held value that cannot be resolved. */
     unresolved?: [
-      /** The unresolved fallback record. */
-      record: SelectRecord,
+      /** The held option the select could not resolve. */
+      option: SelectResolvedOption,
     ];
   };
 }
@@ -441,7 +441,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     {{#if (@engine.isHeldUnresolved chip.record)}}
                       {{#if @hasUnresolvedBlock}}
                         {{yield
-                          (@engine.heldRecord chip.record)
+                          (@engine.heldOption chip.record)
                           to="unresolved"
                         }}
                       {{else}}
@@ -451,7 +451,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield (@engine.heldRecord chip.record) to="selection"}}
+                      {{yield (@engine.heldOption chip.record) to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}

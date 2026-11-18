@@ -406,24 +406,30 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
       @valueRecords={{this.valueRecords}}
       @variant={{this.variant}}
     >
-      <:option as |record config option|>
+      <:option as |option config|>
         {{#if (has-block "option")}}
-          {{yield record config option to="option"}}
-        {{else if (this.isShortcut record)}}
-          <span class="d-tag-drop__shortcut">{{tagRecordName record}}</span>
+          {{yield option config to="option"}}
+        {{else if (this.isShortcut option.record)}}
+          <span class="d-tag-drop__shortcut">{{tagRecordName
+              option.record
+            }}</span>
         {{else}}
-          <TagOption @config={{config}} @option={{option}} @record={{record}} />
+          <TagOption
+            @config={{config}}
+            @option={{option}}
+            @record={{option.record}}
+          />
         {{/if}}
       </:option>
-      <:selection as |record config|>
+      <:selection as |option config|>
         {{#if (has-block "selection")}}
-          {{yield record config to="selection"}}
+          {{yield option config to="selection"}}
         {{else if @multiple}}
-          <TagSelection @record={{record}} />
+          <TagSelection @record={{option.record}} />
         {{else}}
           <span class="d-tag-drop__selection">
             {{~! no whitespace around the tag ~}}
-            <TagSelection @record={{record}} />
+            <TagSelection @record={{option.record}} />
           </span>
         {{/if}}
       </:selection>

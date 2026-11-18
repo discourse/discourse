@@ -10,6 +10,7 @@ import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-l
 import SelectEngine, {
   SelectLoadRequest,
   SelectRecord,
+  type SelectResolvedOption,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -80,15 +81,15 @@ interface SingleTriggerDisplaySignature {
   Blocks: {
     /** Custom markup for the selected record. */
     selection?: [
-      /** The resolved selected record. */
-      record: SelectRecord,
+      /** The held option, as the select resolved it. */
+      option: SelectResolvedOption,
     ];
     /** Custom markup shown in place of a selection while it resolves. */
     selectionLoading?: [];
     /** Custom markup for a held value that cannot be resolved. */
     unresolved?: [
-      /** The unresolved fallback record. */
-      record: SelectRecord,
+      /** The held option the select could not resolve. */
+      option: SelectResolvedOption,
     ];
   };
 }
@@ -127,7 +128,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                     {{/unless}}
                     {{#if (@engine.isHeldUnresolved selected)}}
                       {{#if @hasUnresolvedBlock}}
-                        {{yield (@engine.heldRecord selected) to="unresolved"}}
+                        {{yield (@engine.heldOption selected) to="unresolved"}}
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
@@ -135,7 +136,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield (@engine.heldRecord selected) to="selection"}}
+                      {{yield (@engine.heldOption selected) to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}
@@ -182,7 +183,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                   {{#if selected}}
                     {{#if (@engine.isHeldUnresolved selected)}}
                       {{#if @hasUnresolvedBlock}}
-                        {{yield (@engine.heldRecord selected) to="unresolved"}}
+                        {{yield (@engine.heldOption selected) to="unresolved"}}
                       {{else}}
                         <SelectionLabel
                           @engine={{@engine}}
@@ -190,7 +191,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                         />
                       {{/if}}
                     {{else if @hasSelectionBlock}}
-                      {{yield (@engine.heldRecord selected) to="selection"}}
+                      {{yield (@engine.heldOption selected) to="selection"}}
                     {{else}}
                       <SelectionLabel
                         @engine={{@engine}}
@@ -291,12 +292,12 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
               {{/unless}}
               {{#if (@engine.isHeldUnresolved selected)}}
                 {{#if @hasUnresolvedBlock}}
-                  {{yield (@engine.heldRecord selected) to="unresolved"}}
+                  {{yield (@engine.heldOption selected) to="unresolved"}}
                 {{else}}
                   <SelectionLabel @engine={{@engine}} @record={{selected}} />
                 {{/if}}
               {{else if @hasSelectionBlock}}
-                {{yield (@engine.heldRecord selected) to="selection"}}
+                {{yield (@engine.heldOption selected) to="selection"}}
               {{else}}
                 <SelectionLabel @engine={{@engine}} @record={{selected}} />
               {{/if}}

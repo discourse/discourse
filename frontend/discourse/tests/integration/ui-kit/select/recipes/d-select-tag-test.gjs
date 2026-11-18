@@ -1295,14 +1295,14 @@ module(
               @onChange={{onChange}}
               @value={{array (hash id=2 name="held")}}
             >
-              <:option as |item options row|>
-                <span class="custom-row {{if row 'has-row'}}">
-                  {{~item.name~}}
+              <:option as |option|>
+                <span class="custom-row {{if option.label 'has-option'}}">
+                  {{~option.record.name~}}
                 </span>
               </:option>
-              <:selection as |item|>
+              <:selection as |option|>
                 <span class="custom-held">
-                  {{~item.name~}}
+                  {{~option.record.name~}}
                 </span>
               </:selection>
               <:footer as |state|>
@@ -1319,8 +1319,8 @@ module(
         await new DSelect().open();
         assert.dom(".custom-row").hasText("row", "item block is forwarded");
         assert
-          .dom(".custom-row.has-row")
-          .exists("the item block receives the row's state");
+          .dom(".custom-row.has-option")
+          .exists("the option block receives the row's resolved option");
         assert.dom(".custom-footer").hasText("1", "footer block is forwarded");
       });
 

@@ -17,8 +17,7 @@ import SelectEngine, {
   type SelectGroupInfo,
   SelectHeldRow,
   SelectLoadRequest,
-  type SelectOption,
-  SelectRecord,
+  type SelectResolvedOption,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -169,30 +168,29 @@ interface SelectPanelSignature<State> {
     field?: [];
     /** Custom option content. */
     option?: [
-      /** The record the option stands for. */ record: SelectRecord,
+      /** The option the row shows, as the select resolved it. */ option: SelectResolvedOption,
       /** Resolved core and recipe config. */ config: SelectConfig,
-      /** The option, with its settings. */ option: SelectOption,
     ];
     /** Custom groupHeader content. */
     groupHeader?: [
-      /** The header's record. */ record: SelectRecord,
+      /** The header's resolved option: the action option, or one carrying the text's label. */ option: SelectResolvedOption,
       /** Resolved core and recipe config. */ config: SelectConfig,
       /** The group the header belongs to. */ group: SelectGroupInfo,
     ];
     /** Custom groupFooter content. */
     groupFooter?: [
-      /** The footer's record. */ record: SelectRecord,
+      /** The footer's resolved option, like the header's. */ option: SelectResolvedOption,
       /** Resolved core and recipe config. */ config: SelectConfig,
       /** The group the footer belongs to. */ group: SelectGroupInfo,
     ];
     /** Custom selection content. */
     selection?: [
-      /** The held record. */ record: SelectRecord,
+      /** The held option, as the select resolved it. */ option: SelectResolvedOption,
       /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom unresolved content. */
     unresolved?: [
-      /** The fallback record. */ record: SelectRecord,
+      /** The held option the select could not resolve. */ option: SelectResolvedOption,
       /** Resolved core and recipe config. */ config: SelectConfig,
     ];
     /** Custom skeleton content. */
@@ -256,11 +254,11 @@ export default class SelectPanel<State> extends Component<
         @returnToInput={{@returnToInput}}
         @value={{@value}}
       >
-        <:selection as |item|>
-          {{~yield item this.config to="selection"~}}
+        <:selection as |option|>
+          {{~yield option this.config to="selection"~}}
         </:selection>
-        <:unresolved as |item|>
-          {{~yield item this.config to="unresolved"~}}
+        <:unresolved as |option|>
+          {{~yield option this.config to="unresolved"~}}
         </:unresolved>
       </SelectionStrip>
     {{/if}}
@@ -338,14 +336,14 @@ export default class SelectPanel<State> extends Component<
             @selectedIcon={{@selectedIcon}}
             @tabIndex={{@tabIndex}}
           >
-            <:option as |record option|>
-              {{~yield record this.config option to="option"~}}
+            <:option as |option|>
+              {{~yield option this.config to="option"~}}
             </:option>
-            <:groupHeader as |record group|>
-              {{~yield record this.config group to="groupHeader"~}}
+            <:groupHeader as |option group|>
+              {{~yield option this.config group to="groupHeader"~}}
             </:groupHeader>
-            <:groupFooter as |record group|>
-              {{~yield record this.config group to="groupFooter"~}}
+            <:groupFooter as |option group|>
+              {{~yield option this.config group to="groupFooter"~}}
             </:groupFooter>
             <:skeleton>
               {{~yield to="skeleton"~}}
