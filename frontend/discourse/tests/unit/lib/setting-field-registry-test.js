@@ -109,6 +109,11 @@ module("Unit | Lib | setting-field-registry", function () {
         "compact_list",
         "date",
         "host_list",
+        "font_list",
+        "locale_list",
+        "topic",
+        "datetime",
+        "color",
       ]) {
         assert.true(
           resolveSettingFieldType({ type }).adminReady,
