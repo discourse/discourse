@@ -99,7 +99,8 @@ class UploadsController < ApplicationController
     params.permit(short_urls: [])
     uploads = []
 
-    if params[:short_urls] && params[:short_urls].length > MAX_LOOKUP_SHORT_URLS
+    # The client batches lookups from repeated renders, so the same short url can arrive many times.
+    if params[:short_urls] && params[:short_urls].uniq.length > MAX_LOOKUP_SHORT_URLS
       return(
         render_json_error(
           I18n.t("upload.too_many_short_urls", count: MAX_LOOKUP_SHORT_URLS),

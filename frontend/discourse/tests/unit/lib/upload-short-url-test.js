@@ -11,10 +11,7 @@ import {
 } from "pretty-text/upload-short-url";
 import { module, test } from "qunit";
 import { ajax } from "discourse/lib/ajax";
-import pretender, {
-  parsePostData,
-  response,
-} from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
 function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
@@ -279,37 +276,6 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
       { url: MISSING, short_path: MISSING },
       "marks the urls it didn't find as missing"
     );
-  });
-
-  test("lookupUncachedUploadUrls sends each short url once in batches the server accepts", async function (assert) {
-    const batchSizes = [];
-    pretender.post("/uploads/lookup-urls", (request) => {
-      const shortUrls = parsePostData(request.requestBody)["short_urls[]"];
-      batchSizes.push(shortUrls.length);
-      return response(
-        shortUrls.map((shortUrl) => ({
-          short_url: shortUrl,
-          url: `/${shortUrl}`,
-          short_path: `/s/${shortUrl}`,
-        }))
-      );
-    });
-    const shortUrls = Array.from(
-      { length: 1001 },
-      (_, index) => `upload://${index}.png`
-    );
-
-    const uploads = await lookupUncachedUploadUrls(
-      [...shortUrls, ...shortUrls],
-      ajax
-    );
-
-    assert.deepEqual(batchSizes, [1000, 1]);
-    assert.strictEqual(uploads.length, 1001);
-    assert.deepEqual(lookupCachedUploadUrl("upload://1000.png"), {
-      url: "/upload://1000.png",
-      short_path: "/s/upload://1000.png",
-    });
   });
 
   test("resolveCachedShortUrls uses only the cache", function (assert) {

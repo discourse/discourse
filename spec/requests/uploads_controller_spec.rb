@@ -1031,6 +1031,19 @@ RSpec.describe UploadsController do
       )
     end
 
+    it "counts a repeated short url once against the limit" do
+      sign_in(user)
+      upload = Fabricate(:upload)
+
+      post "/uploads/lookup-urls.json",
+           params: {
+             short_urls: [upload.short_url] * (UploadsController::MAX_LOOKUP_SHORT_URLS + 1),
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.map { |result| result["url"] }).to contain_exactly(upload.url)
+    end
+
     describe "secure uploads" do
       let(:upload) { Fabricate(:upload_s3, secure: true) }
 
