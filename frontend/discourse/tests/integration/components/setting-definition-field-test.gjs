@@ -619,6 +619,43 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert.dom(".value-probe").hasText("a.com|b.com", "ignores wildcard hosts");
   });
 
+  for (const [type, extra] of [
+    ["group_list", {}],
+    ["category_list", {}],
+    ["compact_list", {}],
+    ["font_list", { choices: [{ value: "arial", name: "Arial" }] }],
+    ["topic", {}],
+    ["host_list", {}],
+    ["group", {}],
+    ["category", {}],
+    ["tag_group_list", {}],
+  ]) {
+    test(`${type} is disabled with its field`, async function (assert) {
+      const definition = {
+        key: "my_setting",
+        type,
+        label: "My setting",
+        ...extra,
+      };
+
+      await render(
+        <template>
+          <Form @data={{hash my_setting=""}} as |form|>
+            <SettingDefinitionField
+              @definition={{definition}}
+              @disabled={{true}}
+              @form={{form}}
+            />
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom("[data-name='my_setting'] .select-kit")
+        .hasClass("is-disabled");
+    });
+  }
+
   test("category_list clears every selection", async function (assert) {
     const categoryId = Site.current().categories[0].id;
 
