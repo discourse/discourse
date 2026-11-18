@@ -259,7 +259,7 @@ export default class DsaModeration extends Component {
       return;
     }
 
-    this.pendingFieldHints = suggestion.pendingFieldHints;
+    this.pendingFieldHints = suggestion.pendingFieldHints ?? {};
     this.statusMessage = suggestion.loadingMessage;
     try {
       const { values, fieldHints, message } = await suggestion.result;

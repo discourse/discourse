@@ -131,7 +131,7 @@ module(
     });
 
     test("preserves the sole rule and shows manual guidance only for Category", async function (assert) {
-      pretender.post(endpoint, () => response({}));
+      pretender.post(endpoint, () => response({ community_rule: "spam" }));
       await renderForm([{ id: "spam", ground: "No spam" }]);
       assert
         .dom(".dsa-classification-select")
