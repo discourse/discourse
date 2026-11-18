@@ -5,33 +5,14 @@ enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 
 if enable_logstash_logger
-  require "active_support"
-  require "active_support/core_ext/object/blank"
-  require_relative "../lib/truncate_logs_formatter"
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/pitchfork_logstash_patch"
   FileUtils.touch(stderr_log_path) if !File.exist?(stderr_log_path)
-  structured_logger =
-    DiscourseLogstashLogger.logger(
-      logdev: stderr_log_path,
-      type: :unicorn,
-      customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
-    )
-
-  environment = ENV["RAILS_ENV"].presence || ENV["RACK_ENV"]
-  if TruncateLogsFormatter.enabled?(environment)
-    require "yaml"
-    require "active_support/core_ext/hash/keys"
-    require_relative "../app/models/global_setting"
-
-    unless GlobalSetting.respond_to?(:log_line_max_chars)
-      GlobalSetting.configure!(use_blank_provider: environment == "test")
-      GlobalSetting.load_defaults
-    end
-    structured_logger.formatter =
-      TruncateLogsFormatter.new(log_line_max_chars: GlobalSetting.log_line_max_chars)
-  end
-  logger structured_logger
+  logger DiscourseLogstashLogger.logger(
+           logdev: stderr_log_path,
+           type: :unicorn,
+           customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
+         )
 else
   console_logger = Logger.new(STDOUT)
   if ENV["RAILS_ENV"] != "production"

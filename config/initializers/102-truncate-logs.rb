@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "truncate_logs_formatter"
-
-if TruncateLogsFormatter.enabled?(Rails.env)
+if Rails.env.production? || ENV["ENABLE_LOGS_TRUNCATION"] == "1"
   def set_or_extend_truncate_logs_formatter(logger)
     if logger.formatter
       logger.formatter.extend(
@@ -25,8 +23,5 @@ if TruncateLogsFormatter.enabled?(Rails.env)
 
   Rails.application.config.to_prepare do
     Rails.logger.broadcasts.each { |logger| set_or_extend_truncate_logs_formatter(logger) }
-    if DiscourseLograge.enabled?
-      set_or_extend_truncate_logs_formatter(Rails.configuration.lograge.logger)
-    end
   end
 end

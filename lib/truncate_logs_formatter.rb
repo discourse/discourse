@@ -6,10 +6,6 @@
 class TruncateLogsFormatter < ::ActiveSupport::Logger::SimpleFormatter
   include ::ActiveSupport::TaggedLogging::Formatter
 
-  def self.enabled?(environment)
-    environment == "production" || ENV["ENABLE_LOGS_TRUNCATION"] == "1"
-  end
-
   def initialize(log_line_max_chars:)
     @log_line_max_chars = log_line_max_chars
   end
