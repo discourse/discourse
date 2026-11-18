@@ -79,7 +79,7 @@ export default class FileTypesList extends Component {
         break;
     }
 
-    const oldTypes = this.args.value.split(TOKEN_SEPARATOR);
+    const oldTypes = this.settingValue;
     const newTypes = uniqueItemsFromArray([...oldTypes, ...types]);
     const diffTypes = newTypes.filter((type) => !oldTypes.includes(type));
 

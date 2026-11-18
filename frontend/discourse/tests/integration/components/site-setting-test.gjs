@@ -7,6 +7,7 @@ import {
   triggerEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import SiteSettingComponent from "discourse/admin/components/site-setting";
 import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
 import ThemeTranslation from "discourse/admin/components/theme-translation";
@@ -122,7 +123,9 @@ module("Integration | Component | SiteSetting", function (hooks) {
       type: "file_types_list",
     });
 
-    assert.dom(".formatted-selection").hasText("jpg, jpeg, png");
+    assert
+      .dom(".form-kit__field .formatted-selection")
+      .hasText("jpg, jpeg, png");
 
     await click(".file-types-list__button.image");
 
@@ -625,6 +628,82 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".form-kit__field .form-kit__errors").doesNotExist();
   });
 
+  test("a file types list setting adds default types to an empty value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_types", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_types",
+      value: "",
+      type: "file_types_list",
+    });
+
+    await click(".form-kit__field .file-types-list__button.video");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_types, "mov|mp4|webm|m4v|3gp|ogv|avi|mpeg");
+  });
+
+  test("an upload setting shows its restrictions and saves a removed file", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_upload", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_upload",
+      value: "/uploads/default/original/1X/notes.txt",
+      type: "upload",
+      authorized_extensions: "txt",
+      max_file_size_kb: 512,
+      upload: { original_filename: "notes.txt", human_filesize: "4 KB" },
+    });
+
+    assert.dom(".form-kit__field .file-name").hasText("notes.txt");
+    assert.dom(".form-kit__field .file-size").hasText("4 KB");
+    assert
+      .dom(".form-kit__field .file-uploader__restrictions")
+      .includesText(".txt")
+      .includesText("512 KB");
+
+    await click(".form-kit__field .file-uploader .btn-danger");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_upload, "");
+  });
+
+  test("an uploaded image list setting saves the images kept in its modal", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/selectable_avatars", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    const modal = getOwner(this).lookup("service:modal");
+    const show = sinon.stub(modal, "show");
+
+    await renderSetting({
+      setting: "selectable_avatars",
+      value: "/a.png|/b.png",
+      type: "uploaded_image_list",
+    });
+
+    await click(".form-kit__field button");
+
+    const { model } = show.firstCall.args[1];
+
+    assert.strictEqual(model.value, "/a.png|/b.png");
+
+    model.changeValue("/b.png");
+    await settled();
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.selectable_avatars, "/b.png");
+  });
+
   test("a date setting saves the picked date", async function (assert) {
     let body;
     pretender.put("/admin/site_settings/test_date", (request) => {
@@ -995,7 +1074,7 @@ module(
       await renderMaxImageSizeSetting("1024");
       await fillIn(".file-size-input", "5000");
 
-      assert.dom(".validation-error").hasText(
+      assert.dom(".form-kit__errors").hasText(
         i18n("file_size_input.error.size_too_large", {
           provided_file_size: "4.9 GB",
           max_file_size: "4 MB",
@@ -1009,7 +1088,7 @@ module(
       await renderMaxImageSizeSetting("1000");
       await fillIn(".file-size-input", "100");
 
-      assert.dom(".validation-error").hasText(
+      assert.dom(".form-kit__errors").hasText(
         i18n("file_size_input.error.size_too_small", {
           provided_file_size: "100 KB",
           min_file_size: "512 KB",
@@ -1023,13 +1102,18 @@ module(
       await renderMaxImageSizeSetting("1000");
 
       await fillIn(".file-size-input", "100");
-      assert.dom(".validation-error").hasNoClass("hidden");
+      assert.dom(".form-kit__errors").exists();
 
       await click(".setting-controls__cancel");
       assert
         .dom(".file-size-input")
         .hasValue("1000", "the value resets to the saved value");
-      assert.dom(".validation-error").hasClass("hidden");
+      assert.dom(".form-kit__errors").doesNotExist();
+
+      await fillIn(".file-size-input", "");
+      assert
+        .dom(".form-kit__errors")
+        .doesNotExist("the cancelled error does not come back");
     });
 
     test("resetting to the default value changes the content of input field", async function (assert) {
@@ -1081,10 +1165,10 @@ module(
       await renderMaxImageSizeSetting("1000");
 
       await fillIn(".file-size-input", "100");
-      assert.dom(".validation-error").hasNoClass("hidden");
+      assert.dom(".form-kit__errors").exists();
 
       await fillIn(".file-size-input", "");
-      assert.dom(".validation-error").hasNoClass("hidden");
+      assert.dom(".form-kit__errors").exists();
       assert.dom(".setting-controls__ok").exists("the save button is shown");
       assert
         .dom(".setting-controls__cancel")
@@ -1093,7 +1177,7 @@ module(
 
       await click(".setting-controls__cancel");
       assert.dom(".file-size-input").hasValue("1000");
-      assert.dom(".validation-error").hasClass("hidden");
+      assert.dom(".form-kit__errors").doesNotExist();
       assert
         .dom(".setting-controls__ok")
         .doesNotExist("the save button is not shown");
