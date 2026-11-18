@@ -4,7 +4,20 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const PLACEHOLDER_CHAR = "-";
 
-export default class Slot extends Component {
+interface SlotSignature {
+  Args: {
+    /** The character in the slot. */
+    char?: string;
+
+    /** The position of the slot. */
+    index: number;
+
+    /** Whether the slot holds the input cursor. */
+    isFocused?: boolean;
+  };
+}
+
+export default class Slot extends Component<SlotSignature> {
   get showCursor() {
     return this.args.isFocused && isBlank(this.args.char);
   }
