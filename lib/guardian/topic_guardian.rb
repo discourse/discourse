@@ -87,16 +87,18 @@ module TopicGuardian
   end
 
   def can_create_post_on_topic?(topic)
-    # No users can create posts on deleted topics
-    return false if topic.blank?
-    return false if topic.trashed?
-    return true if is_admin?
+    return false if topic.present? && topic.closed? && tl4_closed_topic_reply_restricted?
 
-    trusted =
-      (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator? ||
-        can_perform_action_available_to_group_moderators?(topic)
+    can_create_post_on_topic_with_base_permissions?(topic)
+  end
 
-    (!(topic.closed? || topic.archived?) || trusted) && can_create_post?(topic)
+  def tl4_closed_topic_reply_restricted?
+    !SiteSetting.tl4_can_post_in_closed_topics && authenticated? && !is_staff? &&
+      user.trust_level == TrustLevel[4]
+  end
+
+  def can_create_moderator_post_on_topic?(topic)
+    authenticated? && can_see?(topic) && can_create_post_on_topic_with_base_permissions?(topic)
   end
 
   # Editing Method
@@ -373,6 +375,17 @@ module TopicGuardian
   end
 
   private
+
+  def can_create_post_on_topic_with_base_permissions?(topic)
+    return false if topic.blank? || topic.trashed?
+    return true if is_admin?
+
+    trusted =
+      (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator? ||
+        can_perform_action_available_to_group_moderators?(topic)
+
+    (!(topic.closed? || topic.archived?) || trusted) && can_create_post?(topic)
+  end
 
   def can_delete_own_topic?(topic)
     topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago

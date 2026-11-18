@@ -2897,6 +2897,9 @@ trust:
     default: 1
     enum: "TrustLevelSetting"
     area: "trust_levels"
+  tl4_can_post_in_closed_topics:
+    default: true
+    area: "group_permissions"
   create_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
