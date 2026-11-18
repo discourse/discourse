@@ -25,7 +25,7 @@ describe "Edit wireframe images" do
 
   after { Theme.clear_cache! }
 
-  it "lets an author position a section image and cancel canvas adjustment" do
+  it "lets an author position a section image" do
     visit("/custom")
     editor.enter
     frame_width, cell_width = image_editor.grid_frame_widths
@@ -36,66 +36,19 @@ describe "Edit wireframe images" do
     image_editor.set_position(x: 25, y: 75)
     expect(image_editor).to have_position(x: 25, y: 75)
     screenshot_marker(label: "wireframe-image-controls", only: :desktop)
-
-    image_editor.reposition
-    expect(image_editor).to have_adjustment
-    geometry = image_editor.adjustment_geometry
-    expect(geometry["overlay"]["width"]).to be_within(1).of(geometry["frame"]["width"]),
-    geometry.inspect
-    expect(geometry["overlay"]["left"]).to be_within(1).of(geometry["frame"]["left"]),
-    geometry.inspect
-    expect(geometry["overlay"]["right"]).to be <= geometry["chrome"]["right"], geometry.inspect
-    image_editor.nudge(:right)
-    expect(image_editor).to have_position(x: 26, y: 75)
-    screenshot_marker(label: "wireframe-image-reposition", only: :desktop)
-    image_editor.cancel_adjustment
-    expect(image_editor).to have_no_adjustment
-    expect(image_editor).to have_position(x: 25, y: 75)
-
-    image_editor.reposition
-    image_editor.nudge(:left)
-    image_editor.finish_adjustment
-    expect(image_editor).to have_no_adjustment
-    expect(image_editor).to have_position(x: 24, y: 75)
-
-    image_editor.reposition
-    drag_with_pointer(from: ".wireframe-image-reposition__surface", by: { x: 40 })
-    expect(image_editor).to have_no_position(x: 24, y: 75)
-    expect(image_editor).to have_selected_section
-    image_editor.cancel_adjustment
-    expect(image_editor).to have_position(x: 24, y: 75)
-
-    image_editor.reposition
-    image_editor.nudge(:right, :escape)
-    expect(image_editor).to have_no_adjustment
-    expect(image_editor).to have_position(x: 24, y: 75)
   end
 
-  it "keeps the author's image position when clicking away and allows one-step undo" do
+  it "applies the author's image position and supports undo and redo" do
     visit("/custom")
     editor.enter
     image_editor.select_section
     image_editor.set_position(x: 25, y: 75)
-    image_editor.reposition
-    image_editor.nudge(:right, :right, :down)
-    image_editor.select_image
-    expect(image_editor).to have_no_adjustment
-    expect(image_editor).to have_position(x: 27, y: 76)
-
-    image_editor.undo
     expect(image_editor).to have_position(x: 25, y: 75)
-    image_editor.redo
-    expect(image_editor).to have_position(x: 27, y: 76)
 
-    image_editor.select_section
-    image_editor.reposition
-    image_editor.nudge(:left)
-    image_editor.click_outside_blocks
-    expect(image_editor).to have_no_selected_block
-    expect(image_editor).to have_no_adjustment
-    expect(image_editor).to have_position(x: 26, y: 76)
     image_editor.undo
-    expect(image_editor).to have_position(x: 27, y: 76)
+    expect(image_editor).to have_no_position(x: 25, y: 75)
+    image_editor.redo
+    expect(image_editor).to have_position(x: 25, y: 75)
   end
 
   it "lets an author resize an image with handles around its frame" do
@@ -145,12 +98,6 @@ describe "Edit wireframe images" do
       width: dimensions["width"],
       height: dimensions["height"],
     )
-    image_editor.reposition_from_menu
-    expect(image_editor).to have_no_image_menu
-    expect(image_editor).to have_adjustment
-    image_editor.cancel_adjustment
-    expect(image_editor).to have_no_adjustment
-    image_editor.open_image_menu
     image_editor.show_more_image_settings
     expect(image_editor).to have_no_image_menu
     expect(image_editor).to have_focused_image_settings
@@ -261,9 +208,7 @@ describe "Edit wireframe images" do
     image_editor.stretch_grid_image
     image_editor.use_inspector_width(240)
     expect(image_editor).to have_rtl_page
-    expect(image_editor).to have_position_marker(x: 50, y: 50)
     image_editor.set_position(x: 25, y: 75)
-    expect(image_editor).to have_position_marker(x: 25, y: 75)
     image_editor.choose_top_left_position
     expect(image_editor).to have_top_left_position
     expect(image_editor).to have_ordered_source_dimensions
@@ -279,7 +224,6 @@ describe "Edit wireframe images" do
       "image.fit" => "Einpassen",
       "image.fill" => "Ausfüllen",
       "image.zoom_short" => "Vergrößerung",
-      "image.reposition" => "Bild auf der Arbeitsfläche positionieren",
     }.each do |key, value|
       TranslationOverride.upsert!("de", "js.wireframe.inspector.#{key}", value)
     end
@@ -293,19 +237,6 @@ describe "Edit wireframe images" do
     screenshot_marker(label: "wireframe-inspector-closeout-long-labels", only: :desktop)
   end
 
-  it "keeps the zoom track on the same subdued surface as the position pad" do
-    visit("/custom")
-    editor.enter
-    image_editor.select_grid_image
-    image_editor.use_inspector_width(240)
-    expect(image_editor).to have_themed_zoom_track
-    image_editor.change_zoom_with_keyboard(:end)
-    expect(image_editor).to have_image_zoom(250)
-    image_editor.change_zoom_with_keyboard(:home)
-    expect(image_editor).to have_image_zoom(100)
-    screenshot_marker(label: "wireframe-inspector-closeout-slider", only: :desktop)
-  end
-
   it "keeps the minimum inspector usable with zoom-equivalent viewport scaling" do
     image_editor.use_tall_viewport
     visit("/custom")
@@ -317,10 +248,7 @@ describe "Edit wireframe images" do
         expect(image_editor).to have_zoomed_viewport(scale)
         expect(image_editor).to have_contained_inspector_content
         expect(image_editor).to have_aligned_unit_controls(compact: true)
-        expect(image_editor).to have_grouped_composition_controls(
-          compact: true,
-          full_width_actions: true,
-        )
+        expect(image_editor).to have_grouped_composition_controls
         screenshot_marker(
           label: "wireframe-inspector-closeout-zoom-#{scale}",
           only: :desktop,
@@ -342,11 +270,7 @@ describe "Edit wireframe images" do
       image_editor.use_inspector_width(width)
       screenshot_marker(label: "wireframe-composition-layout-#{width}", only: :desktop)
       expect(image_editor).to have_aligned_unit_controls(compact: width == 240)
-      expect(image_editor).to have_grouped_composition_controls(
-        compact: width == 240,
-        full_width_actions: width <= 260,
-      )
-      expect(image_editor).to have_contained_inspector_actions
+      expect(image_editor).to have_grouped_composition_controls
       expect(image_editor).to have_paired_grid_coordinates
       expect(image_editor).to have_readable_coordinate_controls
       expect(image_editor).to have_aligned_inspector_selections
@@ -355,11 +279,7 @@ describe "Edit wireframe images" do
     [240, 260, 480].each do |width|
       image_editor.use_inspector_width(width)
       expect(image_editor).to have_aligned_unit_controls(compact: width == 240)
-      expect(image_editor).to have_grouped_composition_controls(
-        compact: width == 240,
-        full_width_actions: width <= 260,
-      )
-      expect(image_editor).to have_contained_inspector_actions
+      expect(image_editor).to have_grouped_composition_controls
       expect(image_editor).to have_paired_grid_coordinates
       expect(image_editor).to have_readable_coordinate_controls
       expect(image_editor).to have_aligned_inspector_selections

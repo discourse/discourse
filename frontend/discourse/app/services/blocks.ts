@@ -348,15 +348,19 @@ export default class Blocks extends Service {
   }
 
   /**
-   * Whether any outlet's resolved layout places the named block, at any depth.
-   * Reactive when read inside a tracked context, so a consumer re-runs when a
-   * layout gains or loses the block.
+   * Whether a resolved layout places the named block, at any depth. Reactive
+   * when read inside a tracked context, so a consumer re-runs when a layout
+   * gains or loses the block.
    *
    * @param name - The block name.
+   * @param outletName - Only check this outlet's layout; every outlet otherwise.
    * @returns True if a resolved layout contains the block.
    */
-  isBlockPlaced(name: string): boolean {
-    for (const record of _getResolvedLayouts().values()) {
+  isBlockPlaced(name: string, outletName?: string): boolean {
+    for (const [outlet, record] of _getResolvedLayouts()) {
+      if (outletName && outlet !== outletName) {
+        continue;
+      }
       if (layoutPlacesBlock(record.layout, name)) {
         return true;
       }

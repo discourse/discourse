@@ -279,18 +279,17 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
   /**
    * Whether to render the empty-state content (icon + "Add X" label).
    * Always for a non-passive empty arg (its marker is only positioned
-   * when revealed, so it self-gates). For a passive background — which
-   * `data-drop-fills-block` keeps always positioned — only when the card
-   * is selected (the idle hint) OR while a file is dragged over it (drag
-   * feedback); otherwise the bare hint would show on every unselected
-   * empty card. An in-progress upload takes precedence in the template.
+   * when revealed, so it self-gates). A passive background — which
+   * `data-drop-fills-block` keeps always positioned — only shows it while a file
+   * is dragged over (drag feedback); setting one otherwise happens in the
+   * inspector. An in-progress upload takes precedence in the template.
    *
    */
   get showEmptyContent(): boolean {
     return (
       this.args.isEmpty &&
       !(this.markerPassive && this.args.suppressEmptyPrompt) &&
-      (!this.markerPassive || this.isSelected || this.isDragOver)
+      (!this.markerPassive || this.isDragOver)
     );
   }
 

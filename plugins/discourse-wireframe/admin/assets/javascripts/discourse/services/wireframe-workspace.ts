@@ -12,7 +12,6 @@ import type WireframeBlockRevealService from "./wireframe-block-reveal";
 import type WireframeDragOverlayService from "./wireframe-drag-overlay";
 import type WireframeDragSessionService from "./wireframe-drag-session";
 import type WireframeEditModeService from "./wireframe-edit-mode";
-import type WireframeForceExpandService from "./wireframe-force-expand";
 import type WireframeImageCompositionService from "./wireframe-image-composition";
 import type WireframeImageUploadService from "./wireframe-image-upload";
 import type WireframeInspectorArgsService from "./wireframe-inspector-args";
@@ -54,7 +53,6 @@ export default class WireframeWorkspaceService extends Service {
   @service declare wireframeDragSession: WireframeDragSessionService;
 
   /** Owns layout blocks temporarily expanded for editing. */
-  @service declare wireframeForceExpand: WireframeForceExpandService;
 
   @service declare wireframeImageComposition: WireframeImageCompositionService;
 
@@ -172,7 +170,6 @@ export default class WireframeWorkspaceService extends Service {
     // an open editor render the same DOM as live.
     resetBlockArgRenderer("rich-text");
     this.wireframeInspectorArgs.clear();
-    this.wireframeForceExpand.reset();
   }
 
   /** Opens or closes the workspace according to its current active state. */

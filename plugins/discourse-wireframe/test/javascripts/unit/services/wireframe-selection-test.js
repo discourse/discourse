@@ -112,7 +112,7 @@ module(
 
       assert.strictEqual(
         this.selection.selectedBlockAncestry.at(-1).displayName,
-        "Row"
+        "Columns"
       );
     });
 

@@ -126,7 +126,7 @@ module(
         .dom(
           ".d-block-section__content .wireframe-empty-drop-actions__background"
         )
-        .exists("the same empty state offers a background image action");
+        .doesNotExist("background images are set from the inspector");
       assert
         .dom(".wireframe-block-chrome > .wireframe-empty-drop-placeholder")
         .doesNotExist("no competing full-chrome empty placeholder remains");

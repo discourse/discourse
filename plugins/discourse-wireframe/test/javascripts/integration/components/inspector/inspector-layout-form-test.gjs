@@ -1,5 +1,5 @@
 import Service from "@ember/service";
-import { click, render } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Layout from "discourse/blocks/builtin/layout";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
@@ -10,7 +10,6 @@ import InspectorLayoutForm from "discourse/plugins/discourse-wireframe/discourse
 // schema, so the stub hands it core's actual `layout` metadata rather than an
 // empty stand-in — that keeps the picker in step with core's mode enum.
 const LAYOUT_METADATA = getBlockMetadata(Layout);
-const MODE_ENUM = LAYOUT_METADATA.args.mode.enum;
 
 // Minimal stand-in: the layout form reads the selected block's args and a few
 // grid helpers off the service, and writes through `updateSelectedArg`. The
@@ -97,14 +96,13 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("stack mode: justify-content + reverse, but no wrap control", async function (assert) {
+    test("stack mode: justify-content, but no wrap control", async function (assert) {
       stubWireframe(this.owner, { mode: "stack" });
       await render(<template><InspectorLayoutForm /></template>);
 
       assert
         .dom("input[name='wireframe-layout-justify-content']")
         .exists("justify-content renders as a segmented control");
-      assert.dom(".d-toggle-switch").exists("reverse toggle renders");
       assert
         .dom("input[name='wireframe-layout-wrap']")
         .doesNotExist("wrap is not offered for stack (column)");
@@ -117,7 +115,6 @@ module(
       assert
         .dom("input[name='wireframe-layout-wrap']")
         .exists("row offers the wrap segmented control");
-      assert.dom(".d-toggle-switch").exists("reverse toggle renders");
     });
 
     test("grid mode: justify-items, align-content, and dense", async function (assert) {
@@ -134,39 +131,6 @@ module(
       assert
         .dom("input[name='wireframe-layout-wrap']")
         .doesNotExist("no wrap control in grid mode");
-    });
-
-    test("mode picker offers one segment per core mode enum value", async function (assert) {
-      stubWireframe(this.owner, { mode: "stack" });
-      await render(<template><InspectorLayoutForm /></template>);
-
-      assert
-        .dom("input[name='wireframe-layout-mode']")
-        .exists(
-          { count: MODE_ENUM.length },
-          "the picker derives its segments from the block's mode enum"
-        );
-    });
-
-    test("a removed mode falls back to stack", async function (assert) {
-      stubWireframe(this.owner, { mode: "tiles" });
-      await render(<template><InspectorLayoutForm /></template>);
-
-      assert
-        .dom("input[name='wireframe-layout-mode'][value='stack']")
-        .isChecked("legacy layouts remain editable as stacks");
-    });
-
-    test("toggling reverse writes the arg through the service", async function (assert) {
-      stubWireframe(this.owner, { mode: "row" });
-      await render(<template><InspectorLayoutForm /></template>);
-
-      await click(".d-toggle-switch__checkbox");
-
-      const service = this.owner.lookup("service:wireframe-workspace");
-      assert.deepEqual(service.updateSelectedArgCalls, [
-        { name: "reverse", value: true },
-      ]);
     });
 
     test("surfaces a service validation error on its field", async function (assert) {

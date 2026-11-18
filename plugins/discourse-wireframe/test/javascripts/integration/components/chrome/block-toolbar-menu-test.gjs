@@ -239,7 +239,7 @@ module(
       );
       assert.strictEqual(
         crumbs[1],
-        "Stack",
+        "Rows",
         "the immediate parent is the inner layout"
       );
       assert

@@ -19,7 +19,6 @@ import alignCardRows from "../-internals/align-card-rows";
 
 const VALID_MODES = ["stack", "row", "grid"];
 const VALID_ALIGNS = ["start", "center", "end", "stretch"];
-const VALID_ALIGN_SELF = ["auto", "start", "center", "end", "stretch"];
 // A row item's share of the row's width, gaps excluded.
 const ROW_WIDTH_FRACTIONS: Record<string, number> = {
   "1/4": 1 / 4,
@@ -54,7 +53,6 @@ interface LayoutSignature {
     gap?: number;
     align?: string;
     justifyContent?: string;
-    reverse?: boolean;
     wrap?: string;
     columns?: number;
     rows?: number;
@@ -65,7 +63,6 @@ interface LayoutSignature {
     columnFractions?: number[];
     rowTemplate?: string;
     rowHeight?: string;
-    autoCollapse?: string;
     /** Coordinate media seams and trailing actions of matching Card peers. */
     cardAlignment?: "auto" | "off";
   };
@@ -134,7 +131,7 @@ interface LayoutSignature {
       type: "string",
       default: "stack",
       enum: VALID_MODES,
-      ui: { control: "radio-group", label: i18n("blocks.builtin.layout.mode") },
+      ui: { hidden: true },
     },
     gap: {
       type: "number",
@@ -166,14 +163,6 @@ interface LayoutSignature {
       default: "start",
       enum: VALID_JUSTIFY_CONTENT,
       ui: { label: i18n("blocks.builtin.layout.justify_content") },
-    },
-    // Reverses the visual order of children. Implemented by reversing the
-    // rendered children array (not CSS `*-reverse`), so DOM / tab / screen-reader
-    // order stays in step with the visual order. Flex modes only.
-    reverse: {
-      type: "boolean",
-      default: false,
-      ui: { control: "toggle", label: i18n("blocks.builtin.layout.reverse") },
     },
     // Row mode only: whether children wrap onto new lines. Default `wrap` matches
     // the previously-hardcoded row behaviour. The responsive collapse forces wrap
@@ -218,15 +207,16 @@ interface LayoutSignature {
         conditional: { arg: "mode", equals: "grid" },
       },
     },
-    // Grid only: block-axis distribution of the tracks when the grid is shorter
-    // than its container. `stretch` matches the current grid default.
+    // Grid: block-axis distribution of the tracks when the grid is shorter than
+    // its container. Row: how wrapped lines pack along the cross axis (only
+    // visible once the row wraps). `stretch` matches both defaults.
     alignContent: {
       type: "string",
       default: "stretch",
       enum: VALID_ALIGN_CONTENT,
       ui: {
         label: i18n("blocks.builtin.layout.align_content"),
-        conditional: { arg: "mode", equals: "grid" },
+        conditional: { arg: "mode", oneOf: ["row", "grid"] },
       },
     },
     // Grid only: when true, the grid backfills earlier gaps with later items
@@ -281,28 +271,6 @@ interface LayoutSignature {
         placeholder: i18n("blocks.builtin.layout.row_height_placeholder"),
       },
     },
-    // Per-layout opt-out / customization of the responsive collapse.
-    // The `@container` rules in the stylesheet key off the
-    // `d-block-layout--collapse-<value>` modifier class emitted by
-    // `className` below.
-    //   - `default`: collapse below 40rem (core's `sm`). Cards,
-    //     paragraphs, media — typical content.
-    //   - `compact`: collapse below 15rem (~240px). Dense content
-    //     (icon rows, small buttons) that stays multi-column at all
-    //     typical phone widths; only collapses in genuinely tiny
-    //     contexts like watch screens.
-    //   - `never`: no `@container` rule applies — author keeps the
-    //     full layout at every width. For genuinely-dense content
-    //     like a row of icons or small links.
-    autoCollapse: {
-      type: "string",
-      default: "default",
-      enum: ["never", "compact", "default"],
-      ui: {
-        control: "radio-group",
-        label: i18n("blocks.builtin.layout.auto_collapse_label"),
-      },
-    },
   },
   // One namespace per mode. Direct children carry mode-specific placement
   // hints under `containerArgs.<mode>` — e.g. a grid child sets
@@ -344,7 +312,7 @@ interface LayoutSignature {
               start: "wf-align-start-horizontal",
               center: "wf-align-center-horizontal",
               end: "wf-align-end-horizontal",
-              stretch: "wf-stretch-horizontal",
+              stretch: "wf-stretch-vertical",
             },
           },
         },
@@ -359,7 +327,7 @@ interface LayoutSignature {
               start: "wf-align-start-vertical",
               center: "wf-align-center-vertical",
               end: "wf-align-end-vertical",
-              stretch: "wf-stretch-vertical",
+              stretch: "wf-stretch-horizontal",
             },
           },
         },
@@ -369,63 +337,9 @@ interface LayoutSignature {
         conditional: { arg: "mode", equals: "grid" },
       },
     },
-    stack: {
-      type: "object",
-      default: { alignSelf: "auto" },
-      properties: {
-        alignSelf: {
-          type: "string",
-          default: "auto",
-          enum: VALID_ALIGN_SELF,
-          ui: {
-            control: "radio-group",
-            label: i18n("blocks.builtin.layout.placement.align_self"),
-            // Stack mode is a flex column, so `align-self` acts on the
-            // horizontal (cross) axis: left / center / right / stretch.
-            optionIcons: {
-              start: "wf-align-start-vertical",
-              center: "wf-align-center-vertical",
-              end: "wf-align-end-vertical",
-              stretch: "wf-stretch-vertical",
-            },
-          },
-        },
-        flexGrow: {
-          type: "number",
-          min: 0,
-          ui: {
-            control: "stepper",
-            label: i18n("blocks.builtin.layout.placement.flex_grow"),
-            placeholder: i18n("blocks.builtin.layout.placement.automatic"),
-          },
-        },
-      },
-      ui: {
-        label: i18n("blocks.builtin.layout.placement.stack_section"),
-        conditional: { arg: "mode", equals: "stack" },
-      },
-    },
     row: {
       type: "object",
-      default: { alignSelf: "auto" },
       properties: {
-        alignSelf: {
-          type: "string",
-          default: "auto",
-          enum: VALID_ALIGN_SELF,
-          ui: {
-            control: "radio-group",
-            label: i18n("blocks.builtin.layout.placement.align_self"),
-            // Row mode is a flex row, so `align-self` acts on the
-            // vertical (cross) axis: top / center / bottom / stretch.
-            optionIcons: {
-              start: "wf-align-start-horizontal",
-              center: "wf-align-center-horizontal",
-              end: "wf-align-end-horizontal",
-              stretch: "wf-stretch-horizontal",
-            },
-          },
-        },
         width: {
           type: "string",
           default: "auto",
@@ -602,22 +516,16 @@ export default class Layout extends Component<LayoutSignature> {
       `--d-block-layout-gap: ${gap}rem; --d-block-layout-align: ${align}; ` +
       `--d-block-layout-justify-content: ${justifyContent};`;
     if (mode === "row") {
-      style += ` --d-block-layout-wrap: ${this.args.wrap ?? "wrap"};`;
+      style +=
+        ` --d-block-layout-wrap: ${this.args.wrap ?? "wrap"};` +
+        ` --d-block-layout-align-content: ${this.args.alignContent ?? "stretch"};`;
     }
     return trustHTML(style);
   }
 
-  /**
-   * Composes the layout's BEM class list with mode and collapse
-   * modifiers. The collapse modifier drives which `@container` rule in
-   * the stylesheet applies (40rem for `--collapse-default`, 20rem for
-   * `--collapse-compact`, no rule for `--collapse-never`).
-   */
+  /** Composes the layout's BEM class list. */
   get className(): string {
-    return (
-      `d-block-layout d-block-layout--${this.resolvedMode} ` +
-      `d-block-layout--collapse-${this.args.autoCollapse ?? "default"}`
-    );
+    return `d-block-layout d-block-layout--${this.resolvedMode}`;
   }
 
   /**
@@ -640,16 +548,6 @@ export default class Layout extends Component<LayoutSignature> {
       return children.filter(
         (child) => child.blockName !== LAYOUT_MERGED_CELL_BLOCK
       );
-    }
-    // Flex reverse is done here by reordering the DOM (a reversed copy — the
-    // source array is owned upstream), NOT via CSS `flex-direction: *-reverse`,
-    // so tab and screen-reader order follow the visual order. Grid early-returns
-    // above, so its placement sort and merged-cell filter are untouched.
-    if (
-      (this.resolvedMode === "stack" || this.resolvedMode === "row") &&
-      this.args.reverse
-    ) {
-      return [...children].reverse();
     }
     return children;
   }
@@ -748,13 +646,6 @@ export default class Layout extends Component<LayoutSignature> {
       placement.flexGrow >= 0
     ) {
       declarations.push(`flex-grow: ${placement.flexGrow}`);
-    }
-    if (
-      "alignSelf" in placement &&
-      typeof placement.alignSelf === "string" &&
-      VALID_ALIGN_SELF.includes(placement.alignSelf)
-    ) {
-      declarations.push(`align-self: ${placement.alignSelf}`);
     }
     return declarations.length ? trustHTML(declarations.join("; ")) : null;
   }

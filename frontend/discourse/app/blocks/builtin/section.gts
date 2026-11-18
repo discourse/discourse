@@ -12,7 +12,6 @@ const SURFACES = ["transparent", "default", "subtle", "accent", "custom"];
 const SCRIMS = ["none", "subtle", "medium", "strong"];
 const PADDINGS = ["none", "small", "medium", "large"];
 const GAPS = ["none", "small", "medium", "large"];
-const CONTENT_WIDTHS = ["full", "wide", "narrow"];
 const MIN_HEIGHTS = ["content", "small", "medium", "large", "viewport"];
 const VERTICAL_ALIGNS = ["start", "center", "end"];
 
@@ -25,7 +24,6 @@ interface SectionSignature {
     scrim?: string;
     padding?: string;
     gap?: string;
-    contentWidth?: string;
     minHeight?: string;
     verticalAlign?: string;
     accessibleLabel?: string;
@@ -84,14 +82,16 @@ interface SectionSignature {
       default: "medium",
       enum: SCRIMS,
       ui: {
-        control: "segmented",
+        control: "select",
         group: i18n("blocks.builtin.section.groups.background"),
         label: i18n("blocks.builtin.section.scrim"),
+        visibleWhen: ({ args }) =>
+          Boolean((args.backgroundImage as { url?: string } | undefined)?.url),
         optionLabels: {
-          none: i18n("blocks.builtin.section.options.none"),
-          subtle: i18n("blocks.builtin.section.options.subtle"),
-          medium: i18n("blocks.builtin.section.options.medium"),
-          strong: i18n("blocks.builtin.section.options.strong"),
+          none: i18n("blocks.builtin.section.transparency_options.none"),
+          subtle: i18n("blocks.builtin.section.transparency_options.low"),
+          medium: i18n("blocks.builtin.section.transparency_options.medium"),
+          strong: i18n("blocks.builtin.section.transparency_options.high"),
         },
       },
     },
@@ -125,21 +125,6 @@ interface SectionSignature {
           small: i18n("blocks.builtin.section.options.small"),
           medium: i18n("blocks.builtin.section.options.medium"),
           large: i18n("blocks.builtin.section.options.large"),
-        },
-      },
-    },
-    contentWidth: {
-      type: "string",
-      default: "full",
-      enum: CONTENT_WIDTHS,
-      ui: {
-        control: "segmented",
-        group: i18n("blocks.builtin.section.groups.layout"),
-        label: i18n("blocks.builtin.section.content_width"),
-        optionLabels: {
-          full: i18n("blocks.builtin.section.options.full"),
-          wide: i18n("blocks.builtin.section.options.wide"),
-          narrow: i18n("blocks.builtin.section.options.narrow"),
         },
       },
     },
@@ -217,7 +202,6 @@ export default class Section extends Component<SectionSignature> {
   get className(): string {
     const padding = validChoice(this.args.padding, PADDINGS, "medium");
     const gap = validChoice(this.args.gap, GAPS, "medium");
-    const width = validChoice(this.args.contentWidth, CONTENT_WIDTHS, "full");
     const height = validChoice(this.args.minHeight, MIN_HEIGHTS, "content");
     const align = validChoice(
       this.args.verticalAlign,
@@ -231,7 +215,6 @@ export default class Section extends Component<SectionSignature> {
       `--scrim-${this.scrim}`,
       `--padding-${padding}`,
       `--gap-${gap}`,
-      `--width-${width}`,
       `--height-${height}`,
       `--align-${align}`,
     ].join(" ");

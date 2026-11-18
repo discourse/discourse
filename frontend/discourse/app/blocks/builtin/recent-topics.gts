@@ -2,14 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
+import BlockFrame, {
+  frameArgs,
+  frameIconArg,
+} from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import { URL_PATTERN } from "discourse/lib/blocks";
 import { VALID_TOPIC_LIST_FILTERS } from "discourse/lib/blocks/-internals/fetch-topic-list";
 import { topicListDataSource } from "discourse/lib/blocks/-internals/sources/topic-list";
-import { and } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
+import { and, or } from "discourse/truth-helpers";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -25,6 +27,33 @@ interface RecentTopic {
   fancyTitle?: string;
   category?: unknown;
   bumpedAt?: unknown;
+}
+
+/**
+ * Whether the solved filter has anything to match: solving is enabled and either
+ * every topic can be solved or the category the block is filtered to allows it.
+ *
+ * @param args - The block's current args.
+ * @param siteSettings - The site settings service.
+ * @param site - The site service.
+ */
+function canFilterBySolved(
+  args: Record<string, unknown>,
+  siteSettings: Record<string, unknown>,
+  site: Record<string, unknown>
+): boolean {
+  if (!siteSettings.solved_enabled) {
+    return false;
+  }
+  if (siteSettings.allow_solved_on_all_topics) {
+    return true;
+  }
+  const categories = (site.categories ?? []) as Array<{
+    id: number;
+    custom_fields?: Record<string, unknown>;
+  }>;
+  const category = categories.find((c) => c.id === args.categoryId);
+  return category?.custom_fields?.enable_accepted_answers === "true";
 }
 
 interface RecentTopicsSignature {
@@ -74,6 +103,7 @@ interface RecentTopicsSignature {
         label: i18n("blocks.builtin.recent_topics.title"),
       },
     },
+    ...frameIconArg({ defaultIcon: "list" }),
     count: {
       type: "number",
       default: 5,
@@ -114,6 +144,8 @@ interface RecentTopicsSignature {
       ui: {
         control: "toggle",
         label: i18n("blocks.builtin.recent_topics.solved"),
+        visibleWhen: ({ args, siteSettings, site }) =>
+          canFilterBySolved(args, siteSettings, site),
       },
     },
     linkLabel: {
@@ -166,7 +198,7 @@ interface RecentTopicsSignature {
         label: i18n("blocks.builtin.recent_topics.show_activity"),
       },
     },
-    ...frameArgs({ defaultIcon: "list" }),
+    ...frameArgs(),
   },
   constraints: {
     allOrNone: ["linkLabel", "linkHref"],
@@ -240,13 +272,6 @@ export default class RecentTopics extends Component<RecentTopicsSignature> {
         {{#if (and frame.isPlain @title)}}
           <div class="d-block-recent-topics__header">
             <h2 class="d-block-recent-topics__title">{{@title}}</h2>
-            {{#if @linkHref}}
-              <DButton
-                class="btn btn-primary d-block-recent-topics__link"
-                @href={{@linkHref}}
-                @translatedLabel={{@linkLabel}}
-              />
-            {{/if}}
           </div>
         {{/if}}
 
@@ -279,14 +304,6 @@ export default class RecentTopics extends Component<RecentTopicsSignature> {
                   @topics={{topics}}
                 />
               {{/if}}
-
-              {{#if (and frame.isPlain @linkHref)}}
-                <div class="d-block-recent-topics__footer">
-                  <a class="d-block-recent-topics__all-link" href={{@linkHref}}>
-                    {{@linkLabel}}
-                  </a>
-                </div>
-              {{/if}}
             </div>
           </:content>
           <:empty>
@@ -295,6 +312,14 @@ export default class RecentTopics extends Component<RecentTopicsSignature> {
             </div>
           </:empty>
         </@Data>
+
+        {{#if (and frame.isPlain @linkHref)}}
+          <div class="d-block-recent-topics__footer">
+            <a class="d-block-recent-topics__all-link" href={{@linkHref}}>
+              {{or @linkLabel (i18n "blocks.frame.show_all")}}
+            </a>
+          </div>
+        {{/if}}
       </div>
     </BlockFrame>
   </template>

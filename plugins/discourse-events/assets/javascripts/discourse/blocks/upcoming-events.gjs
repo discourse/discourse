@@ -3,16 +3,24 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { block, defineBlockDataSource } from "discourse/blocks";
-import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
+import BlockFrame, {
+  frameArgs,
+  frameIconArg,
+} from "discourse/blocks/block-frame";
 import getURL from "discourse/lib/get-url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 /** @type {import("discourse/plugins/discourse-events/discourse/components/upcoming-events-list-view.gjs")} */
 import UpcomingEventsListView from "../components/upcoming-events-list-view";
 import {
+  hasEventsSubcategories,
+  offersCategoryChoice,
+} from "../lib/events-categories";
+import {
   fetchUpcomingEvents,
   upcomingEventsListTitle,
 } from "../lib/upcoming-events";
+import UpcomingEventsThumbnail from "./thumbnails/upcoming-events";
 
 const upcomingEventsDataSource = defineBlockDataSource({
   resolve: (descriptor) => fetchUpcomingEvents(descriptor),
@@ -29,6 +37,7 @@ const upcomingEventsDataSource = defineBlockDataSource({
  * included.
  */
 @block("events:upcoming-events", {
+  thumbnail: UpcomingEventsThumbnail,
   displayName: "Upcoming events",
   icon: "calendar-days",
   category: "community",
@@ -38,12 +47,10 @@ const upcomingEventsDataSource = defineBlockDataSource({
       type: "string",
       ui: {
         label: i18n("discourse_post_event.upcoming_events_list.block.title"),
-        helpText: i18n(
-          "discourse_post_event.upcoming_events_list.block.title_help"
-        ),
         placeholder: i18n("discourse_post_event.upcoming_events_list.title"),
       },
     },
+    ...frameIconArg({ defaultIcon: "calendar-days" }),
     count: {
       type: "number",
       default: 8,
@@ -78,6 +85,7 @@ const upcomingEventsDataSource = defineBlockDataSource({
         label: i18n(
           "discourse_post_event.upcoming_events_list.block.category_id"
         ),
+        visibleWhen: ({ siteSettings }) => offersCategoryChoice(siteSettings),
       },
     },
     includeSubcategories: {
@@ -88,6 +96,7 @@ const upcomingEventsDataSource = defineBlockDataSource({
         label: i18n(
           "discourse_post_event.upcoming_events_list.block.include_subcategories"
         ),
+        visibleWhen: hasEventsSubcategories,
       },
     },
     timeFormat: {
@@ -102,7 +111,7 @@ const upcomingEventsDataSource = defineBlockDataSource({
         ),
       },
     },
-    ...frameArgs({ defaultIcon: "calendar-days", withLink: true }),
+    ...frameArgs({ withLink: true }),
   },
   previewArgs: { count: 8, upcomingDays: 180 },
   data: {

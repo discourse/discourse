@@ -67,7 +67,6 @@ const gamificationLeaderboardDataSource = defineBlockDataSource({
       default: "",
       ui: {
         label: i18n("gamification.leaderboard.block.title"),
-        helpText: i18n("gamification.leaderboard.block.title_help"),
       },
     },
     titleIcon: {

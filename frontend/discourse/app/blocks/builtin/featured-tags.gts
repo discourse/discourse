@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import type Owner from "@ember/owner";
 import { block, defineBlockDataSource } from "discourse/blocks";
-import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
+import BlockFrame, {
+  frameArgs,
+  frameIconArg,
+} from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import {
   fetchTags,
@@ -64,6 +67,7 @@ interface FeaturedTagsSignature {
       default: "Tags",
       ui: { label: i18n("blocks.builtin.featured_tags.title") },
     },
+    ...frameIconArg({ defaultIcon: "tag" }),
     count: {
       type: "number",
       default: 10,
@@ -84,7 +88,7 @@ interface FeaturedTagsSignature {
         label: i18n("blocks.builtin.featured_tags.sort"),
       },
     },
-    ...frameArgs({ defaultIcon: "tag", withLink: true }),
+    ...frameArgs({ withLink: true }),
   },
   data: {
     source: featuredTagsDataSource,

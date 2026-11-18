@@ -24,7 +24,7 @@ describe "Wireframe designs" do
   it "names the design from the header and keeps renaming the same design" do
     visit("/")
     find(".wireframe-empty-homepage__add").click
-    expect(editor).to have_design_name("Untitled template")
+    expect(editor).to have_design_name("Untitled layout")
 
     editor.rename_design("Spring launch")
     editor.add_block_to_empty_outlet("divider")
@@ -72,7 +72,7 @@ describe "Wireframe designs" do
       )
     end
 
-    visit("/admin/config/customize/templates")
+    visit("/admin/config/customize/layouts")
     expect(page).to have_css(".wireframe-designs__row", count: 2)
     expect(page).to have_css(".wireframe-designs__row", text: "Autumn")
     expect(page).to have_css(".wireframe-designs__status.--active", count: 1)
@@ -103,11 +103,11 @@ describe "Wireframe designs" do
     expect(page).to have_css(".wireframe-pill")
   end
 
-  it "lists templates as a tab with breadcrumbs on the themes and components page" do
+  it "lists layouts as a tab with breadcrumbs on the themes and components page" do
     visit("/admin/config/customize/themes")
     click_link(I18n.t("js.wireframe.admin.designs.tab"))
 
-    expect(page).to have_current_path("/admin/config/customize/templates")
+    expect(page).to have_current_path("/admin/config/customize/layouts")
     expect(page).to have_css(
       ".d-breadcrumbs__item",
       text: I18n.t("js.wireframe.admin.designs.title"),
@@ -120,7 +120,7 @@ describe "Wireframe designs" do
     find(".wireframe-design-title__menu").click
     find(".wireframe-design-switcher__manage").click
 
-    expect(page).to have_current_path("/admin/config/customize/templates")
+    expect(page).to have_current_path("/admin/config/customize/layouts")
     expect(page).to have_css(".wireframe-designs")
     expect(page).to have_no_css(".wireframe-shell")
   end
@@ -153,7 +153,7 @@ describe "Wireframe designs" do
 
     def edit_autumn
       autumn = Theme.find_by(name: "Autumn")
-      visit("/admin/config/customize/templates")
+      visit("/admin/config/customize/layouts")
       within(".wireframe-designs__row[data-design-id='#{autumn.id}']") do
         find(".wireframe-designs__menu").click
       end

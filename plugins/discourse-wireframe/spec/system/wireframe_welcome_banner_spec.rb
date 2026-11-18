@@ -17,7 +17,7 @@ describe "Wireframe welcome banner block" do
     sign_in(admin)
   end
 
-  it "replaces the site's welcome banner on every page once a template places it" do
+  it "replaces the site's welcome banner on the custom homepage only" do
     visit("/latest")
     expect(page).to have_css(".welcome-banner")
 
@@ -33,6 +33,6 @@ describe "Wireframe welcome banner block" do
 
     visit("/latest")
     expect(page).to have_css("#main-outlet")
-    expect(page).to have_no_css(".welcome-banner")
+    expect(page).to have_css(".welcome-banner")
   end
 end

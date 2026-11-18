@@ -182,7 +182,6 @@ body.wireframe-active {
         .wireframe-block-chrome__resize-handle,
         .wireframe-empty-drop-placeholder,
         .wireframe-image-arg-overlay,
-        .wireframe-image-reposition,
         .wireframe-image-resize-overlay
       ) {
       pointer-events: none;
@@ -2417,7 +2416,6 @@ body.wireframe-active {
 
 .wireframe-inspector-form {
   .form-kit__section-title,
-  .wireframe-image-composition__heading,
   .wireframe-image-field__frame legend {
     color: var(--primary);
     font-size: var(--font-0-rem);
@@ -2791,77 +2789,16 @@ body.wireframe-active .wireframe-block-chrome.--media-background {
    the `order:` declarations both cell types emit). */
 
 @container d-block-layout (max-width: 40rem) {
-  .d-block-layout--grid.d-block-layout--collapse-default
-    > .wireframe-grid-cell {
+  .d-block-layout--grid > .wireframe-grid-cell {
     grid-column: 1 / -1;
     grid-row: auto;
-  }
-}
-
-@container d-block-layout (max-width: 15rem) {
-  .d-block-layout--grid.d-block-layout--collapse-compact
-    > .wireframe-grid-cell {
-    grid-column: 1 / -1;
-    grid-row: auto;
-  }
-}
-
-/* "Expand for editing" override — the chrome wrapper carries
-   `--force-expanded` when the author has flipped the toolbar toggle
-   on a `wf:layout`. Restores each cell's per-author grid placement
-   (and each row child's natural flex basis) regardless of canvas
-   width, defeating the universal `@container` collapse rules for
-   that single layout via a more specific selector chain.
-   `overflow-x: auto` lets the author scroll horizontally when the
-   restored grid is wider than the canvas. */
-
-.wireframe-block-chrome-wrapper.--force-expanded {
-  overflow-x: auto;
-
-  .d-block-layout--grid.d-block-layout--collapse-default
-    > .d-block-layout__cell,
-  .d-block-layout--grid.d-block-layout--collapse-compact
-    > .d-block-layout__cell,
-  .d-block-layout--grid.d-block-layout--collapse-default > .wireframe-grid-cell,
-  .d-block-layout--grid.d-block-layout--collapse-compact
-    > .wireframe-grid-cell {
-    grid-column: var(--d-block-cell-column, var(--wf-grid-cell-column, auto));
-    grid-row: var(--d-block-cell-row, var(--wf-grid-cell-row, auto));
-  }
-
-  .d-block-layout--row.d-block-layout--collapse-default > .d-block-layout__flex,
-  .d-block-layout--row.d-block-layout--collapse-compact
-    > .d-block-layout__flex {
-    flex-wrap: var(--d-block-layout-wrap, wrap);
-  }
-
-  .d-block-layout--row.d-block-layout--collapse-default
-    > .d-block-layout__flex
-    > *,
-  .d-block-layout--row.d-block-layout--collapse-compact
-    > .d-block-layout__flex
-    > * {
-    flex-basis: auto;
   }
 }
 
 @container d-block-layout (max-width: 40rem) {
-  .d-block-layout--grid.d-block-layout--collapse-default
-    .wireframe-block-chrome__resize-handle {
+  .d-block-layout--grid .wireframe-block-chrome__resize-handle {
     display: none;
   }
-}
-
-@container d-block-layout (max-width: 15rem) {
-  .d-block-layout--grid.d-block-layout--collapse-compact
-    .wireframe-block-chrome__resize-handle {
-    display: none;
-  }
-}
-
-.wireframe-block-chrome-wrapper.--force-expanded
-  .wireframe-block-chrome__resize-handle {
-  display: block;
 }
 
 .wireframe-block-chrome__resize-handle {
@@ -5310,118 +5247,20 @@ body.wireframe-active--dim-non-editable
     #dialog-holder,
     #dialog-holder *
   ) {
-  opacity: 0.75;
+  opacity: 0.875;
 }
 
-.wireframe-image-reposition {
-  position: absolute;
-  z-index: z("dropdown");
-  pointer-events: auto;
-
-  &__surface {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border: 2px solid var(--tertiary);
-    background: transparent;
-    cursor: move;
-  }
-
-  &__actions {
-    position: absolute;
-    inset-block-start: var(--space-2);
-    inset-inline-end: var(--space-2);
-    display: flex;
-    gap: var(--space-2);
-    padding: var(--space-2);
-    background: var(--secondary);
-    border-radius: var(--d-border-radius);
-  }
-}
+/* The quick-action menu keeps its inline label beside the control. The
+   inspector's composition settings are ordinary sibling fields instead. */
 
 .wireframe-image-composition {
-  --wireframe-image-label-width: 3.125rem;
-  --wireframe-image-control-height: 2rem;
-  --wireframe-image-axis-width: 0.625rem;
-  --wireframe-image-axis-gutter: calc(
-    var(--wireframe-image-axis-width) + var(--space-1)
-  );
-  --wireframe-position-pad-size: calc(
-    2 * var(--wireframe-image-control-height) + var(--space-2)
-  );
-  --wireframe-image-number-width: clamp(
-    4rem,
-    calc(
-      100cqi - var(--wireframe-image-label-width) - var(
-          --wireframe-image-axis-gutter
-        ) - var(--wireframe-position-pad-size) - var(--space-2) - var(--space-1)
-    ),
-    5rem
-  );
-  container-type: inline-size;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-3);
   min-width: 0;
   margin: 0;
   padding: 0;
   border: 0;
 
-  &__heading {
-    width: 100%;
-    margin-block-end: var(--space-3);
-  }
-
-  &__heading-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  &__fit,
-  &__position,
-  &__zoom {
-    display: grid;
-    grid-template-columns: var(--wireframe-image-label-width) minmax(0, 1fr);
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  &__fit > .d-fit-swap {
-    width: min(calc(100% - var(--wireframe-image-axis-gutter)), 10.125rem);
-    margin-inline-start: var(--wireframe-image-axis-gutter);
-  }
-
-  .form-kit__control-input,
-  .form-kit__after-input {
-    height: var(--wireframe-image-control-height);
-    box-sizing: border-box;
-    font-size: var(--font-down-1-rem);
-  }
-
-  .form-kit__after-input {
-    padding-inline: var(--space-1);
-    color: var(--primary-high);
-    font-weight: 400;
-  }
-
-  .form-kit__control-input {
-    appearance: textfield;
-    font-variant-numeric: tabular-nums;
-
-    &::-webkit-inner-spin-button,
-    &::-webkit-outer-spin-button {
-      appearance: none;
-      margin: 0;
-    }
-  }
-
   &.--compact {
-    margin: 0;
+    display: grid;
     gap: var(--space-1);
 
     .wireframe-image-composition__fit {
@@ -5437,92 +5276,6 @@ body.wireframe-active--dim-non-editable
       }
     }
   }
-
-  &__zoom {
-    row-gap: var(--space-2);
-
-    .form-kit__control-input-wrapper {
-      width: var(--wireframe-image-number-width);
-      margin-inline-start: var(--wireframe-image-axis-gutter);
-    }
-
-    input[type="range"] {
-      --wireframe-zoom-track-height: var(--space-2);
-      grid-column: 2;
-      width: calc(100% - var(--wireframe-image-axis-gutter));
-      min-width: 0;
-      margin: 0;
-      margin-inline-start: var(--wireframe-image-axis-gutter);
-      accent-color: var(--tertiary);
-      appearance: none;
-      height: var(--space-4);
-      background: transparent;
-      cursor: pointer;
-
-      &::-webkit-slider-runnable-track {
-        box-sizing: border-box;
-        height: var(--wireframe-zoom-track-height);
-        border: 1px solid var(--primary-low-mid);
-        border-radius: var(--space-4);
-        background: var(--primary-very-low);
-      }
-
-      &::-moz-range-track {
-        box-sizing: border-box;
-        height: var(--wireframe-zoom-track-height);
-        border: 1px solid var(--primary-low-mid);
-        border-radius: var(--space-4);
-        background: var(--primary-very-low);
-      }
-
-      &::-webkit-slider-thumb {
-        appearance: none;
-        box-sizing: border-box;
-        width: var(--space-4);
-        height: var(--space-4);
-        margin-top: calc(
-          (var(--wireframe-zoom-track-height) - var(--space-4)) / 2 - 1px
-        );
-        border: 2px solid var(--secondary);
-        border-radius: 50%;
-        background: var(--tertiary);
-      }
-
-      &::-moz-range-thumb {
-        box-sizing: border-box;
-        width: var(--space-4);
-        height: var(--space-4);
-        border: 2px solid var(--secondary);
-        border-radius: 50%;
-        background: var(--tertiary);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--tertiary);
-        outline-offset: 2px;
-      }
-    }
-  }
-
-  &__actions {
-    display: flex;
-    gap: var(--space-2);
-    flex-wrap: wrap;
-    margin-inline-start: calc(
-      var(--wireframe-image-label-width) + var(--space-2) +
-        var(--wireframe-image-axis-gutter)
-    );
-
-    > .btn {
-      max-width: 100%;
-      white-space: normal;
-      overflow-wrap: anywhere;
-    }
-  }
-
-  &.--compact &__actions {
-    margin-inline-start: 0;
-  }
 }
 
 .wireframe-inspector-form,
@@ -5535,68 +5288,6 @@ body.wireframe-active--dim-non-editable
 
   .d-segmented-control__label:has(:checked) {
     background: var(--secondary);
-  }
-}
-
-@container wireframe-inspector (width < 15rem) {
-  .wireframe-image-composition__actions {
-    margin-inline-start: 0;
-
-    > .btn {
-      width: 100%;
-    }
-  }
-}
-
-@container wireframe-inspector (width < 13.25rem) {
-  .wireframe-image-composition {
-    --wireframe-image-number-width: 5rem;
-
-    &__fit,
-    &__zoom {
-      grid-template-columns: minmax(0, 1fr) auto;
-    }
-
-    &__fit > .d-fit-swap {
-      width: min(100%, 7.5rem);
-      margin-inline-start: 0;
-    }
-
-    &__position {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .wireframe-image-position-picker {
-      width: 100%;
-    }
-
-    &__zoom .form-kit__control-input-wrapper {
-      margin-inline-start: 0;
-    }
-
-    &__zoom input[type="range"] {
-      grid-column: 1 / -1;
-      width: 100%;
-      margin-inline-start: 0;
-    }
-  }
-}
-
-@container wireframe-inspector (width < 10rem) {
-  .wireframe-image-composition {
-    --wireframe-image-number-width: min(
-      5rem,
-      calc(100cqi - var(--wireframe-image-axis-gutter))
-    );
-
-    &__fit,
-    &__zoom {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    &__actions > .btn {
-      padding-inline: var(--space-1);
-    }
   }
 }
 
@@ -5640,21 +5331,11 @@ body.wireframe-active--dim-non-editable
   flex-direction: column;
   gap: var(--space-3);
 
-  > .wireframe-image-composition {
-    margin-block-start: var(--space-3);
-  }
-
-  .wireframe-image-composition__heading,
   &__frame legend {
     width: 100%;
     padding-block-start: var(--space-4);
     border-block-start: 1px solid var(--primary-low);
     margin-block-end: var(--space-4);
-  }
-
-  .wireframe-image-position-picker__coordinates label,
-  .wireframe-image-composition__zoom {
-    font-weight: 400;
   }
 
   &__grid {

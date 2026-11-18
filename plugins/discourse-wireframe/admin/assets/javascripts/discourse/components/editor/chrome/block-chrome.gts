@@ -31,7 +31,6 @@ import EditorEmptyDropPlaceholder from "discourse/plugins/discourse-wireframe/di
 import GridOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/grid-overlay";
 import ImageArgOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-arg-overlay";
 import ImageEditMenu from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-edit-menu";
-import ImageReposition from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-reposition";
 import ImageResizeOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-resize-overlay";
 import InplaceLinkPopover from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-link-popover";
 import { type BlockStatus } from "discourse/plugins/discourse-wireframe/discourse/lib/block-status";
@@ -83,7 +82,6 @@ import type WireframeDragOverlayService from "discourse/plugins/discourse-wirefr
 import type WireframeDragSessionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
 import type WireframeDropAuthorityService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drop-authority";
 import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
-import type WireframeForceExpandService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-force-expand";
 import type WireframeGridPlacementService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-grid-placement";
 import type WireframeImageCompositionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-composition";
 import type WireframeImageUploadService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-upload";
@@ -270,7 +268,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   @service declare wireframeDragSession: WireframeDragSessionService;
   @service declare wireframeDropAuthority: WireframeDropAuthorityService;
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
-  @service declare wireframeForceExpand: WireframeForceExpandService;
   @service declare wireframeGridPlacement: WireframeGridPlacementService;
   @service declare wireframeImageComposition: WireframeImageCompositionService;
   @service declare wireframeImageUpload: WireframeImageUploadService;
@@ -446,16 +443,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     return this.pendingBackgroundFile ?? undefined;
   }
 
-  get emptyBackgroundArgName(): string | undefined {
-    if (!this.emptyHost) {
-      return undefined;
-    }
-    const passiveName = this.#passiveImageArgName();
-    return this.imageArgEntries.find(
-      (entry) => entry.name === passiveName && entry.isEmpty
-    )?.name;
-  }
-
   get emptyHost(): HTMLElement | null {
     const host = this.chromeEl?.querySelector<HTMLElement>(
       "[data-wf-empty-host]"
@@ -584,21 +571,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     )?.entry;
     const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
     return mode === "grid" || mode === "free-grid";
-  }
-
-  /**
-   * `true` when this chrome wraps a `wf:layout` whose key is in the
-   * editor service's force-expand set. The wrapper's `--force-expanded`
-   * modifier defeats the universal `@container` collapse rule so the
-   * author can edit the full multi-column structure even when the
-   * canvas is narrow enough to trigger collapse on the live page.
-   *
-   */
-  get isForceExpanded() {
-    return (
-      this.args.blockName === "layout" &&
-      this.wireframeForceExpand.isForceExpanded(this.args.blockKey)
-    );
   }
 
   /**
@@ -1024,29 +996,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     return (
       this.imageArgEntries.find((e) => e.def?.allowResize === true) ?? null
     );
-  }
-
-  get repositionTarget() {
-    const session = this.wireframeImageComposition;
-    return session.repositioning &&
-      session.target?.blockKey === this.args.blockKey
-      ? session.target
-      : null;
-  }
-
-  get repositionFrame() {
-    const name = this.repositionTarget?.argName;
-    const marker =
-      name &&
-      this.chromeEl?.querySelector<HTMLElement>(
-        `[data-block-arg="${CSS.escape(name)}"]`
-      );
-    return marker instanceof HTMLElement &&
-      marker.matches(".d-block-image-frame")
-      ? marker
-      : marker instanceof HTMLElement
-        ? marker.querySelector<HTMLElement>(".d-block-image-frame")
-        : null;
   }
 
   get imageIsResized() {
@@ -1504,18 +1453,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   @action
   selectSelf(): void {
     this.#selectThisBlock();
-  }
-
-  @action
-  addBackgroundImage(file: File): void {
-    const argName = this.emptyBackgroundArgName;
-    if (!argName) {
-      return;
-    }
-    void this.wireframeImageUpload.uploadImageForArg(file, {
-      blockKey: this.args.blockKey,
-      argName,
-    });
   }
 
   /**
@@ -2155,7 +2092,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
           (if @isGhost "--ghost")
           (if @isError "--error")
           (if (eq this.parentLayoutAxis "horizontal") "--axis-horizontal")
-          (if this.isForceExpanded "--force-expanded")
         }}
         data-block-layout-item={{@blockName}}
         style={{@style}}
@@ -2281,16 +2217,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             `image-arg-overlay.gts`): an in-place "add image" affordance
             when empty, an invisible drop-to-replace target when filled.
             Keyed on emptiness so a fill / clear remounts the overlay. }}
-          {{#if this.repositionTarget}}
-            {{#if this.repositionFrame}}
-              <ImageReposition
-                @chrome={{this.chromeEl}}
-                @frame={{this.repositionFrame}}
-                @target={{this.repositionTarget}}
-              />
-            {{/if}}
-          {{/if}}
-
           {{#each this.imageArgEntries key="key" as |imageArg|}}
             <ImageArgOverlay
               @argDef={{imageArg.def}}
@@ -2354,16 +2280,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
             {{#if this.emptyHost}}
               {{#in-element this.emptyHost insertBefore=null}}
                 <EditorEmptyDropPlaceholder
-                  @backgroundHint={{i18n
-                    "wireframe.canvas.add_background_image"
-                  }}
                   @groupActions={{true}}
                   @hint={{this.emptyActionHint}}
                   @onActivate={{this.selectSelf}}
-                  @onAddBackground={{if
-                    this.emptyBackgroundArgName
-                    this.addBackgroundImage
-                  }}
                   @onPick={{this.pickBlockForContainer}}
                   @palette={{this.palette}}
                   @targetOutletName={{@outletName}}

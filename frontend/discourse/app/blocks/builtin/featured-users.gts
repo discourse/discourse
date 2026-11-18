@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import type Owner from "@ember/owner";
 import { block, defineBlockDataSource } from "discourse/blocks";
-import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
+import BlockFrame, {
+  frameArgs,
+  frameIconArg,
+} from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import {
   fetchUsers,
@@ -76,6 +79,7 @@ interface FeaturedUsersSignature {
       default: "Top contributors",
       ui: { label: i18n("blocks.builtin.featured_users.title") },
     },
+    ...frameIconArg({ defaultIcon: "users" }),
     count: {
       type: "number",
       default: 5,
@@ -105,7 +109,7 @@ interface FeaturedUsersSignature {
         label: i18n("blocks.builtin.featured_users.order"),
       },
     },
-    ...frameArgs({ defaultIcon: "users", withLink: true }),
+    ...frameArgs({ withLink: true }),
   },
   data: {
     source: featuredUsersDataSource,

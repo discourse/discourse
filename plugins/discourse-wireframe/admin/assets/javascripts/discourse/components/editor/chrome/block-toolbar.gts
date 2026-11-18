@@ -32,7 +32,6 @@ import WireframeDragSessionService, {
   type BlockDragPayload,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
 import type WireframeEntryConfigService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-entry-config";
-import type WireframeForceExpandService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-force-expand";
 import WireframeInplaceTextService, {
   type InplaceTextController,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-text";
@@ -298,7 +297,6 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
   @service declare wireframeEntryConfig: WireframeEntryConfigService;
 
   /** Owns per-block edit-presentation overrides. */
-  @service declare wireframeForceExpand: WireframeForceExpandService;
 
   /** Coordinates the active in-place text editor. */
   @service declare wireframeInplaceText: WireframeInplaceTextService;
@@ -368,31 +366,6 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
     return this.isHorizontalMove
       ? "wireframe.canvas.toolbar.move_right"
       : "wireframe.canvas.toolbar.move_down";
-  }
-
-  /**
-   * `true` when the menu should expose the "expand for editing"
-   * toggle. Shown for `wf:layout` blocks whose `autoCollapse` isn't
-   * `"never"` — i.e. the layout could actually collapse at narrow
-   * widths, so an override has something to override.
-   */
-  get canForceExpand(): boolean {
-    void this.wireframeLayoutSignal.version;
-    const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
-      this.args.blockKey
-    );
-    const entry = located?.entry;
-    if (entry?.block !== "layout") {
-      return false;
-    }
-    return (entry.args?.autoCollapse ?? "default") !== "never";
-  }
-
-  /**
-   * Mirrors the editor service's force-expand state for this block.
-   */
-  get isForceExpanded(): boolean {
-    return this.wireframeForceExpand.isForceExpanded(this.args.blockKey);
   }
 
   /**
@@ -612,8 +585,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * is `{ id, group, icon, title, action, disabled?, active?, danger? }`;
    * `separatorBefore` is computed from `group` transitions so the menu shows
    * a divider between groups. Outlet roots and parts omit the structural
-   * actions (move/duplicate/detach/delete), leaving only whatever applies (e.g.
-   * the force-expand toggle on a layout).
+   * actions (move/duplicate/detach/delete), leaving only whatever applies.
    */
   @cached
   get actionItems(): ToolbarActionItem[] {
@@ -662,21 +634,6 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
           action: this.detach,
         });
       }
-    }
-
-    if (this.canForceExpand) {
-      items.push({
-        id: "force-expand",
-        group: "layout",
-        icon: this.isForceExpanded
-          ? "down-left-and-up-right-to-center"
-          : "up-right-and-down-left-from-center",
-        title: this.isForceExpanded
-          ? "wireframe.canvas.toolbar.collapse_for_preview"
-          : "wireframe.canvas.toolbar.expand_for_editing",
-        active: this.isForceExpanded,
-        action: this.toggleForceExpand,
-      });
     }
 
     if (this.args.onEditImage) {
@@ -742,12 +699,6 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
     }
     const found = findEntrySiblings(layout, this.args.blockKey);
     return found ? { index: found.index, count: found.siblings.length } : null;
-  }
-
-  /** Toggles edit-presentation expansion for the represented block. */
-  @action
-  toggleForceExpand(): void {
-    this.wireframeForceExpand.toggleForceExpand(this.args.blockKey);
   }
 
   /** Moves the represented block toward its earlier sibling. */

@@ -23,7 +23,6 @@ import dDragAndDropExternalTarget, {
   type ExternalDropTargetEvent,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
-import ImageCompositionControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-composition-controls";
 import {
   type ImageArgValue,
   isImageArgValue,
@@ -103,8 +102,6 @@ interface InspectorImageFieldSignature {
     custom: ImageFieldData;
     /** Explicit block identity; the inspector adapter supplies it. */
     blockKey?: string;
-    /** Closes a floating editor when adjustment moves to the canvas. */
-    onReposition?: () => void;
     /** Canonical image argument schema. */
     schema?: ArgSchema;
   };
@@ -868,16 +865,6 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
             {{/if}}
           </div>
         </ImageSource>
-      {{/if}}
-
-      {{#if @schema.allowComposition}}
-        {{#if this.lightVariant.url}}
-          <ImageCompositionControls
-            @onReposition={{@onReposition}}
-            @target={{this.target}}
-            @value={{this.liveValue}}
-          />
-        {{/if}}
       {{/if}}
 
       {{#if (and this.lightVariant.url this.gridOwnsSize)}}

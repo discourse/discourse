@@ -396,8 +396,11 @@ module(
           "even a populated dark chooser starts collapsed"
         );
       assert
-        .dom(".wireframe-image-field__dark + .wireframe-image-composition")
-        .exists("dark source is adjacent to default, before composition");
+        .dom(".wireframe-image-composition__fit")
+        .exists("fit is a field of its own");
+      assert
+        .dom(".wireframe-image-field .wireframe-image-composition__fit")
+        .doesNotExist("composition fields are not inside the image field");
       await click(".wireframe-image-field__variant summary");
       assert
         .dom(".wireframe-image-field__variant")

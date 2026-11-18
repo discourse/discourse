@@ -368,11 +368,6 @@ Latest acceptance continuation:
 
 - The complete block-layout request suite passes 20/20 (seed 8186), including
   the new Card export/import round-trip and surrounding publish/export endpoints.
-- A reversed Row test passes after expanding identity/body text, doubling text
-  size and changing spacing tokens, in both LTR and RTL. Restoring the original
-  content releases the extra height. Disabling Card alignment makes its seam
-  assertion fail, so natural stretch alone does not satisfy the oracle. This
-  adds evidence for those transitions, not asynchronous font/image loading.
 - The narrow theme matrix is fully reviewed at its original scroll positions.
   The additional lower-reference run passed (5 examples, seed 7510), and all 32
   PNGs were opened. Museum stories, final Meta Above/Below cards, HubSpot
@@ -380,7 +375,7 @@ Latest acceptance continuation:
   Complete UNBOUND highlights and stress-case bottoms still need their own
   positions. Per-shot boundaries are recorded in the visual review.
 - The complete Card/Section/Layout file passes 37/37 (seed dx31jCpX), including
-  the reversed Row invalidation and release test. Changed-file lint passed for
+  the invalidation and release tests. Changed-file lint passed for
   that test and the lower-reference system test/page object.
 - A real Tab/Enter flow reaches the body link, visible primary, secondary and
   next whole-card-only link in order, each once. It follows each destination and

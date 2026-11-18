@@ -18,10 +18,6 @@
     font-size: 1.5rem;
   }
 
-  &__link {
-    flex-shrink: 0;
-  }
-
   &__loading {
     min-height: 8rem;
     display: flex;
@@ -98,21 +94,17 @@
   }
 
   &__footer {
-    margin-top: 0.5rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--primary-low);
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    font-size: var(--font-down-1);
   }
 
   &__all-link {
-    color: var(--d-link-color);
-    font-weight: 700;
-    text-decoration: none;
+    color: var(--primary-high);
 
     &:hover,
     &:focus-visible {
-      text-decoration: underline;
+      color: var(--primary);
     }
   }
 }

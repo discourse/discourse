@@ -150,7 +150,7 @@ module(
         (element) => element.textContent.trim()
       );
       assert.true(
-        names.includes("Row"),
+        names.includes("Columns"),
         "the layout row uses its palette name"
       );
       assert.false(

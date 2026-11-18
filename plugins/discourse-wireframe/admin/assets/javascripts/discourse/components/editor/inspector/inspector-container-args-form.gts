@@ -114,7 +114,11 @@ export default class InspectorContainerArgsForm extends Component {
       if (conditional && !isFieldVisible({ conditional }, this.parentArgs)) {
         continue;
       }
-      const fields = schemaToFields(def.properties ?? {});
+      // A child's width in a Columns parent is edited in its own "Layout"
+      // group (see `InspectorForm`), so it isn't repeated here.
+      const fields = schemaToFields(def.properties ?? {}).filter(
+        (field) => !(namespace === "row" && field.name === "width")
+      );
       if (fields.length === 0) {
         continue;
       }

@@ -41,6 +41,7 @@
   flex-wrap: var(--d-block-layout-wrap, wrap);
   gap: var(--d-block-layout-gap, 1rem);
   align-items: var(--d-block-layout-align, stretch);
+  align-content: var(--d-block-layout-align-content, stretch);
   justify-content: var(--d-block-layout-justify-content, start);
 }
 
@@ -98,22 +99,10 @@
    of full-width cells: the same visual effect as a real
    `display: flex; flex-direction: column`.
 
-   Two threshold variants driven by the `autoCollapse` arg on the block
-   (which emits the `--collapse-{value}` class):
-   - `--collapse-default` collapses below 40rem (core's `sm`
-     breakpoint, see `app/assets/stylesheets/lib/viewport.scss`).
-     Cards, paragraphs, media — typical content.
-   - `--collapse-compact` collapses below 15rem (~240px). Dense content
-     (icon rows, small buttons, compact links) that should stay
-     multi-column at all typical phone widths and only collapse in
-     genuinely tiny contexts (watch faces, very narrow side panels).
-     15rem is well below the narrowest modern phones (iPhone SE =
-     23.4rem).
-   - `--collapse-never` has no matching `@container` rule — the layout
-     keeps its columns at every width.
-   Both thresholds are hardcoded literals: `@container` condition
-   expressions can't read `var()` or SCSS interpolation, so each variant
-   needs its own block.
+   Layouts collapse below 40rem (core's `sm` breakpoint, see
+   `app/assets/stylesheets/lib/viewport.scss`). Themes that want a different
+   threshold, or none, override these rules in CSS. The threshold is a literal
+   because `@container` conditions can't read `var()` or SCSS interpolation.
 
    Row mode: each child takes 100% width to stack, which only works if the
    flex wrapper wraps. Because the author can set `nowrap`, the collapse must
@@ -123,39 +112,16 @@
    `nowrap` setting at narrow widths. */
 
 @container d-block-layout (max-width: 40rem) {
-  .d-block-layout--grid.d-block-layout--collapse-default
-    > .d-block-layout__cell {
+  .d-block-layout--grid > .d-block-layout__cell {
     grid-column: 1 / -1;
     grid-row: auto;
   }
 
-  .d-block-layout--row.d-block-layout--collapse-default
-    > .d-block-layout__flex {
+  .d-block-layout--row > .d-block-layout__flex {
     flex-wrap: wrap;
   }
 
-  .d-block-layout--row.d-block-layout--collapse-default
-    > .d-block-layout__flex
-    > * {
-    flex-basis: 100%;
-  }
-}
-
-@container d-block-layout (max-width: 15rem) {
-  .d-block-layout--grid.d-block-layout--collapse-compact
-    > .d-block-layout__cell {
-    grid-column: 1 / -1;
-    grid-row: auto;
-  }
-
-  .d-block-layout--row.d-block-layout--collapse-compact
-    > .d-block-layout__flex {
-    flex-wrap: wrap;
-  }
-
-  .d-block-layout--row.d-block-layout--collapse-compact
-    > .d-block-layout__flex
-    > * {
+  .d-block-layout--row > .d-block-layout__flex > * {
     flex-basis: 100%;
   }
 }

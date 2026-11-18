@@ -137,8 +137,8 @@ module(
           label: element.getAttribute("aria-label"),
         })),
         [
-          { id: "layout:stack", label: "Stack" },
-          { id: "layout:row", label: "Row" },
+          { id: "layout:stack", label: "Rows" },
+          { id: "layout:row", label: "Columns" },
           { id: "layout:grid", label: "Grid" },
         ],
         "the three creation intents share one underlying block"
@@ -198,8 +198,8 @@ module(
       ].map((el) => el.textContent.trim());
       assert.deepEqual(
         headers,
-        ["Community", "Cards & actions", "Text", "Media", "Layout"],
-        "community first, layout last, no invented group"
+        ["Community", "Cards & actions", "Text", "Media", "Arrangement"],
+        "community first, arrangement last, no invented group"
       );
     });
 

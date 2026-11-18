@@ -20,7 +20,6 @@ en:
           leaderboard_id_help: "Leave blank to use the default leaderboard."
           count: "Users to show"
           title: "Title override"
-          title_help: "Leave blank to use the leaderboard's name."
           title_icon: "Title icon"
           period: "Time period"
           period_help: "Leave blank for all-time."

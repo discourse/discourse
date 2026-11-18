@@ -21,7 +21,6 @@ import {
   removeEntry,
   replaceEntryInPlace,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
-import { isReversedFlexLayout } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/reversed-flex";
 import type WireframeBlockRevealService from "./wireframe-block-reveal";
 import type WireframeDropAuthorityService from "./wireframe-drop-authority";
 import type WireframeLayoutQueryService from "./wireframe-layout-query";
@@ -660,19 +659,13 @@ export default class WireframeBlockMutationsService extends Service {
    * Looks up the selected entry's siblings and computes a `moveBlock` call
    * against the previous / next sibling in the direction the author SEES.
    *
-   * A reversed flex parent (stack / row with `reverse`) renders its children
-   * in reverse, so a visual "up" is a move toward a LATER persisted index (and
-   * vice versa). The visual direction is mapped to the persisted one before
-   * picking the target sibling, so the buttons always move the block the way
-   * the author expects on screen.
-   *
    * Returns `false` (no-op) when the block is already first / last (visually)
    * in its parent, when no block is selected, or when the move is rejected.
    *
    * @param blockKey - Composite key of the block to move.
    * @param visualDirection - Direction the author expects on screen.
    */
-  #moveBlockSibling(blockKey: string, visualDirection: "up" | "down"): boolean {
+  #moveBlockSibling(blockKey: string, direction: "up" | "down"): boolean {
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;
@@ -687,14 +680,8 @@ export default class WireframeBlockMutationsService extends Service {
     if (!sibs) {
       return false;
     }
-    const reversed = isReversedFlexLayout(
-      this.wireframeLayoutQuery.findEntryParent(blockKey)?.args
-    );
-    const goEarlier = reversed
-      ? visualDirection === "down"
-      : visualDirection === "up";
 
-    if (goEarlier) {
+    if (direction === "up") {
       if (sibs.index === 0) {
         return false;
       }

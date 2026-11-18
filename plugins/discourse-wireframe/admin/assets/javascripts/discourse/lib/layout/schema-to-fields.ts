@@ -36,6 +36,7 @@ import type {
   ArgUiConditional,
   ArgUiConditionalLeaf,
   ArgUiGroup,
+  ArgUiVisibilityContext,
 } from "discourse/blocks/types";
 
 /** A field rendered by the block-argument inspector. */
@@ -54,6 +55,8 @@ export interface InspectorField {
   name: string;
   /** A predicate controlling field visibility. */
   conditional: ArgUiConditional | null;
+  /** A runtime predicate over site data controlling field visibility. */
+  visibleWhen: ((context: ArgUiVisibilityContext) => boolean) | null;
   /** Icon IDs keyed by enum value. */
   optionIcons: Record<string, string> | null;
   /** Display labels keyed by enum value. */
@@ -205,6 +208,7 @@ export function schemaToFields(
       optionIcons: ui.optionIcons ?? null,
       optionLabels: ui.optionLabels ?? null,
       conditional: ui.conditional ?? null,
+      visibleWhen: ui.visibleWhen ?? null,
       schema: argDef,
     });
   }
@@ -337,17 +341,28 @@ export function buildValidationRule(field: {
  * Evaluates a field's `conditional` predicate against the current arg
  * values. Returns `true` (visible) when no predicate is set.
  *
+ * Also honours a `visibleWhen` predicate when `siteData` is supplied.
+ *
  * @param field - The inspector field whose predicate should be evaluated.
  * @param values - Current argument values keyed by argument name.
+ * @param siteData - Site settings and site data for `visibleWhen` predicates.
  * @returns Whether the field should be visible.
  */
 export function isFieldVisible(
   field: {
     /** The predicate controlling field visibility. */
     conditional?: ArgUiConditional | null;
+    /** A runtime predicate over site data controlling field visibility. */
+    visibleWhen?: ((context: ArgUiVisibilityContext) => boolean) | null;
   },
-  values: Record<string, unknown> | null | undefined
+  values: Record<string, unknown> | null | undefined,
+  siteData?: Pick<ArgUiVisibilityContext, "siteSettings" | "site">
 ): boolean {
+  if (field.visibleWhen && siteData) {
+    if (!field.visibleWhen({ args: values ?? {}, ...siteData })) {
+      return false;
+    }
+  }
   const predicate = field.conditional;
   if (!predicate) {
     return true;

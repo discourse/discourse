@@ -211,7 +211,7 @@ module(
         toolbar
           ?.querySelector(".wireframe-block-toolbar__name")
           ?.textContent.trim(),
-        "Stack",
+        "Rows",
         "the strip reads the effective layout variant"
       );
       assert.strictEqual(

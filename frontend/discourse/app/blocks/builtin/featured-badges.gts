@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
 import { block, defineBlockDataSource } from "discourse/blocks";
-import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
+import BlockFrame, {
+  frameArgs,
+  frameIconArg,
+} from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import {
   type BadgeGrant,
@@ -63,6 +66,7 @@ interface FeaturedBadgesSignature {
       default: "Recently awarded badges",
       ui: { label: i18n("blocks.builtin.featured_badges.title") },
     },
+    ...frameIconArg({ defaultIcon: "certificate" }),
     badges: {
       type: "string",
       default: "",
@@ -92,7 +96,7 @@ interface FeaturedBadgesSignature {
         label: i18n("blocks.builtin.featured_badges.count"),
       },
     },
-    ...frameArgs({ defaultIcon: "certificate", withLink: true }),
+    ...frameArgs({ withLink: true }),
   },
   data: {
     source: featuredBadgesDataSource,

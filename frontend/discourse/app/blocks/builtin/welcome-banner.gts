@@ -74,8 +74,8 @@ interface WelcomeBannerSignature {
 /**
  * The welcome banner as a block: a greeting for the viewer, an optional search
  * input and an optional background image. Text left blank falls back to the
- * welcome banner's translations. A layout that places this block replaces the
- * setting-driven welcome banner across the site.
+ * welcome banner's translations. A custom homepage layout that places this
+ * block replaces the setting-driven welcome banner on that page.
  */
 @block(WELCOME_BANNER_BLOCK, {
   thumbnail: () => import("discourse/blocks/thumbnails/welcome-banner"),

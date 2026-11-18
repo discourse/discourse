@@ -2,6 +2,6 @@ export default {
   resource: "admin.adminConfig.customize",
 
   map() {
-    this.route("templates");
+    this.route("layouts");
   },
 };

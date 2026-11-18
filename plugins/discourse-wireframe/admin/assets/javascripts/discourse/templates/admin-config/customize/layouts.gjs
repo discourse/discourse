@@ -5,7 +5,7 @@ import DesignsList from "discourse/plugins/discourse-wireframe/discourse/compone
 export default <template>
   <DBreadcrumbsItem
     @label={{i18n "wireframe.admin.designs.title"}}
-    @path="/admin/config/customize/templates"
+    @path="/admin/config/customize/layouts"
   />
 
   <DesignsList @designs={{@model}} />

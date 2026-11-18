@@ -54,6 +54,14 @@ interface NewTopicButtonSignature {
         label: i18n("blocks.builtin.new_topic_button.label"),
       },
     },
+    icon: {
+      type: "string",
+      pattern: ICON_NAME_PATTERN,
+      ui: {
+        control: "icon",
+        label: i18n("blocks.builtin.new_topic_button.icon"),
+      },
+    },
     categoryId: {
       type: "number",
       ui: {
@@ -85,14 +93,6 @@ interface NewTopicButtonSignature {
       ui: {
         control: "radio-group",
         label: i18n("blocks.builtin.new_topic_button.variant"),
-      },
-    },
-    icon: {
-      type: "string",
-      pattern: ICON_NAME_PATTERN,
-      ui: {
-        control: "icon",
-        label: i18n("blocks.builtin.new_topic_button.icon"),
       },
     },
   },

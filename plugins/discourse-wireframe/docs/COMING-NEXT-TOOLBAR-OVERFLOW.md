@@ -9,7 +9,7 @@ It carries two things:
 1. **Handle / identity** (always rendered): grip icon + block display name +
    optional ordinal chip ("Tab 2"). Also the drag source.
 2. **Action buttons** (only when `@isSelected`): move back/forward, duplicate
-   (+ count combo), optional detach, optional force-expand, inline-format
+   (+ count combo), optional detach, inline-format
    (bold / italic / link), delete.
 
 The bar is `display: inline-flex` with **no width cap**, so on a narrow block

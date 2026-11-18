@@ -159,12 +159,14 @@ module(
       );
     });
 
-    test("stands down while a layout places the welcome banner block", async function (assert) {
+    test("stands down on the custom homepage while its layout places the welcome banner block", async function (assert) {
       withPluginApi((api) =>
         api.renderBlocks("homepage-blocks", [
           { block: "layout", children: [{ block: WelcomeBannerBlock }] },
         ])
       );
+      this.siteSettings.welcome_banner_page_visibility = "all_pages";
+      this.owner.lookup("service:router").currentRouteName = "discovery.custom";
       await render(<template><WelcomeBanner /></template>);
       assert
         .dom(".welcome-banner")
@@ -175,6 +177,32 @@ module(
       assert
         .dom(".welcome-banner")
         .exists("it comes back once no layout places the block");
+    });
+
+    test("stays on other pages even when the homepage layout places the welcome banner block", async function (assert) {
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [
+          { block: "layout", children: [{ block: WelcomeBannerBlock }] },
+        ])
+      );
+      await render(<template><WelcomeBanner /></template>);
+      assert
+        .dom(".welcome-banner")
+        .exists("other routes keep the setting-driven banner");
+    });
+
+    test("stays on the custom homepage when a different outlet places the welcome banner block", async function (assert) {
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          { block: "layout", children: [{ block: WelcomeBannerBlock }] },
+        ])
+      );
+      this.siteSettings.welcome_banner_page_visibility = "all_pages";
+      this.owner.lookup("service:router").currentRouteName = "discovery.custom";
+      await render(<template><WelcomeBanner /></template>);
+      assert
+        .dom(".welcome-banner")
+        .exists("only the homepage layout replaces the banner");
     });
 
     test("uses the welcome_banner.search_placeholder translation for placeholder", async function (assert) {

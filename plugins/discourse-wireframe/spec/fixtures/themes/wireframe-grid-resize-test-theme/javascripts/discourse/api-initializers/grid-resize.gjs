@@ -11,7 +11,6 @@ export default apiInitializer((api) => {
         columns: 3,
         rows: 3,
         rowHeight: "120px",
-        autoCollapse: "never",
       },
       children: [
         {

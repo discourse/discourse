@@ -214,7 +214,6 @@ export default class ImageEditMenu extends Component<ImageEditMenuSignature> {
         {{#if this.value}}
           <ImageCompositionControls
             @compact={{true}}
-            @onReposition={{@data.close}}
             @target={{@data}}
             @value={{this.value}}
           />

@@ -317,7 +317,7 @@ module(
 
         assert.strictEqual(
           query.lookupEntryDisplayName({ block: "layout", args: {} }),
-          "Stack",
+          "Rows",
           "the schema default identifies an entry with no explicit mode"
         );
         assert.strictEqual(
@@ -325,7 +325,7 @@ module(
             block: "layout",
             args: { mode: "row" },
           }),
-          "Row"
+          "Columns"
         );
         assert.strictEqual(
           query.lookupEntryDisplayName({

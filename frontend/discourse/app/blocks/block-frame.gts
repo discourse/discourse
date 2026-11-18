@@ -21,24 +21,47 @@ export type FrameStyle = (typeof FRAME_STYLES)[number];
 const FRAMED_STYLES: readonly FrameStyle[] = ["panel", "heading"];
 
 /**
+ * The panel header icon arg. A block spreads it into its schema right after its
+ * title so the inspector lists it there; it only applies to the panel style.
+ *
+ * @param options - How the block uses the frame.
+ * @returns Arg schema entry keyed by arg name.
+ */
+export function frameIconArg({
+  defaultIcon,
+}: {
+  /** Icon the panel header shows until changed. */
+  defaultIcon: string;
+}): Record<string, ArgSchema> {
+  return {
+    icon: {
+      type: "string",
+      default: defaultIcon,
+      pattern: ICON_NAME_PATTERN,
+      ui: {
+        control: "icon",
+        label: i18n("blocks.frame.icon"),
+        conditional: { arg: "frameStyle", equals: "panel" },
+      },
+    },
+  };
+}
+
+/**
  * The args a block spreads into its schema to offer the frame styles.
  *
  * @param options - How the block uses the frame.
  * @returns Arg schema entries keyed by arg name.
  */
 export function frameArgs({
-  defaultIcon,
   withLink = false,
 }: {
-  /** Icon the panel header shows until changed. */
-  defaultIcon: string;
   /**
    * Also declare `linkLabel` / `linkHref`, for blocks that don't have a link
    * of their own. They only apply when framed.
    */
   withLink?: boolean;
-}): Record<string, ArgSchema> {
-  const group = i18n("blocks.frame.group");
+} = {}): Record<string, ArgSchema> {
   const args: Record<string, ArgSchema> = {
     frameStyle: {
       type: "string",
@@ -46,7 +69,7 @@ export function frameArgs({
       enum: [...FRAME_STYLES],
       ui: {
         control: "segmented",
-        group,
+        group: i18n("blocks.frame.group"),
         label: i18n("blocks.frame.style"),
         optionLabels: {
           plain: i18n("blocks.frame.styles.plain"),
@@ -55,24 +78,12 @@ export function frameArgs({
         },
       },
     },
-    icon: {
-      type: "string",
-      default: defaultIcon,
-      pattern: ICON_NAME_PATTERN,
-      ui: {
-        control: "icon",
-        group,
-        label: i18n("blocks.frame.icon"),
-        conditional: { arg: "frameStyle", equals: "panel" },
-      },
-    },
   };
 
   if (withLink) {
     args.linkLabel = {
       type: "string",
       ui: {
-        group,
         label: i18n("blocks.frame.link_label"),
         placeholder: i18n("blocks.frame.show_all"),
         conditional: { arg: "frameStyle", oneOf: FRAMED_STYLES },
@@ -83,7 +94,6 @@ export function frameArgs({
       pattern: URL_PATTERN,
       ui: {
         control: "url",
-        group,
         label: i18n("blocks.frame.link_href"),
         conditional: { arg: "frameStyle", oneOf: FRAMED_STYLES },
       },

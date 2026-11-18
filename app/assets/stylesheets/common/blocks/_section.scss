@@ -102,13 +102,3 @@
 .d-block-section.--gap-large .d-block-section__content {
   gap: var(--space-8);
 }
-
-.d-block-section.--width-wide .d-block-section__content {
-  max-width: 64rem;
-  margin-inline: auto;
-}
-
-.d-block-section.--width-narrow .d-block-section__content {
-  max-width: 40rem;
-  margin-inline: auto;
-}

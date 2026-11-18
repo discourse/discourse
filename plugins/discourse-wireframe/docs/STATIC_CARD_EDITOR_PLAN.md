@@ -302,7 +302,7 @@ focus or other planned interaction coverage.
 
 Reader and active editor fixtures must cover approximately 220/320/480/800px
 allocated Card widths, 3→2+1→1 wrapping, unequal-width column spans, tall row
-spans, overlap, nested Layout/Section, non-stretch, reverse Row, RTL and a narrow
+spans, overlap, nested Layout/Section, non-stretch, RTL and a narrow
 sidebar on a wide viewport. Inspector checks use its actual minimum/default/wide
 widths, not only Card widths.
 

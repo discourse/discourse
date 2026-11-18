@@ -194,14 +194,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       id: "community-story",
       classNames: "featured-story",
       conditions: [{ type: "user", loggedIn: true }],
-      containerArgs: { stack: { alignSelf: "stretch", flexGrow: 0 } },
+      containerArgs: { row: { flexGrow: 0 } },
     };
     await _renderBlocks(
       "homepage-blocks",
       [
         {
           block: Layout,
-          args: { mode: "stack" },
+          args: { mode: "row" },
           children: [{ block: Card, args, ...metadata }],
         },
       ],

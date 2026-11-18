@@ -254,20 +254,7 @@ describe "Edit wireframe cards" do
     expect(cards).to have_speaker_image_position(:portrait, x: 70, y: 30)
     expect(cards).to have_speaker_image_position(:feature, x: 25, y: 75)
 
-    cards.reposition_speaker_image(:portrait)
-    expect(image_editor).to have_adjustment
-    image_editor.nudge(:right)
-    expect(cards).to have_speaker_image_position(:portrait, x: 71, y: 30)
-    image_editor.nudge(:escape)
-    expect(image_editor).to have_no_adjustment
-    expect(cards).to have_focused_reposition(:portrait)
-    expect(cards).to have_speaker_image_position(:portrait, x: 70, y: 30)
-    expect(cards).to have_speaker_image_position(:feature, x: 25, y: 75)
-
-    cards.reposition_speaker_image(:feature)
-    image_editor.nudge(:left)
-    image_editor.finish_adjustment
-    expect(image_editor).to have_no_adjustment
+    cards.position_speaker_image(:feature, x: 24, y: 75)
     expect(cards).to have_speaker_image_position(:feature, x: 24, y: 75)
     image_editor.undo
     expect(cards).to have_speaker_image_position(:feature, x: 25, y: 75)

@@ -42,19 +42,19 @@ module(
         api.renderBlocks(OUTLET, [
           {
             block: Layout,
-            args: { mode: "row", autoCollapse: "never" },
+            args: { mode: "row", align: "start" },
             children: [
               {
                 block: Card,
                 id: "fixed-card",
                 args: { title: "Fixed" },
-                containerArgs: { row: { flexGrow: 0, alignSelf: "start" } },
+                containerArgs: { row: { flexGrow: 0 } },
               },
               {
                 block: Card,
                 id: "growing-card",
                 args: { title: "Growing", body: "More text. ".repeat(20) },
-                containerArgs: { row: { flexGrow: 2, alignSelf: "stretch" } },
+                containerArgs: { row: { flexGrow: 2 } },
               },
             ],
           },
@@ -90,19 +90,9 @@ module(
           `${mode}: explicit zero growth is retained`
         );
         assert.strictEqual(
-          getComputedStyle(allocations[0]).alignSelf,
-          "start",
-          `${mode}: the first Card remains non-stretched`
-        );
-        assert.strictEqual(
           getComputedStyle(allocations[1]).flexGrow,
           "2",
           `${mode}: explicit positive growth is retained`
-        );
-        assert.strictEqual(
-          getComputedStyle(allocations[1]).alignSelf,
-          "stretch",
-          `${mode}: the second Card remains stretched`
         );
         const fixed = allocations[0].getBoundingClientRect();
         const growing = allocations[1].getBoundingClientRect();
@@ -194,7 +184,6 @@ module(
                   mode: "grid",
                   columns: 3,
                   rows: 1,
-                  autoCollapse: "never",
                 },
                 children: [
                   {

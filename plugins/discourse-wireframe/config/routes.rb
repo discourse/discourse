@@ -3,7 +3,7 @@
 DiscourseWireframe::Engine.routes.draw do
   # The admin Layouts tab: a direct load renders the app shell, the tab fetches
   # its list as JSON.
-  get "/admin/config/customize/templates" => "block_layout_companions#index",
+  get "/admin/config/customize/layouts" => "block_layout_companions#index",
       :constraints => AdminConstraint.new
   scope "/admin/plugins/wireframe", as: "admin_wireframe", constraints: AdminConstraint.new do
     scope format: :json do

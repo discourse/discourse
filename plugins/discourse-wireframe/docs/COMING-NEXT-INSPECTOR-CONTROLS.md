@@ -11,13 +11,13 @@ index + the polish items that have no doc of their own yet.
   inspector controls; gap got direct numeric entry alongside the slider; fixed
   the rich-edit "[Image #N]" display pain. (commit `b7b88947c82`)
 - **P2 — Contextual flex/grid args + unified icon control.** flex-wrap,
-  justify-content, flex reverse, grid justify-items / align-content / dense
+  justify-content, grid justify-items / align-content / dense
   added to the core layout block + inspector; one Lucide icon-segmented picker
-  with a deterministic dropdown fallback; fixed the reverse-ordering drag bug.
+  with a deterministic dropdown fallback.
   (commit `39dbde2e346`)
 - **P3 — FormKit migration of the layout inspector.** `InspectorLayoutForm`
   became a proper FormKit form (every control a `form.Field` — custom slot for
-  segmented/dimension/stepper, native toggle for reverse/dense), sharing one
+  segmented/dimension/stepper, native toggle for dense), sharing one
   rendering / chrome / width / validation contract with the generic inspector.
   Uniform uppercase legends across all inspector forms; full-width control
   chain fixed (field → content → control); steppers compact. (commit

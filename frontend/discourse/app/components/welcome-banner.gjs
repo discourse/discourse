@@ -33,6 +33,9 @@ export const ALL_PAGES_EXCLUDED_ROUTES = [
 /** Name of the block that replaces this banner when a layout places it. */
 export const WELCOME_BANNER_BLOCK = "welcome-banner";
 
+const CUSTOM_HOMEPAGE_ROUTE = "discovery.custom";
+const CUSTOM_HOMEPAGE_OUTLET = "homepage-blocks";
+
 export default class WelcomeBanner extends Component {
   @service blocks;
   @service router;
@@ -112,10 +115,13 @@ export default class WelcomeBanner extends Component {
     return welcomeBannerSubheader({ currentUser: this.currentUser });
   }
 
-  // A layout that places the welcome banner block takes over from the
-  // setting-driven banner on every page, whatever the settings say.
+  // On the custom homepage, a layout that places the welcome banner block takes
+  // over from the setting-driven banner. Every other page keeps the banner.
   get replacedByBlock() {
-    return this.blocks.isBlockPlaced(WELCOME_BANNER_BLOCK);
+    return (
+      this.router.currentRouteName === CUSTOM_HOMEPAGE_ROUTE &&
+      this.blocks.isBlockPlaced(WELCOME_BANNER_BLOCK, CUSTOM_HOMEPAGE_OUTLET)
+    );
   }
 
   get shouldDisplay() {

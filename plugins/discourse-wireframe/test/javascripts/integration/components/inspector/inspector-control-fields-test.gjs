@@ -7,7 +7,6 @@ import { imageComposition } from "discourse/blocks/image-value";
 import Form from "discourse/components/form";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
 import ImageCompositionControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-composition-controls";
 import ImagePositionPicker from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-position-picker";
@@ -21,7 +20,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    for (const mode of ["row", "stack"]) {
+    for (const mode of ["row"]) {
       test(`${mode} distinguishes automatic sizing from explicit zero and restores it when cleared`, async function (assert) {
         const calls = [];
         class Selection extends Service {
@@ -114,8 +113,15 @@ module(
       assert.dom("input[aria-label='X (%)']").exists();
       assert.dom("input[aria-label='Y (%)']").exists();
       assert
-        .dom(".wireframe-image-composition__zoom input[type='number']")
-        .hasAttribute("aria-label", "Zoom (%)");
+        .dom(".wireframe-image-composition__zoom label")
+        .hasText("Zoom", "zoom is a labelled field of its own");
+      assert
+        .dom(".wireframe-image-composition__zoom label")
+        .hasAttribute(
+          "for",
+          find(".wireframe-image-composition__zoom input").id,
+          "the label points at the zoom input"
+        );
     });
 
     test("preserves incomplete numeric input and restores a cleared input on blur", async function (assert) {
@@ -169,67 +175,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("drags from a preset and commits only once on release", async function (assert) {
-      const previews = [];
-      const commits = [];
-      const preview = (value) => previews.push(value);
-      const commit = (value) => commits.push(value);
-      const cancel = () => {};
-      const value = { x: 50, y: 50 };
-      await render(
-        <template>
-          <ImagePositionPicker
-            @onCancel={{cancel}}
-            @onChange={{commit}}
-            @onPreview={{preview}}
-            @value={{value}}
-          />
-        </template>
-      );
-      const pad = find(".wireframe-image-position-picker__pad");
-      const bounds = pad.getBoundingClientRect();
-      stubPointerCapture(".wireframe-image-position-picker__pad");
-      await triggerEvent(
-        ".wireframe-image-position-picker__preset:nth-child(5)",
-        "pointerdown",
-        {
-          button: 0,
-          pointerId: 1,
-          clientX: bounds.left + bounds.width / 2,
-          clientY: bounds.top + bounds.height / 2,
-        }
-      );
-      await triggerEvent(pad, "pointermove", {
-        pointerId: 1,
-        clientX: bounds.left + bounds.width / 4,
-        clientY: bounds.top + bounds.height * 0.75,
-      });
-      assert.deepEqual(
-        previews.at(-1),
-        { x: 25, y: 75 },
-        "dragging the current point previews the new coordinates"
-      );
-      assert.strictEqual(commits.length, 0, "movement does not commit");
-      await triggerEvent(pad, "pointerup", {
-        pointerId: 1,
-        clientX: bounds.left + bounds.width / 4,
-        clientY: bounds.top + bounds.height * 0.75,
-      });
-      await triggerEvent(
-        ".wireframe-image-position-picker__preset:nth-child(5)",
-        "click",
-        {
-          detail: 1,
-        }
-      );
-      assert.deepEqual(
-        commits,
-        [{ x: 25, y: 75 }],
-        "release click neither duplicates nor resets the adjustment"
-      );
-    });
-
-    test("numeric edits preview until blur and keyboard presets remain accessible", async function (assert) {
+    test("numeric edits preview until blur", async function (assert) {
       const commits = [];
       const preview = () => {};
       const commit = (value) => commits.push(value);
@@ -249,18 +195,6 @@ module(
       assert.strictEqual(commits.length, 0, "typing remains a draft");
       await triggerEvent("input[type='number']", "blur");
       assert.deepEqual(commits, [{ x: 30, y: 50 }], "blur commits once");
-      await triggerEvent(
-        ".wireframe-image-position-picker__preset:nth-child(9)",
-        "click",
-        {
-          detail: 0,
-        }
-      );
-      assert.deepEqual(
-        commits.at(-1),
-        { x: 100, y: 100 },
-        "keyboard activation selects the bottom right preset"
-      );
     });
   }
 );

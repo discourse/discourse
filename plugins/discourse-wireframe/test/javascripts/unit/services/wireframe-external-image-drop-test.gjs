@@ -169,10 +169,10 @@ module(
         target.blockKey
       ).entry;
 
-      session.begin(target, true);
+      session.begin(target);
       session.preview(target, { position: { x: 20, y: 75 } });
-      session.change(target, { zoom: 175 });
-      session.change(target, { fit: "contain" });
+      session.preview(target, { zoom: 175 });
+      session.preview(target, { fit: "contain" });
       assert.deepEqual(
         entry.args.image,
         original,
@@ -183,7 +183,7 @@ module(
       assert.strictEqual(
         entry.args.image.zoom,
         175,
-        "Done commits the full draft"
+        "committing applies the full draft"
       );
       assert.deepEqual(
         entry.args.image.frame,
@@ -203,7 +203,7 @@ module(
         "contain",
         "redo restores the committed composition"
       );
-      session.begin(target, true);
+      session.begin(target);
       session.preview(target, { zoom: 250 });
       session.cancel();
       assert.strictEqual(
@@ -227,7 +227,7 @@ module(
       const engine = this.owner.lookup("service:wireframe-mutation-engine");
       engine.clearStacks();
       const session = this.owner.lookup("service:wireframe-image-composition");
-      session.begin(target, true);
+      session.begin(target);
       session.preview(target, { zoom: 175 });
       session.preview(target, { zoom: 100 });
       session.commit();
@@ -259,7 +259,7 @@ module(
       engine.clearStacks();
       const session = this.owner.lookup("service:wireframe-image-composition");
       session.change(target, { zoom: 150 });
-      session.begin(target, true);
+      session.begin(target);
       session.preview(target, { zoom: 225 });
       await engine.undo();
       assert.strictEqual(
@@ -298,7 +298,7 @@ module(
       const engine = this.owner.lookup("service:wireframe-mutation-engine");
       engine.clearStacks();
       const session = this.owner.lookup("service:wireframe-image-composition");
-      session.begin(target, true);
+      session.begin(target);
       session.preview(target, { position: { x: 25, y: 75 } });
       session.preview(target, { zoom: 200 });
       this.editor.wireframeSelection.selectBlock(null);
@@ -329,10 +329,7 @@ module(
         { url: "/a.png" },
         "one undo restores the starting image"
       );
-      assert.false(
-        engine.canUndo,
-        "the entire reposition session is one undo step"
-      );
+      assert.false(engine.canUndo, "the entire adjustment is one undo step");
       await engine.redo();
       assert.strictEqual(
         entry.args.image.zoom,
@@ -341,7 +338,7 @@ module(
       );
     });
 
-    test("shared image selecting another block applies repositioning without stealing focus", function (assert) {
+    test("shared image selecting another block applies the adjustment without stealing focus", function (assert) {
       this.editor.wireframeDragOverlay.claimSlotInsert(
         insertPreview("wf:svc-img-drop-image")
       );
@@ -357,12 +354,13 @@ module(
       document.body.append(trigger, destination);
       try {
         trigger.focus();
-        session.begin(target, true);
+        session.begin(target);
         session.preview(target, { position: { x: 30, y: 60 } });
         selection.selectBlock({ key: target.blockKey });
-        assert.true(
-          session.repositioning,
-          "selecting the same block keeps repositioning active"
+        assert.strictEqual(
+          session.target?.blockKey,
+          target.blockKey,
+          "selecting the same block keeps the adjustment open"
         );
         destination.focus();
         const otherKey = entryKey(
@@ -385,14 +383,14 @@ module(
           { x: 30, y: 60 },
           "switching blocks applies the position"
         );
-        assert.strictEqual(session.target, null, "repositioning ends");
+        assert.strictEqual(session.target, null, "the adjustment ends");
       } finally {
         trigger.remove();
         destination.remove();
       }
     });
 
-    test("shared image deletion discards repositioning without adding an image history entry", async function (assert) {
+    test("shared image deletion discards the adjustment without adding an image history entry", async function (assert) {
       this.editor.wireframeDragOverlay.claimSlotInsert(
         insertPreview("wf:svc-img-drop-image")
       );
@@ -407,7 +405,7 @@ module(
       const engine = this.owner.lookup("service:wireframe-mutation-engine");
       engine.clearStacks();
       const session = this.owner.lookup("service:wireframe-image-composition");
-      session.begin(target, true);
+      session.begin(target);
       session.preview(target, { zoom: 200 });
       this.owner
         .lookup("service:wireframe-block-mutations")
@@ -423,7 +421,7 @@ module(
       assert.false(engine.canUndo, "deletion is the only history entry");
     });
 
-    test("shared image cleared targets do not match during reposition teardown", function (assert) {
+    test("shared image cleared targets do not match during teardown", function (assert) {
       const session = this.owner.lookup("service:wireframe-image-composition");
       assert.false(
         session.matches(null),

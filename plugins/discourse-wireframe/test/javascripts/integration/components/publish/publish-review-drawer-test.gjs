@@ -69,7 +69,7 @@ class StubWireframeService extends Service {
   }
 
   get designName() {
-    return this.#config.designName ?? "Untitled template";
+    return this.#config.designName ?? "Untitled layout";
   }
 
   get hasDesign() {
@@ -276,7 +276,7 @@ module(
 
       assert.deepEqual(
         this.owner.lookup("service:wireframe-staging").createdDesigns,
-        ["Untitled template"],
+        ["Untitled layout"],
         "the design is created with the header's name"
       );
     });

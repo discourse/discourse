@@ -227,7 +227,7 @@ module(
       await render(<template><EditorShell /></template>);
       assert
         .dom(".wireframe-design-title__text")
-        .hasText("Untitled template", "a placeholder names the unsaved design");
+        .hasText("Untitled layout", "a placeholder names the unsaved design");
 
       await click(".wireframe-design-title__text");
       await fillIn(".wireframe-design-title__input", "Spring launch");

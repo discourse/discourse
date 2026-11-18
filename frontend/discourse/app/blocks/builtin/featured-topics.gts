@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import BlockFrame, { frameArgs } from "discourse/blocks/block-frame";
+import BlockFrame, {
+  frameArgs,
+  frameIconArg,
+} from "discourse/blocks/block-frame";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import { URL_PATTERN } from "discourse/lib/blocks";
 import { VALID_TOPIC_LIST_FILTERS } from "discourse/lib/blocks/-internals/fetch-topic-list";
@@ -64,6 +67,7 @@ interface FeaturedTopicsSignature {
         label: i18n("blocks.builtin.featured_topics.title"),
       },
     },
+    ...frameIconArg({ defaultIcon: "fire" }),
     filter: {
       type: "string",
       default: "hot",
@@ -112,7 +116,7 @@ interface FeaturedTopicsSignature {
         label: i18n("blocks.builtin.featured_topics.link_href"),
       },
     },
-    ...frameArgs({ defaultIcon: "fire" }),
+    ...frameArgs(),
   },
   constraints: {
     allOrNone: ["linkLabel", "linkHref"],

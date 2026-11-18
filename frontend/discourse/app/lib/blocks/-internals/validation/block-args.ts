@@ -81,6 +81,8 @@ const VALID_UI_PROPERTIES = Object.freeze([
   "group",
   "hidden",
   "conditional",
+  // Runtime predicate over site data that gates the field's visibility.
+  "visibleWhen",
   "optionIcons",
   "optionLabels",
   // Variant hint for a `richInline` arg ("plain" / "heading" / "paragraph") —
@@ -204,6 +206,15 @@ function validateUIHints(
         `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.${prop}" value. Must be a boolean.`
       );
     }
+  }
+
+  if (
+    uiDef.visibleWhen !== undefined &&
+    typeof uiDef.visibleWhen !== "function"
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.visibleWhen" value. Must be a function.`
+    );
   }
 
   if (uiDef.step !== undefined && typeof uiDef.step !== "number") {
