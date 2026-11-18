@@ -532,6 +532,26 @@ export function notificationLevels(onManage) {
   ];
 }
 
+/**
+ * Topic sort orders as plain records, each with a glyph and a one-line summary in its own fields,
+ * the way a server would send them.
+ */
+export function sortOrders() {
+  const t = (key) => i18n(`styleguide.sections.select.sort_orders.${key}`);
+
+  return [
+    ["latest", "far-clock"],
+    ["top", "arrow-up"],
+    ["replies", "far-comment"],
+    ["likes", "heart"],
+  ].map(([id, icon]) => ({
+    id,
+    icon,
+    name: t(id),
+    summary: t(`${id}_summary`),
+  }));
+}
+
 /* Topics. Synthesised rather than "Option N" so the windowed list, both paging demos, the
    minimum-query demo and the topic picker all read as a real forum. Each bank advances by a
    different stride so the combinations vary across pages. The `#<id>` suffix keeps every title

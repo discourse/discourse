@@ -11,16 +11,22 @@ import CustomEmptySelectExample from "../../examples/molecules/select/content/em
 import customEmptySelectSource from "../../examples/molecules/select/content/empty?source=file";
 import CustomErrorSelectExample from "../../examples/molecules/select/content/error.gjs";
 import customErrorSelectSource from "../../examples/molecules/select/content/error?source=file";
+import FieldsSelectExample from "../../examples/molecules/select/content/fields.gjs";
+import fieldsSelectSource from "../../examples/molecules/select/content/fields?source=file";
 import FooterSelectExample from "../../examples/molecules/select/content/footer.gjs";
 import footerSelectSource from "../../examples/molecules/select/content/footer?source=file";
 import GroupFooterSelectExample from "../../examples/molecules/select/content/group-footer.gjs";
 import groupFooterSelectSource from "../../examples/molecules/select/content/group-footer?source=file";
 import GroupedSelectExample from "../../examples/molecules/select/content/grouped.gjs";
 import groupedSelectSource from "../../examples/molecules/select/content/grouped?source=file";
+import HeldMarkSelectExample from "../../examples/molecules/select/content/held-mark.gjs";
+import heldMarkSelectSource from "../../examples/molecules/select/content/held-mark?source=file";
 import RowIconsSelectExample from "../../examples/molecules/select/content/row-icons.gjs";
 import rowIconsSelectSource from "../../examples/molecules/select/content/row-icons?source=file";
 import SelectionBlockSelectExample from "../../examples/molecules/select/content/selection.gjs";
 import selectionBlockSelectSource from "../../examples/molecules/select/content/selection?source=file";
+import SettingsOverFieldsSelectExample from "../../examples/molecules/select/content/settings-over-fields.gjs";
+import settingsOverFieldsSelectSource from "../../examples/molecules/select/content/settings-over-fields?source=file";
 import StatusIconSelectExample from "../../examples/molecules/select/content/status-icon.gjs";
 import statusIconSelectSource from "../../examples/molecules/select/content/status-icon?source=file";
 import StickySelectExample from "../../examples/molecules/select/content/sticky.gjs";
@@ -83,6 +89,40 @@ export default <template>
     @tryThis={{i18n "styleguide.sections.select.content.chip_icon_try_this"}}
   >
     <div class="select-examples__control"><ChipIconsSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{fieldsSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.fields_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.fields_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.fields_try_this"}}
+  >
+    <div class="select-examples__control"><FieldsSelectExample /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{settingsOverFieldsSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.settings_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.settings_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.settings_try_this"}}
+  >
+    <div class="select-examples__control"><SettingsOverFieldsSelectExample
+      /></div>
+  </StyleguideExample>
+
+  <StyleguideExample
+    @code={{heldMarkSelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.held_mark_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.held_mark_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.held_mark_try_this"}}
+  >
+    <div class="select-examples__control"><HeldMarkSelectExample /></div>
   </StyleguideExample>
 
   <StyleguideExample
