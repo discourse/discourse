@@ -23,7 +23,6 @@ import { engineKey } from "discourse/ui-kit/select/-internals/engine/row-keys";
 import SelectEngine, {
   type SelectLoadRequest,
   type SelectOption,
-  selectRecordLabel,
 } from "discourse/ui-kit/select/select-engine";
 
 /** Fixes the callback tuple before the template curries a lifecycle modifier. */
@@ -72,7 +71,6 @@ const registerListbox = createModifier(
 function placeholderRows(
   items: readonly ListRow[],
   feedback: LoadFeedbackTracker,
-  labelField: string,
   staticBody?: boolean
 ): readonly ListRow[] {
   if (!staticBody || feedback.retainRowsWhileReloading) {
@@ -82,9 +80,7 @@ function placeholderRows(
     ? items.map((row) => ({
         key: row.key,
         isSkeleton: true,
-        label: row.isSkeleton
-          ? row.label
-          : selectRecordLabel(row.record, labelField),
+        label: row.isSkeleton ? row.label : row.item?.label,
       }))
     : [{ key: engineKey("skeleton:empty"), isSkeleton: true }];
 }
@@ -283,7 +279,6 @@ const SelectListBody: TemplateOnlyComponent<SelectListBodySignature> =
             (placeholderRows
               (@listbox.buildListRows content.options content.filter)
               @feedback
-              @presenter.labelField
               @staticBody
             )
             as |items|

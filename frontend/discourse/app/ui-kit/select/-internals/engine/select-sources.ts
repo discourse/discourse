@@ -35,29 +35,44 @@ export function localOptions(args: SelectArgsView): readonly SelectOption[] {
   return args.wrapEntries(resolved);
 }
 
-/** The client list after `filterBy` — the one filter pass a `LocalSource` answers with. */
+/**
+ * The client options a query displays, before content steps run. `filterBy` sees each key's
+ * record; the default match reads the option's own explicit label, then the record's label field.
+ *
+ * @param args - The engine's args.
+ * @param filter - The query.
+ * @param recordOf - The record an option's key stands for.
+ * @param options - The options to filter; the whole client list by default.
+ */
 export function filterLocal(
   args: SelectArgsView,
-  filter: string
+  filter: string,
+  recordOf: (option: SelectOption) => SelectRecord,
+  options: readonly SelectOption[] = localOptions(args)
 ): readonly SelectOption[] {
-  const all = localOptions(args);
   if (!filter) {
-    return all;
+    return options;
   }
   const term = filter.toLowerCase();
-  return all.filter((option) => matchesFilter(args, option.record, term));
+  return options.filter((option) =>
+    matchesFilter(args, option, recordOf(option), term)
+  );
 }
 
 function matchesFilter(
   args: SelectArgsView,
+  option: SelectOption,
   record: SelectRecord,
   term: string
 ): boolean {
   if (typeof args.filterBy === "function") {
     return args.filterBy(record, term, args.config);
   }
-  const field = args.filterBy ?? args.labelField;
-  return String(record?.[field] ?? "")
+  const text =
+    args.filterBy == null
+      ? (option.settings.label ?? record?.[args.labelField])
+      : record?.[args.filterBy];
+  return String(text ?? "")
     .toLowerCase()
     .includes(term);
 }
@@ -165,8 +180,9 @@ export class LocalSource implements SelectSource {
     this.#all = opts.all;
   }
 
+  /** The whole client list: the query narrows it when rows are built, outside async data. */
   rows(): SelectOption[] {
-    return this.#filtered() as SelectOption[];
+    return this.#all() as SelectOption[];
   }
 
   answersSynchronously(): boolean {

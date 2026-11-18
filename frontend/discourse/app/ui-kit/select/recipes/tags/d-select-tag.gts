@@ -206,6 +206,12 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
 
   @tracked private _validation = new Map<string, TagSearchResult>();
 
+  /**
+   * The rows the latest search returned and the rows of held tags, by tag id, so a held tag is
+   * the record the list shows rather than one built from its name.
+   */
+  @tracked private _rows = new Map<number, SelectRecord>();
+
   constructor(owner: Owner, args: DSelectTagSignature["Args"]) {
     super(owner, args);
     assertNoRemovedTextArgs("DSelectTag", args);
@@ -301,7 +307,12 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
   }
 
   get valueRecords() {
-    return this.#tags.map((tag) => this.#recordForTag(tag));
+    return this.#tags.map((tag) => {
+      const record = this.#recordForTag(tag);
+      return (
+        (typeof record.id === "number" && this._rows.get(record.id)) || record
+      );
+    });
   }
 
   /** The locked tags' engine ids, matched to the held tags by name so a known id still matches. */
@@ -464,8 +475,26 @@ export default class DSelectTag extends Component<DSelectTagSignature> {
         result
       );
       this._validation = validation;
+      this.#rememberRows(result.items);
     }
     return this.#prepareOptions(result.items);
+  }
+
+  /** Keeps the rows just searched, and the earlier rows of tags still held. */
+  #rememberRows(items: readonly object[]) {
+    const held = new Set(this.#tags.map((tag) => this.#recordForTag(tag).id));
+    const rows = new Map<number, SelectRecord>();
+    for (const [id, row] of this._rows) {
+      if (held.has(id)) {
+        rows.set(id, row);
+      }
+    }
+    for (const item of items as readonly SelectRecord[]) {
+      if (typeof item.id === "number") {
+        rows.set(item.id, item);
+      }
+    }
+    this._rows = rows;
   }
 
   #recordForTag(

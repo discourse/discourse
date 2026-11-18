@@ -172,31 +172,26 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
                 name, so the name never depends on what the block draws. }}
             {{#if (and option.flags.groupHeader @hasGroupHeaderBlock)}}
               <span class="sr-only">
-                {{~selectRecordLabel option.record @presenter.labelField~}}
+                {{~option.item.label~}}
               </span>
               <span aria-hidden="true">
                 {{~yield option.record (groupOf option) to="groupHeader"~}}
               </span>
             {{else if (and option.flags.groupFooter @hasGroupFooterBlock)}}
               <span class="sr-only">
-                {{~selectRecordLabel option.record @presenter.labelField~}}
+                {{~option.item.label~}}
               </span>
               <span aria-hidden="true">
                 {{~yield option.record (groupOf option) to="groupFooter"~}}
               </span>
             {{else if (or option.flags.groupHeader option.flags.groupFooter)}}
-              {{selectRecordLabel option.record @presenter.labelField}}
+              {{option.item.label}}
             {{else if @hasOptionBlock}}
               {{yield option.record option.option to="option"}}
             {{else if option.flags.create}}
-              {{@engine.text
-                "createOption"
-                (hash
-                  label=(selectRecordLabel option.record @presenter.labelField)
-                )
-              }}
+              {{@engine.text "createOption" (hash label=option.item.label)}}
             {{else}}
-              {{selectRecordLabel option.record @presenter.labelField}}
+              {{option.item.label}}
             {{/if}}
           </SelectOptionContent>
         {{else}}

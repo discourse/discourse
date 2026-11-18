@@ -101,7 +101,7 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
     );
   });
 
-  test("extra options keep the first equal value and drop source duplicates", async function (assert) {
+  test("an extra option takes an equal source value's slot and shows its own presentation", async function (assert) {
     const extraPear = { id: "pear", name: "Extra pear" };
     const sourcePear = { id: extraPear.id, name: "Source pear" };
     const apple = { id: "apple", name: "Apple" };
@@ -117,9 +117,7 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
           @extraOptions={{extraOptions}}
           @onChange={{onChange}}
           @options={{options}}
-        >
-          <:option as |record|>{{record.name}}</:option>
-        </DSelect>
+        />
       </template>
     );
     await dSelect().open();
@@ -132,7 +130,10 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
       );
     assert
       .dom(pearRow)
-      .hasText(extraPear.name, "the first option, from extras, is retained");
+      .hasText(
+        extraPear.name,
+        "the extra's differing name is the row's label, over the source record's"
+      );
     assert
       .dom(pearRow)
       .hasAttribute(

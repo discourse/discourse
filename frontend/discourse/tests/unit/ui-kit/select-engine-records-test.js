@@ -1929,3 +1929,932 @@ module("Unit | ui-kit | SelectEngine | staged picks", function (hooks) {
     });
   });
 });
+
+module("Unit | ui-kit | SelectEngine | list view", function (hooks) {
+  setupTest(hooks);
+
+  let withPluginApi;
+  hooks.before(async function () {
+    ({ withPluginApi } = await import("discourse/lib/plugin-api"));
+  });
+
+  function customize(setup) {
+    withPluginApi((api) =>
+      api.registerValueTransformer("select-customizations", ({ value }) =>
+        value.forAll(setup)
+      )
+    );
+  }
+
+  for (const tier of ["valueRecords", "local", "extra", "sighting", "view"]) {
+    test(`rows use the ${tier} record and the row input's presentation`, async function (assert) {
+      const record = {
+        id: "a",
+        title: "Canonical",
+        detail: "Canonical detail",
+      };
+      const copy = { ...record, title: "Copy", detail: "Copy detail" };
+      const lower = { ...record, title: "Lower priority" };
+      const input = selectOption(tier === "view" ? record : copy, {
+        label: "Row label",
+        description: "Row detail",
+      });
+      const engine = new SelectEngine({
+        labelField: "title",
+        descriptionField: "detail",
+        getValue: () => (tier === "sighting" ? record.id : null),
+        options:
+          tier === "local" ? [record] : tier === "valueRecords" ? [lower] : [],
+        ...(tier === "valueRecords" && { valueRecords: [record] }),
+        ...(["valueRecords", "local", "extra"].includes(tier) && {
+          extraOptions: ({ filter }) =>
+            filter === "" ? [tier === "extra" ? record : lower] : [],
+        }),
+        resolveValue: () => record,
+      });
+      if (tier === "sighting") {
+        await engine.resolveSelection(record.id);
+      }
+      engine.setFilter("query");
+      const [row] = engine.buildRows([input]);
+      assert.strictEqual(
+        row.record,
+        record,
+        "the row carries the key's one record"
+      );
+      assert.strictEqual(
+        row.item?.record,
+        record,
+        "the item carries that same record"
+      );
+      assert.strictEqual(
+        row.item?.label,
+        "Row label",
+        "the input supplies an explicit label"
+      );
+      assert.strictEqual(
+        row.item?.description,
+        "Row detail",
+        "the input supplies an explicit description"
+      );
+    });
+  }
+
+  test("native copies contribute changed presentation without replacing the record", function (assert) {
+    const record = Object.freeze({
+      id: "a",
+      title: "Original",
+      detail: "Original detail",
+      group: "Original group",
+    });
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) => ({
+          ...option.record,
+          title: "Content label",
+          detail: "Content detail",
+          group: "Copy group",
+        }))
+      )
+    );
+    const engine = new SelectEngine({
+      options: [record],
+      labelField: "title",
+      descriptionField: "detail",
+    });
+    const [row] = engine.buildRows([record]);
+    assert.strictEqual(
+      row.record,
+      record,
+      "a content copy never becomes the record"
+    );
+    assert.strictEqual(
+      row.item?.label,
+      "Content label",
+      "the changed label becomes explicit presentation"
+    );
+    assert.strictEqual(
+      row.item?.description,
+      "Content detail",
+      "the changed description becomes explicit presentation"
+    );
+    assert.strictEqual(
+      record.title,
+      "Original",
+      "the original stays untouched"
+    );
+  });
+
+  test("legacy copies contribute empty presentation without replacing the record", async function (assert) {
+    const { getOwner } = await import("@ember/owner");
+    const { clearCallbacks } =
+      await import("discourse/select-kit/lib/plugin-api");
+    const { default: DeprecationCounter } =
+      await import("discourse/tests/helpers/deprecation-counter");
+    const { disableRaiseOnDeprecation, enableRaiseOnDeprecation } =
+      await import("discourse/tests/helpers/raise-on-deprecation");
+    const record = Object.freeze({
+      id: "a",
+      title: "Original",
+      detail: "Original detail",
+    });
+    disableRaiseOnDeprecation();
+    const warning = sinon.stub(console, "warn");
+    const counter = sinon.stub(DeprecationCounter.prototype, "incrementCount");
+    try {
+      withPluginApi((api) =>
+        api.modifySelectKit("list-view").replaceContent((_facade, records) =>
+          records.map((entry) => ({
+            ...entry,
+            title: "",
+            detail: "",
+            description: "",
+          }))
+        )
+      );
+      const engine = new SelectEngine({
+        kind: "list-view",
+        options: [record],
+        labelField: "title",
+        descriptionField: "detail",
+        legacy: {
+          owner: getOwner(this),
+          getElement: () => document.createElement("div"),
+          isDestroyed: () => false,
+        },
+      });
+      const [row] = engine.buildRows([
+        selectOption(record, { description: "Earlier explicit detail" }),
+      ]);
+      assert.strictEqual(
+        row.record,
+        record,
+        "a legacy copy never becomes the record"
+      );
+      assert.strictEqual(
+        row.item?.label,
+        "",
+        "the copy can suppress the label"
+      );
+      assert.strictEqual(
+        row.item?.description,
+        undefined,
+        "the copy can suppress an earlier explicit description"
+      );
+      assert.strictEqual(
+        row.item?.properties.description,
+        "",
+        "the empty override is retained explicitly"
+      );
+    } finally {
+      clearCallbacks();
+      enableRaiseOnDeprecation();
+      warning.restore();
+      counter.restore();
+    }
+  });
+
+  test("extras override content and source presentation without claiming the local record", function (assert) {
+    const record = { id: "a", name: "Local", detail: "Local detail" };
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) =>
+          option.with({ label: "Content", description: "Content detail" })
+        )
+      )
+    );
+    const engine = new SelectEngine({
+      options: [
+        selectOption(record, { label: "Source", description: "Source detail" }),
+      ],
+      valueRecords: [
+        selectOption(record, { label: "Held", description: "Held detail" }),
+      ],
+      extraOptions: () => [
+        selectOption({ ...record, name: "Extra copy" }, { label: "Extra" }),
+      ],
+    });
+    const rows = engine.buildRows(engine.loadOptions(engine.loadContext));
+    assert.strictEqual(
+      rows.length,
+      1,
+      "the duplicate extra owns one displayed slot"
+    );
+    assert.strictEqual(
+      rows[0].record,
+      record,
+      "the local record outranks the extra copy"
+    );
+    assert.strictEqual(
+      rows[0].item?.label,
+      "Extra",
+      "the extra's explicit label wins"
+    );
+    assert.strictEqual(
+      rows[0].item?.description,
+      "Content detail",
+      "an absent extra property preserves the content contribution"
+    );
+  });
+
+  test("data edges share the authoritative record behind a content copy", function (assert) {
+    const listed = { id: "a", name: "Listed" };
+    const authoritative = { ...listed, name: "Authoritative", rich: true };
+    const state = trackedObject({ value: null });
+    const onChange = sinon.spy((value) => (state.value = value));
+    const middleware = sinon.spy((next) => next());
+    const onReconfirm = sinon.spy();
+    const allowCreate = sinon.spy(() => false);
+    customize((spec) => {
+      spec.content((options) =>
+        options.map((option) => ({ ...option.record, name: "Copy" }))
+      );
+      spec.change(middleware);
+    });
+    const engine = new SelectEngine({
+      options: [listed],
+      valueRecords: [authoritative],
+      getValue: () => state.value,
+      onChange,
+      onReconfirm,
+      allowCreate,
+      createOption: (name) => ({ id: name, name }),
+    });
+    engine.setFilter("query");
+    const [row] = engine.buildRows([listed]);
+    engine.activate(row.option);
+    engine.select(row.option, { programmatic: true });
+    assert.strictEqual(
+      onChange.firstCall?.args[1],
+      authoritative,
+      "onChange gets the authoritative record"
+    );
+    assert.strictEqual(
+      middleware.firstCall?.args[1].records,
+      authoritative,
+      "middleware gets the same record"
+    );
+    assert.strictEqual(
+      onReconfirm.firstCall?.args[0],
+      authoritative,
+      "reconfirm gets the same record"
+    );
+    assert.strictEqual(
+      allowCreate.firstCall?.args[1][0],
+      authoritative,
+      "allowCreate maps the displayed membership to the same record"
+    );
+  });
+
+  for (const paged of [false, true]) {
+    test(`${paged ? "paged runs" : "local groups"} use authoritative group keys through copies`, async function (assert) {
+      const records = [
+        { id: "a", name: "A", group: "One" },
+        { id: "b", name: "B", group: "Two" },
+        { id: "c", name: "C", group: "One" },
+      ];
+      const opts = {
+        ...(paged ? { load: () => records } : { options: records }),
+        valueRecords: records,
+        groupBy: "group",
+        groupHeader: (key) => key,
+      };
+      const baseline = new SelectEngine(opts);
+      const expected = baseline.buildRows(
+        await baseline.loadOptions(baseline.loadContext)
+      );
+      customize((spec) =>
+        spec.content((options) =>
+          options.map((option) => ({ ...option.record, group: "Copy group" }))
+        )
+      );
+      const groupBy = sinon.spy((record) => record.group);
+      const engine = new SelectEngine({ ...opts, groupBy });
+      const rows = engine.buildRows(
+        await engine.loadOptions(engine.loadContext)
+      );
+      assert.deepEqual(
+        rows.map((row) => row.key),
+        expected.map((row) => row.key),
+        "copies preserve group/run row keys and repeated runs"
+      );
+      assert.deepEqual(
+        rows.filter((row) => row.group).map((row) => row.group.key),
+        paged ? ["One", "Two", "One"] : ["One", "Two"],
+        "boundaries keep the authoritative group keys"
+      );
+      assert.true(
+        groupBy.args.every(([record]) => records.includes(record)),
+        "groupBy gets only canonical records"
+      );
+    });
+  }
+
+  test("default filtering uses pre-content explicit labels and counts the filtered population", function (assert) {
+    const inputs = [
+      selectOption({ id: "alias", title: "Miss" }, { label: "Needle alias" }),
+      { id: "field", title: "Needle field" },
+      selectOption({ id: "empty", title: "Needle hidden" }, { label: "" }),
+      selectOption({ id: "renamed", title: "Needle old" }, { label: "Miss" }),
+    ];
+    customize((spec) =>
+      spec.content((options) => [
+        ...options.map((option) => option.with({ label: "Content miss" })),
+        selectOption(
+          { id: "injected", title: "Not a match" },
+          { label: "Injected" }
+        ),
+      ])
+    );
+    const engine = new SelectEngine({ options: inputs, labelField: "title" });
+    engine.setFilter("NEEDLE");
+    assert.deepEqual(
+      engine.filteredOptions?.map((option) => option.record.id),
+      ["alias", "field"],
+      "source settings precede fields and empty suppresses matching"
+    );
+    assert.strictEqual(engine.total, 2, "total counts filtered local inputs");
+    assert.strictEqual(
+      engine.loadedCount,
+      2,
+      "loadedCount counts the same population"
+    );
+    const rows = engine.buildRows(engine.filteredOptions ?? []);
+    assert.deepEqual(
+      rows.map((row) => row.value),
+      ["alias", "field", "injected"],
+      "content renames and additions are never filtered again"
+    );
+  });
+
+  test("explicit filterBy forms receive canonical records and ignore presentation", function (assert) {
+    const local = [
+      { id: "a", name: "Needle", keywords: "miss" },
+      { id: "b", name: "Needle", keywords: "miss" },
+    ];
+    const records = local.map((record, index) => ({
+      ...record,
+      keywords: index ? "miss" : "needle",
+      rich: true,
+    }));
+    const filterBy = sinon.spy((record, term) => record.keywords === term);
+    for (const filter of [filterBy, "keywords"]) {
+      const engine = new SelectEngine({
+        options: local.map((record) =>
+          selectOption(record, { label: "Wrong presentation" })
+        ),
+        valueRecords: records,
+        filterBy: filter,
+      });
+      engine.setFilter("NEEDLE");
+      assert.deepEqual(
+        engine.filteredOptions?.map((option) => option.record.id),
+        ["a"],
+        "explicit filtering uses record data, independently of the label"
+      );
+      assert.strictEqual(
+        engine.total,
+        1,
+        "the explicit predicate also determines total"
+      );
+      assert.strictEqual(
+        engine.loadedCount,
+        1,
+        "loadedCount shares its population"
+      );
+    }
+    assert.true(filterBy.called, "the predicate is called");
+    assert.true(
+      filterBy.args.every(
+        ([record, term]) => records.includes(record) && term === "needle"
+      ),
+      "the predicate gets canonical records and the normalized query"
+    );
+  });
+
+  test("paste matching uses item labels from settings and authoritative fields", function (assert) {
+    const local = [
+      { id: "a", name: "Local A" },
+      { id: "b", name: "Local B" },
+      { id: "c", name: "Must not match" },
+    ];
+    const records = local.map((record) => ({
+      ...record,
+      name: `Canonical ${record.id}`,
+    }));
+    const engine = new SelectEngine({
+      options: [
+        selectOption(local[0], { label: "Alias" }),
+        local[1],
+        selectOption(local[2], { label: "" }),
+      ],
+      valueRecords: records,
+      multiple: true,
+    });
+    const pasted = engine.parsePaste("ALIAS | canonical b | Must not match");
+    assert.deepEqual(
+      pasted?.map((input) => input.record.id),
+      ["a", "b"],
+      "matching follows explicit and derived item labels, including empty suppression"
+    );
+    const state = trackedObject({ value: [] });
+    const onChange = sinon.spy((value) => (state.value = value));
+    const controlled = new SelectEngine({
+      options: local,
+      valueRecords: records,
+      multiple: true,
+      getValue: () => state.value,
+      onChange,
+    });
+    controlled.selectMany(pasted ?? []);
+    assert.strictEqual(
+      onChange.firstCall?.args[1][0],
+      records[0],
+      "the first matched input emits its canonical record"
+    );
+    assert.strictEqual(
+      onChange.firstCall?.args[1][1],
+      records[1],
+      "the second matched input emits its canonical record"
+    );
+  });
+
+  test("paste matching follows content and extra item labels", function (assert) {
+    const record = { id: "a", name: "Original" };
+    const extra = { id: "b", name: "Extra record" };
+    customize((spec) =>
+      spec.content((options) =>
+        options.map((option) => ({ ...option.record, name: "Content alias" }))
+      )
+    );
+    const engine = new SelectEngine({
+      options: [record],
+      extraOptions: () => [selectOption(extra, { label: "Extra alias" })],
+      multiple: true,
+    });
+    engine.buildRows(engine.loadOptions(engine.loadContext));
+    assert.deepEqual(
+      engine
+        .parsePaste("CONTENT ALIAS | Extra alias")
+        ?.map((input) => input.record.id),
+      ["a", "b"],
+      "paste matches the same content and extra presentation as the displayed items"
+    );
+    assert.deepEqual(
+      engine.parsePaste("Original | Extra record"),
+      [],
+      "superseded record labels no longer match"
+    );
+  });
+
+  test("describeRecords carries records without reading presentation", function (assert) {
+    const presentation = trackedObject({
+      label: "Before",
+      description: "Before detail",
+    });
+    let reads = 0;
+    let runs = 0;
+    const record = {
+      id: "a",
+      get name() {
+        reads++;
+        return presentation.label;
+      },
+      get detail() {
+        reads++;
+        return presentation.description;
+      },
+    };
+    const engine = new SelectEngine({
+      options: [record],
+      descriptionField: "detail",
+    });
+    const cache = createCache(() => {
+      runs++;
+      return engine.describeRecords([record]);
+    });
+    const before = getValue(cache);
+    assert.strictEqual(
+      before[0].record,
+      record,
+      "the held descriptor retains the original record"
+    );
+    assert.strictEqual(
+      reads,
+      0,
+      "describing held records reads no presentation"
+    );
+    presentation.label = "After";
+    presentation.description = "After detail";
+    assert.strictEqual(
+      getValue(cache),
+      before,
+      "presentation never invalidates held async data"
+    );
+    assert.strictEqual(runs, 1, "held descriptors run only once");
+  });
+
+  for (const refusal of ["declined", "vetoed", "superseded"]) {
+    test(`a ${refusal} pick cannot pin a later row's record or settings`, async function (assert) {
+      const stale = { id: "a", name: "Stale pick" };
+      const fresh = { id: "a", name: "Fresh view", detail: "Fresh detail" };
+      const state = trackedObject({ value: null });
+      const onChange = sinon.spy();
+      if (refusal === "vetoed") {
+        customize((spec) => spec.change(() => {}));
+      }
+      const engine = new SelectEngine({
+        options: [],
+        getValue: () => state.value,
+        onChange,
+        descriptionField: "detail",
+      });
+      engine.select(
+        selectOption(stale, {
+          label: "Stale label",
+          description: "Stale detail",
+        })
+      );
+      if (refusal === "superseded") {
+        engine.select({ id: "b", name: "Newer emit" });
+        state.value = "a";
+      }
+      await Promise.resolve();
+      const [row] = engine.buildRows([fresh]);
+      assert.strictEqual(
+        row.record,
+        fresh,
+        "an unaccepted pick cannot replace the row's record"
+      );
+      assert.strictEqual(
+        row.item?.record,
+        fresh,
+        "the list item also forgets the stale pick"
+      );
+      assert.strictEqual(
+        row.item?.label,
+        "Fresh view",
+        "the stale label never leaks"
+      );
+      assert.strictEqual(
+        row.item?.description,
+        "Fresh detail",
+        "the stale description never leaks"
+      );
+      assert.strictEqual(
+        onChange.callCount,
+        refusal === "vetoed" ? 0 : refusal === "superseded" ? 2 : 1,
+        "the intended refusal path was exercised"
+      );
+    });
+  }
+
+  for (const property of ["label", "description", "icon"]) {
+    test(`legacy copies override inherited source ${property}`, async function (assert) {
+      const { getOwner } = await import("@ember/owner");
+      const { withPluginApi: legacyPluginApi } =
+        await import("discourse/lib/plugin-api");
+      const { clearCallbacks } =
+        await import("discourse/select-kit/lib/plugin-api");
+      const { default: DeprecationCounter } =
+        await import("discourse/tests/helpers/deprecation-counter");
+      const { disableRaiseOnDeprecation, enableRaiseOnDeprecation } =
+        await import("discourse/tests/helpers/raise-on-deprecation");
+      const record = Object.freeze({
+        id: "a",
+        name: "Apple",
+        detail: "Original detail",
+        glyph: "apple-whole",
+      });
+      const source = selectOption(record, {
+        disabled: true,
+        label: "Source alias",
+        description: "Source detail",
+        icon: "star",
+      });
+      const expected = {
+        label: "Legacy alias",
+        description: "Legacy detail",
+        icon: "heart",
+      };
+      disableRaiseOnDeprecation();
+      const warning = sinon.stub(console, "warn");
+      const counter = sinon.stub(
+        DeprecationCounter.prototype,
+        "incrementCount"
+      );
+      try {
+        legacyPluginApi((api) =>
+          api.modifySelectKit("list-view").replaceContent((_facade, records) =>
+            records.map((entry) => ({
+              ...entry,
+              name: expected.label,
+              detail: expected.description,
+              glyph: expected.icon,
+            }))
+          )
+        );
+        const engine = new SelectEngine({
+          kind: "list-view",
+          options: [source],
+          descriptionField: "detail",
+          iconField: "glyph",
+          legacy: {
+            owner: getOwner(this),
+            getElement: () => document.createElement("div"),
+            isDestroyed: () => false,
+          },
+        });
+        const [row] = engine.buildRows([source]);
+
+        assert.strictEqual(
+          row.item?.[property],
+          expected[property],
+          `the legacy copy's ${property} overrides the inherited source setting`
+        );
+        assert.strictEqual(
+          row.record,
+          record,
+          "the legacy presentation keeps the canonical record"
+        );
+        assert.true(
+          row.item?.disabled,
+          "the legacy copy retains unrelated source behavior"
+        );
+      } finally {
+        clearCallbacks();
+        enableRaiseOnDeprecation();
+        warning.restore();
+        counter.restore();
+      }
+    });
+  }
+
+  for (const phase of ["before a build", "while filtered out"]) {
+    test(`paste creation receives canonical records ${phase}`, function (assert) {
+      const local = [
+        { id: "a", name: "Apple" },
+        { id: "b", name: "Banana" },
+      ];
+      const records = local.map((record) => ({ ...record, detail: "Full" }));
+      const allowCreate = sinon.spy(() => false);
+      const engine = new SelectEngine({
+        multiple: true,
+        options: local,
+        valueRecords: records,
+        allowCreate,
+        createOption: (name) => ({ id: name, name }),
+      });
+      if (phase === "while filtered out") {
+        engine.setFilter("no matching fruit");
+        engine.buildRows(engine.filteredOptions ?? []);
+        allowCreate.resetHistory();
+      }
+
+      const pasted = engine.parsePaste("Kiwi | Mango");
+
+      assert.strictEqual(
+        allowCreate.callCount,
+        2,
+        "both unknown names reach the creation callback"
+      );
+      for (const [name, candidates] of allowCreate.args) {
+        for (const [index, record] of records.entries()) {
+          assert.strictEqual(
+            candidates[index],
+            record,
+            `${name} creation receives the canonical ${record.id} record ${phase}`
+          );
+        }
+        assert.strictEqual(
+          candidates.length,
+          records.length,
+          "paste creation sees all current source candidates"
+        );
+      }
+      assert.deepEqual(
+        pasted,
+        [],
+        "declined names produce no paste selections"
+      );
+    });
+  }
+
+  for (const presentation of ["record label", "explicit label"]) {
+    test(`paste refreshes a same-key ${presentation} without another build`, function (assert) {
+      const original = { id: "a", name: "Old label" };
+      const replacement = { id: "a", name: "New label" };
+      const state = trackedObject({
+        options: [
+          presentation === "explicit label"
+            ? selectOption(original, { label: "Old label" })
+            : original,
+        ],
+      });
+      const engine = new SelectEngine({
+        multiple: true,
+        options: () => state.options,
+      });
+      engine.buildRows(engine.loadOptions(engine.loadContext));
+      state.options = [
+        presentation === "explicit label"
+          ? selectOption(original, { label: "New label" })
+          : replacement,
+      ];
+
+      assert.deepEqual(
+        engine.parsePaste("Old label | unknown"),
+        [],
+        `paste no longer matches the superseded ${presentation}`
+      );
+      const pasted = engine.parsePaste("New label | unknown");
+      assert.strictEqual(pasted?.length, 1, "paste matches the current label");
+      assert.strictEqual(
+        pasted?.[0]?.record,
+        presentation === "explicit label" ? original : replacement,
+        "the match carries the current source record"
+      );
+    });
+  }
+
+  test("paste refreshes same-key disabled settings without another build", function (assert) {
+    const record = { id: "a", name: "Apple" };
+    const other = { id: "b", name: "Banana" };
+    const state = trackedObject({ options: [record, other] });
+    const engine = new SelectEngine({
+      multiple: true,
+      options: () => state.options,
+    });
+    engine.buildRows(engine.loadOptions(engine.loadContext));
+    state.options = [selectOption(record, { disabled: true }), other];
+
+    assert.deepEqual(
+      engine.parsePaste("Apple | Banana")?.map((input) => input.record.id),
+      [other.id],
+      "paste skips the option disabled since the last build"
+    );
+  });
+
+  for (const reset of ["filter", "reload"]) {
+    test(`paste drops displayed page options after a ${reset} reset`, async function (assert) {
+      const record = { id: "a", name: "Apple" };
+      const engine = new SelectEngine({
+        multiple: true,
+        load: () => [record],
+      });
+      engine.buildRows(await engine.loadOptions(engine.loadContext));
+      if (reset === "filter") {
+        engine.setFilter("another query");
+      } else {
+        engine.reload();
+      }
+
+      assert.deepEqual(
+        engine.parsePaste("Apple | unknown"),
+        [],
+        `paste cannot match an option from the page discarded by ${reset}`
+      );
+    });
+  }
+
+  test("same-key extras preserve item identity across unchanged builds", function (assert) {
+    const source = { id: "a", name: "Source" };
+    const extra = { id: "a", name: "Extra" };
+    const state = trackedObject({ extras: [extra] });
+    const engine = new SelectEngine({
+      options: [source],
+      extraOptions: () => state.extras,
+    });
+    const options = engine.loadOptions(engine.loadContext);
+    const rows = engine.buildRows(options);
+    const item = rows[0]?.item;
+    assert.strictEqual(
+      rows.length,
+      1,
+      "the extra owns the only displayed slot"
+    );
+    assert.strictEqual(
+      item?.record,
+      source,
+      "the source record stays canonical"
+    );
+    assert.strictEqual(
+      item?.label,
+      "Extra",
+      "the extra supplies the displayed label"
+    );
+
+    for (let build = 2; build <= 3; build++) {
+      assert.strictEqual(
+        engine.buildRows(options)[0]?.item,
+        item,
+        `unchanged build ${build} reuses the displayed extra item`
+      );
+    }
+
+    state.extras = [{ id: "a", name: "Changed extra" }];
+    const changed = engine.buildRows(options)[0]?.item;
+    assert.notStrictEqual(
+      changed,
+      item,
+      "changed extra presentation replaces the item"
+    );
+    assert.strictEqual(
+      changed?.label,
+      "Changed extra",
+      "the new extra label reaches the item"
+    );
+    assert.strictEqual(
+      changed?.record,
+      source,
+      "the replacement extra keeps the canonical record"
+    );
+    assert.strictEqual(
+      engine.buildRows(options)[0]?.item,
+      changed,
+      "the changed extra item is reused on the next unchanged build"
+    );
+  });
+
+  test("paste matches a displayed content label after its local source is filtered out", function (assert) {
+    const local = { id: "a", name: "Apple" };
+    const canonical = { id: "a", name: "Canonical" };
+    const copy = { id: "a", name: "Apple" };
+    customize((spec) => spec.content(() => [copy]));
+    const engine = new SelectEngine({
+      multiple: true,
+      options: [local],
+      valueRecords: [canonical],
+    });
+    engine.setFilter("no matching fruit");
+    const options = engine.filteredOptions;
+    assert.strictEqual(
+      options.length,
+      0,
+      "filtering excludes the local source input"
+    );
+    const rows = engine.buildRows(options);
+    assert.strictEqual(rows.length, 1, "content injects one displayed row");
+    assert.strictEqual(
+      rows[0]?.item?.label,
+      "Apple",
+      "the displayed content label is Apple"
+    );
+    assert.strictEqual(
+      rows[0]?.record,
+      canonical,
+      "the displayed copy keeps the canonical record"
+    );
+
+    const pasted = engine.parsePaste("Apple | unknown");
+    assert.strictEqual(
+      pasted?.length,
+      1,
+      "paste matches the displayed Apple label even though the local input is filtered out"
+    );
+    assert.strictEqual(
+      pasted?.[0]?.record,
+      canonical,
+      "the pasted match carries the canonical record"
+    );
+    assert.deepEqual(
+      engine.parsePaste("Canonical | unknown"),
+      [],
+      "the canonical label does not replace the displayed content label for paste"
+    );
+  });
+
+  test("shadowing extras preserve source presentation and inherited actions with hideSelected", function (assert) {
+    const source = { id: "a", name: "Source" };
+    const extra = { ...source };
+    const onSelect = sinon.spy();
+    const engine = new SelectEngine({
+      getValue: () => "a",
+      hideSelected: true,
+      options: [
+        selectOption(source, {
+          label: "Content alias",
+          description: "Content detail",
+        }),
+      ],
+      valueRecords: [selectOption(source, { onSelect })],
+      extraOptions: () => [extra],
+    });
+    const [row] = engine.buildRows(engine.loadOptions(engine.loadContext));
+
+    assert.strictEqual(
+      row?.item?.label,
+      "Content alias",
+      "the visible extra preserves the source label with hideSelected"
+    );
+    assert.strictEqual(
+      row?.item?.description,
+      "Content detail",
+      "the visible extra preserves the source description with hideSelected"
+    );
+
+    engine.activate(row.option);
+
+    assert.true(onSelect.calledOnce, "the visible extra still runs its action");
+  });
+});

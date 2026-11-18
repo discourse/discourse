@@ -123,6 +123,11 @@ export interface SelectRow {
   record: SelectRecord;
   /** The option behind the row, with its settings. */
   option: SelectOption;
+  /**
+   * What the row shows: its key's item, or for a row that stands for no value key, an item of
+   * its own option. Absent on the rows that describe held records.
+   */
+  item?: SelectItem;
   /** The group a boundary row belongs to; absent on every other row. */
   group?: SelectGroupInfo;
   /** Row state, centralized so the template and option component don't re-derive it. */
@@ -186,6 +191,14 @@ export interface SelectRow {
    * "more exists" half is announced instead.
    */
   setSize?: number;
+}
+
+/** An option a paste can match, with the key and label it matches by. */
+interface PasteCandidate {
+  option: SelectOption;
+  key: string | null;
+  label: string;
+  record: SelectRecord;
 }
 
 export function selectRecordLabel(
@@ -918,11 +931,18 @@ export default class SelectEngine {
       isLockedValue: (value) => this.isLockedValue(value),
       getAtMaximum: () => this.atMaximum,
       getTotal: () => this.total,
-      keyScopeRecord: (record) => {
-        const key = this.#args.valueKey(this.#args.recordValue(record));
-        return (
-          (key != null && this.#valueResolver.realRecordFor(key)) || record
-        );
+      viewRecord: (key, input) => this.#valueResolver.recordForView(key, input),
+      itemFor: (key, input) => this.itemFor(key, { kind: "list", input }),
+      peekItem: (key, input) => this.#items.peek(key, { kind: "list", input }),
+      rowItem: (input) => this.#items.rowItem(input),
+      keepItems: (keys) => {
+        const kept = new Set(keys);
+        for (const key of this.#selectionActions._selectedKeys) {
+          if (key != null) {
+            kept.add(key);
+          }
+        }
+        this.#items.pruneList(kept);
       },
       noteVisible: (visible, input) => this.#source.noteVisible(visible, input),
       canGrow: () => this.#source.mayGrow(),
@@ -1195,17 +1215,20 @@ export default class SelectEngine {
   }
 
   /**
-   * The client list after `filterBy`. Deriving this is the engine's job, so it is exposed
-   * rather than recomputed by each caller — and it is `@cached` so `total` and `loadOptions`
-   * share one filter pass per render instead of each walking the list again. Empty for a
-   * server source.
+   * The client list the current query displays, before content steps run. Deriving this is the
+   * engine's job, so it is exposed rather than recomputed by each caller, and it is `@cached` so
+   * `total` and the list share one filter pass per render. Empty for a server source.
    */
   @cached
   get filteredOptions(): readonly SelectOption[] {
     // Copied AND frozen: `@cached` hands the same array to every reader in the render, so
     // mutating it would corrupt what the engine itself reads next. Matches `buildRows`, which
     // also yields a frozen projection.
-    return Object.freeze([...filterLocal(this.#args, this.#state.filter)]);
+    return Object.freeze([
+      ...filterLocal(this.#args, this.#state.filter, (option) =>
+        this.#authorityRecordOf(option)
+      ),
+    ]);
   }
 
   /** Whether the current source can fetch another page within any configured ceiling. */
@@ -1329,8 +1352,9 @@ export default class SelectEngine {
   }
 
   /**
-   * The async-data function for the list `DAsyncContent`. Returns the full filtered local
-   * list or the accumulated server pages, bounded by `maxLoaded` when configured.
+   * The async-data function for the list `DAsyncContent`. Returns the whole local list, which
+   * the query narrows when rows are built, or the accumulated server pages, bounded by
+   * `maxLoaded` when configured.
    *
    * @param _context - Reactivity trigger only; unused.
    * @returns Options, or a promise of options.
@@ -1342,6 +1366,32 @@ export default class SelectEngine {
   ): SelectOption[] | Promise<SelectOption[]> {
     this.#assertSingleSource();
     return this.#source.rows(opts);
+  }
+
+  /**
+   * The options a list shows for a loaded snapshot: a client list narrowed by the query it was
+   * loaded for, and a server page as it came.
+   *
+   * @param options - The loaded options.
+   * @param filter - The query they were loaded for.
+   */
+  @bind
+  listInputs(
+    options: readonly SelectOption[],
+    filter: string
+  ): readonly SelectOption[] {
+    if (this.#args.isAsync) {
+      return options;
+    }
+    if (filter === this.#state.filter && options === localOptions(this.#args)) {
+      return this.filteredOptions;
+    }
+    return filterLocal(
+      this.#args,
+      filter,
+      (option) => this.#authorityRecordOf(option),
+      options
+    );
   }
 
   /**
@@ -1632,23 +1682,17 @@ export default class SelectEngine {
       return null;
     }
     const args = this.#args;
-    const known = this.#source.knownOptions();
-    const records = known.map((option) => option.record);
+    const candidates = this.#pasteCandidates();
+    const records = candidates.map(({ record }) => record);
     const allowCreate = args.allowCreate;
     return names
       .map((name) => {
         const term = name.toLowerCase();
         const match =
-          known.find(
-            (option) => args.valueKey(args.recordValue(option.record)) === name
-          ) ??
-          known.find(
-            (option) =>
-              String(args.recordLabel(option.record) ?? "").toLowerCase() ===
-              term
-          );
+          candidates.find(({ key }) => key === name) ??
+          candidates.find(({ label }) => label.toLowerCase() === term);
         if (match) {
-          return match;
+          return match.option;
         }
         const creates =
           typeof allowCreate === "function"
@@ -1703,6 +1747,38 @@ export default class SelectEngine {
   @bind
   requestClose(): void {
     this.#args.requestClose?.();
+  }
+
+  /** The authoritative record an option's key stands for, or the option's own. */
+  #authorityRecordOf(option: SelectOption): SelectRecord {
+    const key = this.#args.valueKey(this.#args.recordValue(option.record));
+    return (
+      (key != null && this.#valueResolver.authorityRecord(key)) || option.record
+    );
+  }
+
+  /**
+   * What a paste can match: the options the list shows for the current query, as it shows them,
+   * then every other option the source holds.
+   */
+  #pasteCandidates(): PasteCandidate[] {
+    const known = this.#source.knownOptions();
+    const shown = this.listInputs(known, this.filter);
+    const candidates = this.#listComposer.pasteOptions(shown);
+    if (shown !== known) {
+      const keys = new Set(candidates.map(({ item }) => item.key));
+      candidates.push(
+        ...this.#listComposer
+          .pasteOptions(known)
+          .filter(({ item }) => item.key != null && !keys.has(item.key))
+      );
+    }
+    return candidates.map(({ option, item }) => ({
+      option,
+      key: item.key,
+      label: item.label,
+      record: item.record,
+    }));
   }
 
   #contextEntryChanged(

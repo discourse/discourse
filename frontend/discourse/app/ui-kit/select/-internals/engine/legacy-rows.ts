@@ -47,7 +47,8 @@ function legacySettings(
   if (row.sticky) {
     settings.position = "sticky";
   }
-  if (typeof row.description === "string" && row.description) {
+  // An empty description is kept: it clears one the row's input had.
+  if (typeof row.description === "string") {
     settings.description = row.description;
   }
   return settings;
@@ -93,8 +94,12 @@ export function optionsFromLegacyRows(
     const key = args.valueKey(args.recordValue(row));
     const source = key == null ? undefined : byKey.get(key);
     const settings = legacySettings(row, adaptAction);
+    // What the copy shows differently outranks the settings it inherits from its input.
     return source
-      ? selectOption(row).with(source.settings).with(settings)
+      ? selectOption(row)
+          .with(source.settings)
+          .with(args.changedPresentation(source.record, row))
+          .with(settings)
       : selectOption(row, settings);
   });
 }

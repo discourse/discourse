@@ -1488,3 +1488,734 @@ module(
     });
   }
 );
+
+module("Integration | ui-kit | select | DSelect list view", function (hooks) {
+  setupRenderingTest(hooks);
+
+  let trackedObject;
+  let withPluginApi;
+  let EngineProbe;
+  let DSelectList;
+  hooks.before(async function () {
+    ({ trackedObject } = await import("@ember/reactive/collections"));
+    ({ withPluginApi } = await import("discourse/lib/plugin-api"));
+    ({ EngineProbe } = await import("discourse/tests/helpers/d-select-hosts"));
+    ({ default: DSelectList } =
+      await import("discourse/ui-kit/select/d-select-list"));
+  });
+
+  function customize(setup) {
+    withPluginApi((api) =>
+      api.registerValueTransformer("select-customizations", ({ value }) =>
+        value.forAll(setup)
+      )
+    );
+  }
+
+  /** Action accessors need a standalone spy on their bound callback. */
+  function spyOnHostCallback(host, name) {
+    const spy = sinon.spy(host[name]);
+    Object.defineProperty(host, name, { configurable: true, value: spy });
+    return spy;
+  }
+
+  test("renders explicit, derived and empty item presentation on value rows", async function (assert) {
+    const records = [
+      {
+        id: "explicit",
+        title: "Canonical explicit",
+        detail: "Canonical detail",
+      },
+      { id: "derived", title: "Canonical derived", detail: "Derived detail" },
+      { id: "empty", title: "Must not show", detail: "Must not describe" },
+    ];
+    const options = [
+      selectOption(
+        { ...records[0], title: "Local explicit" },
+        { label: "Alias", description: "Explicit detail" }
+      ),
+      { ...records[1], title: "Local derived", detail: "Local detail" },
+      selectOption(records[2], { label: "", description: "" }),
+    ];
+    await render(
+      <template>
+        <DSelect
+          @descriptionField="detail"
+          @labelField="title"
+          @options={{options}}
+          @valueRecords={{records}}
+          @variant="static"
+        />
+      </template>
+    );
+    await dSelect().open();
+    assert
+      .dom('[role="option"][data-value="explicit"]')
+      .hasAttribute("data-name", "Alias")
+      .hasText("Alias Explicit detail", "explicit properties drive the row");
+    assert
+      .dom('[data-value="explicit"] .d-select__option-description')
+      .hasText("Explicit detail", "the explicit description wins");
+    assert
+      .dom('[role="option"][data-value="derived"]')
+      .hasAttribute("data-name", "Canonical derived")
+      .hasText(
+        "Canonical derived Derived detail",
+        "fields come from the key's canonical record"
+      );
+    assert
+      .dom('[data-value="derived"] .d-select__option-description')
+      .hasText("Derived detail", "the configured description field is drawn");
+    assert
+      .dom('[role="option"][data-value="empty"]')
+      .hasAttribute("data-name", "")
+      .hasText("", "empty properties suppress both field fallbacks");
+    assert
+      .dom('[data-value="empty"] .d-select__option-description')
+      .doesNotExist("an empty description adds no description element");
+  });
+
+  test("renders native copy presentation while clicking emits the canonical record", async function (assert) {
+    const record = { id: "a", title: "Original", detail: "Original detail" };
+    const options = [record];
+    const onChange = sinon.spy();
+    customize((spec) =>
+      spec.content((inputs) =>
+        inputs.map((input) => ({
+          ...input.record,
+          title: "Changed",
+          detail: "Changed detail",
+        }))
+      )
+    );
+    await render(
+      <template>
+        <DSelect
+          @descriptionField="detail"
+          @labelField="title"
+          @onChange={{onChange}}
+          @options={{options}}
+          @variant="static"
+        />
+      </template>
+    );
+    await dSelect().open();
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute("data-name", "Changed")
+      .hasText(
+        "Changed Changed detail",
+        "copy presentation reaches the rendered item"
+      );
+    await dSelect().select("a");
+    assert.strictEqual(
+      onChange.firstCall?.args[1],
+      record,
+      "the click emits the original record"
+    );
+  });
+
+  test("local presentation changes update membership without rerunning list async data", async function (assert) {
+    const state = trackedObject({ label: "Needle", detail: "Before" });
+    const record = {
+      id: "a",
+      get name() {
+        return state.label;
+      },
+      get detail() {
+        return state.detail;
+      },
+    };
+    const options = [record];
+    let loadListContent;
+    class Probe extends EngineProbe {
+      constructor() {
+        super(...arguments);
+        loadListContent = spyOnHostCallback(this.host, "loadListContent");
+      }
+    }
+    await render(
+      <template>
+        <Probe
+          @debounce={{false}}
+          @descriptionField="detail"
+          @options={{options}}
+        />
+      </template>
+    );
+    await dSelect().search("needle");
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .exists("the initial label matches");
+    const loads = loadListContent.callCount;
+    assert.true(loads > 0, "the real list async-data boundary was exercised");
+    state.label = "Haystack";
+    await settled();
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .doesNotExist("the changed pre-content label removes the row");
+    assert.strictEqual(
+      loadListContent.callCount,
+      loads,
+      "the label is a display dependency, never an async-data dependency"
+    );
+    state.label = "Needle again";
+    state.detail = "After";
+    await settled();
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute("data-name", "Needle again");
+    assert
+      .dom('[data-value="a"] .d-select__option-description')
+      .hasText("After", "the returning row uses current presentation");
+    assert.strictEqual(
+      loadListContent.callCount,
+      loads,
+      "neither presentation change reruns the list loader"
+    );
+  });
+
+  test("held async data ignores presentation while the list and chips update", async function (assert) {
+    const state = trackedObject({ label: "Before", detail: "Before detail" });
+    const record = {
+      id: "a",
+      get name() {
+        return state.label;
+      },
+      get detail() {
+        return state.detail;
+      },
+    };
+    const options = [record];
+    const value = ["a"];
+    let loadListContent;
+    let resolveMulti;
+    class Probe extends EngineProbe {
+      constructor() {
+        super(...arguments);
+        resolveMulti = spyOnHostCallback(this.host, "resolveMulti");
+        loadListContent = spyOnHostCallback(this.host, "loadListContent");
+      }
+    }
+    await render(
+      <template>
+        <Probe
+          @descriptionField="detail"
+          @multiple={{true}}
+          @options={{options}}
+          @value={{value}}
+        />
+      </template>
+    );
+    await dSelect().open();
+    const heldRuns = resolveMulti.callCount;
+    const listRuns = loadListContent.callCount;
+    assert.true(
+      heldRuns > 0,
+      "the real held async-data boundary was exercised"
+    );
+    assert.true(
+      listRuns > 0,
+      "the real list async-data boundary was exercised"
+    );
+    state.label = "After";
+    state.detail = "After detail";
+    await settled();
+    assert
+      .dom(".d-select__chip-label")
+      .hasText("After", "held presentation updates outside async data");
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute("data-name", "After");
+    assert
+      .dom('[data-value="a"] .d-select__option-description')
+      .hasText("After detail", "the list reads the same presentation");
+    assert.strictEqual(
+      resolveMulti.callCount,
+      heldRuns,
+      "held async data does not rerun"
+    );
+    assert.strictEqual(
+      loadListContent.callCount,
+      listRuns,
+      "list async data does not rerun"
+    );
+  });
+
+  test("presentation changes never restart or abort an in-flight loader", async function (assert) {
+    const state = trackedObject({ label: "Before" });
+    const record = {
+      id: "a",
+      get name() {
+        return state.label;
+      },
+    };
+    const records = [record];
+    let release;
+    const load = sinon.spy(
+      (_filter, { signal }) =>
+        new Promise((resolve) => {
+          release = () => resolve(records);
+          assert.false(signal.aborted, "the pending request starts live");
+        })
+    );
+    await render(
+      <template><DSelect @load={{load}} @valueRecords={{records}} /></template>
+    );
+    const opening = dSelect().open();
+    try {
+      await waitUntil(() => load.called);
+      const signal = load.firstCall.args[1].signal;
+      state.label = "After";
+      await new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve))
+      );
+      assert.strictEqual(
+        load.callCount,
+        1,
+        "presentation never starts another load"
+      );
+      assert.false(
+        signal.aborted,
+        "presentation never aborts the existing load"
+      );
+    } finally {
+      release?.();
+      await opening;
+    }
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute(
+        "data-name",
+        "After",
+        "the accepted page draws current presentation"
+      );
+  });
+
+  test("loading skeleton labels follow explicit and canonical item labels", async function (assert) {
+    const records = [
+      { id: "a", name: "Canonical A" },
+      { id: "b", name: "Canonical B" },
+    ];
+    const rows = [
+      selectOption({ id: "a", name: "Local A" }, { label: "Alias A" }),
+      { id: "b", name: "Local B" },
+    ];
+    let release;
+    const load = (filter) =>
+      filter ? new Promise((resolve) => (release = () => resolve([]))) : rows;
+    await render(
+      <template>
+        <DSelectList
+          @debounce={{false}}
+          @load={{load}}
+          @texts={{hash ariaLabel="Results"}}
+          @valueRecords={{records}}
+          @virtualized={{false}}
+        />
+      </template>
+    );
+    const typing = fillIn(
+      '.d-select.--list .d-select__chips input[type="search"]',
+      "query"
+    );
+    try {
+      await waitUntil(
+        () => findAll(".d-select__placeholder-label").length === 2
+      );
+      assert.deepEqual(
+        findAll(".d-select__placeholder-label").map((element) =>
+          element.textContent.trim()
+        ),
+        ["Alias A", "Canonical B"],
+        "replacement skeletons retain item labels, rather than input record labels"
+      );
+    } finally {
+      release?.();
+      await typing;
+    }
+  });
+
+  test("option attributes reuse equivalent items and recompute for item and placement changes", async function (assert) {
+    const listed = { id: "a", name: "Local" };
+    const record = { ...listed, name: "Canonical" };
+    const other = { id: "b", name: "Other" };
+    const state = trackedObject({
+      options: [listed, other],
+      records: [selectOption(record, { description: "Before" })],
+    });
+    const attributes = sinon.spy((attrs, context) => {
+      attrs.title = context.record.name;
+    });
+    customize((spec) => spec.optionAttributes(attributes));
+    await render(
+      <template>
+        <DSelect
+          @options={{state.options}}
+          @valueRecords={{state.records}}
+          @variant="static"
+        />
+      </template>
+    );
+    await dSelect().open();
+    const initial = attributes.callCount;
+    assert.strictEqual(
+      initial,
+      2,
+      "each rendered row invokes the customization once"
+    );
+    assert.strictEqual(
+      attributes.firstCall.args[1].record,
+      record,
+      "the customization receives the canonical record"
+    );
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute(
+        "title",
+        "Canonical",
+        "the returned attributes use that canonical record"
+      );
+    state.options = [selectOption(listed), other];
+    await settled();
+    assert.strictEqual(
+      attributes.callCount,
+      initial,
+      "equivalent rebuilt inputs reuse the item's attributes"
+    );
+    await triggerKeyEvent('[role="combobox"]', "keydown", "Home");
+    await triggerKeyEvent('[role="combobox"]', "keydown", "ArrowDown");
+    assert
+      .dom('[role="option"].--active')
+      .hasAttribute(
+        "data-value",
+        "b",
+        "navigation really moved to a different row"
+      );
+    assert.strictEqual(
+      attributes.callCount,
+      initial,
+      "moving the active row does not change its item or placement"
+    );
+    state.records = [selectOption(record, { description: "After" })];
+    await settled();
+    assert.strictEqual(
+      attributes.callCount,
+      initial + 1,
+      "a merged item property changes even though the input record and settings did not"
+    );
+    assert
+      .dom('[data-value="a"] .d-select__option-description')
+      .hasText("After", "the changed item reaches the row");
+    state.options = [selectOption(listed, { position: "sticky" }), other];
+    await settled();
+    assert.strictEqual(
+      attributes.callCount,
+      initial + 2,
+      "placement invalidates attributes independently of item properties"
+    );
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasClass("--sticky", "the placement really changed");
+    state.options = [selectOption(listed, { position: "sticky" }), other];
+    await settled();
+    assert.strictEqual(
+      attributes.callCount,
+      initial + 2,
+      "equal placement and item do not invalidate the cache"
+    );
+  });
+
+  test("rows honor disabled behavior contributed by valueRecords", async function (assert) {
+    const record = { id: "a", name: "Apple" };
+    const options = [record];
+    const records = [selectOption(record, { disabled: true })];
+    const onChange = sinon.spy();
+    await render(
+      <template>
+        <DSelect
+          @onChange={{onChange}}
+          @options={{options}}
+          @valueRecords={{records}}
+          @variant="static"
+        />
+      </template>
+    );
+    await dSelect().open();
+
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute(
+        "aria-disabled",
+        "true",
+        "the row exposes the disabled behavior from valueRecords"
+      );
+    await dSelect().select("a");
+    assert.true(onChange.notCalled, "clicking the disabled row emits no value");
+    assert
+      .dom('[role="listbox"]')
+      .exists("the disabled click keeps the list open");
+  });
+
+  test("rows run actions contributed by valueRecords instead of selecting a value", async function (assert) {
+    const record = { id: "a", name: "Apple" };
+    const options = [record];
+    const onSelect = sinon.spy();
+    const records = [selectOption(record, { onSelect })];
+    const onChange = sinon.spy();
+    await render(
+      <template>
+        <DSelect
+          @onChange={{onChange}}
+          @options={{options}}
+          @valueRecords={{records}}
+          @variant="static"
+        />
+      </template>
+    );
+    await dSelect().select("a");
+
+    assert.strictEqual(
+      onSelect.callCount,
+      1,
+      "clicking the row runs the action from valueRecords"
+    );
+    assert.strictEqual(
+      onSelect.firstCall?.args[1],
+      record,
+      "the action receives the canonical record"
+    );
+    assert.true(onChange.notCalled, "the action never emits a selected value");
+    assert.dom('[role="listbox"]').exists("the action keeps the list open");
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute(
+        "aria-selected",
+        "false",
+        "the action row remains unselected"
+      );
+  });
+
+  for (const origin of ["extra", "content"]) {
+    test(`${origin} copies retain presentation when their source row is filtered out`, async function (assert) {
+      const record = { id: "a", name: "Apple" };
+      const copy = { id: "a", name: "All fruit" };
+      const options = [record];
+      const extraOptions = () => (origin === "extra" ? [copy] : []);
+      const onChange = sinon.spy();
+      if (origin === "content") {
+        customize((spec) => spec.content(() => [copy]));
+      }
+      await render(
+        <template>
+          <DSelect
+            @debounce={{false}}
+            @extraOptions={{extraOptions}}
+            @onChange={{onChange}}
+            @options={{options}}
+          />
+        </template>
+      );
+      await dSelect().open();
+      assert
+        .dom('[role="option"][data-value="a"]')
+        .hasText("All fruit", "the copy has its own presentation at rest");
+
+      await dSelect().search("no matching fruit");
+
+      assert
+        .dom('[role="option"][data-value="a"]')
+        .hasText(
+          "All fruit",
+          `the ${origin} copy keeps its label after Apple is filtered out`
+        );
+      assert
+        .dom('[role="option"]')
+        .exists({ count: 1 }, "only the injected copy is shown");
+      await dSelect().select("a");
+      assert.strictEqual(
+        onChange.firstCall?.args[0],
+        "a",
+        "clicking the copy emits its value"
+      );
+      assert.strictEqual(
+        onChange.firstCall?.args[1],
+        record,
+        "the filtered-out source record remains canonical"
+      );
+    });
+  }
+
+  test("paste ignores a local option removed while the select is closed", async function (assert) {
+    const record = { id: "a", name: "Apple" };
+    const created = { id: "new:Kiwi", name: "Kiwi" };
+    const state = trackedObject({ options: [record] });
+    const onChange = sinon.spy();
+    const allowCreate = sinon.spy((name) => name === "Kiwi");
+    const createOption = sinon.spy(() => created);
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{allowCreate}}
+          @createOption={{createOption}}
+          @multiple={{true}}
+          @onChange={{onChange}}
+          @options={{state.options}}
+          @value={{(array)}}
+        />
+      </template>
+    );
+    await dSelect().open();
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasText("Apple", "the list initially shows the option");
+    await dSelect().close();
+    state.options = [];
+    await settled();
+    assert
+      .dom('[role="listbox"]')
+      .doesNotExist("the source changes while closed");
+
+    const data = new DataTransfer();
+    data.setData("text/plain", "Apple | Kiwi");
+    find('[role="combobox"]').dispatchEvent(
+      new ClipboardEvent("paste", {
+        clipboardData: data,
+        bubbles: true,
+        cancelable: true,
+      })
+    );
+    await settled();
+
+    assert.deepEqual(
+      onChange.lastCall?.args[0],
+      [created.id],
+      "paste emits no removed source value"
+    );
+    assert.deepEqual(
+      allowCreate.args.map(([name]) => name),
+      ["Apple", "Kiwi"],
+      "the removed label reaches creation instead of matching the old row"
+    );
+    assert.deepEqual(
+      createOption.args.map(([name]) => name),
+      ["Kiwi"],
+      "only the allowed unknown name is created"
+    );
+    assert.strictEqual(
+      onChange.lastCall?.args[1]?.[0],
+      created,
+      "paste emits the created record"
+    );
+  });
+
+  test("option attributes follow own settings when merged item presentation stays unchanged", async function (assert) {
+    const record = { id: "a", name: "Apple" };
+    const records = [selectOption(record, { description: "Detail" })];
+    const state = trackedObject({ options: [record] });
+    const attributes = sinon.spy((attrs, context) => {
+      attrs.title = context.option.description ?? "No option description";
+    });
+    customize((spec) => spec.optionAttributes(attributes));
+    await render(
+      <template>
+        <DSelect
+          @options={{state.options}}
+          @valueRecords={{records}}
+          @variant="static"
+        />
+      </template>
+    );
+    await dSelect().open();
+    assert.strictEqual(
+      attributes.callCount,
+      1,
+      "the rendered row evaluates attributes once"
+    );
+    assert.strictEqual(
+      attributes.firstCall.args[1].record,
+      record,
+      "attributes receive the canonical record"
+    );
+    assert.strictEqual(
+      attributes.firstCall.args[1].option.description,
+      undefined,
+      "the source option has no own description"
+    );
+    assert
+      .dom('[data-value="a"] .d-select__option-description')
+      .hasText("Detail", "valueRecords supplies the merged item description");
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute(
+        "title",
+        "No option description",
+        "attributes read the option's own description"
+      );
+
+    state.options = [selectOption(record)];
+    await settled();
+    assert.strictEqual(
+      attributes.callCount,
+      1,
+      "equal own settings reuse the attribute cache"
+    );
+
+    state.options = [selectOption(record, { description: "Detail" })];
+    await settled();
+    assert.strictEqual(
+      attributes.callCount,
+      2,
+      "changed own option settings recompute attributes even when the merged item is unchanged"
+    );
+    assert.strictEqual(
+      attributes.lastCall.args[1].option.description,
+      "Detail",
+      "the callback receives the new own description"
+    );
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute(
+        "title",
+        "Detail",
+        "the rendered attributes follow the new own settings"
+      );
+    assert
+      .dom('[data-value="a"] .d-select__option-description')
+      .hasText("Detail", "the merged item description remains unchanged");
+
+    state.options = [selectOption(record, { description: "Detail" })];
+    await settled();
+    assert.strictEqual(
+      attributes.callCount,
+      2,
+      "equivalent own settings still reuse attributes"
+    );
+
+    state.options = [record];
+    await settled();
+    assert.strictEqual(
+      attributes.callCount,
+      3,
+      "removing an own setting recomputes attributes"
+    );
+    assert.strictEqual(
+      attributes.lastCall.args[1].option.description,
+      undefined,
+      "the callback sees the removed own description"
+    );
+    assert
+      .dom('[role="option"][data-value="a"]')
+      .hasAttribute(
+        "title",
+        "No option description",
+        "removing the own setting restores the initial attributes"
+      );
+    assert
+      .dom('[data-value="a"] .d-select__option-description')
+      .hasText(
+        "Detail",
+        "valueRecords continues supplying the item description"
+      );
+  });
+});

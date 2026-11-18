@@ -11,6 +11,7 @@ import type {
 } from "discourse/ui-kit/select/select-engine";
 import type { SelectContentContext } from "./customizations.ts";
 import { engineKey, groupIdentity, recordKey } from "./row-keys.ts";
+import type { SelectItem } from "./select-item.ts";
 import {
   engineOption,
   optionKind,
@@ -62,6 +63,15 @@ interface GroupedRows {
 
 type BoundaryKind = "none" | "text" | "action";
 
+/** Finds the list item for a key, given the option a row shows it through. */
+type ItemLookup = (key: string, input: SelectOption) => SelectItem | undefined;
+
+/** An option paste can match, and the item it is listed as. */
+export interface PasteOption {
+  option: SelectOption;
+  item: SelectItem;
+}
+
 export default class ListComposer {
   #args: SelectArgsView;
   #getFilter: () => string;
@@ -71,7 +81,11 @@ export default class ListComposer {
   #isLockedValue: (value: SelectId) => boolean;
   #getAtMaximum: () => boolean;
   #getTotal: () => number | undefined;
-  #keyScopeRecord: (record: SelectRecord) => SelectRecord;
+  #viewRecord: (key: string, input: SelectOption) => SelectRecord | undefined;
+  #itemFor: ItemLookup;
+  #peekItem: ItemLookup;
+  #rowItem: (input: SelectOption) => SelectItem;
+  #keepItems: (keys: ReadonlySet<string>) => void;
   #getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
 
   /** Native content steps run before the compatibility bridge. */
@@ -105,8 +119,16 @@ export default class ListComposer {
     isLockedValue: (value: SelectId) => boolean;
     getAtMaximum: () => boolean;
     getTotal: () => number | undefined;
-    /** The record a row's key stands for, which a displayed copy never replaces. */
-    keyScopeRecord?: (record: SelectRecord) => SelectRecord;
+    /** The record a key stands for in the list, which a displayed copy never replaces. */
+    viewRecord: (key: string, input: SelectOption) => SelectRecord | undefined;
+    /** The list item for a row's key, given the row's own option. */
+    itemFor: ItemLookup;
+    /** The same item built afresh and never memoised, for matching outside a build. */
+    peekItem: ItemLookup;
+    /** The item of a row that stands for no value key. */
+    rowItem: (input: SelectOption) => SelectItem;
+    /** Called after a build with the keys it showed, so other keys' items can be let go. */
+    keepItems: (keys: ReadonlySet<string>) => void;
     getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
     /** Applies sealed per-select content declarations. */
     applyContent: (
@@ -128,7 +150,11 @@ export default class ListComposer {
     this.#getAtMaximum = opts.getAtMaximum;
     this.#isLockedValue = opts.isLockedValue;
     this.#getTotal = opts.getTotal;
-    this.#keyScopeRecord = opts.keyScopeRecord ?? ((record) => record);
+    this.#viewRecord = opts.viewRecord;
+    this.#itemFor = opts.itemFor;
+    this.#peekItem = opts.peekItem;
+    this.#rowItem = opts.rowItem;
+    this.#keepItems = opts.keepItems;
     this.#getContentContext = opts.getContentContext;
     this.#applyContent = opts.applyContent;
     this.#applyLegacyContent = opts.applyLegacyContent;
@@ -152,17 +178,22 @@ export default class ListComposer {
     // The source validates a measurement against the options it holds.
     const rawCount = loaded.length;
 
-    let options = this.#applyContent(loaded, {
-      filter: this.#getFilter(),
-      value: this.#getValue(),
-      ...this.#getContentContext(),
-    });
-
-    // Legacy `modifySelectKit(id).{prepend,append,replace}Content` extensions run in
-    // their own stage, after native customizations, so ordering is deterministic and
-    // does not depend on global registration order.
-    options = this.#applyLegacyContent(options);
+    let options = this.#content(loaded);
     this.#noteVisible(options.length, rawCount);
+
+    // Every option now stands for its key's record, with its item; what content changed on a
+    // copy is kept as presentation.
+    const items = new Map<SelectOption, SelectItem>();
+    const originals = new Map<SelectOption, SelectOption>();
+    const before = this.#byKey(loaded);
+    const rawExtra = this.#wrapExtras(this.#snapshot());
+    // A source option an extra replaces never reaches a row, so it never claims the key's item.
+    const itemOf = this.#unlessShadowed(rawExtra, this.#itemFor);
+    options = options.map((option) => {
+      const normalized = this.#normalize(option, before, items, itemOf);
+      originals.set(normalized, option);
+      return normalized;
+    });
 
     // Runs are found before held options are hidden, so what is selected never renumbers them.
     const runs =
@@ -171,7 +202,12 @@ export default class ListComposer {
         : undefined;
     // The next page may continue the last run, so its footer waits rather than move later.
     const held =
-      runs && this.#canGrow() ? this.#trailingRun(loaded, runs) : undefined;
+      runs && this.#canGrow()
+        ? this.#trailingRun(
+            loaded.map((option) => this.#recordOf(option)),
+            runs
+          )
+        : undefined;
     const extending = runs ? this.#trackExtension(filter, rawCount) : false;
 
     const createCandidate = this.#createOption(options, filter);
@@ -183,9 +219,17 @@ export default class ListComposer {
       !this.#isSelected(option);
     const create =
       createCandidate && include(createCandidate) ? createCandidate : null;
+    // Taken before held options are hidden, so an extra keeps what its source shows either way.
+    const listed = this.#byKey(options);
     options = options.filter(include);
 
-    const allExtra = this.#extraOptions(options);
+    this.#assertDistinctExtras(
+      rawExtra,
+      options.map((option) => originals.get(option) ?? option)
+    );
+    const allExtra = rawExtra.map((extra) =>
+      this.#normalizeExtra(extra, listed, items, this.#itemFor)
+    );
     // One option per value: an extra option comes first, so it keeps its value.
     const extraKeys = new Set(
       allExtra.map((option) => this.#keyOf(option)).filter((key) => key != null)
@@ -233,8 +277,41 @@ export default class ListComposer {
       sourceCount,
       rawCount,
       create,
-      grouped
+      grouped,
+      items
     );
+  }
+
+  /**
+   * The options a paste can match among `inputs`, listed as the list would show them now: after
+   * content steps, the legacy bridge and the extra options, each with its item. Built afresh, so
+   * it never reflects a list built earlier.
+   *
+   * @param inputs - Options the source holds, as a list would be built from them.
+   */
+  pasteOptions(inputs: readonly SelectOption[]): PasteOption[] {
+    const items = new Map<SelectOption, SelectItem>();
+    const before = this.#byKey(inputs);
+    const rawExtra = this.#wrapExtras(this.#snapshot());
+    const itemOf = this.#unlessShadowed(rawExtra, this.#peekItem);
+    const options = this.#content(inputs).map((option) =>
+      this.#normalize(option, before, items, itemOf)
+    );
+    const listed = this.#byKey(options);
+    const extra = rawExtra.map((option) =>
+      this.#normalizeExtra(option, listed, items, this.#peekItem)
+    );
+    const extraKeys = new Set(extra.map((option) => this.#keyOf(option)));
+    return [
+      ...extra,
+      ...options.filter((option) => {
+        const key = this.#keyOf(option);
+        return key == null || !extraKeys.has(key);
+      }),
+    ].map((option) => ({
+      option,
+      item: items.get(option) ?? this.#rowItem(option),
+    }));
   }
 
   /**
@@ -361,9 +438,11 @@ export default class ListComposer {
     return this.#args.valueKey(this.#args.recordValue(option.record));
   }
 
-  /** The extra options the select adds beside its source, wrapped, one per value. */
-  #extraOptions(sourceOptions: readonly SelectOption[]): SelectOption[] {
-    const extra = this.#wrapExtras(this.#snapshot());
+  /** Asserts that no extra option lists a record the source also lists. */
+  #assertDistinctExtras(
+    extra: readonly SelectOption[],
+    sourceOptions: readonly SelectOption[]
+  ): void {
     if (DEBUG) {
       const records = new Set<object>(sourceOptions.map((o) => o.record));
       for (const option of extra) {
@@ -375,7 +454,15 @@ export default class ListComposer {
         records.add(option.record);
       }
     }
-    return extra;
+  }
+
+  /** An item lookup that skips the keys the given extra options take over. */
+  #unlessShadowed(
+    extra: readonly SelectOption[],
+    itemOf: ItemLookup
+  ): ItemLookup {
+    const keys = new Set(extra.map((option) => this.#keyOf(option)));
+    return (key, input) => (keys.has(key) ? undefined : itemOf(key, input));
   }
 
   #wrapExtras(snapshot: SelectSnapshot): SelectOption[] {
@@ -413,7 +500,8 @@ export default class ListComposer {
     sourceCount: number,
     inputCount: number,
     create: SelectOption | null,
-    grouped: GroupedRows
+    grouped: GroupedRows,
+    items: ReadonlyMap<SelectOption, SelectItem>
   ): readonly SelectRow[] {
     const total = this.#getTotal();
     // `aria-setsize` describes the complete set rather than the rendered rows, so a source that
@@ -441,9 +529,11 @@ export default class ListComposer {
 
     let optionOrdinal = 0;
     let logicalIndex = 0;
-    return Object.freeze(
+    const shown = new Set<string>();
+    const described = Object.freeze(
       rows.map((placed, index) => {
         const row = this.#describe(placed, index, atMaximum);
+        row.item = this.#itemOf(placed, items, shown);
         const group = {
           groupOrdinal: placed.stamp?.ordinal,
           groupText: placed.stamp?.text,
@@ -468,15 +558,149 @@ export default class ListComposer {
         };
       })
     );
+    this.#keepItems(shown);
+    return described;
+  }
+
+  /**
+   * The item a placed row shows: its key's, for an option that stands for a value, and its own
+   * option's for every row kind the engine builds.
+   */
+  #itemOf(
+    placed: PlacedRow,
+    items: ReadonlyMap<SelectOption, SelectItem>,
+    shown: Set<string>
+  ): SelectItem {
+    const item = placed.boundary ? undefined : items.get(placed.option);
+    if (item?.key != null) {
+      shown.add(item.key);
+      return item;
+    }
+    return this.#rowItem(placed.option);
+  }
+
+  /** Content steps, then the compatibility bridge's legacy content. */
+  #content(loaded: readonly SelectOption[]): SelectOption[] {
+    const options = this.#applyContent([...loaded], {
+      filter: this.#getFilter(),
+      value: this.#getValue(),
+      ...this.#getContentContext(),
+    });
+    // Legacy `modifySelectKit(id).{prepend,append,replace}Content` extensions run in
+    // their own stage, after native customizations, so ordering is deterministic and
+    // does not depend on global registration order.
+    return this.#applyLegacyContent(options);
+  }
+
+  /** The first option listed for each key. */
+  #byKey(options: readonly SelectOption[]): Map<string, SelectOption> {
+    const byKey = new Map<string, SelectOption>();
+    for (const option of options) {
+      const key = this.#keyOf(option);
+      if (key != null && !byKey.has(key)) {
+        byKey.set(key, option);
+      }
+    }
+    return byKey;
+  }
+
+  /** The record an option's key stands for in the list. */
+  #recordOf(option: SelectOption): SelectRecord {
+    const key = this.#keyOf(option);
+    return (key != null && this.#viewRecord(key, option)) || option.record;
+  }
+
+  /**
+   * The option over the record its key stands for, so grouping, runs and every data edge read
+   * one record, and with the behaviour its item merged from every source. A copy a content step
+   * made contributes the presentation it changed from what it was made from: the listed option
+   * of its key, or the key's record when none was listed. The copy's own settings outrank that.
+   */
+  #normalize(
+    option: SelectOption,
+    before: ReadonlyMap<string, SelectOption>,
+    items: Map<SelectOption, SelectItem>,
+    itemOf: ItemLookup
+  ): SelectOption {
+    const key = this.#keyOf(option);
+    if (key == null || optionKind(option) !== "value") {
+      return option;
+    }
+    const record = this.#viewRecord(key, option) ?? option.record;
+    const made = before.get(key)?.record ?? record;
+    const changed =
+      option.record === made
+        ? undefined
+        : this.#args.changedPresentation(made, option.record);
+    const view =
+      record === option.record && !changed
+        ? option
+        : selectOption(record, { ...changed, ...option.settings });
+    return this.#withItem(key, view, items, itemOf);
+  }
+
+  /**
+   * An extra option over its key's record. It takes the slot of a listed option with its key,
+   * whose item properties it keeps wherever it is silent; placement stays its own. Like a content
+   * copy, a different record of that key contributes the presentation it shows differently.
+   */
+  #normalizeExtra(
+    extra: SelectOption,
+    listed: ReadonlyMap<string, SelectOption>,
+    items: Map<SelectOption, SelectItem>,
+    itemOf: ItemLookup
+  ): SelectOption {
+    const key = this.#keyOf(extra);
+    if (key == null || optionKind(extra) !== "value") {
+      return extra;
+    }
+    const record = this.#viewRecord(key, extra) ?? extra.record;
+    const shadowed = listed.get(key);
+    let view = extra;
+    if (record !== extra.record || shadowed) {
+      const kept: Record<string, unknown> = { ...shadowed?.settings };
+      delete kept.position;
+      delete kept.divider;
+      const changed =
+        record === extra.record
+          ? undefined
+          : this.#args.changedPresentation(record, extra.record);
+      view = selectOption(record, { ...kept, ...changed, ...extra.settings });
+    }
+    return this.#withItem(key, view, items, itemOf);
+  }
+
+  /**
+   * Looks the view's item up and returns the option the row acts through: the view, carrying
+   * the disabled state and action the item merged.
+   */
+  #withItem(
+    key: string,
+    view: SelectOption,
+    items: Map<SelectOption, SelectItem>,
+    itemOf: ItemLookup
+  ): SelectOption {
+    const item = itemOf(key, view);
+    if (!item) {
+      return view;
+    }
+    const acting =
+      item.disabled === view.disabled &&
+      item.action === (view.settings.onSelect ?? undefined)
+        ? view
+        : view.with({
+            disabled: item.disabled ? true : null,
+            onSelect: item.action ?? null,
+          });
+    items.set(acting, item);
+    return acting;
   }
 
   #createOption(options: SelectOption[], filter: string): SelectOption | null {
     if (!filter || !this.#args.createOption) {
       return null;
     }
-    const records = options.map((option) =>
-      this.#keyScopeRecord(option.record)
-    );
+    const records = options.map((option) => option.record);
     const allowed =
       typeof this.#args.allowCreate === "function"
         ? this.#args.allowCreate(filter, records, this.#args.config)
@@ -666,11 +890,11 @@ export default class ListComposer {
 
   /** The run of the last loaded option grouping placed; options injected after it never count. */
   #trailingRun(
-    loaded: SelectOption[],
+    loaded: SelectRecord[],
     runs: Map<SelectRecord, GroupRun>
   ): GroupRun | undefined {
     for (let index = loaded.length - 1; index >= 0; index--) {
-      const run = runs.get(loaded[index].record);
+      const run = runs.get(loaded[index]);
       if (run) {
         return run;
       }

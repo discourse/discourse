@@ -47,13 +47,17 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       );
     });
 
-    test("filteredOptions is a frozen projection, not a handle on engine state", function (assert) {
+    test("filteredOptions is frozen and cannot corrupt the source", function (assert) {
       // `readonly` is erased at runtime. Copying alone is not enough either: @cached returns
       // the same array to every reader in a render, so a mutable copy could still be spliced
       // out from under the engine.
       const items = clientItems(5);
       const engine = new SelectEngine({ options: items });
 
+      assert.true(
+        Array.isArray(engine.filteredOptions),
+        "the displayed projection exists"
+      );
       assert.true(
         Object.isFrozen(engine.filteredOptions),
         "the projection is frozen"
@@ -101,7 +105,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       );
     });
 
-    test("total is the full filtered length and stays reactive to the filter", function (assert) {
+    test("counts and displayed membership follow the filter independently of loading", function (assert) {
       const engine = new SelectEngine({ options: clientItems(5000) });
 
       assert.strictEqual(engine.total, 5000, "the whole client list");
@@ -115,13 +119,23 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         1,
         "re-derived live from the filter, not a stale snapshot"
       );
+      assert.strictEqual(
+        engine.loadedCount,
+        1,
+        "loadedCount shares the displayed population"
+      );
+      assert.strictEqual(
+        engine.loadOptions(engine.loadContext).length,
+        5000,
+        "the loader still carries the complete corpus"
+      );
       assert.false(
         engine.atCapWithMore,
         "a single match is never the narrow hint"
       );
       assert.false(engine.canRevealMore, "nothing left to reveal");
       assert.strictEqual(
-        engine.loadOptions(engine.loadContext).length,
+        engine.filteredOptions.length,
         1,
         "the rendered set narrows with the filter"
       );

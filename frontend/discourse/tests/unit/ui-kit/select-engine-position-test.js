@@ -45,7 +45,8 @@ module(
     }
 
     async function build(engine) {
-      return engine.buildRows(await engine.loadOptions(engine.loadContext));
+      const loaded = await engine.loadOptions(engine.loadContext);
+      return engine.buildRows(engine.listInputs(loaded, engine.filter));
     }
 
     test("end options follow group footers and take the last option indices", async function (assert) {

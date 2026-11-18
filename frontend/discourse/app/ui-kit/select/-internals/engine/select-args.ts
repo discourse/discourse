@@ -477,6 +477,38 @@ export default class SelectArgsView {
   }
 
   /**
+   * The label, description and icon a copy of a record shows differently from it, through the
+   * configured fields, as explicit properties. A field the copy cleared or made non-text means
+   * none, except the label, which always reads as text.
+   *
+   * @param original - The record the copy stands for.
+   * @param copy - The copy.
+   */
+  changedPresentation(
+    original: SelectRecord,
+    copy: SelectRecord
+  ): { label?: string; description?: string; icon?: string } | undefined {
+    const changed: { label?: string; description?: string; icon?: string } = {};
+    const fields = [
+      ["label", this.#labelField],
+      ["description", this.#descriptionField],
+      ["icon", this.#iconField],
+    ] as const;
+    for (const [name, field] of fields) {
+      if (!field || copy[field] === original[field]) {
+        continue;
+      }
+      const value = copy[field];
+      if (name === "label") {
+        changed.label = String(value ?? "");
+      } else {
+        changed[name] = typeof value === "string" ? value : "";
+      }
+    }
+    return Object.keys(changed).length ? changed : undefined;
+  }
+
+  /**
    * The `valueRecords` record for a value key, the first one listed winning.
    *
    * @param key - A normalized key, as {@link valueKey} returns.

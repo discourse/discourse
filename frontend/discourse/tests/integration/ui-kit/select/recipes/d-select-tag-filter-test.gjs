@@ -668,7 +668,8 @@ module(
       });
 
       test("the shortcuts lead browsing and leave a search", async function (assert) {
-        stubSearch();
+        // One id is one tag, so the search rows must not reuse the held tag's id.
+        stubSearch(ROWS.map((row) => ({ ...row, id: row.id + 10 })));
         const tag = { id: 1, name: "alpha", slug: "alpha" };
 
         await render(<template><DSelectTagFilter @value={{tag}} /></template>);

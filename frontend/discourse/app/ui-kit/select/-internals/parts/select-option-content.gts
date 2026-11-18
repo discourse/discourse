@@ -81,18 +81,23 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
     return this.#resolveAttributes(this.args.engine, this.args.descriptor);
   }
 
-  /** The option label from the engine's configured label field. */
+  /** The label the row's item shows. */
   get name(): string {
-    return this.args.engine.getRecordLabel(this.args.descriptor.record);
+    const { item, record } = this.args.descriptor;
+    return item ? item.label : this.args.engine.getRecordLabel(record);
+  }
+
+  /** The description the row's item shows, if any. */
+  get description(): string | undefined {
+    const { item, option } = this.args.descriptor;
+    return item ? item.description : option.description;
   }
 
   get describedBy(): string | undefined {
     return (
       [
         this.args.describedBy,
-        this.args.descriptor.option.description
-          ? this.descriptionId
-          : undefined,
+        this.description ? this.descriptionId : undefined,
         this.args.descriptor.flags.capDisabled ? this.args.limitId : undefined,
         this.args.descriptor.flags.locked ? this.lockedHintId : undefined,
       ]
@@ -117,7 +122,10 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
     this.args.engine.activate(this.args.descriptor.option);
   }
 
-  /** Reuses the tracked computation across equivalent rows, comparing settings by value. */
+  /**
+   * Reuses the tracked computation while the row shows the same item through equal settings: an
+   * item is rebuilt only when what it shows changes, and the callback also reads the option.
+   */
   #resolveAttributes(
     engine: SelectEngine,
     descriptor: SelectRow
@@ -127,6 +135,7 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
       !previous ||
       previous.engine !== engine ||
       previous.descriptor.record !== descriptor.record ||
+      previous.descriptor.item !== descriptor.item ||
       !sameSettings(
         previous.descriptor.option.settings,
         descriptor.option.settings
@@ -148,7 +157,7 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
       <li
         aria-describedby={{this.describedBy}}
         aria-disabled={{if @descriptor.flags.disabled "true"}}
-        aria-labelledby={{if @descriptor.option.description this.labelId}}
+        aria-labelledby={{if this.description this.labelId}}
         aria-selected={{if @descriptor.flags.selected "true" "false"}}
         class={{dConcatClass
           "d-select__option"
@@ -190,7 +199,7 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
             class="d-select__option-selected-icon --checkbox"
           }}
         {{/if}}
-        {{#if @descriptor.option.description}}
+        {{#if this.description}}
           <span class="d-select__option-content">
             <span id={{this.labelId}}>{{yield @descriptor.record}}</span>
             <span
@@ -198,7 +207,7 @@ export default class SelectOptionContent extends Component<SelectOptionContentSi
               dir={{if this.siteSettings.support_mixed_text_direction "auto"}}
               id={{this.descriptionId}}
             >
-              {{@descriptor.option.description}}
+              {{this.description}}
             </span>
           </span>
         {{else}}

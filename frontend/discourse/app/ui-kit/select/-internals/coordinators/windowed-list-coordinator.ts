@@ -74,7 +74,7 @@ export default class WindowedListCoordinator {
 
     const listboxId = this.#getListboxId();
     const rows: OptionRow[] = this.#engine
-      .buildRows(options, filter)
+      .buildRows(this.#engine.listInputs(options, filter), filter)
       .map((row) => {
         const { groupOrdinal, groupText } = row;
         if (groupOrdinal == null || !groupText) {

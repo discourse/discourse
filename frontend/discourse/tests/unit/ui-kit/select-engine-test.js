@@ -561,7 +561,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
   });
 
   module("data source", function () {
-    test("loadOptions filters a client source by label substring", function (assert) {
+    test("filters a client snapshot outside loadOptions", function (assert) {
       const engine = new SelectEngine({
         options: [
           { id: 1, name: "Apple" },
@@ -571,9 +571,14 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       engine.setFilter("ban");
 
       assert.deepEqual(
-        engine.loadOptions(engine.loadContext).map((i) => i.record.id),
+        engine.filteredOptions.map((i) => i.record.id),
         [2],
-        "only the matching item is returned, synchronously"
+        "only the matching item enters the displayed list"
+      );
+      assert.deepEqual(
+        engine.loadOptions(engine.loadContext).map((input) => input.record.id),
+        [1, 2],
+        "the loader snapshot carries the corpus without reading display labels"
       );
       assert.false(engine.isAsync, "a client source is not async");
     });

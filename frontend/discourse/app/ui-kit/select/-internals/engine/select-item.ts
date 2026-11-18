@@ -206,29 +206,39 @@ export class ItemDirectory {
    * @param view - The surface asking, which keeps its own memo.
    */
   itemFor(key: string, view: SelectItemView): SelectItem {
-    const { record, unresolved } = this.#sources.recordFor(key, view);
-    const properties = mergeContributions(
-      this.#sources.contributions(key, view, record)
-    );
+    const item = this.peek(key, view);
     const memo = this.#memos[view.kind];
     const cached = memo.get(key);
     if (
       cached &&
-      cached.record === record &&
-      cached.unresolved === unresolved &&
-      sameSettings(cached.properties, properties)
+      cached.record === item.record &&
+      cached.unresolved === item.unresolved &&
+      sameSettings(cached.properties, item.properties)
     ) {
       return cached;
     }
-    const item = new SelectItem({
+    memo.set(key, item);
+    return item;
+  }
+
+  /**
+   * The item a view would show for a key, built afresh and never memoised, for reads such as
+   * matching that must not keep items alive.
+   *
+   * @param key - A normalized key.
+   * @param view - The surface asking.
+   */
+  peek(key: string, view: SelectItemView): SelectItem {
+    const { record, unresolved } = this.#sources.recordFor(key, view);
+    return new SelectItem({
       key,
       record,
       unresolved,
-      properties,
+      properties: mergeContributions(
+        this.#sources.contributions(key, view, record)
+      ),
       sources: this.#sources,
     });
-    memo.set(key, item);
-    return item;
   }
 
   /**

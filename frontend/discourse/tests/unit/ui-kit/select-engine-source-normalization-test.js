@@ -38,7 +38,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       assert.false(engine.serverPending, "a client source is never pending");
     });
 
-    test("derived reads follow a live items thunk", function (assert) {
+    test("projections and loader snapshots follow a live items thunk", function (assert) {
       const source = trackedObject({
         options: [
           { id: 1, name: "Apple" },
@@ -64,7 +64,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       assert.deepEqual(
         engine.filteredOptions.map((item) => item.record.id),
         [3, 4],
-        "filteredOptions follows the replacement array"
+        "the displayed list follows the replacement array"
       );
       assert.strictEqual(
         engine.total,
@@ -73,8 +73,8 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
       assert.deepEqual(
         engine.loadOptions(engine.loadContext).map((item) => item.record.id),
-        [3, 4],
-        "loadItems follows the replacement array"
+        [3, 4, 5],
+        "the loader follows the whole replacement corpus"
       );
     });
 
@@ -88,9 +88,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       });
       labelEngine.setFilter("VISIBLE");
       assert.deepEqual(
-        labelEngine
-          .loadOptions(labelEngine.loadContext)
-          .map((item) => item.record.id),
+        labelEngine.filteredOptions.map((item) => item.record.id),
         [51],
         "labelField filtering selects the single visible row out of the corpus"
       );
@@ -104,9 +102,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       });
       fieldEngine.setFilter("NEEDLE");
       assert.deepEqual(
-        fieldEngine
-          .loadOptions(fieldEngine.loadContext)
-          .map((option) => option.record.keywords),
+        fieldEngine.filteredOptions.map((option) => option.record.keywords),
         ["needle"],
         "string filterBy matches the named field, not the label"
       );
@@ -120,9 +116,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       });
       predicateEngine.setFilter("ENABLED");
       assert.deepEqual(
-        predicateEngine
-          .loadOptions(predicateEngine.loadContext)
-          .map((item) => item.record.id),
+        predicateEngine.filteredOptions.map((item) => item.record.id),
         [2],
         "predicate filterBy receives the normalized term"
       );
@@ -172,7 +166,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("resolveSelection uses the unfiltered client corpus", function (assert) {
+    test("filtering leaves the resolution corpus whole", function (assert) {
       const hidden = { id: 2, name: "Banana" };
       const engine = new SelectEngine({
         options: [{ id: 1, name: "Apple" }, hidden],
@@ -180,7 +174,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       engine.setFilter("apple");
 
       assert.deepEqual(
-        engine.loadOptions(engine.loadContext).map((item) => item.record.id),
+        engine.filteredOptions.map((item) => item.record.id),
         [1],
         "the current list excludes the held value"
       );
@@ -537,7 +531,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("a group whose rows all filter out drops its header", function (assert) {
+    test("drops the header of a group whose rows all filter out", function (assert) {
       const engine = new SelectEngine({
         options: [
           { id: 1, name: "Apple", group: "Fruits" },
@@ -547,7 +541,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         groupHeader: identityLabel,
       });
       engine.setFilter("apple");
-      const rows = descriptors(engine);
+      const rows = engine.buildRows(engine.filteredOptions);
 
       assert.deepEqual(
         rows
@@ -625,7 +619,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("the create row leads the set before the grouped options", function (assert) {
+    test("prepends creation before the surviving filtered groups", function (assert) {
       const engine = new SelectEngine({
         options: [
           { id: 1, name: "Apple", group: "Fruits" },
@@ -641,7 +635,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         }),
       });
       engine.setFilter("Ap");
-      const rows = descriptors(engine);
+      const rows = engine.buildRows(engine.filteredOptions);
       const opts = options(rows);
 
       assert.true(
@@ -803,7 +797,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("splitters are recomputed from the filtered list", function (assert) {
+    test("recomputes splitters from the filtered local list", function (assert) {
       const engine = new SelectEngine({
         options: [
           { id: 1, name: "Apple", group: "a" },
@@ -815,13 +809,13 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       engine.setFilter("ap");
 
       assert.deepEqual(
-        kinds(descriptors(engine)),
+        kinds(engine.buildRows(engine.filteredOptions)),
         [1, "DIV", 3],
         "one splitter separates the two surviving groups; none is orphaned"
       );
     });
 
-    test("the create row is never tagged with a group", function (assert) {
+    test("keeps the create row outside filtered groups", function (assert) {
       const engine = new SelectEngine({
         options: [
           { id: 1, name: "Apple", group: "Fruits" },
@@ -837,7 +831,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         }),
       });
       engine.setFilter("Ap");
-      const rows = descriptors(engine);
+      const rows = engine.buildRows(engine.filteredOptions);
       const createRow = rows[0];
 
       assert.true(createRow.flags.create, "the leading row is the create row");
