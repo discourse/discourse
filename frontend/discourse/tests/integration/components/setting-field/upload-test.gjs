@@ -1,23 +1,29 @@
 import { click, render, waitFor } from "@ember/test-helpers";
+import "discourse/admin/lib/setting-field-types";
 import { module, test } from "qunit";
-import SiteSettingUpload from "discourse/admin/components/site-settings/upload";
+import Form from "discourse/components/form";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | SiteSettings | Upload", function (hooks) {
+function renderUpload(definition, value, onSet) {
+  const data = { [definition.key]: value };
+
+  return render(
+    <template>
+      <Form @data={{data}} @onSet={{onSet}} as |form|>
+        <SettingDefinitionField @definition={{definition}} @form={{form}} />
+      </Form>
+    </template>
+  );
+}
+
+module("Integration | Component | SettingField | Upload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with image file shows preview and lightbox", async function (assert) {
-    const setting = { setting: "logo", placeholder: "/images/placeholder.png" };
+    const definition = { key: "logo", type: "upload", label: "Upload" };
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.noop}}
-          @setting={{setting}}
-          @value="/images/logo.png"
-        />
-      </template>
-    );
+    await renderUpload(definition, "/images/logo.png");
 
     assert.dom(".file-uploader").hasClass("has-file", "file present");
     assert.dom(".file-uploader").hasClass("has-image", "image file detected");
@@ -32,8 +38,10 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
   });
 
   test("with non-image file shows file info and download link", async function (assert) {
-    const setting = {
-      setting: "llms_txt",
+    const definition = {
+      key: "llms_txt",
+      type: "upload",
+      label: "Upload",
       authorized_extensions: "txt",
       upload: {
         original_filename: "my-llms-file.txt",
@@ -41,15 +49,7 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
       },
     };
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.noop}}
-          @setting={{setting}}
-          @value="/uploads/default/original/1X/abc123.txt"
-        />
-      </template>
-    );
+    await renderUpload(definition, "/uploads/default/original/1X/abc123.txt");
 
     assert.dom(".file-uploader").hasClass("has-file", "file present");
     assert.dom(".file-uploader").doesNotHaveClass("has-image", "not an image");
@@ -83,17 +83,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
   });
 
   test("without file shows upload control", async function (assert) {
-    const setting = { setting: "logo" };
+    const definition = { key: "logo", type: "upload", label: "Upload" };
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.noop}}
-          @setting={{setting}}
-          @value=""
-        />
-      </template>
-    );
+    await renderUpload(definition, "");
 
     assert.dom(".file-uploader").hasClass("no-file", "empty state styling");
     assert.dom(".d-icon-upload").exists("can upload file");
@@ -103,17 +95,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
   });
 
   test("accepts only images by default", async function (assert) {
-    const setting = { setting: "logo" };
+    const definition = { key: "logo", type: "upload", label: "Upload" };
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.noop}}
-          @setting={{setting}}
-          @value=""
-        />
-      </template>
-    );
+    await renderUpload(definition, "");
 
     assert
       .dom("[id$='__input']")
@@ -121,17 +105,14 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
   });
 
   test("uses authorized_extensions when specified", async function (assert) {
-    const setting = { setting: "llms_txt", authorized_extensions: "txt|json" };
+    const definition = {
+      key: "llms_txt",
+      type: "upload",
+      label: "Upload",
+      authorized_extensions: "txt|json",
+    };
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.noop}}
-          @setting={{setting}}
-          @value=""
-        />
-      </template>
-    );
+    await renderUpload(definition, "");
 
     assert
       .dom("[id$='__input']")
@@ -142,20 +123,12 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
       );
   });
 
-  test("delete button calls changeValueCallback with null", async function (assert) {
-    const setting = { setting: "logo" };
+  test("delete button sets the field to null", async function (assert) {
+    const definition = { key: "logo", type: "upload", label: "Upload" };
     let callbackValue = "not called";
-    this.handleChange = (value) => (callbackValue = value);
+    this.handleChange = (_name, value) => (callbackValue = value);
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.handleChange}}
-          @setting={{setting}}
-          @value="/images/logo.png"
-        />
-      </template>
-    );
+    await renderUpload(definition, "/images/logo.png", this.handleChange);
 
     await click(".btn-danger");
 
@@ -163,21 +136,15 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
   });
 
   test("shows upload restrictions when configured", async function (assert) {
-    const setting = {
-      setting: "llms_txt",
+    const definition = {
+      key: "llms_txt",
+      type: "upload",
+      label: "Upload",
       authorized_extensions: "txt|json",
       max_file_size_kb: 512,
     };
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.noop}}
-          @setting={{setting}}
-          @value=""
-        />
-      </template>
-    );
+    await renderUpload(definition, "");
 
     assert
       .dom(".file-uploader__restrictions")
@@ -191,17 +158,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
   });
 
   test("does not show restrictions for default image uploads", async function (assert) {
-    const setting = { setting: "logo" };
+    const definition = { key: "logo", type: "upload", label: "Upload" };
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.noop}}
-          @setting={{setting}}
-          @value=""
-        />
-      </template>
-    );
+    await renderUpload(definition, "");
 
     assert
       .dom(".file-uploader__restrictions")
@@ -209,17 +168,13 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
   });
 
   test("applies background-size cover for welcome_banner_image", async function (assert) {
-    const setting = { setting: "welcome_banner_image" };
+    const definition = {
+      key: "welcome_banner_image",
+      type: "upload",
+      label: "Upload",
+    };
 
-    await render(
-      <template>
-        <SiteSettingUpload
-          @changeValueCallback={{this.noop}}
-          @setting={{setting}}
-          @value="/images/banner.png"
-        />
-      </template>
-    );
+    await renderUpload(definition, "/images/banner.png");
 
     assert
       .dom(".file-uploader__preview")
