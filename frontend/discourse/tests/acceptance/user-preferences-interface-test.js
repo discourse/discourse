@@ -268,6 +268,77 @@ acceptance(
       assert.strictEqual(dropdownObject.rows().length, 2);
     });
 
+    test("shows the theme default and keeps explicit choices when color schemes are restricted to the theme", async function (assert) {
+      let session = Session.current();
+      session.userColorSchemeId = -1;
+      session.userDarkSchemeId = -1;
+
+      let site = Site.current();
+      site.set("user_themes", [
+        {
+          theme_id: 2,
+          name: "A Theme",
+          color_scheme_id: 2,
+          dark_color_scheme_id: 4,
+          only_theme_color_schemes: true,
+          default: true,
+        },
+      ]);
+
+      site.set("user_color_schemes", [
+        { id: 2, name: "Theme Light", theme_id: 2, is_dark: false },
+        { id: 3, name: "Alt Light", theme_id: 2, is_dark: false },
+        { id: 4, name: "Theme Dark", theme_id: 2, is_dark: true },
+        { id: 5, name: "Alt Dark", theme_id: 2, is_dark: true },
+      ]);
+
+      await visit("/u/eviltrout/preferences/interface");
+
+      const lightDropdown = selectKit(".light-color-scheme .select-kit");
+      assert.strictEqual(lightDropdown.header().value(), "-1");
+      assert.strictEqual(
+        lightDropdown.header().label(),
+        i18n("user.color_schemes.default_description")
+      );
+
+      const darkDropdown = selectKit(".dark-color-scheme .select-kit");
+      assert.strictEqual(darkDropdown.header().value(), "-1");
+      assert.strictEqual(
+        darkDropdown.header().label(),
+        i18n("user.color_schemes.default_description")
+      );
+
+      await lightDropdown.expand();
+      assert.true(lightDropdown.rowByValue(2).exists());
+      await lightDropdown.collapse();
+
+      await darkDropdown.expand();
+      assert.true(darkDropdown.rowByValue(4).exists());
+    });
+
+    test("keeps the pickers hidden when a theme offers one scheme per mode", async function (assert) {
+      const site = Site.current();
+      site.set("user_themes", [
+        {
+          theme_id: 2,
+          name: "A Theme",
+          color_scheme_id: 2,
+          dark_color_scheme_id: 4,
+          only_theme_color_schemes: true,
+          default: true,
+        },
+      ]);
+      site.set("user_color_schemes", [
+        { id: 2, name: "Theme Light", theme_id: 2, is_dark: false },
+        { id: 4, name: "Theme Dark", theme_id: 2, is_dark: true },
+      ]);
+
+      await visit("/u/eviltrout/preferences/interface");
+
+      assert.dom(".light-color-scheme").doesNotExist();
+      assert.dom(".dark-color-scheme").doesNotExist();
+    });
+
     test("light and dark color scheme pickers", async function (assert) {
       let site = Site.current();
       let session = Session.current();
