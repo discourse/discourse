@@ -80,6 +80,26 @@ describe "Admin Logo Page" do
   describe "mobile section" do
     let(:mobile_section_logos) { %i[mobile_logo mobile_logo_dark manifest_icon apple_touch_icon] }
 
+    it "lets the admin enable the small logo fallback" do
+      logo_page.visit
+      logo_page.form.expand_mobile_section
+
+      field = logo_page.form.form.field("use_small_logo_on_mobile")
+      expect(page).to have_text(
+        I18n.t("admin_js.admin.config.logo.form.use_small_logo_on_mobile.title"),
+      )
+      expect(field).to have_value(false)
+      field.toggle
+
+      logo_page.form.submit
+      expect(logo_page.form).to have_saved_successfully
+
+      logo_page.visit
+      logo_page.form.expand_mobile_section
+
+      expect(logo_page.form.form.field("use_small_logo_on_mobile")).to have_value(true)
+    end
+
     it "can upload images and dark versions" do
       logo_page.visit
       logo_page.form.expand_mobile_section

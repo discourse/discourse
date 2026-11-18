@@ -40,6 +40,7 @@ export default class AdminLogoForm extends Component {
       mobile_logo: this.siteSettings.mobile_logo,
       mobile_logo_dark_required: !!this.siteSettings.mobile_logo_dark,
       mobile_logo_dark: this.siteSettings.mobile_logo_dark,
+      use_small_logo_on_mobile: this.siteSettings.use_small_logo_on_mobile,
       manifest_icon: this.siteSettings.manifest_icon,
       manifest_screenshots: this.siteSettings.manifest_screenshots,
       apple_touch_icon: this.siteSettings.apple_touch_icon,
@@ -72,6 +73,7 @@ export default class AdminLogoForm extends Component {
           logo_small_dark: data.logo_small_dark,
           mobile_logo: data.mobile_logo,
           mobile_logo_dark: data.mobile_logo_dark,
+          use_small_logo_on_mobile: data.use_small_logo_on_mobile,
           manifest_icon: data.manifest_icon,
           manifest_screenshots: data.manifest_screenshots,
           apple_touch_icon: data.apple_touch_icon,
@@ -283,6 +285,20 @@ export default class AdminLogoForm extends Component {
                 </form.Field>
               </form.Section>
             {{/if}}
+            <form.Field
+              @description={{i18n
+                "admin.config.logo.form.use_small_logo_on_mobile.description"
+              }}
+              @format="full"
+              @name="use_small_logo_on_mobile"
+              @title={{i18n
+                "admin.config.logo.form.use_small_logo_on_mobile.title"
+              }}
+              @type="toggle"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
             <form.Field
               @description={{i18n
                 "admin.config.logo.form.manifest_icon.description"

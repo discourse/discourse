@@ -7406,12 +7406,15 @@ en:
             social_media: "Social media"
             mobile_logo:
               title: "Mobile logo"
-              description: "The logo used on mobile version of your site. If left blank, the image from the `logo` setting will be used."
+              description: "The logo for the mobile version of your site. An upload here takes priority over the small or primary logo."
               help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
             mobile_logo_dark:
               required: "Use a different mobile logo for dark mode?"
               title: "Mobile logo dark"
               help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
+            use_small_logo_on_mobile:
+              title: "Use the small logo on mobile"
+              description: "Uses the small logo when no mobile logo is uploaded. A mobile dark logo still takes priority in dark mode."
             manifest_icon:
               title: "Manifest icon"
               description: "Image used as logo/splash image on Android. If left blank, large_icon will be used."
