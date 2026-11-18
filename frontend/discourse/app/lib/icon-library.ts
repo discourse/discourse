@@ -97,6 +97,7 @@ export const REPLACEMENTS: Record<string, string> = {
   "notification.watching_first_post": "discourse-bell-one",
   "notification.group_message_summary": "users",
   "notification.post_approved": "check",
+  "notification.staff_post_deleted": "trash-can",
   "notification.membership_request_accepted": "user-plus",
   "notification.membership_request_consolidated": "users",
   "notification.reaction": "bell",
