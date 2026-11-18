@@ -62,13 +62,19 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.email_reject_user_not_found
         system_messages.email_revoked
         system_messages.flags_agreed_and_post_deleted
+        system_messages.flags_agreed_and_post_deleted_automated
         system_messages.flags_agreed_and_post_deleted_for_responders
+        system_messages.flags_agreed_and_post_deleted_for_responders_automated
         system_messages.flags_disagreed
         system_messages.ignored_users_summary
         system_messages.new_user_of_the_month
         system_messages.pending_users_reminder
         system_messages.post_hidden
         system_messages.post_hidden_again
+        system_messages.post_hidden_again_automated
+        system_messages.post_hidden_again_moderator
+        system_messages.post_hidden_automated
+        system_messages.post_hidden_moderator
         system_messages.queued_by_staff
         system_messages.queued_posts_reminder
         system_messages.restore_failed

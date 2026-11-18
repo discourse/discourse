@@ -4156,43 +4156,47 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
-      moderator:
-        subject_template: "Post hidden by community flags"
-        text_body_template: |
-          Hello,
+    post_hidden_moderator:
+      title: "Post hidden by a moderator after community flags"
+      subject_template: "Post hidden by community flags"
+      text_body_template: |
+        Hello,
 
-          This is an automated message from %{site_name} to let you know that your post was hidden.
+        This is an automated message from %{site_name} to let you know that your post was hidden.
 
-          <%{base_url}%{url}>
+        <%{base_url}%{url}>
 
-          %{flag_reason}
+        %{flag_reason}
 
-          This post was hidden by a moderator due to flags from the community, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
+        This post was hidden by a moderator due to flags from the community, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
 
-          However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
+        However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
 
-          For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-      automated:
-        subject_template: "Post hidden by an automated flag"
-        text_body_template: |
-          Hello,
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
-          This is an automated message from %{site_name} to let you know that your post was hidden.
+    post_hidden_automated:
+      title: "Post hidden by a moderator after an automated flag"
+      subject_template: "Post hidden by an automated flag"
+      text_body_template: |
+        Hello,
 
-          <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that your post was hidden.
 
-          %{flag_reason}
+        <%{base_url}%{url}>
 
-          This post was hidden by a moderator due to an automated flag, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
+        %{flag_reason}
 
-          However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
+        This post was hidden by a moderator due to an automated flag, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
 
-          For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+        However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     reviewable_queued_post_revise_and_reject_edit_post: "You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "You can edit your original post below and re-submit to make the suggested changes."
     reviewable_queued_post_revise_and_reject_edit_topic: "You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
     reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "You can edit your topic's original post below and re-submit to make the suggested changes."
+
     reviewable_queued_post_revise_and_reject:
       title: "Feedback on your post"
       subject_template: "Feedback on your post in %{topic_title}"
@@ -4256,34 +4260,37 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
-      moderator:
-        subject_template: "Post hidden by community flags, staff notified"
-        text_body_template: |
-          Hello,
+    post_hidden_again_moderator:
+      title: "Post hidden again by a moderator after community flags"
+      subject_template: "Post hidden by community flags, staff notified"
+      text_body_template: |
+        Hello,
 
-          This is an automated message from %{site_name} to let you know that your post was hidden again.
+        This is an automated message from %{site_name} to let you know that your post was hidden again.
 
-          <%{base_url}%{url}>
+        <%{base_url}%{url}>
 
-          %{flag_reason}
+        %{flag_reason}
 
-          The community flagged this post and a moderator hid it. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
+        The community flagged this post and a moderator hid it. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
-          For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-      automated:
-        subject_template: "Post hidden by an automated flag, staff notified"
-        text_body_template: |
-          Hello,
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
-          This is an automated message from %{site_name} to let you know that your post was hidden again.
+    post_hidden_again_automated:
+      title: "Post hidden again by a moderator after an automated flag"
+      subject_template: "Post hidden by an automated flag, staff notified"
+      text_body_template: |
+        Hello,
 
-          <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that your post was hidden again.
 
-          %{flag_reason}
+        <%{base_url}%{url}>
 
-          An automated check flagged this post and a moderator hid it. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
+        %{flag_reason}
 
-          For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+        An automated check flagged this post and a moderator hid it. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     queued_by_staff:
       title: "Post Needs Approval"
@@ -4333,22 +4340,23 @@ en:
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
 
-      automated:
-        subject_template: "Flagged post removed by staff"
-        text_body_template: |
-          Hello,
+    flags_agreed_and_post_deleted_automated:
+      title: "Post removed by staff after automated flags"
+      subject_template: "Flagged post removed by staff"
+      text_body_template: |
+        Hello,
 
-          This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was removed.
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was removed.
 
-          %{flag_reason}
+        %{flag_reason}
 
-          This post was flagged automatically and a staff member opted to remove it.
+        This post was flagged automatically and a staff member opted to remove it.
 
-          ``` markdown
-          %{flagged_post_raw_content}
-          ```
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
 
-          Please review our [community guidelines](%{base_url}/guidelines) for details.
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
 
     flags_agreed_and_post_deleted_for_responders:
       title: "Reply removed from flagged post by staff"
@@ -4374,28 +4382,29 @@ en:
 
         For more details on the reason for removal, please review our [community guidelines](%{base_url}/guidelines).
 
-      automated:
-        subject_template: "Reply removed from flagged post by staff"
-        text_body_template: |
-          Hello,
+    flags_agreed_and_post_deleted_for_responders_automated:
+      title: "Reply removed with an automatically flagged post"
+      subject_template: "Reply removed from flagged post by staff"
+      text_body_template: |
+        Hello,
 
-          This is an automated message from %{site_name} to let you know that a [post](%{base_url}%{url}) you replied to was removed.
+        This is an automated message from %{site_name} to let you know that a [post](%{base_url}%{url}) you replied to was removed.
 
-          %{flag_reason}
+        %{flag_reason}
 
-          This post was flagged automatically and a staff member opted to remove it.
+        This post was flagged automatically and a staff member opted to remove it.
 
-          ``` markdown
-          %{flagged_post_raw_content}
-          ```
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
 
-          To which you responded
+        To which you responded
 
-          ``` markdown
-          %{flagged_post_response_raw_content}
-          ```
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
 
-          For more details on the reason for removal, please review our [community guidelines](%{base_url}/guidelines).
+        For more details on the reason for removal, please review our [community guidelines](%{base_url}/guidelines).
 
     usage_tips:
       text_body_template: |

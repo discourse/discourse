@@ -403,7 +403,7 @@ RSpec.describe ModerationNotice do
         customized_body = "Custom instructions for this site."
         TranslationOverride.upsert!(
           :en,
-          "system_messages.#{message_type}.automated.text_body_template",
+          "system_messages.#{message_type}_automated.text_body_template",
           customized_body,
         )
 
@@ -473,12 +473,12 @@ RSpec.describe ModerationNotice do
       author.update!(locale: "de")
       TranslationOverride.upsert!(
         :de,
-        "system_messages.post_hidden.automated.text_body_template",
+        "system_messages.post_hidden_automated.text_body_template",
         "Lokaler Hinweis.",
       )
       TranslationOverride.upsert!(
         :de,
-        "system_messages.post_hidden.automated.subject_template",
+        "system_messages.post_hidden_automated.subject_template",
         "Lokaler Betreff",
       )
 
@@ -503,7 +503,7 @@ RSpec.describe ModerationNotice do
       TranslationOverride.upsert!(:en, "flag_reasons.automated.inappropriate", customized_reason)
       TranslationOverride.upsert!(
         :en,
-        "system_messages.post_hidden.automated.text_body_template",
+        "system_messages.post_hidden_automated.text_body_template",
         "CUSTOM %{flag_reason} END",
       )
 

@@ -599,7 +599,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         reply: nil,
         appeal: true
       )
-        type = "#{type}.moderator" if %i[post_hidden post_hidden_again].include?(type)
+        type = "#{type}_moderator" if %i[post_hidden post_hidden_again].include?(type)
         options = {
           url: post.url,
           edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,

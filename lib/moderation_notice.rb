@@ -12,7 +12,7 @@ class ModerationNotice
       when "flags_agreed_and_post_deleted", "flags_agreed_and_post_deleted_for_responders"
         "automated" if flag_source == "automated"
       end
-    message_type = "#{message_type}.#{variant}" if variant
+    message_type = "#{message_type}_#{variant}" if variant
     reason =
       flag_reason_for(post_action_type_id:, for_responders:, automated: variant == "automated")
 
