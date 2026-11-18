@@ -110,7 +110,7 @@ export default class Contents extends Component {
         {{#if this.site.desktopView}}
           {{#if @sidebarEnabled}}
             <SidebarToggle
-              @icon={{this.sidebarIcon}}
+              @icon={{if this.pageShell.enabled "bars" this.sidebarIcon}}
               @showSidebar={{@showSidebar}}
               @toggleNavigationMenu={{@toggleNavigationMenu}}
             />

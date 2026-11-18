@@ -23,6 +23,7 @@ en:
       expand: "Expand"
       expand_navigation: "Expand navigation panel"
       expand_context: "Expand context panel"
+      hide_context: "Hide context panel"
       context_description: "Temporary panel for checking shell geometry with real page content."
       footer_description: "Temporary footer for checking alignment and sticky panel boundaries."
     dsa_notice:
