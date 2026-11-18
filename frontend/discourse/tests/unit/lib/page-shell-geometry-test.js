@@ -64,7 +64,7 @@ module("Unit | Lib | page shell geometry", function () {
   test("the mapping stays continuous when the shell reaches the viewport edge", function (assert) {
     const start = geometry();
     const offset = handleOffset(start, "context");
-    // Half speed until the end gutter closes at 472px, then one to one.
+    // Half speed until the start gutter closes at 502px, then one to one.
     const width = widthForHandleOffset(
       start,
       "context",
@@ -72,7 +72,7 @@ module("Unit | Lib | page shell geometry", function () {
       200,
       1000
     );
-    assert.strictEqual(width, 586);
+    assert.strictEqual(width, 601);
     assert.strictEqual(
       handleOffset(
         geometry({ context: { ...start.context, width } }),

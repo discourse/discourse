@@ -50,10 +50,6 @@ export default class PageShellPanelSeparator extends Component {
     return PANEL_LIMITS[this.args.panel].minWidth;
   }
 
-  get side() {
-    return this.args.panel === "navigation" ? "start" : "end";
-  }
-
   get value() {
     return this.args.panel === "navigation"
       ? this.pageShell.effectiveNavigationWidth
@@ -129,7 +125,7 @@ export default class PageShellPanelSeparator extends Component {
       @onResize={{this.resize}}
       @onResizeEnd={{this.end}}
       @onResizeStart={{this.start}}
-      @side={{this.side}}
+      @side="start"
       @value={{this.value}}
       {{this.registerElement}}
       {{on "keydown" this.noteKey}}

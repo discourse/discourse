@@ -81,12 +81,11 @@ module("Integration | Component | page shell", function (hooks) {
     await click(".page-shell-controls summary");
     await choose("width", "full");
     await choose("navigation", "rail");
-    await choose("context", "rail");
     await choose("footer", "row");
 
     assert.dom(".page-shell").hasAttribute("data-width", "full");
     assert.dom(".page-shell").hasAttribute("data-navigation", "rail");
-    assert.dom(".page-shell").hasAttribute("data-context", "rail");
+    assert.dom(".page-shell").hasAttribute("data-context", "open");
     assert.dom(".page-shell").hasAttribute("data-footer", "row");
     assert.dom("#main-outlet-wrapper > #reply-control").exists({ count: 1 });
     assert.dom("#main-outlet-wrapper").doesNotHaveAttribute("role");
@@ -101,14 +100,10 @@ module("Integration | Component | page shell", function (hooks) {
     assert.dom("#main-outlet #main-outlet").doesNotExist();
     assert.dom(".page-shell__navigation .sidebar-wrapper").doesNotExist();
     assert.dom("#main-outlet-wrapper [data-test-footer]").exists({ count: 1 });
-
-    await click(".page-shell__context button");
-    assert.dom(".page-shell").hasAttribute("data-context", "open");
-    assert.dom('select[name="context"]').hasValue("open");
   });
 
   test("temporary context panel availability does not overwrite preferences", async function (assert) {
-    this.shell.context = "rail";
+    this.shell.context = "open";
     const router = this.owner.lookup("service:router");
     router.currentRouteName = "user.preferences.account";
 
@@ -121,11 +116,11 @@ module("Integration | Component | page shell", function (hooks) {
     assert.dom(".page-shell").hasAttribute("data-context", "hidden");
     assert.dom(".page-shell__context").doesNotExist();
     assert.dom('select[name="context"]').isDisabled();
-    assert.strictEqual(this.shell.context, "rail");
+    assert.strictEqual(this.shell.context, "open");
 
     router.currentRouteName = "discovery.latest";
     await waitUntil(() => find(".page-shell__context"));
-    assert.dom(".page-shell").hasAttribute("data-context", "rail");
+    assert.dom(".page-shell").hasAttribute("data-context", "open");
   });
 
   test("panel caps preserve the main minimum when either panel grows", async function (assert) {
@@ -275,7 +270,7 @@ module("Integration | Component | page shell", function (hooks) {
     assert.strictEqual(this.shell.navigationWidth, 400);
   });
 
-  test("header search stays centered with a rail and overflowing header actions", async function (assert) {
+  test("header search stays over Main with a rail and header actions", async function (assert) {
     this.shell.navigation = "rail";
     this.shell.context = "hidden";
 
@@ -311,16 +306,17 @@ module("Integration | Component | page shell", function (hooks) {
     await waitUntil(() =>
       element.style.getPropertyValue("--_page-shell-header-end-width")
     );
-    const headerBox = find(".d-header > .wrap").getBoundingClientRect();
-    const searchBox = find(".floating-search-input").getBoundingClientRect();
+    const searchFitsMainHeader = () => {
+      const mainBox = find(".page-shell__main").getBoundingClientRect();
+      const searchBox = find(".floating-search-input").getBoundingClientRect();
+      const actionsBox = find(".d-header .panel").getBoundingClientRect();
+      return (
+        searchBox.left >= mainBox.left && searchBox.right <= actionsBox.left
+      );
+    };
     assert.true(
-      Math.abs(
-        headerBox.left +
-          headerBox.width / 2 -
-          searchBox.left -
-          searchBox.width / 2
-      ) < 1,
-      "header chrome reserves equal space around the centered search"
+      searchFitsMainHeader(),
+      "search stays between Main’s start and the actions"
     );
 
     const measuredWidths = [];
@@ -340,18 +336,9 @@ module("Integration | Component | page shell", function (hooks) {
       measuredWidths.every(Boolean),
       "panel resizing preserves measured header widths between frames"
     );
-    const resizedHeaderBox = find(".d-header > .wrap").getBoundingClientRect();
-    const resizedSearchBox = find(
-      ".floating-search-input"
-    ).getBoundingClientRect();
     assert.true(
-      Math.abs(
-        resizedHeaderBox.left +
-          resizedHeaderBox.width / 2 -
-          resizedSearchBox.left -
-          resizedSearchBox.width / 2
-      ) < 1,
-      "the search stays centered as the page edges change"
+      searchFitsMainHeader(),
+      "search stays over Main after a resize"
     );
   });
 
@@ -406,6 +393,8 @@ module("Integration | Component | page shell", function (hooks) {
 
   test("the header switches to the compact logo without oscillating", async function (assert) {
     this.shell.width = "full";
+    this.shell.navigation = "hidden";
+    this.shell.context = "hidden";
 
     await render(
       <template>
@@ -424,7 +413,7 @@ module("Integration | Component | page shell", function (hooks) {
                         {{/if}}
                       </div>
                       <div class="page-shell__header-main"></div>
-                      <nav class="panel">Actions</nav>
+                      <nav class="panel" style="width: 300px;">Actions</nav>
                     </div>
                   </div>
                 </header>
@@ -443,7 +432,7 @@ module("Integration | Component | page shell", function (hooks) {
     assert.false(this.shell.compactLogo, "the full logo fits at 1440px");
 
     const wrapper = find(".shell-logo-test");
-    wrapper.style.width = "1000px";
+    wrapper.style.width = "850px";
     await waitUntil(() => this.shell.compactLogo);
     await waitUntil(
       () =>
@@ -524,12 +513,12 @@ module("Integration | Component | page shell", function (hooks) {
     assert.dom(separator).hasAttribute("aria-valuenow", "300");
 
     // Context sits at the inline end, so ArrowLeft grows it in LTR.
-    await triggerKeyEvent(separator, "keydown", "ArrowLeft");
-    await triggerKeyEvent(separator, "keydown", "ArrowLeft");
+    await triggerKeyEvent(separator, "keydown", "ArrowRight");
+    await triggerKeyEvent(separator, "keydown", "ArrowRight");
     assert.strictEqual(this.shell.contextWidth, 332);
     assert.dom(separator).hasAttribute("aria-valuenow", "332");
 
-    await triggerKeyEvent(separator, "keyup", "ArrowLeft");
+    await triggerKeyEvent(separator, "keyup", "ArrowRight");
     const store = this.owner.lookup("service:key-value-store");
     assert.strictEqual(store.getObject("page-shell-panels").context.width, 332);
 
@@ -539,7 +528,7 @@ module("Integration | Component | page shell", function (hooks) {
   });
 
   test("only open panels get a separator", async function (assert) {
-    this.shell.context = "rail";
+    this.shell.context = "hidden";
     await render(
       <template>
         <PageShell @sidebarEnabled={{true}}><:main>Route</:main></PageShell>

@@ -58,9 +58,9 @@ body.has-page-shell {
     );
     --_page-shell-end-track: minmax(0, 1fr);
     --_page-shell-grid-columns: var(--_page-shell-inline-offset)
-      var(--_page-shell-navigation-track-width) var(--_page-shell-main-track)
-      var(--_page-shell-composer-track-width)
-      var(--_page-shell-context-track-width) var(--_page-shell-end-track);
+      var(--_page-shell-navigation-track-width)
+      var(--_page-shell-context-track-width) var(--_page-shell-main-track)
+      var(--_page-shell-composer-track-width) var(--_page-shell-end-track);
     --_page-shell-max-inline-size: calc(
       var(--_page-shell-content-max-width) + 2 *
         var(--d-comp-PageShell-space-padding-inline) +
@@ -86,8 +86,8 @@ body.has-page-shell {
     grid-template-areas:
       "shell-header shell-header shell-header shell-header shell-header shell-header"
       ". shell-notices shell-notices shell-notices shell-notices ."
-      ". sidebar content composer shell-context ."
-      ". sidebar shell-footer composer shell-context .";
+      ". sidebar shell-context content composer ."
+      ". sidebar shell-context shell-footer composer .";
     grid-template-rows: auto auto 1fr auto;
     gap: 0;
     padding: 0;
@@ -132,21 +132,6 @@ body.has-page-shell {
     &[data-navigation="hidden"] {
       --_page-shell-navigation-track-width: 0px;
       --_page-shell-navigation-reference-width: 0px;
-    }
-
-    &[data-context="rail"] {
-      --_page-shell-context-reference-width: var(
-        --_page-shell-panel-rail-width
-      );
-      --_page-shell-context-track-width: min(
-        var(--_page-shell-panel-rail-width),
-        max(
-          0px,
-          100% - var(--_page-shell-navigation-track-width) - var(
-              --_page-shell-composer-track-width
-            ) - var(--_page-shell-content-min-width)
-        )
-      );
     }
 
     &[data-context="hidden"] {
@@ -206,14 +191,7 @@ body.has-page-shell {
 
       > .wrap {
         display: grid;
-        grid-template-columns:
-          minmax(0, var(--_page-shell-header-chrome-width)) minmax(0, 1fr)
-          minmax(0, var(--_page-shell-header-chrome-width));
-
-        --_page-shell-header-chrome-width: max(
-          var(--_page-shell-header-start-width, 184px),
-          var(--_page-shell-header-end-width, 240px)
-        );
+        grid-template-columns: subgrid;
         grid-column: 2 / -2;
         gap: 0;
         max-width: none;
@@ -241,14 +219,14 @@ body.has-page-shell {
     }
 
     .page-shell__header-start {
-      grid-column: 1;
+      grid-column: var(--_page-shell-header-start-column, 1);
       grid-row: 1;
       display: flex;
       align-items: center;
       gap: var(--space-2);
       min-inline-size: 0;
       inline-size: max-content;
-      max-inline-size: var(--_page-shell-navigation-max-width);
+      max-inline-size: 100%;
       padding-inline: var(--space-1);
       box-sizing: border-box;
 
@@ -279,13 +257,93 @@ body.has-page-shell {
       }
     }
 
-    .page-shell__header-main {
+    &[data-navigation="open"],
+    &[data-navigation="rail"] {
+      .page-shell__header-start {
+        inline-size: 100%;
+        block-size: 100%;
+        background: var(--d-sidebar-background);
+        border-inline-end: 1px solid var(--d-sidebar-border-color);
+      }
+    }
+
+    &[data-navigation="rail"]
+      .page-shell__header-start
+      .home-logo-wrapper-outlet {
+      display: none;
+    }
+
+    &[data-navigation="hidden"] {
+      --_page-shell-header-start-column: 3;
+      --_page-shell-header-start-inset: var(
+        --_page-shell-header-start-width,
+        0px
+      );
+
+      .page-shell__header-start {
+        max-inline-size: 40%;
+        padding-inline-start: var(--space-4);
+      }
+
+      &:has(.page-shell__header-start > .header-sidebar-toggle) {
+        --_page-shell-header-navigation-toggle-space: calc(
+          3em + var(--space-1)
+        );
+
+        .page-shell__header-start > .header-sidebar-toggle {
+          position: absolute;
+          z-index: 1;
+          inset-block-start: 50%;
+          inset-inline-start: var(--space-1);
+          translate: 0 -50%;
+        }
+
+        &[data-context="hidden"],
+        &[data-constrained-context] {
+          .page-shell__header-start {
+            padding-inline-start: var(
+              --_page-shell-header-navigation-toggle-space
+            );
+          }
+        }
+      }
+    }
+
+    .page-shell__header-context {
       grid-column: 2;
       grid-row: 1;
       display: flex;
       align-items: center;
+      block-size: 100%;
       min-inline-size: 0;
-      padding-inline: var(--d-comp-PageShell-space-padding-inline);
+      padding-inline-start: var(
+        --_page-shell-header-navigation-toggle-space,
+        0
+      );
+      overflow: clip;
+      box-sizing: border-box;
+      background: var(--d-comp-PageShell-color-background);
+      border-inline-end: 1px solid var(--d-comp-PageShell-color-border);
+
+      .d-native-select {
+        margin-inline: var(--space-2);
+        inline-size: auto;
+        min-inline-size: 0;
+        border: 0;
+      }
+    }
+
+    .page-shell__header-main {
+      grid-column: 3 / 5;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      min-inline-size: 0;
+      padding-inline-start: max(
+        var(--d-comp-PageShell-space-padding-inline),
+        var(--_page-shell-header-start-inset, 0px)
+      );
+      padding-inline-end: var(--_page-shell-header-end-width, 0);
 
       .floating-search-input-wrapper,
       .extra-info-wrapper {
@@ -297,7 +355,7 @@ body.has-page-shell {
 
     .d-header .contents > .panel {
       grid-area: auto;
-      grid-column: 3;
+      grid-column: 3 / 5;
       grid-row: 1;
       justify-self: end;
       margin: 0;
@@ -392,7 +450,7 @@ body.has-page-shell {
       grid-template-areas: "panel";
       align-items: start;
       min-inline-size: 0;
-      border-inline-start: 1px solid var(--d-comp-PageShell-color-border);
+      border-inline-end: 1px solid var(--d-comp-PageShell-color-border);
       background: var(--d-comp-PageShell-color-background);
       overflow: clip;
 
@@ -433,8 +491,7 @@ body.has-page-shell {
     .page-shell__separator--context {
       position: sticky;
       top: var(--header-offset);
-      inset-inline-end: auto;
-      justify-self: start;
+      justify-self: end;
       block-size: max(
         0px,
         100dvh - var(--_page-shell-body-offset, var(--header-offset)) - var(
@@ -442,10 +499,6 @@ body.has-page-shell {
             0px
           )
       );
-
-      &::after {
-        inset-inline: 0 auto;
-      }
     }
 
     &[data-cannot-open-context] .page-shell__context-toggle {
@@ -456,7 +509,8 @@ body.has-page-shell {
       --_page-shell-context-track-width: 0px;
       --_page-shell-context-reference-width: 0px;
 
-      .page-shell__context {
+      .page-shell__context,
+      .page-shell__header-context {
         display: none;
       }
     }
@@ -474,12 +528,6 @@ body.has-page-shell {
       padding: var(--space-4);
       overflow: auto;
       box-sizing: border-box;
-    }
-
-    .page-shell__context[data-presentation="rail"]
-      .page-shell__context-content {
-      padding: var(--space-1);
-      overflow-wrap: anywhere;
     }
 
     .page-shell__footer {
@@ -520,7 +568,7 @@ body.has-page-shell {
         background: var(--d-comp-PageShell-color-background-raised);
 
         > * {
-          grid-column: 2;
+          grid-column: 3;
         }
       }
     }
@@ -593,7 +641,15 @@ body.has-page-shell {
       --_page-shell-context-track-width: 0px;
       --_page-shell-context-reference-width: 0px;
 
+      &[data-navigation="hidden"] .page-shell__header-start {
+        padding-inline-start: var(
+          --_page-shell-header-navigation-toggle-space,
+          var(--space-4)
+        );
+      }
+
       .page-shell__context,
+      .page-shell__header-context,
       .page-shell__context-toggle {
         display: none;
       }
@@ -605,6 +661,23 @@ body.has-page-shell {
       --_page-shell-navigation-track-width: 0px;
       --_page-shell-navigation-reference-width: 0px;
       --d-comp-PageShell-space-padding-inline: var(--space-3);
+      --_page-shell-header-start-column: 3;
+      --_page-shell-header-start-inset: var(
+        --_page-shell-header-start-width,
+        0px
+      );
+
+      .page-shell__header-start {
+        inline-size: max-content;
+        max-inline-size: 40%;
+        padding-inline-start: var(--space-4);
+        border-inline-end: 0;
+        background: transparent;
+
+        .home-logo-wrapper-outlet {
+          display: block;
+        }
+      }
 
       &::before,
       .page-shell__navigation {
@@ -625,7 +698,7 @@ body.has-page-shell {
     }
 
     #main-outlet-wrapper #reply-control:not(.fullscreen).hide-preview {
-      grid-column: 4;
+      grid-column: 5;
       grid-row: 3;
       inset-inline-start: auto;
       inset-inline-end: auto;

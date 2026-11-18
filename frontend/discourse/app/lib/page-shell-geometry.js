@@ -74,9 +74,9 @@ export function shellTracks(geometry) {
     return {
       offset: 0,
       navigation,
+      context,
       main: Math.max(0, shellWidth - fixed),
       composer,
-      context,
       end: 0,
     };
   }
@@ -104,7 +104,7 @@ export function shellTracks(geometry) {
   );
   const free = Math.max(0, shellWidth - offset - fixed);
   const main = Math.min(mainLimit, free);
-  return { offset, navigation, main, composer, context, end: free - main };
+  return { offset, navigation, context, main, composer, end: free - main };
 }
 
 /**
@@ -116,10 +116,11 @@ export function shellTracks(geometry) {
  */
 export function handleOffset(geometry, panel) {
   const tracks = shellTracks(geometry);
-  return panel === "navigation"
-    ? tracks.offset + tracks.navigation
-    : geometry.shellWidth -
-        (tracks.offset + tracks.navigation + tracks.main + tracks.composer);
+  return (
+    tracks.offset +
+    tracks.navigation +
+    (panel === "context" ? tracks.context : 0)
+  );
 }
 
 /**
@@ -192,7 +193,7 @@ export function readShellGeometry(shell, state) {
     shellWidth: shell.clientWidth,
     mainMaxWidth: content ? parseFloat(getComputedStyle(content).maxWidth) : 0,
     mainMinWidth: pixels("--_page-shell-content-min-width"),
-    composerWidth: tracks[3] || 0,
+    composerWidth: tracks[4] || 0,
     railWidth: pixels("--_page-shell-panel-rail-width"),
     navigation: {
       mode: shell.dataset.navigation,

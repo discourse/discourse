@@ -92,10 +92,6 @@ export default class PageShellControls extends Component {
               value="open"
             >{{i18n "page_shell.open"}}</option>
             <option
-              selected={{eq this.pageShell.context "rail"}}
-              value="rail"
-            >{{i18n "page_shell.rail"}}</option>
-            <option
               selected={{eq this.pageShell.context "hidden"}}
               value="hidden"
             >{{i18n "page_shell.hidden"}}</option>
