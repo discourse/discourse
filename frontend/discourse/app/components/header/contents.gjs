@@ -114,15 +114,12 @@ export default class Contents extends Component {
         (and
           this.pageShell.enabled
           this.pageShell.hasContextPanel
-          (or
-            (eq this.pageShell.context "open")
-            this.pageShell.closingPanels.context
-          )
+          (or (eq this.pageShell.context "open") this.pageShell.closingContext)
         )
       }}
         <div
           class="page-shell__header-context"
-          inert={{if this.pageShell.closingPanels.context true}}
+          inert={{if this.pageShell.closingContext true}}
         >
           <DNativeSelect
             aria-label={{i18n "page_shell.context_view"}}

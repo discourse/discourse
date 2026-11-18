@@ -44,7 +44,9 @@ export default class Sidebar extends Component {
   }
 
   get #canAcceptLinkDrop() {
-    return this.currentUser && this.sidebarState.showMainPanel;
+    return (
+      !this.args.rail && this.currentUser && this.sidebarState.showMainPanel
+    );
   }
 
   get switchPanelButtons() {
@@ -127,21 +129,24 @@ export default class Sidebar extends Component {
       }}
     >
       {{#if this.showSwitchPanelButtonsOnTop}}
-        <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
+        <SwitchPanelButtons
+          @buttons={{this.switchPanelButtons}}
+          @rail={{@rail}}
+        />
       {{/if}}
 
       <PluginOutlet @name="before-sidebar-sections" />
 
       {{#if this.sidebarState.showMainPanel}}
         <Sections
-          @collapsableSections={{true}}
+          @collapsableSections={{not @rail}}
           @currentUser={{this.currentUser}}
-          @enableLinkDrop={{true}}
+          @enableLinkDrop={{not @rail}}
           @panel={{this.sidebarState.currentPanel}}
         />
       {{else}}
         <ApiPanels
-          @collapsableSections={{true}}
+          @collapsableSections={{not @rail}}
           @currentUser={{this.currentUser}}
         />
       {{/if}}
@@ -149,7 +154,10 @@ export default class Sidebar extends Component {
       <PluginOutlet @name="after-sidebar-sections" />
 
       {{#unless this.showSwitchPanelButtonsOnTop}}
-        <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
+        <SwitchPanelButtons
+          @buttons={{this.switchPanelButtons}}
+          @rail={{@rail}}
+        />
       {{/unless}}
 
       <Footer />

@@ -9,7 +9,14 @@ const MORE_MENU = "sidebar-more-section";
 export default class SidebarSectionLinkButton extends Component {
   @service menu;
   @service header;
+  @service pageShell;
   @service siteSettings;
+
+  get title() {
+    if (this.pageShell.enabled && this.pageShell.navigation === "rail") {
+      return this.args.text;
+    }
+  }
 
   @action
   handleClick() {
@@ -33,6 +40,7 @@ export default class SidebarSectionLinkButton extends Component {
       <button
         class="sidebar-section-link sidebar-row --link-button"
         data-list-item-name={{@text}}
+        title={{this.title}}
         type="button"
         {{on "click" this.handleClick}}
       >

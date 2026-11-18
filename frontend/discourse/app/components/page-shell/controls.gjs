@@ -60,10 +60,6 @@ export default class PageShellControls extends Component {
               selected={{eq this.pageShell.navigation "rail"}}
               value="rail"
             >{{i18n "page_shell.rail"}}</option>
-            <option
-              selected={{eq this.pageShell.navigation "hidden"}}
-              value="hidden"
-            >{{i18n "page_shell.hidden"}}</option>
           </select>
         </label>
         <label>
