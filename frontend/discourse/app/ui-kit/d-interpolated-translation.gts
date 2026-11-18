@@ -1,19 +1,62 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { getOwner } from "@ember/owner";
+import type { WithBoundArgs } from "@glint/template";
 import curryComponent from "ember-curry-component";
 import { isProduction } from "discourse/lib/environment";
 import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
 
-/**
- * @typedef {Object} TranslationPlaceholders
- * @property {Map<string, string[]>} appearance
- * @property {Map<string, HTMLSpanElement[]>} elements
- * @property {Map<string, string>} keys
- * @property {string[]} rendered
- * @property {(string | HTMLSpanElement)[]} parts
- */
+/** The rendering data for a translation, returned by `textAndPlaceholders`. */
+interface TranslationPlaceholders {
+  appearance: Map<string, string[]>;
+  elements: Map<string, HTMLSpanElement[]>;
+  keys: Map<string, string>;
+  rendered: string[];
+  parts: (string | HTMLSpanElement)[];
+}
+
+interface PlaceholderSignature {
+  Args: {
+    /** The name of the placeholder this content should fill. */
+    name: string;
+
+    /** A CSS class to apply to the placeholder's wrapper element. */
+    class?: string;
+
+    /** Records that the placeholder was rendered. Curried by `DInterpolatedTranslation`. */
+    markAsRendered: (name: string) => void;
+
+    /** The elements assigned to each placeholder. Curried by `DInterpolatedTranslation`. */
+    elements: Map<string, HTMLSpanElement[]>;
+  };
+
+  Blocks: {
+    /** The content to render in place of the placeholder. */
+    default: [];
+  };
+}
+
+interface DInterpolatedTranslationSignature {
+  Args: {
+    /** The i18n translation key to use. */
+    key: string;
+
+    /** A hash of options to pass to the i18n function for string interpolation. */
+    options?: Record<string, unknown>;
+  };
+
+  Blocks: {
+    default: [
+      /** The component that renders content in place of a placeholder. */
+      Placeholder: WithBoundArgs<
+        typeof Placeholder,
+        "markAsRendered" | "elements"
+      >,
+    ];
+  };
+}
 
 /**
  * Provides the ability to interpolate both strings and components into translatable strings.
@@ -22,9 +65,7 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  *
  * If you don't require this specific functionality, use the standard i18n() function.
  *
- * @component InterpolatedTranslation
- *
- * @template Usage example:
+ * @example
  * ```gjs
  * // Translation key: "some.translation.key" = "Welcome, %{username}! The date is %{shortdate}!"
  * <InterpolatedTranslation
@@ -37,18 +78,18 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  *   </Placeholder>
  * </InterpolatedTranslation>
  * ```
- *
- * @param {String} key - The i18n translation key to use
- * @param {Object} [options] - Hash of options to pass to the i18n function for string interpolation
  */
-export default class DInterpolatedTranslation extends Component {
+export default class DInterpolatedTranslation extends Component<DInterpolatedTranslationSignature> {
   /**
    * Throws errors in dev, or logs them to the browser console in production.
    *
-   * @param {String} The error message.
-   * @param {Class} The type of Error class to throw.
+   * @param message - The error message.
+   * @param errorClass - The type of Error class to throw.
    **/
-  static log(message, errorClass = Error) {
+  static log(
+    message: string,
+    errorClass: new (message: string) => Error = Error
+  ) {
     if (isProduction()) {
       // eslint-disable-next-line no-console
       console.error(message);
@@ -60,9 +101,9 @@ export default class DInterpolatedTranslation extends Component {
   /**
    * Processes the translation string and returns all of the rendering data.
    *
-   * @returns {TranslationPlaceholders}
+   * @returns The rendering data for the translation.
    */
-  get textAndPlaceholders() {
+  get textAndPlaceholders(): TranslationPlaceholders {
     const optionsArg = this.args.options || {};
 
     // Find all of the placeholders in the string we're looking at.
@@ -70,15 +111,15 @@ export default class DInterpolatedTranslation extends Component {
       ...optionsArg,
       needsPluralization: typeof optionsArg.count === "number",
     });
-    const placeholderAppearance = I18n.findPlaceholders(message);
+    const placeholderAppearance = I18n.findPlaceholders(message as string);
 
     // We only need to keep the placeholders that aren't being handled by those passed in @options.
     Object.keys(optionsArg).forEach((stringPlaceholder) =>
       placeholderAppearance.delete(stringPlaceholder)
     );
 
-    const placeholderKeys = new Map();
-    const placeholderElements = new Map();
+    const placeholderKeys = new Map<string, string>();
+    const placeholderElements = new Map<string, HTMLSpanElement[]>();
 
     placeholderAppearance.forEach((placeholderAppearances, placeholderName) => {
       placeholderKeys.set(
@@ -91,16 +132,17 @@ export default class DInterpolatedTranslation extends Component {
       );
     });
 
-    const text = i18n(this.args.key, {
+    const text: string = i18n(this.args.key, {
       ...Object.fromEntries(placeholderKeys),
       ...optionsArg,
     });
 
-    const parts = [];
+    const parts: (string | HTMLSpanElement)[] = [];
     let currentIndex = 0;
     const placeholderRegex = /__PLACEHOLDER__([^_]+)__[^_]+__/g;
-    const foundCount = [];
-    let match;
+    // How many of each placeholder were found, by name.
+    const foundCount: Record<string, number> = {};
+    let match: RegExpExecArray | null;
 
     while ((match = placeholderRegex.exec(text)) !== null) {
       // Add text before placeholder if exists
@@ -112,7 +154,7 @@ export default class DInterpolatedTranslation extends Component {
       // the uniqueId we generated earlier for that placeholder.
       if (placeholderKeys.get(match[1]) === match[0]) {
         const elIdx = foundCount[match[1]] ?? 0;
-        parts.push(placeholderElements.get(match[1])[elIdx]);
+        parts.push(placeholderElements.get(match[1])![elIdx]);
         foundCount[match[1]] = elIdx + 1;
       }
 
@@ -136,31 +178,34 @@ export default class DInterpolatedTranslation extends Component {
   /**
    * Creates a curried TranslationPlaceholder component for all of the placeholders.
    *
-   * @param {Map<String, Array<HTMLElement>>} elements A map of the elements assigned to each placeholder.
-   * @param {Array<string>} rendered An array of the placeholders that have been
+   * @param elements - A map of the elements assigned to each placeholder.
+   * @param rendered - An array of the placeholders that have been
    *
-   * @returns {Component} A curried TranslationPlaceholder component
+   * @returns A curried TranslationPlaceholder component
    */
   @action
-  curriedPlaceholderComponent(elements, rendered) {
+  curriedPlaceholderComponent(
+    elements: Map<string, HTMLSpanElement[]>,
+    rendered: string[]
+  ) {
     return curryComponent(
       Placeholder,
       {
-        markAsRendered: (name) => rendered.push(name),
+        markAsRendered: (name: string) => rendered.push(name),
         elements,
       },
-      getOwner(this)
+      getOwner(this)!
     );
   }
 
   /**
    * Checks for any mismatches between the placeholders expected, and those provided.
    *
-   * @param {TranslationPlaceholders} info The rendering object returned by textAndPlaceholders().
+   * @param info - The rendering object returned by textAndPlaceholders().
    */
   @action
-  checkPlaceholders(info) {
-    let missing = [];
+  checkPlaceholders(info: TranslationPlaceholders) {
+    const missing = [];
     for (const [name, elements] of info.elements) {
       if (!info.rendered.includes(name)) {
         const value = `[missing ${info.appearance.get(name)} placeholder]`;
@@ -203,38 +248,34 @@ export default class DInterpolatedTranslation extends Component {
  * This component is only used through the Translation component's yielded
  * Placeholder component, rather than directly.
  *
- * @component Placeholder
- *
- * @template Usage example:
+ * @example
  * ```gjs
  * <Placeholder @name="username">
  *   <UserLink @user={{user}}>{{user.username}}</UserLink>
  * </Placeholder>
  * ```
- *
- * @param {String} name - The name of the placeholder this content should fill
- * @param {String} [class] - Optional CSS class to apply to the placeholder's wrapper element
  */
-class Placeholder extends Component {
-  constructor() {
-    super(...arguments);
+class Placeholder extends Component<PlaceholderSignature> {
+  constructor(owner: Owner, args: PlaceholderSignature["Args"]) {
+    super(owner, args);
     this.args.markAsRendered(this.args.name);
-    if (this.args.class) {
+    const className = this.args.class;
+    if (className) {
       this.args.elements
         .get(this.args.name)
-        ?.forEach((el) => (el.className = this.args.class));
+        ?.forEach((el) => (el.className = className));
     }
   }
 
   /**
-   * Since {{get}} doesn't work with Maps, we need a helper to handle it.
+   * Since `{{get}}` doesn't work with Maps, we need a helper to handle it.
    *
-   * @param {Map<any,any>} map The map we're retrieving from.
-   * @param {any} key The key of the value we're retrieving.
+   * @param map - The map we're retrieving from.
+   * @param key - The key of the value we're retrieving.
    *
-   * @returns {any|undefined} The value found, or undefined if there was no matching entry.
+   * @returns The value found, or undefined if there was no matching entry.
    **/
-  getFromMap(map, key) {
+  getFromMap<K, V>(map: Map<K, V>, key: K): V | undefined {
     return map.get(key);
   }
 

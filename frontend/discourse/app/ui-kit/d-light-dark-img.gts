@@ -1,11 +1,37 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { getURLWithCDN } from "discourse/lib/get-url";
+import type Session from "discourse/models/session";
+import type InterfaceColor from "discourse/services/interface-color";
 import DCdnImg from "discourse/ui-kit/d-cdn-img";
 
-export default class DLightDarkImg extends Component {
-  @service session;
-  @service interfaceColor;
+/** An uploaded image, such as a category logo. */
+export interface DLightDarkImgImage {
+  /** The URL of the image. */
+  url?: string | null;
+
+  /** The width of the image, in pixels. */
+  width?: number | null;
+
+  /** The height of the image, in pixels. */
+  height?: number | null;
+}
+
+interface DLightDarkImgSignature {
+  Args: {
+    /** The image for the light color scheme, and the fallback. */
+    lightImg?: DLightDarkImgImage | null;
+
+    /** The image for the dark color scheme. It is used only with a light image. */
+    darkImg?: DLightDarkImgImage | null;
+  };
+
+  Element: HTMLImageElement;
+}
+
+export default class DLightDarkImg extends Component<DLightDarkImgSignature> {
+  @service declare session: Session;
+  @service declare interfaceColor: InterfaceColor;
 
   get isDarkImageAvailable() {
     return (
@@ -26,7 +52,8 @@ export default class DLightDarkImg extends Component {
   }
 
   get darkImgCdnSrc() {
-    return getURLWithCDN(this.args.darkImg.url);
+    const url = this.args.darkImg?.url;
+    return url ? getURLWithCDN(url) : undefined;
   }
 
   get darkMediaQuery() {

@@ -4,9 +4,25 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { getCustomHTML } from "discourse/helpers/custom-html";
+import type AppEventsService from "discourse/services/app-events";
 
-export default class DCustomHtml extends Component {
-  @service appEvents;
+interface DCustomHtmlSignature {
+  Args: {
+    /** The key the custom HTML was registered under. */
+    name: string;
+
+    /**
+     * Whether to trigger the `inserted-custom-html:<name>` and
+     * `destroyed-custom-html:<name>` app events as the HTML enters and leaves the page.
+     */
+    triggerAppEvent?: boolean;
+  };
+
+  Element: HTMLDivElement;
+}
+
+export default class DCustomHtml extends Component<DCustomHtmlSignature> {
+  @service declare appEvents: AppEventsService;
 
   get html() {
     return getCustomHTML(this.args.name);
