@@ -804,6 +804,10 @@
     .control-group {
       margin-bottom: 2em;
     }
+
+    fieldset.control-group {
+      min-inline-size: 0;
+    }
   }
 
   #control-chat_quick_reactions_custom .form-kit__control-custom {
@@ -818,6 +822,10 @@
   input.user-selector,
   .user-chooser {
     width: 100%;
+  }
+
+  .select-kit.multi-select {
+    max-width: 100%;
   }
 
   textarea {

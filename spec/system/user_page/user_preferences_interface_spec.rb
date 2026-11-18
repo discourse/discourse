@@ -7,6 +7,16 @@ describe "User preferences | Interface" do
 
   before { sign_in(user) }
 
+  it "keeps the content language picker inside the form on a narrow screen", mobile: true do
+    SiteSetting.content_localization_enabled = true
+
+    resize_window(width: 320) do
+      user_preferences_interface_page.visit(user)
+
+      expect(user_preferences_interface_page).to have_understood_languages_picker_within_form
+    end
+  end
+
   describe "Bookmarks" do
     it "changes the bookmark after notification preference" do
       user_preferences_page.visit(user)
