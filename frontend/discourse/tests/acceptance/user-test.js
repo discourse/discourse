@@ -1,3 +1,5 @@
+import { setComponentTemplate } from "@ember/component";
+import templateOnly from "@ember/component/template-only";
 import EmberObject from "@ember/object";
 import {
   click,
@@ -6,9 +8,11 @@ import {
   settled,
   visit,
 } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import pretender, {
   response as jsonResponse,
@@ -55,6 +59,34 @@ acceptance("User Routes", function (needs) {
     }
 
     assert.strictEqual(currentRouteName(), "exception-unknown");
+  });
+
+  test("The profile location row only takes up space when it has content", async function (assert) {
+    const locationRow = ".user-profile__location-and-website";
+
+    await visit("/u/charlie/summary");
+    assert.dom(locationRow).hasStyle({ display: "none" });
+
+    await visit("/u/eviltrout/summary");
+    await click(".user-profile-toggle-btn");
+    assert.dom(locationRow).isVisible();
+    assert.dom(`${locationRow} .user-profile-location`).hasText("Toronto");
+  });
+
+  test("Plugin content can fill an otherwise empty profile location row", async function (assert) {
+    withPluginApi((api) => {
+      api.renderInOutlet(
+        "user-location-and-website",
+        setComponentTemplate(hbs`Community region`, templateOnly())
+      );
+    });
+
+    await visit("/u/charlie/summary");
+
+    assert
+      .dom(".user-profile__location-and-website")
+      .isVisible()
+      .hasText("Community region");
   });
 
   test("Unicode usernames", async function (assert) {

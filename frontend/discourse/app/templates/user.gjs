@@ -290,13 +290,11 @@ export default <template>
                     {{! eslint-enable ember/template-link-rel-noopener }}
                   </div>
                 {{/if}}
-                <span>
-                  <PluginOutlet
+                <span><PluginOutlet
                     @connectorTagName="div"
                     @name="user-location-and-website"
                     @outletArgs={{lazyHash model=@controller.model}}
-                  />
-                </span>
+                  /></span>
               </div>
 
               <PluginOutlet
