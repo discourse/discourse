@@ -77,6 +77,21 @@ describe "Topic page" do
     end
   end
 
+  context "with participant avatars in the topic map" do
+    fab!(:participant, :user)
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:topic_map) { PageObjects::Components::TopicMap.new }
+
+    it "keeps the keyboard focus outline inside the avatar summary" do
+      Fabricate.times(2, :post, topic: topic, user: participant)
+      topic_page.visit_topic(topic)
+      page.send_keys(:tab)
+      topic_map.focus_first_summary_avatar
+
+      expect(topic_map).to have_inset_summary_avatar_focus_outline
+    end
+  end
+
   context "with a post containing a code block" do
     before { Fabricate(:post, topic: topic, raw: <<~RAW) }
       this a code block
