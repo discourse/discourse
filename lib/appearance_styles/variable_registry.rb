@@ -3,12 +3,11 @@
 # The core design variables generated theme styles may override, with their
 # type, where core defines them, and bounds for anything size-like.
 #
-# Loaded from config/appearance_styles/variables.json, which
-# script/appearance_styles/build_variables.rb generates from compiled core CSS.
+# The variables themselves come from AppearanceStyles::VariableInventory, which
+# reads them from compiled core CSS; the rules below decide which ones styles
+# may change.
 module AppearanceStyles
   class VariableRegistry
-    CONFIG_DIR = Rails.root.join("config/appearance_styles")
-
     Variable =
       Data.define(
         :name,
@@ -76,18 +75,19 @@ module AppearanceStyles
       /text-alignment\z/ => %w[left center right start end],
     }.freeze
 
+    # Built again when core's stylesheets change.
     def self.instance
-      @instance ||= new
+      cachebuster = Stylesheet::Manager.fs_asset_cachebuster
+      if @instance.nil? || @cachebuster != cachebuster
+        @instance = new(VariableInventory.current)
+        @cachebuster = cachebuster
+      end
+      @instance
     end
 
-    def initialize
-      @palette_names =
-        JSON.parse(File.read(CONFIG_DIR.join("palette_variables.json"))).to_set.freeze
-      @variables =
-        JSON
-          .parse(File.read(CONFIG_DIR.join("variables.json")))
-          .to_h { |entry| [entry["name"], build(entry)] }
-          .freeze
+    def initialize(inventory)
+      @palette_names = inventory["palette_variables"].to_set.freeze
+      @variables = inventory["variables"].to_h { |entry| [entry["name"], build(entry)] }.freeze
     end
 
     def [](name)
@@ -104,6 +104,10 @@ module AppearanceStyles
 
     def palette_variable?(name)
       @palette_names.include?(name)
+    end
+
+    def palette_variables
+      @palette_names.sort
     end
 
     # Variables a value may reference through var(): palette colors, core
