@@ -304,6 +304,17 @@ RSpec.describe SearchController do
       expect(log.term).to eq("wookie")
     end
 
+    it "returns results without logging a derived query" do
+      SiteSetting.log_search_queries = true
+      term = "awesome topic:#{awesome_topic.id}"
+
+      get "/search/query.json", params: { term: term, skip_search_log: true }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["posts"].pluck("id")).to eq([awesome_post.id])
+      expect(SearchLog.where(term: term)).to be_empty
+    end
+
     it "logs the pageview session the search was made from" do
       SiteSetting.log_search_queries = true
       session_id = SecureRandom.alphanumeric(32)
