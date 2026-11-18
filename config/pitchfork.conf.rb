@@ -5,14 +5,33 @@ enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 
 if enable_logstash_logger
+  require "active_support"
+  require_relative "../lib/truncate_logs_formatter"
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/pitchfork_logstash_patch"
   FileUtils.touch(stderr_log_path) if !File.exist?(stderr_log_path)
-  logger DiscourseLogstashLogger.logger(
-           logdev: stderr_log_path,
-           type: :unicorn,
-           customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
-         )
+  structured_logger =
+    DiscourseLogstashLogger.logger(
+      logdev: stderr_log_path,
+      type: :unicorn,
+      customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
+    )
+
+  if TruncateLogsFormatter.enabled?(ENV["RAILS_ENV"])
+    require "yaml"
+    require "active_support/core_ext/hash/keys"
+    require "active_support/core_ext/object/blank"
+    require_relative "../app/models/global_setting"
+
+    defaults = GlobalSetting::FileProvider.new(GlobalSetting::DEFAULTS_PATH)
+    limit =
+      GlobalSetting::EnvProvider.new.lookup(
+        :log_line_max_chars,
+        defaults.lookup(:log_line_max_chars, nil),
+      )
+    structured_logger.formatter = TruncateLogsFormatter.new(log_line_max_chars: limit)
+  end
+  logger structured_logger
 else
   console_logger = Logger.new(STDOUT)
   if ENV["RAILS_ENV"] != "production"

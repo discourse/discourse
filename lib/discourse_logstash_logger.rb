@@ -119,7 +119,9 @@ class DiscourseLogstashLogger < Logger
 
     @customize_event.call(event) if @customize_event
 
-    @logdev.write("#{event.to_json}\n")
+    line = event.to_json
+    line = formatter.call(event["severity_name"], Time.now, progname, line) if formatter
+    @logdev.write("#{line}\n")
   rescue Exception => e
     STDERR.puts "Error logging message `#{message}` in DiscourseLogstashLogger: #{e.class} (#{e.message})\n#{e.backtrace.join("\n")}"
   end
