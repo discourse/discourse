@@ -3,12 +3,15 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import PostReadersReport from "discourse/components/modal/post-readers-report";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class AdminPostMenu extends Component {
   @service currentUser;
+  @service modal;
+  @service site;
   @service siteSettings;
   @service adminPostMenuButtons;
   @service router;
@@ -37,6 +40,17 @@ export default class AdminPostMenu extends Component {
 
   get canChangePostOwner() {
     return this.currentUser?.canChangePostOwner;
+  }
+
+  get canSeePostReaders() {
+    const post = this.args.data.post;
+    return (
+      this.siteSettings.enable_post_readers_modal &&
+      this.currentUser?.staff &&
+      !post.deleted &&
+      !post.topic.isPrivateMessage &&
+      post.post_type === this.site.post_types.regular
+    );
   }
 
   get nestedPinButton() {
@@ -89,6 +103,14 @@ export default class AdminPostMenu extends Component {
     await this.args.data.scheduleRerender?.();
   }
 
+  @action
+  async showPostReaders() {
+    await this.args.close();
+    this.modal.show(PostReadersReport, {
+      model: { postId: this.args.data.post.id },
+    });
+  }
+
   <template>
     <DDropdownMenu as |dropdown|>
       {{#if this.currentUser.staff}}
@@ -98,6 +120,17 @@ export default class AdminPostMenu extends Component {
             @href={{this.reviewUrl}}
             @icon="list"
             @label="review.moderation_history"
+          />
+        </dropdown.item>
+      {{/if}}
+
+      {{#if this.canSeePostReaders}}
+        <dropdown.item>
+          <DButton
+            class="btn btn-transparent see-post-readers"
+            @action={{this.showPostReaders}}
+            @icon="book-open-reader"
+            @label="post.readers_report.title"
           />
         </dropdown.item>
       {{/if}}

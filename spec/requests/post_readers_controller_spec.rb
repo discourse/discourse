@@ -1,6 +1,94 @@
 # frozen_string_literal: true
 
 RSpec.describe PostReadersController do
+  describe "#staff_report" do
+    fab!(:post)
+    fab!(:moderator)
+    fab!(:reader, :user)
+    fab!(:other_reader, :user)
+
+    def report_for(post)
+      get "/post_readers/#{post.id}/staff_report.json",
+          headers: {
+            "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+          }
+    end
+
+    it "requires the site to opt in" do
+      sign_in(moderator)
+      report_for(post)
+      expect(response.status).to eq(404)
+    end
+
+    context "when enabled" do
+      before { SiteSetting.enable_post_readers_modal = true }
+
+      it "denies regular users" do
+        sign_in(reader)
+        report_for(post)
+        expect(response).to be_forbidden
+      end
+
+      it "denies access to a post the moderator cannot see" do
+        category = Fabricate(:private_category, group: Fabricate(:group))
+        restricted = Fabricate(:post, topic: Fabricate(:topic, category:))
+        sign_in(moderator)
+        report_for(restricted)
+        expect(response).to be_forbidden
+      end
+
+      it "does not report readers of a personal message" do
+        message = Fabricate(:private_message_post, user: moderator, recipient: reader)
+        sign_in(moderator)
+        report_for(message)
+        expect(response.status).to eq(404)
+      end
+
+      it "does not report readers of a whisper" do
+        whisper = Fabricate(:post, topic: post.topic, post_type: Post.types[:whisper])
+        sign_in(Fabricate(:admin))
+        report_for(whisper)
+        expect(response.status).to eq(404)
+      end
+
+      it "returns timing-backed readers and their last topic visits" do
+        visit = 1.hour.ago.change(usec: 0)
+        TopicUser.create!(topic: post.topic, user: reader, last_visited_at: visit)
+        TopicUser.create!(
+          topic: post.topic,
+          user: post.user,
+          last_read_post_number: post.post_number,
+        )
+        PostTiming.create!(
+          topic: post.topic,
+          post_number: post.post_number,
+          user: reader,
+          msecs: 700,
+        )
+        PostTiming.create!(
+          topic: post.topic,
+          post_number: post.post_number,
+          user: other_reader,
+          msecs: 600,
+        )
+        PostTiming.create!(
+          topic: post.topic,
+          post_number: post.post_number,
+          user: post.user,
+          msecs: 1,
+        )
+        sign_in(moderator)
+
+        report_for(post)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["readers"].pluck("username", "last_visited_at")).to eq(
+          [[reader.username, visit.as_json], [other_reader.username, nil]],
+        )
+      end
+    end
+  end
+
   describe "#index" do
     fab!(:admin)
     fab!(:reader, :user)
