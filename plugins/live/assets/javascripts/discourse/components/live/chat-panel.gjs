@@ -18,6 +18,9 @@ import ChatPendingThreadComposer from "discourse/plugins/chat/discourse/componen
 import ChatNavbar from "discourse/plugins/chat/discourse/components/chat/navbar" with {
   discourseImport: "optional",
 };
+import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel" with {
+  discourseImport: "optional",
+};
 // Chat's own loading skeleton doubles as the panel's loading state, so the hand-off to the
 // thread's identical skeleton reads as one continuous load instead of a spinner flashing into
 // a skeleton.
@@ -67,7 +70,11 @@ export default class LiveChatPanel extends Component {
   }
 
   get canOpenInChat() {
-    return !!this.thread;
+    return !!this.thread || this.directCallChat;
+  }
+
+  get directCallChat() {
+    return this.room.ephemeral && this.channel?.isDirectMessageChannel;
   }
 
   @action
@@ -95,7 +102,9 @@ export default class LiveChatPanel extends Component {
 
   @action
   openInChat() {
-    if (this.thread) {
+    if (this.directCallChat) {
+      this.router.transitionTo("chat.channel", ...this.channel.routeModels);
+    } else if (this.thread) {
       this.router.transitionTo(
         "chat.channel.thread",
         ...this.thread.routeModels
@@ -147,7 +156,9 @@ export default class LiveChatPanel extends Component {
     if (this.chat.activeChannel !== channel) {
       this.chat.activeChannel = channel;
     }
-    this.draft ||= this.liveChatDrafts.get(this.room.id, channel);
+    if (!this.directCallChat) {
+      this.draft ||= this.liveChatDrafts.get(this.room.id, channel);
+    }
   }
 
   #showThread(channel, thread) {
@@ -238,6 +249,8 @@ export default class LiveChatPanel extends Component {
           {{else}}
             <DConditionalLoadingSpinner @condition={{true}} />
           {{/if}}
+        {{else if (and ChatChannel this.directCallChat)}}
+          <ChatChannel @channel={{this.channel}} />
         {{else if (and ChatThread this.thread)}}
           {{#each (array this.thread) key="id" as |thread|}}
             <ChatThread
