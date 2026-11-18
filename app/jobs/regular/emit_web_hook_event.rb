@@ -78,8 +78,6 @@ module Jobs
     end
 
     def retry_web_hook
-      return if @arguments[:skip_retry]
-
       if SiteSetting.retry_web_hook_events?
         @retry_count += 1
         return if @retry_count > MAX_RETRY_COUNT

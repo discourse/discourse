@@ -741,15 +741,18 @@ describe "MCP webhook tools" do
     )
   end
 
-  it "does not automatically retry a native ping when webhook retries are enabled" do
+  it "uses the existing webhook retry behavior for pings" do
     SiteSetting.retry_web_hook_events = true
     authorize
     call_tool("discourse_ping_webhook", identity.merge(confirm_external_request: true))
     args = Jobs::EmitWebHookEvent.jobs.last["args"].first.deep_symbolize_keys
     request = stub_request(:post, web_hook.payload_url).to_return(status: 500)
-    expect { Jobs::EmitWebHookEvent.new.execute(args) }.not_to change {
+    expect { Jobs::EmitWebHookEvent.new.execute(args) }.to change {
       Jobs::EmitWebHookEvent.jobs.length
-    }
+    }.by(1)
+    expect(Jobs::EmitWebHookEvent.jobs.last["args"].first).to include(
+      "expected_destination_fingerprint" => web_hook.destination_fingerprint,
+    )
     expect(request).to have_been_requested.once
   end
 

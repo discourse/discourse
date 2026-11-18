@@ -489,7 +489,6 @@ module DiscourseMcp
           web_hook_id: hook.id,
           event_type: "ping",
           event_name: "ping",
-          skip_retry: true,
           expected_destination_fingerprint: hook.destination_fingerprint,
         )
         ToolHelpers.text_and_structured(

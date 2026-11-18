@@ -327,7 +327,7 @@ module DiscourseMcp
         "discourse_ping_webhook",
         title: "Ping webhook",
         description:
-          "Queues one ping without automatic retries to the administrator-configured destination, including for an inactive webhook. Requires confirm_external_request=true and the current destination fingerprint. Enqueue success does not mean delivery succeeded; inspect delivery history for the outcome.",
+          "Queues a ping using the existing webhook delivery job and retry behavior, including for an inactive webhook. Requires confirm_external_request=true and the current destination fingerprint. Enqueue success does not mean delivery succeeded; inspect delivery history for the outcome.",
         implementation: Tools::PingWebhook,
         input_schema:
           object_schema(
