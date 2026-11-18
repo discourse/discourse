@@ -696,6 +696,28 @@ RSpec.describe ApplicationController do
         end
       end
 
+      it "does not retain topics converted to private messages" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}/convert-topic/private.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload).to be_private_message
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(topic.title)
+      end
+
       it "does not retain topics after a category becomes restricted" do
         Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
         category = Fabricate(:category)

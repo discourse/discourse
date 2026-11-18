@@ -3094,6 +3094,43 @@ RSpec.describe TopicsController do
     fab!(:private_topic) { pm }
     fab!(:topic) { Fabricate(:post_with_cooked_content, user: post_author1).topic }
 
+    it "serves a cached public topic after a restricted category move until its 60-second TTL expires" do
+      global_setting :anon_cache_store_threshold, 1
+      Middleware::AnonymousCache.enable_anon_cache
+      Middleware::AnonymousCache.clear_all_cache!
+      url = "#{topic.relative_url}.json"
+      cooked = topic.first_post.cooked
+
+      get url
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Cached"]).to eq("store")
+      expect(response.parsed_body["post_stream"]["posts"].first["cooked"]).to eq(cooked)
+
+      cache = Middleware::AnonymousCache::Helper.new(request.env)
+      cache_keys = [cache.cache_key_body, cache.cache_key_other]
+      cache_keys.each { |key| expect(Discourse.redis.ttl(key)).to be_between(59, 60) }
+
+      topic.change_category_to_id(staff_category.id)
+
+      get url
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Cached"]).to eq("true")
+      expect(response.parsed_body["post_stream"]["posts"].first["cooked"]).to eq(cooked)
+
+      # Redis uses its own clock, so simulate expiry after checking the real TTL.
+      cache_keys.each { |key| Discourse.redis.expire(key, 0) }
+
+      get url
+
+      expect(response.status).to eq(404)
+      expect(response.headers["X-Discourse-Cached"]).not_to eq("true")
+      expect(response.parsed_body["post_stream"]).to be_nil
+    ensure
+      Middleware::AnonymousCache.clear_all_cache!
+    end
+
     describe "when topic is not allowed" do
       it "returns a not-found response" do
         SiteSetting.detailed_404 = true
