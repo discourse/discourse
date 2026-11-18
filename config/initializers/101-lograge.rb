@@ -103,7 +103,7 @@ if DiscourseLograge.enabled?
           end
 
           output = {
-            params: params.to_query,
+            params: params.to_query.truncate(4.kilobytes),
             database: RailsMultisite::ConnectionManagement.current_db,
           }
 
