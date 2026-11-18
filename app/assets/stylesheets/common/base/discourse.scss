@@ -255,7 +255,7 @@ small {
 
 blockquote {
   background: var(--d-post-aside-background);
-  border-left: var(--d-post-aside-border-left);
+  border-inline-start: var(--d-post-aside-border-left);
 
   @include viewport.until(sm) {
     clear: both;

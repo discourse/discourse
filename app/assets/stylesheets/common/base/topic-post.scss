@@ -841,7 +841,7 @@ aside.quote {
     color: var(--primary-high-or-secondary-low);
     padding: 0.8em 0.8em 0 0.8em;
     background: var(--d-post-aside-background);
-    border-left: var(--d-post-aside-border-left);
+    border-inline-start: var(--d-post-aside-border-left);
 
     @include unselectable;
 
@@ -911,7 +911,11 @@ aside.quote {
   aside {
     .quote,
     .title,
-    blockquote,
+    blockquote {
+      background: var(--primary-very-low);
+      border-inline-start: 5px solid var(--primary-low);
+    }
+
     .onebox,
     .onebox-result {
       background: var(--primary-very-low);
@@ -920,7 +924,7 @@ aside.quote {
 
     aside.quote > blockquote,
     aside.quote > .title {
-      border-left: 0;
+      border-inline-start: 0;
     }
   }
 }

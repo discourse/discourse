@@ -92,6 +92,21 @@ describe "Topic page" do
     end
   end
 
+  context "with a right-to-left quote on a left-to-right site" do
+    fab!(:quoted_post) { Fabricate(:post, topic:, raw: "> שלום עולם") }
+
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:post_with_quote) { PageObjects::Components::Post.new(quoted_post.post_number) }
+
+    it "places the quote border on the right side" do
+      SiteSetting.support_mixed_text_direction = true
+
+      topic_page.visit_topic(topic)
+
+      expect(post_with_quote).to have_rtl_quote_border_in_ltr_interface
+    end
+  end
+
   context "with a gap" do
     before do
       post2 = Fabricate(:post, topic: topic, cooked: "post2")
