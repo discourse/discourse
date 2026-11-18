@@ -90,41 +90,19 @@ module("Integration | Component | SettingField | Upload", function (hooks) {
     assert.dom(".d-icon-trash-can").doesNotExist("nothing to delete");
     assert.dom(".lightbox").doesNotExist("nothing to preview");
     assert.dom(".file-info").doesNotExist("no file to show info for");
-  });
-
-  test("accepts only images by default", async function (assert) {
-    await renderUpload(LOGO, "");
-
     assert
       .dom("[id$='__input']")
       .hasAttribute("accept", "image/*", "restricts to images for security");
-  });
-
-  test("uses authorized_extensions when specified", async function (assert) {
-    const definition = {
-      key: "llms_txt",
-      type: "upload",
-      label: "Upload",
-      authorized_extensions: "txt|json",
-    };
-
-    await renderUpload(definition, "");
-
     assert
-      .dom("[id$='__input']")
-      .hasAttribute(
-        "accept",
-        ".txt,.json",
-        "converts pipe-separated extensions to HTML accept format"
-      );
+      .dom(".file-uploader__restrictions")
+      .doesNotExist("no restrictions for standard image uploads");
   });
 
   test("delete button sets the field to null", async function (assert) {
-    const definition = { key: "logo", type: "upload", label: "Upload" };
     let callbackValue = "not called";
     const handleChange = (_name, value) => (callbackValue = value);
 
-    await renderUpload(definition, "/images/logo.png", handleChange);
+    await renderUpload(LOGO, "/images/logo.png", handleChange);
 
     await click(".btn-danger");
 
@@ -143,22 +121,18 @@ module("Integration | Component | SettingField | Upload", function (hooks) {
     await renderUpload(definition, "");
 
     assert
-      .dom(".file-uploader__restrictions")
-      .exists("displays restrictions info when configured");
+      .dom("[id$='__input']")
+      .hasAttribute(
+        "accept",
+        ".txt,.json",
+        "converts pipe-separated extensions to HTML accept format"
+      );
     assert
       .dom(".file-uploader__restrictions")
       .includesText(".txt", "shows accepted extensions");
     assert
       .dom(".file-uploader__restrictions")
       .includesText("512 KB", "shows max file size");
-  });
-
-  test("does not show restrictions for default image uploads", async function (assert) {
-    await renderUpload(LOGO, "");
-
-    assert
-      .dom(".file-uploader__restrictions")
-      .doesNotExist("no restrictions for standard image uploads");
   });
 
   test("applies background-size cover for welcome_banner_image", async function (assert) {

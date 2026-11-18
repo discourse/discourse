@@ -71,19 +71,18 @@ const FilePreview = <template>
 
 /**
  * @typedef {{
- *   file_name: string,
  *   url?: string,
  *   original_filename?: string,
  *   human_filesize?: string,
  *   width?: number | null,
  *   height?: number | null
- * }} SiteSettingUploadedFile
+ * }} UploadedFile
  */
 export default class SettingFieldUpload extends Component {
   @service currentUser;
   @service siteSettings;
 
-  /** @type {SiteSettingUploadedFile | null} */
+  /** @type {UploadedFile | null} */
   @tracked uploadedFile = null;
 
   uppyUpload = new UppyUpload(this, {
@@ -170,31 +169,19 @@ export default class SettingFieldUpload extends Component {
   }
 
   get backgroundStyle() {
-    return this.isImageFile
-      ? trustHTML(`background-image: url(${this.fileCdnUrl})`)
-      : trustHTML("");
+    if (this.isImageFile) {
+      return trustHTML(`background-image: url(${this.fileCdnUrl})`);
+    }
+  }
+
+  get upload() {
+    return this.uploadedFile ?? this.args.definition.upload;
   }
 
   get fileName() {
-    const filename =
-      this.uploadedFile?.original_filename ??
-      this.args.definition.upload?.original_filename;
-    return filename || this.args.field.value?.split("/").pop();
-  }
-
-  get filesize() {
     return (
-      this.uploadedFile?.human_filesize ??
-      this.args.definition.upload?.human_filesize
+      this.upload?.original_filename || this.args.field.value?.split("/").pop()
     );
-  }
-
-  get imageWidth() {
-    return this.uploadedFile?.width ?? this.args.definition.upload?.width;
-  }
-
-  get imageHeight() {
-    return this.uploadedFile?.height ?? this.args.definition.upload?.height;
   }
 
   get isUploading() {
@@ -234,7 +221,7 @@ export default class SettingFieldUpload extends Component {
       );
     }
 
-    return parts.length > 0 ? parts.join(" · ") : null;
+    return parts.join(" · ");
   }
 
   formatExtensions(separator = ", ") {
@@ -292,16 +279,16 @@ export default class SettingFieldUpload extends Component {
                 @applyLightbox={{this.applyLightbox}}
                 @cdnUrl={{this.fileCdnUrl}}
                 @fileName={{this.fileName}}
-                @filesize={{this.filesize}}
-                @height={{this.imageHeight}}
+                @filesize={{this.upload.human_filesize}}
+                @height={{this.upload.height}}
                 @onToggleLightbox={{this.toggleLightbox}}
-                @width={{this.imageWidth}}
+                @width={{this.upload.width}}
               />
             {{else}}
               <FilePreview
                 @cdnUrl={{this.fileCdnUrl}}
                 @fileName={{this.fileName}}
-                @filesize={{this.filesize}}
+                @filesize={{this.upload.human_filesize}}
               />
             {{/if}}
           {{else}}
