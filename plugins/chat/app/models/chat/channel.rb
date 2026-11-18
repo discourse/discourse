@@ -242,23 +242,9 @@ module Chat
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)
-      DB.query_single(<<~SQL, channel_id: id, anchor_message_id: anchor_message_id).first
-        SELECT chat_messages.id
-        FROM chat_messages
-        LEFT JOIN chat_threads original_message_threads ON original_message_threads.original_message_id = chat_messages.id
-        WHERE chat_channel_id = :channel_id
-        AND deleted_at IS NULL
-        -- this is so only the original message of a thread is counted not all thread replies
-        -- (broadcasted thread replies are counted, they show in the channel stream)
-        AND (
-          chat_messages.thread_id IS NULL OR
-          chat_messages.broadcasted OR
-          original_message_threads.id IS NOT NULL
-        )
-        #{anchor_message_id ? "AND chat_messages.id < :anchor_message_id" : ""}
-        ORDER BY chat_messages.created_at DESC, chat_messages.id DESC
-        LIMIT 1
-      SQL
+      messages = Chat::Message.where(chat_channel_id: id).where(deleted_at: nil).channel_stream
+      messages = messages.where("chat_messages.id < ?", anchor_message_id) if anchor_message_id
+      messages.order(created_at: :desc, id: :desc).limit(1).pluck(:id).first
     end
 
     def mark_all_threads_as_read(user: nil)

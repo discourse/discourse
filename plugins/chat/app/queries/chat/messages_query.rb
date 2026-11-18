@@ -69,7 +69,7 @@ module Chat
             )
         end
       else
-        messages = messages.channel_stream(channel.id)
+        messages = messages.channel_stream
       end
 
       if target_message_id.present? && direction.blank?

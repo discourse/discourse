@@ -118,12 +118,15 @@ module Chat
     scope :uncooked, -> { where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION) }
 
     # Messages that render in the channel's main stream
-    scope :channel_stream, ->(channel_id) { where(<<~SQL, channel_id:) }
-        chat_messages.thread_id IS NULL OR chat_messages.broadcasted OR chat_messages.id IN (
-          SELECT original_message_id
-          FROM chat_threads
-          WHERE chat_threads.channel_id = :channel_id
-        )
+    scope :channel_stream, -> { where(<<~SQL) }
+        chat_messages.thread_id IS NULL
+          OR chat_messages.broadcasted
+          OR EXISTS (
+            SELECT 1
+            FROM chat_threads
+            WHERE chat_threads.id = chat_messages.thread_id
+              AND chat_threads.original_message_id = chat_messages.id
+          )
       SQL
 
     before_save { ensure_last_editor_id }
@@ -434,6 +437,10 @@ module Chat
 
     def thread_om?
       in_thread? && thread&.original_message_id == id
+    end
+
+    def channel_stream?
+      !in_thread? || thread_om? || broadcasted?
     end
 
     def parsed_mentions

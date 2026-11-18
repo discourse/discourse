@@ -97,7 +97,7 @@ module Chat
 
     def fetch_messages(metadata:, guardian:)
       target_message = metadata[:target_message]
-      target_message = nil if target_message&.thread_reply? && !target_message.broadcasted?
+      target_message = nil unless target_message&.channel_stream?
 
       messages = [
         metadata[:messages],

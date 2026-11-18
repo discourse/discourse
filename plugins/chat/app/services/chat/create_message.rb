@@ -219,12 +219,12 @@ module Chat
     end
 
     def update_channel_last_message(channel:, message_instance:)
-      return if message_instance.in_thread? && !message_instance.broadcasted?
+      return unless message_instance.channel_stream?
       channel.update!(last_message: message_instance)
     end
 
     def update_membership_last_read(membership:, message_instance:)
-      return if message_instance.in_thread? && !message_instance.broadcasted?
+      return unless message_instance.channel_stream?
       membership.update!(last_read_message: message_instance)
     end
 
@@ -278,7 +278,7 @@ module Chat
 
     def publish_user_tracking_state(message_instance:, channel:, membership:, guardian:)
       message_to_publish = message_instance
-      if message_instance.in_thread? && !message_instance.broadcasted?
+      if !message_instance.channel_stream?
         message_to_publish = membership.last_read_message || message_instance
       end
       Chat::Publisher.publish_user_tracking_state!(guardian.user, channel, message_to_publish)

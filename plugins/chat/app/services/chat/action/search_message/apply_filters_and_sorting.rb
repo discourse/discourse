@@ -28,14 +28,8 @@ module Chat
 
         # Applies thread exclusion filtering to messages when requested.
         #
-        # When exclude_threads is true, this method filters out thread reply messages
-        # while preserving:
-        # 1. Messages that are not part of any thread (thread_id IS NULL)
-        # 2. Original messages that started threads (these have thread_id but are
-        #    referenced as original_message_id in the chat_threads table)
-        #
-        # This allows searching in channel messages and thread starters without
-        # getting overwhelmed by thread replies.
+        # Excludes thread replies from the results while preserving messages
+        # that render in the channel's main stream (see Chat::Message.channel_stream).
         #
         # @param [ActiveRecord::Relation] messages The messages query to filter
         # @param [Boolean] exclude_threads Whether to apply thread exclusion
@@ -43,15 +37,7 @@ module Chat
         def apply_thread_exclusion(messages, exclude_threads)
           return messages unless exclude_threads
 
-          # Exclude messages that have a thread_id unless they are the original
-          # message of the thread or broadcasted into the channel stream.
-          messages.where(
-            "chat_messages.thread_id IS NULL OR chat_messages.broadcasted OR chat_messages.id IN (
-              SELECT ct.original_message_id
-              FROM chat_threads ct
-              WHERE ct.id = chat_messages.thread_id
-            )",
-          )
+          messages.channel_stream
         end
 
         # Applies sorting to messages based on the specified sort option.

@@ -140,7 +140,7 @@ module Chat
         if thread
           Chat::Message.where(chat_channel_id: channel.id, thread_id: thread.id)
         elsif channel.threading_enabled?
-          Chat::Message.where(chat_channel_id: channel.id).channel_stream(channel.id)
+          Chat::Message.where(chat_channel_id: channel.id).channel_stream
         else
           # Mirrors the channel UI, which only hides replies of forced threads when threading is off.
           Chat::Message
