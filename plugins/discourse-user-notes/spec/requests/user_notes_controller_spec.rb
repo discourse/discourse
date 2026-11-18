@@ -68,6 +68,32 @@ describe DiscourseUserNotes::UserNotesController do
         expect(notes.last["post_id"]).to be_nil
       end
     end
+
+    it "triggers the :user_note_created event when a note is added" do
+      sign_in(moderator)
+
+      events =
+        DiscourseEvent.track_events(:user_note_created) do
+          post "/user_notes",
+               params: {
+                 user_note: {
+                   user_id: user.id,
+                   raw: "helpful member",
+                 },
+               },
+               headers: {
+                 "ACCEPT" => "application/json",
+               }
+        end
+
+      expect(response.status).to eq(200)
+      expect(events.size).to eq(1)
+      record, target_user, created_by_id, opts = events.first[:params]
+      expect(record[:raw]).to eq("helpful member")
+      expect(target_user).to eq(user)
+      expect(created_by_id).to eq(moderator.id)
+      expect(opts).to eq({})
+    end
   end
 
   describe "#index" do

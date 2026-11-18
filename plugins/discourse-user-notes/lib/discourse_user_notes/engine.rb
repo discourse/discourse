@@ -34,6 +34,8 @@ module DiscourseUserNotes
     user.custom_fields[DiscourseUserNotes::COUNT_FIELD] = notes.size
     user.save_custom_fields
 
+    DiscourseEvent.trigger(:user_note_created, record, user, created_by, opts)
+
     record
   end
 
