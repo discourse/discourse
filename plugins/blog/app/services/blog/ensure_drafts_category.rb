@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Finds the private category that holds editorial drafts, creating it when it is
-# missing, and keeps it readable only by the blog role groups.
+# missing, and removes any other group that was given access to it.
 class Blog::EnsureDraftsCategory
   include Service::Base
 
@@ -21,6 +21,7 @@ class Blog::EnsureDraftsCategory
         step :log_category_creation
       end
     end
+    policy :category_private
     only_if(:permissions_loosened) do
       step :restore_permissions
       step :log_permissions_repair
@@ -29,11 +30,8 @@ class Blog::EnsureDraftsCategory
 
   private
 
-  # A category the blog also uses for something else must never be made private.
   def fetch_category
-    Category
-      .where.not(id: [SiteSetting.blog_category.to_i, SiteSetting.shared_drafts_category.to_i])
-      .find_by(id: Blog::ManagedCategories.stored_category_id(:blog_drafts_category))
+    Blog::ManagedCategories.drafts_category
   end
 
   def category_missing(category:)
@@ -61,6 +59,12 @@ class Blog::EnsureDraftsCategory
 
   def log_category_creation(category:)
     StaffActionLogger.new(Discourse.system_user).log_category_creation(category)
+  end
+
+  # A category open to everyone may be an ordinary one stored by mistake, so it is
+  # reported rather than hidden from the members using it.
+  def category_private(category:)
+    category.read_restricted?
   end
 
   def permissions_loosened(category:)

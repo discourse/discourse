@@ -102,9 +102,11 @@ after_initialize do
 
   on(:site_setting_changed) do |name|
     name = name.to_sym
+    if %i[blog_category blog_publisher_groups].include?(name)
+      Blog::AddPublishersToPublicCategory.call
+    end
     next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
     Blog::EnsureDraftsCategory.call(options: { create_missing: false })
-    Blog::AddPublishersToPublicCategory.call if name == :blog_publisher_groups
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

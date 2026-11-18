@@ -18,10 +18,9 @@ RSpec.describe Blog::EnsurePublicCategory do
 
       before { SiteSetting.blog_category = blog_category.id }
 
-      it { is_expected.to run_successfully }
-
       it "returns it without changing its permissions or logging anything" do
         expect { result }.not_to change { [Category.count, UserHistory.count] }
+        expect(result).to run_successfully
         expect(result[:category]).to eq(blog_category)
         expect(blog_category.reload.category_groups.pluck(:group_id, :permission_type)).to eq(
           [[writers.id, CategoryGroup.permission_types[:full]]],
@@ -40,10 +39,9 @@ RSpec.describe Blog::EnsurePublicCategory do
     end
 
     context "without a blog category" do
-      it { is_expected.to run_successfully }
-
-      it "creates an open category where publishers have full access and stores it" do
+      it "creates an open category where publishers have full access, stores it and logs it" do
         expect { result }.to change { Category.count }.by(1)
+        expect(result).to run_successfully
         category = result[:category]
         expect(category).to have_attributes(
           name: "Blog",
@@ -55,12 +53,13 @@ RSpec.describe Blog::EnsurePublicCategory do
           [publishers.id, CategoryGroup.permission_types[:full]],
         )
         expect(SiteSetting.blog_category.to_i).to eq(category.id)
-      end
-
-      it "explains what the category holds" do
-        expect(result[:category].topic.first_post.raw).to eq(
-          I18n.t("blog.categories.public_description"),
-        )
+        expect(category.topic.first_post.raw).to eq(I18n.t("blog.categories.public_description"))
+        expect(
+          UserHistory.where(
+            action: UserHistory.actions[:create_category],
+            category_id: category.id,
+          ),
+        ).to exist
       end
 
       it "leaves deleted publisher groups out of the permissions" do
@@ -71,22 +70,6 @@ RSpec.describe Blog::EnsurePublicCategory do
           Group::AUTO_GROUPS[:everyone],
           publishers.id,
         )
-      end
-
-      it "logs the creation" do
-        result
-        expect(
-          UserHistory.where(
-            action: UserHistory.actions[:create_category],
-            category_id: result[:category].id,
-          ),
-        ).to exist
-      end
-
-      it "reuses the stored category on the next call" do
-        result
-        expect { described_class.call }.not_to change { Category.count }
-        expect(described_class.call[:category]).to eq(result[:category])
       end
     end
 

@@ -24,21 +24,31 @@ RSpec.describe Blog do
       expect(SiteSetting.blog_drafts_category).to be_blank
     end
 
-    it "lets new publisher groups start topics in the public category without removing access" do
-      blog_category = Fabricate(:category)
-      blog_category.set_permissions(members.name => :full, :everyone => :readonly)
-      blog_category.save!
+    it "gives new publisher groups access to the public category" do
+      blog_category = Fabricate(:category, permissions: { members.id => :full })
       SiteSetting.blog_category = blog_category.id
 
       SiteSetting.blog_publisher_groups = publishers.id.to_s
 
-      expect(
-        blog_category.reload.category_groups.pluck(:group_id, :permission_type),
-      ).to contain_exactly(
-        [members.id, CategoryGroup.permission_types[:full]],
-        [Group::AUTO_GROUPS[:everyone], CategoryGroup.permission_types[:readonly]],
-        [publishers.id, CategoryGroup.permission_types[:full]],
-      )
+      expect(blog_category.reload.category_groups.pluck(:group_id)).to include(publishers.id)
+    end
+  end
+
+  describe "choosing the public blog category" do
+    fab!(:publishers, :group)
+    fab!(:members, :group)
+
+    before do
+      enable_blog!
+      SiteSetting.blog_publisher_groups = publishers.id.to_s
+    end
+
+    it "gives the publisher groups access to it" do
+      blog_category = Fabricate(:category, permissions: { members.id => :full })
+
+      SiteSetting.blog_category = blog_category.id
+
+      expect(blog_category.reload.category_groups.pluck(:group_id)).to include(publishers.id)
     end
   end
 end

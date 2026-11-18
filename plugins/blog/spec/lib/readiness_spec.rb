@@ -67,6 +67,15 @@ RSpec.describe Blog::Readiness do
       )
     end
 
+    it "reports a drafts category that is open to everyone" do
+      drafts.set_permissions(everyone: :full)
+      drafts.save!
+
+      expect(readiness.problems).to contain_exactly(
+        have_attributes(key: :drafts_category_public, settings: []),
+      )
+    end
+
     it "lists every problem in the order they should be fixed" do
       SiteSetting.login_required = true
       SiteSetting.prevent_anons_from_downloading_files = true

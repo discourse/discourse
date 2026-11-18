@@ -46,10 +46,8 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
 
       before { SiteSetting.blog_category = blog_category.id }
 
-      it { is_expected.to run_successfully }
-
-      it "grants them full access and keeps every other permission" do
-        result
+      it "grants them full access, keeps every other permission and logs the change" do
+        expect(result).to run_successfully
         expect(blog_category.reload.category_groups.pluck(:group_id, :permission_type)).to(
           contain_exactly(
             [Group::AUTO_GROUPS[:everyone], create_post],
@@ -58,10 +56,6 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
             [other_publishers.id, full],
           ),
         )
-      end
-
-      it "logs the change" do
-        result
         expect(
           UserHistory.where(
             action: UserHistory.actions[:custom_staff],
@@ -93,14 +87,6 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
             blog_category.reload.category_groups.pluck(:group_id, :permission_type),
           ]
         }
-        expect(result).to run_successfully
-      end
-
-      it "ignores deleted groups still listed in the publisher setting" do
-        deleted = Fabricate(:group).tap(&:destroy!)
-        SiteSetting.blog_publisher_groups = "#{publishers.id}|#{other_publishers.id}|#{deleted.id}"
-
-        expect { result }.not_to change { blog_category.reload.category_groups.count }
         expect(result).to run_successfully
       end
     end

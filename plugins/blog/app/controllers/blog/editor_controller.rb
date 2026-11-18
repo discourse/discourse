@@ -73,6 +73,10 @@ module ::Blog
         end
         on_model_errors(:category) { |category| raise ActiveRecord::RecordInvalid.new(category) }
         on_model_not_found(:category) { |result| raise result.exception if result.exception }
+        on_failed_policy(:category_private) do
+          render_json_error I18n.t("blog.errors.drafts_category_public"),
+                            status: :unprocessable_entity
+        end
         on_failure do
           render_json_error I18n.t("blog.errors.drafts_category_unavailable"),
                             status: :unprocessable_entity

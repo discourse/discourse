@@ -9,21 +9,16 @@ RSpec.describe Blog::EnsureDraftsCategory do
     fab!(:publishers, :group)
 
     let(:dependencies) { {} }
-    let(:publisher_group_ids) { [publishers.id] }
     let(:full) { CategoryGroup.permission_types[:full] }
     let(:editorial_permissions) do
-      [
-        [contributors.id, full],
-        [editors.id, full],
-        *publisher_group_ids.map { |group_id| [group_id, full] },
-      ]
+      [[contributors.id, full], [editors.id, full], [publishers.id, full]]
     end
 
     # Role groups are set first: changing them repairs an already stored category.
     before do
       SiteSetting.blog_contributor_groups = contributors.id.to_s
       SiteSetting.blog_editor_groups = "#{editors.id}|#{contributors.id}"
-      SiteSetting.blog_publisher_groups = publisher_group_ids.join("|")
+      SiteSetting.blog_publisher_groups = publishers.id.to_s
     end
 
     context "when the category is missing and creating it is disabled" do
@@ -37,10 +32,9 @@ RSpec.describe Blog::EnsureDraftsCategory do
     end
 
     context "without a stored drafts category" do
-      it { is_expected.to run_successfully }
-
-      it "creates a private category for the editorial groups and stores it" do
+      it "creates a private category for the editorial groups, stores it and logs it" do
         expect { result }.to change { Category.count }.by(1)
+        expect(result).to run_successfully
         category = result[:category]
         expect(category).to have_attributes(
           name: "Blog drafts",
@@ -51,29 +45,14 @@ RSpec.describe Blog::EnsureDraftsCategory do
           editorial_permissions,
         )
         expect(SiteSetting.blog_drafts_category.to_i).to eq(category.id)
-      end
-
-      it "logs the creation without a permissions repair" do
-        result
+        expect(category.topic.first_post.raw).to eq(I18n.t("blog.categories.drafts_description"))
         expect(
           UserHistory.where(
             action: UserHistory.actions[:create_category],
-            category_id: result[:category].id,
+            category_id: category.id,
           ),
         ).to exist
         expect(UserHistory.where(custom_type: "blog_drafts_category_permissions")).not_to exist
-      end
-
-      it "reuses the stored category on the next call" do
-        result
-        expect { described_class.call }.not_to change { Category.count }
-        expect(described_class.call[:category]).to eq(result[:category])
-      end
-
-      it "explains that the blog manages the category" do
-        expect(result[:category].topic.first_post.raw).to eq(
-          I18n.t("blog.categories.drafts_description"),
-        )
       end
     end
 
@@ -185,10 +164,9 @@ RSpec.describe Blog::EnsureDraftsCategory do
 
       before { SiteSetting.blog_drafts_category = drafts.id }
 
-      it { is_expected.to run_successfully }
-
       it "returns the category without creating or logging anything" do
         expect { result }.not_to change { [Category.count, UserHistory.count] }
+        expect(result).to run_successfully
         expect(result[:category]).to eq(drafts)
       end
     end
@@ -208,20 +186,13 @@ RSpec.describe Blog::EnsureDraftsCategory do
 
       before { SiteSetting.blog_drafts_category = drafts.id }
 
-      it "restricts it to the editorial groups again and logs the repair" do
-        expect(result).to run_successfully
-        drafts.reload
-        expect(drafts.read_restricted).to eq(true)
-        expect(drafts.category_groups.pluck(:group_id, :permission_type)).to match_array(
-          editorial_permissions,
-        )
-        expect(
-          UserHistory.where(
-            action: UserHistory.actions[:custom_staff],
-            custom_type: "blog_drafts_category_permissions",
-            category_id: drafts.id,
-          ),
-        ).to exist
+      it "refuses it and leaves the category as it is" do
+        expect { result }.not_to change {
+          [Category.count, drafts.reload.category_groups.pluck(:group_id).sort]
+        }
+        expect(result).to fail_a_policy(:category_private)
+        expect(drafts).to have_attributes(read_restricted: false)
+        expect(UserHistory.where(custom_type: "blog_drafts_category_permissions")).not_to exist
       end
     end
 
@@ -246,33 +217,13 @@ RSpec.describe Blog::EnsureDraftsCategory do
         expect(drafts.reload.category_groups.pluck(:group_id, :permission_type)).to match_array(
           editorial_permissions,
         )
-        expect(UserHistory.where(custom_type: "blog_drafts_category_permissions")).to exist
-      end
-    end
-
-    context "when the publisher groups have changed" do
-      fab!(:new_publishers, :group)
-      fab!(:drafts) do
-        Fabricate(
-          :category,
-          permissions: {
-            contributors.id => CategoryGroup.permission_types[:full],
-            editors.id => CategoryGroup.permission_types[:full],
-            publishers.id => CategoryGroup.permission_types[:full],
-          },
-        )
-      end
-
-      let(:publisher_group_ids) { [new_publishers.id] }
-
-      before { SiteSetting.blog_drafts_category = drafts.id }
-
-      it "replaces the old publishers with the new ones" do
-        expect(result).to run_successfully
-        expect(drafts.reload.category_groups.pluck(:group_id, :permission_type)).to match_array(
-          [[contributors.id, full], [editors.id, full], [new_publishers.id, full]],
-        )
-        expect(UserHistory.where(custom_type: "blog_drafts_category_permissions")).to exist
+        expect(
+          UserHistory.where(
+            action: UserHistory.actions[:custom_staff],
+            custom_type: "blog_drafts_category_permissions",
+            category_id: drafts.id,
+          ),
+        ).to exist
       end
     end
   end

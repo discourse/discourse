@@ -6,9 +6,25 @@ class ProblemCheck::BlogNotReady < ProblemCheck
   self.priority = "high"
 
   def call
+    return no_problem if !blog_in_use?
     blocker = Blog::Readiness.new.problems.first
     return no_problem if blocker.nil?
+    setting = blocker.settings.first
+    return problem(override_data: { reason: blocker.message, setting: }) if setting
 
-    problem(override_data: { reason: blocker.message, setting: blocker.settings.first })
+    problem(
+      override_key: "dashboard.problem.blog_not_ready_without_setting",
+      override_data: {
+        reason: blocker.message,
+      },
+    )
+  end
+
+  private
+
+  # The blog is switched on for sites that never asked for it, and they should not
+  # be warned about a feature nobody has used.
+  def blog_in_use?
+    SiteSetting.blog_drafts_category.present? || Blog::Publication.exists?
   end
 end

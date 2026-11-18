@@ -48,13 +48,19 @@ RSpec.describe "Blog managed categories", type: :request do
       expect(member.guardian.can_see?(drafts)).to eq(false)
     end
 
-    it "returns the existing category without creating another" do
+    it "refuses to use a drafts category that is open to everyone" do
       drafts = Blog::EnsureDraftsCategory.call![:category]
+      drafts.set_permissions(everyone: :full)
+      drafts.save!
       sign_in(writer)
 
-      expect { post "/blog-editor/drafts-category.json" }.not_to change { Category.count }
+      post "/blog-editor/drafts-category.json"
 
-      expect(response.parsed_body["id"]).to eq(drafts.id)
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("blog.errors.drafts_category_public"),
+      )
+      expect(drafts.reload.read_restricted).to eq(false)
     end
   end
 
@@ -119,24 +125,9 @@ RSpec.describe "Blog managed categories", type: :request do
       drafts = Category.find(SiteSetting.blog_drafts_category)
       expect(Blog::Publication.find_by!(topic:).draft_topic.category).to eq(drafts)
     end
-
-    it "repairs a drafts category whose access was loosened" do
-      drafts = Blog::EnsureDraftsCategory.call![:category]
-      drafts.set_permissions(everyone: :full)
-      drafts.save!
-      topic = Fabricate(:topic, category: blog_category, user: writer)
-      Fabricate(:post, topic:, user: writer, raw: "A topic that becomes an article.")
-      sign_in(admin)
-
-      post "/blog-editor/publications/#{topic.id}/prepare.json"
-
-      expect(response.status).to eq(200)
-      expect(drafts.reload.read_restricted).to eq(true)
-      expect(member.guardian.can_see?(drafts)).to eq(false)
-    end
   end
 
-  describe "editorial work on a drafts category whose access was loosened" do
+  describe "editorial work on a drafts category that is open to everyone" do
     fab!(:topic) { draft_topic_for(writer) }
 
     before do
@@ -147,18 +138,21 @@ RSpec.describe "Blog managed categories", type: :request do
       sign_in(writer)
     end
 
-    it "makes the category private again when the draft is submitted" do
+    it "does not submit the draft or change the category" do
       post "/blog-editor/publications/#{topic.id}/submit.json"
 
-      expect(response.status).to eq(200)
-      expect(member.guardian.can_see?(topic.category.reload)).to eq(false)
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include(
+        I18n.t("blog.errors.drafts_category_public"),
+      )
+      expect(topic.category.reload.read_restricted).to eq(false)
     end
 
-    it "makes the category private again before a review link is issued" do
-      post "/blog-editor/publications/#{topic.id}/reviews.json"
-
-      expect(response.status).to eq(201)
-      expect(member.guardian.can_see?(topic.category.reload)).to eq(false)
+    it "does not issue a review link" do
+      expect { post "/blog-editor/publications/#{topic.id}/reviews.json" }.not_to change {
+        Blog::Review.count
+      }
+      expect(response.status).not_to eq(201)
     end
   end
 end

@@ -32,7 +32,12 @@ module ::Blog
     # Ordered so the first problem is the one to fix first. Missing categories are
     # not problems: the blog creates them when it first needs them.
     def problems
-      @problems ||= [private_site_problem, anonymous_uploads_problem, category_problem].compact
+      @problems ||= [
+        private_site_problem,
+        anonymous_uploads_problem,
+        category_problem,
+        drafts_category_problem,
+      ].compact
     end
 
     def ready?
@@ -64,6 +69,13 @@ module ::Blog
       return Problem.new(key: :category, settings: %i[blog_category]) if category&.read_restricted?
       return if category || !ManagedCategories.public_category_name_taken?
       Problem.new(key: :category_name_taken, settings: %i[blog_category])
+    end
+
+    # The setting is managed by the blog, so the fix is in the category itself.
+    def drafts_category_problem
+      drafts = ManagedCategories.drafts_category
+      return if drafts.nil? || drafts.read_restricted?
+      Problem.new(key: :drafts_category_public, settings: [])
     end
   end
 end

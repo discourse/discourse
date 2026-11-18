@@ -57,6 +57,13 @@ module ::Blog
       top_level_name_taken?(public_category_name)
     end
 
+    # A category the blog also uses for something else is never its drafts category.
+    def self.drafts_category
+      Category
+        .where.not(id: [SiteSetting.blog_category.to_i, SiteSetting.shared_drafts_category.to_i])
+        .find_by(id: stored_category_id(:blog_drafts_category))
+    end
+
     def self.public_category
       Category.find_by(id: SiteSetting.blog_category)
     end
