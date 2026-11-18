@@ -7,16 +7,49 @@ import { bind } from "discourse/lib/decorators";
 import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 
-export default class DCopyButton extends Component {
+interface DCopyButtonSignature {
+  Args: {
+    /** The text to copy. Without it, the button copies the content of `@selector`. */
+    value?: string;
+
+    /** A selector for the element whose value or text to copy. */
+    selector?: string;
+
+    /** The ID of the button icon. Defaults to `copy`. */
+    icon?: string;
+
+    /** The class of the button. Defaults to `btn-primary`. */
+    copyClass?: string;
+
+    /** The label of the button, already translated. */
+    translatedLabel?: string;
+
+    /** The label shown, and announced, after a copy. */
+    translatedLabelAfterCopy?: string;
+
+    /** The accessible name of the button. */
+    ariaLabel?: string;
+
+    /** Called after the text is copied. */
+    copied?: () => void;
+
+    /** Shows the copied state when it turns true, for copies made elsewhere. */
+    isCopied?: boolean;
+  };
+}
+
+export default class DCopyButton extends Component<DCopyButtonSignature> {
   @tracked showCopied = false;
 
-  watchExternalCopy = modifier((_, [isCopied]) => {
+  watchExternalCopy = modifier((_: Element, [isCopied]: [boolean?]) => {
     if (isCopied && !this._wasCopied) {
       this._showCopied();
     }
 
     this._wasCopied = isCopied;
   });
+
+  declare _wasCopied: boolean | undefined;
 
   get copyIcon() {
     return this.showCopied ? "check" : this.args.icon || "copy";
@@ -51,7 +84,7 @@ export default class DCopyButton extends Component {
         return;
       }
 
-      value = target.value ?? target.textContent;
+      value = (target as HTMLInputElement).value ?? target.textContent;
     }
 
     if (value == null) {

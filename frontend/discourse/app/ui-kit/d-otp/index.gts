@@ -1,4 +1,3 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
@@ -8,40 +7,49 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import type { CapabilitiesService } from "discourse/services/capabilities";
 import { i18n } from "discourse-i18n";
-import Slot from "./slot.gjs";
+import Slot from "./slot.gts";
 
 const DEFAULT_SLOTS = 6;
 
-/**
- * @typedef DOTPSignature
- *
- * @property {HTMLInputElement} Element
- * @property {object} Args
- *
- * @property {number} [Args.slots] - Number of OTP input slots to display (defaults to 6)
- * @property {string} [Args.inputMode] - The inputmode attribute for the hidden input (defaults to "numeric")
- * @property {string} [Args.autocomplete] - The autocomplete attribute for the hidden input (defaults to "one-time-code")
- * @property {boolean} [Args.autoFocus] - Focus the input automatically unless disabled or on iOS
- * @property {(value: string) => string} [Args.normalizeInput] - Callback used to normalize typed or pasted input
- * @property {(value: string) => void} [Args.onChange] - Callback fired when the input value changes
- * @property {(value: string) => void} [Args.onFill] - Callback fired when all slots become filled
- * @property {number} [Args.groupSize] - Adds a visual separator after every groupSize slots
- *
- */
+interface DOTPSignature {
+  Element: HTMLInputElement;
 
-/** @extends {Component<DOTPSignature>} */
-export default class DOTP extends Component {
-  /**
-   * @type {import("discourse/services/capabilities").CapabilitiesService}
-   */
-  // @ts-ignore (incorrect no-initialization error)
-  @service capabilities;
+  Args: {
+    /** Number of OTP input slots to display (defaults to 6) */
+    slots?: number;
+
+    /** The inputmode attribute for the hidden input (defaults to "numeric") */
+    inputMode?: string;
+
+    /** The autocomplete attribute for the hidden input (defaults to "one-time-code") */
+    autocomplete?: string;
+
+    /** Focus the input automatically unless disabled or on iOS */
+    autoFocus?: boolean;
+
+    /** Callback used to normalize typed or pasted input */
+    normalizeInput?: (value: string) => string;
+
+    /** Callback fired when the input value changes */
+    onChange?: (value: string) => void;
+
+    /** Callback fired when all slots become filled */
+    onFill?: (value: string) => void;
+
+    /** Adds a visual separator after every groupSize slots */
+    groupSize?: number;
+  };
+}
+
+export default class DOTP extends Component<DOTPSignature> {
+  @service declare capabilities: CapabilitiesService;
 
   @tracked isFocused = false;
   @tracked isAllSelected = false;
 
-  otp = trackedArray(Array(this.slots).fill(""));
+  otp = trackedArray<string>(Array(this.slots).fill(""));
 
   get slots() {
     return this.args.slots ?? DEFAULT_SLOTS;
@@ -79,8 +87,7 @@ export default class DOTP extends Component {
     return this.otp.join("");
   }
 
-  /** @param {string} value */
-  normalizeInput(value) {
+  normalizeInput(value: string) {
     if (this.args.normalizeInput) {
       return this.args.normalizeInput(value);
     }
@@ -88,9 +95,8 @@ export default class DOTP extends Component {
     return value.replace(/[^0-9]/g, "");
   }
 
-  /** @param {number} index */
   @action
-  showSeparator(index) {
+  showSeparator(index: number) {
     return (
       this.groupSize &&
       index < this.otp.length - 1 &&
@@ -98,9 +104,8 @@ export default class DOTP extends Component {
     );
   }
 
-  /** @param {HTMLInputElement} element */
   @action
-  focusInput(element) {
+  focusInput(element: HTMLInputElement) {
     if (!this.autoFocus) {
       return;
     }
@@ -116,42 +121,14 @@ export default class DOTP extends Component {
     });
   }
 
-  /**
-   * @param {Event} event
-   */
   @action
-  onInput(event) {
-    const chars = this.normalizeInput(
-      /** @type(HTMLInputElement) */ (event.target).value
-    )
-      .split("")
-      .slice(0, this.otp.length);
-    const wasFilled = this.isFilled;
-
-    for (let i = 0; i < this.otp.length; i++) {
-      this.otp[i] = chars[i] || "";
-    }
-
-    const joinedOtp = this.otp.join("");
-
-    /** @type(HTMLInputElement) */ (event.target).value = joinedOtp;
-
-    this.args.onChange?.(joinedOtp);
-
-    // Check if just became filled and call callback
-    if (!wasFilled && this.isFilled) {
-      this.args.onFill?.(joinedOtp);
-    }
-
-    this.isAllSelected = false;
+  onInput(event: Event) {
+    this.#handleInput(event.target as HTMLInputElement);
   }
 
-  /**
-   * @param {Event} event
-   */
   @action
-  onSelect(event) {
-    const input = /** @type {HTMLInputElement} */ (event.target);
+  onSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
     const hasSelection = input.selectionStart !== input.selectionEnd;
     this.isAllSelected =
       hasSelection &&
@@ -171,11 +148,8 @@ export default class DOTP extends Component {
     this.isAllSelected = false;
   }
 
-  /**
-   * @param {KeyboardEvent} event
-   */
   @action
-  onKeyDown(event) {
+  onKeyDown(event: KeyboardEvent) {
     // Disable arrow keys as you can only fill last unfilled or backspace
     if (
       ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)
@@ -184,12 +158,9 @@ export default class DOTP extends Component {
     }
   }
 
-  /**
-   * @param {ClipboardEvent} event
-   */
   @action
-  onPaste(event) {
-    const input = /** @type {HTMLInputElement} */ (event.target);
+  onPaste(event: ClipboardEvent) {
+    const input = event.target as HTMLInputElement;
     event.preventDefault(); // Prevent the call to input as we manually call it later
 
     const { clipboardData } = event;
@@ -199,15 +170,11 @@ export default class DOTP extends Component {
 
     const pastedData = clipboardData.getData("text");
     input.value = this.normalizeInput(pastedData);
-    // @ts-ignore
-    this.onInput({ target: input });
+    this.#handleInput(input);
   }
 
-  /**
-   * @param {number} index
-   */
   @action
-  isFocusedSlot(index) {
+  isFocusedSlot(index: number) {
     if (!this.isFocused) {
       return false;
     }
@@ -220,6 +187,30 @@ export default class DOTP extends Component {
     return (
       index === (firstEmptyIndex >= 0 ? firstEmptyIndex : this.otp.length - 1)
     );
+  }
+
+  #handleInput(input: HTMLInputElement) {
+    const chars = this.normalizeInput(input.value)
+      .split("")
+      .slice(0, this.otp.length);
+    const wasFilled = this.isFilled;
+
+    for (let i = 0; i < this.otp.length; i++) {
+      this.otp[i] = chars[i] || "";
+    }
+
+    const joinedOtp = this.otp.join("");
+
+    input.value = joinedOtp;
+
+    this.args.onChange?.(joinedOtp);
+
+    // Check if just became filled and call callback
+    if (!wasFilled && this.isFilled) {
+      this.args.onFill?.(joinedOtp);
+    }
+
+    this.isAllSelected = false;
   }
 
   <template>
