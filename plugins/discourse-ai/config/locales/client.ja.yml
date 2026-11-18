@@ -1061,6 +1061,7 @@ ja:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "どのようなご用件ですか？"
           submit: "質問を送信"
           disclaimer: "生成 AI は間違いを犯す可能性があります。重要な情報は確認してください。"

@@ -50,6 +50,15 @@ module PageObjects
         find(".search-menu-recent .search-menu-assistant-item", text: query).click
       end
 
+      def expect_recent(*terms)
+        slugs = ".search-menu-recent .search-item-slug"
+        # the list can still change as each history arrives, so it is retried
+        page.document.synchronize do
+          shown = page.all(slugs, wait: false).map(&:text)
+          raise Capybara::ExpectationNotMet, "recent searches: #{shown}" if shown != terms
+        end
+      end
+
       def expect_no_search
         expect(page).to have_no_css(".ai-search-tabs")
       end
@@ -61,6 +70,11 @@ module PageObjects
 
       def expect_tab_label(kind, label)
         expect(page).to have_css(tab(kind), text: label)
+      end
+
+      def expect_no_tab(kind)
+        expect(page).to have_css(".ai-search-tabs")
+        expect(page).to have_no_css(tab(kind))
       end
 
       def select_tab(kind)

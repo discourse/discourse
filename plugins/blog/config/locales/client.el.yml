@@ -55,7 +55,11 @@ el:
         edit: Επεξεργασία
         status: Κατάσταση
         replies: Απαντήσεις
+        title: Τίτλος
+        page: Σελίδα
+      all: Όλα
       drafts: Προσχέδια
+      pages: Σελίδες
       preview: Προεπισκόπηση
       unpublish: Κατάργηση δημοσίευσης
       appearance_link: Εμφάνιση

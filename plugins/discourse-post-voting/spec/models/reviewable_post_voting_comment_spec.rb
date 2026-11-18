@@ -59,6 +59,30 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
     end
   end
 
+  describe "#build_actions" do
+    it "requests classification for keeping a deleted comment removed" do
+      comment.trash!
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_keep_deleted",
+        "agree_and_silence",
+        "agree_and_suspend",
+      )
+    end
+
+    it "requests classification for actions that restrict content or the author" do
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_silence",
+        "agree_and_suspend",
+        "agree_and_delete",
+        "delete_and_agree",
+      )
+    end
+  end
+
   describe "#perform" do
     it "suspends the author and deletes the flagged comment" do
       reviewable.update!(target_created_by: comment_poster)

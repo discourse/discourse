@@ -3121,6 +3121,7 @@ ur:
         size_too_small: "%{provided_file_size} اجازت دی گئی کم مقدار %{min_file_size}سےکم ہے"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
+      no_results: "کوئی نتائج نہیں"
       smileys_&_emotion: سمائیلیاں اور جذبات
       people_&_body: لوگ اور جسم
       animals_&_nature: جانور اور قدرت
@@ -3194,6 +3195,10 @@ ur:
       emoji: "اِیمَوجی :)"
       more_emoji: "مزید۔۔۔"
       options: "اختیارات"
+      ai_content:
+        code: "کوڈ"
+        quote: "اقتباس کریں"
+        details: "تفصیلات"
       whisper: "سرگوشی"
       unlist: "غیر مندرج"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
@@ -4528,6 +4533,7 @@ ur:
         actions: "حجمی عوامل"
     post:
       accessible_heading: "پوسٹ منجانب %{username} %{date}"
+      ai_generated: "مصنوعی ذہانت"
       heading_anchor: "ہیڈنگ لنک"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
@@ -5645,6 +5651,15 @@ ur:
       forward: "آگے"
       share: "شیئر"
       dismiss: "بر خاست کریں"
+    mobile_tab_bar:
+      new_topic: "نیا موضوع"
+      create: "بنائیں"
+      more: "مزید "
+      back: "واپس"
+      topics: "موضوعات"
+      drafts:
+        one: "مسودات (%{count})"
+        other: "مسودات (%{count})"
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
     theme_preview_notice: "آپ فی الحال ایک تھیم کی جھلک دیکھ رہے ہیں، اس براؤزر ٹیب یا ونڈو کو اپنی عام سائٹ کی ترتیب پر واپس آنے کے لیے بند کریں۔"
@@ -7375,14 +7390,6 @@ ur:
           company_name: "نام"
           company_url: "ویب سائٹ"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "گورنمنٹ قانون"
-          governing_law_placeholder: "صوبہ، ریاست یا ملک"
-          governing_law_help: |
-            سائٹ کی قانونی شرائط کے لیے دائرہ اختیار کی وضاحت کریں، عام طور پر جہاں کمپنی رجسٹرڈ ہے یا کام کرتی ہے۔
-          city_for_disputes: "تنازعات کے لئے شہر"
-          city_for_disputes_placeholder: "شہر"
-          city_for_disputes_help: |
-            اس فورم سے متعلق قانونی تنازعات کے حل کے لیے شہر کی وضاحت کریں۔
           extra_groups:
             heading: "گروپ کی فہرست"
             description: "بارے میں صفحہ پر دکھانے کے لیے اضافی گروپس۔"

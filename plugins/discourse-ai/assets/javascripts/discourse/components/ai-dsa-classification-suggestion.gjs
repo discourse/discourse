@@ -1,11 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const SuggestionHint = <template>
+  {{dIcon "discourse-sparkles"}}
+  {{i18n "discourse_ai.dsa_classification.suggested_by_ai"}}
+</template>;
 
 export default class AiDsaClassificationSuggestion extends Component {
   static shouldRender(_outletArgs, { siteSettings }) {
@@ -23,17 +30,19 @@ export default class AiDsaClassificationSuggestion extends Component {
   @action
   async suggest() {
     const { reviewableId, updateClassification } = this.args.outletArgs;
-    let hasSuggestion = false;
+    if (this.loading) {
+      return;
+    }
     this.loading = true;
     try {
-      await updateClassification(async () => {
-        const classification = await ajax(
-          `/discourse-ai/ai-moderation/dsa-classifications/${reviewableId}/suggest`,
-          { type: "POST" }
-        );
-        hasSuggestion = Object.values(classification).some(Boolean);
-        return classification;
-      });
+      const hasSuggestion = await updateClassification(
+        () =>
+          ajax(
+            `/discourse-ai/ai-moderation/dsa-classifications/${reviewableId}/suggest`,
+            { type: "POST" }
+          ),
+        SuggestionHint
+      );
 
       if (!this.isDestroying) {
         if (hasSuggestion) {
@@ -66,6 +75,7 @@ export default class AiDsaClassificationSuggestion extends Component {
       @icon="discourse-sparkles"
       @isLoading={{this.loading}}
       @label="discourse_ai.dsa_classification.suggest"
+      {{didInsert this.suggest}}
     />
   </template>
 }

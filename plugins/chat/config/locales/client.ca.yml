@@ -146,11 +146,6 @@ ca:
         short:
           one: "%{count} dia"
           other: "%{count} dies"
-      emoji_picker:
-        objects: "Objectes"
-        activities: "Activitats"
-        flags: "Banderes"
-        symbols: "Símbols"
       thread:
         title: "Títol"
         replies:

@@ -8,15 +8,15 @@ RSpec.describe PostBookmarkable do
 
   let(:guardian) { Guardian.new(user) }
 
-  let!(:post1) { Fabricate(:post) }
-  let!(:post2) { Fabricate(:post) }
-  let!(:bookmark1) do
+  fab!(:post1, :post)
+  fab!(:post2, :post)
+  fab!(:bookmark1) do
     Fabricate(:bookmark, user: user, bookmarkable: post1, name: "something i gotta do")
   end
-  let!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: post2) }
-  let!(:bookmark3) { Fabricate(:bookmark) }
-  let!(:topic_user1) { Fabricate(:topic_user, user: user, topic: post1.topic) }
-  let!(:topic_user2) { Fabricate(:topic_user, user: user, topic: post2.topic) }
+  fab!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: post2) }
+  fab!(:bookmark3, :bookmark)
+  fab!(:topic_user1) { Fabricate(:topic_user, user: user, topic: post1.topic) }
+  fab!(:topic_user2) { Fabricate(:topic_user, user: user, topic: post2.topic) }
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do

@@ -3138,6 +3138,9 @@ zh_CN:
         size_too_small: "%{provided_file_size} 小于允许的最小值 %{min_file_size}"
     emoji_picker:
       filter_placeholder: 搜索表情符号
+      search_placeholder: "按表情符号名称和别名搜索…"
+      no_results: "没有结果"
+      favorites: "常用"
       smileys_&_emotion: 笑脸与情感
       people_&_body: 人与身体
       animals_&_nature: 动物与自然
@@ -3269,6 +3272,10 @@ zh_CN:
       emoji: "表情符号 :)"
       more_emoji: "更多…"
       options: "选项"
+      ai_content:
+        code: "代码"
+        quote: "引用"
+        details: "详细信息"
       whisper: "密语"
       unlist: "取消公开"
       add_warning: "这是一个官方警告。"
@@ -4609,6 +4616,7 @@ zh_CN:
         actions: "批量操作"
     post:
       accessible_heading: "由 %{username} 于 %{date} 发布"
+      ai_generated: "AI"
       heading_anchor: "标题链接"
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
@@ -5795,6 +5803,14 @@ zh_CN:
       forward: "前进"
       share: "分享"
       dismiss: "忽略"
+    mobile_tab_bar:
+      new_topic: "新建话题"
+      create: "创建"
+      more: "更多"
+      back: "返回"
+      topics: "话题"
+      drafts:
+        other: "草稿 (%{count})"
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
     theme_preview_notice: "您当前正在预览主题，请关闭此浏览器标签页或窗口以返回到正常网站配置。"
@@ -7965,19 +7981,10 @@ zh_CN:
           site_contact_group_help: |
             受邀接收所有自动发送的个人消息的群组。
           your_organization: "您的组织"
-          your_organization_description: "本网站的运营方及其管辖范围等详细信息。"
           company_name: "名称"
           company_name_placeholder: "ExampleCo"
           company_url: "网站"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "适用法律"
-          governing_law_placeholder: "省、州或国家/地区"
-          governing_law_help: |
-            指定网站法律条款的司法管辖区，通常是公司注册地或运营地。
-          city_for_disputes: "争议城市"
-          city_for_disputes_placeholder: "城市"
-          city_for_disputes_help: |
-            指定解决与本论坛相关的法律纠纷的城市。
           extra_groups:
             heading: "群组列表"
             description: "在“关于”页面上显示的额外群组。"

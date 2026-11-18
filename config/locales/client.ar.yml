@@ -3593,6 +3593,8 @@ ar:
         size_too_small: "%{provided_file_size} أصغر من الحد الأدنى المسموح به وهو %{min_file_size}"
     emoji_picker:
       filter_placeholder: البحث عن رمز تعبيري
+      no_results: "لا توجد نتائج"
+      favorites: "المستخدمة بشكلٍ متكرر"
       smileys_&_emotion: الوجوه المبتسمة ورموز المشاعر
       people_&_body: الأشخاص وأعضاء الجسم
       animals_&_nature: الحيوانات والطبيعة
@@ -3726,6 +3728,10 @@ ar:
       emoji: "الرمز التعبيري :)"
       more_emoji: "المزيد…"
       options: "الخيارات"
+      ai_content:
+        code: "الرمز"
+        quote: "اقتباس"
+        details: "التفاصيل"
       whisper: "همس"
       unlist: "تم إلغاء إدراجه"
       add_warning: "هذا تحذير رسمي."
@@ -5461,6 +5467,7 @@ ar:
         actions: "الإجراءات الجماعية"
     post:
       accessible_heading: "منشور بواسطة %{username} في %{date}"
+      ai_generated: "الذكاء الاصطناعي"
       heading_anchor: "رابط العنوان"
       confirm_delete: "هل تريد بالتأكيد حذف هذا المنشور؟"
       quote_reply: "اقتباس"
@@ -6896,6 +6903,19 @@ ar:
       forward: "للأمام"
       share: "مشاركة"
       dismiss: "تجاهل"
+    mobile_tab_bar:
+      new_topic: "موضوع جديد"
+      create: "إنشاء"
+      more: "المزيد"
+      back: "رجوع"
+      topics: "الموضوعات"
+      drafts:
+        zero: "المسودات (%{count})"
+        one: "المسودات (%{count})"
+        two: "المسودات (%{count})"
+        few: "المسودات (%{count})"
+        many: "المسودات (%{count})"
+        other: "المسودات (%{count})"
     safe_mode:
       enabled: "تم تفعيل الوضع الآمن، أغلق نافذة المتصفح هذه للخروج منه"
     theme_preview_notice: "أنت تقوم حاليًا بمعاينة إحدى السمات، أغلق علامة تبويب أو نافذة هذا المتصفح للرجوع إلى التكوين الطبيعي للموقع."
@@ -8885,14 +8905,6 @@ ar:
           company_name_placeholder: "ExampleCo"
           company_url: "الموقع الإلكتروني"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "القانون الحاكم"
-          governing_law_placeholder: "المقاطعة أو الولاية أو البلد"
-          governing_law_help: |
-            حدِّد الولاية القضائية فيما يتعلَّق بالشروط القانونية للموقع. تكون منطقة الولاية القضائية عادةً هي مكان عمل الشركة أو تشغيلها.
-          city_for_disputes: "مدينة النزاعات"
-          city_for_disputes_placeholder: "المدينة"
-          city_for_disputes_help: |
-            حدِّد المدينة لحل النزاعات القانونية المتعلقة بهذا المنتدى.
           extra_groups:
             heading: "قائمة المجموعة"
             description: "المجموعات الإضافية المراد عرضها في صفحة \"حول\"."

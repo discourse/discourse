@@ -49,6 +49,8 @@ gl:
         edit: Editar
         status: Estado
         replies: Réplicas
+        title: Título
+      all: Todas
       drafts: Borradores
       preview: Visualizar
       unpublish: Despublicar

@@ -151,12 +151,6 @@ required:
   company_url:
     default: ""
     area: "about|legal"
-  governing_law:
-    default: ""
-    area: "about|legal"
-  city_for_disputes:
-    default: ""
-    area: "about|legal"
 
 branding:
   logo:

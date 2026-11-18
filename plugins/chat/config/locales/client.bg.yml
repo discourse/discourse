@@ -183,11 +183,6 @@ bg:
         short:
           one: "%{count} ден"
           other: "%{count} дни"
-      emoji_picker:
-        objects: "Обекти"
-        activities: "Дейности"
-        flags: "Сигнали"
-        symbols: "Символи"
       thread:
         title: "Заглавие"
         replies:

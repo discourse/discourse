@@ -345,16 +345,6 @@ fa_IR:
         short:
           one: "%{count} روز"
           other: "%{count} روز"
-      emoji_picker:
-        favorites: "اغلب استفاده می‌شه"
-        objects: "اشیا"
-        people_&_body: "مردم و بدن"
-        travel_&_places: "سفر و مکان‌ها"
-        animals_&_nature: "حیوانات و طبیعت"
-        activities: "فعالیت ها"
-        flags: "پرچم‌ها"
-        symbols: "نشانه ها"
-        no_results: "هیج نتیجه‌ای نداشت"
       thread:
         title: "عنوان"
         view_thread: مشاهده موضوع

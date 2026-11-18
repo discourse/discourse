@@ -54,7 +54,11 @@ da:
         edit: Rediger
         status: Status
         replies: Svar
+        title: Titel
+        page: Side
+      all: Alle
       drafts: Kladder
+      pages: Sider
       preview: Forhåndsvisning
       unpublish: Fjern udgivelsen
       appearance_link: Udseende

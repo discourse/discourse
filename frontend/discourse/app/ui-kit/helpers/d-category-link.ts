@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const -- Preserve the original JavaScript emit for this types-only port. */
 import { get } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
@@ -8,61 +9,121 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import type SiteSettingsService from "discourse/services/site-settings";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
-/**
- * @typedef {Object} CategoryBadgeCategory
- * @property {number | string} [id]
- * @property {string} [name]
- * @property {string | null} [slug]
- * @property {string | null} [color]
- * @property {string | null} [textColor]
- * @property {string | null} [style_type]
- * @property {string | null} [icon]
- * @property {string | null} [emoji]
- * @property {boolean} [read_restricted]
- * @property {number | null} [parent_category_id]
- * @property {CategoryBadgeCategory | null} [parentCategory]
- */
+/** The category properties a badge reads. */
+export interface CategoryBadgeCategory {
+  id?: number | string;
+  name?: string;
+  slug?: string | null;
+  color?: string | null;
+  textColor?: string | null;
+  style_type?: string | null;
+  icon?: string | null;
+  emoji?: string | null;
+  read_restricted?: boolean;
+  parent_category_id?: number | null;
+  parentCategory?: CategoryBadgeCategory | null;
+}
+
+/** Options for a category badge. */
+export interface CategoryBadgeOptions {
+  /** The url that we want the category badge to link to. */
+  url?: string;
+
+  /** If false, returns an empty string for the uncategorized category. */
+  allowUncategorized?: boolean;
+
+  /** If false, the category badge will not be a link. */
+  link?: boolean | "false";
+
+  /** If true, parent category will be hidden in the badge. */
+  hideParent?: boolean;
+
+  /** If true, category color will be set as an inline style. */
+  previewColor?: boolean;
+
+  /** The ancestors of the category to generate the badge for. */
+  ancestors?: CategoryBadgeCategory[];
+
+  /** Badge style, either "icon", "emoji" or "square" (default). */
+  styleType?: string;
+
+  /** The emoji to use for the badge (if styleType is "emoji"). */
+  emoji?: string | null;
+
+  /** The icon to use for the badge (if styleType is "icon"). */
+  icon?: string | null;
+
+  /** Additional wrapper classes. */
+  extraClasses?: string;
+
+  /** Topic count displayed after the badge. */
+  topicCount?: number;
+
+  /** Whether to display the subcategory indicator. */
+  hasSubcategories?: boolean;
+
+  /** Whether to display the read-only indicator. */
+  readOnly?: boolean;
+}
+
+/** Renders a category badge as HTML. */
+export type CategoryLinkRenderer = (
+  category: CategoryBadgeCategory,
+  opts: CategoryBadgeOptions
+) => string;
+
+/** Returns the id of an extra icon for a category's badge, if it has one. */
+export type ExtraIconRenderer = (
+  category: CategoryBadgeCategory
+) => string | null | undefined;
 
 /**
- * @typedef {Object} CategoryBadgeOptions
- * @property {String}  [url] The url that we want the category badge to link to.
- * @property {Boolean} [allowUncategorized] If false, returns an empty string for the uncategorized category.
- * @property {boolean | "false"} [link] If false, the category badge will not be a link.
- * @property {Boolean} [hideParent] If true, parent category will be hidden in the badge.
- * @property {Boolean} [previewColor] If true, category color will be set as an inline style.
- * @property {CategoryBadgeCategory[]} [ancestors] The ancestors of the category to generate the badge for.
- * @property {String}  [styleType] Badge style, either "icon", "emoji" or "square" (default).
- * @property {String}  [emoji] The emoji to use for the badge (if styleType is "emoji").
- * @property {String}  [icon] The icon to use for the badge (if styleType is "icon").
- * @property {string} [extraClasses] Additional wrapper classes.
- * @property {number} [topicCount] Topic count displayed after the badge.
- * @property {boolean} [hasSubcategories] Whether to display the subcategory indicator.
- * @property {boolean} [readOnly] Whether to display the read-only indicator.
+ * TODO(typescript-pending): `SiteSettingsService` does not declare its setting keys, so
+ * this types the settings read here. Remove it once the service types its settings.
  */
+interface BadgeSettings {
+  suppress_uncategorized_badge: boolean;
+  support_mixed_text_direction: boolean;
+}
 
-let _renderer = defaultCategoryLinkRenderer;
+let _renderer: CategoryLinkRenderer = defaultCategoryLinkRenderer;
 
-export function replaceCategoryLinkRenderer(fn) {
+/**
+ * Replaces the function that renders category badges.
+ *
+ * @param fn - The renderer.
+ */
+export function replaceCategoryLinkRenderer(fn: CategoryLinkRenderer) {
   _renderer = fn;
 }
 
-let _extraIconRenderers = [];
+let _extraIconRenderers: ExtraIconRenderer[] = [];
 
-export function addExtraIconRenderer(renderer) {
+/**
+ * Registers a function that adds an icon to category badges.
+ *
+ * @param renderer - Returns the icon id for a category, if it has one.
+ */
+export function addExtraIconRenderer(renderer: ExtraIconRenderer) {
   _extraIconRenderers.push(renderer);
 }
 
 /**
-  Generates category badge HTML
-
-  @param {CategoryBadgeCategory | null} [category] The category to generate the badge for.
-  @param {CategoryBadgeOptions | null} [opts]
-  @returns {string}
-**/
-export function categoryBadgeHTML(category, opts) {
+ * Generates category badge HTML.
+ *
+ * @param category - The category to generate the badge for.
+ * @param opts - The options. They are changed in place.
+ * @returns The badge HTML, or `""` without a category or for a suppressed
+ *   uncategorized badge.
+ */
+export function categoryBadgeHTML(
+  category?: CategoryBadgeCategory | null,
+  opts?: CategoryBadgeOptions | null
+): string {
   const { site, siteSettings } = helperContext();
   opts = opts || {};
 
@@ -70,7 +131,8 @@ export function categoryBadgeHTML(category, opts) {
     !category ||
     (!opts.allowUncategorized &&
       get(category, "id") === site.uncategorized_category_id &&
-      siteSettings.suppress_uncategorized_badge)
+      (siteSettings as SiteSettingsService & BadgeSettings)
+        .suppress_uncategorized_badge)
   ) {
     return "";
   }
@@ -89,7 +151,9 @@ export function categoryBadgeHTML(category, opts) {
     const { ancestors, readOnly, ...newOpts } = opts;
 
     // allow each ancestor to use its own style
-    ["styleType", "icon", "emoji"].forEach((k) => delete newOpts[k]);
+    ["styleType", "icon", "emoji"].forEach(
+      (k) => delete (newOpts as Record<string, unknown>)[k]
+    );
 
     return [category, ...ancestors]
       .reverse()
@@ -106,8 +170,18 @@ export function categoryBadgeHTML(category, opts) {
   return _renderer(category, opts);
 }
 
-export function categoryLinkHTML(category, options) {
-  let categoryOptions = {};
+/**
+ * Generates trusted category badge HTML from the options a template passes.
+ *
+ * @param category - The category to generate the badge for.
+ * @param options - The options. Only some are passed on.
+ * @returns The badge HTML.
+ */
+export function categoryLinkHTML(
+  category?: CategoryBadgeCategory | null,
+  options?: (CategoryBadgeOptions & { hash?: CategoryBadgeOptions }) | null
+) {
+  let categoryOptions: CategoryBadgeOptions = {};
 
   // TODO: This is a compatibility layer with the old helper structure.
   // Can be removed once we migrate to `registerUnbound` fully
@@ -147,28 +221,49 @@ export function categoryLinkHTML(category, options) {
   return trustHTML(categoryBadgeHTML(category, categoryOptions));
 }
 
-export default function dCategoryLink(...args) {
+/**
+ * Renders a category badge.
+ *
+ * @param args - The arguments for `categoryLinkHTML`.
+ * @returns The badge HTML.
+ */
+export default function dCategoryLink(
+  ...args: Parameters<typeof categoryLinkHTML>
+) {
   return categoryLinkHTML(...args);
 }
 
-function buildTopicCount(count) {
+function buildTopicCount(count: number) {
   return `<span class="topic-count" aria-label="${i18n(
     "category_row.topic_count",
     { count }
   )}">&times; ${count}</span>`;
 }
 
-export function defaultCategoryLinkRenderer(category, opts) {
+/**
+ * Renders a category badge.
+ *
+ * @param category - The category.
+ * @param opts - The options.
+ * @returns The badge HTML.
+ */
+export function defaultCategoryLinkRenderer(
+  category: CategoryBadgeCategory,
+  opts: CategoryBadgeOptions
+): string {
   let restricted = get(category, "read_restricted");
+  // `slugFor` reads only the id, the slug and the parent category.
   let url = opts.url
     ? opts.url
-    : getURL(`/c/${Category.slugFor(category)}/${get(category, "id")}`);
+    : getURL(
+        `/c/${Category.slugFor(category as Category)}/${get(category, "id")}`
+      );
   let href = opts.link === false ? "" : url;
   let tagName = opts.link === false || opts.link === "false" ? "span" : "a";
   let extraClasses = opts.extraClasses ? " " + opts.extraClasses : "";
   let style = `${categoryVariables(category)}`;
   let html = "";
-  let parentCategory = null;
+  let parentCategory: CategoryBadgeCategory | null | undefined = null;
   let categoryDir = "";
   let dataAttributes = category
     ? `data-category-id="${get(category, "id")}"`
@@ -180,7 +275,8 @@ export function defaultCategoryLinkRenderer(category, opts) {
       Category.findById(get(category, "parent_category_id"));
   }
 
-  let siteSettings = helperContext().siteSettings;
+  let siteSettings = helperContext().siteSettings as SiteSettingsService &
+    BadgeSettings;
 
   let classNames = `badge-category`;
   if (restricted) {

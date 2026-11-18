@@ -10,6 +10,7 @@ import MenuButton from "discourse/components/mobile-tab-bar/menu-button";
 import MoreTab from "discourse/components/mobile-tab-bar/more-tab";
 import Tab from "discourse/components/mobile-tab-bar/tab";
 import htmlClass from "discourse/helpers/html-class";
+import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import { SCROLLED_DOWN } from "discourse/services/scroll-direction";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -17,6 +18,7 @@ import { i18n } from "discourse-i18n";
 export default class MobileTabBar extends Component {
   @service composer;
   @service mobileTabBar;
+  @service router;
   @service scrollDirection;
 
   #track = null;
@@ -37,6 +39,11 @@ export default class MobileTabBar extends Component {
   // too short to scroll never counts as scrolled down, so it keeps them.
   get viewsTucked() {
     return this.scrollDirection.lastScrollDirection === SCROLLED_DOWN;
+  }
+
+  // Reading down a topic, the whole bar gives way to the posts
+  get barTucked() {
+    return this.viewsTucked && routeWithin(this.router.currentRoute, "topic");
   }
 
   @action
@@ -94,12 +101,19 @@ export default class MobileTabBar extends Component {
       {{#if this.mobileTabBar.isTitledPage}}
         {{htmlClass "mobile-tab-bar-titled"}}
       {{/if}}
+      {{#if this.viewsTucked}}
+        {{htmlClass "mobile-tab-bar-views-tucked"}}
+      {{/if}}
+      {{#if this.barTucked}}
+        {{htmlClass "mobile-tab-bar-tucked"}}
+      {{/if}}
 
       <nav
         aria-label={{i18n "mobile_tab_bar.label"}}
         class={{dConcatClass
           "mobile-tab-bar"
           (if this.viewsTucked "--views-tucked")
+          (if this.barTucked "--tucked")
           (unless this.mobileTabBar.sectionTabKey "--no-section")
         }}
       >

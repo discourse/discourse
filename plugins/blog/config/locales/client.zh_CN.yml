@@ -268,11 +268,11 @@ zh_CN:
       editor_title: 博客编辑器
       editor_description: 草稿在您发布之前始终保持私密状态。您可以编辑文章以发布、安排发布时间或进行更正。
       editor_table:
-        article: 文章
         edit: 编辑
         status: 状态
         published: 已发布
         replies: 回复
+        title: 标题
         edits_pending: 待编辑
         edits_need_approval: 修改需要审批
         more_actions: 更多操作
@@ -280,12 +280,13 @@ zh_CN:
         view_on_blog: 在博客上查看
       new_draft: 新草稿
       settings: 配置博客设置
-      all: 所有文章
+      all: 所有
       drafts: 草稿
       published: 已发布
       visit_blog: 访问博客
       public_discussion: 公开讨论
       not_published: 博客上没有
+      pages: 页面
       preview: 预览
       load_more: 加载更多
       unpublish_confirm: 删除此博客文章？该主题及其回复仍将在社区内公开。已存在于信息流和搜索引擎中的副本无法撤回。

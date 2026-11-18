@@ -54,7 +54,10 @@ lt:
         edit: Redaguoti
         status: Statusas
         replies: Atsakymai
+        title: Antraštė
+      all: Visi
       drafts: Juodraščiai
+      pages: Puslapiai
       preview: Peržiūrėti
       unpublish: Atšaukti paskelbimą
       appearance_link: Išvaizda

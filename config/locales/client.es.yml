@@ -2933,6 +2933,9 @@ es:
         size_too_small: "%{provided_file_size} es más equeño que el %{min_file_size} mínimo permitido"
     emoji_picker:
       filter_placeholder: Buscar emoji
+      search_placeholder: "Busca por nombre de emoji y alias..."
+      no_results: "No hay resultados"
+      favorites: "De uso frecuente"
       smileys_&_emotion: Caras y emociones
       people_&_body: Personas y cuerpo
       animals_&_nature: Animales y naturaleza
@@ -2985,6 +2988,10 @@ es:
       emoji: "Emoji :)"
       more_emoji: "más…"
       options: "Opciones"
+      ai_content:
+        code: "Código"
+        quote: "Citar"
+        details: "Detalles"
       whisper: "susurrar"
       unlist: "oculto"
       add_warning: "Esta es una advertencia oficial."
@@ -4200,6 +4207,7 @@ es:
         actions: "Acciones en bloque"
     post:
       accessible_heading: "publicación por %{username} %{date}"
+      ai_generated: "IA"
       heading_anchor: "Enlace a encabezado"
       confirm_delete: "¿Seguro que quieres eliminar esta publicación?"
       quote_reply: "Citar"
@@ -5294,6 +5302,15 @@ es:
       forward: "Avanzar"
       share: "Compartir"
       dismiss: "Descartar"
+    mobile_tab_bar:
+      new_topic: "Nuevo tema"
+      create: "Crear"
+      more: "Más"
+      back: "Atrás"
+      topics: "Temas"
+      drafts:
+        one: "Borradores (%{count})"
+        other: "Borradores (%{count})"
     safe_mode:
       enabled: "El modo seguro está activado, para salir del modo seguro cierra esta ventana del navegador"
     theme_preview_notice: "En este momento estás previsualizando un tema, cierra esta pestaña o ventana del navegador para volver a la configuración normal de tu sitio."
@@ -6887,14 +6904,6 @@ es:
           your_organization: "Tu organización"
           company_name: "Nombre"
           company_url: "Página web"
-          governing_law: "Ley que rige"
-          governing_law_placeholder: "Provincia, Estado o País"
-          governing_law_help: |
-            Especifica la jurisdicción para los términos legales del sitio, normalmente donde está registrada u opera la empresa.
-          city_for_disputes: "Ciudad para disputas"
-          city_for_disputes_placeholder: "Ciudad"
-          city_for_disputes_help: |
-            Especifica la ciudad para resolver las disputas legales relacionadas con este foro.
           extra_groups:
             heading: "Listado de grupos"
             description: "Grupos adicionales que se muestran en la página Acerca de."

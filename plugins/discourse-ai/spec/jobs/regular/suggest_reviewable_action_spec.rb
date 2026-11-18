@@ -37,6 +37,86 @@ RSpec.describe Jobs::SuggestReviewableAction do
     expect(reviewable.reload).to be_pending
   end
 
+  it "explains the account action alongside the suspect profile and reading history" do
+    bio = "Wholesale loans! Contact offers@example.org for a quote."
+    item = Fabricate(:suspect_user_reviewable, payload: { bio: bio })
+    item.target.update!(created_at: 2.days.ago)
+    item.target.user_stat.update!(posts_read_count: 1)
+
+    DiscourseAi::Decisions.with_canned_answers(action: "user-delete_user_block") do |canned|
+      described_class.new.execute(reviewable_id: item.id)
+      call = canned.calls.sole
+      expect(call[:questions].sole.instructions).to include(
+        "prefer user-delete_user_block",
+        I18n.t("reviewables.actions.reject_user.block.description"),
+      )
+      expect(call[:state][:account]).to include(age_days: 2, posts_read: 1)
+      expect(call[:state].dig(:item, "bio")).to eq(bio)
+      expect(call[:state][:flags].sole[:reason]).to eq("suspect_user")
+    end
+    expect(AiReviewableSuggestion.find_by!(reviewable: item).action_name).to eq(
+      "user-delete_user_block",
+    )
+  end
+
+  it "gives the model the fast-typing reason and the queued reply to evaluate together" do
+    item = Fabricate(:reviewable_queued_post)
+    item.add_score(
+      Discourse.system_user,
+      ReviewableScore.types[:needs_approval],
+      reason: :fast_typer,
+    )
+
+    DiscourseAi::Decisions.with_canned_answers(action: :refusal) do |canned|
+      described_class.new.execute(reviewable_id: item.id)
+      call = canned.calls.sole
+      expect(call[:state][:flags].sole[:reason]).to eq("fast_typer")
+      expect(call[:state].dig(:item, "raw")).to eq(item.payload["raw"])
+      expect(call[:questions].sole.instructions).to include("prefer delete_user_block")
+    end
+  end
+
+  it "provides the spam flag and flagged post with the post-specific account action" do
+    post = Fabricate(:post)
+    reason =
+      I18n.t("discourse_ai.spam_detection.flag_reason", url: "/admin/plugins/discourse-ai/ai-spam")
+    item =
+      PostActionCreator
+        .new(
+          Discourse.system_user,
+          post,
+          PostActionType.types[:spam],
+          reason:,
+          queue_for_review: true,
+        )
+        .perform
+        .reviewable
+
+    DiscourseAi::Decisions.with_canned_answers(action: :refusal) do |canned|
+      described_class.new.execute(reviewable_id: item.id)
+      call = canned.calls.sole
+      expect(call[:state][:flags].sole).to include(type: :spam, reason:)
+      expect(call[:state][:post]).to eq(post.raw)
+      expect(call[:questions].sole.instructions).to include("prefer post-delete_user_block")
+    end
+  end
+
+  it "omits the account recommendation when blocking is unavailable" do
+    post = Fabricate(:post)
+    item =
+      PostActionCreator.create(
+        Fabricate(:user, trust_level: TrustLevel[3]),
+        post,
+        :inappropriate,
+      ).reviewable
+    DiscourseAi::Decisions.with_canned_answers(action: :refusal) do |canned|
+      described_class.new.execute(reviewable_id: item.id)
+      question = canned.calls.sole[:questions].sole
+      expect(question.choices).not_to include("post-delete_user_block")
+      expect(question.instructions).not_to include("blocks its email and IP address")
+    end
+  end
+
   it "enqueues suggestions only when configured" do
     Jobs.run_later!
     expect { DiscourseEvent.trigger(:reviewable_created, reviewable) }.to change {

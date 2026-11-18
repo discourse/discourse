@@ -95,6 +95,8 @@ module Live
       # channel and the active thread (if any). Never creates anything.
       def state(room)
         channel_id = room.chat_channel_id
+        return { channel_id: channel_id, thread_id: nil } if room.direct_call_chat?
+
         thread_id = channel_id.present? && !stale?(room) ? live_thread_id(room) : nil
         { channel_id: channel_id, thread_id: thread_id }
       end
@@ -123,7 +125,7 @@ module Live
       def start!(room, user)
         channel = ensure_channel!(room)
         with_session_lock(room) do
-          roll_over_if_stale!(room)
+          roll_over_if_stale!(room) unless room.direct_call_chat?
           ::Chat::ChannelMembershipManager.new(channel).follow(user)
         end
         state(room)
@@ -136,6 +138,8 @@ module Live
       # delivered there rather than spawning a competing thread.
       # Returns the session state.
       def post_message!(room, user, message, upload_ids: [])
+        raise Discourse::InvalidAccess if room.direct_call_chat?
+
         channel = ensure_channel!(room)
         message =
           TextCleaner.clean(message.to_s, strip_whitespaces: true, strip_zero_width_spaces: true)
