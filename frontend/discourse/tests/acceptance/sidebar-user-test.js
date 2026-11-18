@@ -1,5 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
+import { capabilities } from "discourse/services/capabilities";
 import {
   acceptance,
   updateCurrentUser,
@@ -117,6 +119,15 @@ acceptance(
       assert
         .dom("#keyboard-shortcuts-help")
         .exists("keyboard shortcuts help is displayed");
+    });
+
+    test("hides keyboard shortcuts on desktop layout without a keyboard", async function (assert) {
+      sinon.stub(capabilities, "hasKeyboard").get(() => false);
+
+      await visit("/");
+
+      assert.dom(".sidebar-footer-actions").exists();
+      assert.dom(".sidebar-footer-actions-keyboard-shortcuts").doesNotExist();
     });
 
     test("sidebar is disabled on wizard route", async function (assert) {
