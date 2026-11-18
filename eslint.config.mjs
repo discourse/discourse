@@ -35,9 +35,24 @@ export default [
     },
   },
   {
-    files: ["frontend/discourse/app/ui-kit/**/*.{js,gjs}"],
-    // These files predate the rule. Remove each one once it is converted.
+    files: [
+      "frontend/discourse/admin/models/**/*.{js,gjs}",
+      "frontend/discourse/app/blocks/**/*.{js,gjs}",
+      "frontend/discourse/app/lib/-internals/**/*.{js,gjs}",
+      "frontend/discourse/app/lib/blocks/**/*.{js,gjs}",
+      "frontend/discourse/app/models/**/*.{js,gjs}",
+      "frontend/discourse/app/static/dev-tools/block-debug/**/*.{js,gjs}",
+      "frontend/discourse/app/ui-kit/**/*.{js,gjs}",
+      "frontend/discourse/float-kit/**/*.{js,gjs}",
+      "frontend/discourse/pretty-text/**/*.{js,gjs}",
+      "frontend/discourse/truth-helpers/**/*.{js,gjs}",
+    ],
     ignores: [
+      // Module loaders that `app.js` imports.
+      "frontend/discourse/float-kit/compat-modules.js",
+      "frontend/discourse/truth-helpers/compat-modules.js",
+
+      // These files predate the rule. Remove each one once it is converted.
       "frontend/discourse/app/ui-kit/d-access-control-field.gjs",
       "frontend/discourse/app/ui-kit/d-access-control-permission-menu.gjs",
       "frontend/discourse/app/ui-kit/d-access-control.gjs",
@@ -70,7 +85,7 @@ export default [
         "error",
         {
           selector: "Program",
-          message: "Write ui-kit modules in TypeScript (.ts or .gts).",
+          message: "Write this module in TypeScript (.ts or .gts).",
         },
       ],
     },
