@@ -4775,6 +4775,14 @@ dashboard:
     client: true
 
 experimental:
+  enable_updated_moderation_notice_copy:
+    default: false
+    hidden: true
+    upcoming_change:
+      status: "stable"
+      impact: "other,all_members"
+      allow_enabled_for:
+        - everyone
   enable_user_menu_mentions_tab:
     default: false
     client: true

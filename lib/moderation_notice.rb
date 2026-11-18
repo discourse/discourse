@@ -5,6 +5,7 @@ class ModerationNotice
     options = message_options.dup
     for_responders = message_type.to_s == "flags_agreed_and_post_deleted_for_responders"
     flag_source = options.delete(:flag_source)
+    flag_source = nil unless SiteSetting.enable_updated_moderation_notice_copy
     variant =
       case message_type.to_s
       when "post_hidden", "post_hidden_again"

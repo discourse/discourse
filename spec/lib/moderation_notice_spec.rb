@@ -348,6 +348,7 @@ RSpec.describe ModerationNotice do
       reviewable.reviewable_scores.update_all(user_id: flagger.id, reason: nil)
       SiteSetting.dsa_reporting_enabled = false
       SiteSetting.dsa_moderation_appeal_email = "changed@example.com"
+      SiteSetting.enable_updated_moderation_notice_copy = false
       Jobs::SendSystemMessage.new.execute(args)
 
       expect(Post.last.raw).to include("hidden by a moderator due to an automated flag")
@@ -356,6 +357,47 @@ RSpec.describe ModerationNotice do
   end
 
   describe ".enqueue" do
+    shared_examples "the original notice copy" do |message_type:|
+      it "preserves the original #{message_type} copy when the upcoming change is disabled" do
+        SiteSetting.enable_updated_moderation_notice_copy = false
+        options = {
+          flag_source: "automated",
+          url: "/flagged-post",
+          edit_delay: 10,
+          flagged_post_raw_content: "The flagged post.",
+          flagged_post_response_raw_content: "A response to the flagged post.",
+        }
+        reason_prefix =
+          message_type.end_with?("_for_responders") ? "flag_reasons.responder" : "flag_reasons"
+        original_reason = I18n.t("#{reason_prefix}.inappropriate", base_path: Discourse.base_path)
+        original =
+          SystemMessage.create(
+            author,
+            message_type,
+            options.except(:flag_source).merge(flag_reason: original_reason),
+          )
+
+        ModerationNotice.enqueue(
+          user: author,
+          message_type:,
+          message_options: options,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        args = Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys
+        SiteSetting.enable_updated_moderation_notice_copy = true
+        Jobs::SendSystemMessage.new.execute(args)
+
+        expect(Post.last.raw).to eq(original.raw)
+        expect(Post.last.topic.title).to eq(original.topic.title)
+      end
+    end
+
+    include_examples "the original notice copy", message_type: "post_hidden"
+    include_examples "the original notice copy", message_type: "post_hidden_again"
+    include_examples "the original notice copy", message_type: "flags_agreed_and_post_deleted"
+    include_examples "the original notice copy",
+                     message_type: "flags_agreed_and_post_deleted_for_responders"
+
     it "keeps automated attribution when the notice falls back from an untranslated locale" do
       SiteSetting.default_locale = "de"
 
