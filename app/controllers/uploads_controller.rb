@@ -101,11 +101,10 @@ class UploadsController < ApplicationController
 
     if params[:short_urls] && params[:short_urls].length > MAX_LOOKUP_SHORT_URLS
       return(
-        render json:
-                 failed_json.merge(
-                   errors: [I18n.t("upload.too_many_short_urls", count: MAX_LOOKUP_SHORT_URLS)],
-                 ),
-               status: :payload_too_large
+        render_json_error(
+          I18n.t("upload.too_many_short_urls", count: MAX_LOOKUP_SHORT_URLS),
+          status: :payload_too_large,
+        )
       )
     end
 

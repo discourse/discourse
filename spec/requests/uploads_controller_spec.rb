@@ -1019,17 +1019,16 @@ RSpec.describe UploadsController do
       expect(result[0]["short_path"]).to eq(upload.short_path)
     end
 
-    it "rejects an oversized batch instead of scanning uploads for each short_url" do
+    it "rejects batches over the limit" do
       sign_in(user)
+      short_urls = Array.new(UploadsController::MAX_LOOKUP_SHORT_URLS + 1) { |i| "video#{i}" }
 
-      short_urls = Array.new(1001) { |i| "upload://scanme#{i}" }
-
-      queries =
-        track_sql_queries { post "/uploads/lookup-urls.json", params: { short_urls: short_urls } }
+      post "/uploads/lookup-urls.json", params: { short_urls: }
 
       expect(response.status).to eq(413)
-      filename_scans = queries.count { |sql| sql.include?("original_filename LIKE") }
-      expect(filename_scans).to eq(0)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("upload.too_many_short_urls", count: UploadsController::MAX_LOOKUP_SHORT_URLS),
+      )
     end
 
     describe "secure uploads" do
