@@ -15,6 +15,11 @@ module Jobs
       validate_arguments!
 
       return if @web_hook.blank? # Web Hook was deleted
+      # Keep queued sends bound to the destination the caller confirmed.
+      if @arguments[:expected_destination_fingerprint].present? &&
+           @web_hook.destination_fingerprint != @arguments[:expected_destination_fingerprint]
+        return
+      end
 
       unless ping_event?(@arguments[:event_type])
         validate_argument!(:payload)
