@@ -358,7 +358,6 @@ en:
           select_agent: "Select an agent..."
         ai_tool:
           tool_ref: "Tool"
-          tool_ref_description: "Enabled custom tools are available unless they use secrets. Built-in tools that require agent state or approval are not available here."
           llm_model_id: "LLM model"
           arguments: "Arguments"
           loading_arguments: "Loading tool arguments…"

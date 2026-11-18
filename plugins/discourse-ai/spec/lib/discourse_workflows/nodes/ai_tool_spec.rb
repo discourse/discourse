@@ -153,14 +153,38 @@ RSpec.describe DiscourseWorkflows::Nodes::AiTool::V1 do
     expect { execute_node(configuration:) }.to raise_error(DiscourseWorkflows::NodeError, error)
   end
 
-  it "rejects enabled custom tools with secret contracts" do
-    custom_tool.update!(secret_contracts: [{ alias: "key" }])
+  it "uses the custom tool's saved secret binding without exposing it in workflow data" do
+    secret = Fabricate(:ai_secret)
+    expected = OpenSSL::HMAC.hexdigest("SHA256", secret.secret, "workflow demo")
+    custom_tool.update!(parameters: [], secret_contracts: [{ alias: "signing_key" }], script: <<~JS)
+        function invoke() {
+          return { verified: crypto.hmacSha256(secrets.get("signing_key"), "workflow demo") === "#{expected}" };
+        }
+      JS
+    custom_tool.replace_secret_bindings!([{ alias: "signing_key", ai_secret_id: secret.id }])
     reference = "custom:#{custom_tool.id}"
+    configuration = { "tool_ref" => reference }
 
-    expect(options("tool_arguments", parameters: { tool_ref: reference })).to be_nil
-    expect { execute_node(configuration: { "tool_ref" => reference }) }.to raise_error(
+    expect(options("tools").find { |option| option[:id] == reference }).to eq(
+      id: reference,
+      name: I18n.t("discourse_ai.tools.custom_name", name: custom_tool.name),
+      custom: true,
+    )
+    expect(options("tool_arguments", parameters: configuration)).to eq([])
+
+    output = execute_node(configuration:)
+    expect(output).to eq("result" => { "verified" => true })
+    expect(output).to match_node_output_schema(described_class, configuration:)
+  end
+
+  it "fails when a custom tool's required secret binding is missing" do
+    custom_tool.update!(parameters: [], secret_contracts: [{ alias: "key" }])
+
+    expect {
+      execute_node(configuration: { "tool_ref" => "custom:#{custom_tool.id}" })
+    }.to raise_error(
       DiscourseWorkflows::NodeError,
-      I18n.t("discourse_ai.discourse_workflows.ai_tool.errors.unavailable"),
+      /#{Regexp.escape(I18n.t("discourse_ai.discourse_workflows.ai_tool.errors.failed"))}/,
     )
   end
 

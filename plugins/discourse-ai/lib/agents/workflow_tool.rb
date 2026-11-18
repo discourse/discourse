@@ -26,19 +26,14 @@ module DiscourseAi
       end
 
       def self.custom_tools
-        ::AiTool.where(enabled: true).includes(:secret_bindings)
-      end
-
-      def self.custom_eligible?(tool)
-        tool.secret_contracts.blank? && tool.secret_bindings.empty?
+        ::AiTool.where(enabled: true)
       end
 
       def self.options
         built_ins.map do |tool|
           { id: "builtin:#{tool.name}", name: AiToolSerializer.new(tool).name, custom: false }
         end +
-          custom_tools.filter_map do |tool|
-            next if !custom_eligible?(tool)
+          custom_tools.map do |tool|
             {
               id: "custom:#{tool.id}",
               name: I18n.t("discourse_ai.tools.custom_name", name: tool.name),
@@ -57,7 +52,6 @@ module DiscourseAi
         when "custom"
           return if !id&.match?(/\A[1-9][0-9]*\z/)
           tool = custom_tools.find_by(id: id)
-          return if !tool || !custom_eligible?(tool)
         end
         new(tool) if tool
       end
