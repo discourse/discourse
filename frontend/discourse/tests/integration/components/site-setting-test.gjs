@@ -641,6 +641,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
       type: "file_types_list",
     });
 
+    assert
+      .dom(".form-kit__control-custom > .file-types-list__button")
+      .doesNotExist("the buttons are not stretched as direct control children");
+    assert.dom(".file-types-list > .file-types-list__button").exists();
+
     await click(".form-kit__field .file-types-list__button.video");
     await click(".setting-controls__ok");
 

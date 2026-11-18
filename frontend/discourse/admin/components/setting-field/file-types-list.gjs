@@ -3,14 +3,12 @@ import FileTypesList from "discourse/admin/components/site-settings/file-types-l
 
 const SettingFieldFileTypesList = <template>
   <@field.Control>
-    <div>
-      <FileTypesList
-        @allowAny={{not (eq @definition.allow_any false)}}
-        @changeValueCallback={{@field.set}}
-        @setting={{hash setting=@definition.key choices=@definition.choices}}
-        @value={{@field.value}}
-      />
-    </div>
+    <FileTypesList
+      @allowAny={{not (eq @definition.allow_any false)}}
+      @changeValueCallback={{@field.set}}
+      @setting={{hash setting=@definition.key choices=@definition.choices}}
+      @value={{@field.value}}
+    />
   </@field.Control>
 </template>;
 
