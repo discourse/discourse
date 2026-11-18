@@ -108,6 +108,7 @@ module("Unit | Lib | setting-field-registry", function () {
         "category_list",
         "compact_list",
         "date",
+        "host_list",
       ]) {
         assert.true(
           resolveSettingFieldType({ type }).adminReady,

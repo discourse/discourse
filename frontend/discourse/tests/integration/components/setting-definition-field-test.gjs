@@ -589,6 +589,36 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       .hasClass("disabled");
   });
 
+  test("host_list adds typed hosts and ignores wildcards", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_hosts="a.com"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_hosts"
+              type="host_list"
+              label="My hosts"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_hosts}}</span>
+        </Form>
+      </template>
+    );
+
+    const hosts = selectKit("[data-name='my_hosts'] .list-setting");
+    await hosts.expand();
+    await hosts.fillInFilter("b.com");
+    await hosts.keyboard("Enter");
+
+    assert.dom(".value-probe").hasText("a.com|b.com");
+
+    await hosts.fillInFilter("*.c.com");
+    await hosts.keyboard("Enter");
+
+    assert.dom(".value-probe").hasText("a.com|b.com", "ignores wildcard hosts");
+  });
+
   test("category_list clears every selection", async function (assert) {
     const categoryId = Site.current().categories[0].id;
 
