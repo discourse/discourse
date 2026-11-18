@@ -325,10 +325,6 @@ vi:
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một tút."
-  no_embedded_media_allowed_group: "Xin lỗi, bạn không thể nhúng các tệp phương tiện vào một tút."
-  no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào tút."
-  too_many_embedded_media:
-    other: "Xin lỗi, thành viên mới chỉ có thể nhúng %{count} tệp phương tiện vào một tút."
   no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong tút."
   too_many_attachments:
     other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một tút."

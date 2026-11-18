@@ -541,11 +541,6 @@ de:
   too_many_mentions_newuser:
     one: "Entschuldige, neue Benutzer können nur einen anderen Benutzer in einem Beitrag erwähnen."
     other: "Entschuldige, neue Benutzer können nur %{count} Benutzer in einem Beitrag erwähnen."
-  no_embedded_media_allowed_group: "Entschuldige, du kannst keine Medienelemente in einen Beitrag einbetten."
-  no_embedded_media_allowed: "Entschuldige, neue Benutzer können keine Medienelemente in Beiträge einbetten."
-  too_many_embedded_media:
-    one: "Entschuldige, neue Benutzer können leider nur ein eingebettetes Medienelement in einen Beitrag einfügen."
-    other: "Entschuldige, neue Benutzer können leider nur %{count} eingebettete Medienelemente in einen Beitrag einfügen."
   no_attachments_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Dateien hinzufügen."
   too_many_attachments:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens eine Datei hinzufügen."

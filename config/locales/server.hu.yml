@@ -516,11 +516,6 @@ hu:
   too_many_mentions_newuser:
     one: "Sajnáljuk, de az új felhasználók csak egy felhasználót említhetnek meg."
     other: "Sajnáljuk, de az új felhasználók csak %{count} felhasználót említhetnek meg."
-  no_embedded_media_allowed_group: "Sajnáljuk, nem ágyazhat be médiaelemeket egy bejegyzésbe."
-  no_embedded_media_allowed: "Sajnáljuk, az új felhasználók nem ágyazhatnak be médiaelemeket a bejegyzésekbe."
-  too_many_embedded_media:
-    one: "Sajnáljuk, az új felhasználók csak egy beágyazott médiaelemet helyezhetnek el egy bejegyzésben."
-    other: "Sajnáljuk, az új felhasználók csak %{count} beágyazott médiaelemet helyezhetnek el egy bejegyzésben."
   no_attachments_allowed: "Sajnáljuk, de az új felhasználók nem adhatnak mellékleteket egy bejegyzéshez."
   too_many_attachments:
     one: "Sajnáljuk, de az új felhasználók csak egy mellékletet adhatnak egy bejegyzéshez."

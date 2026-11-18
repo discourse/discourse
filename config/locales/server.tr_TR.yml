@@ -522,11 +522,6 @@ tr_TR:
   too_many_mentions_newuser:
     one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
-  no_embedded_media_allowed_group: "Maalesef bir gönderiye medya ögesi ekleyemezsiniz."
-  no_embedded_media_allowed: "Üzgünüz, yeni kullanıcılar medya ögelerini gönderilere gömemez."
-  too_many_embedded_media:
-    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece 1 görüntü gömebilirler."
-    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} görüntü gömebilirler."
   no_attachments_allowed: "Üzgünüz, yeni kullanıcılar gönderilere ek koyamaz."
   too_many_attachments:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye yalnızca bir ek koyabilir."

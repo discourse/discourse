@@ -325,11 +325,6 @@ pt:
   too_many_mentions_newuser:
     one: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
-  no_embedded_media_allowed_group: "Desculpe, você não pode incorporar itens de media num post."
-  no_embedded_media_allowed: "Pedimos desculpa, mas novos utilizadores não podem incorporar itens de media nos posts."
-  too_many_embedded_media:
-    one: "Sinto muito, novos usuários só podem colocar um item de mídia embutida por post."
-    other: "Sinto muito, novos usuários só podem colocar até %{count} ítens de mídia embutida por post."
   no_attachments_allowed: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
   too_many_attachments:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexo numa mensagem."

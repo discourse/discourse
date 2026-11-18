@@ -685,10 +685,6 @@ zh_CN:
   no_mentions_allowed_newuser: "抱歉，新用户无法提及其他用户。"
   too_many_mentions_newuser:
     other: "抱歉，新用户在一个帖子中只能提及 %{count} 个用户。"
-  no_embedded_media_allowed_group: "抱歉，您无法在帖子中嵌入媒体条目。"
-  no_embedded_media_allowed: "抱歉，新用户不能在帖子中嵌入媒体条目。"
-  too_many_embedded_media:
-    other: "抱歉，新用户在一个帖子中只能添加 %{count} 个媒体条目。"
   no_attachments_allowed: "抱歉，新用户不能在帖子中上传附件。"
   too_many_attachments:
     other: "抱歉，新用户在一个帖子中仅能上传 %{count} 个附件。"

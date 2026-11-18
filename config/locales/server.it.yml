@@ -509,11 +509,6 @@ it:
   too_many_mentions_newuser:
     one: "Spiacenti, i nuovi utenti possono menzionare al massimo un utente in un messaggio."
     other: "Spiacenti, i nuovi utenti possono menzionare al massimo %{count} utenti in un messaggio."
-  no_embedded_media_allowed_group: "Spiacenti, non puoi incorporare elementi multimediali in un messaggio."
-  no_embedded_media_allowed: "Spiacenti, i nuovi utenti non possono incorporare elementi multimediali nei messaggi."
-  too_many_embedded_media:
-    one: "Spiacenti, i nuovi utenti possono inserire solo un elemento multimediale incorporato in un messaggio."
-    other: "Spiacenti, i nuovi utenti possono inserire solo %{count} elementi multimediali incorporati in un messaggio."
   no_attachments_allowed: "Spiacenti, i nuovi utenti non possono inserire allegati nei messaggi."
   too_many_attachments:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un allegato in un messaggio."
