@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Evented from "@ember/object/evented";
-import { next, run } from "@ember/runloop";
+import { run } from "@ember/runloop";
 import Service from "@ember/service";
 import {
   click,
@@ -1135,13 +1135,17 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     this.owner.unregister("service:router");
     this.owner.register("service:router", RouterStub);
     const router = this.owner.lookup("service:router");
+    const pendingURLs = [];
     sinon.stub(DiscourseURL, "replaceState").callsFake((url) => {
       if (router.currentURL !== url) {
-        next(() => {
-          router.currentURL = url;
-        });
+        pendingURLs.push(url);
       }
     });
+    const applyPendingURLs = () => {
+      for (const url of pendingURLs.splice(0)) {
+        router.currentURL = url;
+      }
+    };
 
     this.data = SAMPLE_DATA;
     this.searchableProps = ["name"];
@@ -1153,6 +1157,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
           @array={{this.data}}
           @dropdownFilterQueryParam="category"
           @dropdownOptions={{this.dropdownOptions}}
+          @onResetFilters={{applyPendingURLs}}
           @searchableProps={{this.searchableProps}}
           @textFilterQueryParam="filter"
         >
@@ -1168,45 +1173,24 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     const input = find(".d-filter-controls__input");
     const category = find(".d-filter-controls__dropdown");
     await fillIn(input, "second");
+    run(applyPendingURLs);
     assert.strictEqual(router.currentURL, "/admin/example?filter=second");
 
-    const clock = sinon.useFakeTimers({
-      toFake: ["Date", "setTimeout", "clearTimeout"],
-    });
-    try {
-      run(() => {
-        input.value = "";
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-      });
-      clock.tick(10);
-      run(() => {
-        category.value = "feature";
-        category.dispatchEvent(new Event("input", { bubbles: true }));
-      });
-      clock.tick(20);
+    await fillIn(input, "");
+    await select(category, "feature");
+    run(applyPendingURLs);
 
-      assert.dom(input).hasValue("");
-      assert.dom(".item").exists({ count: 2 });
-      assert.strictEqual(router.currentURL, "/admin/example?category=feature");
+    assert.dom(input).hasValue("");
+    assert.dom(".item").exists({ count: 2 });
+    assert.strictEqual(router.currentURL, "/admin/example?category=feature");
 
-      run(() => {
-        category.value = "all";
-        category.dispatchEvent(new Event("input", { bubbles: true }));
-      });
-      clock.tick(20);
-      assert.strictEqual(router.currentURL, "/admin/example");
+    await select(category, "all");
+    run(applyPendingURLs);
+    assert.strictEqual(router.currentURL, "/admin/example");
 
-      run(() => {
-        input.value = "first";
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-      });
-      clock.tick(9);
-      run(() => find(".d-filter-controls__reset").click());
-      clock.tick(30);
-    } finally {
-      clock.restore();
-    }
-    await settled();
+    await fillIn(input, "first");
+    await click(".d-filter-controls__reset");
+    run(applyPendingURLs);
 
     assert.dom(input).hasValue("");
     assert.dom(".item").exists({ count: 3 });
