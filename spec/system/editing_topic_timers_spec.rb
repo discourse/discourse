@@ -24,4 +24,23 @@ describe "Editing topic timers" do
 
     expect(page).to have_text("This topic will automatically close in 10 hours.")
   end
+
+  it "hides the reopen action as soon as a restricted category moderator closes a topic" do
+    SiteSetting.enable_category_group_moderation = true
+    SiteSetting.category_group_moderators_can_reopen_topics = false
+    category_moderation = Fabricate(:category_moderation_group)
+    category_moderator = Fabricate(:user)
+    category_moderation.group.add(category_moderator)
+    topic.update!(category: category_moderation.category)
+    sign_in(category_moderator)
+    topic_page.visit_topic(topic)
+
+    topic_page.click_admin_menu_button
+    find(".topic-admin-close button").click
+    topic_page.click_admin_menu_button
+
+    expect(page).to have_css(".topic-admin-archive")
+    expect(page).to have_no_css(".topic-admin-open")
+    expect(topic.reload).to be_closed
+  end
 end

@@ -17,6 +17,21 @@ RSpec.describe TopicGuardian do
 
   after { Guardian.disable_topic_can_see_consistency_check }
 
+  describe "#can_open_topic?" do
+    it "restricts category group moderators only in the categories they moderate" do
+      SiteSetting.enable_category_group_moderation = true
+      SiteSetting.category_group_moderators_can_reopen_topics = false
+      group.add(tl4_user)
+      Fabricate(:category_moderation_group, category:, group:)
+      other_topic = Fabricate(:topic, closed: true)
+      topic.update!(closed: true)
+
+      guardian = tl4_user.reload.guardian
+      expect(guardian.can_open_topic?(topic)).to eq(false)
+      expect(guardian.can_open_topic?(other_topic)).to eq(true)
+    end
+  end
+
   describe "#can_create_shared_draft?" do
     it "when shared_drafts are disabled" do
       SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]

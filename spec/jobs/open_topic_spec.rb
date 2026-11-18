@@ -83,6 +83,19 @@ RSpec.describe Jobs::OpenTopic do
 
       expect(topic.reload.open?).to eq(true)
     end
+
+    it "cancels a pending open timer when its category moderator loses reopen permission" do
+      SiteSetting.enable_category_group_moderation = true
+      SiteSetting.category_group_moderators_can_reopen_topics = false
+      Fabricate(:category_moderation_group, category: topic.category, group:)
+      timer = topic.public_topic_timer
+      freeze_time(timer.execute_at + 1.minute)
+
+      described_class.new.execute(topic_timer_id: timer.id)
+
+      expect(topic.reload).to be_closed
+      expect(topic.public_topic_timer).to be_nil
+    end
   end
 
   describe "when user is no longer authorized to open topics" do

@@ -1496,6 +1496,30 @@ RSpec.describe TopicsController do
         SiteSetting.enable_category_group_moderation = true
       end
 
+      it "lets category group moderators close a topic while restricting reopening" do
+        Fabricate(:post, topic:)
+        SiteSetting.category_group_moderators_can_reopen_topics = false
+
+        get "/t/#{topic.id}.json"
+        expect(response.parsed_body["details"]).to include(
+          "can_close_topic" => true,
+          "can_open_topic" => false,
+        )
+
+        put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: true }
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload).to be_closed
+
+        put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: false }
+        expect(response).to have_http_status(:forbidden)
+        expect(topic.reload).to be_closed
+
+        sign_in(moderator)
+        put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: false }
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload).to be_open
+      end
+
       it "allows a group moderator to toggle topic statuses" do
         put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: "true" }
 
@@ -6693,6 +6717,28 @@ RSpec.describe TopicsController do
       before do
         SiteSetting.topic_timers_allowed_groups = topic_timer_group.id.to_s
         sign_in(user)
+      end
+
+      it "guards timers that would reopen a topic in a restricted moderator's category" do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: topic.category, group: topic_timer_group)
+        topic.update!(closed: true)
+
+        post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: "open" }
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload.public_topic_timer.status_type).to eq(TopicTimer.types[:open])
+
+        SiteSetting.category_group_moderators_can_reopen_topics = false
+        post "/t/#{topic.id}/timer.json", params: { status_type: "open" }
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload.public_topic_timer).to be_nil
+
+        %w[open close].each do |status_type|
+          post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: }
+          expect(response).to have_http_status(:forbidden)
+          expect(topic.reload).to be_closed
+          expect(topic.public_topic_timer).to be_nil
+        end
       end
 
       it "guards destructive timers but allows ordinary timers for the configured group" do

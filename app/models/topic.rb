@@ -1773,6 +1773,11 @@ class Topic < ActiveRecord::Base
       return delete_topic_timer(status_type, by_user: by_user)
     end
 
+    if status_type == TopicTimer.types[:open] &&
+         by_user&.guardian&.category_moderator_topic_reopen_restricted?(self)
+      raise Discourse::InvalidAccess
+    end
+
     duration_minutes = duration_minutes ? duration_minutes.to_i : 0
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
