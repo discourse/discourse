@@ -111,6 +111,9 @@ RSpec.describe Blog::EditorQuery do
     end
 
     it "hides topics, and articles whose working copy, the user cannot see" do
+      drafts.set_permissions(:staff => :full, writers.name => :full)
+      drafts.save!
+
       expect(topic_ids(editor.guardian)).to contain_exactly(unpublished_article.id)
     end
 

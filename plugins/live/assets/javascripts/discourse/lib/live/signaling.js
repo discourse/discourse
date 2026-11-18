@@ -76,6 +76,9 @@ export default class SignalingManager {
             payload,
             participant_session_id: this.#getParticipantSessionId(roomId),
           },
+          // Senders await this from the room's serialized message queue; an
+          // unsent request left pending would stall that queue for good.
+          ignoreUnsent: false,
         }));
     this.#candidateBatchDelayMs = candidateBatchDelayMs;
     this.#candidateBatchSize = candidateBatchSize;

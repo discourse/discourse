@@ -29,6 +29,7 @@ import {
   computeRoomGrid,
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
+import watchRoom from "../../lib/live/watch-room.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
 import LiveConnectionDiagnosticsModal from "../modal/live-connection-diagnostics.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
@@ -133,13 +134,6 @@ export default class LiveRoomPage extends Component {
     super.willDestroy(...arguments);
     clearInterval(this.#ringingTicker);
     cancel(this.#chatCloseFallback);
-    const liveWebrtc = this.liveWebrtc;
-    const roomId = this.args.room.id;
-    const keepVideo = liveWebrtc.isActiveRoom(roomId);
-
-    next(() => {
-      liveWebrtc.setWatching(roomId, false, { keepVideo });
-    });
   }
 
   get #isStageRoom() {
@@ -508,17 +502,6 @@ export default class LiveRoomPage extends Component {
   }
 
   @action
-  watchRoom() {
-    next(this, () => {
-      if (this.isDestroying) {
-        return;
-      }
-
-      this.liveWebrtc.setWatching(this.args.room.id, true);
-    });
-  }
-
-  @action
   setFullscreenWithin(isFullscreen) {
     this.fullscreenWithin = isFullscreen;
   }
@@ -731,7 +714,7 @@ export default class LiveRoomPage extends Component {
         (if this.presentationLayout "--presentation")
         (if this.tiledLayout "--tiled")
       }}
-      {{didInsert this.watchRoom}}
+      {{watchRoom this.liveWebrtc this.room.id}}
       {{didInsert this.autoJoinIfRequested}}
       {{didUpdate this.reconcileSpotlight this.participants}}
       {{didUpdate

@@ -2,6 +2,7 @@
 
 class Blog::Publication::PrepareDraft
   include Service::Base
+  include Blog::DraftsCategoryStep
 
   params do
     attribute :topic_id, :integer
@@ -10,6 +11,7 @@ class Blog::Publication::PrepareDraft
   end
 
   model :topic
+  step :ensure_drafts_category
 
   transaction do
     model :publication, :lock_publication
