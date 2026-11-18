@@ -1,10 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import type { TOC } from "@ember/component/template-only";
 import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import type RouterService from "@ember/routing/router-service";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -15,6 +18,7 @@ import DiscourseURL, {
   applyQueryParams,
   searchParamsFromPath,
 } from "discourse/lib/url";
+import type { CapabilitiesService } from "discourse/services/capabilities";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -22,7 +26,194 @@ import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
-const ResetButton = <template>
+/** An option of a filter dropdown. */
+export interface DFilterControlsDropdownOption<T = unknown> {
+  /** The value of the option. */
+  value: string;
+
+  /** The label of the option. */
+  label: string;
+
+  /** Keeps the items that match the option, for client-side filtering. */
+  filterFn?: (item: T) => boolean;
+}
+
+/** An option of the sort menu. */
+export interface DFilterControlsSortOption<T = unknown> {
+  /** The value of the option. */
+  value: string;
+
+  /** The label of the option. */
+  label: string;
+
+  /** Orders the items, for client-side sorting. Omit it to sort on the server. */
+  compareFn?: (a: T, b: T) => number;
+}
+
+/** The options of one dropdown, or of several dropdowns keyed by name. */
+export type DFilterControlsDropdownOptions<T = unknown> =
+  | DFilterControlsDropdownOption<T>[]
+  | DropdownOptionsByKey<T>;
+
+type DropdownOptionsByKey<T> = Record<
+  string,
+  DFilterControlsDropdownOption<T>[]
+>;
+
+interface ResetButtonSignature {
+  Args: {
+    action: () => void;
+    disabled?: boolean;
+    label?: string;
+  };
+}
+
+interface SortMenuSignature {
+  Args: {
+    label?: string;
+    onChange: (close: () => void, value: string) => void;
+    options: Pick<DFilterControlsSortOption, "value" | "label">[];
+    showLabel?: boolean;
+    value?: string;
+  };
+}
+
+interface DFilterControlsSignature<T> {
+  Args: {
+    /** The dataset to display. */
+    array?: T[];
+
+    /**
+     * Property names to search for client-side text filtering. They can be dot-separated
+     * for nested properties, such as `user.name`.
+     */
+    searchableProps?: string[];
+
+    /** The dropdown options. Key them by name for several dropdowns. */
+    dropdownOptions?: DFilterControlsDropdownOptions<T>;
+
+    /**
+     * Sort menu options. The menu shows with two or more options. Reset leaves the sort in
+     * place, as it isn't a filter.
+     */
+    sortOptions?: DFilterControlsSortOption<T>[];
+
+    /** The default sort value. Defaults to the first option. */
+    defaultSort?: string;
+
+    /** The query param that holds a non-default sort. */
+    sortQueryParam?: string;
+
+    /** Called with the new sort value. */
+    onSortChange?: (value: string) => void;
+
+    /** Placeholder text for the search input. */
+    inputPlaceholder?: string;
+
+    /** The default dropdown value, or values keyed by dropdown. Defaults to `all`. */
+    defaultDropdownValue?: string | Record<string, string>;
+
+    /** The current dropdown value, or values keyed by dropdown. */
+    dropdownValue?: string | Record<string, string>;
+
+    /** The query param that holds the dropdown value. */
+    dropdownFilterQueryParam?: string;
+
+    /** The query params that hold the dropdown values, keyed by dropdown. */
+    dropdownFilterQueryParams?: Record<string, string>;
+
+    /** The query param that holds the text filter. */
+    textFilterQueryParam?: string;
+
+    /**
+     * Whether to render the dropdown drawer toggle. Defaults to true for multiple
+     * dropdowns or when forced.
+     */
+    showDropdownFilterToggle?: boolean;
+
+    /** Whether to place a single dropdown behind the filter toggle. */
+    forceShowDropdownFilterToggle?: boolean;
+
+    /** Whether the dropdown drawer starts open. */
+    filterDropdownsExpanded?: boolean;
+
+    /** The message shown when no results are found. */
+    noResultsMessage?: string;
+
+    /** Whether to show the built-in no-results state. Defaults to `true`. */
+    showNoResults?: boolean;
+
+    /** Whether to show the text filter input. Defaults to `true`. */
+    showTextFilter?: boolean;
+
+    /** Whether to show the reset filters button. Defaults to `true`. */
+    showResetButton?: boolean;
+
+    /** Whether data is loading. It hides the no-results state. */
+    loading?: boolean;
+
+    /** The minimum number of items before the filters show. */
+    minItemsForFilter?: number;
+
+    /** Called on text changes. It enables server-side filtering. */
+    onTextFilterChange?: (event: Event) => void;
+
+    /**
+     * Called on dropdown changes. It enables server-side filtering. With several
+     * dropdowns, it receives the dropdown key and the value.
+     */
+    onDropdownFilterChange?: (keyOrValue: string, value?: string) => void;
+
+    /** Called on dropdown selection changes, with the same arguments. */
+    onDropdownChange?: (keyOrValue: string, value?: string) => void;
+
+    /** Called on reset, for server-side filtering. */
+    onResetFilters?: () => void | Promise<void>;
+
+    /** Called with the new expanded state when the dropdown drawer opens or closes. */
+    onFilterDropdownsToggle?: (expanded: boolean) => void;
+
+    /** The label of the filter drawer button, already translated. */
+    toggleLabel?: string;
+
+    /** Whether filters rendered in the `additionalFilters` block are active. */
+    additionalFiltersActive?: boolean;
+
+    /** The initial value of the text filter. */
+    initialTextFilter?: string;
+
+    /**
+     * Whether to show the `customEmptyState` block when the array is empty and
+     * `@minItemsForFilter` hides the filters.
+     */
+    showCustomEmptyState?: boolean;
+  };
+
+  Blocks: {
+    /** Content above the filters. */
+    aboveFilters: [];
+
+    /** Controls placed beside the search input, outside the drawer. */
+    inlineFilters: [];
+
+    /** Filters rendered with the dropdowns, sharing the drawer. */
+    additionalFilters: [];
+
+    /** Actions after the filters. */
+    actions: [];
+
+    /** Content between the filters and the results. */
+    aboveContent: [];
+
+    /** The results. */
+    content: [items: T[]];
+
+    /** The empty state, with `@showCustomEmptyState`. */
+    customEmptyState: [];
+  };
+}
+
+const ResetButton: TOC<ResetButtonSignature> = <template>
   <DButton
     class="btn-default d-filter-controls__reset"
     @action={{@action}}
@@ -34,7 +225,7 @@ const ResetButton = <template>
   />
 </template>;
 
-const SortMenu = <template>
+const SortMenu: TOC<SortMenuSignature> = <template>
   <DMenu
     @ariaLabel={{i18n "filter_controls.sort_trigger_label" sort=@label}}
     @icon="arrow-down-wide-short"
@@ -75,47 +266,13 @@ const SortMenu = <template>
  *
  * The inlineFilters block places controls beside the search input, outside the drawer.
  *
- * @component DFilterControls
- * @param {Array} array - The dataset to display
- * @param {Array} [searchableProps] - Property names to search for client-side text filtering, can be dot-separated
- *                                for nested properties (e.g. "user.name")
- * @param {Array|Object} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]. Or, if you
- *                                   want multiple dropdowns, format is: { dropdown1: [...], dropdown2: [...] }
- * @param {Array} [sortOptions] - Sort menu options. Format: [{value, label, compareFn?}]. The menu shows with
- *                                 two or more options. Reset leaves the sort in place, as it isn't a filter
- * @param {String} [defaultSort] - Default sort value, defaults to the first option
- * @param {String} [sortQueryParam] - Query param that holds a non-default sort
- * @param {Function} [onSortChange] - Callback for sort changes. Omit compareFn to sort on the server
- * @param {String} [inputPlaceholder] - Placeholder text for search input
- * @param {String|Object} [defaultDropdownValue="all"] - Default dropdown value(s). For single dropdown: "all",
- *                                                       for multiple: { dropdown1: "all", dropdown2: "all" }
- * @param {String|Object} [dropdownValue] - Current dropdown value(s), defaults to defaultDropdownValue
- * @param {Boolean} [showDropdownFilterToggle] - Whether to render the dropdown drawer toggle. Defaults to true for multiple dropdowns or when forced.
- * @param {Boolean} [forceShowDropdownFilterToggle=false] - Whether to place a single dropdown behind the filter toggle
- * @param {String} [noResultsMessage] - Message shown when no results found
- * @param {Boolean} [showNoResults=true] - Whether to show the built-in no-results state
- * @param {Boolean} [showTextFilter=true] - Whether to show the text filter input
- * @param {Boolean} [showResetButton=true] - Whether to show the reset filters button
- * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
- * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
- * @param {Function} [onTextFilterChange] - Callback for text changes (enables server-side mode)
- * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode).
- *                                              For multiple dropdowns: receives (key, value)
- * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
- * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
- * @param {Function} [onFilterDropdownsToggle] - Callback fired when the dropdown drawer is opened or
- *                                               closed, receiving the new expanded state as a boolean
- * @param {String} [toggleLabel] - Optional translated label for the filter drawer button.
- * @param {Boolean} [additionalFiltersActive=false] - Whether filters rendered in the additionalFilters block are active.
- *                                                     The block renders alongside the dropdowns, sharing the drawer
- * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
- * @param {Boolean} [showCustomEmptyState] - Whether to show a custom empty state when no results found,
- *                                           if minItemsForFilter is set and the array is empty
  */
 
-export default class DFilterControls extends Component {
-  @service capabilities;
-  @service router;
+export default class DFilterControls<T = unknown> extends Component<
+  DFilterControlsSignature<T>
+> {
+  @service declare capabilities: CapabilitiesService;
+  @service declare router: RouterService;
 
   @tracked dropdownFilter = "all";
   @tracked
@@ -123,12 +280,12 @@ export default class DFilterControls extends Component {
   @resettableTracked sort = this.initialSortValue;
   @resettableTracked textFilter = this.initialTextFilterValue;
 
-  dropdownFilters = trackedObject();
+  dropdownFilters = trackedObject<Record<string, string>>();
   #searchSeed = tracked(this.#linkedSearch);
-  #searchDebounce;
+  #searchDebounce: ReturnType<typeof discourseDebounce> | undefined;
 
-  constructor() {
-    super(...arguments);
+  constructor(owner: Owner, args: DFilterControlsSignature<T>["Args"]) {
+    super(owner, args);
 
     this.applyDropdownValues();
 
@@ -141,14 +298,14 @@ export default class DFilterControls extends Component {
   }
 
   willDestroy() {
-    super.willDestroy(...arguments);
+    super.willDestroy();
     cancel(this.#searchDebounce);
     if (this.#hasUrlOwnedFilters) {
       this.router.off("routeDidChange", this.applyFiltersFromRoute);
     }
   }
 
-  get initialTextFilterValue() {
+  get initialTextFilterValue(): string {
     if (!this.showTextFilter) {
       return "";
     }
@@ -170,7 +327,7 @@ export default class DFilterControls extends Component {
     return fromUrl ?? this.defaultSort;
   }
 
-  get currentSearchParams() {
+  get currentSearchParams(): URLSearchParams {
     // router.currentURL, unlike window.location, is also correct under the
     // test environment's mock location
     return searchParamsFromPath(this.router.currentURL);
@@ -184,7 +341,7 @@ export default class DFilterControls extends Component {
     );
   }
 
-  get #linkedSearch() {
+  get #linkedSearch(): string | null {
     const param = this.args.textFilterQueryParam;
     return param ? this.currentSearchParams.get(param) : null;
   }
@@ -193,7 +350,7 @@ export default class DFilterControls extends Component {
     return this.args.textFilterQueryParam || this.hasUrlOwnedDropdowns;
   }
 
-  get array() {
+  get array(): T[] {
     return Array.isArray(this.args.array) ? this.args.array : [];
   }
 
@@ -210,8 +367,28 @@ export default class DFilterControls extends Component {
     );
   }
 
-  get dropdownOptions() {
+  get dropdownOptions(): DFilterControlsDropdownOptions<T> {
     return this.args.dropdownOptions || [];
+  }
+
+  /**
+   * The options of the single dropdown.
+   *
+   * @returns The options, or an empty list when there are several dropdowns.
+   */
+  get dropdownOptionList(): DFilterControlsDropdownOption<T>[] {
+    const options = this.dropdownOptions;
+    return Array.isArray(options) ? options : [];
+  }
+
+  /**
+   * The options of each dropdown, keyed by name.
+   *
+   * @returns The options by name, or an empty object when there is one dropdown.
+   */
+  get dropdownOptionsByKey(): DropdownOptionsByKey<T> {
+    const options = this.dropdownOptions;
+    return Array.isArray(options) ? {} : options;
   }
 
   get sortOptions() {
@@ -239,7 +416,7 @@ export default class DFilterControls extends Component {
 
   get showDropdownFilter() {
     return (
-      (this.dropdownOptions.length > 1 &&
+      (this.dropdownOptionList.length > 1 &&
         !this.args.forceShowDropdownFilterToggle) ||
       (this.hasMultipleDropdowns && this.showFilterDropdowns) ||
       (this.args.forceShowDropdownFilterToggle && this.showFilterDropdowns)
@@ -324,7 +501,7 @@ export default class DFilterControls extends Component {
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownFilters).forEach((key) => {
         const selectedValue = this.dropdownFilters[key];
-        const options = this.dropdownOptions[key] || [];
+        const options = this.dropdownOptionsByKey[key] || [];
         const selectedOption = options.find(
           (option) => option.value === selectedValue
         );
@@ -333,7 +510,7 @@ export default class DFilterControls extends Component {
         }
       });
     } else if (this.dropdownFilter !== this.defaultDropdownValue) {
-      const selectedOption = this.dropdownOptions.find(
+      const selectedOption = this.dropdownOptionList.find(
         (option) => option.value === this.dropdownFilter
       );
       if (selectedOption?.filterFn) {
@@ -345,7 +522,7 @@ export default class DFilterControls extends Component {
   }
 
   get singleDropdownLabel() {
-    return this.dropdownOptions.find(
+    return this.dropdownOptionList.find(
       (option) => option.value === this.defaultDropdownValue
     )?.label;
   }
@@ -354,18 +531,24 @@ export default class DFilterControls extends Component {
    * Allows searchable props in the format user.name, this function gets the
    * nested value based on a dot-separated path.
    *
-   * @param {object} obj - The object to get value from
-   * @param {String} path - The property path (e.g. "user.name")
-   * @returns {unknown} The value at the path
+   * @param obj - The object to get value from
+   * @param path - The property path (e.g. "user.name")
+   * @returns The value at the path
    */
-  getNestedValue(obj, path) {
-    return path.split(".").reduce((current, key) => current?.[key], obj);
+  getNestedValue(obj: unknown, path: string): unknown {
+    return path
+      .split(".")
+      .reduce<unknown>(
+        (current, key) =>
+          (current as Record<string, unknown> | null | undefined)?.[key],
+        obj
+      );
   }
 
   // @action so it stays bound to `this` when invoked from the template
   @action
-  defaultValue(key) {
-    const defaults =
+  defaultValue(key: string): string {
+    const defaults: Record<string, string> =
       typeof this.defaultDropdownValue === "object"
         ? this.defaultDropdownValue
         : {};
@@ -373,8 +556,8 @@ export default class DFilterControls extends Component {
   }
 
   @action
-  dropdownLabel(key) {
-    const options = this.dropdownOptions[key] || [];
+  dropdownLabel(key: string): string | undefined {
+    const options = this.dropdownOptionsByKey[key] || [];
     return options.find((option) => option.value === this.defaultValue(key))
       ?.label;
   }
@@ -407,7 +590,7 @@ export default class DFilterControls extends Component {
           this.#validatedUrlValue(
             params,
             paramName,
-            this.dropdownOptions[key] ?? []
+            this.dropdownOptionsByKey[key] ?? []
           ) ?? defaultValue;
 
         this.dropdownFilters[key] = value;
@@ -418,13 +601,13 @@ export default class DFilterControls extends Component {
         this.#validatedUrlValue(
           params,
           this.args.dropdownFilterQueryParam,
-          this.dropdownOptions
-        ) ?? this.defaultDropdownValue;
+          this.dropdownOptionList
+        ) ?? (this.defaultDropdownValue as string);
     }
   }
 
-  dropdownValueFor(key) {
-    const values =
+  dropdownValueFor(key: string): string {
+    const values: Record<string, string> =
       typeof this.dropdownValue === "object" ? this.dropdownValue : {};
     return values[key] || this.defaultValue(key);
   }
@@ -436,11 +619,11 @@ export default class DFilterControls extends Component {
         this.dropdownFilters[key] = this.dropdownValueFor(key);
       });
     } else {
-      this.dropdownFilter = this.dropdownValue;
+      this.dropdownFilter = this.dropdownValue as string;
     }
   }
 
-  updateQueryParams(updates) {
+  updateQueryParams(updates: Record<string, string | null | undefined>) {
     // no currentURL means the router isn't live (e.g. rendering tests)
     if (!this.showFilters || !this.router.currentURL) {
       return;
@@ -458,8 +641,8 @@ export default class DFilterControls extends Component {
   }
 
   @action
-  onTextFilterChange(event) {
-    this.textFilter = event.target?.value || "";
+  onTextFilterChange(event: Event) {
+    this.textFilter = (event.target as HTMLInputElement | null)?.value || "";
 
     this.#scheduleSearchSync();
 
@@ -467,39 +650,41 @@ export default class DFilterControls extends Component {
   }
 
   @action
-  onDropdownFilterChange(keyOrValue, value) {
-    const multiple = this.hasMultipleDropdowns;
-    const selectedValue = multiple ? value : keyOrValue;
-    const paramName = multiple
-      ? this.args.dropdownFilterQueryParams?.[keyOrValue]
-      : this.args.dropdownFilterQueryParam;
-    const defaultValue = multiple
-      ? this.defaultValue(keyOrValue)
-      : this.defaultDropdownValue;
-
-    if (multiple) {
-      this.dropdownFilters[keyOrValue] = value;
-    } else {
-      this.dropdownFilter = keyOrValue;
+  onSingleDropdownChange(value: string | null) {
+    // Every option has a value, so the select never reports none.
+    if (value === null) {
+      return;
     }
 
-    if (paramName) {
-      this.updateQueryParams({
-        [paramName]: selectedValue === defaultValue ? null : selectedValue,
-      });
-    }
-
-    if (multiple) {
-      this.args.onDropdownFilterChange?.(keyOrValue, value);
-      this.args.onDropdownChange?.(keyOrValue, value);
-    } else {
-      this.args.onDropdownFilterChange?.(keyOrValue);
-      this.args.onDropdownChange?.(keyOrValue);
-    }
+    this.dropdownFilter = value;
+    this.#updateDropdownQueryParam(
+      this.args.dropdownFilterQueryParam,
+      value,
+      this.defaultDropdownValue
+    );
+    this.args.onDropdownFilterChange?.(value);
+    this.args.onDropdownChange?.(value);
   }
 
   @action
-  onSortChange(close, value) {
+  onKeyedDropdownChange(key: string, value: string | null) {
+    // Every option has a value, so the select never reports none.
+    if (value === null) {
+      return;
+    }
+
+    this.dropdownFilters[key] = value;
+    this.#updateDropdownQueryParam(
+      this.args.dropdownFilterQueryParams?.[key],
+      value,
+      this.defaultValue(key)
+    );
+    this.args.onDropdownFilterChange?.(key, value);
+    this.args.onDropdownChange?.(key, value);
+  }
+
+  @action
+  onSortChange(close: () => void, value: string) {
     this.sort = value;
 
     if (this.args.sortQueryParam) {
@@ -526,15 +711,15 @@ export default class DFilterControls extends Component {
         this.args.onDropdownChange?.(key, defaultValue);
       });
     } else {
-      this.dropdownFilter = this.defaultDropdownValue;
-      this.args.onDropdownChange?.(this.defaultDropdownValue);
+      this.dropdownFilter = this.defaultDropdownValue as string;
+      this.args.onDropdownChange?.(this.defaultDropdownValue as string);
     }
 
     const queryParams = [
       this.args.textFilterQueryParam,
       this.args.dropdownFilterQueryParam,
       ...Object.values(this.args.dropdownFilterQueryParams ?? {}),
-    ].filter(Boolean);
+    ].filter((name): name is string => Boolean(name));
     if (queryParams.length) {
       this.updateQueryParams(
         Object.fromEntries(queryParams.map((name) => [name, null]))
@@ -545,9 +730,11 @@ export default class DFilterControls extends Component {
 
     schedule("afterRender", () => {
       (
-        document.querySelector(".d-filter-controls__input") ||
-        document.querySelector(".d-filter-controls__toggle-filters") ||
-        document.querySelector(".d-filter-controls__dropdown")
+        document.querySelector<HTMLElement>(".d-filter-controls__input") ||
+        document.querySelector<HTMLElement>(
+          ".d-filter-controls__toggle-filters"
+        ) ||
+        document.querySelector<HTMLElement>(".d-filter-controls__dropdown")
       )?.focus();
     });
   }
@@ -570,7 +757,19 @@ export default class DFilterControls extends Component {
     }
   }
 
-  #sorted(items) {
+  #updateDropdownQueryParam(
+    paramName: string | undefined,
+    value: string,
+    defaultValue: string | Record<string, string>
+  ) {
+    if (paramName) {
+      this.updateQueryParams({
+        [paramName]: value === defaultValue ? null : value,
+      });
+    }
+  }
+
+  #sorted(items: T[]): T[] {
     const compareFn = this.sortOptions.find(
       (option) => option.value === this.sort
     )?.compareFn;
@@ -578,7 +777,11 @@ export default class DFilterControls extends Component {
     return compareFn ? items.sort(compareFn) : items;
   }
 
-  #validatedUrlValue(params, paramName, options) {
+  #validatedUrlValue(
+    params: URLSearchParams,
+    paramName: string,
+    options: readonly { value: string }[]
+  ): string | null {
     const value = params.get(paramName);
     return value !== null && options.some((option) => option.value === value)
       ? value
@@ -656,7 +859,7 @@ export default class DFilterControls extends Component {
         {{#if this.showDropdownFilter}}
           <div class="d-filter-controls__dropdowns">
             {{#if this.hasMultipleDropdowns}}
-              {{#each-in this.dropdownOptions as |key options|}}
+              {{#each-in this.dropdownOptionsByKey as |key options|}}
                 <DNativeSelect
                   aria-label={{this.dropdownLabel key}}
                   class={{dConcatClass
@@ -671,7 +874,7 @@ export default class DFilterControls extends Component {
                   }}
                   data-dropdown-key={{key}}
                   @includeNone={{false}}
-                  @onChange={{fn this.onDropdownFilterChange key}}
+                  @onChange={{fn this.onKeyedDropdownChange key}}
                   @value={{get this.dropdownFilters key}}
                   as |select|
                 >
@@ -682,7 +885,7 @@ export default class DFilterControls extends Component {
                   {{/each}}
                 </DNativeSelect>
               {{/each-in}}
-            {{else if this.dropdownOptions.length}}
+            {{else if this.dropdownOptionList.length}}
               <DNativeSelect
                 aria-label={{this.singleDropdownLabel}}
                 class={{dConcatClass
@@ -693,11 +896,11 @@ export default class DFilterControls extends Component {
                   )
                 }}
                 @includeNone={{false}}
-                @onChange={{this.onDropdownFilterChange}}
+                @onChange={{this.onSingleDropdownChange}}
                 @value={{this.dropdownFilter}}
                 as |select|
               >
-                {{#each this.dropdownOptions as |option|}}
+                {{#each this.dropdownOptionList as |option|}}
                   <select.Option @value={{option.value}}>
                     {{option.label}}
                   </select.Option>
