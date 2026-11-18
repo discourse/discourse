@@ -863,6 +863,48 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.strictEqual(body.test_date, "2026-01-15");
   });
 
+  for (const [type, selector, saved, shown] of [
+    ["date", "input[type='date']", "2026-01-15", "2026-01-15"],
+    [
+      "datetime",
+      "input[type='datetime-local']",
+      "2026-01-15T10:00:00Z",
+      moment("2026-01-15T10:00:00Z")
+        .local()
+        .format(moment.HTML5_FMT.DATETIME_LOCAL),
+    ],
+  ]) {
+    test(`a ${type} setting can be emptied, then reset to a non-empty default`, async function (assert) {
+      let body;
+      pretender.put("/admin/site_settings/test_when", (request) => {
+        body = parsePostData(request.requestBody);
+        return response(200, {});
+      });
+      const input = `.form-kit__field ${selector}`;
+
+      await renderSetting({
+        setting: "test_when",
+        value: saved,
+        default: saved,
+        type,
+      });
+
+      await fillIn(input, "");
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_when, "", "saves the emptied value");
+      assert.dom(input).hasValue("");
+
+      await click(".setting-controls__undo");
+
+      assert.dom(input).hasValue(shown, "reset restores the default");
+
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_when, saved);
+    });
+  }
+
   test("a secret setting that is also a textarea stays readable", async function (assert) {
     await renderSetting({
       setting: "test_setting",
