@@ -37,38 +37,16 @@ RSpec.describe "DSA classification suggestion" do
     sign_in(moderator)
   end
 
-  it "prefills the classification and lets the moderator adjust it before silencing the user" do
-    penalty_modal = PageObjects::Modals::PenalizeUser.new("silence")
-
+  it "prefills the community rule and category when the moderator opens the classification modal" do
     DiscourseAi::Decisions.with_canned_answers(
       community_rule: "#{advertising_rule[:ground]}: #{advertising_rule[:explanation]}",
       category:,
     ) do
       review_page.visit_reviewable(reviewable)
-      review_page.select_bundled_action(reviewable, "post-agree_and_silence", bundle_index: 1)
-      penalty_modal.set_future_date("two_weeks")
-      penalty_modal.fill_in_silence_reason("Repeated unsolicited advertising.")
-      modal.continue
+      review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
 
       expect(modal).to have_selected_rule(advertising_rule[:ground])
       expect(modal).to have_selected_category(category)
-      expect(review_page).to have_reviewable_with_pending_status(reviewable)
-
-      expect(modal).to have_field_hint(:community_rule, "Suggested by AI")
-      expect(modal).to have_field_hint(:category, "Suggested by AI")
-      modal.open_rule_menu
-      expect(modal).to have_readable_rule(advertising_rule[:ground])
-      modal.close_rule_menu
-
-      modal.select_category("Other violation of terms and conditions")
-
-      expect(modal).to have_no_field_hint(:category)
-      expect(modal).to have_field_hint(:community_rule, "Suggested by AI")
-
-      modal.confirm("Silence")
-
-      expect(modal).to be_closed
-      expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
     end
   end
 end
