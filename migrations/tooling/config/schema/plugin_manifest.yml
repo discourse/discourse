@@ -10,6 +10,7 @@ plugins:
     columns: {}
   blog:
     tables:
+      - blog_instances
       - blog_paths
       - blog_publications
       - blog_review_feedback
@@ -275,7 +276,7 @@ plugins:
 plugin_checksums:
   automation: d168107063ed75d7e568f1c1250866f8
   boards: b1410e9ce903ab8c722282afd4cf5b9f
-  blog: '4cf722e384ecd08dd933aac624df7805'
+  blog: 49dd872f9439dea49387665dbc55438c
   chat: dfdf8b56a5fcd06326c693011990c36a
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'

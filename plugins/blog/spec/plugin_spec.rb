@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe Blog do
+  describe "changing a blog setting the default blog copies" do
+    it "updates the default blog even while the blog is disabled" do
+      SiteSetting.blog_enabled = false
+
+      SiteSetting.blog_title = "Field notes"
+
+      expect(Blog::Instance.find_by(is_default: true).name).to eq("Field notes")
+    end
+  end
+
   describe "changing a blog role group setting" do
     fab!(:editors, :group)
     fab!(:publishers, :group)
