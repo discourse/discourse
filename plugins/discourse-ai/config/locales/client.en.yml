@@ -312,6 +312,7 @@ en:
       title: "AI"
       dsa_classification:
         suggest: "Suggest with AI"
+        suggested_by_ai: "Suggested by AI"
         updated: "Classification updated"
         no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
