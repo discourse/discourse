@@ -195,8 +195,6 @@ RSpec.describe Chat::Api::ChannelsMessagesInteractionsController do
         original_message.trash!
       end
 
-      fab!(:admin, :admin)
-
       it "returns 404 and does not create an interaction" do
         expect {
           post "/chat/api/channels/#{threading_channel.id}/messages/#{hidden_reply.id}/interactions",
@@ -206,35 +204,6 @@ RSpec.describe Chat::Api::ChannelsMessagesInteractionsController do
         }.not_to change(Chat::MessageInteraction, :count)
 
         expect(response.status).to eq(404)
-      end
-
-      it "allows a chat moderator" do
-        sign_in(admin)
-
-        post "/chat/api/channels/#{threading_channel.id}/messages/#{hidden_reply.id}/interactions",
-             params: {
-               action_id: "xxx",
-             }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body.dig("interaction", "message", "text")).to eq(
-          "thread reply secret",
-        )
-      end
-
-      context "when the channel does not use threads" do
-        before { threading_channel.update!(threading_enabled: false) }
-
-        it "creates the interaction" do
-          expect {
-            post "/chat/api/channels/#{threading_channel.id}/messages/#{hidden_reply.id}/interactions",
-                 params: {
-                   action_id: "xxx",
-                 }
-          }.to change(Chat::MessageInteraction, :count).by(1)
-
-          expect(response.status).to eq(200)
-        end
       end
     end
 

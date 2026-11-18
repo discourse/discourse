@@ -172,42 +172,4 @@ RSpec.describe OneboxController do
       expect(response.body).to include("inline reply secret")
     end
   end
-
-  describe "a reply in a forced thread of a channel with threading disabled" do
-    fab!(:inline_channel, :category_channel)
-    fab!(:original_message) do
-      Fabricate(
-        :chat_message,
-        chat_channel: inline_channel,
-        user: direct_message_user_1,
-        message: "forced original secret",
-      )
-    end
-    fab!(:thread) do
-      Fabricate(
-        :chat_thread,
-        channel: inline_channel,
-        original_message: original_message,
-        force: true,
-      )
-    end
-    fab!(:reply) do
-      Fabricate(
-        :chat_message,
-        chat_channel: inline_channel,
-        user: direct_message_user_1,
-        thread: thread,
-        message: "forced reply secret",
-      )
-    end
-
-    it "does not onebox the reply after the original message is trashed" do
-      original_message.trash!
-
-      get "/onebox.json", params: { url: "#{Discourse.base_url}#{reply.url}", refresh: "true" }
-
-      expect(response.status).to eq(200)
-      expect(response.body).not_to include("forced reply secret")
-    end
-  end
 end

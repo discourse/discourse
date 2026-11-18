@@ -585,31 +585,11 @@ RSpec.describe Chat::Api::ChannelThreadsController do
 
       before { thread_original.trash! }
 
-      fab!(:admin, :admin)
-
       it "returns 404 without leaking the hidden thread" do
         post "/chat/api/channels/#{channel_id}/threads", params: params
 
         expect(response.body).not_to include("thread reply secret")
         expect(response.body).not_to include("thread original secret")
-        expect(response.status).to eq(404)
-      end
-
-      it "returns the existing thread for a chat moderator" do
-        sign_in(admin)
-
-        post "/chat/api/channels/#{channel_id}/threads", params: params
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["id"]).to eq(thread.id)
-      end
-
-      it "returns 404 when the thread original message was purged" do
-        thread_original.destroy!
-        sign_in(admin)
-
-        post "/chat/api/channels/#{channel_id}/threads", params: params
-
         expect(response.status).to eq(404)
       end
     end

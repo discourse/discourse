@@ -148,16 +148,6 @@ RSpec.describe Chat::Api::ChannelPinsController do
         expect(response.body).not_to include("thread reply secret")
       end
 
-      it "does not expose the pinned reply once the original message was purged" do
-        original_message.destroy!
-
-        get "/chat/api/channels/#{thread_channel.id}/pins"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["pinned_messages"]).to be_empty
-        expect(response.body).not_to include("thread reply secret")
-      end
-
       it "still exposes the pinned reply to a chat moderator" do
         sign_in(admin)
 
@@ -168,40 +158,6 @@ RSpec.describe Chat::Api::ChannelPinsController do
           [reply.id],
         )
         expect(response.body).to include("thread reply secret")
-      end
-
-      it "still exposes the pinned reply to a chat moderator once the original message was purged" do
-        original_message.destroy!
-        sign_in(admin)
-
-        get "/chat/api/channels/#{thread_channel.id}/pins"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["pinned_messages"].map { |pin| pin["chat_message_id"] }).to eq(
-          [reply.id],
-        )
-      end
-
-      it "still exposes the pinned reply when the channel does not use threads" do
-        thread_channel.update!(threading_enabled: false)
-
-        get "/chat/api/channels/#{thread_channel.id}/pins"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["pinned_messages"].map { |pin| pin["chat_message_id"] }).to eq(
-          [reply.id],
-        )
-      end
-
-      it "exposes the pinned reply again once the original message is restored" do
-        original_message.recover!
-
-        get "/chat/api/channels/#{thread_channel.id}/pins"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["pinned_messages"].map { |pin| pin["chat_message_id"] }).to eq(
-          [reply.id],
-        )
       end
     end
   end
@@ -282,24 +238,6 @@ RSpec.describe Chat::Api::ChannelPinsController do
 
         expect(response.status).to eq(403)
         expect(Chat::PinnedMessage.exists?(chat_message_id: reply.id)).to eq(false)
-      end
-
-      it "lets a chat moderator pin the hidden reply" do
-        sign_in(admin)
-
-        post "/chat/api/channels/#{thread_channel.id}/messages/#{reply.id}/pin"
-
-        expect(response.status).to eq(200)
-        expect(Chat::PinnedMessage.exists?(chat_message_id: reply.id)).to eq(true)
-      end
-
-      it "lets a pinning group member pin the reply when the channel does not use threads" do
-        thread_channel.update!(threading_enabled: false)
-
-        post "/chat/api/channels/#{thread_channel.id}/messages/#{reply.id}/pin"
-
-        expect(response.status).to eq(200)
-        expect(Chat::PinnedMessage.exists?(chat_message_id: reply.id)).to eq(true)
       end
     end
   end

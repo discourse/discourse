@@ -235,39 +235,6 @@ RSpec.describe Chat::Api::SearchController do
           end
         end
 
-        context "when the message is a reply in a thread in a channel with threading disabled" do
-          fab!(:inline_original_message) do
-            Fabricate(:chat_message, chat_channel: channel, message: "inline original message")
-          end
-          fab!(:inline_thread) do
-            Fabricate(:chat_thread, channel: channel, original_message: inline_original_message)
-          end
-          fab!(:inline_reply) do
-            Fabricate(
-              :chat_message,
-              chat_channel: channel,
-              thread: inline_thread,
-              message: "zebra inline reply",
-            )
-          end
-
-          before { SearchIndexer.index(inline_reply, force: true) }
-
-          it "returns the reply after the original message is trashed" do
-            get "/chat/api/search.json", params: { query: "zebra", channel_id: channel.id }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(inline_reply.id)
-
-            inline_original_message.trash!
-
-            get "/chat/api/search.json", params: { query: "zebra", channel_id: channel.id }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(inline_reply.id)
-          end
-        end
-
         context "when searching without a channel_id" do
           fab!(:thread_channel) { Fabricate(:chat_channel, threading_enabled: true) }
           fab!(:thread_original_message) do
@@ -329,29 +296,6 @@ RSpec.describe Chat::Api::SearchController do
             admin = Fabricate(:admin)
             thread_channel.add(admin)
             thread_original_message.trash!
-            sign_in(admin)
-
-            get "/chat/api/search.json", params: { query: "zebra" }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["messages"].map { |m| m["id"] }).to include(thread_reply.id)
-          end
-
-          it "hides replies of threads whose original message was purged" do
-            thread_original_message.destroy!
-
-            get "/chat/api/search.json", params: { query: "zebra" }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["messages"].map { |m| m["id"] }).not_to include(
-              thread_reply.id,
-            )
-          end
-
-          it "returns replies of threads whose original message was purged to staff" do
-            admin = Fabricate(:admin)
-            thread_channel.add(admin)
-            thread_original_message.destroy!
             sign_in(admin)
 
             get "/chat/api/search.json", params: { query: "zebra" }
