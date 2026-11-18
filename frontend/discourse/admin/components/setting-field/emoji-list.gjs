@@ -1,4 +1,4 @@
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import EmojiValueList from "discourse/admin/components/emoji-value-list";
 import showFieldError from "discourse/admin/lib/show-field-error";
 
@@ -6,7 +6,7 @@ const SettingFieldEmojiList = <template>
   <@field.Control>
     <EmojiValueList
       @changeValueCallback={{@field.set}}
-      @setting={{hash setting=@definition.key}}
+      @settingName={{@definition.key}}
       @setValidationMessage={{fn showFieldError @field}}
       @values={{@field.value}}
     />

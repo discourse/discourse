@@ -38,7 +38,6 @@ import { i18n } from "discourse-i18n";
 
 const FORM_KIT_NAME_SEPARATORS = /[.-]/g;
 const TEXT_FIELD_TYPES = ["input", "input-email", "textarea", "password"];
-const TEXT_TYPE_CLASS = "string";
 
 export default class SiteSettingComponent extends Component {
   @service modal;
@@ -59,7 +58,9 @@ export default class SiteSettingComponent extends Component {
   /** @type {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void>, submit: (event?: Event) => Promise<void> } | null} */
   formApi = null;
 
-  #formKitData;
+  formKitData = {
+    [this.fieldName]: this.fromWire(this.buffered.get("value")),
+  };
 
   constructor() {
     super(...arguments);
@@ -252,7 +253,7 @@ export default class SiteSettingComponent extends Component {
     const { type } = resolveSettingFieldType(this.definition);
 
     return TEXT_FIELD_TYPES.includes(type)
-      ? TEXT_TYPE_CLASS
+      ? "string"
       : this.type.replace(/_/g, "-");
   }
 
@@ -289,12 +290,6 @@ export default class SiteSettingComponent extends Component {
 
   get fieldName() {
     return this.definition.key.replace(FORM_KIT_NAME_SEPARATORS, "_");
-  }
-
-  get formKitData() {
-    return (this.#formKitData ??= {
-      [this.fieldName]: this.fromWire(this.buffered.get("value")),
-    });
   }
 
   get bufferedValues() {

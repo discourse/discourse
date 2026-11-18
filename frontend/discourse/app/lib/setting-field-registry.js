@@ -23,6 +23,7 @@ const REGISTRY = {};
 
 const ROW = { format: "large", labelFormat: "full" };
 const INLINE = { format: "full" };
+export const CUSTOM_CONTROL = { ...ROW, type: "custom" };
 
 export function registerSettingFieldType(type, entry) {
   REGISTRY[type] = entry;
@@ -63,8 +64,6 @@ function typeKeyFor({ type, subtype, list_type }) {
   return "default";
 }
 
-export const CUSTOM_CONTROL = { ...ROW, type: "custom" };
-
 registerSettingFieldType("default", { ...ROW, type: "input" });
 registerSettingFieldType("textarea", {
   ...ROW,
@@ -74,10 +73,7 @@ registerSettingFieldType("email", {
   ...ROW,
   type: "input-email",
 });
-registerSettingFieldType("date", {
-  ...ROW,
-  type: "input-date",
-});
+registerSettingFieldType("date", { ...ROW, type: "input-date" });
 registerSettingFieldType("password", {
   ...ROW,
   type: "password",

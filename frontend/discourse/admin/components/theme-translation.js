@@ -4,7 +4,6 @@ import getURL from "discourse/lib/get-url";
 import SiteSettingComponent from "./site-setting.gjs";
 
 export default class ThemeTranslation extends SiteSettingComponent {
-  type = "string";
   trackChanges = false;
 
   get setting() {
