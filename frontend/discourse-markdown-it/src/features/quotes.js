@@ -192,7 +192,13 @@ const rule = {
       state.push("quote_header_close", "div", -1);
     }
 
-    state.push("bbcode_open", "blockquote", 1);
+    token = state.push("bbcode_open", "blockquote", 1);
+
+    if (attrs.ai === "") {
+      token.attrs = [["data-ai-generated", "true"]];
+      token = state.push("html_inline", "", 0);
+      token.content = renderAiBadge(state.md);
+    }
   },
 
   after(state) {

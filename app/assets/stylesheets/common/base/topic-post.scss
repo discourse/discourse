@@ -793,7 +793,8 @@ blockquote {
   }
 }
 
-blockquote > .ai-badge {
+blockquote > .ai-badge,
+blockquote > .post__contents-cooked-quote > .ai-badge {
   float: inline-end;
   margin-inline-start: 0.75em;
 }
