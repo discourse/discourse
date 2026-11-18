@@ -138,7 +138,7 @@ These things are part of the normal operation of Discourse, and are not vulnerab
 
 - Discourse version information and source code for core, themes and plugins are expected to be publicly available.
 
-- Counts, totals, IDs, slugs, and timestamps of restricted content may be visible. Access control applies to the content itself.
+- Counts, totals, IDs, and timestamps of restricted content may be visible. Access control applies to the content itself.
 
 ### Network and code execution
 
