@@ -422,6 +422,17 @@ RSpec.describe Draft do
       expect(Draft.discarded.where(user: user)).to exist
     end
 
+    it "saves a draft whose sequence is ahead of the draft sequence" do
+      # left behind by user merges that didn't reconcile sequences
+      DraftSequence.next!(user, key)
+      Draft.create!(user: user, draft_key: key, data: content, sequence: 3)
+
+      sequence = Draft.set(user, key, 1, { reply: "edited" }.to_json)
+
+      expect(sequence).to eq(2)
+      expect(Draft.get(user, key, 2)).to eq({ reply: "edited" }.to_json)
+    end
+
     it "keeps a draft restorable when a permanent clear loaded it before a discard" do
       Draft.set(user, key, 0, content)
       sequence = DraftSequence.current(user, key)

@@ -37,9 +37,10 @@ class Draft < ActiveRecord::Base
     end
 
     # this is called a lot so we should micro optimize here
-    draft_id, current_owner, current_sequence = DB.query_single(<<~SQL, user_id: user.id, key: key)
+    draft_id, current_owner, draft_row_sequence, current_sequence =
+      DB.query_single(<<~SQL, user_id: user.id, key: key)
       WITH draft AS (
-        SELECT id, owner FROM drafts
+        SELECT id, owner, sequence FROM drafts
         WHERE
           user_id = :user_id AND
           draft_key = :key AND
@@ -56,6 +57,7 @@ class Draft < ActiveRecord::Base
       SELECT
         (SELECT id FROM draft),
         (SELECT owner FROM draft),
+        (SELECT sequence FROM draft),
         (SELECT sequence FROM draft_sequence)
     SQL
 
@@ -64,7 +66,6 @@ class Draft < ActiveRecord::Base
     if draft_id
       raise Draft::OutOfSequence if !force_save && (current_sequence != sequence)
 
-      read_sequence = current_sequence
       sequence = current_sequence if force_save
       sequence += 1
 
@@ -73,7 +74,7 @@ class Draft < ActiveRecord::Base
         sequence: sequence,
         data: data,
         owner: owner || current_owner,
-        read_sequence: read_sequence,
+        draft_row_sequence: draft_row_sequence,
         force_save: force_save,
       }
 
@@ -94,10 +95,11 @@ class Draft < ActiveRecord::Base
                , updated_at = CURRENT_TIMESTAMP
            WHERE id = :id
              AND deleted_at IS NULL
-             AND (:force_save OR sequence <= :read_sequence)
+             AND (:force_save OR sequence = :draft_row_sequence)
         SQL
 
-        # another save, a discard or a restore moved the draft past the sequence this save read
+        # Another save, a discard or a restore changed the draft since this save read it. The
+        # row's own sequence is the token because it can be ahead of `draft_sequences`.
         raise Draft::OutOfSequence if updated == 0
       end
     elsif sequence != current_sequence
