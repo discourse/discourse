@@ -6,9 +6,28 @@ import { escapeExpression } from "discourse/lib/utilities";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-export default class DAvatarFlair extends Component {
+interface DAvatarFlairSignature {
+  Args: {
+    /** The name of the flair, used in its class and as its title. */
+    flairName?: string;
+
+    /** The ID of an icon, or the URL of an image when it contains a slash. */
+    flairUrl?: string;
+
+    /** The background color, as hex digits without the `#`. */
+    flairBgColor?: string;
+
+    /** The icon color, as hex digits without the `#`. */
+    flairColor?: string;
+  };
+
+  Element: HTMLDivElement;
+}
+
+export default class DAvatarFlair extends Component<DAvatarFlairSignature> {
   get icon() {
-    return convertIconClass(this.args.flairUrl);
+    // The template reads this only when `isIcon`, so the URL is set.
+    return convertIconClass(this.args.flairUrl ?? "");
   }
 
   get isIcon() {

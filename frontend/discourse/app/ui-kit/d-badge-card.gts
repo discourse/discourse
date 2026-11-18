@@ -4,13 +4,51 @@ import { isEmpty } from "@ember/utils";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
+import type Badge from "discourse/models/badge";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
-export default class DBadgeCard extends Component {
+interface DBadgeCardSignature {
+  Args: {
+    /** The badge to show. */
+    badge: Badge;
+
+    /** The size of the card. A large card shows the long description. Defaults to `medium`. */
+    size?: "medium" | "large";
+
+    /** Whether to link to the badge page filtered to `@username`. */
+    filterUser?: boolean;
+
+    /** The username to filter the badge page by. */
+    username?: string;
+
+    /**
+     * How many times the user was granted the badge. Without it, the card shows how
+     * many times the badge was granted across the site.
+     */
+    count?: number | null;
+
+    /** Whether the user holds the badge. */
+    granted?: boolean;
+
+    /** Whether to offer a button to favorite the badge. */
+    canFavorite?: boolean;
+
+    /** Whether the badge is a favorite. */
+    isFavorite?: boolean;
+
+    /** Whether the user can favorite more badges. */
+    canFavoriteMoreBadges?: boolean;
+
+    /** Called when the favorite button is pressed. */
+    onFavoriteClick?: () => void;
+  };
+}
+
+export default class DBadgeCard extends Component<DBadgeCardSignature> {
   get size() {
     return this.args.size || "medium";
   }
@@ -37,7 +75,7 @@ export default class DBadgeCard extends Component {
     const { badge } = this.args;
 
     if (this.size === "large" && !isEmpty(badge.long_description)) {
-      return emojiUnescape(sanitize(badge.long_description));
+      return emojiUnescape(sanitize(badge.long_description)) ?? "";
     }
     return sanitize(badge.description);
   }

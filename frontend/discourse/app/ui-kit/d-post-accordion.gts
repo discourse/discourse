@@ -1,15 +1,47 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { trackedSet } from "@ember/reactive/collections";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import DPostAccordionItem from "./d-post-accordion-item.gjs";
+import DPostAccordionItem, {
+  type DPostAccordionPost,
+} from "./d-post-accordion-item.gts";
 
-export default class DPostAccordion extends Component {
-  expandedIds = trackedSet();
+interface DPostAccordionSignature {
+  Args: {
+    /** The posts to show. Without any, nothing is rendered. */
+    posts?: DPostAccordionPost[] | null;
 
-  constructor() {
-    super(...arguments);
+    /** Which posts start expanded. Defaults to the first one. */
+    defaultExpanded?: "all" | "none" | "first" | "";
+
+    /** How many lines of a collapsed post to show. */
+    linesDisplayed?: number | string;
+
+    /** State passed to the post decorators. */
+    decoratorState?: unknown;
+  };
+
+  Element: HTMLElement;
+
+  Blocks: {
+    /** A header above the posts. */
+    header: [posts: DPostAccordionPost[]];
+
+    /** The metadata of a post, in place of its author and date. */
+    itemMetadata: [post: DPostAccordionPost];
+
+    /** Content shown before a post's content. */
+    beforeItemContent: [post: DPostAccordionPost];
+  };
+}
+
+export default class DPostAccordion extends Component<DPostAccordionSignature> {
+  expandedIds = trackedSet<number>();
+
+  constructor(owner: Owner, args: DPostAccordionSignature["Args"]) {
+    super(owner, args);
 
     this.resetExpandedIds();
   }
@@ -54,14 +86,14 @@ export default class DPostAccordion extends Component {
   }
 
   @action
-  toggleItemExpanded(postId) {
+  toggleItemExpanded(postId: number) {
     this.expandedIds.has(postId)
       ? this.expandedIds.delete(postId)
       : this.expandedIds.add(postId);
   }
 
   @action
-  itemIsExpanded(postId) {
+  itemIsExpanded(postId: number) {
     return this.expandedIds.has(postId);
   }
 

@@ -4,10 +4,66 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
+import type User from "discourse/models/user";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
 
-export function smallUserAttrs(user) {
+/** A user as the list shows them. */
+export interface SmallUserAttrs {
+  /** The avatar template. */
+  template?: string | null;
+
+  /** The username, shown as the avatar title and used to open the user card. */
+  username: string;
+
+  /** A post to link the description to. */
+  post_url?: string | null;
+
+  /** The path of the user's profile. */
+  url?: string;
+
+  /** Whether the user is unknown, which shows a placeholder instead of an avatar. */
+  unknown?: boolean;
+}
+
+/** The user fields that `smallUserAttrs` reads. */
+interface SmallUserSource {
+  avatar_template?: string | null;
+  username: string;
+  username_lower?: string;
+  post_url?: string | null;
+  unknown?: boolean;
+}
+
+interface DSmallUserListSignature {
+  Args: {
+    /** The users to show. */
+    users: SmallUserAttrs[];
+
+    /** Whether to add the current user when the list doesn't include them. */
+    addSelf?: boolean;
+
+    /** The translation key of a description shown after the avatars. */
+    description?: string;
+
+    /** The count passed to the description translation. */
+    count?: number;
+
+    /** Whether the list is shown. Defaults to `true`. */
+    isVisible?: boolean;
+  };
+
+  Element: HTMLDivElement;
+}
+
+/**
+ * Builds the attributes the list shows for a user. The `small-user-attrs` value
+ * transformer can change them.
+ *
+ * @param user - The user to show.
+ * @returns The attributes of the user.
+ */
+export function smallUserAttrs(user: SmallUserSource): SmallUserAttrs {
   const defaultAttrs = {
     template: user.avatar_template,
     username: user.username,
@@ -21,24 +77,26 @@ export function smallUserAttrs(user) {
   });
 }
 
-export default class DSmallUserList extends Component {
-  @service currentUser;
+export default class DSmallUserList extends Component<DSmallUserListSignature> {
+  @service declare currentUser: User | null;
 
   get users() {
     let users = this.args.users;
+    const { currentUser } = this;
     if (
       this.args.addSelf &&
-      !users.some((u) => u.username === this.currentUser.username)
+      currentUser &&
+      !users.some((u) => u.username === currentUser.username)
     ) {
-      users = users.concat(smallUserAttrs(this.currentUser));
+      users = users.concat(smallUserAttrs(currentUser));
     }
     return users;
   }
 
   get postUrl() {
-    const url = this.users.find((user) => user.post_url);
-    if (url) {
-      return getURL(url);
+    const user = this.users.find((u) => u.post_url);
+    if (user) {
+      return getURL(user.post_url);
     }
   }
 
