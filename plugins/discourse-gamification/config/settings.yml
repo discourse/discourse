@@ -21,6 +21,9 @@ discourse_gamification:
     default: 5
   post_created_score_value:
     default: 2
+  gamification_post_created_daily_cap:
+    default: 0
+    min: 0
   flag_created_score_value:
     default: 10
   day_visited_score_value:
