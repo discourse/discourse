@@ -25,6 +25,7 @@ register_asset "stylesheets/common/ai-decoded-transcript.scss"
 
 register_asset "stylesheets/admin/ai-features-editor.scss", :admin
 register_asset "stylesheets/admin/ai-logs.scss", :admin
+register_asset "stylesheets/admin/ai-tool-arguments.scss", :admin
 
 register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 
@@ -159,6 +160,8 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiTool::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::McpTool::V1 }
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::Classify::V1 }
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::PostLocaleDetected::V1 }
   end

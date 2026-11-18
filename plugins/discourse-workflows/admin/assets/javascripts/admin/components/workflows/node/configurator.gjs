@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { cancel, later } from "@ember/runloop";
+import { cancel, later, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import Form from "discourse/components/form";
@@ -106,7 +106,6 @@ export default class NodeConfigurator extends Component {
 
   parametersApi = null;
   settingsApi = null;
-
   focusNameInput = modifier((element) => {
     syncNameInputWidth(element);
     element.focus();
@@ -116,11 +115,18 @@ export default class NodeConfigurator extends Component {
     return () => element.removeEventListener("input", handler);
   });
 
+  captureParametersForm = modifier((element) => {
+    this.#parametersForm = element;
+    return () => (this.#parametersForm = null);
+  });
+
   focusModal = modifier((element) => {
     requestAnimationFrame(() => {
       element.closest(".d-modal")?.querySelector(".btn")?.focus();
     });
   });
+
+  #parametersForm;
 
   constructor() {
     super(...arguments);
@@ -427,6 +433,12 @@ export default class NodeConfigurator extends Component {
 
   @action
   async executeStep() {
+    if (this.#parametersForm && !this.#parametersForm.checkValidity()) {
+      this.activeTab = "parameters";
+      schedule("afterRender", () => this.#parametersForm?.reportValidity());
+      return;
+    }
+
     try {
       await this.saveCurrentConfiguration();
       await runExecuteStep({
@@ -681,6 +693,7 @@ export default class NodeConfigurator extends Component {
                   @onRegisterApi={{this.registerParametersApi}}
                   @onSet={{this.scheduleSave}}
                   @validateOn="change"
+                  {{this.captureParametersForm}}
                   as |form transientData|
                 >
                   <PropertyEngineConfigurator

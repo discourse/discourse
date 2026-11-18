@@ -111,6 +111,31 @@ RSpec.describe DiscourseAi::Agents::Tools::Mcp do
     expect(schema).not_to have_key(:$defs)
   end
 
+  it "keeps recursive schema references from expanding indefinitely in the editor signature" do
+    schema = {
+      "type" => "object",
+      "properties" => {
+        "tree" => {
+          "$ref" => "#/$defs/tree",
+        },
+      },
+      "$defs" => {
+        "tree" => {
+          "type" => "object",
+          "properties" => {
+            "child" => {
+              "$ref" => "#/$defs/tree",
+            },
+          },
+        },
+      },
+    }
+    definition = { "name" => "tree", "inputSchema" => schema }
+    tool = described_class.class_instance(ai_mcp_server.id, "tree", definition)
+
+    expect(tool.signature.dig(:json_schema, :properties, :tree, :type)).to eq("object")
+  end
+
   it "uses a short title in thinking summaries and renders the invocation parameters in details" do
     tool = tool_class.new({ query: "bug" }, bot_user: user, llm: nil)
 
