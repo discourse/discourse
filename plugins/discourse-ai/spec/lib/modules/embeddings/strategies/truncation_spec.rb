@@ -40,6 +40,24 @@ RSpec.describe DiscourseAi::Embeddings::Strategies::Truncation do
       expect(prepared_text.starts_with?(prefix)).to eq(true)
     end
 
+    it "excludes whisper and hidden posts from topic and post truncation" do
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          post_type: Post.types[:whisper],
+          raw: "secret staff whisper content",
+        )
+      hidden_post = Fabricate(:post, topic: topic, hidden: true, raw: "hidden flagged post content")
+
+      prepared_topic_text = truncation.prepare_target_text(topic, open_ai_embedding_def)
+
+      expect(prepared_topic_text).not_to include("secret staff whisper content")
+      expect(prepared_topic_text).not_to include("hidden flagged post content")
+      expect(truncation.prepare_target_text(whisper, open_ai_embedding_def)).to eq("")
+      expect(truncation.prepare_target_text(hidden_post, open_ai_embedding_def)).to eq("")
+    end
+
     context "if topic contains more tokens in cooked posts than embeddings max sequence length" do
       before { open_ai_embedding_def.update!(max_sequence_length: 100) }
 

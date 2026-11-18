@@ -82,15 +82,18 @@ module DiscourseAi
           posts_text = +""
           posts_text_size = 0
 
-          topic.posts.find_each do |post|
-            posts_text_size += tokenizer.size(post.cooked)
-            posts_text << post.cooked
-            posts_text << " "
+          topic
+            .posts
+            .where(post_type: Post.types[:regular], hidden: false)
+            .find_each do |post|
+              posts_text_size += tokenizer.size(post.cooked)
+              posts_text << post.cooked
+              posts_text << " "
 
-            # Since we will strip all HTML tags before embedding, we can fit more text
-            # than the max_length as it will shrink after Nokogiri extracts the text
-            break if posts_text_size >= max_length * TEXT_TO_HTML_TOKEN_RATIO
-          end
+              # Since we will strip all HTML tags before embedding, we can fit more text
+              # than the max_length as it will shrink after Nokogiri extracts the text
+              break if posts_text_size >= max_length * TEXT_TO_HTML_TOKEN_RATIO
+            end
 
           text << Nokogiri::HTML5.fragment(posts_text).text
 
@@ -98,6 +101,8 @@ module DiscourseAi
         end
 
         def post_truncation(post, tokenizer, max_length)
+          return "" if post.post_type != Post.types[:regular] || post.hidden?
+
           text = +topic_information(post.topic)
 
           if post.is_first_post? && post.topic&.topic_embed&.embed_content_cache.present?

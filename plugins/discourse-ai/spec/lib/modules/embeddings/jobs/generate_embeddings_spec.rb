@@ -44,6 +44,14 @@ RSpec.describe Jobs::GenerateEmbeddings do
       expect(posts_schema.find_by_embedding(expected_embedding).post_id).to eq(post.id)
     end
 
+    it "skips whisper posts" do
+      whisper = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+
+      job.execute(target_id: whisper.id, target_type: "Post")
+
+      expect(a_request(:post, vector_def.url)).not_to have_been_made
+    end
+
     it "quietly skips jobs after a terminal provider failure" do
       error =
         DiscourseAi::Inference::EmbeddingInferenceError.new(
