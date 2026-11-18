@@ -244,4 +244,37 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
 
     assert.dom(".probe").hasText("dated true false");
   });
+
+  test("has no clear button without @clearable", async function (assert) {
+    await render(
+      <template><DDateTimeInput @date={{DEFAULT_DATE_TIME}} /></template>
+    );
+
+    assert
+      .dom(".clear-date-time")
+      .doesNotExist("there is no clear button without @clearable");
+  });
+
+  test("@timeFirst shows the time before the date", async function (assert) {
+    await render(
+      <template>
+        <div class="date-first">
+          <DDateTimeInput @date={{DEFAULT_DATE_TIME}} />
+        </div>
+        <div class="time-first">
+          <DDateTimeInput @date={{DEFAULT_DATE_TIME}} @timeFirst={{true}} />
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".date-first .d-date-time-input > :first-child")
+      .hasClass("d-date-input", "the date comes first by default");
+    assert
+      .dom(".time-first .d-date-time-input > :first-child")
+      .hasClass("d-time-input", "@timeFirst moves the time first");
+    assert
+      .dom(".time-first .d-date-input")
+      .exists({ count: 1 }, "the date is still shown once");
+  });
 });

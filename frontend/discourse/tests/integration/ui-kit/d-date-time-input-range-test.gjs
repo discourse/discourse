@@ -207,4 +207,28 @@ module("Integration | ui-kit | DDateTimeInputRange", function (hooks) {
       "Tue Jan 29 2019 19:15:00 GMT+0100"
     );
   });
+
+  test("@clearable and @toTimeFirst apply to the end input", async function (assert) {
+    await render(
+      <template>
+        <DDateTimeInputRange
+          @clearable={{true}}
+          @from={{DEFAULT_DATE_TIME}}
+          @to={{DEFAULT_DATE_TIME}}
+          @toTimeFirst={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".from .clear-date-time")
+      .doesNotExist("the start cannot be cleared");
+    assert.dom(".to .clear-date-time").exists("the end can be cleared");
+    assert
+      .dom(".from > :first-child")
+      .hasClass("d-date-input", "the start shows its date first");
+    assert
+      .dom(".to > :first-child")
+      .hasClass("d-time-input", "the end shows its time first");
+  });
 });
