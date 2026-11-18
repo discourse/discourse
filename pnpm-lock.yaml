@@ -6211,9 +6211,9 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  mktemp@2.0.3:
-    resolution: {integrity: sha512-Bq72L2oi/isYSy0guN9ihNhAMQOyZEwts+Bezm/1U+wh8bQ+fVQ2ZiUoJJjceOMiiKv/BUrA0NF98jFc81CB6w==}
-    engines: {node: 20 || 22 || 24}
+  mktemp@2.0.4:
+    resolution: {integrity: sha512-SGFVW+UHYZlNGkFfMHev141IUTDh47r/t0yb1sZxrSect6+E88anirPFAiBA/aH/VSESYQ7AWpE2hzLIxf9ILA==}
+    engines: {node: 20 || 22 || 24 || 26}
 
   moment-timezone@0.6.2:
     resolution: {integrity: sha512-lDsQv8FoGdBUdf0+TjGsq2orxKuXdwFlQ6Zw6TX3xIcTwTfEpCLyKqvEauvCHJ8iu3KBV8+uPhlv70YsNGdUBQ==}
@@ -14823,7 +14823,7 @@ snapshots:
 
   mkdirp@3.0.1: {}
 
-  mktemp@2.0.3: {}
+  mktemp@2.0.4: {}
 
   moment-timezone@0.6.2:
     dependencies:
@@ -15533,7 +15533,7 @@ snapshots:
 
   quick-temp@0.1.9:
     dependencies:
-      mktemp: 2.0.3
+      mktemp: 2.0.4
       rimraf: 5.0.10
       underscore.string: 3.3.6
 
