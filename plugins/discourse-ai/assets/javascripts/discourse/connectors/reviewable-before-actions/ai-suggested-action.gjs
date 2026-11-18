@@ -19,14 +19,15 @@ export default class AiSuggestedAction extends Component {
     {{#let this.suggestedAction as |suggestion|}}
       {{#if suggestion}}
         <DButton
-          class="btn-default reviewable-action"
+          class="btn-primary ai-suggested-action"
           @action={{fn @outletArgs.performAction suggestion}}
           @disabled={{@outletArgs.disabled}}
           @icon="discourse-sparkles"
-          @translatedLabel={{i18n
+          @translatedAriaLabel={{i18n
             "discourse_ai.apply_review_suggestion"
             action=suggestion.label
           }}
+          @translatedLabel={{suggestion.label}}
         />
       {{/if}}
     {{/let}}
