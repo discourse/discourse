@@ -313,6 +313,8 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
   require_relative "jobs/regular/discourse_post_event/warm_recording_onebox"
   require_relative "jobs/regular/discourse_post_event/publish_livestream_chat_transcript"
+  require_relative "lib/discourse_events/events/calendar_invitation_content"
+  require_relative "app/jobs/regular/deliver_event_calendar_invitation"
   require_relative "lib/discourse_events/events/chat_channel_sync"
   require_relative "lib/discourse_events/events/email_renderer"
   require_relative "lib/discourse_events/events/excerpt"
@@ -641,6 +643,7 @@ after_initialize do
   require_relative "jobs/scheduled/create_holiday_events"
   require_relative "jobs/scheduled/delete_expired_event_posts"
   require_relative "jobs/scheduled/monitor_event_dates"
+  require_relative "jobs/scheduled/deliver_pending_event_calendar_invitations"
   require_relative "jobs/scheduled/update_holiday_usernames"
 
   register_post_custom_field_type(DiscourseEvents::CALENDAR_CUSTOM_FIELD, :string)
@@ -870,6 +873,7 @@ after_initialize do
   end
 
   on(:user_destroyed) do |user|
+    DiscourseEvents::Events::CalendarInvitation.where(user_id: user.id).delete_all
     DiscourseEvents::Events::Invitee.where(user_id: user.id).destroy_all
     DiscourseEvents::Events::EventHost.where(user_id: user.id).delete_all
   end

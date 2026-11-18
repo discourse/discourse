@@ -19,6 +19,7 @@ module DiscourseEvents
       model :invited_users, optional: true
 
       step :notify_invited_users
+      step :invite_to_calendar
 
       private
 
@@ -32,6 +33,10 @@ module DiscourseEvents
 
       def fetch_invited_users(params:)
         User.real.where(username: params.invites)
+      end
+
+      def invite_to_calendar(event:, invited_users:)
+        invited_users.each { |user| CalendarInvitation.invite!(event, user) }
       end
 
       def notify_invited_users(event:, invited_users:)

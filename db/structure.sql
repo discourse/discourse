@@ -5054,6 +5054,46 @@ ALTER SEQUENCE public.discourse_calendar_post_event_dates_id_seq OWNED BY public
 
 
 --
+-- Name: discourse_event_calendar_invitations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_event_calendar_invitations (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    uid character varying NOT NULL,
+    organizer character varying NOT NULL,
+    recipient character varying NOT NULL,
+    snapshot jsonb DEFAULT '{}'::jsonb NOT NULL,
+    delivered_snapshot jsonb DEFAULT '{}'::jsonb NOT NULL,
+    sequence integer DEFAULT 0 NOT NULL,
+    delivered_sequence integer DEFAULT '-1'::integer NOT NULL,
+    cancelled boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_event_calendar_invitations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_event_calendar_invitations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_event_calendar_invitations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_event_calendar_invitations_id_seq OWNED BY public.discourse_event_calendar_invitations.id;
+
+
+--
 -- Name: discourse_kanban_board_histories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15274,6 +15314,13 @@ ALTER TABLE ONLY public.discourse_calendar_post_event_dates ALTER COLUMN id SET 
 
 
 --
+-- Name: discourse_event_calendar_invitations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_event_calendar_invitations ALTER COLUMN id SET DEFAULT nextval('public.discourse_event_calendar_invitations_id_seq'::regclass);
+
+
+--
 -- Name: discourse_kanban_board_histories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18016,6 +18063,14 @@ ALTER TABLE ONLY public.discourse_calendar_disabled_holidays
 
 ALTER TABLE ONLY public.discourse_calendar_post_event_dates
     ADD CONSTRAINT discourse_calendar_post_event_dates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_event_calendar_invitations discourse_event_calendar_invitations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_event_calendar_invitations
+    ADD CONSTRAINT discourse_event_calendar_invitations_pkey PRIMARY KEY (id);
 
 
 --
@@ -20948,6 +21003,13 @@ CREATE UNIQUE INDEX idx_on_decision_model_id_usage_date_85aaac4721 ON public.dec
 
 
 --
+-- Name: idx_on_event_id_user_id_ac31a754df; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_event_id_user_id_ac31a754df ON public.discourse_event_calendar_invitations USING btree (event_id, user_id);
+
+
+--
 -- Name: idx_on_llm_model_id_feature_name_2b0b794b27; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22583,6 +22645,13 @@ CREATE INDEX index_discourse_calendar_post_event_dates_on_event_id_and_dates ON 
 --
 
 CREATE INDEX index_discourse_calendar_post_event_dates_on_finished_at ON public.discourse_calendar_post_event_dates USING btree (finished_at);
+
+
+--
+-- Name: index_discourse_event_calendar_invitations_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discourse_event_calendar_invitations_on_user_id ON public.discourse_event_calendar_invitations USING btree (user_id);
 
 
 --
@@ -26727,6 +26796,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261118184801'),
 ('20261117234001'),
 ('20261117200926'),
 ('20261113163304'),
