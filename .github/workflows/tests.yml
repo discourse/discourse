@@ -277,7 +277,7 @@ jobs:
           fi
 
       - name: Install playwright
-        if: matrix.build_type == 'system'
+        if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
         run: pnpm playwright-install
 
       - name: Precompile the JS bundles
