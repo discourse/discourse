@@ -6,6 +6,7 @@ import {
   isPushNotificationsEnabled,
   keyValueStore,
   register,
+  subscribe,
   userSubscriptionKey,
 } from "discourse/lib/push-notifications";
 import pretender, {
@@ -180,6 +181,30 @@ module("Unit | Lib | push-notifications | register", function (hooks) {
     assert.strictEqual(
       keyValueStore.getItem(userSubscriptionKey(user)),
       "false"
+    );
+  });
+
+  test("enabling push reports a subscription the server did not accept", async function (assert) {
+    pretender.post("/push_notifications/subscribe", () => response(429, {}));
+    sinon.stub(console, "error");
+    const callback = sinon.spy();
+
+    const subscribed = await subscribe(callback, "1|2|3");
+
+    assert.false(subscribed);
+    assert.true(callback.notCalled);
+  });
+
+  test("enabling push confirms once the server accepts the subscription", async function (assert) {
+    const callback = sinon.spy();
+
+    const subscribed = await subscribe(callback, "1|2|3");
+
+    assert.true(subscribed);
+    assert.true(callback.calledOnce);
+    assert.strictEqual(
+      this.subscribeRequests[0]?.subscription.endpoint,
+      "restored"
     );
   });
 

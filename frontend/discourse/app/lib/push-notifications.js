@@ -131,8 +131,8 @@ export function subscribe(callback, applicationServerKey) {
   return navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
     return serviceWorkerRegistration.pushManager
       .subscribe(pushSubscriptionOptions(applicationServerKey))
-      .then((subscription) => {
-        sendSubscriptionToServer(subscription, true);
+      .then(async (subscription) => {
+        await sendSubscriptionToServer(subscription, true);
         if (callback) {
           callback();
         }
