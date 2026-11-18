@@ -2,6 +2,15 @@ discourse_solved:
   solved_enabled:
     default: true
     client: true
+  solved_badge_2_required_solutions:
+    default: 10
+    min: 1
+  solved_badge_3_required_solutions:
+    default: 50
+    min: 1
+  solved_badge_4_required_solutions:
+    default: 150
+    min: 1
   solved_allow_multiple_solutions:
     default: false
     client: true
