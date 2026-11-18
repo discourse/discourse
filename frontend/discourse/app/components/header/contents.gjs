@@ -5,6 +5,7 @@ import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "../plugin-outlet.gjs";
 import HeaderSearch from "./header-search.gjs";
@@ -108,6 +109,33 @@ export default class Contents extends Component {
         </div>
 
       </PageShellRegion>
+
+      {{#if
+        (and
+          this.pageShell.enabled
+          this.pageShell.hasContextPanel
+          (or
+            (eq this.pageShell.context "open")
+            this.pageShell.closingPanels.context
+          )
+        )
+      }}
+        <div
+          class="page-shell__header-context"
+          inert={{if this.pageShell.closingPanels.context true}}
+        >
+          <DNativeSelect
+            aria-label={{i18n "page_shell.context_view"}}
+            @includeNone={{false}}
+            @value="overview"
+            as |select|
+          >
+            <select.Option @value="overview">
+              {{i18n "page_shell.context_overview"}}
+            </select.Option>
+          </DNativeSelect>
+        </div>
+      {{/if}}
 
       <PageShellRegion
         class="page-shell__header-main"

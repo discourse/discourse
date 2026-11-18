@@ -67,7 +67,7 @@ export default class MeasurePageShell extends Modifier {
           styles.getPropertyValue("--_page-shell-content-min-width")
         );
         const availableWidth =
-          element.clientWidth - (tracks[1] || 0) - (tracks[3] || 0);
+          element.clientWidth - (tracks[1] || 0) - (tracks[4] || 0);
         const contextMaxWidth = Math.max(
           200,
           Math.min(1000, Math.floor(availableWidth - minimumMainWidth))
@@ -80,28 +80,20 @@ export default class MeasurePageShell extends Modifier {
           Math.min(
             PANEL_LIMITS.navigation.maxWidth,
             Math.floor(
-              element.clientWidth - (tracks[3] || 0) - minimumMainWidth
+              element.clientWidth - (tracks[4] || 0) - minimumMainWidth
             )
           )
         );
         if (this.pageShell.navigationMaxWidth !== navigationMaxWidth) {
           this.pageShell.navigationMaxWidth = navigationMaxWidth;
         }
-        const minimumContextWidth =
-          element.dataset.context === "open"
-            ? 200
-            : element.dataset.context === "rail"
-              ? 56
-              : 0;
-        // Hiding Context must not change the available-width decision next frame.
+        const cannotOpenContext =
+          availableWidth - PANEL_LIMITS.context.minWidth < minimumMainWidth;
         element.toggleAttribute(
           "data-constrained-context",
-          availableWidth - minimumContextWidth < minimumMainWidth
+          element.dataset.context === "open" && cannotOpenContext
         );
-        element.toggleAttribute(
-          "data-cannot-open-context",
-          availableWidth - PANEL_LIMITS.context.minWidth < minimumMainWidth
-        );
+        element.toggleAttribute("data-cannot-open-context", cannotOpenContext);
         const { left, right, width } = content.getBoundingClientRect();
         const inlineStart =
           styles.direction === "rtl"
@@ -129,11 +121,13 @@ export default class MeasurePageShell extends Modifier {
             fullHeaderStartWidth = headerStart.offsetWidth;
           }
           const compactLogo =
-            2 * Math.max(fullHeaderStartWidth, headerEnd?.offsetWidth ?? 0) +
+            !tracks[1] &&
+            fullHeaderStartWidth +
+              (headerEnd?.offsetWidth ?? 0) +
               parseFloat(
                 styles.getPropertyValue("--_page-shell-header-main-min-width")
               ) >
-            headerWrap.clientWidth;
+              (tracks[3] || 0) + (tracks[4] || 0);
           if (this.pageShell.compactLogo !== compactLogo) {
             this.pageShell.compactLogo = compactLogo;
           }

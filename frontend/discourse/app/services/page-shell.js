@@ -30,7 +30,11 @@ export const PANEL_LIMITS = {
  */
 function parsePanelPreference(name, stored, fallbackMode = "open") {
   const { defaultWidth, minWidth, maxWidth } = PANEL_LIMITS[name];
-  const mode = PANEL_MODES.includes(stored?.mode) ? stored.mode : fallbackMode;
+  const mode =
+    PANEL_MODES.includes(stored?.mode) &&
+    (name === "navigation" || stored.mode !== "rail")
+      ? stored.mode
+      : fallbackMode;
   const width =
     typeof stored?.width === "number" && Number.isFinite(stored.width)
       ? Math.round(Math.max(minWidth, Math.min(stored.width, maxWidth)))
@@ -105,7 +109,10 @@ export default class PageShell extends Service {
     };
 
     if (name === "navigation" || name === "context") {
-      if (!PANEL_MODES.includes(value)) {
+      if (
+        !PANEL_MODES.includes(value) ||
+        (name === "context" && value === "rail")
+      ) {
         return;
       }
       this.#setPanelMode(name, value);
@@ -164,12 +171,6 @@ export default class PageShell extends Service {
   @action
   openNavigation() {
     this.#setPanelMode("navigation", "open");
-    this.#save();
-  }
-
-  @action
-  openContext() {
-    this.#setPanelMode("context", "open");
     this.#save();
   }
 
