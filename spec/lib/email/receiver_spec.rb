@@ -472,6 +472,24 @@ RSpec.describe Email::Receiver do
       expect(post.raw.length).to be <= SiteSetting.max_post_length
     end
 
+    context "when a recipient address ends with a group address" do
+      subject(:invited_addresses) do
+        Email::Receiver.new(email_with_recipient).process!
+        Topic.last.allowed_users.joins(:user_emails).pluck(:"user_emails.email")
+      end
+
+      let(:recipient_address) { "xteam@bar.com" }
+      let(:email_with_recipient) do
+        email(:cc).sub("To: someone@else.com", "To: someone@else.com, #{recipient_address}")
+      end
+
+      before { configure_reply_by_email }
+
+      it "invites the recipient" do
+        expect(invited_addresses).to include(recipient_address)
+      end
+    end
+
     context "with reply_by_email configured" do
       before { configure_reply_by_email }
 
@@ -751,6 +769,22 @@ RSpec.describe Email::Receiver do
     end
 
     context "when a group forwards an email to its inbox" do
+      subject(:author_email) do
+        Email::Receiver.new(forwarded_email).process!
+        Topic.last.first_post.user.email
+      end
+
+      let(:forwarded_email) do
+        email(:forwarded_by_group_to_inbox).sub(
+          "From: Discourse Team <team@somesmtpaddress.com>",
+          "From: #{outer_from}",
+        )
+      end
+      let(:outer_from) { "Discourse Team <#{group_address}>" }
+      let(:group_address) { "team@somesmtpaddress.com" }
+      let(:stranger_address) { "stranger@evil.example" }
+      let(:embedded_sender_address) { "fred@bedrock.com" }
+
       before do
         group.update!(
           email_username: "team@somesmtpaddress.com",
@@ -840,6 +874,117 @@ RSpec.describe Email::Receiver do
             forwarded_small_post = topic.ordered_posts.last
             expect(forwarded_small_post.action_code).to eq("forwarded")
             expect(forwarded_small_post.user).to eq(staged_team_user)
+          end
+        end
+      end
+
+      context "when the outer sender has the group address in its display name" do
+        let(:outer_from) { %("#{group_address}" <#{stranger_address}>) }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(stranger_address)
+        end
+      end
+
+      context "when the outer sender has the group address in a comment" do
+        let(:outer_from) { "#{stranger_address} (#{group_address})" }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(stranger_address)
+        end
+      end
+
+      context "when the group address follows the outer sender in the From header" do
+        let(:outer_from) { "#{stranger_address}, #{group_address}" }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(stranger_address)
+        end
+      end
+
+      context "when the group address precedes another sender in the From header" do
+        let(:outer_from) { "#{group_address}, #{stranger_address}" }
+
+        it "attributes the topic to the group address" do
+          expect(author_email).to eq(group_address)
+        end
+      end
+
+      context "when the outer sender has the group address in a mailto link" do
+        let(:outer_from) { "#{stranger_address} <mailto:#{group_address}>" }
+
+        it "attributes the topic to the group address" do
+          expect(author_email).to eq(group_address)
+        end
+      end
+
+      context "when the domain of the outer sender starts with the group address" do
+        let(:outer_from) { "#{group_address}.evil.example" }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(outer_from)
+        end
+      end
+
+      context "when the address of the outer sender ends with the group address" do
+        let(:outer_from) { "x#{group_address}" }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(outer_from)
+        end
+      end
+
+      context "when the outer sender is the group address in a different case" do
+        let(:outer_from) { "Discourse Team <Team@SomeSmtpAddress.COM>" }
+
+        it "attributes the topic to the embedded sender" do
+          expect(author_email).to eq(embedded_sender_address)
+        end
+      end
+
+      context "when the outer sender matches only the email_username of the group" do
+        before { group.update!(incoming_email: "support+team@bar.com") }
+
+        it "attributes the topic to the embedded sender" do
+          expect(author_email).to eq(embedded_sender_address)
+        end
+      end
+
+      context "when the outer sender matches only an incoming email of the group" do
+        before { group.update!(email_username: "other@somesmtpaddress.com") }
+
+        it "attributes the topic to the embedded sender" do
+          expect(author_email).to eq(embedded_sender_address)
+        end
+      end
+
+      context "when the destination is a category that rejects strangers" do
+        subject(:process_email) { Email::Receiver.new(forwarded_email).process! }
+
+        fab!(:category) do
+          Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: false)
+        end
+        fab!(:trusted_embedded_sender) do
+          Fabricate(:user, email: "fred@bedrock.com", trust_level: 2)
+        end
+
+        let(:forwarded_email) do
+          super().sub("To: support+team@bar.com", "To: #{category.email_in}")
+        end
+
+        context "when a stranger has the group address in its display name" do
+          let(:outer_from) { %("#{group_address}" <#{stranger_address}>) }
+
+          it "rejects the email" do
+            expect { process_email }.to raise_error(Email::Receiver::StrangersNotAllowedError)
+          end
+        end
+
+        context "when the outer sender is the group address" do
+          it "creates a topic by the embedded sender" do
+            expect { process_email }.to change {
+              category.topics.where(user: trusted_embedded_sender).count
+            }.by(1)
           end
         end
       end
