@@ -158,6 +158,49 @@ module(
       );
     });
 
+    test("keeps the indentation of the first line of block math", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      const markdown = "$$\n  \\begin{x}\n  a\n  \\end{x}\n$$";
+      await testMarkdown(assert, markdown, () => {}, markdown);
+    });
+
+    test("pastes the source of block math rendered by KaTeX", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      const [editorClass] = await setupRichEditor(assert, "");
+      editorClass.view.pasteHTML(
+        `<div class="math math-container block-math katex-math" data-math-original="E=mc^2"><span class="katex"><span class="katex-mathml"><math><semantics><mi>E</mi><annotation encoding="application/x-tex">E=mc^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true">E=mc2</span></span></div>`
+      );
+      await settled();
+
+      assert.strictEqual(editorClass.value.trim(), "$$\nE=mc^2\n$$");
+    });
+
+    test("pastes the source of inline math rendered by KaTeX", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      const [editorClass] = await setupRichEditor(assert, "");
+      editorClass.view.pasteHTML(
+        `<p>x <span class="math math-container inline-math katex-math" data-math-original="E=mc^2"><span class="katex"><span class="katex-html" aria-hidden="true">E=mc2</span></span></span> y</p>`
+      );
+      await settled();
+
+      assert.strictEqual(editorClass.value.trim(), "x $E=mc^2$ y");
+    });
+
+    test("pastes math rendered by MathJax without its rendered output", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      const [editorClass] = await setupRichEditor(assert, "");
+      editorClass.view.pasteHTML(
+        `<div class="math" hidden>E=mc^2</div><div class="math-container block-math mathjax-math"><mjx-container>E=mc2</mjx-container></div><p>x <span class="math" hidden>a</span><span class="math-container inline-math mathjax-math"><mjx-container>a</mjx-container></span> y</p>`
+      );
+      await settled();
+
+      assert.strictEqual(editorClass.value.trim(), "$$\nE=mc^2\n$$\n\nx $a$ y");
+    });
+
     test("preserves multi-line block math nested in a list", async function (assert) {
       this.siteSettings.discourse_math_enabled = true;
 

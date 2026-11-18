@@ -6,6 +6,7 @@ import MathEditModal from "discourse/plugins/discourse-math/discourse/components
 import MathBlockPreview from "../discourse/components/math-block-preview.gjs";
 import {
   buildDiscourseMathOptions,
+  mathSource,
   renderMathInElement,
 } from "./math-renderer.js";
 
@@ -179,10 +180,12 @@ const extension = {
         mathType: { default: "tex" },
       },
       parseDOM: [
+        // MathJax renders next to the source it hides, so only the source is kept
+        { tag: "span.mathjax-math", ignore: true, priority: 60 },
         {
           tag: "span.math",
           getAttrs: (dom) => ({
-            text: dom.textContent.trim(),
+            text: mathSource(dom).trim(),
             mathType: "tex",
           }),
         },
@@ -208,13 +211,14 @@ const extension = {
       isolating: true,
       createGapCursor: true,
       parseDOM: [
+        { tag: "div.mathjax-math", ignore: true, priority: 60 },
         {
           tag: "div.math",
           // cooked source is plain text the parser would otherwise collapse
           getContent: (dom, schema) =>
             schema.nodes.math_block.create(
               null,
-              previewSourceNode(schema, dom.textContent, LANGUAGE)
+              previewSourceNode(schema, mathSource(dom), LANGUAGE)
             ).content,
         },
       ],
@@ -230,13 +234,14 @@ const extension = {
       }),
     },
     math_block: (state, token) => {
-      const content = token.content.trim();
+      // unlike cooked HTML, the indentation of the first line is source
+      const source = token.content.trim()
+        ? token.content.replace(/^\s*\n|\s+$/g, "")
+        : "";
 
       state.openNode(state.schema.nodes.math_block);
       state.openNode(state.schema.nodes.preview_source, { params: LANGUAGE });
-      if (content) {
-        state.addText(content);
-      }
+      state.addText(source);
       state.closeNode();
       state.closeNode();
 
