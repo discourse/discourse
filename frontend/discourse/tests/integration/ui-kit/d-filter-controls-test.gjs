@@ -1190,6 +1190,13 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       assert.strictEqual(router.currentURL, "/admin/example?category=feature");
 
       run(() => {
+        category.value = "all";
+        category.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      clock.tick(20);
+      assert.strictEqual(router.currentURL, "/admin/example");
+
+      run(() => {
         input.value = "first";
         input.dispatchEvent(new Event("input", { bubbles: true }));
       });
