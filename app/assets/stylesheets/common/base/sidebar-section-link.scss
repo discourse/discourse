@@ -47,7 +47,8 @@
     gap: var(--d-sidebar-section-link-prefix-margin-right);
 
     &:focus-visible {
-      @include sidebar-section-link-highlight;
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
     }
 
     // touch browsers leave :hover stuck on the link a scroll started on
