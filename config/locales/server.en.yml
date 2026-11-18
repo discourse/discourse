@@ -4815,6 +4815,23 @@ en:
         As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    moderator_silence:
+      date_with_timezone: "%{date} (UTC%{offset})"
+      title: "Moderator silence"
+      subject_template: "Your account has been silenced"
+      timed: "This is an automated message from %{site_name} to let you know that a moderator silenced your account until %{silenced_till}."
+      indefinite: "This is an automated message from %{site_name} to let you know that a moderator silenced your account indefinitely."
+      text_body_template: |
+        Hello,
+
+        %{decision}
+
+        **Reason:** %{reason}
+
+        You can still read discussions, but you can’t participate in them while your account is silenced.
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
+
     silenced_by_staff:
       title: "Silenced by Staff"
       preview: "Account temporarily placed on hold."
@@ -5258,33 +5275,6 @@ en:
         Hello,
 
         This is an automated message from %{site_name} to let you know that your account has been suspended.
-
-        Reason - %{reason}
-
-        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
-
-    account_silenced:
-      date_with_timezone: "%{date} (UTC%{offset})"
-      title: "Account Silenced"
-      subject_template: "[%{email_prefix}] Your account has been silenced"
-      subject_template_improved: "Your account has been silenced"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to let you know that your account has been silenced until %{silenced_till}.
-
-        Reason - %{reason}
-
-        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
-
-    account_silenced_forever:
-      title: "Account Silenced"
-      subject_template: "[%{email_prefix}] Your account has been silenced"
-      subject_template_improved: "Your account has been silenced"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to let you know that your account has been silenced.
 
         Reason - %{reason}
 
