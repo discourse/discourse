@@ -3,29 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-
-function loadingHint(label) {
-  return <template>
-    <span class="dsa-loading-hint">{{dIcon "spinner"}} {{label}}</span>
-  </template>;
-}
-
-function outcomeHint(outcome) {
-  return <template>
-    {{#if outcome.errorLabel}}{{dIcon "triangle-exclamation"}}
-      {{outcome.errorLabel}}{{else}}{{dIcon "discourse-sparkles"}}
-      {{outcome.label}}{{/if}}
-  </template>;
-}
 
 const Help = <template>
   <DTooltip
@@ -97,14 +83,10 @@ const Body = <template>
     {{#if @flow.hasActionDetails}}
       <div hidden={{not @flow.showContinue}}>{{yield}}</div>
     {{/if}}
-    <div
-      hidden={{@flow.showContinue}}
-      {{didInsert @flow.suggestClassification}}
-    >
-      <span class="sr-only" role="status">{{@flow.statusMessage}}</span>
+    <div hidden={{@flow.showContinue}}>
       <DsaModerationDetails
         @disabled={{@flow.isUpdatingClassification}}
-        @fieldHints={{or @flow.pendingFieldHints @flow.fieldHints}}
+        @fieldHints={{@flow.fieldHints}}
         @formId={{@flow.formId}}
         @onFieldSet={{@flow.editField}}
         @onRegisterApi={{@flow.registerFormApi}}
@@ -138,6 +120,18 @@ const Footer = <template>
       @translatedLabel={{@submitLabel}}
     />
   {{/if}}
+  {{#if (and @flow.enabled @flow.reviewableId)}}
+    <div class="dsa-classification-footer" hidden={{@flow.showContinue}}>
+      <PluginOutlet
+        @name="dsa-classification-footer"
+        @outletArgs={{lazyHash
+          disabled=(or @disabled @flow.isUpdatingClassification)
+          reviewableId=@flow.reviewableId
+          updateClassification=@flow.updateClassification
+        }}
+      />
+    </div>
+  {{/if}}
   {{#if @flow.showBack}}
     <DButton
       class="btn-flat"
@@ -156,12 +150,9 @@ const Footer = <template>
 </template>;
 
 export default class DsaModeration extends Component {
-  @service reviewableDsaSuggestions;
-
-  @tracked fieldHints = {};
-  @tracked statusMessage;
   @tracked classificationStep = false;
-  @tracked pendingFieldHints = null;
+  @tracked fieldHints = {};
+  @tracked isUpdatingClassification = false;
 
   formId = `dsa-moderation-${guidFor(this)}`;
   #setClassification;
@@ -180,10 +171,6 @@ export default class DsaModeration extends Component {
 
   get nextStepLabel() {
     return this.args.nextStepLabel;
-  }
-
-  get isUpdatingClassification() {
-    return this.pendingFieldHints !== null;
   }
 
   get options() {
@@ -258,50 +245,32 @@ export default class DsaModeration extends Component {
   }
 
   @action
-  async suggestClassification() {
-    const provider = this.reviewableDsaSuggestions.provider;
-    if (!this.reviewableId || !provider) {
+  async updateClassification(load, hint) {
+    if (this.isUpdatingClassification) {
       return;
     }
 
-    const suggestRule = this.options.community_rules.length > 1;
-    const pending = loadingHint(provider.loadingLabel);
-    this.pendingFieldHints = {
-      community_rule: suggestRule && pending,
-      category: pending,
-    };
-    this.statusMessage = provider.loadingLabel;
+    this.isUpdatingClassification = true;
     try {
-      const { communityRule, category } = await provider.suggest(
-        this.reviewableId
-      );
-      if (!this.isDestroying) {
-        const rule = suggestRule && communityRule;
-        await this.#setClassification({
-          ...(rule?.value && { community_rule: rule.value }),
-          ...(category?.value && { category: category.value }),
-        });
-        this.fieldHints = {
-          community_rule: rule && outcomeHint(rule),
-          category: category && outcomeHint(category),
-        };
-        this.statusMessage = [rule?.errorLabel, category?.errorLabel]
-          .filter(Boolean)
-          .join(" ");
+      const { community_rule, category } = await load();
+      if (this.isDestroying) {
+        return;
       }
-    } catch {
-      if (!this.isDestroying) {
-        const errorLabel = i18n("generic_error");
-        const hint = outcomeHint({ errorLabel });
-        this.fieldHints = {
-          community_rule: suggestRule && hint,
-          category: hint,
-        };
-        this.statusMessage = errorLabel;
-      }
+      const values = {
+        ...(this.options.community_rules.length > 1 &&
+          community_rule && { community_rule }),
+        ...(category && { category }),
+      };
+      await this.#setClassification(values);
+      const fields = Object.keys(values);
+      this.fieldHints = {
+        ...this.fieldHints,
+        ...Object.fromEntries(fields.map((field) => [field, hint])),
+      };
+      return fields.length > 0;
     } finally {
       if (!this.isDestroying) {
-        this.pendingFieldHints = null;
+        this.isUpdatingClassification = false;
       }
     }
   }

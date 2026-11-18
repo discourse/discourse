@@ -311,12 +311,10 @@ en:
     discourse_ai:
       title: "AI"
       dsa_classification:
+        suggest: "Suggest with AI"
         suggested_by_ai: "Suggested by AI"
-        no_category: "The AI could not suggest a category."
-        no_suggestion: "The AI could not suggest a classification."
-        rate_limit: "AI request limit reached."
-        rule_error: "%{reason} Choose a rule manually."
-        category_error: "%{reason} Review the selected category."
+        updated: "Classification updated"
+        no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
       view_raw: "View raw"
       view_decoded: "View decoded"

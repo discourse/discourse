@@ -114,11 +114,6 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
   }
 }
 
-.dsa-loading-hint {
-  font-style: italic;
-
-  .d-icon-spinner {
-    color: var(--tertiary);
-    animation: spin 1s linear infinite;
-  }
+.dsa-classification-footer:not([hidden]) {
+  display: contents;
 }
