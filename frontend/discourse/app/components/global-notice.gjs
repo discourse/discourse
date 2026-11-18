@@ -270,17 +270,23 @@ export default class GlobalNotice extends Component {
             <div
               class="alert alert-{{notice.options.level}} {{notice.id}}"
               id="global-notice-{{notice.id}}"
+              role={{if (eq notice.options.level "error") "alert" "status"}}
             >
               {{#if notice.options.html}}
                 {{trustHTML notice.options.html}}
               {{/if}}
 
-              <span class="text">{{trustHTML notice.text}}</span>
+              <span
+                class="text"
+                id="global-notice-text-{{notice.id}}"
+              >{{trustHTML notice.text}}</span>
 
               {{#if notice.options.dismissable}}
                 <DButton
+                  aria-describedby="global-notice-text-{{notice.id}}"
                   class="btn-transparent close"
                   @action={{fn this.dismissNotice notice}}
+                  @ariaLabel="close"
                   @icon="xmark"
                 />
               {{/if}}

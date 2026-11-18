@@ -1,5 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { addGlobalNotice } from "discourse/components/global-notice";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -27,5 +28,29 @@ acceptance("Global notice - logs notice", function (needs) {
     await click(".alert-logs-notice .close");
 
     assert.dom(".alert-logs-notice").doesNotExist("hides the dismissed notice");
+  });
+
+  test("announces a notice as a status, and its close button has a name", async function (assert) {
+    await visit("/");
+
+    assert.dom(".alert-logs-notice").hasAttribute("role", "status");
+    assert.dom(".alert-logs-notice .close").hasAria("label", "Close");
+    assert
+      .dom(".alert-logs-notice .close")
+      .hasAttribute(
+        "aria-describedby",
+        "global-notice-text-alert-logs-notice",
+        "the close button points at the message it closes"
+      );
+  });
+
+  test("announces an error notice as an alert", async function (assert) {
+    addGlobalNotice("Something failed", "test-error-notice", {
+      level: "error",
+    });
+
+    await visit("/");
+
+    assert.dom(".alert.test-error-notice").hasAttribute("role", "alert");
   });
 });
