@@ -50,6 +50,8 @@ sv:
         edit: Redigera
         status: Status
         replies: Svar
+        title: Rubrik
+      all: Alla
       drafts: Utkast
       preview: Förhandsgranska
       unpublish: Avpublicera

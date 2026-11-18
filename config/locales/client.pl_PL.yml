@@ -36,7 +36,7 @@ pl_PL:
     code_editor:
       resize: "Zmień rozmiar edytora kodu"
       load_failed: "Edytor kodu nie mógł się załadować. Odśwież stronę, aby spróbować ponownie."
-      tab_hint: "Naciśnij Escape, a następnie Tab, aby przenieść fokus poza edytor."
+      tab_hint: "Naciśnij Escape, a następnie Tab, aby przenieść aktywność poza edytor."
       completions: "Uzupełnienia"
       search:
         find: "Znajdź"
@@ -1826,6 +1826,7 @@ pl_PL:
       view_all: "pokaż wszystkie"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
+      page_layout: "Układ strony kategorii"
       reorder:
         title: "Zmień kolejność kategorii"
         title_long: "Zmień kolejność listy kategorii"
@@ -3318,6 +3319,10 @@ pl_PL:
       username_unavailable: "Ta nazwa użytkownika jest niedostępna. Spróbuj %{suggestion}."
     login:
       header_title: "Witamy ponownie"
+      invitation_gate:
+        title: "Do tej społeczności można dołączyć tylko na zaproszenie"
+        description: "Aby dołączyć, otwórz otrzymany link z zaproszeniem. Jeśli nie masz zaproszenia, skontaktuj się z właścicielem społeczności, aby o nie poprosić."
+        existing_member: "Jesteś już członkiem tej społeczności? Zaloguj się poniżej."
       title: "Zaloguj się"
       username: "Użytkownik"
       password: "Hasło"
@@ -3583,6 +3588,9 @@ pl_PL:
         size_too_small: "%{provided_file_size} jest mniejsze niż minimalna dozwolona wartość %{min_file_size}"
     emoji_picker:
       filter_placeholder: Szukaj emoji
+      search_placeholder: "Szukaj według nazwy emoji i aliasu..."
+      no_results: "Brak wyników"
+      favorites: "Często używane"
       smileys_&_emotion: Buźki i emocje
       people_&_body: Ludzie i ciało
       animals_&_nature: Zwierzęta i przyroda
@@ -3720,6 +3728,12 @@ pl_PL:
       emoji: "Emoji :)"
       more_emoji: "więcej…"
       options: "Opcje"
+      ai_content:
+        menu: "Dodaj treść AI..."
+        code: "Kod"
+        quote: "Cytat"
+        details: "Detale"
+        placeholder: "Treść AI"
       whisper: "szept"
       unlist: "zastrzeżony"
       add_warning: "To jest oficjalne ostrzeżenie."
@@ -4474,6 +4488,7 @@ pl_PL:
         default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
       new_messages_marker: "ostatnia wizyta"
+      list_options: "Opcje listy"
       bulk:
         select: "Wybór zbiorczy"
         confirm: "Potwierdź"
@@ -5354,6 +5369,8 @@ pl_PL:
         actions: "Działania zbiorcze"
     post:
       accessible_heading: "wpis %{username} %{date}"
+      ai_generated: "AI"
+      ai_generated_title: "Ta treść została częściowo lub w całości wygenerowana przez sztuczną inteligencję"
       heading_anchor: "Łącze nagłówka"
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
@@ -5512,6 +5529,7 @@ pl_PL:
         upload_not_authorized: "Przepraszamy, plik który próbujesz wgrać jest nie dozwolony (dozwolone rozszerzenia: %{authorized_extensions})."
         no_uploads_authorized: "Przepraszamy, żadne pliki nie są upoważnione do przesyłania."
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
+        media_upload_not_allowed: "Przepraszamy, nie masz uprawnień do przesyłania obrazów, filmów ani plików audio."
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
       cancel_composer:
@@ -6709,6 +6727,27 @@ pl_PL:
       forward: "Do przodu"
       share: "Udostępnij"
       dismiss: "Odrzuć"
+    mobile_tab_bar:
+      label: "Sekcje witryny"
+      new_topic: "Nowy temat"
+      new_personal_message: "Nowa prywatna wiadomość"
+      create: "Utwórz"
+      menu: "Menu"
+      more: "Więcej"
+      edit_topic: "Edytuj tytuł, kategorię i tagi"
+      menu_with_reviewables:
+        one: "Menu, %{count} pozycja do przejrzenia"
+        few: "Menu, %{count} pozycje do przejrzenia"
+        many: "Menu, %{count} pozycji do przejrzenia"
+        other: "Menu, %{count} pozycji do przejrzenia"
+      back: "Poprzednia"
+      topics: "Tematy"
+      drafts:
+        one: "Szkice (%{count})"
+        few: "Szkice (%{count})"
+        many: "Szkice (%{count})"
+        other: "Szkice (%{count})"
+      hub: "Hub"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
@@ -9050,19 +9089,10 @@ pl_PL:
           site_contact_group_help: |
             Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości.
           your_organization: "Twoja organizacja"
-          your_organization_description: "Szczegóły dotyczące tego, kto zarządza tą witryną i pod jaką jurysdykcją."
           company_name: "Nazwa"
           company_name_placeholder: "PrzykładowaSA"
           company_url: "Strona internetowa"
           company_url_placeholder: "https://przykładowa-sa.pl"
-          governing_law: "Obowiązujące prawo"
-          governing_law_placeholder: "Prowincja, stan lub kraj"
-          governing_law_help: |
-            Określ jurysdykcję dla warunków prawnych witryny, zazwyczaj tam, gdzie firma jest zarejestrowana lub działa.
-          city_for_disputes: "Miasto do sporów"
-          city_for_disputes_placeholder: "Miasto"
-          city_for_disputes_help: |
-            Określ miasto rozstrzygania sporów prawnych związanych z tym forum.
           extra_groups:
             heading: "Lista grup"
             description: "Dodatkowe grupy do wyświetlenia na stronie „O nas”."
@@ -9628,6 +9658,7 @@ pl_PL:
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
           theme_setting_saved: "Ustawienia motywu zostały zapisane!"
+          setting_link_label: "Link do ustawienia %{name}"
           theme_site_setting_saved: "Ustawienia motywu witryny zostały zapisane!"
         schema:
           title: "Edytuj ustawienie %{name}"

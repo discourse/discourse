@@ -56,7 +56,11 @@ fi:
         edit: Muokkaa
         status: Tila
         replies: Vastaukset
+        title: Otsikko
+        page: Sivu
+      all: Kaikki
       drafts: Luonnokset
+      pages: Sivut
       preview: Esikatselu
       unpublish: Peru julkaisu
       appearance_link: Ulkoasu

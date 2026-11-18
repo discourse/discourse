@@ -1135,6 +1135,7 @@ ru:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "Чем я могу помочь?"
           submit: "Задать вопрос"
           disclaimer: "Генеративный AI может ошибаться. Проверяйте важную информацию."

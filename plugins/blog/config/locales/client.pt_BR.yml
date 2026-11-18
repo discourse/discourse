@@ -57,7 +57,11 @@ pt_BR:
         edit: Editar
         status: Status
         replies: Respostas
+        title: Título
+        page: Página
+      all: Todas
       drafts: Rascunhos
+      pages: Páginas
       preview: Pré-visualizar
       unpublish: Cancelar postagem
       appearance_link: Aparência

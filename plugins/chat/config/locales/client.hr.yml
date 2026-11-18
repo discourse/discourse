@@ -288,11 +288,6 @@ hr:
           one: "%{count} dan"
           few: "%{count} dana"
           other: "%{count} dana"
-      emoji_picker:
-        objects: "Objekti"
-        activities: "Aktivnosti"
-        flags: "Oznake zastavicom"
-        symbols: "Simboli"
       thread:
         title: "Naslov"
         view_thread: Pogledaj nit

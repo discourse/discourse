@@ -1325,6 +1325,10 @@ sw:
     composer:
       emoji: "Ishara :)"
       options: "Chaguo"
+      ai_content:
+        code: "Kodi"
+        quote: "Nukulu"
+        details: "Taarifa"
       whisper: "nong'ona"
       unlist: "ondoa kwenye orodha"
       add_warning: "Hii ni onyo rasmi."
@@ -2363,6 +2367,11 @@ sw:
       back: "Nyuma"
       share: "Shirikisha"
       dismiss: "Ondosha"
+    mobile_tab_bar:
+      create: "Tengeneza"
+      more: "Zaidi"
+      back: "Iliyopita"
+      topics: "Mada"
     trust_levels:
       names:
         newuser: "mtumiaji mpya"

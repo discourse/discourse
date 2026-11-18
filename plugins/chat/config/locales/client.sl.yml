@@ -208,11 +208,6 @@ sl:
           two: "%{count} dneva"
           few: "%{count} dnevi"
           other: "%{count} dni"
-      emoji_picker:
-        objects: "Stvari"
-        activities: "Dejavnosti"
-        flags: "Zastave"
-        symbols: "Simboli"
       thread:
         title: "Naziv"
         replies:

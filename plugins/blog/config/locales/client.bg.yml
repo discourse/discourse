@@ -44,6 +44,8 @@ bg:
         edit: Редактирай
         status: Статус
         replies: Отговори
+        title: Заглавие
+      all: Всички
       drafts: Чернови
       preview: Преглед
       unpublish: Прекратяване на публикуването

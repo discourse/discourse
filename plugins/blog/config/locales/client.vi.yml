@@ -56,7 +56,10 @@ vi:
         edit: Sửa
         status: Trạng thái
         replies: Lượt trả lời
+        title: Tiêu đề
+      all: Tất cả
       drafts: Nháp
+      pages: Trang
       preview: Xem trước
       unpublish: Hủy xuất bản
       appearance_link: Ngoại hình

@@ -54,7 +54,11 @@ fa_IR:
         edit: ویرایش
         status: وضعیت
         replies: پاسخ‌ها
+        title: عنوان
+        page: صفحه
+      all: همه
       drafts: پیش‌نویس‌ها
+      pages: صفحه
       preview: پیش‌نمایش
       unpublish: لغو انتشار
       appearance_link: ظاهر
