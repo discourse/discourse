@@ -262,7 +262,13 @@
 }
 
 .d-select__selection-icon {
+  flex: none;
   margin-inline-end: 0.25em;
+}
+
+// The trigger's gap already separates its children.
+.d-select__trigger > .d-select__selection-icon {
+  margin-inline-end: 0;
 }
 
 .d-select__listbox {

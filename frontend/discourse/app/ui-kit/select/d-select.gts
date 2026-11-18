@@ -212,7 +212,7 @@ export interface DSelectSignature {
     icon?: string;
     /**
      * Suppresses value/placeholder text on single-select `button` and `static` triggers.
-     * Requires a resolved label; ignored with a debug warning otherwise.
+     * Requires `@icon` and a resolved label; ignored with a debug warning otherwise.
      * Drive `@icon` from `@value` for a selection-reactive glyph.
      */
     iconOnly?: boolean;

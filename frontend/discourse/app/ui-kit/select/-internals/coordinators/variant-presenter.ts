@@ -256,7 +256,7 @@ export default class VariantPresenter
   /**
    * Whether to render a label-less trigger. Effective only on the `button`/`static` single-select
    * variants; on a `typeahead` (editable input) or `multiple` (chips are the display) the arg is
-   * inert. Config resolution ignores it with a warning when no accessible label resolves.
+   * inert. Config resolution ignores it with a warning when no icon or accessible label resolves.
    */
   get iconOnly(): boolean {
     return (

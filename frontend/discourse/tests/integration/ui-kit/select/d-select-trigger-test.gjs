@@ -31,6 +31,7 @@ import {
   optionWithText,
 } from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 // A controlled host that forwards the trigger-frame args (icon / caret / clear / lock).
@@ -3095,6 +3096,261 @@ module(
       await triggerKeyEvent(TRIGGER, "keydown", "Backspace");
 
       assert.deepEqual(held.value, [1], "the locked value stays");
+    });
+  }
+);
+
+/** A controlled host that draws the default trigger, with no blocks. */
+class IconHost extends Component {
+  @tracked value = this.args.value ?? null;
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @icon={{@icon}}
+      @onChange={{this.onChange}}
+      @options={{@options}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+  </template>
+}
+
+module(
+  "Integration | ui-kit | select | DSelect trigger icons",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const OPTIONS = [
+      selectOption({ id: 1, name: "Apple" }, { icon: "far-heart" }),
+      { id: 2, name: "Banana" },
+    ];
+    const selectionIcons = () =>
+      findAll(".d-select__trigger .d-select__selection-icon");
+
+    /** Whether `first` comes before the element whose text includes `text`. */
+    const precedes = (container, first, text) =>
+      container.innerHTML.indexOf(first) >= 0 &&
+      container.innerHTML.indexOf(first) < container.innerHTML.indexOf(text);
+
+    test("a static trigger draws the held item's icon before its label", async function (assert) {
+      await render(
+        <template>
+          <IconHost @options={{OPTIONS}} @value={{1}} @variant="static" />
+        </template>
+      );
+
+      const value = find(".d-select__value");
+      assert.dom(value).hasText("Apple");
+      assert
+        .dom(".d-select__selection-icon.d-icon-far-heart", value)
+        .exists({ count: 1 });
+      assert.true(precedes(value, "d-icon-far-heart", "Apple"), "icon first");
+    });
+
+    test("a button trigger draws the held item's icon", async function (assert) {
+      await render(
+        <template>
+          <IconHost @options={{OPTIONS}} @value={{1}} @variant="button" />
+        </template>
+      );
+
+      assert.strictEqual(selectionIcons().length, 1);
+      assert.dom(selectionIcons()[0]).hasClass("d-icon-far-heart");
+    });
+
+    test("a held item without an icon draws none", async function (assert) {
+      await render(
+        <template>
+          <IconHost @options={{OPTIONS}} @value={{2}} @variant="static" />
+        </template>
+      );
+
+      assert.dom(".d-select__value").hasText("Banana");
+      assert.strictEqual(selectionIcons().length, 0);
+    });
+
+    test("@icon always wins over the held item's icon", async function (assert) {
+      await render(
+        <template>
+          <IconHost
+            @icon="gear"
+            @options={{OPTIONS}}
+            @value={{1}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__leading-icon.d-icon-gear").exists({ count: 1 });
+      assert
+        .dom(".d-select__trigger .d-icon-far-heart")
+        .doesNotExist("the held icon steps aside");
+    });
+
+    test("a selection block's content follows the held icon", async function (assert) {
+      await render(
+        <template>
+          <DSelect @options={{OPTIONS}} @value={{1}} @variant="static">
+            <:selection as |record|>
+              <span class="custom-selection">{{record.name}}</span>
+            </:selection>
+          </DSelect>
+        </template>
+      );
+
+      const value = find(".d-select__value");
+      assert.dom(".custom-selection", value).hasText("Apple");
+      assert.dom(".d-icon-far-heart", value).exists({ count: 1 });
+      assert.true(
+        precedes(value, "d-icon-far-heart", "custom-selection"),
+        "the icon precedes the block"
+      );
+    });
+
+    test("a pending selection shows one skeleton and no icon", async function (assert) {
+      let answer;
+      const resolveValues = () => new Promise((resolve) => (answer = resolve));
+      const options = [];
+
+      const rendered = render(
+        <template>
+          <DSelect
+            @iconField="glyph"
+            @options={{options}}
+            @resolveValues={{resolveValues}}
+            @value={{7}}
+            @variant="static"
+          />
+        </template>
+      );
+      await waitFor(".d-select__trigger .d-skeleton");
+
+      assert
+        .dom(".d-select__trigger .d-skeleton")
+        .exists({ count: 1 }, "one skeleton while the value resolves");
+      assert.strictEqual(selectionIcons().length, 0, "no icon while pending");
+
+      answer([{ id: 7, name: "Seven", glyph: "star" }]);
+      await rendered;
+
+      assert.dom(".d-select__trigger .d-skeleton").doesNotExist();
+      assert.dom(".d-select__value").hasText("Seven");
+      assert.dom(".d-select__value .d-icon-star").exists({ count: 1 });
+    });
+
+    test("an unresolved held value draws no icon", async function (assert) {
+      const options = [];
+
+      await render(
+        <template>
+          <DSelect
+            @iconField="glyph"
+            @options={{options}}
+            @value={{99}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__value").exists();
+      assert.strictEqual(selectionIcons().length, 0);
+    });
+
+    test("a typeahead shows the held icon at rest and while focused, never while typing", async function (assert) {
+      await render(
+        <template>
+          <IconHost @options={{OPTIONS}} @value={{1}} @variant="typeahead" />
+        </template>
+      );
+
+      assert.dom("[role='combobox']").hasValue("Apple");
+      assert.strictEqual(selectionIcons().length, 1, "drawn at rest");
+      assert.dom(selectionIcons()[0]).hasClass("d-icon-far-heart");
+
+      await click("[role='combobox']");
+      assert.strictEqual(selectionIcons().length, 1, "drawn while focused");
+
+      await fillIn("[role='combobox']", "ban");
+      assert.strictEqual(selectionIcons().length, 0, "hidden while typing");
+    });
+
+    test("a typeahead with a selection block keeps the held icon while focused", async function (assert) {
+      await render(
+        <template>
+          <DSelect @options={{OPTIONS}} @value={{1}} @variant="typeahead">
+            <:selection as |record|>
+              <span class="custom-selection">{{record.name}}</span>
+            </:selection>
+          </DSelect>
+        </template>
+      );
+
+      assert.dom(".custom-selection").hasText("Apple");
+      assert.strictEqual(selectionIcons().length, 1, "drawn at rest");
+
+      await click("[role='combobox']");
+      assert
+        .dom(".custom-selection")
+        .doesNotExist("focus hands the label to the input");
+      assert.dom("[role='combobox']").hasValue("Apple");
+      assert.strictEqual(
+        selectionIcons().length,
+        1,
+        "the icon stays beside the input"
+      );
+
+      await fillIn("[role='combobox']", "ban");
+      assert.strictEqual(selectionIcons().length, 0, "hidden while typing");
+    });
+
+    test("a mobile typeahead draws the held icon before its label", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <IconHost @options={{OPTIONS}} @value={{1}} @variant="typeahead" />
+        </template>
+      );
+
+      const presentation = find(".d-select__presentation");
+      assert.dom(presentation).hasText("Apple");
+      assert
+        .dom(".d-select__selection-icon.d-icon-far-heart", presentation)
+        .exists({ count: 1 });
+      assert.true(precedes(presentation, "d-icon-far-heart", "Apple"));
+    });
+
+    test("@iconOnly without @icon is ignored with a warning", async function (assert) {
+      const warn = sinon.stub(console, "warn");
+
+      try {
+        await render(
+          <template>
+            <DSelect
+              @iconOnly={{true}}
+              @options={{OPTIONS}}
+              @texts={{hash ariaLabel="Fruit"}}
+              @value={{2}}
+              @variant="static"
+            />
+          </template>
+        );
+
+        assert
+          .dom(".d-select__trigger.--icon-only")
+          .doesNotExist("the trigger keeps its text layout");
+        assert.dom(".d-select__value").hasText("Banana", "the value shows");
+        assert.true(
+          warn.calledWithMatch("iconOnly requires an icon"),
+          "a warning names what is missing"
+        );
+      } finally {
+        warn.restore();
+      }
     });
   }
 );

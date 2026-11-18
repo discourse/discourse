@@ -5,6 +5,7 @@ import DSkeleton from "discourse/ui-kit/d-skeleton";
 import type VariantPresenter from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
+import SelectionIcon from "discourse/ui-kit/select/-internals/parts/selection-icon";
 import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-label";
 import SelectEngine, {
   SelectLoadRequest,
@@ -121,6 +122,9 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
               {{#unless @editing}}
                 <span class="d-select__presentation">
                   {{#if selected}}
+                    {{#unless @presenter.icon}}
+                      <SelectionIcon @engine={{@engine}} @record={{selected}} />
+                    {{/unless}}
                     {{#if (@engine.isHeldUnresolved selected)}}
                       {{#if @hasUnresolvedBlock}}
                         {{yield (@engine.heldRecord selected) to="unresolved"}}
@@ -167,6 +171,12 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
               {{/if}}
             </:loading>
             <:content as |selected|>
+              {{! The label moves into the input on focus, so the icon stays beside it. }}
+              {{#if selected}}
+                {{#unless (or @editing @presenter.icon)}}
+                  <SelectionIcon @engine={{@engine}} @record={{selected}} />
+                {{/unless}}
+              {{/if}}
               {{#if (and (not @editing) (or @pending (not @triggerFocused)))}}
                 <span class="d-select__presentation" id={{@selectionId}}>
                   {{#if selected}}
@@ -206,7 +216,14 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
               </span>
             {{/unless}}
           </:loading>
-          <:content></:content>
+          <:content as |selected|>
+            {{! The label is the input's value, which is empty while a change is pending. }}
+            {{#if selected}}
+              {{#unless (or @editing @pending @presenter.icon)}}
+                <SelectionIcon @engine={{@engine}} @record={{selected}} />
+              {{/unless}}
+            {{/if}}
+          </:content>
         </DAsyncContent>
       {{/if}}
       {{#if @presenter.isDesktopTypeahead}}
@@ -269,6 +286,9 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         <:content as |selected|>
           {{#if selected}}
             <span class="d-select__value">
+              {{#unless @presenter.icon}}
+                <SelectionIcon @engine={{@engine}} @record={{selected}} />
+              {{/unless}}
               {{#if (@engine.isHeldUnresolved selected)}}
                 {{#if @hasUnresolvedBlock}}
                   {{yield (@engine.heldRecord selected) to="unresolved"}}

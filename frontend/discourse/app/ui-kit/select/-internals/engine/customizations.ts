@@ -573,6 +573,18 @@ export default class SelectCustomizations {
       }
       iconOnly = false;
     }
+    if (iconOnly && !current.icon) {
+      if (DEBUG) {
+        warn(
+          "DSelect: iconOnly requires an icon and is ignored without one",
+          false,
+          {
+            id: "discourse.d-select.icon-only-without-icon",
+          }
+        );
+      }
+      iconOnly = false;
+    }
     if (
       noneOption !== current.noneOption ||
       loadingStatus !== current.loadingStatus ||

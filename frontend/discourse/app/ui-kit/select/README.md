@@ -606,7 +606,7 @@ Named blocks control what the component renders: `:option`, `:selection`, `:sele
 
 **Supply a block only when an argument cannot express the content.** `@labelField` picks the
 field to display, `@iconField` (or an option's `icon` setting) draws a glyph before each option
-and chip, `@selectedIcon` marks the chosen option, `@icon` puts a glyph in the trigger,
+and held value, `@selectedIcon` marks the chosen option, `@icon` puts a glyph in the trigger,
 and `@texts` rewords the empty state (`noResults`). The select draws an item's icon itself, before
 any block's content, so a block never draws it again. A block that reproduces one of those is not
 neutral: it costs behaviour (see `:selection` below) and it costs the reader a reason to look.
@@ -822,8 +822,8 @@ again.
 `loadingStatus`, `disabled` and `texts` (see [Texts](#texts)), plus the keys a recipe declares
 (see [Recipes](#recipes)). `current` holds the values so far, starting from the call site's
 arguments. Every key is last-wins except `disabled`, which can add a lock but never lift one, and
-`texts`, which merges per entry. `iconOnly` needs an `ariaLabel` text above the engine's default:
-without one it is ignored with a warning. A key that is neither core nor declared
+`texts`, which merges per entry. `iconOnly` needs an `icon` and an `ariaLabel` text above the
+engine's default: without either it is ignored with a warning. A key that is neither core nor declared
 warns in development and is ignored, and a non-object result is skipped. The values resolve once
 per change in what they read, not once per option. The context has `value` and `control`, and no
 `config`, because config cannot depend on itself.
@@ -1436,9 +1436,10 @@ by mechanism.
 - Selected-option indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
-  icon-only trigger on the button/static variants (`@iconOnly`, which needs a resolved `ariaLabel` text for
-  the accessible name and is ignored with a warning without one; drive `@icon` from `@value` for
-  a selection-reactive glyph); caret swap
+  icon-only trigger on the button/static variants (`@iconOnly`, which needs `@icon` and a resolved
+  `ariaLabel` text for the accessible name, and is ignored with a warning without either; drive
+  `@icon` from `@value` for a selection-reactive glyph); the held
+  item's icon before its label when `@icon` is not set; caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); a trailing `@searchIcon` in a
   search field that is not the trigger (the `button` panel's field, the mobile modal's, and
   DSelectList's; never a desktop `typeahead` trigger, and `static` has no search); `@clearable`; `@disabled` /
