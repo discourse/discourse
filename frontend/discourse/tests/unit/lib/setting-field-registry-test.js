@@ -104,6 +104,10 @@ module("Unit | Lib | setting-field-registry", function () {
         "tag_list",
         "tag_group_list",
         "icon",
+        "group_list",
+        "category_list",
+        "compact_list",
+        "date",
       ]) {
         assert.true(
           resolveSettingFieldType({ type }).adminReady,
