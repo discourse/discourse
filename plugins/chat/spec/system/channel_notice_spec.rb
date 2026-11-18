@@ -55,18 +55,48 @@ RSpec.describe "Channel notice" do
       chat_page.visit_channel(private_channel)
       channel_page.send_message("hello @#{group_2.name} and @#{group_3.name}")
 
+      # `user_1` is a member of `group_2`, whose members are visible, so they may be
+      # named. `user_2` belongs only to `group_3`, whose members are hidden.
       expect(page).to have_selector(
+        ".chat-notices__notice",
+        text: I18n.t("chat.mention_warning.cannot_see", first_identifier: user_1.username),
+      )
+      expect(page).to have_no_selector(
         ".chat-notices__notice",
         text: I18n.t("chat.mention_warning.cannot_see_group", group_name: group_3.name),
       )
+      expect(page).to have_no_selector(
+        ".chat-notices__notice",
+        text: I18n.t("chat.mention_warning.cannot_see", first_identifier: user_2.username),
+      )
     end
 
-    it "does not show group notice if unreachable member is not part of member visibility restricted group" do
+    it "names a user who can't see the channel when their group membership is visible" do
       secret_group.add(user_2)
 
       chat_page.visit_channel(private_channel)
       channel_page.send_message("hello @#{group_2.name} and @#{group_3.name}")
 
+      expect(page).to have_selector(
+        ".chat-notices__notice",
+        text: I18n.t("chat.mention_warning.cannot_see", first_identifier: user_1.username),
+      )
+      expect(page).to have_no_selector(
+        ".chat-notices__notice",
+        text: I18n.t("chat.mention_warning.cannot_see_group", group_name: group_3.name),
+      )
+    end
+
+    it "still names a directly mentioned user who can't see the channel, even when they are hidden in a mentioned group" do
+      group_3.add(mentioned_user)
+
+      chat_page.visit_channel(private_channel)
+      channel_page.send_message("hello @#{mentioned_user.username} and @#{group_3.name}")
+
+      expect(page).to have_selector(
+        ".chat-notices__notice",
+        text: I18n.t("chat.mention_warning.cannot_see", first_identifier: mentioned_user.username),
+      )
       expect(page).to have_no_selector(
         ".chat-notices__notice",
         text: I18n.t("chat.mention_warning.cannot_see_group", group_name: group_3.name),
