@@ -3,7 +3,23 @@ import { guidFor } from "@ember/object/internals";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class DToggleSwitch extends Component {
+interface DToggleSwitchSignature {
+  Args: {
+    /** Whether the switch is on. */
+    state?: boolean;
+
+    /** The translation key of the visible label. It takes precedence over `@translatedLabel`. */
+    label?: string;
+
+    /** The visible label, already translated. */
+    translatedLabel?: string;
+  };
+
+  /** The switch button, so attributes such as `disabled` reach it. */
+  Element: HTMLButtonElement;
+}
+
+export default class DToggleSwitch extends Component<DToggleSwitchSignature> {
   labelId = `${guidFor(this)}-label`;
 
   get computedLabel() {
