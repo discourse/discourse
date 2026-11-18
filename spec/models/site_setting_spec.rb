@@ -21,6 +21,27 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe ".builtin_badge_thresholds=" do
+    it "rejects duplicate badges" do
+      overrides = [{ badge: "Nice Reply", threshold: 5 }, { badge: "Nice Reply", threshold: 3 }]
+
+      expect { SiteSetting.builtin_badge_thresholds = overrides }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.duplicate_builtin_badge_thresholds"),
+      )
+    end
+
+    it "requires a known badge and a positive integer" do
+      expect do
+        SiteSetting.builtin_badge_thresholds = [{ badge: "Welcome", threshold: 5 }]
+      end.to raise_error(Discourse::InvalidParameters)
+
+      expect do
+        SiteSetting.builtin_badge_thresholds = [{ badge: "Nice Reply", threshold: 0 }]
+      end.to raise_error(Discourse::InvalidParameters)
+    end
+  end
+
   describe ".dsa_reporting_enabled=" do
     it "requires a community rule before enabling reporting" do
       expect { SiteSetting.dsa_reporting_enabled = true }.to raise_error(

@@ -397,7 +397,8 @@ class BadgeGranter
   def self.backfill(badge, opts = nil)
     return unless SiteSetting.enable_badges
     return unless badge.enabled
-    return if badge.query.blank?
+    query = badge.query
+    return if query.blank?
 
     post_ids = user_ids = nil
     post_ids = opts[:post_ids] if opts
@@ -425,7 +426,7 @@ class BadgeGranter
           SELECT ub.id
           FROM user_badges ub
           LEFT JOIN (
-            #{badge.query}
+            #{query}
           ) q ON q.user_id = ub.user_id
           #{post_clause}
           WHERE ub.badge_id = :id
@@ -455,7 +456,7 @@ class BadgeGranter
         INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, created_at, post_id)
         SELECT :id, q.user_id, q.granted_at, -1, current_timestamp, #{post_id_field}
           FROM (
-                 #{badge.query}
+                 #{query}
                ) q
      LEFT JOIN user_badges ub ON ub.badge_id = :id AND ub.user_id = q.user_id
         #{post_clause}
@@ -472,17 +473,17 @@ class BadgeGranter
     builder = DB.build(sql)
     builder.where("ub.badge_id IS NULL AND q.user_id > 0")
 
-    if (post_ids || user_ids) && !badge.query.include?(":backfill")
+    if (post_ids || user_ids) && !query.include?(":backfill")
       Rails.logger.warn "Your triggered badge query for #{badge.name} does not include the :backfill param, skipping!"
       return
     end
 
-    if post_ids && !badge.query.include?(":post_ids")
+    if post_ids && !query.include?(":post_ids")
       Rails.logger.warn "Your triggered badge query for #{badge.name} does not include the :post_ids param, skipping!"
       return
     end
 
-    if user_ids && !badge.query.include?(":user_ids")
+    if user_ids && !query.include?(":user_ids")
       Rails.logger.warn "Your triggered badge query for #{badge.name} does not include the :user_ids param, skipping!"
       return
     end

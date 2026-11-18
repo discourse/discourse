@@ -279,7 +279,15 @@ class Badge < ActiveRecord::Base
     self.class.i18n_key(name)
   end
 
+  def query
+    BuiltinBadgeThreshold.for(self)&.query || self[:query]
+  end
+
   def long_description
+    if threshold = BuiltinBadgeThreshold.for(self)
+      return threshold.description
+    end
+
     key = "badges.#{i18n_name}.long_description"
     I18n.t(
       key,
@@ -294,6 +302,10 @@ class Badge < ActiveRecord::Base
   end
 
   def description
+    if threshold = BuiltinBadgeThreshold.for(self)
+      return threshold.description
+    end
+
     key = "badges.#{i18n_name}.description"
     I18n.t(
       key,

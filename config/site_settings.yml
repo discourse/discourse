@@ -444,6 +444,47 @@ basic:
     client: true
     default: true
     area: "badges"
+  builtin_badge_thresholds:
+    type: objects
+    default: []
+    area: "badges"
+    schema:
+      name: Badge threshold
+      identifier: badge
+      properties:
+        badge:
+          type: enum
+          label: Badge
+          required: true
+          choices:
+            - Nice Reply
+            - Good Reply
+            - Great Reply
+            - Nice Topic
+            - Good Topic
+            - Great Topic
+            - Nice Share
+            - Good Share
+            - Great Share
+            - Popular Link
+            - Hot Link
+            - Famous Link
+            - Appreciated
+            - Respected
+            - Admired
+            - Out of Love
+            - Higher Love
+            - Crazy in Love
+            - Enthusiast
+            - Aficionado
+            - Devotee
+        threshold:
+          type: integer
+          label: Required count
+          required: true
+          validations:
+            min: 1
+            max: 2147483647
   show_badges_in_post_header:
     client: true
     default: true
