@@ -2,6 +2,7 @@
 
 class Blog::Review::Create
   include Service::Base
+  include Blog::DraftsCategoryStep
 
   params do
     attribute :topic_id, :integer
@@ -15,6 +16,7 @@ class Blog::Review::Create
   model :topic
   policy :can_edit_blog_topic
   policy :blog_is_ready, class_name: Blog::Policy::Ready
+  step :ensure_drafts_category
 
   transaction do
     step :lock_topic

@@ -26,6 +26,7 @@ class Blog::Publication::Action::PublishScheduledRevision < Service::ActionBase
     ) do
       on_success { nil }
       on_failed_policy(:blog_ready) { |policy| policy.reason }
+      on_failed_step(:ensure_public_category) { |step| step.error }
       on_failed_policy(:not_published_as_page) { I18n.t("blog.errors.published_page") }
       on_model_errors(:publication) do |publication|
         ActiveRecord::RecordInvalid.new(publication).message

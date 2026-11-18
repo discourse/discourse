@@ -99,7 +99,7 @@ RSpec.describe "Blog publication", type: :request do
       end
     end
 
-    it "rejects drafts categories that ordinary groups can read" do
+    it "makes a drafts category that ordinary groups can read private again" do
       group = Fabricate(:group)
       drafts.set_permissions(group.name => :full, :staff => :full)
       drafts.save!
@@ -109,8 +109,10 @@ RSpec.describe "Blog publication", type: :request do
               excerpt: "A draft",
             },
           }
-      expect(response.status).to eq(400)
-      expect(Blog::Publication.where(topic_id: topic.id)).not_to exist
+      expect(response.status).to eq(200)
+      expect(drafts.reload.category_groups.pluck(:group_id)).to contain_exactly(
+        Group::AUTO_GROUPS[:staff],
+      )
     end
   end
 

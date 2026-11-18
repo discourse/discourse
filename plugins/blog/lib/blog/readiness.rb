@@ -6,7 +6,7 @@ module ::Blog
     Problem =
       Data.define(:key, :settings) do
         def message
-          I18n.t("blog.errors.#{key}")
+          I18n.t("blog.errors.#{key}", name: ManagedCategories.public_category_name)
         end
       end
 
@@ -24,20 +24,15 @@ module ::Blog
     def self.editorial_group_ids
       (
         Group::AUTO_GROUPS.values_at(:admins, :moderators, :staff) +
-          SiteSetting.blog_contributor_groups_map + SiteSetting.blog_editor_groups_map +
-          SiteSetting.blog_publisher_groups_map
+          ManagedCategories.editorial_group_ids
       ).uniq
     end
     private_class_method :editorial_group_ids
 
-    # Ordered so the first problem is the one to fix first.
+    # Ordered so the first problem is the one to fix first. Missing categories are
+    # not problems: the blog creates them when it first needs them.
     def problems
-      @problems ||= [
-        private_site_problem,
-        anonymous_uploads_problem,
-        category_problem,
-        drafts_category_problem,
-      ].compact
+      @problems ||= [private_site_problem, anonymous_uploads_problem, category_problem].compact
     end
 
     def ready?
@@ -65,23 +60,10 @@ module ::Blog
     end
 
     def category_problem
-      return if category && !category.read_restricted?
-      Problem.new(key: :category, settings: %i[blog_category])
-    end
-
-    def drafts_category_problem
-      return if self.class.valid_drafts_category?(drafts)
-      Problem.new(key: :drafts_category, settings: %i[blog_drafts_category])
-    end
-
-    def category
-      return @category if defined?(@category)
-      @category = Category.find_by(id: SiteSetting.blog_category)
-    end
-
-    def drafts
-      return @drafts if defined?(@drafts)
-      @drafts = Category.find_by(id: SiteSetting.blog_drafts_category)
+      category = ManagedCategories.public_category
+      return Problem.new(key: :category, settings: %i[blog_category]) if category&.read_restricted?
+      return if category || !ManagedCategories.public_category_name_taken?
+      Problem.new(key: :category_name_taken, settings: %i[blog_category])
     end
   end
 end

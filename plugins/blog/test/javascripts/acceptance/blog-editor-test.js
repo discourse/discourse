@@ -9,6 +9,7 @@ import {
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
 import {
   disableLoadMoreObserver,
@@ -456,5 +457,63 @@ acceptance("Blog composer", function (needs) {
     assert
       .dom(".d-editor-textarea-wrapper .popup-tip.bad")
       .exists("the composer still validated the draft");
+  });
+});
+
+acceptance("Blog composer without a drafts category", function (needs) {
+  needs.user({ admin: true, moderator: false });
+  needs.settings({
+    blog_enabled: true,
+    blog_category: "",
+    blog_drafts_category: "",
+    min_topic_title_length: 15,
+  });
+
+  let draftsCategoryRequests;
+
+  needs.hooks.beforeEach(() => {
+    draftsCategoryRequests = 0;
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/blog-editor.json", () =>
+      helper.response({ topics: [], blog_url: "https://blog.example.com" })
+    );
+    server.post("/blog-editor/drafts-category.json", () => {
+      draftsCategoryRequests++;
+      return helper.response({
+        id: 900,
+        name: "Blog drafts",
+        slug: "blog-drafts",
+        color: "0088CC",
+        text_color: "FFFFFF",
+        read_restricted: true,
+        permission: 1,
+      });
+    });
+  });
+
+  test("creates the drafts category when the first draft is started", async function (assert) {
+    await visit("/blog-editor");
+    await click(".d-page-header__actions .btn-primary");
+    assert.strictEqual(
+      selectKit(".category-chooser").header().value(),
+      "900",
+      "the composer opens in the new drafts category"
+    );
+
+    await click("#reply-control .discard-button");
+    await click(".d-page-header__actions .btn-primary");
+    assert.strictEqual(
+      draftsCategoryRequests,
+      1,
+      "a known drafts category is not requested again"
+    );
+
+    await fillIn("#reply-title", "Contact");
+    await click(".submit-panel .create");
+    assert
+      .dom(".title-input .popup-tip.bad")
+      .doesNotExist("the new category accepts a short article title");
   });
 });

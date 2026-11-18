@@ -98,6 +98,13 @@ after_initialize do
     @blog_publication
   end
 
+  on(:site_setting_changed) do |name|
+    name = name.to_sym
+    next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
+    Blog::EnsureDraftsCategory.call(options: { create_missing: false })
+    Blog::AddPublishersToPublicCategory.call if name == :blog_publisher_groups
+  end
+
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)
 
   reloadable_patch { ::TopicView.prepend(Blog::TopicViewExtension) }
