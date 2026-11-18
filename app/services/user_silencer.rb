@@ -45,6 +45,7 @@ class UserSilencer
       end
 
       silence_message_params = Dsa::AppealInstructions.message_options
+      silence_message_params[:body_suffix] = @opts[:notice_paragraph] if @opts[:notice_paragraph]
       DiscourseEvent.trigger(
         :user_silenced,
         user: @user,

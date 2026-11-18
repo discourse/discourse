@@ -3,6 +3,7 @@
 class User::Action::SuspendAll < Service::ActionBase
   option :users, []
   option :actor
+  option :notice_paragraph, default: -> { nil }
   option :params
   option :raise_on_failure, default: -> { false }
 
@@ -20,6 +21,7 @@ class User::Action::SuspendAll < Service::ActionBase
         user,
         suspended_till: suspend_until,
         reason: reason,
+        notice_paragraph: (notice_paragraph if user.id == params.user_id),
         by_user: actor,
         message: message,
         post_id: post_id,

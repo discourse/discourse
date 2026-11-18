@@ -43,7 +43,8 @@ class UserSuspender
     by_user:,
     message: nil,
     post_id: nil,
-    reviewable_id: nil
+    reviewable_id: nil,
+    notice_paragraph: nil
   )
     @user = user
     @suspended_till = suspended_till
@@ -52,6 +53,7 @@ class UserSuspender
     @message = message
     @post_id = post_id
     @reviewable_id = reviewable_id
+    @notice_paragraph = notice_paragraph
   end
 
   def suspend
@@ -88,6 +90,7 @@ class UserSuspender
         type: "account_suspended",
         user_id: @user.id,
         user_history_id: @user_history.id,
+        notice_paragraph: @notice_paragraph,
       )
     end
 

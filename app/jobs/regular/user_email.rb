@@ -235,6 +235,7 @@ module Jobs
         email_args[:user_history] = UserHistory.where(id: args[:user_history_id]).first
       end
 
+      email_args[:notice_paragraph] = args[:notice_paragraph] if args[:notice_paragraph]
       email_args[:reject_reason] = args[:reject_reason]
 
       message =

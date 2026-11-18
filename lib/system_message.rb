@@ -39,6 +39,8 @@ class SystemMessage
           I18n.t("system_messages.#{type}.text_body_template", params)
         end
 
+    raw = "#{raw.rstrip}\n\n#{params[:body_suffix]}" if params[:body_suffix].present?
+
     if key = params[:body_suffix_key]
       paragraph = I18n.with_locale(@recipient.effective_locale) { I18n.t(key, params) }
       raw = "#{raw.rstrip}\n\n#{paragraph}"

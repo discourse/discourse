@@ -72,6 +72,7 @@ class UserNotifications < ActionMailer::Base
       **Dsa::AppealInstructions.message_options,
       locale: locale,
       reject_reason: opts[:reject_reason],
+      body_suffix: opts[:notice_paragraph],
       recipient_user: user,
     )
   end
@@ -184,6 +185,7 @@ class UserNotifications < ActionMailer::Base
         **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
+        body_suffix: opts[:notice_paragraph],
         recipient_user: user,
       )
     else
@@ -197,6 +199,7 @@ class UserNotifications < ActionMailer::Base
         **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
+        body_suffix: opts[:notice_paragraph],
         silenced_till:
           I18n.t(
             "user_notifications.account_silenced.date_with_timezone",
@@ -209,7 +212,7 @@ class UserNotifications < ActionMailer::Base
     end
   end
 
-  def account_deleted(email, reviewable)
+  def account_deleted(email, reviewable, notice_paragraph: nil)
     post_action_type_view = PostActionTypeView.new
     post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
 
@@ -228,6 +231,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_deleted",
       **Dsa::AppealInstructions.message_options,
       flag_reason: flag_reason,
+      body_suffix: notice_paragraph,
     )
   end
 
@@ -245,6 +249,7 @@ class UserNotifications < ActionMailer::Base
         **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
+        body_suffix: opts[:notice_paragraph],
         recipient_user: user,
       )
     else
@@ -258,6 +263,7 @@ class UserNotifications < ActionMailer::Base
         **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
+        body_suffix: opts[:notice_paragraph],
         suspended_till:
           I18n.t(
             "user_notifications.account_suspended.date_with_timezone",

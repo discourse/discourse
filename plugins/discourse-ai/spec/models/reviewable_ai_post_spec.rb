@@ -289,6 +289,25 @@ describe ReviewableAiPost do
         )
       end
 
+      it "includes the selected guideline in the author's hiding notice" do
+        rule = { "ground" => "Be respectful", "explanation" => "Personal attacks are prohibited." }
+        Jobs::SendSystemMessage.clear
+        reviewable.perform(
+          admin,
+          :agree_and_hide,
+          dsa_classification: {
+            community_rule: rule,
+            category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY,
+          },
+        )
+
+        Jobs::SendSystemMessage.new.perform(Jobs::SendSystemMessage.jobs.sole["args"].first)
+
+        expect(Post.last.raw).to include(
+          "More specifically, your post violated the following community guideline: **Be respectful**. Personal attacks are prohibited.",
+        )
+      end
+
       it "records a statement when agree_and_hide handles the AI post reviewable" do
         expect { reviewable.perform(admin, :agree_and_hide) }.to change(
           DsaStatementOfRecord,
