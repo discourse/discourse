@@ -1,15 +1,19 @@
 import { tracked } from "@glimmer/tracking";
 import Evented from "@ember/object/evented";
+import { next, run } from "@ember/runloop";
 import Service from "@ember/service";
 import {
   click,
   fillIn,
+  find,
   render,
   rerender,
   select,
   settled,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
@@ -1125,6 +1129,81 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
 
     await click(".d-filter-controls__reset");
     assert.dom(".item").exists({ count: 3 }, "reset still works");
+  });
+
+  test("keeps a cleared search out of the URL when filters change", async function (assert) {
+    this.owner.unregister("service:router");
+    this.owner.register("service:router", RouterStub);
+    const router = this.owner.lookup("service:router");
+    sinon.stub(DiscourseURL, "replaceState").callsFake((url) => {
+      if (router.currentURL !== url) {
+        next(() => {
+          router.currentURL = url;
+        });
+      }
+    });
+
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
+    this.dropdownOptions = SAMPLE_DROPDOWN_OPTIONS;
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @dropdownFilterQueryParam="category"
+          @dropdownOptions={{this.dropdownOptions}}
+          @searchableProps={{this.searchableProps}}
+          @textFilterQueryParam="filter"
+        >
+          <:content as |filteredData|>
+            {{#each filteredData as |item|}}
+              <div class="item">{{item.name}}</div>
+            {{/each}}
+          </:content>
+        </DFilterControls>
+      </template>
+    );
+
+    const input = find(".d-filter-controls__input");
+    const category = find(".d-filter-controls__dropdown");
+    await fillIn(input, "second");
+    assert.strictEqual(router.currentURL, "/admin/example?filter=second");
+
+    const clock = sinon.useFakeTimers({
+      toFake: ["Date", "setTimeout", "clearTimeout"],
+    });
+    try {
+      run(() => {
+        input.value = "";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      clock.tick(10);
+      run(() => {
+        category.value = "feature";
+        category.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      clock.tick(20);
+
+      assert.dom(input).hasValue("");
+      assert.dom(".item").exists({ count: 2 });
+      assert.strictEqual(router.currentURL, "/admin/example?category=feature");
+
+      run(() => {
+        input.value = "first";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      clock.tick(9);
+      run(() => find(".d-filter-controls__reset").click());
+      clock.tick(30);
+    } finally {
+      clock.restore();
+    }
+    await settled();
+
+    assert.dom(input).hasValue("");
+    assert.dom(".item").exists({ count: 3 });
+    assert.strictEqual(router.currentURL, "/admin/example");
   });
 
   test("initialTextFilter still seeds when a query param arg is set", async function (assert) {

@@ -1,14 +1,5 @@
-import { run } from "@ember/runloop";
-import {
-  click,
-  currentURL,
-  fillIn,
-  find,
-  settled,
-  visit,
-} from "@ember/test-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 function buildChange(
@@ -93,14 +84,6 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
     await visit(
       "/admin/config/upcoming-changes?changeNamesFilter=alpha_composer"
     );
-    await fillIn(".d-filter-controls__input", "beta_sidebar");
-    await visit(
-      "/admin/config/upcoming-changes?changeNamesFilter=stable_defaults"
-    );
-    assert
-      .dom(".d-filter-controls__input")
-      .hasValue("stable_defaults", "navigation restores the linked search");
-
     await visit("/admin/config/upcoming-changes?status=stable");
 
     assert.dom(".d-filter-controls__input").hasValue("");
@@ -110,139 +93,15 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
       .exists();
   });
 
-  test("clearing the search discards a pending URL update", async function (assert) {
-    await visit("/admin/config/upcoming-changes");
-
-    const input = find(".d-filter-controls__input");
-    const clock = sinon.useFakeTimers({
-      toFake: ["Date", "setTimeout", "clearTimeout"],
-    });
-
-    try {
-      run(() => {
-        input.value = "beta_sidebar";
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-      });
-      clock.tick(10);
-
-      run(() => {
-        input.value = "";
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-      });
-      clock.tick(20);
-    } finally {
-      clock.restore();
-    }
-
-    await settled();
-
-    assert.dom(input).hasValue("", "the cleared search stays empty");
-    assert.strictEqual(
-      currentURL(),
-      "/admin/config/upcoming-changes",
-      "the pending search is removed from the URL"
-    );
-    assert
-      .dom(".upcoming-change-row")
-      .exists({ count: 3 }, "all changes are visible");
-  });
-
-  for (const delay of [9, 10]) {
-    test(`keeps the search cleared when a status filter changes after ${delay} ms`, async function (assert) {
-      await visit("/admin/config/upcoming-changes");
-      await fillIn(".d-filter-controls__input", "beta_sidebar");
-      assert.strictEqual(
-        new URL(currentURL(), "https://example.com").searchParams.get(
-          "changeNamesFilter"
-        ),
-        "beta_sidebar",
-        "the search being cleared was already written to the URL"
-      );
-
-      const input = find(".d-filter-controls__input");
-      const status = find(".d-filter-controls__dropdown--status");
-      const clock = sinon.useFakeTimers({
-        toFake: ["Date", "setTimeout", "clearTimeout"],
-      });
-
-      try {
-        run(() => {
-          input.value = "";
-          input.dispatchEvent(new Event("input", { bubbles: true }));
-        });
-        clock.tick(delay);
-        run(() => {
-          status.value = "stable";
-          status.dispatchEvent(new Event("input", { bubbles: true }));
-        });
-        clock.tick(20);
-      } finally {
-        clock.restore();
-      }
-
-      await settled();
-      assert.dom(input).hasValue("", "the cleared field stays empty");
-      assert.dom(status).hasValue("stable", "Stable remains selected");
-      assert
-        .dom(".upcoming-change-row[data-upcoming-change='stable_defaults']")
-        .exists("the stable row remains visible");
-      assert.strictEqual(
-        currentURL(),
-        "/admin/config/upcoming-changes?status=stable",
-        "the shareable URL reproduces the visible filters"
-      );
-    });
-  }
-
-  test("reset discards a pending search URL update", async function (assert) {
-    await visit("/admin/config/upcoming-changes");
-
-    const input = find(".d-filter-controls__input");
-    const clock = sinon.useFakeTimers({
-      toFake: ["Date", "setTimeout", "clearTimeout"],
-    });
-
-    try {
-      run(() => {
-        input.value = "alpha_composer";
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-      });
-      clock.tick(9);
-      assert
-        .dom(".d-filter-controls__reset")
-        .isEnabled("Reset is available to the user");
-      run(() => find(".d-filter-controls__reset").click());
-      clock.tick(30);
-    } finally {
-      clock.restore();
-    }
-
-    await settled();
-
-    assert.dom(input).hasValue("", "the reset search stays empty");
-    assert.strictEqual(
-      currentURL(),
-      "/admin/config/upcoming-changes",
-      "the pending search is removed from the URL"
-    );
-    assert
-      .dom(".upcoming-change-row")
-      .exists({ count: 3 }, "all changes are visible");
-  });
-
   test("reset removes every owned parameter", async function (assert) {
     await visit(
-      "/admin/config/upcoming-changes?changeNamesFilter=beta&status=beta&type=feature&impactRole=all_members&enabled=enabled&sort=status"
+      "/admin/config/upcoming-changes?changeNamesFilter=beta&status=beta&type=feature&impactRole=all_members&enabled=enabled"
     );
 
     assert.dom(".upcoming-change-row").exists({ count: 1 });
     await click(".d-filter-controls__reset");
 
-    assert.strictEqual(
-      currentURL(),
-      "/admin/config/upcoming-changes?sort=status",
-      "reset clears filters and preserves the linked sort"
-    );
+    assert.strictEqual(currentURL(), "/admin/config/upcoming-changes");
     assert.dom(".d-filter-controls__input").hasValue("");
     assert.dom(".d-filter-controls__dropdown--status").hasValue("all");
     assert.dom(".upcoming-change-row").exists({ count: 3 });

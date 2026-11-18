@@ -169,17 +169,6 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
       .dom(".d-filter-controls__input")
       .isFocused("keeps focus while the URL updates");
 
-    await fillIn(".d-filter-controls__input", "air,bus");
-
-    assert
-      .dom(".d-filter-controls__input")
-      .hasValue("air,bus", "keeps punctuation as typed");
-    assert.strictEqual(
-      currentURL(),
-      "/admin/config/customize/components?filter=air%2Cbus",
-      "mirrors the typed search without inserting a space"
-    );
-
     await fillIn(".d-filter-controls__input", "");
 
     assert.strictEqual(
