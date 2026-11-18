@@ -202,7 +202,7 @@ patchedDependencies:
   http-proxy@1.18.1: 3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73
   licensee: 566956dc682db703e899e5b01c65b129e434ad9f0848f5b9f62c3c28afd086e9
   pikaday: ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83
-  xss@1.0.15: c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf
+  xss@1.0.17: c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf
 
 importers:
 
@@ -843,8 +843,8 @@ importers:
         specifier: ^8.2.4
         version: 8.2.4(@types/node@26.4.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0)
       xss:
-        specifier: 1.0.15
-        version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
+        specifier: 1.0.17
+        version: 1.0.17(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
 
   frontend/discourse-i18n:
     dependencies:
@@ -873,8 +873,8 @@ importers:
         specifier: ^15.0.3
         version: 15.0.3
       xss:
-        specifier: 1.0.15
-        version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
+        specifier: 1.0.17
+        version: 1.0.17(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
 
   frontend/discourse-types:
     devDependencies:
@@ -915,8 +915,8 @@ importers:
         specifier: 1.2.7
         version: 1.2.7
       xss:
-        specifier: 1.0.15
-        version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
+        specifier: 1.0.17
+        version: 1.0.17(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
 
   plugins/automation:
     dependencies:
@@ -8330,8 +8330,8 @@ packages:
   xmlcreate@2.0.4:
     resolution: {integrity: sha512-nquOebG4sngPmGPICTS5EnxqhKbCmz5Ox5hsszI2T6U5qdrJizBc+0ilYSEjTSzU0yZcmvppztXe/5Al5fUwdg==}
 
-  xss@1.0.15:
-    resolution: {integrity: sha512-FVdlVVC67WOIPvfOwhoMETV72f6GbW7aOabBC3WxN/oUdoEMDyLz4OgRv5/gck2ZeNqEQu+Tb0kloovXOfpYVg==}
+  xss@1.0.17:
+    resolution: {integrity: sha512-+SEr5IDSgTBnhT6bnnf0mVRHT91+HU517zkahLNhkWLz8retCgeR1YDT4OknLiExA5+chn2Wy7z3KyjvnD8A2w==}
     engines: {node: '>= 0.10.0'}
     hasBin: true
 
@@ -17010,7 +17010,7 @@ snapshots:
 
   xmlcreate@2.0.4: {}
 
-  xss@1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf):
+  xss@1.0.17(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf):
     dependencies:
       commander: 2.20.3
       cssfilter: 0.0.10
