@@ -1,12 +1,25 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import type { BreadcrumbsService } from "discourse/ui-kit/d-breadcrumbs-item";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-export default class DBreadcrumbsContainer extends Component {
-  @service breadcrumbs;
+interface DBreadcrumbsContainerSignature {
+  Args: {
+    /** Classes added to each item. */
+    additionalItemClasses?: string;
 
-  registerContainer = modifier((element) => {
+    /** Classes added to each item's link. */
+    additionalLinkClasses?: string;
+  };
+
+  Element: HTMLUListElement;
+}
+
+export default class DBreadcrumbsContainer extends Component<DBreadcrumbsContainerSignature> {
+  @service declare breadcrumbs: BreadcrumbsService;
+
+  registerContainer = modifier((element: HTMLElement) => {
     const container = { element };
 
     this.breadcrumbs.containers.add(container);

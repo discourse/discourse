@@ -14,28 +14,46 @@ export function enableLoadMoreObserver() {
   ENABLE_LOAD_MORE_OBSERVER = true;
 }
 
-/**
- * @typedef DLoadMoreSignature
- *
- * @property {HTMLDivElement} Element
- * @property {object} Args
- *
- * @property {() => void} Args.action - The action to trigger when more content should be loaded
- * @property {boolean} [Args.enabled=true] - Whether to allow the loadMore action to trigger.
- *   Use this when you know there's no more content available (e.g., `model.canLoadMore`).
- *   When false, the observer continues to run but the action won't be triggered.
- * @property {boolean} [Args.isLoading=false] - Whether content is currently loading.
- *   When true, the IntersectionObserver won't be created, preventing premature triggers
- *   during initial content load. Pass this to avoid race conditions during page initialization.
- * @property {string} [Args.rootMargin="0px 0px 0px 0px"] - Margin around the root element for intersection detection
- * @property {number} [Args.threshold=0.0] - Threshold at which the intersection callback is triggered
- * @property {string|Element|null} [Args.root=null] - The element to observe intersection within, or a CSS
- *   selector for it. Pass the element itself when it mounts in the same render as the
- *   sentinel, since a selector cannot resolve a root that does not exist yet.
- *
- * @property {object} Blocks
- * @property {[]} Blocks.default - Content rendered above the sentinel.
- */
+interface DLoadMoreSignature {
+  Element: HTMLDivElement;
+
+  Args: {
+    /** The action to trigger when more content should be loaded. */
+    action: () => void;
+
+    /**
+     * Whether to allow the loadMore action to trigger. Defaults to `true`.
+     * Use this when you know there's no more content available (e.g., `model.canLoadMore`).
+     * When false, the observer continues to run but the action won't be triggered.
+     */
+    enabled?: boolean;
+
+    /**
+     * Whether content is currently loading. Defaults to `false`.
+     * When true, the IntersectionObserver won't be created, preventing premature triggers
+     * during initial content load. Pass this to avoid race conditions during page initialization.
+     */
+    isLoading?: boolean;
+
+    /** Margin around the root element for intersection detection. Defaults to `"0px 0px 0px 0px"`. */
+    rootMargin?: string;
+
+    /** Threshold at which the intersection callback is triggered. Defaults to `0.0`. */
+    threshold?: number;
+
+    /**
+     * The element to observe intersection within, or a CSS selector for it. Defaults to `null`.
+     * Pass the element itself when it mounts in the same render as the
+     * sentinel, since a selector cannot resolve a root that does not exist yet.
+     */
+    root?: string | Element | null;
+  };
+
+  Blocks: {
+    /** Content rendered above the sentinel. */
+    default: [];
+  };
+}
 
 /**
  * A component that implements infinite loading using IntersectionObserver.
@@ -85,11 +103,9 @@ export function enableLoadMoreObserver() {
  *   class="users-list__sentinel"
  * />
  * ```
- *
- * @extends {Component<DLoadMoreSignature>}
  */
-export default class DLoadMore extends Component {
-  observer;
+export default class DLoadMore extends Component<DLoadMoreSignature> {
+  observer: IntersectionObserver | undefined;
 
   // Getters, not fields: a field snapshots the argument at construction, so an `@root` that
   // is captured after this component mounts (its container and the sentinel rendering in the
@@ -111,7 +127,7 @@ export default class DLoadMore extends Component {
   }
 
   @action
-  onIntersection(entry) {
+  onIntersection(entry: IntersectionObserverEntry) {
     if (ENABLE_LOAD_MORE_OBSERVER && entry.isIntersecting && this.enabled) {
       discourseDebounce(this, this.args.action, 100);
     }

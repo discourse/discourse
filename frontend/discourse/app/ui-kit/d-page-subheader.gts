@@ -4,12 +4,14 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import type Site from "discourse/models/site";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import {
   DangerActionListItem,
   DangerButton,
   DefaultActionListItem,
   DefaultButton,
+  type DPageActions,
   PrimaryButton,
   WrappedActionListItem,
   WrappedButton,
@@ -17,14 +19,38 @@ import {
 import dElement from "discourse/ui-kit/helpers/d-element";
 import { i18n } from "discourse-i18n";
 
-export default class DPageSubheader extends Component {
-  @service site;
+interface DPageSubheaderSignature {
+  Args: {
+    /** The title. */
+    titleLabel?: string;
+
+    /** A URL the title links to. */
+    titleUrl?: string;
+
+    /** The heading level of the title, from 1 to 6. Defaults to 2. */
+    titleHeadingLevel?: number | null;
+
+    /** A description shown under the title. Its markup is rendered. */
+    descriptionLabel?: string;
+
+    /** A URL linked after the description. */
+    learnMoreUrl?: string;
+  };
+
+  Blocks: {
+    /** The actions. On mobile, they collapse into a menu. */
+    actions: [actions: DPageActions];
+  };
+}
+
+export default class DPageSubheader extends Component<DPageSubheaderSignature> {
+  @service declare site: Site;
 
   /**
    * The element the title renders as. A subheader nested under another heading
    * needs to continue that heading structure rather than restart it at `h2`.
    *
-   * @returns {object} A component wrapping the heading tag.
+   * @returns A component wrapping the heading tag.
    */
   get titleTag() {
     const level = this.args.titleHeadingLevel ?? 2;
