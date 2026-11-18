@@ -31,6 +31,7 @@ class UserSilencer
     return false if @user.silenced?
     @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
     if @user.save
+      # Despite its name, silenced_by_staff is the default notice for automatic holds.
       message_type = @opts[:message] || :silenced_by_staff
 
       details = StaffMessageFormat.new(:silence, @opts[:reason], @opts[:message_body]).format
@@ -44,7 +45,9 @@ class UserSilencer
         @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
       end
 
-      silence_message_params = Dsa::AppealInstructions.message_options
+      silence_message_params =
+        Dsa::AppealInstructions.message_options.merge(notice_options(message_type, details))
+
       DiscourseEvent.trigger(
         :user_silenced,
         user: @user,
@@ -58,7 +61,6 @@ class UserSilencer
         silence_message_params: silence_message_params,
       )
 
-      silence_message_params.merge!(post_alert_options: { skip_send_email: true })
       SystemMessage.create(@user, message_type, silence_message_params)
       true
     end
@@ -113,6 +115,41 @@ class UserSilencer
   end
 
   private
+
+  def notice_options(message_type, reason)
+    unless message_type.to_s == "moderator_silence"
+      return { post_alert_options: { skip_send_email: true } }
+    end
+
+    locale = @user.effective_locale
+    options = { locale:, site_name: SiteSetting.title }
+    decision =
+      if @user.silenced_forever?
+        I18n.t("system_messages.moderator_silence.indefinite", **options)
+      else
+        I18n.t(
+          "system_messages.moderator_silence.timed",
+          **options,
+          silenced_till: formatted_silence_end,
+        )
+      end
+
+    { decision:, reason:, from_system: true }
+  end
+
+  def formatted_silence_end
+    timezone =
+      ActiveSupport::TimeZone[@user.user_option.timezone.presence || "UTC"] ||
+        ActiveSupport::TimeZone["UTC"]
+    deadline = @user.silenced_till.in_time_zone(timezone)
+    locale = @user.effective_locale
+    I18n.t(
+      "system_messages.moderator_silence.date_with_timezone",
+      locale:,
+      date: I18n.l(deadline, format: :long, locale:),
+      offset: deadline.formatted_offset,
+    )
+  end
 
   def notify_moderators
     return if !SiteSetting.notify_mods_when_user_silenced
