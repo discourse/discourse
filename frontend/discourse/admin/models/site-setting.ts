@@ -349,6 +349,7 @@ export default class SiteSetting extends EmberObject {
       type: this.type,
       list_type: this.list_type,
       subtype: this.settingSubtype,
+      secret: this.secret,
       min: this.min,
       max: this.max,
       choices: this.choices,

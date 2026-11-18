@@ -504,6 +504,95 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.strictEqual(body.test_simple, "a|b");
   });
 
+  test("an emoji list setting saves the remaining emojis as a pipe-delimited value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_emojis", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_emojis",
+      value: "smile|heart",
+      type: "list",
+      list_type: "emoji",
+    });
+
+    await click(
+      ".form-kit__field .emoji-value-list .value[data-index='0'] .remove-value-btn"
+    );
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_emojis, "heart");
+  });
+
+  test("a secret list setting saves key and secret pairs", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_secrets", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_secrets",
+      value: "k1|s1",
+      type: "list",
+      list_type: "secret",
+    });
+
+    await fillIn(".form-kit__field .new-value-input.key", "k2");
+    await fillIn(".form-kit__field .new-value-input.secret", "s2");
+    await click(".form-kit__field .add-value-btn");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_secrets, "k1|s1\nk2|s2");
+  });
+
+  test("a secret list setting masks its secrets and reports invalid input", async function (assert) {
+    await renderSetting({
+      setting: "test_secrets",
+      value: "k1|s1",
+      type: "list",
+      list_type: "secret",
+      secret: true,
+    });
+
+    assert.dom(".form-kit__control-password").doesNotExist();
+    assert.dom(".new-value-input.secret").hasAttribute("type", "password");
+
+    await click(".form-kit__field .setting-toggle-secret");
+
+    assert.dom(".new-value-input.secret").hasAttribute("type", "text");
+
+    await click(".form-kit__field .add-value-btn");
+    await click(".form-kit__field .add-value-btn");
+
+    assert
+      .dom(".form-kit__field .form-kit__errors")
+      .hasText(
+        i18n("admin.site_settings.secret_list.invalid_input"),
+        "a repeated rejection shows the message once"
+      );
+  });
+
+  test("cancelling a secret list setting clears its invalid input error", async function (assert) {
+    await renderSetting({
+      setting: "test_secrets",
+      value: "k1|s1",
+      type: "list",
+      list_type: "secret",
+    });
+
+    await click(".form-kit__field .remove-value-btn");
+    await click(".form-kit__field .add-value-btn");
+
+    assert.dom(".form-kit__field .form-kit__errors").exists();
+
+    await click(".setting-controls__cancel");
+
+    assert.dom(".form-kit__field .form-kit__errors").doesNotExist();
+  });
+
   test("a date setting saves the picked date", async function (assert) {
     let body;
     pretender.put("/admin/site_settings/test_date", (request) => {
@@ -532,19 +621,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
 
     assert.dom(".form-kit__control-textarea").exists();
     assert.dom(".form-kit__control-password").doesNotExist();
-  });
-
-  test("a secret list setting is not collapsed into a password input", async function (assert) {
-    await renderSetting({
-      setting: "test_setting",
-      type: "list",
-      list_type: "secret",
-      secret: true,
-      value: "key|secret",
-    });
-
-    assert.dom(".form-kit__control-password").doesNotExist();
-    assert.dom(".secret-value-list").exists();
   });
 
   test("shows link to the staff action logs for the setting on hover", async function (assert) {
