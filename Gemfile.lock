@@ -250,7 +250,11 @@ GEM
     ffi (1.17.4)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
+    ffi (1.17.4-arm-linux-gnu)
+    ffi (1.17.4-arm-linux-musl)
     ffi (1.17.4-arm64-darwin)
+    ffi (1.17.4-x86-linux-gnu)
+    ffi (1.17.4-x86-linux-musl)
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
     ffi (1.17.4-x86_64-linux-musl)
@@ -273,6 +277,12 @@ GEM
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.36.2-arm64-darwin)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.36.2-x86-linux-gnu)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.36.2-x86-linux-musl)
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.36.2-x86_64-darwin)
@@ -408,6 +418,10 @@ GEM
     nokogiri (1.19.7-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.19.7-aarch64-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.19.7-arm-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.7-arm-linux-musl)
       racc (~> 1.4)
     nokogiri (1.19.7-arm64-darwin)
       racc (~> 1.4)
@@ -715,13 +729,29 @@ GEM
     sass-embedded (1.108.2)
       google-protobuf (~> 4.31)
       rake (~> 13.3)
+    sass-embedded (1.108.2-aarch64-linux-android)
+      google-protobuf (~> 4.31)
     sass-embedded (1.108.2-aarch64-linux-gnu)
       google-protobuf (~> 4.31)
     sass-embedded (1.108.2-aarch64-linux-musl)
       google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-arm-linux-androideabi)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-arm-linux-gnueabihf)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-arm-linux-musleabihf)
+      google-protobuf (~> 4.31)
     sass-embedded (1.108.2-arm64-darwin)
       google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-riscv64-linux-android)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-riscv64-linux-gnu)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-riscv64-linux-musl)
+      google-protobuf (~> 4.31)
     sass-embedded (1.108.2-x86_64-darwin)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-x86_64-linux-android)
       google-protobuf (~> 4.31)
     sass-embedded (1.108.2-x86_64-linux-gnu)
       google-protobuf (~> 4.31)
@@ -752,7 +782,11 @@ GEM
       mini_portile2 (~> 2.8.0)
     sqlite3 (2.10.2-aarch64-linux-gnu)
     sqlite3 (2.10.2-aarch64-linux-musl)
+    sqlite3 (2.10.2-arm-linux-gnu)
+    sqlite3 (2.10.2-arm-linux-musl)
     sqlite3 (2.10.2-arm64-darwin)
+    sqlite3 (2.10.2-x86-linux-gnu)
+    sqlite3 (2.10.2-x86-linux-musl)
     sqlite3 (2.10.2-x86_64-darwin)
     sqlite3 (2.10.2-x86_64-linux-gnu)
     sqlite3 (2.10.2-x86_64-linux-musl)
@@ -772,6 +806,8 @@ GEM
       rb_sys (~> 0.9)
     tiktoken_ruby (0.0.18-aarch64-linux)
     tiktoken_ruby (0.0.18-aarch64-linux-musl)
+    tiktoken_ruby (0.0.18-arm-linux-gnu)
+    tiktoken_ruby (0.0.18-arm-linux-musl)
     tiktoken_ruby (0.0.18-arm64-darwin)
     tiktoken_ruby (0.0.18-x86_64-darwin)
     tiktoken_ruby (0.0.18-x86_64-linux)
@@ -835,11 +871,24 @@ GEM
 
 PLATFORMS
   aarch64-linux
+  aarch64-linux-android
   aarch64-linux-gnu
   aarch64-linux-musl
+  arm-linux-androideabi
+  arm-linux-gnu
+  arm-linux-gnueabihf
+  arm-linux-musl
+  arm-linux-musleabihf
   arm64-darwin
+  riscv64-linux-android
+  riscv64-linux-gnu
+  riscv64-linux-musl
+  ruby
+  x86-linux-gnu
+  x86-linux-musl
   x86_64-darwin
   x86_64-linux
+  x86_64-linux-android
   x86_64-linux-gnu
   x86_64-linux-musl
 
@@ -1099,7 +1148,11 @@ CHECKSUMS
   ffi (1.17.4) sha256=bcd1642e06f0d16fc9e09ac6d49c3a7298b9789bcb58127302f934e437d60acf
   ffi (1.17.4-aarch64-linux-gnu) sha256=b208f06f91ffd8f5e1193da3cae3d2ccfc27fc36fba577baf698d26d91c080df
   ffi (1.17.4-aarch64-linux-musl) sha256=9286b7a615f2676245283aef0a0a3b475ae3aae2bb5448baace630bb77b91f39
+  ffi (1.17.4-arm-linux-gnu) sha256=d6dbddf7cb77bf955411af5f187a65b8cd378cb003c15c05697f5feee1cb1564
+  ffi (1.17.4-arm-linux-musl) sha256=9d4838ded0465bef6e2426935f6bcc93134b6616785a84ffd2a3d82bc3cf6f95
   ffi (1.17.4-arm64-darwin) sha256=19071aaf1419251b0a46852abf960e77330a3b334d13a4ab51d58b31a937001b
+  ffi (1.17.4-x86-linux-gnu) sha256=38e150df5f4ca555e25beca4090823ae09657bceded154e3c52f8631c1ed72cf
+  ffi (1.17.4-x86-linux-musl) sha256=fbeec0fc7c795bcf86f623bb18d31ea1820f7bd580e1703a3d3740d527437809
   ffi (1.17.4-x86_64-darwin) sha256=aa70390523cf3235096cf64962b709b4cfbd5c082a2cb2ae714eb0fe2ccda496
   ffi (1.17.4-x86_64-linux-gnu) sha256=9d3db14c2eae074b382fa9c083fe95aec6e0a1451da249eab096c34002bc752d
   ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
@@ -1112,6 +1165,8 @@ CHECKSUMS
   google-protobuf (4.36.2-aarch64-linux-gnu) sha256=c3279ec6eaa59f6ed6276eda2a33cffb4306471183ab79a332e698b8564f5169
   google-protobuf (4.36.2-aarch64-linux-musl) sha256=0772c9dde1e6dce9a6b44d1d35c28c29adee99d9bd6aff5e21840daeb22161ce
   google-protobuf (4.36.2-arm64-darwin) sha256=f70d810e6bbab9d8ad9c1d5fd685a21de4c10ad3ad32efb9455e17e5b1286917
+  google-protobuf (4.36.2-x86-linux-gnu) sha256=ffcd06d49bffca24afff18c900dd61a51ea3028d43c47d0d9621d00bf38a5866
+  google-protobuf (4.36.2-x86-linux-musl) sha256=e1afec03babd73c9117cc09d5fc2a98dfef37a414bfd8a4d0ceaac7bd66fc028
   google-protobuf (4.36.2-x86_64-darwin) sha256=8d1bd2a344f7f589703b202ad2ee4cca8ef731b4ced45782ef92d385967384ba
   google-protobuf (4.36.2-x86_64-linux-gnu) sha256=d25a820873e423f1d209ae8c672a4a28b019e2429debd0901d26670a0b4e14db
   google-protobuf (4.36.2-x86_64-linux-musl) sha256=0fa17686c896da96a60a705e56ddc7d4ff56413f52787c655bd4c9fb33ffe14f
@@ -1190,6 +1245,8 @@ CHECKSUMS
   nokogiri (1.19.7) sha256=abe94507c54cb18f872777b16bdca4aad32b1abdc4c52fe843f1c80fbdf992b8
   nokogiri (1.19.7-aarch64-linux-gnu) sha256=8f5e15d299602456406e1f03a9f3456cceb33a0722811e818d2ee2214eb4c84a
   nokogiri (1.19.7-aarch64-linux-musl) sha256=efe0c3602e6e54521bc21c681930ce5568e2d11203de17400710b2b3ca2e4cb4
+  nokogiri (1.19.7-arm-linux-gnu) sha256=7fd1907125691aa89e838cc91161761c758b4e17bb32f0dd9b5515a82cc759af
+  nokogiri (1.19.7-arm-linux-musl) sha256=28d0ff0c87b6bb2e56580323a6fb049d5d4a02b94f0958fdd47e9ac146991c77
   nokogiri (1.19.7-arm64-darwin) sha256=f27d7f25f4873fbc3aa35a2cc2fb680c98555fec1925348da439d0869d541142
   nokogiri (1.19.7-x86_64-darwin) sha256=508e81e8c5f84aaa240dce981bf1c43faae60808726f0ce7024ee92effc5cafe
   nokogiri (1.19.7-x86_64-linux-gnu) sha256=25865ccb462f714e712fdf8906fde07849cb6704a808e3d629d75baa5af5dd3b
@@ -1303,10 +1360,18 @@ CHECKSUMS
   samovar (2.5.1) sha256=8a9fc41eb8868084f0321eb41678c485cfbc7d282fb306c0be67c3284b1d2394
   sanitize (7.0.2) sha256=84c14aca3f69ee42da4ccd8aef5ee0f70c94bd600a652260b37fbfe833a77b97
   sass-embedded (1.108.2) sha256=d3df2784ab3195aae3c5893a7dabe985d191cae4210868f99774d0f5ae7b97af
+  sass-embedded (1.108.2-aarch64-linux-android) sha256=5abb2547112254f1c89e5f43812a1f1a01fd5e2b2005b46476bb0b9c34a47388
   sass-embedded (1.108.2-aarch64-linux-gnu) sha256=79372c347ebfef0b80c29511487e80a78950b449538d1c162b2bc09b92967587
   sass-embedded (1.108.2-aarch64-linux-musl) sha256=e09cd8faf9468ee726bfc225d6fdb1705d12fb4d323039e1b2176f13d318d41f
+  sass-embedded (1.108.2-arm-linux-androideabi) sha256=a8ae928aee0d574c6d3ccf3d8f3f9ffcae073c05b91f147e4030e77030e40124
+  sass-embedded (1.108.2-arm-linux-gnueabihf) sha256=de55d4296132b44399a615dd7b676589bb1c546496683e746ccc3559412ef62e
+  sass-embedded (1.108.2-arm-linux-musleabihf) sha256=3404e087506d9ec30ab417f6f3b7a444d99e781d8b197c7ecfef90769b095cc6
   sass-embedded (1.108.2-arm64-darwin) sha256=08d38ac71e9b6fcb651efeb40c7a27394357d8a044e19f620712a410f68c2c03
+  sass-embedded (1.108.2-riscv64-linux-android) sha256=051cdf9110f85d75a04fba968793bcab2076eed60774569a8142c553ddf476dd
+  sass-embedded (1.108.2-riscv64-linux-gnu) sha256=4d79a784f1c857af11282d90b2be4aa623f3017b47a8e1b42130c214ee4d7783
+  sass-embedded (1.108.2-riscv64-linux-musl) sha256=571040cbf6c2d0e1cd3680792b7eeac3e58b7027ed0d6f094ed928c762aa00a5
   sass-embedded (1.108.2-x86_64-darwin) sha256=e1e97527a9392d8368a9e3fbe34822ae0353432eed874d7634a036386364589d
+  sass-embedded (1.108.2-x86_64-linux-android) sha256=758f65a05713354598277b847768f5c0d58e524e03836a1e01ba1cfcd694af63
   sass-embedded (1.108.2-x86_64-linux-gnu) sha256=797f7128c5cb11e527e390c2a8dbbdee09832e43b754f2c2ce7f691e27fec75d
   sass-embedded (1.108.2-x86_64-linux-musl) sha256=a0e16d18bd90a63139fe5644a915abb6073a12660e4648754c5a5240dc65444e
   sassc-embedded (1.80.10) sha256=6baf835e2208d5905d8cff7d0322af45ee3a5933d4d93d22e2875ade967d8a57
@@ -1321,7 +1386,11 @@ CHECKSUMS
   sqlite3 (2.10.2) sha256=f1ea68cd3287f8a49f39a088ac9e4bd0ef4e7f394c3d4a60dd4c7e44b0566964
   sqlite3 (2.10.2-aarch64-linux-gnu) sha256=e9aea2c2b3476fc875dd8a89313a9a2862818519c0186bfb5b56d6f57bb08d98
   sqlite3 (2.10.2-aarch64-linux-musl) sha256=4986fc40cdf21342362b72a941df28e95cfe0e644f3ad2532d948b157c39dbee
+  sqlite3 (2.10.2-arm-linux-gnu) sha256=762f609ef891463226b472d3df66aea84d5466ff4376d3ccf4a059718c4ce9c9
+  sqlite3 (2.10.2-arm-linux-musl) sha256=833623eaf1157b1b85d1c0830e3e8f9beb3bb95a9bec3d252f20557a50e9803a
   sqlite3 (2.10.2-arm64-darwin) sha256=5b0d235ea037e6dcd1b8387a19d73be571917db9f93044d35741cf933a21a37d
+  sqlite3 (2.10.2-x86-linux-gnu) sha256=46a02a29e9ae452824082388be5c24fd26f133b14bdd268610c6aa9a8d924c44
+  sqlite3 (2.10.2-x86-linux-musl) sha256=38980cf01eb2e4ac1c0755964d60b3d743ccf00686798a626bab852ff4cd3d1e
   sqlite3 (2.10.2-x86_64-darwin) sha256=fd2c67b49d313031af112e172c83ab321681a2b4996bf882eefac50be7bea08f
   sqlite3 (2.10.2-x86_64-linux-gnu) sha256=ca92731ab464df9cae503fa1a439a549e2724f6953c8c05a7769b59366e38f15
   sqlite3 (2.10.2-x86_64-linux-musl) sha256=b9f8fc62f3e0eb8966b41de251b492b4c8e9d1b23559beb6e150ad7f8d590941
@@ -1336,6 +1405,8 @@ CHECKSUMS
   tiktoken_ruby (0.0.18) sha256=3b4ac99f287a324d833b81ef5a8c7d2fd0b38f7192f02b4fcfa28f56a54513ed
   tiktoken_ruby (0.0.18-aarch64-linux) sha256=0c2dcd55bacb659e61b9af0a7bd18b8d6390fb6fda6cbb35ac95c4230565e0f8
   tiktoken_ruby (0.0.18-aarch64-linux-musl) sha256=35580c76464c69b2e6a225dcd37fa0cd11c32499782f055b97965bd24c0422f3
+  tiktoken_ruby (0.0.18-arm-linux-gnu) sha256=d5fb49087b3cbb306a5573392d7053b3ccbd695a241710288fd8fb87c6667630
+  tiktoken_ruby (0.0.18-arm-linux-musl) sha256=e3ce86fb7b464005e99ed5bd3c3f27ab9fbfdf0dc0cfeac896abe995614a3b72
   tiktoken_ruby (0.0.18-arm64-darwin) sha256=30881dfd8215d4ea00ef17a350ad2f2181266c5c9cc5310017d1ac2807b3090f
   tiktoken_ruby (0.0.18-x86_64-darwin) sha256=c24815fa26b4aadca5ec095d0c3e1a871029e4f23648790092a1e2c295f22758
   tiktoken_ruby (0.0.18-x86_64-linux) sha256=0a20788674970f6c3083541686308bed02b598d0d9d4f8320339c60f6f8e6200
