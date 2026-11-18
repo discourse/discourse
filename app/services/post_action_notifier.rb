@@ -20,6 +20,7 @@ class PostActionNotifier
 
   def self.refresh_like_notification(post, read)
     return unless post && post.user_id && post.topic
+    return if post.topic.like_activity_suppressed?
 
     usernames =
       post
@@ -84,7 +85,7 @@ class PostActionNotifier
     return unless post_action.is_like?
 
     post = post_action.post
-    return if post_action.user.blank? || post.blank?
+    return if post_action.user.blank? || post.blank? || post.topic&.like_activity_suppressed?
 
     alerter.create_notification(
       post.user,

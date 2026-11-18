@@ -11,6 +11,7 @@ module DiscourseReactions
     end
 
     def create
+      return if @post.topic&.like_activity_suppressed?
       post_user = @post.user
 
       if post_user.user_option&.like_notification_frequency ==
@@ -57,6 +58,7 @@ module DiscourseReactions
 
     def refresh_notification(read)
       return unless @post && @post.user_id && @post.topic
+      return if @post.topic.like_activity_suppressed?
 
       remaining_data = remaining_reaction_data
       return if remaining_data.blank?

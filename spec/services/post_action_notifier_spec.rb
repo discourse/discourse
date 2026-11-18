@@ -201,6 +201,31 @@ RSpec.describe PostActionNotifier do
     end
   end
 
+  context "when a category suppresses like notifications" do
+    it "saves likes without notifying the post author" do
+      SiteSetting.suppress_like_notifications_in_categories = post.topic.category_id.to_s
+
+      expect { PostActionCreator.like(evil_trout, post) }.not_to change {
+        post.user.notifications.where(notification_type: Notification.types[:liked]).count
+      }
+      expect(post.reload.like_count).to eq(1)
+    end
+
+    it "does not recreate a like notification when a like is removed" do
+      liker = Fabricate(:user)
+      PostActionCreator.like(evil_trout, post)
+      PostActionCreator.like(liker, post)
+      notifications = post.user.notifications.where(notification_type: Notification.types[:liked])
+      expect(notifications).to be_exists
+
+      SiteSetting.suppress_like_notifications_in_categories = post.topic.category_id.to_s
+      PostActionDestroyer.new(liker, post, PostActionType::LIKE_POST_ACTION_ID).perform
+
+      expect(notifications).not_to be_exists
+      expect(post.reload.like_count).to eq(1)
+    end
+  end
+
   context "with private message" do
     fab!(:private_message) do
       Fabricate(:topic, archetype: Archetype.private_message, category_id: nil)

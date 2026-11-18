@@ -44,6 +44,7 @@ class UserAction < ActiveRecord::Base
     ]
 
   USER_ACTED_TYPES = [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE]
+  LIKE_ACTION_TYPES = [LIKE, WAS_LIKED].freeze
 
   def self.types
     @types ||=
@@ -334,7 +335,9 @@ class UserAction < ActiveRecord::Base
         group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
       end
 
-      if action.user && (user_ids.present? || group_ids.present?)
+      hide_like_activity =
+        LIKE_ACTION_TYPES.include?(action.action_type) && topic&.like_activity_suppressed?
+      if !hide_like_activity && action.user && (user_ids.present? || group_ids.present?)
         MessageBus.publish(
           "/u/#{action.user.username_lower}",
           action.id,
@@ -462,6 +465,15 @@ class UserAction < ActiveRecord::Base
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)
     filter_ignored_users(builder, guardian)
+
+    suppressed_categories = SiteSetting.suppress_like_notifications_in_categories_map
+    if suppressed_categories.present?
+      builder.where(
+        "(a.action_type NOT IN (:like_types) OR t.category_id IS NULL OR t.category_id NOT IN (:suppressed_categories))",
+        like_types: LIKE_ACTION_TYPES,
+        suppressed_categories: suppressed_categories,
+      )
+    end
   end
 
   def self.filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)
