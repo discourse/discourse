@@ -728,7 +728,19 @@ export default class Post extends RestModel {
   }
 
   get canToggleLike() {
+    if (this.likesDisabledInCategory) {
+      return !!this.likeAction?.can_undo;
+    }
     return !!this.likeAction?.get("canToggle");
+  }
+
+  get likesDisabledInCategory() {
+    const categoryId = this.topic?.get("category_id");
+    const categories = this.siteSettings.disable_likes_in_categories;
+    return (
+      typeof categories === "string" &&
+      categories.split("|").includes(String(categoryId))
+    );
   }
 
   get filteredRepliesPostNumber() {
@@ -782,6 +794,10 @@ export default class Post extends RestModel {
   }
 
   get showLike() {
+    if (this.likesDisabledInCategory) {
+      return this.liked;
+    }
+
     if (
       !this.currentUser ||
       (this.topic?.get("archived") && this.user_id !== this.currentUser.id)

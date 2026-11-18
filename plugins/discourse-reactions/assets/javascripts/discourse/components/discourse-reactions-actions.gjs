@@ -145,6 +145,10 @@ export default class DiscourseReactionsActions extends Component {
       return false;
     }
 
+    if (this.data.likesDisabledInCategory) {
+      return !!this.data.current_user_reaction?.can_undo;
+    }
+
     // Anonymous users can pick a reaction — it gets deferred until login.
     if (!this.currentUser) {
       return true;
@@ -210,7 +214,11 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   get showReactionsPicker() {
-    if (!this.reactionsPickerExpanded || !this.siteSettings.enable_emoji) {
+    if (
+      !this.reactionsPickerExpanded ||
+      !this.siteSettings.enable_emoji ||
+      this.data.likesDisabledInCategory
+    ) {
       return false;
     }
 
@@ -326,6 +334,10 @@ export default class DiscourseReactionsActions extends Component {
 
   @action
   async toggle(params) {
+    if (this.data.likesDisabledInCategory) {
+      return;
+    }
+
     if (!this.currentUser) {
       if (!this.canReact) {
         return;
@@ -544,7 +556,11 @@ export default class DiscourseReactionsActions extends Component {
       this.siteSettings.discourse_reactions_reaction_for_like;
     const current_user_reaction = this.data.current_user_reaction;
 
-    if (
+    if (this.data.likesDisabledInCategory) {
+      if (!this.canReact || current_user_reaction?.id !== attrs.reaction) {
+        return;
+      }
+    } else if (
       !this.data.likeAction ||
       !(this.data.likeAction.canToggle || this.data.likeAction.can_undo)
     ) {
@@ -788,7 +804,15 @@ export default class DiscourseReactionsActions extends Component {
 
         {{#if (eq @position "left")}}
           <components.counter />
-        {{else if (not this.data.yours)}}
+        {{else if
+          (and
+            (not this.data.yours)
+            (or
+              (not this.data.likesDisabledInCategory)
+              this.data.current_user_reaction
+            )
+          )
+        }}
           <components.button />
         {{/if}}
       {{/let}}
