@@ -3,6 +3,7 @@ import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -16,6 +17,7 @@ acceptance("Global notice - logs notice", function (needs) {
   let errorNoticeVisible = false;
 
   needs.hooks.beforeEach(() => {
+    disableClearA11yAnnouncementsInTests();
     store.setItem("logs-notice-text", "Errors are piling up");
   });
 
