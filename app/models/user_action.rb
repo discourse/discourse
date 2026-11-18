@@ -44,6 +44,7 @@ class UserAction < ActiveRecord::Base
     ]
 
   USER_ACTED_TYPES = [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE]
+  LIKE_ACTION_TYPES = [LIKE, WAS_LIKED].freeze
 
   def self.types
     @types ||=
@@ -325,7 +326,10 @@ class UserAction < ActiveRecord::Base
 
       topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
 
-      update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
+      if LIKE_ACTION_TYPES.include?(action.action_type) && topic && !topic.private_message? &&
+           !topic.like_stats_excluded?
+        update_like_count(user_id, action.action_type, 1)
+      end
 
       user_ids = user_id != action.acting_user_id ? [user_id] : nil
 
@@ -359,17 +363,22 @@ class UserAction < ActiveRecord::Base
       :target_topic_id,
       :target_post_id,
     )
-    if action = UserAction.find_by(hash.except(:created_at))
-      action.destroy
-      MessageBus.publish(
-        "/user/#{action.user_id}",
-        { user_action_id: action.id, remove: true },
-        user_ids: [action.user_id],
-      )
-    end
+    transaction do
+      if action = UserAction.find_by(hash.except(:created_at))
+        action.destroy
+        MessageBus.publish(
+          "/user/#{action.user_id}",
+          { user_action_id: action.id, remove: true },
+          user_ids: [action.user_id],
+        )
+      end
 
-    if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
-      update_like_count(hash[:user_id], hash[:action_type], -1)
+      if LIKE_ACTION_TYPES.include?(hash[:action_type])
+        topic = Topic.find_by(id: hash[:target_topic_id])
+        unless topic&.private_message? || topic&.like_stats_excluded?
+          update_like_count(hash[:user_id], hash[:action_type], -1)
+        end
+      end
     end
   end
 

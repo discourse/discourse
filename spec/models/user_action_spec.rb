@@ -46,6 +46,25 @@ RSpec.describe UserAction do
     end
   end
 
+  it "keeps likes and unlikes in excluded categories out of user stats" do
+    post = Fabricate(:post)
+    liker = Fabricate(:user)
+    SiteSetting.exclude_categories_from_like_stats = post.topic.category_id.to_s
+
+    expect(PostActionCreator.like(liker, post)).to be_success
+    expect(post.reload.like_count).to eq(1)
+    expect(liker.user_stat.reload.likes_given).to eq(0)
+    expect(post.user.user_stat.reload.likes_received).to eq(0)
+    expect(
+      described_class.exists?(user: liker, target_post: post, action_type: UserAction::LIKE),
+    ).to eq(true)
+
+    expect(PostActionDestroyer.destroy(liker, post, :like)).to be_success
+    expect(post.reload.like_count).to eq(0)
+    expect(liker.user_stat.reload.likes_given).to eq(0)
+    expect(post.user.user_stat.reload.likes_received).to eq(0)
+  end
+
   describe "#stream" do
     fab!(:public_post, :post)
     let(:public_topic) { public_post.topic }

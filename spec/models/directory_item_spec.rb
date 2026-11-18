@@ -13,6 +13,37 @@ RSpec.describe DirectoryItem do
     end
   end
 
+  it "refreshes historical like totals when the excluded categories change" do
+    Jobs.run_immediately!
+    UserActionManager.enable
+    post = create_post
+    category = Fabricate(:category)
+    other_post = create_post(category:, user: post.user)
+    create_post(topic: other_post.topic, user: post.user)
+    liker = Fabricate(:user)
+
+    PostActionCreator.like(liker, post)
+    PostActionCreator.like(liker, other_post)
+
+    SiteSetting.exclude_categories_from_like_stats = category.id.to_s
+
+    expect(liker.user_stat.reload.likes_given).to eq(1)
+    expect(post.user.user_stat.reload.likes_received).to eq(1)
+    all_time = described_class.where(period_type: described_class.period_types[:all])
+    expect(all_time.find_by!(user: post.user)).to have_attributes(
+      likes_received: 1,
+      topic_count: 2,
+      post_count: 1,
+    )
+    expect(all_time.find_by!(user: liker)).to have_attributes(likes_given: 1)
+
+    SiteSetting.exclude_categories_from_like_stats = ""
+
+    expect(liker.user_stat.reload.likes_given).to eq(2)
+    expect(post.user.user_stat.reload.likes_received).to eq(2)
+    expect(all_time.find_by!(user: liker)).to have_attributes(likes_given: 2)
+  end
+
   describe "eligible users" do
     fab!(:post) { create_post }
 

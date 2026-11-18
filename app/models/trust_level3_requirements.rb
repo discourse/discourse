@@ -210,12 +210,7 @@ class TrustLevel3Requirements
   end
 
   def num_likes_given
-    UserAction
-      .where(user_id: @user.id, action_type: UserAction::LIKE)
-      .where("user_actions.created_at > ?", time_period.days.ago)
-      .joins(:target_topic)
-      .where.not(topics: { archetype: Archetype.private_message })
-      .count
+    likes_query(UserAction::LIKE).count
   end
 
   def min_likes_given
@@ -223,11 +218,7 @@ class TrustLevel3Requirements
   end
 
   def num_likes_received_query
-    UserAction
-      .where(user_id: @user.id, action_type: UserAction::WAS_LIKED)
-      .where("user_actions.created_at > ?", time_period.days.ago)
-      .joins(:target_topic)
-      .where.not(topics: { archetype: Archetype.private_message })
+    likes_query(UserAction::WAS_LIKED)
   end
 
   def num_likes_received
@@ -296,5 +287,25 @@ class TrustLevel3Requirements
           time_period.days.ago,
         )
         .pluck(:id)
+  end
+
+  private
+
+  def likes_query(action_type)
+    likes =
+      UserAction
+        .where(user_id: @user.id, action_type:)
+        .where("user_actions.created_at > ?", time_period.days.ago)
+        .joins(:target_topic)
+        .where.not(topics: { archetype: Archetype.private_message })
+    excluded_categories = SiteSetting.exclude_categories_from_like_stats_map
+    if excluded_categories.present?
+      likes =
+        likes.where(
+          "topics.category_id IS NULL OR topics.category_id NOT IN (?)",
+          excluded_categories,
+        )
+    end
+    likes
   end
 end
