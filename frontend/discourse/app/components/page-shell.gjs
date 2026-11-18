@@ -9,10 +9,6 @@ import { i18n } from "discourse-i18n";
 export default class PageShell extends Component {
   @service pageShell;
 
-  get contextPresentation() {
-    return this.pageShell.closingPanels.context ?? this.pageShell.context;
-  }
-
   <template>
     {{#if this.pageShell.enabled}}
       {{bodyClass
@@ -30,7 +26,6 @@ export default class PageShell extends Component {
       <div
         class="page-shell"
         data-animating-panels={{if this.pageShell.animatingPanels "true"}}
-        data-closing-navigation={{this.pageShell.closingPanels.navigation}}
         data-context={{if
           this.pageShell.hasContextPanel
           this.pageShell.context
@@ -61,14 +56,16 @@ export default class PageShell extends Component {
         {{#if
           (and
             this.pageShell.hasContextPanel
-            (not (eq this.contextPresentation "hidden"))
+            (or
+              (eq this.pageShell.context "open") this.pageShell.closingContext
+            )
           )
         }}
           <aside
             aria-label={{i18n "page_shell.context"}}
             class="page-shell__context"
             id="page-shell-context"
-            inert={{if this.pageShell.closingPanels.context true}}
+            inert={{if this.pageShell.closingContext true}}
           >
             {{#if (eq this.pageShell.context "open")}}
               <PageShellPanelSeparator @panel="context" />

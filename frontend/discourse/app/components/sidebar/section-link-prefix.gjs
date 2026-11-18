@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isHex } from "discourse/components/sidebar/section-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -7,6 +8,8 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class SidebarSectionLinkPrefix extends Component {
+  @service pageShell;
+
   get prefixValue() {
     if (!this.args.prefixType && !this.args.prefixValue) {
       return;
@@ -72,6 +75,12 @@ export default class SidebarSectionLinkPrefix extends Component {
         {{#if @prefixBadge}}
           {{dIcon @prefixBadge class="prefix-badge"}}
         {{/if}}
+      </span>
+    {{else if
+      (and this.pageShell.enabled (eq this.pageShell.navigation "rail"))
+    }}
+      <span class="page-shell__rail-link-icon" hidden>
+        {{dIcon "link"}}
       </span>
     {{/if}}
   </template>

@@ -36,12 +36,14 @@ export default class SwitchPanelButtons extends Component {
   <template>
     {{#each @buttons as |button|}}
       <DButton
+        aria-label={{if @rail button.switchButtonLabel}}
         class="btn-default sidebar__panel-switch-button"
         data-key={{button.key}}
         @action={{fn this.switchPanel button}}
         @disabled={{this.isSwitching}}
         @icon={{button.switchButtonIcon}}
-        @translatedLabel={{button.switchButtonLabel}}
+        @translatedLabel={{unless @rail button.switchButtonLabel}}
+        @translatedTitle={{if @rail button.switchButtonLabel}}
       />
     {{/each}}
   </template>

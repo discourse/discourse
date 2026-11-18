@@ -257,8 +257,7 @@ body.has-page-shell {
       }
     }
 
-    &[data-navigation="open"],
-    &[data-navigation="rail"] {
+    &[data-navigation="open"] {
       .page-shell__header-start {
         inline-size: 100%;
         block-size: 100%;
@@ -267,12 +266,26 @@ body.has-page-shell {
       }
     }
 
-    &[data-navigation="rail"]
-      .page-shell__header-start
-      .home-logo-wrapper-outlet {
-      display: none;
+    &[data-navigation="rail"] {
+      .d-header .contents::before {
+        content: "";
+        grid-column: 1;
+        grid-row: 1;
+        align-self: stretch;
+        border-inline-end: 1px solid var(--d-sidebar-border-color);
+        background: var(--d-sidebar-background);
+      }
+
+      .page-shell__header-start > .header-sidebar-toggle {
+        position: absolute;
+        z-index: 1;
+        inset-block-start: 50%;
+        inset-inline-start: var(--space-1);
+        translate: 0 -50%;
+      }
     }
 
+    &[data-navigation="rail"],
     &[data-navigation="hidden"] {
       --_page-shell-header-start-column: 3;
       --_page-shell-header-start-inset: var(
@@ -284,29 +297,6 @@ body.has-page-shell {
         max-inline-size: 40%;
         padding-inline-start: var(--space-4);
       }
-
-      &:has(.page-shell__header-start > .header-sidebar-toggle) {
-        --_page-shell-header-navigation-toggle-space: calc(
-          3em + var(--space-1)
-        );
-
-        .page-shell__header-start > .header-sidebar-toggle {
-          position: absolute;
-          z-index: 1;
-          inset-block-start: 50%;
-          inset-inline-start: var(--space-1);
-          translate: 0 -50%;
-        }
-
-        &[data-context="hidden"],
-        &[data-constrained-context] {
-          .page-shell__header-start {
-            padding-inline-start: var(
-              --_page-shell-header-navigation-toggle-space
-            );
-          }
-        }
-      }
     }
 
     .page-shell__header-context {
@@ -316,10 +306,6 @@ body.has-page-shell {
       align-items: center;
       block-size: 100%;
       min-inline-size: 0;
-      padding-inline-start: var(
-        --_page-shell-header-navigation-toggle-space,
-        0
-      );
       overflow: clip;
       box-sizing: border-box;
       background: var(--d-comp-PageShell-color-background);
@@ -412,7 +398,7 @@ body.has-page-shell {
       background: var(--d-sidebar-background);
     }
 
-    &[data-navigation="hidden"]:not([data-closing-navigation])::before {
+    &[data-navigation="hidden"]::before {
       display: none;
     }
 
@@ -433,14 +419,57 @@ body.has-page-shell {
       overflow: hidden;
     }
 
-    &[data-navigation="hidden"]:not([data-closing-navigation])
-      .page-shell__navigation {
+    &[data-navigation="hidden"] .page-shell__navigation {
       display: none;
     }
 
-    &[data-navigation="rail"] .sidebar-wrapper {
-      box-sizing: border-box;
-      border-inline-end: 1px solid var(--d-sidebar-border-color);
+    &[data-navigation="rail"] .page-shell__navigation {
+      .sidebar-sections,
+      .sidebar-section-nested {
+        padding-inline: var(--space-1);
+      }
+
+      .sidebar-section-header-wrapper,
+      .sidebar-section-link
+        > :not(
+          .sidebar-section-link-prefix,
+          .sidebar-section-link-content-text,
+          .page-shell__rail-link-icon
+        ) {
+        display: none;
+      }
+
+      .sidebar-section-link {
+        position: relative;
+        justify-content: center;
+        box-sizing: border-box;
+        padding-inline: 0;
+
+        .sidebar-section-link-content-text {
+          position: absolute;
+          inline-size: 1px;
+          block-size: 1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+        }
+      }
+
+      .page-shell__rail-link-icon {
+        display: flex;
+      }
+
+      .sidebar__panel-switch-button {
+        align-self: center;
+        margin-inline: 0;
+      }
+
+      .sidebar-footer-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        inline-size: 100%;
+      }
     }
 
     // The separator and the content share one cell, so both can stick.
@@ -641,13 +670,6 @@ body.has-page-shell {
       --_page-shell-context-track-width: 0px;
       --_page-shell-context-reference-width: 0px;
 
-      &[data-navigation="hidden"] .page-shell__header-start {
-        padding-inline-start: var(
-          --_page-shell-header-navigation-toggle-space,
-          var(--space-4)
-        );
-      }
-
       .page-shell__context,
       .page-shell__header-context,
       .page-shell__context-toggle {
@@ -674,12 +696,13 @@ body.has-page-shell {
         border-inline-end: 0;
         background: transparent;
 
-        .home-logo-wrapper-outlet {
-          display: block;
+        &:has(> .header-sidebar-toggle) {
+          padding-inline-start: calc(3em + var(--space-1));
         }
       }
 
       &::before,
+      .d-header .contents::before,
       .page-shell__navigation {
         display: none;
       }

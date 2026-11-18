@@ -1,4 +1,4 @@
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, findAll, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -97,6 +97,45 @@ acceptance("Page shell | regions", function (needs) {
       .dom(toggle)
       .hasAttribute("aria-expanded", "true", "The button reports open");
     assert.dom("#page-shell-context").exists("The panel reopens");
+  });
+
+  test("the Navigation toggle collapses to actionable sidebar icons", async function (assert) {
+    await visit("/");
+
+    const toggle = ".btn-sidebar-toggle";
+    const links = ".page-shell__navigation .sidebar-section-link";
+    const expandedCount = findAll(links).length;
+    assert.true(expandedCount > 0, "Navigation starts with links");
+
+    await click(toggle);
+
+    assert
+      .dom(".page-shell")
+      .hasAttribute(
+        "data-navigation",
+        "rail",
+        "Navigation collapses to a rail"
+      );
+    assert
+      .dom(toggle)
+      .hasAttribute("aria-expanded", "false", "The toggle reports collapsed");
+    assert.true(
+      findAll(links).length >= expandedCount,
+      "The rail keeps the links"
+    );
+    assert
+      .dom(`${links} .sidebar-section-link-prefix`)
+      .exists("Links show icons");
+
+    await click(toggle);
+
+    assert
+      .dom(".page-shell")
+      .hasAttribute(
+        "data-navigation",
+        "open",
+        "The toggle restores Navigation"
+      );
   });
 
   test("Preferences has no header Context button", async function (assert) {
