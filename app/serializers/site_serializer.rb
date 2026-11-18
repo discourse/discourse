@@ -41,6 +41,7 @@ class SiteSerializer < ApplicationSerializer
     :watched_words_replace,
     :watched_words_link,
     :categories,
+    :category_group_moderator_topic_move_ids,
     :markdown_additional_options,
     :hashtag_configurations,
     :hashtag_icons,
@@ -319,6 +320,14 @@ class SiteSerializer < ApplicationSerializer
 
   def topic_featured_link_allowed_category_ids
     scope.topic_featured_link_allowed_category_ids
+  end
+
+  def category_group_moderator_topic_move_ids
+    @category_group_moderator_topic_move_ids ||= scope.category_group_moderator_topic_move_ids
+  end
+
+  def include_category_group_moderator_topic_move_ids?
+    category_group_moderator_topic_move_ids.present?
   end
 
   def censored_regexp

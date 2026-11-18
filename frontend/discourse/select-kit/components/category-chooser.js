@@ -17,6 +17,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
   allowUncategorized: "allowUncategorized",
   autoInsertNoneItem: false,
   allowSubCategories: true,
+  includeTopicMoveDestinations: false,
   permissionType: PermissionType.FULL,
   excludeCategoryId: null,
   scopedCategoryId: null,
@@ -54,8 +55,10 @@ export default class CategoryChooser extends ComboBoxComponent {
 
   @computed(
     "selectKit.filter",
+    "selectKit.options.includeTopicMoveDestinations",
     "selectKit.options.scopedCategoryId",
-    "selectKit.options.prioritizedCategoryId"
+    "selectKit.options.prioritizedCategoryId",
+    "site.category_group_moderator_topic_move_ids.[]"
   )
   get content() {
     if (!this.selectKit.filter) {
@@ -180,6 +183,10 @@ export default class CategoryChooser extends ComboBoxComponent {
     }
 
     const excludeCategoryId = this.selectKit.options.excludeCategoryId;
+    const topicMoveCategoryIds = this.selectKit.options
+      .includeTopicMoveDestinations
+      ? this.site.category_group_moderator_topic_move_ids
+      : undefined;
 
     let scopedCategories = categories.filter((category) => {
       const categoryId = this.getValue(category);
@@ -213,7 +220,10 @@ export default class CategoryChooser extends ComboBoxComponent {
 
       const permissionType = this.selectKit.options.permissionType;
       if (permissionType && !this.allowRestrictedCategories) {
-        return permissionType === category.permission;
+        return (
+          permissionType === category.permission ||
+          topicMoveCategoryIds?.includes(categoryId)
+        );
       }
 
       return true;

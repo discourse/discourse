@@ -204,6 +204,7 @@ interface ExpectedSiteFields {
   can_associate_groups?: boolean;
   wizard_required?: true;
   topic_featured_link_allowed_category_ids?: number[];
+  category_group_moderator_topic_move_ids?: number[];
   user_themes?: ExpectedUserTheme[];
   user_color_schemes?: ExpectedSelectableColorScheme[];
   default_light_color_scheme?: ExpectedColorScheme | null;

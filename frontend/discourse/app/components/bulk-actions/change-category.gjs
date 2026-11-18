@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DButton from "discourse/ui-kit/d-button";
@@ -26,6 +26,7 @@ export default class ChangeCategory extends Component {
     <p>
       <CategoryChooser
         @onChange={{fn (mut this.categoryId)}}
+        @options={{hash includeTopicMoveDestinations=true}}
         @value={{this.categoryId}}
       />
     </p>
