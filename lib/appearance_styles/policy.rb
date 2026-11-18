@@ -591,28 +591,31 @@ module AppearanceStyles
     end
 
     # The color a background shows: see-through ones are composited onto the
-    # background core shows around the area. Returns nil when that can't be
-    # told.
-    def shown_background(node, area, mode, depth = 0)
-      hex = resolve_node(node, mode)
+    # background core shows around the area, or onto `behind` when there's no
+    # area. Returns nil when that can't be told.
+    def shown_background(node, area, mode, depth = 0, behind: nil, use_draft: true)
+      hex = resolve_node(node, mode, use_draft:)
       return hex if hex != :translucent || depth > 8
 
-      behind = resolve_color(outside_background(area), mode)
-      return if !behind.is_a?(String)
+      behind ||= outside_background(area)
+      behind_hex = resolve_color(behind, mode, use_draft:)
+      return if !behind_hex.is_a?(String)
 
       case node.type
       when :ident
-        behind if node.value.downcase == "transparent"
+        behind_hex if node.value.downcase == "transparent"
       when :function
         if node.value == "var"
           name = node.children.first&.value
-          value = (@draft_variables || {})[name] || @registry[name]&.default
+          value = (use_draft ? (@draft_variables || {})[name] : nil) || @registry[name]&.default
           nodes = value && CssValue.parse(value.to_s)
-          nodes&.size == 1 ? shown_background(nodes.first, area, mode, depth + 1) : nil
+          if nodes&.size == 1
+            shown_background(nodes.first, area, mode, depth + 1, behind:, use_draft:)
+          end
         elsif (rgb = palette_rgb(node))
           name, opacity = rgb
-          color = resolve_variable(name.delete_suffix("-rgb"), mode)
-          blend(color, behind, opacity) if color.is_a?(String)
+          color = resolve_variable(name.delete_suffix("-rgb"), mode, use_draft:)
+          blend(color, behind_hex, opacity) if color.is_a?(String)
         end
       end
     rescue CssValue::ParseError
@@ -757,6 +760,23 @@ module AppearanceStyles
       end
     end
 
+    # The color a background variable shows: a see-through one is composited
+    # onto what core shows around it.
+    def shown_variable_background(name, mode, use_draft: true)
+      hex = resolve_variable(name, mode, use_draft:)
+      return hex if hex != :translucent
+
+      around = foreground_background(name)
+      around = "--secondary" if around == name
+      shown_background(
+        CssValue.parse("var(#{name})").first,
+        nil,
+        mode,
+        behind: "var(#{around})",
+        use_draft:,
+      )
+    end
+
     # Text needs 4.5:1 and icons 3:1 (WCAG non-text contrast). Core's own
     # defaults miss 4.5:1 in places, so a pair passes when it is AA or at
     # least as readable as core's default.
@@ -765,7 +785,7 @@ module AppearanceStyles
         next true if !variables.key?(background) && !variables.key?(text)
 
         %w[light dark].all? do |mode|
-          background_hex = resolve_variable(background, mode)
+          background_hex = shown_variable_background(background, mode)
           text_hex = resolve_variable(text, mode)
           if background_hex.nil? && variables.key?(background)
             next unreadable_unknown(path, background)
@@ -778,7 +798,7 @@ module AppearanceStyles
 
           ratio = contrast(text_hex, background_hex)
           required = text.include?("icon") ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
-          default_background = resolve_variable(background, mode, use_draft: false)
+          default_background = shown_variable_background(background, mode, use_draft: false)
           default_text = resolve_variable(text, mode, use_draft: false)
           if default_background.is_a?(String) && default_text.is_a?(String)
             required = [required, contrast(default_text, default_background)].min

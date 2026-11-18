@@ -491,6 +491,14 @@ RSpec.describe AppearanceStyles::Policy do
       )
     end
 
+    it "checks text variables on a see-through background against what shows through it" do
+      expect_error(
+        { variables: { "--d-nav-color" => "var(--secondary)" } },
+        "--d-nav-color on --d-nav-bg-color is 1.0:1",
+      )
+      expect_valid(variables: { "--d-nav-color" => "var(--primary-high)" })
+    end
+
     it "checks the draft's value for variables that are also palette colors" do
       expect_error(
         { variables: { "--d-selected-text-color" => "transparent" } },
