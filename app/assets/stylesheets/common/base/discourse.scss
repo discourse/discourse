@@ -76,6 +76,13 @@
   --heading-font-weight: bold;
 }
 
+// Baseline keyboard focus ring for controls with no focus style of their own.
+// Zero specificity, so any component rule overrides it.
+:where(:focus-visible) {
+  outline: 2px solid var(--d-input-focused-color);
+  outline-offset: 2px;
+}
+
 // Animation Keyframes
 @keyframes rotate-forever {
   0% {
