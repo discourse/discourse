@@ -335,6 +335,120 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
       end
     end
 
+    describe "post_edited event" do
+      fab!(:post) { Fabricate(:post, user: Fabricate(:user, refresh_auto_groups: true)) }
+
+      let(:replacement_job_args) do
+        {
+          topic_id: post.topic_id,
+          locale: SiteSetting.default_locale,
+          force_regenerate: true,
+          drop_on_failure: true,
+        }
+      end
+
+      def fabricate_gist(**attrs)
+        Fabricate(
+          :topic_ai_gist,
+          target: post.topic,
+          locale: SiteSetting.default_locale,
+          highest_target_number: post.topic.highest_post_number,
+          **attrs,
+        )
+      end
+
+      def edit_without_revision
+        post.revise(post.user, { raw: "#{post.raw} edited #{SecureRandom.hex(4)}" })
+      end
+
+      context "when an edit replaces text that no revision keeps" do
+        it "keeps the gist and schedules its replacement" do
+          gist = fabricate_gist
+          summary = Fabricate(:ai_summary, target: post.topic)
+
+          expect_enqueued_with(job: :fast_track_topic_gist, args: replacement_job_args) do
+            edit_without_revision
+          end
+
+          expect(PostRevision.where(post:)).to be_empty
+          expect(AiSummary.exists?(gist.id)).to eq(true)
+          expect(AiSummary.exists?(summary.id)).to eq(false)
+        end
+
+        it "leaves gists generated before the edited version alone" do
+          gist = fabricate_gist(updated_at: 1.day.ago)
+
+          edit_without_revision
+
+          expect(AiSummary.exists?(gist.id)).to eq(true)
+          expect(Jobs::FastTrackTopicGist.jobs).to be_empty
+        end
+
+        it "drops the gist when gists are disabled" do
+          gist = fabricate_gist
+          SiteSetting.ai_summary_gists_enabled = false
+
+          edit_without_revision
+
+          expect(AiSummary.exists?(gist.id)).to eq(false)
+          expect(Jobs::FastTrackTopicGist.jobs).to be_empty
+        end
+
+        context "when the post's replacements are rate limited" do
+          before do
+            RateLimiter.enable
+            RateLimiter.new(nil, "ai-gist-replacement-#{post.id}", 3, 1.hour).clear!
+          end
+
+          after { RateLimiter.disable }
+
+          it "drops the gist instead of scheduling another replacement" do
+            gist = fabricate_gist
+
+            3.times { edit_without_revision }
+
+            expect(AiSummary.exists?(gist.id)).to eq(true)
+            expect(Jobs::FastTrackTopicGist.jobs.size).to eq(3)
+
+            edit_without_revision
+
+            expect(AiSummary.exists?(gist.id)).to eq(false)
+            expect(Jobs::FastTrackTopicGist.jobs.size).to eq(3)
+          end
+        end
+      end
+    end
+
+    describe "post_destroyed event" do
+      fab!(:admin)
+      fab!(:topic)
+      fab!(:first_post) { Fabricate(:post, topic:) }
+      fab!(:reply) { Fabricate(:post, topic:) }
+      fab!(:gist) { Fabricate(:topic_ai_gist, target: topic, locale: SiteSetting.default_locale) }
+      fab!(:summary) { Fabricate(:ai_summary, target: topic) }
+
+      it "keeps the gist and schedules its replacement when a reply is destroyed" do
+        expect_enqueued_with(
+          job: :fast_track_topic_gist,
+          args: {
+            topic_id: topic.id,
+            locale: SiteSetting.default_locale,
+            force_regenerate: true,
+            drop_on_failure: true,
+          },
+        ) { PostDestroyer.new(admin, reply).destroy }
+
+        expect(AiSummary.where(target: topic)).to contain_exactly(gist)
+      end
+
+      it "drops every summary when the topic is destroyed" do
+        PostDestroyer.new(admin, first_post).destroy
+
+        expect(AiSummary.where(target: topic)).to be_empty
+        expect(Jobs::FastTrackTopicGist.jobs).to be_empty
+      end
+    end
+
     describe "posts_moved event" do
       fab!(:original_topic, :topic)
       fab!(:destination_topic, :topic)

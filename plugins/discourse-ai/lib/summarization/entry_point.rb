@@ -130,9 +130,7 @@ module DiscourseAi
           end
         end
 
-        plugin.on(:post_destroyed) do |post|
-          AiSummary.where(target_type: "Topic", target_id: post.topic_id).delete_all
-        end
+        plugin.on(:post_destroyed) { |post| invalidate_summaries(post) }
 
         plugin.on(:post_revision_hidden) do |post_revision|
           AiSummary.drop_for_post!(post_revision.post_id)
@@ -148,7 +146,7 @@ module DiscourseAi
           revision = revisor.post_revision
           next if revision && revision.modifications.dig("raw", 0) == post.raw_before_last_save
 
-          AiSummary.drop_since!(post.topic_id, revision ? post.created_at : post.last_version_at)
+          invalidate_summaries(post, since: revision ? post.created_at : post.last_version_at)
         end
 
         plugin.on(:posts_moved) do |args|
@@ -173,7 +171,43 @@ module DiscourseAi
 
       private
 
-      def enqueue_gist_jobs(topic, force_regenerate: false, minimum_target_number: nil)
+      GIST_REPLACEMENTS_PER_POST = 3
+
+      # Intended behavior, not an oversight: a stale gist stays visible until its replacement
+      # is stored, even though it may briefly reflect content that was just removed. Gists
+      # appear in topic lists, and deleting them up front leaves topics without one until
+      # the next backfill. Exposure is bounded: the replacement job drops the gist if it
+      # can't store a new one, and rate-limited posts fall back to dropping immediately.
+      # Complete summaries are still dropped up front.
+      def invalidate_summaries(post, since: nil)
+        replace_gists = false
+        AiSummary.drop_since!(post.topic_id, since) { replace_gists = replace_gists?(post) }
+
+        if replace_gists
+          enqueue_gist_jobs(post.topic, force_regenerate: true, drop_on_failure: true)
+        end
+      end
+
+      def replace_gists?(post)
+        return false if !SiteSetting.discourse_ai_enabled
+        return false if !SiteSetting.ai_summarization_enabled
+        return false if !SiteSetting.ai_summary_gists_enabled
+        return false if post.topic.blank? || post.topic.trashed?
+
+        RateLimiter.new(
+          nil,
+          "ai-gist-replacement-#{post.id}",
+          GIST_REPLACEMENTS_PER_POST,
+          1.hour,
+        ).performed!(raise_error: false)
+      end
+
+      def enqueue_gist_jobs(
+        topic,
+        force_regenerate: false,
+        minimum_target_number: nil,
+        drop_on_failure: false
+      )
         locales = DiscourseAi::Summarization.gist_locales(topic)
         return if locales.empty?
 
@@ -196,7 +230,13 @@ module DiscourseAi
             next if gist_is_current || gist_is_recent
           end
 
-          Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, locale:, force_regenerate:)
+          Jobs.enqueue(
+            :fast_track_topic_gist,
+            topic_id: topic.id,
+            locale:,
+            force_regenerate:,
+            drop_on_failure:,
+          )
         end
       end
     end

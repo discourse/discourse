@@ -40,11 +40,16 @@ class AiSummary < ActiveRecord::Base
     where(target_type: "Topic", target_id: topic_ids).delete_all
   end
 
-  def self.drop_since!(topic_id, time)
+  # Drops a topic's summaries, or only those updated since `time` when given.
+  # When stale gists exist, the block decides whether they are kept to be replaced in place.
+  def self.drop_since!(topic_id, time = nil)
     transaction do
       Topic.with_deleted.where(id: topic_id).lock.pick(:id)
 
-      where(target_type: "Topic", target_id: topic_id).where("updated_at >= ?", time).delete_all
+      stale = where(target_type: "Topic", target_id: topic_id)
+      stale = stale.where("updated_at >= ?", time) if time
+      stale = stale.where.not(summary_type: :gist) if block_given? && stale.gist.exists? && yield
+      stale.delete_all
     end
   end
 
