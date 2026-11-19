@@ -367,7 +367,7 @@ en:
           invalid_json: "Fix or revert the JSON before executing this step."
           revert_json: "Revert JSON edit"
           json_arguments: "Arguments as JSON"
-          json_arguments_description: "This tool uses argument names that need to be entered as JSON. Use the exact keys listed below."
+          json_arguments_description: "Enter this tool’s arguments as a JSON object, using the exact keys listed below."
           invalid_arguments: "The saved arguments are not an object. Clear them to edit individual arguments."
           clear_arguments: "Clear arguments"
           stale_argument: "Saved argument “%{name}” is not in the tool’s current signature."

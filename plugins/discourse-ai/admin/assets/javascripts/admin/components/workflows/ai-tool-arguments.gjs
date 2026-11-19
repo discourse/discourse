@@ -256,8 +256,11 @@ export default class AiToolArguments extends Component {
 
   get usesJsonEditor() {
     return this.signature?.rows.some(
-      ({ name }) =>
-        !name || /[.-]/.test(name) || Object.hasOwn(Object.prototype, name)
+      ({ name, enum: values }) =>
+        !name ||
+        /[.-]/.test(name) ||
+        Object.hasOwn(Object.prototype, name) ||
+        values?.some((value) => typeof value === "object")
     );
   }
 
