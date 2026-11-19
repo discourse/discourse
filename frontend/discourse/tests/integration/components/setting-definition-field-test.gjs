@@ -1065,4 +1065,70 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
 
     assert.dom(".value-probe").hasText("dog|cat|monkey");
   });
+
+  test("topic picks and clears with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const topics = [
+      { id: 5, title: "Cats are fine", fancy_title: "Cats are fine" },
+      { id: 8, title: "Birds are loud", fancy_title: "Birds are loud" },
+    ];
+    pretender.get("/topics/lookup.json", () =>
+      response({ topics: topics.filter((topic) => topic.id === 8) })
+    );
+    pretender.get("/search/query", () =>
+      response({
+        topics: [topics[0]],
+        posts: [{ id: 50, topic_id: 5 }],
+      })
+    );
+
+    await render(
+      <template>
+        <Form @data={{hash my_topic="8"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash key="my_topic" type="topic" label="My topic"}}
+            @form={{form}}
+          />
+          <span class="value-probe" data-value={{data.my_topic}}></span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_topic'] .d-select";
+    await waitFor(`${control}[data-name='Birds are loud']`);
+    assert.dom(control).hasAttribute("data-name", "Birds are loud");
+
+    await dSelect(control).search("cats");
+    await dSelect(control).select(5);
+    assert.dom(".value-probe").hasAttribute("data-value", "5");
+
+    await dSelect(control).clear();
+    assert
+      .dom(".value-probe")
+      .hasAttribute(
+        "data-value",
+        "",
+        "a cleared setting holds an empty string"
+      );
+  });
+
+  test("topic is disabled with its field under the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_topic=""}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash key="my_topic" type="topic" label="My topic"}}
+            @disabled={{true}}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_topic'] .d-select__input")
+      .isDisabled("the picker follows its field");
+  });
 });
