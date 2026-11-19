@@ -8,6 +8,7 @@ module Live
       session = close_session(room.id, user_id)
       Live::ParticipantTracker.mark_left(room.id, user_id)
       Live::ParticipantTracker.remove(room.id, user_id)
+      Live::StageRoles.revoke_session_speaker!(room, user_id) if user_id.positive?
 
       user = User.find_by(id: user_id)
       Live::UserStatusManager.clear_live_status(user) if user
@@ -17,6 +18,8 @@ module Live
       Live::RoomBroadcaster.publish_participants(room)
 
       Live::Livekit::RoomServiceClient.remove_participant(room, user_id) unless user_id.negative?
+
+      Live::StageRoles.clear_session_speakers!(room) if Live::ParticipantTracker.vacant?(room.id)
 
       if Live::ParticipantTracker.human_user_ids(room.id).empty? &&
            Live::AgentManager.provider_room?(room.id)

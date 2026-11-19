@@ -13,8 +13,11 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { isTesting } from "discourse/lib/environment";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import virtualElementFromPoint from "discourse/lib/virtual-element-from-point";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -26,11 +29,16 @@ import {
 import { activeRingingEntries } from "../../lib/live/ringing.js";
 import { speakQueue } from "../../lib/live/speak-queue.js";
 import {
+  isStageSpeaker,
+  sortStageAudience,
+} from "../../lib/live/stage-roles.js";
+import {
   computeRoomGrid,
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
 import watchRoom from "../../lib/live/watch-room.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
+import LiveParticipantSidebarContextMenu from "../live-participant-sidebar-context-menu.gjs";
 import LiveConnectionDiagnosticsModal from "../modal/live-connection-diagnostics.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
@@ -171,7 +179,57 @@ export default class LiveRoomPage extends Component {
     return this.room.active_participants || [];
   }
 
+  get #ownParticipant() {
+    return this.participants.find(
+      (participant) => Number(participant?.id) === this.currentUser?.id
+    );
+  }
+
+  get pendingSpeakInvitation() {
+    if (!this.joined || !this.isStageRoom) {
+      return null;
+    }
+    const own = this.#ownParticipant;
+    if (!own || isStageSpeaker(own) || !own.speak_invited_at) {
+      return null;
+    }
+    return {
+      username: own.speak_invited_by || "",
+      invitedAt: own.speak_invited_at,
+    };
+  }
+
+  get stageParticipants() {
+    if (!this.isStageRoom) {
+      return this.participants;
+    }
+    return this.participants.filter(
+      (participant) =>
+        isStageSpeaker(participant) || this.#isPublishing(participant)
+    );
+  }
+
+  get audienceParticipants() {
+    if (!this.isStageRoom) {
+      return [];
+    }
+    const listeners = this.participants.filter(
+      (participant) =>
+        !isStageSpeaker(participant) && !this.#isPublishing(participant)
+    );
+    return sortStageAudience(listeners).map((participant) => ({
+      participant,
+      isSelf: Number(participant.id) === this.currentUser?.id,
+      displayName: prioritizeNameInUx(participant.name)
+        ? participant.name
+        : participant.username,
+      handRaised: !!participant.hand_raised_at,
+      invited: !!participant.speak_invited_at,
+    }));
+  }
+
   get tiles() {
+    const stageList = this.stageParticipants;
     const budget = this.capabilities.viewport.md
       ? Infinity
       : MOBILE_VIDEO_TILE_BUDGET;
@@ -179,13 +237,13 @@ export default class LiveRoomPage extends Component {
 
     // Whoever can take the stage gets live video first, so a featured feed is
     // never demoted to an avatar by cameras earlier in the roster.
-    const spotlightParticipant = this.participants.find(
+    const spotlightParticipant = stageList.find(
       (participant) => participant.id === this.spotlightParticipantId
     );
     const prioritized = [
       spotlightParticipant,
       ...this.remoteScreenSharers,
-      ...this.participants,
+      ...stageList,
     ];
 
     for (const participant of prioritized) {
@@ -200,7 +258,7 @@ export default class LiveRoomPage extends Component {
       }
     }
 
-    return this.participants.map((participant) => {
+    return stageList.map((participant) => {
       const isSelf = participant.id === this.currentUser?.id;
       return {
         participant,
@@ -538,6 +596,42 @@ export default class LiveRoomPage extends Component {
   }
 
   @action
+  async acceptSpeakInvitation() {
+    await this.liveWebrtc.acceptSpeakInvitation(this.room.id);
+  }
+
+  @action
+  async declineSpeakInvitation() {
+    await this.liveWebrtc.declineSpeakInvitation(this.room.id);
+  }
+
+  @action
+  openAudienceMemberMenu(entry, event) {
+    if (!this.joined) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    const anchor =
+      event.type === "contextmenu"
+        ? virtualElementFromPoint(event.clientX, event.clientY)
+        : event.target.closest(".live-room-page__audience-member");
+    this.menu.show(anchor, {
+      identifier: "live-participant-menu",
+      component: LiveParticipantSidebarContextMenu,
+      placement: "top-start",
+      modalForMobile: true,
+      data: {
+        room: this.room,
+        participant: entry.participant,
+        canManageRoom: this.room?.can_manage,
+        isCurrentUser: entry.isSelf,
+      },
+    });
+  }
+
+  @action
   dockRoom() {
     // Docking keeps the call and drops the page, so the user should get their
     // place back rather than a reset: return to where they came from, replacing
@@ -734,6 +828,30 @@ export default class LiveRoomPage extends Component {
         />
 
         <div class="live-room-page__stage">
+          {{#if this.pendingSpeakInvitation}}
+            <div class="live-room-page__stage-invite" role="status">
+              <span class="live-room-page__stage-invite-text">
+                {{dIcon "microphone"}}
+                {{i18n
+                  "live.stage.invited_to_speak_banner"
+                  username=this.pendingSpeakInvitation.username
+                }}
+              </span>
+              <div class="live-room-page__stage-invite-actions">
+                <DButton
+                  class="btn-primary btn-small live-room-page__stage-invite-accept"
+                  @action={{this.acceptSpeakInvitation}}
+                  @icon="microphone"
+                  @label="live.stage.join_stage"
+                />
+                <DButton
+                  class="btn-default btn-small live-room-page__stage-invite-decline"
+                  @action={{this.declineSpeakInvitation}}
+                  @label="live.stage.decline_invitation"
+                />
+              </div>
+            </div>
+          {{/if}}
           {{#if this.tiles.length}}
             {{#if this.presentationLayout}}
               <div class="live-room-page__presentation">
@@ -822,10 +940,67 @@ export default class LiveRoomPage extends Component {
                 {{/if}}
               </div>
             {{/if}}
+          {{else if this.audienceParticipants.length}}
+            <div class="live-room-page__stage-empty">
+              {{i18n "live.stage.stage_empty"}}
+            </div>
           {{else}}
             <div class="live-room-page__empty">
               {{i18n "live.room_page.empty"}}
             </div>
+          {{/if}}
+          {{#if this.audienceParticipants.length}}
+            <section
+              aria-label={{i18n "live.stage.audience"}}
+              class="live-room-page__audience"
+            >
+              <div class="live-room-page__audience-header">
+                <span class="live-room-page__audience-title">
+                  {{i18n
+                    "live.stage.audience_count"
+                    count=this.audienceParticipants.length
+                  }}
+                </span>
+              </div>
+              <div class="live-room-page__audience-list">
+                {{#each
+                  this.audienceParticipants key="participant.id"
+                  as |entry|
+                }}
+                  <DButton
+                    class={{dConcatClass
+                      "btn-transparent live-room-page__audience-member"
+                      (if entry.isSelf "--self")
+                      (if entry.handRaised "--hand-raised")
+                      (if entry.invited "--invited")
+                    }}
+                    data-user-id={{entry.participant.id}}
+                    @action={{this.openAudienceMemberMenu}}
+                    @actionParam={{entry}}
+                    @disabled={{not this.joined}}
+                    @forwardEvent={{true}}
+                    {{on "contextmenu" (fn this.openAudienceMemberMenu entry)}}
+                  >
+                    {{dAvatar entry.participant imageSize="small"}}
+                    <span
+                      class="live-room-page__audience-name"
+                    >{{entry.displayName}}</span>
+                    {{#if entry.handRaised}}
+                      {{dIcon
+                        "hand"
+                        class="live-room-page__audience-hand"
+                        title="live.participant.status_hand_raised"
+                      }}
+                    {{/if}}
+                    {{#if entry.invited}}
+                      <span class="live-room-page__audience-invited-badge">
+                        {{i18n "live.stage.invited_badge"}}
+                      </span>
+                    {{/if}}
+                  </DButton>
+                {{/each}}
+              </div>
+            </section>
           {{/if}}
           {{#if this.joined}}
             <LiveCaptionOverlay @room={{this.room}} />

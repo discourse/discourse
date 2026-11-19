@@ -1,6 +1,7 @@
 import { i18n } from "discourse-i18n";
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
 import {
+  playHandRaisedSound,
   playUserJoinedSound,
   playUserLeftSound,
   stopCallSounds,
@@ -27,6 +28,7 @@ export default class RosterHandler {
   #getRoom;
   #isActiveRoom;
   #isConnectingRoom;
+  #isWatchingRoom;
   #isMeshRoom;
   #registerTrack;
   #getRemoteUserIds;
@@ -39,8 +41,11 @@ export default class RosterHandler {
   #getLocalStream;
   #acquireMicrophone;
   #setMicEnabled;
+  #getPttEnabled;
   #stopLocalAudio;
   #ensureLocalAudioMonitor;
+  #acceptSpeakInvitation;
+  #declineSpeakInvitation;
 
   constructor({
     peerManager,
@@ -53,6 +58,7 @@ export default class RosterHandler {
     getRoom,
     isActiveRoom,
     isConnectingRoom,
+    isWatchingRoom = () => false,
     isMeshRoom,
     registerTrack,
     getRemoteUserIds = () => [],
@@ -65,8 +71,11 @@ export default class RosterHandler {
     getLocalStream,
     acquireMicrophone,
     setMicEnabled,
+    getPttEnabled = () => false,
     stopLocalAudio,
     ensureLocalAudioMonitor,
+    acceptSpeakInvitation = () => {},
+    declineSpeakInvitation = () => {},
   }) {
     this.#peerManager = peerManager;
     this.#signaling = signaling;
@@ -78,6 +87,7 @@ export default class RosterHandler {
     this.#getRoom = getRoom;
     this.#isActiveRoom = isActiveRoom;
     this.#isConnectingRoom = isConnectingRoom;
+    this.#isWatchingRoom = isWatchingRoom;
     this.#isMeshRoom = isMeshRoom;
     this.#registerTrack = registerTrack;
     this.#getRemoteUserIds = getRemoteUserIds;
@@ -90,8 +100,11 @@ export default class RosterHandler {
     this.#getLocalStream = getLocalStream;
     this.#acquireMicrophone = acquireMicrophone;
     this.#setMicEnabled = setMicEnabled;
+    this.#getPttEnabled = getPttEnabled;
     this.#stopLocalAudio = stopLocalAudio;
     this.#ensureLocalAudioMonitor = ensureLocalAudioMonitor;
+    this.#acceptSpeakInvitation = acceptSpeakInvitation;
+    this.#declineSpeakInvitation = declineSpeakInvitation;
   }
 
   isRoleChangeInProgress(roomId) {
@@ -251,6 +264,9 @@ export default class RosterHandler {
         (p) => Number(p?.id) === targetUserId
       );
       if (participant) {
+        if (this.#isActiveRoom(roomId)) {
+          playHandRaisedSound(this.#getChatSound());
+        }
         this.#toasts.default({
           duration: 5000,
           data: {
@@ -261,6 +277,94 @@ export default class RosterHandler {
         });
       }
     }
+  }
+
+  handleSpeakInvitation(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const isSelf = targetUserId === this.#getCurrentUserId();
+
+    if (isSelf && payload.invited) {
+      if (this.#isActiveRoom(roomId)) {
+        playHandRaisedSound(this.#getChatSound());
+      }
+      // On the room page the inline invitation banner already surfaces the
+      // invite with Accept/Decline actions; only toast when listening from
+      // elsewhere (widget or another tab/page).
+      if (this.#isWatchingRoom(roomId)) {
+        return;
+      }
+      this.#toasts.default({
+        duration: 15000,
+        data: {
+          message: i18n("live.stage.invited_to_speak_toast", {
+            username: payload.inviter_username || "",
+          }),
+          actions: [
+            {
+              label: i18n("live.stage.join_stage"),
+              class: "btn-primary",
+              action: () => this.#acceptSpeakInvitation(roomId),
+            },
+            {
+              label: i18n("live.stage.decline_invitation"),
+              class: "btn-default",
+              action: () => this.#declineSpeakInvitation(roomId),
+            },
+          ],
+        },
+      });
+      return;
+    }
+
+    if (isSelf && !payload.invited && payload.reason === "withdrawn") {
+      this.#toasts.default({
+        duration: 5000,
+        data: { message: i18n("live.stage.invitation_withdrawn") },
+      });
+      return;
+    }
+
+    const room = this.#getRoom(roomId);
+    if (
+      !isSelf &&
+      !payload.invited &&
+      payload.reason === "declined" &&
+      room?.can_manage
+    ) {
+      const participant = (room.active_participants || []).find(
+        (p) => Number(p?.id) === targetUserId
+      );
+      if (participant) {
+        this.#toasts.default({
+          duration: 5000,
+          data: {
+            message: i18n("live.stage.invitation_declined_toast", {
+              username: participant.username,
+            }),
+          },
+        });
+      }
+    }
+  }
+
+  async handleRoomTypeChange(roomId, newRoomType) {
+    const room = this.#getRoom(roomId);
+    if (!room) {
+      return;
+    }
+
+    const canSpeakNow = participantCanSpeak(room, this.#getCurrentUserId());
+    let toastKey = "live.stage.room_now_open";
+    if (newRoomType !== "open") {
+      toastKey = canSpeakNow
+        ? "live.stage.room_now_stage_speaker"
+        : "live.stage.room_now_stage";
+    }
+
+    await this.#reconfigureLocalMediaForRole(roomId, canSpeakNow, {
+      toastMessage: i18n(toastKey),
+      toastType: newRoomType === "open" ? "success" : "default",
+    });
   }
 
   #syncRemoteMediaTracks(roomId, participants) {
@@ -349,7 +453,21 @@ export default class RosterHandler {
 
   async #handleOwnRoleChange(roomId, newRole) {
     const canSpeak = newRole === "speaker" || newRole === "moderator";
+    await this.#reconfigureLocalMediaForRole(roomId, canSpeak, {
+      toastMessage: i18n(
+        canSpeak
+          ? "live.stage.promoted_to_speaker"
+          : "live.stage.demoted_to_listener"
+      ),
+      toastType: canSpeak ? "success" : "default",
+    });
+  }
 
+  async #reconfigureLocalMediaForRole(
+    roomId,
+    canSpeak,
+    { toastMessage, toastType = "default" } = {}
+  ) {
     // Block handleParticipants while we reconfigure the local stream,
     // so the subsequent "participants" broadcast doesn't create peers
     // before the mic is ready.
@@ -375,25 +493,29 @@ export default class RosterHandler {
           return;
         }
 
-        this.#setMicEnabled(true);
+        this.#setMicEnabled(!this.#getPttEnabled());
       }
 
       this.#ensureLocalAudioMonitor(roomId);
 
-      this.#toasts.success({
-        duration: 5000,
-        data: { message: i18n("live.stage.promoted_to_speaker") },
-      });
+      if (toastMessage) {
+        this.#toasts[toastType]({
+          duration: 5000,
+          data: { message: toastMessage },
+        });
+      }
     } else {
       if (this.#getLocalVideoKind()) {
         await this.#stopLocalVideo();
       }
       this.#stopLocalAudio();
       this.#setMicEnabled(false);
-      this.#toasts.default({
-        duration: 5000,
-        data: { message: i18n("live.stage.demoted_to_listener") },
-      });
+      if (toastMessage) {
+        this.#toasts[toastType]({
+          duration: 5000,
+          data: { message: toastMessage },
+        });
+      }
     }
 
     this.#roleChangeInProgress.delete(roomId);

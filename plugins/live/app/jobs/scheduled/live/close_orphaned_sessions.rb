@@ -40,6 +40,7 @@ module Jobs
 
           room = ::Live::Room.find_by(id: session.room_id)
           if room && ::Live::ParticipantTracker.vacant?(room.id)
+            ::Live::StageRoles.clear_session_speakers!(room)
             ::Live::AgentManager.evict_agents_in_room!(room)
           end
 
