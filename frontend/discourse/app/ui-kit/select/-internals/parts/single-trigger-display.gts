@@ -162,7 +162,10 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
             <:loading>
               {{#if (and (not @editing) (or @pending (not @triggerFocused)))}}
-                <span class="d-select__presentation" id={{@selectionId}}>
+                <span
+                  class="d-select__presentation --beside-input"
+                  id={{@selectionId}}
+                >
                   {{~#if @hasSelectionLoadingBlock~}}
                     {{yield to="selectionLoading"}}
                   {{~else~}}
@@ -179,7 +182,10 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 {{/unless}}
               {{/if}}
               {{#if (and (not @editing) (or @pending (not @triggerFocused)))}}
-                <span class="d-select__presentation" id={{@selectionId}}>
+                <span
+                  class="d-select__presentation --beside-input"
+                  id={{@selectionId}}
+                >
                   {{#if selected}}
                     {{#if (@engine.isHeldUnresolved selected)}}
                       {{#if @hasUnresolvedBlock}}

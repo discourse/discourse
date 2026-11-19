@@ -11,14 +11,9 @@
     color: var(--primary-medium);
   }
 
-  // At rest the held value takes the trigger's free space, so its date sits by the caret.
+  // The held value fills the trigger at rest, so laying it out lets its date sit by the caret.
   &__select .d-select__presentation {
     display: flex;
-    flex: 1 1 auto;
-  }
-
-  &__select .d-select__presentation + .d-select__input {
-    flex-grow: 0;
   }
 
   &__selection-date {

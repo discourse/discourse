@@ -1,8 +1,9 @@
 // Styles for the ui-kit DSelect family.
 .d-select__trigger {
+  --d-select-trigger-gap: 0.25em;
   display: inline-flex;
   align-items: center;
-  gap: 0.25em;
+  gap: var(--d-select-trigger-gap);
   width: 100%;
   justify-content: space-between;
   background: var(--d-input-bg-color);
@@ -40,10 +41,18 @@
     }
   }
 
-  // While the held value is drawn the field is not being typed in, so the input keeps no room
-  // of its own; clicking anywhere on the trigger still focuses it.
-  .d-select__presentation + .d-select__input {
-    flex-basis: 0;
+  // While the held value is drawn the field is not being typed in, so the value takes the room
+  // the input would, and adds no width of its own: a field sized by its content stays as wide as
+  // when focused. The input keeps a token grow factor because only a growable item counts its
+  // own width there; the value's negative margin cancels the one extra gap.
+  .d-select__presentation.--beside-input {
+    flex: 1 1 0;
+    contain: inline-size;
+    margin-inline-end: calc(-1 * var(--d-select-trigger-gap));
+  }
+
+  .d-select__presentation.--beside-input + .d-select__input {
+    flex: 0.001 1 0;
     min-width: 0;
   }
 }

@@ -677,6 +677,37 @@ module(
       );
     });
 
+    test("a drawn held value keeps the field's width when it takes focus", async function (assert) {
+      const items = [{ id: 1, name: "Trailblazer" }];
+      await render(
+        <template>
+          <div style="display: inline-flex">
+            <DSelect @identifier="test-select" @options={{items}} @value={{1}}>
+              <:selection as |option|>
+                <span class="held-mark">*</span>
+                {{~option.record.name~}}
+              </:selection>
+            </DSelect>
+          </div>
+        </template>
+      );
+
+      const trigger = find(".d-select__trigger");
+      const atRest = trigger.offsetWidth;
+      assert.dom(".held-mark", trigger).exists("the held value is drawn");
+
+      await focus(".d-select__input");
+      assert
+        .dom(".held-mark", trigger)
+        .doesNotExist("focus moves the value into the input");
+
+      assert.strictEqual(
+        atRest,
+        trigger.offsetWidth,
+        "a field that sizes to its content is as wide at rest as with focus"
+      );
+    });
+
     test("@disabled makes the control inert: not focusable, cannot open, no clear", async function (assert) {
       await render(
         <template>
