@@ -93,7 +93,11 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(award_badge.dig(:properties, :badge_id, :type_options)).to include(
           load_options_method: "badges",
         )
-        expect(award_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
+        expect(award_badge.dig(:metadata, "badges")).to include(
+          id: badge.id,
+          name: badge.name,
+          hide_reason: false,
+        )
       end
 
       it "serializes the required group selector for group membership triggers",

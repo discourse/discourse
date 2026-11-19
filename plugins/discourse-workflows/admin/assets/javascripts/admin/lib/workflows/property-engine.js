@@ -108,13 +108,16 @@ export function propertyLabel(nodeDefinitionOrType, fieldName) {
   );
 }
 
-export function propertyDescription(nodeDefinitionOrType, fieldName) {
+export function propertyDescription(nodeDefinitionOrType, fieldName, schema) {
+  const descriptionKey = fieldUi(schema).description_key;
   const labelKey = localeKeyPart(fieldName);
 
   return (
+    (descriptionKey && translatedOrNull(descriptionKey)) ||
     translatedOrNull(
       `${i18nBase(nodeDefinitionOrType)}.${labelKey}_description`
-    ) || translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
+    ) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
   );
 }
 
@@ -521,7 +524,7 @@ export function credentialSlotAnchorField(slot = {}) {
  * expression-valued parameter cannot be settled in the editor, so the target
  * stays visible rather than vanishing along with its validations.
  */
-export function fieldDisplayState(schema = {}, configuration = {}) {
+export function fieldDisplayState(schema = {}, configuration = {}, metadata) {
   if (fieldUi(schema).hidden) {
     return "hidden";
   }
@@ -530,14 +533,14 @@ export function fieldDisplayState(schema = {}, configuration = {}) {
   let indeterminate = false;
 
   if (display_options?.show) {
-    const outcome = rulesOutcome(display_options.show, configuration);
+    const outcome = rulesOutcome(display_options.show, configuration, metadata);
     if (outcome === false) {
       return "hidden";
     }
     indeterminate ||= outcome === "unknown";
   }
   if (display_options?.hide) {
-    const outcome = rulesOutcome(display_options.hide, configuration);
+    const outcome = rulesOutcome(display_options.hide, configuration, metadata);
     if (outcome === true) {
       return "hidden";
     }
@@ -547,22 +550,30 @@ export function fieldDisplayState(schema = {}, configuration = {}) {
   return indeterminate ? "indeterminate" : "visible";
 }
 
-export function fieldVisible(schema = {}, configuration = {}) {
-  return fieldDisplayState(schema, configuration) !== "hidden";
+export function fieldVisible(schema = {}, configuration = {}, metadata) {
+  return fieldDisplayState(schema, configuration, metadata) !== "hidden";
 }
 
-export function fieldDefinitelyVisible(schema = {}, configuration = {}) {
-  return fieldDisplayState(schema, configuration) === "visible";
+export function fieldDefinitelyVisible(
+  schema = {},
+  configuration = {},
+  metadata
+) {
+  return fieldDisplayState(schema, configuration, metadata) === "visible";
 }
 
-export function pruneModeHiddenFields(schema = {}, configuration = {}) {
+export function pruneModeHiddenFields(
+  schema = {},
+  configuration = {},
+  metadata
+) {
   const pruned = { ...configuration };
 
   for (const [name, field] of Object.entries(schema)) {
     if (fieldUi(field).hidden) {
       continue;
     }
-    if (fieldDisplayState(field, configuration) === "hidden") {
+    if (fieldDisplayState(field, configuration, metadata) === "hidden") {
       delete pruned[name];
     }
   }
@@ -570,7 +581,7 @@ export function pruneModeHiddenFields(schema = {}, configuration = {}) {
   return pruned;
 }
 
-function rulesOutcome(rules, configuration) {
+function rulesOutcome(rules, configuration, metadata) {
   let unknown = false;
 
   for (const [fieldName, expected] of Object.entries(rules)) {
@@ -579,7 +590,7 @@ function rulesOutcome(rules, configuration) {
       unknown = true;
       continue;
     }
-    if (!matchesRule(expected, value)) {
+    if (!matchesRule(expected, value, metadata)) {
       return false;
     }
   }
@@ -587,15 +598,17 @@ function rulesOutcome(rules, configuration) {
   return unknown ? "unknown" : true;
 }
 
-function matchesRule(expected, value) {
+function matchesRule(expected, value, metadata) {
   if (!Array.isArray(expected)) {
-    return matchesCondition(expected, value);
+    return matchesCondition(expected, value, metadata);
   }
 
-  return expected.some((condition) => matchesCondition(condition, value));
+  return expected.some((condition) =>
+    matchesCondition(condition, value, metadata)
+  );
 }
 
-function matchesCondition(condition, value) {
+function matchesCondition(condition, value, metadata) {
   const operator = condition?.condition;
   if (!operator) {
     if (Array.isArray(value) && !Array.isArray(condition)) {
@@ -610,6 +623,20 @@ function matchesCondition(condition, value) {
 
   if (Object.hasOwn(operator, "exists")) {
     return operator.exists ? !isEmptyValue(value) : isEmptyValue(value);
+  }
+  if (operator.metadata_flag) {
+    const { collection, flag } = operator.metadata_flag;
+    const options = metadata?.[collection];
+    return (
+      value != null &&
+      Array.isArray(options) &&
+      options.some(
+        (option) =>
+          option?.id != null &&
+          String(option.id) === String(value) &&
+          option[flag] === true
+      )
+    );
   }
 
   return false;

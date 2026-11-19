@@ -130,7 +130,8 @@ export default class Field extends Component {
 
     const description = propertyDescription(
       this.nodeDefinition,
-      this.args.fieldName
+      this.args.fieldName,
+      this.args.schema
     );
     return description ? trustHTML(description) : undefined;
   }
