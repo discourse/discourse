@@ -1706,6 +1706,10 @@ posting:
     client: true
     list_type: compact
     area: "posts_and_topics"
+  show_codeblock_line_numbers:
+    default: false
+    client: true
+    area: "posts_and_topics"
   show_copy_button_on_codeblocks:
     client: true
     default: true

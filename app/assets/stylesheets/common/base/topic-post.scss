@@ -1346,6 +1346,41 @@ pre {
   }
 }
 
+pre.codeblock-numbered {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+
+  > code,
+  > .codeblock-line-numbers {
+    grid-row: 2;
+    white-space: pre;
+  }
+
+  > code {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  > :not(code, .codeblock-line-numbers) {
+    grid-column: 1 / -1;
+  }
+
+  > .codeblock-line-numbers {
+    grid-column: 1;
+    box-sizing: border-box;
+    align-self: start;
+    block-size: 0;
+    overflow: hidden;
+    padding-inline: var(--space-2);
+    border-inline-end: 1px solid var(--primary-low);
+    background: var(--hljs-bg);
+    color: var(--primary-high);
+    text-align: end;
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
 kbd {
   align-items: center;
   border: 1px solid var(--primary-low-mid);
