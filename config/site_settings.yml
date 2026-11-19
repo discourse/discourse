@@ -4402,6 +4402,18 @@ user_preferences:
   default_other_external_links_in_new_tab:
     default: false
     area: "user_defaults"
+  show_external_post_link_indicators:
+    default: false
+    client: true
+    area: "posts_and_topics"
+  external_post_link_internal_hosts:
+    default: ""
+    type: host_list
+    list_type: simple
+    client: true
+    depends_on:
+      - "show_external_post_link_indicators"
+    area: "posts_and_topics"
   default_other_enable_quoting:
     default: true
     area: "user_defaults"
