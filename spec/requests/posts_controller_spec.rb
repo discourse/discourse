@@ -3486,6 +3486,80 @@ RSpec.describe PostsController do
       expect(response.status).to eq(200)
       expect(elapsed).to be < 2, "request took #{elapsed.round(2)}s to cook"
     end
+
+    context "when notification emails include previous replies" do
+      fab!(:whisper_group, :group)
+      fab!(:whisper_author) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:whisperer_watcher) do
+        Fabricate(:user, last_seen_at: 1.day.ago, refresh_auto_groups: true)
+      end
+      fab!(:watching_moderator) do
+        Fabricate(:moderator, last_seen_at: 1.day.ago, refresh_auto_groups: true)
+      end
+      fab!(:watched_topic) { Fabricate(:post, user: user).topic }
+
+      before do
+        NotificationEmailer.enable
+        Jobs.run_immediately!
+        whisper_group.add(whisper_author)
+        whisper_group.add(whisperer_watcher)
+        SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+
+        [whisperer_watcher, watching_moderator].each do |watcher|
+          TopicUser.change(
+            watcher.id,
+            watched_topic.id,
+            notification_level: TopicUser.notification_levels[:watching],
+          )
+          watcher.user_option.update!(
+            email_previous_replies: UserOption.previous_replies_type[:always],
+          )
+        end
+      end
+
+      it "includes previous whispers only in email to allowed recipients" do
+        sign_in(whisper_author)
+        post "/posts.json",
+             params: {
+               raw: "this whisper must stay private",
+               topic_id: watched_topic.id,
+               whisper: true,
+             }
+        expect(response.status).to eq(200)
+        whisper = Post.find(response.parsed_body["id"])
+
+        sign_out
+        sign_in(user)
+        post "/posts.json",
+             params: {
+               raw: "this is a regular reply",
+               topic_id: watched_topic.id,
+               reply_to_post_number: 1,
+             }
+        expect(response.status).to eq(200)
+
+        moderator_email =
+          ActionMailer::Base.deliveries.find do |mail|
+            mail.to == [watching_moderator.email] &&
+              mail.text_part.body.to_s.include?("this is a regular reply")
+          end
+        expect(moderator_email).to be_present
+        expect(moderator_email.text_part.body.to_s).not_to include(whisper.raw)
+        expect(moderator_email.html_part.body.to_s).not_to include(
+          whisper.raw,
+          whisper_author.username,
+        )
+
+        whisperer_email =
+          ActionMailer::Base.deliveries.find do |mail|
+            mail.to == [whisperer_watcher.email] &&
+              mail.text_part.body.to_s.include?("this is a regular reply")
+          end
+        expect(whisperer_email).to be_present
+        expect(whisperer_email.text_part.body.to_s).to include(whisper.raw)
+        expect(whisperer_email.html_part.body.to_s).to include(whisper.raw, whisper_author.username)
+      end
+    end
   end
 
   describe "#revisions" do

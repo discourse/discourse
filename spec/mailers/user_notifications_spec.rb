@@ -6,7 +6,7 @@ RSpec.describe UserNotifications do
   describe "#get_context_posts" do
     fab!(:category)
 
-    it "does not include hidden/deleted/user_deleted posts in context" do
+    it "excludes hidden and deleted context posts and limits whispers to whisperers" do
       post1 = create_post
       _post2 = Fabricate(:post, topic: post1.topic, deleted_at: 1.day.ago)
       _post3 = Fabricate(:post, topic: post1.topic, user_deleted: true)
@@ -20,12 +20,34 @@ RSpec.describe UserNotifications do
 
       # default is only post #1
       expect(UserNotifications.get_context_posts(last, nil, post1.user).count).to eq(1)
-      # staff members can also see the whisper
-      moderator = build(:moderator)
-      moderator.user_option = UserOption.new
-      moderator.user_option.email_previous_replies = UserOption.previous_replies_type[:always]
-      tu = TopicUser.new(topic: post1.topic, user: moderator)
-      expect(UserNotifications.get_context_posts(last, tu, tu.user).count).to eq(2)
+      whisper_group = Fabricate(:group)
+      SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+
+      moderator = Fabricate(:moderator)
+      moderator.user_option.update!(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+      )
+      moderator_topic_user = TopicUser.new(topic: post1.topic, user: moderator)
+      expect(UserNotifications.get_context_posts(last, moderator_topic_user, moderator).to_a).to eq(
+        [post1],
+      )
+
+      whisperer = Fabricate(:moderator)
+      whisper_group.add(whisperer)
+      whisperer.user_option.update!(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+      )
+      whisperer_topic_user = TopicUser.new(topic: post1.topic, user: whisperer)
+      expect(UserNotifications.get_context_posts(last, whisperer_topic_user, whisperer).to_a).to eq(
+        [_post7, post1],
+      )
+
+      expect(UserNotifications.get_context_posts(last, moderator_topic_user, whisperer).to_a).to eq(
+        [_post7, post1],
+      )
+      expect(UserNotifications.get_context_posts(last, whisperer_topic_user, moderator).to_a).to eq(
+        [post1],
+      )
     end
 
     it "allows users to control context" do
