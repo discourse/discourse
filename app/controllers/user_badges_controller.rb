@@ -117,7 +117,7 @@ class UserBadgesController < ApplicationController
       guardian.ensure_can_see!(post)
       post_id = post.id
     else
-      post_id = BadgeGranter.post_for_reason(params[:reason])&.id
+      post_id = BadgeGranter.post_for_reason(params[:reason], guardian:)&.id
     end
 
     grant_opts_from_params =
