@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import HostListSelect from "discourse/components/setting-field/host-list-select";
+import SelectHostList from "discourse/components/setting-field/-internals/select-host-list";
 import { splitString } from "discourse/lib/utilities";
 import ListSetting from "discourse/select-kit/components/list-setting";
 
@@ -29,7 +29,7 @@ export default class SettingFieldHostList extends Component {
     <@field.Control>
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if this.siteSettings.enable_new_select_controls}}
-        <HostListSelect
+        <SelectHostList
           @ariaLabel={{@field.title}}
           @disabled={{@field.disabled}}
           @hosts={{this.hosts}}

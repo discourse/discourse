@@ -25,7 +25,7 @@ function hostRecords(hosts) {
  * Picks a host list setting's hosts, taking typed ones. A host with a wildcard or a separator is
  * never offered for creation, so it can't be stored.
  */
-const HostListSelect = <template>
+const SelectHostList = <template>
   <DSelect
     @allowCreate={{isStorableHost}}
     @createOption={{hostRecord}}
@@ -45,4 +45,4 @@ const HostListSelect = <template>
   />
 </template>;
 
-export default HostListSelect;
+export default SelectHostList;
