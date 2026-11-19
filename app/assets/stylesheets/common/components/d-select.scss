@@ -619,6 +619,11 @@
     color: var(--primary);
   }
 
+  // The chip is one line of the field's type, so a full-size glyph nearly fills it.
+  .d-icon {
+    font-size: 0.75em;
+  }
+
   // The whole-chip ring above is the focus indicator, so suppress the button's own
   // outline to avoid a second ring around the × while it holds the roving focus.
   &:focus-visible {
