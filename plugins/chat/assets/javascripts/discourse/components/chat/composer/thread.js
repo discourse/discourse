@@ -39,8 +39,6 @@ export default class ChatComposerThread extends ChatComposer {
   get showBroadcastOption() {
     return (
       this.siteSettings.chat_thread_improvements &&
-      // editing cannot change broadcast state; the message actions menu
-      // toggle owns it for saved messages
       !this.draft?.editing &&
       Boolean(this.args.thread?.channel?.threadingEnabled)
     );

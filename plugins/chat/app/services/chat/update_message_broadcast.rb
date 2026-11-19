@@ -73,7 +73,7 @@ module Chat
           Chat::Publisher.serialize_message_with_type(message, :sent),
         )
         Chat::Publisher.publish_new_message_indicator(channel, message)
-      else
+      elsif Chat::Publisher.allow_publish_to_thread?(channel, message)
         Chat::Publisher.publish_to_channel!(
           channel,
           Chat::Publisher.delete_payload(
@@ -81,6 +81,8 @@ module Chat
             channel.latest_not_deleted_message_id(anchor_message_id: message.id),
           ).merge(broadcast_removed: true),
         )
+      else
+        Chat::Publisher.publish_edit!(channel, message)
       end
 
       Chat::Publisher.publish_to_targets!(
