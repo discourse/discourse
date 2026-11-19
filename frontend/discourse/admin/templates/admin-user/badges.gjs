@@ -10,6 +10,7 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectBadge from "discourse/ui-kit/select/recipes/badges/d-select-badge";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -41,13 +42,26 @@ export default <template>
         >
           <form class="form-horizontal">
             <div class="control-group">
-              <label>{{i18n "admin.badges.badge"}}</label>
-              <ComboBox
-                @content={{@controller.badgeOptions}}
-                @onChange={{fn (mut @controller.selectedBadgeId)}}
-                @options={{hash filterable=true}}
-                @value={{@controller.selectedBadgeId}}
-              />
+              <label id="admin-user-badges-grant-label">{{i18n
+                  "admin.badges.badge"
+                }}</label>
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if @controller.siteSettings.enable_new_select_controls}}
+                <DSelectBadge
+                  @ariaLabelledBy="admin-user-badges-grant-label"
+                  @identifier="admin-user-badges-grant"
+                  @onChange={{fn (mut @controller.selectedBadgeId)}}
+                  @options={{@controller.availableBadges}}
+                  @value={{@controller.selectedBadgeId}}
+                />
+              {{else}}
+                <ComboBox
+                  @content={{@controller.badgeOptions}}
+                  @onChange={{fn (mut @controller.selectedBadgeId)}}
+                  @options={{hash filterable=true}}
+                  @value={{@controller.selectedBadgeId}}
+                />
+              {{/if}}
             </div>
             <div class="control-group">
               <label>{{i18n "admin.badges.reason"}}</label>

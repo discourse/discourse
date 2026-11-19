@@ -10,10 +10,16 @@ module PageObjects
       end
 
       def select_badge(badge_name)
+        return badge_select.select_name(badge_name) if SiteSetting.enable_new_select_controls
+
         within(modal) do
           grantable_badges_dropdown.expand
           grantable_badges_dropdown.select_row_by_name(badge_name)
         end
+      end
+
+      def badge_select
+        PageObjects::Components::UiKit::DSelect.by_identifier("grant-badge")
       end
 
       def grant

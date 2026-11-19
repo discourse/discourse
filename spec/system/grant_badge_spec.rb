@@ -22,15 +22,25 @@ describe "Granting Badges" do
       topic_page.click_post_admin_action_button(post, :grant_badge)
     end
 
-    it "grants badge with the correct badge reason which links the right post" do
-      visit_topic_and_open_badge_modal(post)
-      badge_modal.select_badge(badge_to_grant.name)
-      badge_modal.grant
+    shared_examples "granting from the post" do
+      it "grants badge with the correct badge reason which links the right post" do
+        visit_topic_and_open_badge_modal(post)
+        badge_modal.select_badge(badge_to_grant.name)
+        badge_modal.grant
 
-      expect(badge_modal).to have_success_flash_visible
-      granted_badge = UserBadge.last
-      expect(granted_badge.badge_id).to eq badge_to_grant.id
-      expect(granted_badge.post_id).to eq post.id
+        expect(badge_modal).to have_success_flash_visible
+        granted_badge = UserBadge.last
+        expect(granted_badge.badge_id).to eq badge_to_grant.id
+        expect(granted_badge.post_id).to eq post.id
+      end
+    end
+
+    include_examples "granting from the post"
+
+    context "with the new select controls" do
+      with_select_controls(true)
+
+      include_examples "granting from the post"
     end
   end
 
