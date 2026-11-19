@@ -271,13 +271,9 @@ RSpec.describe Chat::CreateMessage do
 
       before { SiteSetting.chat_thread_improvements = true }
 
-      it "flags the new message as broadcasted" do
+      it "flags the new message as broadcasted and updates the channel last message" do
         expect(result).to run_successfully
         expect(result.message_instance.broadcasted?).to be(true)
-      end
-
-      it "treats the message as a channel message for last message bookkeeping" do
-        expect(result).to run_successfully
         expect(channel.reload.last_message_id).to eq(result.message_instance.id)
       end
 

@@ -100,33 +100,6 @@ module("Unit | Components | ChatThread", function (hooks) {
   });
 
   test("broadcast option follows the upcoming change and channel threading, and toggles the draft", async function (assert) {
-    this.siteSettings.chat_thread_improvements = true;
-    const channel = this.fabricators.channel({ id: 1 });
-    channel.currentUserMembership = UserChatChannelMembership.create({
-      following: true,
-    });
-    channel.threadingEnabled = false;
-    const thread = this.fabricators.thread({ id: 1, channel });
-    this.thread = thread;
-
-    await render(
-      <template>
-        <ChatThread @targetMessageId={{null}} @thread={{this.thread}} />
-      </template>
-    );
-    assert.dom(".chat-composer__broadcast-option").doesNotExist();
-
-    channel.threadingEnabled = true;
-    await settled();
-    assert.dom(".chat-composer__broadcast-option").exists();
-    assert.dom(".chat-composer__broadcast-option input").isNotChecked();
-
-    await click(".chat-composer__broadcast-option input");
-    assert.true(thread.draft.broadcasted, "toggling marks the staged draft");
-    assert.dom(".chat-composer__broadcast-option input").isChecked();
-  });
-
-  test("broadcast option is hidden when the upcoming change is off", async function (assert) {
     this.siteSettings.chat_thread_improvements = false;
     const channel = this.fabricators.channel({ id: 1 });
     channel.currentUserMembership = UserChatChannelMembership.create({
@@ -141,7 +114,23 @@ module("Unit | Components | ChatThread", function (hooks) {
         <ChatThread @targetMessageId={{null}} @thread={{this.thread}} />
       </template>
     );
+    assert
+      .dom(".chat-composer__broadcast-option")
+      .doesNotExist("hidden while the upcoming change is off");
 
-    assert.dom(".chat-composer__broadcast-option").doesNotExist();
+    this.siteSettings.chat_thread_improvements = true;
+    await settled();
+    assert.dom(".chat-composer__broadcast-option").exists();
+    assert.dom(".chat-composer__broadcast-option input").isNotChecked();
+
+    await click(".chat-composer__broadcast-option input");
+    assert.true(thread.draft.broadcasted, "toggling marks the staged draft");
+    assert.dom(".chat-composer__broadcast-option input").isChecked();
+
+    channel.threadingEnabled = false;
+    await settled();
+    assert
+      .dom(".chat-composer__broadcast-option")
+      .doesNotExist("hidden again when threading is off");
   });
 });

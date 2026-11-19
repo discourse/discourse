@@ -234,39 +234,29 @@ module("Unit | chat-message-interactor", function (hooks) {
     assert.true(interactor.canReply, "reply is available in channel context");
   });
 
-  test("canReply is true in thread context when the upcoming change is on", function (assert) {
-    this.siteSettings.chat_thread_improvements = true;
-    const channel = this.chatFabricators.channel();
-    channel.currentUserMembership = UserChatChannelMembership.create({
-      following: true,
-    });
-    const message = this.chatFabricators.message({ channel });
-    const interactor = new ChatMessageInteractor(
-      getOwner(this),
-      message,
-      MESSAGE_CONTEXT_THREAD
-    );
+  test("canReply in thread context follows the upcoming change", function (assert) {
+    for (const [enabled, expected] of [
+      [true, true],
+      [false, false],
+    ]) {
+      this.siteSettings.chat_thread_improvements = enabled;
+      const channel = this.chatFabricators.channel();
+      channel.currentUserMembership = UserChatChannelMembership.create({
+        following: true,
+      });
+      const message = this.chatFabricators.message({ channel });
+      const interactor = new ChatMessageInteractor(
+        getOwner(this),
+        message,
+        MESSAGE_CONTEXT_THREAD
+      );
 
-    assert.true(interactor.canReply, "reply is available in thread context");
-  });
-
-  test("canReply is false in thread context when the upcoming change is off", function (assert) {
-    this.siteSettings.chat_thread_improvements = false;
-    const channel = this.chatFabricators.channel();
-    channel.currentUserMembership = UserChatChannelMembership.create({
-      following: true,
-    });
-    const message = this.chatFabricators.message({ channel });
-    const interactor = new ChatMessageInteractor(
-      getOwner(this),
-      message,
-      MESSAGE_CONTEXT_THREAD
-    );
-
-    assert.false(
-      interactor.canReply,
-      "reply is hidden in thread context without the change"
-    );
+      assert.strictEqual(
+        interactor.canReply,
+        expected,
+        `thread-context reply is ${expected ? "available" : "hidden"} when the change is ${enabled ? "on" : "off"}`
+      );
+    }
   });
 
   test("canBroadcastMessage is true for a moderator of another user's reply", function (assert) {
