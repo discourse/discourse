@@ -50,7 +50,8 @@ const Swatch = <template>
 /**
  * Picks a string list setting's values: its choices, plus typed ones when `@allowAny` is set. A
  * value removed from the list stays listed, unticked, held `@mandatory` values can't be removed, and
- * `@colors` draws each value that is a hex colour as a small square.
+ * `@colors` draws each value that is a hex colour as a small square. A `:footer` block draws in the
+ * open panel, below the list.
  */
 export default class SelectStringList extends Component {
   /**
@@ -121,6 +122,7 @@ export default class SelectStringList extends Component {
       @multiple={{true}}
       @onChange={{this.onChange}}
       @options={{this.options}}
+      @suppressFooter={{not (has-block "footer")}}
       @texts={{this.texts}}
       @value={{@values}}
     >
@@ -147,6 +149,9 @@ export default class SelectStringList extends Component {
           {{renderSelectText config "noResults"}}
         {{/if}}
       </:empty>
+      <:footer as |state config|>
+        {{yield state config to="footer"}}
+      </:footer>
       <:selection as |option|>
         {{#if @colors}}
           <Swatch @value={{option.value}} />

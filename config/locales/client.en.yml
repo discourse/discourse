@@ -10773,8 +10773,10 @@ en:
           add_video_types: "Videos"
           add_audio_types: "Audio"
           add_document_types: "Documents"
+          add_common_types: "Add common types"
           add_types_title: "Allow extensions %{types}"
           add_types_toast: "%{types} file types added"
+          already_allowed: "Already allowed: %{types}"
         mandatory_group: "Group is mandatory"
         requires_confirmation_messages:
           default:

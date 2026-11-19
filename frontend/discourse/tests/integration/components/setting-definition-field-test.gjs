@@ -1379,6 +1379,9 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert
       .dom("[role='option'][data-value='a']")
       .hasAttribute("aria-selected", "true", "and lists the held values");
+    assert
+      .dom(".d-select__footer")
+      .doesNotExist("a list without footer content draws no footer");
 
     await dSelect(control).search("custom");
     await click("[role='option'].--create");

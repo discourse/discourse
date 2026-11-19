@@ -292,3 +292,22 @@
     }
   }
 }
+
+// Drawn in the select's portaled panel, outside `.settings`.
+.file-types-list__footer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.4em;
+}
+
+.file-types-list__label {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.file-types-list__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+}
