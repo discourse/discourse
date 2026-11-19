@@ -4965,6 +4965,30 @@ RSpec.describe PostsController do
         expect(post_ids).to_not include(whisper_post.id)
       end
 
+      it "does not disclose another participant's hidden private post" do
+        other_user = Fabricate(:user)
+        pm = Fabricate(:private_message_topic, user: other_user, recipient: user)
+        visible_post = Fabricate(:post, topic: pm, user: other_user, raw: "visible private message")
+        hidden_post =
+          Fabricate(:post, topic: pm, user: other_user, hidden: true, raw: "hidden private message")
+
+        expect(user.guardian.can_see_post?(hidden_post)).to be_falsey
+
+        sign_in(user)
+
+        get "/private-posts.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(visible_post.raw)
+        expect(response.body).not_to include(hidden_post.raw)
+
+        get "/private-posts.rss"
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(visible_post.raw)
+        expect(response.body).not_to include(hidden_post.raw)
+      end
+
       it "returns private posts for json" do
         sign_in(admin)
 
