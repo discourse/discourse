@@ -25,6 +25,27 @@ module("lib:details-cooked-test", (hooks) => {
     );
   });
 
+  test("details badge matches core badge attributes", async function (assert) {
+    const cooked = await cook('[details="Title" ai]\nHidden text\n[/details]');
+    const doc = new DOMParser().parseFromString(cooked.toString(), "text/html");
+    const badge = doc.querySelector("details > summary > .ai-badge");
+
+    assert.true(!!badge, "the summary contains the shared badge class");
+    // Keep in sync with frontend/discourse-markdown-it/src/ai-badge.js.
+    assert.deepEqual(
+      badge?.getAttributeNames().sort(),
+      ["class", "data-ai-label", "title"],
+      "the details badge has exactly the core badge attributes"
+    );
+    assert.strictEqual(
+      badge?.getAttribute("data-ai-label"),
+      "AI",
+      "the label is present"
+    );
+    assert.true(!!badge?.getAttribute("title"), "the badge has a tooltip");
+    assert.strictEqual(badge?.textContent, "", "the label comes from CSS");
+  });
+
   test("details", async (assert) => {
     const testCooked = async (input, expected, text) => {
       const cooked = (await cook(input)).toString();

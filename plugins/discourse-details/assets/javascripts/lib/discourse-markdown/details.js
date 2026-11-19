@@ -35,9 +35,6 @@ export function setup(helper) {
     "details.ai-quote",
     "details[data-ai-generated=true]",
     "details.elided",
-    "span.ai-badge",
-    "span[data-ai-label]",
-    "span[title]",
   ]);
 
   helper.registerPlugin((md) => {
