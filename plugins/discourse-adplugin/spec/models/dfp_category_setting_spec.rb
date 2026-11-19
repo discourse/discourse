@@ -14,6 +14,22 @@ RSpec.describe AdPlugin::DfpCategorySetting do
     end
   end
 
+  describe "broadcast on write" do
+    it "broadcasts programmatic creates and updates that bypass the controller" do
+      create_messages =
+        MessageBus.track_publish("/site/dfp-category-settings/changed") do
+          described_class.create!(category: category, gam_adunit: "/123/travel")
+        end
+      expect(create_messages).not_to be_empty
+
+      update_messages =
+        MessageBus.track_publish("/site/dfp-category-settings/changed") do
+          described_class.find_by(category_id: category.id).update!(gam_adunit: "/123/finance")
+        end
+      expect(update_messages).not_to be_empty
+    end
+  end
+
   describe "category lifecycle" do
     it "removes settings without broadcasting when a category is destroyed while the plugin is disabled" do
       setting = described_class.create!(category: category, gam_adunit: "/123/travel")

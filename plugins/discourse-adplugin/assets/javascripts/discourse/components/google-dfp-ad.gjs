@@ -635,6 +635,7 @@ export default class GoogleDfpAd extends AdComponent {
         this.currentRouteName
         this.postNumber
         this.showAd
+        this.site.mobileView
       }}
     >
       {{#if this.showAd}}

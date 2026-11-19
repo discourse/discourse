@@ -19,7 +19,6 @@ module AdPlugin
     def create
       setting = DfpCategorySetting.new(dfp_category_setting_params)
       if setting.save
-        DfpCategorySetting.publish_site_settings
         render_json_dump(serialize_data(setting, DfpCategorySettingSerializer), status: :created)
       else
         render_json_error(setting)
@@ -31,7 +30,6 @@ module AdPlugin
       raise Discourse::NotFound if setting.nil?
 
       if setting.update(dfp_category_setting_params)
-        DfpCategorySetting.publish_site_settings
         render_json_dump(serialize_data(setting, DfpCategorySettingSerializer))
       else
         render_json_error(setting)

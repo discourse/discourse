@@ -11,9 +11,7 @@ module AdPlugin
     validates :category_id, uniqueness: true
     validates :gam_adunit, :gam_keywords, :gtm_taxonomy, length: { maximum: 255 }
 
-    after_destroy_commit do
-      self.class.publish_site_settings if SiteSetting.discourse_adplugin_enabled
-    end
+    after_commit :broadcast_change, on: %i[create update destroy]
 
     def self.site_settings_for(scope)
       where(category_id: Category.secured(scope).select(:id)).to_h do |setting|
@@ -36,6 +34,14 @@ module AdPlugin
       payload = { public: site_settings_for(nil), secure: secure_settings_exist? }
 
       MessageBus.publish("/site/dfp-category-settings/changed", payload)
+    end
+
+    private
+
+    def broadcast_change
+      return unless SiteSetting.discourse_adplugin_enabled
+
+      self.class.publish_site_settings
     end
   end
 end
