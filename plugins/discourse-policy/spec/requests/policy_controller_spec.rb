@@ -305,6 +305,28 @@ describe DiscoursePolicy::PolicyController do
         I18n.t("discourse_policy.errors.policy_group_inaccessible"),
       )
     end
+
+    context "when the policy is in a system message" do
+      let(:system_message) do
+        SystemMessage.create(user1, :plugin_notice, message_title: "Notice", message_raw: "Text")
+      end
+
+      before do
+        post_policy.update!(post: system_message)
+        sign_in(user1)
+        put "/policy/accept.json", params: { post_id: system_message.id }
+      end
+
+      it "responds with an error" do
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.no_policy"),
+        )
+      end
+
+      it "does not add the user to the group" do
+        expect(group2.users).not_to include(user1)
+      end
+    end
   end
 
   describe "#unaccept" do
