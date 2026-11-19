@@ -2,12 +2,13 @@
 
 RSpec.describe Blog::AddPublishersToPublicCategory do
   describe ".call" do
-    subject(:result) { described_class.call(**dependencies) }
+    subject(:result) { described_class.call(params: { category_id: }, **dependencies) }
 
     fab!(:publishers, :group)
     fab!(:other_publishers, :group)
     fab!(:writers, :group)
 
+    let(:category_id) { SiteSetting.blog_category.presence }
     let(:dependencies) { {} }
     let(:full) { CategoryGroup.permission_types[:full] }
     let(:create_post) { CategoryGroup.permission_types[:create_post] }
@@ -17,6 +18,12 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
     before { SiteSetting.blog_publisher_groups = "#{publishers.id}|#{other_publishers.id}" }
 
     context "without a blog category" do
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when the category no longer exists" do
+      let(:category_id) { Fabricate(:category).tap(&:destroy!).id }
+
       it { is_expected.to fail_to_find_a_model(:category) }
     end
 

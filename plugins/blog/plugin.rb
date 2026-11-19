@@ -69,14 +69,14 @@ after_initialize do
     include_condition: -> do
       object.is_first_post? && object.word_count.to_i >= 250 &&
         Blog::Configuration.public_enabled? &&
-        object.topic.category_id == SiteSetting.blog_category.to_i
+        Blog::Instance.category_ids.include?(object.topic.category_id)
     end,
   ) do
     if publication = object.topic.blog_live_publication
       {
         url: publication.url,
         excerpt: publication.display_excerpt,
-        blog_name: SiteSetting.blog_title,
+        blog_name: publication.blog.name,
       }
     end
   end
@@ -109,8 +109,13 @@ after_initialize do
 
   on(:site_setting_changed) do |name|
     name = name.to_sym
-    if %i[blog_category blog_publisher_groups].include?(name)
-      Blog::AddPublishersToPublicCategory.call
+    if name == :blog_publisher_groups
+      Blog::Instance.category_ids.each do |category_id|
+        Blog::AddPublishersToPublicCategory.call(params: { category_id: })
+      end
+    end
+    if name == :blog_category
+      Blog::AddPublishersToPublicCategory.call(params: { category_id: SiteSetting.blog_category })
     end
     next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
     Blog::EnsureDraftsCategory.call(options: { create_missing: false })

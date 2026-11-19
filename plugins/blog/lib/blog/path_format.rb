@@ -9,8 +9,8 @@ module ::Blog
     UNIQUE_TOKENS = %w[slug id].freeze
     MAX_LENGTH = 100
 
-    def self.current
-      new(SiteSetting.blog_path_format)
+    def self.for_blog(blog)
+      new(blog.path_format)
     end
 
     def initialize(template)

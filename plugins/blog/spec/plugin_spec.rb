@@ -34,6 +34,20 @@ RSpec.describe Blog do
       expect(SiteSetting.blog_drafts_category).to be_blank
     end
 
+    it "gives new publisher groups access to every blog's public category" do
+      default_category = Fabricate(:category, permissions: { members.id => :full })
+      SiteSetting.blog_category = default_category.id
+      other_category = Fabricate(:category, permissions: { members.id => :full })
+      Blog::Instance.create!(name: "Engineering", slug: "engineering", category: other_category)
+
+      SiteSetting.blog_publisher_groups = publishers.id.to_s
+
+      expect(CategoryGroup.where(group_id: publishers.id).pluck(:category_id)).to contain_exactly(
+        default_category.id,
+        other_category.id,
+      )
+    end
+
     it "gives new publisher groups access to the public category" do
       blog_category = Fabricate(:category, permissions: { members.id => :full })
       SiteSetting.blog_category = blog_category.id
