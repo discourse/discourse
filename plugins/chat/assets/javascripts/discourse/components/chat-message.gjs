@@ -251,10 +251,19 @@ export default class ChatMessage extends Component {
   }
 
   get hideReplyToInfo() {
+    if (this.siteSettings.chat_thread_improvements) {
+      return (
+        (!this.threadContext && this.threadingEnabled) ||
+        this.args.message?.inReplyTo?.id ===
+          this.args.message?.previousMessage?.id
+      );
+    }
+
     return (
-      (!this.threadContext && this.threadingEnabled) ||
+      this.threadContext ||
       this.args.message?.inReplyTo?.id ===
-        this.args.message?.previousMessage?.id
+        this.args.message?.previousMessage?.id ||
+      this.threadingEnabled
     );
   }
 

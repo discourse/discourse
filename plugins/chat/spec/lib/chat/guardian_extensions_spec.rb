@@ -121,6 +121,8 @@ RSpec.describe Chat::GuardianExtensions do
     fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user:, thread:) }
     fab!(:member) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
 
+    before { SiteSetting.chat_thread_improvements = true }
+
     it "allows the message author" do
       expect(guardian.can_broadcast_chat_message?(message)).to eq(true)
     end
@@ -131,6 +133,13 @@ RSpec.describe Chat::GuardianExtensions do
 
     it "disallows other members" do
       expect(Guardian.new(member).can_broadcast_chat_message?(message)).to eq(false)
+    end
+
+    it "disallows everyone while the chat_thread_improvements upcoming change is off" do
+      SiteSetting.chat_thread_improvements = false
+
+      expect(guardian.can_broadcast_chat_message?(message)).to eq(false)
+      expect(staff_guardian.can_broadcast_chat_message?(message)).to eq(false)
     end
   end
 

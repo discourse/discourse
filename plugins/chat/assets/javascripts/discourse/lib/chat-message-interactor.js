@@ -114,7 +114,11 @@ export default class ChatMessageInteractor {
   }
 
   get canReply() {
-    return this.canInteractWithMessage;
+    return (
+      this.canInteractWithMessage &&
+      (this.siteSettings.chat_thread_improvements ||
+        this.context !== MESSAGE_CONTEXT_THREAD)
+    );
   }
 
   get canReact() {
@@ -154,7 +158,11 @@ export default class ChatMessageInteractor {
   }
 
   get canBroadcastMessage() {
-    if (this.message.deletedAt || this.message.chatWebhookEvent) {
+    if (
+      !this.siteSettings.chat_thread_improvements ||
+      this.message.deletedAt ||
+      this.message.chatWebhookEvent
+    ) {
       return false;
     }
     const channel = this.message.channel;

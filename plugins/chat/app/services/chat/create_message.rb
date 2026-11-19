@@ -182,7 +182,9 @@ module Chat
         cooked_version: ::Chat::Message::BAKED_VERSION,
         streaming: options.streaming,
         blocks: params.blocks,
-        broadcasted: params.broadcast && channel.threading_enabled? && thread.present?,
+        broadcasted:
+          params.broadcast && guardian.user&.upcoming_change_enabled?(:chat_thread_improvements) &&
+            channel.threading_enabled? && thread.present?,
       )
     end
 

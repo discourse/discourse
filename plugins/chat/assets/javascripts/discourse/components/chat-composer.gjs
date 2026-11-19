@@ -77,7 +77,12 @@ export default class ChatComposer extends Component {
   @tracked inProgressUploadsCount = 0;
 
   get shouldRenderMessageDetails() {
-    return this.draft?.editing || !!this.draft?.inReplyTo;
+    return (
+      this.draft?.editing ||
+      (!!this.draft?.inReplyTo &&
+        (this.siteSettings.chat_thread_improvements ||
+          this.context === "channel"))
+    );
   }
 
   get inlineButtons() {

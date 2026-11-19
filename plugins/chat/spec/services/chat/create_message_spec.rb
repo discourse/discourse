@@ -269,6 +269,8 @@ RSpec.describe Chat::CreateMessage do
         { chat_channel_id: channel.id, message: content, thread_id: thread.id, broadcast: true }
       end
 
+      before { SiteSetting.chat_thread_improvements = true }
+
       it "flags the new message as broadcasted" do
         expect(result).to run_successfully
         expect(result.message_instance.broadcasted?).to be(true)
@@ -277,6 +279,15 @@ RSpec.describe Chat::CreateMessage do
       it "treats the message as a channel message for last message bookkeeping" do
         expect(result).to run_successfully
         expect(channel.reload.last_message_id).to eq(result.message_instance.id)
+      end
+
+      context "when the chat_thread_improvements upcoming change is off" do
+        before { SiteSetting.chat_thread_improvements = false }
+
+        it "sends the message without the broadcast flag" do
+          expect(result).to run_successfully
+          expect(result.message_instance.broadcasted?).to be(false)
+        end
       end
 
       context "when the channel has threading disabled" do

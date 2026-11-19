@@ -37,7 +37,10 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   get showBroadcastOption() {
-    return Boolean(this.args.thread?.channel?.threadingEnabled);
+    return (
+      this.siteSettings.chat_thread_improvements &&
+      Boolean(this.args.thread?.channel?.threadingEnabled)
+    );
   }
 
   get broadcastChecked() {

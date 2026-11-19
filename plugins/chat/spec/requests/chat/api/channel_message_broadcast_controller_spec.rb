@@ -10,6 +10,7 @@ RSpec.describe Chat::Api::ChannelMessageBroadcastController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.chat_thread_improvements = true
     channel.add(user)
     sign_in(user)
   end

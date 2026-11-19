@@ -19,7 +19,16 @@ RSpec.describe Chat::UpdateMessageBroadcast do
     let(:dependencies) { { guardian: } }
     let(:params) { { message_id: reply.id, channel_id: channel.id, broadcast: true } }
 
-    before { channel.add(author) }
+    before do
+      SiteSetting.chat_thread_improvements = true
+      channel.add(author)
+    end
+
+    context "when the chat_thread_improvements upcoming change is off" do
+      before { SiteSetting.chat_thread_improvements = false }
+
+      it { is_expected.to fail_a_policy(:can_manage_broadcast) }
+    end
 
     context "when params are not valid" do
       let(:params) { {} }
