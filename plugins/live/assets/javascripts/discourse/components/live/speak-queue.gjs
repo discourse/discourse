@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -12,11 +13,14 @@ import { i18n } from "discourse-i18n";
 import { speakQueue } from "../../lib/live/speak-queue.js";
 
 // The ordered request-to-speak queue of a stage room. Everyone sees the
-// order; moderators get approve/dismiss controls, a queued viewer can lower
-// their own hand.
+// order; moderators get approve/dismiss controls and a quick requests toggle,
+// and a queued viewer can lower their own hand.
 export default class LiveSpeakQueue extends Component {
   @service currentUser;
+  @service liveRooms;
   @service liveWebrtc;
+
+  @tracked togglingRequests = false;
 
   get room() {
     return this.args.room;
@@ -24,6 +28,10 @@ export default class LiveSpeakQueue extends Component {
 
   get canManage() {
     return this.room?.can_manage;
+  }
+
+  get speakRequestsEnabled() {
+    return this.room?.speak_requests_enabled !== false;
   }
 
   get entries() {
@@ -38,11 +46,40 @@ export default class LiveSpeakQueue extends Component {
   }
 
   @action
+  async toggleSpeakRequests() {
+    if (this.togglingRequests) {
+      return;
+    }
+
+    this.togglingRequests = true;
+    try {
+      const result = await ajax(`/live/rooms/${this.room.id}`, {
+        type: "PUT",
+        data: {
+          room: {
+            speak_requests_enabled: !this.speakRequestsEnabled,
+          },
+        },
+      });
+      if (result?.room) {
+        this.liveRooms.handleDirectoryEvent({
+          type: "updated",
+          room: result.room,
+        });
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.togglingRequests = false;
+    }
+  }
+
+  @action
   async approve(participant) {
     try {
       await ajax(`/live/rooms/${this.room.id}/memberships`, {
         type: "POST",
-        data: { user_id: participant.id, role: "speaker" },
+        data: { user_id: participant.id, role: "speaker", session_only: true },
       });
     } catch (error) {
       popupAjaxError(error);
@@ -79,9 +116,32 @@ export default class LiveSpeakQueue extends Component {
 
   <template>
     <div class="live-speak-queue">
-      <h3 class="live-speak-queue__title">
-        {{i18n "live.stage.queue_title"}}
-      </h3>
+      <div class="live-speak-queue__header">
+        <h3 class="live-speak-queue__title">
+          {{i18n "live.stage.queue_title"}}
+        </h3>
+        {{#if this.canManage}}
+          <DButton
+            class={{dConcatClass
+              "btn-flat btn-small live-speak-queue__toggle-requests"
+              (if this.speakRequestsEnabled "--enabled" "--paused")
+            }}
+            @action={{this.toggleSpeakRequests}}
+            @disabled={{this.togglingRequests}}
+            @icon={{if this.speakRequestsEnabled "hand" "ban"}}
+            @label={{if
+              this.speakRequestsEnabled
+              "live.stage.allow_requests_toggle"
+              "live.stage.requests_paused"
+            }}
+          />
+        {{/if}}
+      </div>
+      {{#unless this.speakRequestsEnabled}}
+        <div class="live-speak-queue__paused">
+          {{i18n "live.stage.requests_paused_hint"}}
+        </div>
+      {{/unless}}
       {{#if this.entries.length}}
         <ul class="live-speak-queue__list">
           {{#each this.entries key="participant.id" as |entry|}}

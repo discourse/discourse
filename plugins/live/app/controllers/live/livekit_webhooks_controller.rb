@@ -105,6 +105,7 @@ module Live
       room = event_room(event)
       return if room.nil?
 
+      Live::StageRoles.clear_session_speakers!(room)
       AgentManager.evict_agents_in_room!(room, delete_room: false)
       Live::ParticipantTracker.clear_livekit_sids(room.id)
     end
