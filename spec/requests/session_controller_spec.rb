@@ -767,9 +767,23 @@ RSpec.describe SessionController do
       before { RateLimiter.enable }
 
       it "rate limits requests per IP per minute" do
-        3.times do |i|
-          post "/session/login-code.json", params: { email: "user#{i}@example.com" }
+        6.times do |index|
+          post "/session/login-code.json", params: { email: "user#{index}@example.com" }
           expect(response.status).to eq(200)
+        end
+
+        post "/session/login-code.json", params: { email: "another@example.com" }
+
+        expect(response.status).to eq(429)
+      end
+
+      it "rate limits requests per IP per hour" do
+        freeze_time
+
+        30.times do |index|
+          post "/session/login-code.json", params: { email: "user#{index}@example.com" }
+          expect(response.status).to eq(200)
+          freeze_time 1.minute.from_now
         end
 
         post "/session/login-code.json", params: { email: "another@example.com" }
