@@ -298,10 +298,26 @@ RSpec.describe AppearanceStyles::Policy do
         },
         "rules[0]: text on background is",
       )
+      # core darkens primary buttons on hover, which black text can't take
+      expect_error(
+        {
+          rules: [
+            { area: "primary_button", declarations: { "color" => "light-dark(#000000, #000000)" } },
+          ],
+        },
+        "rules[0]: text on background is 3.36:1 in light mode on hover",
+      )
       expect_valid(
         {
           rules: [
             { area: "primary_button", declarations: { "color" => "light-dark(#000000, #000000)" } },
+            {
+              area: "primary_button",
+              state: "hover",
+              declarations: {
+                "background-color" => "var(--tertiary)",
+              },
+            },
           ],
         },
       )
@@ -644,6 +660,133 @@ RSpec.describe AppearanceStyles::Policy do
           ],
         },
         "text on background is",
+      )
+    end
+
+    it "only checks rules together where they can apply together" do
+      expect_valid(
+        rules: [
+          {
+            area: "welcome_banner",
+            media: "desktop",
+            declarations: {
+              "background-color" => "light-dark(#000000, #000000)",
+              "color" => "light-dark(#ffffff, #ffffff)",
+            },
+          },
+          {
+            area: "welcome_banner_title",
+            media: "mobile",
+            declarations: {
+              "color" => "light-dark(#000000, #ffffff)",
+            },
+          },
+        ],
+      )
+      expect_error(
+        {
+          rules: [
+            {
+              area: "welcome_banner",
+              declarations: {
+                "background-color" => "light-dark(#000000, #000000)",
+                "color" => "light-dark(#ffffff, #ffffff)",
+              },
+            },
+            {
+              area: "welcome_banner_title",
+              media: "mobile",
+              declarations: {
+                "color" => "light-dark(#000000, #000000)",
+              },
+            },
+          ],
+        },
+        "rules[0] and rules[1]: Welcome banner title text is 1.0:1 on the background around it in light mode on mobile",
+      )
+    end
+
+    it "composites a see-through background onto what rules paint behind it" do
+      dark_banner = {
+        area: "welcome_banner",
+        declarations: {
+          "background-color" => "light-dark(#000000, #000000)",
+          "color" => "light-dark(#ffffff, #ffffff)",
+        },
+      }
+      expect_valid(
+        rules: [
+          dark_banner,
+          {
+            area: "welcome_banner_title",
+            declarations: {
+              "background-color" => "rgba(var(--secondary-rgb), 0.1)",
+            },
+          },
+        ],
+      )
+      expect_error(
+        {
+          rules: [
+            dark_banner,
+            {
+              area: "welcome_banner_title",
+              declarations: {
+                "background-color" => "color-mix(in srgb, var(--secondary) 90%, transparent)",
+              },
+            },
+          ],
+        },
+        "Welcome banner title text is",
+      )
+    end
+
+    it "measures color-mix() backgrounds that are partly transparent" do
+      expect_valid(
+        rules: [
+          {
+            area: "welcome_banner",
+            declarations: {
+              "background-color" => "color-mix(in srgb, var(--tertiary) 10%, transparent)",
+            },
+          },
+        ],
+      )
+      expect_error(
+        {
+          rules: [
+            {
+              area: "welcome_banner",
+              declarations: {
+                "background-color" => "color-mix(in srgb, var(--primary) 90%, transparent)",
+              },
+            },
+          ],
+        },
+        "rules[0]: text on background is",
+      )
+    end
+
+    it "checks text with the opacity it is shown at" do
+      expect_valid(rules: [{ area: "welcome_banner", declarations: { "opacity" => "0.9" } }])
+      expect_error(
+        { rules: [{ area: "post", declarations: { "opacity" => "0.6" } }] },
+        "rules[0]: text on background is 4.29:1",
+      )
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "background-color" => "light-dark(#2e7d32, #66bb6a)",
+                "color" => "light-dark(#ffffff, #111111)",
+                "opacity" => "0.6",
+              },
+            },
+          ],
+        },
+        "rules[0]: text on background is",
       )
     end
 

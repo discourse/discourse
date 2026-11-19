@@ -74,13 +74,6 @@ module AppearanceStyles
       ].compact
     end
 
-    # Whether rules for both areas can style the same element, such as the
-    # sign-up button, which is also a primary button.
-    def same_element?(first, second)
-      first == second || first.same_element.include?(second.key) ||
-        second.same_element.include?(first.key)
-    end
-
     def [](key)
       @areas[key.to_s]
     end

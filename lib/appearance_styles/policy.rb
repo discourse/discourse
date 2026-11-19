@@ -226,9 +226,11 @@ module AppearanceStyles
       end
 
       @checked_rules = []
+      @global_variables = variables
+      errors_before_rules = @errors.size
       rules.each_with_index { |rule, index| blocks.concat(check_rule(rule, "rules[#{index}]")) }
-      readable_together? if @errors.empty?
-      readable_nested? if @errors.empty?
+      # rules are checked together once each one is valid on its own
+      readable_everywhere? if @errors.size == errors_before_rules
 
       css = blocks.join("\n")
       if css.bytesize > MAX_CSS_BYTES
@@ -356,7 +358,7 @@ module AppearanceStyles
         )
       end
       return [] if rendered.size != declarations.size
-      return [] if !readable?(declarations, path, area, state)
+      return [] if !measurable?(declarations, path)
       return [] if overrides.any? && !readable_variables?(overrides, path)
 
       @checked_rules << {
@@ -435,204 +437,437 @@ module AppearanceStyles
       end
     end
 
-    # When a rule sets a background or a text color, check the text stays
-    # readable in light and dark mode: against the rule's own background, or
-    # the one core gives the area. Every color of a gradient is checked.
-    # Translucent colors depend on what is behind them, so they aren't
-    # checked; any other color the rule sets has to be one that can be.
-    def readable?(declarations, path, area, state = nil)
+    # A rule's own colors have to be ones whose contrast can be measured, and
+    # its text has to be opaque. How readable they are, with everything else
+    # that can apply at the same time, is checked by readable_everywhere?.
+    def measurable?(declarations, path)
       own_text = declarations["color"]
-      text = own_text || area.text_color
       own_backgrounds = background_values(declarations)
-      backgrounds = own_backgrounds
-      if backgrounds.empty?
-        return true if !own_text
-        default = (state == "hover" && area.hover_background) || area.background
-        backgrounds = CssValue.parse(default)
-      end
-      return true if !text
 
       %w[light dark].all? do |mode|
-        text_hex = resolve_color(text, mode)
-        next unreadable_unknown(path, "color") if text_hex.nil? && own_text
-        next error(path, "text needs an opaque color") if text_hex == :translucent && own_text
-        next true if !text_hex.is_a?(String)
-        required = area.icon ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
+        if own_text
+          text_hex = resolve_color(own_text, mode)
+          next unreadable_unknown(path, "color") if text_hex.nil?
+          next error(path, "text needs an opaque color") if text_hex == :translucent
+        end
+        own_backgrounds.all? do |background|
+          color_with_alpha(background, mode) ? true : unreadable_unknown(path, "background")
+        end
+      end
+    end
 
-        backgrounds.all? do |background|
-          own = own_backgrounds.include?(background)
-          background_hex = shown_background(background, area, mode)
-          next unreadable_unknown(path, "background") if background_hex.nil? && own
-          next true if !background_hex.is_a?(String)
+    BACKGROUND_PROPERTIES = %w[background-color background background-image].freeze
 
-          ratio = contrast(text_hex, background_hex)
-          next true if ratio >= required
-          error(
-            path,
-            "text on background is #{ratio}:1 in #{mode} mode; it needs #{required}:1. Set a readable color too.",
+    # One combination of the conditions rules can depend on: the screen, the
+    # page, which of an area's elements are hovered (by level, see
+    # #readable_area?) and whether each is an odd or even row.
+    Situation = Data.define(:media, :page, :hovered, :parity)
+
+    # Checks the text of every area against its background in every situation
+    # a rule can apply in, with the declarations that would actually win
+    # there: rules for the area, for areas that style the same element, and
+    # for the areas around it, which paint the background behind it and may
+    # give it its color.
+    def readable_everywhere?
+      rules =
+        @checked_rules.each_with_index.map do |rule, index|
+          rule.merge(index:, specificity: specificity(rule))
+        end
+      @catalog.all.all? { |area| readable_area?(area, rules) }
+    end
+
+    # Level 0 is the area's own element, which the areas it shares an element
+    # with also style; the levels after it are the areas around it,
+    # innermost first.
+    def readable_area?(area, rules)
+      levels =
+        @catalog.chain(area).map { |node| [node, *node.same_element.map { |key| @catalog[key] }] }
+      level_rules = levels.map { |nodes| rules.select { |rule| nodes.include?(rule[:area]) } }
+      return true if level_rules.all?(&:empty?)
+
+      situations(levels, level_rules).all? do |situation|
+        readable_in?(area, levels, level_rules, situation)
+      end
+    end
+
+    def situations(levels, level_rules)
+      rules = level_rules.flatten
+      medias = rules.any? { |rule| rule[:media] } ? MEDIA.keys : [nil]
+      pages = rules.any? { |rule| rule[:page] } ? [nil, *PAGES.keys] : [nil]
+      hoverable =
+        levels.each_index.select do |level|
+          level_rules[level].any? { |rule| rule[:state] == "hover" } ||
+            levels[level].first.hover_background
+        end
+      # hovering an element hovers the elements around it too
+      hovers = (0..levels.size).map { |from| hoverable.select { |level| level >= from } }.uniq
+      parities =
+        level_rules.map do |rules_here|
+          rules_here.any? { |rule| %w[odd even].include?(rule[:state]) } ? %w[odd even] : [nil]
+        end
+      parity_sets = parities.first.product(*parities.drop(1))
+
+      medias
+        .product(pages, hovers, parity_sets)
+        .map { |media, page, hovered, parity| Situation.new(media:, page:, hovered:, parity:) }
+    end
+
+    def applies?(rule, level, situation)
+      return false if rule[:media] && rule[:media] != situation.media
+      return false if rule[:page] && rule[:page] != situation.page
+
+      case rule[:state]
+      when nil
+        true
+      when "hover"
+        situation.hovered.include?(level)
+      else
+        situation.parity[level] == rule[:state]
+      end
+    end
+
+    # For each level, the rule whose value wins for each property: the more
+    # specific selector, then the later rule, as in the CSS written for them.
+    def winning_rules(level_rules, situation)
+      level_rules.each_with_index.map do |rules, level|
+        rules
+          .select { |rule| applies?(rule, level, situation) }
+          .sort_by { |rule| [rule[:specificity], rule[:index]] }
+          .each_with_object({}) do |rule, winners|
+            rule[:declarations].each_key { |property| winners[property] = rule }
+          end
+      end
+    end
+
+    def specificity(rule)
+      selector = scope_selector(rule[:area].selector, rule[:state], rule[:page]).split(",").first
+      [
+        selector.scan(/#[\w-]+/).size,
+        selector.scan(/\.[\w-]+|:[\w-]+|\[/).size,
+        selector.split(/[\s>+~]+/).count { |part| part.match?(/\A[a-z]/i) },
+      ]
+    end
+
+    # The variables an element sees: the draft's, then those rules set on the
+    # areas around it, then its own.
+    def variables_at(winners, level)
+      winners[level..]
+        .reverse
+        .each_with_object(@global_variables.dup) do |rules, variables|
+          rules.each do |property, rule|
+            variables[property] = rule[:declarations][property] if property.start_with?("--")
+          end
+        end
+    end
+
+    def variable_rules_at(winners, level)
+      winners[level..]
+        .flat_map do |rules|
+          rules.filter_map { |property, rule| rule if property.start_with?("--") }
+        end
+        .uniq
+    end
+
+    def with_variables(variables)
+      saved = @draft_variables
+      @draft_variables = variables
+      yield
+    ensure
+      @draft_variables = saved
+    end
+
+    # The text color an area shows, and the level of the rule it comes from:
+    # its own, or, when core doesn't color it, the nearest area around it
+    # that a rule gives a color, up to one core colors itself.
+    def shown_text_color(area, levels, winners)
+      if (rule = winners[0]["color"])
+        return rule[:declarations]["color"], 0
+      end
+      if area.inherits_color
+        (1...levels.size).each do |level|
+          if (rule = winners[level]["color"])
+            return rule[:declarations]["color"], level
+          end
+          node = levels[level].first
+          break if !node.inherits_color && node.text_color
+        end
+      end
+      [area.text_color, nil]
+    end
+
+    # The colors shown behind an element's text, each with the rules it comes
+    # from: what the element paints, or what shows through from the areas
+    # around it, see-through colors composited onto them.
+    def backgrounds(levels, winners, situation, level, mode)
+      if level >= levels.size
+        return [[resolve_color(AreaCatalog::PAGE_BACKGROUND, mode), [], levels.size]]
+      end
+
+      painted = winners[level].slice(*BACKGROUND_PROPERTIES)
+      node = levels[level].first
+      if painted.empty?
+        return backgrounds(levels, winners, situation, level + 1, mode) if !node.paints_background
+        values =
+          CssValue.parse(
+            (situation.hovered.include?(level) && node.hover_background) || node.background,
           )
+        sources = []
+      else
+        declarations = painted.to_h { |property, rule| [property, rule[:declarations][property]] }
+        values = background_values(declarations)
+        sources = painted.values.uniq
+      end
+
+      colors =
+        with_variables(variables_at(winners, level)) do
+          values.filter_map { |value| color_with_alpha(value, mode) }
+        end
+      colors.flat_map do |color, alpha|
+        next [[color, sources, level]] if alpha >= 1
+
+        backgrounds(
+          levels,
+          winners,
+          situation,
+          level + 1,
+          mode,
+        ).filter_map do |behind, behind_sources|
+          [blend(color, behind, alpha), sources + behind_sources, level] if behind.is_a?(String)
         end
       end
     end
 
-    # Rules for the same area, or for areas that style the same element, can
-    # apply at once, so each one's text is checked against the other's
-    # background too: when their media and page match or one has none, and
-    # their states match, one has none or one is hover (a hovered row is also
-    # odd or even).
-    def readable_together?
-      @checked_rules
-        .combination(2)
-        .all? do |first, second|
-          next true if !@catalog.same_element?(first[:area], second[:area])
-          next true if !overlap?(first, second)
-          # the more specific area, whose element both rules reach
-          area = first[:area].same_element.any? ? first[:area] : second[:area]
+    def readable_in?(area, levels, level_rules, situation)
+      winners = winning_rules(level_rules, situation)
+      text, text_level = shown_text_color(area, levels, winners)
+      return true if text.nil?
 
-          state =
-            (
-              if [first[:state], second[:state]].include?("hover")
-                "hover"
-              else
-                first[:state] || second[:state]
-              end
-            )
-          path = "#{first[:path]} and #{second[:path]}"
-          global_variables = @draft_variables
-          @draft_variables = global_variables.merge(first[:overrides]).merge(second[:overrides])
-          begin
-            [[first, second], [second, first]].all? do |under, over|
-              readable?(under[:declarations].merge(over[:declarations]), path, area, state)
-            end &&
-              (
-                (overrides = first[:overrides].merge(second[:overrides])).empty? ||
-                  readable_variables?(overrides, path)
-              )
-          ensure
-            @draft_variables = global_variables
-          end
-        end
-    end
+      text_rule = text_level && winners[text_level]["color"]
+      variable_rules = variable_rules_at(winners, 0)
+      element_variables = variables_at(winners, 0)
 
-    # Text in an area shows on the background of the nearest area around it
-    # that paints one, and may take its color from an area around it, so
-    # rules on surrounding areas are checked with the text inside them.
-    def readable_nested?
-      rules_by_area = @checked_rules.group_by { |rule| rule[:area].key }
-      @catalog.all.all? do |area|
-        chain = @catalog.chain(area)
-        outer = chain.drop(1)
-        next true if outer.none? { |around| rules_by_area[around.key] }
-
-        own_rules = rules_by_area[area.key] || []
-        texts =
-          own_rules.filter_map do |rule|
-            [rule[:declarations]["color"], rule] if rule[:declarations]["color"]
+      # variables set by several rules that apply together
+      if variable_rules.size > 1
+        overrides =
+          variable_rules.reduce({}) do |merged, rule|
+            merged.merge(rule[:declarations].select { |property, _| property.start_with?("--") })
           end
-        if texts.empty?
-          next true if area.text_color.nil?
-          texts = [[area.text_color, nil]]
-          inherited =
-            area.inherits_color &&
-              outer
-                .lazy
-                .map do |around|
-                  (rules_by_area[around.key] || []).select { |rule| rule[:declarations]["color"] }
-                end
-                .find(&:any?)
-          if inherited
-            # a color given everywhere replaces core's; one given only for
-            # some states, screens or pages leaves core's in place elsewhere
-            texts = [] if inherited.any? { |rule| %i[state media page].all? { rule[it].nil? } }
-            texts += inherited.map { |rule| [rule[:declarations]["color"], rule] }
-          end
-        end
-
-        backgrounds = nil
-        chain.each do |node|
-          painted =
-            (rules_by_area[node.key] || []).flat_map do |rule|
-              background_values(rule[:declarations]).map { |background| [background, rule] }
-            end
-          if painted.any?
-            backgrounds = painted
-            break
-          end
-          if node.paints_background
-            backgrounds = CssValue.parse(node.background).map { |background| [background, nil] }
-            break
-          end
-        end
-        backgrounds ||=
-          CssValue.parse(AreaCatalog::PAGE_BACKGROUND).map { |background| [background, nil] }
-
-        texts.all? do |text, text_rule|
-          backgrounds.all? do |background, background_rule|
-            sources = [text_rule, background_rule].compact.uniq
-            # a rule's own text on its own background was checked with the rule
-            next true if sources.all? { |rule| rule[:area] == area }
-            next true if sources.empty?
-
-            readable_on?(text, background, area, sources.map { |rule| rule[:path] }.join(" and "))
-          end
-        end
+        path =
+          variable_rules.sort_by { |rule| rule[:index] }.map { |rule| rule[:path] }.join(" and ")
+        return false if !with_variables(element_variables) { readable_variables?(overrides, path) }
       end
-    end
 
-    # Like variable pairs, AA or no worse than core's own default for the area,
-    # which misses AA in places (category headings, links).
-    def readable_on?(text, background, area, path)
       %w[light dark].all? do |mode|
-        text_hex = resolve_color(text, mode)
-        background_hex = shown_background(background, area, mode)
-        next true if !text_hex.is_a?(String) || !background_hex.is_a?(String)
+        text_hex = with_variables(element_variables) { resolve_color(text, mode) }
+        next true if !text_hex.is_a?(String)
 
-        required = area.icon ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
+        backgrounds(
+          levels,
+          winners,
+          situation,
+          0,
+          mode,
+        ).all? do |background, background_rules, painted_at|
+          next true if !background.is_a?(String)
+
+          faded(
+            levels,
+            winners,
+            situation,
+            mode,
+            text_hex,
+            background,
+            painted_at,
+          ).all? do |shown_text, shown_background, opacity_rules|
+            literal_rules = [text_rule, *background_rules, *opacity_rules].compact.uniq
+            next true if literal_rules.empty? && variable_rules.empty?
+
+            readable_pair?(
+              area,
+              shown_text,
+              shown_background,
+              mode,
+              situation,
+              literal_rules:,
+              variable_rules:,
+              own_element: levels.first,
+            )
+          end
+        end
+      end
+    end
+
+    # A draft's own colors for an element are held to AA. Anything it shows
+    # from the areas around it, or through variables, is held to AA or no
+    # worse than core's default for the area, which misses AA in places
+    # (category headings, links).
+    def readable_pair?(
+      area,
+      text_hex,
+      background,
+      mode,
+      situation,
+      literal_rules:,
+      variable_rules:,
+      own_element:
+    )
+      strict = literal_rules.any? && literal_rules.all? { |rule| own_element.include?(rule[:area]) }
+      required = area.icon ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
+      if !strict
         default_text = area.text_color && resolve_color(area.text_color, mode, use_draft: false)
         default_background = resolve_color(default_background(area), mode, use_draft: false)
         if default_text.is_a?(String) && default_background.is_a?(String)
           required = [required, contrast(default_text, default_background)].min
         end
+      end
 
-        ratio = contrast(text_hex, background_hex)
-        next true if ratio >= required
+      ratio = contrast(text_hex, background)
+      return true if ratio >= required
+
+      path =
+        (literal_rules.presence || variable_rules)
+          .sort_by { |rule| rule[:index] }
+          .map { |rule| rule[:path] }
+          .join(" and ")
+      where = describe(situation)
+      if strict
         error(
           path,
-          "#{area.label} text is #{ratio}:1 on the background around it in #{mode} mode; it needs #{required}:1",
+          "text on background is #{ratio}:1 in #{mode} mode#{where}; it needs #{required}:1. Set a readable color too.",
+        )
+      else
+        error(
+          path,
+          "#{area.label} text is #{ratio}:1 on the background around it in #{mode} mode#{where}; it needs #{required}:1",
         )
       end
+    end
+
+    # Text and background as they show once the opacity rules give an element
+    # or the areas around it is applied: everything inside a faded element,
+    # its own background too, is blended with what shows behind it.
+    def faded(levels, winners, situation, mode, text, background, painted_at)
+      shown = [[text, background, []]]
+      levels.each_index do |level|
+        rule = winners[level]["opacity"]
+        next if rule.nil?
+        opacity = rule[:declarations]["opacity"].to_s.to_f
+        next if opacity >= 1
+
+        behinds = backgrounds(levels, winners, situation, level + 1, mode)
+        shown =
+          shown.flat_map do |shown_text, shown_background, rules|
+            behinds.filter_map do |behind, _, _|
+              next if !behind.is_a?(String)
+              [
+                blend(shown_text, behind, opacity),
+                painted_at <= level ? blend(shown_background, behind, opacity) : shown_background,
+                rules + [rule],
+              ]
+            end
+          end
+      end
+      shown
+    end
+
+    def describe(situation)
+      parts = []
+      parts << "on #{situation.media}" if situation.media
+      parts << "on #{situation.page} pages" if situation.page
+      parts << "on hover" if situation.hovered.include?(0)
+      parts << "in #{situation.parity[0]} rows" if situation.parity[0]
+      parts.empty? ? "" : " #{parts.join(", ")}"
     end
 
     # The color a background shows: see-through ones are composited onto the
     # background core shows around the area, or onto `behind` when there's no
     # area. Returns nil when that can't be told.
-    def shown_background(node, area, mode, depth = 0, behind: nil, use_draft: true)
-      hex = resolve_node(node, mode, use_draft:)
-      return hex if hex != :translucent || depth > 8
+    def shown_background(node, area, mode, behind: nil, use_draft: true)
+      color, alpha = color_with_alpha(node, mode, use_draft:)
+      return if color.nil?
+      return color if alpha >= 1
 
-      behind ||= outside_background(area)
-      behind_hex = resolve_color(behind, mode, use_draft:)
-      return if !behind_hex.is_a?(String)
+      behind_hex = resolve_color(behind || outside_background(area), mode, use_draft:)
+      blend(color, behind_hex, alpha) if behind_hex.is_a?(String)
+    end
+
+    # A color as [hex, alpha], or nil when it can't be told. transparent,
+    # rgb(var(--name-rgb), alpha), and color-mix() with a see-through color or
+    # percentages under 100% are see-through.
+    def color_with_alpha(node, mode, depth = 0, use_draft: true)
+      return if depth > 8
 
       case node.type
       when :ident
-        behind_hex if node.value.downcase == "transparent"
+        return "000000", 0.0 if node.value.downcase == "transparent"
       when :function
-        if node.value == "var"
-          name = node.children.first&.value
-          value = (use_draft ? (@draft_variables || {})[name] : nil) || @registry[name]&.default
-          nodes = value && CssValue.parse(value.to_s)
-          if nodes&.size == 1
-            shown_background(nodes.first, area, mode, depth + 1, behind:, use_draft:)
-          end
-        elsif (rgb = palette_rgb(node))
-          name, opacity = rgb
-          color = resolve_variable(name.delete_suffix("-rgb"), mode, use_draft:)
-          blend(color, behind_hex, opacity) if color.is_a?(String)
+        case node.value
+        when "var"
+          return variable_with_alpha(node.children.first&.value, mode, depth, use_draft:)
+        when "light-dark"
+          part = CssValue.split_commas(node.children)[mode == "light" ? 0 : 1]
+          return part&.size == 1 ? color_with_alpha(part.first, mode, depth + 1, use_draft:) : nil
+        when "rgb", "rgba"
+          name, opacity = palette_rgb(node)
+          return if name.nil?
+          hex = resolve_variable(name.delete_suffix("-rgb"), mode, use_draft:)
+          return hex.is_a?(String) ? [hex, opacity.to_f] : nil
+        when "color-mix"
+          return mix_with_alpha(node, mode, depth, use_draft:)
         end
       end
+      hex = resolve_node(node, mode, depth, use_draft:)
+      hex.is_a?(String) ? [hex, 1.0] : nil
     rescue CssValue::ParseError
       nil
+    end
+
+    # Like resolve_variable: a draft's value wins over the palette's.
+    def variable_with_alpha(name, mode, depth, use_draft:)
+      return if name.nil?
+
+      value = use_draft ? (@draft_variables || {})[name] : nil
+      if value.nil? && @registry.palette_variable?(name)
+        hex = @palette_colors[mode][name]
+        return hex.is_a?(String) ? [hex, 1.0] : nil
+      end
+      value ||= @registry[name]&.default
+      nodes = value && CssValue.parse(value.to_s)
+      nodes&.size == 1 ? color_with_alpha(nodes.first, mode, depth + 1, use_draft:) : nil
+    end
+
+    # color-mix(in srgb, A p%, B q%) as [hex, alpha]: each color counts by its
+    # weight and opacity, and percentages under 100% lower the opacity.
+    def mix_with_alpha(node, mode, depth, use_draft:)
+      space, *parts = CssValue.split_commas(node.children)
+      return if space.map { |n| n.value.to_s.downcase } != %w[in srgb] || parts.size != 2
+
+      colors =
+        parts.map do |part|
+          color = part.find { |n| n.type != :dimension }
+          percent = part.find { |n| n.type == :dimension && n.unit == "%" }&.value
+          [color && color_with_alpha(color, mode, depth + 1, use_draft:), percent]
+        end
+      return if colors.any? { |color, _| color.nil? }
+      return if colors.any? { |_, percent| percent && !percent.between?(0, 100) }
+
+      (first, first_percent), (second, second_percent) = colors
+      first_percent ||= second_percent ? 100 - second_percent : 50
+      second_percent ||= 100 - first_percent
+      return if first_percent + second_percent > 100
+
+      weighted = [[first, first_percent / 100.0], [second, second_percent / 100.0]]
+      alpha = weighted.sum { |(_, color_alpha), weight| color_alpha * weight }
+      return "000000", 0.0 if alpha <= 0
+
+      rgb =
+        weighted
+          .map do |(hex, color_alpha), weight|
+            ColorMath::Converters.hex_to_rgb(hex).map { |channel| channel * color_alpha * weight }
+          end
+          .transpose
+          .map { |channels| (channels.sum / alpha).round.clamp(0, 255) }
+      [ColorMath::Converters.rgb_to_hex(rgb), alpha.clamp(0.0, 1.0)]
     end
 
     def blend(color, behind, opacity)
@@ -654,13 +889,6 @@ module AppearanceStyles
     def default_background(area)
       painted = @catalog.chain(area).find(&:paints_background)
       painted ? painted.background : AreaCatalog::PAGE_BACKGROUND
-    end
-
-    def overlap?(first, second)
-      states = [first[:state], second[:state]]
-      return false if states.compact.size == 2 && states.uniq.size == 2 && !states.include?("hover")
-
-      %i[media page].all? { |key| first[key].nil? || second[key].nil? || first[key] == second[key] }
     end
 
     def unreadable_unknown(path, what)
