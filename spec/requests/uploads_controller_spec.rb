@@ -1031,17 +1031,22 @@ RSpec.describe UploadsController do
       )
     end
 
-    it "counts a repeated short url once against the limit" do
+    it "looks up a repeated short url once" do
       sign_in(user)
-      upload = Fabricate(:upload)
+      video = Fabricate(:upload)
+      thumbnail_short_url = Upload.base62_sha1(video.sha1)
 
-      post "/uploads/lookup-urls.json",
-           params: {
-             short_urls: [upload.short_url] * (UploadsController::MAX_LOOKUP_SHORT_URLS + 1),
-           }
+      queries =
+        track_sql_queries do
+          post "/uploads/lookup-urls.json",
+               params: {
+                 short_urls: [thumbnail_short_url] * (UploadsController::MAX_LOOKUP_SHORT_URLS + 1),
+               }
+        end
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body.map { |result| result["url"] }).to contain_exactly(upload.url)
+      expect(response.parsed_body.map { |result| result["url"] }).to contain_exactly(video.url)
+      expect(queries.count { |sql| sql.include?("original_filename") }).to eq(1)
     end
 
     describe "secure uploads" do

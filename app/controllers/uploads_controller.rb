@@ -97,10 +97,10 @@ class UploadsController < ApplicationController
 
   def lookup_urls
     params.permit(short_urls: [])
+    short_urls = params[:short_urls]&.uniq
     uploads = []
 
-    # The client batches lookups from repeated renders, so the same short url can arrive many times.
-    if params[:short_urls] && params[:short_urls].uniq.length > MAX_LOOKUP_SHORT_URLS
+    if short_urls && short_urls.length > MAX_LOOKUP_SHORT_URLS
       return(
         render_json_error(
           I18n.t("upload.too_many_short_urls", count: MAX_LOOKUP_SHORT_URLS),
@@ -109,8 +109,8 @@ class UploadsController < ApplicationController
       )
     end
 
-    if params[:short_urls] && params[:short_urls].length > 0
-      upload_urls = PrettyText::Helpers.lookup_upload_urls(params[:short_urls])
+    if short_urls.present?
+      upload_urls = PrettyText::Helpers.lookup_upload_urls(short_urls)
       uploads_by_sha1 =
         Upload.where(
           sha1:
