@@ -25,6 +25,17 @@
     }
   }
 
+  .automation-workflows-notice {
+    margin-block-end: var(--space-4);
+    padding: var(--space-4);
+    border-inline-start: 4px solid var(--primary-low-mid);
+    background: var(--primary-very-low);
+
+    p {
+      margin-block: var(--space-1) var(--space-3);
+    }
+  }
+
   .discourse-automations-table {
     margin-top: 1em;
   }

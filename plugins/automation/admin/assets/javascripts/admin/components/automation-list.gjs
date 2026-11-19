@@ -95,6 +95,16 @@ export default class AutomationList extends Component {
         </:actions>
       </DPageSubheader>
 
+      <aside class="automation-workflows-notice">
+        <strong>{{i18n "discourse_automation.workflows_notice.title"}}</strong>
+        <p>{{i18n "discourse_automation.workflows_notice.description"}}</p>
+        <DButton
+          class="btn-default"
+          @href={{getURL "/admin/plugins/discourse-workflows"}}
+          @label="discourse_automation.workflows_notice.action"
+        />
+      </aside>
+
       {{#if @model.content.length}}
         <table class="d-table automations">
           <thead class="d-table__header">
