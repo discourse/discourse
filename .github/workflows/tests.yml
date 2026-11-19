@@ -56,6 +56,7 @@ jobs:
 
     env:
       RAILS_ENV: test
+      RUBY_YJIT_ENABLE: "1"
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}

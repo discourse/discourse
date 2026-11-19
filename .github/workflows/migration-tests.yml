@@ -34,6 +34,7 @@ jobs:
 
     env:
       RAILS_ENV: test
+      RUBY_YJIT_ENABLE: "1"
       PGUSER: discourse
       PGPASSWORD: discourse
       LOAD_PLUGINS: 1
