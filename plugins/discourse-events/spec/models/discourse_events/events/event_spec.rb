@@ -1235,6 +1235,18 @@ RSpec.describe DiscourseEvents::Events::Event do
     it "is empty without reminders" do
       expect(event_with_reminders(nil).parsed_reminders).to eq([])
     end
+
+    it "deduplicates reminders with the same type, value, and unit" do
+      event = event_with_reminders("notification.15.minutes,notification.15.minutes")
+
+      expect(event.parsed_reminders).to eq([{ type: "notification", value: 15, unit: "minutes" }])
+    end
+
+    it "deduplicates reminders with the same overall time value regardless of unit" do
+      event = event_with_reminders("notification.1.hour,notification.60.minutes")
+
+      expect(event.parsed_reminders).to eq([{ type: "notification", value: 60, unit: "minutes" }])
+    end
   end
 
   describe ".valid_reminder?" do

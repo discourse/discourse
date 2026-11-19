@@ -218,6 +218,8 @@ module DiscourseEvents
 
             { type: type.presence || NOTIFICATION_REMINDER, value: value.to_i, unit: unit }
           end
+          .index_by { |reminder| [reminder[:type], Event.reminder_offset(reminder).to_i] }
+          .values
       end
 
       def self.split_reminder(reminder)
