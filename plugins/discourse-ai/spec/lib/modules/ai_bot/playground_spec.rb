@@ -1348,6 +1348,49 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(message.group_ids).to contain_exactly(group.id)
     end
 
+    it "stops streaming to participants removed while generating" do
+      removed = Fabricate(:user)
+      pm.topic_allowed_users.create!(user: removed)
+
+      DiscourseAi::AiBot::PostStreamer.on_callback =
+        lambda do |callback|
+          pm.topic_allowed_users.where(user: removed).destroy_all
+          callback.call
+        end
+
+      messages =
+        DiscourseAi::Completions::Llm.with_prepared_responses([%w[the secret bot reply]]) do
+          MessageBus.track_publish("discourse-ai/ai-bot/topic/#{pm.id}") do
+            playground.reply_to(third_post)
+          end
+        end
+
+      expect(messages.first.user_ids).to include(removed.id)
+      expect(messages.last.data[:noop]).to eq(true)
+      expect(messages.last.user_ids).not_to include(removed.id)
+    ensure
+      DiscourseAi::AiBot::PostStreamer.on_callback = nil
+    end
+
+    it "stops streaming once the PM is deleted while generating" do
+      DiscourseAi::AiBot::PostStreamer.on_callback =
+        lambda do |callback|
+          pm.trash!
+          callback.call
+        end
+
+      messages =
+        DiscourseAi::Completions::Llm.with_prepared_responses([%w[the secret bot reply]]) do
+          MessageBus.track_publish("discourse-ai/ai-bot/topic/#{pm.id}") do
+            playground.reply_to(third_post)
+          end
+        end
+
+      expect(messages.map { |m| m.data[:raw] }).to eq([""])
+    ensure
+      DiscourseAi::AiBot::PostStreamer.on_callback = nil
+    end
+
     it "supports multiple function calls" do
       tool_call1 =
         DiscourseAi::Completions::ToolCall.new(
