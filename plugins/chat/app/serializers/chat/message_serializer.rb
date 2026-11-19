@@ -221,7 +221,14 @@ module Chat
     end
 
     def include_thread?
-      include_thread_id? && (object.thread_om? || object.broadcasted?) && object.thread.present?
+      include_thread_id? &&
+        (object.thread_om? || (object.broadcasted? && thread_original_message_visible?)) &&
+        object.thread.present?
+    end
+
+    def thread_original_message_visible?
+      scope&.can_moderate_chat?(channel_object.chatable) ||
+        !object.thread&.original_message&.trashed?
     end
 
     def include_thread_title?
@@ -246,8 +253,9 @@ module Chat
         scope: scope,
         membership: @options[:thread_memberships]&.find { |m| m.thread_id == object.thread&.id },
         participants: @options[:thread_participants]&.dig(object.thread&.id),
-        include_thread_preview: true,
-        include_thread_original_message: @options[:include_thread_original_message],
+        include_thread_preview: object.thread_om?,
+        include_thread_original_message:
+          object.thread_om? && @options[:include_thread_original_message],
         root: false,
       )
     end
