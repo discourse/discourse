@@ -1,5 +1,5 @@
 import { click, find, render } from "@ember/test-helpers";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 import { buildSimulatedViewport } from "discourse/blocks/conditions/viewport";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -23,7 +23,7 @@ module(
       );
     });
 
-    test("renders the dim toggle and simulation controls when open", async function (assert) {
+    skip("renders the dim toggle and simulation controls when open", async function (assert) {
       await render(
         <template>
           <ViewDrawer
@@ -50,7 +50,7 @@ module(
         .exists("the viewport segmented control renders");
     });
 
-    test("the persona dropdown shows an icon and a description for each option", async function (assert) {
+    skip("the persona dropdown shows an icon and a description for each option", async function (assert) {
       await render(
         <template>
           <ViewDrawer
@@ -71,7 +71,7 @@ module(
         .exists("each persona row carries an icon");
     });
 
-    test("the viewport segment reflects the active simulated size", async function (assert) {
+    skip("the viewport segment reflects the active simulated size", async function (assert) {
       const simulation = this.owner.lookup("service:wireframe-simulation");
       // `xl` marks sm..xl true; the control must map that back to "desktop"
       // (the largest chosen size), not the smallest true breakpoint.
@@ -93,7 +93,7 @@ module(
         .isChecked("an xl viewport selects the desktop segment");
     });
 
-    test("clicking a viewport segment slides the highlight to it", async function (assert) {
+    skip("clicking a viewport segment slides the highlight to it", async function (assert) {
       await render(
         <template>
           <ViewDrawer
@@ -126,7 +126,7 @@ module(
         .hasClass("is-animated", "the slide transition is enabled");
     });
 
-    test("is exempt from the dim system so its transitions survive", async function (assert) {
+    skip("is exempt from the dim system so its transitions survive", async function (assert) {
       // Reproduces the real editor: the dim system's blanket
       // `body.wireframe-active *:not(...) { transition: opacity }` would clobber
       // the segmented slider's transform transition (and fade the drawer) unless

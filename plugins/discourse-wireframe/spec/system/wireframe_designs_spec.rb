@@ -95,6 +95,59 @@ describe "Wireframe designs" do
     expect(designs.map { _1[:name] }).to eq(["Autumn"])
   end
 
+  it "previews an unpublished layout on the live homepage for an admin" do
+    DiscourseWireframe::EnsureBlockLayoutCompanion.call(
+      params: {
+        theme_id: Theme.find_default.id,
+        name: "Autumn",
+        install: false,
+        drafts: [
+          {
+            outlet_name: "homepage-blocks",
+            layout_json: {
+              schema_version: 1,
+              layout: [
+                { block: "layout", args: { mode: "stack" }, children: [{ block: "divider" }] },
+              ],
+            }.to_json,
+          },
+        ],
+      },
+      guardian: admin.guardian,
+    )
+    autumn = Theme.find_by(name: "Autumn")
+
+    visit("/?wf_preview=#{autumn.id}")
+    expect(page).to have_css(".wireframe-draft-preview", text: "Autumn")
+    expect(page).to have_css(".d-block-divider, [data-block-name='divider']")
+
+    find(".wireframe-pill").click
+    expect(page).to have_css(".wireframe-shell")
+    expect(page).to have_no_css(".wireframe-draft-preview")
+    expect(page).to have_current_path("/")
+    expect(editor).to have_design_name("Autumn")
+
+    visit("/?wf_preview=#{autumn.id}")
+    expect(page).to have_css(".wireframe-draft-preview")
+    find(".wireframe-draft-preview__link.--exit").click
+    expect(page).to have_no_css(".wireframe-draft-preview")
+  end
+
+  it "tells an admin about a saved layout that isn't published yet" do
+    DiscourseWireframe::EnsureBlockLayoutCompanion.call(
+      params: {
+        theme_id: Theme.find_default.id,
+        name: "Autumn",
+        install: false,
+      },
+      guardian: admin.guardian,
+    )
+
+    visit("/")
+    expect(page).to have_css(".wireframe-empty-homepage", text: "Autumn")
+    expect(page).to have_css(".wireframe-empty-homepage__preview")
+  end
+
   it "keeps the editor pill off admin pages" do
     visit("/admin/plugins/discourse-wireframe/settings")
     expect(page).to have_no_css(".wireframe-pill")
@@ -163,32 +216,31 @@ describe "Wireframe designs" do
       expect(page).to have_css(".wireframe-block-chrome[data-wf-block-name='divider']")
       find(".wireframe-block-chrome[data-wf-block-name='divider']").click
       find("body").send_keys(:delete)
-      editor.publish
+      editor.save
+      expect(editor).to have_saved
     end
 
     def active_design
       designs.find { _1[:active] }&.fetch(:name)
     end
 
-    it "publishes it and uses it when asked to" do
+    it "saves it as unpublished and keeps the current layout live" do
       edit_autumn
-      find(".wireframe-use-design__use").click
 
-      expect(page).to have_no_css(".wireframe-shell")
-      try_until_success { expect(active_design).to eq("Autumn") }
-    end
-
-    it "publishes it without using it" do
-      edit_autumn
-      find(".wireframe-use-design__publish-only").click
-
-      expect(page).to have_no_css(".wireframe-shell")
+      expect(page).to have_css(".wireframe-status-chip.--draft")
       try_until_success do
         autumn = Theme.find_by(name: "Autumn")
         field = autumn.theme_fields.find_by(name: "homepage-blocks")
         expect(JSON.parse(field.value)["layout"].to_s).not_to include("divider")
       end
       expect(active_design).to eq("Spring")
+    end
+
+    it "makes it the live layout when set to published" do
+      edit_autumn
+      editor.set_status(:published)
+
+      try_until_success { expect(active_design).to eq("Autumn") }
     end
   end
 end

@@ -16,11 +16,28 @@ RSpec.describe "Wireframe custom homepage routing" do
     )
   end
 
+  def publish_homepage_layout(target_theme)
+    target_theme.set_field(
+      target: :common,
+      name: "homepage-blocks",
+      type: :block_layout,
+      value: { schema_version: 1, layout: [{ block: "layout", args: { mode: "stack" } }] }.to_json,
+    )
+    target_theme.save!
+  end
+
   it "routes / to the custom homepage when the default theme has the setting enabled" do
+    publish_homepage_layout(Theme.find_default)
     get "/"
 
     expect(response.status).to eq(200)
     expect(controller.controller_name).to eq("home_page")
+  end
+
+  it "keeps the default homepage while the theme has no homepage layout" do
+    get "/"
+
+    expect(controller.controller_name).not_to eq("home_page")
   end
 
   it "prefers a user's own homepage preference over the theme setting" do

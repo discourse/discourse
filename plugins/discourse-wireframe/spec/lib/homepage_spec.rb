@@ -12,7 +12,18 @@ RSpec.describe HomepageHelper do
     request
   end
 
+  def publish_homepage_layout(target_theme)
+    target_theme.set_field(
+      target: :common,
+      name: "homepage-blocks",
+      type: :block_layout,
+      value: { schema_version: 1, layout: [{ block: "layout", args: { mode: "stack" } }] }.to_json,
+    )
+    target_theme.save!
+  end
+
   def enable_for(target_theme, value: true)
+    publish_homepage_layout(target_theme) if value
     Fabricate(
       :theme_site_setting_with_service,
       theme: target_theme,
@@ -25,6 +36,12 @@ RSpec.describe HomepageHelper do
 
   it "returns the default homepage when the setting is off" do
     disable_for(theme)
+    expect(HomepageHelper.resolve(request_resolved_to(theme.id))).to eq("latest")
+  end
+
+  it "keeps the default homepage while the theme has no homepage layout" do
+    Fabricate(:theme_site_setting_with_service, theme: theme, name: "custom_homepage", value: true)
+
     expect(HomepageHelper.resolve(request_resolved_to(theme.id))).to eq("latest")
   end
 

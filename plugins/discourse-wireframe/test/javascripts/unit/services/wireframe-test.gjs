@@ -15,10 +15,6 @@ import {
   registerBlock,
   withTestBlockRegistration,
 } from "discourse/tests/helpers/block-testing";
-import pretender, {
-  parsePostData,
-  response,
-} from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
@@ -1224,10 +1220,6 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
 
     test("discardOutlet drops the outlet's undo history", async function (assert) {
-      pretender.delete(
-        "/admin/plugins/wireframe/block-layout-drafts.json",
-        () => response({ success: true })
-      );
       mutationsOf(this.editor).insertBlock({
         blockName: "wf:svc-test-tile",
         targetKey: null,
@@ -3859,73 +3851,6 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("a click target outside any editor scope is out-of-scope", function (assert) {
       const child = appendScope("");
       assert.false(this.editor.wireframeSelection.isInsideAllowedScope(child));
-    });
-  });
-
-  module("saveAllEditedDrafts", function (innerHooks) {
-    const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
-    const PUBLISH_URL = "/admin/customize/block-layouts.json";
-
-    innerHooks.beforeEach(async function () {
-      withTestBlockRegistration(() => registerBlock(TestTile));
-      await registerTestLayout(getOwner(this));
-      this.editor.siteSettings.wireframe_enabled = true;
-      logIn(getOwner(this));
-      this.editor = getOwner(this).lookup("service:wireframe-workspace");
-      this.editor.enter();
-      getOwner(this)
-        .lookup("service:wireframe-publish-target")
-        .setActiveTheme(1);
-
-      // Edit the outlet's tile so the outlet counts as edited.
-      const tile = outletChildren(this.editor)[0];
-      this.editor.wireframeSelection.selectBlock({
-        key: `wf:svc-test-tile:${tile.__stableKey}`,
-        name: "wf:svc-test-tile",
-        args: { title: "Original" },
-        metadata: { args: { title: { type: "string" } } },
-      });
-      await editArg(this.editor, "title", "Edited");
-    });
-
-    test("drafts every edited outlet without publishing it live", async function (assert) {
-      pretender.post(DRAFTS_URL, (request) => {
-        const body = parsePostData(request.requestBody);
-        assert.step(`draft:${body.outlet_name}`);
-        return response({ success: true });
-      });
-      // Saving a draft must never write the live field.
-      pretender.post(PUBLISH_URL, () => {
-        assert.true(
-          false,
-          "the publish endpoint must not be hit by Save draft"
-        );
-        return response({});
-      });
-
-      const banner = await stagingOf(this.editor).saveAllEditedDrafts();
-
-      assert.strictEqual(banner, null, "no error banner on success");
-      assert.verifySteps(["draft:homepage-blocks"]);
-      assert.true(
-        engineOf(this.editor).isOutletEdited("homepage-blocks"),
-        "the outlet stays edited — a draft never goes live"
-      );
-    });
-
-    test("returns a banner naming an outlet whose draft fails", async function (assert) {
-      pretender.post(DRAFTS_URL, () => response(500, {}));
-
-      const banner = await stagingOf(this.editor).saveAllEditedDrafts();
-
-      assert.true(
-        banner?.includes("homepage-blocks"),
-        "the failing outlet is named in the banner"
-      );
-      assert.true(
-        engineOf(this.editor).isOutletEdited("homepage-blocks"),
-        "a failed draft leaves the outlet edited"
-      );
     });
   });
 });

@@ -48,6 +48,7 @@ module DiscourseWireframe
       theme_id = params[:theme_id].to_i
       render json: {
                companion_id: DiscourseWireframe::BlockLayoutCompanion.companion_id_for(theme_id),
+               current_id: DiscourseWireframe::BlockLayoutCompanion.current_id_for(theme_id),
                designs: DiscourseWireframe::BlockLayoutCompanion.designs_for(theme_id),
              }
     end
@@ -87,7 +88,7 @@ module DiscourseWireframe
     private
 
     def service_params
-      permitted = params.permit(:theme_id, :name, drafts: %i[outlet_name layout_json])
+      permitted = params.permit(:theme_id, :name, :install, drafts: %i[outlet_name layout_json])
 
       # The browser encodes an array of objects as `drafts[0][outlet_name]=...`,
       # which Rack parses into a positional `{ "0" => {...} }` hash rather than an

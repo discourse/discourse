@@ -33,6 +33,18 @@ RSpec.describe DiscourseWireframe::EnsureBlockLayoutCompanion do
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
     end
 
+    context "when install is false" do
+      let(:params) { { theme_id: parent.id, name: "Spring launch", drafts:, install: false } }
+
+      it "saves the layout and records the mapping without installing it" do
+        expect(result).to run_successfully
+        expect(parent.reload.child_theme_ids).not_to include(result.theme_id)
+        expect(
+          DiscourseWireframe::BlockLayoutCompanion.exists?(component_theme_id: result.theme_id),
+        ).to eq(true)
+      end
+    end
+
     it "creates a local component child of the parent, holding the overlaid layout, and records the mapping" do
       expect(result).to run_successfully
       expect(component.component).to eq(true)

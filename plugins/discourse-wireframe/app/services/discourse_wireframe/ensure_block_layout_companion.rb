@@ -31,6 +31,10 @@ module DiscourseWireframe
       attribute :name, :string
       attribute :drafts, :array, default: []
 
+      # Whether the new layout goes live on the theme right away. The editor creates
+      # layouts uninstalled, so a layout stays a draft until it is published.
+      attribute :install, :boolean, default: true
+
       # Allow negative ids: core system themes (Foundation, Horizon) have negative
       # ids and are a primary use case. `0` is never a real theme; existence is
       # enforced by the `model :theme` step.
@@ -79,8 +83,10 @@ module DiscourseWireframe
       name = params.name.strip
       name = Theme.uniquify_name(name) if Theme.exists?(name: name)
       component = Theme.create!(name: name, component: true, user_id: guardian.user.id)
-      DiscourseWireframe::BlockLayoutCompanion.uninstall_all(theme)
-      theme.add_relative_theme!(:child, component)
+      if params.install
+        DiscourseWireframe::BlockLayoutCompanion.uninstall_all(theme)
+        theme.add_relative_theme!(:child, component)
+      end
       context[:component] = component
     end
 

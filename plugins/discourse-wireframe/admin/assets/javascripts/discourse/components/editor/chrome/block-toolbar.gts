@@ -39,6 +39,7 @@ import WireframeLayoutQueryService, {
   OUTLET_STATE,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
+import type WireframeLayoutStatusService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-status";
 import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 import WireframeSelectionService, {
   type BlockAncestrySegment,
@@ -286,6 +287,7 @@ class StripCrumbs extends Component<StripCrumbsSignature> {
 export default class BlockToolbar extends Component<BlockToolbarSignature> {
   /** Resolves outlet display names for the breadcrumb. */
   @service declare blocks: BlocksService;
+  @service declare wireframeLayoutStatus: WireframeLayoutStatusService;
 
   /** Applies structural mutations for menu actions. */
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
@@ -531,17 +533,10 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * the persisted state; an outlet nothing has published yet is a draft.
    */
   get publishState(): string {
-    if (this.args.isOutletEditing) {
-      return "unpublished_changes";
+    if (this.args.outletState === OUTLET_STATE.LOCKED) {
+      return "locked";
     }
-    switch (this.args.outletState) {
-      case OUTLET_STATE.PUBLISHED:
-        return "published";
-      case OUTLET_STATE.LOCKED:
-        return "locked";
-      default:
-        return "draft";
-    }
+    return this.wireframeLayoutStatus.status;
   }
 
   /** Translated publish state label. */
@@ -1011,6 +1006,12 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
               }}
               title={{this.publishStateLabel}}
             >
+              {{#if @isOutletEditing}}
+                <span class="wireframe-block-toolbar__edited">{{i18n
+                    "wireframe.status.edited"
+                  }}
+                  ·</span>
+              {{/if}}
               <span
                 aria-hidden="true"
                 class="wireframe-block-toolbar__dot"

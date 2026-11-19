@@ -19,6 +19,7 @@ module ::DiscourseWireframe
 end
 
 require_relative "lib/discourse_wireframe/engine"
+require_relative "lib/discourse_wireframe/homepage_layout"
 
 # Plugin-API registrations are grouped by concern in setup modules under
 # `lib/discourse_wireframe/plugin_setup/`. Keep this file a short manifest: do

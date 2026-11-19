@@ -12,7 +12,6 @@ import {
   serializeLayoutForSave,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { downloadJson as triggerJsonDownload } from "../lib/download-json";
-import type WireframeDraftsService from "./wireframe-drafts";
 import type WireframeLayoutQueryService from "./wireframe-layout-query";
 import type WireframeMutationEngineService from "./wireframe-mutation-engine";
 import type WireframePublishTargetService from "./wireframe-publish-target";
@@ -89,9 +88,6 @@ type AjaxError = {
  * service calls it for post-publish cleanup.
  */
 export default class WireframeLiveLayoutService extends Service {
-  /** Deletes private drafts after successful publication. */
-  @service declare wireframeDrafts: WireframeDraftsService;
-
   /** Supplies edited outlets and reconciles successful publication. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
 
@@ -194,13 +190,14 @@ export default class WireframeLiveLayoutService extends Service {
   }
 
   /**
-   * Creates a named design (a local component installed on the theme in use) and
-   * returns its theme id. Any other design of that theme is uninstalled.
+   * Creates a named design (a local component) and returns its theme id. Pass
+   * `install` to also make the theme use it, which uninstalls its other designs.
    *
    * @param themeId - ID of the theme in use.
    * @param name - Name the author gave the design.
    * @param options - Creation options.
    *   - `withEdits` - Seed the design with every edited outlet's draft.
+   *   - `install` - Install the design on the theme right away.
    * @returns The created design.
    */
   createDesign(
@@ -208,9 +205,12 @@ export default class WireframeLiveLayoutService extends Service {
     name: string,
     {
       withEdits = false,
+      install = false,
     }: {
       /** Whether to seed the design with the edited outlets' drafts. */
       withEdits?: boolean;
+      /** Whether the theme starts using the new design right away. */
+      install?: boolean;
     } = {}
   ): Promise<ThemeActionResponse> {
     // Design creation + its parent↔component mapping is an editor concept, so it
@@ -222,6 +222,7 @@ export default class WireframeLiveLayoutService extends Service {
       data: {
         theme_id: themeId,
         name,
+        install,
         drafts: withEdits ? this.#editedDrafts() : [],
       },
     }) as Promise<ThemeActionResponse>;
@@ -250,6 +251,19 @@ export default class WireframeLiveLayoutService extends Service {
     return ajax("/admin/plugins/wireframe/companion.json", {
       type: "PUT",
       data: { theme_id: themeId, design_id: designId },
+    });
+  }
+
+  /**
+   * Stops the theme using any design. Its saved layouts stay available to
+   * install again.
+   *
+   * @param themeId - ID of the theme in use.
+   */
+  uninstallDesign(themeId: number): Promise<unknown> {
+    return ajax("/admin/plugins/wireframe/companion.json", {
+      type: "PUT",
+      data: { theme_id: themeId, design_id: "" },
     });
   }
 
@@ -352,7 +366,6 @@ export default class WireframeLiveLayoutService extends Service {
     this.#publishToThemeLayer(outlet, themeId);
     this.#setToken(themeId, outlet, versionToken);
     this.wireframeMutationEngine.markOutletPublished(outlet);
-    await this.wireframeDrafts.deleteDraft(themeId, outlet);
   }
 
   /**

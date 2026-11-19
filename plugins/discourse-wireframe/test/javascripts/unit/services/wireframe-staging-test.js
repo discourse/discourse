@@ -6,20 +6,19 @@ import { module, test } from "qunit";
 // workflow. These tests cover the commit-orchestration logic — publish-result
 // processing, the stale-version conflict prompt, and the git escape-hatch error
 // formatting — which previously had no direct unit coverage (it was exercised
-// only through the orchestrator). The draft-layer materialize/hydrate paths are covered
+// only through the orchestrator). The draft-layer materialize paths are covered
 // end-to-end by the navigation + service integration tests.
 
 const DEFAULTS = {
   "service:modal": () => ({ show: async () => ({}) }),
   "service:wireframe-image-composition": () => ({ target: null }),
-  "service:wireframe-inspector-args": () => ({ hasPending: false }),
-  "service:wireframe-inplace-text": () => ({ blockKey: null }),
   "service:wireframe-edit-mode": () => ({ active: true }),
   "service:wireframe-drafts": () => ({
-    deleteDraft: async () => {},
-    saveDraftOutlet: async () => {},
-    fetchDrafts: async () => [],
-    companionId: async () => null,
+    fetchDesigns: async () => ({
+      installedId: null,
+      currentId: null,
+      designs: [],
+    }),
   }),
   "service:wireframe-layout-query": () => ({
     readResolvedLayout: () => [],
@@ -71,25 +70,32 @@ module(
   function (hooks) {
     setupTest(hooks);
 
-    test("openReviewDrawer / closeReviewDrawer toggle the drawer", function (assert) {
-      const staging = buildStaging(getOwner(this));
-      assert.false(staging.reviewDrawerOpen);
-      staging.openReviewDrawer();
-      assert.true(staging.reviewDrawerOpen);
-      staging.closeReviewDrawer();
-      assert.false(staging.reviewDrawerOpen);
-    });
-
-    test("canOpenReview is true when the engine is dirty", function (assert) {
+    test("createDesign saves the new layout as a draft", async function (assert) {
+      const registered = [];
+      const created = [];
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-mutation-engine": { isDirty: true },
+        "service:wireframe-publish-target": {
+          registerDesign: (...args) => registered.push(args),
+        },
+        "service:wireframe-live-layout": {
+          createDesign: async (...args) => {
+            created.push(args);
+            return { theme_id: 9 };
+          },
+        },
       });
-      assert.true(staging.canOpenReview);
-    });
-
-    test("canOpenReview is false with nothing dirty and no unsaved drafts", function (assert) {
-      const staging = buildStaging(getOwner(this));
-      assert.false(staging.canOpenReview);
+      const result = await staging.createDesign("Spring");
+      assert.deepEqual(result, { themeId: 9 });
+      assert.deepEqual(
+        registered,
+        [[9, "Spring", { inUse: false }]],
+        "a new layout is registered as not used by the theme"
+      );
+      assert.strictEqual(
+        created[0][2]?.install,
+        undefined,
+        "creating a layout does not ask to install it"
+      );
     });
 
     test("publishEditedOutlets returns null on a clean publish", async function (assert) {

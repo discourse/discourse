@@ -49,16 +49,13 @@ describe "Edit wireframe tabs" do
     screenshot_marker(label: "wireframe-dtabs-overflow", only: :desktop)
   end
 
-  it "edits a tab label in place and reviews the change" do
+  it "edits a tab label in place and saves it" do
     visit "/custom"
     tabs_editor.enter
     tabs_editor.rename_first_panel
     expect(tabs_editor).to have_renamed_panel
-    tabs_editor.open_review
-    expect(tabs_editor).to have_bounded_review
-    screenshot_marker(label: "wireframe-dtabs-review-details", only: :desktop)
-    tabs_editor.show_changes
-    expect(tabs_editor).to have_bounded_review
-    screenshot_marker(label: "wireframe-dtabs-review-changes", only: :desktop)
+    expect(find(".wireframe-unsaved")).to have_text("1")
+    find(".wireframe-btn-save").click
+    expect(page).to have_css(".wireframe-saved-state")
   end
 end

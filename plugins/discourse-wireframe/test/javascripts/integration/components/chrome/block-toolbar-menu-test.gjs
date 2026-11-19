@@ -132,8 +132,8 @@ module(
         .dom(".wireframe-block-toolbar__handle--outlet")
         .exists("the outlet identity handle renders");
       assert
-        .dom(".wireframe-block-toolbar__status--publish.--published")
-        .hasText("Published", "the outlet strip shows its publish state");
+        .dom(".wireframe-block-toolbar__status--publish")
+        .hasText("Unpublished", "the outlet strip shows the layout's status");
       assert
         .dom(".wireframe-block-toolbar__settings")
         .doesNotExist("an outlet root has no gear");
@@ -142,7 +142,7 @@ module(
         .doesNotExist("an outlet root with no actions shows no menu");
     });
 
-    test("an outlet with unsaved edits reads as unpublished changes", async function (assert) {
+    test("an outlet with unsaved edits is marked Edited beside the layout status", async function (assert) {
       await render(
         <template>
           <BlockToolbar
@@ -157,8 +157,12 @@ module(
       );
 
       assert
+        .dom(".wireframe-block-toolbar__status--publish")
+        .includesText("Edited")
+        .includesText("Unpublished");
+      assert
         .dom(".wireframe-block-toolbar__status--publish.--unpublished_changes")
-        .hasText("Unpublished changes");
+        .doesNotExist("unsaved edits are never styled as a red warning");
     });
 
     test("a hidden block's strip summarises why", async function (assert) {

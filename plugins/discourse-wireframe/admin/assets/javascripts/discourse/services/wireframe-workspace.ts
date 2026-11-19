@@ -5,16 +5,19 @@ import {
   registerBlockArgRenderer,
   resetBlockArgRenderer,
 } from "discourse/blocks";
+import { isTesting } from "discourse/lib/environment";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
 import type BlocksService from "discourse/services/blocks";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
 import type WireframeBlockRevealService from "./wireframe-block-reveal";
+import type WireframeDraftPreviewService from "./wireframe-draft-preview";
 import type WireframeDragOverlayService from "./wireframe-drag-overlay";
 import type WireframeDragSessionService from "./wireframe-drag-session";
 import type WireframeEditModeService from "./wireframe-edit-mode";
 import type WireframeImageCompositionService from "./wireframe-image-composition";
 import type WireframeImageUploadService from "./wireframe-image-upload";
 import type WireframeInspectorArgsService from "./wireframe-inspector-args";
+import type WireframeLayoutStatusService from "./wireframe-layout-status";
 import type WireframePublishTargetService from "./wireframe-publish-target";
 import type WireframeSelectionService from "./wireframe-selection";
 import type WireframeStagingService from "./wireframe-staging";
@@ -56,6 +59,9 @@ export default class WireframeWorkspaceService extends Service {
 
   @service declare wireframeImageComposition: WireframeImageCompositionService;
 
+  /** Knows whether the page must reload to show saved changes. */
+  @service declare wireframeLayoutStatus: WireframeLayoutStatusService;
+
   /** Clears pending image uploads around workspace transitions. */
   @service declare wireframeImageUpload: WireframeImageUploadService;
 
@@ -64,6 +70,9 @@ export default class WireframeWorkspaceService extends Service {
 
   /** Controls whether the editor session is active and allowed. */
   @service declare wireframeEditMode: WireframeEditModeService;
+
+  /** Ends an admin preview when editing begins. */
+  @service declare wireframeDraftPreview: WireframeDraftPreviewService;
 
   /** Seeds and tears down editable layout drafts. */
   @service declare wireframeStaging: WireframeStagingService;
@@ -95,6 +104,7 @@ export default class WireframeWorkspaceService extends Service {
       return;
     }
     this.wireframeEditMode.activate();
+    this.wireframeDraftPreview.clear();
     this.wireframeImageUpload.clearPending();
     this.wireframePublishTarget.setActiveTheme(themeId);
     // Swap in the editor-aware rich-text renderer so every richInline arg gains
@@ -170,6 +180,14 @@ export default class WireframeWorkspaceService extends Service {
     // an open editor render the same DOM as live.
     resetBlockArgRenderer("rich-text");
     this.wireframeInspectorArgs.clear();
+
+    // Saved layouts and status changes only reach the page on a fresh load, so
+    // land the author on what visitors will see.
+    const reload = this.wireframeLayoutStatus.needsReload;
+    this.wireframeLayoutStatus.needsReload = false;
+    if (reload && !isTesting()) {
+      this.wireframePublishTarget.navigateToThemeInUse();
+    }
   }
 
   /** Opens or closes the workspace according to its current active state. */

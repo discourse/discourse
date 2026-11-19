@@ -20,12 +20,45 @@ module("Unit | Discourse Wireframe | lib:outlet-change-summary", function () {
     const before = [entry(1, { args: { a: 1 } }), entry(2)];
 
     assert.deepEqual(diffLayouts(before, layout), {
+      changes: [],
       added: 0,
       removed: 0,
       moved: 0,
       edited: 0,
       reliable: true,
     });
+  });
+
+  test("each changed block is listed with what happened to it", function (assert) {
+    const before = [entry(1, { args: { a: 1 } }), entry(2), entry(3)];
+    const after = [entry(2), entry(1, { args: { a: 2 } }), entry(4)];
+
+    const { changes } = diffLayouts(before, after);
+
+    assert.deepEqual(
+      changes.map(({ entry: changed, kind }) => [changed.__stableKey, kind]),
+      [
+        [2, "moved"],
+        [1, "moved"],
+        [1, "edited"],
+        [4, "added"],
+        [3, "removed"],
+      ]
+    );
+  });
+
+  test("the editor's implicit root layout is not reported as a change", function (assert) {
+    const before = [entry(1, { args: { a: 1 } })];
+    const root = entry(9, { block: "layout", children: [before[0]] });
+
+    assert.deepEqual(diffLayouts(before, [root]).changes, []);
+
+    const edited = [entry(1, { args: { a: 2 } })];
+    const wrapped = entry(9, { block: "layout", children: edited });
+    assert.deepEqual(
+      diffLayouts(before, [wrapped]).changes.map(({ kind }) => kind),
+      ["edited"]
+    );
   });
 
   test("a new block counts as added", function (assert) {

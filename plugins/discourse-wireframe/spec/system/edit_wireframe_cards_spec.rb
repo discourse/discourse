@@ -204,12 +204,9 @@ describe "Edit wireframe cards" do
     cards.fill_identity_name(saved_name)
     cards.position_speaker_image(:portrait, x: 70, y: 30)
 
-    editor.save_draft
-    expect(editor).to have_saved_draft
-    visit("/custom")
-    cards.show_media_stories
-    expect(cards).to have_speaker_identity("Sam Saffron")
-    expect(cards).to have_no_speaker_identity(saved_name)
+    editor.save
+    expect(editor).to have_saved
+    page.refresh
 
     editor.enter
     cards.show_media_stories
@@ -287,8 +284,8 @@ describe "Edit wireframe cards" do
 
     expect(cards).to have_four_distinct_speaker_sources
     sources = cards.speaker_source_urls
-    editor.save_draft
-    expect(editor).to have_saved_draft
+    editor.save
+    expect(editor).to have_saved
     page.refresh
     editor.enter
     cards.show_media_stories

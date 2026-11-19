@@ -24,14 +24,20 @@ module PageObjects
         self
       end
 
-      def save_draft
+      def save
         find(".wireframe-btn-save").click
-        find(".wireframe-review__save-draft").click
+      end
+
+      def set_status(status)
+        find(".wireframe-status-chip").click
+        find(".wireframe-status-menu__item.--#{status}").click
       end
 
       def publish
-        find(".wireframe-btn-save").click
-        find(".wireframe-review__publish").click
+        save
+        has_saved?
+        set_status(:published)
+        find(".wireframe-btn-exit").click
       end
 
       def rename_design(name)
@@ -72,9 +78,8 @@ module PageObjects
         has_css?(".wireframe-rail-resizer--right[aria-valuenow='#{width}']")
       end
 
-      def has_saved_draft?
-        has_css?(".wireframe-btn-save[data-wf-save-state='unpublished']") &&
-          has_no_css?(".wireframe-review__error")
+      def has_saved?
+        has_css?(".wireframe-saved-state") && has_no_css?(".wireframe-unsaved")
       end
 
       def has_grid?

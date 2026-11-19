@@ -131,6 +131,19 @@ module DiscourseWireframe
       true
     end
 
+    # The design the editor should open for a theme: the installed one, otherwise
+    # the one saved most recently, so a draft is found again after leaving.
+    #
+    # @param parent_theme_id [Integer]
+    # @return [Integer, nil]
+    def self.current_id_for(parent_theme_id)
+      companion_id_for(parent_theme_id) ||
+        where(parent_theme_id:)
+          .joins(:component_theme)
+          .order("themes.updated_at DESC", id: :desc)
+          .pick(:component_theme_id)
+    end
+
     # The id of a parent theme's installed design, or nil when none.
     #
     # The stored mapping survives renaming or emptying the component, but it is

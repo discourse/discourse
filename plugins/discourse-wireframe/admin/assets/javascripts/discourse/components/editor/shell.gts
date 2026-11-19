@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import type DialogService from "discourse/dialog-holder/services/dialog";
 import bodyClass from "discourse/helpers/body-class";
 import type DragAndDropService from "discourse/services/drag-and-drop";
 import type KeyValueStoreService from "discourse/services/key-value-store";
@@ -16,24 +17,23 @@ import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-moni
 import { i18n } from "discourse-i18n";
 import BlockBreadcrumb from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-breadcrumb";
 import DesignTitle from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/design-title";
+import LayoutStatusChip from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/layout-status-chip";
 import EditorPanelSwitcher from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/panel-switcher";
 import RailResizeHandle from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/rail-resize-handle";
-import ViewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/view-drawer";
+import UnsavedChanges from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/unsaved-changes";
+import ViewSettingsMenu from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/view-settings-menu";
 import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/drop-preview";
 import InplaceTextController from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-text-controller";
 import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-panel";
 import IssuesPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/issues/issues-panel";
 import OutlinePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-panel";
 import PalettePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/palette-panel";
-import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-review-drawer";
 import type WireframeDragDwellService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-dwell";
 import type WireframeDragSessionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
 import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
+import type WireframeLayoutStatusService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-status";
 import type WireframeMutationEngineService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
-import type WireframePublishTargetService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-publish-target";
 import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
-import type WireframeSimulationService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-simulation";
-import type WireframeStagingService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-staging";
 import type WireframeWorkspaceService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-workspace";
 
 // TODO(devxp-typescript-pending): use the core service type directly once it
@@ -77,14 +77,12 @@ export default class EditorShell extends Component {
   @service declare wireframeDragDwell: WireframeDragDwellService;
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
   @service declare wireframeEditMode: WireframeEditModeService;
-  @service declare wireframePublishTarget: WireframePublishTargetService;
+  @service declare wireframeLayoutStatus: WireframeLayoutStatusService;
   @service declare wireframeRail: WireframeRailService;
-  @service declare wireframeStaging: WireframeStagingService;
-  @service declare wireframeSimulation: WireframeSimulationService;
+  @service declare dialog: DialogService;
   @service declare keyValueStore: ProxiedKeyValueStoreService;
 
   @tracked dimNonEditable: boolean;
-  @tracked viewSettingsOpen = false;
 
   constructor(owner: Owner, args: Component["args"]) {
     super(owner, args);
@@ -112,42 +110,12 @@ export default class EditorShell extends Component {
     return classes.join(" ");
   }
 
-  /**
-   * How dirty the canvas is, as a coarse tier that drives the Save button's
-   * unsaved/unpublished indicator. Unsaved draft edits win over a plain
-   * publish-diff because they're the losable state (nothing has persisted them
-   * yet); an outlet reverted to match the published layout is not publishable but
-   * still has a draft to save, so the two signals are deliberately distinct.
-   */
-  get saveDirtiness(): "unsaved" | "unpublished" | "clean" {
-    if (this.wireframeStaging.hasUnsavedDraftEdits) {
-      return "unsaved";
+  @action
+  async save() {
+    const error = await this.wireframeLayoutStatus.save();
+    if (error) {
+      this.dialog.alert(error);
     }
-    if (this.wireframeMutationEngine.isDirty) {
-      return "unpublished";
-    }
-    return "clean";
-  }
-
-  /**
-   * The Save button's `title` i18n key, describing the current dirty tier so the
-   * indicator dot has an accessible explanation on hover / focus.
-   */
-  get saveTitleKey() {
-    return `wireframe.chrome.save_state.${this.saveDirtiness}`;
-  }
-
-  /**
-   * Whether the Save button may open the review drawer. Beyond having edits to
-   * commit, the drawer is also the home of the homepage opt-in toggle, so it
-   * must stay reachable with a clean canvas wherever that toggle is on offer —
-   * an admin flipping only the homepage choice has nothing edited.
-   */
-  get canOpenReviewDrawer(): boolean {
-    return (
-      this.wireframeStaging.canOpenReview ||
-      this.wireframePublishTarget.homepageToggleAvailable
-    );
   }
 
   @action
@@ -157,16 +125,6 @@ export default class EditorShell extends Component {
       key: DIM_NON_EDITABLE_KEY,
       value: this.dimNonEditable,
     });
-  }
-
-  @action
-  toggleViewSettings() {
-    this.viewSettingsOpen = !this.viewSettingsOpen;
-  }
-
-  @action
-  closeViewSettings() {
-    this.viewSettingsOpen = false;
   }
 
   @action
@@ -233,28 +191,21 @@ export default class EditorShell extends Component {
           {{! Center zone — the design name, editable in place, plus its menu. }}
           <div class="toolbar-center">
             <DesignTitle />
+            <LayoutStatusChip />
           </div>
 
           {{! Right zone — view options and the commit action. }}
           <div class="toolbar-right">
-            <DButton
-              class={{dConcatClass
-                "btn-flat wireframe-view-toggle"
-                (if this.wireframeSimulation.isSimulating "--active")
-              }}
-              @action={{this.toggleViewSettings}}
-              @ariaExpanded={{this.viewSettingsOpen}}
-              @icon="sliders"
-              @label="wireframe.chrome.view_menu"
+            <UnsavedChanges />
+            <ViewSettingsMenu
+              @dimNonEditable={{this.dimNonEditable}}
+              @onToggleDim={{this.toggleDimNonEditable}}
             />
             <DButton
               class="btn-primary wireframe-btn-save"
-              data-wf-save-state={{this.saveDirtiness}}
-              @action={{this.wireframeStaging.openReviewDrawer}}
-              @disabled={{unless this.canOpenReviewDrawer true}}
+              @action={{this.save}}
               @icon="cloud-arrow-up"
-              @label="wireframe.review.open"
-              @title={{this.saveTitleKey}}
+              @label="wireframe.changes.save"
             />
             <DButton
               class="btn-flat wireframe-btn-exit"
@@ -327,13 +278,6 @@ export default class EditorShell extends Component {
       </div>
 
       <DropPreview />
-      <PublishReviewDrawer />
-      <ViewDrawer
-        @dimNonEditable={{this.dimNonEditable}}
-        @isOpen={{this.viewSettingsOpen}}
-        @onClose={{this.closeViewSettings}}
-        @onToggleDim={{this.toggleDimNonEditable}}
-      />
     {{/if}}
   </template>
 }

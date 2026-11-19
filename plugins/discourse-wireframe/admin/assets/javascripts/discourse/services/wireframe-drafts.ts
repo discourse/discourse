@@ -1,103 +1,48 @@
-import Service, { service } from "@ember/service";
-import type { LayoutEntry } from "discourse/blocks/types";
+import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { serializeLayoutForSave } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
-import type WireframeLayoutQueryService from "./wireframe-layout-query";
 
-const SCHEMA_VERSION = 1;
-const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";
 const COMPANION_URL = "/admin/plugins/wireframe/companion.json";
 
-/** A named design of a theme. */
+/** A named layout of a theme. */
 export type Design = {
-  /** The design component's theme ID. */
+  /** The layout component's theme ID. */
   id: number;
-  /** Name the author gave the design. */
+  /** Name the author gave the layout. */
   name: string;
-  /** Whether the design is the one installed on the theme. */
+  /** Whether the layout is the one installed on the theme. */
   active: boolean;
 };
 
 type CompanionResponse = {
-  /** Installed design's theme ID, or `null` when none is installed. */
+  /** Installed layout's theme ID, or `null` when none is installed. */
   companion_id: number | null;
-  /** All designs of the theme. */
+  /** The layout the editor opens: the installed one, else the latest saved. */
+  current_id?: number | null;
+  /** All layouts of the theme. */
   designs?: Design[];
 };
 
-type DraftRowResponse = {
-  /** Version token of the live layout on which the draft was based. */
-  base_version_token: string | null;
-  /** Serialized draft envelope. */
-  data: string;
-  /** Outlet containing the draft. */
-  outlet: string;
-  /** Owning theme ID. */
-  theme_id: number;
-};
-
-type DraftsResponse = {
-  /** Draft rows visible to the current user. */
-  drafts: DraftRowResponse[];
-};
-
-type DraftEnvelope = {
-  /** Persisted layout entries. */
-  layout?: LayoutEntry[];
-  /** Serialization schema version. */
-  schema_version?: number;
-};
-
-/** A hydrated per-user layout draft. */
-export interface PersistedDraft {
-  /** Version token of the live layout on which the draft was based. */
-  baseVersionToken: string | null;
-  /** Hydrated draft layout. */
-  layout: LayoutEntry[];
-  /** Outlet containing the draft. */
-  outlet: string;
-  /** Owning theme ID. */
-  themeId: number;
-}
-
 /**
- * Owns all per-user block-layout draft I/O — read, save, and delete — against
- * the plugin's drafts endpoint. Drafts are private and never live; promoting one
- * to the live `block_layout` ThemeField is the live-layout service's `publish`.
- *
- * A draft records the live version token it was based on (`base_version_token`)
- * so a later session can tell whether the live layout moved on underneath it.
+ * Looks up a theme's saved layouts (designs): which are available, which one is
+ * installed, and which one the editor should open.
  */
 export default class WireframeDraftsService extends Service {
-  /** Resolves the live layout that is serialized into a draft. */
-  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
-
   /**
-   * The id of the design installed on a theme (the local component that holds its
-   * overrides), or null when none is. Lets the editor target the installed design
-   * on entry. A transport error degrades to null (no design).
+   * Every layout of a theme, which one is installed, and which one the editor
+   * should open. Never rejects: a transport error reads as "no layouts".
    *
-   * @param themeId - Theme whose installed design should be resolved.
-   * @returns The design's theme ID, or `null` when none is installed.
-   */
-  async companionId(themeId: number): Promise<number | null> {
-    return (await this.fetchDesigns(themeId)).installedId;
-  }
-
-  /**
-   * Every design of a theme plus which one is installed. Never rejects: a
-   * transport error reads as "no designs".
-   *
-   * @param themeId - Theme whose designs should be listed.
+   * @param themeId - Theme whose layouts should be listed.
    */
   async fetchDesigns(themeId: number): Promise<{
-    /** Installed design's ID, or `null`. */
+    /** Installed layout's ID, or `null`. */
     installedId: number | null;
-    /** All designs of the theme, newest first. */
+    /** The layout to open: the installed one, else the latest saved, or `null`. */
+    currentId: number | null;
+    /** All layouts of the theme, newest first. */
     designs: Design[];
   }> {
     if (themeId == null) {
-      return { installedId: null, designs: [] };
+      return { installedId: null, currentId: null, designs: [] };
     }
     try {
       // TODO(devxp-typescript-pending): remove this response cast once core's
@@ -108,116 +53,11 @@ export default class WireframeDraftsService extends Service {
       })) as CompanionResponse;
       return {
         installedId: response?.companion_id ?? null,
+        currentId: response?.current_id ?? response?.companion_id ?? null,
         designs: response?.designs ?? [],
       };
     } catch {
-      return { installedId: null, designs: [] };
+      return { installedId: null, currentId: null, designs: [] };
     }
-  }
-
-  /**
-   * Fetches the current user's drafts, optionally scoped to a set of theme ids
-   * (the active stack). Returns parsed rows; a row whose stored `data` can't be
-   * parsed is dropped (the caller falls back to the live layout). Never rejects
-   * on a transport error — returns an empty array so a failed fetch degrades to
-   * "no drafts" rather than breaking the editor's entry path.
-   *
-   * @param themeIds - Theme IDs to scope the fetch to.
-   * @returns Hydrated drafts whose payloads use the current readable shape.
-   */
-  async fetchDrafts(themeIds?: number[]): Promise<PersistedDraft[]> {
-    let response: DraftsResponse;
-    try {
-      // TODO(devxp-typescript-pending): remove this response cast once core's
-      // `ajax` helper exposes a generic response type.
-      response = (await ajax(DRAFTS_URL, {
-        type: "GET",
-        data: themeIds?.length ? { theme_ids: themeIds } : {},
-      })) as DraftsResponse;
-    } catch {
-      return [];
-    }
-
-    const drafts: PersistedDraft[] = [];
-    for (const row of response?.drafts ?? []) {
-      let parsed: DraftEnvelope;
-      try {
-        // TODO(devxp-typescript-pending): replace this JSON boundary cast when
-        // draft envelopes have a shared runtime validator and inferred type.
-        parsed = JSON.parse(row.data) as DraftEnvelope;
-      } catch {
-        // A corrupt or older-schema draft row is skipped; the outlet keeps its
-        // live seed instead of throwing during hydration.
-        continue;
-      }
-      drafts.push({
-        themeId: row.theme_id,
-        outlet: row.outlet,
-        layout: parsed?.layout ?? [],
-        baseVersionToken: row.base_version_token ?? null,
-      });
-    }
-    return drafts;
-  }
-
-  /**
-   * Deletes the caller's draft for an outlet. The server endpoint is idempotent,
-   * and a transport error is swallowed on purpose: a leftover draft is detected
-   * and cleaned on the next hydrate, so a failed cleanup must never fail the
-   * publish or reset that triggered it.
-   *
-   * @param themeId - ID of the theme owning the outlet.
-   * @param outlet - The outlet identifier.
-   */
-  async deleteDraft(themeId: number, outlet: string): Promise<void> {
-    try {
-      await ajax(DRAFTS_URL, {
-        type: "DELETE",
-        data: { theme_id: themeId, outlet_name: outlet },
-      });
-    } catch {
-      // Intentionally ignored — see the method doc.
-    }
-  }
-
-  /**
-   * Saves a single outlet as a private draft — the per-outlet Save draft
-   * affordance.
-   *
-   * @param themeId - ID of the theme owning the outlet.
-   * @param outlet - The outlet identifier.
-   * @param baseVersionToken - The live version token the draft is based
-   *   on, supplied by the caller (the live-layout layer owns the token map, so it
-   *   is passed in rather than read here — that keeps this draft-I/O leaf free of
-   *   a dependency on the live-layout service).
-   * @returns The draft endpoint request.
-   */
-  saveDraftOutlet(
-    themeId: number,
-    outlet: string,
-    baseVersionToken: string | null
-  ): Promise<unknown> {
-    const resolvedLayout = this.wireframeLayoutQuery.readResolvedLayout(outlet);
-    const layout = serializeLayoutForSave(resolvedLayout ?? []);
-
-    // A null resolved read means the read path failed, not a deliberate empty
-    // layout; refuse so we don't persist a draft of nothing.
-    if (layout.length === 0 && resolvedLayout == null) {
-      throw new Error(
-        `Refusing to draft outlet "${outlet}": resolved layout was empty/unreadable`
-      );
-    }
-
-    // TODO(devxp-typescript-pending): remove this response cast once core's
-    // `ajax` helper exposes a generic response type.
-    return ajax(DRAFTS_URL, {
-      type: "POST",
-      data: {
-        theme_id: themeId,
-        outlet_name: outlet,
-        layout_json: JSON.stringify({ schema_version: SCHEMA_VERSION, layout }),
-        base_version_token: baseVersionToken,
-      },
-    }) as Promise<unknown>;
   }
 }

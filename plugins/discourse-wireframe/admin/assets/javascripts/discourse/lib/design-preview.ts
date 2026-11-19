@@ -69,13 +69,13 @@ export function isInRenderedStack(themeId: number): boolean {
  * @param api - Plugin API used to publish the layouts.
  * @param designId - The design to preview.
  * @param services - The services the preview updates.
- * @returns Whether the design could be loaded.
+ * @returns The design's name, or null when it could not be loaded.
  */
 export async function previewDesign(
   api: PluginApi,
   designId: number,
   { drafts, liveLayout, publishTarget }: PreviewServices
-): Promise<boolean> {
+): Promise<string | null> {
   let detail: DesignDetail;
   try {
     // TODO(devxp-typescript-pending): remove this response cast once core's
@@ -84,7 +84,7 @@ export async function previewDesign(
       `/admin/plugins/wireframe/designs/${designId}.json`
     )) as DesignDetail;
   } catch {
-    return false;
+    return null;
   }
 
   const { installedId } = await drafts.fetchDesigns(detail.theme_id);
@@ -101,7 +101,7 @@ export async function previewDesign(
   publishTarget.registerDesign(designId, detail.name, {
     inUse: detail.active,
   });
-  return true;
+  return detail.name;
 }
 
 /**

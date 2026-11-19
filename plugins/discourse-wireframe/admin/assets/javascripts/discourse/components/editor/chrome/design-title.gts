@@ -86,6 +86,10 @@ export default class DesignTitle extends Component {
   /** Designs of the theme in use, refreshed each time the menu opens. */
   @tracked designs: Design[] = [];
 
+  /** Whether a layout is the one being edited. */
+  isCurrentDesign = (designId: number): boolean =>
+    designId === this.wireframePublishTarget.activeThemeId;
+
   /** The open menu, so a pick can close it. */
   #menu: DMenuInstance | null = null;
 
@@ -158,17 +162,13 @@ export default class DesignTitle extends Component {
     if (designId === this.wireframePublishTarget.activeThemeId) {
       return;
     }
-    const run = async () => {
-      const error = await this.wireframeStaging.switchDesign(designId);
-      if (error) {
-        this.dialog.alert(error);
-        return;
-      }
+    // Opening another layout only changes which one is being edited. Whether it
+    // is live is the status chip's job.
+    this.#confirmDiscard(() =>
       this.wireframePublishTarget.navigateToEditTheme(designId, {
         isComponent: true,
-      });
-    };
-    this.#confirmDiscard(run);
+      })
+    );
   }
 
   @action
@@ -271,10 +271,10 @@ export default class DesignTitle extends Component {
                 {{#each this.designs as |design|}}
                   <dropdown.item>
                     <DButton
-                      aria-current={{if design.active "true"}}
+                      aria-current={{if (this.isEditing design.id) "true"}}
                       class={{dConcatClass
                         "btn-transparent wireframe-design-switcher__design"
-                        (if design.active "-selected")
+                        (if (this.isCurrentDesign design.id) "-selected")
                       }}
                       @action={{fn this.pickDesign design.id}}
                       @translatedLabel={{design.name}}
