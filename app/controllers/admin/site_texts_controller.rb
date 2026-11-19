@@ -108,7 +108,13 @@ class Admin::SiteTextsController < Admin::AdminController
         if ThemeTranslationManager::SITE_TEXT_ID_PATTERN.match?(record[:id])
           record
         else
-          serialize_data(record, SiteTextSerializer, root: false, overridden_keys: overridden)
+          serialize_data(
+            record,
+            SiteTextSerializer,
+            root: false,
+            overridden_keys: overridden,
+            include_preview_default: true,
+          )
         end
       end
     render_json_dump({ site_texts: records }, rest_serializer: true, extras:)

@@ -239,6 +239,7 @@ RSpec.describe Admin::SiteTextsController do
                   status: "up_to_date",
                   old_default: nil,
                   new_default: nil,
+                  override_value: nil,
                   can_revert: overridden,
                   overridden:,
                   interpolation_keys:,

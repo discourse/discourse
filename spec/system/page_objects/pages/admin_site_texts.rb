@@ -25,6 +25,18 @@ module PageObjects
         has_css?(".site-text-value", text: value)
       end
 
+      def has_preview_value?(key, value)
+        has_css?(".site-text[data-site-text-id='#{key}'] .site-text-value", text: value)
+      end
+
+      def select_preview(key, preview)
+        find(".site-text[data-site-text-id='#{key}']").find(
+          '[role="tab"]',
+          text: I18n.t("admin_js.admin.site_text.preview.#{preview}"),
+          exact_text: true,
+        ).click
+      end
+
       def select_locale(locale_short_name)
         locale_selector = PageObjects::Components::SelectKit.new(".locale-search")
         locale_selector.expand

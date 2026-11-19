@@ -99,6 +99,8 @@ class ThemeTranslationManager
     {
       id: "js.theme_translations.#{theme.id}.#{key}",
       value: value,
+      override_value: override&.value,
+      preview_default: default,
       status: status,
       old_default: override&.original_translation,
       new_default: source_default,
