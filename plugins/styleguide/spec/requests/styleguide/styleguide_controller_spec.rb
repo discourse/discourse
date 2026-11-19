@@ -77,4 +77,38 @@ RSpec.describe Styleguide::StyleguideController do
       end
     end
   end
+
+  describe "#design_variables" do
+    it "lists core's design variables and which ones theme styles may change" do
+      sign_in(Fabricate(:admin))
+
+      get "/styleguide/design-variables.json"
+
+      expect(response.status).to eq(200)
+      variables = response.parsed_body["design_variables"].index_by { |variable| variable["name"] }
+      expect(variables["--d-border-radius"]).to include(
+        "type" => "length",
+        "scope" => "root",
+        "default" => "4px",
+        "editable" => true,
+        "min_px" => 0,
+        "max_px" => 32,
+      )
+      not_editable = variables.values.reject { |variable| variable["editable"] }
+      expect(not_editable).to be_present
+      expect(not_editable).to all(include("reason" => be_present))
+      expect(response.parsed_body["palette_variables"]).to include("--primary", "--tertiary")
+    end
+
+    it "is only for people who can see the styleguide" do
+      sign_in(Fabricate(:user))
+      get "/styleguide/design-variables.json"
+      expect(response.status).to eq(404)
+
+      SiteSetting.styleguide_enabled = false
+      sign_in(Fabricate(:admin))
+      get "/styleguide/design-variables.json"
+      expect(response.status).to eq(404)
+    end
+  end
 end

@@ -123,6 +123,22 @@ en:
           title: "Font System"
         colors:
           title: "Colors"
+        design_variables:
+          title: "Design variables"
+          description: "The design variables core defines, read from its compiled CSS, and which ones typed theme styles such as the Admin Assistant's may change."
+          filter_placeholder: "Filter by name, type or default"
+          name: "Variable"
+          type: "Type"
+          default: "Default"
+          theme_styles: "Theme styles"
+          scoped: "Set on %{selectors}"
+          editable: "Can change"
+          length_bounds: "%{min}px to %{max}px"
+          not_editable: "Can't change: %{reason}"
+          palette_variables:
+            one: "%{count} palette variable"
+            other: "%{count} palette variables"
+          palette_description: "These come from the site's color palettes. Theme styles can use them but never set them."
         dialog:
           title: "Dialog"
         drag_and_drop:
