@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import pretender, {
@@ -209,8 +210,12 @@ acceptance("User Preferences - Account", function (needs) {
     await click(".avatar-selector-refresh-gravatar");
 
     assert
-      .dom(".avatar[src='/images/gravatar_is_not_avatar.png']")
-      .exists("displays the new gravatar image");
+      .dom(".avatar-choice--gravatar .avatar")
+      .hasAttribute(
+        "src",
+        getAbsoluteURL("/images/gravatar_is_not_avatar.png"),
+        "displays the new gravatar image from the authenticated site origin"
+      );
 
     await click("#gravatar");
     await click(".d-modal__footer .btn");
@@ -247,10 +252,18 @@ acceptance("User Preferences - Account", function (needs) {
       .includesText("Facebook", "identifies the provider");
     assert
       .dom('label[for="associated-account-avatar-12"] img')
-      .hasAttribute("src", avatarTemplate, "shows the provider preview");
+      .hasAttribute(
+        "src",
+        getAbsoluteURL(avatarTemplate),
+        "shows the provider preview"
+      );
     assert
       .dom(".avatar-choice--upload img")
-      .hasAttribute("src", avatarTemplate, "keeps the uploaded preview");
+      .hasAttribute(
+        "src",
+        getAbsoluteURL(avatarTemplate),
+        "keeps the uploaded preview"
+      );
 
     await click("#associated-account-avatar-13");
     await click(".d-modal__footer .btn-primary");
