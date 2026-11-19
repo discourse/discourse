@@ -3456,6 +3456,9 @@ spam:
     default: "Duplicate|Does not meet posting guidelines"
     type: list
     client: true
+  reviewable_note_notification_groups:
+    type: group_list
+    default: ""
 
 rate_limits:
   unique_posts_mins: 5

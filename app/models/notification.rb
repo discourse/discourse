@@ -176,6 +176,7 @@ class Notification < ActiveRecord::Base
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
         circles_activity: 900, # Used by https://github.com/discourse/discourse-circles
         live_invitation: 1000, # Used by the live plugin
+        staff_reviewable_note: 49,
       )
   end
 
@@ -255,7 +256,7 @@ class Notification < ActiveRecord::Base
   def self.filter_inaccessible_reviewable_notifications(guardian, notifications)
     reviewable_ids =
       notifications
-        .select(&:reviewable_mention?)
+        .select(&:reviewable_linked?)
         .map { |notification| notification.data_hash[:reviewable_id].to_i }
         .uniq
     return notifications if reviewable_ids.empty?
@@ -272,7 +273,7 @@ class Notification < ActiveRecord::Base
       end
 
     notifications.reject do |notification|
-      notification.reviewable_mention? &&
+      notification.reviewable_linked? &&
         !accessible_ids.include?(notification.data_hash[:reviewable_id].to_i)
     end
   end
@@ -316,8 +317,16 @@ class Notification < ActiveRecord::Base
     notification_type == Notification.types[:mentioned] && data_hash[:reviewable_id].present?
   end
 
+  def reviewable_linked?
+    reviewable_mention? ||
+      (
+        notification_type == Notification.types[:staff_reviewable_note] &&
+          data_hash[:reviewable_id].present?
+      )
+  end
+
   def url
-    return "#{Discourse.base_path}/review/#{data_hash[:reviewable_id]}" if reviewable_mention?
+    return "#{Discourse.base_path}/review/#{data_hash[:reviewable_id]}" if reviewable_linked?
 
     return if topic.blank?
     return consolidated_nested_replied_url if consolidated_nested_replied?
