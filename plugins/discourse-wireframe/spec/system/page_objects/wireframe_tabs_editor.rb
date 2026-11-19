@@ -23,20 +23,6 @@ module PageObjects
         has_css?(".d-block-tabs__tab[aria-selected='true']", exact_text: "Updated collection")
       end
 
-      def open_review
-        find(".wireframe-btn-save").click
-      end
-
-      def show_changes
-        find(".wireframe-review__tab[data-d-tab='changes']").click
-      end
-
-      def has_bounded_review?
-        has_css?(".wireframe-review__footer") do |footer|
-          footer.evaluate_script("this.getBoundingClientRect().bottom <= window.innerHeight")
-        end
-      end
-
       def has_selected_panel?
         has_css?(".wireframe-block-chrome.--selected[data-wf-block-name='layout']")
       end

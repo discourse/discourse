@@ -7,7 +7,6 @@
  * ```
  *   [
  *     { outletName: "homepage-blocks", rows: [<row>, <row>, ...] },
- *     { outletName: "sidebar-blocks",  rows: [<row>, ...] },
  *     ...
  *   ]
  * ```
@@ -22,13 +21,13 @@
  *   - `path` is the array index trail (e.g. `[0, "children", 1]`) suitable
  *     for re-locating the entry from the layout root.
  *
- * The walker filters to outlets whose `<OutletBoundary>` is actually
- * mounted in the DOM, so outlets registered site-wide but not mounted
- * on the current page don't show up as dead rows. The editor mounts
- * the boundary for active outlets via the OUTLET_INFO_COMPONENT
- * callback — see `api-initializers/wireframe.ts`. Falls back to the
- * unfiltered list during tests / SSR where `document` isn't a
- * meaningful DOM source.
+ * The walker filters to outlets the editor exposes (see `EDITOR_OUTLETS`)
+ * whose `<OutletBoundary>` is actually mounted in the DOM, so outlets
+ * registered site-wide but not mounted on the current page don't show up
+ * as dead rows. The editor mounts the boundary for active outlets via the
+ * OUTLET_INFO_COMPONENT callback — see `api-initializers/wireframe.ts`.
+ * Falls back to the unfiltered list during tests / SSR where `document`
+ * isn't a meaningful DOM source.
  */
 import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";
 import { synthesizePartEntries } from "discourse/lib/blocks/-internals/composite";
@@ -36,6 +35,7 @@ import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import type { BlockEntry } from "discourse/lib/blocks/-internals/types";
 import type { ValidationErrorDetails } from "discourse/lib/blocks/-internals/validation/args";
 import type BlocksService from "discourse/services/blocks";
+import { isEditorOutlet } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-outlets";
 import { layoutPaletteDisplayName } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 
 /** A path segment used to relocate an outline row in its source layout. */
@@ -179,7 +179,7 @@ export async function walkAllOutlets({
   alwaysInclude?: Set<string>;
 }): Promise<OutletOutline[]> {
   const result: OutletOutline[] = [];
-  const outlets = blocksService.listOutlets();
+  const outlets = blocksService.listOutlets().filter(isEditorOutlet);
   const layoutMap = blocksService.resolvedLayouts();
   // Outlets actually on this page, from the blocks service's mounted-outlet
   // registry (populated by each `<BlockOutlet>`'s lifecycle at page render). A

@@ -140,4 +140,84 @@ module("Integration | Blocks | featured data", function (hooks) {
         .doesNotExist("no list when the directory is empty");
     });
   });
+
+  module("frame styles", function (innerHooks) {
+    innerHooks.beforeEach(function () {
+      pretender.get("/directory_items", () =>
+        response({
+          directory_items: [
+            {
+              id: 1,
+              user: { id: 1, username: "alice", avatar_template: "/a.png" },
+            },
+            {
+              id: 2,
+              user: { id: 2, username: "bob", avatar_template: "/a.png" },
+            },
+          ],
+        })
+      );
+    });
+
+    async function renderUsers(args) {
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          { block: FeaturedUsers, args: { title: "Members", ...args } },
+        ])
+      );
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+      await waitFor(".d-block-featured-users__list");
+      await settled();
+    }
+
+    test("plain keeps the block's own title and no frame", async function (assert) {
+      await renderUsers({ frameStyle: "plain", linkHref: "/u" });
+
+      assert.dom(".d-block-frame").doesNotExist();
+      assert.dom(".d-block-featured-users__title").hasText("Members");
+      assert
+        .dom(".d-block-frame__link")
+        .doesNotExist("the link is only drawn by a frame");
+    });
+
+    test("panel draws an icon header, divided rows and a show all footer", async function (assert) {
+      await renderUsers({ frameStyle: "panel", linkHref: "/u" });
+
+      assert
+        .dom(".d-block-frame.--panel .d-block-frame__header .d-icon-users")
+        .exists("the default icon heads the panel");
+      assert.dom(".d-block-frame__header h3").hasText("Members");
+      assert
+        .dom(".d-block-featured-users__title")
+        .doesNotExist("the block's own title gives way to the frame's");
+      assert
+        .dom(".d-block-frame__body .d-block-frame__content")
+        .exists("the block body sits in the frame");
+      assert
+        .dom(".d-block-frame__row")
+        .exists({ count: 2 }, "each contributor is a frame row");
+      assert
+        .dom(".d-block-frame__footer .d-block-frame__link")
+        .hasAttribute("href", "/u")
+        .hasText("Show all");
+    });
+
+    test("heading puts the title and link above the rows", async function (assert) {
+      await renderUsers({
+        frameStyle: "heading",
+        linkLabel: "Member directory",
+        linkHref: "/u",
+      });
+
+      assert
+        .dom(".d-block-frame.--heading .d-block-frame__header h2")
+        .hasText("Members");
+      assert
+        .dom(".d-block-frame__header .d-block-frame__link")
+        .hasAttribute("href", "/u")
+        .hasText("Member directory");
+      assert.dom(".d-block-frame__icon").doesNotExist("headings have no icon");
+      assert.dom(".d-block-frame__footer").doesNotExist();
+    });
+  });
 });

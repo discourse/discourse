@@ -47,6 +47,7 @@ interface CategoryBannerSignature {
  * outlet (`main-outlet-blocks`) and stay invisible elsewhere.
  */
 @block("category-banner", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/category-banner"),
   displayName: "Category banner",
   icon: "folder",

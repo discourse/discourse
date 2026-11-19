@@ -68,6 +68,7 @@ export default class BasicTopicList extends Component {
           @changeSort={{this.changeSort}}
           @expandExcerpts={{this.expandExcerpts}}
           @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+          @hiddenColumns={{this.hiddenColumns}}
           @hideCategory={{this.hideCategory}}
           @listContext={{this.listContext}}
           @order={{this.order}}

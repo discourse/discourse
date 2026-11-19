@@ -41,6 +41,8 @@ type FriendlyValidationExpected = Record<string, unknown> & {
   key?: string;
   /** Known entry keys offered as alternatives. */
   keys?: string[];
+  /** Set when a container failed for having no children. */
+  requiresChildren?: boolean;
 };
 
 /** TODO(typescript-pending): use core directly once expected values are typed. */
@@ -136,6 +138,20 @@ function constraintMessage(details: FriendlyValidationDetail): string {
  * @param details - One structured failure from the entry's validation stamps.
  * @returns Localized author-facing message.
  */
+/**
+ * Whether a validation detail only says a container has no children yet.
+ *
+ * @param details - The structured validation detail.
+ */
+export function isEmptyContainerFailure(
+  details: FriendlyValidationDetail | null | undefined
+): boolean {
+  return (
+    details?.code === ERROR_CODES.INVALID_CHILDREN &&
+    details.expected?.requiresChildren === true
+  );
+}
+
 export function friendlyErrorMessage(
   details: FriendlyValidationDetail | null | undefined
 ): string {
@@ -176,7 +192,9 @@ export function friendlyErrorMessage(
         ? details.message
         : constraintMessage(details);
     case ERROR_CODES.INVALID_CHILDREN:
-      return i18n("wireframe.inspector.errors.invalid_children");
+      return isEmptyContainerFailure(details)
+        ? i18n("wireframe.inspector.errors.requires_children")
+        : i18n("wireframe.inspector.errors.invalid_children");
     case ERROR_CODES.UNREGISTERED_BLOCK:
       return i18n("wireframe.inspector.errors.unregistered_block");
     case ERROR_CODES.DUPLICATE_ID:

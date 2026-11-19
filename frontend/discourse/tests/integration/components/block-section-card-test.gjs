@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
 import {
   clearRender,
@@ -148,6 +149,60 @@ module("Integration | Blocks | section and card", function (hooks) {
     );
   });
 
+  test("section spaces its blocks with the chosen gap", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Section,
+          children: [
+            { block: Heading, args: { text: "One", level: 2 } },
+            { block: Heading, args: { text: "Two", level: 2 } },
+          ],
+        },
+        {
+          block: Section,
+          args: { gap: "none" },
+          children: [{ block: Heading, args: { text: "Three", level: 2 } }],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".d-block-section.--gap-medium .d-block-section__content")
+      .hasStyle({ rowGap: "16px" }, "medium is the default gap");
+    assert
+      .dom(".d-block-section.--gap-none .d-block-section__content")
+      .hasStyle({ rowGap: "normal" });
+  });
+
+  test("section paints a custom background color only for the custom surface", async function (assert) {
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: Section,
+          args: { surface: "custom", backgroundColor: "#123456" },
+          children: [{ block: Heading, args: { text: "Custom", level: 2 } }],
+        },
+        {
+          block: Section,
+          args: { surface: "subtle", backgroundColor: "#123456" },
+          children: [{ block: Heading, args: { text: "Preset", level: 2 } }],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".d-block-section.--surface-custom")
+      .hasStyle({ backgroundColor: "rgb(18, 52, 86)" });
+    assert
+      .dom(".d-block-section.--surface-subtle")
+      .doesNotHaveAttribute("style", "a preset surface ignores the color");
+  });
+
   test("section renders a semantic surface with a persistent background marker", async function (assert) {
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
@@ -166,7 +221,6 @@ module("Integration | Blocks | section and card", function (hooks) {
                 height: 900,
               },
             },
-            contentWidth: "wide",
             minHeight: "medium",
             padding: "large",
             scrim: "strong",
@@ -186,7 +240,6 @@ module("Integration | Blocks | section and card", function (hooks) {
       .hasClass("--surface-subtle")
       .hasClass("--scrim-strong")
       .hasClass("--padding-large")
-      .hasClass("--width-wide")
       .hasClass("--height-medium")
       .hasClass("--align-center");
     assert
@@ -1229,7 +1282,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
   hooks.afterEach(() => _resetOutletLayoutsForTesting());
 
   test("Below peers grow for media identity and release nested, overlapping and non-stretch cards", async function (assert) {
-    const args = { mode: "grid", columns: 4, rows: 1, autoCollapse: "never" };
+    const args = { mode: "grid", columns: 4, rows: 1 };
     const one = storyCard(
       "one",
       { presentation: "below", scale: "compact" },
@@ -1356,10 +1409,10 @@ module("Integration | Blocks | Card layout", function (hooks) {
     window.ResizeObserver = RecordingObserver;
     window.MutationObserver = RecordingMutationObserver;
     try {
-      await setCardLayout(
-        { mode: "grid", columns: 2, rows: 1, autoCollapse: "never" },
-        [storyCard("one"), storyCard("two", { body: "Long copy. ".repeat(12) })]
-      );
+      await setCardLayout({ mode: "grid", columns: 2, rows: 1 }, [
+        storyCard("one"),
+        storyCard("two", { body: "Long copy. ".repeat(12) }),
+      ]);
       await render(
         <template>
           <div style="width: 800px"><BlockOutlet @name="hero-blocks" /></div>
@@ -1453,11 +1506,13 @@ module("Integration | Blocks | Card layout", function (hooks) {
       storyCard("two", { scale: "compact" }),
       storyCard("three", { body: "A short body" }),
     ];
-    this.set("widthStyle", trustHTML("width: 1080px"));
-    await setCardLayout({ mode: "row", autoCollapse: "never" }, children);
+    const widthStyle = tracked(trustHTML("width: 1080px"));
+    await setCardLayout({ mode: "row" }, children);
     await render(
       <template>
-        <div style={{this.widthStyle}}><BlockOutlet @name="hero-blocks" /></div>
+        <div style={{widthStyle.value}}><BlockOutlet
+            @name="hero-blocks"
+          /></div>
       </template>
     );
     await settleCardLayout();
@@ -1471,7 +1526,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
       1,
       "first peers share a seam"
     );
-    this.set("widthStyle", trustHTML("width: 888px"));
+    widthStyle.value = trustHTML("width: 888px");
     await settleCardLayout();
     assert.closeTo(
       cardRegion("one", "media").getBoundingClientRect().top,
@@ -1487,7 +1542,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
       1,
       "the cards use the available row instead of leaving an empty gutter"
     );
-    this.set("widthStyle", trustHTML("width: 720px"));
+    widthStyle.value = trustHTML("width: 720px");
     await settleCardLayout();
     assert
       .dom("[data-block-id='one'] .d-block-card")
@@ -1500,7 +1555,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
         cardRegion("one", "content").offsetHeight,
       "long first row does not inflate singleton"
     );
-    this.set("widthStyle", trustHTML("width: 320px"));
+    widthStyle.value = trustHTML("width: 320px");
     await settleCardLayout();
     assert
       .dom("[data-card-aligned]")
@@ -1511,96 +1566,12 @@ module("Integration | Blocks | Card layout", function (hooks) {
     );
   });
 
-  test("reversed Row peers realign after identity, text size and spacing changes in both directions", async function (assert) {
-    const args = { mode: "row", reverse: true, autoCollapse: "never" };
-    const one = storyCard("one", { scale: "compact" });
-    const two = storyCard("two", {
-      identityEnabled: true,
-      identityName: "A speaker",
-      identityPlacement: "media",
-      identityFormat: "stacked",
-      avatarDisplay: "initials",
-    });
-    await setCardLayout(args, [one, two]);
-    await render(
-      <template>
-        <div class="card-allocation" style="width: 1080px">
-          <BlockOutlet @name="hero-blocks" />
-        </div>
-      </template>
-    );
-    await settleCardLayout();
-    const initialHeight = cardRegion("one", "media").offsetHeight;
-    const allocation = find(".card-allocation");
-
-    for (const direction of ["ltr", "rtl"]) {
-      allocation.dir = direction;
-      allocation.style.fontSize = "200%";
-      allocation.style.setProperty("--space-4", "40px");
-      await setCardLayout(args, [
-        one,
-        {
-          ...two,
-          args: {
-            ...two.args,
-            identityRole: "Researcher and community organizer. ".repeat(12),
-            body: "An expanded description. ".repeat(12),
-          },
-        },
-      ]);
-      await settleCardLayout();
-      assert.deepEqual(
-        findAll(".d-block-layout__flex > [data-block-id]").map(
-          (item) => item.dataset.blockId
-        ),
-        ["two", "one"],
-        `${direction}: reversal changes reading order without changing the source`
-      );
-      assert.true(
-        cardRegion("one", "media").offsetHeight > initialHeight + 100,
-        `${direction}: the peer grows for the expanded media identity`
-      );
-      assert.closeTo(
-        cardRegion("one", "media").getBoundingClientRect().bottom,
-        cardRegion("two", "media").getBoundingClientRect().bottom,
-        1,
-        `${direction}: the media seam stays aligned after text zoom`
-      );
-      assert.closeTo(
-        cardRegion("one", "actions").getBoundingClientRect().bottom,
-        cardRegion("two", "actions").getBoundingClientRect().bottom,
-        1,
-        `${direction}: different spacing tokens retain aligned action edges`
-      );
-      const identity = cardRegion("two", "identity").getBoundingClientRect();
-      const media = cardRegion("two", "media").getBoundingClientRect();
-      assert.true(
-        identity.top >= media.top,
-        `${direction}: expanded identity starts inside its artwork region`
-      );
-      assert.true(
-        identity.bottom <= media.bottom,
-        `${direction}: expanded identity ends inside its artwork region`
-      );
-      await setCardLayout(args, [one, two]);
-      allocation.style.removeProperty("font-size");
-      allocation.style.removeProperty("--space-4");
-      await settleCardLayout();
-      assert.closeTo(
-        cardRegion("one", "media").offsetHeight,
-        initialHeight,
-        1,
-        `${direction}: restoring the content and theme releases the extra height`
-      );
-    }
-  });
-
   test("Card peers realign when a late font changes the media identity's natural height", async function (assert) {
     const font = new FontFace(
       "CardLateFont",
       'url("/fonts/RobotoMono-Regular.woff2")'
     );
-    await setCardLayout({ mode: "row", autoCollapse: "never" }, [
+    await setCardLayout({ mode: "row" }, [
       storyCard("one", { scale: "compact" }),
       storyCard("two", {
         identityEnabled: true,
@@ -1660,15 +1631,12 @@ module("Integration | Blocks | Card layout", function (hooks) {
     }
   });
 
-  test("Row cards respect explicit growth and cross-axis alignment", async function (assert) {
+  test("Row cards respect explicit growth and the row's cross-axis alignment", async function (assert) {
     const fixed = storyCard("fixed", { body: "Short copy" });
-    fixed.containerArgs = { row: { flexGrow: 0, alignSelf: "start" } };
+    fixed.containerArgs = { row: { flexGrow: 0 } };
     const growing = storyCard("growing", { body: "Long copy. ".repeat(40) });
-    growing.containerArgs = { row: { flexGrow: 2, alignSelf: "stretch" } };
-    await setCardLayout({ mode: "row", autoCollapse: "never" }, [
-      fixed,
-      growing,
-    ]);
+    growing.containerArgs = { row: { flexGrow: 2 } };
+    await setCardLayout({ mode: "row", align: "start" }, [fixed, growing]);
     await render(
       <template>
         <div style="width: 888px"><BlockOutlet @name="hero-blocks" /></div>
@@ -1679,7 +1647,6 @@ module("Integration | Blocks | Card layout", function (hooks) {
     const growingCard = find("[data-block-id='growing']");
     assert.strictEqual(getComputedStyle(fixedCard).flexGrow, "0");
     assert.strictEqual(getComputedStyle(growingCard).flexGrow, "2");
-    assert.strictEqual(getComputedStyle(fixedCard).alignSelf, "start");
     assert.true(growingCard.offsetWidth > fixedCard.offsetWidth + 100);
     assert.true(fixedCard.offsetHeight < growingCard.offsetHeight);
     assert
@@ -1688,22 +1655,19 @@ module("Integration | Blocks | Card layout", function (hooks) {
   });
 
   test("a non-card sibling does not prevent direct Card peers from aligning", async function (assert) {
-    await setCardLayout(
-      { mode: "grid", columns: 3, rows: 1, autoCollapse: "never" },
-      [
-        {
-          block: Heading,
-          args: { text: "Stories" },
-          containerArgs: { grid: { column: "1", row: "1" } },
-        },
-        storyCard("one", { scale: "compact" }, { column: "2", row: "1" }),
-        storyCard(
-          "two",
-          { body: "Long copy. ".repeat(10), scale: "featured" },
-          { column: "3", row: "1" }
-        ),
-      ]
-    );
+    await setCardLayout({ mode: "grid", columns: 3, rows: 1 }, [
+      {
+        block: Heading,
+        args: { text: "Stories" },
+        containerArgs: { grid: { column: "1", row: "1" } },
+      },
+      storyCard("one", { scale: "compact" }, { column: "2", row: "1" }),
+      storyCard(
+        "two",
+        { body: "Long copy. ".repeat(10), scale: "featured" },
+        { column: "3", row: "1" }
+      ),
+    ]);
     await render(
       <template>
         <div style="width: 1080px"><BlockOutlet @name="hero-blocks" /></div>
@@ -1725,7 +1689,6 @@ module("Integration | Blocks | Card layout", function (hooks) {
         columns: 3,
         rows: 2,
         rowHeight: "700px",
-        autoCollapse: "never",
       },
       [
         storyCard("one", { scale: "compact" }, { column: "1", row: "1" }),
@@ -1822,7 +1785,6 @@ module("Integration | Blocks | Card layout", function (hooks) {
       mode: "grid",
       columns: 3,
       rows: 1,
-      autoCollapse: "never",
       cardAlignment: "auto",
     };
     await setCardLayout(args, children);
@@ -1875,7 +1837,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
       storyCard("three", {}, { column: "2", row: "2" }),
       storyCard("four", { body: "Short body" }, { column: "3", row: "2" }),
     ];
-    const args = { mode: "grid", columns: 3, rows: 2, autoCollapse: "never" };
+    const args = { mode: "grid", columns: 3, rows: 2 };
     await setCardLayout(args, children);
     await render(
       <template>
@@ -1932,10 +1894,7 @@ module("Integration | Blocks | Card layout", function (hooks) {
       storyCard("two", { body: "Long copy. ".repeat(15) }),
     ];
     const original = structuredClone(children.map((child) => child.args));
-    await setCardLayout(
-      { mode: "grid", columns: 2, rows: 1, autoCollapse: "never" },
-      children
-    );
+    await setCardLayout({ mode: "grid", columns: 2, rows: 1 }, children);
     await render(
       <template>
         <div style="width: 800px"><BlockOutlet @name="hero-blocks" /></div>

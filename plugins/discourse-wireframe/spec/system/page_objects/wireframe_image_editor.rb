@@ -72,19 +72,6 @@ module PageObjects
         has_css?("html[lang='ar'].rtl")
       end
 
-      def has_position_marker?(x:, y:)
-        has_css?(".wireframe-image-position-picker__pad") { |pad| pad.evaluate_script(<<~JS) }
-            (() => {
-              const pad = this.getBoundingClientRect();
-              const thumb = this.querySelector('.wireframe-image-position-picker__thumb').getBoundingClientRect();
-              const expectedX = pad.left + this.clientLeft + this.clientWidth * #{x} / 100;
-              const expectedY = pad.top + this.clientTop + this.clientHeight * #{y} / 100;
-              return Math.abs((thumb.left + thumb.right) / 2 - expectedX) < 1 &&
-                Math.abs((thumb.top + thumb.bottom) / 2 - expectedY) < 1;
-            })()
-          JS
-      end
-
       def with_zoomed_viewport(scale)
         page.driver.with_playwright_page do |pw_page|
           original = pw_page.viewport_size.transform_keys(&:to_sym)
@@ -119,11 +106,11 @@ module PageObjects
       end
 
       def has_inspector_translation?(text)
-        has_css?(".wireframe-inspector__tab", text: text)
+        has_css?(".wireframe-panel.--right .wireframe-image-composition__fit", text: text)
       end
 
       def choose_top_left_position
-        find(".wireframe-image-position-picker__pad").click(x: 10, y: 10)
+        set_position(x: 0, y: 0)
       end
 
       def has_top_left_position?
@@ -194,31 +181,6 @@ module PageObjects
         ) && has_no_source_progress?
       end
 
-      def has_themed_zoom_track?
-        has_css?(".wireframe-image-composition__zoom input[type='range']") do |slider|
-          color = slider.evaluate_script(<<~JS).scan(/\d+/).first(3).map(&:to_i)
-            getComputedStyle(this.closest('.wireframe-image-composition').querySelector('.wireframe-image-position-picker__pad')).backgroundColor
-          JS
-          page.driver.with_playwright_page do |pw_page|
-            png =
-              ChunkyPNG::Image.from_blob(
-                pw_page.locator(
-                  ".wireframe-image-composition__zoom input[type='range']",
-                ).screenshot,
-              )
-            pixel = png[png.width / 2, png.height / 2]
-            [ChunkyPNG::Color.r(pixel), ChunkyPNG::Color.g(pixel), ChunkyPNG::Color.b(pixel)].zip(
-              color,
-            )
-              .all? { |actual, expected| (actual - expected).abs <= 3 }
-          end
-        end
-      end
-
-      def change_zoom_with_keyboard(key)
-        find(".wireframe-image-composition__zoom input[type='range']").send_keys(key)
-      end
-
       def has_image_zoom?(value)
         has_css?(".wireframe-image-composition__zoom input[type='number']") do |input|
           input.value == value.to_s
@@ -242,12 +204,12 @@ module PageObjects
       def has_clear_section_hierarchy?
         has_css?(".wireframe-inspector__body") { |body| body.evaluate_script(<<~JS) }
             (() => {
-              const headings = [...this.querySelectorAll('.wireframe-image-composition__heading, .wireframe-image-field__frame legend, .form-kit__section-title')];
+              const headings = [...this.querySelectorAll('.wireframe-image-field__frame legend, .form-kit__section-title')];
               const label = this.querySelector('.form-kit__container-title');
               const source = this.querySelector('.wireframe-image-field__source-label');
               const gridAction = this.querySelector('.wireframe-image-field__grid .btn');
               const placement = this.querySelector('.wireframe-inspector-container-args-form');
-              if (headings.length < 4 || !label || !placement) return false;
+              if (headings.length < 3 || !label || !placement) return false;
               const size = el => parseFloat(getComputedStyle(el).fontSize);
               return size(source) === size(label) && size(gridAction) >= 12 &&
                 headings.every(heading => size(heading) > size(label) && size(heading) === size(headings[0])) &&
@@ -351,8 +313,16 @@ module PageObjects
         has_no_css?(".d-block-image-frame:has(img[alt='Grid image']) source", visible: false)
       end
 
+      # Clicks the canvas gutter just outside the outlet root: the homepage has
+      # no non-block content of its own to aim at.
       def click_outside_blocks
-        find(".welcome-banner__title").click
+        box =
+          find(".wireframe-block-chrome.--outlet-root").evaluate_script(
+            "this.getBoundingClientRect().toJSON()",
+          )
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.mouse.click(box["x"] - 8, box["y"] + box["height"] / 2)
+        end
       end
 
       def has_no_selected_block?
@@ -368,9 +338,8 @@ module PageObjects
       end
 
       def open_image_menu
-        find(".wireframe-block-chrome.--selected .wireframe-block-toolbar").click_button(
-          "Edit image",
-        )
+        find(".wireframe-block-chrome.--selected .wireframe-block-toolbar__more").click
+        find(".wireframe-toolbar-more-content").click_button("Edit image")
       end
 
       def has_no_image_menu?
@@ -407,25 +376,19 @@ module PageObjects
         has_css?(".wireframe-image-editor-menu") { |menu| menu.evaluate_script(<<~JS) }
             (() => {
               const fit = this.querySelector('.wireframe-image-composition__fit');
-              const reposition = this.querySelector('.wireframe-image-composition__actions');
               const source = this.querySelector(':scope > .wireframe-image-editor-menu__action');
               const footer = this.querySelector('.wireframe-image-editor-menu__footer');
               const separators = [...this.querySelectorAll('hr')];
-              if (!fit || !reposition || !source || separators.length !== (footer ? 2 : 1)) {
+              if (!fit || !source || separators.length !== (footer ? 2 : 1)) {
                 return false;
               }
               const bounds = element => element.getBoundingClientRect();
-              return bounds(fit).bottom <= bounds(reposition).top &&
-                bounds(reposition).bottom <= bounds(separators[0]).top &&
+              return bounds(fit).bottom <= bounds(separators[0]).top &&
                 bounds(separators[0]).bottom <= bounds(source).top &&
                 separators.every(separator => parseFloat(getComputedStyle(separator).borderTopWidth) > 0) &&
                 (!footer || bounds(separators[1]).bottom <= bounds(footer).top);
             })()
           JS
-      end
-
-      def reposition_from_menu
-        within(".wireframe-image-editor-menu") { click_button("Reposition", exact: true) }
       end
 
       def change_image(path)
@@ -504,7 +467,7 @@ module PageObjects
       def has_toolbar_anchored_menu?
         has_css?(".wireframe-image-editor-menu") { |menu| menu.evaluate_script(<<~JS) }
             (() => {
-              const trigger = document.querySelector('.wireframe-block-chrome.--selected button[title="Edit image"]').getBoundingClientRect();
+              const trigger = document.querySelector('.wireframe-block-chrome.--selected .wireframe-block-toolbar__actions').getBoundingClientRect();
               const menu = this.getBoundingClientRect();
               return Math.abs(menu.top - trigger.bottom) < trigger.height && menu.left <= trigger.right && menu.right >= trigger.left;
             })()
@@ -546,7 +509,6 @@ module PageObjects
       end
 
       def hide_image_settings
-        within(".wireframe-panel.--right") { click_button("JSON") }
         find(".wireframe-panel.--right").click_button("Collapse panel")
       end
 
@@ -645,7 +607,7 @@ module PageObjects
       end
 
       def has_composition_controls?
-        has_css?(".wireframe-inspector-form .wireframe-image-composition")
+        has_css?(".wireframe-inspector-form .wireframe-image-composition__fit")
       end
 
       def grid_frame_widths
@@ -664,31 +626,27 @@ module PageObjects
       end
 
       def has_aligned_unit_controls?(compact: false)
-        has_css?(".wireframe-inspector-form .wireframe-image-composition") do |composition|
-          composition.evaluate_script(<<~JS)
+        has_css?(".wireframe-inspector-form") { |form| form.evaluate_script(<<~JS) }
             (() => {
-              const fields = [...this.querySelectorAll('.form-kit__control-input-wrapper')];
+              const fields = [...this.querySelectorAll('.wireframe-image-composition__position .form-kit__control-input-wrapper, .wireframe-image-composition__zoom .form-kit__control-input-wrapper')];
               if (fields.length !== 3) { return false; }
               const reference = fields[0].getBoundingClientRect();
               const container = this.getBoundingClientRect();
-              return fields.every((field, index) => {
+              return fields.every(field => {
                 const rect = field.getBoundingClientRect();
                 const input = field.querySelector('input').getBoundingClientRect();
                 const unit = field.querySelector('.form-kit__after-input').getBoundingClientRect();
-                const keys = #{compact} && index === 2 ? ['width', 'height'] : ['width', 'height', 'left', 'right'];
-                return keys.every(key => Math.abs(rect[key] - reference[key]) < 1) &&
+                return Math.abs(rect.height - reference.height) < 1 &&
                   rect.left >= container.left && rect.right <= container.right &&
                   Math.abs(input.height - unit.height) < 1;
               });
             })()
           JS
-        end
       end
 
       def has_readable_coordinate_controls?
-        has_css?(
-          ".wireframe-inspector-form .wireframe-image-position-picker__coordinates",
-        ) { |coordinates| coordinates.evaluate_script(<<~JS) }
+        has_css?(".wireframe-inspector-form .wireframe-image-position-picker") do |picker|
+          picker.evaluate_script(<<~JS)
             (() => {
               const fields = [...this.querySelectorAll('.form-kit__control-input-wrapper')];
               if (fields.length !== 2) return false;
@@ -696,50 +654,23 @@ module PageObjects
               if (!focused || getComputedStyle(focused).outlineStyle === 'none' ||
                   parseFloat(getComputedStyle(focused).outlineWidth) < 2) return false;
               const context = document.createElement('canvas').getContext('2d');
-              return fields[1].getBoundingClientRect().top - fields[0].getBoundingClientRect().bottom >= 8 &&
+              const [first, second] = fields
+                .map(field => field.getBoundingClientRect())
+                .sort((a, b) => a.left - b.left);
+              const sideBySide = Math.abs(first.top - second.top) < 1 && second.left - first.right >= 2;
+              return sideBySide &&
                 fields.every(field => {
                   const input = field.querySelector('input');
                   const style = getComputedStyle(input);
-                  const axis = field.parentElement.querySelector('.wireframe-image-position-picker__axis');
-                  if (!axis || field.contains(axis)) return false;
-                  const suffix = getComputedStyle(field.querySelector('.form-kit__after-input'));
-                  context.font = style.font;
                   const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
-                  const contentWidth = input.clientWidth - padding;
-                  return field.getBoundingClientRect().height >= 32 &&
-                    contentWidth >= context.measureText('100').width + 2 &&
-                    parseFloat(style.borderInlineStartWidth) > 0 &&
-                    parseFloat(style.borderInlineEndWidth) > 0 &&
-                    parseFloat(suffix.borderInlineStartWidth) > 0;
+                  context.font = style.font;
+                  return field.querySelector('.form-kit__before-input') &&
+                    field.querySelector('.form-kit__after-input') &&
+                    input.clientWidth - padding >= context.measureText('100').width;
                 });
             })()
           JS
-      end
-
-      def has_contained_inspector_actions?
-        has_css?(".wireframe-panel.--right") { |panel| panel.evaluate_script(<<~JS) }
-            (() => {
-              const tabs = this.querySelector('.wireframe-inspector__sections .d-tabs__tablist');
-              const composition = this.querySelector('.wireframe-image-composition');
-              const contained = (parent, children) => {
-                const bounds = parent.getBoundingClientRect();
-                return [...children].every(child => {
-                  const rect = child.getBoundingClientRect();
-                  return rect.left >= bounds.left && rect.right <= bounds.right &&
-                    child.scrollWidth <= child.clientWidth;
-                });
-              };
-              const firstTab = tabs.firstElementChild.getBoundingClientRect();
-              const inspectorFontSize = parseFloat(getComputedStyle(this.querySelector('.wireframe-inspector-form')).fontSize);
-              return [...tabs.children].every(tab =>
-                Math.abs(tab.getBoundingClientRect().top - firstTab.top) < 1 &&
-                parseFloat(getComputedStyle(tab).fontSize) >= inspectorFontSize &&
-                parseFloat(getComputedStyle(tab).paddingInlineStart) >= 4 &&
-                parseFloat(getComputedStyle(tab).paddingInlineEnd) >= 4
-              ) && contained(tabs, tabs.children) &&
-                contained(composition, composition.querySelectorAll('.wireframe-image-composition__actions button'));
-            })()
-          JS
+        end
       end
 
       def has_aligned_inspector_selections?
@@ -779,55 +710,34 @@ module PageObjects
           JS
       end
 
-      def has_grouped_composition_controls?(compact: false, full_width_actions: false)
-        has_css?(".wireframe-inspector-form .wireframe-image-composition") do |composition|
-          composition.evaluate_script(<<~JS)
+      def has_grouped_composition_controls?
+        has_css?(".wireframe-inspector-form") { |form| form.evaluate_script(<<~JS) }
             (() => {
-              const rect = selector => this.querySelector(selector)?.getBoundingClientRect();
-              const coordinates = rect('.wireframe-image-position-picker__coordinates');
-              const coordinateField = rect('.wireframe-image-position-picker__coordinates .form-kit__control-input-wrapper');
-              const pad = rect('.wireframe-image-position-picker__pad');
-              const fit = rect('.wireframe-image-composition__fit .wireframe-segmented-field');
-              const number = rect('.wireframe-image-composition__zoom .form-kit__control-input-wrapper');
-              const slider = rect('input[type="range"]');
-              const action = rect('.wireframe-image-composition__actions');
-              if (!coordinates || !coordinateField || !pad || !fit || !number || !slider || !action) return false;
+              const rect = el => el?.getBoundingClientRect();
+              const bounds = rect(this);
               const rtl = getComputedStyle(this).direction === 'rtl';
               const start = rtl ? 'right' : 'left';
-              const end = rtl ? 'left' : 'right';
-              const bounds = this.getBoundingClientRect();
-              const gap = rtl ? coordinates.left - pad.right : pad.left - coordinates.right;
               const close = (a, b) => Math.abs(a - b) < 1;
-              const labelsFit = [...this.querySelectorAll('.wireframe-image-composition__fit, .wireframe-image-composition__position, .wireframe-image-composition__zoom')].every(row => {
-                const range = document.createRange();
-                range.selectNodeContents(row.firstElementChild);
-                const label = range.getBoundingClientRect();
-                const control = row.children[1].getBoundingClientRect();
-                if (#{compact}) {
-                  return row.classList.contains('wireframe-image-composition__position') ?
-                    label.bottom + 4 <= control.top :
-                    label.top < control.bottom && label.bottom > control.top &&
-                      (rtl ? label.left - control.right >= 4 : control.left - label.right >= 4);
-                }
-                return rtl ? label.left - fit.right >= 4 : fit.left - label.right >= 4;
+              const containers = [...this.querySelectorAll('.wireframe-image-composition__fit, .wireframe-image-composition__position, .wireframe-image-composition__zoom')];
+              if (containers.length !== 3) return false;
+              const separate = containers.every(container =>
+                container.classList.contains('form-kit__field') &&
+                  !container.closest('.wireframe-image-field'));
+              const titled = containers.every(container => {
+                const title = rect(container.querySelector('.form-kit__container-title'));
+                const content = rect(container.querySelector('.form-kit__container-content'));
+                return title && content && title.bottom <= content.top + 1 &&
+                  close(title[start], content[start]);
               });
-              const aligned = #{compact} ?
-                [fit, number, pad].every(box => close(box[end], bounds[end])) &&
-                  [coordinates, slider].every(box => close(box[start], bounds[start])) &&
-                  close(slider.width, bounds.width) :
-                [coordinateField, number, slider].every(box => close(box[start], fit[start]));
-              const actionAligned = #{full_width_actions} ?
-                close(action[start], bounds[start]) && close(rect('.wireframe-image-composition__actions button').width, bounds.width) :
-                close(action[start], fit[start]);
-              return labelsFit && aligned && actionAligned && gap >= 4 && gap <= (#{compact} ? 32 : 16) && pad.width <= 80 && number.width <= 96 &&
-                close(coordinates.top, pad.top) && close(coordinates.bottom, pad.bottom) &&
-                close(pad.width, pad.height) &&
-                slider.top > number.bottom && slider.width >= fit.width &&
-                slider.left >= this.getBoundingClientRect().left &&
-                slider.right <= this.getBoundingClientRect().right;
+              const stacked = containers.every((container, index) =>
+                index === 0 || rect(container).top >= rect(containers[index - 1]).bottom - 1);
+              const contained = containers.every(el => {
+                const box = rect(el);
+                return box.left >= bounds.left - 1 && box.right <= bounds.right + 1;
+              });
+              return separate && titled && stacked && contained;
             })()
           JS
-        end
       end
 
       def has_position?(x:, y:)
@@ -844,39 +754,6 @@ module PageObjects
 
       def has_selected_section?
         has_css?(".wireframe-block-chrome.--selected[data-wf-block-name='section']")
-      end
-
-      def reposition
-        within(".wireframe-image-composition") { click_button("Reposition on canvas") }
-      end
-
-      def has_adjustment?
-        has_css?(".wireframe-image-reposition__surface")
-      end
-
-      def adjustment_geometry
-        find(".wireframe-image-reposition").evaluate_script(<<~JS)
-          (() => {
-            const frame = document.querySelector('.d-block-section__backdrop .d-block-image-frame');
-            return { overlay: this.getBoundingClientRect().toJSON(), frame: frame.getBoundingClientRect().toJSON(), chrome: this.closest('.wireframe-block-chrome').getBoundingClientRect().toJSON() };
-          })()
-        JS
-      end
-
-      def cancel_adjustment
-        within(".wireframe-image-reposition") { click_button("Cancel") }
-      end
-
-      def nudge(*keys)
-        find(".wireframe-image-reposition__surface").send_keys(*keys)
-      end
-
-      def finish_adjustment
-        within(".wireframe-image-reposition") { click_button("Done") }
-      end
-
-      def has_no_adjustment?
-        has_no_css?(".wireframe-image-reposition")
       end
     end
   end

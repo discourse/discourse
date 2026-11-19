@@ -21,12 +21,10 @@ import {
   removeEntry,
   replaceEntryInPlace,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
-import { isReversedFlexLayout } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/reversed-flex";
 import type WireframeBlockRevealService from "./wireframe-block-reveal";
 import type WireframeDropAuthorityService from "./wireframe-drop-authority";
 import type WireframeLayoutQueryService from "./wireframe-layout-query";
 import type WireframeMutationEngineService from "./wireframe-mutation-engine";
-import type WireframeRecentBlocksService from "./wireframe-recent-blocks";
 import type WireframeSelectionService from "./wireframe-selection";
 
 /** The relative position of an enter-style drop against its target. */
@@ -66,8 +64,6 @@ export type InsertBlockArgs = {
   blockName: string;
   /** Initial arguments copied into the new entry. */
   defaultArgs?: Record<string, unknown>;
-  /** Stable palette choice to remember after insertion. */
-  paletteId?: string;
   /** Composite key of the destination entry, or `null` for the outlet root. */
   targetKey: string | null;
   /** Position relative to the destination entry. */
@@ -118,9 +114,6 @@ export default class WireframeBlockMutationsService extends Service {
 
   /** Records, publishes, and reverses structural mutations. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
-
-  /** Remembers what was inserted, for the palette's Recent group. */
-  @service declare wireframeRecentBlocks: WireframeRecentBlocksService;
 
   /** Resolves live entries, layouts, and parent relationships. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
@@ -429,7 +422,6 @@ export default class WireframeBlockMutationsService extends Service {
   insertBlock({
     blockName,
     defaultArgs = {},
-    paletteId,
     targetKey,
     position,
     targetOutletName,
@@ -502,9 +494,6 @@ export default class WireframeBlockMutationsService extends Service {
         return true;
       }
     );
-    if (inserted) {
-      this.wireframeRecentBlocks.record(paletteId ?? blockName);
-    }
     return inserted;
   }
 
@@ -670,19 +659,13 @@ export default class WireframeBlockMutationsService extends Service {
    * Looks up the selected entry's siblings and computes a `moveBlock` call
    * against the previous / next sibling in the direction the author SEES.
    *
-   * A reversed flex parent (stack / row with `reverse`) renders its children
-   * in reverse, so a visual "up" is a move toward a LATER persisted index (and
-   * vice versa). The visual direction is mapped to the persisted one before
-   * picking the target sibling, so the buttons always move the block the way
-   * the author expects on screen.
-   *
    * Returns `false` (no-op) when the block is already first / last (visually)
    * in its parent, when no block is selected, or when the move is rejected.
    *
    * @param blockKey - Composite key of the block to move.
    * @param visualDirection - Direction the author expects on screen.
    */
-  #moveBlockSibling(blockKey: string, visualDirection: "up" | "down"): boolean {
+  #moveBlockSibling(blockKey: string, direction: "up" | "down"): boolean {
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return false;
@@ -697,14 +680,8 @@ export default class WireframeBlockMutationsService extends Service {
     if (!sibs) {
       return false;
     }
-    const reversed = isReversedFlexLayout(
-      this.wireframeLayoutQuery.findEntryParent(blockKey)?.args
-    );
-    const goEarlier = reversed
-      ? visualDirection === "down"
-      : visualDirection === "up";
 
-    if (goEarlier) {
+    if (direction === "up") {
       if (sibs.index === 0) {
         return false;
       }

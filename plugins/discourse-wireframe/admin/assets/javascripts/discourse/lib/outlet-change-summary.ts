@@ -1,11 +1,22 @@
 import type { LayoutEntry } from "discourse/blocks/types";
 import {
+  isLayoutBlockEntry,
   serializeEntryForSave,
   type ValidatedLayoutEntry,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
+/** One block's change, for listing what an edit touched. */
+export type BlockChange = {
+  /** The entry as it is now, or as it was for a removed block. */
+  entry: LayoutEntry;
+  /** What happened to the block. */
+  kind: "added" | "removed" | "moved" | "edited";
+};
+
 /** Counts describing how an edited outlet differs from its baseline. */
 export type ChangeSummary = {
+  /** Each changed block, in layout order. */
+  changes: BlockChange[];
   /** Blocks present only in the edited layout. */
   added: number;
   /** Blocks present only in the baseline layout. */
@@ -52,13 +63,17 @@ export function diffLayouts(
   after: ValidatedLayoutEntry[] | null
 ): ChangeSummary {
   const baseline = indexEntries(before, null, new Map());
-  const edited = indexEntries(after, null, new Map());
+  const edited = indexEntries(unwrapNewRoot(before, after), null, new Map());
 
   // No shared identity between two non-empty layouts means the keys desynced —
   // matching would report every block as both removed and re-added, which is
   // worse than useless. Fall back to a single "edited" signal.
   if (baseline.size > 0 && edited.size > 0 && !sharesAnyKey(baseline, edited)) {
     return {
+      changes: [...edited.values()].map(({ entry }) => ({
+        entry,
+        kind: "edited" as const,
+      })),
       added: 0,
       removed: 0,
       moved: 0,
@@ -71,30 +86,65 @@ export function diffLayouts(
   let removed = 0;
   let moved = 0;
   let editedCount = 0;
+  const changes: BlockChange[] = [];
 
   for (const [key, info] of edited) {
     const prev = baseline.get(key);
     if (!prev) {
       added++;
+      changes.push({ entry: info.entry, kind: "added" });
       continue;
     }
     // A block can be both moved and edited; the two metrics are independent and
     // both worth surfacing, so we count each on its own.
     if (prev.parentKey !== info.parentKey || prev.index !== info.index) {
       moved++;
+      changes.push({ entry: info.entry, kind: "moved" });
     }
     if (ownPropsFingerprint(prev.entry) !== ownPropsFingerprint(info.entry)) {
       editedCount++;
+      changes.push({ entry: info.entry, kind: "edited" });
     }
   }
 
-  for (const key of baseline.keys()) {
+  for (const [key, info] of baseline) {
     if (!edited.has(key)) {
       removed++;
+      changes.push({ entry: info.entry, kind: "removed" });
     }
   }
 
-  return { added, removed, moved, edited: editedCount, reliable: true };
+  return {
+    changes,
+    added,
+    removed,
+    moved,
+    edited: editedCount,
+    reliable: true,
+  };
+}
+
+/**
+ * The editor wraps a layout in an implicit root layout so it can be edited. That
+ * wrapper isn't something the author added, so it is left out of the comparison
+ * and its children are compared with the baseline directly.
+ *
+ * @param before - Baseline resolved layout.
+ * @param after - Edited resolved layout.
+ * @returns The edited entries, without a wrapper that only exists in the editor.
+ */
+function unwrapNewRoot(
+  before: ValidatedLayoutEntry[] | null,
+  after: ValidatedLayoutEntry[] | null
+): ValidatedLayoutEntry[] | null {
+  const [root] = after ?? [];
+  if (after?.length !== 1 || !root || !isLayoutBlockEntry(root)) {
+    return after;
+  }
+  const known = indexEntries(before, null, new Map());
+  return root.__stableKey != null && known.has(root.__stableKey)
+    ? after
+    : (root.children ?? []);
 }
 
 /**

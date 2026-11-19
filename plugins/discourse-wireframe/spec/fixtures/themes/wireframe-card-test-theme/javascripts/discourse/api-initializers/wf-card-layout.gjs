@@ -112,7 +112,7 @@ export default apiInitializer((api) => {
 
   api.renderBlocks("hero-blocks", [placeholder("Site hero — outside this Card study")]);
   api.renderBlocks("sidebar-blocks", [placeholder("Site navigation — outside this Card study")]);
-  api.renderBlocks("main-outlet-blocks", [
+  api.renderBlocks("homepage-blocks", [
     {
       block: Section, id: "museum-discussions", args: { surface: "transparent" },
       children: [placeholder("Museum hero — heading, image and actions are outside this Card study"), heading("Latest discussions"), {

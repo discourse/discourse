@@ -33,7 +33,6 @@ import type WireframeBlockMutationsService from "./wireframe-block-mutations";
 import type WireframeDropAuthorityService from "./wireframe-drop-authority";
 import type WireframeLayoutQueryService from "./wireframe-layout-query";
 import type WireframeMutationEngineService from "./wireframe-mutation-engine";
-import type WireframeRecentBlocksService from "./wireframe-recent-blocks";
 import type WireframeSelectionService from "./wireframe-selection";
 
 /** A fresh palette block or an existing layout entry being placed. */
@@ -45,8 +44,6 @@ export type GridDropSource =
       blockName: string | null;
       /** Initial block arguments copied into the new entry. */
       defaultArgs?: Record<string, unknown> | null;
-      /** Stable palette choice to remember after insertion. */
-      paletteId?: string;
       /** Fresh blocks have no existing layout key. */
       key?: null;
     }
@@ -96,8 +93,6 @@ export type PlaceInGridCellArgs = {
   blockName: string;
   /** Initial arguments copied into the new block. */
   defaultArgs?: Record<string, unknown>;
-  /** Stable palette choice to remember after insertion. */
-  paletteId?: string;
 };
 
 /** Arguments for creating a persisted merged-cell region. */
@@ -175,9 +170,6 @@ export default class WireframeGridPlacementService extends Service {
 
   /** Mutation service used to record and publish grid changes. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
-
-  /** Remembers fresh palette choices after successful placement. */
-  @service declare wireframeRecentBlocks: WireframeRecentBlocksService;
 
   /** Read-only layout service used to resolve grids and entries. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
@@ -296,9 +288,6 @@ export default class WireframeGridPlacementService extends Service {
         }
       }
     );
-    if (changed && source.kind === "new" && source.blockName) {
-      this.wireframeRecentBlocks.record(source.paletteId ?? source.blockName);
-    }
     return changed;
   }
 
@@ -381,7 +370,6 @@ export default class WireframeGridPlacementService extends Service {
     cellKey,
     blockName,
     defaultArgs = {},
-    paletteId,
   }: PlaceInGridCellArgs): boolean {
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(cellKey);
     if (!located || !isMergedCell(located.entry)) {
@@ -426,9 +414,6 @@ export default class WireframeGridPlacementService extends Service {
         return true;
       }
     );
-    if (changed) {
-      this.wireframeRecentBlocks.record(paletteId ?? blockName);
-    }
     return changed;
   }
 

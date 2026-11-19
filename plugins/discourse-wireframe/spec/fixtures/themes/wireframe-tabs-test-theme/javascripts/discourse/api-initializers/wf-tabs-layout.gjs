@@ -4,7 +4,7 @@ import Tabs from "discourse/blocks/builtin/tabs";
 import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer((api) => {
-  api.renderBlocks("main-outlet-blocks", [
+  api.renderBlocks("homepage-blocks", [
     {
       block: Tabs,
       children: Array.from({ length: 10 }, (_, index) => ({

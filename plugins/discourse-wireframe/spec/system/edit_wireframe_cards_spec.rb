@@ -27,14 +27,13 @@ describe "Edit wireframe cards" do
   after { Theme.clear_cache! }
 
   it "shows all reference Cards without structural issues" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
-    cards.show_issues
-    expect(cards).to have_no_issues, cards.issue_messages
+    expect(cards).to have_no_issues, -> { cards.issue_messages.join("\n") }
   end
 
   it "lets readers tab to and follow each independent Card link" do
-    visit("/latest")
+    visit("/custom")
     cards.start_keyboard_navigation
     [
       ["visitor guide", "body"],
@@ -48,20 +47,20 @@ describe "Edit wireframe cards" do
       end
       expect(cards).to have_focused_reader_link(label)
       cards.follow_focused_link
-      expect(page).to have_current_path("#{page.server_url}/latest#card-#{destination}", url: true)
+      expect(page).to have_current_path("#{page.server_url}/custom#card-#{destination}", url: true)
     end
 
     cards.click_exhibition_title
-    expect(page).to have_current_path("#{page.server_url}/latest#card-primary", url: true)
+    expect(page).to have_current_path("#{page.server_url}/custom#card-primary", url: true)
     cards.click_reader_link("visitor guide")
-    expect(page).to have_current_path("#{page.server_url}/latest#card-body", url: true)
+    expect(page).to have_current_path("#{page.server_url}/custom#card-body", url: true)
     cards.click_reader_link("Read the transcript")
-    expect(page).to have_current_path("#{page.server_url}/latest#card-secondary", url: true)
+    expect(page).to have_current_path("#{page.server_url}/custom#card-secondary", url: true)
   end
 
   it "keeps reader Cards within narrow sections without clipping their content" do
     cards.use_narrow_reader
-    visit("/latest")
+    visit("/custom")
     expect(cards).to have_loaded_artwork
     %w[
       museum-cards
@@ -80,7 +79,7 @@ describe "Edit wireframe cards" do
 
   it "shows the lower static reference Cards in narrow sections" do
     cards.use_narrow_reader
-    visit("/latest")
+    visit("/custom")
     expect(cards).to have_loaded_artwork
     %w[
       museum-neutrino
@@ -100,7 +99,7 @@ describe "Edit wireframe cards" do
 
   it "keeps Card inspector groups distinct and readable at every rail width" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     editor.enter
     cards.show_media_stories
     cards.select_speaker
@@ -116,7 +115,7 @@ describe "Edit wireframe cards" do
   end
 
   it "shows complete highlight and fully populated Cards without clipping" do
-    visit("/latest")
+    visit("/custom")
     expect(cards).to have_loaded_artwork
     %w[hubspot-dark-highlight hubspot-light-highlight].each do |reference|
       cards.show_complete_reference(reference)
@@ -135,7 +134,7 @@ describe "Edit wireframe cards" do
 
   it "lets readers and authors use Cards with enlarged right-to-left text" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     expect(cards).to have_loaded_artwork
     cards.enlarge_text(direction: "rtl")
     cards.show_complete_reference("meta-cards")
@@ -162,7 +161,7 @@ describe "Edit wireframe cards" do
     capture = { preserve_viewport: true }
     cards.use_wide_editor
     %w[ltr rtl].each do |direction|
-      visit("/latest")
+      visit("/custom")
       page.refresh
       cards.enlarge_text(direction: direction)
       editor.enter
@@ -181,7 +180,7 @@ describe "Edit wireframe cards" do
 
   it "shows empty optional Card fields only while that Card is selected" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     editor.enter
     cards.show_media_stories
     expect(cards).to have_no_optional_story_placeholders
@@ -195,27 +194,19 @@ describe "Edit wireframe cards" do
   it "lets the author reload a private Card draft and then publish it to the reader" do
     saved_name = "Sam Saffron, saved speaker"
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     editor.enter
     cards.show_media_stories
     cards.select_speaker
     cards.position_speaker_image(:feature, x: 20, y: 80)
-    editor.create_customization_component
-    dialog.click_yes
-    expect(editor).to have_publishable_target
-    cards.show_media_stories
-    cards.select_speaker
     cards.position_speaker_image(:feature, x: 25, y: 75)
     cards.toggle_identity_group
     cards.fill_identity_name(saved_name)
     cards.position_speaker_image(:portrait, x: 70, y: 30)
 
-    editor.save_draft
-    expect(editor).to have_saved_draft
-    visit("/latest")
-    cards.show_media_stories
-    expect(cards).to have_speaker_identity("Sam Saffron")
-    expect(cards).to have_no_speaker_identity(saved_name)
+    editor.save
+    expect(editor).to have_saved
+    page.refresh
 
     editor.enter
     cards.show_media_stories
@@ -234,7 +225,7 @@ describe "Edit wireframe cards" do
 
   it "lets the author reach text over feature images" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     editor.enter
     cards.show_museum
     cards.select_curator
@@ -248,7 +239,7 @@ describe "Edit wireframe cards" do
 
   it "lets the author crop the feature image and portrait independently" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     editor.enter
     cards.show_media_stories
     cards.select_speaker
@@ -260,20 +251,7 @@ describe "Edit wireframe cards" do
     expect(cards).to have_speaker_image_position(:portrait, x: 70, y: 30)
     expect(cards).to have_speaker_image_position(:feature, x: 25, y: 75)
 
-    cards.reposition_speaker_image(:portrait)
-    expect(image_editor).to have_adjustment
-    image_editor.nudge(:right)
-    expect(cards).to have_speaker_image_position(:portrait, x: 71, y: 30)
-    image_editor.nudge(:escape)
-    expect(image_editor).to have_no_adjustment
-    expect(cards).to have_focused_reposition(:portrait)
-    expect(cards).to have_speaker_image_position(:portrait, x: 70, y: 30)
-    expect(cards).to have_speaker_image_position(:feature, x: 25, y: 75)
-
-    cards.reposition_speaker_image(:feature)
-    image_editor.nudge(:left)
-    image_editor.finish_adjustment
-    expect(image_editor).to have_no_adjustment
+    cards.position_speaker_image(:feature, x: 24, y: 75)
     expect(cards).to have_speaker_image_position(:feature, x: 24, y: 75)
     image_editor.undo
     expect(cards).to have_speaker_image_position(:feature, x: 25, y: 75)
@@ -282,7 +260,7 @@ describe "Edit wireframe cards" do
 
   it "lets the author replace four card image sources from closed controls" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     editor.enter
     cards.show_media_stories
     cards.select_speaker
@@ -306,8 +284,8 @@ describe "Edit wireframe cards" do
 
     expect(cards).to have_four_distinct_speaker_sources
     sources = cards.speaker_source_urls
-    editor.save_draft
-    expect(editor).to have_saved_draft
+    editor.save
+    expect(editor).to have_saved
     page.refresh
     editor.enter
     cards.show_media_stories
@@ -323,14 +301,14 @@ describe "Edit wireframe cards" do
   end
 
   it "shows the podcast label with its headphones artwork" do
-    visit("/latest")
+    visit("/custom")
     cards.show_media_stories
     expect(cards).to have_podcast_icon
   end
 
   it "keeps the Card row aligned when the author undoes and redoes a longer identity" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     editor.enter
     cards.show_media_stories
     cards.select_speaker
@@ -352,7 +330,7 @@ describe "Edit wireframe cards" do
   end
 
   it "keeps readable aligned Cards while artwork is delayed, fails and then recovers" do
-    visit("/latest")
+    visit("/custom")
     cards.show_media_stories
     expect(cards).to have_loaded_speaker_artwork
     expect(cards).to have_aligned_media_stories
@@ -393,7 +371,7 @@ describe "Edit wireframe cards" do
 
   it "lets the author inspect all reference cards and fully populated cards at narrow allocations" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     expect(cards).to have_reference_cards
 
     %w[hubspot-dark hubspot-light andela-reference populii-cards meta-below].each do |reference|
@@ -420,7 +398,7 @@ describe "Edit wireframe cards" do
   it "lets the author compare complete reference Cards before and during editing" do
     capture = { only: :desktop, preserve_viewport: true }
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     expect(cards).to have_loaded_artwork
 
     %w[reader editor].each do |mode|
@@ -442,7 +420,7 @@ describe "Edit wireframe cards" do
 
   it "lets the author recover a collapsed identity field and preserve it when toggled" do
     cards.use_wide_editor
-    visit("/latest")
+    visit("/custom")
     editor.enter
     cards.show_media_stories
     cards.select_speaker
@@ -468,7 +446,7 @@ describe "Edit wireframe cards" do
   end
 
   it "shows the author editorial cards and aligned media stories before and during editing" do
-    visit("/latest")
+    visit("/custom")
     expect(cards).to have_loaded_artwork
     cards.show_museum
     expect(cards).to have_filled_editorial_cell, cards.editorial_geometry.inspect

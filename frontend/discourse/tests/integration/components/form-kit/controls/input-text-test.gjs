@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import {
   fillIn as fillInput,
   focus,
@@ -137,15 +138,15 @@ module(
     });
 
     test("named addons support interactive controls and explicit disabled bindings", async function (assert) {
-      this.disabled = false;
-      this.unit = "px";
-      const changeUnit = (value) => this.set("unit", value);
+      const disabled = tracked(false);
+      const unit = tracked("px");
+      const changeUnit = (value) => (unit.value = value);
 
       await render(
         <template>
           <Form as |form|>
             <form.Field
-              @disabled={{this.disabled}}
+              @disabled={{disabled.value}}
               @name="size"
               @title="Size"
               @type="input-number"
@@ -158,7 +159,7 @@ module(
                     disabled={{field.disabled}}
                     @includeNone={{false}}
                     @onChange={{changeUnit}}
-                    @value={{this.unit}}
+                    @value={{unit.value}}
                     as |select|
                   >
                     <select.Option @value="px">px</select.Option>
@@ -181,10 +182,10 @@ module(
       await focus("select");
       assert.dom("select").isFocused("addon is independently focusable");
       await fillInput("select", "%");
-      assert.strictEqual(this.unit, "%", "addon remains interactive");
+      assert.strictEqual(unit.value, "%", "addon remains interactive");
       await fillInput("input", "25");
       assert.form().field("size").hasValue("25");
-      this.set("disabled", true);
+      disabled.value = true;
       await rerender();
       assert.dom("input").isDisabled("input follows field state");
       assert.dom("select").isDisabled("consumer can bind addon to field state");
@@ -306,12 +307,12 @@ module(
     }
 
     test("named addons validate arguments on rerender", async function (assert) {
-      this.after = undefined;
+      const after = tracked(undefined);
       await render(
         <template>
           <Form as |form|>
             <form.Field @name="foo" @title="Foo" @type="input" as |field|>
-              <field.Control @after={{this.after}}><:after
+              <field.Control @after={{after.value}}><:after
                 >Suffix</:after></field.Control>
             </form.Field>
           </Form>
@@ -325,7 +326,7 @@ module(
       setupOnerror((error) => {
         errors.push(error.message);
       });
-      this.set("after", "");
+      after.value = "";
       await rerender();
       assert.deepEqual(
         errors,

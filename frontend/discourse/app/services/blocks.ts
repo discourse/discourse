@@ -35,6 +35,7 @@ import {
 } from "discourse/lib/blocks/-internals/registry/outlet";
 import type {
   BlockClass,
+  BlockEntry,
   BlockRegistryEntry,
 } from "discourse/lib/blocks/-internals/types";
 import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
@@ -344,6 +345,27 @@ export default class Blocks extends Service {
    */
   resolvedLayouts() {
     return _getResolvedLayouts();
+  }
+
+  /**
+   * Whether a resolved layout places the named block, at any depth. Reactive
+   * when read inside a tracked context, so a consumer re-runs when a layout
+   * gains or loses the block.
+   *
+   * @param name - The block name.
+   * @param outletName - Only check this outlet's layout; every outlet otherwise.
+   * @returns True if a resolved layout contains the block.
+   */
+  isBlockPlaced(name: string, outletName?: string): boolean {
+    for (const [outlet, record] of _getResolvedLayouts()) {
+      if (outletName && outlet !== outletName) {
+        continue;
+      }
+      if (layoutPlacesBlock(record.layout, name)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /*
@@ -822,4 +844,17 @@ export default class Blocks extends Service {
     setOwner(instance, getOwner(this)!);
     this.#conditionInstances.set(type, instance);
   }
+}
+
+function layoutPlacesBlock(
+  entries: BlockEntry[] | undefined,
+  name: string
+): boolean {
+  return (entries ?? []).some((entry) => {
+    const entryName =
+      typeof entry.block === "string"
+        ? entry.block
+        : getBlockMetadata(entry.block)?.blockName;
+    return entryName === name || layoutPlacesBlock(entry.children, name);
+  });
 }

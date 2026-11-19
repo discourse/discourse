@@ -5,6 +5,7 @@ import { trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";
 import type { ValidationErrorDetails } from "discourse/lib/blocks/-internals/validation/args";
+import { isEmptyContainerFailure } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
 import {
   entryKey,
   findAncestryPath,
@@ -327,10 +328,7 @@ export default class WireframeSelectionService extends Service {
     if (!key) {
       return {};
     }
-    const entry = validatedEntry(
-      this.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry
-    );
-    const list = entry?.__failureDetails ?? [];
+    const list = this.#failureDetails(key);
     const byField: Record<string, ValidationErrorDetails[]> = {};
     for (const d of list) {
       if (!d?.field) {
@@ -353,10 +351,7 @@ export default class WireframeSelectionService extends Service {
     if (!key) {
       return [];
     }
-    const entry = validatedEntry(
-      this.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry
-    );
-    return (entry?.__failureDetails ?? []).filter((d) => !d?.field);
+    return this.#failureDetails(key).filter((d) => !d?.field);
   }
 
   /**
@@ -832,7 +827,6 @@ export default class WireframeSelectionService extends Service {
     return Boolean(
       target.closest(".wireframe-block-chrome") ||
       target.closest(".wireframe-shell") ||
-      target.closest(".wireframe-conditions-floating-panel") ||
       target.closest(".dialog-container") ||
       target.closest(".fk-d-menu") ||
       target.closest(".fk-d-menu-modal") ||
@@ -858,6 +852,23 @@ export default class WireframeSelectionService extends Service {
    */
   registerAfterChange(fn: AfterChangeHook): void {
     this.#afterChange.push(fn);
+  }
+
+  /**
+   * The validation failures stamped on an entry. An outlet root starts out
+   * empty and the canvas already invites the first block, so its missing
+   * children aren't reported as an error.
+   *
+   * @param key - Composite key of the entry.
+   */
+  #failureDetails(key: string): ValidationErrorDetails[] {
+    const entry = validatedEntry(
+      this.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry
+    );
+    const details = entry?.__failureDetails ?? [];
+    return this.wireframeLayoutQuery.isOutletRoot(key)
+      ? details.filter((d) => !isEmptyContainerFailure(d))
+      : details;
   }
 
   /**

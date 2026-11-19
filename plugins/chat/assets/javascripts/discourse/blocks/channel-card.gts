@@ -53,6 +53,7 @@ interface ChatChannelCardBlockSignature {
  * block stays a pure renderer and the resolved channel arrives as `@data`.
  */
 @block("chat:channel-card", {
+  paletteHidden: true,
   thumbnail: ChannelCardThumbnail,
   displayName: "Chat channel",
   icon: "d-chat",

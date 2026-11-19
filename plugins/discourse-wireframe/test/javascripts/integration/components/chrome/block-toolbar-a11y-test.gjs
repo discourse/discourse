@@ -12,17 +12,17 @@ import { queryOf } from "../../../helpers/wireframe-peers";
 const OUTLET = "homepage-blocks";
 const TOOLBAR = ".wireframe-block-toolbar[role='toolbar']";
 const BTN = ".wireframe-block-toolbar__btn";
-const SELECT_PARENT = `${BTN}:has(.d-icon-arrow-turn-up)`;
-const MOVE_BACK = `${BTN}:has(.d-icon-arrow-up)`;
+const SETTINGS = `${BTN}:has(.d-icon-gear)`;
+const MORE = `${BTN}:has(.d-icon-ellipsis)`;
 const URL_INPUT = ".wireframe-block-toolbar__url-input";
 
 function outletChildren(editor) {
   return queryOf(editor).readResolvedLayout(OUTLET)?.[0]?.children ?? [];
 }
 
-// Admin plugin SCSS isn't loaded in rendering tests, so the fit tiers never hide
-// the off-tier region — these tests assert the keyboard contract (labelling,
-// roving tabindex, focus restoration), never tier-driven visibility.
+// Admin plugin SCSS isn't loaded in rendering tests, so the hover-only
+// visibility never applies — these tests assert the keyboard contract
+// (labelling, roving tabindex, focus restoration), never visibility.
 module(
   "Integration | discourse-wireframe | Component | block-toolbar a11y",
   function (hooks) {
@@ -105,25 +105,21 @@ module(
         </template>
       );
 
-      // Select-parent is the first action, so it seeds the single tab stop.
+      // The gear is the first action, so it seeds the single tab stop.
       assert
-        .dom(SELECT_PARENT)
+        .dom(SETTINGS)
         .hasAttribute("tabindex", "0", "the first button is the tab stop");
 
-      await focus(SELECT_PARENT);
-      await triggerKeyEvent(SELECT_PARENT, "keydown", "ArrowRight");
+      await focus(SETTINGS);
+      await triggerKeyEvent(SETTINGS, "keydown", "ArrowRight");
+      assert.dom(MORE).isFocused("ArrowRight moves focus to the next button");
       assert
-        .dom(MOVE_BACK)
-        .isFocused("ArrowRight moves focus to the next button");
-      assert
-        .dom(MOVE_BACK)
+        .dom(MORE)
         .hasAttribute("tabindex", "0", "the tab stop follows focus");
-      assert.dom(SELECT_PARENT).hasAttribute("tabindex", "-1");
+      assert.dom(SETTINGS).hasAttribute("tabindex", "-1");
     });
 
-    test("the select-parent button selects the block's parent (the outlet at top level)", async function (assert) {
-      // Wrap in a block-chrome so the editor's document mouseup handler treats
-      // the click as in-scope and doesn't deselect before the action runs.
+    test("a top-level block's menu offers no select-parent — its parent is the outlet", async function (assert) {
       await render(
         <template>
           <div class="wireframe-block-chrome">
@@ -137,14 +133,15 @@ module(
         </template>
       );
 
-      const outletRootKey = queryOf(this.editor).outletRootKey(OUTLET);
-      await click(SELECT_PARENT);
-
-      assert.strictEqual(
-        this.editor.wireframeSelection.selectedBlockKey,
-        outletRootKey,
-        "a top-level block's parent is the outlet root"
-      );
+      await click(MORE);
+      assert
+        .dom(".wireframe-toolbar-more-content [data-toolbar-action]")
+        .exists("the menu opens with actions");
+      assert
+        .dom(
+          ".wireframe-toolbar-more-content [data-toolbar-action='select-parent']"
+        )
+        .doesNotExist("stepping up to the outlet itself isn't offered");
     });
 
     test("an idle, unselected toolbar is hidden from assistive tech", async function (assert) {

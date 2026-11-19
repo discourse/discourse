@@ -64,6 +64,14 @@ interface LinkListSignature {
           required: true,
           ui: { label: i18n("blocks.builtin.link_list.item_label") },
         },
+        icon: {
+          type: "string",
+          pattern: ICON_NAME_PATTERN,
+          ui: {
+            control: "icon",
+            label: i18n("blocks.builtin.link_list.item_icon"),
+          },
+        },
         url: {
           type: "string",
           required: true,
@@ -71,14 +79,6 @@ interface LinkListSignature {
           ui: {
             control: "url",
             label: i18n("blocks.builtin.link_list.item_url"),
-          },
-        },
-        icon: {
-          type: "string",
-          pattern: ICON_NAME_PATTERN,
-          ui: {
-            control: "icon",
-            label: i18n("blocks.builtin.link_list.item_icon"),
           },
         },
         description: {

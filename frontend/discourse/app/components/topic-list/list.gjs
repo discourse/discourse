@@ -100,11 +100,18 @@ export default class TopicList extends Component {
       item: ItemActivityCell,
     });
 
-    return applyMutableValueTransformer(
+    const columns = applyMutableValueTransformer(
       "topic-list-columns",
       defaultColumns,
       this.#transformerContext
     ).resolve();
+
+    // Filtered after the transformer so customizations positioned relative to
+    // a hidden column still resolve.
+    const hidden = this.args.hiddenColumns;
+    return hidden?.length
+      ? columns.filter(({ key }) => !hidden.includes(key))
+      : columns;
   }
 
   get selected() {

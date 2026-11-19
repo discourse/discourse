@@ -24,24 +24,35 @@ module PageObjects
         self
       end
 
-      def save_draft
+      def save
         find(".wireframe-btn-save").click
-        find(".wireframe-review__save-draft").click
+      end
+
+      def set_status(status)
+        find(".wireframe-status-chip").click
+        find(".wireframe-status-menu__item.--#{status}").click
       end
 
       def publish
-        find(".wireframe-btn-save").click
-        find(".wireframe-review__publish").click
+        save
+        has_saved?
+        set_status(:published)
+        find(".wireframe-btn-exit").click
       end
 
-      def create_customization_component
-        find(".wireframe-btn-save").click
-        find(".wireframe-review__create-component").click
+      def rename_design(name)
+        find(".wireframe-design-title__text").click
+        find(".wireframe-design-title__input").fill_in(with: name)
+        find(".wireframe-design-title__input").send_keys(:enter)
       end
 
-      def has_publishable_target?
-        has_css?(".wireframe-target-status:not(.--blocked)") &&
-          has_no_css?(".wireframe-review__create-component")
+      def has_design_name?(name)
+        has_css?(".wireframe-design-title__text", exact_text: name)
+      end
+
+      def add_block_to_empty_outlet(block_name)
+        find(".wireframe-empty-drop-placeholder").click
+        find(".wireframe-block-picker .wireframe-block-tile[data-block-name='#{block_name}']").click
       end
 
       def has_reader?
@@ -67,9 +78,8 @@ module PageObjects
         has_css?(".wireframe-rail-resizer--right[aria-valuenow='#{width}']")
       end
 
-      def has_saved_draft?
-        has_css?(".wireframe-btn-save[data-wf-save-state='unpublished']") &&
-          has_no_css?(".wireframe-review__error")
+      def has_saved?
+        has_css?(".wireframe-saved-state") && has_no_css?(".wireframe-unsaved")
       end
 
       def has_grid?
@@ -146,14 +156,16 @@ module PageObjects
 
       def has_layout_variant_name?(name)
         has_css?(
-          "#{LAYOUT_CHROME_SELECTOR}.--selected .wireframe-block-toolbar__handle > span:first-of-type",
+          "#{LAYOUT_CHROME_SELECTOR}.--selected .wireframe-block-toolbar__name",
           exact_text: name,
         ) && has_css?(".wireframe-inspector__block-name", exact_text: name) &&
           has_css?(".wireframe-breadcrumb__segment", exact_text: name)
       end
 
       def open_outline
-        find(".wireframe-panel-switcher__entry[aria-label='Layers']").click
+        find(
+          ".wireframe-panel-switcher__sections .d-segmented-control__label:has(input[value='outline'])",
+        ).click
       end
 
       def has_layout_variant_in_outline?(name)

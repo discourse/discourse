@@ -114,7 +114,11 @@ export default class InspectorContainerArgsForm extends Component {
       if (conditional && !isFieldVisible({ conditional }, this.parentArgs)) {
         continue;
       }
-      const fields = schemaToFields(def.properties ?? {});
+      // A child's width in a Columns parent is edited in its own "Layout"
+      // group (see `InspectorForm`), so it isn't repeated here.
+      const fields = schemaToFields(def.properties ?? {}).filter(
+        (field) => !(namespace === "row" && field.name === "width")
+      );
       if (fields.length === 0) {
         continue;
       }
@@ -158,13 +162,15 @@ export default class InspectorContainerArgsForm extends Component {
       >
         <form.Section @title={{section.label}}>
           {{#each section.fields as |field|}}
-            <InspectorField
-              @disabled={{this.disabled}}
-              @field={{field}}
-              @form={{form}}
-              @onFieldSet={{fn this.onFieldSet section.namespace}}
-              @values={{section.values}}
-            />
+            {{#if (isFieldVisible field section.values)}}
+              <InspectorField
+                @disabled={{this.disabled}}
+                @field={{field}}
+                @form={{form}}
+                @onFieldSet={{fn this.onFieldSet section.namespace}}
+                @values={{section.values}}
+              />
+            {{/if}}
           {{/each}}
         </form.Section>
       </Form>

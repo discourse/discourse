@@ -18,7 +18,12 @@ class Admin::Config::CustomizeController < Admin::AdminController
     page = params[:page]&.to_i
 
     components =
-      Theme.include_basic_relations.where(component: true).order(:name).limit(PAGE_SIZE + 1)
+      Theme
+        .include_basic_relations
+        .where(component: true)
+        .where.not(id: Theme.managed_component_ids.to_a)
+        .order(:name)
+        .limit(PAGE_SIZE + 1)
 
     components = components.offset(page * PAGE_SIZE) if page && page > 0
 

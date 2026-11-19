@@ -22,16 +22,16 @@ module(
       assert.strictEqual(this.theme.activeThemeId, null);
     });
 
-    test("activeThemeIsSystem detects core (negative-id) themes", function (assert) {
-      this.theme.setActiveTheme(-1);
-      assert.true(this.theme.activeThemeIsSystem);
+    test("hasDesign is false until the session is bound to a design component", function (assert) {
       this.theme.setActiveTheme(7);
-      assert.false(this.theme.activeThemeIsSystem);
-    });
-
-    test("activeThemeIsSystem is false with no active theme", function (assert) {
-      this.theme.reset();
-      assert.false(this.theme.activeThemeIsSystem);
+      assert.false(this.theme.hasDesign);
+      this.theme.registerDesign(8, "Spring launch");
+      this.theme.setActiveTheme(8);
+      assert.true(this.theme.hasDesign);
+      assert.strictEqual(
+        this.theme.activeThemeTarget.themeName,
+        "Spring launch"
+      );
     });
   }
 );

@@ -73,6 +73,9 @@ import type WireframeLayoutQueryService from "discourse/plugins/discourse-wirefr
 import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
+// Mirrors the `@container` threshold in the layout stylesheet.
+const COLLAPSE_THRESHOLD_REM = 40;
+
 /**
  * The five-zone hit-test result within a cell. Center maps to a rect drop;
  * the four edges map to insert lines. The collapsed hit-test only ever emits
@@ -686,7 +689,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
   }
 
   /**
-   * `true` when the layout is currently below its `autoCollapse`
+   * `true` when the layout is currently below the collapse
    * width threshold — i.e. the universal `@container` rule in
    * `wireframe.scss` has fired and each cell now spans all
    * columns via `grid-column: 1 / -1`. The grid container itself
@@ -704,10 +707,6 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    * `wireframe.scss` because there's no clean way to read a
    * The `@container` max-width from JS; if either constant changes,
    * update both sides.
-   *
-   * Returns `false` when an ancestor carries `.--force-expanded`
-   * (the editor-only override restores per-author placements so the
-   * track-math path is correct).
    */
   get isCollapsed() {
     const cache = this.#activeDragContext();
@@ -923,7 +922,6 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
         kind: "new",
         blockName: blockEntry.blockName,
         defaultArgs: { ...blockEntry.defaultArgs },
-        paletteId: blockEntry.id,
       },
     });
   }
@@ -1099,17 +1097,11 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     if (!gridEl) {
       return false;
     }
-    if (gridEl.closest(".--force-expanded")) {
-      return false;
-    }
-    const autoCollapse = this.gridEntry?.args?.autoCollapse ?? "default";
-    if (autoCollapse === "never") {
-      return false;
-    }
     const remPx =
       parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-    const thresholdRem = autoCollapse === "compact" ? 15 : 40;
-    return gridEl.getBoundingClientRect().width < thresholdRem * remPx;
+    return (
+      gridEl.getBoundingClientRect().width < COLLAPSE_THRESHOLD_REM * remPx
+    );
   }
 
   /**
@@ -1316,7 +1308,6 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
             kind: "new",
             blockName: source.data?.blockName,
             defaultArgs: source.data?.defaultArgs,
-            paletteId: source.data?.paletteId,
           }
         : { kind: "existing", key: source.data?.blockKey };
 

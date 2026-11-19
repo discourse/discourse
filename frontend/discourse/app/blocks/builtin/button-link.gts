@@ -39,6 +39,11 @@ interface ButtonLinkSignature {
         label: i18n("blocks.builtin.button_link.label"),
       },
     },
+    icon: {
+      type: "string",
+      pattern: ICON_NAME_PATTERN,
+      ui: { control: "icon", label: i18n("blocks.builtin.button_link.icon") },
+    },
     href: {
       type: "string",
       required: true,
@@ -53,11 +58,6 @@ interface ButtonLinkSignature {
         control: "radio-group",
         label: i18n("blocks.builtin.button_link.variant"),
       },
-    },
-    icon: {
-      type: "string",
-      pattern: ICON_NAME_PATTERN,
-      ui: { control: "icon", label: i18n("blocks.builtin.button_link.icon") },
     },
   },
   constraints: {

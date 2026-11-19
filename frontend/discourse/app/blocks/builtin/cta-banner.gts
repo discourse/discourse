@@ -49,11 +49,6 @@ interface CtaBannerSignature {
   description:
     "A banner with title, body text, optional CTA button, and optional dismiss.",
   args: {
-    icon: {
-      type: "string",
-      pattern: ICON_NAME_PATTERN,
-      ui: { control: "icon", label: i18n("blocks.builtin.cta_banner.icon") },
-    },
     title: {
       type: "richInline",
       required: true,
@@ -62,6 +57,11 @@ interface CtaBannerSignature {
         schema: "heading",
         label: i18n("blocks.builtin.cta_banner.title"),
       },
+    },
+    icon: {
+      type: "string",
+      pattern: ICON_NAME_PATTERN,
+      ui: { control: "icon", label: i18n("blocks.builtin.cta_banner.icon") },
     },
     content: {
       type: "richInline",

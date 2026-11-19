@@ -1,0 +1,96 @@
+/* The text and search reuse the site welcome banner's `welcome-banner__*`
+   styles; this adds the block's own image backdrop. */
+
+.d-block-welcome-banner {
+  position: relative;
+  width: 100%;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+
+    /* The root can't clip: the search results drop below the banner. */
+    overflow: hidden;
+    border-radius: var(--d-border-radius);
+  }
+
+  &__content {
+    position: relative;
+  }
+
+  /* Themes may hard-code the title's alignment, so the block applies the
+     variable itself. The title and search input are centered boxes, so their
+     margins move them to the same side. */
+
+  .welcome-banner__title,
+  .welcome-banner__subheader {
+    text-align: var(--d-welcome-banner-text-alignment);
+  }
+
+  /* Sizes are only set when chosen, so the theme's own sizing (including
+     its responsive steps) applies otherwise. The subheader sits inside the
+     title, so its sizes are in rem to stay independent of the header. */
+
+  &.--heading-small .welcome-banner__title {
+    font-size: var(--font-up-3);
+  }
+
+  &.--heading-medium .welcome-banner__title {
+    font-size: var(--font-up-4);
+  }
+
+  &.--heading-large .welcome-banner__title {
+    font-size: var(--font-up-5);
+  }
+
+  &.--heading-x-large .welcome-banner__title {
+    font-size: var(--font-up-6);
+  }
+
+  &.--subheading-small .welcome-banner__subheader {
+    font-size: var(--font-down-1-rem);
+  }
+
+  &.--subheading-medium .welcome-banner__subheader {
+    font-size: var(--font-0-rem);
+  }
+
+  &.--subheading-large .welcome-banner__subheader {
+    font-size: var(--font-up-1-rem);
+  }
+
+  &.--subheading-x-large .welcome-banner__subheader {
+    font-size: var(--font-up-2-rem);
+  }
+
+  &.--align-left {
+    --d-welcome-banner-text-alignment: left;
+
+    .welcome-banner__title,
+    .welcome-banner__search-menu {
+      margin-left: 0;
+      margin-right: auto;
+    }
+  }
+
+  &.--align-right {
+    --d-welcome-banner-text-alignment: right;
+
+    .welcome-banner__title,
+    .welcome-banner__search-menu {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+
+  .search-menu-panel {
+    --d-welcome-banner-height: calc(
+      var(--font-up-6) + var(--d-welcome-banner-padding-top) +
+        var(--d-welcome-banner-padding-bottom) +
+        var(--d-welcome-banner-title-margin-bottom) + 4em
+    );
+    max-height: calc(
+      100vh - var(--header-offset) - var(--d-welcome-banner-height)
+    );
+  }
+}

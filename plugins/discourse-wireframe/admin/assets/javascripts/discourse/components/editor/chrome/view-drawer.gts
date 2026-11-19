@@ -54,6 +54,9 @@ const dCloseOnClickOutside =
     };
   }>;
 
+/** The simulated viewer and viewport controls aren't offered yet. */
+const SHOW_SIMULATION = false;
+
 interface ViewDrawerSignature {
   /** Drawer state and actions owned by the editor shell. */
   Args: {
@@ -120,7 +123,9 @@ const ViewDrawer: TemplateOnlyComponent<ViewDrawerSignature> = <template>
             {{i18n "wireframe.chrome.dim_non_editable_description"}}
           </p>
         </div>
-        <SimulationControls />
+        {{#if SHOW_SIMULATION}}
+          <SimulationControls />
+        {{/if}}
       </div>
     </div>
   {{/if}}

@@ -201,4 +201,21 @@ module("Unit | Lib | friendly-error-message", function (hooks) {
       "unknown-entry-key maps to a friendly, key-naming message"
     );
   });
+
+  test("friendlyErrorMessage tells an empty container apart from disallowed children", function (assert) {
+    assert.strictEqual(
+      friendlyErrorMessage({
+        code: ERROR_CODES.INVALID_CHILDREN,
+        expected: { acceptsChildren: true, requiresChildren: true },
+      }),
+      "Add at least one block inside."
+    );
+    assert.strictEqual(
+      friendlyErrorMessage({
+        code: ERROR_CODES.INVALID_CHILDREN,
+        expected: { acceptsChildren: false },
+      }),
+      "Block can't have these children."
+    );
+  });
 });

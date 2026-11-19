@@ -122,18 +122,16 @@ module("Integration | Blocks | carousel", function (hooks) {
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     const dots = () => [...document.querySelectorAll(".d-block-carousel__dot")];
-    assert
-      .dom(dots()[0])
-      .hasClass("is-active", "the first slide starts active");
+    assert.dom(dots()[0]).hasClass("--active", "the first slide starts active");
 
     await click(".d-block-carousel__nav--next");
     assert
       .dom(dots()[1])
-      .hasClass("is-active", "next pages forward to the second slide");
+      .hasClass("--active", "next pages forward to the second slide");
 
     await click(dots()[2]);
     assert
       .dom(dots()[2])
-      .hasClass("is-active", "clicking a dot pages to that slide");
+      .hasClass("--active", "clicking a dot pages to that slide");
   });
 });

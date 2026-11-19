@@ -65,6 +65,8 @@ interface InspectorSegmentedFieldSignature {
     optionIcons?: Record<string, string> | null;
     /** Optional display label per option value, used with `@options`. */
     optionLabels?: Record<string, string> | null;
+    /** Always render the dropdown, whatever the width or option count. */
+    dropdown?: boolean;
   };
   /** Root segmented control or dropdown element. */
   Element: HTMLElement;
@@ -180,11 +182,12 @@ export default class InspectorSegmentedField extends Component<InspectorSegmente
   }
 
   /**
-   * `true` when there are too many options for a segmented row no matter how
-   * wide the field is; width-driven folding is handled by `DFitSwap` instead.
+   * `true` when the dropdown is forced, or there are too many options for a
+   * segmented row no matter how wide the field is; width-driven folding is
+   * handled by `DFitSwap` instead.
    */
   get exceedsSegmentMax(): boolean {
-    return this.items.length > SEGMENT_MAX;
+    return this.args.dropdown || this.items.length > SEGMENT_MAX;
   }
 
   /**

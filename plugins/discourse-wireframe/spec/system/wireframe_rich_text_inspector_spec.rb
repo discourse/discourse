@@ -28,7 +28,7 @@ describe "Wireframe inspector rich-text control" do
   after { Theme.clear_cache! }
 
   it "mounts an editable rich-text editor in the inspector seeded with the value" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
 
     # One click selects the heading; the inspector then shows its fields,
@@ -38,21 +38,8 @@ describe "Wireframe inspector rich-text control" do
     expect(page).to have_css(RICH_EDITOR, text: "Hello world")
   end
 
-  it "shows the block preview in the inspector header" do
-    visit("/latest")
-    editor.enter
-    find(".d-block-heading").click
-
-    # The inspector header shows a preview of the selected block above its name.
-    expect(page).to have_css(".wireframe-inspector__thumbnail")
-
-    # Desktop only — the wireframe editor is a desktop admin tool and isn't
-    # operable at mobile width, so the marker skips the mobile capture leg.
-    screenshot_marker(label: "wireframe-inspector-preview", only: :desktop)
-  end
-
   it "commits an inspector edit back to the block on blur" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     find(".d-block-heading").click
 
@@ -69,7 +56,7 @@ describe "Wireframe inspector rich-text control" do
   end
 
   it "bolds a selection from the inspector and round-trips to a <strong> on the canvas" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     find(".d-block-heading").click
 

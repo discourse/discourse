@@ -30,6 +30,7 @@ interface TagBannerSignature {
  * lazily from the `tag-info` endpoint.
  */
 @block("tag-banner", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/tag-banner"),
   displayName: "Tag banner",
   icon: "tag",

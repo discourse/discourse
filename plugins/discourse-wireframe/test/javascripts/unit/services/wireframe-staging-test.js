@@ -6,20 +6,19 @@ import { module, test } from "qunit";
 // workflow. These tests cover the commit-orchestration logic — publish-result
 // processing, the stale-version conflict prompt, and the git escape-hatch error
 // formatting — which previously had no direct unit coverage (it was exercised
-// only through the orchestrator). The draft-layer materialize/hydrate paths are covered
+// only through the orchestrator). The draft-layer materialize paths are covered
 // end-to-end by the navigation + service integration tests.
 
 const DEFAULTS = {
   "service:modal": () => ({ show: async () => ({}) }),
   "service:wireframe-image-composition": () => ({ target: null }),
-  "service:wireframe-inspector-args": () => ({ hasPending: false }),
-  "service:wireframe-inplace-text": () => ({ blockKey: null }),
   "service:wireframe-edit-mode": () => ({ active: true }),
   "service:wireframe-drafts": () => ({
-    deleteDraft: async () => {},
-    saveDraftOutlet: async () => {},
-    fetchDrafts: async () => [],
-    companionId: async () => null,
+    fetchDesigns: async () => ({
+      installedId: null,
+      currentId: null,
+      designs: [],
+    }),
   }),
   "service:wireframe-layout-query": () => ({
     readResolvedLayout: () => [],
@@ -29,6 +28,10 @@ const DEFAULTS = {
     activeThemeId: 5,
     defaultThemeId: 5,
     activeThemeTarget: { publishable: true },
+    hasDesign: true,
+    parentThemeId: 5,
+    registerDesign() {},
+    setActiveTheme() {},
     outletOwner: () => ({ themeId: 5, isGit: false }),
   }),
   "service:wireframe-mutation-engine": () => ({
@@ -45,9 +48,8 @@ const DEFAULTS = {
     publish: async () => ({ saved: [], errors: [] }),
     publishOutlet: async () => ({ saved: [], errors: [] }),
     overwriteOutlet: async () => true,
-    exportOutlet: async () => {},
-    duplicateTheme: async () => ({ theme_id: 1 }),
-    createCustomizationComponent: async () => ({ theme_id: 1 }),
+    createDesign: async () => ({ theme_id: 1 }),
+    installDesign: async () => {},
     resetToDefault: async () => {},
     tokenFor: () => "",
   }),
@@ -68,25 +70,32 @@ module(
   function (hooks) {
     setupTest(hooks);
 
-    test("openReviewDrawer / closeReviewDrawer toggle the drawer", function (assert) {
-      const staging = buildStaging(getOwner(this));
-      assert.false(staging.reviewDrawerOpen);
-      staging.openReviewDrawer();
-      assert.true(staging.reviewDrawerOpen);
-      staging.closeReviewDrawer();
-      assert.false(staging.reviewDrawerOpen);
-    });
-
-    test("canOpenReview is true when the engine is dirty", function (assert) {
+    test("createDesign saves the new layout as a draft", async function (assert) {
+      const registered = [];
+      const created = [];
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-mutation-engine": { isDirty: true },
+        "service:wireframe-publish-target": {
+          registerDesign: (...args) => registered.push(args),
+        },
+        "service:wireframe-live-layout": {
+          createDesign: async (...args) => {
+            created.push(args);
+            return { theme_id: 9 };
+          },
+        },
       });
-      assert.true(staging.canOpenReview);
-    });
-
-    test("canOpenReview is false with nothing dirty and no unsaved drafts", function (assert) {
-      const staging = buildStaging(getOwner(this));
-      assert.false(staging.canOpenReview);
+      const result = await staging.createDesign("Spring");
+      assert.deepEqual(result, { themeId: 9 });
+      assert.deepEqual(
+        registered,
+        [[9, "Spring", { inUse: false }]],
+        "a new layout is registered as not used by the theme"
+      );
+      assert.strictEqual(
+        created[0][2]?.install,
+        undefined,
+        "creating a layout does not ask to install it"
+      );
     });
 
     test("publishEditedOutlets returns null on a clean publish", async function (assert) {
@@ -167,43 +176,51 @@ module(
       assert.false(overwritten, "cancel leaves the outlet edited for the user");
     });
 
-    test("exportOutlet returns null on success", async function (assert) {
-      const staging = buildStaging(getOwner(this));
-      assert.strictEqual(await staging.exportOutlet("homepage-blocks"), null);
-    });
-
-    test("exportOutlet returns the server's error as a banner on failure", async function (assert) {
+    test("createDesign returns the new design's id and binds the session to it", async function (assert) {
+      let boundTo;
       const staging = buildStaging(getOwner(this), {
         "service:wireframe-live-layout": {
-          exportOutlet: async () => {
-            throw { jqXHR: { responseJSON: { errors: ["no repo"] } } };
+          createDesign: async (themeId, name) => {
+            assert.strictEqual(themeId, 5);
+            assert.strictEqual(name, "Spring launch");
+            return { theme_id: 9 };
           },
         },
-      });
-      assert.strictEqual(
-        await staging.exportOutlet("homepage-blocks"),
-        "no repo"
-      );
-    });
-
-    test("duplicateForEditing returns the new theme id on success", async function (assert) {
-      const staging = buildStaging(getOwner(this), {
-        "service:wireframe-live-layout": {
-          duplicateTheme: async () => ({ theme_id: 9 }),
+        "service:wireframe-publish-target": {
+          setActiveTheme: (id) => (boundTo = id),
         },
       });
-      assert.deepEqual(await staging.duplicateForEditing(), { themeId: 9 });
+      assert.deepEqual(await staging.createDesign("Spring launch"), {
+        themeId: 9,
+      });
+      assert.strictEqual(boundTo, 9);
     });
 
-    test("duplicateForEditing returns an error message on failure", async function (assert) {
+    test("createDesign returns an error message on failure", async function (assert) {
       const staging = buildStaging(getOwner(this), {
         "service:wireframe-live-layout": {
-          duplicateTheme: async () => {
+          createDesign: async () => {
             throw { jqXHR: { responseJSON: { errors: ["nope"] } } };
           },
         },
       });
-      assert.deepEqual(await staging.duplicateForEditing(), { error: "nope" });
+      assert.deepEqual(await staging.createDesign("Spring launch"), {
+        error: "nope",
+      });
+    });
+
+    test("switchDesign returns null on success and the server error on failure", async function (assert) {
+      const ok = buildStaging(getOwner(this));
+      assert.strictEqual(await ok.switchDesign(9), null);
+
+      const failing = buildStaging(getOwner(this), {
+        "service:wireframe-live-layout": {
+          installDesign: async () => {
+            throw { jqXHR: { responseJSON: { errors: ["gone"] } } };
+          },
+        },
+      });
+      assert.strictEqual(await failing.switchDesign(9), "gone");
     });
   }
 );

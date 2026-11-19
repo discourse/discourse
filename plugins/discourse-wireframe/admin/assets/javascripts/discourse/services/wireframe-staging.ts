@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { trackedMap } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import {
@@ -9,22 +8,19 @@ import {
   _setLayoutLayer,
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
-import type { LayoutEntry } from "discourse/blocks/types";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import type ModalService from "discourse/services/modal";
 import { i18n } from "discourse-i18n";
 import ConflictModal from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/conflict-modal";
-import StaleDraftModal from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/stale-draft-modal";
 import {
   cloneLayoutForDraft,
   normalizeImplicitChildren,
-  serializeLayoutForSave,
   wrapAsOutletRoot,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
+import { isInRenderedStack, previewDesign } from "../lib/design-preview";
 import type WireframeDraftsService from "./wireframe-drafts";
 import type WireframeEditModeService from "./wireframe-edit-mode";
 import type WireframeImageCompositionService from "./wireframe-image-composition";
-import type WireframeInplaceTextService from "./wireframe-inplace-text";
-import type WireframeInspectorArgsService from "./wireframe-inspector-args";
 import WireframeLayoutQueryService, {
   OUTLET_STATE,
 } from "./wireframe-layout-query";
@@ -32,18 +28,12 @@ import type WireframeLiveLayoutService from "./wireframe-live-layout";
 import type WireframeMutationEngineService from "./wireframe-mutation-engine";
 import type WireframePublishTargetService from "./wireframe-publish-target";
 
-/** A persisted per-user draft, as returned by the drafts I/O peer. */
-type PersistedDraft = Awaited<
-  ReturnType<WireframeDraftsService["fetchDrafts"]>
->[number];
-
 /**
- * The outcome of a Git-escape-hatch action (create companion component /
- * duplicate theme): the new theme id to reload onto, or an error message for
+ * The outcome of creating a design: the new design's id, or an error message for
  * the banner. Exactly one field is populated.
  */
-type GitActionResult = {
-  /** Newly created destination theme, when the action succeeds. */
+type DesignActionResult = {
+  /** Newly created design, when the action succeeds. */
   themeId?: number;
   /** Message shown when the action fails. */
   error?: string;
@@ -118,22 +108,16 @@ type AjaxError = {
  * publish-review surfaces that inject it directly.
  */
 export default class WireframeStagingService extends Service {
-  /** Presents conflict and stale-draft decisions to the editor. */
+  /** Presents conflict decisions to the editor. */
   @service declare modal: ModalService;
 
   @service declare wireframeImageComposition: WireframeImageCompositionService;
 
-  /** Flushes pending inspector edits before staging operations. */
-  @service declare wireframeInspectorArgs: WireframeInspectorArgsService;
-
-  /** Reads and writes the current user's persisted drafts. */
+  /** Looks up the theme's saved layouts. */
   @service declare wireframeDrafts: WireframeDraftsService;
 
   /** Tracks mutations, dirty outlets, snapshots, and undo state. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
-
-  /** Commits active in-place text edits before staging operations. */
-  @service declare wireframeInplaceText: WireframeInplaceTextService;
 
   /** Resolves editable outlets, layout entries, and block metadata. */
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
@@ -148,13 +132,6 @@ export default class WireframeStagingService extends Service {
   @service declare wireframePublishTarget: WireframePublishTargetService;
 
   /**
-   * Whether the publish review surface (the save/publish drawer) is open. Held
-   * here, not on a single chrome component, because several entry points open it
-   * (the toolbar Save button, the publish-target indicator, the blocked callout).
-   */
-  @tracked reviewDrawerOpen = false;
-
-  /**
    * Whether the on-entry companion lookup is still in flight. Set true at
    * `beginSession` only when the bound theme can't be published to directly, then
    * cleared once the lookup settles (re-pointing `wireframePublishTarget.activeThemeId` to
@@ -165,63 +142,12 @@ export default class WireframeStagingService extends Service {
   @tracked publishTargetResolving = false;
 
   /**
-   * The serialized layout of each outlet's last *persisted draft* — set when a
-   * saved draft is hydrated on entry and after each successful draft save, and
-   * cleared when the draft is discarded, reset, or published. This is the
-   * baseline for "are there unsaved draft edits?" — distinct from the engine's
-   * pristine at-entry layout (used for discard and the publish-diff). It
-   * lets the editor tell "the canvas differs from my saved draft" even when the
-   * canvas happens to match the published layout. A `trackedMap` so the
-   * `hasUnsavedDraftEdits` getter re-evaluates when a baseline changes.
-   */
-  #persistedDraftLayouts = trackedMap<string, string>();
-
-  /**
    * Bumped on every `beginSession()` and `endSession()`. The async draft
    * hydration captures the value at begin time and bails if it no longer matches
    * — so a hydration whose fetch resolves after the user exited (or re-entered)
    * never writes into a closed or freshly-reopened session.
    */
   #generation = 0;
-
-  /**
-   * Outlets whose persisted draft was based on an older live version than what
-   * is published now, queued at hydration time for a one-at-a-time stale-draft
-   * prompt (keep the draft, or start fresh from the live layout).
-   */
-  #staleDraftQueue: PersistedDraft[] = [];
-
-  /**
-   * Whether any outlet's current layout differs from its last persisted draft —
-   * i.e. there are edits that Save draft would write. Computed by comparing the
-   * resolved layout against the persisted-draft baseline (or, for an outlet with
-   * no saved draft yet, the published/underlying layout). Deliberately NOT derived
-   * from `isDirty`: an outlet edited back to match the *published* layout drops out
-   * of the published-diff bookkeeping, yet its *saved draft* still differs and must
-   * remain saveable.
-   */
-  get hasUnsavedDraftEdits(): boolean {
-    const outlets = new Set([
-      ...this.wireframeMutationEngine.editedOutletNames(),
-      ...this.#persistedDraftLayouts.keys(),
-    ]);
-    for (const outletName of outlets) {
-      if (this.#outletHasUnsavedDraftEdits(outletName)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Whether the toolbar's Save control should be enabled — there is something to
-   * publish (`isDirty`, i.e. the canvas differs from the published layout) OR an
-   * unsaved draft change to write. The two are distinct: a draft reverted to match
-   * the published layout is not publishable but still has a draft to save.
-   */
-  get canOpenReview(): boolean {
-    return this.wireframeMutationEngine.isDirty || this.hasUnsavedDraftEdits;
-  }
 
   /**
    * Opens the staging session: seeds an editable `session-draft` layer for every
@@ -232,18 +158,16 @@ export default class WireframeStagingService extends Service {
     // New session generation: invalidates any draft hydration still in flight
     // from a previous session so it can't write into this one.
     const generation = ++this.#generation;
-    // A theme that can't be published to directly may have a companion to
-    // retarget to; suppress the blocked callout until the after-render lookup
-    // settles.
+    // The theme in use may have an installed design to retarget to; hold the
+    // "unsaved design" state until the after-render lookup settles.
     this.publishTargetResolving =
       this.wireframePublishTarget.activeThemeTarget?.publishable === false;
     this.#materializeAllDrafts();
 
-    // Seed each outlet from the live layout first (above) so the canvas paints
-    // immediately and entry stays synchronous; then, after render, overlay any
-    // persisted per-user draft. The fetch is fire-and-forget and
-    // generation-guarded — it never blocks entry and bails if the session ends.
-    schedule("afterRender", this, this.#hydrateDrafts, generation);
+    // Re-point to a layout the theme already has once the canvas has painted, so
+    // default outlets, the indicator and saving all target it. Fire-and-forget and
+    // generation-guarded: it never blocks entry and bails if the session ends.
+    schedule("afterRender", this, this.#resolveCompanionTarget, generation);
   }
 
   /**
@@ -251,9 +175,8 @@ export default class WireframeStagingService extends Service {
    * engine's edit state and drops every session-draft layer this seeded, so the
    * underlying theme/code-default layer resolves again — in-memory mutations live
    * ONLY on draft entries, so dropping the drafts discards them cleanly. Then
-   * bumps the generation (which invalidates any draft hydration still in flight),
-   * drops the stale-draft queue and the persisted-draft baseline, and resets the
-   * review-drawer and publish-target-resolving flags. Driven one-way by the
+   * bumps the generation (which invalidates any lookup still in flight) and
+   * resets the publish-target-resolving flag. Driven one-way by the
    * orchestrator's `exit()`.
    */
   endSession(): void {
@@ -269,9 +192,6 @@ export default class WireframeStagingService extends Service {
     }
     this.wireframeLayoutQuery.clearOutletRoots();
     this.#generation++;
-    this.#staleDraftQueue.length = 0;
-    this.#persistedDraftLayouts.clear();
-    this.reviewDrawerOpen = false;
     this.publishTargetResolving = false;
   }
 
@@ -287,47 +207,21 @@ export default class WireframeStagingService extends Service {
     if (!this.wireframeEditMode.active) {
       return;
     }
-    const materialized = this.#materializeAllDrafts();
-    // Only refetch persisted drafts when a fresh outlet was actually seeded —
-    // navigating between pages that share outlets shouldn't trigger a fetch.
-    if (materialized > 0) {
-      this.#hydrateDrafts(this.#generation);
-    }
-  }
-
-  /** Opens the publish review surface. */
-  @action
-  openReviewDrawer(): void {
-    this.reviewDrawerOpen = true;
-  }
-
-  /** Closes the publish review surface. */
-  @action
-  closeReviewDrawer(): void {
-    this.reviewDrawerOpen = false;
+    this.#materializeAllDrafts();
   }
 
   /**
    * Discards one outlet's unsaved edits: rolls its session draft back to the
-   * pristine pre-edit layout (in memory) and deletes the caller's persisted
-   * draft for it. Does NOT touch the live field — the published layout is
-   * unaffected.
+   * pristine pre-edit layout (in memory). Does NOT touch the saved layout.
    *
    * @param outletName - Outlet whose draft edits should be discarded.
    */
   @action
   async discardOutlet(outletName: string): Promise<void> {
     this.wireframeMutationEngine.rollbackOutletInMemory(outletName);
-    this.#persistedDraftLayouts.delete(outletName);
-    // Drop the outlet's own undo/redo history so a later undo can't resurrect a
-    // draft we just discarded.
+    // Drop the outlet's own undo/redo history so a later undo can't resurrect an
+    // edit we just discarded.
     this.wireframeMutationEngine.dropUndoEntriesForOutlet(outletName);
-    const themeId =
-      this.wireframePublishTarget.outletOwner(outletName).themeId ??
-      this.wireframePublishTarget.defaultThemeId;
-    if (themeId != null) {
-      await this.wireframeDrafts.deleteDraft(themeId, outletName);
-    }
   }
 
   /**
@@ -351,8 +245,8 @@ export default class WireframeStagingService extends Service {
    * Resets a published outlet to its default: deletes the live `block_layout`
    * field (via the live-layout service), drops the caller's draft, clears the
    * local theme + session-draft layers so the underlying code default resolves,
-   * then re-seeds a fresh editable draft from it. Only valid for a PUBLISHED
-   * outlet whose owner is not Git-managed.
+   * then re-seeds a fresh editable draft from it. Only valid for an outlet
+   * published on the session's own design.
    *
    * @param outletName - Published outlet to reset to its underlying default.
    * @returns false when the outlet isn't eligible.
@@ -363,22 +257,19 @@ export default class WireframeStagingService extends Service {
     if (
       this.wireframeLayoutQuery.outletState(outletName) !==
         OUTLET_STATE.PUBLISHED ||
-      owner.isGit ||
-      owner.themeId == null
+      !this.wireframePublishTarget.hasDesign ||
+      owner.themeId !== this.wireframePublishTarget.activeThemeId
     ) {
       return false;
     }
     await this.wireframeLiveLayout.resetToDefault(owner.themeId, outletName);
-    await this.wireframeDrafts.deleteDraft(owner.themeId, outletName);
 
     // The live field and theme layer are gone; clear our session draft and edit
     // bookkeeping for this outlet so it resolves to the underlying default, then
     // re-seed a clean editable draft from that default (matching a fresh enter).
     _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
-    // Drop the engine's baseline + edit bookkeeping for this outlet; the
-    // persisted-draft baseline is owned here, cleared here.
+    // Drop the engine's baseline + edit bookkeeping for this outlet.
     this.wireframeMutationEngine.dropOutlet(outletName);
-    this.#persistedDraftLayouts.delete(outletName);
     this.#materializeAllDrafts();
     return true;
   }
@@ -421,185 +312,92 @@ export default class WireframeStagingService extends Service {
   }
 
   /**
-   * Saves every outlet with unsaved draft edits as a private draft — the toolbar's
-   * global Save draft. Drafts never go live. Iterates the outlets whose current
-   * layout differs from their persisted draft (not just the published-diff set):
-   * an outlet edited back to match the published layout is dropped from the
-   * published-diff bookkeeping but its saved draft still differs, so it must be
-   * written. A per-outlet failure is collected rather than thrown, so one bad
-   * outlet doesn't abort drafting the rest.
+   * Creates a named design on the theme in use and binds the session to it, so
+   * the next publish writes there. By default it starts empty and the edits are
+   * published afterwards; with `withEdits` it is seeded with the edited outlets,
+   * for a design created to hold a copy of the current work.
    *
-   * @returns a banner message listing any failures, or null on success.
+   * @param name - Name the author gave the design.
+   * @param options - Creation options.
+   *   - `withEdits` - Seed the design with the edited outlets' drafts.
+   * @returns The new design's id, or an error message for the banner.
    */
   @action
-  async saveAllEditedDrafts(): Promise<string | null> {
-    if (this.wireframeImageComposition.target) {
-      return i18n("wireframe.inspector.image.finish_adjustment");
+  async createDesign(
+    name: string,
+    {
+      withEdits = false,
+    }: {
+      /** Whether to seed the design with the edited outlets' drafts. */
+      withEdits?: boolean;
+    } = {}
+  ): Promise<DesignActionResult> {
+    const parentId = this.wireframePublishTarget.parentThemeId;
+    if (parentId == null) {
+      return { error: i18n("wireframe.design.create_failed") };
     }
-    const errors: string[] = [];
-    const outlets = new Set([
-      ...this.wireframeMutationEngine.editedOutletNames(),
-      ...this.#persistedDraftLayouts.keys(),
-    ]);
-    for (const outletName of outlets) {
-      if (!this.#outletHasUnsavedDraftEdits(outletName)) {
-        continue;
-      }
-      try {
-        await this.saveDraftOutlet(outletName);
-      } catch (error) {
-        errors.push(`${outletName}: ${this.#describeSaveError(error)}`);
-      }
-    }
-    if (errors.length === 0) {
-      // Every saved outlet advanced its draft baseline, so Save draft reads as
-      // clean until the next change.
-      return null;
-    }
-    return errors.join("; ");
-  }
-
-  /**
-   * Saves a single outlet as a private, never-live draft (the inspector's Save
-   * draft). The outlet stays edited — a draft doesn't go live.
-   *
-   * @param outletName - Outlet whose current draft should be persisted.
-   */
-  @action
-  async saveDraftOutlet(outletName: string): Promise<void> {
-    if (this.wireframeImageComposition.target) {
-      throw new Error(i18n("wireframe.inspector.image.finish_adjustment"));
-    }
-    const themeId = this.wireframePublishTarget.activeThemeId;
-    if (themeId == null) {
-      throw new Error(i18n("generic_error"));
-    }
-    // The live-layout layer owns the version-token map; read the baseline token
-    // here and hand it to the draft-I/O leaf so that leaf needn't depend on the
-    // live-layout service (keeps the peer graph acyclic).
-    await this.wireframeDrafts.saveDraftOutlet(
-      themeId,
-      outletName,
-      this.wireframeLiveLayout.tokenFor(themeId, outletName)
-    );
-    // The persisted draft now matches the canvas — advance the baseline so the
-    // outlet reads as having no unsaved draft edits until the next change.
-    this.#persistedDraftLayouts.set(
-      outletName,
-      this.#serializeBaseline(
-        this.wireframeLayoutQuery.readResolvedLayout(outletName)
-      )
-    );
-  }
-
-  /**
-   * Exports one outlet's layout as a downloadable repo file (the Git escape
-   * hatch for committing upstream). Exports the current draft when the outlet
-   * has edits, otherwise the live field.
-   *
-   * @param outletName - Outlet whose layout should be downloaded.
-   * @returns an error message for the banner, or null on success.
-   */
-  @action
-  async exportOutlet(outletName: string): Promise<string | null> {
-    const themeId =
-      this.wireframePublishTarget.outletOwner(outletName).themeId ??
-      this.wireframePublishTarget.defaultThemeId;
-    if (themeId == null) {
-      return this.#gitActionError(
-        new Error("No theme owns this outlet"),
-        "wireframe.outlet.export_failed"
+    try {
+      const { theme_id } = await this.wireframeLiveLayout.createDesign(
+        parentId,
+        name,
+        { withEdits }
       );
+      // A new layout starts as a draft: saved, but not used by the theme.
+      this.wireframePublishTarget.registerDesign(theme_id, name, {
+        inUse: false,
+      });
+      if (!withEdits) {
+        this.wireframePublishTarget.setActiveTheme(theme_id);
+      }
+      return { themeId: theme_id };
+    } catch (error) {
+      return {
+        error: this.#designActionError(error, "wireframe.design.create_failed"),
+      };
+    }
+  }
+
+  /**
+   * Renames the session's design. Before the design exists the name is only
+   * remembered, and used when it is created on the first publish.
+   *
+   * @param name - The new name.
+   * @returns An error message for the banner, or null on success.
+   */
+  @action
+  async renameDesign(name: string): Promise<string | null> {
+    const target = this.wireframePublishTarget.activeThemeTarget;
+    if (!target?.publishable) {
+      this.wireframePublishTarget.setPendingDesignName(name);
+      return null;
     }
     try {
-      await this.wireframeLiveLayout.exportOutlet(themeId, outletName, {
-        useDraft: this.wireframeMutationEngine.isOutletEdited(outletName),
-      });
+      await this.wireframeLiveLayout.renameDesign(target.themeId, name);
+      this.wireframePublishTarget.registerDesign(target.themeId, name);
       return null;
     } catch (error) {
-      return this.#gitActionError(error, "wireframe.outlet.export_failed");
+      return this.#designActionError(error, "wireframe.design.rename_failed");
     }
   }
 
   /**
-   * Creates (or reuses) a local customization component for the active Git theme
-   * carrying all edited outlets' drafts. Returns the component's theme id (the
-   * caller reloads so its override takes effect) or an error message.
+   * Installs one of the theme's designs. Returns an error message, or null on
+   * success; the caller reloads so the design's layouts take effect.
+   *
+   * @param designId - ID of the design to install.
    */
   @action
-  async createCustomizationComponent(): Promise<GitActionResult> {
-    const themeId = this.wireframePublishTarget.activeThemeId;
-    if (themeId == null) {
-      return {
-        error: i18n("wireframe.outlet.create_component_failed"),
-      };
+  async switchDesign(designId: number): Promise<string | null> {
+    const parentId = this.wireframePublishTarget.parentThemeId;
+    if (parentId == null) {
+      return i18n("wireframe.design.switch_failed");
     }
     try {
-      const { theme_id } =
-        await this.wireframeLiveLayout.createCustomizationComponent(themeId);
-      return { themeId: theme_id };
+      await this.wireframeLiveLayout.installDesign(parentId, designId);
+      return null;
     } catch (error) {
-      return {
-        error: this.#gitActionError(
-          error,
-          "wireframe.outlet.create_component_failed"
-        ),
-      };
+      return this.#designActionError(error, "wireframe.design.switch_failed");
     }
-  }
-
-  /**
-   * Duplicates the active theme into a new editable copy carrying all edited
-   * outlets' drafts. Returns the new theme id (the caller navigates to it) or an
-   * error message — never navigates itself, so it stays testable.
-   */
-  @action
-  async duplicateForEditing(): Promise<GitActionResult> {
-    const themeId = this.wireframePublishTarget.activeThemeId;
-    if (themeId == null) {
-      return { error: i18n("wireframe.outlet.duplicate_failed") };
-    }
-    try {
-      const { theme_id } =
-        await this.wireframeLiveLayout.duplicateTheme(themeId);
-      return { themeId: theme_id };
-    } catch (error) {
-      return {
-        error: this.#gitActionError(error, "wireframe.outlet.duplicate_failed"),
-      };
-    }
-  }
-
-  /**
-   * Whether one outlet's current layout differs from the state Save draft would
-   * have persisted: its last saved draft when one exists, otherwise the published
-   * (underlying-layer) layout.
-   *
-   * @param outletName - Outlet whose current and persisted states should be compared.
-   */
-  #outletHasUnsavedDraftEdits(outletName: string): boolean {
-    const current = this.#serializeBaseline(
-      this.wireframeLayoutQuery.readResolvedLayout(outletName)
-    );
-    const baseline = this.#persistedDraftLayouts.has(outletName)
-      ? this.#persistedDraftLayouts.get(outletName)
-      : this.#serializeBaseline(
-          this.wireframeLayoutQuery.readResolvedLayout(outletName, {
-            ignoreSessionDraft: true,
-          })
-        );
-    return current !== baseline;
-  }
-
-  /**
-   * Canonical serialization of a resolved layout for baseline comparison — the
-   * same shape a draft/publish would persist, so two layouts that would save
-   * identically compare equal regardless of in-memory identity (`__stableKey`).
-   *
-   * @param layout - Resolved layout to serialize for comparison.
-   */
-  #serializeBaseline(layout: LayoutEntry[] | null): string {
-    return JSON.stringify(serializeLayoutForSave(layout ?? []));
   }
 
   /**
@@ -612,8 +410,6 @@ export default class WireframeStagingService extends Service {
    */
   #clearOutletEditState(outletName: string): void {
     this.wireframeMutationEngine.clearOutletEditState(outletName);
-    // Publishing deletes the server-side draft, so its baseline no longer applies.
-    this.#persistedDraftLayouts.delete(outletName);
   }
 
   /**
@@ -671,28 +467,6 @@ export default class WireframeStagingService extends Service {
   }
 
   /**
-   * Turns a thrown save-draft failure into a human-readable banner string. The
-   * ajax helper rejects with `{ jqXHR, textStatus, errorThrown }` — an object
-   * with no `message` — so a bare `error.message` read would always fall back to
-   * a generic string and hide the real cause. Prefers the server's `errors`
-   * array, then the HTTP status, then any thrown Error's message/name, and only
-   * as a last resort the stringified value.
-   *
-   * @param error - the value thrown/rejected from the draft save.
-   * @returns a non-empty description for the banner.
-   */
-  #describeSaveError(error: AjaxError): string {
-    const serverErrors = error?.jqXHR?.responseJSON?.errors;
-    if (serverErrors?.length) {
-      return serverErrors.join(", ");
-    }
-    if (error?.jqXHR) {
-      return `HTTP ${error.jqXHR.status}`;
-    }
-    return error?.message || error?.name || String(error);
-  }
-
-  /**
    * Extracts a server message from a failed Git action, falling back to a
    * localized generic message.
    *
@@ -700,7 +474,7 @@ export default class WireframeStagingService extends Service {
    * @param fallbackKey - Translation key used when the response has no errors.
    * @returns The message suitable for the editor error banner.
    */
-  #gitActionError(error: AjaxError, fallbackKey: string): string {
+  #designActionError(error: AjaxError, fallbackKey: string): string {
     const messages = error?.jqXHR?.responseJSON?.errors;
     return messages?.length ? messages.join(", ") : i18n(fallbackKey);
   }
@@ -788,11 +562,11 @@ export default class WireframeStagingService extends Service {
   }
 
   /**
-   * When the bound theme can't be published to directly, look up its companion
-   * component and re-point `wireframePublishTarget.activeThemeId` to it — so the editor
-   * targets the publishable companion the user already set up instead of the
-   * unpublishable parent. A no-op (and clears the resolving flag) when the theme
-   * is already publishable or has no companion. Generation-guarded so a late
+   * When the session is bound to the theme in use rather than a design, look up
+   * the theme's installed design and re-point
+   * `wireframePublishTarget.activeThemeId` to it — so the editor targets the
+   * design the user already set up. A no-op (and clears the resolving flag) when
+   * the session is already on a design or none is installed. Generation-guarded so a late
    * lookup never writes into a new session.
    *
    * @param generation - Session generation captured before the async lookup.
@@ -803,157 +577,55 @@ export default class WireframeStagingService extends Service {
       this.publishTargetResolving = false;
       return;
     }
-    const companionId = await this.wireframeDrafts.companionId(target.themeId);
+    const { installedId, currentId } = await this.wireframeDrafts.fetchDesigns(
+      target.themeId
+    );
     if (generation !== this.#generation || !this.wireframeEditMode.active) {
       return;
     }
-    if (companionId != null) {
-      this.wireframePublishTarget.setActiveTheme(companionId);
+    if (currentId != null) {
+      this.wireframePublishTarget.setActiveTheme(currentId);
+      this.wireframePublishTarget.markDesignInUse(
+        currentId,
+        currentId === installedId
+      );
+      // A saved layout the theme doesn't use isn't on the page, so load it for
+      // this session and seed the canvas from it.
+      if (currentId !== installedId && !isInRenderedStack(currentId)) {
+        await this.#loadUnusedDesign(currentId);
+        if (generation !== this.#generation || !this.wireframeEditMode.active) {
+          return;
+        }
+        this.#reseedCleanOutlets();
+      }
     }
     this.publishTargetResolving = false;
   }
 
-  /**
-   * Overlays any persisted per-user draft on top of the freshly materialized
-   * live seeds. Runs after render (off the synchronous entry path), so it never
-   * blocks first paint, and is generation-guarded so a fetch that resolves after
-   * the user exited or re-entered never writes into the wrong session. A failed
-   * fetch degrades to "no drafts" (handled in the drafts service).
-   *
-   * @param generation - the `#generation` captured at begin time.
-   */
-  async #hydrateDrafts(generation: number): Promise<void> {
-    // Re-point to an existing companion BEFORE deriving theme ids, so default
-    // outlets, the indicator, publish targeting, and the draft fetch below all
-    // resolve against the companion the user already set up.
-    await this.#resolveCompanionTarget(generation);
-    if (generation !== this.#generation || !this.wireframeEditMode.active) {
-      return;
-    }
-    const themeIds = [
-      ...new Set(
-        this.wireframeLayoutQuery.editableOutlets
-          .map((name) => this.wireframePublishTarget.outletOwner(name).themeId)
-          .filter((id) => id != null)
-      ),
-    ];
-    const drafts = await this.wireframeDrafts.fetchDrafts(themeIds);
-    // Bail if the user exited or re-entered while the fetch was in flight.
-    if (generation !== this.#generation || !this.wireframeEditMode.active) {
-      return;
-    }
+  async #loadUnusedDesign(designId: number): Promise<void> {
+    await withPluginApi((api) =>
+      previewDesign(api, designId, {
+        drafts: this.wireframeDrafts,
+        liveLayout: this.wireframeLiveLayout,
+        publishTarget: this.wireframePublishTarget,
+      })
+    );
+  }
 
-    for (const draft of drafts) {
-      const { outlet } = draft;
-      // Only hydrate outlets the editor is actually drafting and that the user
-      // hasn't started touching since enter — re-seeding would clobber a live
-      // edit (committed or still in flight).
+  /**
+   * Re-seeds the session drafts of outlets with no edits, so they pick up
+   * layouts that loaded after the session began.
+   */
+  #reseedCleanOutlets(): void {
+    for (const outletName of this.wireframeLayoutQuery.editableOutlets) {
       if (
-        !this.wireframeMutationEngine.isOutletDrafted(outlet) ||
-        !this.#isOutletPristineSinceEnter(outlet)
+        this.wireframeMutationEngine.isOutletDrafted(outletName) &&
+        !this.wireframeMutationEngine.editedOutletNames().includes(outletName)
       ) {
-        continue;
-      }
-      const liveToken = this.wireframeLiveLayout.tokenFor(
-        draft.themeId,
-        outlet
-      );
-      if ((draft.baseVersionToken ?? "") === liveToken) {
-        // The draft is based on the live version that's still current: apply it.
-        this.#applyDraftToOutlet(outlet, draft.layout);
-      } else {
-        // The live layout moved on since the draft was saved: prompt the user.
-        this.#staleDraftQueue.push(draft);
+        _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
+        this.wireframeMutationEngine.dropOutlet(outletName);
       }
     }
-
-    // Each re-seeded outlet recorded its draft baseline in `#applyDraftToOutlet`,
-    // so it reads as having no unsaved draft edits until the next change; an outlet
-    // touched by a live edit during the fetch has no baseline and is compared
-    // against the published layout instead, so a genuine edit stays saveable.
-    await this.#flushStaleDraftQueue(generation);
-  }
-
-  /**
-   * Re-seeds an outlet's session draft from a persisted draft layout and marks
-   * the outlet edited (so it is dirty, badged as editing, and a Save/Publish
-   * target). Leaves the engine's pristine baseline untouched — it still holds
-   * the live clone, so a later discard reverts to the published layout, not the
-   * draft.
-   *
-   * @param outlet - Outlet receiving the persisted draft.
-   * @param layout - Persisted draft layout to apply.
-   */
-  #applyDraftToOutlet(outlet: string, layout: LayoutEntry[]): void {
-    const draftLayout = normalizeImplicitChildren(
-      wrapAsOutletRoot(cloneLayoutForDraft(layout ?? [])),
-      (ref) => this.wireframeLayoutQuery.lookupBlockMetadata(ref)
-    );
-    _setLayoutLayer(
-      outlet,
-      LAYOUT_LAYERS.SESSION_DRAFT,
-      draftLayout,
-      getOwner(this),
-      { permissive: true }
-    );
-    this.wireframeLayoutQuery.recordOutletRoot(outlet);
-    this.wireframeMutationEngine.markOutletStructurallyEdited(outlet);
-    // Record what the saved draft holds, so an edit that returns the canvas to the
-    // published layout is still recognized as differing from the persisted draft.
-    this.#persistedDraftLayouts.set(
-      outlet,
-      this.#serializeBaseline(
-        this.wireframeLayoutQuery.readResolvedLayout(outlet)
-      )
-    );
-  }
-
-  /**
-   * Whether an outlet is untouched since `beginSession()` — safe to overlay a
-   * draft onto. Conservative: any committed edit, pending arg flush, or open
-   * inline edit anywhere blocks re-seeding so live work is never clobbered.
-   *
-   * @param outlet - Outlet whose in-session edit state should be checked.
-   */
-  #isOutletPristineSinceEnter(outlet: string): boolean {
-    return (
-      !this.wireframeMutationEngine.isOutletEdited(outlet) &&
-      !this.wireframeInspectorArgs.hasPending &&
-      this.wireframeInplaceText.blockKey == null
-    );
-  }
-
-  /**
-   * Prompts for each stale draft one at a time (chained on the modal's
-   * close promise so they never overlap). Keep re-seeds from the draft; start
-   * fresh drops the persisted draft and keeps the already-seeded live layout.
-   * Generation-guarded between prompts so exiting mid-queue stops it.
-   *
-   * @param generation - the `#generation` captured at begin time.
-   */
-  async #flushStaleDraftQueue(generation: number): Promise<void> {
-    while (this.#staleDraftQueue.length > 0) {
-      if (generation !== this.#generation) {
-        return;
-      }
-      const item = this.#staleDraftQueue.shift();
-      if (!item) {
-        break;
-      }
-      const result = await this.modal.show(StaleDraftModal, {
-        model: { outlet: item.outlet },
-      });
-      if (generation !== this.#generation) {
-        return;
-      }
-      if (result?.choice === "keep") {
-        this.#applyDraftToOutlet(item.outlet, item.layout);
-      } else if (result?.choice === "fresh") {
-        // Start fresh: the live seed is already in place; drop the stale draft.
-        this.wireframeDrafts.deleteDraft(item.themeId, item.outlet);
-      }
-      // Dismissed (no choice): keep the live seed and leave the draft in place
-      // so the prompt returns next session.
-    }
+    this.rediscover();
   }
 }

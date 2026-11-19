@@ -24,10 +24,8 @@ export default class WireframeImageCompositionService extends Service {
   @service declare wireframeSelection: WireframeSelectionService;
 
   @tracked draft: ImageComposition | null = null;
-  @tracked repositioning = false;
   @tracked target: ImageEditTarget | null = null;
 
-  #focus: HTMLElement | null = null;
   #frame: HTMLElement | null = null;
   #original: BlockImageValue | null = null;
   #reference: unknown;
@@ -40,8 +38,6 @@ export default class WireframeImageCompositionService extends Service {
     );
     this.wireframeSelection.registerBeforeChange(({ nextKey }) => {
       if (this.target && nextKey !== this.target.blockKey) {
-        // Leave focus with the incoming selection instead of the old trigger.
-        this.#focus = null;
         this.commit();
       }
     });
@@ -52,9 +48,8 @@ export default class WireframeImageCompositionService extends Service {
     super.willDestroy();
   }
 
-  begin(target: ImageEditTarget, repositioning = false): boolean {
+  begin(target: ImageEditTarget): boolean {
     if (this.matches(target)) {
-      this.repositioning ||= repositioning;
       return true;
     }
     this.cancel();
@@ -68,11 +63,6 @@ export default class WireframeImageCompositionService extends Service {
     this.#original = JSON.parse(JSON.stringify(value)) as BlockImageValue;
     this.target = { ...target };
     this.draft = imageComposition(this.#original);
-    this.repositioning = repositioning;
-    this.#focus =
-      document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
     const chrome = document.querySelector(
       `[data-wf-block-key="${CSS.escape(target.blockKey)}"]`
     );
@@ -105,24 +95,17 @@ export default class WireframeImageCompositionService extends Service {
         this.#frame?.style.removeProperty(property);
       }
     }
-    if (this.repositioning && this.#focus?.isConnected) {
-      this.#focus.focus();
-    }
     this.#styles.clear();
     this.#frame = null;
-    this.#focus = null;
     this.#original = null;
     this.#reference = undefined;
     this.target = null;
     this.draft = null;
-    this.repositioning = false;
   }
 
   change(target: ImageEditTarget, patch: Partial<ImageComposition>): void {
     this.preview(target, patch);
-    if (!this.repositioning) {
-      this.commit();
-    }
+    this.commit();
   }
 
   commit(): void {

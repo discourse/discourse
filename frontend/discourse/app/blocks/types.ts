@@ -124,6 +124,18 @@ export type ArgUiConditional =
       all: readonly ArgUiConditionalLeaf[];
     };
 
+/** Live data an argument's `visibleWhen` predicate can read. */
+export interface ArgUiVisibilityContext {
+  /** The block's current argument values, keyed by argument name. */
+  args: Record<string, unknown>;
+
+  /** The site settings service. */
+  siteSettings: Record<string, unknown>;
+
+  /** The site service (categories, groups, and other preloaded data). */
+  site: Record<string, unknown>;
+}
+
 /** Disclosure metadata for grouping related argument fields. */
 export interface ArgUiGroup {
   /** Stable group identity, independent of its translated label. */
@@ -162,6 +174,12 @@ export interface ArgUiHint {
 
   /** Predicate gating the field's visibility on another argument's value. */
   conditional?: ArgUiConditional;
+
+  /**
+   * Runtime predicate for visibility that depends on site data rather than
+   * another argument. The field shows only while it returns true.
+   */
+  visibleWhen?: (context: ArgUiVisibilityContext) => boolean;
 
   /** Per-option icons, keyed by option value (for enum-style controls). */
   optionIcons?: Record<string, string>;

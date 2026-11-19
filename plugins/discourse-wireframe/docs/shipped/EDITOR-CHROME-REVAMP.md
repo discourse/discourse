@@ -48,7 +48,7 @@ accessibility, and touch** — which the current chrome largely lacks.
   navigate via keyboard. There is **no roving-tabindex/focus-trap/list-keydown
   infrastructure anywhere** in the plugin to inherit.
 - **On-canvas chrome**: `block-toolbar.gjs` is mature (grip+name handle drag
-  source `:590`; `actionItems` move/duplicate-split/detach/force-expand/
+  source `:590`; `actionItems` move/duplicate-split/detach/
   image/delete; hamburger collapse via `toolbar-fit`; inline bold/italic/link with
   `@preventFocus` to preserve the ProseMirror selection; URL sub-mode). It
   declares `role="toolbar"` (`:535`) but is **NOT a roving-tabindex toolbar** (ARIA

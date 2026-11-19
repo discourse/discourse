@@ -100,9 +100,13 @@ module PageObjects
               const contained = (child, parent) => child.left >= parent.left - 1 && child.right <= parent.right + 1;
               const separated = (first, second) => first.bottom <= second.top + 1 || second.bottom <= first.top + 1 ||
                 first.right <= second.left + 1 || second.right <= first.left + 1;
-              const rows = [...this.querySelectorAll('.wireframe-image-composition__heading-content, .wireframe-image-composition__fit, .wireframe-image-composition__zoom')];
-              const labels = [...this.querySelectorAll('.wireframe-image-field__source-label, .wireframe-image-composition__actions .d-button-label')];
-              return rows.length === 3 && labels.length === 3 && rows.every(row => {
+              const rows = [];
+              for (let row = this.closest('.form-kit__field').nextElementSibling;
+                row?.className.includes('wireframe-image-composition__'); row = row.nextElementSibling) {
+                rows.push(row);
+              }
+              const labels = [...this.querySelectorAll('.wireframe-image-field__source-label')];
+              return rows.length === 3 && labels.length > 0 && rows.every(row => {
                 const bounds = row.getBoundingClientRect();
                 const children = [...row.children].map(child => child.getBoundingClientRect());
                 return children.every((child, index) => contained(child, bounds) &&
@@ -149,15 +153,22 @@ module PageObjects
       end
 
       def show_issues
-        find('.wireframe-panel-switcher [role="tab"][aria-label^="Issues"]').click
+        find(
+          ".wireframe-panel-switcher__sections .d-segmented-control__label:has(input[value='issues'])",
+        ).click
       end
 
       def has_no_issues?
-        has_css?(".wireframe-issues .panel-empty") && has_no_css?(".wireframe-issues__item")
+        has_css?(".wireframe-palette") && issue_messages.empty?
       end
 
+      # Read from the validation service: the Issues section isn't shown in the editor.
       def issue_messages
-        find(".wireframe-issues").text
+        page.evaluate_script(<<~JS)
+          Discourse.__container__
+            .lookup("service:wireframe-validation")
+            .validationIssues.map((issue) => `${issue.blockName}: ${issue.messages.join(", ")}`)
+        JS
       end
 
       def allocate_stress_width(width)
@@ -307,12 +318,7 @@ module PageObjects
           ".wireframe-inspector-form .form-kit__section-title",
           text: "Media",
           exact_text: true,
-        ) &&
-          has_css?(
-            "#control-image .wireframe-image-composition__heading-content > span",
-            text: "Composition",
-            exact_text: true,
-          )
+        ) && has_css?("#control-image + .wireframe-image-composition__fit")
       end
 
       def has_optional_story_placeholders?
@@ -360,21 +366,13 @@ module PageObjects
 
       def position_speaker_image(region, x:, y:)
         field = region == :feature ? "image" : "avatar"
-        within("#control-#{field}") do
+        within(
+          "#control-#{field} + .wireframe-image-composition__fit + .wireframe-image-composition__position",
+        ) do
           find("input[aria-label='X (%)']").fill_in(with: x)
           find("input[aria-label='Y (%)']").fill_in(with: y)
           find("input[aria-label='X (%)']").click
         end
-      end
-
-      def reposition_speaker_image(region)
-        field = region == :feature ? "image" : "avatar"
-        within("#control-#{field}") { click_button("Reposition on canvas") }
-      end
-
-      def has_focused_reposition?(region)
-        field = region == :feature ? "image" : "avatar"
-        has_css?("#control-#{field} button:focus", text: "Reposition on canvas")
       end
 
       def drop_speaker_source(path, region:, dark: false)

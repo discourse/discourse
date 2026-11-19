@@ -22,11 +22,11 @@ describe "Wireframe editor drop preview alignment" do
   end
 
   it "paints the drop preview over the empty outlet placeholder it targets" do
-    visit("/latest")
+    visit("/custom")
     find(".wireframe-pill").click
 
     outlet =
-      ".wireframe-outlet-boundary[data-outlet-name='sidebar-blocks'] .wireframe-block-chrome.--outlet-root"
+      ".wireframe-outlet-boundary[data-outlet-name='homepage-blocks'] .wireframe-block-chrome.--outlet-root"
     placeholder = "#{outlet} .wireframe-empty-drop-placeholder"
     expect(page).to have_css(placeholder, wait: 5)
 

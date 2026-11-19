@@ -8,14 +8,18 @@
 
 register_asset "stylesheets/wireframe.scss"
 register_asset "stylesheets/admin/wireframe-chrome.scss", :admin
+register_asset "stylesheets/admin/wireframe-empty-homepage.scss", :admin
 
 enabled_site_setting :wireframe_enabled
+
+add_admin_route("wireframe.admin.title", "discourse-wireframe", { use_new_show_route: true })
 
 module ::DiscourseWireframe
   PLUGIN_NAME = "discourse-wireframe"
 end
 
 require_relative "lib/discourse_wireframe/engine"
+require_relative "lib/discourse_wireframe/homepage_layout"
 
 # Plugin-API registrations are grouped by concern in setup modules under
 # `lib/discourse_wireframe/plugin_setup/`. Keep this file a short manifest: do
@@ -27,8 +31,10 @@ require_relative "lib/discourse_wireframe/plugin_setup/icons"
 require_relative "lib/discourse_wireframe/plugin_setup/draft_cleanup"
 require_relative "lib/discourse_wireframe/plugin_setup/homepage"
 require_relative "lib/discourse_wireframe/plugin_setup/access"
+require_relative "lib/discourse_wireframe/plugin_setup/theme_components"
 
 DiscourseWireframe::PluginSetup::Icons.apply(self)
 DiscourseWireframe::PluginSetup::DraftCleanup.apply(self)
 DiscourseWireframe::PluginSetup::Homepage.apply(self)
 DiscourseWireframe::PluginSetup::Access.apply(self)
+DiscourseWireframe::PluginSetup::ThemeComponents.apply(self)

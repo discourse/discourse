@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { warn } from "@ember/debug";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -120,32 +119,7 @@ const DMenu = DMenuUntyped as unknown as ComponentLike<{
   };
 }>;
 
-/**
- * Presentation for each layout mode: its i18n label suffix and picker icon.
- * The set of modes the picker offers is NOT taken from here — it comes from
- * the block's live `mode` enum (see `modeItems`), so this map only supplies
- * the icon and label a given mode should render with. A mode present in the
- * enum but missing here is a drift bug the `modeItems` guard surfaces.
- *
- * Exported so a unit test can assert it covers every value of core's `mode`
- * enum, keeping the two from drifting apart.
- */
-export const MODE_PRESENTATION = {
-  stack: { labelKey: "mode_stack", icon: "wf-arrow-down" },
-  row: { labelKey: "mode_row", icon: "wf-arrow-right" },
-  grid: { labelKey: "mode_grid", icon: "wf-layout-dashboard" },
-};
-
-// Auto-collapse options for grid / row layouts. Each value maps to a
-// `wf-layout--collapse-{id}` modifier class consumed by the
-// `@container` rules in wireframe.scss. The labels live in i18n
-// (`auto_collapse_{id}`); each option carries its own help-text key
-// for the dynamic hint copy beneath the segmented selector.
-const AUTO_COLLAPSE_OPTIONS = [
-  { id: "never", labelKey: "auto_collapse_never" },
-  { id: "compact", labelKey: "auto_collapse_compact" },
-  { id: "default", labelKey: "auto_collapse_default" },
-];
+const LAYOUT_MODES = ["stack", "row", "grid"];
 
 const ALIGNMENTS = ["start", "center", "end", "stretch"] as const;
 const JUSTIFY_CONTENT = [
@@ -176,13 +150,13 @@ const ALIGN_ICONS = {
     start: "wf-align-start-horizontal",
     center: "wf-align-center-horizontal",
     end: "wf-align-end-horizontal",
-    stretch: "wf-stretch-horizontal",
+    stretch: "wf-stretch-vertical",
   },
   vertical: {
     start: "wf-align-start-vertical",
     center: "wf-align-center-vertical",
     end: "wf-align-end-vertical",
-    stretch: "wf-stretch-vertical",
+    stretch: "wf-stretch-horizontal",
   },
 };
 const JUSTIFY_CONTENT_ICONS = {
@@ -396,14 +370,13 @@ export default class InspectorLayoutForm extends Component {
   }
 
   get mode(): string {
-    // Coerce the legacy `"free-grid"` mode value to `"grid"` so the
-    // segmented control highlights the right segment and the rest of
-    // the form behaves consistently with the new naming.
+    // Coerce the legacy `"free-grid"` mode value to `"grid"` so the rest of the
+    // form behaves consistently with the new naming.
     const raw = typeof this.#args.mode === "string" ? this.#args.mode : "stack";
     if (raw === "free-grid") {
       return "grid";
     }
-    return Object.hasOwn(MODE_PRESENTATION, raw) ? raw : "stack";
+    return LAYOUT_MODES.includes(raw) ? raw : "stack";
   }
 
   get isGrid() {
@@ -440,11 +413,13 @@ export default class InspectorLayoutForm extends Component {
   }
 
   /**
-   * Whether to show the auto-collapse control. Only row and grid consume the
-   * responsive-collapse classes; stack is already single-column.
+   * `true` when "align content" has something to position: grid tracks, or the
+   * wrapped lines of a row (a row that never wraps has a single line).
    */
-  get showAutoCollapse() {
-    return this.isRow || this.isGrid;
+  get alignsLines() {
+    return (
+      this.isGrid || (this.isRow && (this.#args.wrap ?? "wrap") === "wrap")
+    );
   }
 
   get columnTemplate(): string {
@@ -459,21 +434,6 @@ export default class InspectorLayoutForm extends Component {
       : "";
   }
 
-  get autoCollapse(): string {
-    return typeof this.#args.autoCollapse === "string"
-      ? this.#args.autoCollapse
-      : "default";
-  }
-
-  /**
-   * i18n key for the dynamic help text beneath the auto-collapse
-   * segmented selector. Keys follow the `auto_collapse_help_{value}`
-   * pattern — one per enum value.
-   */
-  get autoCollapseHelpKey() {
-    return `wireframe.inspector.layout.auto_collapse_help_${this.autoCollapse}`;
-  }
-
   /**
    * Glyph orientation for the alignment / justify icons: a stack's axes are the
    * mirror of a row's (and grid reads like a row), so stack mode uses the
@@ -481,43 +441,6 @@ export default class InspectorLayoutForm extends Component {
    */
   get #glyphAxis(): "horizontal" | "vertical" {
     return this.mode === "stack" ? "vertical" : "horizontal";
-  }
-
-  /**
-   * Items for the unified enum field — `{value, label, icon, title}`. The label
-   * doubles as the tooltip / accessible name and the dropdown-fallback text.
-   */
-  get modeItems() {
-    // Drive the picker off the block's live `mode` enum so it always offers
-    // exactly the modes core declares — never a stale hardcoded subset. Fall
-    // back to the presentation map's own keys only when metadata is absent
-    // (e.g. an unregistered block), so the picker is never empty.
-    const ids = (
-      this.#schema.mode?.enum ?? Object.keys(MODE_PRESENTATION)
-    ).filter((id): id is string => typeof id === "string");
-    return ids.flatMap((id) => {
-      const presentation = Object.entries(MODE_PRESENTATION).find(
-        ([mode]) => mode === id
-      )?.[1];
-      if (!presentation) {
-        // The enum gained a mode this plugin has no icon/label for. Skip it
-        // rather than render a broken segment; the warn (dev-only) and the
-        // drift-guard test flag the missing entry.
-        warn(`No presentation for layout mode "${id}"`, {
-          id: "discourse-wireframe.layout-mode-presentation",
-        });
-        return [];
-      }
-      const label = i18n(`wireframe.inspector.layout.${presentation.labelKey}`);
-      return [{ value: id, label, title: label, icon: presentation.icon }];
-    });
-  }
-
-  get autoCollapseItems() {
-    return AUTO_COLLAPSE_OPTIONS.map((option) => {
-      const label = i18n(`wireframe.inspector.layout.${option.labelKey}`);
-      return { value: option.id, label, title: label };
-    });
   }
 
   get alignItems() {
@@ -559,16 +482,6 @@ export default class InspectorLayoutForm extends Component {
       const label = i18n(`wireframe.inspector.layout.wrap_${value}`);
       return { value, label, title: label, icon: WRAP_ICONS[value] };
     });
-  }
-
-  @action
-  setMode(mode: string) {
-    this.#set("mode", mode);
-  }
-
-  @action
-  setAutoCollapse(value: string) {
-    this.#set("autoCollapse", value);
   }
 
   @action
@@ -817,51 +730,6 @@ export default class InspectorLayoutForm extends Component {
         @onRegisterApi={{this.registerFormApi}}
         as |form|
       >
-        {{! Mode is service-live: it drives the conditional visibility below and
-          coerces the legacy free-grid value, so it reads the live getter rather
-          than the FormKit draft. }}
-        <form.Field
-          @name="mode"
-          @title={{i18n "wireframe.inspector.layout.mode_legend"}}
-          @type="custom"
-          as |f|
-        >
-          <f.Control>
-            <InspectorSegmentedField
-              @items={{this.modeItems}}
-              @name="wireframe-layout-mode"
-              @onChange={{this.setMode}}
-              @value={{this.mode}}
-            />
-          </f.Control>
-        </form.Field>
-
-        {{! Auto-collapse surfaces the responsive collapse behaviour and lets
-          authors tune the threshold per layout. Shown only for row and grid;
-          stack is already column-oriented.
-          Service-live so the dynamic help text below reads the current value. }}
-        {{#if this.showAutoCollapse}}
-          <form.Field
-            @name="autoCollapse"
-            @title={{i18n "wireframe.inspector.layout.auto_collapse_label"}}
-            @type="custom"
-            as |f|
-          >
-            <f.Control>
-              <InspectorSegmentedField
-                @items={{this.autoCollapseItems}}
-                @name="wireframe-layout-auto-collapse"
-                @onChange={{this.setAutoCollapse}}
-                @value={{this.autoCollapse}}
-              />
-            </f.Control>
-          </form.Field>
-          <p class="wireframe-layout-form__hint">
-            {{dIcon "circle-info"}}
-            <span>{{i18n this.autoCollapseHelpKey}}</span>
-          </p>
-        {{/if}}
-
         {{#if this.isGrid}}
           {{! Source picker: a bespoke widget (Free toggle plus a preset menu),
             not a single arg, so it stays plain markup inside the form. The
@@ -999,6 +867,7 @@ export default class InspectorLayoutForm extends Component {
           <f.Control>
             <InspectorSegmentedField
               @custom={{f}}
+              @dropdown={{true}}
               @items={{this.alignItems}}
               @name="wireframe-layout-align"
             />
@@ -1022,16 +891,6 @@ export default class InspectorLayoutForm extends Component {
         </form.Field>
 
         {{#if this.isFlex}}
-          <form.Field
-            @name="reverse"
-            @onSet={{this.onFieldSet}}
-            @title={{i18n "wireframe.inspector.layout.reverse_legend"}}
-            @type="toggle"
-            as |f|
-          >
-            <f.Control />
-          </form.Field>
-
           {{#if this.isRow}}
             <form.Field
               @name="wrap"
@@ -1051,6 +910,24 @@ export default class InspectorLayoutForm extends Component {
           {{/if}}
         {{/if}}
 
+        {{#if this.alignsLines}}
+          <form.Field
+            @name="alignContent"
+            @onSet={{this.onFieldSet}}
+            @title={{i18n "wireframe.inspector.layout.align_content_legend"}}
+            @type="custom"
+            as |f|
+          >
+            <f.Control>
+              <InspectorSegmentedField
+                @custom={{f}}
+                @items={{this.alignContentItems}}
+                @name="wireframe-layout-align-content"
+              />
+            </f.Control>
+          </form.Field>
+        {{/if}}
+
         {{#if this.isGrid}}
           <form.Field
             @name="justifyItems"
@@ -1064,22 +941,6 @@ export default class InspectorLayoutForm extends Component {
                 @custom={{f}}
                 @items={{this.justifyItemsItems}}
                 @name="wireframe-layout-justify-items"
-              />
-            </f.Control>
-          </form.Field>
-
-          <form.Field
-            @name="alignContent"
-            @onSet={{this.onFieldSet}}
-            @title={{i18n "wireframe.inspector.layout.align_content_legend"}}
-            @type="custom"
-            as |f|
-          >
-            <f.Control>
-              <InspectorSegmentedField
-                @custom={{f}}
-                @items={{this.alignContentItems}}
-                @name="wireframe-layout-align-content"
               />
             </f.Control>
           </form.Field>

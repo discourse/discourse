@@ -5,6 +5,7 @@ import { and, eq, not, or } from "discourse/truth-helpers";
 import InspectorCategoryField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-category-field";
 import InspectorDimensionField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-dimension-field";
 import InspectorGroupField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-group-field";
+import InspectorImageComposition from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-image-composition";
 import InspectorImageField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-image-field";
 import InspectorRepeatableField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-repeatable-field";
 import InspectorRichTextField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-rich-text-field";
@@ -56,6 +57,8 @@ type FormFieldContext = {
     Args: {
       /** Optional native input placeholder. */
       placeholder?: string | null;
+      /** Color controls only: store the value with its leading "#". */
+      prefixHex?: boolean;
     };
     /** Native input element rendered by the default control. */
     Element: HTMLInputElement;
@@ -282,7 +285,12 @@ const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
       as |formField|
     >
       {{#if (eq @field.control "select")}}
-        <formField.Control as |select|>
+        {{! A setting with a default always has a value, so FormKit's extra
+          blank option would only duplicate a real "none" choice. }}
+        <formField.Control
+          @includeNone={{eq @field.default undefined}}
+          as |select|
+        >
           {{#each @field.options as |option|}}
             <select.Option @value={{option}}>
               {{or (get @field.optionLabels option) option}}
@@ -398,10 +406,19 @@ const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
               canvas</span>
           </div>
         {{/if}}
+      {{else if (eq @field.control "color")}}
+        {{! Block color args are validated as "#rrggbb", so keep the "#". }}
+        <formField.Control @prefixHex={{true}} />
       {{else}}
         <formField.Control placeholder={{@field.placeholder}} />
       {{/if}}
     </@form.Field>
+    {{#if (and (eq @field.control "image") @field.schema.allowComposition)}}
+      <InspectorImageComposition
+        @argName={{@field.name}}
+        @blockKey={{@blockKey}}
+      />
+    {{/if}}
   </template>;
 
 export default InspectorField;

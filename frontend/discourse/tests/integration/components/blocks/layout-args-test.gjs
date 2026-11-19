@@ -120,28 +120,4 @@ module("Integration | Blocks | builtin | layout args", function (hooks) {
 
     assert.true(layoutStyle().includes("--d-block-layout-auto-flow: row;"));
   });
-
-  test("reverse reverses rendered child order for a row", async function (assert) {
-    withPluginApi((api) => renderLayout(api, { mode: "row", reverse: true }));
-    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
-
-    const markers = [
-      ...document.querySelectorAll(
-        ".d-block-layout__flex .marker-a, .d-block-layout__flex .marker-b"
-      ),
-    ].map((el) => el.textContent.trim());
-    assert.deepEqual(markers, ["B", "A"], "the DOM order is reversed");
-  });
-
-  test("reverse does NOT reorder a grid (placement sort wins)", async function (assert) {
-    withPluginApi((api) =>
-      renderLayout(api, { mode: "grid", columns: 2, reverse: true })
-    );
-    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
-
-    const markers = [...document.querySelectorAll(".marker-a, .marker-b")].map(
-      (el) => el.textContent.trim()
-    );
-    assert.deepEqual(markers, ["A", "B"], "grid keeps its placement order");
-  });
 });

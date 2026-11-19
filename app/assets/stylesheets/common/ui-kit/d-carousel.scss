@@ -1,0 +1,112 @@
+.d-carousel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+
+  &__track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding-block: var(--space-1);
+  }
+
+  &__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    cursor: pointer;
+    touch-action: manipulation;
+
+    &:hover {
+      background: none;
+      color: var(--primary);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.6;
+    }
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: var(--primary-very-low);
+    border-radius: 1rem;
+  }
+
+  &__dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    padding: 0;
+    border: 0;
+    border-radius: 1rem;
+    background: var(--primary-low-mid);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition:
+      width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.15s ease-out;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+
+    &.--active {
+      width: 1.4rem;
+      background: var(--primary-medium);
+    }
+  }
+
+  &__counter {
+    padding: var(--space-2) var(--space-3);
+    background: var(--primary-very-low);
+    border-radius: 1rem;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__track {
+      scroll-behavior: auto;
+    }
+
+    &__dot {
+      transition: none;
+    }
+  }
+}

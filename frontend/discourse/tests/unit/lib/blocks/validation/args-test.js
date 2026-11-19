@@ -1227,6 +1227,24 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
     });
 
+    test("ui hints: accepts a visibleWhen function", function (assert) {
+      const schema = {
+        title: { type: "string", ui: { visibleWhen: () => true } },
+      };
+      validateArgsSchema(schema, "test-block");
+      assert.true(true, "a function predicate is valid");
+    });
+
+    test("ui hints: throws when visibleWhen is not a function", function (assert) {
+      const schema = {
+        title: { type: "string", ui: { visibleWhen: true } },
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "ui\.visibleWhen" value\. Must be a function/
+      );
+    });
+
     test("ui hints: throws for unsupported control name", function (assert) {
       const schema = { title: { type: "string", ui: { control: "wysiwyg" } } };
       assert.throws(

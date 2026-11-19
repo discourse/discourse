@@ -31,15 +31,12 @@ class BlockAlwaysFalseCondition extends BlockCondition {
 
 /* A condition backed by tracked state, so flipping it re-evaluates the layout
  * the same way a real route/discovery change does — without any editor. */
-class ToggleState {
-  @tracked visible = true;
-}
-const toggleState = new ToggleState();
+const toggleVisible = tracked(true);
 
 @blockCondition({ type: "toggle-visible", args: {} })
 class BlockToggleVisibleCondition extends BlockCondition {
   evaluate() {
-    return toggleState.visible;
+    return toggleVisible.value;
   }
 }
 
@@ -54,7 +51,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       registerConditionType(BlockToggleVisibleCondition);
     });
     // Module-scoped, so reset between tests.
-    toggleState.visible = true;
+    toggleVisible.value = true;
   });
 
   test("renders block when no conditions specified", async function (assert) {
@@ -698,7 +695,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     const before = find(".stable-sibling");
 
     // Simulate a navigation-driven condition change.
-    toggleState.visible = false;
+    toggleVisible.value = false;
     await settled();
     assert
       .dom(".toggling-child")
@@ -709,7 +706,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       "the stable sibling keeps its DOM node across the condition change"
     );
 
-    toggleState.visible = true;
+    toggleVisible.value = true;
     await settled();
     assert
       .dom(".toggling-child")

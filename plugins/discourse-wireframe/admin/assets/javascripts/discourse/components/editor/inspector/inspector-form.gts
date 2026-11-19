@@ -6,6 +6,8 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import type { ArgSchema } from "discourse/blocks/types";
 import Form from "discourse/components/form";
+import type Site from "discourse/models/site";
+import type SiteSettingsService from "discourse/services/site-settings";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import InspectorField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-field";
@@ -17,6 +19,7 @@ import {
   isFieldVisible,
   schemaToFields,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields";
+import type WireframeEntryConfigService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-entry-config";
 import type WireframeInspectorArgsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inspector-args";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
@@ -89,6 +92,13 @@ function coerceToSchemaType(
 }
 
 /**
+ * Form-field name for the child's width inside a Columns parent. The value is
+ * stored with the parent's placement data (`containerArgs.row.width`), not in
+ * the block's own args, so it's written through the entry-config service.
+ */
+const PLACEMENT_WIDTH_FIELD = "placementWidth";
+
+/**
  * Inspector form for the selected block's args. Reads the args schema
  * (with `ui` hints), maps it to FormKit fields via `schemaToFields`,
  * and pushes value changes back through `wireframe.updateSelectedArg`.
@@ -102,6 +112,9 @@ function coerceToSchemaType(
  * supported extension point — see `fk/field-data.gjs:71`.)
  */
 export default class InspectorForm extends Component {
+  @service declare site: Site;
+  @service declare wireframeEntryConfig: WireframeEntryConfigService;
+  @service declare siteSettings: SiteSettingsService;
   @service declare wireframeInspectorArgs: WireframeInspectorArgsService;
   @service declare wireframeSelection: WireframeSelectionService;
 
@@ -149,9 +162,48 @@ export default class InspectorForm extends Component {
     return inferSchemaFromValues(this.values);
   }
 
+  /**
+   * The child's width in a Columns parent, as an extra field. It sits in the
+   * block's own "Layout" group so a block's sizing settings are in one place.
+   * Null unless the parent is a Columns layout.
+   */
+  get placementWidthField(): InspectorFieldDescriptor | null {
+    const namespace =
+      this.wireframeSelection.selectedBlockData?.parentChildArgsSchema?.row;
+    const widthDef = namespace?.properties?.width;
+    const parentArgs =
+      this.wireframeSelection.selectedBlockData?.parentArgsSnapshot ?? {};
+    if (
+      !widthDef ||
+      !isFieldVisible({ conditional: namespace.ui?.conditional }, parentArgs)
+    ) {
+      return null;
+    }
+    const [field] = schemaToFields({ [PLACEMENT_WIDTH_FIELD]: widthDef });
+    return field ?? null;
+  }
+
   @cached
   get fieldGroups() {
-    return groupFields(schemaToFields(this.schema)).map((group) => ({
+    const groups = groupFields(schemaToFields(this.schema));
+    const width = this.placementWidthField;
+    if (width) {
+      const layout = groups.find(
+        (group) => group.label.toLowerCase() === "layout"
+      );
+      if (layout) {
+        layout.fields.push({ ...width, group: layout.group });
+      } else {
+        groups.push({
+          group: "Layout",
+          label: i18n("wireframe.inspector.layout_group"),
+          disclosure: false,
+          collapsed: false,
+          fields: [{ ...width, group: "Layout" }],
+        });
+      }
+    }
+    return groups.map((group) => ({
       ...group,
       title: group.fields.some((field) => field.schema.ui?.group)
         ? group.label
@@ -206,7 +258,15 @@ export default class InspectorForm extends Component {
 
   @cached
   get initialValues(): Record<string, unknown> {
-    return this.resolvedValues(this.values);
+    const values = this.resolvedValues(this.values);
+    const width = this.placementWidthField;
+    if (width) {
+      const placement =
+        this.wireframeSelection.selectedBlockData?.containerArgsSnapshot?.row;
+      values[PLACEMENT_WIDTH_FIELD] =
+        (placement as { width?: unknown } | undefined)?.width ?? width.default;
+    }
+    return values;
   }
 
   @action
@@ -217,7 +277,10 @@ export default class InspectorForm extends Component {
     const visible = fields.filter(
       (field) =>
         this.fieldErrors[field.name]?.length > 0 ||
-        isFieldVisible(field, values)
+        isFieldVisible(field, values, {
+          site: this.site,
+          siteSettings: this.siteSettings,
+        })
     );
     const locked = this.lockedArgs;
     if (!locked) {
@@ -291,6 +354,15 @@ export default class InspectorForm extends Component {
    */
   @action
   async onFieldSet(value: unknown, ctx: FormFieldSetContext) {
+    if (ctx.name === PLACEMENT_WIDTH_FIELD) {
+      await ctx.set(ctx.name, value);
+      this.wireframeEntryConfig.updateSelectedContainerArg(
+        "row",
+        "width",
+        value
+      );
+      return;
+    }
     const argDef = this.schema?.[ctx.name];
     // Radio inputs hand their selected value back as a string (HTML
     // `<input>` values can't be anything else). For args whose schema

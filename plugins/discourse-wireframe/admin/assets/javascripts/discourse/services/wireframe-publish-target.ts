@@ -1,4 +1,8 @@
-import { trackedObject } from "@ember/reactive/collections";
+import {
+  trackedMap,
+  trackedObject,
+  trackedSet,
+} from "@ember/reactive/collections";
 import type RouterService from "@ember/routing/router-service";
 import Service, { service } from "@ember/service";
 import {
@@ -10,6 +14,7 @@ import { currentThemeId } from "discourse/lib/theme-selector";
 import type SiteService from "discourse/models/site";
 import type User from "discourse/models/user";
 import type BlocksService from "discourse/services/blocks";
+import { i18n } from "discourse-i18n";
 import type WireframeMutationEngineService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
 
 /**
@@ -50,11 +55,7 @@ export interface ActiveThemeTarget {
   themeId: number;
   /** Human-readable theme name, or `null` when unavailable. */
   themeName: string | null;
-  /** Whether the destination is managed from Git. */
-  isGit: boolean;
-  /** Whether the destination is a built-in system theme. */
-  isSystem: boolean;
-  /** Whether changes can be written directly to the destination. */
+  /** Whether the destination is a design, which changes can be published to. */
   publishable: boolean;
 }
 
@@ -67,13 +68,9 @@ export interface PublishTarget {
   themeId: number | null;
   /** Human-readable theme name, or `null` when unavailable. */
   themeName: string | null;
-  /** Whether the destination is managed from Git. */
-  isGit: boolean;
-  /** Whether the destination is a built-in system theme. */
-  isSystem: boolean;
-  /** Whether changes can be written directly to the destination. */
+  /** Whether the destination is a design, which changes can be published to. */
   publishable: boolean;
-  /** Edited outlets owned by this destination. */
+  /** Edited outlets that publish to this destination. */
   outlets: string[];
 }
 
@@ -121,12 +118,21 @@ export default class WireframePublishTargetService extends Service {
   /** Supplies the reactive set of edited outlets. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
 
+  /** Designs loaded into the session that their theme doesn't use. */
+  #designsNotInUse = trackedSet<number>();
+
+  /** Designs created this session, which the boot preload doesn't list yet. */
+  #createdDesigns = trackedMap<string, ThemeBlockLayoutMetaEntry>();
+
   /** Reactive publish destination state for the current editor session. */
   #state = trackedObject<{
     /** Theme receiving edits in the current session. */
     activeThemeId: number | null;
+    /** Name the author gave the design before it exists, or `null`. */
+    pendingDesignName: string | null;
   }>({
     activeThemeId: null,
+    pendingDesignName: null,
   });
 
   /**
@@ -140,13 +146,12 @@ export default class WireframePublishTargetService extends Service {
   }
 
   /**
-   * Whether the editor is bound to a core "system" theme (Foundation, Horizon),
-   * which have negative ids. Such themes can't be published to directly — the
-   * editor offers an installable companion component instead — so the toolbar
-   * uses this to disable the direct Publish action.
+   * Whether the session is bound to a design (a local component the editor
+   * publishes to). False until the author names their first design: the theme in
+   * use is never published to directly, so edits wait on a design.
    */
-  get activeThemeIsSystem(): boolean {
-    return this.activeThemeId != null && this.activeThemeId < 0;
+  get hasDesign(): boolean {
+    return this.activeThemeTarget?.publishable === true;
   }
 
   /**
@@ -162,25 +167,21 @@ export default class WireframePublishTargetService extends Service {
       return null;
     }
     const themeMeta = this.#themeMeta(themeId);
-    const isSystem = themeId < 0;
-    const isGit = themeMeta?.is_git ?? false;
     return {
       themeId,
       themeName: themeMeta?.name ?? null,
-      isGit,
-      isSystem,
-      publishable: !isGit && !isSystem,
+      publishable: this.#isDesign(themeMeta),
     };
   }
 
   /**
-   * The parent theme the homepage opt-in reads and writes: the rendered theme,
-   * `null` whenever that identity is unusable — no resolvable theme (safe
-   * mode), or a rendered theme that is a component. Themeable site settings are
-   * only ever read for parent themes, so a component target would accept the
-   * write and never serve it.
+   * The theme in use, which designs are installed on and which the homepage
+   * opt-in reads and writes: the rendered theme, `null` whenever that identity is
+   * unusable — no resolvable theme (safe mode), or a rendered theme that is a
+   * component. Themeable site settings are only ever read for parent themes, so a
+   * component target would accept the write and never serve it.
    */
-  get homepageThemeId(): number | null {
+  get parentThemeId(): number | null {
     const themeId = currentThemeId();
     if (!Number.isInteger(themeId)) {
       return null;
@@ -190,6 +191,11 @@ export default class WireframePublishTargetService extends Service {
       return null;
     }
     return themeId;
+  }
+
+  /** The parent theme the homepage opt-in reads and writes. */
+  get homepageThemeId(): number | null {
+    return this.parentThemeId;
   }
 
   /**
@@ -224,36 +230,101 @@ export default class WireframePublishTargetService extends Service {
   }
 
   /**
-   * The edited outlets grouped by the theme that owns them — the publish plan.
-   * Each group names its target theme and whether that theme can be published to
-   * directly (a local, non-Git theme) or needs the companion/duplicate/export
-   * path instead (a Git-managed or core "system" theme). Drives the publish
-   * review surface and the toolbar target indicator.
+   * The publish plan: every edited outlet publishes to the session's design, so
+   * there is at most one group. It is not `publishable` until the author has
+   * named a design. Drives the publish review surface and the toolbar target
+   * indicator.
    *
-   * Reactive: derives from the engine's `editedOutletNames()` (which reads the
-   * tracked edit bookkeeping) and `outletOwner` (which reads the tracked layer
-   * store), so a template re-renders as edits and their owners change.
+   * Reactive: derives from the engine's `editedOutletNames()`, which reads the
+   * tracked edit bookkeeping.
    */
   get publishTargets(): PublishTarget[] {
-    const groups = new Map<number | null, PublishTarget>();
-    for (const outletName of this.wireframeMutationEngine.editedOutletNames()) {
-      const owner = this.outletOwner(outletName);
-      let group = groups.get(owner.themeId);
-      if (!group) {
-        const isSystem = owner.themeId != null && owner.themeId < 0;
-        group = {
-          themeId: owner.themeId,
-          themeName: owner.themeName,
-          isGit: owner.isGit,
-          isSystem,
-          publishable: !owner.isGit && !isSystem,
-          outlets: [],
-        };
-        groups.set(owner.themeId, group);
-      }
-      group.outlets.push(outletName);
+    const outlets = this.wireframeMutationEngine.editedOutletNames();
+    const target = this.activeThemeTarget;
+    if (outlets.length === 0 || !target) {
+      return [];
     }
-    return [...groups.values()];
+    return [{ ...target, outlets: [...outlets] }];
+  }
+
+  /**
+   * The name the author gave a design that doesn't exist yet, used when it is
+   * created on the first publish. `null` until they rename the placeholder.
+   */
+  get pendingDesignName(): string | null {
+    return this.#state.pendingDesignName;
+  }
+
+  /**
+   * The name shown for the session's design: the design's own name, or — before
+   * one exists — the author's pending name or a placeholder.
+   */
+  get designName(): string {
+    const target = this.activeThemeTarget;
+    if (target?.publishable && target.themeName) {
+      return target.themeName;
+    }
+    return this.pendingDesignName || i18n("wireframe.design.untitled");
+  }
+
+  /**
+   * Whether the session's design is the one its theme uses. False while editing
+   * a design opened from the designs list that the theme doesn't use yet.
+   */
+  get designInUse(): boolean {
+    const themeId = this.activeThemeId;
+    return themeId == null || !this.#designsNotInUse.has(themeId);
+  }
+
+  /**
+   * Names the design that will be created on the first publish.
+   *
+   * @param name - The author's chosen name.
+   */
+  setPendingDesignName(name: string | null): void {
+    this.#state.pendingDesignName = name;
+  }
+
+  /**
+   * Records a design created this session, so it reads as a design before the
+   * boot preload (which predates it) is refreshed by a reload.
+   *
+   * @param themeId - ID of the new design component.
+   * @param name - The name the author gave it.
+   * @param options - Parameters:
+   *   - `inUse` - Whether the theme uses the design.
+   */
+  registerDesign(
+    themeId: number,
+    name: string,
+    {
+      inUse = true,
+    }: {
+      /** Whether the theme uses the design. */
+      inUse?: boolean;
+    } = {}
+  ): void {
+    this.#createdDesigns.set(String(themeId), {
+      name,
+      component: true,
+      is_git: false,
+      stack_index: 1,
+    });
+    this.markDesignInUse(themeId, inUse);
+  }
+
+  /**
+   * Records whether the theme uses a design.
+   *
+   * @param themeId - ID of the design.
+   * @param inUse - Whether the theme uses it.
+   */
+  markDesignInUse(themeId: number, inUse: boolean = true): void {
+    if (inUse) {
+      this.#designsNotInUse.delete(themeId);
+    } else {
+      this.#designsNotInUse.add(themeId);
+    }
   }
 
   /**
@@ -289,6 +360,16 @@ export default class WireframePublishTargetService extends Service {
     if (!isComponent) {
       url.searchParams.set("preview_theme_id", String(themeId));
     }
+    window.location.assign(url.toString());
+  }
+
+  /**
+   * Reloads the page back onto the theme in use, dropping the design the editor
+   * was opened on, so the page shows what visitors see.
+   */
+  navigateToThemeInUse(): void {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("wf_theme");
     window.location.assign(url.toString());
   }
 
@@ -331,6 +412,7 @@ export default class WireframePublishTargetService extends Service {
    */
   reset(): void {
     this.#state.activeThemeId = null;
+    this.#state.pendingDesignName = null;
   }
 
   /**
@@ -409,11 +491,25 @@ export default class WireframePublishTargetService extends Service {
     if (themeId == null) {
       return null;
     }
+    const created = this.#createdDesigns.get(String(themeId));
+    if (created) {
+      return created;
+    }
     const meta = this.#themeMetaMap();
     if (!meta) {
       return null;
     }
     return meta[String(themeId)] ?? null;
+  }
+
+  /**
+   * Whether a theme is a design: a local component, which changes can be
+   * published to directly.
+   *
+   * @param meta - The theme's block-layout metadata.
+   */
+  #isDesign(meta: ThemeBlockLayoutMetaEntry | null): boolean {
+    return meta != null && meta.component && !meta.is_git;
   }
 
   /**

@@ -11,6 +11,7 @@ import dropdowns from "../components/sections/atoms/09-dropdowns";
 import topicLink from "../components/sections/atoms/10-topic-link-status";
 import shortcut from "../components/sections/atoms/11-shortcut";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs";
+import carousel from "../components/sections/molecules/carousel";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
 import comboButton from "../components/sections/molecules/combo-button";
@@ -110,6 +111,7 @@ const SECTIONS = [
   { component: topicTimerInfo, category: "molecules", id: "topic-timer-info" },
   { component: virtualList, category: "molecules", id: "virtual-list" },
   { component: tabs, category: "molecules", id: "tabs" },
+  { component: carousel, category: "molecules", id: "carousel" },
   {
     component: overflowControls,
     category: "molecules",

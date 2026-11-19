@@ -1,4 +1,8 @@
-import type { AutoUpdateOptions, ReferenceElement } from "@floating-ui/dom";
+import type {
+  AutoUpdateOptions,
+  Padding,
+  ReferenceElement,
+} from "@floating-ui/dom";
 import { type ComponentLike } from "@glint/template";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 
@@ -229,6 +233,13 @@ export interface TooltipOptions {
  */
 export interface MenuOptions extends TooltipOptions {
   /**
+   * The clearance the float keeps from the viewport edges. When unset, the top clearance is
+   * the site header's height, and 10px applies on the other sides. A menu anchored inside
+   * its own fixed chrome, where the site header isn't in the way, passes its own.
+   */
+  padding: Padding | null;
+
+  /**
    * The ARIA role for the content element. `dialog` suits a panel that holds its own widgets.
    * A popup that is only a list should pass `none`, so the container does not sit between the
    * control and the items its `aria-activedescendant` points at.
@@ -455,6 +466,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     offset: 10,
     triggers: ["click"],
     untriggers: ["click"],
+    padding: null,
     placement: "bottom-start",
     shiftBeforeVisibilityOptimizer: false,
     visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,

@@ -24,7 +24,7 @@ describe "Resize wireframe grid cells" do
   after { Theme.clear_cache! }
 
   it "lets an author span columns and rows by dragging a filled cell's edges and corner" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     grid.select_filled_cell
     expect(grid).to have_positioned_filled_handles
@@ -42,7 +42,7 @@ describe "Resize wireframe grid cells" do
   end
 
   it "lets an author merge empty cells across columns and rows with their handles" do
-    visit("/latest")
+    visit("/custom")
     editor.enter
     grid.resize_empty_cell(column: 1, row: 1, direction: "e", to_column: 2, to_row: 1)
     expect(grid).to have_empty_span(column: "1 / 3", row: "1")
