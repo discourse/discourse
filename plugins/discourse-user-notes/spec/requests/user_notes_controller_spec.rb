@@ -10,6 +10,46 @@ describe DiscourseUserNotes::UserNotesController do
   before { SiteSetting.user_notes_enabled = true }
 
   describe "#create" do
+    it "does not create a notification by default" do
+      Jobs.run_immediately!
+
+      expect { DiscourseUserNotes.add_note(user, "Staff note", admin.id) }.not_to change {
+        Notification.where(notification_type: Notification.types[:staff_user_note]).count
+      }
+    end
+
+    it "notifies configured staff once and hides the notice after they lose their role" do
+      Jobs.run_immediately!
+      group = Fabricate(:group)
+      [admin, moderator, user].each { |member| group.add(member) }
+      SiteSetting.user_notes_notification_groups = group.id.to_s
+      note = DiscourseUserNotes.add_note(user, "Staff-only text", admin.id)
+      Jobs::NotifyStaffUserNote.new.execute(user_id: user.id, note_id: note[:id])
+
+      notices = Notification.where(notification_type: Notification.types[:staff_user_note])
+      expect(notices.pluck(:user_id)).to eq([moderator.id])
+      expect(notices.first.data_hash).to eq(
+        "username" => user.username,
+        "user_note_id" => note[:id],
+      )
+
+      sign_in(moderator)
+      get "/notifications.json"
+      expect(response.parsed_body["notifications"].pluck("id")).to include(notices.first.id)
+
+      SiteSetting.user_notes_enabled = false
+      get "/notifications.json"
+      expect(response.parsed_body["notifications"]).to be_empty
+
+      SiteSetting.user_notes_enabled = true
+      moderator.update!(moderator: false)
+      [true, false].each do |recent|
+        get "/notifications.json", params: { recent: recent ? true : nil }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["notifications"]).to be_empty
+      end
+    end
+
     it "rejects notes longer than the maximum post length" do
       SiteSetting.max_post_length = 10
       sign_in(moderator)
@@ -71,6 +111,34 @@ describe DiscourseUserNotes::UserNotesController do
   end
 
   describe "#index" do
+    it "requires moderation scope for the scoped notifications API" do
+      Jobs.run_immediately!
+      group = Fabricate(:group)
+      group.add(moderator)
+      SiteSetting.user_notes_notification_groups = group.id.to_s
+      DiscourseUserNotes.add_note(user, "Staff-only text", admin.id)
+      token = McpOauthAccessToken.new(user: moderator, scopes: [DiscourseMcp::Scopes::CONTENT_READ])
+
+      result =
+        DiscourseMcp::Tools::ListNotifications.call(
+          arguments: {
+          },
+          request_context: DiscourseMcp::RequestContext.new(token),
+        ).fetch(:structuredContent)
+      expect(result[:notifications]).to be_empty
+
+      token.scopes += [DiscourseMcp::Scopes::MODERATION_READ]
+      result =
+        DiscourseMcp::Tools::ListNotifications.call(
+          arguments: {
+          },
+          request_context: DiscourseMcp::RequestContext.new(token),
+        ).fetch(:structuredContent)
+      expect(result[:notifications].pluck(:notification_type)).to eq(
+        [Notification.types[:staff_user_note]],
+      )
+    end
+
     context "when a note references a PM the moderator cannot see" do
       fab!(:pm_topic) do
         Fabricate(

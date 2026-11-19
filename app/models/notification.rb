@@ -31,6 +31,15 @@ class Notification < ActiveRecord::Base
             "topics.id IS NULL OR topics.deleted_at IS NULL",
           )
         }
+  scope :visible_to,
+        ->(guardian) do
+          if guardian.is_staff? && SiteSetting.has_setting?(:user_notes_enabled) &&
+               SiteSetting.user_notes_enabled?
+            all
+          else
+            where.not(notification_type: types[:staff_user_note])
+          end
+        end
   scope :unread_type, ->(user, type, limit = 30) { unread_types(user, [type], limit) }
   scope :unread_types,
         ->(user, types, limit = 30) do
@@ -171,6 +180,7 @@ class Notification < ActiveRecord::Base
         boost: 43, # Used by https://github.com/discourse/discourse-boosts
         suggested_edit_created: 44, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
         suggested_edit_accepted: 45, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
+        staff_user_note: 48,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
@@ -349,6 +359,7 @@ class Notification < ActiveRecord::Base
         .notifications
         .includes(:topic)
         .visible
+        .visible_to(user.guardian)
         .prioritized(types.present? ? [] : like_types)
         .limit(count)
 
@@ -367,7 +378,8 @@ class Notification < ActiveRecord::Base
     return unless user && user.user_option
 
     count ||= 10
-    notifications = user.notifications.visible.recent(count).includes(:topic)
+    notifications =
+      user.notifications.visible.visible_to(user.guardian).recent(count).includes(:topic)
 
     notifications = notifications.where(notification_type: types) if types.present?
     if user.user_option.like_notification_frequency ==

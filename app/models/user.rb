@@ -922,7 +922,8 @@ class User < ActiveRecord::Base
     return if !allow_live_notifications?
 
     # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order("notifications.created_at desc").first
+    notification =
+      notifications.visible.visible_to(guardian).order("notifications.created_at desc").first
     json = NotificationSerializer.new(notification).as_json if notification
 
     sql = <<~SQL

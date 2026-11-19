@@ -24,6 +24,7 @@ after_initialize do
 
   require_relative "app/serializers/user_note_serializer"
   require_relative "app/controllers/discourse_user_notes/user_notes_controller"
+  require_relative "jobs/regular/notify_staff_user_note"
 
   Discourse::Application.routes.append { mount DiscourseUserNotes::Engine, at: "/user_notes" }
 
