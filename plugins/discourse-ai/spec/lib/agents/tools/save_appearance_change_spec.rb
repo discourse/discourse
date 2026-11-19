@@ -228,6 +228,56 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
       expect(appearance_change.theme.name).to eq("Acme (draft)")
     end
 
+    it "shows what a new version changes from the one it replaces" do
+      live =
+        AppearanceChange::DraftTheme.call(
+          params: {
+            name: "Acme",
+            light_colors: palettes.light,
+            dark_colors: palettes.dark,
+            styles:,
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      draft_attributes[:replaces_theme_id] = live.theme_id
+      draft_attributes[:styles] = { "variables" => { "--d-border-radius" => "16px" } }
+
+      expect(tool.approval_changes).to include(
+        a_hash_including(label: "--d-border-radius", before: "12px", after: "16px"),
+        a_hash_including(
+          label: "Topic list rows (hover) box-shadow",
+          before: "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+        ),
+      )
+    end
+
+    it "saves a new version that removes every style" do
+      live =
+        AppearanceChange::DraftTheme.call(
+          params: {
+            name: "Acme",
+            light_colors: palettes.light,
+            dark_colors: palettes.dark,
+            styles:,
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      draft_attributes[:replaces_theme_id] = live.theme_id
+      draft_attributes[:styles] = {}
+
+      expect(tool.approval_changes.map { |row| row[:label] }).to include("--d-border-radius")
+      approve_as(other_admin, build_reviewable)
+
+      appearance_change = AppearanceChange.last
+      expect(appearance_change.replaces_theme).to eq(live.theme)
+      expect(appearance_change.css).to eq("")
+      expect(appearance_change.theme.theme_fields).to be_empty
+    end
+
     it "doesn't save styles a plugin keeps off" do
       plugin = Plugin::Instance.new
       modifier =

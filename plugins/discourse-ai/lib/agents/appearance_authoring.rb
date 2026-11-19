@@ -168,23 +168,41 @@ module DiscourseAi
       MAX_STYLE_ROWS = 12
 
       # Approval card rows for a draft's styles, as the policy describes them.
-      def self.style_changes(styles, palettes:)
-        return [] if styles.blank?
+      # For a new version, only what differs from the styles it replaces,
+      # including the ones it removes.
+      def self.style_changes(styles, palettes:, previous: nil)
+        after = style_values(styles, palettes)
+        before = style_values(previous, palettes)
 
-        changes = AppearanceStyles::Policy.call(styles, palettes:).changes
         rows =
-          changes
-            .first(MAX_STYLE_ROWS)
-            .map { |change| { label: change.label, before: empty_value, after: change.value } }
-        if changes.size > MAX_STYLE_ROWS
-          rows << {
+          after.filter_map do |label, value|
+            next if before[label] == value
+            { label:, before: before[label] || empty_value, after: value }
+          end
+        rows +=
+          before
+            .except(*after.keys)
+            .map { |label, value| { label:, before: value, after: empty_value } }
+
+        if rows.size > MAX_STYLE_ROWS
+          more = {
             label: I18n.t("discourse_ai.appearance_authoring.more_styles"),
             before: empty_value,
-            after: (changes.size - MAX_STYLE_ROWS).to_s,
+            after: (rows.size - MAX_STYLE_ROWS).to_s,
           }
+          rows = rows.first(MAX_STYLE_ROWS) << more
         end
         rows
       end
+
+      def self.style_values(styles, palettes)
+        return {} if styles.blank?
+        AppearanceStyles::Policy
+          .call(styles, palettes:)
+          .changes
+          .to_h { |change| [change.label, change.value] }
+      end
+      private_class_method :style_values
 
       def self.default_theme_change(from:, to:)
         {

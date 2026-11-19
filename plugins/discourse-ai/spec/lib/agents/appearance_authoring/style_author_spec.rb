@@ -45,6 +45,35 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::StyleAuthor do
     described_class.new(llm:, user: admin, feature_name: "admin_assistant").call(request, palettes:)
   end
 
+  describe "an answer with no styles" do
+    let(:empty_answer) { { "variables" => [], "rules" => [], "unsupported" => [] } }
+
+    it "removes every style when editing existing ones" do
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([empty_answer]) do
+          described_class.new(llm:, user: admin, feature_name: "admin_assistant").call(
+            "Show the share button again",
+            palettes:,
+            current_styles: {
+              "rules" => [{ "area" => "share_button", "declarations" => { "display" => "none" } }],
+            },
+          )
+        end
+
+      expect(result).to be_a(described_class::Result)
+      expect(result.styles).to eq({})
+    end
+
+    it "fails for a new request" do
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([empty_answer]) do
+          author("Rounder corners")
+        end
+
+      expect(result).to be_a(described_class::Failure)
+    end
+  end
+
   it "returns typed styles that pass the policy, with what they change" do
     result = nil
     DiscourseAi::Completions::Llm.with_prepared_responses([valid_answer]) do |_, _, prompts|

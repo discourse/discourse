@@ -51,7 +51,8 @@ module DiscourseAi
 
             styles = typed_styles(answer)
             unsupported = Array.wrap(answer["unsupported"]).map(&:to_s).compact_blank
-            if styles.values.all?(&:blank?) && unsupported.empty?
+            # no styles at all is only an answer when editing: it removes them
+            if styles.values.all?(&:blank?) && unsupported.empty? && current_styles.blank?
               return Failure.new(errors: ["The model gave no styles."], attempts: attempt + 1)
             end
 

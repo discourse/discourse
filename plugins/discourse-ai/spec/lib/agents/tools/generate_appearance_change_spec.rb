@@ -537,6 +537,35 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
         )
       end
 
+      it "drafts a new version without styles when asked to remove the last one" do
+        result =
+          invoke_with_styles(
+            [{ "variables" => [], "rules" => [], "unsupported" => [] }],
+            name: "Acme",
+            styles: "Go back to square corners",
+          )
+
+        expect(result[:status]).to eq("success")
+        expect(draft(result)).to include(replaces_theme_id: live_change.theme_id)
+        expect(draft(result)[:styles]).to be_blank
+      end
+
+      it "doesn't drop the current styles for a request it can't make" do
+        result =
+          invoke_with_styles(
+            [{ "variables" => [], "rules" => [], "unsupported" => ["Add a carousel"] }],
+            name: "Acme",
+            styles: "Add a carousel",
+          )
+
+        expect(result[:error]).to eq(
+          I18n.t(
+            "discourse_ai.appearance_authoring.styles_unsupported",
+            requests: "Add a carousel",
+          ),
+        )
+      end
+
       it "makes a separate theme when asked for a new one" do
         result = invoke_with_styles(name: "Other", styles: "Rounder corners", new_theme: true)
 

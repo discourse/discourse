@@ -216,7 +216,9 @@ module DiscourseAi
           if result.is_a?(AppearanceAuthoring::StyleAuthor::Failure)
             refuse(I18n.t("discourse_ai.appearance_authoring.styles_failed"))
           end
-          if result.styles.blank?
+          # an edit may remove every style, but not because the rest of the
+          # request couldn't be made
+          if result.styles.blank? && (edited_change.nil? || result.unsupported.any?)
             refuse(
               I18n.t(
                 "discourse_ai.appearance_authoring.styles_unsupported",
