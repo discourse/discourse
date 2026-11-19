@@ -59,6 +59,9 @@ en:
         [Go to event topic](%{event_url})
 
   site_settings:
+    event_calendar_invitations_organizer_invalid: "Use a valid email address that is not a Discourse reply-by-email, category, or group inbox address."
+    event_calendar_invitations_enabled: "Email calendar invitations, updates, and cancellations for individual username invitations to non-recurring events. Group and bulk invitations are excluded. Requires {{setting:event_calendar_invitations_organizer}}. Calendar replies do not update attendance in Discourse. Disabling stops all calendar email, including cancellations."
+    event_calendar_invitations_organizer: "Organizer and reply address for calendar invitations. Use a dedicated mailbox that does NOT deliver to Discourse incoming email or a group inbox. Calendar replies must be handled outside Discourse. Existing invitations retain their original organizer."
     map_events_to_color: "Assign a color to each tag or category."
     map_events_title: "Overwrites 'Events' in the 'Upcoming Events' sidebar title per category."
     discourse_events_enabled: "Enable the Discourse Events plugin. This will add support for a [calendar][/calendar] tag in the first post of a topic."
@@ -103,6 +106,21 @@ en:
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 
   discourse_events:
+    calendar_invitation:
+      request:
+        subject_template: "Calendar invitation: %{topic_title}"
+        text_body_template: |
+          You have been invited to **%{topic_title}**, or its details have changed.
+
+          [View the event and update your attendance](%{event_url}).
+
+          Use the attached calendar invitation to update your calendar. Calendar responses do not update attendance in Discourse. Replies go to the calendar organizer, not to the topic.
+      cancel:
+        subject_template: "Calendar cancellation: %{topic_title}"
+        text_body_template: |
+          Your calendar invitation to **%{topic_title}** has been cancelled.
+
+          Use the attached cancellation to update your calendar. [View the event](%{event_url}) if it is still available.
     reminder:
       subjects:
         before: "%{title} is about to start"

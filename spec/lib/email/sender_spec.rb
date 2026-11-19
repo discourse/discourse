@@ -527,6 +527,25 @@ RSpec.describe Email::Sender do
     end
   end
 
+  it "preserves prebuilt attachments without post headers in multipart/mixed" do
+    message = Mail::Message.new(to: "calendar@example.com")
+    message.text_part = Mail::Part.new(content_type: "text/plain", body: "Invitation")
+    message.attachments["event.ics"] = {
+      mime_type: "text/calendar; method=REQUEST",
+      content: "BEGIN:VCALENDAR\r\nMETHOD:REQUEST\r\nEND:VCALENDAR\r\n",
+    }
+    stub_deliver_response(message)
+
+    Email::Sender.new(message, :test_message).send
+
+    delivered = Mail.read_from_string(message.encoded)
+    expect(delivered.mime_type).to eq("multipart/mixed")
+    expect(delivered.parts.first.mime_type).to eq("multipart/alternative")
+    expect(delivered.text_part.body.decoded).to eq("Invitation")
+    expect(delivered.html_part.body.decoded).to include("Invitation")
+    expect(delivered.attachments.first.content_type_parameters["method"]).to eq("REQUEST")
+  end
+
   context "with attachments" do
     fab!(:small_pdf) do
       SiteSetting.authorized_extensions = "pdf"

@@ -272,6 +272,7 @@ module Email
       end
 
       @message.html_part.body = style.to_s
+      fix_parts_after_attachments!
 
       email_log.message_id = @message.message_id
 
@@ -409,8 +410,6 @@ module Email
           end
         end
       end
-
-      fix_parts_after_attachments!
     end
 
     def should_attach_image?(upload, optimized_1X = nil)

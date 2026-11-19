@@ -46,7 +46,9 @@ module DiscourseEvents
       before_save :chat_channel_sync
       # prepend so it runs before `dependent: :delete_all` wipes the invitees
       before_destroy :reset_invitees_topic_tracking, prepend: true
+      after_destroy :sync_calendar_invitations
       after_save :sync_hosts
+      after_save :sync_calendar_invitations
       after_commit :create_livestream_chat_channel, on: %i[create update]
       after_commit :enqueue_warm_livestream_onebox, on: %i[create update]
       after_commit :enqueue_warm_recording_onebox, on: %i[create update]
@@ -83,6 +85,10 @@ module DiscourseEvents
       validate :allowed_custom_fields
       validate :url_is_a_uri, if: :url_changed?
       validate :hosts_are_valid
+
+      def sync_calendar_invitations
+        CalendarInvitation.sync_event!(self)
+      end
 
       def self.attributes_protected_by_default
         super - %w[id]

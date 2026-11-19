@@ -27,6 +27,7 @@ module DiscourseEvents
 
       before_save :clear_recurring_unless_going
       after_destroy :reset_topic_tracking!
+      after_destroy { CalendarInvitation.find_by(event_id: post_id, user_id: user_id)&.cancel! }
       after_commit :sync_chat_channel_members
 
       def self.statuses

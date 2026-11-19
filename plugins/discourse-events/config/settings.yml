@@ -1,4 +1,10 @@
 discourse_events:
+  event_calendar_invitations_enabled:
+    default: false
+  event_calendar_invitations_organizer:
+    default: ""
+    type: email
+    validator: "DiscourseEvents::Configuration::CalendarOrganizerValidator"
   discourse_events_enabled:
     default: false
     client: true
