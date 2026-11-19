@@ -710,19 +710,14 @@ module DiscourseWorkflows
         if operator.key?("exists")
           return operator["exists"] ? !empty_value?(value) : empty_value?(value)
         end
-        if (metadata_flag = operator["metadata_flag"]).is_a?(Hash)
+        if (metadata_flag = operator["metadata_flag"])
+          return false if value.nil?
+
           collection, flag = metadata_flag.values_at("collection", "flag")
-          return false if value.nil? || !collection.is_a?(String) || !flag.is_a?(String)
-
-          options = metadata[collection] || metadata[collection.to_sym]
-          return false unless options.is_a?(Array)
-
           return(
-            options.any? do |option|
-              next false unless option.is_a?(Hash)
-
-              id = option.fetch("id", option[:id])
-              !id.nil? && id.to_s == value.to_s && option.fetch(flag, option[flag.to_sym]) == true
+            Array(metadata[collection]).any? do |option|
+              option = option.with_indifferent_access
+              option[:id].to_s == value.to_s && option[flag] == true
             end
           )
         end

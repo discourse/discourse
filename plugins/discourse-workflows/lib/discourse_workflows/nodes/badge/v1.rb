@@ -135,8 +135,7 @@ module DiscourseWorkflows
           user = exec_ctx.find_user(username: config["username"])
           badge = ::Badge.find(config["badge_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-          guardian = actor.guardian
-          raise Discourse::InvalidAccess if !guardian.can_grant_badges?(user)
+          raise Discourse::InvalidAccess if !actor.guardian.can_grant_badges?(user)
 
           user_badges = UserBadge.where(user: user, badge: badge)
 
@@ -147,7 +146,7 @@ module DiscourseWorkflows
             changed = user_badge.present?
           else
             post = find_reason_post(exec_ctx, item_index) unless self.class.reason_hidden?(badge)
-            guardian.ensure_can_see!(post) if post
+            actor.guardian.ensure_can_see!(post) if post
 
             last_user_badge_id = user_badges.maximum(:id)
             BadgeGranter.grant(badge, user, granted_by: actor, post_id: post&.id)
@@ -167,15 +166,15 @@ module DiscourseWorkflows
 
         def find_reason_post(exec_ctx, item_index)
           reason = exec_ctx.get_node_parameter("reason", item_index).to_s.strip
-          if /\A[0-9]+\z/.match?(reason)
-            raise NodeError,
-                  I18n.t("discourse_workflows.errors.badge.reason_id_requires_prefix", id: reason)
-          end
-
-          reference = /\A(post|topic):([0-9]+)\z/.match(reason)
+          reference = /\A(?:(post|topic):)?([0-9]+)\z/.match(reason)
           return BadgeGranter.post_for_reason(reason) if !reference
 
           type, id = reference.captures
+          if !type
+            raise NodeError,
+                  I18n.t("discourse_workflows.errors.badge.reason_id_requires_prefix", id:)
+          end
+
           post = type == "post" ? ::Post.find_by(id:) : ::Post.find_by(topic_id: id, post_number: 1)
           return post if post
 

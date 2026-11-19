@@ -25,7 +25,7 @@ class BadgeGranter
     in { controller: "topics", action: "show" } | { controller: "nested_topics" }
       topic_id = (route[:id] || route[:topic_id]).to_i
       post_number = route[:post_number] || 1
-      Post.find_by(topic_id:, post_number:) if topic_id > 0
+      Post.find_by(topic_id:, post_number:)
     else
       nil
     end

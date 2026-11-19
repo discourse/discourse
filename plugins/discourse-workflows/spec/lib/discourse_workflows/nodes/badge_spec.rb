@@ -92,126 +92,108 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
         expect(result["changed"]).to be(false)
       end
 
-      it "associates the badge grant with the post from the reason expression" do
-        post = Fabricate(:post)
-        config = {
-          "operation" => "grant",
-          "username" => user.username,
-          "badge_id" => badge.id.to_s,
-          "reason" => "={{ $json.post_url }}",
-        }
+      context "with a reason" do
+        let(:grant_config) do
+          { "operation" => "grant", "username" => user.username, "badge_id" => badge.id.to_s }
+        end
 
-        execute_node(configuration: config, item: { "json" => { "post_url" => post.full_url } })
+        def granted_post_id(badge_id: badge.id)
+          UserBadge.find_by!(user:, badge_id:).post_id
+        end
 
-        expect(UserBadge.find_by!(user: user, badge: badge).post_id).to eq(post.id)
-      end
+        it "associates the grant with the post from a URL expression" do
+          post = Fabricate(:post)
 
-      it "rejects an external reason URL" do
-        config = {
-          "operation" => "grant",
-          "username" => user.username,
-          "badge_id" => badge.id.to_s,
-          "reason" => "https://example.com/t/42",
-        }
+          execute_node(
+            configuration: grant_config.merge("reason" => "={{ $json.post_url }}"),
+            item: {
+              "json" => {
+                "post_url" => post.full_url,
+              },
+            },
+          )
 
-        expect { execute_node(configuration: config, item: item) }.to raise_error(
-          DiscourseWorkflows::NodeError,
-          I18n.t("invalid_grant_badge_reason_link"),
-        ).and not_change { UserBadge.count }
-      end
+          expect(granted_post_id).to eq(post.id)
+        end
 
-      it "associates the badge grant with the topic's first post when given a prefixed topic ID" do
-        post = Fabricate(:post)
-        config = {
-          "operation" => "grant",
-          "username" => user.username,
-          "badge_id" => badge.id.to_s,
-          "reason" => "topic:#{post.topic_id}",
-        }
-
-        execute_node(configuration: config, item: item)
-
-        expect(UserBadge.find_by!(user: user, badge: badge).post_id).to eq(post.id)
-      end
-
-      it "uses a prefixed post ID expression even when the same ID identifies a topic" do
-        topic = Fabricate(:topic, id: 50_000)
-        Fabricate(:post, topic:)
-        first_post = Fabricate(:post)
-        reply = Fabricate(:post, id: topic.id, topic: first_post.topic)
-        config = {
-          "operation" => "grant",
-          "username" => user.username,
-          "badge_id" => badge.id.to_s,
-          "reason" => "=post:{{ $json.post_id }}",
-        }
-
-        execute_node(configuration: config, item: { "json" => { "post_id" => reply.id } })
-
-        expect(UserBadge.find_by!(user: user, badge: badge).post_id).to eq(reply.id)
-      end
-
-      it "uses a prefixed topic ID expression even when the same ID identifies a post" do
-        topic = Fabricate(:topic, id: 50_000)
-        first_post = Fabricate(:post, topic:)
-        Fabricate(:post, id: topic.id)
-        config = {
-          "operation" => "grant",
-          "username" => user.username,
-          "badge_id" => badge.id.to_s,
-          "reason" => "=topic:{{ $json.topic.id }}",
-        }
-
-        execute_node(configuration: config, item: { "json" => { "topic" => { "id" => topic.id } } })
-
-        expect(UserBadge.find_by!(user: user, badge: badge).post_id).to eq(first_post.id)
-      end
-
-      it "requires a prefix even when an expression references a topic ID" do
-        post = Fabricate(:post)
-        config = {
-          "operation" => "grant",
-          "username" => user.username,
-          "badge_id" => badge.id.to_s,
-          "reason" => "={{ $json.topic.id }}",
-        }
-        item = { "json" => { "topic" => { "id" => post.topic_id } } }
-
-        expect { execute_node(configuration: config, item: item) }.to raise_error(
-          DiscourseWorkflows::NodeError,
-          I18n.t("discourse_workflows.errors.badge.reason_id_requires_prefix", id: post.topic_id),
-        ).and not_change { UserBadge.count }
-      end
-
-      it "reports missing post and topic references as node errors" do
-        config = {
-          "operation" => "grant",
-          "username" => user.username,
-          "badge_id" => badge.id.to_s,
-        }
-
-        %w[post:0 topic:0].each do |reference|
-          expect do
-            execute_node(configuration: config.merge("reason" => reference), item: item)
-          end.to raise_error(
+        it "rejects an external URL" do
+          expect {
+            execute_node(
+              configuration: grant_config.merge("reason" => "https://example.com/t/42"),
+              item:,
+            )
+          }.to raise_error(
             DiscourseWorkflows::NodeError,
-            I18n.t("discourse_workflows.errors.badge.reason_id_not_found", reference:),
+            I18n.t("invalid_grant_badge_reason_link"),
           ).and not_change { UserBadge.count }
         end
-      end
 
-      it "ignores a reason when the badge's post visibility is locked off" do
-        post = Fabricate(:post)
-        config = {
-          "operation" => "grant",
-          "username" => user.username,
-          "badge_id" => Badge::Anniversary,
-          "reason" => "post:#{post.id}",
-        }
+        it "associates the grant with the topic's first post for a prefixed topic ID" do
+          post = Fabricate(:post)
 
-        execute_node(configuration: config, item: item)
+          execute_node(
+            configuration: grant_config.merge("reason" => "topic:#{post.topic_id}"),
+            item:,
+          )
 
-        expect(UserBadge.find_by!(user: user, badge_id: Badge::Anniversary).post_id).to be_nil
+          expect(granted_post_id).to eq(post.id)
+        end
+
+        it "associates the grant with the post for a prefixed post ID expression" do
+          reply = Fabricate(:post, topic: Fabricate(:post).topic)
+
+          execute_node(
+            configuration: grant_config.merge("reason" => "=post:{{ $json.post_id }}"),
+            item: {
+              "json" => {
+                "post_id" => reply.id,
+              },
+            },
+          )
+
+          expect(granted_post_id).to eq(reply.id)
+        end
+
+        it "requires a prefix for a bare ID" do
+          post = Fabricate(:post)
+
+          expect {
+            execute_node(
+              configuration: grant_config.merge("reason" => "={{ $json.topic_id }}"),
+              item: {
+                "json" => {
+                  "topic_id" => post.topic_id,
+                },
+              },
+            )
+          }.to raise_error(
+            DiscourseWorkflows::NodeError,
+            I18n.t("discourse_workflows.errors.badge.reason_id_requires_prefix", id: post.topic_id),
+          ).and not_change { UserBadge.count }
+        end
+
+        it "reports missing post and topic references as node errors" do
+          %w[post:0 topic:0].each do |reference|
+            expect {
+              execute_node(configuration: grant_config.merge("reason" => reference), item:)
+            }.to raise_error(
+              DiscourseWorkflows::NodeError,
+              I18n.t("discourse_workflows.errors.badge.reason_id_not_found", reference:),
+            ).and not_change { UserBadge.count }
+          end
+        end
+
+        it "ignores the reason when the badge's post visibility is locked off" do
+          post = Fabricate(:post)
+
+          execute_node(
+            configuration:
+              grant_config.merge("badge_id" => Badge::Anniversary, "reason" => "post:#{post.id}"),
+            item:,
+          )
+
+          expect(granted_post_id(badge_id: Badge::Anniversary)).to be_nil
+        end
       end
 
       it "reports no change when the badge is disabled" do
