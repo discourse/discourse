@@ -12,6 +12,7 @@ import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import "discourse/admin/lib/setting-field-types";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import SettingBool from "discourse/admin/components/site-settings/bool";
 import SettingCategory from "discourse/admin/components/site-settings/category";
