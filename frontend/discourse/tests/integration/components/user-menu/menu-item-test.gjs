@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { render, settled } from "@ember/test-helpers";
+import { render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MenuItem from "discourse/components/user-menu/menu-item";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
@@ -73,6 +73,22 @@ module(
       assert
         .dom("li.unread")
         .doesNotExist("the item re-renders when the read property is updated");
+    });
+
+    test("middle-clicking an unread notification marks it as read", async function (assert) {
+      const item = getNotification(
+        this.currentUser,
+        this.siteSettings,
+        this.site
+      );
+      item.appEvents = this.owner.lookup("service:app-events");
+      await render(<template><MenuItem @item={{item}} /></template>);
+
+      await triggerEvent("li a", "auxclick", { button: 2 });
+      assert.false(item.notification.read, "right-click is ignored");
+
+      await triggerEvent("li a", "auxclick", { button: 1 });
+      assert.true(item.notification.read, "middle-click marks it as read");
     });
 
     test("pushes the notification type name to the classList", async function (assert) {
