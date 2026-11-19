@@ -234,14 +234,9 @@ const extension = {
       }),
     },
     math_block: (state, token) => {
-      // unlike cooked HTML, the indentation of the first line is source
-      const source = token.content.trim()
-        ? token.content.replace(/^\s*\n|\s+$/g, "")
-        : "";
-
       state.openNode(state.schema.nodes.math_block);
       state.openNode(state.schema.nodes.preview_source, { params: LANGUAGE });
-      state.addText(source);
+      state.addText(token.content);
       state.closeNode();
       state.closeNode();
 

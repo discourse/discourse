@@ -165,6 +165,27 @@ module(
       await testMarkdown(assert, markdown, () => {}, markdown);
     });
 
+    test("preserves a trailing escaped space in block math", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+
+      const source = "a\\ ";
+      const markdown = `$$\n${source}\n$$`;
+      const [editorClass] = await setupRichEditor(assert, markdown, {
+        multiToggle: true,
+      });
+
+      assert.strictEqual(
+        editorClass.view.state.doc.textContent,
+        source,
+        "the preview source keeps the LaTeX space command"
+      );
+      assert.strictEqual(
+        editorClass.value,
+        markdown,
+        "switching editor modes preserves the trailing escaped space"
+      );
+    });
+
     test("pastes the source of block math rendered by KaTeX", async function (assert) {
       this.siteSettings.discourse_math_enabled = true;
 
