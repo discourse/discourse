@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Thread tracking state | full page" do
+  include ActiveSupport::Testing::TimeHelpers
+
   fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user, :user)
@@ -139,6 +141,7 @@ describe "Thread tracking state | full page" do
         chat_page.visit_channel(channel)
         expect(sidebar_page).to have_no_unread_channel(channel)
         chat_page.visit_channel(other_channel)
+        travel_to(1.minute.from_now)
         Fabricate(:chat_message, thread: thread, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel)
       end
