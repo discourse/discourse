@@ -1,4 +1,278 @@
 en:
+<<<<<<< HEAD
+=======
+  dsa_notice:
+    subject: "[%{reference}] Report of potentially illegal content"
+    summary: "**Report reference: %{reference}**\n\n**Email address:** %{reporter_email}\n\n**Full name or organization name:** %{reporter_name}\n\n**Exact URL of the content:** %{content_url}\n\n**Why do you believe this content is illegal?**\n\n%{explanation}"
+    verification_invalid: "The email verification code is incorrect or has expired. Check the code or request a new one."
+    invalid_parameters: "The report contains invalid values."
+    invalid_url: "must be a valid HTTP or HTTPS URL without login credentials"
+    invalid_email: "must be a valid email address"
+  dsa_notice_verification:
+    subject_template: "[%{email_prefix}] Your report verification code"
+    text_body_template: |
+      Use this code to verify your email for reporting illegal content on %{site_title}:
+
+      ## %{verification_code}
+
+      This code expires in %{expires_in_minutes} minutes. If you didn’t request it, you can safely ignore this email.
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] Your report of potentially illegal content %{reference}"
+    text_body_template: |
+      %{site_title} has received your report.
+
+      The reviewing team will email you the outcome. This receipt does not mean that a decision has been made or that the content has been removed.
+
+      %{summary}
+
+      **Declaration:**
+
+      I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete.
+  dsa_statements:
+    classification_note: "Classified this moderation decision for DSA reporting.\nCommunity rule: %{ground}\nCategory: %{category}"
+    errors:
+      statements_changed: "The statements for this review have changed. Reload the page to see their current classification."
+      failed: "Classification could not be saved. Please try again."
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "Animal welfare"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "Consumer information infringements"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "Cyber violence"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "Cyber violence against women"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "Data protection and privacy violations"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "Illegal or harmful speech"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "Intellectual property infringements"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "Negative effects on civic discourse or elections"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "Type of alleged illegal content not specified by the notifier"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "Other violation of terms and conditions"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "Protection of minors"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "Risk for public security"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "Scams and fraud"
+      STATEMENT_CATEGORY_SELF_HARM: "Self harm"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "Unsafe or prohibited products"
+      STATEMENT_CATEGORY_VIOLENCE: "Violence"
+  markdown_endpoints:
+    latest: "Latest"
+    categories: "Categories"
+    tags: "Tags"
+    parent: "Parent: %{parent}"
+    previous_page: "Previous page"
+    next_page: "Next page"
+    empty: "No entries to display."
+    replies: "Replies"
+    post_author: "**Author:** %{author}"
+    post_date: "**Post date:** %{timestamp}"
+    last_updated: "Last updated"
+    event:
+      name: "Event"
+      start: "Starts"
+      end: "Ends"
+      location: "Location"
+      link: "Link"
+      date_with_timezone: "%{date} (%{timezone})"
+  mcp:
+    errors:
+      author_must_match: "This connection acts as %{username} and cannot create content as another user. Omit author_username or use %{username}."
+      authoring_guide_unavailable: "Guide unavailable. Choose a Markdown file under .skills/ or docs/developer-guides/ in this site's repository (maximum 256 KiB)."
+      category_create_failed: "Category could not be created"
+      category_delete_confirmation_required: "Category deletion must be confirmed"
+      category_delete_name_mismatch: "Category name does not match"
+      category_emoji_required: "Emoji must contain a shortcode name, such as dog or paw_prints."
+      category_not_found: "Category not found"
+      category_update_failed: "Category could not be updated"
+      category_update_required: "At least one category field must be provided"
+      draft_sequence_conflict: "Draft sequence conflict"
+      draft_too_long: "Draft is too long"
+      group_create_failed: "The group could not be created"
+      group_delete_confirmation_required: "Group deletion must be confirmed"
+      group_delete_name_mismatch: "Group name does not match"
+      group_member_selector_required: "Provide exactly one of usernames, user_ids, or user_emails"
+      group_user_limit:
+        one: "Select no more than %{count} user."
+        other: "Select no more than %{count} users."
+      group_membership_request_not_found: "This user has no pending membership request for the group"
+      group_not_found: "Group not found"
+      group_post_single_cursor: "Provide either before_post_id or before, not both"
+      group_request_reason_required: "A reason is required to request group membership"
+      group_update_existing_users_required:
+        one: "This change also affects %{count} existing member. Call again with update_existing_users to decide whether to apply it to them."
+        other: "This change also affects %{count} existing members. Call again with update_existing_users to decide whether to apply it to them."
+      group_update_failed: "The group could not be updated"
+      group_update_required: "Provide at least one group field to update"
+      invalid_date: "Invalid date"
+      invalid_directory_period: "Invalid directory period"
+      invalid_reply_mode: "Invalid reply mode"
+      moderation_confirmation_required: "Set confirm to true to attest that this specific moderation action was requested."
+      moderation_invalid_duration_reason: "Provide a nonblank reason of at most 300 characters and duration_days from 1 to %{max}."
+      moderation_operation_failed: "The moderation action could not be verified. Read the user's current state before retrying."
+      moderation_user_not_found: "User not found. Use an exact existing username."
+      post_not_found: "Post not found"
+      post_not_created: "The post could not be created"
+      user_directory_disabled: "The user directory is disabled"
+      filter_only_for_filtered_view: "Filter is only supported by the filtered view"
+      filter_required: "A nonblank filter is required for the filtered view"
+      invalid_post_selection: "The post selection options are invalid"
+      invalid_search_query: "The search query is invalid"
+      invalid_reviewable_status: "The reviewable status is invalid"
+      invalid_reviewable_type: "The reviewable type is invalid"
+      group_mailbox_sent: "Group private-message mailboxes do not support sent messages"
+      invalid_upload_data: "The upload data is not valid base64"
+      invalid_upload_source: "Provide either base64 data with a filename or one remote URL"
+      invalid_upload_type: "The upload type is not supported"
+      invalid_upload_url: "The upload URL must use HTTP or HTTPS"
+      private_message_email_message: "A custom message is only valid with an email recipient"
+      private_message_group_notification: "Group notifications are only valid with a group recipient"
+      private_message_invite_failed: "The participant could not be added to the personal message"
+      private_message_not_found: "Personal message not found"
+      private_message_recipient_required: "At least one private-message recipient is required"
+      private_message_single_recipient: "Provide exactly one user, group, or email recipient"
+      post_revision_not_found: "Post revision not found"
+      report_date_range: "Provide a date range of no more than %{count} days, with start_date on or before end_date"
+      report_failed: "The report could not be generated"
+      report_not_found: "Report not found or unavailable"
+      report_timeout: "The report took too long to generate. Try a shorter date range or narrower filters."
+      reviewable_action_failed: "The reviewable action failed"
+      reviewable_action_unavailable: "The reviewable action is no longer available"
+      reviewable_confirmation_required: "Explicit confirmation is required for a reviewable action"
+      reviewable_conflict: "The reviewable changed since it was read"
+      reviewable_fields_unavailable: "These fields are not accepted by the reviewable action: %{fields}"
+      reviewable_not_found: "Reviewable not found"
+      reviewable_reject_reason_required: "A reject reason is required for this action"
+      site_setting_confirmation_required: "This site setting requires explicit confirmation"
+      site_setting_change_confirmation_required: "Explicit confirmation is required to change a site setting"
+      site_setting_conflict: "The site setting changed since it was read"
+      site_setting_dependency: "These site setting dependencies are not satisfied: %{settings}"
+      site_setting_no_change: "The requested site setting change has no effect"
+      site_setting_not_found: "Site setting not found"
+      site_setting_sensitive: "Sensitive site settings cannot be read or changed by this tool"
+      site_setting_type_unsupported: "This site setting type cannot be changed by this tool"
+      site_setting_update_failed: "The site setting could not be updated"
+      site_setting_value_forbidden: "Do not provide a value when resetting a site setting"
+      site_setting_value_required: "Provide a value when setting a site setting"
+      site_setting_verification_failed: "The site setting update could not be verified"
+      source_path_unavailable: "Choose a tracked source file under the documented source directories. Absolute paths, private configuration, and symlink escapes are unavailable."
+      source_too_large: "Source output is too large. Use a narrower query, fewer lines, or a file of at most 2 MiB."
+      source_unavailable: "Source checkout or reported commit is unavailable. No latest-version fallback was fetched."
+      theme_children_must_be_components: "Only standalone themes can have child components, and every child_theme_id must identify an existing component. Convert a standalone child with component:true first."
+      theme_code_compile_failed: "Theme compilation failed; no changes were committed: %{message}"
+      theme_code_js_invalid: "The theme's JavaScript bundle failed compilation, possibly in another file; no changes were committed: %{message}"
+      theme_code_required: "Provide css or javascript. Omit unchanged inputs; explicitly use an empty string to remove a managed file."
+      theme_code_stale: "Theme code changed since your read. Call discourse_get_theme and use its current code_revision before editing."
+      theme_code_too_large: "Theme code must be text of at most 65,536 characters per file."
+      theme_create_failed: "The theme could not be created"
+      theme_field_location_invalid: "That field has no supported theme file path and will not load. For page CSS use target common, name scss; JavaScript modules use target extra_js with a .js filename. Prefer discourse_set_theme_code for inline code."
+      theme_field_source_conflict: "Provide either inline value or an upload_id, not both."
+      theme_field_type_invalid: "Unknown theme field type '%{type}'."
+      theme_field_upload_not_found: "Upload not found. Use an existing upload ID returned by the upload tool."
+      theme_field_value_required: "Field '%{name}' requires a string value for inline source or upload_id for an upload variable. To remove an existing field, explicitly set value to an empty string."
+      theme_inline_field_upload: "Field '%{name}' is an inline source field. Put its code in value and omit upload_id; upload IDs are only supported for theme upload variables. For CSS/JavaScript prefer discourse_set_theme_code."
+      theme_not_found: "Theme not found"
+      theme_parents_must_be_themes: "Only components can be attached to parent themes, and every parent_theme_id must identify an existing standalone theme. Use component:true to convert first, or in the same update."
+      theme_update_failed: "The theme could not be updated"
+      theme_update_required: "Provide at least one theme field to update"
+      theme_confirmation_required: "Confirm this theme operation before proceeding"
+      theme_name_mismatch: "The theme name has changed. Read the theme again before proceeding"
+      theme_delete_failed: "The theme could not be deleted. Default and system themes cannot be deleted"
+      theme_install_source_required: "Provide exactly one repository URL or base64 theme archive"
+      theme_install_options_invalid: "Provide only options that apply to the selected theme source"
+      theme_repository_migrations_required: "Repository installs run theme migrations. Do not disable migrations, and confirm that they may run"
+      theme_component_migrations_required: "Importing theme components requires migrations. Enable and confirm migrations, or choose no component imports"
+      theme_not_remote: "The theme does not have a Git repository"
+      theme_remote_mismatch: "The repository URL has changed. Read the theme again before proceeding"
+      theme_setting_value_invalid: "Provide a value when setting a theme setting and omit it when reverting"
+      tag_group_not_found: "Tag group not found"
+      tag_group_tags_unresolved: "One or more selected tags could not be applied. Use valid tag names or original tag IDs."
+      tag_group_unknown_tags: "One or more selected tags do not exist"
+      tag_group_unknown_permission_groups: "One or more permission groups do not exist"
+      tag_group_tag_creation_confirmation: "Name selectors require allow_tag_creation=true; use tag IDs to select existing tags"
+      tag_group_update_required: "Provide at least one tag group field to update"
+      tag_group_delete_confirmation: "Confirm deletion and provide the exact current tag group name"
+      theme_setting_type_invalid: "Theme setting %{name} requires a value of type %{type}"
+      theme_setting_not_found: "The theme does not declare this setting"
+      theme_translation_not_found: "The theme does not declare one or more translation keys"
+      topic_not_found: "Topic not found"
+      topic_update_required: "Provide at least one topic field to update"
+      top_period_only_for_top_view: "Top period is only supported by the top view"
+      webhook_confirmation: "Confirm this operation with %{field}=true before proceeding"
+      webhook_changed: "The webhook destination, active state, or event status has changed. Read it again before proceeding."
+      webhook_destination_unreachable: "The destination host could not be resolved. Check the hostname and try again."
+      webhook_event_not_deliverable: "This event cannot be redelivered. Use the ping tool for ping events."
+      webhook_event_not_found: "The event does not belong to this webhook or is no longer available"
+      webhook_invalid_destination: "Provide an HTTP or HTTPS destination without URL credentials or a fragment"
+      webhook_no_change: "Provide at least one webhook field with a different value"
+      webhook_not_found: "Webhook not found"
+      webhook_unknown_selection: "One or more IDs in %{field} are unknown or unavailable"
+      webhook_wildcard_events: "Wildcard webhooks cannot also select individual event types"
+      upload_not_found: "Upload not found"
+      upload_too_large: "The upload is too large"
+      user_create_failed: "The user could not be created"
+      user_deactivation_pending_review: "Review this user's pending approval before deactivating the account."
+      user_not_found: "User not found"
+      user_update_required: "Provide at least one profile field to update"
+    oauth:
+      authorize_title: "Authorize MCP client"
+      client_request: "%{client_name} is requesting access to %{site_name}."
+      client_id: "Client ID"
+      redirect_uri: "Redirect URI"
+      resource: "MCP server"
+      requested_permission_count:
+        one: "%{client_name} requested %{count} permission."
+        other: "%{client_name} requested %{count} permissions."
+      eligible_permission_count:
+        one: "Your account is eligible for %{count}."
+        other: "Your account is eligible for %{count}."
+      granted_permissions:
+        one: "The following permission will be granted"
+        other: "The following permissions will be granted"
+      guardian_notice: "The client acts as your account and remains subject to your normal Discourse permissions."
+      deny: "Deny"
+      approve: "Authorize"
+    admin:
+      site_enabled: "Enable the MCP server site setting"
+      primitives_enabled: "Enable at least one primitive in Capabilities"
+      client_registered: "Register or approve an OAuth client"
+
+  llms_txt:
+    human_community_policy: "This is a community for human discussion. Do not impersonate people or create accounts autonomously. Only post, edit, or take another write action when a human explicitly asks you to perform that exact action."
+    crawler_policy: "Fetch only the pages needed for the user's specific request. Do not systematically crawl or bulk-download this community. Respect `robots.txt`, the site's terms, and its crawler controls. If the server responds with HTTP 429, stop and wait for the `Retry-After` interval before retrying."
+    mcp_guidance: "If you can run a local MCP server, Discourse MCP is the preferred way to access this community. Set its site URL to `%{base_url}`. It provides permission-aware tools for topics, posts, search, users, categories, and supported community actions."
+    account_required: "Community content is available only to authenticated members."
+    sections:
+      preferred_interface: "Preferred agent interface"
+      public_web_access: "Public web access"
+      optional: "Optional"
+    links:
+      mcp:
+        label: "Discourse MCP setup"
+        note: "Install the local server and connect it to an MCP-compatible client"
+      search:
+        label: "Search"
+        note: "Search public discussions for a specific user request; do not crawl result pages"
+      filter:
+        label: "Topic filter"
+        note: "Query public topics with `?q=` using filters such as `category:`, `tag:`, `status:`, and `order:`"
+      latest:
+        label: "Latest discussions"
+        note: "Browse recently active public topics"
+      categories:
+        label: "Categories"
+        note: "Browse public discussion categories"
+      sitemap:
+        label: "Sitemap"
+        note: "Discover public topic URLs subject to `robots.txt` and crawler controls"
+      about:
+        label: "About"
+        note: "Community overview, staff, and statistics"
+      guidelines:
+        label: "Guidelines"
+        note: "Read the community guidelines"
+      tos:
+        label: "Terms of service"
+        note: "Read the terms of service"
+      privacy:
+        label: "Privacy policy"
+        note: "Read the privacy policy"
+
+>>>>>>> 6df887b03d (SECURITY: Send MCP topics and replies through the review queue)
   dates:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
