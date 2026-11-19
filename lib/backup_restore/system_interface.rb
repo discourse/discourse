@@ -12,6 +12,8 @@ module BackupRestore
   class SystemInterface
     delegate :log, to: :@logger, private: true
 
+    KEPT_REDIS_KEYS = [SidekiqPauser::PAUSED_KEY, *Discourse::READONLY_KEYS]
+
     def initialize(logger)
       @logger = logger
 
@@ -100,7 +102,7 @@ module BackupRestore
 
     def flush_redis
       redis = Discourse.redis
-      redis.scan_each(match: "*") { |key| redis.del(key) unless key == SidekiqPauser::PAUSED_KEY }
+      redis.scan_each(match: "*") { |key| redis.del(key) if KEPT_REDIS_KEYS.exclude?(key) }
       MessageBus.backend_instance.expire_all_backlogs!(site_id: @current_db)
     end
 
