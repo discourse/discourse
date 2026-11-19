@@ -164,6 +164,20 @@ RSpec.describe Blog::Publication do
       expect(publication.blog).to eq(Blog::Instance.default_blog)
     end
 
+    it "keeps the main blog's articles off paths that start with another blog's slug" do
+      publication = described_class.new(topic:, path: "/engineering/story")
+
+      expect(publication).not_to be_valid
+      expect(publication.errors[:path]).to eq([I18n.t("blog.errors.path_taken")])
+      expect(described_class.new(topic:, path: "/engineering/story", blog: other_blog)).to be_valid
+
+      clashing_topic = Fabricate(:topic)
+      clashing_topic.update_columns(slug: "engineering")
+      expect(described_class.default_path(clashing_topic)).to eq(
+        "/engineering-#{clashing_topic.id}",
+      )
+    end
+
     it "builds its URL from its own blog" do
       publication = described_class.new(topic:, path: "/story", blog: other_blog)
 

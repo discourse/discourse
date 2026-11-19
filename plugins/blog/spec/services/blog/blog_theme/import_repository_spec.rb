@@ -131,7 +131,9 @@ RSpec.describe Blog::BlogTheme::ImportRepository do
             "commit" => "a" * 40,
           },
         )
-        expect(Blog::BlogTheme.active["id"]).to eq(Blog::ThemePresets::DEFAULT_ID)
+        expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq(
+          Blog::ThemePresets::DEFAULT_ID,
+        )
       end
     end
   end

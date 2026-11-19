@@ -49,6 +49,16 @@ RSpec.describe Blog::DefaultBlogMirror do
       )
     end
 
+    it "leaves the theme activated on the existing default blog alone" do
+      described_class.sync!
+      default_blog.update!(active_theme: { "id" => "ledger", "preset" => true })
+      PluginStore.set(Blog::BlogTheme::STORE, "active", { "id" => "older", "preset" => true })
+
+      sync
+
+      expect(default_blog.reload.active_theme).to eq("id" => "ledger", "preset" => true)
+    end
+
     it "copies the value a setting has once overridden in the environment" do
       SiteSetting.stubs(:blog_url).returns("https://env.example.com")
 

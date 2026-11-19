@@ -132,7 +132,7 @@ module ::Blog
       slug = visible_slug(slug).presence || topic.id.to_s
       date ||= Time.current
       path = format.render(slug:, id: topic.id, date:, max_length: MAX_PATH_LENGTH)
-      return path if !reserved_path?(path)
+      return path if !reserved_path?(path) && !blog_slug_path?(path, blog)
 
       format.render(slug: "#{slug}-#{topic.id}", id: topic.id, date:, max_length: MAX_PATH_LENGTH)
     end
@@ -163,6 +163,14 @@ module ::Blog
 
     def self.traversal_path?(path)
       path.to_s.split("/").intersect?(%w[. ..])
+    end
+
+    # Other blogs live at /blog/<slug>, so the default blog's articles may not
+    # start with a blog's slug.
+    def self.blog_slug_path?(path, blog)
+      return false if !blog&.is_default?
+      segment = path.to_s.downcase.split("/")[1]
+      Instance.cached.any? { |other| !other.is_default? && other.slug == segment }
     end
 
     def self.reserved_path?(path)
@@ -402,7 +410,7 @@ module ::Blog
     end
 
     def path_available?(candidate)
-      !Path.where(blog_id:, path: candidate).where.not(publication_id: id).exists?
+      !Path.where(blog_id: blog.id, path: candidate).where.not(publication_id: id).exists?
     end
 
     def draft_date_changed?(value)
@@ -524,7 +532,7 @@ module ::Blog
       return false if persisted? && !will_save_change_to_path?
       # Dated archive imports may use the otherwise reserved editorial prefix.
       return false if path.to_s.match?(%r{\A/blog/archive/\d{4}/\d{2}/\d{2}/[^/]+\z})
-      self.class.reserved_path?(path)
+      self.class.reserved_path?(path) || self.class.blog_slug_path?(path, blog)
     end
 
     def valid_publication_date

@@ -2,8 +2,8 @@
 
 module ::Blog
   # Themes are documents in the plugin store. Editors change drafts
-  # ("theme:<id>"); readers only ever see a frozen copy ("snapshot:<id>"), the
-  # latest of which is also kept as "active".
+  # ("theme:<id>"); readers only ever see a frozen copy ("snapshot:<id>"), and
+  # each blog keeps the one it shows on its row.
   class BlogTheme
     STORE = "discourse-blog-themes"
     MAX_THEMES = 30
@@ -55,14 +55,14 @@ module ::Blog
 
     # Readers see the built-in preset until a theme is activated. An active
     # preset is stored by id only and resolved from the shipped files.
-    def self.active
-      stored = PluginStore.get(STORE, "active")
+    def self.active_for(blog)
+      stored = blog.active_theme
       return stored if stored && !stored["preset"]
       (stored && ThemePresets.find(stored["id"])) || ThemePresets.default
     end
 
-    def self.active?(theme)
-      active["id"] == theme["id"]
+    def self.active_anywhere?(theme)
+      Instance.cached.any? { |blog| active_for(blog)["id"] == theme["id"] }
     end
 
     def self.snapshot(id)
@@ -98,28 +98,35 @@ module ::Blog
     end
 
     # Readers use a copy, never the mutable draft or its Git source.
-    def self.activate(theme)
-      if theme["preset"]
-        PluginStore.set(STORE, "active", theme.slice("id", "preset"))
-        DefaultBlogMirror.sync!
-        return theme
-      end
-
-      snapshot = theme.merge("snapshot" => SecureRandom.uuid)
-      PluginStore.set(STORE, "snapshot:#{snapshot["snapshot"]}", snapshot)
-      PluginStore.set(STORE, "active", snapshot)
-      DefaultBlogMirror.sync!
-      snapshot
+    def self.activate(theme, blog)
+      active = theme["preset"] ? theme.slice("id", "preset") : snapshot_of(theme)
+      record = Instance.find(blog.id)
+      record.active_theme = active
+      record.save!(validate: false)
+      theme["preset"] ? theme : active
     end
 
+    # A blog keeps showing its snapshot however many newer ones other blogs make.
     def self.prune_snapshots
+      in_use = Instance.pluck(:active_theme).filter_map { |active| active&.dig("snapshot") }
+      oldest =
+        PluginStoreRow
+          .where(plugin_name: STORE)
+          .where("key LIKE 'snapshot:%'")
+          .order(id: :desc)
+          .offset(MAX_SNAPSHOTS)
       PluginStoreRow
-        .where(plugin_name: STORE)
-        .where("key LIKE 'snapshot:%'")
-        .order(id: :desc)
-        .offset(MAX_SNAPSHOTS)
+        .where(id: oldest.select(:id))
+        .where.not(key: in_use.map { |id| "snapshot:#{id}" })
         .destroy_all
     end
+
+    def self.snapshot_of(theme)
+      snapshot = theme.merge("snapshot" => SecureRandom.uuid)
+      PluginStore.set(STORE, "snapshot:#{snapshot["snapshot"]}", snapshot)
+      snapshot
+    end
+    private_class_method :snapshot_of
 
     def self.drafts
       PluginStoreRow.where(plugin_name: STORE).where("key LIKE 'theme:%'")

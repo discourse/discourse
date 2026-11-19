@@ -51,6 +51,31 @@ RSpec.describe Blog::Instance do
       end
     end
 
+    it "rejects a slug the blog's own routes or the main blog's articles use" do
+      default_blog = described_class.find_by(is_default: true)
+      publication =
+        Blog::Publication.create!(topic: Fabricate(:topic), path: "/field-notes/day-one")
+      publication.paths.create!(path: "/Field-Notes/day-one")
+
+      {
+        "feed" => "blog_slug_reserved",
+        "archive" => "blog_slug_reserved",
+        "field-notes" => "blog_slug_taken",
+      }.each do |slug, error|
+        blog.slug = slug
+        expect(blog).not_to be_valid
+        expect(blog.errors[:slug]).to eq([I18n.t("blog.errors.#{error}")])
+      end
+      expect(default_blog).to be_valid
+    end
+
+    it "rejects the community's own hostname as a blog's domain" do
+      blog.url = "https://#{Discourse.current_hostname}"
+
+      expect(blog).not_to be_valid
+      expect(blog.errors[:url]).to eq([I18n.t("blog.errors.blog_url_forum_host")])
+    end
+
     it "allows only one default blog" do
       described_class.where(is_default: true).delete_all
       described_class.create!(name: "Main", slug: "main", is_default: true)
