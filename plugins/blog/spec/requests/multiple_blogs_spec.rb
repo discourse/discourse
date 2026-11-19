@@ -104,6 +104,17 @@ RSpec.describe "Several blogs", type: :request do
       expect(response).to redirect_to("https://engineering.example.com/story")
     end
 
+    it "redirects addresses other blog engines publish to the blog on that domain" do
+      host! "engineering.example.com"
+
+      get "/posts"
+      expect(response).to redirect_to("https://engineering.example.com/")
+      get "/rss"
+      expect(response).to redirect_to("https://engineering.example.com/feed.xml")
+      get "/page/2"
+      expect(response).to redirect_to("https://engineering.example.com/?page=2")
+    end
+
     it "keeps the editor off the blog's domain" do
       sign_in(admin)
       host! "engineering.example.com"

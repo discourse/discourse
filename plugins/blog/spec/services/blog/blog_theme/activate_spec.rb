@@ -90,6 +90,14 @@ RSpec.describe Blog::BlogTheme::Activate do
         end
       end
 
+      it "creates the default blog when the site has none yet" do
+        Blog::Instance.delete_all
+
+        result
+
+        expect(Blog::Instance.find_by(is_default: true).active_theme).to eq(result.active_theme)
+      end
+
       it "keeps a snapshot another blog still shows, however old" do
         engineering = Blog::Instance.create!(name: "Engineering", slug: "engineering")
         stub_const(Blog::BlogTheme, :MAX_SNAPSHOTS, 1) do

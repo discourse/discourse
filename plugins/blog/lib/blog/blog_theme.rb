@@ -100,7 +100,8 @@ module ::Blog
     # Readers use a copy, never the mutable draft or its Git source.
     def self.activate(theme, blog)
       active = theme["preset"] ? theme.slice("id", "preset") : snapshot_of(theme)
-      record = Instance.find(blog.id)
+      # Without a default row the fallback blog is unsaved, so create the row.
+      record = blog.new_record? ? DefaultBlogMirror.sync! : Instance.find(blog.id)
       record.active_theme = active
       record.save!(validate: false)
       theme["preset"] ? theme : active

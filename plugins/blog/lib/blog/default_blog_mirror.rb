@@ -24,10 +24,12 @@ module ::Blog
     def self.sync!
       blog = Instance.find_or_initialize_by(is_default: true) { |new_blog| new_blog.slug = "blog" }
       blog.assign_attributes(COLUMNS.to_h { |setting, column| [column, SiteSetting.get(setting)] })
-      # Activation writes the row now. A row created here, on a site upgrading
-      # past the blogs table, starts from the theme the old code activated.
-      blog.active_theme = PluginStore.get(BlogTheme::STORE, "active") if blog.new_record?
+      # Activation writes the row now. A row without a theme, created here or by
+      # the migration on a site upgrading past the blogs table, starts from the
+      # theme the old code activated.
+      blog.active_theme ||= PluginStore.get(BlogTheme::STORE, "active")
       blog.save!(validate: false)
+      blog
     end
   end
 end

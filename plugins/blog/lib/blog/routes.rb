@@ -79,15 +79,17 @@ module Blog
             get "/review" =>
                   redirect { |_, request| request.fullpath.sub("/review", "/blog/review") },
                 :format => false
-            get "/posts" => redirect { "#{Configuration.base_url}/" }, :format => false
+            get "/posts" => redirect { |_, request| "#{Routes.host_base_url(request)}/" },
+                :format => false
             # Feed and pagination URLs that other blog engines publish, kept for readers and links.
             %w[/posts.rss /posts.atom /rss /feed].each do |path|
-              get path => redirect { "#{Configuration.base_url}/feed.xml" }, :format => false
+              get path => redirect { |_, request| "#{Routes.host_base_url(request)}/feed.xml" },
+                  :format => false
             end
             get "/page/:page" =>
-                  redirect { |params, _|
+                  redirect { |params, request|
                     page = params[:page].to_i
-                    "#{Configuration.base_url}/#{"?page=#{page}" if page > 1}"
+                    "#{Routes.host_base_url(request)}/#{"?page=#{page}" if page > 1}"
                   },
                 :constraints => {
                   page: /\d+/,
@@ -143,6 +145,10 @@ module Blog
                      :MOVED_TO_CUSTOM_DOMAIN,
                      :REVIEW_ON_FORUM,
                      :ARTICLES
+
+    def self.host_base_url(request)
+      Configuration.base_url(Configuration.blog_for_host(request.host))
+    end
 
     def self.blog_on_forum_path(request)
       return if !UpcomingChanges.enabled?(:blog_enabled)
