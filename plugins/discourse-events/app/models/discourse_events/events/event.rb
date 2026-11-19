@@ -15,6 +15,7 @@ module DiscourseEvents
       MAX_LOCATION_LENGTH = 1000
       MAX_URL_LENGTH = 1000
       MAX_RAW_INVITEES = 10
+      MAX_REMINDERS = 5
       MAX_ATTENDEES_LIMIT = 2_147_483_647
       DEFAULT_DURATION_SECONDS = 3600
       # An event with no end has nothing to pause notifications until, and leaving
@@ -220,6 +221,7 @@ module DiscourseEvents
           end
           .index_by { |reminder| [reminder[:type], Event.reminder_offset(reminder).to_i] }
           .values
+          .take(Event::MAX_REMINDERS)
       end
 
       def self.split_reminder(reminder)

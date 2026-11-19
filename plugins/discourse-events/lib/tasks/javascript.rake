@@ -8,6 +8,7 @@ task "javascript:update_constants" => :environment do
     "update_constants",
     <<~JS,
     export const MAX_HOSTS = #{DiscourseEvents::Events::Event::MAX_HOSTS};
+    export const MAX_REMINDERS = #{DiscourseEvents::Events::Event::MAX_REMINDERS};
   JS
   )
 
