@@ -194,6 +194,28 @@ module DiscourseAi
           ]
         end
 
+        def review_queue_model
+          DecisionModel.find_by(id: SiteSetting.ai_reviewable_action_decision_model.presence)
+        end
+
+        def review_queue_features
+          feature_cache[:review_queue] ||= [
+            new(
+              "reviewable_action",
+              nil,
+              DiscourseAi::Configuration::Module::REVIEW_QUEUE_ID,
+              DiscourseAi::Configuration::Module::REVIEW_QUEUE,
+              metadata_lookup: -> do
+                model = review_queue_model
+                decision_model_metadata(model).merge(
+                  backend: "decision_model",
+                  ready: model.present?,
+                )
+              end,
+            ),
+          ]
+        end
+
         def spam_features
           feature_cache[:spam] ||= [
             new(
@@ -475,6 +497,7 @@ module DiscourseAi
             image_caption_features,
             translation_features,
             bot_features,
+            review_queue_features,
             spam_features,
             embeddings_features,
             admin_dashboard_features,

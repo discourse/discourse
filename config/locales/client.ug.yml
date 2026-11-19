@@ -4110,10 +4110,8 @@ ug:
           label: "تاللاندى"
           title: "چېكىلسە يازمىنى تاللانمىدىن چىقىرىۋېتىدۇ"
         select_replies:
-          label: "تاللا + جاۋاب"
           title: "يازما ۋە ئۇنىڭ بارلىق جاۋابلىرىنى تاللانمىغا قوشىدۇ"
         select_below:
-          label: "تاللا + تۆۋەندىكى"
           title: "يازما ۋە ئۇنىڭدىن كېيىنكىنىڭ ھەممىسىنى تاللانمىغا قوشىدۇ"
         delete: تاللانغاننى ئۆچۈر
         cancel: تاللاشتىن ۋاز كەچ
@@ -7871,7 +7869,6 @@ ug:
         silence_duration: "ئىشلەتكۈچى قاچانغىچە سۈكۈت قىلىدۇ؟"
         silence_reason_title: "ئۈنسىز قىلىش سەۋەبى"
         silence_reason_placeholder: "سۈكۈت قىلىش سەۋەبى"
-        silence_message: "ئېلخەت ئۇچۇرى"
         suspended_until: "(%{until} غىچە)"
         suspend_forever: "مەڭگۈلۈك توختات"
         cant_suspend: "بۇ ئىشلەتكۈچىنى توختاتقىلى بولمايدۇ."

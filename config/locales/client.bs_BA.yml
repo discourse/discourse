@@ -2395,10 +2395,8 @@ bs_BA:
           label: "označeno"
           title: "Klikni kako bi odstranio objavu iz označenog"
         select_replies:
-          label: "označi +odgovore"
           title: "Odaberi objavu i sve njene odgovore"
         select_below:
-          label: "označi +ispod"
           title: "Odaberi objavu i sve ispod nje"
         delete: delete selected
         cancel: cancel selecting
@@ -4351,7 +4349,6 @@ bs_BA:
         silence_modal_title: "Stišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti ućutkan?"
         silence_reason_placeholder: "Razlog za utišanje"
-        silence_message: "Email Poruka"
         suspended_until: "(do %{until})"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
         delete_posts_failed: "Došlo je do problema prilikom brisanja postova."

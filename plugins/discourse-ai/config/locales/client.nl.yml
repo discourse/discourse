@@ -62,6 +62,7 @@ nl:
     discourse_workflows:
       nodes:
         "action:ai_agent": "AI-agent"
+        "action:ai_tool": "AI-tool"
     discourse_automation:
       scriptables:
         llm_report:
@@ -252,6 +253,15 @@ nl:
         ai_agent:
           agent_id: "Agent"
           mode: "Modus"
+        ai_tool:
+          tool_ref: "Tool"
+          arguments: "Argumenten"
+          list_item: "Lijstitem"
+          add_list_item: "Item toevoegen"
+        mcp_tool:
+          mcp_server_id: "MCP-server"
+          tool_name: "Tool"
+          arguments: "Argumenten"
         classify:
           text: "Tekst"
           upload_ids: "Afbeeldingen"
@@ -386,6 +396,9 @@ nl:
             enabled_features: "Ingeschakelde functies"
             automation: "Automatisering"
             agents: "Agenten"
+        review_queue:
+          setting_groups:
+            settings: "Instellingen"
         image_caption:
           setting_groups:
             settings: "Instellingen"
@@ -1237,8 +1250,7 @@ nl:
         filter_conversation: "Conversatie"
       ai_bot:
         title: "AI-bot"
-        agent: "Agent:"
-        llm: "Model:"
+        agent_menu_heading: "Agent"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"
         try_again: "Opnieuw proberen"
@@ -1304,7 +1316,6 @@ nl:
           tab_label: "AI"
           header: "Waarmee kan ik helpen?"
           submit: "Vraag verzenden"
-          disclaimer: "Generatieve AI kan fouten maken. Verifieer belangrijke informatie."
           placeholder: "Stel een vraag..."
           new: "Nieuwe vraag"
           min_input_length_message:

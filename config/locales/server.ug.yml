@@ -3775,12 +3775,6 @@ ug:
     account_suspended_forever:
       title: "ھېسابات توختىتىلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز توختىتىلدى"
-    account_silenced:
-      title: "ھېسابات ئۈنسىزلەندى"
-      subject_template: "%{email_prefix} ھېساباتىڭىز ئۈنسىزلەندى"
-    account_silenced_forever:
-      title: "ھېسابات ئۈنسىزلەندى"
-      subject_template: "%{email_prefix} ھېساباتىڭىز ئۈنسىزلەندى"
     account_deleted:
       title: "ھېسابات ئۆچۈرۈلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز ئۆچۈرۈلدى"

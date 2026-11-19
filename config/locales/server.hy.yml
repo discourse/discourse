@@ -2342,12 +2342,6 @@ hy:
     account_suspended_forever:
       title: "Հաշիվը Սառեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը սառեցվել է"
-    account_silenced:
-      title: "Հաշիվը Լռեցված է"
-      subject_template: "[%{email_prefix}] Ձեր հաշիվը լռեցված է"
-    account_silenced_forever:
-      title: "Հաշիվը Լռեցված է"
-      subject_template: "[%{email_prefix}] Ձեր հաշիվը լռեցված է"
     account_exists:
       title: "Հաշիվը արդեն գոյություն ունի"
       subject_template: "[%{email_prefix}] Հաշիվը արդեն գոյություն ունի"

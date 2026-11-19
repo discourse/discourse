@@ -3335,7 +3335,7 @@ en:
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The {{setting:faq_url}} setting works as before."
-    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is clicked if the user has permission to view that category."
+    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is hovered if the user has permission to view that category."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
@@ -4825,6 +4825,23 @@ en:
         As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    moderator_silence:
+      date_with_timezone: "%{date} (UTC%{offset})"
+      title: "Moderator silence"
+      subject_template: "Your account has been silenced"
+      timed: "This is an automated message from %{site_name} to let you know that a moderator silenced your account until %{silenced_till}."
+      indefinite: "This is an automated message from %{site_name} to let you know that a moderator silenced your account indefinitely."
+      text_body_template: |
+        Hello,
+
+        %{decision}
+
+        **Reason:** %{reason}
+
+        You can still read discussions, but you can’t participate in them while your account is silenced.
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
+
     silenced_by_staff:
       title: "Silenced by Staff"
       preview: "Account temporarily placed on hold."
@@ -5268,33 +5285,6 @@ en:
         Hello,
 
         This is an automated message from %{site_name} to let you know that your account has been suspended.
-
-        Reason - %{reason}
-
-        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
-
-    account_silenced:
-      date_with_timezone: "%{date} (UTC%{offset})"
-      title: "Account Silenced"
-      subject_template: "[%{email_prefix}] Your account has been silenced"
-      subject_template_improved: "Your account has been silenced"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to let you know that your account has been silenced until %{silenced_till}.
-
-        Reason - %{reason}
-
-        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
-
-    account_silenced_forever:
-      title: "Account Silenced"
-      subject_template: "[%{email_prefix}] Your account has been silenced"
-      subject_template_improved: "Your account has been silenced"
-      text_body_template: |
-        Hello,
-
-        This is an automated message from %{site_name} to let you know that your account has been silenced.
 
         Reason - %{reason}
 

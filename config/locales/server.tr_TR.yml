@@ -3723,6 +3723,8 @@ tr_TR:
         Önlem olarak, bir personel hesabınızı inceleyene kadar yeni hesabınızın yeni yanıt veya konu oluşturması engellendi. Yaşadığınız sıkıntı için üzgünüz.
 
         Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
+    moderator_silence:
+      subject_template: "Hesabınız susturuldu"
     silenced_by_staff:
       title: "Personel Tarafından Susturuldu"
       preview: "Hesap geçici olarak askıya alındı."
@@ -4107,14 +4109,6 @@ tr_TR:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
       subject_template_improved: "Hesabınız askıya alınmıştır"
-    account_silenced:
-      title: "Hesap Susturuldu"
-      subject_template: "[%{email_prefix}] Hesabınız susturuldu"
-      subject_template_improved: "Hesabınız susturuldu"
-    account_silenced_forever:
-      title: "Hesap Susturuldu"
-      subject_template: "[%{email_prefix}] Hesabınız susturuldu"
-      subject_template_improved: "Hesabınız susturuldu"
     account_deleted:
       title: "Hesap Silindi"
       subject_template: "[%{email_prefix}] Hesabınız silindi"

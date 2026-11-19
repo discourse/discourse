@@ -3016,10 +3016,8 @@ hy:
           label: "ընտրված"
           title: "Սեղմեք՝ գրառումն ընտրվածից հեռացնելու համար "
         select_replies:
-          label: "ընտրել+պատասխաններ"
           title: "Ավելացնել գրառումը և դրա բոլոր պատասխանները ընտրվածին"
         select_below:
-          label: "ընտրել+ներքև"
           title: "Ավելացնել գրառումը և դրանից հետո բոլորը ընտրվածին"
         delete: ջնջել ընտրվածը
         cancel: չեղարկել ընտրվածը
@@ -5075,7 +5073,6 @@ hy:
         silence_modal_title: "Լռեցնել Օգտատիրոջը"
         silence_duration: "Որքա՞ն ժամանակ պետք է լռեցվի օգտատերը:"
         silence_reason_placeholder: "Լռեցման Պատճառը"
-        silence_message: "Էլ. Նամակ"
         suspended_until: "(մինչև %{until})"
         cant_suspend: "Այս օգտատերը չի կարող սառեցվել:"
         delete_posts_failed: "Գրառումները ջնջելիս խնդիր է առաջացել:"

@@ -4,7 +4,7 @@ const SecretList = <template>
   <SecretValueList
     @changeValueCallback={{@changeValueCallback}}
     @isSecret={{@isSecret}}
-    @setting={{@setting}}
+    @placeholder={{@setting.placeholder}}
     @setValidationMessage={{@setValidationMessage}}
     @values={{@value}}
   />

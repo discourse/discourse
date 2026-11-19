@@ -3696,12 +3696,6 @@ it:
     account_suspended_forever:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
-    account_silenced:
-      title: "Account Silenziato"
-      subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
-    account_silenced_forever:
-      title: "Account Silenziato"
-      subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
     account_deleted:
       title: "Account eliminato"
       subject_template: "[%{email_prefix}] Il tuo account è stato eliminato"

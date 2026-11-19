@@ -108,7 +108,13 @@ class Admin::SiteTextsController < Admin::AdminController
         if ThemeTranslationManager::SITE_TEXT_ID_PATTERN.match?(record[:id])
           record
         else
-          serialize_data(record, SiteTextSerializer, root: false, overridden_keys: overridden)
+          serialize_data(
+            record,
+            SiteTextSerializer,
+            root: false,
+            overridden_keys: overridden,
+            include_preview_default: true,
+          )
         end
       end
     render_json_dump({ site_texts: records }, rest_serializer: true, extras:)
@@ -339,7 +345,6 @@ class Admin::SiteTextsController < Admin::AdminController
   def fix_plural_keys(key, value, locale, only_selected_locale = false)
     value = value.with_indifferent_access
     plural_keys = I18n.with_locale(locale) { I18n.t("i18n.plural.keys") }
-    return value if value.keys.size == plural_keys.size && plural_keys.all? { |k| value.key?(k) }
 
     fallback_value = I18n.t(key, locale: :en, default: {})
     plural_keys.map do |k|

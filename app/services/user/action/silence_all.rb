@@ -22,6 +22,7 @@ class User::Action::SilenceAll < Service::ActionBase
         .new(
           user,
           actor,
+          message: :moderator_silence,
           message_body: message,
           keep_posts: true,
           silenced_till:,
@@ -30,16 +31,7 @@ class User::Action::SilenceAll < Service::ActionBase
           reviewable_id:,
         )
         .tap do |silencer|
-          unless silencer.silence
-            raise ActiveRecord::RecordInvalid.new(user) if raise_on_failure
-            next
-          end
-          Jobs.enqueue(
-            :critical_user_email,
-            type: "account_silenced",
-            user_id: user.id,
-            user_history_id: silencer.user_history.id,
-          )
+          raise ActiveRecord::RecordInvalid.new(user) if !silencer.silence && raise_on_failure
         end
     rescue => err
       raise if raise_on_failure

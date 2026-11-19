@@ -76,6 +76,12 @@ ur:
       discourse_workflows:
         ai_agent:
           mode: "موڈ"
+        ai_tool:
+          arguments: "دلائل"
+          list_item: "فہرست آئٹم"
+          add_list_item: "آئٹم شامل کریں"
+        mcp_tool:
+          arguments: "دلائل"
         classify:
           text: "ٹیکسٹ"
           upload_ids: "تصاویر"
@@ -128,6 +134,9 @@ ur:
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
+        review_queue:
+          setting_groups:
+            settings: "سیٹِنگ"
         image_caption:
           setting_groups:
             settings: "سیٹِنگ"

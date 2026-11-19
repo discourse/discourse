@@ -2025,10 +2025,6 @@ te:
       title: "ఖాతా నిలిపివేయబడింది"
     account_suspended_forever:
       title: "ఖాతా నిలిపివేయబడింది"
-    account_silenced:
-      title: "ఖాతా నిశ్శబ్దం చేయబడింది"
-    account_silenced_forever:
-      title: "ఖాతా నిశ్శబ్దం చేయబడింది"
     account_exists:
       title: "ఖాతా ఇప్పటికే ఉంది"
       subject_template_improved: "ఖాతా ఇప్పటికే ఉంది"

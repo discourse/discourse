@@ -4219,10 +4219,8 @@ nl:
           label: "geselecteerd"
           title: "Klik om bericht te verwijderen uit selectie"
         select_replies:
-          label: "selecteer +antwoorden"
           title: "Bericht en alle antwoorden erop toevoegen aan selectie"
         select_below:
-          label: "selecteer +hieronder"
           title: "Bericht en alle erna toevoegen aan selectie"
         delete: geselecteerde verwijderen
         cancel: selectie annuleren
@@ -8180,7 +8178,6 @@ nl:
         silence_duration: "Hoelang wordt de gebruiker gedempt?"
         silence_reason_title: "Reden van dempen"
         silence_reason_placeholder: "Reden van dempen"
-        silence_message: "E-mailbericht"
         suspended_until: "(tot %{until})"
         suspend_forever: "Voor altijd schorsen"
         cant_suspend: "Deze gebruiker kan niet worden geschorst."

@@ -2346,19 +2346,17 @@ RSpec.describe Admin::UsersController do
         expect(reg_user.silenced_till).to eq(future_date)
       end
 
-      it "sends the provided message" do
-        expect do
-          put "/admin/users/#{reg_user.id}/silence.json",
-              params: {
-                reason: "none of your biz",
-                silenced_till: 666.hours.from_now,
-                message: "Email this to the user",
-              }
-        end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+      it "includes the moderator’s message in the silenced user’s inbox notice" do
+        put "/admin/users/#{reg_user.id}/silence.json",
+            params: {
+              reason: "Spam",
+              silenced_till: 1.day.from_now,
+              message: "Please stop posting referral links.",
+            }
 
-        expect(response.status).to eq(200)
-        reg_user.reload
-        expect(reg_user).to be_silenced
+        expect(response).to have_http_status(:ok)
+        notice = Topic.private_messages_for_user(reg_user).sole.first_post
+        expect(notice.raw).to include("Please stop posting referral links.")
       end
 
       it "checks if user is silenced" do

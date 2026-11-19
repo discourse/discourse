@@ -4549,10 +4549,8 @@ de:
           label: "ausgewählt"
           title: "Klicke, um den Beitrag aus der Auswahl zu entfernen"
         select_replies:
-          label: "auswählen inkl. Antworten"
           title: "Beitrag und alle Antworten zu Auswahl hinzufügen"
         select_below:
-          label: "auswählen inkl. folgender"
           title: "Beitrag und alles danach zu Auswahl hinzufügen"
         delete: ausgewählte löschen
         cancel: Auswahlvorgang abbrechen
@@ -8884,7 +8882,6 @@ de:
         silence_duration: "Wie lange wird der Benutzer stummgeschaltet?"
         silence_reason_title: "Grund der Stummschaltung"
         silence_reason_placeholder: "Grund der Stummschaltung"
-        silence_message: "E-Mail-Nachricht"
         suspended_until: "(bis %{until})"
         suspend_forever: "Für immer sperren"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
