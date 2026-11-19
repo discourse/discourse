@@ -76,9 +76,10 @@ module DiscourseMcp
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
-          id: OutputSchema::INTEGER,
-          topic_id: OutputSchema::INTEGER,
-          slug: OutputSchema::STRING,
+          queued: OutputSchema::BOOLEAN,
+          id: OutputSchema::INTEGER_OR_NULL,
+          topic_id: OutputSchema::INTEGER_OR_NULL,
+          slug: OutputSchema::STRING_OR_NULL,
           title: OutputSchema::STRING,
           username: OutputSchema::STRING,
           requested_author: OutputSchema::STRING_OR_NULL,
@@ -86,67 +87,85 @@ module DiscourseMcp
         )
 
       def self.call(arguments:, request_context:)
-        ToolHelpers.ensure_current_author!(arguments, request_context.user)
-        post =
-          PostCreator.create!(
-            request_context.user,
-            title: arguments.fetch("title"),
+        user = request_context.user
+        ToolHelpers.ensure_current_author!(arguments, user)
+        category_id = arguments["category_id"]
+        if category_id
+          request_context.guardian.ensure_can_create!(Topic)
+          # NewPostManager raises ActiveRecord::RecordNotFound for a missing category.
+          raise Discourse::InvalidParameters.new(:category_id) if !Category.exists?(id: category_id)
+        end
+        submitted_title = arguments.fetch("title")
+        submission =
+          ToolHelpers.submit_post!(
+            user,
+            title: submitted_title,
             raw: arguments.fetch("raw"),
-            category: arguments["category_id"],
+            category: category_id,
             tags: Array(arguments["tags"]),
-            skip_validations: false,
           )
-        requested_author = arguments["author_username"]
         ToolHelpers.text_and_structured(
-          id: post.id,
-          topic_id: post.topic_id,
-          slug: post.topic.slug,
-          title: post.topic.title,
-          username: post.user.username,
-          requested_author:,
-          author_applied:
-            requested_author.present? ? post.user.username.casecmp?(requested_author) : nil,
+          **topic_fields(submission, submitted_title),
+          **ToolHelpers.author_fields(arguments, user),
         )
       end
+
+      def self.topic_fields(submission, submitted_title)
+        if ToolHelpers.queued?(submission)
+          { queued: true, id: nil, topic_id: nil, slug: nil, title: submitted_title }
+        else
+          post = submission.post
+          topic = post.topic
+          { queued: false, id: post.id, topic_id: topic.id, slug: topic.slug, title: topic.title }
+        end
+      end
+      private_class_method :topic_fields
     end
 
     class ReplyTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
-          id: OutputSchema::INTEGER,
+          queued: OutputSchema::BOOLEAN,
+          id: OutputSchema::INTEGER_OR_NULL,
           topic_id: OutputSchema::INTEGER,
-          post_number: OutputSchema::INTEGER,
+          post_number: OutputSchema::INTEGER_OR_NULL,
           username: OutputSchema::STRING,
           requested_author: OutputSchema::STRING_OR_NULL,
           author_applied: OutputSchema::BOOLEAN_OR_NULL,
         )
 
       def self.call(arguments:, request_context:)
-        ToolHelpers.ensure_current_author!(arguments, request_context.user)
+        user = request_context.user
+        ToolHelpers.ensure_current_author!(arguments, user)
         topic = Topic.find_by(id: arguments.fetch("topic_id"))
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
         ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
-        post =
-          PostCreator.create!(
-            request_context.user,
-            topic_id: arguments.fetch("topic_id"),
+        submission =
+          ToolHelpers.submit_post!(
+            user,
+            topic_id: topic.id,
             raw: arguments.fetch("raw"),
             reply_to_post_number: arguments["reply_to_post_number"],
           )
-        requested_author = arguments["author_username"]
         ToolHelpers.text_and_structured(
-          id: post.id,
-          topic_id: post.topic_id,
-          post_number: post.post_number,
-          username: post.user.username,
-          requested_author:,
-          author_applied:
-            requested_author.present? ? post.user.username.casecmp?(requested_author) : nil,
+          **reply_fields(submission),
+          topic_id: topic.id,
+          **ToolHelpers.author_fields(arguments, user),
         )
       end
+
+      def self.reply_fields(submission)
+        if ToolHelpers.queued?(submission)
+          { queued: true, id: nil, post_number: nil }
+        else
+          post = submission.post
+          { queued: false, id: post.id, post_number: post.post_number }
+        end
+      end
+      private_class_method :reply_fields
     end
 
     class EditPost
