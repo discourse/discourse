@@ -129,6 +129,12 @@ tr_TR:
     ai_translation_backfill_hourly_rate: "Doldurma işlemleri sırasında saat başına çevrilecek gönderi ve konu sayısı. Mevcut içeriklerin çevirilerinin otomatik olarak doldurulmasını devre dışı bırakmak için 0 olarak ayarlayın."
     ai_translation_backfill_parallel_jobs: "Her dolgu döngüsü başına çalıştırılacak paralel gönderi konumlandırma işlerinin sayısı. Daha yüksek değerler iş hacmini artırır ancak daha fazla kaynak tüketir."
     ai_usage_rollup_after_days: "Günlük toplamlara aktarılmadan önce istek başına AI kullanım istatistiklerinin saklanacağı gün sayısı. Toplamları devre dışı bırakmak için 0 olarak ayarlayın."
+    keywords:
+      ai_default_llm_model: "varsayılan dil modeli"
+      ai_discord_search_enabled: "discord entegrasyonu"
+      ai_helper_automatic_chat_thread_title: "sohbet başlıkları"
+      ai_summarization_enabled: "özetler"
+      ai_summary_gists_enabled: "konu listesinin kısa özetleri"
   reviewables:
     reasons:
       flagged_by_toxicity: YZ eklentisi, toksik olarak sınıflandırdıktan sonra buna bayrak ekledi.
@@ -223,10 +229,6 @@ tr_TR:
           name: "Görüntü oluşturma..."
         image_generation_custom:
           name: "Özel"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -835,6 +837,14 @@ tr_TR:
       fonts:
         base_font: "Gövde yazı tipi"
         heading_font: "Başlık yazı tipi"
+    mcp_theme_access:
+      "on": "Açık"
+      "off": "Kapalı"
+      none: "hiçbiri"
+      changes:
+        server: "MCP sunucusu"
+    mcp_app_setup:
+      none: "hiçbiri"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"

@@ -167,6 +167,7 @@ ro:
         notification_level: "Trimite notificări instante"
         follow: "Alătură-te"
         followed: "Înscris"
+        muted_until_hint: "până la %{until}"
         threading_enabled: "Activat"
         threading_disabled: "Dezactivat"
         notifications: "Notificări"
@@ -216,10 +217,6 @@ ro:
           one: "%{count} zi"
           few: "%{count} zile"
           other: "%{count} de zile"
-      emoji_picker:
-        objects: "Obiecte"
-        flags: "Semnalări"
-        no_results: "Fără rezultate"
       thread:
         title: "Titlu"
         replies:

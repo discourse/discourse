@@ -96,16 +96,14 @@ module("Integration | ui-kit | DPageSubheader", function (hooks) {
   });
 
   test("the title updates in place and survives level changes", async function (assert) {
-    const state = new (class {
-      @tracked level = 2;
-      @tracked title = "First";
-    })();
+    const headingLevel = tracked(2);
+    const title = tracked("First");
 
     await render(
       <template>
         <DPageSubheader
-          @titleHeadingLevel={{state.level}}
-          @titleLabel={{state.title}}
+          @titleHeadingLevel={{headingLevel.value}}
+          @titleLabel={{title.value}}
           @titleUrl="#target"
         />
       </template>
@@ -118,7 +116,7 @@ module("Integration | ui-kit | DPageSubheader", function (hooks) {
       .dom(heading)
       .doesNotHaveClass("ember-view", "renders no classic component wrapper");
 
-    state.title = "Second";
+    title.value = "Second";
     await rerender();
 
     assert.strictEqual(
@@ -134,7 +132,7 @@ module("Integration | ui-kit | DPageSubheader", function (hooks) {
     assert.dom(link).hasText("Second");
 
     for (const level of [1, 3, 4, 5, 6, 2]) {
-      state.level = level;
+      headingLevel.value = level;
       await rerender();
 
       assert.dom(`h${level}.d-page-subheader__title`).exists({ count: 1 });

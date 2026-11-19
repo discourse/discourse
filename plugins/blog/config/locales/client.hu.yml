@@ -16,6 +16,9 @@ hu:
         preview_archive: Archiválás
         desktop: Asztali
         mobile: Mobil
+        save: Mentés
+        path_formats:
+          custom: Egyéni
         back_to_themes: Vissza a témákhoz
         new_theme_short: Új téma
         themes: Témák
@@ -53,7 +56,11 @@ hu:
         edit: Szerkesztés
         status: Állapot
         replies: Válaszok
+        title: Cím
+        page: Oldal
+      all: Összes
       drafts: Vázlatok
+      pages: Oldalak
       preview: Előnézet
       unpublish: Közzététel visszavonása
       appearance_link: Megjelenés

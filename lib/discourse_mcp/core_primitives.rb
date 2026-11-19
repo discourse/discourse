@@ -66,14 +66,457 @@ module DiscourseMcp
       register_read_tools(registry)
       register_write_tools(registry)
       register_moderation_tools(registry)
+      register_report_tools(registry)
+      register_webhook_tools(registry)
       register_site_setting_tools(registry)
       register_theme_tools(registry)
       register_theme_management_tools(registry)
       register_group_tools(registry)
+      register_tag_group_tools(registry)
       register_category_tools(registry)
       register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    def register_report_tools(registry)
+      register_tool(
+        registry,
+        "discourse_list_reports",
+        title: "List reports",
+        description:
+          "Lists the caller's available Discourse reports, including enabled plugin reports. Requires staff access. Use the returned report types with discourse_get_report.",
+        implementation: Tools::ListReports,
+        input_schema: object_schema,
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+
+      scalar_filter = {
+        anyOf: [{ type: "string", maxLength: 250 }, { type: "number" }, { type: "boolean" }],
+      }
+      date = { type: "string", pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", maxLength: 10 }
+      register_tool(
+        registry,
+        "discourse_get_report",
+        title: "Get report",
+        description:
+          "Retrieves one report from the caller's current report catalog. Requires staff access; admin-only reports and related items retain their normal restrictions. Dates use YYYY-MM-DD and default to the last 30 days ending on end_date or today. Date ranges cannot exceed 366 days. Filters accept scalar values or arrays, as supported by each report. limit bounds rows only where the report supports it; omitting it preserves that report's default. cache opts into the existing report cache and requires administrator access; include_related_items defaults to false. This runs registered reports, not arbitrary SQL.",
+        implementation: Tools::GetReport,
+        defer: true,
+        input_schema:
+          object_schema(
+            {
+              report_type: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+                pattern: "^[a-z0-9_-]+$",
+                not: {
+                  pattern: "[^a-z0-9_-]",
+                },
+              },
+              start_date: date,
+              end_date: date,
+              facets: {
+                type: "array",
+                maxItems: 20,
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 50,
+                },
+              },
+              filters: {
+                type: "object",
+                maxProperties: 20,
+                propertyNames: {
+                  minLength: 1,
+                  maxLength: 100,
+                },
+                additionalProperties: {
+                  anyOf: [scalar_filter, { type: "array", maxItems: 100, items: scalar_filter }],
+                },
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: Tools::GetReport::MAX_LIMIT,
+              },
+              cache: {
+                type: "boolean",
+              },
+              include_related_items: {
+                type: "boolean",
+              },
+            },
+            required: %w[report_type],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+    end
+
+    def register_webhook_tools(registry)
+      id = { type: "integer", minimum: 1 }
+      boolean = { type: "boolean" }
+      ids = { type: "array", maxItems: 100, uniqueItems: true, items: id }
+      fingerprint = { type: "string", minLength: 64, maxLength: 64, pattern: "^[a-f0-9]{64}$" }
+      pagination = {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: Tools::WebHookSupport::PAGE_LIMIT,
+        },
+        offset: {
+          type: "integer",
+          minimum: 0,
+          maximum: 1_000_000,
+        },
+      }
+      identity = { webhook_id: id, expected_destination_fingerprint: fingerprint }
+      attributes = {
+        payload_url: {
+          type: "string",
+          minLength: 1,
+          maxLength: 2_048,
+        },
+        content_type: {
+          type: "string",
+          enum: %w[application/json application/x-www-form-urlencoded],
+        },
+        secret: {
+          type: "string",
+          maxLength: 1_024,
+        },
+        active: boolean,
+        verify_certificate: boolean,
+        wildcard_web_hook: boolean,
+        event_type_ids: ids,
+        category_ids: ids,
+        tag_ids: ids,
+        group_ids: ids,
+        confirm_activate: boolean,
+        confirm_wildcard: boolean,
+        confirm_insecure_http: boolean,
+        confirm_disable_tls_verification: boolean,
+      }
+      register_tool(
+        registry,
+        "discourse_list_webhooks",
+        title: "List webhooks",
+        description:
+          "Lists administrator-only webhook configurations, ordered by ID. Destination paths, queries, URL credentials, and signing secrets are omitted. Use the returned destination fingerprint for mutations. Relationship ID lists are capped at 100 and report truncation. include_catalog returns available event types and content types.",
+        implementation: Tools::ListWebhooks,
+        input_schema:
+          object_schema(
+            pagination.merge(
+              active: boolean,
+              delivery_status: {
+                type: "string",
+                enum: %w[inactive failed successful disabled],
+              },
+              include_catalog: boolean,
+            ),
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_get_webhook",
+        title: "Get webhook",
+        description:
+          "Reads safe webhook configuration for administrators. Returns destination origin and fingerprint, never the complete URL or signing secret. Relationship IDs are capped at 100 and report truncation.",
+        implementation: Tools::GetWebhook,
+        input_schema:
+          object_schema({ webhook_id: id, include_catalog: boolean }, required: %w[webhook_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_list_webhook_events",
+        title: "List webhook events",
+        description:
+          "Lists administrator-only delivery history, newest first. Headers and bodies are omitted by default. include_content requires confirm_sensitive_content=true and mcp:private-messages:read because delivery bodies may contain private messages. Returns bounded JSON previews with current-configuration credential filtering; other sensitive forum or destination data may remain. Non-JSON and oversized bodies are omitted. content_limit bounds each preview.",
+        implementation: Tools::ListWebhookEvents,
+        defer: true,
+        input_schema:
+          object_schema(
+            pagination.merge(
+              webhook_id: id,
+              status: {
+                type: "string",
+                enum: %w[all successful failed],
+              },
+              include_content: boolean,
+              confirm_sensitive_content: boolean,
+              content_limit: {
+                type: "integer",
+                minimum: 100,
+                maximum: Tools::WebHookSupport::MAX_CONTENT_LENGTH,
+              },
+            ),
+            required: %w[webhook_id],
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_webhook",
+        title: "Create webhook",
+        description:
+          "Creates an administrator-only webhook, inactive with TLS verification enabled by default. Requires confirm_external_delivery=true. Activation, wildcard subscriptions, HTTP destinations, and disabling TLS verification each need their corresponding explicit confirmation. Select active event type IDs from the live catalog; wildcard and explicit event subscriptions cannot be combined.",
+        implementation: Tools::CreateWebhook,
+        defer: true,
+        input_schema:
+          object_schema(
+            attributes.merge(confirm_external_delivery: boolean),
+            required: %w[payload_url content_type confirm_external_delivery],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_update_webhook",
+        title: "Update webhook",
+        description:
+          "Partially updates an administrator-only webhook after checking its current destination fingerprint and active state. Requires confirm_update=true. Omitted fields are preserved. Relationship arrays replace their complete selections and require confirm_scope_replacement=true when changed. Clearing the signing secret requires confirm_clear_secret=true. Retargeting an active hook also requires confirm_external_delivery=true. Risky configuration changes require the same confirmations as creation. Clearing relationship arrays removes those delivery filters.",
+        implementation: Tools::UpdateWebhook,
+        defer: true,
+        input_schema:
+          object_schema(
+            attributes.merge(identity).merge(
+              expected_active: boolean,
+              confirm_external_delivery: boolean,
+              confirm_update: boolean,
+              confirm_scope_replacement: boolean,
+              confirm_clear_secret: boolean,
+            ),
+            required: %w[
+              webhook_id
+              expected_destination_fingerprint
+              expected_active
+              confirm_update
+            ],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_delete_webhook",
+        title: "Delete webhook",
+        description:
+          "Deletes an administrator-only webhook and its delivery history. Requires confirm_delete=true and the current destination fingerprint. This cannot be undone.",
+        implementation: Tools::DeleteWebhook,
+        defer: true,
+        input_schema:
+          object_schema(
+            identity.merge(confirm_delete: boolean),
+            required: %w[webhook_id expected_destination_fingerprint confirm_delete],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_ping_webhook",
+        title: "Ping webhook",
+        description:
+          "Queues a ping using the existing webhook delivery job and retry behavior, including for an inactive webhook. Requires confirm_external_request=true and the current destination fingerprint. Enqueue success does not mean delivery succeeded; inspect delivery history for the outcome.",
+        implementation: Tools::PingWebhook,
+        input_schema:
+          object_schema(
+            identity.merge(confirm_external_request: boolean),
+            required: %w[webhook_id expected_destination_fingerprint confirm_external_request],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_redeliver_webhook_event",
+        title: "Redeliver webhook event",
+        description:
+          "Makes one administrator-authorized redelivery attempt using the original stored headers and payload and the existing outbound SSRF protection. Requires confirm_redelivery=true, the current destination fingerprint, and expected_event_status. The event must belong to this webhook and must not be a ping or already queued for redelivery. May send private forum data to an external destination; no bulk redelivery or automatic retry is performed. In-progress native attempts block overlapping calls. A call after completion is a new attempt, so do not retry automatically after a timeout.",
+        implementation: Tools::RedeliverWebhookEvent,
+        defer: true,
+        input_schema:
+          object_schema(
+            identity.merge(
+              event_id: id,
+              expected_event_status: {
+                type: "integer",
+                minimum: -1,
+                maximum: 999,
+              },
+              confirm_redelivery: boolean,
+            ),
+            required: %w[
+              webhook_id
+              event_id
+              expected_destination_fingerprint
+              expected_event_status
+              confirm_redelivery
+            ],
+          ),
+        annotations: EXTERNAL_SIDE_EFFECT,
+        risk: :administration,
+      )
+    end
+
+    def register_tag_group_tools(registry)
+      id = { type: "integer", minimum: 1 }
+      name = { type: "string", minLength: 1, maxLength: 100 }
+      selector = {
+        oneOf: [
+          object_schema({ id: }, required: %w[id]),
+          object_schema({ name: }, required: %w[name]),
+        ],
+      }
+      attributes = {
+        name:,
+        tags: {
+          type: "array",
+          maxItems: 1000,
+          items: selector,
+        },
+        parent_tag: {
+          anyOf: [selector, { type: "null" }],
+        },
+        one_per_topic: {
+          type: "boolean",
+        },
+        permissions: {
+          type: "object",
+          minProperties: 1,
+          maxProperties: 1000,
+          propertyNames: {
+            pattern: "^(0|[1-9][0-9]*)$",
+            # $ can match before a trailing newline
+            not: {
+              pattern: "[^0-9]",
+            },
+          },
+          additionalProperties: {
+            type: "string",
+            enum: %w[full readonly],
+          },
+        },
+        allow_tag_creation: {
+          type: "boolean",
+        },
+      }
+      register_tool(
+        registry,
+        "discourse_search_tag_groups",
+        title: "Search tag groups",
+        description:
+          "Searches visible tag groups and visible member tags. Omits staff configuration. q and names combine; q supports SQL LIKE wildcards. truncated signals possible additional results.",
+        implementation: Tools::SearchTagGroups,
+        input_schema:
+          object_schema(
+            {
+              q: {
+                type: "string",
+                maxLength: 250,
+              },
+              names: {
+                type: "array",
+                minItems: 1,
+                maxItems: 100,
+                items: name,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 1000,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_list_tag_groups",
+        title: "List tag groups",
+        description:
+          "Lists staff tag-group inventory with permissions and parent tags, ordered by name and ID. Requires staff authority. Paginate with limit and offset; reads remain available when tagging is disabled.",
+        implementation: Tools::ListTagGroups,
+        input_schema:
+          object_schema(
+            {
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+              },
+              offset: {
+                type: "integer",
+                minimum: 0,
+                maximum: 1_000_000,
+              },
+            },
+          ),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_get_tag_group",
+        title: "Get tag group",
+        description:
+          "Reads tag-group configuration, including tags, parent, one-per-topic policy and permissions. Requires staff authority.",
+        implementation: Tools::GetTagGroup,
+        input_schema: object_schema({ tag_group_id: id }, required: %w[tag_group_id]),
+        annotations: READ_ONLY,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
+        "discourse_create_tag_group",
+        title: "Create tag group",
+        description:
+          "Creates a tag group. Requires staff authority and tagging enabled. Tags use ID or name selectors; synonyms resolve to original tags. Name selectors require allow_tag_creation=true and may create tags. permissions maps group IDs to full or readonly; group 0 means everyone. Omitted permissions default to everyone/full.",
+        implementation: Tools::CreateTagGroup,
+        input_schema: object_schema(attributes, required: %w[name]),
+        annotations: WRITE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_update_tag_group",
+        title: "Update tag group",
+        description:
+          "Updates supplied fields, preserving omitted fields. tags replaces all member tags; [] clears them. parent_tag=null clears the parent. permissions replaces the full permission map. Synonyms resolve to original tags. Name selectors require allow_tag_creation=true. Requires staff authority and tagging enabled.",
+        implementation: Tools::UpdateTagGroup,
+        input_schema: object_schema(attributes.merge(tag_group_id: id), required: %w[tag_group_id]),
+        annotations: WRITE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
+      register_tool(
+        registry,
+        "discourse_delete_tag_group",
+        title: "Delete tag group",
+        description:
+          "Deletes a tag group and its membership, permission and category relationships, including required-tag rules. Tags and topic tags remain. Requires staff authority, tagging enabled, confirm=true and the exact current expected_name.",
+        implementation: Tools::DeleteTagGroup,
+        input_schema:
+          object_schema(
+            { tag_group_id: id, expected_name: name, confirm: { type: "boolean" } },
+            required: %w[tag_group_id expected_name confirm],
+          ),
+        annotations: DESTRUCTIVE,
+        risk: :administration,
+        availability: -> { SiteSetting.tagging_enabled },
+      )
     end
 
     def register_category_tools(registry)
@@ -117,6 +560,8 @@ module DiscourseMcp
                 type: "string",
                 minLength: 1,
                 maxLength: Tools::CreateCategory::MAX_STYLE_VALUE_LENGTH,
+                description:
+                  "Emoji shortcode name without surrounding colons, for example dog or paw_prints. Colon-wrapped names are normalized.",
               },
               icon: {
                 type: "string",
@@ -172,6 +617,8 @@ module DiscourseMcp
                 type: "string",
                 minLength: 1,
                 maxLength: Tools::UpdateCategory::MAX_STYLE_VALUE_LENGTH,
+                description:
+                  "Emoji shortcode name without surrounding colons, for example dog or paw_prints. Colon-wrapped names are normalized.",
               },
               icon: {
                 type: "string",
@@ -894,7 +1341,8 @@ module DiscourseMcp
         registry,
         "discourse_update_topic",
         title: "Update topic",
-        description: "Updates fields on a topic when the user may edit it.",
+        description:
+          "Updates title, category, tags, or featured link when the user may edit the topic. Omit unchanged fields. To close or reopen, use discourse_set_topic_closed; to pin or unpin, use discourse_set_topic_pin.",
         implementation: Tools::UpdateTopic,
         input_schema:
           object_schema(
@@ -1307,6 +1755,107 @@ module DiscourseMcp
     def register_moderation_tools(registry)
       register_tool(
         registry,
+        "discourse_set_topic_pin",
+        title: "Set topic pin",
+        description:
+          "Pins a topic in its category, pins it globally, or unpins it. Uses normal topic pin permissions and status-change behavior. Category/global pins remain until unpinned; this replaces any existing pin expiration. Returns persisted pin state. Use this tool rather than update_topic for pinning.",
+        implementation: Tools::SetTopicPin,
+        input_schema:
+          object_schema(
+            {
+              topic_id: {
+                type: "integer",
+                minimum: 1,
+              },
+              mode: {
+                type: "string",
+                enum: %w[category global unpin],
+              },
+            },
+            required: %w[topic_id mode],
+          ),
+        annotations: WRITE,
+        risk: :moderation,
+      )
+      register_tool(
+        registry,
+        "discourse_set_topic_closed",
+        title: "Close or reopen topic",
+        description:
+          "Closes a topic with closed=true or reopens it with closed=false. Uses normal topic moderation permissions, status-change posts, timers, and staff logging. Returns persisted closed and archived state. Does not change archived status. Use this tool, not update_topic, to close or reopen topics.",
+        implementation: Tools::SetTopicClosed,
+        input_schema:
+          object_schema(
+            { topic_id: { type: "integer", minimum: 1 }, closed: { type: "boolean" } },
+            required: %w[topic_id closed],
+          ),
+        annotations: WRITE,
+        risk: :moderation,
+      )
+      {
+        "suspend" => Tools::SuspendUser,
+        "unsuspend" => Tools::UnsuspendUser,
+        "silence" => Tools::SilenceUser,
+        "unsilence" => Tools::UnsilenceUser,
+      }.each do |operation, implementation|
+        restriction = %w[suspend silence].include?(operation)
+        properties = {
+          username: {
+            type: "string",
+            minLength: 1,
+            maxLength: 255,
+          },
+          confirm: {
+            type: "boolean",
+            const: true,
+            description:
+              "Caller attests this specific moderation action was requested. This argument is not an interactive approval flow.",
+          },
+        }
+        required = %w[username confirm]
+        if restriction
+          properties.merge!(
+            duration_days: {
+              type: "integer",
+              minimum: 1,
+              maximum: Tools::UserModerationSupport::MAX_DURATION_DAYS,
+            },
+            reason: {
+              type: "string",
+              minLength: 1,
+              maxLength: 300,
+            },
+            message: {
+              type: "string",
+              maxLength: 2000,
+              description:
+                "Optional explanation for the user. Standard site moderation notices and audit logging still apply.",
+            },
+          )
+          required.concat(%w[duration_days reason])
+        end
+        description =
+          case operation
+          when "suspend"
+            "Suspends a user, blocking login until the requested duration ends. Requires staff permissions, explicit confirmation, duration and reason. Does not deactivate the account or delete posts. Uses standard suspension audit/notification behavior; independent of reviewable status."
+          when "silence"
+            "Silences a user for the requested duration, restricting posting while preserving login. Requires staff permissions, explicit confirmation, duration and reason. Uses standard silence audit/notification behavior without deleting posts; independent of reviewable status."
+          else
+            "Removes the user's #{operation == "unsuspend" ? "suspension" : "silence"} using standard staff permission checks and audit/notification behavior. Requires explicit confirmation. Returns verified current state; already-clear restrictions are a no-op."
+          end
+        register_tool(
+          registry,
+          "discourse_#{operation}_user",
+          title: "#{operation.capitalize} user",
+          description: description,
+          implementation: implementation,
+          input_schema: object_schema(properties, required: required),
+          annotations: restriction ? DESTRUCTIVE : WRITE,
+          risk: :moderation,
+        )
+      end
+      register_tool(
+        registry,
         "discourse_get_review_queue_count",
         title: "Get review queue count",
         description:
@@ -1644,6 +2193,37 @@ module DiscourseMcp
     def register_theme_tools(registry)
       register_tool(
         registry,
+        "discourse_set_theme_code",
+        title: "Set theme code",
+        description:
+          "Preferred tool for inline theme code. First get_theme and copy code_revision into expected_code_revision. Supply plain css and/or javascript strings; no field arrays, upload IDs, or numeric types. CSS replaces common/common.scss; JavaScript replaces javascripts/discourse/api-initializers/mcp-theme-code.js and should import { apiInitializer } from discourse/lib/api and export default apiInitializer((api) => { ... }). Each input accepts at most 65,536 characters. Omitted inputs remain unchanged; empty strings remove these managed files. Does not attach/enable a component. Checks compilation and rejects a code revision that has changed since your read. The revision check coordinates edits through this tool; it does not prevent concurrent edits through other interfaces. Read the returned verification; saved code is not browser-verified.",
+        implementation: Tools::SetThemeCode,
+        input_schema:
+          object_schema(
+            {
+              theme_id: {
+                type: "integer",
+              },
+              expected_code_revision: {
+                type: "string",
+                pattern: "^[0-9a-f]{64}$",
+              },
+              css: {
+                type: "string",
+                maxLength: 65_536,
+              },
+              javascript: {
+                type: "string",
+                maxLength: 65_536,
+              },
+            },
+            required: %w[theme_id expected_code_revision],
+          ),
+        annotations: WRITE,
+        risk: :administration,
+      )
+      register_tool(
+        registry,
         "discourse_get_theme",
         title: "Get theme",
         description:
@@ -1669,6 +2249,8 @@ module DiscourseMcp
           value: {
             type: "string",
             maxLength: 1_000_000,
+            description:
+              "Inline source code or text for this field. Put CSS, SCSS, JavaScript, HTML, and YAML source here. An empty string removes an existing inline field.",
           },
           type: {
             type: "string",
@@ -1677,10 +2259,14 @@ module DiscourseMcp
           type_id: {
             type: "integer",
             minimum: 0,
+            description:
+              "Advanced numeric field type. Prefer type or allow inference from name and target.",
           },
           upload_id: {
             type: "integer",
             minimum: 1,
+            description:
+              "An existing upload ID returned by an upload tool. Only valid with type theme_upload_var or theme_screenshot_upload_var. Omit value when supplying upload_id. For inline source code, use value and omit upload_id.",
           },
         },
         required: %w[name target],
@@ -1691,7 +2277,7 @@ module DiscourseMcp
         "discourse_create_theme",
         title: "Create theme",
         description:
-          "Creates a theme or theme component with optional HTML, SCSS, and settings fields.",
+          "Creates theme metadata or a component. For additive styling use component:true, then attach with update_theme parent_theme_ids; enabled alone does not apply it. Standalone themes do not affect the default theme unless made default or selected by a user. For inline CSS/JavaScript prefer creating without fields, then discourse_set_theme_code using the returned code_revision. theme_fields is an advanced file/asset interface; do not invent upload IDs.",
         implementation: Tools::CreateTheme,
         input_schema:
           object_schema(
@@ -1733,7 +2319,7 @@ module DiscourseMcp
         "discourse_update_theme",
         title: "Update theme",
         description:
-          "Updates attributes and fields on a theme when the authenticated user may edit it.",
+          "Updates theme metadata, component relationships, or advanced files/assets when the authenticated user may edit it. Set component:true to convert an existing non-default theme in place, preserving its ID and code; conversion removes incompatible relationships and resets palette/user-selectability. Attach components using parent_theme_ids (full replacement list); child_theme_ids also replaces the full list, so preserve existing components. enabled alone does not attach a component. Prefer discourse_set_theme_code for inline CSS/JavaScript; it chooses canonical paths and checks revision and compilation.",
         implementation: Tools::UpdateTheme,
         input_schema:
           object_schema(
@@ -1756,6 +2342,11 @@ module DiscourseMcp
               },
               user_selectable: {
                 type: "boolean",
+              },
+              component: {
+                type: "boolean",
+                description:
+                  "Convert in place between theme and component. The default theme cannot be converted.",
               },
               enabled: {
                 type: "boolean",

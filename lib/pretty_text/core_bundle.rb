@@ -27,7 +27,7 @@ module PrettyText
           %w[
             pnpm-lock.yaml
             frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
-            frontend/discourse/pretty-text/**/*.js
+            frontend/discourse/pretty-text/**/*.{js,ts}
             frontend/discourse-markdown-it/src/**/*.js
           ] + DISCOURSE_MODULES.map { "frontend/discourse/app/#{it}.{js,ts}" },
       ) do

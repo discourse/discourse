@@ -521,6 +521,9 @@ sk:
         follow: "Pridať sa"
         followed: "Vytvorený"
         mute: "Stlmiť kanál"
+        muted_until_hint: "do %{until}"
+        mute_options:
+          "off": "Vypnuté"
         threading_enabled: "Povolené"
         threading_disabled: "Vypnuté"
         muted_on: "Zapnuté"
@@ -652,19 +655,6 @@ sk:
         notify_moderators: "Táto správa si vyžaduje pozornosť personálu z iného dôvodu, ktorý nie je uvedený vyššie."
       flagging:
         action: "Vlajková správu"
-      emoji_picker:
-        favorites: "Často používané"
-        smileys_&_emotion: "Smajlíky a emócie"
-        objects: "Objekty"
-        people_&_body: "Ľudia a telo"
-        travel_&_places: "Cestovanie a miesta"
-        animals_&_nature: "Zvieratá a príroda"
-        food_&_drink: "Jedlo a nápoje"
-        activities: "Aktivity"
-        flags: "Označenia"
-        symbols: "Symboly"
-        search_placeholder: "Hľadať podľa názvu emoji a aliasu..."
-        no_results: "Žiadne výsledky"
       thread:
         title: "Názov"
         view_thread: Zobraziť vlákno

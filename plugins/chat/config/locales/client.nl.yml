@@ -508,6 +508,9 @@ nl:
         followed: "Lid sinds"
         mute: "Kanaal dempen"
         unmute: "Dempen kanaal opheffen"
+        muted_until_hint: "tot %{until}"
+        mute_options:
+          "off": "Uit"
         threading_enabled: "Ingeschakeld"
         threading_disabled: "Uitgeschakeld"
         muted_on: "Aan"
@@ -637,19 +640,6 @@ nl:
         notify_moderators: "Dit bericht vereist aandacht van een medewerker om een andere reden dan hierboven vermeld."
       flagging:
         action: "Bericht markeren"
-      emoji_picker:
-        favorites: "Veel gebruikt"
-        smileys_&_emotion: "Smileys en emoji's"
-        objects: "Objecten"
-        people_&_body: "Mensen en lichaam"
-        travel_&_places: "Reizen en plaatsen"
-        animals_&_nature: "Dieren en natuur"
-        food_&_drink: "Eten en drinken"
-        activities: "Activiteiten"
-        flags: "Markeringen"
-        symbols: "Symbolen"
-        search_placeholder: "Zoek op emojinaam en -alias..."
-        no_results: "Geen resultaten"
       thread:
         title: "Titel"
         view_thread: Thread weergeven

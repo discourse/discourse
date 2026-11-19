@@ -808,7 +808,12 @@ export default class ReviewableItem extends Component {
                 {{dIcon "link"}}
               </button>
 
-              {{newReviewableStatus @reviewable.status @reviewable.type}}
+              {{newReviewableStatus
+                @reviewable.status
+                @reviewable.type
+                @reviewable.approval_style
+                @reviewable.answersProblem
+              }}
 
               <span class="reviewable-created-date">
                 {{dFormatDate @reviewable.created_at format="tiny"}}

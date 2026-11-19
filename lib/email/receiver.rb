@@ -31,6 +31,9 @@ module Email
     class NoSenderDetectedError < ProcessingError
     end
 
+    class AuthenticationFailedError < ProcessingError
+    end
+
     class FromReplyByAddressError < ProcessingError
     end
 
@@ -156,7 +159,7 @@ module Email
 
         Email::Validator.ensure_valid!(@mail)
 
-        @from_email, @from_display_name = parse_from_field(@mail)
+        @from_email, @from_display_name, @from_email_substituted = parse_from_field(@mail)
         @from_user = User.find_by_email(@from_email)
         @incoming_email = create_incoming_email
 
@@ -246,7 +249,7 @@ module Email
       user = @from_user
 
       if user.present?
-        log_and_validate_user(user)
+        log_user(user)
       elsif !SiteSetting.enable_staged_users
         category = Category.find_by_email(mail.to)
         if category&.email_in_allow_strangers? && SiteSetting.email_in_allow_system_user_fallback
@@ -276,6 +279,8 @@ module Email
 
       if action = subscription_action_for(body, subject)
         raise UnsubscribeNotAllowed if user.nil?
+        validate_user(user)
+        ensure_authenticated!
         send_subscription_mail(action, user)
         return
       end
@@ -328,6 +333,7 @@ module Email
 
         # We don't stage new users for emails to reply addresses, exit if user is nil
         raise BadDestinationAddress if user.blank?
+        validate_user(user)
 
         # We only get here if there are no destinations (the email is not going to
         # a Category, Group, or PostReplyKey)
@@ -346,12 +352,32 @@ module Email
       end
     end
 
-    def log_and_validate_user(user)
+    def log_user(user)
       @incoming_email.update_columns(user_id: user.id)
+    end
 
-      raise InactiveUserError if !user.active && !user.staged
-      raise SuspendedUserError if user.suspended?
-      raise SilencedUserError if user.silenced?
+    def validate_user(user)
+      error = user_restriction_error(user)
+      raise error if error
+    end
+
+    def user_restriction_error(user)
+      return InactiveUserError if !user.active && !user.staged
+      return SuspendedUserError if user.suspended?
+      return SilencedUserError if user.silenced?
+      nil
+    end
+
+    def original_sender(user)
+      address, = Email::Receiver.extract_email_address_and_name(@mail[:from])
+      User.find_by_email(address) || @from_user || user
+    end
+
+    def validate_destination_user(user:, destination:)
+      if destination.is_a?(Category) ||
+           (destination.is_a?(Group) && destination.incoming_email.blank?)
+        validate_user(user)
+      end
     end
 
     def get_all_recipients(mail)
@@ -385,10 +411,12 @@ module Email
 
       DiscourseEvent.trigger(:email_bounce, @mail, @incoming_email, @email_log)
 
-      if mail_error_statuses.any? { |s| s.start_with?(Email::SMTP_STATUS_TRANSIENT_FAILURE) }
-        Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
-      else
-        Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
+      if scoreable_bounce?
+        if mail_error_statuses.any? { |s| s.start_with?(Email::SMTP_STATUS_TRANSIENT_FAILURE) }
+          Email::Receiver.update_bounce_score(@from_email, SiteSetting.soft_bounce_score)
+        else
+          Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
+        end
       end
 
       if SiteSetting.whispers_allowed_groups.present? && @from_user&.staged?
@@ -411,6 +439,13 @@ module Email
       end
 
       raise BouncedEmailError
+    end
+
+    def scoreable_bounce?
+      return false if email_log.blank? || email_log.user_id.blank?
+      return false if email_log.cc_addresses.present? || email_log.bcc_addresses.present?
+
+      User.find_by_email(@from_email)&.id == email_log.user_id
     end
 
     def is_from_reply_by_email_address?
@@ -483,11 +518,22 @@ module Email
     end
 
     def auth_res_action
-      @auth_res_action ||= AuthenticationResults.new(@mail.header[:authentication_results]).action
+      @auth_res_action ||=
+        if SiteSetting.email_in_authserv_id.present? && @from_email_substituted
+          # the Authentication-Results verdict only vouches for the From header,
+          # not for a sender address taken from another, unauthenticated header
+          :enqueue
+        else
+          AuthenticationResults.new(@mail.header[:authentication_results]).action
+        end
     rescue StandardError => e
       # fail closed without losing the post: queue it for review
       Discourse.warn_exception(e, message: "Failed to evaluate Authentication-Results")
       @auth_res_action = :enqueue
+    end
+
+    def ensure_authenticated!
+      raise AuthenticationFailedError if auth_res_action == :enqueue
     end
 
     def select_body
@@ -792,20 +838,21 @@ module Email
       # For forwarded emails, where the from address matches a group incoming
       # email, we want to use the from address of the original email sender,
       # which we can extract from embedded_email_raw.
-      if process_forwarded_emails && has_been_forwarded?
-        if mail[:from].to_s =~ group_incoming_emails_regex
-          if embedded_email && embedded_email[:from].errors.blank?
-            from_address, from_display_name =
-              Email::Receiver.extract_email_address_and_name(embedded_email[:from])
-            return from_address, from_display_name if from_address
-          end
+      if process_forwarded_emails && has_been_forwarded? && sent_by_group_mailbox?(mail)
+        if embedded_email && embedded_email[:from].errors.blank?
+          from_address, from_display_name =
+            Email::Receiver.extract_email_address_and_name(embedded_email[:from])
+          return from_address, from_display_name, true if from_address
         end
       end
+
+      from_header_address, from_header_name =
+        Email::Receiver.extract_email_address_and_name(mail[:from])
 
       # extract proper sender when using mailman mailing list
       if mail[:x_mailman_version].present?
         address, name = Email::Receiver.extract_email_address_and_name_from_mailman(mail)
-        return address, name if address
+        return address, name, address != from_header_address if address
       end
 
       # For now we are only using the Reply-To header if the email has
@@ -817,10 +864,12 @@ module Email
           Email::Receiver.extract_email_address_and_name(mail[:x_original_from])
         reply_to_address, reply_to_name =
           Email::Receiver.extract_email_address_and_name(mail[:reply_to])
-        return reply_to_address, reply_to_name if original_from_address == reply_to_address
+        if original_from_address == reply_to_address
+          return reply_to_address, reply_to_name, reply_to_address != from_header_address
+        end
       end
 
-      Email::Receiver.extract_email_address_and_name(mail[:from])
+      [from_header_address, from_header_name]
     rescue StandardError
       nil
     end
@@ -971,11 +1020,13 @@ module Email
         user ||= stage_from_user
         create_group_post(destination, user, body, elided)
       elsif destination.is_a?(Category)
+        validate_user(user) if user
         if (user.nil? || user.staged?) && !destination.email_in_allow_strangers
           raise StrangersNotAllowedError
         end
 
         user ||= stage_from_user
+        validate_user(user)
 
         if !user.staged? && !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map) &&
              !sent_to_mailinglist_mirror?
@@ -995,6 +1046,7 @@ module Email
         raise BadDestinationAddress if user.blank?
 
         post = Post.with_deleted.find(destination.post_id)
+        validate_user(user) unless group_inbox_message?(post.topic)
         raise ReplyNotAllowedError if !Guardian.new(user).can_create_post?(post&.topic)
 
         if destination.user_id != user.id && !forwarded_reply_key?(destination, user)
@@ -1015,6 +1067,7 @@ module Email
     end
 
     def create_group_post(group, user, body, elided)
+      validate_destination_user(user: user, destination: group)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
 
       # Incoming emails with matching message ids, and then cross references
@@ -1065,12 +1118,14 @@ module Email
           archetype: Archetype.private_message,
           target_group_names: [group.name],
           is_group_message: true,
+          is_group_inbox_message: group.incoming_email.present?,
           skip_validations: true,
         )
       else
         # This must be done for the unknown user (who is staged) to
         # be allowed to post a reply in the topic.
         if group.allow_unknown_sender_topic_replies
+          ensure_authenticated!
           target_post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
         end
 
@@ -1164,6 +1219,11 @@ module Email
 
     def process_forwarded_email(destination, user)
       user ||= stage_from_user
+      sender = original_sender(user)
+      [user, sender].uniq.each do |destination_user|
+        validate_destination_user(user: destination_user, destination: destination)
+      end
+      user = sender if user_restriction_error(sender)
       case SiteSetting.forwarded_emails_behaviour
       when "create_replies"
         forwarded_email_create_replies(destination, user)
@@ -1183,7 +1243,7 @@ module Email
       embedded_user: nil
     )
       if destination.is_a?(Group)
-        topic_user = embedded_user&.call || user
+        topic_user = user_restriction_error(user) ? user : (embedded_user&.call || user)
         create_topic(
           user: topic_user,
           raw: raw,
@@ -1192,6 +1252,7 @@ module Email
           target_usernames: [user.username],
           target_group_names: [destination.name],
           is_group_message: true,
+          is_group_inbox_message: destination.incoming_email.present?,
           skip_validations: true,
           created_at: date,
         )
@@ -1221,12 +1282,17 @@ module Email
 
       if forwarded_by_address && forwarded_by_name
         @forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
+        validate_destination_user(user: @forwarded_by_user, destination: destination)
       end
 
       email_address, display_name =
         parse_from_field(embedded_email, process_forwarded_emails: false)
 
       return false if email_address.blank? || !email_address.include?("@")
+
+      # the embedded sender becomes the author, but the Authentication-Results
+      # verdict only vouches for the outer From header
+      @from_email_substituted ||= email_address != forwarded_by_address
 
       post =
         forwarded_email_create_topic(
@@ -1238,6 +1304,8 @@ module Email
           embedded_user: lambda { find_or_create_user(email_address, display_name) },
         )
 
+      # a post queued for review is still handled, it must not be processed again
+      return true if @post_queued
       return false unless post
 
       if post.topic
@@ -1319,13 +1387,25 @@ module Email
       end
     end
 
-    def group_incoming_emails_regex
-      @group_incoming_emails_regex =
-        Regexp.union(DB.query_single(<<~SQL).map { |e| e.split("|") }.flatten.compact_blank.uniq)
-          SELECT CONCAT(incoming_email, '|', email_username)
-          FROM groups
-          WHERE incoming_email IS NOT NULL OR email_username IS NOT NULL
-        SQL
+    def group_incoming_emails
+      @group_incoming_emails ||=
+        Group
+          .where("incoming_email IS NOT NULL OR email_username IS NOT NULL")
+          .pluck(:incoming_email, :email_username)
+          .flatten
+          .compact
+          .flat_map { |emails| emails.split("|") }
+          .map { |email| email.strip.downcase }
+          .compact_blank
+          .to_set
+    end
+
+    # A From header with more than one address can name the group mailbox
+    # without being sent by it.
+    def sent_by_group_mailbox?(mail)
+      return false unless mail.from in [sender_address]
+
+      group_incoming_emails.include?(sender_address.downcase)
     end
 
     def category_email_in_regex
@@ -1387,7 +1467,10 @@ module Email
     end
 
     def create_topic(options = {})
-      enable_email_pm_setting(options[:user]) if options[:archetype] == Archetype.private_message
+      if options[:archetype] == Archetype.private_message
+        ensure_authenticated!
+        enable_email_pm_setting(options[:user])
+      end
 
       create_post_with_attachments(options)
     end
@@ -1411,18 +1494,33 @@ module Email
 
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
+      options[:is_group_message] = options[:topic].private_message? &&
+        options[:topic].allowed_groups.exists?
+      options[:is_group_inbox_message] = group_inbox_message?(options[:topic])
+      post_action_type = post_action_for(options[:raw])
+      notification_level = notification_level_for(options[:raw])
+      group_inbox_post =
+        options[:is_group_inbox_message] && !post_action_type && !notification_level
+      validate_user(options[:user]) unless group_inbox_post || options[:bounce]
       if options[:bounce] && options[:topic].archetype != Archetype.private_message
         raise BouncedEmailError
       end
 
+      # Reply commands change state without passing through create_post's authentication checks.
+      if post_action_type || notification_level
+        category = options[:topic].category
+        ensure_authenticated! unless category && sent_to_mailinglist_mirror?(category)
+      end
+
       options[:post] = nil if options[:post]&.trashed?
       if options[:topic].archetype == Archetype.private_message
+        ensure_authenticated!
         enable_email_pm_setting(options[:user])
       end
 
-      if post_action_type = post_action_for(options[:raw])
+      if post_action_type
         create_post_action(options[:user], options[:post], post_action_type)
-      elsif notification_level = notification_level_for(options[:raw])
+      elsif notification_level
         TopicUser.change(
           options[:user].id,
           options[:post].topic_id,
@@ -1432,10 +1530,13 @@ module Email
         raise TopicClosedError if options[:topic].closed?
         options[:topic_id] = options[:topic].id
         options[:reply_to_post_number] = options[:post]&.post_number
-        options[:is_group_message] = options[:topic].private_message? &&
-          options[:topic].allowed_groups.exists?
         create_post_with_attachments(options)
       end
+    end
+
+    def group_inbox_message?(topic)
+      topic.present? && topic.private_message? &&
+        topic.allowed_groups.where.not(incoming_email: [nil, ""]).exists?
     end
 
     def create_post_action(user, post, type)
@@ -1609,6 +1710,12 @@ module Email
         options[:email_auth_res_action] = auth_res_action
       end
 
+      # Private messages bypass the review queue, so reject unauthenticated mail here.
+      if options[:email_auth_res_action] == :enqueue &&
+           (options[:archetype] == Archetype.private_message || options[:topic]&.private_message?)
+        raise AuthenticationFailedError
+      end
+
       user = options.delete(:user)
 
       if options[:bounce]
@@ -1675,6 +1782,8 @@ module Email
         DiscourseEvent.trigger(:post_created, result.post, options, user)
       end
 
+      @post_queued = result.action == :enqueued
+
       result.post
     end
 
@@ -1688,6 +1797,8 @@ module Email
     end
 
     def add_other_addresses(post, sender, mail_object)
+      return if user_restriction_error(original_sender(sender))
+
       max_staged_users_post = nil
 
       %i[to cc bcc].each do |d|
@@ -1738,7 +1849,7 @@ module Email
 
     def should_invite?(email)
       email !~ Email::Receiver.reply_by_email_address_regex &&
-        email !~ group_incoming_emails_regex && email !~ category_email_in_regex
+        group_incoming_emails.exclude?(email) && email !~ category_email_in_regex
     end
 
     def can_invite?(topic, user)
@@ -1759,7 +1870,7 @@ module Email
     end
 
     def stage_sender_user(email, display_name)
-      find_or_create_user!(email, display_name).tap { |u| log_and_validate_user(u) }
+      find_or_create_user!(email, display_name).tap { |u| log_user(u) }
     end
 
     def delete_created_staged_users

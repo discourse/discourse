@@ -562,34 +562,13 @@ ur:
         completed: "اختیارات تبدیل کریں"
         show_light_screenshot: "لائٹ اسکرین شاٹ دکھائیں"
         show_dark_screenshot: "ڈارک اسکرین شاٹ دکھائیں"
+      create_category:
+        action: "زمرہ بنائیں"
       invite_collaborators:
         title: "شراکت داروں کو مدعو کریں"
         description: "ابتدائی صارفین اسے زندگی بخشیں گے۔"
         action: "دعوت نامہ بنائیں"
         completed: "مزید مدعو کریں"
-      start_posting:
-        title: "دھاگے بنائیں"
-        description: "لوگوں کو بحث کرنے کے لیے موضوع دیں۔"
-        action: "خیالات دیکھیں"
-        completed: "مزید خیالات دیکھیں"
-        choose_option: "آپ کیسے شروع کرنا چاہیں گے؟"
-        predefined_topics: "بحث کے موضوع کے سانچے"
-        predefined_topics_description: "بحث کو آگے بڑھانے کے لیے گفتگو شروع کرنے والے موضوعات میں سے انتخاب کریں"
-        use_predefined: "سانچے پرکھیں"
-        back: "واپس"
-        category_unavailable: "اس زمرے میں پوسٹ کرنا ممکن نہیں ہے۔"
-        icebreakers:
-          plan_categories:
-            title: "ہمیں کون سی زمروں سے آغاز کرنا چاہیے؟"
-            body: "آئیے لانچ کرنے سے پہلے چیزوں کو منظم کرنے کا طریقہ طے کریں! لوگ سب سے زیادہ کس موضوع پر بات کرنا چاہیں گے؟ ہم صرف چند زمروں سے آغاز کر سکتے ہیں اور بعد میں مزید شامل کر سکتے ہیں۔"
-          plan_invites:
-            body: "ایک ایسی کمیونٹی میں شامل ہونا ہمیشہ بہتر ہوتا ہے جس میں پہلے ہی کچھ لوگ موجود ہوں۔ ہمیں سب سے پہلے کسے مدعو کرنا چاہیے؟ ایسے لوگوں کے بارے میں سوچیں جو بات چیت کرنا پسند کرتے ہیں، دوسروں کی مدد کرتے ہیں، اور جلد شامل ہونے کے لیے پرجوش ہوں۔"
-          introduce_yourself:
-            title: "اپنا تعارف کروائیں"
-            body: "کمیونٹی میں خوش آمدید! آئیے ایک دوسرے کو جانیں۔ براہِ کرم اپنا تعارف کروائیں اور اپنی دلچسپیوں کو رقم کریں۔ میں پہل کرتا ہوں: مجھے ٹیکنالوجی کا بہت شوق ہے اور دوسروں کو سکھانا پسند ہے!"
-          write_your_own:
-            title: "اپنی طرف سے لکھیں"
-            description: "اپنی کمیونٹی کے مطابق بنائے گئے موضوع کے ساتھ بات چیت شروع کریں۔"
     design_wizard:
       title: "اپنی سائٹ کو تخصیص کریں"
       step_label: "%{index} مرحلے پر جائیں"
@@ -2673,6 +2652,7 @@ ur:
       no_results: "کوئی نتائج نہیں"
       search: "تلاش۔۔۔"
       label: "اختیارات کا انتخاب"
+      remove_item: "%{name} ہٹائیں"
     d_otp:
       screen_reader:
         one: نمبر درج کریں
@@ -3141,6 +3121,7 @@ ur:
         size_too_small: "%{provided_file_size} اجازت دی گئی کم مقدار %{min_file_size}سےکم ہے"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
+      no_results: "کوئی نتائج نہیں"
       smileys_&_emotion: سمائیلیاں اور جذبات
       people_&_body: لوگ اور جسم
       animals_&_nature: جانور اور قدرت
@@ -3214,6 +3195,10 @@ ur:
       emoji: "اِیمَوجی :)"
       more_emoji: "مزید۔۔۔"
       options: "اختیارات"
+      ai_content:
+        code: "کوڈ"
+        quote: "اقتباس کریں"
+        details: "تفصیلات"
       whisper: "سرگوشی"
       unlist: "غیر مندرج"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
@@ -4548,6 +4533,7 @@ ur:
         actions: "حجمی عوامل"
     post:
       accessible_heading: "پوسٹ منجانب %{username} %{date}"
+      ai_generated: "مصنوعی ذہانت"
       heading_anchor: "ہیڈنگ لنک"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
@@ -5665,6 +5651,15 @@ ur:
       forward: "آگے"
       share: "شیئر"
       dismiss: "بر خاست کریں"
+    mobile_tab_bar:
+      new_topic: "نیا موضوع"
+      create: "بنائیں"
+      more: "مزید "
+      back: "واپس"
+      topics: "موضوعات"
+      drafts:
+        one: "مسودات (%{count})"
+        other: "مسودات (%{count})"
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
     theme_preview_notice: "آپ فی الحال ایک تھیم کی جھلک دیکھ رہے ہیں، اس براؤزر ٹیب یا ونڈو کو اپنی عام سائٹ کی ترتیب پر واپس آنے کے لیے بند کریں۔"
@@ -7395,14 +7390,6 @@ ur:
           company_name: "نام"
           company_url: "ویب سائٹ"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "گورنمنٹ قانون"
-          governing_law_placeholder: "صوبہ، ریاست یا ملک"
-          governing_law_help: |
-            سائٹ کی قانونی شرائط کے لیے دائرہ اختیار کی وضاحت کریں، عام طور پر جہاں کمپنی رجسٹرڈ ہے یا کام کرتی ہے۔
-          city_for_disputes: "تنازعات کے لئے شہر"
-          city_for_disputes_placeholder: "شہر"
-          city_for_disputes_help: |
-            اس فورم سے متعلق قانونی تنازعات کے حل کے لیے شہر کی وضاحت کریں۔
           extra_groups:
             heading: "گروپ کی فہرست"
             description: "بارے میں صفحہ پر دکھانے کے لیے اضافی گروپس۔"

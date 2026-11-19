@@ -11,6 +11,9 @@ sq:
         overridden: Grupet e krijuara
         preview_archive: Arkivoni
         mobile: Mobile
+        save: Ruani
+        path_formats:
+          custom: Grupet e krijuara
         edit: Redaktoni
         activate: Aktivizoni
         preview: Parashikimi
@@ -42,5 +45,7 @@ sq:
         edit: Redaktoni
         status: Status
         replies: Përgjigjet
+        title: Titulli
+      all: Të gjitha
       drafts: Drafte
       preview: Parashikimi

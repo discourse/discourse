@@ -245,6 +245,10 @@ after_initialize do
       agent_klass: DiscourseWorkflows::AiWorkflowAuthor,
       enabled_by_setting: "discourse_workflows_ai_authoring_enabled",
       plugin: self,
+      entry_point: {
+        path: "/admin/plugins/discourse-workflows/workflows/new",
+        label: "discourse_workflows.new_workflow",
+      },
     )
 
     DiscourseAi.register_tools(

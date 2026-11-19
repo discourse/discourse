@@ -1,3 +1,11 @@
+@mixin sidebar-footer-action-highlight {
+  background: var(--d-sidebar-highlight-background);
+
+  .d-icon {
+    color: var(--d-sidebar-highlight-color);
+  }
+}
+
 .sidebar-footer-wrapper {
   box-sizing: border-box;
   background: var(--d-sidebar-background);
@@ -40,9 +48,15 @@
     color: var(--d-sidebar-link-color);
     padding: 0 0.5em;
 
-    &:hover,
-    &:focus {
+    &:focus-visible {
       background: var(--d-sidebar-highlight-background);
+    }
+
+    @media (hover: hover) {
+      &:hover,
+      &:focus {
+        background: var(--d-sidebar-highlight-background);
+      }
     }
   }
 
@@ -60,12 +74,13 @@
       color: var(--d-sidebar-link-icon-color);
     }
 
-    &:focus-visible,
-    &:hover {
-      background: var(--d-sidebar-highlight-background);
+    &:focus-visible {
+      @include sidebar-footer-action-highlight;
+    }
 
-      .d-icon {
-        color: var(--d-sidebar-highlight-color);
+    @media (hover: hover) {
+      &:hover {
+        @include sidebar-footer-action-highlight;
       }
     }
   }

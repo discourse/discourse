@@ -21,7 +21,14 @@ module ::Blog
                :url,
                :path,
                :excerpt,
+               :meta_description,
+               :canonical_url,
+               :cover_upload_id,
+               :cover_url,
+               :cover_alt,
+               :co_authors,
                :featured,
+               :page,
                :published_at,
                :last_published_at,
                :published,
@@ -112,8 +119,39 @@ module ::Blog
       metadata["excerpt"]
     end
 
+    def meta_description
+      metadata["meta_description"].to_s
+    end
+
+    def canonical_url
+      metadata["canonical_url"].to_s
+    end
+
+    def cover_upload_id
+      metadata["cover_upload_id"]
+    end
+
+    def cover_url
+      Upload.find_by(id: cover_upload_id)&.url if cover_upload_id
+    end
+
+    def cover_alt
+      metadata["cover_alt"].to_s
+    end
+
+    def co_authors
+      ids = Array(metadata["co_author_ids"])
+      return [] if ids.empty?
+      usernames = User.where(id: ids).pluck(:id, :username).to_h
+      usernames.values_at(*ids).compact
+    end
+
     def featured
       metadata["featured"]
+    end
+
+    def page
+      metadata["page"].present?
     end
 
     def published_at

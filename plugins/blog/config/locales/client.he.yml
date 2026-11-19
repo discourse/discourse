@@ -16,6 +16,9 @@ he:
         preview_archive: ארכב
         desktop: מחשב-שולחני
         mobile: נייד
+        save: שמירה
+        path_formats:
+          custom: מותאם
         back_to_themes: חזרה לערכות עיצוב
         new_theme_short: ערכת עיצוב חדשה
         themes: תמות
@@ -54,7 +57,11 @@ he:
         edit: עריכה
         status: מצב
         replies: תשובות
+        title: כותרת
+        page: עמוד
+      all: הכול
       drafts: טיוטות
+      pages: עמודים
       preview: תצוגה מקדימה
       unpublish: משיכת הפרסום
       appearance_link: מראה

@@ -107,6 +107,7 @@ nb_NO:
         channel_wide_mentions_label: "Tillat @alle og @her omtaler"
         follow: "Bli medlem"
         followed: "Medlem fra"
+        muted_until_hint: "til %{until}"
         threading_enabled: "Aktivert"
         threading_disabled: "Deaktivert"
         notifications: "Varsler"
@@ -152,11 +153,6 @@ nb_NO:
         short:
           one: "%{count} dag"
           other: "%{count} dager"
-      emoji_picker:
-        objects: "Objekter"
-        activities: "Aktiviteter"
-        flags: "Flagg"
-        symbols: "Symboler"
       thread:
         title: "Tittel"
         replies:

@@ -12,6 +12,7 @@ lv:
         preview_archive: Arhīvs
         desktop: Personālais dators
         mobile: Mobilais
+        save: Saglabāt
         themes: Dizaini
         edit: Labot
         preview: Priekšskatījums
@@ -39,5 +40,7 @@ lv:
         edit: Labot
         status: Statuss
         replies: Atbildes
+        title: Virsraksts
+      all: Visi
       drafts: Melnraksti
       preview: Priekšskatījums

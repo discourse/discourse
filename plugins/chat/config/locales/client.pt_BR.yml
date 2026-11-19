@@ -528,6 +528,9 @@ pt_BR:
         followed: "Entrou"
         mute: "Silenciar canal"
         unmute: "Reativar canal"
+        muted_until_hint: "até %{until}"
+        mute_options:
+          "off": "Desligado"
         threading_enabled: "Ativada"
         threading_disabled: "Desativada"
         muted_on: "Ligado"
@@ -657,19 +660,6 @@ pt_BR:
         notify_moderators: "Esta mensagem requer atenção da equipe por outro motivo não listado acima."
       flagging:
         action: "Sinalizar mensagem"
-      emoji_picker:
-        favorites: "Usado frequentemente"
-        smileys_&_emotion: "Smileys e emoticons"
-        objects: "Objetos"
-        people_&_body: "Pessoas e corpo"
-        travel_&_places: "Viagens e lugares"
-        animals_&_nature: "Animais e natureza"
-        food_&_drink: "Comida e bebida"
-        activities: "Atividades"
-        flags: "Sinalizações"
-        symbols: "Símbolos"
-        search_placeholder: "Pesquisar por nome de emoji e codinomes..."
-        no_results: "Nenhum resultado"
       thread:
         title: "Título"
         view_thread: Visualizar linha de discussão

@@ -172,6 +172,37 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
+    it "keeps invite-only visitors on site with a sole authenticator" do
+      enable_auth_provider(:google_oauth2)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/latest"
+      expect(response).to redirect_to("/login")
+
+      get "/login"
+      expect(response.status).to eq(200)
+
+      invite = Fabricate(:invite, invited_by: admin)
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+    end
+
+    it "keeps invite-only visitors on site with Discourse ID" do
+      enable_auth_provider(:discourse_id)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/login"
+      expect(response.status).to eq(200)
+    end
+
     it "does not redirect to SSO when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
       SiteSetting.discourse_connect_url = "http://someurl.com"
@@ -663,6 +694,28 @@ RSpec.describe ApplicationController do
           expect(response).to have_http_status(:not_found)
           expect(response.body).not_to include(topic.title)
         end
+      end
+
+      it "does not retain topics converted to private messages" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}/convert-topic/private.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload).to be_private_message
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(topic.title)
       end
 
       it "does not retain topics after a category becomes restricted" do

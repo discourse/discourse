@@ -40,12 +40,12 @@ acceptance("Blog themes and identity", function (needs) {
     pretender.get("/admin/plugins/blog/theme-authoring.json", () =>
       response({
         templates: Object.fromEntries(
-          ["layout", "index", "article", "about", "not_found"].map((name) => [
-            `template_${name}`,
-            "<h1>{{ site.title }}</h1>",
-          ])
+          ["layout", "index", "article", "page", "about", "not_found"].map(
+            (name) => [`template_${name}`, "<h1>{{ site.title }}</h1>"]
+          )
         ),
         articles: [{ id: 1, title: "Published sample" }],
+        has_page: false,
         variables: {
           site: { title: "Example blog" },
           article: {
@@ -129,6 +129,18 @@ acceptance("Blog themes and identity", function (needs) {
         `${name} retains its label containment`
       );
     }
+  });
+
+  test("links to the editor and the live blog from the header", async function (assert) {
+    await visit("/admin/plugins/blog/themes");
+    assert
+      .dom(".d-page-header__actions .btn-primary")
+      .hasText("Go to editor", "the editor is the primary action");
+    assert
+      .dom(".d-page-header__actions a.btn-default")
+      .hasText("View blog")
+      .hasAttribute("href", "https://blog.example.com", "the blog is linked")
+      .hasAttribute("target", "_blank", "the blog opens in a new tab");
   });
 
   test("saves a draft without activation and blocks activating unsaved edits", async function (assert) {
@@ -368,6 +380,14 @@ acceptance("Blog themes and identity", function (needs) {
         "mobile preview has its own viewport"
       );
 
+    await fillControl('select[aria-label="Page to preview"]', "page");
+    assert
+      .dom(".blog-theme-preview__empty")
+      .hasText(
+        "Page previews need a published standalone page.",
+        "a page preview explains that it needs a published page"
+      );
+
     assert.deepEqual(
       previewedPages,
       ["index", "article"],
@@ -440,7 +460,7 @@ acceptance("Blog themes and identity", function (needs) {
     await visit("/admin/plugins/blog/themes/candidate/edit");
     assert
       .dom(".blog-theme-editor__tabs .nav-pills > li")
-      .exists({ count: 6 }, "design and every template have a tab");
+      .exists({ count: 7 }, "design and every template have a tab");
     assert
       .dom(".blog-theme-editor__state")
       .doesNotExist("the design tab needs no template state");
@@ -656,6 +676,65 @@ acceptance("Blog themes and identity", function (needs) {
     const form = formKit(".blog-identity__form");
     await form.field("blog_title").fillIn("New identity");
     await form.submit();
+  });
+
+  test("saves the article URL format with the identity", async function (assert) {
+    const saved = [];
+    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
+      const values = new URLSearchParams(request.requestBody);
+      saved.push(values.get("settings[blog_path_format][value]"));
+      return response(204);
+    });
+    await visit("/admin/plugins/blog/identity");
+    const today = moment.utc();
+    assert
+      .dom(".blog-identity__form")
+      .includesText("/my-article", "the slug format shows an example")
+      .includesText(
+        `/${today.format("YYYY/MM")}/my-article`,
+        "the monthly format shows today's example"
+      )
+      .includesText(
+        `/${today.format("YYYY/MM/DD")}/my-article`,
+        "the daily format shows today's example"
+      );
+    const form = formKit(".blog-identity__form");
+    assert.form(".blog-identity__form").field("path_format").hasValue("slug");
+    await form.field("path_format").select("year_month_slug");
+    await form.submit();
+
+    await form.field("path_format").select("custom");
+    await form.field("custom_path_format").fillIn("/news/{slug}");
+    assert
+      .dom(".blog-identity__form")
+      .includesText("/news/my-article", "the custom format shows an example");
+    await form.submit();
+
+    assert.deepEqual(
+      saved,
+      ["/{year}/{month}/{slug}", "/news/{slug}"],
+      "presets and custom formats are saved as templates"
+    );
+  });
+
+  test("rejects a custom URL format without a unique placeholder", async function (assert) {
+    pretender.put("/admin/site_settings/bulk_update.json", () => {
+      assert.step("saved");
+      return response(204);
+    });
+    await visit("/admin/plugins/blog/identity");
+    const form = formKit(".blog-identity__form");
+    await form.field("path_format").select("custom");
+    await form.field("custom_path_format").fillIn("/{year}/{month}");
+    await form.submit();
+
+    assert
+      .form(".blog-identity__form")
+      .field("custom_path_format")
+      .hasError(
+        "Start with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used."
+      );
+    assert.verifySteps([], "nothing is saved");
   });
 
   test("warns before leaving a theme with unsaved changes", async function (assert) {

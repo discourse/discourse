@@ -32,7 +32,7 @@ describe "Flagging post" do
 
       visit "/review/#{other_flag_reviewable.id}"
 
-      expect(review_page).to have_reviewable_with_approved_status(other_flag_reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(other_flag_reviewable)
     end
 
     it "can choose to immediately silence the user" do
@@ -56,7 +56,7 @@ describe "Flagging post" do
 
       visit "/review/#{Reviewable.sole.id}"
 
-      expect(review_page).to have_reviewable_with_approved_status(Reviewable.sole)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(Reviewable.sole)
     end
   end
 

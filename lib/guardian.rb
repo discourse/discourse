@@ -155,10 +155,13 @@ class Guardian
 
   def is_category_group_moderator?(category)
     return false if !category
-    return false if !category_group_moderation_allowed?
+    moderated_category_ids.include?(category.id)
+  end
+
+  def moderated_category_ids
+    return Set.new if !category_group_moderation_allowed?
 
     @moderated_category_ids ||= category_group_moderator_scope.pluck(:id).to_set
-    @moderated_category_ids.include?(category.id)
   end
 
   def is_silenced?
@@ -388,7 +391,7 @@ class Guardian
   end
 
   def can_activate?(target)
-    is_staff? && target && not(target.active?)
+    is_staff? && target && not(target.active?) && !Developer.configured_email?(target.email)
   end
 
   def can_suspend?(user)

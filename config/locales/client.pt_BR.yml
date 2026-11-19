@@ -510,21 +510,11 @@ pt_BR:
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
+      create_category:
+        action: "Criar categoria"
       invite_collaborators:
         title: "Convidar colaboradores"
         action: "Criar convite"
-      start_posting:
-        title: "Comece a postar"
-        action: "Ver ideias"
-        choose_option: "Como você gostaria de começar?"
-        predefined_topics: "Modelos para quebrar o gelo"
-        predefined_topics_description: "Escolha dentre uma seleção de temas para iniciar conversas e dar início a um diálogo."
-        use_predefined: "Navegar pelos modelos"
-        back: "Voltar"
-        icebreakers:
-          introduce_yourself:
-            title: "Apresente-se"
-            body: "Bem-vindo(a) à comunidade! Vamos nos conhecer. Por favor, apresente-se e compartilhe um pouco sobre seus interesses. Eu começo: sou apaixonado(a) por tecnologia e adoro ensinar!"
     design_wizard:
       back: "Voltar"
       next: "Próximo"
@@ -997,6 +987,7 @@ pt_BR:
         suspect_user: "Este usuário é spam?"
         approve_post: "Aprovar esta postagem?"
         approve_topic: "Aprovar este tópico?"
+        something_wrong_with_post: "Existe algo errado com essa postagem?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -2548,6 +2539,7 @@ pt_BR:
       no_results: "Nenhum resultado"
       search: "Pesquisar…"
       label: "Selecione as opções"
+      remove_item: "Remover %{name}"
     d_otp:
       screen_reader:
         one: Digite um número
@@ -2977,6 +2969,9 @@ pt_BR:
         size_too_small: "%{provided_file_size} é menor do que o mínimo permitido de %{min_file_size}"
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
+      search_placeholder: "Pesquisar por nome de emoji e codinomes..."
+      no_results: "Nenhum resultado"
+      favorites: "Usado frequentemente"
       smileys_&_emotion: Carinhas e emotion
       people_&_body: Pessoas e corpo
       animals_&_nature: Animais e natureza
@@ -3029,6 +3024,10 @@ pt_BR:
       emoji: "Emoji :)"
       more_emoji: "mais…"
       options: "Opções"
+      ai_content:
+        code: "Código"
+        quote: "Citação"
+        details: "Detalhes"
       whisper: "sussuro"
       unlist: "não listado"
       add_warning: "Esta é uma advertência oficial."
@@ -4187,6 +4186,7 @@ pt_BR:
         actions: "Ações em massa"
     post:
       accessible_heading: "postagem por #%{username} em %{date}"
+      ai_generated: "IA"
       heading_anchor: "Link do cabeçalho"
       confirm_delete: "Tem certeza de que deseja excluir esta postagem?"
       quote_reply: "Citação"
@@ -5270,6 +5270,15 @@ pt_BR:
       forward: "Avançar"
       share: "Compartilhar"
       dismiss: "Descartar"
+    mobile_tab_bar:
+      new_topic: "Novo tópico"
+      create: "Criar"
+      more: "Mais"
+      back: "Voltar"
+      topics: "Tópicos"
+      drafts:
+        one: "Rascunhos (%{count})"
+        other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
     theme_preview_notice: "Atualmente, você está pré-visualizando um tema, feche esta aba ou janela do navegador para voltar para a configuração normal do site."
@@ -6865,14 +6874,6 @@ pt_BR:
           company_name: "Nome"
           company_url: "Site"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Lei aplicável"
-          governing_law_placeholder: "Província, estado ou país"
-          governing_law_help: |
-            Especifique a jurisdição à qual pertencem os termos legais do site, geralmente é onde a empresa está registrada ou atua
-          city_for_disputes: "Cidade para disputas"
-          city_for_disputes_placeholder: "Cidade"
-          city_for_disputes_help: |
-            Especifique a cidade para a solução de disputas legais relacionadas a este fórum.
           extra_groups:
             heading: "Listagem de grupos"
             description: "Grupos extras a serem exibidos na página Sobre."

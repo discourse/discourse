@@ -144,6 +144,38 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   end
 
   describe ".perform_scan!" do
+    it "notifies admins when the provider has insufficient credits" do
+      model = Fabricate(:anthropic_model)
+      spam_setting.update!(llm_model: model)
+      stub_request(:post, model.url).to_return(
+        status: 400,
+        body: { error: { message: "Your credit balance is too low" } }.to_json,
+      )
+
+      expect { described_class.perform_scan!(post) }.to raise_error(
+        DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+      )
+
+      notice = AdminNotice.find_by(identifier: "ai_spam_scan_errors")
+      expect(notice).to be_present
+      expect(notice.priority).to eq("high")
+      expect(notice.message).to include("AI spam detection", "/admin/plugins/discourse-ai/ai-spam")
+      expect(AiSpamLog.where(post: post)).not_to exist
+    end
+
+    it "notifies admins when the provider rejects an invalid API key" do
+      stub_request(:post, llm_model.url).to_return(
+        status: 401,
+        body: { error: { message: "Invalid API key" } }.to_json,
+      )
+
+      expect { described_class.perform_scan!(post) }.to raise_error(
+        DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+      )
+
+      expect(AdminNotice.where(identifier: "ai_spam_scan_errors")).to exist
+    end
+
     it "creates spam log entry when scanning post" do
       expect do
         DiscourseAi::Completions::Llm.with_prepared_responses(

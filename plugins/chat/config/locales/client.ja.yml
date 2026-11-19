@@ -454,6 +454,9 @@ ja:
         followed: "参加中"
         mute: "チャンネルをミュート"
         unmute: "チャンネルのミュートを解除する"
+        muted_until_hint: "%{until} まで"
+        mute_options:
+          "off": "オフ"
         threading_enabled: "有効"
         threading_disabled: "無効"
         muted_on: "オン"
@@ -573,19 +576,6 @@ ja:
         notify_moderators: "このメッセージには、上記以外の理由でスタッフの注意が必要です。"
       flagging:
         action: "メッセージを通報する"
-      emoji_picker:
-        favorites: "よく使用される絵文字"
-        smileys_&_emotion: "顔文字と感情"
-        objects: "物"
-        people_&_body: "人と体"
-        travel_&_places: "旅行と場所"
-        animals_&_nature: "動物と自然"
-        food_&_drink: "食べ物と飲み物"
-        activities: "活動"
-        flags: "旗"
-        symbols: "記号"
-        search_placeholder: "絵文字名とエイリアスで検索..."
-        no_results: "結果がありません"
       thread:
         title: "タイトル"
         view_thread: スレッドを表示

@@ -44,6 +44,14 @@ function pendingWork(topic) {
   }
 }
 
+const PageBadge = <template>
+  {{#if @topic.page}}
+    <span class="status-label blog-dashboard__page-badge">
+      <span class="status-label-text">{{i18n "blog.editor_table.page"}}</span>
+    </span>
+  {{/if}}
+</template>;
+
 const PendingWork = <template>
   {{#let (pendingWork @topic) as |pending|}}
     {{#if pending}}
@@ -58,6 +66,7 @@ export default class BlogDashboard extends Component {
   @service composer;
   @service currentUser;
   @service router;
+  @service site;
   @service siteSettings;
 
   @tracked filter;
@@ -98,8 +107,12 @@ export default class BlogDashboard extends Component {
 
   @action
   async newDraft() {
-    const category = Category.findById(this.siteSettings.blog_drafts_category);
-    await this.composer.openNewTopic({ category });
+    const category =
+      Category.findById(this.siteSettings.blog_drafts_category) ||
+      (await this.#ensureDraftsCategory());
+    if (category) {
+      await this.composer.openNewTopic({ category });
+    }
   }
 
   @action
@@ -164,6 +177,19 @@ export default class BlogDashboard extends Component {
         { type: "POST" }
       );
       DiscourseURL.routeTo(publication.source_url);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  // The drafts category is created the first time anyone starts a draft.
+  async #ensureDraftsCategory() {
+    try {
+      const category = await ajax("/blog-editor/drafts-category.json", {
+        type: "POST",
+      });
+      this.siteSettings.blog_drafts_category = category.id;
+      return this.site.updateCategory(category);
     } catch (error) {
       popupAjaxError(error);
     }
@@ -275,7 +301,7 @@ export default class BlogDashboard extends Component {
               <thead class="d-table__header">
                 <tr class="d-table__row">
                   <th class="d-table__header-cell">{{i18n
-                      "blog.editor_table.article"
+                      "blog.editor_table.title"
                     }}</th>
                   <th
                     class="d-table__header-cell blog-dashboard__status-column"
@@ -307,6 +333,7 @@ export default class BlogDashboard extends Component {
                                 topic.title
                               }}</div>
                           </a>
+                          <PageBadge @topic={{topic}} />
                           <PendingWork @topic={{topic}} />
                         </div>
                         {{#if topic.public_excerpt}}
@@ -324,6 +351,7 @@ export default class BlogDashboard extends Component {
                               class="d-table__overview-name"
                             >{{topic.title}}</div>
                           </a>
+                          <PageBadge @topic={{topic}} />
                           <PendingWork @topic={{topic}} />
                         </div>
                         {{#if topic.excerpt}}

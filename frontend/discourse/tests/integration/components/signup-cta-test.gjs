@@ -1,4 +1,4 @@
-import { click, render, settled } from "@ember/test-helpers";
+import { clearRender, click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SignupCta from "discourse/components/signup-cta";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -26,18 +26,10 @@ module("Integration | Component | SignupCta", function (hooks) {
   test("turns a hidden prompt off when it goes away", async function (assert) {
     const session = this.owner.lookup("service:session");
     session.setProperties({ hideSignupCta: true, showSignupCta: true });
-    this.set("shown", true);
 
-    await render(
-      <template>
-        {{#if this.shown}}
-          <SignupCta />
-        {{/if}}
-      </template>
-    );
+    await render(<template><SignupCta /></template>);
 
-    this.set("shown", false);
-    await settled();
+    await clearRender();
 
     assert.false(session.get("showSignupCta"), "stops showing the prompt");
   });

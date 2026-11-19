@@ -16,6 +16,9 @@ uk:
         preview_archive: Архів
         desktop: Десктоп
         mobile: Мобільний
+        save: Зберегти
+        path_formats:
+          custom: Користувацька
         back_to_themes: Назад до тем
         new_theme_short: Нова тема
         themes: Стилі
@@ -56,7 +59,11 @@ uk:
         edit: Редагувати
         status: Статус
         replies: Відповіді
+        title: Назва
+        page: Сторінка
+      all: Всі
       drafts: Чернетки
+      pages: Сторінки
       preview: Попередній перегляд
       unpublish: Скасувати публікацію
       appearance_link: Зовнішній вигляд

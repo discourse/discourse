@@ -326,9 +326,6 @@ ca:
       pill: "Missatges relacionats"
     suggested_topics:
       pm_title: "Missatges recomanats"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Enrere"
     design_wizard:
       back: "Enrere"
       next: "Següent"
@@ -1756,6 +1753,10 @@ ca:
     composer:
       emoji: "Emoji :)"
       options: "Opcions"
+      ai_content:
+        code: "Codi"
+        quote: "Cita"
+        details: "Detalls"
       whisper: "xiuxiueig"
       unlist: "invisible"
       add_warning: "Aquest és un avís oficial."
@@ -3028,6 +3029,14 @@ ca:
       back: "Enrere"
       share: "Comparteix"
       dismiss: "Descarta-ho"
+    mobile_tab_bar:
+      create: "Crea"
+      more: "Més"
+      back: "Enrere"
+      topics: "Temes"
+      drafts:
+        one: "Esborranys (%{count})"
+        other: "Esborranys (%{count})"
     safe_mode:
       enabled: "El mode segur està activat. Per a sortir-ne tanqueu aquesta finestra del navegador."
     trust_levels:

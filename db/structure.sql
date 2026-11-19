@@ -1000,6 +1000,40 @@ CREATE TABLE public.ai_posts_embeddings (
 
 
 --
+-- Name: ai_reviewable_suggestions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_reviewable_suggestions (
+    id bigint NOT NULL,
+    reviewable_id bigint NOT NULL,
+    decision_model_id bigint NOT NULL,
+    action_name character varying NOT NULL,
+    confidence double precision NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_reviewable_suggestions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_reviewable_suggestions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_reviewable_suggestions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_reviewable_suggestions_id_seq OWNED BY public.ai_reviewable_suggestions.id;
+
+
+--
 -- Name: ai_secrets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2275,7 +2309,16 @@ CREATE TABLE public.blog_publications (
     last_published_at timestamp(6) without time zone,
     schedule_token character varying,
     schedule_error text DEFAULT ''::text NOT NULL,
-    draft_metadata jsonb DEFAULT '{}'::jsonb NOT NULL
+    draft_metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    cooked text,
+    image_url text,
+    meta_description character varying DEFAULT ''::character varying NOT NULL,
+    canonical_url character varying DEFAULT ''::character varying NOT NULL,
+    cover_upload_id integer,
+    cover_alt character varying DEFAULT ''::character varying NOT NULL,
+    word_count integer,
+    co_author_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    page boolean DEFAULT false NOT NULL
 );
 
 
@@ -2563,7 +2606,8 @@ CREATE TABLE public.browser_pageview_event_scores (
     ip_rotation_score smallint DEFAULT 0 NOT NULL,
     datacenter_asn_score smallint DEFAULT 0 NOT NULL,
     single_request_no_referrer_score smallint DEFAULT 0 NOT NULL,
-    stale_browser_score smallint DEFAULT 0 NOT NULL
+    stale_browser_score smallint DEFAULT 0 NOT NULL,
+    distributed_traffic_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -2584,7 +2628,8 @@ CREATE TABLE public.browser_pageview_event_scores_backup (
     ip_rotation_score smallint NOT NULL,
     datacenter_asn_score smallint NOT NULL,
     single_request_no_referrer_score smallint NOT NULL,
-    stale_browser_score smallint NOT NULL
+    stale_browser_score smallint NOT NULL,
+    distributed_traffic_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -5238,7 +5283,8 @@ CREATE TABLE public.discourse_post_event_events (
     all_day boolean DEFAULT false NOT NULL,
     image_upload_id bigint,
     livestream boolean DEFAULT false NOT NULL,
-    recording_url character varying(1000)
+    recording_url character varying(1000),
+    allow_anonymous_livestream boolean DEFAULT false NOT NULL
 );
 
 
@@ -11688,7 +11734,8 @@ CREATE TABLE public.theme_translation_overrides (
     translation_key character varying NOT NULL,
     value character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    original_translation text
 );
 
 
@@ -14506,6 +14553,13 @@ ALTER TABLE ONLY public.ai_post_image_captions ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: ai_reviewable_suggestions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_reviewable_suggestions ALTER COLUMN id SET DEFAULT nextval('public.ai_reviewable_suggestions_id_seq'::regclass);
+
+
+--
 -- Name: ai_secrets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17098,6 +17152,14 @@ ALTER TABLE ONLY public.ai_moderation_settings
 
 ALTER TABLE ONLY public.ai_post_image_captions
     ADD CONSTRAINT ai_post_image_captions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_reviewable_suggestions ai_reviewable_suggestions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_reviewable_suggestions
+    ADD CONSTRAINT ai_reviewable_suggestions_pkey PRIMARY KEY (id);
 
 
 --
@@ -21537,6 +21599,13 @@ CREATE UNIQUE INDEX index_ai_posts_embeddings_on_model_strategy_post ON public.a
 
 
 --
+-- Name: index_ai_reviewable_suggestions_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_reviewable_suggestions_on_reviewable_id ON public.ai_reviewable_suggestions USING btree (reviewable_id);
+
+
+--
 -- Name: index_ai_secrets_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24617,6 +24686,13 @@ CREATE INDEX index_search_logs_on_created_at_excluding_crawlers ON public.search
 
 
 --
+-- Name: index_search_logs_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_search_logs_on_session_id ON public.search_logs USING btree (session_id) WHERE (session_id IS NOT NULL);
+
+
+--
 -- Name: index_search_logs_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26589,6 +26665,14 @@ ALTER TABLE ONLY public.user_profiles
 
 
 --
+-- Name: ai_reviewable_suggestions fk_rails_d1e9158c31; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_reviewable_suggestions
+    ADD CONSTRAINT fk_rails_d1e9158c31 FOREIGN KEY (reviewable_id) REFERENCES public.reviewables(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ask_ai_report_subject_asks fk_rails_e54eb07de5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -26643,6 +26727,18 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261117234001'),
+('20261117200926'),
+('20261113163304'),
+('20261113130002'),
+('20261113090951'),
+('20261112162839'),
+('20261112150235'),
+('20261110093228'),
+('20261110093224'),
+('20261110080540'),
+('20261109074217'),
+('20261109060019'),
 ('20261106020035'),
 ('20261105165644'),
 ('20261104164335'),
@@ -26706,6 +26802,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260925155026'),
 ('20260925054715'),
 ('20260923174053'),
+('20260923151316'),
 ('20260923141924'),
 ('20260923080644'),
 ('20260923080642'),

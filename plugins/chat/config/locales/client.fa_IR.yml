@@ -280,6 +280,7 @@ fa_IR:
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
+        muted_until_hint: "تا %{until}"
         threading_disabled: "غیرفعال"
         muted_on: "روشن"
         muted_off: "خاموش"
@@ -344,16 +345,6 @@ fa_IR:
         short:
           one: "%{count} روز"
           other: "%{count} روز"
-      emoji_picker:
-        favorites: "اغلب استفاده می‌شه"
-        objects: "اشیا"
-        people_&_body: "مردم و بدن"
-        travel_&_places: "سفر و مکان‌ها"
-        animals_&_nature: "حیوانات و طبیعت"
-        activities: "فعالیت ها"
-        flags: "پرچم‌ها"
-        symbols: "نشانه ها"
-        no_results: "هیج نتیجه‌ای نداشت"
       thread:
         title: "عنوان"
         view_thread: مشاهده موضوع

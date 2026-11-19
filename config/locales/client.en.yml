@@ -29,6 +29,7 @@ en:
       resize: "Resize code editor"
     code_editor:
       resize: "Resize code editor"
+      load_failed: "The code editor couldn't load. Reload the page to try again."
       tab_hint: "Press Escape, then Tab to move focus out of the editor."
       completions: "Completions"
       search:
@@ -654,39 +655,16 @@ en:
         completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
+      create_category:
+        title: "Create a category"
+        description: "Give conversations a place to live."
+        action: "Create category"
+        completed: "Create another"
       invite_collaborators:
         title: "Invite collaborators"
         description: "Early members bring it to life."
         action: "Create invite"
         completed: "Invite more"
-      start_posting:
-        title: "Start posting"
-        description: "Give people something to discuss."
-        action: "See ideas"
-        completed: "See more ideas"
-        choose_option: "How would you like to start?"
-        predefined_topics: "Icebreaker templates"
-        predefined_topics_subtitle: "Give members something to discuss"
-        predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
-        use_predefined: "Browse templates"
-        back: "Back"
-        category_unavailable: "This category is unavailable for posting."
-        icebreakers:
-          plan_categories:
-            title: "What categories should we start with?"
-            description: "Ask your team which categories to launch with."
-            body: "Let’s figure out how to organise things before we launch! What will people want to talk about most? We can start with just a few categories and add more later."
-          plan_invites:
-            title: "Who should we invite before we launch?"
-            description: "Agree with your team on who to invite first."
-            body: "It’s always nicer to join a community that already has some people in it. Who should we invite first? Think of folks who love to chat, help others out, and would be excited to get involved early."
-          introduce_yourself:
-            title: "Introduce yourself"
-            description: "Get members sharing a little about themselves."
-            body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
-          write_your_own:
-            title: "Write your own"
-            description: "Start a conversation with a topic tailored to your community."
 
     design_wizard:
       title: "Customize your site"
@@ -911,9 +889,9 @@ en:
           other: "Are you sure you want to delete these <b>%{count}</b> bookmarks?"
 
     copy_codeblock:
-      copied: "copied!"
-      copy: "copy code to clipboard"
-      fullscreen: "show code in full screen"
+      copied: "Copied!"
+      copy: "Copy code to clipboard"
+      fullscreen: "Show code in full screen"
       view_code: "View code"
 
     drafts:
@@ -1022,13 +1000,13 @@ en:
       none_found: "No topics found."
       title:
         search: "Search for a Topic"
-        placeholder: "type the topic title, url or id here"
+        placeholder: "Type the topic title, URL or ID here"
 
     choose_message:
       none_found: "No messages found."
       title:
         search: "Search for a Message"
-        placeholder: "type the message title, url or id here"
+        placeholder: "Type the message title, URL or ID here"
 
     dsa_statements:
       title: "DSA classification"
@@ -1230,6 +1208,10 @@ en:
       statuses:
         pending:
           title: "Pending"
+        problem_confirmed:
+          title: "Problem confirmed"
+        no_problem_found:
+          title: "No problem found"
         approved:
           title: "Approved"
         approved_flag:
@@ -1263,6 +1245,9 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
+        something_wrong_with_post: "Is there something wrong with this post?"
+        something_wrong_with_topic: "Is there something wrong with this topic?"
+        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -1313,6 +1298,8 @@ en:
         reviewed: "Reviewed"
         approved_by: "Approved by %{username} · %{relativeDate}"
         rejected_by: "Rejected by %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem confirmed by %{username} · %{relativeDate}"
+        no_problem_found_by: "No problem found by %{username} · %{relativeDate}"
         ignored_by: "Ignored by %{username} · %{relativeDate}"
         view_conversation: "view PM"
         note_added: "Moderator note"
@@ -1760,16 +1747,17 @@ en:
       "17": "Links"
 
     categories:
-      categories_label: "categories"
-      subcategories_label: "subcategories"
-      no_subcategories: "no subcategories"
-      remove_filter: "remove filter"
+      categories_label: "Categories"
+      subcategories_label: "Subcategories"
+      no_subcategories: "No subcategories"
+      remove_filter: "Remove filter"
       plus_more_count:
         one: "+%{count} more"
         other: "+%{count} more"
-      view_all: "view all"
+      view_all: "View all"
       category: "Category"
       category_list: "Display category list"
+      page_layout: "Categories page layout"
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"
@@ -2653,6 +2641,7 @@ en:
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
+        invited_via_link_without_key: "link (%{count} / %{max} redeemed)"
         generating_link: "Generating link..."
         groups: "Groups"
         topic: "Topic"
@@ -2996,6 +2985,7 @@ en:
       no_results: "No results"
       search: "Search…"
       label: "Select options"
+      remove_item: "Remove %{name}"
     d_otp:
       screen_reader:
         one: Enter a number
@@ -3262,6 +3252,10 @@ en:
 
     login:
       header_title: "Welcome back"
+      invitation_gate:
+        title: "This community is invite-only"
+        description: "To join, open the invitation link you received. If you don’t have an invitation, contact the community owner to request one."
+        existing_member: "Already a member of this community? Log in below."
       title: "Log In"
       username: "User"
       password: "Password"
@@ -3527,11 +3521,14 @@ en:
 
     emoji_picker:
       filter_placeholder: Search for emoji
-      smileys_&_emotion: Smileys and Emotion
-      people_&_body: People and Body
-      animals_&_nature: Animals and Nature
-      food_&_drink: Food and Drink
-      travel_&_places: Travel and Places
+      search_placeholder: "Search by emoji name and alias..."
+      no_results: "No results"
+      favorites: "Frequently used"
+      smileys_&_emotion: Smileys and emotion
+      people_&_body: People and body
+      animals_&_nature: Animals and nature
+      food_&_drink: Food and drink
+      travel_&_places: Travel and places
       activities: Activities
       objects: Objects
       symbols: Symbols
@@ -3667,6 +3664,12 @@ en:
       emoji: "Emoji :)"
       more_emoji: "more…"
       options: "Options"
+      ai_content:
+        menu: "Add AI content..."
+        code: "Code"
+        quote: "Quote"
+        details: "Details"
+        placeholder: "AI content"
       whisper: "whisper"
       unlist: "unlisted"
 
@@ -4377,6 +4380,7 @@ en:
 
     topics:
       new_messages_marker: "last visit"
+      list_options: "List options"
       bulk:
         select: "Bulk select"
         confirm: "Confirm"
@@ -5020,21 +5024,21 @@ en:
       invite_private:
         title: "Invite to Message"
         email_or_username: "Invitee's Email or Username"
-        email_or_username_placeholder: "email address or username"
+        email_or_username_placeholder: "Email address or username"
         action: "Invite"
         success: "We've invited that user to participate in this message."
         success_group: "We've invited that group to participate in this message."
         error: "Sorry, there was an error inviting that user."
         not_allowed: "Sorry, that user can't be invited."
-        group_name: "group name"
+        group_name: "Group name"
 
       controls: "Topic Controls"
 
       invite_reply:
         title: "Invite"
-        username_placeholder: "username"
+        username_placeholder: "Username"
         action: "Send Invite"
-        help: "invite others to this topic via email or notifications"
+        help: "Invite others to this topic via email or notifications"
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link."
         discourse_connect_enabled: "Enter the username of the person you'd like to invite to this topic."
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
@@ -5058,14 +5062,14 @@ en:
 
       move_to:
         title: "Move to"
-        action: "move to"
+        action: "Move to"
         error: "There was an error moving posts."
 
       split_topic:
         title: "Move to New Topic"
-        action: "move to new topic"
+        action: "Move to new topic"
         topic_name: "New Topic Title"
-        radio_label: "New Topic"
+        radio_label: "New topic"
         error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
@@ -5073,9 +5077,9 @@ en:
 
       merge_topic:
         title: "Move to Existing Topic"
-        action: "move to existing topic"
+        action: "Move to existing topic"
         error: "There was an error moving posts into that topic."
-        radio_label: "Existing Topic"
+        radio_label: "Existing topic"
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>%{count}</b> posts to."
@@ -5083,9 +5087,9 @@ en:
 
       move_to_new_message:
         title: "Move to New Message"
-        action: "move to new message"
+        action: "Move to new message"
         message_title: "New Message Title"
-        radio_label: "New Message"
+        radio_label: "New message"
         participants: "Participants"
         instructions:
           one: "You are about to create a new message and populate it with the post you've selected."
@@ -5093,8 +5097,8 @@ en:
 
       move_to_existing_message:
         title: "Move to Existing Message"
-        action: "move to existing message"
-        radio_label: "Existing Message"
+        action: "Move to existing message"
+        radio_label: "Existing message"
         participants: "Participants"
         instructions:
           one: "Please choose the message you'd like to move that post to."
@@ -5102,7 +5106,7 @@ en:
 
       merge_posts:
         title: "Merge Selected Posts"
-        action: "merge selected posts"
+        action: "Merge selected posts"
         error: "There was an error merging the selected posts."
 
       publish_page:
@@ -5122,9 +5126,9 @@ en:
 
       change_owner:
         title: "Change Owner"
-        action: "change ownership"
+        action: "Change ownership"
         error: "There was an error changing the ownership of the posts."
-        placeholder: "username of new owner"
+        placeholder: "Username of new owner"
         instructions:
           one: "Please choose a new owner for the post by <b>@%{old_user}</b>"
           other: "Please choose a new owner for the %{count} posts by <b>@%{old_user}</b>"
@@ -5140,24 +5144,24 @@ en:
         instructions: "Please select the new timestamp of the topic. Posts in the topic will be updated to have the same time difference."
 
       multi_select:
-        select: "select"
-        selected: "selected (%{count})"
+        select: "Select"
+        selected: "Selected (%{count})"
         select_post:
-          label: "select"
+          label: "Select"
           title: "Add post to selection"
         selected_post:
-          label: "selected"
+          label: "Selected"
           title: "Click to remove post from selection"
         select_replies:
-          label: "select +replies"
+          label: "Select & replies"
           title: "Add post and all its replies to selection"
         select_below:
-          label: "select +below"
+          label: "Select & below"
           title: "Add post and all after it to selection"
-        delete: delete selected
-        cancel: cancel selecting
-        select_all: select all
-        deselect_all: deselect all
+        delete: Delete selected
+        cancel: Cancel selecting
+        select_all: Select all
+        deselect_all: Deselect all
         description:
           one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>%{count}</b> posts."
@@ -5183,6 +5187,8 @@ en:
 
     post:
       accessible_heading: "post by %{username} %{date}"
+      ai_generated: "AI"
+      ai_generated_title: "This content has been partially or fully generated by AI"
       heading_anchor: "Heading link"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
@@ -5324,6 +5330,7 @@ en:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
         no_uploads_authorized: "Sorry, no files are authorized to be uploaded."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
+        media_upload_not_allowed: "Sorry, you are not allowed to upload images, videos, or audio."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
@@ -5621,6 +5628,7 @@ en:
         site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
+        description: "Each type comes set up for a different kind of conversation."
         requires_plugin: "Requires %{plugin_name} plugin"
         unavailable: "Unavailable"
         ask_admin_to_enable_plugin: "Ask an admin to enable the %{plugin_name} plugin"
@@ -6298,10 +6306,10 @@ en:
       default_title: "Scheduled Event"
     tagging:
       all_tags: "All tags"
-      other_tags: "Other Tags"
-      selector_tags: "tags"
-      selector_no_tags: "no tags"
-      selector_remove_filter: "remove filter"
+      other_tags: "Other tags"
+      selector_tags: "Tags"
+      selector_no_tags: "No tags"
+      selector_remove_filter: "Remove filter"
       tags: "Tags"
       choose_for_topic: "Optional tags…"
       choose_for_topic_required:
@@ -6489,6 +6497,24 @@ en:
       forward: "Forward"
       share: "Share"
       dismiss: "Dismiss"
+
+    mobile_tab_bar:
+      label: "Site sections"
+      new_topic: "New topic"
+      new_personal_message: "New personal message"
+      create: "Create"
+      menu: "Menu"
+      more: "More"
+      edit_topic: "Edit title, category and tags"
+      menu_with_reviewables:
+        one: "Menu, %{count} item to review"
+        other: "Menu, %{count} items to review"
+      back: "Back"
+      topics: "Topics"
+      drafts:
+        one: "Drafts (%{count})"
+        other: "Drafts (%{count})"
+      hub: "Hub"
 
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
@@ -8772,19 +8798,11 @@ en:
           site_contact_group_help: |
             The group that gets invited to all automatically sent personal messages.
           your_organization: "Your organization"
-          your_organization_description: "Details about who operates this site and under which jurisdiction."
+          your_organization_description: "Details about who operates this site."
           company_name: "Name"
           company_name_placeholder: "ExampleCo"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Governing law"
-          governing_law_placeholder: "Province, State, or Country"
-          governing_law_help: |
-            Specify the jurisdiction for the site's legal terms, typically where the company is registered or operates.
-          city_for_disputes: "City for disputes"
-          city_for_disputes_placeholder: "City"
-          city_for_disputes_help: |
-            Specify the city for resolving legal disputes related to this forum.
           extra_groups:
             heading: "Group listing"
             description: "Extra groups to show on the About page."
@@ -9348,6 +9366,7 @@ en:
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
           theme_setting_saved: "Theme setting saved!"
+          setting_link_label: "Link to the %{name} setting"
           theme_site_setting_saved: "Theme site setting saved!"
 
         schema:
@@ -9370,6 +9389,7 @@ en:
                 one: "at least %{count} tag is required"
                 other: "at least %{count} tags are required"
             string:
+              invalid_translation_identifier: "Use at most 80 characters, starting with a lowercase letter and containing only lowercase letters, numbers, and underscores."
               too_short:
                 one: "must be at least %{count} character"
                 other: "must be at least %{count} characters"
@@ -9687,6 +9707,8 @@ en:
             web_hook_update: "webhook update"
             web_hook_destroy: "webhook destroy"
             web_hook_deactivate: "webhook deactivate"
+            web_hook_ping: "Webhook ping"
+            web_hook_redeliver: "Webhook redelivery"
             embeddable_host_create: "embeddable host create"
             embeddable_host_update: "embeddable host update"
             embeddable_host_destroy: "embeddable host destroy"
@@ -10099,8 +10121,8 @@ en:
         silence_reason_hidden_label: "Why are you silencing? This text will only be visible to staff and this user. Keep it short."
         silence_reason_title: "Silence reason"
         silence_reason_placeholder: "Silence Reason"
-        silence_message: "Email Message"
-        silence_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the silenced user."
+        silence_notice_message: "Message to the user"
+        silence_notice_message_placeholder: "Optionally, add details to the message the silenced user receives."
         suspended_until: "(until %{until})"
         suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."
@@ -10455,17 +10477,21 @@ en:
         theme: "Theme or component"
         all_themes: "All site texts"
         theme_disabled: "Disabled"
+        usable_keys: "Translation keys"
+        manage_translations: "Manage translations"
         filters: "Filters"
         filters_active:
           one: "Filters (%{count})"
           other: "Filters (%{count})"
         edit_title: "Edit site text"
         default_text: "Default text"
+        default_text_language: "Default text · %{language}"
         value_label: "Your text · %{language}"
         invalid_title: "Invalid interpolation placeholders"
         invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."
         status:
           customized: "Customized"
+          unknown: "Unknown baseline"
           outdated: "Outdated"
           invalid: "Invalid"
         title: "Site texts"
@@ -10485,6 +10511,10 @@ en:
         interpolation_key_insert: "Click to insert"
         interpolation_key_used: "Already used"
         interpolation_key_invalid: "Unknown key — will not be interpolated"
+        unknown:
+          title: "The previous default was not recorded"
+          description: "This customization predates default tracking. Review the current default below and acknowledge it to track future changes."
+          acknowledge: "Acknowledge current default"
         outdated:
           title: "This translation is outdated"
           description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."
@@ -10529,9 +10559,9 @@ en:
           one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."
         clear_filter: "Clear"
-        add_url: "add URL"
-        add_host: "add host"
-        add_group: "add group"
+        add_url: "Add URL"
+        add_host: "Add host"
+        add_group: "Add group"
         uploaded_image_list:
           label: "Edit list"
           empty: "There are no pictures yet. Please upload one."

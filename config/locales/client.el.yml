@@ -514,21 +514,11 @@ el:
         title: "Προσαρμόστε τον ιστότοπό σας"
         show_light_screenshot: "Εμφάνιση φωτεινού στιγμιότυπου οθόνης"
         show_dark_screenshot: "Εμφάνιση σκοτεινού στιγμιότυπου οθόνης"
+      create_category:
+        action: "Δημιουργία κατηγορίας"
       invite_collaborators:
         title: "Προσκαλέστε συνεργάτες"
         action: "Δημιουργία πρόσκλησης"
-      start_posting:
-        title: "Ξεκινήστε να αναρτάτε"
-        action: "Δείτε ιδέες"
-        choose_option: "Πώς θα θέλατε να ξεκινήσετε;"
-        predefined_topics: "Πρότυπα για το σπάσιμο του πάγου"
-        predefined_topics_description: "Διαλέξτε από μια συλλογή από αφορμές για συζήτηση για να ξεκινήσουν οι συζητήσεις"
-        use_predefined: "Περιήγηση προτύπων"
-        back: "Πίσω"
-        icebreakers:
-          introduce_yourself:
-            title: "Συστηθείτε"
-            body: "Καλώς ορίσατε στην κοινότητα! Ας γνωριστούμε. Συστηθείτε μας και μοιραστείτε μαζί μας λίγα πράγματα για τα ενδιαφέροντά σας. Θα ξεκινήσω πρώτος: Είμαι παθιασμένος με την τεχνολογία και μου αρέσει να διδάσκω άλλους!"
     design_wizard:
       title: "Προσαρμόστε τον ιστότοπό σας"
       back: "Πίσω"
@@ -2519,6 +2509,7 @@ el:
       no_results: "Δεν υπάρχουν αποτελέσματα"
       search: "Αναζήτηση…"
       label: "Επιλέξτε επιλογές"
+      remove_item: "Αφαίρεση %{name}"
     d_otp:
       screen_reader:
         one: Εισάγετε έναν αριθμό
@@ -2923,6 +2914,8 @@ el:
         size_too_small: "%{provided_file_size} είναι μικρότερο από το ελάχιστο επιτρεπόμενο %{min_file_size}"
     emoji_picker:
       filter_placeholder: Αναζήτησε για emoji
+      no_results: "Δεν υπάρχουν αποτελέσματα"
+      favorites: "Συχνά χρησιμοποιούμενα"
       smileys_&_emotion: Χαμόγελα και συγκίνηση
       people_&_body: Άνθρωποι και Σώμα
       animals_&_nature: Ζώα και Φύση
@@ -2980,6 +2973,10 @@ el:
       emoji: "Emoji :)"
       more_emoji: "περισσότερα…"
       options: "Επιλογές"
+      ai_content:
+        code: "Κωδικός"
+        quote: "Παράθεση"
+        details: "Λεπτομέρειες"
       whisper: "ψιθύρισμα"
       unlist: "κρυμμένο"
       add_warning: "Αυτή είναι μια επίσημη προειδοποίηση."
@@ -5388,6 +5385,15 @@ el:
       forward: "Μπροστά"
       share: "Κοινοποίηση"
       dismiss: "Παράβλεψη"
+    mobile_tab_bar:
+      new_topic: "Νέο θέμα"
+      create: "Δημιουργία"
+      more: "Περισσότερα"
+      back: "Πίσω"
+      topics: "Θέματα"
+      drafts:
+        one: "Πρόχειρα (%{count})"
+        other: "Πρόχειρα (%{count})"
     safe_mode:
       enabled: "Η ασφαλής λειτουργία είναι ενεργοποιημένη, για να εξέλθετε από την ασφαλή λειτουργία κλείστε αυτό το παράθυρο περίηγησης"
     image_removed: "(η εικόνα αφαιρέθηκε)"
@@ -6940,14 +6946,6 @@ el:
           company_name: "Όνομα"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Εφαρμοστέο δίκαιο"
-          governing_law_placeholder: "Επαρχία, Πολιτεία ή Χώρα"
-          governing_law_help: |
-            Προσδιορίστε τη δικαιοδοσία για τους νομικούς όρους του ιστότοπου, συνήθως εκεί όπου είναι εγγεγραμμένη ή λειτουργεί η εταιρεία.
-          city_for_disputes: "Πόλη για διαφορές"
-          city_for_disputes_placeholder: "Πόλη"
-          city_for_disputes_help: |
-            Ορίστε την πόλη για την επίλυση νομικών διαφορών που σχετίζονται με αυτό το φόρουμ.
           extra_groups:
             heading: "Κατάλογος ομάδων"
             description: "Επιπλέον ομάδες που θα εμφανίζονται στη σελίδα Σχετικά."

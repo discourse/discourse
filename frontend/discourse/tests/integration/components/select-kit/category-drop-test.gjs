@@ -38,7 +38,7 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("caretUpIcon", async function (assert) {
@@ -278,7 +278,7 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
 
   test("shortcuts:default", async function (assert) {
     initCategories(this);
-    this.set("category", null);
+    this.category = null;
 
     await render(
       <template>
@@ -338,7 +338,7 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
 
   test("shortcuts with parentCategory/subCategory=true:category is selected", async function (assert) {
     initCategoriesWithParentCategory(this);
-    this.set("category", this.categories[0]);
+    this.category = this.categories[0];
 
     await render(
       <template>

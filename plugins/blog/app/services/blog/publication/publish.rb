@@ -20,6 +20,8 @@ class Blog::Publication::Publish
     step :approve_current_draft
   end
 
+  step :ensure_public_category
+
   transaction do
     model :publication, :lock_publication
     only_if(:releasing_revision) { model :revision }
@@ -27,6 +29,7 @@ class Blog::Publication::Publish
     model :working_copy
     policy :releasable, class_name: Blog::Publication::Policy::Releasable
     policy :not_published_as_page
+    model :revision, :release_revision
     model :publication, :stage_release
     try(ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved) do
       only_if(:has_discussion) { step :revise_discussion }
@@ -78,6 +81,12 @@ class Blog::Publication::Publish
     end
   end
 
+  def ensure_public_category
+    Blog::EnsurePublicCategory.call do
+      on_failure { fail!(Blog::Readiness.new.error || I18n.t("blog.errors.category_unavailable")) }
+    end
+  end
+
   def lock_publication(topic:)
     Blog::Publication.lock_for_topic(topic)
   end
@@ -101,6 +110,10 @@ class Blog::Publication::Publish
 
   def not_published_as_page(working_copy:)
     !PublishedPage.exists?(topic_id: working_copy.id)
+  end
+
+  def release_revision(publication:, revision:)
+    publication.release_revision(revision)
   end
 
   def stage_release(guardian:, publication:, revision:)

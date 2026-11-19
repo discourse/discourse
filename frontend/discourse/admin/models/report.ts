@@ -14,7 +14,10 @@ import {
   formatUsername,
   toNumber,
 } from "discourse/lib/utilities";
-import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
+import {
+  renderAvatar,
+  type RenderAvatarOptions,
+} from "discourse/ui-kit/helpers/d-user-avatar";
 import I18n, { i18n } from "discourse-i18n";
 
 /** Change when the report format changes and cached reports must be reset. */
@@ -600,9 +603,8 @@ export default class Report extends EmberObject {
         prev += "%";
       }
     } else {
-      // TODO(typescript-pending): formatter.number's inferred signature requires optional options; remove casts when typed.
-      prev = (number as (value: unknown) => string)(prev);
-      current = (number as (value: unknown) => string)(current);
+      prev = number(prev);
+      current = number(current);
     }
 
     return i18n("admin.dashboard.reports.trend_title", {
@@ -838,8 +840,7 @@ export default class Report extends EmberObject {
         `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
         {
           count: valAtT1,
-          // TODO(typescript-pending): remove when formatter.number types its optional options.
-          previousValue: (number as (value: unknown) => string)(valAtT1),
+          previousValue: number(valAtT1),
         }
       )
     );
@@ -861,17 +862,19 @@ export default class Report extends EmberObject {
         }) => EmberObject & { name: string }
       )({
         username,
-        name: formatUsername(username),
+        // The username column holds usernames.
+        name: formatUsername(username as string | null | undefined),
         avatar_template: row[properties.avatar],
       });
 
       const href = getURL(`/admin/users/${userId}/${username}`);
 
+      // `renderAvatar` doesn't read `siteSettings`.
       const avatarImg = renderAvatar(user, {
         imageSize: "tiny",
         ignoreTitle: true,
         siteSettings: this.siteSettings,
-      });
+      } as RenderAvatarOptions);
 
       return `<a href='${href}'>${avatarImg}<span class='username'>${user.name}</span></a>`;
     };
@@ -916,10 +919,7 @@ export default class Report extends EmberObject {
   _secondsLabel(value: ReportCellValue): ReportCell {
     return {
       value: toNumber(value),
-      // TODO(typescript-pending): remove when durationTiny types its optional options.
-      formattedValue: (durationTiny as (value: ReportCellValue) => string)(
-        value
-      ),
+      formattedValue: durationTiny(value),
     };
   }
 

@@ -413,6 +413,30 @@ RSpec.describe UserNotifications do
         expect(email.html_part.body.to_s).not_to include(secret)
       end
 
+      it "does not excerpt a relisted topic whose first post is hidden" do
+        secret = "this is the secret hidden first post body"
+        topic =
+          Fabricate(
+            :topic,
+            user: coding_horror,
+            title: "Relisted topic with a hidden first post",
+            created_at: 1.hour.ago,
+          )
+        first_post = Fabricate(:post, topic: topic, raw: secret)
+
+        first_post.hide!(PostActionType.types[:inappropriate])
+        topic.reload
+        expect(topic.visible).to eq(false)
+        # moderators can relist a topic while its first post stays hidden
+        topic.update_status("visible", true, Discourse.system_user)
+
+        [email.html_part.body.to_s, email.text_part.body.to_s].each do |body|
+          expect(body).not_to include(secret)
+        end
+        expect(email.html_part.body.to_s).to include(post.raw)
+        expect(email.html_part.body.to_s).not_to include(I18n.t("system_messages.contents_hidden"))
+      end
+
       it "doesn't include new user count if digest_after_minutes is low" do
         user.user_option.digest_after_minutes = 60
         expect(email.html_part.body.to_s).to_not include("New Users")
@@ -1698,6 +1722,33 @@ RSpec.describe UserNotifications do
       )
     end
 
+    it "doesn't include hidden group member counts in the recipient's participant list" do
+      hidden_members_group =
+        Fabricate(
+          :group,
+          members_visibility_level: Group.visibility_levels[:owners],
+          users: [Fabricate(:user), Fabricate(:user)],
+        )
+      hidden_members_group.reload
+      topic.allowed_users = [user]
+      topic.allowed_groups = [hidden_members_group]
+
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      expect(mail.body.to_s).not_to include(
+        "[#{hidden_members_group.name} (#{hidden_members_group.user_count})]",
+      )
+      expect(mail.body.to_s).to include(
+        "[#{hidden_members_group.name}](#{hidden_members_group.full_url})",
+      )
+    end
+
     it "renders participant names as text" do
       SiteSetting.prioritize_username_in_ux = false
       group = Fabricate(:group, full_name: "Help](https://evil.example) <img src=x> \\[x")
@@ -2686,120 +2737,6 @@ RSpec.describe UserNotifications do
     end
   end
 
-  describe ".account_silenced" do
-    fab!(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:silence_user]) }
-
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        enable_dsa_reporting
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "includes appeal instructions for temporary and permanent silences without a reviewable" do
-        [1.day.from_now, 1000.years.from_now].each do |deadline|
-          user.silenced_till = deadline
-
-          mail = UserNotifications.account_silenced(user, user_history:)
-
-          expect(mail.body.decoded).to include(
-            "To appeal this decision, contact appeals@example.com",
-          )
-        end
-      end
-    end
-
-    it "adds the silenced_till date in user's timezone" do
-      user.user_option.timezone = "Asia/Tbilisi" # GMT+4
-      user.silenced_till = DateTime.parse("May 25, 2020, 12:00pm")
-
-      mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-      expect(mail.body).to include("May 25, 2020,  4:00pm (UTC+04:00)")
-    end
-
-    it "uses the offset at the silence end date across daylight saving changes" do
-      user.user_option.timezone = "America/New_York"
-
-      {
-        "2027-01-15T17:00:00Z" => "UTC-05:00",
-        "2027-07-15T17:00:00Z" => "UTC-04:00",
-      }.each do |deadline, offset|
-        user.silenced_till = Time.iso8601(deadline)
-        email = UserNotifications.account_silenced(user, user_history:)
-
-        expect(email.body.decoded).to include(offset)
-      end
-    end
-
-    it "falls back to UTC for an unrecognized timezone" do
-      user.user_option.timezone = "Not/A_Timezone"
-      user.silenced_till = Time.iso8601("2027-01-15T17:00:00Z")
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).to include("UTC+00:00")
-    end
-
-    it "uses the recipient locale and customized date format and wrapper" do
-      SiteSetting.allow_user_locale = true
-      user.locale = "fr"
-      user.user_option.timezone = "Asia/Kolkata"
-      user.silenced_till = Time.iso8601("2027-01-15T12:00:00Z")
-      TranslationOverride.upsert!(:fr, "time.formats.long", "%d/%m/%Y à %H:%M")
-      TranslationOverride.upsert!(
-        :fr,
-        "user_notifications.account_silenced.date_with_timezone",
-        "%{date} (heure UTC%{offset})",
-      )
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).to include("15/01/2027 à 17:30 (heure UTC+05:30)")
-    end
-
-    it "keeps permanent silences free of an expiry date" do
-      user.silenced_till = 1000.years.from_now
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).not_to include("UTC", "until")
-    end
-
-    context "when user doesn't have timezone set" do
-      before { user.user_option.timezone = nil }
-
-      it "doesn't raise error" do
-        expect { UserNotifications.account_silenced(user) }.not_to raise_error
-      end
-
-      it "adds the silenced_till date in UTC" do
-        date = "May 25, 2020, 12:00pm"
-        user.silenced_till = DateTime.parse(date)
-
-        mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-        expect(mail.body).to include("#{date} (UTC+00:00)")
-      end
-    end
-
-    context "when user timezone is blank" do
-      before { user.user_option.timezone = "" }
-
-      it "doesn't raise error" do
-        expect { UserNotifications.account_silenced(user) }.not_to raise_error
-      end
-
-      it "adds the silenced_till date in UTC" do
-        date = "May 25, 2020, 12:00pm"
-        user.silenced_till = DateTime.parse(date)
-
-        mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-        expect(mail.body).to include("#{date} (UTC+00:00)")
-      end
-    end
-  end
-
   describe ".account_deleted" do
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, reviewable_scores: []) }
 
@@ -3056,12 +2993,6 @@ RSpec.describe UserNotifications do
 
       it "has improved version for account_suspended without email_prefix" do
         improved = I18n.t("user_notifications.account_suspended.subject_template_improved")
-
-        expect(improved).not_to include("%{email_prefix}")
-      end
-
-      it "has improved version for account_silenced without email_prefix" do
-        improved = I18n.t("user_notifications.account_silenced.subject_template_improved")
 
         expect(improved).not_to include("%{email_prefix}")
       end

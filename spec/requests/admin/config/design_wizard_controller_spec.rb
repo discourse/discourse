@@ -9,7 +9,7 @@ RSpec.describe Admin::Config::DesignWizardController do
     context "when signed in as an admin" do
       before { sign_in(admin) }
 
-      it "returns the core themes with their palette pairs" do
+      it "returns the core themes with their palette pairs and Concord" do
         ThemeField.create!(
           theme_id: Theme::CORE_THEMES["horizon"],
           name: "en",
@@ -30,6 +30,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(themes.map { |theme| theme["id"] }).to contain_exactly(
           Theme::CORE_THEMES["foundation"],
           Theme::CORE_THEMES["horizon"],
+          "concord",
         )
 
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
@@ -59,29 +60,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(dracula["light"]).to be_nil
       end
 
-      it "excludes installed Concord from the choices by default" do
-        concord =
-          Fabricate(
-            :theme,
-            remote_theme:
-              Fabricate(
-                :remote_theme,
-                remote_url: "https://github.com/discourse/discourse-concord-theme",
-              ),
-          )
-        concord.set_default!
-
-        get "/admin/config/design-wizard.json"
-
-        expect(SiteSetting.concord_in_wizard).to eq(false)
-        expect(response.parsed_body["themes"].map { |theme| theme["id"] }).to contain_exactly(
-          *Theme::CORE_THEMES.values,
-        )
-        expect(response.parsed_body["current_theme"]).to include("id" => concord.id)
-      end
-
-      it "offers Concord for installation without creating a theme" do
-        SiteSetting.concord_in_wizard = true
+      it "offers Concord for installation by default without creating a theme" do
         expect { get "/admin/config/design-wizard.json" }.not_to change { Theme.count }
 
         expect(response.status).to eq(200)
@@ -97,7 +76,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "limits choices to core themes and Concord when other themes are installed" do
-        SiteSetting.concord_in_wizard = true
         Fabricate(:theme, name: "Concord")
         Fabricate(
           :theme,
@@ -124,7 +102,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "hides installation choices when repository imports are restricted" do
-        SiteSetting.concord_in_wizard = true
         global_setting :allowed_theme_repos, "https://github.com/discourse/other-theme"
 
         get "/admin/config/design-wizard.json"
@@ -135,7 +112,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "hides installation choices when theme creation is disabled" do
-        SiteSetting.concord_in_wizard = true
         plugin = Plugin::Instance.new
         modifier = ->(*) { false }
         DiscoursePluginRegistry.register_modifier(
@@ -158,7 +134,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "returns installed Concord as a selectable default with its palette state" do
-        SiteSetting.concord_in_wizard = true
         concord =
           Fabricate(
             :theme,
@@ -374,7 +349,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "applies installed Concord" do
-        SiteSetting.concord_in_wizard = true
         concord =
           Fabricate(
             :theme,
@@ -389,24 +363,6 @@ RSpec.describe Admin::Config::DesignWizardController do
 
         expect(response.status).to eq(200)
         expect(SiteSetting.default_theme_id).to eq(concord.id)
-      end
-
-      it "rejects installed Concord by default" do
-        concord =
-          Fabricate(
-            :theme,
-            remote_theme:
-              Fabricate(
-                :remote_theme,
-                remote_url: "https://github.com/discourse/discourse-concord-theme",
-              ),
-          )
-
-        expect do
-          put "/admin/config/design-wizard.json", params: { theme_id: concord.id }
-        end.not_to change { SiteSetting.default_theme_id }
-
-        expect(response.status).to eq(400)
       end
 
       it "rejects unsupported themes without changing the default" do

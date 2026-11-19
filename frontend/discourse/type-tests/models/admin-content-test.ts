@@ -208,10 +208,14 @@ store.createRecord("site-text", {
 });
 expectTypeOf(siteText.id).toEqualTypeOf<string>();
 expectTypeOf(siteText.value).toEqualTypeOf<string>();
-expectTypeOf(siteText.status).toEqualTypeOf<TextStatus>();
+expectTypeOf(siteText.status).toEqualTypeOf<TextStatus | "unknown">();
 expectTypeOf(siteText.old_default).toEqualTypeOf<string | null>();
 expectTypeOf(siteText.new_default).toEqualTypeOf<string | null>();
-expectTypeOf(siteText.interpolation_keys).toEqualTypeOf<string[]>();
+expectTypeOf(siteText.default_text).toEqualTypeOf<string | null | undefined>();
+expectTypeOf(siteText.default_locale).toEqualTypeOf<
+  string | null | undefined
+>();
+expectTypeOf(siteText.interpolation_keys).toEqualTypeOf<string[] | null>();
 expectTypeOf(siteText.overridden).toEqualTypeOf<boolean>();
 expectTypeOf(siteText.can_revert).toEqualTypeOf<boolean>();
 expectTypeOf(siteText.revert("en")).resolves.toEqualTypeOf<
@@ -223,6 +227,8 @@ expectTypeOf(siteText.revert("en")).resolves.toEqualTypeOf<
     | "status"
     | "old_default"
     | "new_default"
+    | "default_text"
+    | "default_locale"
     | "interpolation_keys"
   >
 >();

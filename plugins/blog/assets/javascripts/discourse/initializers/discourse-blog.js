@@ -22,6 +22,20 @@ export default {
         });
       }
       api.renderInOutlet("topic-above-post-stream", BlogPublicationPanel);
+      // Article titles like "Contact" are shorter than a forum topic title needs to be.
+      // Read the settings each time: the blog creates its categories mid-session.
+      api.registerValueTransformer(
+        "composer-minimum-title-length",
+        ({ value, context }) => {
+          const blogCategoryIds = [
+            settings.blog_category,
+            settings.blog_drafts_category,
+          ].map((id) => parseInt(id, 10));
+          return blogCategoryIds.includes(context.composer.categoryId)
+            ? 1
+            : value;
+        }
+      );
       // Inline title edits don't fire an app event, so tell the panel to recheck its status.
       api.registerBehaviorTransformer(
         "topic-controller:finished-editing",

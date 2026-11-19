@@ -14,6 +14,9 @@ ro:
         preview_archive: Arhivă
         desktop: Desktop
         mobile: Mobil
+        save: Salvează
+        path_formats:
+          custom: Personalizat
         new_theme_short: Temă nouă
         themes: Teme
         edit: Editează
@@ -46,6 +49,10 @@ ro:
         edit: Editează
         status: Stare
         replies: Răspunsuri
+        title: Titlu
+        page: Pagină
+      all: Toate
       drafts: Ciorne
+      pages: Pagini
       preview: Previzualizează
       appearance_link: Aspect

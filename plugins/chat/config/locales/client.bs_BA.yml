@@ -95,6 +95,7 @@ bs_BA:
       settings:
         follow: "Učlani se"
         followed: "Pridružio se"
+        muted_until_hint: "do %{until}"
         threading_enabled: "Omogućen"
         threading_disabled: "Neomogućen"
         notifications: "Obavijest"
@@ -136,11 +137,6 @@ bs_BA:
           title: "Move to Existing Topic"
         new_message:
           title: "Premjesti u novu poruku"
-      emoji_picker:
-        objects: "Objekti"
-        activities: "Aktivnosti"
-        flags: "Flags"
-        symbols: "Simboli"
       thread:
         title: "Naslov"
         replies:

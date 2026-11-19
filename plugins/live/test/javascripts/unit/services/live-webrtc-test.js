@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import Site from "discourse/models/site";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 import { setPeerTimingForTesting } from "discourse/plugins/live/discourse/lib/live/peer-manager";
 
 // Park the service's wall-clock timers far outside any test's window so a
@@ -99,6 +100,7 @@ class LiveRoomsStub extends Service {
 }
 
 class ToastsStub extends Service {
+  defaults = [];
   errors = [];
 
   error(options) {
@@ -106,7 +108,10 @@ class ToastsStub extends Service {
   }
 
   success() {}
-  default() {}
+
+  default(options) {
+    this.defaults.push(options);
+  }
 }
 
 class FakeRTCPeerConnection {
@@ -127,6 +132,11 @@ class FakeRTCPeerConnection {
   constructor() {
     FakeRTCPeerConnection.created++;
     FakeRTCPeerConnection.instances.push(this);
+  }
+
+  createDataChannel() {
+    this.fileChannel = { readyState: "open", close() {} };
+    return this.fileChannel;
   }
 
   addTrack(track) {
@@ -555,6 +565,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
 
   hooks.afterEach(function () {
     this.subject?.leave({ id: 1 }, { keepLocalStream: true });
+    this.subject.site.live_file_transfers_available = false;
     this.keyValueStore.remove(this.cameraPreferenceKey);
 
     setPeerTimingForTesting(null);
@@ -562,6 +573,287 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     globalThis.RTCIceCandidate = this.originalRTCIceCandidate;
     globalThis.RTCSessionDescription = this.originalRTCSessionDescription;
     globalThis.MediaStream = this.originalMediaStream;
+  });
+
+  test("notifies call participants when the private chat is disconnected", async function (assert) {
+    await this.subject.join(this.room);
+    const toasts = this.owner.lookup("service:toasts");
+
+    this.rooms.emit(this.room.id, { type: "chat_disabled" });
+    await waitUntil(() => toasts.defaults.length === 1);
+
+    assert.strictEqual(
+      toasts.defaults[0].data.message,
+      i18n("live.chat.disabled_for_group_call"),
+      "explains why chat disappeared and that DMs remain private"
+    );
+
+    this.subject.leave(this.room, { keepLocalStream: true });
+    this.rooms.emit(this.room.id, { type: "chat_disabled" });
+    await wait(0);
+
+    assert.strictEqual(
+      toasts.defaults.length,
+      1,
+      "participants who have left the call receive no further notice"
+    );
+  });
+
+  test("file transfer size follows the current site setting in binary MiB", function (assert) {
+    this.subject.siteSettings.live_file_transfer_max_size_mb = 256;
+    assert.strictEqual(
+      this.subject.maxFileTransferSize,
+      256 * 1024 * 1024,
+      "custom maximum is in bytes"
+    );
+    this.subject.siteSettings.live_file_transfer_max_size_mb = 1;
+    assert.strictEqual(
+      this.subject.maxFileTransferSize,
+      1024 * 1024,
+      "getter is not a cached startup value"
+    );
+    this.subject.siteSettings.live_file_transfer_max_size_mb = NaN;
+    assert.strictEqual(
+      this.subject.maxFileTransferSize,
+      100 * 1024 * 1024,
+      "invalid settings use the safe default"
+    );
+  });
+
+  test("file transfer API requires enabled setting, active room and remote participant", async function (assert) {
+    this.subject.site.live_file_transfers_available = false;
+    assert.false(this.subject.canSendFile(1, 2));
+    assert.throws(() => this.subject.sendFile(1, 2, new File(["x"], "x.txt")));
+    this.subject.site.live_file_transfers_available = true;
+    assert.false(this.subject.canSendFile(1, 2), "not joined");
+    await this.subject.join(this.room);
+    assert.false(this.subject.canSendFile(1, this.currentUser.id), "not self");
+    assert.false(
+      this.subject.canSendFile(1, 9999),
+      "not an active participant"
+    );
+    assert.false(
+      this.subject.canSendFile(1, 2),
+      "recipient cannot initiate without permission"
+    );
+    this.currentUser.live_can_send_files = true;
+    assert.true(
+      this.subject.canSendFile(1, 2),
+      "recipient need not have sender permission"
+    );
+    const self = this.rooms
+      .roomById(1)
+      .active_participants.find((user) => user.id === this.currentUser.id);
+    self.can_send_files = false;
+    assert.false(
+      this.subject.canSendFile(1, 2),
+      "a later roster revokes a stale page-load permission"
+    );
+    self.can_send_files = true;
+    const id = this.subject.sendFile(1, 2, new File(["x"], "x.txt"));
+    assert.strictEqual(
+      this.subject.fileTransfers[0].status,
+      "failed",
+      "fake channel cannot send"
+    );
+    this.subject.dismissFileTransfer(id);
+    assert.deepEqual(this.subject.fileTransfers, []);
+    this.subject.leave(this.room, { keepLocalStream: true });
+    assert.false(this.subject.canSendFile(1, 2));
+  });
+
+  test("incoming files require attested sender permission, not recipient group membership", async function (assert) {
+    this.subject.site.live_file_transfers_available = true;
+    this.currentUser.live_can_send_files = false;
+    await this.subject.join(this.room);
+    assert.false(
+      this.subject.canReceiveFile(1, 2),
+      "missing attestation fails closed"
+    );
+    const peer = this.rooms
+      .roomById(1)
+      .active_participants.find((user) => user.id === 2);
+    peer.can_send_files = true;
+    assert.true(
+      this.subject.canReceiveFile(1, 2),
+      "non-sender recipient may receive"
+    );
+    assert.false(this.subject.canSendFile(1, 2));
+    peer.can_send_files = false;
+    assert.false(
+      this.subject.canReceiveFile(1, 2),
+      "unprivileged sender rejected"
+    );
+    peer.can_send_files = true;
+    this.subject.site.live_file_transfers_available = false;
+    assert.false(
+      this.subject.canReceiveFile(1, 2),
+      "empty setting disables incoming too"
+    );
+    this.currentUser.live_can_send_files = true;
+    assert.false(
+      this.subject.canSendFile(1, 2),
+      "empty setting disables outgoing too"
+    );
+    this.subject.site.live_file_transfers_available = true;
+    this.subject.leave(this.room, { keepLocalStream: true });
+    assert.false(this.subject.canReceiveFile(1, 2), "must remain joined");
+  });
+
+  test("the real transfer manager rechecks sender permission before sending accepted bytes", async function (assert) {
+    this.subject.site.live_file_transfers_available = true;
+    this.currentUser.live_can_send_files = true;
+    await this.subject.join(this.room);
+    const channel = FakeRTCPeerConnection.instances.find(
+      (pc) => pc.fileChannel
+    )?.fileChannel;
+    const sent = [];
+    channel.send = (data) => sent.push(data);
+    const id = this.subject.sendFile(1, 2, new File(["secret"], "test.txt"));
+    this.currentUser.live_can_send_files = false;
+    channel.onmessage({ data: JSON.stringify({ type: "accept", id }) });
+    await waitUntil(() => this.subject.fileTransfers[0].status === "cancelled");
+    assert.true(
+      sent.every((data) => typeof data === "string"),
+      "revoked sender never transmits file bytes"
+    );
+  });
+
+  test("file types follow the sender's authorized extensions on both ends", async function (assert) {
+    const settings = this.subject.siteSettings;
+    const original = {
+      authorized_extensions: settings.authorized_extensions,
+      authorized_extensions_for_staff: settings.authorized_extensions_for_staff,
+    };
+    const { admin, moderator } = this.currentUser;
+    const setStaff = (staff) =>
+      this.currentUser.setProperties({ admin: staff, moderator: false });
+    settings.authorized_extensions = "txt";
+    settings.authorized_extensions_for_staff = "zip";
+    try {
+      this.subject.site.live_file_transfers_available = true;
+      this.currentUser.live_can_send_files = true;
+      setStaff(false);
+      assert.true(this.subject.canSendFileType("notes.txt"));
+      assert.false(this.subject.canSendFileType("archive.zip"));
+      setStaff(true);
+      assert.true(
+        this.subject.canSendFileType("archive.zip"),
+        "staff may send staff extensions"
+      );
+      setStaff(false);
+
+      await this.subject.join(this.room);
+      const channel = FakeRTCPeerConnection.instances.find(
+        (pc) => pc.fileChannel
+      )?.fileChannel;
+      channel.send = () => {};
+      const peer = this.rooms
+        .roomById(1)
+        .active_participants.find((user) => user.id === 2);
+      peer.can_send_files = true;
+      const offer = (id) =>
+        channel.onmessage({
+          data: JSON.stringify({
+            type: "offer",
+            id,
+            name: "a.zip",
+            size: 1,
+            chunkSize: 65500,
+          }),
+        });
+
+      offer("55555555-5555-4555-8555-555555555555");
+      assert.deepEqual(
+        this.subject.fileTransfers,
+        [],
+        "non-staff sender cannot offer staff extensions"
+      );
+      peer.can_send_staff_file_types = true;
+      offer("66666666-6666-4666-8666-666666666666");
+      assert.strictEqual(
+        this.subject.fileTransfers[0]?.status,
+        "pending",
+        "a non-staff recipient accepts staff extensions from staff senders"
+      );
+    } finally {
+      Object.assign(settings, original);
+      this.currentUser.setProperties({ admin, moderator });
+    }
+  });
+
+  test("hides file sending when no extensions are authorized", async function (assert) {
+    const settings = this.subject.siteSettings;
+    const original = {
+      authorized_extensions: settings.authorized_extensions,
+      authorized_extensions_for_staff: settings.authorized_extensions_for_staff,
+    };
+    try {
+      this.subject.site.live_file_transfers_available = true;
+      this.currentUser.live_can_send_files = true;
+      await this.subject.join(this.room);
+      assert.true(this.subject.canSendFile(1, 2));
+      settings.authorized_extensions = "";
+      settings.authorized_extensions_for_staff = "";
+      assert.false(this.subject.canSendFile(1, 2));
+    } finally {
+      Object.assign(settings, original);
+    }
+  });
+
+  test("the real transfer manager rejects unprivileged incoming offers but allows non-sender recipients", async function (assert) {
+    this.subject.site.live_file_transfers_available = true;
+    this.currentUser.live_can_send_files = false;
+    await this.subject.join(this.room);
+    const channel = FakeRTCPeerConnection.instances.find(
+      (pc) => pc.fileChannel
+    )?.fileChannel;
+    assert.true(!!channel?.onmessage, "real manager owns the RTC channel");
+    // Permit protocol rejects without changing the existing fake-channel send failure tests.
+    channel.send = () => {};
+    const offer = (id) =>
+      channel.onmessage({
+        data: JSON.stringify({
+          type: "offer",
+          id,
+          name: "test.txt",
+          size: 1,
+          chunkSize: 65500,
+        }),
+      });
+    offer("11111111-1111-4111-8111-111111111111");
+    assert.deepEqual(
+      this.subject.fileTransfers,
+      [],
+      "missing sender attestation rejects offer"
+    );
+    const peer = this.rooms
+      .roomById(1)
+      .active_participants.find((user) => user.id === 2);
+    peer.can_send_files = true;
+    offer("22222222-2222-4222-8222-222222222222");
+    assert.strictEqual(
+      this.subject.fileTransfers[0]?.status,
+      "pending",
+      "recipient outside sender groups may receive"
+    );
+    this.subject.rejectFileTransfer(this.subject.fileTransfers[0].id);
+    this.subject.dismissFileTransfer(this.subject.fileTransfers[0].id);
+    peer.can_send_files = false;
+    offer("33333333-3333-4333-8333-333333333333");
+    assert.deepEqual(
+      this.subject.fileTransfers,
+      [],
+      "explicitly unauthorized sender rejected"
+    );
+    peer.can_send_files = true;
+    this.subject.site.live_file_transfers_available = false;
+    offer("44444444-4444-4444-8444-444444444444");
+    assert.deepEqual(
+      this.subject.fileTransfers,
+      [],
+      "empty groups disables incoming at manager boundary"
+    );
   });
 
   test("ICE configuration defaults to no servers and policy 'all' before any join", function (assert) {
@@ -900,7 +1192,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     }
   });
 
-  test("simultaneous join offers resolve glare by rolling back the lower user id side", async function (assert) {
+  test("simultaneous join offers resolve glare by rebuilding the peer on the lower user id side", async function (assert) {
     assert.timeout(2000);
 
     const rawTrack = createFakeTrack("raw-track");
@@ -931,14 +1223,22 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       await this.subject.join(this.room);
       await waitUntil(() => signalRequests.length === 1);
 
+      const candidate = {
+        candidate: "candidate:1 1 UDP 2122252543 127.0.0.1 3478 typ host",
+        sdpMid: "0",
+        sdpMLineIndex: 0,
+      };
       this.rooms.emit(1, {
         type: "signal",
         sender_id: 50,
-        data: { type: "offer", sdp: "simultaneous-offer" },
+        events: [
+          { type: "candidate", candidate },
+          { type: "offer", sdp: "simultaneous-offer" },
+        ],
       });
       await waitUntil(() => signalRequests.length === 2);
 
-      const pc = FakeRTCPeerConnection.instances[0];
+      const [offeringPc, pc] = FakeRTCPeerConnection.instances;
       assert.deepEqual(
         signalRequests[0],
         { recipientId: 50, type: "offer", sdp: "fake-offer" },
@@ -947,12 +1247,27 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       assert.deepEqual(
         signalRequests[1],
         { recipientId: 50, type: "answer", sdp: "fake-answer" },
-        "answers the competing offer after rollback"
+        "answers the competing offer"
+      );
+      assert.strictEqual(
+        offeringPc.connectionState,
+        "closed",
+        "closes the connection that carried the losing offer"
+      );
+      assert.strictEqual(
+        offeringPc.localDescription.type,
+        "offer",
+        "does not roll back the losing offer"
       );
       assert.strictEqual(
         pc.remoteDescription.sdp,
         "simultaneous-offer",
-        "accepts the competing offer after rolling back local offer"
+        "accepts the competing offer on a fresh connection"
+      );
+      assert.strictEqual(
+        pc.addedCandidates.length,
+        1,
+        "keeps a candidate that arrived ahead of the competing offer"
       );
       assert.strictEqual(
         pc.localDescription.type,
@@ -1604,7 +1919,7 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
     }
   });
 
-  test("slow mic, lower-id local user: offer queued during the permission prompt connects via rollback", async function (assert) {
+  test("slow mic, lower-id local user: queued offer is answered on grant without a competing offer", async function (assert) {
     assert.timeout(2000);
 
     const rawTrack = createFakeTrack("raw-track");
@@ -1623,8 +1938,13 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
 
     // Local user is the designated (lower-id) offerer, but is slow to grant
     // mic access. The higher-id peer's fallback offer arrives while the
-    // permission prompt is still open. The immediate offer and the rollback
-    // answer to the same peer can land in one HTTP batch, so flatten them.
+    // permission prompt is still open, so it is answered instead of raced.
+    // Keep the fallback delay small so a broken cancelation would fire well
+    // inside the observation window below.
+    setPeerTimingForTesting({
+      ...SAFE_PEER_TIMING,
+      offerRetryBaseDelayMs: 200,
+    });
     this.currentUser.id = 2;
     this.room.room_type = "open";
     this.room.membership.role_name = "participant";
@@ -1662,21 +1982,26 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
 
       micGranted.resolve();
       await join;
-      await waitUntil(() => signalRequests.length === 2, 1000);
+      await waitUntil(() => signalRequests.length === 1, 1000);
+      // Wait 3x past the 200ms fallback delay to prove no late competing
+      // offer fires.
+      await wait(600);
 
       const pc = FakeRTCPeerConnection.instances[0];
       assert.deepEqual(
         signalRequests,
-        [
-          { recipientId: 50, type: "offer", sdp: "fake-offer" },
-          { recipientId: 50, type: "answer", sdp: "fake-answer" },
-        ],
-        "offers immediately on grant, then rolls back and answers the queued offer"
+        [{ recipientId: 50, type: "answer", sdp: "fake-answer" }],
+        "answers the queued offer and never sends a competing offer"
+      );
+      assert.strictEqual(
+        FakeRTCPeerConnection.created,
+        1,
+        "connects on a single peer connection"
       );
       assert.strictEqual(
         pc.signalingState,
         "stable",
-        "ends negotiation in a stable state, not stuck on a dangling offer"
+        "ends negotiation in a stable state"
       );
 
       const remoteTrack = createFakeTrack("peer-50-track");

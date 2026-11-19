@@ -25,9 +25,15 @@ RSpec.describe Guardian do
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
-  before { Guardian.enable_topic_can_see_consistency_check }
+  before do
+    Guardian.enable_topic_can_see_consistency_check
+    Guardian.enable_post_can_see_consistency_check
+  end
 
-  after { Guardian.disable_topic_can_see_consistency_check }
+  after do
+    Guardian.disable_topic_can_see_consistency_check
+    Guardian.disable_post_can_see_consistency_check
+  end
 
   it "can be created without a user (not logged in)" do
     expect { Guardian.new }.not_to raise_error
@@ -2066,6 +2072,26 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_activate?" do
+    fab!(:inactive_user)
+
+    it "allows staff to activate an inactive user" do
+      expect(Guardian.new(admin).can_activate?(inactive_user)).to eq(true)
+      expect(Guardian.new(moderator).can_activate?(inactive_user)).to eq(true)
+    end
+
+    it "does not allow a non-staff user to activate an inactive user" do
+      expect(Guardian.new(user).can_activate?(inactive_user)).to eq(false)
+    end
+
+    it "does not allow activating a configured developer email" do
+      Rails.configuration.stubs(:developer_emails).returns([inactive_user.email])
+
+      expect(Guardian.new(admin).can_activate?(inactive_user)).to eq(false)
+      expect(Guardian.new(moderator).can_activate?(inactive_user)).to eq(false)
+    end
+  end
+
   describe "#can_approve?" do
     it "wont allow a non-logged in user to approve" do
       expect(Guardian.new.can_approve?(user)).to be_falsey
@@ -3429,8 +3455,8 @@ RSpec.describe Guardian do
   end
 
   describe "suspension reasons" do
-    it "shows suspension reasons by default" do
-      expect(Guardian.new.can_see_suspension_reason?(user)).to eq(true)
+    it "hides suspension reasons by default" do
+      expect(Guardian.new.can_see_suspension_reason?(user)).to eq(false)
     end
 
     context "with hide suspension reason enabled" do
@@ -3451,8 +3477,8 @@ RSpec.describe Guardian do
   end
 
   describe "silencing reasons" do
-    it "shows silencing reasons by default" do
-      expect(Guardian.new.can_see_silencing_reason?(user)).to eq(true)
+    it "hides silencing reasons by default" do
+      expect(Guardian.new.can_see_silencing_reason?(user)).to eq(false)
     end
 
     context "with hide silencing reason enabled" do

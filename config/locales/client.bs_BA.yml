@@ -289,9 +289,6 @@ bs_BA:
       pill: "Povezane Poruke"
     suggested_topics:
       pm_title: "Preporučene Poruke"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Prethodno"
     design_wizard:
       back: "Prethodno"
       next: "Iduće"
@@ -1747,6 +1744,10 @@ bs_BA:
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
+      ai_content:
+        code: "Šifra"
+        quote: "Citiraj"
+        details: "Details"
       whisper: "šapat"
       unlist: "nelistan"
       add_warning: "Ovo je zvanično upozorenje."
@@ -3082,6 +3083,11 @@ bs_BA:
       forward: "Naprijed"
       share: "Podijeli"
       dismiss: "Odpusti"
+    mobile_tab_bar:
+      create: "napravi"
+      more: "Više"
+      back: "Prethodno"
+      topics: "Topics"
     safe_mode:
       enabled: "Bezbedan režim je omogućen, da biste izašli iz bezbednog režima, zatvorite ovaj prozor pregledača"
     image_removed: "(slika uklonjena)"

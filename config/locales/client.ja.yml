@@ -436,9 +436,6 @@ ja:
       title: "新規と未読のトピック"
       pill: "提案"
       pm_title: "推奨メッセージ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "戻る"
     design_wizard:
       back: "戻る"
       next: "次へ"
@@ -855,6 +852,7 @@ ja:
         suspect_user: "これは迷惑ユーザーですか？"
         approve_post: "この投稿を承認しますか？"
         approve_topic: "このトピックを承認しますか？"
+        something_wrong_with_post: "この投稿に何か問題がありますか？"
       types:
         reviewable_flagged_post:
           title: "通報された投稿"
@@ -2331,6 +2329,7 @@ ja:
       no_results: "結果がありません"
       search: "検索…"
       label: "オプションを選択"
+      remove_item: "%{name} を削除"
     d_otp:
       screen_reader:
         other: '%{count} 桁の数字を入力してください'
@@ -2709,6 +2708,9 @@ ja:
         size_too_small: "%{provided_file_size} は最低許容サイズの %{min_file_size} を下回っています"
     emoji_picker:
       filter_placeholder: 絵文字を探す
+      search_placeholder: "絵文字名とエイリアスで検索..."
+      no_results: "結果がありません"
+      favorites: "よく使用される絵文字"
       smileys_&_emotion: スマイルと感情
       people_&_body: 人と体
       animals_&_nature: 動物と自然
@@ -2750,6 +2752,10 @@ ja:
       emoji: "絵文字 :)"
       more_emoji: "もっと…"
       options: "オプション"
+      ai_content:
+        code: "コード"
+        quote: "引用"
+        details: "詳細"
       whisper: "ささやき"
       unlist: "非表示"
       add_warning: "これは運営スタッフからの警告です。"
@@ -3815,6 +3821,7 @@ ja:
         actions: "一括操作"
     post:
       accessible_heading: "%{username} の投稿 %{date}"
+      ai_generated: "AI"
       heading_anchor: "見出しのリンク"
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"
@@ -4813,6 +4820,14 @@ ja:
       forward: "転送"
       share: "共有"
       dismiss: "閉じる"
+    mobile_tab_bar:
+      new_topic: "新規トピック"
+      create: "作成"
+      more: "もっと"
+      back: "戻る"
+      topics: "トピック"
+      drafts:
+        other: "下書き (%{count})"
     safe_mode:
       enabled: "セーフモードが有効になっています。セーフモードを終了するには、このブラウザウィンドウを閉じてください。"
     theme_preview_notice: "現在、テーマをプレビューしています。通常のサイト構成に戻るには、このブラウザタブまたはウィンドウを閉じてください。"
@@ -6352,14 +6367,6 @@ ja:
           company_name: "名前"
           company_url: "ウェブサイト"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "準拠法"
-          governing_law_placeholder: "都道府県または国"
-          governing_law_help: |
-            サイトの法的条件の管轄を指定します。通常、会社が登録または運営されている場所です。
-          city_for_disputes: "紛争都市"
-          city_for_disputes_placeholder: "都市"
-          city_for_disputes_help: |
-            このフォーラムに関連する法的紛争を解決するための都市を指定します。
           extra_groups:
             heading: "グループのリスト"
             description: "情報ページに表示される追加グループ。"

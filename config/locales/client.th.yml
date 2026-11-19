@@ -321,9 +321,6 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "กลับ"
     design_wizard:
       back: "กลับ"
       next: "ต่อไป"
@@ -1512,6 +1509,9 @@ th:
     composer:
       emoji: "อีโมจิ :)"
       options: "ตัวเลือก"
+      ai_content:
+        quote: "อ้างอิง"
+        details: "รายละเอียด"
       whisper: "กระซิบ"
       add_warning: "นี่คือคำเตือนอย่างเป็นทางการ"
       posting_not_on_topic: "กระทู้ไหนที่คุณต้องการตอบ"
@@ -2579,6 +2579,11 @@ th:
       forward: "ส่งต่อ"
       share: "แบ่งปัน"
       dismiss: "ซ่อน"
+    mobile_tab_bar:
+      create: "สร้าง"
+      more: "อื่น"
+      back: "กลับ"
+      topics: "หัวข้อ"
     trust_levels:
       names:
         member: "สมาชิก"

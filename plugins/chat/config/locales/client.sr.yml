@@ -131,8 +131,6 @@ sr:
           one: "%{count} дан"
           few: "%{count} дана"
           other: "%{count} дана"
-      emoji_picker:
-        flags: "Zastave"
       thread:
         title: "Naslov"
         settings: "Podešavanja"

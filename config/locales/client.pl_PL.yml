@@ -35,7 +35,8 @@ pl_PL:
       resize: "Zmień rozmiar edytora kodu"
     code_editor:
       resize: "Zmień rozmiar edytora kodu"
-      tab_hint: "Naciśnij Escape, a następnie Tab, aby przenieść fokus poza edytor."
+      load_failed: "Edytor kodu nie mógł się załadować. Odśwież stronę, aby spróbować ponownie."
+      tab_hint: "Naciśnij Escape, a następnie Tab, aby przenieść aktywność poza edytor."
       completions: "Uzupełnienia"
       search:
         find: "Znajdź"
@@ -677,39 +678,16 @@ pl_PL:
         completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
+      create_category:
+        title: "Utwórz kategorię"
+        description: "Daj rozmowom miejsce, w którym będą mogły zamieszkać."
+        action: "Utwórz kategorię"
+        completed: "Utwórz inny"
       invite_collaborators:
         title: "Zaproś współpracowników"
         description: "Pierwsi członkowie wcielają ją w życie."
         action: "Utwórz zaproszenie"
         completed: "Zaproś więcej"
-      start_posting:
-        title: "Rozpocznij publikowanie"
-        description: "Daj ludziom temat do dyskusji."
-        action: "Zobacz pomysły"
-        completed: "Zobacz więcej pomysłów"
-        choose_option: "Jak chcesz zacząć?"
-        predefined_topics: "Szablony przełamujące lody"
-        predefined_topics_subtitle: "Daj członkom temat do dyskusji"
-        predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
-        use_predefined: "Przeglądaj szablony"
-        back: "Wstecz"
-        category_unavailable: "Ta kategoria nie jest dostępna do publikowania."
-        icebreakers:
-          plan_categories:
-            title: "Od jakich kategorii powinniśmy zacząć?"
-            description: "Zapytaj swój zespół, od jakich kategorii zacząć."
-            body: "Zastanówmy się, jak to wszystko zorganizować, zanim zaczniemy! O czym ludzie będą chcieli rozmawiać najbardziej? Możemy zacząć od kilku kategorii, a później dodać więcej."
-          plan_invites:
-            title: "Kogo powinniśmy zaprosić przed startem?"
-            description: "Uzgodnij ze swoim zespołem, kogo zaprosić jako pierwszego."
-            body: "Zawsze miło jest dołączyć do społeczności, w której już są osoby. Kogo powinniśmy zaprosić w pierwszej kolejności? Pomyśl o osobach, które lubią rozmawiać, pomagać innym i chętnie zaangażowałyby się jak najszybciej."
-          introduce_yourself:
-            title: "Przedstaw się"
-            description: "Poproś członków, aby podzielili się kilkoma informacjami o sobie."
-            body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
-          write_your_own:
-            title: "Napisz swój własny"
-            description: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
     design_wizard:
       title: "Dostosuj swoją witrynę"
       step_label: "Przejdź do kroku %{index}"
@@ -1283,6 +1261,10 @@ pl_PL:
       statuses:
         pending:
           title: "Oczekujące"
+        problem_confirmed:
+          title: "Problem potwierdzony"
+        no_problem_found:
+          title: "Nie znaleziono problemu"
         approved:
           title: "Zaakceptowany"
         approved_flag:
@@ -1315,6 +1297,9 @@ pl_PL:
         suspect_user: "Czy ta osoba to spam?"
         approve_post: "Zatwierdzić ten wpis?"
         approve_topic: "Zatwierdzić ten temat?"
+        something_wrong_with_post: "Czy coś jest nie tak z tym wpisem?"
+        something_wrong_with_topic: "Czy coś jest nie tak z tym tematem?"
+        something_wrong_with_account: "Czy coś jest nie tak z tym kontem?"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
@@ -1364,6 +1349,8 @@ pl_PL:
         reviewed: "Przejrzany"
         approved_by: "Zatwierdzono przez %{username} · %{relativeDate}"
         rejected_by: "Odrzucono przez %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem potwierdzony przez %{username} · %{relativeDate}"
+        no_problem_found_by: "%{username} nie znalazł żadnego problemu · %{relativeDate}"
         ignored_by: "Zignorowano przez %{username} · %{relativeDate}"
         view_conversation: "zobacz PW"
         note_added: "Uwaga moderatora"
@@ -1839,6 +1826,7 @@ pl_PL:
       view_all: "pokaż wszystkie"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
+      page_layout: "Układ strony kategorii"
       reorder:
         title: "Zmień kolejność kategorii"
         title_long: "Zmień kolejność listy kategorii"
@@ -2724,6 +2712,7 @@ pl_PL:
         redeemed_tab_with_count: "Zrealizowane (%{count})"
         invited_via: "Zaproszenie"
         invited_via_link: "link %{key} (użyto %{count} z %{max})"
+        invited_via_link_without_key: "link (użyto %{count} / %{max})"
         generating_link: "Generowanie linku..."
         groups: "Grupy"
         topic: "Temat"
@@ -3065,6 +3054,7 @@ pl_PL:
       no_results: "Brak wyników"
       search: "Szukaj…"
       label: "Wybierz opcje"
+      remove_item: "Usuń %{name}"
     d_otp:
       screen_reader:
         one: Wprowadź liczbę
@@ -3329,6 +3319,10 @@ pl_PL:
       username_unavailable: "Ta nazwa użytkownika jest niedostępna. Spróbuj %{suggestion}."
     login:
       header_title: "Witamy ponownie"
+      invitation_gate:
+        title: "Do tej społeczności można dołączyć tylko na zaproszenie"
+        description: "Aby dołączyć, otwórz otrzymany link z zaproszeniem. Jeśli nie masz zaproszenia, skontaktuj się z właścicielem społeczności, aby o nie poprosić."
+        existing_member: "Jesteś już członkiem tej społeczności? Zaloguj się poniżej."
       title: "Zaloguj się"
       username: "Użytkownik"
       password: "Hasło"
@@ -3594,6 +3588,9 @@ pl_PL:
         size_too_small: "%{provided_file_size} jest mniejsze niż minimalna dozwolona wartość %{min_file_size}"
     emoji_picker:
       filter_placeholder: Szukaj emoji
+      search_placeholder: "Szukaj według nazwy emoji i aliasu..."
+      no_results: "Brak wyników"
+      favorites: "Często używane"
       smileys_&_emotion: Buźki i emocje
       people_&_body: Ludzie i ciało
       animals_&_nature: Zwierzęta i przyroda
@@ -3731,6 +3728,12 @@ pl_PL:
       emoji: "Emoji :)"
       more_emoji: "więcej…"
       options: "Opcje"
+      ai_content:
+        menu: "Dodaj treść AI..."
+        code: "Kod"
+        quote: "Cytat"
+        details: "Detale"
+        placeholder: "Treść AI"
       whisper: "szept"
       unlist: "zastrzeżony"
       add_warning: "To jest oficjalne ostrzeżenie."
@@ -4485,6 +4488,7 @@ pl_PL:
         default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
       new_messages_marker: "ostatnia wizyta"
+      list_options: "Opcje listy"
       bulk:
         select: "Wybór zbiorczy"
         confirm: "Potwierdź"
@@ -5365,6 +5369,8 @@ pl_PL:
         actions: "Działania zbiorcze"
     post:
       accessible_heading: "wpis %{username} %{date}"
+      ai_generated: "AI"
+      ai_generated_title: "Ta treść została częściowo lub w całości wygenerowana przez sztuczną inteligencję"
       heading_anchor: "Łącze nagłówka"
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
@@ -5523,6 +5529,7 @@ pl_PL:
         upload_not_authorized: "Przepraszamy, plik który próbujesz wgrać jest nie dozwolony (dozwolone rozszerzenia: %{authorized_extensions})."
         no_uploads_authorized: "Przepraszamy, żadne pliki nie są upoważnione do przesyłania."
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
+        media_upload_not_allowed: "Przepraszamy, nie masz uprawnień do przesyłania obrazów, filmów ani plików audio."
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
       cancel_composer:
@@ -5821,6 +5828,7 @@ pl_PL:
         site_settings: "Ustawienia witryny"
       choose_type:
         title: "Wybierz typ kategorii"
+        description: "Każdy typ jest przeznaczony do innego rodzaju konwersacji."
         requires_plugin: "Wymaga wtyczki „%{plugin_name}”"
         unavailable: "Niedostępne"
         ask_admin_to_enable_plugin: "Poproś administratora o włączenie wtyczki „%{plugin_name}”"
@@ -6719,6 +6727,27 @@ pl_PL:
       forward: "Do przodu"
       share: "Udostępnij"
       dismiss: "Odrzuć"
+    mobile_tab_bar:
+      label: "Sekcje witryny"
+      new_topic: "Nowy temat"
+      new_personal_message: "Nowa prywatna wiadomość"
+      create: "Utwórz"
+      menu: "Menu"
+      more: "Więcej"
+      edit_topic: "Edytuj tytuł, kategorię i tagi"
+      menu_with_reviewables:
+        one: "Menu, %{count} pozycja do przejrzenia"
+        few: "Menu, %{count} pozycje do przejrzenia"
+        many: "Menu, %{count} pozycji do przejrzenia"
+        other: "Menu, %{count} pozycji do przejrzenia"
+      back: "Poprzednia"
+      topics: "Tematy"
+      drafts:
+        one: "Szkice (%{count})"
+        few: "Szkice (%{count})"
+        many: "Szkice (%{count})"
+        other: "Szkice (%{count})"
+      hub: "Hub"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
@@ -9060,19 +9089,10 @@ pl_PL:
           site_contact_group_help: |
             Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości.
           your_organization: "Twoja organizacja"
-          your_organization_description: "Szczegóły dotyczące tego, kto zarządza tą witryną i pod jaką jurysdykcją."
           company_name: "Nazwa"
           company_name_placeholder: "PrzykładowaSA"
           company_url: "Strona internetowa"
           company_url_placeholder: "https://przykładowa-sa.pl"
-          governing_law: "Obowiązujące prawo"
-          governing_law_placeholder: "Prowincja, stan lub kraj"
-          governing_law_help: |
-            Określ jurysdykcję dla warunków prawnych witryny, zazwyczaj tam, gdzie firma jest zarejestrowana lub działa.
-          city_for_disputes: "Miasto do sporów"
-          city_for_disputes_placeholder: "Miasto"
-          city_for_disputes_help: |
-            Określ miasto rozstrzygania sporów prawnych związanych z tym forum.
           extra_groups:
             heading: "Lista grup"
             description: "Dodatkowe grupy do wyświetlenia na stronie „O nas”."
@@ -9638,6 +9658,7 @@ pl_PL:
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
           theme_setting_saved: "Ustawienia motywu zostały zapisane!"
+          setting_link_label: "Link do ustawienia %{name}"
           theme_site_setting_saved: "Ustawienia motywu witryny zostały zapisane!"
         schema:
           title: "Edytuj ustawienie %{name}"
@@ -9665,6 +9686,7 @@ pl_PL:
                 many: "wymagane jest co najmniej %{count} tagów"
                 other: "wymagane jest co najmniej %{count} tagów"
             string:
+              invalid_translation_identifier: "Można użyć maksymalnie 80 znaków, zaczynając od małej litery i składając się wyłącznie z małych liter, cyfr i podkreśleń."
               too_short:
                 one: "musi zawierać co najmniej %{count} znak"
                 few: "musi zawierać co najmniej %{count} znaki"
@@ -10747,6 +10769,8 @@ pl_PL:
         theme: "Motyw lub komponent"
         all_themes: "Wszystkie teksty witryny"
         theme_disabled: "Wyłączone"
+        usable_keys: "Klucze tłumaczeniowe"
+        manage_translations: "Zarządzaj tłumaczeniami"
         filters: "Filtry"
         filters_active:
           one: "Filtry (%{count})"
@@ -10755,11 +10779,13 @@ pl_PL:
           other: "Filtry (%{count})"
         edit_title: "Edytuj tekst witryny"
         default_text: "Tekst domyślny"
+        default_text_language: "Tekst domyślny · %{language}"
         value_label: "Twój tekst · %{language}"
         invalid_title: "Nieprawidłowe symbole zastępcze interpolacji"
         invalid_description: "W tym tekście użyto nierozpoznanych symboli zastępczych. Użyj dostępnych poniżej kluczy interpolacji."
         status:
           customized: "Dostosowane"
+          unknown: "Nieznana linia bazowa"
           outdated: "Nieaktualne"
           invalid: "Nieprawidłowe"
         title: "Teksty witryny"
@@ -10779,6 +10805,10 @@ pl_PL:
         interpolation_key_insert: "Kliknij, aby wstawić"
         interpolation_key_used: "Już używane"
         interpolation_key_invalid: "Nieznany klucz — nie będzie interpolowany"
+        unknown:
+          title: "Poprzednia wartość domyślna nie została odnotowana"
+          description: "Ta personalizacja jest starsza niż domyślne śledzenie. Sprawdź aktualne ustawienia domyślne poniżej i potwierdź je, aby śledzić przyszłe zmiany."
+          acknowledge: "Potwierdź bieżące ustawienie domyślne"
         outdated:
           title: "To tłumaczenie jest nieaktualne"
           description: "Domyślne tłumaczenie tego klucza zmieniło się od czasu utworzenia tego zastąpienia. Sprawdź poniżej, czy Twoje tłumaczenie odpowiada wszelkim zmianom wprowadzonym w pierwotnej intencji."

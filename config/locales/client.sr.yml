@@ -372,8 +372,6 @@ sr:
         title: "Prilagodite svoj sajt"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
-      start_posting:
-        back: "Nazad"
     design_wizard:
       title: "Prilagodite svoj sajt"
       back: "Nazad"
@@ -1844,6 +1842,8 @@ sr:
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
+      ai_content:
+        details: "Detalji"
       add_warning: "Ovo je službeno upozorenje."
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "sačuvano lokalno"
@@ -2720,6 +2720,15 @@ sr:
       back: "Nazad"
       share: "Podeli"
       dismiss: "Odbaci"
+    mobile_tab_bar:
+      create: "Kreiraj"
+      more: "Više"
+      back: "Nazad"
+      topics: "Teme"
+      drafts:
+        one: "Skice (%{count})"
+        few: "Skice (%{count})"
+        other: "Skice (%{count})"
     pause_notifications:
       title: "Pauzirajte obaveštenja za..."
     trust_levels:

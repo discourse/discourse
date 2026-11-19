@@ -6,6 +6,7 @@ en:
         max_prompt_tokens: "Context window"
   dashboard:
     problem:
+      ai_spam_scan_errors: "AI spam detection could not scan posts because its AI model failed to respond. Check for model configuration, provider availability, or credit issues. <a href='%{base_path}/admin/plugins/discourse-ai/ai-spam'>Review spam detection settings</a>."
       ai_llm_status:
         one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. In the past hour, it failed to respond %{failed_calls} out of %{total_calls} times."
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
@@ -192,6 +193,7 @@ en:
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX for Google Custom Search API"
+    ai_google_custom_search_url: "Endpoint for the Google Custom Search API. Change it only to use a service that serves the same API."
 
     ai_discord_search_enabled: "Enables the Discord search feature"
     ai_discord_app_id: "The ID of the Discord application you would like to connect Discord search to"
@@ -201,6 +203,10 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
+    ai_reviewable_action_suggestions_enabled: "Generate action suggestions for new review queue items."
+    ai_reviewable_action_decision_model: "Send new pending review items, including flagged private content, to this decision model for action suggestions. Leave blank to disable."
+    ai_reviewable_action_min_confidence: "Minimum confidence required to save a suggested review action, from 0 to 1."
+    ai_dsa_classification_decision_model: "Choose the model used to suggest community rules and categories during DSA classification. Leave blank to disable suggestions."
     ai_translation_locale_detector_decision_model: "Decision model that detects the language of content before it is translated. Content in a language it cannot place confidently is left to the locale detector agent. Leave blank to detect every language with the agent."
     ai_translation_category_scope: "Choose which categories AI translation can use. Include and exclude options use {{setting:ai_translation_categories}}. Personal messages are controlled by {{setting:ai_translation_personal_messages}}."
     ai_translation_categories: "Categories used when the AI translation category scope is set to <strong>include</strong> or <strong>exclude</strong>."
@@ -212,6 +218,28 @@ en:
     ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
     ai_audit_logs_detailed_retention_days: "Keep raw AI request and response payloads for this many days. Set to 0 to keep payloads until the summary log is deleted. Raw payloads can contain private or sensitive content. Cleanup continues while the AI plugin is disabled."
     ai_audit_logs_purge_after_days: "Keep AI API audit log summaries for this many days before deleting the entire log. Set to 0 to keep summaries forever. Cleanup continues while the AI plugin is disabled."
+
+    keywords:
+      ai_default_llm_model: "default language model"
+      ai_discord_search_enabled: "discord integration"
+      ai_embeddings_semantic_quick_search_enabled: "ai results in quick search"
+      ai_embeddings_semantic_search_enabled: "ai search results"
+      ai_embeddings_semantic_search_use_hyde: "better search queries (hyde)"
+      ai_helper_automatic_chat_thread_title: "chat thread titles"
+      ai_sentiment_backfill_post_max_age_days: "post age limit (days)"
+      ai_sentiment_emotion_classification_strategy: "backend"
+      ai_sentiment_sentiment_classification_strategy: "backend"
+      ai_summarization_enabled: "summaries"
+      ai_summary_gists_enabled: "topic list's short summaries"
+      ai_translation_backfill_hourly_rate: "existing content per hour"
+      ai_translation_backfill_start_date: "translate existing content since"
+      ai_translation_categories: "selected categories"
+      ai_translation_include_bot_content: "translate content written by bots"
+      ai_translation_locale_detector_agent: "language detection agent"
+      ai_translation_locale_detector_decision_model: "language detection decision model"
+      ai_translation_post_raw_translator_agent: "post translation agent"
+      ai_translation_short_text_translator_agent: "short text translation agent"
+      ai_translation_topic_title_translator_agent: "topic title translation agent"
 
   reviewables:
     reasons:
@@ -375,9 +403,13 @@ en:
         image_generation_custom:
           name: "Custom"
         image_generation_openai:
-          name: "OpenAI"
+          name: "GPT Image 2.6 Flare"
+        image_generation_openai_sunburst:
+          name: "GPT Image 2.6 Sunburst"
         image_generation_gemini:
-          name: "Nano Banana"
+          name: "Nano Banana 2.1"
+        image_generation_gemini_pro:
+          name: "Nano Banana Pro"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -425,6 +457,15 @@ en:
         invalid_header_value: "Invalid MCP header value"
         invalid_annotated_argument: "Invalid MCP annotated tool argument"
         timeout: "The MCP server request timed out."
+        connection_failed: "The connection to the MCP server failed. If this was a write operation, check whether it completed before retrying."
+        connection_blocked: "The MCP server address resolves to a private or otherwise disallowed network address."
+        dns_lookup_failed: "The MCP server hostname could not be resolved."
+        reconnect_required: "This MCP connection needs an administrator to reconnect it."
+        too_many_tool_pages: "The MCP server returned more than %{max} pages of tools."
+        tool_catalog_too_large: "The MCP server tool catalog exceeded %{max} bytes."
+        too_many_tools: "The MCP server advertised more than %{max} tools."
+        repeated_tool_list_cursor: "The MCP server repeated a tool list pagination cursor."
+        failure_limit: "Repeated MCP failures stopped further calls for this turn. Explain the error and the unfinished work; do not claim success or retry again."
         oauth_authorization_required: "OAuth authorization is required before this MCP server can be used. Connect it to %{issuer} from the admin UI."
         oauth_discovery_failed: "Unable to discover OAuth authorization details for this MCP server."
         oauth_discovery_failed_with_status: "OAuth discovery failed with status %{status}."
@@ -501,6 +542,9 @@ en:
         other_content_in_pm: "Personal messages containing posts from other people cannot be shared publicly"
         failed_to_share: "Failed to share the conversation"
         conversation_deleted: "Conversation share deleted successfully"
+    dsa_classification:
+      suggestion_failed: "The AI could not suggest a classification. Choose one yourself or try again."
+      credit_limit_exceeded: "The AI has used all of today's credits for classification suggestions. Choose a classification yourself."
     spam_detection:
       flag_reason: "Flagged as spam by <a href='%{url}'>Discourse AI</a>"
       silence_reason: "User silenced automatically by <a href='%{url}'>Discourse AI</a>"
@@ -1406,8 +1450,8 @@ en:
       cannot_restore: "What that change replaced no longer exists, so the site can't switch back to it."
       failed: "The change couldn't be made."
       saved: "Saved without changing the site. Share the preview link, then ask whether to make it live. Fonts change when it goes live."
-      live: "%{name} is live."
-      switched_back: "Switched back from %{name}."
+      live: "%{name} is live. Tell the administrator to refresh the page to see it, since pages already open keep the old look until they reload."
+      switched_back: "Switched back from %{name}. Tell the administrator to refresh the page to see it, since pages already open keep the old look until they reload."
       palettes_target: "New palettes for the current theme, %{theme}"
       existing_palettes_target: "The %{palette} palettes, the closest of the ones %{theme} can use"
       already_closest: "%{theme} already uses %{palette}, the closest of the palettes it can use, so its colors don't need to change. Fonts can still change through the base_font and heading_font settings."

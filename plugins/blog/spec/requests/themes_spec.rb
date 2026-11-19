@@ -57,7 +57,7 @@ RSpec.describe "Blog themes", type: :request do
     expect(response.body).to include('class="blog__header"')
   end
 
-  it "keeps authenticated editorial previews and feeds independent of custom templates" do
+  it "renders editorial previews with the active theme's templates, but not its JavaScript" do
     drafts = Fabricate(:private_category, group: Group[:staff])
     SiteSetting.blog_drafts_category = drafts.id
     private_topic = Fabricate(:topic, category: drafts, user: admin)
@@ -65,8 +65,9 @@ RSpec.describe "Blog themes", type: :request do
     theme =
       create_blog_theme(
         attributes.stringify_keys.merge(
-          "template_article" => "CUSTOM ARTICLE",
-          "template_layout" => "CUSTOM LAYOUT",
+          "template_article" => "<div data-custom-article>{{ article.body_html }}</div>",
+          "template_layout" => "<div data-custom-layout>{{ content_html }}</div>",
+          "javascript" => "window.blogOnly = true;",
         ),
         user: admin,
       )
@@ -74,8 +75,19 @@ RSpec.describe "Blog themes", type: :request do
     get "https://test.localhost/session/#{admin.encoded_username}/become"
     get "https://test.localhost/blog-editor/preview/#{private_topic.id}"
     expect(response.status).to eq(200)
+    html = Nokogiri.HTML5(response.body)
+    expect(html.at_css("[data-custom-layout] [data-custom-article]").inner_html).to include(
+      private_post.cooked,
+    )
+    expect(html.at_css("script[data-blog-custom-script]")).to be_nil
+
+    get "https://test.localhost/blog-editor/preview/#{private_topic.id}",
+        params: {
+          blog_safe_mode: 1,
+        }
     expect(response.body).to include(private_post.cooked)
-    expect(response.body).not_to include("CUSTOM ARTICLE", "CUSTOM LAYOUT")
+    expect(response.body).not_to include("data-custom-layout", "data-custom-article")
+
     get "https://blog.example.com/feed.xml"
     expect(response.status).to eq(200)
     expect(Nokogiri.XML(response.body).at_xpath("/rss/channel")).to be_present

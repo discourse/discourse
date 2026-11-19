@@ -2,13 +2,16 @@
 
 describe "AI combined search" do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:topic_1) { Fabricate(:topic, title: "Password resets and account recovery") }
-  fab!(:topic_2) { Fabricate(:topic, title: "Login help for new members") }
+  fab!(:author, :user)
+  fab!(:topic_1) { Fabricate(:topic, user: author, title: "Password resets and account recovery") }
+  fab!(:topic_2) { Fabricate(:topic, user: author, title: "Login help for new members") }
+  fab!(:llm_model, :fake_model)
+  fab!(:ask_agent) { Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:admins]]) }
 
   let(:query) { "how do I reset my password" }
-  let(:request_ids) { [] }
-  let(:scopes) { [] }
-  let(:triggers) { [] }
+  let(:requests) { [] }
+  let(:search) { PageObjects::Components::AiCombinedSearch.new }
+  let(:logo) { PageObjects::Components::Logo.new }
   let(:sources) do
     [topic_1, topic_2].map do |topic|
       { title: topic.title, url: topic.url, excerpt: "An excerpt about #{topic.title}" }
@@ -17,21 +20,18 @@ describe "AI combined search" do
 
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_default_llm_model)
-    assign_agent_to(:ai_ask_ai_agent, [Group::AUTO_GROUPS[:admins]])
-
+    SiteSetting.ai_default_llm_model = llm_model.id
+    SiteSetting.ai_ask_ai_agent = ask_agent.id
     SiteSetting.discourse_ai_enabled = true
     SiteSetting.ai_ask_ai_enabled = true
     SiteSetting.ai_ask_ai_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
     SiteSetting.enable_ai_combined_search = true
 
-    # the answer is streamed from the spec instead, one phase at a time
+    # Stream each answer phase from the spec rather than starting an LLM job.
     allow(DiscourseAi::Discoveries).to receive(
       :enqueue_reply,
     ) do |user:, query:, request_id:, scope: nil, trigger: "", trigger_reason: "", intent_heuristic: "", **|
-      request_ids << request_id
-      scopes << scope
-      triggers << [trigger, trigger_reason]
+      requests << { id: request_id, query:, scope:, trigger: [trigger, trigger_reason] }
       AskAiLog.create!(
         user:,
         query:,
@@ -44,134 +44,83 @@ describe "AI combined search" do
   end
 
   def publish(payload)
+    search.wait_for_channel
     MessageBus.publish(
       "/discourse-ai/discoveries",
-      { query:, request_id: request_ids.last }.merge(payload),
+      { query: requests.last.fetch(:query), request_id: requests.last.fetch(:id) }.merge(payload),
       user_ids: [user.id],
     )
   end
 
-  def wait_for_channel(channel)
-    # updates published before the client knows its position on the channel
-    # are skipped, which a real answer never outpaces
-    try_until_success(timeout: 10) { expect(page.evaluate_script(<<~JS)).to eq(true) }
-        MessageBus.callbacks.some(
-          (callback) => callback.channel === #{channel.to_json} && callback.last_id !== -1
-        )
-      JS
+  def wait_for_request(term, after:)
+    try_until_success do
+      expect(requests.size).to eq(after + 1)
+      expect(requests.last.fetch(:query)).to eq(term)
+    end
   end
 
-  def wait_for_discoveries_channel
-    wait_for_channel("/discourse-ai/discoveries")
+  def ask(term, header: false)
+    previous_count = requests.size
+    search.search(term, header:)
+    wait_for_request(term, after: previous_count)
   end
 
-  def ask(term, input: "#welcome-banner-search-input")
-    find(input).fill_in(with: term)
-    find(input).send_keys(:enter)
-    try_until_success { expect(request_ids).to be_present }
-  end
-
-  def tab(kind)
-    ".ai-search-tabs .ai-discoveries-search-options__option.--#{kind}"
-  end
-
-  def expect_tab(kind)
-    expect(page).to have_css("#{tab(kind)}.is-active")
-  end
-
-  def select_tab(kind)
-    find(tab(kind)).click
-    expect_tab(kind)
-  end
-
-  def allow_follow_ups
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
-    assign_agent_to(:ai_ask_ai_follow_up_agent, [Group::AUTO_GROUPS[:admins]]).create_user!
-  end
-
-  def complete_answer
-    publish(
-      done: true,
-      phase: "complete",
-      answerable: true,
-      ai_discover_title: "Resetting your password",
-      ai_discover_reply: "Use the **forgot password** link on the login screen.",
-      ai_discover_follow_up: "What if I no longer have access to my email?",
-      sources:,
-    )
-  end
-
-  it "streams the answer in full, adding its related topics once it is done" do
-    allow_follow_ups
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-
-    # a question opens on the answer
-    expect_tab("ask")
-    expect(page).to have_css(".ai-search-answer .d-skeleton")
-
-    publish(
-      done: false,
-      phase: "rewritten",
-      keyword_query: "reset password",
-      semantic_query: "How can I reset a forgotten password?",
-    )
-    publish(done: false, phase: "sources", ai_discover_title: "Resetting your password", sources:)
-    publish(done: false, phase: "answering", ai_discover_reply: "Use the **forgot")
-
-    expect(page).to have_css(".ai-search-answer__body .cooked", text: "Use the")
-    # added once the answer is complete, so they do not slide down as it streams
-    expect(page).to have_no_css(".ai-search-answer__more")
-
-    publish(
-      done: true,
-      phase: "complete",
-      answerable: true,
-      ai_discover_title: "Resetting your password",
-      ai_discover_reply: "Use the **forgot password** link on the login screen. " * 12,
-      ai_discover_follow_up: "What if I no longer have access to my email?",
-      sources:,
-    )
-
-    expect(page).to have_css(".ai-search-answer__body .cooked", text: "forgot password")
-    within(".ai-search-answer__more") do
-      expect(page).to have_css(".ai-search-answer__related-link", count: 2)
-      expect(page).to have_css(
-        ".ai-search-answer__follow-up-input[placeholder='What if I no longer have access to my email?']",
+  def expect_opening(term, tab:, reason:, **attributes)
+    try_until_success do
+      expect(AskAiLog.find_by(query: term)).to have_attributes(
+        ask_tab_opened: tab,
+        ask_tab_opened_reason: reason,
+        **attributes,
       )
     end
-    expect(page).to have_no_css(".ai-search-answer__expand")
-    expect(page).to have_no_text("Keywords")
   end
 
-  it "leaves out the follow-up when the reader cannot talk to the AI bot" do
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-    complete_answer
-
-    within(".ai-search-answer__more") do
-      expect(page).to have_css(".ai-search-answer__related-link", count: 2)
-      expect(page).to have_no_css(".ai-search-answer__follow-up")
-    end
-  end
-
-  it "lists every related topic the answer used" do
-    category = Fabricate(:category, name: "Account help")
-    more_topics =
-      Array.new(3) { |i| Fabricate(:topic, category:, title: "Account recovery guide part #{i}") }
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-
+  def complete_answer(**overrides)
     publish(
-      done: true,
-      phase: "complete",
-      answerable: true,
-      ai_discover_reply: "Use the forgot password link.",
-      sources:
+      {
+        done: true,
+        phase: "complete",
+        answerable: true,
+        ai_discover_title: "Resetting your password",
+        ai_discover_reply: "Use the **forgot password** link on the login screen.",
+        ai_discover_follow_up: "What if I no longer have access to my email?",
+        sources:,
+      }.merge(overrides),
+    )
+  end
+
+  def empty_answer(**overrides)
+    complete_answer(answerable: false, ai_discover_reply: "", sources: [], **overrides)
+  end
+
+  # Verify opening reasons for every intent branch so searched_again cannot mask them.
+  context "when reading a streamed answer" do
+    fab!(:category) { Fabricate(:category, name: "Account help") }
+    fab!(:more_topics) do
+      Array.new(3) do |index|
+        Fabricate(:topic, user: author, category:, title: "Account recovery guide part #{index}")
+      end
+    end
+    fab!(:follow_up_agent) do
+      Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:admins]]).tap(&:create_user!)
+    end
+
+    it "lets the reader submit, read the full answer and scroll through all its sources" do
+      SiteSetting.ai_bot_enabled = true
+      SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+      SiteSetting.ai_ask_ai_follow_up_agent = follow_up_agent.id
+      page.current_window.resize_to(1400, 450)
+
+      visit "/"
+      search.fill_query(query)
+      search.expect_no_search
+      expect(requests).to be_empty
+      ask(query)
+
+      search.expect_tab("ask")
+      expect_opening(query, tab: "ask", reason: "question")
+      search.expect_answer_loading
+      all_sources =
         sources +
           more_topics.map do |topic|
             {
@@ -182,184 +131,114 @@ describe "AI combined search" do
               topic_replies: 12,
               bumped_at: 2.days.ago.iso8601,
             }
-          end,
-    )
+          end
+      publish(
+        done: false,
+        phase: "rewritten",
+        keyword_query: "reset password",
+        semantic_query: "How can I reset a forgotten password?",
+      )
+      publish(
+        done: false,
+        phase: "sources",
+        ai_discover_title: "Resetting your password",
+        sources: all_sources,
+      )
+      publish(done: false, phase: "answering", ai_discover_reply: "Use the **forgot")
+      search.expect_streaming_answer("Use the")
 
-    expect(page).to have_css(".ai-search-answer__related-heading", text: "Related topics")
-    last_row = find(".ai-search-answer__related-link", text: more_topics.last.title)
-    expect(last_row).to have_css(".ai-search-topic-row__date", text: "2d")
-    expect(last_row).to have_css(".ai-search-topic-row__replies[title='12 replies']", text: "12")
-    expect(last_row).to have_css(".ai-search-topic-row__category", text: "Account help")
-    expect(page).to have_css(".ai-search-answer__related-item", count: 5)
-    expect(page).to have_css(".ai-search-answer__related-link", text: more_topics.last.title)
-    expect(page).to have_no_css(".ai-search-answer__related-excerpt")
+      complete_answer(
+        ai_discover_reply: "Use the **forgot password** link on the login screen. " * 40,
+        sources: all_sources,
+      )
+      search.expect_answer("forgot password")
+      search.expect_related_topics(
+        [topic_1, topic_2, *more_topics],
+        follow_up: "What if I no longer have access to my email?",
+      )
+      search.expect_related_metadata(more_topics.last, category:, replies: 12, date: "2d")
+      search.expect_scrollable_results
+    ensure
+      page.current_window.resize_to(1400, 1400)
+    end
   end
 
-  it "opens on the answer when nothing matches the keywords, and says so on the topics tab" do
+  it "lets a reader without bot access use foreign-language answers or ask the community when answers are empty" do
     visit "/"
-    wait_for_discoveries_channel
-    ask("unheard of things")
-
-    expect_tab("ask")
-    expect(page).to have_css("#{tab("topics")}.--empty .ai-search-tabs__count", text: "0")
-
-    select_tab("topics")
-    expect(page).to have_css(".search-menu .no-results", text: "No keyword matches found.")
-    expect(page).to have_no_text("No results found.")
-  end
-
-  it "marks the answer tab when no answer was found" do
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-
-    publish(done: true, phase: "complete", answerable: false, ai_discover_reply: "", sources: [])
-
-    expect(page).to have_css("#{tab("ask")} .ai-search-tabs__empty .d-icon-ban")
-  end
-
-  it "opens on the answer for a query outside the site's language" do
-    visit "/"
-    wait_for_discoveries_channel
     ask("сброс")
 
-    expect_tab("ask")
-    expect(triggers.last).to eq(["enter", ""])
-  end
+    search.expect_tab("ask")
+    expect_opening("сброс", tab: "ask", reason: "language")
+    expect(requests.last.fetch(:trigger)).to eq(["enter", ""])
+    complete_answer
+    search.expect_related_topics([topic_1, topic_2])
 
-  it "waits for enter rather than searching as the reader types" do
-    visit "/"
-    wait_for_discoveries_channel
+    term = "unheard of things"
+    ask(term)
 
-    find("#welcome-banner-search-input").fill_in(with: query)
-    expect(page).to have_no_css(".ai-search-tabs")
-    expect(request_ids).to be_empty
-
-    find("#welcome-banner-search-input").send_keys(:enter)
-    try_until_success { expect(request_ids.size).to eq(1) }
-    expect(page).to have_css(".ai-search-tabs")
-  end
-
-  context "with more keyword matches than the menu lists" do
-    before do
-      SearchIndexer.enable
-      8.times do |i|
-        topic = Fabricate(:topic, title: "Widget maintenance guide number #{i}")
-        Fabricate(:post, topic:, raw: "Keeping widgets running smoothly, part #{i}")
-        SearchIndexer.index(topic, force: true)
-      end
-    end
-
-    after { SearchIndexer.disable }
-
-    it "opens the full search page on the tab's terms from its more link" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask("widget")
-
-      expect_tab("topics")
-      find(".search-menu__show-more a").click
-
-      expect(page).to have_current_path(%r{/search\?q=widget\z})
-    end
+    search.expect_tab("ask")
+    expect_opening(term, tab: "ask", reason: "no_keyword_matches")
+    search.expect_counts(active: "ask", counts: { topics: 0 }, empty: ["topics"])
+    search.select_tab("topics")
+    search.expect_no_keyword_matches
+    search.select_tab("ask")
+    empty_answer
+    search.expect_empty_answer
+    search.expect_centered_empty_answer
+    search.ask_community(term)
   end
 
   context "with keyword results" do
     let(:query) { "password" }
 
+    fab!(:password_post) do
+      Fabricate(
+        :post,
+        user: author,
+        topic: topic_1,
+        raw: "Reset your password from the login screen",
+      )
+    end
+
     before do
-      Fabricate(:post, topic: topic_1, raw: "Reset your password from the login screen")
       SearchIndexer.enable
       SearchIndexer.index(topic_1, force: true)
     end
 
     after { SearchIndexer.disable }
 
-    it "opens the full search page on a second enter" do
+    it "lets the reader switch between fetched tabs and open a keyword result without semantic notices" do
+      SiteSetting.ai_embeddings_semantic_quick_search_enabled = true
       visit "/"
-      wait_for_discoveries_channel
       ask(query)
 
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      find("#welcome-banner-search-input").send_keys(:enter)
-
-      expect(page).to have_current_path(%r{/search\?q=password\z})
-      expect(request_ids.size).to eq(1)
-    end
-
-    it "shows the search's topics again when the menu is reopened" do
-      visit "/about"
-      wait_for_discoveries_channel
-      find("#search-button").click
-      ask(query, input: "#icon-search-input")
-
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      find("#icon-search-input").send_keys(:escape)
-      expect(page).to have_no_css("#icon-search-input")
-
-      find("#search-button").click
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      expect(request_ids.size).to eq(1)
-    end
-
-    it "opens a lookup on its topics, with every tab fetched at once" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask(query)
-
-      expect_tab("topics")
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      # counts wait for a tab to open, then show only on the others
-      expect(page).to have_no_css("#{tab("topics")} .ai-search-tabs__count")
-
-      # the answer was asked for with the rest, so switching asks nothing more
-      select_tab("ask")
-      expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
-      expect(page).to have_css(".ai-search-answer")
-      expect(page).to have_no_css(".search-menu .search-result-topic")
-      publish(
-        done: true,
-        phase: "complete",
-        answerable: true,
-        ai_discover_reply: "An answer.",
-        sources:,
+      search.expect_tab("topics")
+      search.expect_topic_results(topic_1)
+      search.expect_counts(active: "topics", counts: {})
+      search.select_tab("ask")
+      search.expect_counts(active: "ask", counts: { topics: 1 })
+      search.expect_answer_loading
+      search.select_tab("topics")
+      message_id = complete_answer(ai_discover_reply: "An answer.")
+      search.wait_for_answer_delivery(message_id)
+      search.expect_tab("topics")
+      search.expect_topic_results(topic_1)
+      search.expect_no_semantic_notices
+      search.select_tab("ask")
+      search.expect_answer("An answer.")
+      search.select_tab("topics")
+      expect(requests.size).to eq(1)
+      expect_opening(
+        query,
+        tab: "topics",
+        reason: "topic_results",
+        ask_intent_heuristic: "lookup",
+        ask_tab_switched_to: "ask",
       )
-      expect(page).to have_css(".ai-search-answer__body .cooked", text: "An answer.")
 
-      select_tab("topics")
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      expect(request_ids.size).to eq(1)
-    end
-
-    it "logs the tab the search opened on and the first one the reader switched to" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask(query)
-
-      expect_tab("topics")
-      select_tab("ask")
-      select_tab("topics")
-
+      search.open_topic(topic_1)
       try_until_success do
-        expect(AskAiLog.last).to have_attributes(
-          ask_intent_heuristic: "lookup",
-          ask_tab_opened: "topics",
-          ask_tab_opened_reason: "topic_results",
-          ask_tab_switched_to: "ask",
-        )
-      end
-    end
-
-    it "records the first result the reader opens" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask(query)
-
-      expect_tab("topics")
-      find(".search-menu .search-result-topic a.search-link", text: topic_1.title).click
-
-      try_until_success do
-        expect(AskAiLog.last).to have_attributes(
+        expect(AskAiLog.find_by(query:)).to have_attributes(
           ask_tab_opened_after_ms: be >= 0,
           ask_result_clicked_tab: "topics",
           ask_result_clicked_after_ms: be > 0,
@@ -367,375 +246,266 @@ describe "AI combined search" do
       end
     end
 
-    it "leaves the answer to a search using operators until the reader opens it" do
+    it "lets the reader reopen header results or go to full search with Enter or the more link" do
+      6.times do |index|
+        topic = Fabricate(:topic, user: author, title: "Widget maintenance guide number #{index}")
+        Fabricate(
+          :post,
+          user: author,
+          topic:,
+          raw: "Keeping widgets running smoothly, part #{index}",
+        )
+        SearchIndexer.index(topic, force: true)
+      end
+      visit "/about"
+      search.open_header
+      ask(query, header: true)
+      search.expect_topic_results(topic_1)
+      search.close_header
+      search.open_header
+      search.expect_topic_results(topic_1)
+      expect(requests.size).to eq(1)
+
+      logo.click
+      ask("reset password")
+      search.expect_topic_results(topic_1)
+      expect_opening("reset password", tab: "topics", reason: "topic_results")
+      search.submit
+      expect(page).to have_current_path("/search?q=reset%20password")
+      expect(requests.size).to eq(2)
+
+      logo.click
+      ask("widget")
+      search.expect_tab("topics")
+      search.show_more
+      expect(page).to have_current_path("/search?q=widget")
+      expect(requests.size).to eq(3)
+    end
+
+    it "lets the reader request an answer to an operator search only after opening its answer tab" do
       term = "password status:open"
       visit "/"
-      wait_for_discoveries_channel
-      find("#welcome-banner-search-input").fill_in(with: term)
-      find("#welcome-banner-search-input").send_keys(:enter)
+      search.search(term)
 
-      expect_tab("topics")
-      try_until_success do
-        expect(AskAiLog.find_by(query: term)).to have_attributes(
-          ask_outcome: "skipped",
-          ask_tab_opened: "topics",
-          ask_tab_opened_reason: "syntax",
-        )
-      end
-      expect(request_ids).to be_empty
-
-      select_tab("ask")
-
-      expect(page).to have_css(".ai-search-answer")
-      try_until_success { expect(request_ids.size).to eq(1) }
+      search.expect_tab("topics")
+      expect_opening(term, tab: "topics", reason: "syntax", ask_outcome: "skipped")
+      expect(requests).to be_empty
+      search.select_tab("ask")
+      wait_for_request(term, after: 0)
+      search.expect_answer_loading
     end
 
     context "with a decision model judging intent" do
       fab!(:decision_model)
-
       before { SiteSetting.ai_ask_ai_search_intent_decision_model = decision_model.id }
 
-      it "opens on the answer when the model is sure the reader wants one" do
+      it "lets the reader follow a model's answer, fall back to keywords or stay on an answer they chose" do
         DiscourseAi::Decisions.with_canned_answers(intent: { "answer" => 0.9, "lookup" => 0.1 }) do
           visit "/"
-          wait_for_discoveries_channel
           ask(query)
-
-          expect_tab("ask")
-          expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
-        end
-
-        try_until_success do
-          expect(AskAiLog.last).to have_attributes(
+          search.expect_tab("ask")
+          search.expect_counts(active: "ask", counts: { topics: 1 })
+          expect_opening(
+            query,
+            tab: "ask",
+            reason: "intent_answer",
             ask_intent_heuristic: "lookup",
             ask_intent_model: "answer",
             ask_intent_probability: 0.9,
-            ask_tab_opened: "ask",
-            ask_tab_opened_reason: "intent_answer",
           )
-        end
-      end
+          complete_answer
+          search.expect_answer("forgot password")
+          search.select_tab("topics")
+          search.expect_topic_results(topic_1)
 
-      it "shows the keyword results when the reader switches from the answer" do
-        DiscourseAi::Decisions.with_canned_answers(intent: "answer") do
-          visit "/"
-          wait_for_discoveries_channel
-          ask(query)
-          expect_tab("ask")
-        end
-        publish(
-          done: true,
-          phase: "complete",
-          answerable: true,
-          ai_discover_reply: "Use the forgot password link.",
-          sources:,
-        )
-        expect(page).to have_css(".ai-search-answer__body .cooked", text: "forgot password")
-
-        select_tab("topics")
-
-        expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      end
-
-      it "moves to the results when the answer it opened on finds nothing" do
-        DiscourseAi::Decisions.with_canned_answers(intent: "answer") do
-          visit "/"
-          wait_for_discoveries_channel
-          ask(query)
-          expect_tab("ask")
+          # A disjoint query avoids searched_again; a new request clears the tab choice.
+          term = "account recovery"
+          ask(term)
+          search.expect_tab("ask")
+          expect_opening(term, tab: "ask", reason: "intent_answer")
+          empty_answer
+          search.expect_tab("topics")
+          search.expect_topic_results(topic_1)
         end
 
-        publish(
-          done: true,
-          phase: "complete",
-          answerable: false,
-          ai_discover_reply: "",
-          sources: [],
-        )
-
-        expect_tab("topics")
-        expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      end
-
-      it "leaves a reader on the answer they chose, even when it finds nothing" do
         DiscourseAi::Decisions.with_canned_answers(intent: "lookup") do
-          visit "/"
-          wait_for_discoveries_channel
-          ask(query)
-          expect_tab("topics")
-          select_tab("ask")
-
-          publish(
-            done: true,
-            phase: "complete",
-            answerable: false,
-            ai_discover_reply: "",
-            sources: [],
-          )
-
-          expect(page).to have_css(".ai-search-answer__empty")
-          expect_tab("ask")
+          term = "login"
+          ask(term)
+          search.expect_tab("topics")
+          expect_opening(term, tab: "topics", reason: "topic_results")
+          search.select_tab("ask")
+          empty_answer
+          search.expect_empty_answer
+          search.expect_tab("ask")
         end
       end
 
-      it "keeps rewritten keyword results that arrive while the menu waits for the model" do
+      it "keeps rewritten matches while intent is pending and uses keywords before a late verdict" do
         question = "does this site have any guides on that"
+        release_intent = Queue.new
         slow_intent = instance_double(DiscourseAi::Discoveries::Intent)
-        allow(slow_intent).to receive(:call) do
-          sleep 1.5
-          nil
+        allow(slow_intent).to receive(:call) do |term, **|
+          release_intent.pop
+          if term != question
+            DiscourseAi::Discoveries::Intent::Judgement.new(intent: "answer", probability: 0.95)
+          end
         end
         allow(DiscourseAi::Discoveries::Intent).to receive(:new).and_return(slow_intent)
 
         visit "/"
-        wait_for_discoveries_channel
-        ask(question)
+        search.search_while_intent_pending(question)
+        wait_for_request(question, after: 0)
         publish(
-          query: question,
           done: false,
           phase: "rewritten",
           keyword_query: "password",
           semantic_query: "Password guides",
         )
+        search.expect_tab("ask")
+        search.expect_counts(active: "ask", counts: { topics: 1 })
+        release_intent << true
+        search.wait_for_intent_reply
+        search.select_tab("topics")
+        search.expect_topic_results(topic_1)
+        expect_opening(question, tab: "ask", reason: "question")
 
-        expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
-        select_tab("topics")
-        expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      end
-
-      it "judges from the query alone when the model is too slow, still logging its verdict" do
-        slow_intent = instance_double(DiscourseAi::Discoveries::Intent)
-        allow(slow_intent).to receive(:call) do
-          sleep 1.5
-          DiscourseAi::Discoveries::Intent::Judgement.new(intent: "answer", probability: 0.95)
-        end
-        allow(DiscourseAi::Discoveries::Intent).to receive(:new).and_return(slow_intent)
-
-        visit "/"
-        wait_for_discoveries_channel
-        ask(query)
-
-        expect_tab("topics")
-        try_until_success(timeout: 5) do
-          expect(AskAiLog.last).to have_attributes(
-            ask_intent_model: "answer",
-            ask_tab_opened: "topics",
-            ask_tab_opened_reason: "topic_results",
-          )
-        end
+        # These queries share no words; the logged reason must be the keyword fallback.
+        search.search_while_intent_pending(query)
+        wait_for_request(query, after: 1)
+        search.expect_tab("topics")
+        search.expect_topic_results(topic_1)
+        release_intent << true
+        search.wait_for_intent_reply
+        expect_opening(query, tab: "topics", reason: "topic_results", ask_intent_model: "answer")
+        search.expect_tab("topics")
+      ensure
+        release_intent << true if release_intent
       end
     end
-
-    it "leaves related results to the combined search, so the list holds still" do
-      SiteSetting.ai_embeddings_semantic_quick_search_enabled = true
-
-      visit "/"
-      wait_for_discoveries_channel
-      ask(query)
-      publish(
-        done: true,
-        phase: "complete",
-        answerable: true,
-        ai_discover_reply: "Use the forgot password link.",
-        sources:,
-      )
-
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      expect(page).to have_no_css(".ai-quick-search-notice")
-      expect(page).to have_no_css(".search-menu .ai-search-result")
-    end
-  end
-
-  it "offers to ask the community when no answer is found" do
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-
-    publish(done: true, phase: "complete", answerable: false, ai_discover_reply: "", sources: [])
-
-    expect(page).to have_css(".ai-search-answer__empty", text: "AI couldn’t find a clear answer.")
-    find(".ai-search-answer__ask-community", text: "Ask the community.").click
-
-    expect(page).to have_css("#reply-control.open")
-    expect(find("#reply-title").value).to eq(query)
-  end
-
-  it "centres the message when no answer is found" do
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-
-    publish(done: true, phase: "complete", answerable: false, ai_discover_reply: "", sources: [])
-
-    expect(page).to have_css(".ai-search-answer__empty")
-    offsets = page.evaluate_script(<<~JS)
-        (() => {
-          const box = document.querySelector(".ai-search-answer__body").getBoundingClientRect();
-          const text = document.createRange();
-          text.selectNodeContents(document.querySelector(".ai-search-answer__empty"));
-          const rect = text.getBoundingClientRect();
-          return [
-            Math.round(rect.top - box.top - (box.bottom - rect.bottom)),
-            Math.round(rect.left - box.left - (box.right - rect.right)),
-          ];
-        })()
-      JS
-    expect(offsets.map(&:abs)).to all(be <= 2)
-  end
-
-  it "keeps the results scrollable" do
-    page.current_window.resize_to(1400, 450)
-
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-    publish(
-      done: true,
-      phase: "complete",
-      answerable: true,
-      ai_discover_reply: "A long answer that runs on. " * 40,
-      sources:,
-    )
-    # long enough to run past the window
-    expect(page).to have_css(".ai-search-answer__more")
-
-    scroll = page.evaluate_script(<<~JS)
-        (() => {
-          const list = document.querySelector(".search-menu .panel-body-contents");
-          const panel = document.querySelector(".search-menu .menu-panel");
-          list.scrollTop = 50;
-          return {
-            overflows: list.scrollHeight > list.clientHeight,
-            scrolled: list.scrollTop > 0,
-            fits: list.getBoundingClientRect().bottom <= panel.getBoundingClientRect().bottom + 1,
-          };
-        })()
-      JS
-    expect(scroll).to eq("overflows" => true, "scrolled" => true, "fits" => true)
-  ensure
-    page.current_window.resize_to(1400, 1400)
   end
 
   context "when searching from somewhere" do
     fab!(:category)
-    fab!(:inside) { Fabricate(:topic, category:, title: "Widget setup for this team") }
-    fab!(:outside) { Fabricate(:topic, title: "Widget setup somewhere else entirely") }
+    fab!(:inside) do
+      Fabricate(:topic, user: author, category:, title: "Widget setup for this team")
+    end
+    fab!(:outside) do
+      Fabricate(:topic, user: author, title: "Widget setup somewhere else entirely")
+    end
+    fab!(:inside_post) do
+      Fabricate(:post, user: author, topic: inside, raw: "Widget configuration inside the category")
+    end
+    fab!(:outside_post) do
+      Fabricate(
+        :post,
+        user: author,
+        topic: outside,
+        raw: "Widget configuration outside the category",
+      )
+    end
+    fab!(:decision_model)
     let(:query) { "widget" }
 
     before do
-      Fabricate(:post, topic: inside, raw: "Widget configuration inside the category")
-      Fabricate(:post, topic: outside, raw: "Widget configuration outside the category")
       SearchIndexer.enable
-      [inside, outside].each { |topic| SearchIndexer.index(topic, force: true) }
+      [inside, outside, inside_post].each { |record| SearchIndexer.index(record, force: true) }
     end
 
     after { SearchIndexer.disable }
 
-    def open_header_search
-      find("#search-button").click
-      expect(page).to have_css("#icon-search-input")
-    end
-
-    it "offers the category as a tab, opening on it when it has matches" do
+    it "lets the reader explore category matches, whole-site answers and a new context" do
       visit category.url
-      wait_for_discoveries_channel
-      open_header_search
-      page.execute_script(<<~JS)
-        window.pillWidths = {};
-        new MutationObserver(() => {
-          document.querySelectorAll(".ai-search-tabs .ai-discoveries-search-options__option").forEach((pill) => {
-            const kind = [...pill.classList].find((name) => name.startsWith("--") && name !== "--empty");
-            (window.pillWidths[kind] ??= new Set()).add(Math.round(pill.getBoundingClientRect().width));
-          });
-        }).observe(document.body, { subtree: true, childList: true, characterData: true });
-      JS
-      ask(query, input: "#icon-search-input")
+      search.open_header
+      search.watch_tab_widths
+      ask(query, header: true)
 
-      expect(page).to have_css(tab("context"), text: category.name)
-      expect_tab("context")
-      expect(scopes.last).to eq("category:#{category.id}")
-      expect(page).to have_no_css("#{tab("context")} .ai-search-tabs__count")
-      expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "2")
-      # the counts hang off the pills rather than widening them
-      widths = page.evaluate_script(<<~JS)
-        Object.fromEntries(Object.entries(window.pillWidths).map(([kind, set]) => [kind, set.size]))
-      JS
-      expect(widths.values).to all(eq(1))
-      expect(page).to have_css(".search-menu .search-result-topic", text: inside.title)
-      expect(page).to have_no_css(".search-menu .search-result-topic", text: outside.title)
+      search.expect_tab("context", label: category.name)
+      expect_opening(query, tab: "context", reason: "context_match")
+      expect(requests.last.fetch(:scope)).to eq("category:#{category.id}")
+      search.expect_counts(active: "context", counts: { topics: 2 })
+      search.expect_stable_tab_widths
+      search.expect_topic_results(inside, absent: [outside])
+      search.select_tab("topics")
+      search.expect_topic_results(inside, outside)
+      search.expect_counts(active: "topics", counts: { context: 1 })
+      expect(requests.size).to eq(1)
 
-      select_tab("topics")
-      expect(page).to have_css(".search-menu .search-result-topic", text: outside.title)
-      expect(page).to have_css("#{tab("context")} .ai-search-tabs__count", text: "1")
-      expect(request_ids.size).to eq(1)
+      search.select_tab("ask")
+      complete_answer(scope_fallback: true, ai_discover_reply: "An answer from elsewhere.")
+      search.expect_answer("An answer from elsewhere.")
+      search.expect_scope_note(category)
+      expect(requests.size).to eq(1)
+
+      # A new request must clear the successful answer and its fallback note.
+      ask("widget configuration", header: true)
+      expect(requests.last.fetch(:scope)).to eq("category:#{category.id}")
+      search.select_tab("ask")
+      empty_answer(scope_fallback: true)
+      search.expect_empty_answer
+      search.expect_scope_note
+      search.select_tab("context")
+      search.open_topic(inside)
+      expect(PageObjects::Pages::Topic.new).to have_topic_title(inside.title)
+      search.open_header
+      search.expect_query("widget configuration", header: true)
+      search.expect_tab("context", label: category.name)
+      search.expect_topic_results(inside)
+      expect(requests.size).to eq(2)
+
+      # kept from another page, so enter searches here rather than opening it
+      search.submit(header: true)
+      wait_for_request("widget configuration", after: 2)
+      expect(requests.last.fetch(:scope)).to eq("topic:#{inside.id}")
+      search.expect_tab_label("context", "This topic")
     end
 
-    it "says when the answer had to come from the whole site" do
+    it "credits a category result click to the query the reader typed" do
+      SiteSetting.log_search_queries = true
+
       visit category.url
-      wait_for_discoveries_channel
-      open_header_search
-      ask(query, input: "#icon-search-input")
-      select_tab("ask")
+      search.open_header
+      ask(query, header: true)
+      search.expect_tab("context", label: category.name)
+      search.open_topic(inside)
+      expect(PageObjects::Pages::Topic.new).to have_topic_title(inside.title)
 
-      publish(
-        done: true,
-        phase: "complete",
-        answerable: true,
-        scope_fallback: true,
-        ai_discover_reply: "An answer from elsewhere.",
-        sources:,
-      )
-
-      expect(page).to have_css(
-        ".ai-search-answer__scope-note",
-        text: "Nothing found in #{category.name}",
-      )
-      expect(request_ids.size).to eq(1)
+      try_until_success do
+        expect(
+          SearchLog.where(user: user).pluck(:term, :search_result_type, :search_result_id),
+        ).to contain_exactly([query, SearchLog.search_result_types[:topic], inside_post.id])
+      end
     end
 
-    it "does not mention the whole site when no answer was found there either" do
-      visit category.url
-      wait_for_discoveries_channel
-      open_header_search
-      ask(query, input: "#icon-search-input")
-      select_tab("ask")
-
-      publish(
-        done: true,
-        phase: "complete",
-        answerable: false,
-        scope_fallback: true,
-        ai_discover_reply: "",
-        sources: [],
-      )
-
-      expect(page).to have_css(".ai-search-answer__empty")
-      expect(page).to have_no_css(".ai-search-answer__scope-note")
-    end
-
-    it "opens a topic search on the topic when its posts match, and on the answer when not" do
-      inside.posts.each { |post| SearchIndexer.index(post, force: true) }
-
+    it "keeps a search made in a topic once the reader leaves it, without its topic tab" do
       visit inside.url
-      wait_for_discoveries_channel
-      open_header_search
-      ask("widget configuration?", input: "#icon-search-input")
+      search.open_header
+      ask("widget configuration?", header: true)
+      search.expect_tab("context", label: "This topic")
+      search.select_tab("topics")
+      search.open_topic(outside)
+      expect(PageObjects::Pages::Topic.new).to have_topic_title(outside.title)
 
-      expect(page).to have_css(tab("context"), text: "This topic")
-      expect_tab("context")
-      expect(scopes.last).to eq("topic:#{inside.id}")
-
-      find("#icon-search-input").fill_in(with: "something nobody wrote about here")
-      find("#icon-search-input").send_keys(:enter)
-
-      try_until_success { expect(request_ids.size).to eq(2) }
-      expect_tab("ask")
+      search.open_header
+      search.expect_query("widget configuration?", header: true)
+      search.expect_no_tab("context")
+      search.expect_tab("topics")
+      search.expect_topic_results(inside, outside)
+      expect(requests.size).to eq(1)
     end
 
-    it "opens a search about the whole site on its results, answering from the whole site" do
-      inside.posts.each { |post| SearchIndexer.index(post, force: true) }
-      SiteSetting.ai_ask_ai_search_intent_decision_model = Fabricate(:decision_model).id
+    it "lets the reader search this topic, ask about missing passages or search the whole site" do
+      visit inside.url
+      search.open_header
+      ask("widget configuration?", header: true)
+      search.expect_tab("context", label: "This topic")
+      expect_opening("widget configuration?", tab: "context", reason: "topic_match")
+      expect(requests.last.fetch(:scope)).to eq("topic:#{inside.id}")
 
+      ask("something nobody wrote about here", header: true)
+      search.expect_tab("ask")
+      expect_opening("something nobody wrote about here", tab: "ask", reason: "question")
+
+      SiteSetting.ai_ask_ai_search_intent_decision_model = decision_model.id
       DiscourseAi::Decisions.with_canned_answers(
         intent: "lookup",
         scope: {
@@ -744,32 +514,13 @@ describe "AI combined search" do
         },
       ) do
         visit inside.url
-        wait_for_discoveries_channel
-        open_header_search
-        ask("widget configuration", input: "#icon-search-input")
-
-        expect(page).to have_css(tab("context"), text: "This topic")
-        expect_tab("topics")
+        search.open_header
+        ask("widget configuration", header: true)
+        search.expect_tab_label("context", "This topic")
+        search.expect_tab("topics")
+        expect_opening("widget configuration", tab: "topics", reason: "topic_results")
       end
-      expect(scopes.last).to be_nil
-    end
-
-    it "starts afresh in a new context rather than searching again" do
-      visit category.url
-      wait_for_discoveries_channel
-      open_header_search
-      ask(query, input: "#icon-search-input")
-      expect_tab("context")
-      expect(page).to have_css(".search-menu .search-result-topic", text: inside.title)
-
-      find(".search-menu .search-result-topic a", text: inside.title).click
-      expect(page).to have_current_path(%r{/t/})
-
-      open_header_search
-
-      expect(find("#icon-search-input").value).to be_blank
-      expect(page).to have_no_css(".ai-search-tabs")
-      expect(request_ids.size).to eq(1)
+      expect(requests.last.fetch(:scope)).to be_nil
     end
   end
 
@@ -777,7 +528,6 @@ describe "AI combined search" do
     fab!(:bot) { Fabricate(:user, username: "answerbot") }
     fab!(:conversation) do
       Fabricate(:private_message_topic, user:, recipient: bot).tap do |topic|
-        # laid out as a conversation with the AI bot, which hides the progress bar
         topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = true
         topic.custom_fields[
           DiscourseAi::Discoveries::ContinueConversation::TOPIC_REQUEST_ID_FIELD
@@ -785,169 +535,160 @@ describe "AI combined search" do
         topic.save_custom_fields
       end
     end
-
-    before do
-      Fabricate(:post, topic: conversation, user:, raw: query)
+    fab!(:question_post) do
+      Fabricate(:post, topic: conversation, user:, raw: "how do I reset my password")
+    end
+    fab!(:answer_post) do
       Fabricate(
         :post,
         topic: conversation,
         user: bot,
-        raw: "See [#{topic_1.title}](#{topic_1.url}) for the steps.",
+        raw: "See [#{topic_1.title}](#{topic_1.relative_url}) for the steps.",
       )
     end
 
-    it "lists the topics its answers cite in place of the timeline" do
-      visit conversation.url
-
-      cited = find(".ai-search-references__link", text: topic_1.title)
-      expect(cited).to have_css(".ai-search-topic-row__date")
-      expect(cited).to have_css(".ai-search-topic-row__replies")
-      expect(page).to have_no_css(".timeline-container")
-      expect(page).to have_no_css(".ai-search-references-button")
-    end
-
-    it "lists the answer's sources kept beside the conversation" do
+    it "lets the reader see saved sources, citations and new reply citations instead of the timeline" do
+      topic_3 = Fabricate(:topic, user: author, title: "Recovering a lost account")
       conversation.custom_fields[
         DiscourseAi::Discoveries::ContinueConversation::TOPIC_SOURCES_FIELD
       ] = [{ topic_id: topic_2.id, title: topic_2.title, url: topic_2.url }]
       conversation.save_custom_fields
-
       visit conversation.url
-
-      expect(page).to have_css(".ai-search-references__link", text: topic_2.title)
-    end
-
-    it "adds the topics a new reply cites" do
-      visit conversation.url
-      expect(page).to have_css(".ai-search-references__link", text: topic_1.title)
-      wait_for_channel("discourse-ai/ai-bot/topic/#{conversation.id}")
-
+      search.expect_references(topic_1, topic_2)
+      search.expect_reference_metadata(topic_1)
+      search.expect_no_reference(topic_3)
+      channel = "discourse-ai/ai-bot/topic/#{conversation.id}"
+      search.wait_for_channel(channel)
       reply =
         Fabricate(
           :post,
           topic: conversation,
           user: bot,
-          raw: "Also try [#{topic_2.title}](#{topic_2.url}).",
+          raw: "Also try [#{topic_3.title}](#{topic_3.url}).",
         )
       MessageBus.publish(
-        "discourse-ai/ai-bot/topic/#{conversation.id}",
+        channel,
         { post_id: reply.id, post_number: reply.post_number, cooked: reply.cooked, done: true },
         user_ids: [user.id],
       )
+      search.expect_references(topic_3)
 
-      expect(page).to have_css(".ai-search-references__link", text: topic_2.title)
-    end
-
-    it "opens the cited topics from the topic map where the timeline does not fit", mobile: true do
-      visit conversation.url
-      find(".ai-search-references-button").click
-
-      expect(page).to have_css(
-        ".ai-search-references-modal .ai-search-references__link",
-        text: topic_1.title,
-      )
-    end
-
-    it "keeps the timeline for readers without the combined search" do
       SiteSetting.enable_ai_combined_search = false
+      page.refresh
+      search.expect_standard_timeline
+    end
 
+    it "lets the reader open citations from the topic map on mobile", mobile: true do
       visit conversation.url
-
-      expect(page).to have_css(".timeline-container")
-      expect(page).to have_no_css(".ai-search-references")
+      search.open_mobile_references
+      search.expect_references(topic_1, modal: true)
     end
   end
 
   context "with people and places to find" do
     fab!(:gardening) { Fabricate(:category, name: "Gardening") }
     fab!(:gardener) { Fabricate(:user, username: "plantlover", name: "Green Thumb") }
-
-    before do
-      SearchIndexer.enable
+    fab!(:gardening_topics) do
       [
         "Gardening tips for the spring season",
         "Gardening in small spaces",
         "Gardening with children",
         "Gardening on a budget",
-      ].each do |title|
-        topic = Fabricate(:topic, category: gardening, title:)
-        Fabricate(:post, topic:, raw: "Gardening is a lovely way to spend the spring")
-        SearchIndexer.index(topic, force: true)
+      ].map do |title|
+        Fabricate(:topic, user: author, category: gardening, title:).tap do |topic|
+          Fabricate(
+            :post,
+            user: author,
+            topic:,
+            raw: "Gardening is a lovely way to spend the spring",
+          )
+        end
       end
-      SearchIndexer.index(gardener, force: true)
-      SearchIndexer.index(gardening, force: true)
+    end
+
+    before do
+      SearchIndexer.enable
+      [*gardening_topics, gardener, gardening].each do |record|
+        SearchIndexer.index(record, force: true)
+      end
     end
 
     after { SearchIndexer.disable }
 
-    it "opens a lookup on its topics" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask("gardening")
-
-      expect_tab("topics")
-      expect(page).to have_css(".search-menu .search-result-topic", text: "Gardening tips")
-    end
-
-    it "opens on the answer when only a person matches" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask("green thumb")
-
-      expect_tab("ask")
-    end
-
-    it "opens a question on the answer even when places match" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask("gardening?")
-
-      expect_tab("ask")
-    end
-
-    it "opens a query in search syntax on its topics" do
-      visit "/"
-      wait_for_discoveries_channel
-      find("#welcome-banner-search-input").fill_in(with: '"small spaces"')
-      find("#welcome-banner-search-input").send_keys(:enter)
-
-      expect_tab("topics")
-      expect(page).to have_css(
-        ".search-menu .search-result-topic",
-        text: "Gardening in small spaces",
-      )
-    end
-
-    it "opens on the answer when the reader searches again on the same page" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask("gardening")
-      expect_tab("topics")
-
-      find("#welcome-banner-search-input").fill_in(with: "spring gardening")
-      find("#welcome-banner-search-input").send_keys(:enter)
-
-      try_until_success { expect(request_ids.size).to eq(2) }
-      expect_tab("ask")
-    end
-
-    it "runs the combined search for a recent search picked from the menu" do
+    it "lets the reader choose recent searches, refine a lookup and ask about people or places" do
       SearchLog.log(
         term: "gardening",
         search_type: :header,
         ip_address: "127.0.0.1",
         user_id: user.id,
       )
-
       visit "/"
-      wait_for_discoveries_channel
-      find("#welcome-banner-search-input").click
-      find(".search-menu-recent .search-menu-assistant-item", text: "gardening").click
+      search.select_recent("gardening")
+      wait_for_request("gardening", after: 0)
+      search.expect_tab("topics")
+      search.expect_topic_results(gardening_topics.first)
+      search.expect_query("gardening")
+      expect(requests.last.fetch(:trigger)).to eq(["recent", ""])
+      expect_opening("gardening", tab: "topics", reason: "topic_results")
 
-      expect_tab("topics")
-      expect(page).to have_css(".search-menu .search-result-topic", text: "Gardening tips")
-      expect(find("#welcome-banner-search-input").value).to eq("gardening")
-      expect(triggers.last).to eq(["recent", ""])
+      ask("spring gardening")
+      search.expect_tab("ask")
+      expect_opening("spring gardening", tab: "ask", reason: "searched_again")
+
+      # Disjoint queries avoid searched_again; verify each independent opening reason.
+      ask("green thumb")
+      search.expect_tab("ask")
+      expect_opening("green thumb", tab: "ask", reason: "no_keyword_matches")
+
+      ask("gardening?")
+      search.expect_tab("ask")
+      expect_opening("gardening?", tab: "ask", reason: "question")
+
+      # Syntax precedes searched_again and defers the answer altogether.
+      search.search('"small spaces"')
+      search.expect_tab("topics")
+      search.expect_topic_results(gardening_topics.second)
+      expect_opening('"small spaces"', tab: "topics", reason: "syntax", ask_outcome: "skipped")
+      expect(requests.size).to eq(4)
+    end
+  end
+
+  context "when recalling recent searches" do
+    before do
+      SearchLog.log(
+        term: "account recovery",
+        search_type: :header,
+        ip_address: "127.0.0.1",
+        user_id: user.id,
+      )
+    end
+
+    it "offers history from a page with a search context" do
+      visit topic_1.url
+      search.open_header
+
+      search.expect_recent("account recovery")
+    end
+
+    it "lists a search just run once, ahead of older ones" do
+      visit "/about"
+      search.open_header
+      ask("login help", header: true)
+
+      search.fill_query("", header: true)
+
+      search.expect_recent("login help", "account recovery")
+    end
+
+    it "lists a search whose answer was deferred" do
+      visit "/about"
+      search.open_header
+      search.search('"login help"', header: true)
+      expect(page).to have_css(".ai-search-tabs")
+
+      search.fill_query("", header: true)
+
+      search.expect_recent('"login help"', "account recovery")
     end
   end
 end

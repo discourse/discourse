@@ -15,6 +15,9 @@ el:
         preview_archive: Αρχείο
         desktop: Για υπολογιστές
         mobile: Mobile
+        save: Αποθήκευση
+        path_formats:
+          custom: Προσαρμοσμένο
         back_to_themes: Πίσω στα θέματα
         new_theme_short: Νέο θέμα
         themes: Θέματα
@@ -52,7 +55,11 @@ el:
         edit: Επεξεργασία
         status: Κατάσταση
         replies: Απαντήσεις
+        title: Τίτλος
+        page: Σελίδα
+      all: Όλα
       drafts: Προσχέδια
+      pages: Σελίδες
       preview: Προεπισκόπηση
       unpublish: Κατάργηση δημοσίευσης
       appearance_link: Εμφάνιση

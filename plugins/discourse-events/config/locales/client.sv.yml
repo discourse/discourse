@@ -24,6 +24,10 @@ sv:
             topic_id:
               label: Ämnes-ID
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrera"
       preferences:
         reminders:
           preferences:

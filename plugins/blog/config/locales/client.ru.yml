@@ -16,6 +16,9 @@ ru:
         preview_archive: Архивировать
         desktop: Настольная
         mobile: Мобильная
+        save: Сохранить
+        path_formats:
+          custom: Другое
         back_to_themes: Назад к темам
         new_theme_short: Новая тема
         themes: тем
@@ -54,7 +57,11 @@ ru:
         edit: Изменить
         status: Статус
         replies: Ответы
+        title: Название
+        page: страница
+      all: Все
       drafts: Черновики
+      pages: страниц
       preview: Предпросмотр
       unpublish: Отменить публикацию
       appearance_link: Внешний вид

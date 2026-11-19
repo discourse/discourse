@@ -13,6 +13,9 @@ sl:
         preview_archive: Arhiviraj
         desktop: Namizno
         mobile: Mobilno
+        save: Shrani
+        path_formats:
+          custom: Po meri
         themes: Videzi
         theme_name: Ime videza
         edit: Uredi
@@ -45,6 +48,8 @@ sl:
         edit: Uredi
         status: Status
         replies: Odgovori
+        title: Naziv
+      all: Vsi
       drafts: Osnutki
       preview: Predogled
       appearance_link: Videz

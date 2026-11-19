@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { click, find, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -92,7 +93,7 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
   });
 
   test("renders escaped diffs with a category heading and retains them after approval", async function (assert) {
-    this.definition = {
+    const definition = tracked({
       type: "confirmation",
       title: "Editing category: Cool Stuff",
       cooked_title:
@@ -117,12 +118,12 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
       elements: [
         { type: "button", action_id: "approve", text: { text: "Yes" } },
       ],
-    };
-    this.cooked = "<p>Legacy description</p>";
+    });
+    const cooked = "<p>Legacy description</p>";
 
     await render(
       <template>
-        <Block @cooked={{this.cooked}} @definition={{this.definition}} />
+        <Block @cooked={{cooked}} @definition={{definition.value}} />
       </template>
     );
 
@@ -152,7 +153,7 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
     );
     assert.strictEqual(
       proposedValues[2].textContent,
-      this.definition.changes[2].after,
+      definition.value.changes[2].after,
       "preserves intentional description line breaks"
     );
     const before = find(".chat-confirmation__before");
@@ -172,11 +173,11 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
       .dom(".chat-confirmation__diff .chat-confirmation__color")
       .exists({ count: 2 }, "previews the old and proposed colors");
 
-    this.set("definition", {
-      ...this.definition,
+    definition.value = {
+      ...definition.value,
       cooked_status: "<p>Approved by jordan.</p>",
       elements: [],
-    });
+    };
     await settled();
     assert
       .dom(".chat-confirmation__diff")
@@ -190,7 +191,7 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
   });
 
   test("omits a creation card's middle section unless there are properties or an error", async function (assert) {
-    this.definition = {
+    const definition = tracked({
       title: "Create tag: dingle-dots",
       type: "confirmation",
       show_description: false,
@@ -200,11 +201,11 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
       elements: [
         { type: "button", action_id: "approve", text: { text: "Yes" } },
       ],
-    };
-    this.cooked = "<p>Creating tag 'dingle-dots'</p>";
+    });
+    const cooked = "<p>Creating tag 'dingle-dots'</p>";
     await render(
       <template>
-        <Block @cooked={{this.cooked}} @definition={{this.definition}} />
+        <Block @cooked={{cooked}} @definition={{definition.value}} />
       </template>
     );
     assert
@@ -219,10 +220,10 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
         "Do you want to create this tag?",
         "asks the creation question"
       );
-    this.set("definition", {
-      ...this.definition,
+    definition.value = {
+      ...definition.value,
       parameters: [{ label: "description", value: "Release announcements" }],
-    });
+    };
     await settled();
     assert
       .dom(".chat-confirmation__description")
@@ -230,11 +231,11 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
         "description Release announcements",
         "keeps additional properties available for review"
       );
-    this.set("definition", {
-      ...this.definition,
+    definition.value = {
+      ...definition.value,
       parameters: [],
       cooked_error: "<p>Could not create tag.</p>",
-    });
+    };
     await settled();
     assert
       .dom(".chat-confirmation__description")
@@ -242,12 +243,12 @@ module("Component | ChatMessage | Blocks | Confirmation", function (hooks) {
         "Could not create tag.",
         "keeps execution errors visible for retries"
       );
-    this.set("definition", {
-      ...this.definition,
+    definition.value = {
+      ...definition.value,
       cooked_error: "",
       cooked_status: "<p>Approved by jordan.</p>",
       elements: [],
-    });
+    };
     await settled();
     assert
       .dom(".chat-confirmation__description")

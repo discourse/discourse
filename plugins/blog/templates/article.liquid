@@ -3,12 +3,13 @@
     <a class="blog__eyebrow" href="{{ site.url }}">← {{ labels.all_articles }}</a>
     <h1>{{ article.title }}</h1>
     {% if article.standfirst %}<p class="blog-article__standfirst">{{ article.standfirst }}</p>{% endif %}
-    <div class="blog__meta"><span>{{ article.author }}</span><span>·</span>
+    <div class="blog__meta">{% if article.author %}<span>{% for author in article.authors %}<a href="{{ author.url }}">{{ author.name }}</a>{{ author.separator }}{% endfor %}</span><span>·</span>{% endif %}
       {% if article.published_at %}<time datetime="{{ article.published_at }}">{{ article.date }}</time><span>·</span>{% endif %}
       <span>{{ article.reading_time }}</span>
     </div>
     {% if article.updated_label %}<p class="blog__updated">{{ article.updated_label }}</p>{% endif %}
   </header>
+  {% if article.cover_url %}<figure class="blog-article__cover"><img src="{{ article.cover_url }}" alt="{{ article.cover_alt }}"{% if article.cover_width %} width="{{ article.cover_width }}" height="{{ article.cover_height }}"{% endif %}></figure>{% endif %}
   <div class="blog-article__body cooked">{{ article.body_html }}</div>
   <footer class="blog-article__footer">
     <div class="blog__tags">{% for tag in article.tags %}<a href="{{ tag.url }}">{{ tag.name }}</a>{% endfor %}</div>

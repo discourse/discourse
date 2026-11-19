@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
   MAX_SIMILAR_USERS = 10
+  MAX_FILTER_TERMS = 50
   STAFF_REASON_SANITIZER = Rails::Html::SafeListSanitizer.new
   STAFF_REASON_ALLOWED_TAGS = %w[a br].freeze
   STAFF_REASON_ALLOWED_ATTRIBUTES = %w[href rel target].freeze
@@ -338,7 +339,12 @@ class User < ActiveRecord::Base
   scope :filter_by_username,
         ->(filter) do
           if filter.is_a?(Array)
-            where("username_lower ~* ?", "(#{filter.join("|")})")
+            terms = filter.map(&:to_s).reject(&:blank?)
+            raise Discourse::InvalidParameters.new(:filter) if terms.size > MAX_FILTER_TERMS
+
+            patterns = terms.map { |term| "%#{ActiveRecord::Base.sanitize_sql_like(term)}%" }
+
+            patterns.empty? ? all : where("username_lower ILIKE ANY (ARRAY[:patterns])", patterns:)
           else
             where("username_lower ILIKE ?", "%#{filter}%")
           end
@@ -356,9 +362,16 @@ class User < ActiveRecord::Base
           users = joins(:primary_email)
 
           if filter.is_a?(Array)
+            terms = filter.map(&:to_s).reject(&:blank?)
+            raise Discourse::InvalidParameters.new(:filter) if terms.size > MAX_FILTER_TERMS
+            return users if terms.empty?
+
+            patterns = terms.map { |term| "%#{ActiveRecord::Base.sanitize_sql_like(term)}%" }
+
             users.where(
-              "username_lower ~* :filter OR lower(user_emails.email) SIMILAR TO :filter",
-              filter: "(#{filter.join("|")})",
+              "username_lower ILIKE ANY (ARRAY[:patterns]) OR lower(user_emails.email) IN (:emails)",
+              patterns:,
+              emails: terms.map(&:downcase),
             )
           else
             users.where(

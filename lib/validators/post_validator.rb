@@ -107,7 +107,7 @@ class PostValidator < ActiveModel::Validator
     return if post.acting_user.nil?
     return if post.acting_user.staff?
 
-    if !post.acting_user.in_any_groups?(SiteSetting.embedded_media_post_allowed_groups_map)
+    if !post.acting_user.guardian.can_embed_media?
       add_error_if_count_exceeded(
         post,
         :no_embedded_media_allowed_group,
@@ -155,7 +155,7 @@ class PostValidator < ActiveModel::Validator
     max = SiteSetting.max_quotes_per_post
     return if max <= 0
 
-    count = post.raw.to_s.scan(/\[quote[=\]]/i).size
+    count = post.raw.to_s.scan(/\[quote[=\]\t\v\f\p{Z}\uFEFF]/i).size
     post.errors.add(:base, I18n.t(:too_many_quotes, count: max)) if count > max
   end
 

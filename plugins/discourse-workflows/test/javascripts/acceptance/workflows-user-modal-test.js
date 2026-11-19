@@ -1,4 +1,4 @@
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, find, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -70,6 +70,38 @@ acceptance("Discourse Workflows | User modal", function (needs) {
       .exists({ count: 2 }, "renders one button per configured option");
     assert.dom(".d-modal__footer .btn-primary").hasText("Approve");
     assert.dom(".d-modal__footer .btn-danger").hasText("Reject");
+  });
+
+  test("shows the Markdown image and multiline text together", async function (assert) {
+    const text = "first line\n    <b>second line</b>\n\nlast line";
+    await visit("/");
+    await publishToMessageBus(channel(), {
+      ...payload,
+      body: null,
+      buttons: [],
+      cooked_body: `<p><img src="/images/discourse-logo-sketch.png" alt="Original screenshot"></p><pre><code>first line\n    &lt;b&gt;second line&lt;/b&gt;\n\nlast line</code></pre>`,
+    });
+    await settled();
+
+    assert
+      .dom(".workflows-user-modal__markdown img")
+      .hasAttribute(
+        "alt",
+        "Original screenshot",
+        "the original image is in the dialog"
+      );
+    const preview = find(".workflows-user-modal__markdown pre code");
+    assert.strictEqual(
+      preview.innerText,
+      text,
+      "line breaks and indentation are visible"
+    );
+    assert
+      .dom("b", preview)
+      .doesNotExist("markup in the code block stays literal");
+    assert
+      .dom(".workflows-user-modal .d-modal__footer")
+      .doesNotExist("an informational modal has no empty footer");
   });
 
   test("posts the chosen button's action id and closes the modal", async function (assert) {

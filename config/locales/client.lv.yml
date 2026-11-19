@@ -280,9 +280,6 @@ lv:
       pill: "Saistītās ziņas"
     suggested_topics:
       pm_title: "Ieteiktās ziņas"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Atpakaļ"
     design_wizard:
       back: "Atpakaļ"
       next: "Nākamais"
@@ -1740,6 +1737,10 @@ lv:
     composer:
       emoji: "Emoji :)"
       options: "Iespējas"
+      ai_content:
+        code: "Kods"
+        quote: "Citāts"
+        details: "Detaļas"
       whisper: "čuksts"
       unlist: "paslēpts"
       add_warning: "Šis ir oficiāls brīdinājums."
@@ -2825,6 +2826,15 @@ lv:
       back: "Atpakaļ"
       share: "Dalīties"
       dismiss: "Nerādīt"
+    mobile_tab_bar:
+      create: "Izveidot"
+      more: "Vairāk"
+      back: "Atpakaļ"
+      topics: "Tēmas"
+      drafts:
+        zero: "Melnraksti (%{count})"
+        one: "Melnraksti (%{count})"
+        other: "Melnraksti (%{count})"
     safe_mode:
       enabled: "Ir ieslēgts drošais režīms; lai pamestu drošo režīmu, aizveriet šo pārlūkprogrammas logu"
     trust_levels:

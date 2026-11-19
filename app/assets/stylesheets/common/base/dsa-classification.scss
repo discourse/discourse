@@ -67,25 +67,20 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
   margin-inline: var(--space-2) auto;
 }
 
-.dsa-community-rule-trigger {
-  justify-content: space-between;
-  text-align: start;
-
-  .d-button-label {
-    @include ellipsis;
-    min-width: 0;
-  }
-}
-
-.dsa-community-rules.fk-d-menu {
+.dsa-classification-options.fk-d-menu {
   z-index: z("modal", "popover");
+
+  .dropdown-menu__item > .dsa-classification-option.btn {
+    height: auto;
+    min-height: var(--d-sidebar-row-height);
+  }
 
   .fk-d-menu__inner-content {
     max-height: 40dvh;
   }
 }
 
-.dsa-community-rule {
+.dsa-classification-option {
   white-space: normal;
   text-align: start;
 
@@ -107,4 +102,18 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
     color: var(--token-color-text-subtle);
     font-size: var(--font-down-1);
   }
+}
+
+.dsa-classification-select {
+  justify-content: space-between;
+  text-align: start;
+
+  .d-button-label {
+    @include ellipsis;
+    min-width: 0;
+  }
+}
+
+.dsa-classification-footer:not([hidden]) {
+  display: contents;
 }

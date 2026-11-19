@@ -16,6 +16,9 @@ es:
         preview_archive: Archivo
         desktop: Escritorio
         mobile: Móvil
+        save: Guardar
+        path_formats:
+          custom: Personalizado
         back_to_themes: Volver a los temas
         new_theme_short: Nuevo tema
         themes: Tema
@@ -54,7 +57,11 @@ es:
         edit: Editar
         status: Estado
         replies: Respuestas
+        title: Título
+        page: Página
+      all: Todo
       drafts: Borradores
+      pages: Páginas
       preview: Vista previa
       unpublish: Despublicar
       appearance_link: Aspecto

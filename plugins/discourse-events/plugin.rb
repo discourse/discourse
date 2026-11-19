@@ -420,7 +420,10 @@ after_initialize do
     :post,
     :event,
     include_condition: -> do
-      SiteSetting.discourse_post_event_enabled && !object.nil? && !object.deleted_at.present?
+      next false if !SiteSetting.discourse_post_event_enabled || !object || object.deleted_at
+
+      event = object.event
+      !scope.anonymous? || !event&.livestream? || scope.can_see_livestream_event?(event)
     end,
   ) { DiscourseEvents::Events::EventSerializer.new(object.event, scope: scope, root: false) }
 
@@ -1014,8 +1017,15 @@ after_initialize do
     :chat_channel_id,
     include_condition: -> do
       event = object.topic.first_post&.event
-      event&.livestream? && object.topic.topic_chat_channel.present? &&
-        (scope.is_admin? || event.can_access_livestream_chat?(scope.user))
+      topic_chat_channel = object.topic.topic_chat_channel
+      next false if !event&.livestream? || !topic_chat_channel
+
+      if scope.anonymous?
+        event.can_access_livestream_chat?(nil) &&
+          scope.can_preview_anonymous_public_chat_channel?(topic_chat_channel.chat_channel)
+      else
+        scope.is_admin? || event.can_access_livestream_chat?(scope.user)
+      end
     end,
   ) { object.topic.topic_chat_channel.chat_channel_id }
 
@@ -1079,6 +1089,7 @@ after_initialize do
       event = topic&.first_post&.event
 
       return false if !event
+      return false if scope.anonymous? && !scope.can_see_livestream_event?(event)
 
       event.livestream? &&
         event.can_access_livestream_chat?(scope.user, group_names: livestream_user_group_names)

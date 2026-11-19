@@ -86,20 +86,20 @@ module("Component | LazyVideo", function (hooks) {
   });
 
   test("accepts an optional onLoadedVideo callback function", async function (assert) {
-    this.set("foo", 1);
-    this.set("onLoadedVideo", () => this.set("foo", 2));
+    let foo = 1;
+    const onLoadedVideo = () => (foo = 2);
 
     await render(
       <template>
         <LazyVideo
-          @onLoadedVideo={{this.onLoadedVideo}}
+          @onLoadedVideo={{onLoadedVideo}}
           @videoAttributes={{this.attributes}}
         />
       </template>
     );
-    assert.strictEqual(this.foo, 1);
+    assert.strictEqual(foo, 1);
 
     await click(".video-thumbnail.youtube");
-    assert.strictEqual(this.foo, 2);
+    assert.strictEqual(foo, 2);
   });
 });

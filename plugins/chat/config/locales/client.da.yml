@@ -208,6 +208,7 @@ da:
       settings:
         follow: "Tilslut"
         followed: "Tilmeldt"
+        muted_until_hint: "indtil %{until}"
         threading_enabled: "Aktiveret"
         threading_disabled: "Deaktiveret"
         notifications: "Notifikationer"
@@ -264,12 +265,6 @@ da:
         short:
           one: "%{count} dag"
           other: "%{count} dage"
-      emoji_picker:
-        objects: "Objekter"
-        activities: "Aktiviteter"
-        flags: "Flag"
-        symbols: "Symboler"
-        no_results: "Ingen resultater"
       thread:
         title: "Titel"
         replies:

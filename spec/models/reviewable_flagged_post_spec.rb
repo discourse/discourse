@@ -572,6 +572,211 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   end
 
   describe "#perform" do
+    context "when sending moderation notices" do
+      let(:rule) do
+        {
+          "ground" => "Community Guidelines: Be agreeable",
+          "explanation" => "Personal attacks are not allowed.",
+        }
+      end
+      let(:classification) do
+        { community_rule: rule, category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY }
+      end
+      let(:flag_reason) { I18n.t("flag_reasons.inappropriate", base_path: Discourse.base_path) }
+      let(:paragraph) do
+        "More specifically, your post violated the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}"
+      end
+
+      before do
+        enable_dsa_reporting(community_rules: [rule])
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      def existing_notice(
+        type:,
+        recipient: post.user,
+        flag_reason: self.flag_reason,
+        reply: nil,
+        appeal: true
+      )
+        options = {
+          url: post.url,
+          edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
+          flagged_post_raw_content: post.raw,
+          flagged_post_response_raw_content: reply&.raw,
+          flag_reason:,
+        }
+        if appeal
+          options.merge!(
+            body_suffix_key: "system_messages.moderation_appeal_instructions",
+            email: "appeals@example.com",
+          )
+        end
+
+        SystemMessage.create(recipient, type, options)
+      end
+
+      def expect_notice(args:, baseline:, paragraph: nil, flag_reason: self.flag_reason)
+        expected_body = baseline.raw
+        expected_body =
+          expected_body.sub(flag_reason, "#{flag_reason}\n\n#{paragraph}") if paragraph
+
+        Jobs::SendSystemMessage.new.perform(args)
+
+        expect(Post.last.raw).to eq(expected_body)
+        expect(Post.last.topic.title).to eq(baseline.topic.title)
+        expect(Post.last.topic.allowed_users).to match_array(baseline.topic.allowed_users)
+      end
+
+      it "adds the selected rule and explanation to the hiding notice for agree_and_hide" do
+        baseline = existing_notice(type: :post_hidden)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "adds the selected rule and explanation to the removal notice for delete_and_agree" do
+        baseline = existing_notice(type: :flags_agreed_and_post_deleted)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :delete_and_agree, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "adds the selected rule and explanation to the removal notice for delete_and_ignore" do
+        baseline = existing_notice(type: :flags_agreed_and_post_deleted)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :delete_and_ignore, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "explains that the original post violated the rule in reply notices for delete_and_agree_replies" do
+        reply =
+          PostCreator.create!(
+            Fabricate(:user),
+            topic_id: post.topic_id,
+            reply_to_post_number: post.post_number,
+            raw: "Please keep the discussion respectful.",
+          )
+        post.reload
+        baseline = existing_notice(type: :flags_agreed_and_post_deleted)
+        responder_reason =
+          I18n.t("flag_reasons.responder.inappropriate", base_path: Discourse.base_path)
+        responder_baseline =
+          existing_notice(
+            type: :flags_agreed_and_post_deleted_for_responders,
+            recipient: reply.user,
+            flag_reason: responder_reason,
+            reply:,
+          )
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :delete_and_agree_replies, dsa_classification: classification)
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        expect_notice(
+          args: notices.find { |notice| notice["user_id"] == post.user_id },
+          baseline:,
+          paragraph:,
+        )
+        expect_notice(
+          args: notices.find { |notice| notice["user_id"] == reply.user_id },
+          baseline: responder_baseline,
+          flag_reason: responder_reason,
+          paragraph:
+            "More specifically, the post you replied to violated the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}",
+        )
+      end
+
+      it "explains that the original post violated the rule in reply notices for delete_and_ignore_replies" do
+        reply =
+          PostCreator.create!(
+            Fabricate(:user),
+            topic_id: post.topic_id,
+            reply_to_post_number: post.post_number,
+            raw: "Please keep the discussion respectful.",
+          )
+        post.reload
+        baseline = existing_notice(type: :flags_agreed_and_post_deleted)
+        responder_reason =
+          I18n.t("flag_reasons.responder.inappropriate", base_path: Discourse.base_path)
+        responder_baseline =
+          existing_notice(
+            type: :flags_agreed_and_post_deleted_for_responders,
+            recipient: reply.user,
+            flag_reason: responder_reason,
+            reply:,
+          )
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(
+          moderator,
+          :delete_and_ignore_replies,
+          dsa_classification: classification,
+        )
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        expect_notice(
+          args: notices.find { |notice| notice["user_id"] == post.user_id },
+          baseline:,
+          paragraph:,
+        )
+        expect_notice(
+          args: notices.find { |notice| notice["user_id"] == reply.user_id },
+          baseline: responder_baseline,
+          flag_reason: responder_reason,
+          paragraph:
+            "More specifically, the post you replied to violated the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}",
+        )
+      end
+
+      it "adds the selected rule and explanation to the notice when a post is hidden again" do
+        post.update!(hidden_at: 1.day.ago)
+        baseline = existing_notice(type: :post_hidden_again)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "ignores a supplied classification when DSA reporting is disabled" do
+        SiteSetting.dsa_reporting_enabled = false
+        baseline = existing_notice(type: :post_hidden, appeal: false)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:)
+      end
+
+      it "keeps appeal instructions when DSA is enabled but no rule is selected" do
+        baseline = existing_notice(type: :post_hidden)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:)
+      end
+    end
+
     context "when performing agree_and_edit on a flagged post reviewable" do
       fab!(:flagged, :reviewable_flagged_post)
 
@@ -619,8 +824,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       fab!(:admin)
-      let(:post) { Fabricate(:post) }
-      let!(:reviewable) { PostActionCreator.spam(user, post).reviewable }
+      fab!(:post)
+      fab!(:reviewable) { PostActionCreator.spam(user, post).reviewable }
 
       before do
         freeze_time
@@ -1225,8 +1430,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   end
 
   describe "#perform_delete_and_agree_replies" do
-    let(:flagged_post) { Fabricate(:reviewable_flagged_post) }
-    let!(:reply) { create_reply(flagged_post.target) }
+    fab!(:flagged_post, :reviewable_flagged_post)
+    fab!(:reply) { create_reply(flagged_post.target) }
 
     before { flagged_post.target.update(reply_count: 1) }
 
@@ -1275,8 +1480,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "#perform_unsilence_user" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
     let(:guardian) { Guardian.new(moderator) }
 
     it "is offered whenever the author is currently silenced" do
@@ -1335,8 +1540,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "penalty_effect" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
     let(:guardian) { Guardian.new(moderator) }
 
     def effect_for(action_id)
@@ -1406,8 +1611,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "#author_penalties" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
-
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
     it "is empty when the author has no penalty" do
       expect(reviewable.author_penalties).to eq([])

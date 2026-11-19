@@ -15,6 +15,28 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   end
 
   describe "GET #index" do
+    it "reports tools loaded automatically by the post illustrator" do
+      image_tool =
+        Fabricate(
+          :ai_tool,
+          name: "Image generator",
+          parameters: [{ name: "prompt", type: "string", description: "Prompt" }],
+          script: "function invoke() { upload.create(); chain.setCustomRaw(); }",
+        )
+      Fabricate(:ai_tool, name: "Disabled image tool", enabled: false)
+      Fabricate(:ai_tool, name: "Ordinary tool")
+
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+
+      illustrator_id =
+        DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::PostIllustrator]
+      agents = response.parsed_body["ai_agents"].index_by { |agent| agent["id"] }
+      expect(agents[illustrator_id]["automatic_image_tools"]).to eq(
+        [{ "id" => image_tool.id, "name" => image_tool.name }],
+      )
+      expect(agents[ai_agent.id]).not_to have_key("automatic_image_tools")
+    end
+
     it "offers uploaded document search in the tool catalog" do
       get "/admin/plugins/discourse-ai/ai-agents.json"
 

@@ -13,6 +13,9 @@ et:
         preview_archive: Arhiiv
         desktop: Töölaud
         mobile: Mobiil
+        save: Salvesta
+        path_formats:
+          custom: Individuaalne
         themes: Kujundused
         theme_name: Teema nimi
         edit: Muuda
@@ -44,6 +47,8 @@ et:
         edit: Muuda
         status: Staatus
         replies: Vastused
+        title: Pealkiri
+      all: Kõik
       drafts: Mustandid
       preview: Eelvaade
       unpublish: Tühista avaldamine

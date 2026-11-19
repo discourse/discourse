@@ -402,11 +402,6 @@ sv:
   too_many_mentions_newuser:
     one: "Tyvärr kan besökare bara nämna en annan användare i ett inlägg."
     other: "Tyvärr kan besökare bara nämna %{count} användare i ett inlägg."
-  no_embedded_media_allowed_group: "Tyvärr kan du inte bädda in media i ett inlägg."
-  no_embedded_media_allowed: "Tyvärr kan nya användare inte bädda in media i inlägg."
-  too_many_embedded_media:
-    one: "Tyvärr kan nya användare bara lägga in ett enda inbäddat medieobjekt i ett inlägg."
-    other: "Tyvärr kan nya användare bara lägga in %{count} inbäddade medieobjekt i ett inlägg."
   no_attachments_allowed: "Tyvärr kan nya användare inte bifoga filer till inlägg."
   too_many_attachments:
     one: "Tyvärr kan nya användare bara bifoga en fil till ett inlägg."
@@ -2101,6 +2096,10 @@ sv:
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
       invalid_uncategorized_category_setting: 'Kategorin "Okategoriserade" kan inte väljas om inte "tillåt okategoriserade ämnen" har aktiverats.'
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
+    keywords:
+      company_url: "webbplats"
+      logo: "primär logotyp"
+      title: "forumets namn"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -3900,6 +3899,10 @@ sv:
       links:
         category: kategori inställningar
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nej"
       agree:
         title: "Ja"
       agree_and_keep:

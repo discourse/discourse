@@ -170,45 +170,6 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
-  def account_silenced(user, opts = nil)
-    opts ||= {}
-
-    return unless user_history = opts[:user_history]
-
-    locale = user_locale(user)
-
-    if user.silenced_forever?
-      build_email(
-        user.email,
-        template: "user_notifications.account_silenced_forever",
-        **Dsa::AppealInstructions.message_options,
-        locale:,
-        reason: user_history.details,
-        recipient_user: user,
-      )
-    else
-      timezone =
-        ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
-          ActiveSupport::TimeZone["UTC"]
-      silenced_till = user.silenced_till.in_time_zone(timezone)
-      build_email(
-        user.email,
-        template: "user_notifications.account_silenced",
-        **Dsa::AppealInstructions.message_options,
-        locale:,
-        reason: user_history.details,
-        silenced_till:
-          I18n.t(
-            "user_notifications.account_silenced.date_with_timezone",
-            locale:,
-            date: I18n.l(silenced_till, format: :long, locale:),
-            offset: silenced_till.formatted_offset,
-          ),
-        recipient_user: user,
-      )
-    end
-  end
-
   def account_deleted(email, reviewable)
     post_action_type_view = PostActionTypeView.new
     post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
@@ -378,7 +339,7 @@ class UserNotifications < ActionMailer::Base
         @excerpts = {}
 
         @popular_topics.each do |t|
-          next if t.first_post.blank?
+          next if t.first_post.blank? || t.first_post.hidden?
           @excerpts[t.first_post.id] = email_excerpt(digest_post_cooked(t.first_post), t.first_post)
         end
 
@@ -965,12 +926,20 @@ class UserNotifications < ActionMailer::Base
   def self.participants(post, recipient_user, reveal_staged_email: false)
     list = []
 
-    allowed_groups = post.topic.allowed_groups.order("user_count DESC")
+    allowed_groups = post.topic.allowed_groups
+    members_visible_group_ids =
+      allowed_groups.members_visible_groups(recipient_user).unscope(:order).pluck(:id)
+    allowed_groups =
+      if members_visible_group_ids.size == allowed_groups.count
+        allowed_groups.order("user_count DESC")
+      else
+        allowed_groups.order(:name)
+      end
 
     allowed_groups.each do |g|
-      list.push(
-        "[#{Email::MessageBuilder.escape_markdown(g.name_full_preferred)} (#{g.user_count})](#{g.full_url})",
-      )
+      group_name = Email::MessageBuilder.escape_markdown(g.name_full_preferred)
+      group_name += " (#{g.user_count})" if members_visible_group_ids.include?(g.id)
+      list.push("[#{group_name}](#{g.full_url})")
       break if list.size >= SiteSetting.max_participant_names
     end
 

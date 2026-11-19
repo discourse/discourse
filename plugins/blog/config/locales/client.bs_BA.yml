@@ -13,6 +13,9 @@ bs_BA:
         preview_archive: Arhiva
         desktop: Desktop
         mobile: Mobilno
+        save: Sačuvaj
+        path_formats:
+          custom: Custom
         themes: Teme
         theme_name: Ime teme
         edit: Izmijeni
@@ -42,6 +45,8 @@ bs_BA:
         edit: Izmijeni
         status: Status
         replies: Odgovori
+        title: Naslov
+      all: Sve
       drafts: Skice
       preview: Pregled
       appearance_link: Izgled

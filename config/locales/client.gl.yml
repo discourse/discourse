@@ -274,9 +274,6 @@ gl:
       pill: "Mensaxes relacionadas"
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Volver"
     design_wizard:
       back: "Volver"
       next: "Seguinte"
@@ -1442,6 +1439,7 @@ gl:
         redeemed_tab_with_count: "Utilizados (%{count})"
         invited_via: "Convite"
         invited_via_link: "ligazón %{key} (%{count} / %{max} rescatadas)"
+        invited_via_link_without_key: "ligazón (%{count} / %{max} ofrecementos)"
         groups: "Grupos"
         topic: "Tema"
         sent: "Creado/Último envío"
@@ -1871,6 +1869,10 @@ gl:
     composer:
       emoji: "Emoji :)"
       options: "Opcións"
+      ai_content:
+        code: "Código"
+        quote: "Cita"
+        details: "Detalles"
       whisper: "rumor"
       unlist: "fóra da lista"
       add_warning: "Este é un aviso oficial."
@@ -3335,6 +3337,11 @@ gl:
       forward: "Reenviar"
       share: "Compartir"
       dismiss: "Desbotar"
+    mobile_tab_bar:
+      create: "Crear"
+      more: "Máis"
+      back: "Volver"
+      topics: "Temas"
     safe_mode:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"

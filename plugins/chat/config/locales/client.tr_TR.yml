@@ -508,6 +508,9 @@ tr_TR:
         followed: "Katıldı"
         mute: "Kanalı sessize al"
         unmute: "Kanalın sesini aç"
+        muted_until_hint: "şu zamana kadar: %{until}"
+        mute_options:
+          "off": "Kapalı"
         threading_enabled: "Etkin"
         threading_disabled: "Devre Dışı"
         muted_on: "Açık"
@@ -637,19 +640,6 @@ tr_TR:
         notify_moderators: "Bu mesaj, yukarıda listelenmeyen başka bir nedenden dolayı personelin dikkatini gerektiriyor."
       flagging:
         action: "Mesaja bayrak ekle"
-      emoji_picker:
-        favorites: "Sık kullanılan"
-        smileys_&_emotion: "İfadeler ve duygu"
-        objects: "Nesneler"
-        people_&_body: "İnsanlar ve vücut"
-        travel_&_places: "Seyahat ve yerler"
-        animals_&_nature: "Hayvanlar ve doğa"
-        food_&_drink: "Yiyecek ve içecek"
-        activities: "Aktiviteler"
-        flags: "Bayraklar"
-        symbols: "Semboller"
-        search_placeholder: "Emoji adına ve takma ada göre arama yapın..."
-        no_results: "Sonuç yok"
       thread:
         title: "Başlık"
         view_thread: Konuyu görüntüle

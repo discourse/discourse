@@ -36,16 +36,10 @@ module DiscourseWorkflows
 
     def build_form_data_from_config(form_test_session:, workflow:, form_node:, guardian:, params:)
       config =
-        ExpressionResolver.resolve_hash(
-          NodeData.parameters(form_node).deep_stringify_keys,
-          context: {
-            "__execution" => {
-              "workflow_id" => workflow.id,
-              "workflow_name" => form_test_session.workflow_snapshot.workflow_name,
-              "resume_url" => "",
-              "resumeFormUrl" => "",
-            },
-          },
+        Schemas::FormFields.resolve_trigger_configuration(
+          NodeData.parameters(form_node),
+          workflow_id: workflow.id,
+          workflow_name: form_test_session.workflow_snapshot.workflow_name,
           user: guardian.user,
         )
 

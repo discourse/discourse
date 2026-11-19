@@ -323,9 +323,6 @@ hy:
       title: "Նոր և Չկարդացված Թեմաներ"
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Ետ"
     design_wizard:
       back: "Ետ"
       next: "Հաջորդը"
@@ -2295,6 +2292,10 @@ hy:
     composer:
       emoji: "Էմոջի :)"
       options: "Տարբերակներ"
+      ai_content:
+        code: "Կոդ"
+        quote: "Մեջբերել"
+        details: "Մանրամասներ"
       whisper: "շշուկ"
       unlist: "չցուցակագրված"
       add_warning: "Սա պաշտոնական զգուշացում է:"
@@ -3713,6 +3714,14 @@ hy:
       forward: "Փոխանցել"
       share: "Կիսվել"
       dismiss: "Չեղարկել"
+    mobile_tab_bar:
+      create: "Ստեղծել"
+      more: "Ավելին"
+      back: "Ետ"
+      topics: "Թեմաներ"
+      drafts:
+        one: "Սևագրեր (%{count})"
+        other: "Սևագրեր (%{count})"
     safe_mode:
       enabled: "Անվտանգ ռեժիմը միացված է, փակեք բրաուզերի այս պատուհանը՝ անվտանգ ռեժիմից դուրս գալու համար:"
     pause_notifications:

@@ -54,6 +54,52 @@ RSpec.describe PostAlerter do
     )
   end
 
+  describe "unread post visibility" do
+    it "excludes hidden replies from unread counts and first-unread selection" do
+      root = Fabricate(:post, user: user)
+      hidden =
+        Fabricate(:post, topic: root.topic, hidden: true, reply_to_post_number: root.post_number)
+      visible = Fabricate(:post, topic: root.topic, reply_to_post_number: root.post_number)
+      TopicUser.create!(
+        user: user,
+        topic: root.topic,
+        last_read_post_number: root.post_number,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      alerter = PostAlerter.new
+
+      expect(alerter.unread_posts(user, root.topic)).to contain_exactly(visible)
+      expect(alerter.unread_count(user, root.topic)).to eq(1)
+      expect(alerter.first_unread_post(user, root.topic)).to eq(visible)
+      expect(alerter.unread_posts_in_bucket(user, root.topic, root.post_number)).to contain_exactly(
+        visible,
+      )
+      expect(alerter.unread_count_in_bucket(user, root.topic, root.post_number)).to eq(1)
+
+      hidden.update!(user: user)
+      expect(alerter.unread_posts(user, root.topic)).to contain_exactly(hidden, visible)
+    end
+  end
+
+  describe "recipient authorization reuse" do
+    it "builds one recipient permission snapshot for a collapsed notification" do
+      group.add(user)
+      root = Fabricate(:post, topic: Fabricate(:topic, category: private_category))
+      reply = Fabricate(:post, topic: root.topic)
+      TopicUser.create!(
+        user: user,
+        topic: root.topic,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      queries =
+        track_sql_queries do
+          PostAlerter.new.create_notification(user, Notification.types[:replied], reply)
+        end
+      expect(user.notifications.where(topic_id: root.topic_id).count).to eq(1)
+      expect(queries.grep(/SELECT "categories"\."id" FROM "categories" WHERE/).size).to eq(1)
+    end
+  end
+
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
     PostAlerter.post_created(post)

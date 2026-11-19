@@ -373,9 +373,6 @@ sv:
       title: "Nya och olästa ämnen"
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Tillbaka"
     design_wizard:
       back: "Tillbaka"
       next: "Nästa"
@@ -724,6 +721,7 @@ sv:
         is_this_post: "Är detta %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "eller"
         something_else_wrong: "Är det något fel med denna %{reviewable_type}?"
+        something_wrong_with_post: "Är det något fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
@@ -1770,6 +1768,7 @@ sv:
         redeemed_tab_with_count: "Inlöst (%{count})"
         invited_via: "Inbjudan"
         invited_via_link: "länk %{key} (%{count} / %{max} inlösta)"
+        invited_via_link_without_key: "länk (%{count} / %{max} inlöst)"
         groups: "Grupper"
         topic: "Ämne"
         sent: "Skapad/senast skickad"
@@ -2304,6 +2303,8 @@ sv:
         size_too_large: "%{provided_file_size} är större än den högsta tillåtna %{max_file_size}"
     emoji_picker:
       filter_placeholder: Sök efter emoji
+      search_placeholder: "Sök efter emojinamn och alias..."
+      favorites: "Används ofta"
       smileys_&_emotion: Smileys och känslor
       people_&_body: Människor och kropp
       animals_&_nature: Djur och natur
@@ -2335,6 +2336,10 @@ sv:
       emoji: "Emoji :)"
       more_emoji: "mer…"
       options: "Alternativ"
+      ai_content:
+        code: "Kod"
+        quote: "Citat"
+        details: "Detaljer"
       whisper: "viska"
       unlist: "avlistad"
       add_warning: "Det här är en officiell varning."
@@ -4161,6 +4166,14 @@ sv:
       forward: "Framåt"
       share: "Dela"
       dismiss: "Avfärda"
+    mobile_tab_bar:
+      create: "Skapa"
+      more: "Mer"
+      back: "Tillbaka"
+      topics: "Ämnen"
+      drafts:
+        one: "Utkast (%{count})"
+        other: "Utkast (%{count})"
     safe_mode:
       enabled: "Säkert läge är aktiverat och för att lämna säkert läge stänger du detta webbläsarfönster"
     image_removed: "(bild borttagen)"
@@ -5149,8 +5162,6 @@ sv:
           company_name: "Namn"
           company_url: "Webbplats"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Gällande lag"
-          city_for_disputes: "Domstol vid tvister"
           extra_groups:
             groups: "Grupper"
           locale_selector:

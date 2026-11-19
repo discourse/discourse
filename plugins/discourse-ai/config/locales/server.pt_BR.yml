@@ -119,6 +119,12 @@ pt_BR:
     ai_translation_include_bot_content: "Quando ativada, também enviará para tradução o conteúdo escrito por bots (IDs de usuário abaixo de 0)."
     ai_translation_backfill_hourly_rate: "Número de posts e tópicos a serem traduzidos por hora durante operações de backfill. Defina como 0 para desativar o backfill automático de traduções para conteúdo existente."
     ai_usage_rollup_after_days: "Número de dias para manter as estatísticas de uso de IA por solicitação antes de consolidá-las em agregados diários. Defina como 0 para desativar rollups."
+    keywords:
+      ai_default_llm_model: "modelo de linguagem padrão"
+      ai_discord_search_enabled: "integração com o Discourse"
+      ai_helper_automatic_chat_thread_title: "títulos de threads de chat"
+      ai_summarization_enabled: "resumos"
+      ai_summary_gists_enabled: "resumos breves da lista de tópicos"
   reviewables:
     reasons:
       flagged_by_toxicity: O plugin de IA sinalizou isto após classificar como tóxico.
@@ -213,10 +219,6 @@ pt_BR:
           name: "Geração de imagens..."
         image_generation_custom:
           name: "Personalizadas"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -633,6 +635,12 @@ pt_BR:
       fonts:
         base_font: "Fonte do corpo"
         heading_font: "Fonte do cabeçalho"
+    mcp_theme_access:
+      "on": "Ligado"
+      "off": "Desligado"
+      none: "nenhum(a)"
+    mcp_app_setup:
+      none: "nenhum(a)"
     reviewables:
       ai_tool_action:
         title: "Ação de ferramenta de IA"

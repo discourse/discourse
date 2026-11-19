@@ -96,6 +96,7 @@ sw:
       settings:
         follow: "Jiunge"
         followed: "Alijiunga"
+        muted_until_hint: "mpaka %{until}"
         threading_enabled: "Imeruhusiwa"
         threading_disabled: "Imezuiwa"
         notifications: "Taarifa"
@@ -139,9 +140,6 @@ sw:
         short:
           one: "siku %{count}"
           other: "siku %{count}"
-      emoji_picker:
-        objects: "Vitu"
-        flags: "Bendera"
       thread:
         title: "Kichwa cha Habari"
         replies:

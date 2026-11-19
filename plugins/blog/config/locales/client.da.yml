@@ -14,6 +14,9 @@ da:
         preview_archive: Arkiv
         desktop: Desktop
         mobile: Mobil
+        save: Gem
+        path_formats:
+          custom: Tilpasset
         back_to_themes: Tilbage til temaer
         new_theme_short: Nyt tema
         themes: Temaer
@@ -51,7 +54,11 @@ da:
         edit: Rediger
         status: Status
         replies: Svar
+        title: Titel
+        page: Side
+      all: Alle
       drafts: Kladder
+      pages: Sider
       preview: Forhåndsvisning
       unpublish: Fjern udgivelsen
       appearance_link: Udseende

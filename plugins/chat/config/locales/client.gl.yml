@@ -98,6 +98,7 @@ gl:
       settings:
         follow: "Participar"
         followed: "Uniuse"
+        muted_until_hint: "ata %{until}"
         threading_enabled: "Activado"
         threading_disabled: "Desactivado"
         notifications: "Notificacións"
@@ -143,11 +144,6 @@ gl:
         short:
           one: "%{count} día"
           other: "%{count} días"
-      emoji_picker:
-        objects: "Obxectos"
-        activities: "Actividades"
-        flags: "Alertas"
-        symbols: "Símbolos"
       thread:
         title: "Título"
         replies:

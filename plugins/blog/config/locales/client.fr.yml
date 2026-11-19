@@ -16,6 +16,9 @@ fr:
         preview_archive: Archive
         desktop: Ordinateur
         mobile: Mobile
+        save: Enregistrer
+        path_formats:
+          custom: Personnalisé
         back_to_themes: Retour aux thèmes
         new_theme_short: Nouveau thème
         themes: Thèmes
@@ -54,7 +57,11 @@ fr:
         edit: Modifier
         status: Statut
         replies: Réponses
+        title: Titre
+        page: Page
+      all: Tout
       drafts: Brouillons
+      pages: Pages
       preview: Aperçu
       unpublish: Annuler la publication
       appearance_link: Apparence

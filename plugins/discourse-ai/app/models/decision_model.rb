@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DecisionModel < ActiveRecord::Base
-  PROVIDERS = %w[system_one typesafe open_ai].freeze
+  PROVIDERS = %w[system_one typesafe open_ai gemini].freeze
   MAX_CUSTOM_HEADERS = 20
   MAX_CUSTOM_HEADER_NAME_LENGTH = 128
   MAX_CUSTOM_HEADER_VALUE_LENGTH = 4000
@@ -98,6 +98,14 @@ class DecisionModel < ActiveRecord::Base
         name: "gpt-6-luna",
         url: "https://api.openai.com/v1/decisions",
         provider: "open_ai",
+        vision_enabled: true,
+      }.freeze,
+      {
+        preset_id: "gemini-decision-1",
+        display_name: "Gemini Decision 1",
+        name: "gemini-decision-1",
+        url: "https://generativelanguage.googleapis.com/v1beta/decisions",
+        provider: "gemini",
         vision_enabled: true,
       }.freeze,
     ].freeze

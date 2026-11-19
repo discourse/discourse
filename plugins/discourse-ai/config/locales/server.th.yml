@@ -52,6 +52,10 @@ th:
       colors:
         light:
           header_background: "Header"
+    mcp_theme_access:
+      none: "ไม่มี"
+    mcp_app_setup:
+      none: "ไม่มี"
     reviewables:
       ai_tool_action:
         approve:

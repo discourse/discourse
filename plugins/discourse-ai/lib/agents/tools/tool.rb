@@ -28,7 +28,13 @@ module DiscourseAi
           end
 
           def option(name, type:, values: nil, default: nil)
-            Option.new(tool: self, name: name, type: type, values: values, default: default)
+            DiscourseAi::Agents::Tools::Option.new(
+              tool: self,
+              name: name,
+              type: type,
+              values: values,
+              default: default,
+            )
           end
 
           def help
@@ -48,6 +54,11 @@ module DiscourseAi
           end
 
           def mandatory_approval?
+            false
+          end
+
+          # Tools that can take minutes, so conversations can tell the user it is still working.
+          def long_running?
             false
           end
 
@@ -358,14 +369,6 @@ module DiscourseAi
           end
 
           llm.tokenizer.truncate(text, target, strict: SiteSetting.ai_strict_token_counting)
-        end
-
-        def accepted_options
-          []
-        end
-
-        def option(name, type:)
-          Option.new(tool: self, name: name, type: type)
         end
 
         def acting_user

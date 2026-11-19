@@ -89,6 +89,7 @@ export default class DiscoursePostEventEvent {
   @tracked minimal;
   @tracked chatEnabled;
   @tracked livestream;
+  @tracked allowAnonymousLivestream;
   @tracked livestreamOnebox;
   @tracked livestreamUrl;
   @tracked livestreamChatChannelId;
@@ -146,6 +147,7 @@ export default class DiscoursePostEventEvent {
     this.minimal = args.minimal;
     this.chatEnabled = args.chat_enabled;
     this.livestream = args.livestream;
+    this.allowAnonymousLivestream = args.allow_anonymous_livestream;
     this.livestreamOnebox = args.livestream_onebox;
     this.livestreamUrl = args.livestream_url;
     this.livestreamChatChannelId = args.livestream_chat_channel_id;
@@ -283,6 +285,7 @@ export default class DiscoursePostEventEvent {
     this.minimal = event.minimal;
     this.chatEnabled = event.chatEnabled;
     this.livestream = event.livestream;
+    this.allowAnonymousLivestream = event.allowAnonymousLivestream;
     this.livestreamOnebox = event.livestreamOnebox;
     this.livestreamUrl = this.location || this.url;
     this.livestreamChatChannelId = event.livestreamChatChannelId;

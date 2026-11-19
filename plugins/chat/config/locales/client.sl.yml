@@ -154,6 +154,7 @@ sl:
       settings:
         follow: "Pridruži se"
         followed: "Pridružen"
+        muted_until_hint: "do %{until}"
         threading_enabled: "Vključeno"
         threading_disabled: "Onemogočeno"
         notifications: "Obvestila"
@@ -207,11 +208,6 @@ sl:
           two: "%{count} dneva"
           few: "%{count} dnevi"
           other: "%{count} dni"
-      emoji_picker:
-        objects: "Stvari"
-        activities: "Dejavnosti"
-        flags: "Zastave"
-        symbols: "Simboli"
       thread:
         title: "Naziv"
         replies:

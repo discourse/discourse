@@ -34,6 +34,8 @@ register_homepage(
 )
 
 after_initialize do
+  register_problem_check ProblemCheck::BlogNotReady
+
   if defined?(Rack::MiniProfiler)
     %w[/blog-highlight/ /blog/blog-highlight/].each do |path|
       Rack::MiniProfiler.config.skip_paths << "#{Discourse.base_path}#{path}"
@@ -54,6 +56,11 @@ after_initialize do
   end
 
   Rails.application.config.filter_parameters += [:review_token]
+
+  # Article titles like "Contact" are shorter than a forum topic title needs to be.
+  register_modifier(:min_topic_title_length) do |min_length, topic|
+    topic.blog_article_topic? ? 1 : min_length
+  end
 
   add_to_serializer(
     :post,
@@ -91,6 +98,15 @@ after_initialize do
         end
     end
     @blog_publication
+  end
+
+  on(:site_setting_changed) do |name|
+    name = name.to_sym
+    if %i[blog_category blog_publisher_groups].include?(name)
+      Blog::AddPublishersToPublicCategory.call
+    end
+    next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
+    Blog::EnsureDraftsCategory.call(options: { create_missing: false })
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

@@ -37,21 +37,19 @@ module("Component | Poll | export", function (hooks) {
   });
 
   test("the downloaded CSV carries exactly one UTF-8 BOM", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: { archived: false },
-        user_id: 29,
-      }),
-      poll: EmberObject.create({
-        name: "poll",
-        type: "regular",
-        status: "open",
-        results: "always",
-        options: [{ id: "abc", html: "晚凪", votes: 3 }],
-        voters: 3,
-        chart_type: "bar",
-      }),
+    this.post = EmberObject.create({
+      id: 42,
+      topic: { archived: false },
+      user_id: 29,
+    });
+    this.poll = EmberObject.create({
+      name: "poll",
+      type: "regular",
+      status: "open",
+      results: "always",
+      options: [{ id: "abc", html: "晚凪", votes: 3 }],
+      voters: 3,
+      chart_type: "bar",
     });
 
     await render(

@@ -538,6 +538,9 @@ cs:
         followed: "Účet vytvořen"
         mute: "Ztlumit kanál"
         unmute: "Zrušit ztlumení kanálu"
+        muted_until_hint: "až %{until}"
+        mute_options:
+          "off": "Vypnuto"
         threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
         muted_on: "Zapnuto"
@@ -677,19 +680,6 @@ cs:
         notify_moderators: "Tato zpráva vyžaduje pozornost členů redakce z jiného důvodu, který není uveden výše."
       flagging:
         action: "Nahlásit zprávu"
-      emoji_picker:
-        favorites: "Často používané"
-        smileys_&_emotion: "Smajlíky a emoce"
-        objects: "Objekty"
-        people_&_body: "Lidé a tělo"
-        travel_&_places: "Cestování a místa"
-        animals_&_nature: "Zvířata a příroda"
-        food_&_drink: "Jídlo a pití"
-        activities: "Aktivity"
-        flags: "Vlajky"
-        symbols: "Symboly"
-        search_placeholder: "Hledat podle názvu emoji a aliasu..."
-        no_results: "Žádné výsledky"
       thread:
         title: "Název"
         view_thread: Zobrazit vlákno

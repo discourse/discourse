@@ -328,9 +328,6 @@ sl:
     suggested_topics:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Nazaj"
     design_wizard:
       back: "Nazaj"
       next: "Naprej"
@@ -2060,6 +2057,10 @@ sl:
     composer:
       emoji: "Emoji :)"
       options: "Možnosti"
+      ai_content:
+        code: "Koda"
+        quote: "Citiraj"
+        details: "Podrobnosti"
       whisper: "šepet"
       unlist: "izločeno"
       add_warning: "To je uradno opozorilo."
@@ -3617,6 +3618,16 @@ sl:
       forward: "Naprej"
       share: "Deli"
       dismiss: "Opusti"
+    mobile_tab_bar:
+      create: "Ustvari"
+      more: "Več"
+      back: "Nazaj"
+      topics: "Tem"
+      drafts:
+        one: "Osnutki (%{count})"
+        two: "Osnutki (%{count})"
+        few: "Osnutki (%{count})"
+        other: "Osnutki (%{count})"
     safe_mode:
       enabled: "Varni način je vklopljen, za izklop varnega načina zaprite okno brskalnika."
     image_removed: "(slika odstranjena)"

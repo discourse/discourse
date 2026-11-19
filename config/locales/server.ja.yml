@@ -474,10 +474,6 @@ ja:
   no_mentions_allowed_newuser: "新規ユーザーは他のユーザーをメンションできません。"
   too_many_mentions_newuser:
     other: "新規ユーザーは投稿につき %{count} 人のユーザーしかメンションできません。"
-  no_embedded_media_allowed_group: "投稿にメディア項目を埋め込むことはできません。"
-  no_embedded_media_allowed: "新規ユーザーは投稿にメディア項目を埋め込むことはできません。"
-  too_many_embedded_media:
-    other: "新規ユーザーは、ポストにつき %{count} 個のメディア項目しか埋め込めません。"
   no_attachments_allowed: "新規ユーザーは投稿に添付ファイルを追加できません。"
   too_many_attachments:
     other: "新規ユーザーは投稿につき %{count} 個のファイルしか添付できません。"
@@ -2321,8 +2317,6 @@ ja:
     automatically_clean_unused_tags: "どのトピックや個人メッセージにも使用されていないタグを毎日自動的に削除します。"
     default_watched_precedence_over_muted: "ミュートしているものも含み、ユーザーがウォッチ中のカテゴリまたはタグ内のトピックについてユーザーに通知する"
     company_name: "会社または組織の名前。"
-    governing_law: "利用規約やプライバシーポリシーなど、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。"
-    city_for_disputes: "このフォーラムの使用に関連する紛争を解決するための管轄として使用される都市を指定します。この情報は通常、フォーラムの利用規約などの法的文書に含まれます。"
     shared_drafts_category: "トピック下書き用のカテゴリを指定して、共有下書き機能を有効にする。このカテゴリのトピックは、スタッフユーザーのトピックリストから除外されます。"
     shared_drafts_allowed_groups: "これらのグループのユーザーが共有下書きを閲覧して編集することを許可します。"
     push_notifications_prompt: "プッシュ通知のユーザー同意バナーを表示します。この設定によって、プッシュ通知を送信する許可をユーザーに求めるプロンプトがトリガーされます。プッシュ通知がまだ有効になっていない場合、ユーザーのデバイスがサポートしている場合、およびユーザーが投稿を行ったかプログレッシブウェブアプリ (PWA) を使用している場合にのみ表示されます。このプロンプトをユーザーがすでに閉じた場合、または許可を付与/拒否した場合には、再度表示されることはありません。"
@@ -2435,10 +2429,28 @@ ja:
       mediaconvert_output_subdirectory_required: "MediaConvert 出力サブディレクトリが必要です。"
       s3_credentials_required_for_video_conversion: "動画変換には S3 資格情報が必要です。S3 アクセスキーを構成するか、IAM プロファイルを有効にしてください。"
     keywords:
+      about_banner_image: "バナー画像"
+      about_page_extra_groups: "グループのリスト"
+      about_page_extra_groups_initial_members: "拡大メンバー"
+      about_page_extra_groups_order: "並べ替え順"
+      about_page_extra_groups_show_description: "説明を含める"
       clean_up_inactive_users_after_days: "有効化解除|非アクティブ|未有効化"
+      company_url: "ウェブサイト"
+      default_composition_mode: "rte|リッチテキスト|作成ツール|markdown|リッチエディター"
+      extended_site_description: "コミュニティーの説明"
+      large_icon: "正方形のアイコン"
+      logo: "プライマリーロゴ"
+      logo_dark: "プライマリーロゴ - ダーク"
+      logo_small: "小さいロゴ"
+      logo_small_dark: "小さいロゴ - ダーク"
       navigation_menu: "サイドバー|ヘッダードロップダウン"
       purge_unactivated_users_grace_period_days: "有効化解除|非アクティブ|未有効化"
-      default_composition_mode: "rte|リッチテキスト|作成ツール|markdown|リッチエディター"
+      short_site_description: "コミュニティーのタイトル"
+      site_contact_group_name: "サイトの連絡先グループ"
+      site_contact_username: "サイトの連絡先名"
+      site_description: "コミュニティーの概要"
+      title: "コミュニティー名"
+      welcome_banner_image: "背景画像"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4734,6 +4746,10 @@ ja:
       no_context:
         watched_word: "この投稿にはウォッチ語が含まれていました。%{link} をご覧ください。"
     actions:
+      answer_yes:
+        title: "はい"
+      answer_no:
+        title: "いいえ"
       agree:
         title: "はい"
       agree_and_keep:

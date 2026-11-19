@@ -44,6 +44,15 @@ RSpec.describe ReviewableLiveUser do
       )
     end
 
+    it "requests classification for actions that restrict content or the author" do
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_silence",
+        "agree_and_suspend",
+      )
+    end
+
     it "offers no actions once the reviewable is handled" do
       reviewable.perform(moderator, :ignore)
 

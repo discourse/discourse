@@ -111,6 +111,9 @@ RSpec.describe Blog::EditorQuery do
     end
 
     it "hides topics, and articles whose working copy, the user cannot see" do
+      drafts.set_permissions(:staff => :full, writers.name => :full)
+      drafts.save!
+
       expect(topic_ids(editor.guardian)).to contain_exactly(unpublished_article.id)
     end
 
@@ -150,6 +153,17 @@ RSpec.describe Blog::EditorQuery do
       expect(topic_ids(admin.guardian, filter: "unpublished")).to contain_exactly(
         unpublished_article.id,
         live_article.id,
+      )
+    end
+
+    it "lists standalone pages, going by a staged page setting over the live one, for the pages filter" do
+      live_publication.update_columns(page: true, draft_metadata: { "page" => false })
+      source_publication.update_columns(page: false, draft_metadata: { "page" => true })
+      Blog::Publication.create!(topic: unpublished_article, path: "/contact", page: true)
+
+      expect(topic_ids(admin.guardian, filter: "pages")).to contain_exactly(
+        source.id,
+        unpublished_article.id,
       )
     end
 

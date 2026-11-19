@@ -1,5 +1,7 @@
 import { schema } from "prosemirror-markdown";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
+import { AI_QUOTE_MARKER } from "discourse-markdown-it/features/quotes";
+import { createAiBadge } from "../lib/ai-badge.js";
 
 // null values are omitted, both when serialized and applied by the node view
 function quoteDataAttrs(node) {
@@ -44,6 +46,7 @@ function createQuoteNodeView({ getContext }) {
       this.dom.className = "quote";
 
       this.contentDOM = document.createElement("blockquote");
+      this.#renderAi(node);
       this.dom.append(this.contentDOM);
 
       this.#render(node);
@@ -53,6 +56,7 @@ function createQuoteNodeView({ getContext }) {
       // update() also fires for content edits; the header depends only on markup
       if (!this.node.sameMarkup(node)) {
         this.#render(node);
+        this.#renderAi(node);
       }
 
       this.node = node;
@@ -82,6 +86,14 @@ function createQuoteNodeView({ getContext }) {
 
       if (this.#title) {
         this.dom.insertBefore(this.#title, this.contentDOM);
+      }
+    }
+
+    #renderAi(node) {
+      if (node.attrs.ai) {
+        this.contentDOM.setAttribute("data-ai-generated", "true");
+      } else {
+        this.contentDOM.removeAttribute("data-ai-generated");
       }
     }
 
@@ -125,6 +137,20 @@ const extension = {
     blockquote: {
       createGapCursor: true,
       ...schema.nodes.blockquote.spec,
+      attrs: { ai: { default: false } },
+      parseDOM: [
+        {
+          tag: "blockquote",
+          getAttrs: (dom) => ({
+            ai: dom.getAttribute("data-ai-generated") === "true",
+          }),
+        },
+      ],
+      toDOM: (node) => [
+        "blockquote",
+        node.attrs.ai ? { "data-ai-generated": "true" } : {},
+        0,
+      ],
     },
     quote: {
       content: "block+",
@@ -137,6 +163,7 @@ const extension = {
         postNumber: { default: null },
         topicId: { default: null },
         full: { default: null },
+        ai: { default: false },
       },
       parseDOM: [
         {
@@ -149,6 +176,10 @@ const extension = {
               postNumber: dom.getAttribute("data-post"),
               topicId: dom.getAttribute("data-topic"),
               full: dom.getAttribute("data-full"),
+              ai:
+                dom
+                  .querySelector(":scope > blockquote")
+                  ?.getAttribute("data-ai-generated") === "true",
             };
           },
         },
@@ -166,7 +197,11 @@ const extension = {
           ]);
         }
 
-        domSpec.push(["blockquote", 0]);
+        domSpec.push([
+          "blockquote",
+          node.attrs.ai ? { "data-ai-generated": "true" } : {},
+          0,
+        ]);
 
         return domSpec;
       },
@@ -174,6 +209,12 @@ const extension = {
   },
 
   parse: {
+    blockquote: {
+      block: "blockquote",
+      getAttrs: (token) => ({
+        ai: token.attrGet("data-ai-generated") === "true",
+      }),
+    },
     quote_header_open(state, token, tokens, i) {
       // removing the text child, this depends on the current token order:
       // quote_header_open quote_controls_open quote_controls_close text quote_header_close
@@ -183,14 +224,20 @@ const extension = {
     },
     quote_header_close() {},
     quote_controls: { ignore: true },
-    bbcode_open(state, token) {
+    bbcode_open(state, token, tokens, i) {
       if (token.tag === "aside") {
+        let j = i + 1;
+        while (tokens[j] && tokens[j].type !== "bbcode_open") {
+          j++;
+        }
+
         state.openNode(state.schema.nodes.quote, {
           username: token.attrGet("data-username"),
           displayName: token.attrGet("data-display-name"),
           postNumber: token.attrGet("data-post"),
           topicId: token.attrGet("data-topic"),
           full: token.attrGet("data-full"),
+          ai: tokens[j]?.attrGet("data-ai-generated") === "true",
         });
         return true;
       }
@@ -214,8 +261,17 @@ const extension = {
   },
 
   serializeNode: {
+    blockquote(state, node) {
+      state.wrapBlock("> ", null, node, () => {
+        if (node.attrs.ai) {
+          state.write(`${AI_QUOTE_MARKER}\n`);
+        }
+        state.renderContent(node);
+      });
+    },
     quote(state, node) {
-      const { username, displayName, postNumber, topicId, full } = node.attrs;
+      const { username, displayName, postNumber, topicId, full, ai } =
+        node.attrs;
       const postNumberParam = postNumber ? `, post:${postNumber}` : "";
       const topicIdParam = topicId ? `, topic:${topicId}` : "";
       const fullParam = full === "true" ? `, full:true` : "";
@@ -226,7 +282,7 @@ const extension = {
         ? `="${name}${postNumberParam}${topicIdParam}${fullParam}${usernameParam}"`
         : "";
 
-      state.write(`[quote${quoteValue}]\n`);
+      state.write(`[quote${quoteValue}${ai ? " ai" : ""}]\n`);
       state.renderContent(node);
       state.write("[/quote]\n\n");
     },
@@ -244,9 +300,28 @@ const extension = {
   plugins({
     pmState: { Plugin, NodeSelection },
     pmModel: { Slice, Fragment },
+    pmView: { Decoration, DecorationSet },
   }) {
+    const decorationsByDoc = new WeakMap();
     return new Plugin({
       props: {
+        decorations({ doc }) {
+          if (!decorationsByDoc.has(doc)) {
+            const badges = [];
+            doc.descendants((node, pos) => {
+              if (
+                (node.type.name === "blockquote" ||
+                  node.type.name === "quote") &&
+                node.attrs.ai
+              ) {
+                badges.push(Decoration.widget(pos + 1, createAiBadge));
+              }
+            });
+            decorationsByDoc.set(doc, DecorationSet.create(doc, badges));
+          }
+          return decorationsByDoc.get(doc);
+        },
+
         transformPasted(slice, view) {
           // Prevent quotes that start with a list from being unwrapped during paste.
           // When a quote's first child is a list, Slice.maxOpen opens it too deeply

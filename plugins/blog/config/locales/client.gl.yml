@@ -14,6 +14,9 @@ gl:
         preview_archive: Arquivo
         desktop: Escritorio
         mobile: Móbil
+        save: Gardar
+        path_formats:
+          custom: Personalizado
         themes: Temas
         theme_name: Nome do tema
         edit: Editar
@@ -46,6 +49,8 @@ gl:
         edit: Editar
         status: Estado
         replies: Réplicas
+        title: Título
+      all: Todas
       drafts: Borradores
       preview: Visualizar
       unpublish: Despublicar
