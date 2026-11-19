@@ -72,6 +72,8 @@ class SessionController < ApplicationController
   def sso_provider(payload = nil, confirmed_2fa_during_login = false)
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect_provider
 
+    raise Discourse::InvalidAccess if is_api? || is_user_api?
+
     result =
       run_second_factor!(
         SecondFactor::Actions::DiscourseConnectProvider,

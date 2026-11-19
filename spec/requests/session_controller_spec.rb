@@ -3270,6 +3270,54 @@ RSpec.describe SessionController do
         expect(sso2.no_2fa_methods).to eq(nil)
       end
 
+      it "does not mint a login assertion for a read-scoped admin API key" do
+        scope = ApiKeyScope.new(resource: "global", action: "read")
+        api_key = Fabricate(:api_key, user: @user, api_key_scopes: [scope])
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")),
+            headers: {
+              "Api-Key" => api_key.key,
+              "Api-Username" => @user.username,
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.location).to be_nil
+      end
+
+      it "does not mint a login assertion for a read-scoped user API key" do
+        SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        user_api_key =
+          UserApiKey.create!(user_id: @user.id, scopes: [UserApiKeyScope.new(name: "read")])
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")),
+            headers: {
+              "User-Api-Key" => user_api_key.key,
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.location).to be_nil
+      end
+
+      it "does not log the user out or clear push subscriptions for a read-scoped user API key" do
+        SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        user_api_key =
+          UserApiKey.create!(user_id: @user.id, scopes: [UserApiKeyScope.new(name: "read")])
+        Fabricate(:push_subscription, user: @user)
+        @sso.logout = true
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")),
+            headers: {
+              "User-Api-Key" => user_api_key.key,
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.location).to be_nil
+        expect(@user.push_subscriptions.reload).to be_present
+      end
+
       it "fails with a nice error message if `prompt` parameter has an invalid value" do
         @sso.prompt = "xyzpdq"
 
