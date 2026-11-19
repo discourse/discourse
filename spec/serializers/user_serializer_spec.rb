@@ -64,6 +64,29 @@ RSpec.describe UserSerializer do
     end
   end
 
+  context "with retained custom and gravatar avatars" do
+    fab!(:custom_upload) { Fabricate(:upload, user: user) }
+    fab!(:gravatar_upload) { Fabricate(:upload, user: user) }
+
+    before do
+      user.create_user_avatar!(
+        custom_upload_id: custom_upload.id,
+        gravatar_upload_id: gravatar_upload.id,
+      )
+    end
+
+    it "keeps the retained pictures private from anonymous and other viewers" do
+      [Guardian.new, Fabricate(:user).guardian].each do |scope|
+        json = described_class.new(user, scope: scope, root: false).as_json
+
+        expect(json).not_to have_key(:custom_avatar_upload_id)
+        expect(json).not_to have_key(:custom_avatar_template)
+        expect(json).not_to have_key(:gravatar_avatar_upload_id)
+        expect(json).not_to have_key(:gravatar_avatar_template)
+      end
+    end
+  end
+
   context "with a TL0 user seen as anonymous" do
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
