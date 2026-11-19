@@ -595,6 +595,24 @@ RSpec.describe AppearanceStyles::Policy do
       )
     end
 
+    it "checks rules for areas that style the same element together" do
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "background-color" => "light-dark(#000000, #000000)",
+                "color" => "light-dark(#ffffff, #ffffff)",
+              },
+            },
+            { area: "signup_button", declarations: { "color" => "light-dark(#000000, #000000)" } },
+          ],
+        },
+        "rules[0] and rules[1]: text on background is",
+      )
+    end
+
     it "checks the color the draft gives a token, not the default" do
       expect_error(
         { variables: { "--token-color-surface" => "var(--primary)" } },

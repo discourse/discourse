@@ -21,6 +21,7 @@ module AppearanceStyles
         :paints_background,
         :within,
         :inherits_color,
+        :same_element,
       )
 
     PAGE_BACKGROUND = "var(--secondary)"
@@ -50,6 +51,7 @@ module AppearanceStyles
                 paints_background: entry.key?("background"),
                 within: Array(entry["within"]).freeze,
                 inherits_color: entry["inherits_color"] == true,
+                same_element: Array(entry["same_element"]).freeze,
               ),
             ]
           end
@@ -70,6 +72,13 @@ module AppearanceStyles
         *area.within.map { |key| @areas.fetch(key) },
         (@areas["page"] if area.key != "page"),
       ].compact
+    end
+
+    # Whether rules for both areas can style the same element, such as the
+    # sign-up button, which is also a primary button.
+    def same_element?(first, second)
+      first == second || first.same_element.include?(second.key) ||
+        second.same_element.include?(first.key)
     end
 
     def [](key)

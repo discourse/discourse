@@ -475,15 +475,19 @@ module AppearanceStyles
       end
     end
 
-    # Rules for the same area can apply at once, so each one's text is
-    # checked against the other's background too: when their media and page
-    # match or one has none, and their states match, one has none or one is
-    # hover (a hovered row is also odd or even).
+    # Rules for the same area, or for areas that style the same element, can
+    # apply at once, so each one's text is checked against the other's
+    # background too: when their media and page match or one has none, and
+    # their states match, one has none or one is hover (a hovered row is also
+    # odd or even).
     def readable_together?
       @checked_rules
         .combination(2)
         .all? do |first, second|
-          next true if first[:area] != second[:area] || !overlap?(first, second)
+          next true if !@catalog.same_element?(first[:area], second[:area])
+          next true if !overlap?(first, second)
+          # the more specific area, whose element both rules reach
+          area = first[:area].same_element.any? ? first[:area] : second[:area]
 
           state =
             (
@@ -498,7 +502,7 @@ module AppearanceStyles
           @draft_variables = global_variables.merge(first[:overrides]).merge(second[:overrides])
           begin
             [[first, second], [second, first]].all? do |under, over|
-              readable?(under[:declarations].merge(over[:declarations]), path, first[:area], state)
+              readable?(under[:declarations].merge(over[:declarations]), path, area, state)
             end &&
               (
                 (overrides = first[:overrides].merge(second[:overrides])).empty? ||

@@ -21,6 +21,9 @@
 #   within the page), so its text is checked against their backgrounds
 # - inherits_color: core doesn't color the area's text itself, so it takes
 #   the text color a rule gives an area around it
+# - same_element: other areas whose selector matches the same element, such
+#   as a button that also has .btn-primary, so their rules are checked
+#   together
 
 page:
   label: Page background
@@ -195,6 +198,7 @@ default_button:
 create_topic_button:
   label: New Topic button
   selector: "#create-topic"
+  same_element: [default_button]
   text_color: "var(--d-button-default-text-color)"
   states: [hover]
   background: "var(--d-button-default-bg-color)"
@@ -202,6 +206,7 @@ create_topic_button:
 signup_button:
   label: Sign up button
   selector: ".sign-up-button"
+  same_element: [primary_button]
   within: [header]
   text_color: "var(--d-button-primary-text-color)"
   states: [hover]
