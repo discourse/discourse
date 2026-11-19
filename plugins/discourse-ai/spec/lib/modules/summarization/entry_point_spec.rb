@@ -482,6 +482,18 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
         expect(Jobs::ReplaceStaleTopicSummary.jobs).to be_empty
       end
 
+      it "drops every summary when a user with delegated delete permission destroys a reply" do
+        group = Fabricate(:group)
+        deleter = Fabricate(:user, groups: [group])
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = group.id.to_s
+
+        PostDestroyer.new(deleter, reply).destroy
+
+        expect(reply.reload.deleted_at).to be_present
+        expect(AiSummary.where(target: topic)).to be_empty
+        expect(Jobs::ReplaceStaleTopicSummary.jobs).to be_empty
+      end
+
       it "keeps the summaries and schedules their replacement when an author deletes their reply" do
         PostDestroyer.new(reply.user, reply).destroy
 

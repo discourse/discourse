@@ -182,8 +182,8 @@ module DiscourseAi
       # just removed. Deleting them up front leaves topics without a gist in topic lists,
       # and without a summary, until the next backfill. Exposure is bounded: the
       # replacement job drops whatever it can't replace, and rate-limited posts fall back
-      # to dropping immediately. Moderation of someone else's post also drops immediately,
-      # as that content is most likely being removed on purpose.
+      # to dropping immediately. Acting on someone else's post also drops immediately, as
+      # that content is most likely being removed on purpose.
       def invalidate_summaries(post, actor:, since: nil)
         AiSummary
           .drop_since!(post.topic_id, since) { replace_summaries?(post, actor) }
@@ -213,13 +213,15 @@ module DiscourseAi
         ).performed!(raise_error: false)
       end
 
+      # Anyone acting on a post they didn't write is moderating it, whichever permission
+      # allowed them to.
       def moderating?(post, actor)
         return true if actor.blank?
         return false if actor.id == post.user_id
         # the delayed removal of a post its author already deleted
         return false if actor.is_system_user? && post.user_deleted?
 
-        actor.staff? || actor.guardian.is_category_group_moderator?(post.topic.category)
+        true
       end
 
       def enqueue_gist_jobs(topic, force_regenerate: false, minimum_target_number: nil)
