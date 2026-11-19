@@ -5,8 +5,8 @@ import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import DefaultInputControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/default-input-control";
-import Field from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field";
 import ExpressionWrapper from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/expression-wrapper";
+import Field from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field";
 import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 
 function variableTransfer(variable) {
@@ -66,9 +66,9 @@ module(
               <Field
                 @configuration={{transientData}}
                 @fieldName="amount"
+                @form={{form}}
                 @label="Amount"
                 @schema={{this.schema}}
-                @form={{form}}
               />
             </Form>
           </template>
