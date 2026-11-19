@@ -160,7 +160,7 @@ interface SelectPanelSignature<State> {
     hasListHeaderBlock: boolean;
     /** Whether the host supplies the footer block. */
     hasFooterBlock: boolean;
-    /** Host-built live state for the pinned header and footer. */
+    /** Host-built live state for the pinned header, the footer and the empty state. */
     state: State;
   };
   Blocks: {
@@ -196,7 +196,10 @@ interface SelectPanelSignature<State> {
     /** Custom skeleton content. */
     skeleton?: [];
     /** Custom empty content. */
-    empty?: [];
+    empty?: [
+      /** Host-built live state. */ state: State,
+      /** Resolved core and recipe config. */ config: SelectConfig,
+    ];
     /** Custom source-error content. */
     error?: [
       /** The source rejection. */ error: Error,
@@ -354,7 +357,7 @@ export default class SelectPanel<State> extends Component<
           {{~yield to="skeleton"~}}
         </:skeleton>
         <:empty>
-          {{~yield to="empty"~}}
+          {{~yield @state this.config to="empty"~}}
         </:empty>
         <:error as |error retry|>
           {{~yield error retry to="error"~}}

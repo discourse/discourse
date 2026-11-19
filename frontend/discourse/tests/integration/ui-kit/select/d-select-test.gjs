@@ -2544,6 +2544,54 @@ module(
         );
     });
 
+    test("a consumer :empty block receives the panel state and config", async function (assert) {
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @options={{ITEMS}}>
+            <:empty as |state config|>
+              <span
+                class="custom-empty"
+                data-multiple={{if config.multiple "yes" "no"}}
+              >No match for {{state.query}}</span>
+            </:empty>
+          </DSelect>
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "zzzz");
+
+      assert
+        .dom(".custom-empty")
+        .hasText("No match for zzzz", "the block reads the search it is for")
+        .hasAttribute("data-multiple", "no", "and the select's config");
+    });
+
+    test("the empty announcement speaks a consumer :empty block's text", async function (assert) {
+      const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
+      await render(
+        <template>
+          <DSelect @identifier="test-select" @options={{ITEMS}}>
+            <:empty as |state|>
+              <span class="custom-empty">No match for {{state.query}}</span>
+            </:empty>
+          </DSelect>
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "zzzz");
+
+      assert.strictEqual(
+        announce.withArgs("No match for zzzz", "polite").callCount,
+        1,
+        "the block's message is spoken once"
+      );
+      assert.false(
+        announce.calledWith(i18n("d_select.no_results")),
+        "the default message, which isn't drawn, is not spoken"
+      );
+    });
+
     test("@onShow fires once per open even if the open trigger is clicked again", async function (assert) {
       let shown = 0;
       const onShow = () => shown++;

@@ -386,8 +386,17 @@ export interface DSelectSignature {
      * arriving at the end of the list). Repeated per row, so it should match the shape of `:option`.
      */
     skeleton?: [];
-    /** Consumer override for the no-results state, replacing the default "No results found". */
-    empty?: [];
+    /**
+     * Consumer override for the no-results state, replacing the default "No results found". Its
+     * rendered text is what the empty state announces. Yields the live dropdown state, whose
+     * `query` names the search the empty result is for.
+     */
+    empty?: [
+      /** The live dropdown state. */
+      state: SelectState,
+      /** Resolved core and recipe values. */
+      config: SelectConfig,
+    ];
     /** Content pinned between the search field and the results, outside the listbox. */
     listHeader?: [
       /** The live dropdown state. */
@@ -1061,8 +1070,8 @@ export default class DSelect extends Component<DSelectSignature> {
             <:unresolved as |option config|>
               {{~yield option config to="unresolved"~}}
             </:unresolved>
-            <:empty>
-              {{~yield to="empty"~}}
+            <:empty as |state config|>
+              {{~yield state config to="empty"~}}
             </:empty>
             <:error as |error retry|>
               {{~yield error retry to="error"~}}

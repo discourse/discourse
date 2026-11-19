@@ -680,8 +680,14 @@ handled for you.
 `:error` is yielded a `retry` action alongside the error, so a block that wants its own recovery control
 can render one; the component's retry is shown only when no block is supplied.
 
-`:option`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:listHeader` and
-`:footer` also yield the select's resolved config, so a recipe can render values extensions
+`:empty` is yielded the same live state as `:listHeader` and `:footer`, so its message can depend
+on what was searched. Read `state.query`, the search the empty result is for, rather than
+`state.filter`, which can already hold a newer keystroke. The empty state announces the block's
+rendered text in place of the `noResults` text, read when the announcement fires, so what is
+spoken matches what is drawn.
+
+`:option`, `:selection`, `:unresolved`, `:groupHeader`, `:groupFooter`, `:empty`, `:listHeader`
+and `:footer` also yield the select's resolved config, so a recipe can render values extensions
 override (see [Recipes](#recipes)). It comes after the block's own values, and for the group
 blocks before the group.
 

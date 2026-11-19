@@ -178,8 +178,17 @@ interface DSelectListSignature {
       /** The held option the select could not resolve. */ option: SelectResolvedOption,
       /** Resolved config. */ config: SelectConfig,
     ];
-    /** Custom no-results content for a nonempty query. */
-    empty?: [];
+    /**
+     * Custom no-results content for a nonempty query. Its rendered text is what the empty state
+     * announces. Yields the live list state, whose `query` names the search the empty result is
+     * for.
+     */
+    empty?: [
+      /** The live list state. */
+      state: SelectListState,
+      /** Resolved core and recipe values. */
+      config: SelectConfig,
+    ];
     /** Custom source-error content. */
     error?: [
       /** Rejection reason. */ error: Error,
@@ -462,8 +471,8 @@ export default class DSelectList extends Component<DSelectListSignature> {
         <:unresolved as |option config|>
           {{~yield option config to="unresolved"~}}
         </:unresolved>
-        <:empty>
-          {{~yield to="empty"~}}
+        <:empty as |state config|>
+          {{~yield state config to="empty"~}}
         </:empty>
         <:error as |error retry|>
           {{~yield error retry to="error"~}}

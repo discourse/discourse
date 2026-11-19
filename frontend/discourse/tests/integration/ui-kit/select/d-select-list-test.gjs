@@ -212,6 +212,24 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       );
     });
 
+    test("DSelectList's :empty block receives the list state", async function (assert) {
+      await render(
+        <template>
+          <DSelectList @options={{FRUIT}} @texts={{hash ariaLabel="Fruit"}}>
+            <:empty as |state|>
+              <span class="custom-empty">No match for {{state.query}}</span>
+            </:empty>
+          </DSelectList>
+        </template>
+      );
+
+      await type("zzzz");
+
+      assert
+        .dom(".custom-empty")
+        .hasText("No match for zzzz", "the block reads the search it is for");
+    });
+
     test("DSelectList keeps its list out of the tab order", async function (assert) {
       const held = tracked([]);
       const setHeld = (next) => (held.value = next);

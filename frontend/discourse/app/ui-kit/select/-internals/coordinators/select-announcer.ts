@@ -24,12 +24,15 @@ interface PendingCount {
   timer: ReturnType<typeof discourseLater>;
   query: string;
   message: string;
+  /** Reads the message again when the report fires, for text drawn after it was scheduled. */
+  readMessage?: () => string;
   activeKey: string | null;
   previous: { query: string; message: string } | null;
 }
 
 interface ScheduleReportParams {
   repeatable?: boolean;
+  readMessage?: () => string;
 }
 
 interface SelectAnnouncerInit {
@@ -239,13 +242,17 @@ export default class SelectAnnouncer {
    * there is nothing to ask for a re-read.
    */
   @action
-  announceNoResults(_element: HTMLElement, [query]: [string?] = []): void {
+  announceNoResults(element: HTMLElement, [query]: [string?] = []): void {
     if (!this.#canReport()) {
       return;
     }
 
+    // Speaks what the empty state shows: the noResults text, or a consumer block in its place,
+    // read again when the report fires because a block can still be catching up with the query.
     // An empty text still replaces a held count below; it is just never spoken.
-    const message = this.#engine.text("noResults");
+    const readMessage = () =>
+      element.textContent?.replace(/\s+/g, " ").trim() ?? "";
+    const message = readMessage();
     const settledQuery = query ?? "";
 
     if (this.#suppressNextCount) {
@@ -257,7 +264,10 @@ export default class SelectAnnouncer {
 
     // Replaces any held count rather than queueing behind it: the rows that count described are
     // gone, and reporting them now would describe a list the reader can no longer reach.
-    this.#scheduleReport(settledQuery, message, { repeatable: true });
+    this.#scheduleReport(settledQuery, message, {
+      repeatable: true,
+      readMessage,
+    });
   }
 
   /**
@@ -655,10 +665,8 @@ export default class SelectAnnouncer {
       return;
     }
 
-    this.#lastAnnouncedCount = {
-      query: pending.query,
-      message: pending.message,
-    };
+    const message = pending.readMessage?.() ?? pending.message;
+    this.#lastAnnouncedCount = { query: pending.query, message };
 
     const activeOptionKey = this.#getActiveOptionKey();
     if (activeOptionKey != null && activeOptionKey !== pending.activeKey) {
@@ -672,7 +680,7 @@ export default class SelectAnnouncer {
       return;
     }
 
-    this.#say(pending.message);
+    this.#say(message);
   }
 
   /**
@@ -682,7 +690,7 @@ export default class SelectAnnouncer {
   #scheduleReport(
     query: string,
     message: string,
-    { repeatable = false }: ScheduleReportParams = {}
+    { repeatable = false, readMessage }: ScheduleReportParams = {}
   ): void {
     // A query that lands on exactly the set it already had is not news, whatever the reader typed
     // to get there — and there is no honest way to say it. Announcing the unchanged count is
@@ -697,6 +705,7 @@ export default class SelectAnnouncer {
     this.#pendingCount = {
       query,
       message,
+      readMessage,
       activeKey: this.#getActiveOptionKey(),
       previous: this.#lastAnnouncedCount,
       timer: discourseLater(
