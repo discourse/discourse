@@ -3828,10 +3828,8 @@ fi:
           label: "valittu"
           title: "Poista viesti valituista klikkaamalla"
         select_replies:
-          label: "valitse +vastaukset"
           title: "Lisää viesti ja kaikki sen vastaukset valittuihin"
         select_below:
-          label: "valitse +myöhemmät"
           title: "Lisää viesti ja kaikki sitä myöhemmät valittuihin"
         delete: poista valitut
         cancel: peruuta valinta
@@ -7448,7 +7446,6 @@ fi:
         silence_duration: "Kuinka pitkäksi aikaa käyttäjä hiljennetään?"
         silence_reason_title: "Hiljennyksen syy"
         silence_reason_placeholder: "Hiljennyksen syy"
-        silence_message: "Sähköpostiviesti"
         suspended_until: "(%{until} asti)"
         suspend_forever: "Hyllytä ikuisesti"
         cant_suspend: "Käyttäjää ei voi hyllyttää."

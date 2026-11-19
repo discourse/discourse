@@ -4501,10 +4501,8 @@ ur:
           label: "انتخاب"
           title: "انتخاب سے دھاگہ ہٹانے کے لیے کلک کریں"
         select_replies:
-          label: "منتخب +جوابات"
           title: "انتخاب میں دھاگہ اور اس کے تمام جوابات شامل کریں"
         select_below:
-          label: "منتخب+ذیل میں"
           title: "انتخاب میں دھاگہ اور اس کے بعد سب شامل کریں۔"
         delete: منتخب کو حذف کریں
         cancel: انتخاب کو منسوخ کریں
@@ -8460,7 +8458,6 @@ ur:
         silence_duration: "صارف کب تک خاموش رہے گا؟"
         silence_reason_title: "خاموش کرنے کی وجہ"
         silence_reason_placeholder: "خاموش کردینے کی وجہ"
-        silence_message: "ای میل پیغام"
         suspended_until: "(%{until} تک)"
         suspend_forever: "ہمیشہ کے لیے معطل کریں"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"

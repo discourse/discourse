@@ -44,6 +44,8 @@ lv:
         error: "Kļūda..."
         response: "Atbilde"
       discourse_workflows:
+        ai_tool:
+          list_item: "Saraksta punkts"
         classify:
           text: "Teksts"
           upload_ids: "Attēli"
@@ -78,6 +80,9 @@ lv:
           enabled: "Ieslēgts"
         search:
           name: "Meklēt"
+        review_queue:
+          setting_groups:
+            settings: "Iestatījumi"
         image_caption:
           setting_groups:
             settings: "Iestatījumi"

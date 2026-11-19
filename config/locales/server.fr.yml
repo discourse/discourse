@@ -4036,6 +4036,8 @@ fr:
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez pas publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
+    moderator_silence:
+      subject_template: "Votre compte a été mis en sourdine"
     silenced_by_staff:
       title: "Mis en sourdine par un responsable"
       preview: "Compte temporairement suspendu."
@@ -4420,14 +4422,6 @@ fr:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
       subject_template_improved: "Votre compte a été suspendu"
-    account_silenced:
-      title: "Compte mis en sourdine"
-      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
-      subject_template_improved: "Votre compte a été mis en sourdine"
-    account_silenced_forever:
-      title: "Compte mis en sourdine"
-      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
-      subject_template_improved: "Votre compte a été mis en sourdine"
     account_deleted:
       title: "Compte supprimé"
       subject_template: "[%{email_prefix}] Votre compte a été supprimé"

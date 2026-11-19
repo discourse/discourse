@@ -2848,12 +2848,6 @@ gl:
     account_suspended_forever:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
-    account_silenced:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
-    account_silenced_forever:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
     account_exists:
       title: "A conta xa existe"
       subject_template: "[%{email_prefix}] A conta xa existe"

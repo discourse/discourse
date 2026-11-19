@@ -3813,12 +3813,6 @@ fi:
     account_suspended_forever:
       title: "Tili hyllytetty"
       subject_template: "[%{email_prefix}] Tilisi on hyllytetty"
-    account_silenced:
-      title: "Tili hiljennetty"
-      subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
-    account_silenced_forever:
-      title: "Tili hiljennetty"
-      subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
     account_deleted:
       title: "Tili poistettu"
       subject_template: "[%{email_prefix}] Tilisi on poistettu"

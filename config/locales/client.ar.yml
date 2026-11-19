@@ -5427,10 +5427,8 @@ ar:
           label: "محدَّد"
           title: "انقر لإزالة المنشور من التحديد"
         select_replies:
-          label: "تحديد المنشور +الردود"
           title: "إضافة المنشور وجميع الردود عليه إلى التحديد"
         select_below:
-          label: "تحديد المنشور +ما يليه"
           title: "إضافة المنشور وكل ما يليه إلى التحديد"
         delete: حذف المحدَّد
         cancel: إلغاء التحديد
@@ -10220,7 +10218,6 @@ ar:
         silence_duration: "إلى متى سيتم كتم المستخدم؟"
         silence_reason_title: "سبب الكتم"
         silence_reason_placeholder: "سبب الكتم"
-        silence_message: "رسالة إلكترونية"
         suspended_until: "(حتى %{until})"
         suspend_forever: "التعليق للأبد"
         cant_suspend: "لا يمكن تعليق هذا المستخدم."

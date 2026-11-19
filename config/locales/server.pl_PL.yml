@@ -195,6 +195,16 @@ pl_PL:
       topic_not_found: "Temat nie został znaleziony"
       topic_update_required: "Podaj co najmniej jedno pole tematu do aktualizacji"
       top_period_only_for_top_view: "Okres górny obsługiwany jest tylko przez widok górny"
+      webhook_confirmation: "Potwierdź tę operację za pomocą %{field}=true przed kontynuowaniem"
+      webhook_changed: "Zmienił się cel, stan aktywny lub status zdarzenia webhooka. Przeczytaj go ponownie przed kontynuowaniem."
+      webhook_destination_unreachable: "Nie udało się znaleźć hosta docelowego. Sprawdź nazwę hosta i spróbuj ponownie."
+      webhook_event_not_deliverable: "Nie można ponownie dostarczyć tego wydarzenia. Użyj narzędzia ping do pingowania zdarzeń."
+      webhook_event_not_found: "Zdarzenie nie należy do tego webhooka lub nie jest już dostępne"
+      webhook_invalid_destination: "Podaj adres docelowy HTTP lub HTTPS bez danych uwierzytelniających adres URL lub fragmentu"
+      webhook_no_change: "Podaj co najmniej jedno pole webhooka z inną wartością"
+      webhook_not_found: "Nie znaleziono webhooka"
+      webhook_unknown_selection: "Jeden lub więcej identyfikatorów w %{field} jest nieznany lub niedostępny"
+      webhook_wildcard_events: "Webhooki z symbolami wieloznacznymi nie mogą również wybierać poszczególnych typów zdarzeń"
       upload_not_found: "Nie znaleziono pliku do przesłania"
       upload_too_large: "Przesłany plik jest za duży"
       user_create_failed: "Nie udało się utworzyć użytkownika"
@@ -3219,7 +3229,7 @@ pl_PL:
     enable_new_defaults_for_trust_level_3_requirements: "Zaktualizowaliśmy domyślne wymagania TL3, aby były bardziej rozsądne dla członków dużych, aktywnych społeczności. Jeśli wcześniej nadpisano te ustawienia, ta nadchodząca zmiana nie będzie miała żadnego wpływu."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie {{setting:faq_url}} działa jak poprzednio."
-    enable_category_hashtag_cards: "Wyświetla pływającą kartę kategorii po kliknięciu hashtagu kategorii, jeśli użytkownik ma uprawnienia do wyświetlania danej kategorii."
+    enable_category_hashtag_cards: "Wyświetla pływającą kartę kategorii po najechaniu kursorem na hashtag kategorii, jeśli użytkownik ma uprawnienia do wyświetlania tej kategorii."
     enable_simplified_category_creation: "Umożliwia uproszczony proces tworzenia kategorii z mniejszą liczbą opcji i bardziej przejrzystym interfejsem."
     reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
     modernize_foundation_theme: "Zmiana ta wprowadza modyfikacje projektowe do motywu Foundation w Discourse."
@@ -4681,6 +4691,22 @@ pl_PL:
         Jako środek zapobiegawczy, Twoje nowe konto zostało pozbawione możliwości tworzenia nowych odpowiedzi lub tematów do czasu sprawdzenia Twojego konta. Przepraszamy za niedogodności.
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
+    moderator_silence:
+      date_with_timezone: "%{date} (UTC%{offset})"
+      title: "Wyciszenie przez moderatora"
+      subject_template: "Twoje konto zostało wyciszone"
+      timed: "To automatyczna wiadomość od użytkownika %{site_name} informująca, że moderator wyciszył Twoje konto do czasu %{silenced_till}."
+      indefinite: "To automatyczna wiadomość od użytkownika %{site_name} informująca, że moderator wyciszył Twoje konto na czas nieokreślony."
+      text_body_template: |
+        Witaj,
+
+        %{decision}
+
+        **Powód:** %{reason}
+
+        Nadal możesz czytać dyskusje, ale nie możesz brać w nich udziału, dopóki Twoje konto jest wyciszone.
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [zasadami społeczności](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Wyciszony przez personel"
       preview: "Konto zostało tymczasowo zawieszone."
@@ -5095,31 +5121,6 @@ pl_PL:
         To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało zawieszone.
 
         Powód — %{reason}
-
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
-    account_silenced:
-      date_with_timezone: "%{date} (UTC%{offset})"
-      title: "Konto uciszone"
-      subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
-      subject_template_improved: "Twoje konto zostało wyciszone"
-      text_body_template: |
-        Witaj!
-
-        To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało wyciszone do czasu %{silenced_till}.
-
-        Powód — %{reason}
-
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
-    account_silenced_forever:
-      title: "Konto uciszone"
-      subject_template: "[%{email_prefix}] Twoje konto zostało wyciszone"
-      subject_template_improved: "Twoje konto zostało wyciszone"
-      text_body_template: |
-        Witaj,
-
-        To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało wyciszone.
-
-        Powód - %{reason}
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_deleted:

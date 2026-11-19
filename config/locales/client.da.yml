@@ -3307,10 +3307,8 @@ da:
           label: "valgte"
           title: "Klik for at fjerne indlæg fra valg"
         select_replies:
-          label: "vælg +svar"
           title: "Tilføj indlæg og alle dets svar til valg"
         select_below:
-          label: "vælg + nedenfor"
           title: "Tilføj indlæg og alt efter det til valg"
         delete: slet valgte
         cancel: glem valg
@@ -6014,7 +6012,6 @@ da:
         silence_modal_title: "Mådehold (silence) Bruger"
         silence_duration: "Hvor længe vil brugeren være mådeholdt (silenced)?"
         silence_reason_placeholder: "Årsag for mådeholdenhed (silence)"
-        silence_message: "Email Besked"
         suspended_until: "(indtil %{until})"
         cant_suspend: "Denne bruger kan ikke suspenderes."
         delete_posts_failed: "Der opstod et problem med at slette indlægene."
