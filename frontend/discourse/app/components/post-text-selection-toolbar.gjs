@@ -12,8 +12,11 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+const MAX_SEARCH_SELECTION_LENGTH = 100;
+
 export default class PostTextSelectionToolbar extends Component {
   @service currentUser;
+  @service router;
   @service site;
   @service siteSettings;
   @service toasts;
@@ -67,6 +70,22 @@ export default class PostTextSelectionToolbar extends Component {
     );
   }
 
+  get selectionSearchTerm() {
+    return this.quoteState.buffer.replace(/\s+/g, " ").trim();
+  }
+
+  get showSelectionSearch() {
+    if (
+      !this.siteSettings.show_post_selection_search ||
+      !this.site.can_search
+    ) {
+      return false;
+    }
+
+    const length = this.selectionSearchTerm.length;
+    return length > 0 && length <= MAX_SEARCH_SELECTION_LENGTH;
+  }
+
   @action
   async copyQuoteToClipboard() {
     await clipboardCopyAsync(() =>
@@ -88,6 +107,13 @@ export default class PostTextSelectionToolbar extends Component {
       title: this.topic.title,
       quote: window.getSelection().toString(),
     });
+  }
+
+  @action
+  async searchSelection() {
+    const q = this.selectionSearchTerm;
+    await this.args.data.hideToolbar();
+    this.router.transitionTo("full-page-search", { queryParams: { q } });
   }
 
   <template>
@@ -128,6 +154,16 @@ export default class PostTextSelectionToolbar extends Component {
               @label="post.quote_copy"
               @title="post.quote_copy"
               {{on "click" this.copyQuoteToClipboard}}
+            />
+          {{/if}}
+
+          {{#if this.showSelectionSearch}}
+            <DButton
+              class="btn-flat search-post-selection"
+              @action={{this.searchSelection}}
+              @icon="magnifying-glass"
+              @label="post.search_selection"
+              @title="post.search_selection_title"
             />
           {{/if}}
 
