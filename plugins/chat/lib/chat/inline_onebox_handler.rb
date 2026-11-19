@@ -11,6 +11,8 @@ module Chat
         user = message.user
         return if !chat_channel || !user
 
+        thread = message.thread
+
         title =
           I18n.t(
             "chat.onebox.inline_to_message",

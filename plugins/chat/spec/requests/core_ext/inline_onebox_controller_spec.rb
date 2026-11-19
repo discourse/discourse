@@ -70,5 +70,25 @@ RSpec.describe InlineOneboxController do
       expect(response.status).to eq(200)
       expect(response.body).not_to include("thread title secret")
     end
+
+    it "does not disclose a reply through its message link" do
+      reply = Fabricate(:chat_message, chat_channel: thread_channel, thread: thread)
+      chat_message_url = "#{Discourse.base_url}#{reply.url}"
+      InlineOneboxer.invalidate(chat_message_url)
+
+      get "/inline-onebox.json", params: { urls: [chat_message_url] }
+
+      expect(response.parsed_body["inline-oneboxes"].map { |onebox| onebox["url"] }).to eq(
+        [chat_message_url],
+      )
+
+      original_message.trash!
+      InlineOneboxer.invalidate(chat_message_url)
+
+      get "/inline-onebox.json", params: { urls: [chat_message_url] }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["inline-oneboxes"]).to eq([])
+    end
   end
 end

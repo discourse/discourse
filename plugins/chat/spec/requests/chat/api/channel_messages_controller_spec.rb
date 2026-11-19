@@ -104,6 +104,41 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when the target message is the trashed original message of a thread" do
+      fab!(:channel) { Fabricate(:category_channel, threading_enabled: true) }
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: channel, user: current_user)
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel:, original_message:, title: "Hidden thread title")
+      end
+      fab!(:reply) { Fabricate(:chat_message, chat_channel: channel, thread:) }
+
+      before do
+        thread.update!(last_message: reply)
+        original_message.trash!(current_user)
+      end
+
+      it "does not return the thread to the author of the original message" do
+        get "/chat/api/channels/#{channel.id}/messages?target_message_id=#{original_message.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["messages"]).to contain_exactly(
+          a_hash_including("id" => original_message.id),
+        )
+        expect(response.parsed_body["messages"].first).not_to have_key("thread")
+      end
+
+      it "returns the thread to a moderator" do
+        sign_in(Fabricate(:admin))
+
+        get "/chat/api/channels/#{channel.id}/messages?target_message_id=#{original_message.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["messages"].first.dig("thread", "id")).to eq(thread.id)
+      end
+    end
+
     context "when user can’t see channel" do
       fab!(:channel, :private_category_channel)
 
