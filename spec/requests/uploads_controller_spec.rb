@@ -292,7 +292,6 @@ RSpec.describe UploadsController do
       end
 
       it "rejects a GIF whose decoded canvas exceeds the megapixel limit with libvips" do
-        global_setting :enable_vips_image_processing, true
         SiteSetting.max_image_megapixels = 5
         filename = "gif_frame_larger_than_logical_screen.gif"
         file =

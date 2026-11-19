@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "chunky_png"
+require "vips"
 
 module ImageOrientationHelpers
   private
@@ -24,33 +24,17 @@ module ImageOrientationHelpers
   def stored_color_grid(upload:, rows:, columns:, palette:)
     stored_path = Discourse.store.path_for(upload)
 
-    Dir.mktmpdir do |directory|
-      png_path = File.join(directory, "stored.png")
-      ImageProcessing::OutputFile.write(png_path) do |temporary_path|
-        ImageMagick.magick(
-          stored_path,
-          temporary_path,
-          operation: :upload_format_conversion,
-          read: [stored_path],
-          write: [temporary_path],
-        )
-      end
-      stored_image = ChunkyPNG::Image.from_file(png_path)
-
-      Array.new(rows) do |row_index|
-        Array.new(columns) do |column_index|
-          x = (column_index * stored_image.width + stored_image.width / 2) / columns
-          y = (row_index * stored_image.height + stored_image.height / 2) / rows
-
-          nearest_palette_color(pixel: stored_image[x, y], palette: palette)
-        end
+    image = Vips::Image.jpegload(stored_path)
+    Array.new(rows) do |row_index|
+      Array.new(columns) do |column_index|
+        x = (column_index * image.width + image.width / 2) / columns
+        y = (row_index * image.height + image.height / 2) / rows
+        nearest_palette_color(actual_rgb: image.getpoint(x, y), palette:)
       end
     end
   end
 
-  def nearest_palette_color(pixel:, palette:)
-    actual_rgb = [ChunkyPNG::Color.r(pixel), ChunkyPNG::Color.g(pixel), ChunkyPNG::Color.b(pixel)]
-
+  def nearest_palette_color(actual_rgb:, palette:)
     palette
       .min_by do |_name, expected_rgb|
         expected_rgb

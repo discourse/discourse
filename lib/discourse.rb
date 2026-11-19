@@ -327,10 +327,6 @@ module Discourse
   class SiteSettingMissing < StandardError
   end
 
-  # When ImageMagick is missing
-  class ImageMagickMissing < StandardError
-  end
-
   # When read-only mode is enabled
   class ReadOnly < StandardError
   end

@@ -303,19 +303,7 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            if GlobalSetting.enable_vips_image_processing
-              DiscourseVips.svg_dimensions(input_path: path, timeout: MAX_IDENTIFY_SECONDS)
-            else
-              ImageMagick.identify(
-                "-ping",
-                "-format",
-                "%w %h",
-                "MSVG:#{path}",
-                operation: :upload_svg_dimensions,
-                read: [path],
-                timeout: MAX_IDENTIFY_SECONDS,
-              ).split(" ")
-            end
+            DiscourseVips.svg_dimensions(input_path: path, timeout: MAX_IDENTIFY_SECONDS)
           rescue StandardError
             [0, 0]
           end
@@ -398,39 +386,13 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          if GlobalSetting.enable_vips_image_processing
-            color =
-              DiscourseVips.dominant_color(
-                input_path: local_path,
-                timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
-              )
-            color = "" if color !~ /\A[0-9A-F]{6}\z/
-            color
-          else
-            data =
-              ImageMagick.magick(
-                local_path,
-                "-depth",
-                "8",
-                "-resize",
-                "1x1",
-                "-define",
-                "histogram:unique-colors=true",
-                "-format",
-                "%c",
-                "histogram:info:",
-                operation: :upload_dominant_color,
-                read: [local_path],
-                nice: 10,
-                timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
-              )
-
-            color = data[/#([0-9A-F]{6})/, 1]
-            raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
-
-            color
-          end
-        rescue DiscourseVips::Error, Discourse::Utils::CommandError
+          color =
+            DiscourseVips.dominant_color(
+              input_path: local_path,
+              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
+            )
+          color.to_s[/\A[0-9A-F]{6}\z/] || ""
+        rescue DiscourseVips::Error
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation
@@ -443,25 +405,6 @@ class Upload < ActiveRecord::Base
     else
       self.dominant_color = color
     end
-  end
-
-  def target_jpeg_image_quality(local_path, test_quality)
-    @file_quality ||=
-      begin
-        ImageMagick.identify(
-          "-ping",
-          "-format",
-          "%Q",
-          local_path,
-          operation: :upload_quality_probe,
-          read: [local_path],
-          timeout: MAX_IDENTIFY_SECONDS,
-        ).to_i
-      rescue StandardError
-        0
-      end
-
-    test_quality if @file_quality == 0 || @file_quality > test_quality
   end
 
   def self.sha1_from_short_path(path)

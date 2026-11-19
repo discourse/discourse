@@ -254,9 +254,9 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     expect(execution_context.upload_skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
   end
 
-  it "only claims formats ImageMagick can decode" do
+  it "only claims formats the image processor can decode" do
     described_class::SUPPORTED_IMAGE_EXTENSIONS.each do |extension|
-      expect(extension).to match(OptimizedImage::IM_DECODERS)
+      expect(extension).to match(OptimizedImage::SUPPORTED_EXTENSIONS)
     end
   end
 

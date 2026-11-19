@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "vips"
+
 describe "Composer image optimization for uploads using media-optimization-worker" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
 
@@ -82,10 +84,10 @@ describe "Composer image optimization for uploads using media-optimization-worke
       # We do a conversion here to simulate a PNG with no transparency, the
       # fixture has transparency and transparent PNGs are converted to WEBP
       # rather than JPEG (see the transparent PNG test below).
-      Discourse::Utils.execute_command(
-        *["convert", file.path, "-background", "white", "-alpha", "remove", converted_file_path],
-        timeout: 3,
-      )
+      Vips::Image
+        .pngload(file.path)
+        .flatten(background: [255, 255, 255])
+        .pngsave(converted_file_path)
 
       attach_file("file-uploader", [converted_file_path], make_visible: true)
 

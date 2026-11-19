@@ -2192,7 +2192,6 @@ en:
       s3_upload_config: '{{setting:enable_s3_uploads}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
       s3_backup_config: '{{setting:backup_location}} is set to S3, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
       s3_cdn: 'The server is configured to upload files to S3, but there is no S3 CDN configured. This can lead to expensive S3 costs and slower site performance. <a href="https://meta.discourse.org/t/-/148916" target="_blank">See "Using Object Storage for Uploads" to learn more</a>.'
-      image_magick: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
       subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
       translation_overrides: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
@@ -5640,7 +5639,6 @@ en:
     empty: "Sorry, but the file you provided is empty."
     failed: "Sorry, but your upload failed. Please try again."
     ico_as_avatar: "Sorry, ICO images cannot be used as avatars."
-    png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."
     size_mismatch_failure: "The size of the file uploaded to S3 did not match the external upload's intended size. %{additional_detail}"

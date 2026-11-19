@@ -16,10 +16,7 @@ class LetterAvatar
   end
 
   # BUMP UP if avatar algorithm changes
-  VERSION = 5
-
-  VIPS_VERSION = 6
-  private_constant :VIPS_VERSION
+  VERSION = 6
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
@@ -32,11 +29,7 @@ class LetterAvatar
 
   class << self
     def version
-      if GlobalSetting.enable_vips_image_processing
-        "#{VIPS_VERSION}_#{vips_version}"
-      else
-        "#{VERSION}_#{image_magick_version}"
-      end
+      "#{VERSION}_#{vips_version}"
     end
 
     def cache_path
@@ -81,57 +74,15 @@ class LetterAvatar
     def generate_fullsize(identity)
       filename = fullsize_path(identity)
 
-      if GlobalSetting.enable_vips_image_processing
-        DiscourseVips.letter_avatar(
-          letter: ERB::Util.html_escape(identity.letter),
-          output_path: filename,
-          background_color: format("%02X%02X%02X", *identity.color),
-          font: "#{font_family} #{POINTSIZE}",
-          font_path:,
-        )
-      else
-        color = identity.color
-        letter = identity.letter
-        font = macos? ? "Helvetica" : "NimbusSans-Regular"
-        vertical_offset = font == "Helvetica" ? 26 : 34
-
-        ImageProcessing::OutputFile.write(filename) do |temporary_path|
-          ImageMagick.magick(
-            "-size",
-            "#{FULLSIZE}x#{FULLSIZE}",
-            "xc:#{to_rgb(color)}",
-            "-pointsize",
-            POINTSIZE.to_s,
-            "-fill",
-            "#FFFFFFCC",
-            "-font",
-            font,
-            "-gravity",
-            "Center",
-            "-annotate",
-            "-0+#{vertical_offset}",
-            letter,
-            "-depth",
-            "8",
-            temporary_path,
-            operation: :letter_avatar_render,
-            write: [temporary_path],
-          )
-        end
-      end
+      DiscourseVips.letter_avatar(
+        letter: ERB::Util.html_escape(identity.letter),
+        output_path: filename,
+        background_color: format("%02X%02X%02X", *identity.color),
+        font: "#{font_family} #{POINTSIZE}",
+        font_path:,
+      )
 
       filename
-    end
-
-    def image_magick_version
-      @image_magick_version ||=
-        Digest::MD5.hexdigest(
-          ImageMagick.magick("--version", operation: :letter_avatar_version) << ImageMagick.magick(
-            "-list",
-            "font",
-            operation: :letter_avatar_font_list,
-          ),
-        )
     end
 
     def vips_version
@@ -153,11 +104,6 @@ class LetterAvatar
     end
 
     private
-
-    def to_rgb(color)
-      red, green, blue = color
-      "rgb(#{red},#{green},#{blue})"
-    end
 
     def font_path
       macos? ? MACOS_FONT_PATH : DISCOURSE_FONT_PATH
