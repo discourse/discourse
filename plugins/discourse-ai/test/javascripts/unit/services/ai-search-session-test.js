@@ -114,6 +114,69 @@ module("Unit | Service | ai-search-session", function (hooks) {
     });
   });
 
+  test("refreshes a cached answer without searching for topics again", async function (assert) {
+    const session = this.owner.lookup("service:ai-search-session");
+    const discoveries = session.discoveries;
+    const topics = searchResults([1]);
+    session.query = "battery expansion";
+    session.selectedTab = "ask";
+    session.topicsResults = topics;
+    discoveries.cachedAnswerAt = "2026-11-18T15:00:00Z";
+    let body;
+    let topicSearches = 0;
+
+    pretender.get("/search/query", () => {
+      topicSearches++;
+      return response(searchResults([2]));
+    });
+    pretender.post("/discourse-ai/discoveries/reply", (request) => {
+      body = new URLSearchParams(request.requestBody);
+      return response({ request_id: body.get("request_id") });
+    });
+
+    session.refreshAnswer();
+    await waitUntil(() => body);
+    session.onDiscovery({
+      query: session.query,
+      request_id: discoveries.activeRequestId,
+      phase: "rewritten",
+      keyword_query: "battery swelling",
+    });
+    discoveries.cancelDiscoveryTimeout();
+    await settled();
+
+    assert.strictEqual(
+      body.get("query"),
+      session.query,
+      "the same question is asked"
+    );
+    assert.strictEqual(
+      body.get("fresh_answer"),
+      "true",
+      "the cache is bypassed"
+    );
+    assert.strictEqual(
+      session.selectedTab,
+      "ask",
+      "the new answer opens in Ask AI"
+    );
+    assert.strictEqual(
+      discoveries.cachedAnswerAt,
+      null,
+      "the cached answer age is cleared"
+    );
+    assert.strictEqual(
+      topicSearches,
+      0,
+      "neither refresh nor rewrite searches for topics"
+    );
+    assert.strictEqual(
+      session.topicsResults,
+      topics,
+      "existing topic results are kept"
+    );
+  });
+
   test("reports when an answer is first seen on the Ask tab", async function (assert) {
     const session = this.owner.lookup("service:ai-search-session");
     const discoveries = this.owner.lookup("service:discobot-discoveries");

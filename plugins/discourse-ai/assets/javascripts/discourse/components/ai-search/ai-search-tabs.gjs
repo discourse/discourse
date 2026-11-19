@@ -11,7 +11,7 @@ import { i18n } from "discourse-i18n";
 /**
  * The kinds of result a combined search fetched, as pills that switch between
  * them. Each keyword tab that isn't open says how much it found, so an empty
- * one is plain before it is opened.
+ * one is plain before it is opened. An inactive Ask AI tab marks a ready answer.
  */
 export default class AiSearchTabs extends Component {
   @service aiSearchSession;
@@ -42,15 +42,19 @@ export default class AiSearchTabs extends Component {
       icon: "far-discobot",
       label: i18n("discourse_ai.ai_search.tabs.ask"),
       empty: this.session.answerFailed,
+      ready: this.session.answerReady,
     });
 
     const selectedTab = this.session.selectedTab;
     return tabs.map((tab) => {
       const selected = selectedTab === tab.kind;
-      // the count flags what was found beside the tab in view, so it waits
-      // for one to open and stays off that one
-      const showCount = selectedTab !== null && !selected;
-      return { ...tab, selected, count: showCount ? tab.count : null };
+      const showBadge = selectedTab !== null && !selected;
+      return {
+        ...tab,
+        selected,
+        count: showBadge ? tab.count : null,
+        ready: showBadge && tab.ready,
+      };
     });
   }
 
@@ -105,6 +109,13 @@ export default class AiSearchTabs extends Component {
                 class="ai-search-tabs__empty"
                 title={{i18n "discourse_ai.ai_search.tabs.no_answer"}}
               >{{dIcon "ban"}}</span>
+            {{else if tab.ready}}
+              <span class="ai-search-tabs__ready">
+                {{dIcon "check"}}
+                <span class="sr-only">{{i18n
+                    "discourse_ai.ai_search.tabs.answer_ready"
+                  }}</span>
+              </span>
             {{/if}}
           {{else if tab.count}}
             <span class="ai-search-tabs__count">{{tab.count}}</span>
