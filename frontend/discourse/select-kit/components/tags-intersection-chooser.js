@@ -9,7 +9,10 @@ import { pluginApiIdentifiers } from "discourse/select-kit/components/select-kit
 @classNames("tags-intersection-chooser")
 @pluginApiIdentifiers("tags-intersection-chooser")
 export default class TagsIntersectionChooser extends MiniTagChooser {
+  /** @type {{ id?: number | string, name: string, slug?: string | null } | null | undefined} */
   mainTag = null;
+
+  /** @type {string[] | null | undefined} */
   additionalTags = null;
 
   didReceiveAttrs() {

@@ -43,6 +43,12 @@ class Auth::DefaultCurrentUserProvider
   DECRYPTED_AUTH_COOKIE = "_DISCOURSE_DECRYPTED_AUTH_COOKIE"
 
   TOKEN_SIZE = 32
+  USER_API_KEY_HTML_SCOPES = %w[read write]
+  HTML_LAYOUT_DISALLOWED_ENV = "_DISCOURSE_HTML_LAYOUT_DISALLOWED"
+
+  def self.html_layout_disallowed?(env)
+    !!env[HTML_LAYOUT_DISALLOWED_ENV]
+  end
 
   def self.shared_session_redis_key(key)
     "shared_session_user_auth_token_id:#{key}"
@@ -207,6 +213,10 @@ class Auth::DefaultCurrentUserProvider
       user_api_key_limiter_60_secs.performed!
       user_api_key_limiter_1_day.performed!
 
+      if user_api_key_obj.scopes.none? { |scope| USER_API_KEY_HTML_SCOPES.include?(scope.name) }
+        @env[HTML_LAYOUT_DISALLOWED_ENV] = true
+      end
+
       user_api_key_obj.ensure_allowed!(@env)
 
       current_user = user_api_key_obj.user
@@ -340,8 +350,7 @@ class Auth::DefaultCurrentUserProvider
   # for signup flow, since all admin emails are stored in
   # DISCOURSE_DEVELOPER_EMAILS for self-hosters.
   def make_developer_admin(user)
-    if user.active? && !user.admin && Rails.configuration.respond_to?(:developer_emails) &&
-         Rails.configuration.developer_emails.include?(user.email)
+    if user.active? && !user.admin && Developer.configured_email?(user.email)
       user.admin = true
       user.save
       Group.refresh_automatic_groups!(:staff, :admins)
@@ -353,6 +362,8 @@ class Auth::DefaultCurrentUserProvider
 
     user.grant_moderation!
     StaffActionLogger.new(Discourse.system_user).log_grant_moderation(user)
+
+    DiscoursePluginRegistry.first_admin_bootstrap.each { |callback| callback.call(user) }
   end
 
   def log_off_user(session, cookie_jar, push_subscription: nil)
@@ -408,8 +419,14 @@ class Auth::DefaultCurrentUserProvider
   protected
 
   def lookup_api_user(api_key_value, request)
-    if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
+    if api_key = ApiKey.active.with_key(api_key_value).includes(:user, :api_key_scopes).first
       api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
+
+      scopes = api_key.api_key_scopes
+      if scopes.present? &&
+           scopes.none? { |scope| scope.resource == "global" && scope.action == "read" }
+        @env[HTML_LAYOUT_DISALLOWED_ENV] = true
+      end
 
       return nil if !api_key.request_allowed?(@env)
 

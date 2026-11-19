@@ -98,6 +98,23 @@ RSpec.describe PrettyText do
     )
   end
 
+  it "does not restore a transcript inside an attribute value" do
+    cooked = PrettyText.cook <<~'MD'
+    <div data-x='
+
+    [chat quote="nobody;1;2026-01-01T00:00:00Z"]
+    [x](http://a.example/x= "id=pwn style='color:red' y=")
+    [/chat]
+
+    </div ' title="safe"></div>
+    MD
+
+    doc = Nokogiri::HTML5.fragment(cooked)
+
+    expect(doc.css("[style]")).to be_empty
+    expect(doc.css("#pwn")).to be_empty
+  end
+
   it "converts HTML entities" do
     cooked = PrettyText.cook("The micro sign: &#181;")
     expect(cooked).to include("The micro sign: µ")

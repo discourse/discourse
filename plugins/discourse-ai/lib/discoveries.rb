@@ -12,8 +12,12 @@ module DiscourseAi
     MAX_RELATED_DISCUSSIONS = 6
     REQUEST_ID_PATTERN =
       /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/i
+    ASK_LOG_ID_PATTERN = /\A[1-9]\d*\z/
     PRIVATE_MESSAGE_FILTER =
       /(?:\A|\s)(?:in:(?:messages|personal|personal-direct|all-pms)|(?:group|personal)_messages:\S+)(?=\s|\z)/i
+    # keeps to the search menu's own check for operators and quoted phrases
+    PRECISE_SEARCH =
+      /\A\s*(?:"[^"]+"\s*)+\z|(?:\A|\s)-?(?:in|status|order|before|after|with|category|categories|tags?|user|group|badge|topic|min_\w+|max_\w+):\S|(?:\A|\s)[#@]\S+/i
     BIND_REQUEST_SCRIPT = <<~LUA
       local existing_query = redis.call("GET", KEYS[1])
       if not existing_query then
@@ -40,8 +44,24 @@ module DiscourseAi
       return 1
     LUA
 
-    class RequestConflict < StandardError
-    end
+    # Tag and user names follow their own configurable rules, so they are only
+    # held to being one token: that is what keeps a scope from adding filters.
+    # a tag page within a category scopes to both, as "category:12 tag:a+b"
+    SCOPE_PATTERN =
+      /\A(?:messages|topic:\d{1,12}|category:\d{1,12}|tag:\S{1,100}|user:\S{1,60}|category:\d{1,12} tag:\S{1,100})\z/
+
+    # what set off an Ask AI request and why, recorded so the choice of when to
+    # answer can be tuned against what readers do with the answers
+    TRIGGERS = %w[enter pause page scope recent].freeze
+    TRIGGER_REASON_PATTERN = /\A[a-z_:]{0,60}\z/
+    SEARCH_TABS = %w[ask topics context].freeze
+    # leaving the answer this soon means it was not what the reader came for
+    QUICK_SWITCH_MS = 10_000
+    PREFERENCE_ASKS = 10
+    PREFERENCE_MIN_ASKS = 4
+
+    MAX_QUERY_LENGTH = 1000
+    ASK_RATE_LIMIT = 8
 
     class << self
       def enabled_for_user?(user)
@@ -65,8 +85,40 @@ module DiscourseAi
         request_id.to_s.match?(REQUEST_ID_PATTERN)
       end
 
+      def valid_ask_log_id?(ask_log_id)
+        ask_log_id.to_s.match?(ASK_LOG_ID_PATTERN)
+      end
+
+      # A scope is where the question was asked from. It narrows retrieval
+      # without being part of the question, so the question can still be
+      # rewritten and searched semantically.
+      def valid_scope?(scope)
+        scope.to_s.match?(SCOPE_PATTERN)
+      end
+
+      def scope_filter(scope)
+        return if scope.blank? || !valid_scope?(scope)
+
+        scope.to_s.split(" ").map { |part| scope_part_filter(part) }.join(" ")
+      end
+
       def private_message_query?(query)
         query.to_s.match?(PRIVATE_MESSAGE_FILTER)
+      end
+
+      def precise_search?(query)
+        query.to_s.match?(PRECISE_SEARCH)
+      end
+
+      # Whether answering would send the reader's private messages to the model.
+      def private_search?(query:, scope:, guardian:)
+        return true if private_message_query?(query) || private_message_query?(scope_filter(scope))
+
+        topic_id = scope.to_s[/\Atopic:(\d+)\z/, 1]
+        return false if topic_id.nil?
+
+        # a topic they cannot see stays indistinguishable from any other
+        guardian.can_see_topic?(Topic.private_messages.find_by(id: topic_id))
       end
 
       # Asked terms are kept apart from SearchLog rather than logged into it:
@@ -102,19 +154,72 @@ module DiscourseAi
         "discourse-ai:discoveries:recent-asks:2:#{user_id}"
       end
 
-      def result_settings
+      def combined_search_for?(user)
+        UpcomingChanges.enabled_for_user?(:enable_ai_combined_search, user)
+      end
+
+      def result_settings(user = nil)
         {
           summary_detail: SiteSetting.ai_ask_ai_summary_detail.to_sym,
-          related_count: SiteSetting.ai_ask_ai_related_count,
+          # the combined search lists its related topics compactly, so it can show the most
+          related_count:
+            (
+              if combined_search_for?(user)
+                MAX_RELATED_DISCUSSIONS
+              else
+                SiteSetting.ai_ask_ai_related_count
+              end
+            ),
         }
       end
 
-      def enqueue_reply(user:, request_id:, query:)
-        return if bind_request(user_id: user.id, request_id:, query:) != :created
+      # Whether the reader's recent asks show them leaving the answer for the
+      # results, unless they have lately been coming back to it. A habit moves
+      # slowly, so it is worked out at most every few minutes.
+      def prefers_results?(user)
+        Discourse
+          .cache
+          .fetch("discourse-ai:discoveries:prefers-results:#{user.id}", expires_in: 5.minutes) do
+            leaves_answers?(user)
+          end
+      end
 
+      # Logs a search whose answer waits for the reader to request it.
+      # @return [AskAiLog]
+      def log_deferred_ask(user:, query:, scope: nil, **search)
+        create_ask_log(user:, query:, ask_outcome: :skipped, ask_scope: scope.to_s, **search)
+      end
+
+      # Queues the answer to a request already bound with `bind_request`.
+      # @param deferred_log_id [Integer, nil] the search this answer was requested from
+      # @return [AskAiLog, nil] the ask's log, or nil once that search's answer
+      #   was already requested
+      def enqueue_reply(
+        user:,
+        request_id:,
+        query:,
+        scope: nil,
+        trigger: "",
+        trigger_reason: "",
+        intent_heuristic: "",
+        deferred_log_id: nil
+      )
         asked_at = Time.current
-        ask_log = AskAiLog.create!(user:, query:, asked_at:)
-        settings = result_settings
+        if deferred_log_id
+          # claimed in one statement, so parallel requests cannot each answer it
+          claimed =
+            AskAiLog.awaiting_answer(id: deferred_log_id, user:, query:).update_all(
+              ask_outcome: nil,
+              answer_requested_at: asked_at,
+              updated_at: asked_at,
+            )
+          return if claimed.zero?
+          ask_log = AskAiLog.find(deferred_log_id)
+        else
+          ask_log =
+            create_ask_log(user:, query:, asked_at:, trigger:, trigger_reason:, intent_heuristic:)
+        end
+        settings = result_settings(user)
         Jobs.enqueue(
           :stream_discover_reply,
           user_id: user.id,
@@ -124,10 +229,63 @@ module DiscourseAi
           queued_at: asked_at.to_f,
           summary_detail: settings[:summary_detail].to_s,
           related_count: settings[:related_count],
+          scope:,
         )
+        ask_log
       rescue StandardError
         ask_log&.update!(ask_outcome: :failed)
         raise
+      end
+
+      # Records how the reader moved through the search menu's tabs for an ask.
+      # Each event is kept from its first report only.
+      def record_tabs(
+        user:,
+        ask_log_id:,
+        opened: nil,
+        opened_reason: "",
+        opened_after_ms: 0,
+        switched_to: nil,
+        switched_after_ms: 0,
+        answer_seen_after_ms: nil,
+        clicked_tab: nil,
+        clicked_after_ms: 0
+      )
+        ask_log = AskAiLog.find_by(id: ask_log_id, user_id: user.id)
+        raise Discourse::NotFound if ask_log.nil?
+
+        updates = {}
+        if opened.present? && ask_log.ask_tab_opened.blank?
+          raise Discourse::InvalidParameters.new(:tab_opened) if SEARCH_TABS.exclude?(opened)
+          opened_reason = "" if !opened_reason.to_s.match?(TRIGGER_REASON_PATTERN)
+          updates.merge!(
+            ask_tab_opened: opened,
+            ask_tab_opened_reason: opened_reason.to_s,
+            ask_tab_opened_after_ms: reported_ms(opened_after_ms),
+          )
+        end
+        if switched_to.present? && ask_log.ask_tab_switched_to.blank?
+          if SEARCH_TABS.exclude?(switched_to)
+            raise Discourse::InvalidParameters.new(:tab_switched_to)
+          end
+          updates.merge!(
+            ask_tab_switched_to: switched_to,
+            ask_tab_switched_after_ms: reported_ms(switched_after_ms),
+          )
+        end
+        if answer_seen_after_ms.present? && ask_log.ask_answer_seen_after_ms.nil?
+          updates[:ask_answer_seen_after_ms] = reported_ms(answer_seen_after_ms)
+        end
+        if clicked_tab.present? && ask_log.ask_result_clicked_tab.blank?
+          if SEARCH_TABS.exclude?(clicked_tab)
+            raise Discourse::InvalidParameters.new(:result_clicked_tab)
+          end
+          updates.merge!(
+            ask_result_clicked_tab: clicked_tab,
+            ask_result_clicked_after_ms: reported_ms(clicked_after_ms),
+          )
+        end
+        ask_log.update!(updates) if updates.present?
       end
 
       def bind_request(user_id:, request_id:, query:)
@@ -144,8 +302,9 @@ module DiscourseAi
 
         return :created if result == 1
         return :existing if result == 0
+        # the id was already used for another query
+        return :conflict if result == -1
 
-        raise RequestConflict if result == -1
         raise "Unexpected Discoveries request binding result: #{result.inspect}"
       end
 
@@ -172,30 +331,21 @@ module DiscourseAi
       def store_result(user_id:, request_id:, query:, answer:, sources:, agent_id:, follow_up: "")
         return if !valid_request_id?(request_id) || query.blank? || sources.blank?
 
-        posts =
-          Post
-            .where(id: sources.map { |source| source.fetch("post_id") }, deleted_at: nil)
-            .includes(:topic)
-            .index_by(&:id)
         stored_sources =
-          sources.filter_map do |source|
-            post = posts[source.fetch("post_id")]
-            topic = post&.topic
-            next if topic.nil? || topic.id != source.fetch("topic_id")
-
-            {
-              post_id: post.id,
-              topic_id: topic.id,
-              category_id: topic.category_id,
-              post_updated_at: post.updated_at.iso8601(6),
-            }
+          sources.map do |source|
+            if ExternalSource.candidate?(source)
+              source.slice("kind", "title", "url")
+            else
+              source.slice("post_id", "topic_id")
+            end
           end
-        return if stored_sources.length != sources.length
-
         payload = { query:, answer:, sources: stored_sources, agent_id:, follow_up: }.to_json
         Discourse.redis.set(result_key(user_id, request_id), payload, ex: REQUEST_TTL)
       end
 
+      # The result is read back for follow-ups well after it was answered, so it
+      # expires once any source is out of the user's sight: its answer was
+      # written from all of them.
       def cached_result_for(user:, request_id:)
         return if user.nil? || !valid_request_id?(request_id)
 
@@ -206,36 +356,101 @@ module DiscourseAi
         sources = Array(result["sources"])
         return if result["query"].blank? || !result.key?("answer") || sources.empty?
 
-        posts =
-          Post
-            .where(id: sources.pluck("post_id"), deleted_at: nil)
-            .includes(topic: :category)
-            .index_by(&:id)
+        forum_sources = sources.reject { |source| ExternalSource.candidate?(source) }
+        posts = Post.where(id: forum_sources.pluck("post_id")).includes(:topic).index_by(&:id)
         guardian = Guardian.new(user)
-        visible_sources = []
-        all_sources_visible =
-          sources.all? do |source|
-            post = posts[source["post_id"]]
-            topic = post&.topic
-            visible =
-              topic && topic.id == source["topic_id"] &&
-                [Archetype.default, Archetype.private_message].include?(topic.archetype) &&
-                topic.deleted_at.nil? && topic.visible? && guardian.can_see?(post) &&
-                topic.category_id == source["category_id"] &&
-                post.updated_at.iso8601(6) == source["post_updated_at"]
+        if forum_sources.any? { |source|
+             post = posts[source["post_id"]]
+             post&.topic.nil? || !guardian.can_see?(post)
+           }
+          return
+        end
 
-            if visible
-              visible_sources << source.merge("title" => topic.title, "url" => post.full_url)
-            end
-            visible
-          end
+        result.merge(
+          "sources" =>
+            sources.map do |source|
+              next source if ExternalSource.candidate?(source)
 
-        result.merge("sources" => visible_sources) if all_sources_visible
+              post = posts[source["post_id"]]
+              source.merge(
+                "topic_id" => post.topic_id,
+                "title" => post.topic.title,
+                "url" => post.full_url,
+              )
+            end,
+        )
       rescue JSON::ParserError
         nil
       end
 
       private
+
+      def create_ask_log(
+        user:,
+        query:,
+        asked_at: Time.current,
+        trigger: "",
+        trigger_reason: "",
+        intent_heuristic: "",
+        **attributes
+      )
+        AskAiLog.create!(
+          user:,
+          query:,
+          asked_at:,
+          ask_trigger: trigger,
+          ask_trigger_reason: trigger_reason,
+          ask_intent_heuristic: intent_heuristic,
+          **attributes,
+        )
+      end
+
+      def reported_ms(milliseconds)
+        milliseconds.to_i.clamp(0, 1.hour.in_milliseconds)
+      end
+
+      def leaves_answers?(user)
+        opened_on_answer =
+          AskAiLog
+            .where(user_id: user.id, ask_tab_opened: "ask")
+            .order(asked_at: :desc)
+            .limit(PREFERENCE_ASKS)
+            .pluck(:ask_tab_switched_to, :ask_tab_switched_after_ms)
+        return false if opened_on_answer.size < PREFERENCE_MIN_ASKS
+
+        left =
+          opened_on_answer.count do |switched_to, after_ms|
+            switched_to.present? && after_ms < QUICK_SWITCH_MS
+          end
+        return false if left * 2 <= opened_on_answer.size
+
+        returned =
+          AskAiLog
+            .asked
+            .where(user_id: user.id)
+            .where.not(ask_tab_opened: ["", "ask"])
+            .order(asked_at: :desc)
+            .limit(PREFERENCE_ASKS)
+            .pluck(:ask_tab_switched_to)
+            .count("ask")
+        returned < 2
+      end
+
+      def scope_part_filter(part)
+        type, value = part.split(":", 2)
+        case type
+        when "messages"
+          "in:messages"
+        when "topic"
+          "topic:#{value}"
+        when "category"
+          "category:#{value}"
+        when "tag"
+          "tags:#{value}"
+        when "user"
+          "user:#{value}"
+        end
+      end
 
       def discover_agent
         AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_agent)

@@ -40,6 +40,8 @@ fr:
           load_error: "Vous avez quitté le webinaire ou nous ne parvenons pas à charger Zoom sur cette page."
           too_early: "Vous pourrez rejoindre le webinaire à l'approche de l'heure de début de l'événement."
           view_topic: "Afficher le sujet de l'événement"
+          guest_prompt:
+            register: "Créer"
         chat:
           rsvp_to_event: "Confirmez votre participation à l'événement pour commencer à discuter"
           rsvp_to_event_with_link: "Confirmez votre participation à <a href='%{url}'>l'événement</a> pour commencer à discuter"
@@ -351,6 +353,8 @@ fr:
         topic_id: "ID du sujet"
     discourse_post_event:
       new_event: "Nouvel événement"
+      onebox:
+        all_day: "Toute la journée"
       notifications:
         before_event_reminder: "Un événement est sur le point de commencer"
         after_event_reminder: "Un événement est terminé"
@@ -393,6 +397,7 @@ fr:
         filter_placeholder: "Filtrer les utilisateurs"
         remove_invitee: "Supprimer l'invité de la liste"
         add_invitee: "Ajouter l'invité à la liste"
+        this_event: "Cet événement"
       bulk_invite_modal:
         confirm: "confirmer"
         text: "Téléverser un fichier CSV"
@@ -453,7 +458,6 @@ fr:
               one: "%{count} utilisateur est invité"
               other: "%{count} utilisateurs sont invités"
         event:
-          expired: "Expiré"
           closed: "Fermé"
           full: "Complet"
           status:
@@ -466,6 +470,8 @@ fr:
             private:
               title: "Privé"
               description: "Un événement privé ne peut être rejoint que par les utilisateurs invités."
+      recording_modal:
+        save: "Enregistrer"
       composer:
         name_placeholder: "Nom de l'événement"
         end_date_placeholder: "Date de fin"

@@ -26,10 +26,6 @@ function buildRows(count) {
   }));
 }
 
-class State {
-  @tracked estimate = estimateSmall;
-}
-
 function sizerHeight() {
   const sizer = find(".d-virtual-list__sizer");
   return sizer ? parseFloat(sizer.style.height) : null;
@@ -58,7 +54,7 @@ module(
       // A fresh array would rebuild that function and invalidate the memo for a
       // reason other than the estimate, so the defect would not surface.
       const items = buildRows(COUNT);
-      const state = new State();
+      const estimate = tracked(estimateSmall);
 
       await render(
         <template>
@@ -73,7 +69,7 @@ module(
             }
           </style>
           <DVirtualList
-            @estimateSize={{state.estimate}}
+            @estimateSize={{estimate.value}}
             @items={{items}}
             @key="id"
             as |item|
@@ -96,7 +92,7 @@ module(
       const measured = mountedRows().length;
       const expected = measured * ROW_PX + (COUNT - measured) * SECOND_ESTIMATE;
 
-      state.estimate = estimateLarge;
+      estimate.value = estimateLarge;
       await settled();
 
       const after = sizerHeight();

@@ -31,11 +31,19 @@ RSpec.describe "AI Bot - Homepage" do
       display_name: "Duplicate",
     )
   end
+  fab!(:general_agent) do
+    AiAgent
+      .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
+      .tap do |agent|
+        agent.update!(default_llm: claude_2)
+        agent.ensure_user!
+      end
+  end
   fab!(:bot_user) do
     enable_current_plugin
     toggle_enabled_bots(bots: [claude_2, claude_2_dup])
     SiteSetting.ai_bot_enabled = true
-    claude_2.reload.user
+    general_agent.user
   end
   fab!(:bot) do
     agent =
@@ -43,7 +51,7 @@ RSpec.describe "AI Bot - Homepage" do
         .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
         .class_instance
         .new
-    DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
+    DiscourseAi::Agents::Bot.as(bot_user, agent: agent, model: claude_2)
   end
 
   fab!(:pm) do
@@ -99,7 +107,9 @@ RSpec.describe "AI Bot - Homepage" do
     enable_current_plugin
 
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
-    pm.save!
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = general_agent.id
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+    pm.save_custom_fields
 
     toggle_enabled_bots(bots: [claude_2, claude_2_dup])
     SiteSetting.navigation_menu = "sidebar"

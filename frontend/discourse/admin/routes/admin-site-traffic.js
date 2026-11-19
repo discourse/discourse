@@ -45,6 +45,7 @@ export default class AdminSiteTrafficRoute extends DiscourseRoute {
     return i18n("admin.site_traffic_explorer.title");
   }
 
+  /** @returns {Promise<{ traffic: import("discourse/admin/controllers/admin-site-traffic").SiteTraffic | null, fetchError: "timeout" | "unexpected" | null }>} */
   model(params) {
     const requestParams = this.#requestParams(params);
 

@@ -22,6 +22,11 @@ sr:
         context_menu:
           actions:
             delete: "Obriši"
+        reorderable_list:
+          policies_pinned: "Zakvačeno"
+          policies_required: "Potrebno"
+          table_type: "Tip"
+          cross_list_primary: "Primarna"
         font_scale:
           title: "Систем фонтова"
         colors:

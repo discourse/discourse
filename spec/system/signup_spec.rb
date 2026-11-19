@@ -16,7 +16,7 @@ shared_examples "signup scenarios" do
   context "when anyone can create an account" do
     before { Jobs.run_immediately! }
 
-    it "can signup" do
+    it "can sign up, activate the account, and access 2FA preferences" do
       signup_page
         .open
         .fill_email(invite.email)
@@ -25,19 +25,6 @@ shared_examples "signup scenarios" do
       expect(signup_page).to have_valid_fields
 
       screenshot_marker(label: "signup")
-
-      signup_page.click_create_account
-
-      expect(page).to have_current_path("/u/account-created")
-    end
-
-    it "can signup and activate account" do
-      signup_page
-        .open
-        .fill_email(invite.email)
-        .fill_username("john")
-        .fill_password("supersecurepassword")
-      expect(signup_page).to have_valid_fields
 
       signup_page.click_create_account
       expect(page).to have_current_path("/u/account-created")
@@ -54,29 +41,6 @@ shared_examples "signup scenarios" do
       activate_account.click_continue
 
       expect(page).to have_current_path("/")
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
-    end
-
-    it "can access 2FA preferences screen after signing up and activating account" do
-      signup_page
-        .open
-        .fill_email(invite.email)
-        .fill_username("john")
-        .fill_password("supersecurepassword")
-      expect(signup_page).to have_valid_fields
-
-      signup_page.click_create_account
-      expect(page).to have_current_path("/u/account-created")
-
-      mail = ActionMailer::Base.deliveries.first
-      expect(mail.to).to contain_exactly(invite.email)
-      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
-
-      visit activation_link
-
-      activate_account.click_activate_account
-      activate_account.click_continue
-
       expect(page).to have_css(".header-dropdown-toggle.current-user")
 
       visit "/u/john/preferences/security"

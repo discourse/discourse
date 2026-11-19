@@ -11,7 +11,7 @@ module(
     setupRenderingTest(hooks);
 
     test("does not render a component when template content has invalid YAML", async function (assert) {
-      this.set("content", `- type: checkbox\n  attributes;invalid`);
+      this.content = `- type: checkbox\n  attributes;invalid`;
       await render(
         <template>
           <Wrapper @content={{this.content}} @onChange={{noop}} />
@@ -39,7 +39,7 @@ module(
         "upload",
         "multi-select",
       ];
-      this.set("content", content);
+      this.content = content;
 
       await render(
         <template>
@@ -60,15 +60,15 @@ module(
 - type: textarea\n  id: notes
 - type: dropdown\n  id: dropdown\n  choices:\n    - "Option 1"\n    - "Option 2"\n    - "Option 3"
 - type: multi-select\n  id: multi\n  choices:\n    - "Option 1"\n    - "Option 2"\n    - "Option 3"`;
-      this.set("content", content);
+      this.content = content;
 
-      this.set("initialValues", {
+      this.initialValues = {
         checkbox: "on",
         name: "Test Name",
         notes: "Test Notes",
         dropdown: "Option 1",
         multi: ["Option 1"],
-      });
+      };
 
       await render(
         <template>
@@ -99,7 +99,7 @@ module(
         });
       });
 
-      this.set("formTemplateId", [1]);
+      this.formTemplateId = [1];
       await render(
         <template>
           <Wrapper @id={{this.formTemplateId}} @onChange={{noop}} />

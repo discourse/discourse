@@ -4,16 +4,15 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { outputPreviewForNode } from "../../../lib/workflows/data-preview";
-import processFields from "../../../lib/workflows/field-processors";
-import { nodeTypePorts } from "../../../lib/workflows/node-types";
-import DragDropHint from "./drag-drop-hint";
-import PinDataEditor from "./pin-data-editor";
-import SchemaField from "./schema-field";
+import { outputPreviewForNode } from "../../../lib/workflows/data-preview.js";
+import processFields from "../../../lib/workflows/field-processors.js";
+import { nodeTypePorts } from "../../../lib/workflows/node-types.js";
+import DragDropHint from "./drag-drop-hint.gjs";
+import PinDataEditor from "./pin-data-editor.gjs";
+import SchemaField from "./schema-field.gjs";
 
 const VIEW_SCHEMA = "schema";
 const VIEW_JSON = "json";
@@ -90,7 +89,6 @@ export default class OutputContext extends Component {
     return {
       nodes: this.args.nodes || [],
       connections: this.args.connections || [],
-      nodeTypes: this.args.nodeTypes || [],
     };
   }
 
@@ -103,8 +101,7 @@ export default class OutputContext extends Component {
       {
         pinnedItems: this.pinnedItems,
         node: currentNode,
-        graph: this.graph,
-        configuration: this.args.configuration,
+        declaredOutputSchemas: this.args.session?.outputSchemas,
       }
     );
 

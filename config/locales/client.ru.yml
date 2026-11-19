@@ -6,6 +6,32 @@
 
 ru:
   js:
+    dsa_notice:
+      choice_title: "Это незаконный контент"
+      choice_description: "Предоставьте подробный отчет с объяснением, почему данный контент является незаконным."
+      go_back: "Назад"
+      title: "Сообщите о незаконном контенте"
+      content_url: "Точный URL-адрес контента"
+      explanation: "Почему вы считаете, что этот контент является незаконным?"
+      explanation_help: "Опишите факты и объясните, почему данный контент может быть незаконным. Приводить конкретный закон не требуется."
+      name: "Полное имя или название организации"
+      email: "Адрес электронной почты"
+      declaration_section: "Декларация"
+      declaration: "Я искренне верю, что факты и утверждения, изложенные в этом отчете, являются правдивыми и полными."
+      submit: "Отправить отчет"
+      get_email_code: "Получить код по электронной почте"
+      received_description: "%{site} получил ваш отчет на рассмотрение."
+      reference: "Ссылка на ваш отчет: <strong>%{reference}</strong>."
+      contact_confirmation: "Мы вышлем тебе по электронной почте квитанцию и копию отчёта. Результаты экспертной оценки тебе пришлёт команда экспертов по электронной почте."
+    code_editor:
+      search:
+        replace: "Замены"
+        next: "Далее"
+        previous: "Назад"
+        close: "Закрыть"
+        go: "Создать"
+      fold:
+        to: "—"
     user_api_key:
       authorize: "Разрешить"
       deny: "Нет"
@@ -50,6 +76,7 @@ ru:
     access_control:
       manage:
         access_permission_editor: "Редактор"
+        access_permission_owner: "Владелец"
         access_permission_remove: "Отозвать"
     carousel:
       go_to_slide: "Перейти к слайду %{index}"
@@ -354,7 +381,6 @@ ru:
       zh_CN:
         name: Китайский упрощенный
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "Сообщение #%{postNumber} от пользователя @%{username}"
       close: "закрыть"
       twitter: "Поделиться на X"
@@ -409,6 +435,12 @@ ru:
     skip_to_last_reply: "Перейти к последнему ответу"
     skip_to_top: "Перейти к началу"
     skip_user_nav: "Перейти к контенту профиля"
+    reorder:
+      remove: "Убрать %{label}"
+      removed: "Удалено: %{label}"
+      move_up: "Вверх"
+      move_down: "Вниз"
+      position: "%{position} из %{total}"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления по электронной почте отправляться не будут."
     emails_are_disabled_no_smtp: "Отправка исходящих писем отключена, поскольку не настроен SMTP-сервер. Отправка любых писем невозможна."
     emails_are_disabled_non_staff: "Отправка писем отключена для пользователей, не являющихся сотрудниками."
@@ -539,11 +571,6 @@ ru:
       few: "%{count} макс."
       many: "%{count} макс."
       other: "%{count} макс."
-    character_count:
-      one: "%{count} символ"
-      few: "%{count} символа"
-      many: "%{count} символов"
-      other: "%{count} символа"
     period_chooser:
       aria_label: "Фильтр по периоду"
     related_messages:
@@ -556,39 +583,26 @@ ru:
       pm_title: "Похожие сообщения"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Поздравляем с завершением процесса адаптации!"
+      create_category:
+        action: "Создать категорию"
       invite_collaborators:
         title: "Пригласить соавторов"
         action: "Создать приглашение"
-      start_posting:
-        title: "Начать публикацию"
-        action: "Посмотреть идеи"
-        choose_option: "С чего бы вы хотели начать?"
-        predefined_topics: "Шаблоны для начала разговора"
-        predefined_topics_subtitle: "Дайте новым участникам повод для обсуждения: выберите шаблон для редактирования и создайте свой собственный."
-        predefined_topics_description: "Выберите из подборки тем для начала разговора, чтобы завязать беседу."
-        use_predefined: "Просмотрите шаблоны"
-        back: "Назад"
-        icebreakers:
-          introduce_yourself:
-            title: "Представьтесь"
-            body: "Добро пожаловать в сообщество! Давайте познакомимся. Пожалуйста, представьтесь и расскажите немного о своих интересах. Я начну: я увлечен технологиями и люблю обучать других!"
     design_wizard:
       back: "Назад"
       next: "Далее"
       sections:
-        theme: "тема"
         fonts: "Шрифты"
+        logo: "Логотип"
         homepage: "Главная страница"
-        welcome_banner: "Приветственный баннер"
-        search: "Искать"
       theme:
         selected: "Выбрано"
-      colors:
-        light: "Светлый"
-        dark: "Темная"
       fonts:
-        base_font: "Базовый шрифт"
-        heading_font: "Шрифт заголовка"
+        base_font: "Body"
+        heading_font: "Заголовки"
+      logo:
+        description: "Отображается в верхней части навигации сайта, а также в верхней части уведомлений по электронной почте сайта."
+        help_text: "Рекомендуемый размер — 600 x 80 пикселей."
       homepage:
         topics: "Новые темы"
         categories: "Категории"
@@ -884,6 +898,9 @@ ru:
       title:
         search: "Поиск в сообщениях"
         placeholder: "введите заголовок, URL или идентификатор сообщения"
+    dsa_statements:
+      category: "Категория"
+      category_prompt: "Выберите раздел"
     review:
       show_more: "Развернуть"
       show_less: "Свернуть"
@@ -1093,6 +1110,7 @@ ru:
         suspect_user: "Это спам от пользователя?"
         approve_post: "Одобрить этот пост?"
         approve_topic: "Одобрить эту тему?"
+        something_wrong_with_post: "Что-то не так с этим сообщением?"
       types:
         reviewable_flagged_post:
           title: "На это сообщение поступила жалоба"
@@ -2222,7 +2240,6 @@ ru:
         upload_title: "Загрузка собственного аватара"
         image_is_not_a_square: "Внимание: мы обрезали изображение; ширина и высота не были равны друг другу."
         logo_small: "Маленький логотип сайта. Используется по умолчанию."
-        use_custom: "Загрузить собственный аватар:"
       change_profile_background:
         title: "Шапка профиля"
         instructions: "Шапка профиля будет отцентрирована и по умолчанию имеет ширину 1110 пикселей."
@@ -2417,6 +2434,7 @@ ru:
         redeemed_tab_with_count: "Принятые (%{count})"
         invited_via: "Приглашение"
         invited_via_link: "ссылка %{key} (принято: %{count} из %{max})"
+        invited_via_link_without_key: "Ссылка (принято %{count} из %{max})"
         generating_link: "Создание ссылки..."
         groups: "Группы"
         topic: "Тема"
@@ -2736,6 +2754,7 @@ ru:
       no_results: "Нет результатов"
       search: "Поиск…"
       label: "Выберите варианты"
+      remove_item: "Убрать %{name}"
     d_otp:
       screen_reader:
         one: Введите число
@@ -2840,7 +2859,6 @@ ru:
         }.
     learn_more: "Подробнее…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Подробнее…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Обратная связь…</a>"
     mute: Отключить
     unmute: Включить
     last_post: Последнее сообщение
@@ -2861,7 +2879,7 @@ ru:
       hide_forever: "нет, спасибо"
       hidden_for_session: "Хорошо, напомним завтра. Кстати, зарегистрироваться можно также и с помощью кнопки «Войти»."
       intro: "Здравствуйте! Похоже, вам нравится обсуждение, но вы ещё не зарегистрировали аккаунт."
-      value_prop: "Устали листать одни и те же темы? Создав аккаунт, вы всегда будете возвращаться туда, где остановились. Также вы сможете получать уведомления о новых ответах, сохранять закладки и ставить лайки. Общими усилиями мы сможем сделать сообщество интересным. :heart:"
+      value_prop: "Устали листать одни и те же темы? Создав аккаунт, вы всегда будете возвращаться туда, где остановились. Также вы сможете получать уведомления о новых ответах, сохранять закладки и ставить лайки. Общими усилиями мы сможем сделать сообщество интересным."
     offline_indicator:
       no_internet: "Нет подключения к Интернету."
       refresh_page: "Обновить страницу"
@@ -3188,6 +3206,9 @@ ru:
         size_too_small: "Размер файла %{provided_file_size} меньше минимально допустимого — %{min_file_size}"
     emoji_picker:
       filter_placeholder: Поиск эмодзи
+      search_placeholder: "Поиск по названию эмодзи и псевдониму…"
+      no_results: "Нет результатов"
+      favorites: "Часто используемые"
       smileys_&_emotion: Смайлики и эмоции
       people_&_body: Люди и части тел
       animals_&_nature: Животные и природа
@@ -3209,6 +3230,7 @@ ru:
       clear: "Очистить фильтр"
     filter_controls:
       reset: "Сбросить"
+      sort_label: "Сортировать по"
     d_icon_grid_picker:
       select_icon: "Выбрать иконки"
       search_label: "Искать иконки"
@@ -3238,6 +3260,10 @@ ru:
       emoji: "Эмодзи :)"
       more_emoji: "ещё…"
       options: "Параметры"
+      ai_content:
+        code: "Код"
+        quote: "Ответить с цитированием"
+        details: "Детали"
       whisper: "скрытое сообщение"
       unlist: "тема скрыта"
       add_warning: "Официальное предупреждение."
@@ -3339,8 +3365,7 @@ ru:
       discard: "Отменить"
       draft_saved: "Черновик сохранен!"
       users_placeholder: "Добавьте пользователей или группы"
-      title_placeholder: "Название: суть темы коротким предложением"
-      title_placeholder_redesign: "Название"
+      title_placeholder: "Название"
       title_or_link_placeholder: "Введите название или вставьте здесь ссылку"
       edit_reason_placeholder: "Причина редактирования…"
       topic_featured_link_placeholder: "Введите ссылку с названием."
@@ -3357,8 +3382,6 @@ ru:
       uploading: "Загрузка…"
       show_preview: "показать предпросмотр"
       hide_preview: "скрыть предпросмотр"
-      switch_to_markdown: "Переключиться на стандартный редактор Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Переключиться на новый визуальный текстовый редактор (%{keyboardShortcut})"
       quote_post_title: "Процитировать сообщение целиком"
       bold_label: "Ж"
       bold_title: "Жирный"
@@ -3492,6 +3515,8 @@ ru:
         visit: "Открыть ссылку"
         remove_preview: "Удалить предпросмотр"
         link_copied: "Ссылка скопирована!"
+      table:
+        default_heading: "Колонка %{number}"
       unsupported_token: "Расширенный текстовый редактор не поддерживает все функции, использованные в этом сообщении; в этом случае вам будет предложено переключиться на редактор Markdown."
     notifications:
       tooltip:
@@ -4535,6 +4560,7 @@ ru:
         actions: "Массовые действия"
     post:
       accessible_heading: "пост от %{username} %{date}"
+      ai_generated: "AI"
       confirm_delete: "Действительно удалить сообщение?"
       quote_reply: "Ответить с цитированием"
       quote_reply_shortcut: "Цитировать (или нажмите q)"
@@ -4809,6 +4835,9 @@ ru:
           many: "Действительно объединить %{count} сообщений?"
           other: "Действительно объединить %{count} сообщения?"
       revisions:
+        visibility:
+          hidden:
+            title: "Скрыто"
         locale:
           no_locale_set: "Язык не установлен"
           locale_removed: "Язык удален"
@@ -4817,9 +4846,6 @@ ru:
           previous: "Предыдущая версия"
           next: "Следующая версия"
           last: "Последняя версия"
-          hide: "Скрыть версию"
-          show: "Показать версию"
-          destroy: "Удалить редакции"
           destroy_confirm: "Действительно удалить все редакции этого сообщения? Это действие отменить нельзя."
           revert: "Откат до версии %{revision}"
           edit_wiki: "Редактировать вики"
@@ -4887,7 +4913,6 @@ ru:
     category:
       none: "(разное)"
       all: "Все категории"
-      choose: "Выберите категорию&hellip;"
       edit: "Изменить"
       edit_title: "Редактировать категорию"
       edit_dialog_title: "Редактировать: %{categoryName}"
@@ -5491,11 +5516,6 @@ ru:
       admin:
         title: "Администрирование"
     badges:
-      earned_n_times:
-        one: "Заработал(а) эту награду %{count} раз"
-        few: "Заработал(а) эту награду %{count} раза"
-        many: "Заработал(а) эту награду %{count} раз"
-        other: "Заработал(а) эту награду %{count} раза"
       granted_on: "Выдана %{date}"
       others_count:
         one: "Выдана другим %{count} раз"
@@ -5728,6 +5748,17 @@ ru:
       forward: "Вперёд"
       share: "Поделиться"
       dismiss: "Закрыть"
+    mobile_tab_bar:
+      new_topic: "Новая тема"
+      create: "Создать"
+      more: "Ещё"
+      back: "Назад"
+      topics: "Новые темы"
+      drafts:
+        one: "Черновики (%{count})"
+        few: "Черновики (%{count})"
+        many: "Черновики (%{count})"
+        other: "Черновики (%{count})"
     safe_mode:
       enabled: "Включён безопасный режим. Чтобы выйти из него, закройте это окно браузера."
     theme_preview_notice: "Сейчас вы просматриваете тему. Закройте эту вкладку или окно браузера, чтобы вернуться к обычной конфигурации сайта."
@@ -6027,63 +6058,6 @@ ru:
           other: "Минимум — %{count}."
         pattern_mismatch: "Введите в указанном формате."
         bad_input: "Введите корректное значение."
-    table_builder:
-      title: "Конструктор таблиц"
-      modal:
-        title: "Конструктор таблиц"
-        create: "Создать таблицу"
-        help:
-          title: "Использование редактора электронных таблиц"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "в конце строки — вставить новую строку."
-          new_col: "в конце столбца, чтобы вставить новый столбец."
-          options: "Клик правой кнопкой мыши на ячейке — дополнительные варианты во всплывающем меню."
-        confirm_close: "Точно закрыть конструктор таблиц? Все несохраненные изменения будут утеряны."
-      edit:
-        btn_edit: "Редактирование таблицы"
-        modal:
-          title: "Редактирование таблицы"
-          cancel: "отмена"
-          create: "Сохранить"
-          reason: "Причина редактирования…"
-          trigger_reason: "Добавьте причину редактирования"
-        default_edit_reason: "Обновление таблицы с помощью редактора таблиц"
-      default_header:
-        col_1: "Столбец 1"
-        col_2: "Столбец 2"
-        col_3: "Столбец 3"
-        col_4: "Столбец 4"
-      spreadsheet:
-        no_records_found: "Записей не найдено"
-        show: "Показать"
-        entries: "записи"
-        about: "Информация"
-        prompts:
-          delete_selected_rows: "Действительно удалить выбранные строки?"
-          delete_selected_cols: "Действительно удалить выбранные столбцы?"
-          will_destroy_merged_cells: "Будут удалены все существующие объединенные ячейки. Выполнить действие?"
-          will_clear_search_results: "Будут удалены все существующие объединенные ячейки. Выполнить действие?"
-          conflicts_with_merged_cells: "Возник конфликт с другой объединенной ячейкой"
-        invalid_merge_props: "Недопустимые объединенные свойства"
-        cells_already_merged: "Ячейка уже объединена"
-        no_cells_selected: "Ячейки не выбраны"
-        context_menu:
-          row:
-            before: "Вставить новую строку выше"
-            after: "Вставить новую строку ниже"
-            delete: "Удалить выбранные строки"
-          col:
-            before: "Вставить новый столбец слева"
-            after: "Вставить новый столбец справа"
-            delete: "Удалить выбранные столбцы"
-            rename: "Переименовать столбец"
-          order:
-            ascending: "Упорядочить по возрастанию"
-            descending: "Упорядочить по убыванию"
-          copy: "Копировать..."
-          paste: "Вставить..."
-          save: "Сохранить как..."
     powered_by_discourse: "На платформе Discourse"
     safari_15_warning: "Ваш браузер скоро станет несовместим с этим сообществом. Чтобы продолжить участие, обновите браузер или <a href='%{url}'>узнайте больше</a>."
     filter:
@@ -6210,21 +6184,20 @@ ru:
         name: "Название"
         plugin: "Плагин"
         metadata: "Метаданные"
-        enabled: "Включено"
-        enabled_for: "Включено для..."
+        enabled: "Включено?"
         show_image: "Показать изображение"
+        feedback: "Отзыв"
         groups_updated: "Группы обновлены!"
         save_groups: "Сохранить группы"
         add_groups_to_enable: "Добавьте группы, чтобы включить эту функцию."
         no_changes_to_save: "Изменений для сохранения нет."
         select_groups: "Выберите группы…"
-        show_related_settings: "Показать соответствующие настройки..."
+        settings: "Настроек"
         opt_in_groups_instructions: "Группы с возможностью добровольного участия позволяют определенной группе пользователей протестировать изменение до его общего выпуска. Обратите внимание, что эти группы станут неактуальными после того, как изменение перейдет в стабильный статус."
         enabled_for_throttle: "Вы слишком быстро изменили настройки, для которых это изменение включено. Подождите несколько секунд, прежде чем повторить попытку."
         change_enabled_for_success: "Вы включили это изменение для %{enabledFor}"
         change_disabled: "Вы отказались от этого изменения."
         permanent_notice: "Это изменение теперь является постоянным и вскоре будет отменено. Отказаться от участия больше нельзя."
-        permanent_soon_notice: "Это изменение скоро станет постоянным. Вы больше не сможете отказаться от участия."
         permanent_no_group_selection: "Неприменимо, постоянные изменения касаются всех групп."
         no_changes: "В настоящее время никаких изменений в ближайшее время не планируется."
         preview: "Предпросмотр"
@@ -6232,7 +6205,6 @@ ru:
         default_warning_short: "Значение по умолчанию для этой настройки изменилось, подробнее об этом читайте на странице <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>предстоящих изменений</a>."
         enabled_for_options:
           no_one: "Никто"
-          everyone: "Все"
           staff: "%{staffGroupName} только"
           specific_groups: "Конкретная группа (группы)"
         statuses:
@@ -6275,6 +6247,9 @@ ru:
           impact_role_staff: "Персонал"
           impact_role_all_members: "Все участники"
           impact_role_developers: "Разработчики"
+        sort:
+          status: "Статус"
+          name: "Название"
       config:
         about:
           title: "О вашем сайте"
@@ -6312,6 +6287,7 @@ ru:
             use_preset: "Настроить"
             presets:
               custom: "Другое"
+            automatic: "Автоматическая"
           authorizations:
             user: "Пользователь"
             last_used: "Последнее использование"
@@ -6791,18 +6767,10 @@ ru:
           anonymous_human: "Анонимные просмотры"
       dashboard:
         title: "Панель управления"
-        last_updated: "Панель управления обновлена:"
-        discourse_last_updated: "Discourse обновлён:"
         version: "Версия"
         up_to_date: "Обновлений нет"
         updates_available: "Доступны обновления."
-        please_update: "Обновитесь!"
-        no_check_performed: "Проверка обновлений не производится. Убедитесь, что запущен процесс sidekiq."
-        stale_data: "Проверка обновлений в последнее время не производилась. Убедитесь, что запущен процесс sidekiq."
         version_check_pending: "Вы недавно обновились. Замечательно!"
-        installed_version: "Установленная версия"
-        github: "GitHub"
-        problems_found: "Несколько советов по текущим настройкам сайта"
         dismiss_notice: "Игнорировать"
         new_features:
           title: "Что нового?"
@@ -6810,16 +6778,7 @@ ru:
           no_new_features_found: "В ленте нет элементов, или выбранный вами фильтр не дал результатов. Предыдущие анонсы новых функций можно посмотреть в сообществе Discourse Meta <a href='%{url}' target='_blank'></a>."
           no_new_features_error: "Произошла ошибка при загрузке ленты. Предыдущие анонсы новых функций можно посмотреть на сайте Discourse Releases <a href='%{url}' target='_blank'></a>."
           learn_more: "Подробнее…"
-        last_checked: "Последняя проверка"
         refresh_problems: "Обновить"
-        no_problems: "Проблем не обнаружено."
-        moderators: "Модераторы:"
-        admins: "Администраторы:"
-        silenced: "Замороженные:"
-        suspended: "Заблокированные:"
-        private_messages_short: "Сообщ."
-        private_messages_title: "Сообщений"
-        mobile_title: "Мобильный"
         space_used: "Использовано: %{usedSize}"
         space_used_and_free: "%{usedSize} (свободно: %{freeSize})"
         uploads: "Загрузки"
@@ -6830,20 +6789,7 @@ ru:
           many: "%{count} резервных копий (%{location})"
           other: "%{count} резервной копии (%{location})"
         lastest_backup: "Последняя: %{date}"
-        traffic_short: "Трафик"
-        traffic: "Трафик (веб-запросы)"
-        page_views: "Просмотры"
-        page_views_short: "Просмотры"
-        show_traffic_report: "Расширенный отчёт по трафику"
-        community_health: Состояние сообщества
-        moderators_activity: Активность модераторов
         whats_new_in_discourse: Что нового в Discourse?
-        activity_metrics: Метрики активности
-        all_reports: "Все отчёты"
-        general_tab: "Основное"
-        moderation_tab: "Модерация"
-        security_tab: "Безопасность"
-        reports_tab: "Отчёты"
         report_filter_any: "любой"
         disabled: Отключено
         timeout_error: Запрос занимает слишком много времени. Выберите более короткий интервал.
@@ -6887,7 +6833,6 @@ ru:
             title: "Системные сообщения"
             status: "Статус"
             discourse_updated: "Discourse обновлён"
-            dashboard_updated: "Панель управления обновлена"
         reports_section:
           header_action: "Управление"
           no_data: "Нет данных для отображения"
@@ -6913,11 +6858,6 @@ ru:
             embedded: "Встроенные просмотры страниц"
             crawlers: "Поисковые роботы"
           crawler_learn_more: "Подробнее"
-        period:
-          last_7_days: "За последние 7 дней"
-          last_30_days: "За последние 30 дней"
-          last_3_months: "За последние 3 месяцев"
-          custom: "Другое"
         reports:
           trend_title: "Изменилось на %{percent}. В настоящее время — %{current}, было %{prev} в предыдущий период."
           percent_change_tooltip: "Изменение %{percent}."
@@ -6971,9 +6911,6 @@ ru:
               many: "%{count} публикаций"
               other: "%{count} публикаций"
             deselect: "Отменить выбор пользователя %{name}"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Журналы поиска</a>'
-            disabled: 'Отчёт о поисковых запросах отключён. Включить <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал поисковых запросов</a> для сбора данных.'
           average_chart_label: Показаны средние значения, а не итоговые суммы.
           sort_button: "Сортировка: %{column}"
           sort_button_current: "Отсортировано по %{column}, %{direction}"
@@ -7163,7 +7100,6 @@ ru:
               list: Вывод списка последних сообщений и личных сообщений. RSS также поддерживается.
             revisions:
               read: "Получение последней или конкретной редакции."
-              modify: "Скрытие, отображение или отмена редакции."
               permanently_delete: "Окончательное удаление редакции."
             tags:
               list: Вывод списка тегов.
@@ -7453,20 +7389,9 @@ ru:
           site_contact_group_help: |
             Группа пользователей, получающих все автоматические уведомления в виде личных сообщений.
           your_organization: "Ваша организация"
-          your_organization_description: "Мы будем использовать эту информацию в Условиях использования и Уведомлении о конфиденциальности, чтобы показать, кто управляет сайтом и под какой юрисдикцией."
           company_name: "Название"
-          company_name_warning: |
-            Если оставить это поле пустым, то шаблонных Условий использования и Уведомлений о конфиденциальности предоставляться не будет.
           company_url: "Веб-сайт"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Регулирующее законодательство"
-          governing_law_placeholder: "Провинция, штат или страна"
-          governing_law_help: |
-            Укажите юрисдикцию, в которой применяются юридические условия сайта, как правило, там, где зарегистрирована или осуществляет свою деятельность компания.
-          city_for_disputes: "Город для разрешения споров"
-          city_for_disputes_placeholder: "Город"
-          city_for_disputes_help: |
-            Укажите город для разрешения правовых споров, связанных с данным форумом.
           extra_groups:
             heading: "Список групп"
             description: "Дополнительные группы, которые нужно показывать на странице «О нас»."
@@ -7670,7 +7595,6 @@ ru:
           uploading: "Загрузка…"
           uploading_progress: "Загрузка… %{progress}%"
           success: "Файл «%{filename}» загружен. Обработка файла займёт не более минуты, после чего он отобразится в списке."
-          error: "При загрузке файла «%{filename}» произошла ошибка: %{message}"
         settings: "Настройки"
         operations:
           is_running: "Операция в данный момент выполняется…"
@@ -7874,8 +7798,8 @@ ru:
           upload: "Загрузить"
           select_component: "Выбрать компонент…"
           unsaved_changes_alert: "Вы ещё не сохранили изменения. Отменить их и продолжить?"
-          unsaved_parent_themes: "Вы не назначили компонент темам. Продолжить?"
           discard: "Отменить"
+          leave: "Отписаться"
           stay: "Остаться"
           css_html: "Пользовательский код"
           edit_css_html: "Изменить код"
@@ -8634,6 +8558,11 @@ ru:
           all: "Все пользователи"
           activated: "Активирован"
         approved: "Подтвердить?"
+        source: "Источник"
+        bots:
+          name: "Название"
+          username: "Псевдоним"
+          trust_level: "Уровень доверия"
         titles:
           active: "Активные пользователи"
           new: "Новые пользователи"
@@ -8660,6 +8589,7 @@ ru:
           title: "Удалить все связанные с этим пользователем аккаунты"
           text: "Удалить связанные аккаунты"
       user:
+        bot: "Бот"
         suspend_failed: "Ошибка блокировки пользователя: %{error}"
         unsuspend_failed: "Ошибка разблокировки пользователя: %{error}"
         suspend_duration: "Блокировка пользователя до:"
@@ -8675,16 +8605,14 @@ ru:
           no_constructive_purpose: "У действий пользователя нет никакой конструктивной цели, кроме внесения раскола в сообщество"
           custom: "Другое…"
         suspend_message: "Письмо на электронную почту"
-        suspend_message_placeholder: "При необходимости предоставьте дополнительную информацию о блокировке, и она будет отправлена пользователю по электронной почте."
         suspended_by: "Кем заблокирован"
         silence_reason: "Причина"
         silenced_by: "Кем заморожен"
         silence_modal_title: "Заморозка пользователя"
         silence_duration: "Как долго пользователь будет заморожен?"
-        silence_reason_label: "Почему вы блокируете пользователя?"
+        silence_reason_title: "Причина заморозки"
         silence_reason_placeholder: "Причина заморозки"
         silence_message: "Сообщение на электронную почту"
-        silence_message_placeholder: "(оставьте незаполненным, если необходимо отправить стандартное сообщение)"
         suspended_until: "(блокировка до %{until})"
         suspend_forever: "Бессрочная блокировка"
         cant_suspend: "Этого пользователя нельзя заблокировать."

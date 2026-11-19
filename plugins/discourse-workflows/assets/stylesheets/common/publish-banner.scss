@@ -1,0 +1,61 @@
+.workflows-publish-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+  max-width: min(100%, 36rem);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--primary-low-mid);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
+
+  &__body {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    min-width: 0;
+    line-height: 1.2;
+  }
+
+  &__icon {
+    flex: 0 0 auto;
+    margin-top: 0.1rem;
+    color: var(--workflow-status-running);
+    font-size: var(--font-down-1);
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__title {
+    overflow: hidden;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__detail {
+    overflow: hidden;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__btn {
+    flex: 0 0 auto;
+  }
+
+  &__actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--space-1);
+  }
+}

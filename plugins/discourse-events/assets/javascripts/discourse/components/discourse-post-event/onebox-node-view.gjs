@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { TOPIC_URL_REGEXP } from "discourse/lib/url";
-import DiscoursePostEventOneboxPreview from "./onebox-preview";
+import DiscoursePostEventOneboxPreview from "./onebox-preview.gjs";
 
 // Returns the topic id for a topic-level / first-post onebox link, or null for
 // anything else (including a link to a specific reply, post number > 1) — the
@@ -43,6 +43,7 @@ export function topicIdFromUrl(url) {
 export default class DiscoursePostEventOneboxNodeView extends Component {
   constructor() {
     super(...arguments);
+    this.args.dom.classList.add("onebox-wrapper");
     this.args.onSetup?.(this);
   }
 

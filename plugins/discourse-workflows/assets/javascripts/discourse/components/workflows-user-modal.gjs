@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
@@ -71,10 +72,15 @@ export default class WorkflowsUserModal extends Component {
       class="workflows-user-modal"
       @beforeClose={{this.propagateDismissal}}
       @closeModal={{@closeModal}}
+      @hideFooter={{not this.buttons.length}}
       @title={{@model.title}}
     >
       <:body>
-        {{#if @model.body}}
+        {{#if @model.cooked_body}}
+          <div class="workflows-user-modal__markdown cooked">{{trustHTML
+              @model.cooked_body
+            }}</div>
+        {{else if @model.body}}
           <p class="workflows-user-modal__body">{{@model.body}}</p>
         {{/if}}
       </:body>

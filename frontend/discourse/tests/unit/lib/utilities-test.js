@@ -3,36 +3,63 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { caretCoordinates } from "discourse/lib/caret-position";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import {
-  arrayToTable,
+  ActionSerializer,
+  allowOnlyNumericInput,
+  areCookiesEnabled,
+  caretPosition,
   caretRowCol,
+  cleanNullQueryParams,
+  clipboardCopy,
   clipboardCopyAsync,
+  clipboardHelpers,
   defaultHomepage,
+  determinePostReplaceSelection,
   emailValid,
   escapeExpression,
   extractDomainFromUrl,
   fillMissingDates,
   findTableRegex,
+  formatUsername,
+  getCaretPosition,
+  getElement,
+  highlightPost,
+  hostnameValid,
   inCodeBlock,
   initializeDefaultHomepage,
+  isPrimaryTab,
+  isValidDestinationUrl,
   mergeSortedLists,
-  replaceTableRaw,
+  optionalRequire,
+  postRNWebviewMessage,
+  prefersReducedMotion,
+  removeAccents,
+  replaceFormatter,
   selectedHTML,
+  selectedNode,
+  selectedRange,
+  selectedText,
+  serializedAction,
   setCaretPosition,
   setDefaultHomepage,
   slugify,
+  splitString,
+  splitWhere,
+  stripDiscoursePrefix,
   toAsciiPrintable,
+  toNumber,
   translateModKey,
   unicodeSlugify,
 } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
+import { capabilities } from "discourse/services/capabilities";
 import {
-  mdTable,
-  mdTableNonUniqueHeadings,
-  mdTableSpecialChars,
-} from "discourse/tests/fixtures/md-table";
-import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
+  chromeTest,
+  fixture,
+  selectText,
+} from "discourse/tests/helpers/qunit-helpers";
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
@@ -420,6 +447,30 @@ module("Unit | Utilities | selectedHTML", function (hooks) {
     }
   });
 
+  test("quotes videos as video markdown", async function (assert) {
+    const container = document.createElement("div");
+    container.classList.add("cooked");
+    container.innerHTML =
+      "<p>Before</p><div class='video-placeholder-container' data-video-src='/uploads/clip.mp4' data-video-base62-sha1='abc'></div><div class='video-placeholder-container' data-video-src='/uploads/old.mp4'></div><div class='video-container' data-video-src='/uploads/played.mp4' data-video-base62-sha1='def'><video><source src='/uploads/played.mp4'></video></div><p>After</p>";
+    fixture().append(container);
+
+    await selectText(container);
+    const markdown = await selectedText();
+
+    assert.true(
+      markdown.includes("![|video](upload://abc.mp4)"),
+      `keeps the video as markdown (got: ${markdown})`
+    );
+    assert.true(
+      markdown.includes("![|video](/uploads/old.mp4)"),
+      `falls back to the video path (got: ${markdown})`
+    );
+    assert.true(
+      markdown.includes("![|video](upload://def.mp4)"),
+      `keeps played videos as markdown (got: ${markdown})`
+    );
+  });
+
   test("does not trim when the selection ends mid-content", function (assert) {
     const container = document.createElement("div");
     container.classList.add("cooked");
@@ -494,154 +545,8 @@ module("Unit | Utilities | clipboard", function (hooks) {
   );
 });
 
-module("Unit | Utilities | table-builder", function (hooks) {
+module("Unit | Utilities | tables", function (hooks) {
   setupTest(hooks);
-
-  test("arrayToTable", function (assert) {
-    const tableData = [
-      {
-        col0: "Toyota",
-        col1: "Supra",
-        col2: "1998",
-      },
-      {
-        col0: "Nissan",
-        col1: "Skyline",
-        col2: "1999",
-      },
-      {
-        col0: "Honda",
-        col1: "S2000",
-        col2: "2001",
-      },
-    ];
-
-    assert.strictEqual(
-      arrayToTable(tableData, ["Make", "Model", "Year"]),
-      mdTable,
-      "it creates a markdown table from an array of objects (with headers as keys)"
-    );
-
-    const specialCharsTableData = [
-      {
-        col0: "Toyota",
-        col1: "Supra",
-        col2: "$50,000",
-      },
-      {
-        col0: "",
-        col1: "Celica",
-        col2: "$20,000",
-      },
-      {
-        col0: "Nissan",
-        col1: "GTR",
-        col2: "$80,000",
-      },
-    ];
-
-    assert.strictEqual(
-      arrayToTable(specialCharsTableData, ["Make", "Model", "Price"]),
-      mdTableSpecialChars,
-      "it creates a markdown table with special characters in correct alignment"
-    );
-
-    const nonUniqueColumns = ["col1", "col2", "col1"];
-
-    assert.strictEqual(
-      arrayToTable(
-        [{ col0: "Col A", col1: "Col B", col2: "Col C" }],
-        nonUniqueColumns
-      ),
-      mdTableNonUniqueHeadings,
-      "it does not suppress a column if heading is the same as another column"
-    );
-  });
-  test("arrayToTable with custom column prefix", function (assert) {
-    const tableData = [
-      {
-        A0: "hey",
-        A1: "you",
-      },
-      {
-        A0: "over",
-        A1: "there",
-      },
-    ];
-
-    assert.strictEqual(
-      arrayToTable(tableData, ["Col 1", "Col 2"], "A"),
-      `|Col 1 | Col 2|\n|--- | ---|\n|hey | you|\n|over | there|\n`,
-      "it works"
-    );
-  });
-
-  test("arrayToTable returns valid table with multiline cell data", function (assert) {
-    const tableData = [
-      {
-        col0: "Jane\nDoe",
-        col1: "Teri",
-      },
-      {
-        col0: "Finch",
-        col1: "Sami",
-      },
-    ];
-
-    assert.strictEqual(
-      arrayToTable(tableData, ["Col 1", "Col 2"]),
-      `|Col 1 | Col 2|\n|--- | ---|\n|Jane Doe | Teri|\n|Finch | Sami|\n`,
-      "it creates a valid table"
-    );
-  });
-
-  test("arrayToTable with alignment specification", function (assert) {
-    const tableData = [
-      { col0: "left", col1: "center", col2: "right", col3: "unspecificated" },
-      { col0: "111", col1: "222", col2: "333", col3: "444" },
-    ];
-    const alignment = ["left", "center", "right", null];
-    assert.strictEqual(
-      arrayToTable(
-        tableData,
-        ["Col 1", "Col 2", "Col 3", "Col 4"],
-        "col",
-        alignment
-      ),
-      "|Col 1 | Col 2 | Col 3 | Col 4|\n|:-- | :-: | --: | ---|\n|left | center | right | unspecificated|\n|111 | 222 | 333 | 444|\n",
-      "it creates a valid table"
-    );
-  });
-
-  test("arrayToTable escapes `|` in headings and cells", function (assert) {
-    const tableData = [
-      {
-        col0: "`a|b`",
-        col1: "![image|200x50](/images/discourse-logo-sketch.png)",
-        col2: "",
-        col3: "|",
-      },
-      { col0: "1|1", col1: "2|2", col2: "3|3", col3: "4|4" },
-    ];
-    assert.strictEqual(
-      arrayToTable(tableData, ["Col | 1", "Col 2", "Col 3", "Col 4"]),
-      "|Col \\| 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
-      "it creates a valid table"
-    );
-  });
-
-  test("replaceTableRaw", function (assert) {
-    const raw = "Some text\n\nMaterial | Value\n--- | ---\nA | 1\n\nMore text";
-    const result = replaceTableRaw(
-      raw,
-      [2, 5],
-      "| Material | Value |\n| --- | --- |\n| A | 1 |"
-    );
-    assert.strictEqual(
-      result,
-      "Some text\n\n| Material | Value |\n| --- | --- |\n| A | 1 |\n\nMore text"
-    );
-  });
 
   test("findTableRegex", function (assert) {
     const oneTable = `|Make|Model|Year|\n|--- | --- | ---|\n|Toyota|Supra|1998|`;
@@ -735,5 +640,323 @@ module("Unit | Utilities | translateModKey", function (hooks) {
       translated.includes("⇧"),
       "keeps replacing modifier names with their platform spelling"
     );
+  });
+});
+
+module("Unit | Utilities | strings and numbers", function (hooks) {
+  setupTest(hooks);
+
+  test("splitString drops empty parts", function (assert) {
+    assert.deepEqual(splitString("a,,b"), ["a", "b"]);
+    assert.deepEqual(splitString("a|b", "|"), ["a", "b"]);
+    assert.deepEqual(splitString(null), [], "nothing for a non-string");
+  });
+
+  test("stripDiscoursePrefix", function (assert) {
+    assert.strictEqual(stripDiscoursePrefix("Discourse gadget"), "gadget");
+    assert.strictEqual(stripDiscoursePrefix("discourse-gizmo"), "gizmo");
+    assert.strictEqual(stripDiscoursePrefix(null), "");
+  });
+
+  test("formatUsername uses the replaced formatter", function (assert) {
+    assert.strictEqual(formatUsername("bob"), "bob");
+    assert.strictEqual(formatUsername(null), "");
+
+    try {
+      replaceFormatter((username) => username.toUpperCase());
+      assert.strictEqual(formatUsername("bob"), "BOB");
+    } finally {
+      replaceFormatter((username) => username);
+    }
+  });
+
+  test("hostnameValid", function (assert) {
+    assert.true(hostnameValid("example.com"));
+    assert.false(hostnameValid("bad_host"));
+    assert.strictEqual(
+      hostnameValid(""),
+      "",
+      "passes an empty hostname through"
+    );
+  });
+
+  test("removeAccents", function (assert) {
+    assert.strictEqual(removeAccents("café crème"), "cafe creme");
+  });
+
+  test("toNumber", function (assert) {
+    assert.strictEqual(toNumber(3), 3);
+    assert.strictEqual(toNumber("4.5"), 4.5);
+    assert.true(Number.isNaN(toNumber("gadget")));
+  });
+
+  test("cleanNullQueryParams nulls stringified empty values", function (assert) {
+    const params = { a: "null", b: "undefined", c: "gadget" };
+
+    assert.strictEqual(cleanNullQueryParams(params), params);
+    assert.deepEqual(params, { a: null, b: null, c: "gadget" });
+  });
+
+  test("splitWhere starts a chunk where the predicate holds", function (assert) {
+    assert.deepEqual(
+      splitWhere([1, 2, 3, 4, 6], (n) => n % 2 === 1),
+      [
+        [1, 2],
+        [3, 4, 6],
+      ]
+    );
+  });
+
+  test("isValidDestinationUrl rejects auth and upload paths", function (assert) {
+    assert.true(isValidDestinationUrl("/t/gadget/1"));
+    assert.false(isValidDestinationUrl("/login"));
+    assert.false(isValidDestinationUrl("/uploads/default/1.png"));
+    assert.false(isValidDestinationUrl("/"));
+    assert.strictEqual(isValidDestinationUrl(""), "");
+  });
+
+  test("optionalRequire", function (assert) {
+    assert.strictEqual(
+      optionalRequire("discourse/lib/utilities", "splitString"),
+      splitString
+    );
+    assert.false(optionalRequire("discourse/lib/gadget-that-does-not-exist"));
+  });
+});
+
+module("Unit | Utilities | determinePostReplaceSelection", function () {
+  const needle = { start: 10, end: 20 };
+  const replacement = { start: 10, end: 25 };
+
+  function select(start, end) {
+    return determinePostReplaceSelection({
+      selection: { start, end },
+      needle,
+      replacement,
+    });
+  }
+
+  test("keeps a selection before the needle", function (assert) {
+    assert.deepEqual(select(2, 8), { start: 2, end: 8 });
+  });
+
+  test("cuts a selection that ends inside the needle", function (assert) {
+    assert.deepEqual(select(2, 15), { start: 2, end: 10 });
+  });
+
+  test("grows a selection that spans the needle", function (assert) {
+    assert.deepEqual(select(2, 22), { start: 2, end: 27 });
+  });
+
+  test("collapses a selection inside the needle to the replacement end", function (assert) {
+    assert.deepEqual(select(12, 18), { start: 25, end: 25 });
+  });
+
+  test("starts at the replacement end a selection spanning the needle's end", function (assert) {
+    assert.deepEqual(select(12, 22), { start: 25, end: 27 });
+  });
+
+  test("shifts a selection after the needle", function (assert) {
+    assert.deepEqual(select(22, 24), { start: 27, end: 29 });
+  });
+});
+
+module("Unit | Utilities | DOM", function (hooks) {
+  setupTest(hooks);
+
+  test("highlightPost focuses the post body after the first post", function (assert) {
+    fixture().innerHTML = `
+      <div id="post_1"><div class="topic-body"></div></div>
+      <div id="post_3"><div class="topic-body"></div></div>
+    `;
+
+    highlightPost(1);
+    assert.false(fixture("#post_1 .topic-body").hasAttribute("tabindex"));
+
+    highlightPost(3);
+    assert.strictEqual(
+      fixture("#post_3 .topic-body").getAttribute("tabindex"),
+      "0"
+    );
+    assert.strictEqual(document.activeElement, fixture("#post_3 .topic-body"));
+  });
+
+  test("selectedRange and selectedNode read the selection", async function (assert) {
+    fixture().innerHTML = `<p class="gadget">Gadget text</p>`;
+    await selectText(".gadget");
+
+    assert.true(selectedRange() instanceof Range);
+    assert.strictEqual(selectedNode(), fixture(".gadget"));
+
+    window.getSelection().removeAllRanges();
+    assert.strictEqual(selectedRange(), undefined);
+    assert.strictEqual(selectedNode(), undefined);
+  });
+
+  test("caretPosition reads the selection start", function (assert) {
+    fixture().innerHTML = `<textarea>gadget</textarea>`;
+    const textarea = fixture("textarea");
+    textarea.setSelectionRange(3, 3);
+
+    assert.strictEqual(caretPosition(textarea), 3);
+    assert.strictEqual(caretPosition(null), 0);
+  });
+
+  test("getCaretPosition adds the element's offset to the caret", function (assert) {
+    fixture().innerHTML = `<textarea style="margin: 30px">gadget</textarea>`;
+    const textarea = fixture("textarea");
+    const caret = caretCoordinates(textarea);
+    const rect = textarea.getBoundingClientRect();
+
+    assert.deepEqual(getCaretPosition(textarea), {
+      x: caret.left + rect.left,
+      y: caret.top + rect.top,
+    });
+  });
+
+  test("getElement returns the parent of a text node", function (assert) {
+    fixture().innerHTML = `<p>gadget</p>`;
+    const paragraph = fixture("p");
+
+    assert.strictEqual(getElement(paragraph.firstChild), paragraph);
+    assert.strictEqual(getElement(paragraph), paragraph);
+  });
+
+  test("allowOnlyNumericInput blocks non-numeric keys", function (assert) {
+    const press = (key, allowNegative) => {
+      const event = { key, preventDefault: sinon.spy() };
+      allowOnlyNumericInput(event, allowNegative);
+      return event.preventDefault.called;
+    };
+
+    assert.false(press("5"));
+    assert.false(press("Backspace"));
+    assert.true(press("a"));
+    assert.true(press("-"));
+    assert.false(press("-", true));
+  });
+
+  test("clipboardHelpers reads what can be pasted", function (assert) {
+    const event = (types, files) => ({
+      clipboardData: {
+        types,
+        files,
+        items: [],
+        getData: () => "",
+      },
+    });
+    const opts = {
+      canUpload: true,
+      siteSettings: { enable_rich_text_paste: true },
+    };
+
+    const html = clipboardHelpers(event(["text/html"], []), opts);
+    assert.deepEqual(html.types, ["text/html"]);
+    assert.false(html.canUpload);
+    assert.true(html.canPasteHtml);
+
+    const image = clipboardHelpers(
+      event(["text/html", "Files"], [{ type: "image/jpeg" }]),
+      opts
+    );
+    assert.true(image.canUpload);
+    assert.false(image.canPasteHtml, "an image upload wins over HTML");
+  });
+});
+
+module("Unit | Utilities | browser", function (hooks) {
+  setupTest(hooks);
+
+  test("areCookiesEnabled", function (assert) {
+    assert.true(areCookiesEnabled());
+  });
+
+  test("prefersReducedMotion reads the media query", function (assert) {
+    sinon.stub(window, "matchMedia").returns({ matches: true });
+
+    assert.true(prefersReducedMotion());
+    assert.true(
+      window.matchMedia.calledWith("(prefers-reduced-motion: reduce)")
+    );
+  });
+
+  test("postRNWebviewMessage posts to the app webview", function (assert) {
+    postRNWebviewMessage("gadget", 1);
+
+    try {
+      window.ReactNativeWebView = { postMessage: sinon.spy() };
+      postRNWebviewMessage("gadget", 1);
+
+      assert.true(
+        window.ReactNativeWebView.postMessage.calledOnceWith('{"gadget":1}')
+      );
+    } finally {
+      delete window.ReactNativeWebView;
+    }
+  });
+
+  test("isPrimaryTab is true without service workers", async function (assert) {
+    sinon.stub(capabilities, "supportsServiceWorker").get(() => false);
+
+    assert.true(await isPrimaryTab());
+  });
+
+  test("clipboardCopy writes the text", async function (assert) {
+    const clipboard = { writeText: sinon.stub().resolves() };
+    sinon.stub(window.navigator, "clipboard").get(() => clipboard);
+
+    await clipboardCopy("gadget");
+
+    assert.true(clipboard.writeText.calledOnceWith("gadget"));
+  });
+
+  test("clipboardCopy turns an empty rejection into NotAllowedError", async function (assert) {
+    const clipboard = { writeText: () => Promise.reject() };
+    sinon.stub(window.navigator, "clipboard").get(() => clipboard);
+
+    await assert.rejects(clipboardCopy("gadget"), (error) => {
+      return error.name === "NotAllowedError";
+    });
+  });
+});
+
+module("Unit | Utilities | serialized actions", function () {
+  test("ActionSerializer queues at most one more run", async function (assert) {
+    let runs = 0;
+    let release;
+    const serializer = new ActionSerializer(() => {
+      runs++;
+      return new Promise((resolve) => (release = resolve));
+    });
+
+    const first = serializer.trigger();
+    serializer.trigger();
+    serializer.trigger();
+    assert.strictEqual(runs, 1, "runs once while processing");
+
+    release();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert.strictEqual(runs, 2, "runs the queued call once");
+
+    release();
+    await first;
+    assert.strictEqual(runs, 2);
+    assert.false(serializer.processing);
+  });
+
+  test("serializedAction runs the method through a serializer", async function (assert) {
+    const target = { calls: 0 };
+    const descriptor = serializedAction(target, "go", {
+      value() {
+        this.calls++;
+        return Promise.resolve();
+      },
+    });
+
+    descriptor.value.call(target);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    assert.strictEqual(target.calls, 1);
+    assert.true(target._go_serializer instanceof ActionSerializer);
   });
 });

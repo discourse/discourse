@@ -1,4 +1,5 @@
 import CodeLoginForm from "discourse/components/code-login-form";
+import InvitationGate from "discourse/components/invitation-gate";
 import LocalLoginForm from "discourse/components/local-login-form";
 import LoginButtons from "discourse/components/login-buttons";
 import LoginPageCta from "discourse/components/login-page-cta";
@@ -9,7 +10,6 @@ import bodyClass from "discourse/helpers/body-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and, not } from "discourse/truth-helpers";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -35,7 +35,9 @@ export default <template>
         }}
       />
 
-      {{#if @controller.hasNoLoginOptions}}
+      {{#if @controller.login.showInvitationGate}}
+        <InvitationGate @externalLogin={{@controller.externalLogin}} />
+      {{else if @controller.hasNoLoginOptions}}
         <div class={{if @controller.site.desktopView "login-left-side"}}>
           <NoLoginMethods />
         </div>

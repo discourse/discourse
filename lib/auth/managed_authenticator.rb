@@ -92,7 +92,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     association.save!
 
     # Update avatar/profile
-    retrieve_avatar(association.user, association.info["image"])
+    UserAvatar.retrieve_for_associated_account(association)
     retrieve_profile(association.user, association.info)
 
     # Build the Auth::Result object
@@ -122,7 +122,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     association.user = user
     association.save!
 
-    retrieve_avatar(user, association.info["image"])
+    UserAvatar.retrieve_for_associated_account(association, selection: :initial)
     retrieve_profile(user, association.info)
 
     auth_result.apply_associated_attributes!
@@ -136,12 +136,6 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
   def find_user_by_username(auth_token)
     username = auth_token.dig(:info, :nickname)
     User.find_by_username(username) if username
-  end
-
-  def retrieve_avatar(user, url)
-    return unless user && url.present?
-    return if user.user_avatar.try(:custom_upload_id).present? && !SiteSetting.auth_overrides_avatar
-    Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
   end
 
   def retrieve_profile(user, info)

@@ -24,6 +24,10 @@ vi:
         remove: "Bỏ thích"
         cant_remove: "Bạn không thể xóa lượt thích của mình nữa"
         unauthenticated: "Vui lòng đăng ký hoặc đăng nhập để thích tút"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Tham gia"
+        changes_removed: "Đã xóa"
     notifications:
       reaction_1_user_multiple_posts:
         other: "đã biểu cảm %{count} tút của bạn"

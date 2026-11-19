@@ -19,6 +19,15 @@ module DiscourseWorkflows
           output_contracts: PostLifecycle::OUTPUT_CONTRACTS,
           properties: PostLifecycle::PROPERTIES,
         )
+
+        deprecated(
+          superseded_by: "2.0",
+          changes: {
+            "user" => "actor",
+          },
+          notice_key: "discourse_workflows.node_deprecated.user_is_post_author",
+          description_key: "discourse_workflows.node_descriptions.trigger:post_recovered_v1",
+        )
       end
     end
   end

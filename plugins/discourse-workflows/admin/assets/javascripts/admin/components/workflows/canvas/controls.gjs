@@ -1,5 +1,4 @@
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DShortcut from "discourse/ui-kit/d-shortcut";
 import { i18n } from "discourse-i18n";

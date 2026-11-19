@@ -1,11 +1,12 @@
 <% if ContentLocalization.crawler_locale_param_enabled? %>
   <% locales = SiteSetting.content_localization_supported_locales&.split('|') || [] %>
   <% if locales.any? %>
-    <% current_path = request.path %>
-    <% canonical_url = "#{Discourse.base_url}#{current_path}" %>
-    <link rel="alternate" href="<%= canonical_url %>" hreflang="x-default" />
+    <% plain_url = plain_url_serves_default_locale? %>
+    <% locales = SiteSetting.content_localization_locales if plain_url %>
+    <link rel="alternate" href="<%= canonical_url_for_locale(nil) %>" hreflang="x-default" />
     <% locales.each do |locale| %>
-      <link rel="alternate" href="<%= canonical_url %>?<%= Discourse::LOCALE_PARAM %>=<%= locale %>" hreflang="<%= locale.tr('_', '-') %>" />
+      <% href_locale = locale unless plain_url && locale == SiteSetting.default_locale %>
+      <link rel="alternate" href="<%= canonical_url_for_locale(href_locale) %>" hreflang="<%= locale.tr('_', '-') %>" />
     <% end %>
   <% end %>
 <% end %>

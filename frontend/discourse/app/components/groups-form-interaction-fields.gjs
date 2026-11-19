@@ -1,8 +1,8 @@
-/* eslint-disable ember/no-classic-components */
-import Component, { Input } from "@ember/component";
+import Component from "@glimmer/component";
+import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import { computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { get } from "@ember/object";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -12,8 +12,10 @@ import NotificationsButton from "discourse/select-kit/components/notifications-b
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class GroupsFormInteractionFields extends Component {
+  @service currentUser;
+  @service siteSettings;
+
   aliasLevelOptions = [
     { name: i18n("groups.alias_levels.nobody"), value: 0 },
     { name: i18n("groups.alias_levels.only_admins"), value: 1 },
@@ -23,54 +25,35 @@ export default class GroupsFormInteractionFields extends Component {
     { name: i18n("groups.alias_levels.everyone"), value: 99 },
   ];
 
-  watchingNotificationLevel = NotificationLevels.WATCHING;
-
-  @computed("model.messageable_level", "aliasLevelOptions.firstObject.value")
   get messageableLevel() {
     return (
-      this.model?.messageable_level ||
-      this.aliasLevelOptions?.firstObject?.value
+      get(this.args.model, "messageable_level") ||
+      this.aliasLevelOptions[0].value
     );
   }
 
-  @computed("model.mentionable_level", "aliasLevelOptions.firstObject.value")
   get mentionableLevel() {
     return (
-      this.model?.mentionable_level ||
-      this.aliasLevelOptions?.firstObject?.value
+      get(this.args.model, "mentionable_level") ||
+      this.aliasLevelOptions[0].value
     );
   }
 
-  @computed("model.default_notification_level", "watchingNotificationLevel")
   get defaultNotificationLevel() {
-    if (
-      Object.values(NotificationLevels).includes(
-        this.model?.default_notification_level
-      )
-    ) {
-      return this.model?.default_notification_level;
-    }
-    return this.watchingNotificationLevel;
+    const level = get(this.args.model, "default_notification_level");
+    return Object.values(NotificationLevels).includes(level)
+      ? level
+      : NotificationLevels.WATCHING;
   }
 
-  @computed("siteSettings.email_in", "model.automatic", "currentUser.admin")
   get showEmailSettings() {
-    return (
-      this.siteSettings?.email_in &&
-      this.currentUser?.admin &&
-      !this.model?.automatic
-    );
+    return this.siteSettings.email_in && this.currentUser?.admin;
   }
 
-  @computed(
-    "model.isCreated",
-    "model.can_admin_group",
-    "currentUser.can_create_group"
-  )
   get canAdminGroup() {
     return (
-      (!this.model?.isCreated && this.currentUser?.can_create_group) ||
-      (this.model?.isCreated && this.model?.can_admin_group)
+      (!this.args.model?.isCreated && this.currentUser?.can_create_group) ||
+      (this.args.model?.isCreated && this.args.model?.can_admin_group)
     );
   }
 
@@ -86,7 +69,7 @@ export default class GroupsFormInteractionFields extends Component {
           class="groups-form-mentionable-level"
           @content={{this.aliasLevelOptions}}
           @name="alias"
-          @onChange={{fn (mut this.model.mentionable_level)}}
+          @onChange={{fn (mut @model.mentionable_level)}}
           @value={{this.mentionableLevel}}
           @valueProperty="value"
         />
@@ -99,7 +82,7 @@ export default class GroupsFormInteractionFields extends Component {
           class="groups-form-messageable-level"
           @content={{this.aliasLevelOptions}}
           @name="alias"
-          @onChange={{fn (mut this.model.messageable_level)}}
+          @onChange={{fn (mut @model.messageable_level)}}
           @value={{this.messageableLevel}}
           @valueProperty="value"
         />
@@ -110,7 +93,7 @@ export default class GroupsFormInteractionFields extends Component {
           <label>
             <Input
               class="groups-form-publish-read-state"
-              @checked={{this.model.publish_read_state}}
+              @checked={{@model.publish_read_state}}
               @type="checkbox"
             />
 
@@ -132,7 +115,7 @@ export default class GroupsFormInteractionFields extends Component {
             class="input-xxlarge groups-form-incoming-email"
             @name="incoming_email"
             @placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"
-            @value={{this.model.incoming_email}}
+            @value={{@model.incoming_email}}
           />
 
           <DTooltip
@@ -146,7 +129,7 @@ export default class GroupsFormInteractionFields extends Component {
             <PluginOutlet
               @connectorTagName="div"
               @name="group-email-in"
-              @outletArgs={{lazyHash model=this.model}}
+              @outletArgs={{lazyHash model=@model}}
             />
           </span>
         </div>
@@ -161,7 +144,7 @@ export default class GroupsFormInteractionFields extends Component {
 
         <NotificationsButton
           class="groups-form-default-notification-level"
-          @onChange={{fn (mut this.model.default_notification_level)}}
+          @onChange={{fn (mut @model.default_notification_level)}}
           @options={{hash i18nPrefix="groups.notifications"}}
           @value={{this.defaultNotificationLevel}}
         />
@@ -171,7 +154,7 @@ export default class GroupsFormInteractionFields extends Component {
         <PluginOutlet
           @connectorTagName="div"
           @name="groups-interaction-custom-options"
-          @outletArgs={{lazyHash model=this.model}}
+          @outletArgs={{lazyHash model=@model}}
         />
       </span>
     </div>

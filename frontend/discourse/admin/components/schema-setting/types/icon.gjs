@@ -3,7 +3,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
-import { and, not } from "discourse/truth-helpers";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import { i18n } from "discourse-i18n";
 

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import ChatChannelListFilterToggle from "../../chat-channel-list-filter-toggle";
-import ChatChannelListOptionsButton from "../../chat-channel-list-options-button";
+import ChatChannelListFilterToggle from "../../chat-channel-list-filter-toggle.gjs";
+import ChatChannelListOptionsButton from "../../chat-channel-list-options-button.gjs";
 
 /**
  * Mobile navbar action that opens the shared channel list menu

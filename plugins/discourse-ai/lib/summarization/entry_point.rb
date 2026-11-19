@@ -4,6 +4,37 @@ module DiscourseAi
   module Summarization
     class EntryPoint
       def inject_into(plugin)
+        plugin.register_html_builder("server:topic-show-before-posts") do |controller, topic_view:|
+          publication =
+            DiscourseAi::Summarization::PublishedSummary.new(
+              topic_view,
+              guardian: controller.guardian,
+            )
+          next if !publication.summary&.summarized_cooked.present?
+
+          controller.render_to_string(
+            partial: "discourse_ai/summarization/published_summary",
+            locals: {
+              publication:,
+            },
+          )
+        end
+
+        # markdown is a machine format, so agents get the summary whatever their user agent
+        plugin.register_modifier(
+          :markdown_topic_header_sections,
+        ) do |sections, topic_view, guardian|
+          publication =
+            DiscourseAi::Summarization::PublishedSummary.new(
+              topic_view,
+              guardian:,
+              crawler_only: false,
+            )
+          next sections if !publication.summary
+
+          sections + [publication.markdown]
+        end
+
         plugin.add_to_serializer(:current_user, :can_request_gists) { scope.can_request_gists? }
 
         plugin.add_to_serializer(:current_user, :can_summarize) do
@@ -101,6 +132,23 @@ module DiscourseAi
 
         plugin.on(:post_destroyed) do |post|
           AiSummary.where(target_type: "Topic", target_id: post.topic_id).delete_all
+        end
+
+        plugin.on(:post_revision_hidden) do |post_revision|
+          AiSummary.drop_for_post!(post_revision.post_id)
+        end
+
+        plugin.add_model_callback(PostRevision, :after_destroy) do
+          AiSummary.drop_for_post!(post_id)
+        end
+
+        plugin.on(:post_edited) do |post, _, revisor|
+          next if !revisor.post_changes.key?("raw")
+
+          revision = revisor.post_revision
+          next if revision && revision.modifications.dig("raw", 0) == post.raw_before_last_save
+
+          AiSummary.drop_since!(post.topic_id, revision ? post.created_at : post.last_version_at)
         end
 
         plugin.on(:posts_moved) do |args|

@@ -11,10 +11,6 @@ import dVirtualizer from "discourse/ui-kit/modifiers/d-virtualizer";
 const ROW_PX = 40;
 const estimate = () => ROW_PX;
 
-class ReSyncState {
-  @tracked estimate = estimate;
-}
-
 function buildRows(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
@@ -48,7 +44,7 @@ module(
       const publishes = [];
       const onState = (state) => publishes.push(state);
       const items = buildRows(100);
-      const state = new ReSyncState();
+      const estimateSize = tracked(estimate);
 
       await render(
         <template>
@@ -57,7 +53,7 @@ module(
             style="height: 400px; overflow-y: auto"
             {{dVirtualizer
               items=items
-              estimateSize=state.estimate
+              estimateSize=estimateSize.value
               key="id"
               onState=onState
             }}
@@ -72,7 +68,7 @@ module(
 
       // A different closure with identical behaviour, on the SAME instance: the
       // options object changes identity while the rendered window does not.
-      state.estimate = () => ROW_PX;
+      estimateSize.value = () => ROW_PX;
       await settled();
 
       assert.strictEqual(

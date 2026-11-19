@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { preloadCategories } from "../lib/boards-categories";
-import Column from "./column";
+import { preloadCategories } from "../lib/boards-categories.js";
+import Column from "./column.js";
 
 export default class Board {
   static async createPayload(data) {
@@ -34,6 +34,7 @@ export default class Board {
   @tracked archived;
   @tracked can_archive;
   @tracked can_manage;
+  @tracked can_manage_acl_owner;
   @tracked can_unarchive;
   @tracked can_write;
   @tracked card_style;
@@ -42,6 +43,7 @@ export default class Board {
   @tracked id;
   @tracked name;
   @tracked old_slug_used;
+  @tracked owners;
   @tracked require_confirmation;
   @tracked show_tags;
   @tracked show_topic_thumbnail;

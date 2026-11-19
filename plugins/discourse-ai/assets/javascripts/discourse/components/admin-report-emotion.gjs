@@ -1,11 +1,8 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
 import getURL from "discourse/lib/get-url";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 
-@tagName("")
 export default class AdminReportEmotion extends Component {
   get todayLink() {
     let date = moment().format("YYYY-MM-DD");
@@ -32,7 +29,7 @@ export default class AdminReportEmotion extends Component {
   }
 
   _model() {
-    return "%20order%3A" + this.model.type;
+    return "%20order%3A" + this.args.model.type;
   }
 
   _filterURL(date) {
@@ -42,52 +39,52 @@ export default class AdminReportEmotion extends Component {
   <template>
     <div
       class="admin-report-counters"
-      title={{this.model.description}}
+      title={{@model.description}}
       ...attributes
     >
       <div class="cell title">
-        {{#if this.model.icon}}
-          {{dIcon this.model.icon}}
+        {{#if @model.icon}}
+          {{dIcon @model.icon}}
         {{/if}}
-        {{this.model.title}}
+        {{@model.title}}
       </div>
 
       <div class="cell value today-count">
         <a href={{this.todayLink}}>
-          {{dNumber this.model.todayCount}}
+          {{dNumber @model.todayCount}}
         </a>
       </div>
 
       <div
-        class="cell value yesterday-count {{this.model.yesterdayTrend}}"
-        title={{this.model.yesterdayCountTitle}}
+        class="cell value yesterday-count {{@model.yesterdayTrend}}"
+        title={{@model.yesterdayCountTitle}}
       >
         <a href={{this.yesterdayLink}}>
-          {{dNumber this.model.yesterdayCount}}
+          {{dNumber @model.yesterdayCount}}
         </a>
-        {{dIcon this.model.yesterdayTrendIcon}}
+        {{dIcon @model.yesterdayTrendIcon}}
       </div>
 
       <div
-        class="cell value sevendays-count {{this.model.sevenDaysTrend}}"
-        title={{this.model.sevenDaysCountTitle}}
+        class="cell value sevendays-count {{@model.sevenDaysTrend}}"
+        title={{@model.sevenDaysCountTitle}}
       >
         <a href={{this.lastSevenDaysLink}}>
-          {{dNumber this.model.lastSevenDaysCount}}
+          {{dNumber @model.lastSevenDaysCount}}
         </a>
-        {{dIcon this.model.sevenDaysTrendIcon}}
+        {{dIcon @model.sevenDaysTrendIcon}}
       </div>
 
       <div
-        class="cell value thirty-days-count {{this.model.thirtyDaysTrend}}"
-        title={{this.model.thirtyDaysCountTitle}}
+        class="cell value thirty-days-count {{@model.thirtyDaysTrend}}"
+        title={{@model.thirtyDaysCountTitle}}
       >
 
         <a href={{this.lastThirtyDaysLink}}>
-          {{dNumber this.model.lastThirtyDaysCount}}
+          {{dNumber @model.lastThirtyDaysCount}}
         </a>
-        {{#if this.model.canDisplayTrendIcon}}
-          {{dIcon this.model.thirtyDaysTrendIcon}}
+        {{#if @model.canDisplayTrendIcon}}
+          {{dIcon @model.thirtyDaysTrendIcon}}
         {{/if}}
       </div>
     </div>

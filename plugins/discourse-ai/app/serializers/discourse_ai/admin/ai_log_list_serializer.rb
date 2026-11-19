@@ -23,6 +23,10 @@ module DiscourseAi
                  :has_retries,
                  :outcome
 
+      def outcome
+        AiLogSerializerHelpers.outcome(object)
+      end
+
       def provider_name
         AiLogSerializerHelpers.provider_name(object.provider_id)
       end

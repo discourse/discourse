@@ -95,17 +95,13 @@ RSpec.describe Discourse do
     it "applies worker-specific database variable overrides in a production environment" do
       test_database_config = Rails.application.config.database_configuration["test"]
 
-      temp_discourse_conf = Tempfile.new("discourse.conf")
-      temp_discourse_conf.write <<~TEXT
-      db_name = #{test_database_config["database"]}
-      db_username = ""
-      db_variables_statement_timeout = 10s
-      unicorn_worker_db_variables_statement_timeout = 100s
-      TEXT
-      temp_discourse_conf.rewind
+      ENV["DISCOURSE_DB_NAME"] = test_database_config["database"]
+      ENV["DISCOURSE_DB_USERNAME"] = ""
+      ENV["DISCOURSE_DB_VARIABLES_STATEMENT_TIMEOUT"] = "10s"
+      ENV["DISCOURSE_UNICORN_WORKER_DB_VARIABLES_STATEMENT_TIMEOUT"] = "100s"
 
       Rails.stubs(:env).returns(ActiveSupport::StringInquirer.new("production"))
-      GlobalSetting.configure!(path: temp_discourse_conf.path, use_blank_provider: false)
+      GlobalSetting.configure!(use_blank_provider: false)
       GlobalSetting.load_defaults
 
       Discourse.apply_worker_db_variables_overrides
@@ -120,8 +116,6 @@ RSpec.describe Discourse do
       ].each { |method| GlobalSetting.singleton_class.remove_method(method) }
 
       allow(Rails).to receive(:env).and_call_original
-      temp_discourse_conf&.close
-      temp_discourse_conf&.unlink
     end
   end
 
@@ -831,9 +825,12 @@ RSpec.describe Discourse do
   end
 
   describe ".anonymous_locale" do
-    def locale_for(cookie: nil, path: "/")
-      env = cookie ? { "HTTP_COOKIE" => "locale=#{cookie}" } : {}
-      Discourse.anonymous_locale(ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)))
+    def locale_for(cookie: nil, path: "/", env: {}, include_param: true)
+      env = env.merge("HTTP_COOKIE" => "locale=#{cookie}") if cookie
+      Discourse.anonymous_locale(
+        ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)),
+        include_param:,
+      )
     end
 
     before do
@@ -896,6 +893,29 @@ RSpec.describe Discourse do
       it "still prefers the locale param over the cookie" do
         SiteSetting.set_locale_from_param = true
 
+        expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
+      end
+    end
+
+    context "without the locale param" do
+      before do
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.set_locale_from_accept_language_header = true
+      end
+
+      it "resolves the locale the plain URL would serve" do
+        expect(locale_for(cookie: "es", path: "/?tl=fr", include_param: false)).to eq("es")
+        expect(
+          locale_for(
+            path: "/?tl=fr",
+            env: {
+              "HTTP_ACCEPT_LANGUAGE" => "ja",
+            },
+            include_param: false,
+          ),
+        ).to eq("ja")
+        expect(locale_for(path: "/?tl=fr", include_param: false)).to eq("en")
         expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
       end
     end

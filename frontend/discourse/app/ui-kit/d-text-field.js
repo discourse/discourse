@@ -20,7 +20,10 @@ const DEBOUNCE_MS = 500;
   "resolvedPlaceholder:placeholder"
 )
 export default class DTextField extends TextField {
+  /** @type {string | number | null | undefined} */
   _prevValue = null;
+
+  /** @type {import("@ember/runloop").Timer | null} */
   _timer = null;
 
   @computed("siteSettings.support_mixed_text_direction", "value")

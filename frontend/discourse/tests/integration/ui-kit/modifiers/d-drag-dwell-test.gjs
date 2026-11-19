@@ -887,15 +887,12 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     const onDwell = (event) => dwells.push(event);
     const onDwellEnd = (event) => ends.push(event);
 
-    class State {
-      @tracked show = true;
-    }
-    const state = new State();
+    const show = tracked(true);
 
     await render(
       <template>
         <div data-test-chip {{dDragAndDropSource type="card"}}>chip</div>
-        {{#if state.show}}
+        {{#if show.value}}
           <div
             data-test-dwell
             style="display: block; height: 60px;"
@@ -912,7 +909,7 @@ module("Integration | ui-kit | Modifier | dDragDwell", function (hooks) {
     await settled();
     assert.strictEqual(dwells.length, 1, "fired");
 
-    state.show = false;
+    show.value = false;
     await settled();
     assert.strictEqual(
       ends.length,

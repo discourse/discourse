@@ -6,7 +6,7 @@ import {
 } from "discourse/lib/homepage-router-overrides";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import DiscourseURL from "discourse/lib/url";
-import DiscourseRoute from "../discourse";
+import DiscourseRoute from "../discourse.js";
 
 @disableImplicitInjections
 export default class DiscoveryIndex extends DiscourseRoute {

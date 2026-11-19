@@ -69,6 +69,11 @@ module Jobs
 
       Guardian.new(@current_user).ensure_can_export_entity!(@entity, nil, @extra)
 
+      if @entity == "report" && @extra[:name].present? &&
+           !Report::VALID_TYPE_REGEX.match?(@extra[:name])
+        raise Discourse::InvalidParameters.new("args.name")
+      end
+
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
       entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
         "#{@extra[:name].dasherize}-#{@timestamp}"
@@ -324,7 +329,7 @@ module Jobs
 
     def get_staff_action_fields(staff_action)
       staff_action_array = []
-      can_see_content = staff_action_log_guardian.can_see_staff_action_log_content?(staff_action)
+      serializer = UserHistorySerializer.new(staff_action, scope: staff_action_log_guardian)
 
       HEADER_ATTRS_FOR["staff_action"].each do |attr|
         data =
@@ -340,8 +345,8 @@ module Jobs
             else
               "#{user.username} #{staff_action.attributes[attr]}"
             end
-          elsif %w[details context].include?(attr) && !can_see_content
-            attr == "details" ? I18n.t("staff_action_logs.redacted") : nil
+          elsif %w[details context].include?(attr)
+            serializer.public_send(attr)
           else
             staff_action.attributes[attr]
           end

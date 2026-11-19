@@ -9,10 +9,9 @@ pl_PL:
     chat_separate_sidebar_mode: "Pokaż oddzielne tryby paska bocznego dla forum i czatu."
     chat_enabled: "Włącz czat."
     chat_pinned_messages: "Włącz przypinanie wiadomości na kanałach czatu."
-    enable_new_chat_reactions_popup: "Włącz przeprojektowane wyskakujące okienko reakcji na wiadomościach czatu, pokazujące, kto zareagował, z nieskończonym przewijaniem i natywną obsługą urządzeń mobilnych."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
-    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować, z wyjątkiem użytkowników anonimowych, którzy mogą przeglądać czat tylko po dodaniu ich do tego ustawienia. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
-    chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
+    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować, z wyjątkiem użytkowników anonimowych, którzy mogą przeglądać czat tylko po dodaniu ich do tego ustawienia. Dodanie użytkowników anonimowych pozwala również wyszukiwarkom indeksować kanały publiczne. Należy pamiętać, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
+    chat_channel_retention_days: "Wiadomości czatu w standardowych kanałach będą przechowywane przez tyle dni. Ustaw „0”, aby zachować wiadomości na zawsze. Gdy anonimowi użytkownicy mogą przeglądać czat, usunięte wiadomości z czasem znikają z wyników wyszukiwania, więc krótki czas przechowywania ogranicza liczbę historii czatu, którą można znaleźć za pomocą wyszukiwarki."
     chat_dm_retention_days: "Wiadomości czatu na prywatnych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."
     chat_allowed_messages_for_trust_level_0: "Liczba wiadomości, które użytkownicy o poziomie zaufania 0 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
@@ -29,6 +28,7 @@ pl_PL:
     chat_pinning_messages_allowed_groups: "Użytkownicy w tych grupach mogą przypinać wiadomości czatu w kanałach, do których mają dostęp. Pamiętaj, że administratorzy i moderatorzy zawsze mogą przypinać wiadomości czatu. Każdy członek czatu grupowego lub wiadomości prywatnej może przypinać tam wiadomości."
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
     chat_max_direct_message_users: "Użytkownicy nie mogą dodać więcej niż ta liczba innych użytkowników podczas tworzenia nowej wiadomości bezpośredniej. Ustaw na 0, aby zezwolić na wysyłanie wiadomości tylko do siebie. Personel jest zwolniony z tego ustawienia."
+    chat_homepage_channel: "Kanał, na którym trafiają osoby, gdy {{setting:default_homepage}} jest ustawione na kanał czatu. Osoby, które nie mają dostępu do kanału, widzą zamiast tego pierwszy element w {{setting:top_menu}} , w tym anonimowi goście, chyba że {{setting:chat_allowed_groups}} obejmuje użytkowników anonimowych."
     chat_allow_archiving_channels: "Zezwól personelowi na archiwizowanie wiadomości w temacie podczas zamykania kanału."
     chat_editing_grace_period: "Przez (n) sekund po wysłaniu wiadomości jej edycja nie będzie pokazywać znacznika „edytowana”."
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
@@ -63,7 +63,35 @@ pl_PL:
 
         Odwiedź kanał pod adresem %{channel_url}, aby spróbować ponownie.
   chat:
+    design_wizard_homepage_name: "Czat"
+    design_wizard_homepage_description: "Otwórz kanał %{channel} , gdy członkowie odwiedzą Twoją stronę główną."
     deleted_chat_username: usunięte
+    crawler:
+      directory_title: "Kanały czatu"
+      nav_title: "Czat"
+      last_activity: "Ostatnia aktywność"
+      retention_notice:
+        one: "Wiadomości starsze niż %{count} dzień są usuwane, z wyjątkiem wiadomości przypiętych."
+        few: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+        many: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+        other: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+      messages_count:
+        one: "%{count} wiadomość"
+        few: "%{count} wiadomości"
+        many: "%{count} wiadomości"
+        other: "%{count} wiadomości"
+      members_count:
+        one: "%{count} członek"
+        few: "%{count} członków"
+        many: "%{count} członków"
+        other: "%{count} członków"
+      thread_title: "Wątek w %{channel}"
+      channel_day_title: "%{channel} – %{date}"
+      thread_replies:
+        one: "%{count} odpowiedź"
+        few: "%{count} odpowiedzi"
+        many: "%{count} odpowiedzi"
+        other: "%{count} odpowiedzi"
     errors:
       users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       user_cant_be_removed_from_channel: "Użytkownik nie może zostać usunięty z tego kanału"
@@ -279,13 +307,30 @@ pl_PL:
       default_deny_label: "Odrzuć"
     errors:
       send_chat_message:
-        invalid_params: "Nieprawidłowe parametry: %{errors}"
+        invalid_params: "Wiadomość jest nieprawidłowa: %{errors}"
         channel_not_found: "Nie znaleziono kanału: %{channel_id}"
-        failed: "Nie udało się wysłać wiadomości czatu."
+        channel_blocked: "Nie można publikować na kanale %{channel_id}: %{reason}"
+        failed: "Nie udało się wysłać wiadomości czatu (nieudany krok: %{step})."
+        recipient_blank: "Nie podano nazw użytkowników odbiorców."
+        recipient_staged: "'%{username}' jest użytkownikiem testowym i nie może korzystać z czatu."
+        recipient_suspended: "'%{username}' jest zawieszony i nie można odbierać wiadomości bezpośrednich."
+        recipient_inactive: "'%{username}' nie aktywował jeszcze swojego konta."
+        recipient_chat_disabled: "Użytkownik '%{username}' wyłączył czat w swoich preferencjach."
+        recipient_cannot_chat: "'%{username}' nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
+        sender_anonymous: "Wiadomości czatu nie można wysyłać anonimowo. Wybierz użytkownika jako nadawcę."
+        sender_chat_disabled: "Nadawca '%{sender}' wyłączył czat w swoich preferencjach."
+        sender_cannot_chat: "Nadawca „%{sender}” nie może używać czatu, ponieważ nie należy do grupy dozwolonej przez ustawienie „grupy dozwolone w czacie”."
+        sender_cannot_create_dm: "Nadawca '%{sender}' nie ma uprawnień do wysyłania wiadomości bezpośrednich (zobacz ustawienie „grupy z włączonymi wiadomościami bezpośrednimi”)."
+        sender_dms_disabled: "Nadawca '%{sender}' wyłączył wiadomości prywatne w swoich preferencjach."
+        sender_cannot_post: "Nadawca „%{sender}” nie ma uprawnień do publikowania wpisów na kanale %{channel_id}."
+        sender_not_member: "Nadawca „%{sender}” nie jest członkiem kanału %{channel_id}. Najpierw dołącz do kanału jako ten użytkownik."
+        user_blocked: "'%{sender}' nie można wysłać bezpośredniej wiadomości do '%{username}': %{reason}"
+        group_blocked: "'%{sender}' nie można wysłać wiadomości grupowej bezpośrednio do %{usernames}: %{reason}"
       chat_approval:
         channel_not_found: "Nie udało się wysłać wiadomości na czacie: kanał %{channel_id} nie został znaleziony."
         invalid_params: "Nie udało się wysłać wiadomości na czacie: %{errors}"
-        failed: "Nie udało się wysłać wiadomości na czacie: %{steps}"
+        channel_blocked: "Nie można wysłać wiadomości na czacie: nie można pisać na kanale %{channel_id}: %{reason}"
+        failed_step: "Nie udało się wysłać wiadomości na czacie (nieudany krok: %{step})."
         timeout_must_be_positive: "Liczba minut limitu czasu musi być większa niż 0."
         invalid_timeout_action: "Nieprawidłowa czynność limitu czasu: %{action}."
         buttons_required: "Wymagany jest co najmniej jeden przycisk zatwierdzający czat."
@@ -296,6 +341,15 @@ pl_PL:
         button_value_too_long: "Wartość przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
         button_style_invalid: "Przycisk zatwierdzania czatu %{position} musi mieć jeden z następujących stylów: %{styles}."
         button_icon_too_long: "Ikona przycisku zatwierdzania czatu %{position} musi mieć %{max} znaków lub mniej."
+    hints:
+      send_chat_message:
+        self_message: "Nadawca i odbiorca to „%{username}”, więc wiadomość została opublikowana w ich osobistym czacie."
+        preferences_bypassed: "„%{username}” nie przyjmuje bezpośrednich wiadomości od „%{sender}”, ale wiadomość została dostarczona, bo nadawca jest członkiem personelu."
+    logs:
+      send_chat_message:
+        sent_to_channel: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} na kanał %{channel_id}."
+        sent_to_user: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do '%{username}'."
+        sent_to_group: "Element %{item_index}: '%{sender}' wysłał wiadomość %{message_id} do grupy w wiadomościach bezpośrednich za pomocą %{usernames}."
   reviewable_score_types:
     needs_review:
       title: "Wymaga przeglądu"

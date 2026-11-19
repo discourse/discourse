@@ -9,6 +9,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
 export default class EmojiPicker extends Component {
+  /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null} */
   @tracked menu = null;
 
   get icon() {

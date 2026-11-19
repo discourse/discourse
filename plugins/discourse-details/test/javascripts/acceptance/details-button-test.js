@@ -4,6 +4,7 @@ import {
   find,
   triggerKeyEvent,
   visit,
+  waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { formatShortcut } from "discourse/lib/shortcut-format";
@@ -16,6 +17,31 @@ import { i18n } from "discourse-i18n";
 
 acceptance("Details Button", function (needs) {
   needs.user();
+
+  test("inserts AI-marked details from the AI content submenu", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await fillIn(".d-editor-input", "");
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='ai-content']");
+    await click("[data-name='ai-content-details']");
+    await waitUntil(() => find(".d-editor-input").value);
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        '[details="AI content" ai]\nAI content\n[/details]\n',
+        "the summary and body are prefilled and the block is marked"
+      );
+
+    await click(".composer-toggle-switch");
+    assert
+      .dom(".ProseMirror details.ai-quote summary")
+      .hasText("AI content", "the rich editor preserves the marked summary");
+    assert
+      .dom(".ProseMirror details.ai-quote p")
+      .hasText("AI content", "the body is editable in rich text");
+  });
 
   test("details button", async function (assert) {
     await visit("/");

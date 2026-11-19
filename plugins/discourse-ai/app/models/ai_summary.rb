@@ -3,12 +3,14 @@
 class AiSummary < ActiveRecord::Base
   belongs_to :target, polymorphic: true
 
+  before_save :refresh_cooked, if: :needs_cooking?
+
   enum :summary_type, { complete: 0, gist: 1 }
   enum :origin, { human: 0, system: 1 }
 
   LEGACY_UNIQUE_INDEX_NAME = "idx_on_target_id_target_type_summary_type_3355609fbb"
 
-  def self.store!(strategy, llm_model, summary, og_content, human:)
+  def self.store!(strategy, llm_model, summary, og_content, human:, source_sha: nil)
     attributes = {
       target_id: strategy.target.id,
       target_type: strategy.target.class.name,
@@ -20,17 +22,46 @@ class AiSummary < ActiveRecord::Base
       origin: human ? origins[:human] : origins[:system],
       locale: strategy.locale,
     }
+    attributes.merge!(new(attributes).cooked_attributes)
 
     strategy.target.with_lock do
+      if source_sha && source_changed?(strategy, og_content, source_sha)
+        next new(attributes.merge(updated_at: Time.zone.now)).tap(&:mark_as_outdated)
+      end
+
       stored_summary = upsert_summary!(attributes)
       remove_superseded_summaries!(strategy, stored_summary)
       stored_summary
     end
   end
 
+  def self.drop_for_post!(post_id)
+    topic_ids = Post.with_deleted.where(id: post_id).select(:topic_id)
+    where(target_type: "Topic", target_id: topic_ids).delete_all
+  end
+
+  def self.drop_since!(topic_id, time)
+    transaction do
+      Topic.with_deleted.where(id: topic_id).lock.pick(:id)
+
+      where(target_type: "Topic", target_id: topic_id).where("updated_at >= ?", time).delete_all
+    end
+  end
+
   def self.build_sha(joined_ids)
     Digest::SHA256.hexdigest(joined_ids)
   end
+
+  def self.build_source_sha(strategy, content)
+    build_sha(strategy.as_llm_messages(content).to_json)
+  end
+
+  def self.source_changed?(strategy, og_content, source_sha)
+    summarized_ids = og_content.map { it[:id] }
+    current_content = strategy.targets_data.filter { summarized_ids.include?(it[:id]) }
+    source_sha != build_source_sha(strategy, current_content)
+  end
+  private_class_method :source_changed?
 
   def self.upsert_summary!(attributes)
     upsert_summary(attributes)
@@ -50,6 +81,7 @@ class AiSummary < ActiveRecord::Base
           unique_by: %i[target_id target_type summary_type locale],
           update_only: %i[
             summarized_text
+            summarized_cooked
             original_content_sha
             algorithm
             origin
@@ -94,6 +126,48 @@ class AiSummary < ActiveRecord::Base
   def outdated
     @outdated || false
   end
+
+  def cooked_attributes
+    return { summarized_cooked: nil } if !complete? || target_type != "Topic"
+
+    cooking_locale = LocaleNormalizer.normalize_to_i18n(locale)
+    cooking_locale = SiteSetting.default_locale if !I18n.locale_available?(cooking_locale)
+
+    I18n.with_locale(cooking_locale) do
+      { summarized_cooked: PrettyText.cook(summarized_text, topic_id: target_id) }
+    end
+  end
+
+  def cook_missing!
+    return if !complete? || target_type != "Topic" || !summarized_cooked.nil?
+
+    self
+      .class
+      .where(
+        id:,
+        summarized_text:,
+        updated_at:,
+        locale:,
+        target_type:,
+        target_id:,
+        summary_type:,
+        summarized_cooked: nil,
+      )
+      .update_all(cooked_attributes)
+  end
+
+  private
+
+  def needs_cooking?
+    return summarized_cooked.present? if !complete? || target_type != "Topic"
+
+    summarized_text_changed? || locale_changed? || target_type_changed? || target_id_changed? ||
+      summarized_cooked.nil?
+  end
+
+  def refresh_cooked
+    assign_attributes(cooked_attributes)
+  end
 end
 
 # == Schema Information
@@ -106,6 +180,7 @@ end
 #  locale                :string(20)
 #  origin                :integer
 #  original_content_sha  :string           not null
+#  summarized_cooked     :text
 #  summarized_text       :string           not null
 #  summary_type          :integer          default("complete"), not null
 #  target_type           :string           not null
@@ -116,5 +191,6 @@ end
 # Indexes
 #
 #  idx_ai_summaries_on_target_type_and_locale       (target_id,target_type,summary_type,locale) UNIQUE NULLS NOT DISTINCT
+#  index_ai_summaries_missing_cooked                (id) WHERE ((summarized_cooked IS NULL) AND (summary_type = 0) AND ((target_type)::text = 'Topic'::text))
 #  index_ai_summaries_on_target_type_and_target_id  (target_type,target_id)
 #

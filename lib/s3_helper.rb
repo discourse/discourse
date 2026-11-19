@@ -332,9 +332,14 @@ class S3Helper
     transfer_manager.upload_file(source_path, bucket: obj.bucket_name, key: obj.key, **options)
   end
 
-  def download_file(filename, destination_path, failure_message = nil)
+  def download_file(filename, destination_path, failure_message = nil, **options)
     obj = object(filename)
-    transfer_manager.download_file(destination_path, bucket: obj.bucket_name, key: obj.key)
+    transfer_manager.download_file(
+      destination_path,
+      bucket: obj.bucket_name,
+      key: obj.key,
+      **options,
+    )
   rescue => err
     raise failure_message&.to_s ||
             "Failed to download #{filename} because #{err.message.length > 0 ? err.message : err.class.to_s}"

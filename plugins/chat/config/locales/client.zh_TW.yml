@@ -97,8 +97,6 @@ zh_TW:
           other: "您確定要刪除這 %{count} 則訊息嗎？"
       channel_settings:
         title: "頻道設置"
-        edit: "編輯"
-        add: "添加"
         star_channel: "收藏頻道"
         unstar_channel: "取消收藏頻道"
         close_channel: "關閉頻道"
@@ -107,10 +105,11 @@ zh_TW:
         open_channel_disabled_read_only: "無法重新打開只讀頻道。"
         archive_channel: "歸檔頻道"
         delete_channel: "刪除頻道"
+        danger_zone:
+          title: "危險區域"
         join_channel: "加入頻道"
         leave_channel: "離開頻道"
         leave_groupchat_info: "離開此群組聊天后，您將無法再訪問它，也不會收到與之相關的通知。要重新加入，需要群組聊天成員再次向您發送邀請。"
-        notification_settings: "通知設置"
         notification_settings_context: "通知"
         join: "加入"
         leave: "離開"
@@ -151,6 +150,8 @@ zh_TW:
       muted: "已設為免打擾"
       joined: "已加入"
       empty_state:
+        direct_message_cta: "發起私人聊天或群組聊天"
+        direct_message: "你也可以與一位或多位使用者發起私人聊天或群組聊天。"
         title: "找不到頻道"
         my_threads: "您還沒有任何消息串。您參與的消息串將在此處顯示。"
       email_frequency:
@@ -306,6 +307,8 @@ zh_TW:
       message_too_long: "消息過長，最多只能包含 %{count} 個字符。"
       retry_staged_message:
         title: "網絡錯誤"
+        rate_limited_title: "訊息傳送過於頻繁"
+        rate_limited_waiting: "訊息傳送過於頻繁，請稍候"
         action: "重新發送？"
       bookmark_message: "書籤"
       bookmark_message_edit: "編輯書簽"
@@ -380,21 +383,22 @@ zh_TW:
       members_view:
         filter_placeholder: 查找成員
         add_member: 添加成員
-        back_to_settings: "返回設置"
       about_view:
         associated_topic: 連結的主題
         associated_category: 連結的分類
-        title: 標題
         name: 名稱
         description: 描述
       channel_info:
         back_to_all_channels: "所有頻道"
         back_to_channel: "返回"
+        nav_label: "頻道資訊"
         tabs:
           members: 成員
+          preferences: 偏好設定
           settings: 設置
           search: 搜尋
         remove_member: "移除"
+        members_title: "%{channel} 位成員"
       new_message_modal:
         title: 發送消息
         add_user_long: <kbd>shift + 點擊</kbd>或 <kbd>shift + enter</kbd><span>添加 @%{username}</span>
@@ -414,7 +418,6 @@ zh_TW:
         create_new_group_chat: "創建群組聊天"
         group_with_too_many_members: "成員過多 (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: 編輯頻道
         input_placeholder: 添加名稱
         slug_description: 在 URL 中使用頻道縮略名而不是頻道名稱
         name: 頻道名稱
@@ -422,9 +425,7 @@ zh_TW:
         emoji: 頻道表情符號
         reset_emoji: 重置表情符號
       channel_edit_description_modal:
-        title: 編輯描述
         input_placeholder: 添加描述
-        description: 告訴人們這個頻道的主題
       direct_message_creator:
         add_to_channel: "添加到頻道"
         title: 新消息
@@ -536,7 +537,6 @@ zh_TW:
         always: "所有活動"
       settings:
         channel_wide_mentions_label: "允許 @all 和 @here 提及"
-        channel_wide_mentions_description: "允許使用者使用 @all 通知#%{channel} 的所有成員，或僅使用 @here 通知當前活躍的成員"
         channel_threading_label: "消息串"
         channel_threading_description: "啟用消息串后，對聊天消息的回復將創建一個單獨的對話，該對話將與主頻道并存。"
         auto_join_users_label: "自動添加使用者"
@@ -548,6 +548,9 @@ zh_TW:
         followed: "已加入"
         mute: "將頻道設為免打擾"
         unmute: "取消將頻道設為免打擾"
+        muted_until_hint: "直到%{until}"
+        mute_options:
+          "off": "關閉"
         threading_enabled: "已啟用"
         threading_disabled: "已禁用"
         muted_on: "開"
@@ -557,9 +560,6 @@ zh_TW:
         save: "保存"
         saved: "已保存"
         unfollow: "離開"
-        admin_title: "管理員"
-        settings_title: "設置"
-        info_title: "頻道資訊"
         category_label: "分類"
         history_label: "歷史記錄"
         members_label: "成員"
@@ -585,21 +585,38 @@ zh_TW:
       direct_messages:
         title: "直接消息"
         aria_label: "切換到直接消息"
+        new: "新增私人聊天"
         new_group: "新建群組聊天"
         create: "開始"
         leave: "離開頻道"
         close: "關閉頻道"
         cannot_create: "抱歉，您無法發送直接消息。"
       channel_list:
+        apply_filters: "套用頻道篩選條件"
         title: "頻道"
         aria_label: "切換到頻道列表"
         options:
+          title: "頻道清單選項"
           filter: "篩選"
+          sort: "排序"
+          current_filter: "篩選：%{filter}"
+          current_sort: "排序：%{sort}"
         filter:
+          title: "頻道篩選條件："
           all: "所有頻道"
+          active: "僅限活躍頻道"
+          active_description: "最近 %{days} 天內有新活動"
+          unread: "未讀"
           mentions: "提及"
         sort:
+          title: "頻道排序方式："
+          alphabetical: "名稱字母順序"
+          recent_activity: "近期活動"
           priority: "優先級"
+          priority_description_dms: "先顯示有提及的頻道，再顯示有未讀訊息的頻道，最後依近期活動排序"
+        empty:
+          filtered: "沒有符合此篩選條件的頻道。"
+          show_all: "顯示所有頻道"
       incoming_webhooks:
         back: "返回"
         channel_placeholder: "選擇一個頻道"
@@ -674,19 +691,6 @@ zh_TW:
         notify_moderators: "由于上面未列出的另一個原因，此消息需要管理人員加以注意。"
       flagging:
         action: "檢舉消息"
-      emoji_picker:
-        favorites: "常用"
-        smileys_&_emotion: "笑臉和情感"
-        objects: "物件"
-        people_&_body: "人和身體"
-        travel_&_places: "旅行和地點"
-        animals_&_nature: "動物和自然"
-        food_&_drink: "食品和飲料"
-        activities: "活動"
-        flags: "檢舉"
-        symbols: "符號"
-        search_placeholder: "按表情符號名稱和別名搜尋…"
-        no_results: "沒有結果"
       thread:
         title: "標題"
         view_thread: 查看消息串
@@ -745,6 +749,11 @@ zh_TW:
           direct_html: '<span>%{username}</span> <span>在“%{channel}”中提及您</span>'
           other_plain: '在“%{channel}”中提及“%{identifier}”'
           other_html: '<span>%{username}</span> <span>在“%{channel}”中提及“%{identifier}”</span>'
+        direct_message_chat_mention:
+          direct: "在私人聊天中提及你"
+          direct_html: "<span>%{username}</span> <span>在私人聊天中提及你</span>"
+          other_plain: "在私人聊天中提及 %{identifier}"
+          other_html: "<span>%{username}</span> <span>在私人聊天中提及 %{identifier}</span>"
         chat_message: "新的聊天消息"
         chat_quoted: "%{username} 引用了您的聊天消息"
       titles:
@@ -813,6 +822,9 @@ zh_TW:
         chat:
           title: 聊天
     sidebar:
+      start_new_dm:
+        text: 發起私人聊天或群組聊天
+        title: 新增私人聊天或群組聊天
       panels:
         chat:
           label: "聊天"
@@ -824,15 +836,19 @@ zh_TW:
         "action:chat_approval": "聊天審批"
         "trigger:chat_message_created": "已創建聊天消息"
       node_descriptions:
-        "action:send_chat_message": "向聊天頻道發送消息"
         "action:chat_approval": "向聊天頻道發送審批請求并等待回復"
         "trigger:chat_message_created": "創建新聊天消息時觸發"
       chat_message_created:
         channel_id: "頻道"
         channel_id_description: "留空可觸發所有聊天頻道。"
       send_chat_message:
+        target: "寄送至"
+        targets:
+          channel: "頻道"
         channel_id: "頻道"
+        target_usernames: "收件者"
         message: "訊息"
+        actor_username: "發送人"
       chat_approval:
         message: "訊息"
         buttons: "按鈕"

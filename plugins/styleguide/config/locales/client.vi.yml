@@ -39,6 +39,12 @@ vi:
             delete: "Xóa"
         multi_select:
           title: "Chọn nhiều mục"
+        reorderable_list:
+          policies_pinned: "Đã ghim"
+          policies_required: "Bắt buộc"
+          table_field: "Trường"
+          table_type: "Loại"
+          cross_list_primary: "Chính"
         toasts:
           title: "Thông báo nổi (Toasts)"
         font_scale:

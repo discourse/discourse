@@ -1,52 +1,40 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DatePickerPast from "discourse/components/date-picker-past";
+import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import ComboBox from "discourse/select-kit/components/combo-box";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const ALL_TIME_FROM_DATE = "2014-08-26";
+const RANGES = {
+  last_10_days: { count: 10, type: "days" },
+  last_30_days: { count: 30, type: "days" },
+  last_90_days: { count: 90, type: "days" },
+  last_year: { count: 1, type: "year" },
+  all_time: null,
+  custom_date_range: null,
+};
+
 export default class RecalculateScoresForm extends Component {
   @service messageBus;
 
-  @tracked updateRangeValue = 0;
-  @tracked recalculateFromDate = "";
   @tracked remaining = this.args.model.recalculate_scores_remaining;
   @tracked status = "initial";
 
-  updateRange = [
-    {
-      name: i18n("gamification.update_range.last_10_days"),
-      value: 0,
-      calculation: { count: 10, type: "days" },
-    },
-    {
-      name: i18n("gamification.update_range.last_30_days"),
-      value: 1,
-      calculation: { count: 30, type: "days" },
-    },
-    {
-      name: i18n("gamification.update_range.last_90_days"),
-      value: 2,
-      calculation: { count: 90, type: "days" },
-    },
-    {
-      name: i18n("gamification.update_range.last_year"),
-      value: 3,
-      calculation: { count: 1, type: "year" },
-    },
-    { name: i18n("gamification.update_range.all_time"), value: 4 },
-    { name: i18n("gamification.update_range.custom_date_range"), value: 5 },
-  ];
+  formData = { range: "last_10_days", from_date: null };
+
+  rangeOptions = Object.keys(RANGES).map((key) => ({
+    value: key,
+    name: i18n(`gamification.update_range.${key}`),
+  }));
+  #formApi;
 
   constructor() {
     super(...arguments);
@@ -65,27 +53,18 @@ export default class RecalculateScoresForm extends Component {
   }
 
   get applyDisabled() {
-    const haveAvailability = this.args.model.recalculate_scores_remaining > 0;
-    if (!haveAvailability || this.status !== "initial") {
-      return true;
-    }
-
     return (
-      this.updateRangeValue === 5 &&
-      this.recalculateFromDate <= moment().locale("en").utc().endOf("day")
+      this.args.model.recalculate_scores_remaining <= 0 ||
+      this.status !== "initial"
     );
   }
 
-  get dateRange() {
-    if (this.updateRangeValue === 4) {
-      return;
-    }
+  get today() {
+    return moment().locale("en").utc().endOf("day");
+  }
 
-    let today = moment().locale("en").utc().endOf("day");
-    let pastDate = this.dateRangeToDate(this.updateRangeValue);
-    return `${pastDate} - ${today.format(
-      i18n("dates.long_with_year_no_time")
-    )}`;
+  get maxFromDate() {
+    return this.today.format("YYYY-MM-DD");
   }
 
   @bind
@@ -98,37 +77,58 @@ export default class RecalculateScoresForm extends Component {
   }
 
   @bind
-  dateRangeToDate(updateRangeValue) {
-    if (updateRangeValue === 4) {
-      return "2014-8-26";
+  dateRangeText(range) {
+    const calculation = RANGES[range];
+    if (!calculation) {
+      return;
     }
 
-    if (updateRangeValue === 5) {
-      return this.recalculateFromDate;
-    }
-
-    let today = moment().locale("en").utc().endOf("day");
-    let updateRange = this.updateRange.find((obj) => {
-      return obj.value === updateRangeValue;
-    });
-    let pastDate = today
+    const format = i18n("dates.long_with_year_no_time");
+    const pastDate = this.today
       .clone()
-      .subtract(updateRange.calculation.count, updateRange.calculation.type);
+      .subtract(calculation.count, calculation.type);
+    return `${pastDate.format(format)} - ${this.today.format(format)}`;
+  }
 
-    return pastDate.format(i18n("dates.long_with_year_no_time"));
+  fromDate(data) {
+    if (data.range === "all_time") {
+      return ALL_TIME_FROM_DATE;
+    }
+
+    if (data.range === "custom_date_range") {
+      return data.from_date;
+    }
+
+    const calculation = RANGES[data.range];
+    return this.today
+      .clone()
+      .subtract(calculation.count, calculation.type)
+      .format("YYYY-MM-DD");
   }
 
   @action
-  apply() {
-    this.status = "loading";
-    const data = {
-      from_date: this.dateRangeToDate(this.updateRangeValue),
-    };
+  registerFormApi(api) {
+    this.#formApi = api;
+  }
 
-    return ajax(`/admin/plugins/gamification/recalculate-scores.json`, {
-      data,
-      type: "PUT",
-    }).catch(popupAjaxError);
+  @action
+  submit() {
+    this.#formApi.submit();
+  }
+
+  @action
+  async recalculate(data) {
+    this.status = "loading";
+
+    try {
+      await ajax(`/admin/plugins/gamification/recalculate-scores.json`, {
+        data: { from_date: this.fromDate(data) },
+        type: "PUT",
+      });
+    } catch (error) {
+      this.status = "initial";
+      popupAjaxError(error);
+    }
   }
 
   <template>
@@ -147,52 +147,57 @@ export default class RecalculateScoresForm extends Component {
             {{i18n "gamification.completed"}}
           </div>
         {{else}}
-          <form class="form-horizontal">
-            <div class="input-group">
-              <label>{{i18n "gamification.update_scores_help"}}</label>
-              <ComboBox
-                @content={{this.updateRange}}
-                @id="update-range"
-                @onChange={{fn (mut this.updateRangeValue)}}
-                @value={{this.updateRangeValue}}
-                @valueProperty="value"
-              />
+          <Form
+            class="recalculate-scores-form"
+            @data={{this.formData}}
+            @onRegisterApi={{this.registerFormApi}}
+            @onSubmit={{this.recalculate}}
+            as |form transientData|
+          >
+            <form.Field
+              @description={{this.dateRangeText transientData.range}}
+              @format="full"
+              @name="range"
+              @title={{i18n "gamification.update_scores_help"}}
+              @type="select"
+              @validation="required"
+              as |field|
+            >
+              <field.Control as |select|>
+                {{#each this.rangeOptions as |option|}}
+                  <select.Option @value={{option.value}}>
+                    {{option.name}}
+                  </select.Option>
+                {{/each}}
+              </field.Control>
+            </form.Field>
 
-              {{#if (eq this.updateRangeValue 5)}}
-                <div class="input-group -custom-range">
-                  <label>{{i18n "gamification.custom_range_from"}}</label>
-                  <DatePickerPast
-                    class="date-input"
-                    @id="custom-from-date"
-                    @onSelect={{fn (mut this.recalculateFromDate)}}
-                    @placeholder="yyyy-mm-dd"
-                    @value={{this.recalculateFromDate}}
-                  />
-                </div>
-              {{else}}
-                <div class="recalculate-modal__date-range">
-                  {{this.dateRange}}
-                </div>
-              {{/if}}
-            </div>
-          </form>
+            {{#if (eq transientData.range "custom_date_range")}}
+              <form.Field
+                @format="full"
+                @name="from_date"
+                @title={{i18n "gamification.custom_range_from"}}
+                @type="input-date"
+                @validation="required"
+                as |field|
+              >
+                <field.Control max={{this.maxFromDate}} />
+              </form.Field>
+            {{/if}}
+          </Form>
         {{/if}}
       </:body>
 
       <:footer>
         <DButton
-          class="btn-primary"
-          id="apply-section"
-          @action={{this.apply}}
-          @ariaLabel="gamification.apply"
+          class="btn-primary recalculate-modal__submit"
+          @action={{this.submit}}
           @disabled={{this.applyDisabled}}
-          @label="gamification.apply"
+          @label="gamification.recalculate"
         />
         <DButton
           class="btn-default"
-          id="cancel-section"
           @action={{@closeModal}}
-          @ariaLabel="gamification.cancel"
           @label={{if
             (eq this.status "complete")
             "gamification.close"

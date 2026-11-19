@@ -7,6 +7,9 @@
 th:
   chat:
     deleted_chat_username: ลบ
+    crawler:
+      thread_replies:
+        other: "%{count} ตอบ"
     channel:
       dm_title:
         single_user: "%{username}"

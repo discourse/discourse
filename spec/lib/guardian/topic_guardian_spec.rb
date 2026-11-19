@@ -246,6 +246,14 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_edit_tags?" do
+    it "returns false for the author of a wiki topic whose first post is hidden during the cooldown" do
+      post = Fabricate(:post, user:, wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_tags?(post.topic)).to eq(false)
+    end
+  end
+
   describe "#can_delete_topic?" do
     it "returns false for an unauthenticated user" do
       expect(Guardian.new.can_delete_topic?(topic)).to be_falsey
@@ -424,6 +432,34 @@ RSpec.describe TopicGuardian do
   # `TopicGuardianCanSeeConsistencyCheck` which we run to ensure that the implementation between `TopicGuardian#can_see_topic_ids`
   # and `TopicGuardian#can_see_topic?` is consistent.
   describe "#can_see_topic_ids" do
+    it "includes deleted topics for custom delete-all group members while retaining category access" do
+      group.add(user)
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = group.id.to_s
+      topic.trash!(admin)
+      private_topic.trash!(admin)
+      inaccessible =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      inaccessible.trash!(admin)
+      guardian = user.guardian
+      expect(guardian.can_see_topic?(topic)).to eq(true)
+      expect(guardian.can_see_topic?(private_topic)).to eq(true)
+      expect(guardian.can_see_topic?(inaccessible)).to eq(false)
+      expect(
+        guardian.can_see_topic_ids(topic_ids: [topic.id, private_topic.id, inaccessible.id]),
+      ).to contain_exactly(topic.id, private_topic.id)
+    end
+
+    it "applies shared-draft restrictions to regular topics but not participating PMs" do
+      pm = Fabricate(:private_message_topic, recipient: user)
+      Fabricate(:shared_draft, topic: pm)
+      Fabricate(:shared_draft, topic: topic)
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+      guardian = user.guardian
+      expect(guardian.can_see_topic?(pm)).to eq(true)
+      expect(guardian.can_see_topic?(topic)).to eq(false)
+      expect(guardian.can_see_topic_ids(topic_ids: [pm.id, topic.id])).to contain_exactly(pm.id)
+    end
+
     it "excludes flagged regular topics in inaccessible categories" do
       Fabricate(:reviewable_flagged_post, topic: private_topic, category: private_category)
 
@@ -448,6 +484,38 @@ RSpec.describe TopicGuardian do
       ).to contain_exactly(topic.id, private_message_topic.id)
     end
 
+    it "returns private messages a moderator participates in, was warned in, or must review" do
+      direct_pm = Fabricate(:private_message_topic, recipient: moderator)
+      group_pm =
+        Fabricate(
+          :group_private_message_topic,
+          recipient_group: Fabricate(:group, users: [moderator]),
+        )
+      warning_pm = Fabricate(:private_message_topic, subtype: TopicSubtype.moderator_warning)
+      flagged_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: flagged_pm, category: nil)
+      resolved_flag_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: resolved_flag_pm, status: :rejected)
+      ignored_flag_pm = Fabricate(:private_message_topic)
+      Fabricate(:reviewable_flagged_post, topic: ignored_flag_pm, score: -1)
+      ids = [
+        private_message_topic,
+        direct_pm,
+        group_pm,
+        warning_pm,
+        flagged_pm,
+        resolved_flag_pm,
+        ignored_flag_pm,
+      ].map(&:id)
+
+      expect(moderator.guardian.can_see_topic_ids(topic_ids: ids)).to contain_exactly(
+        direct_pm.id,
+        group_pm.id,
+        warning_pm.id,
+        flagged_pm.id,
+      )
+    end
+
     it "returns the topic ids for topics which are deleted but user is a category moderator of" do
       SiteSetting.enable_category_group_moderation = true
 
@@ -466,6 +534,37 @@ RSpec.describe TopicGuardian do
       expect(
         Guardian.new(user2).can_see_topic_ids(topic_ids: [topic.id, topic2.id]),
       ).to contain_exactly(topic2.id)
+    end
+  end
+
+  describe "#can_move_topic_to_category?" do
+    it "allows a moderator to move a topic to a category they can see" do
+      expect(Guardian.new(moderator).can_move_topic_to_category?(category)).to eq(true)
+    end
+
+    it "allows a moderator to move a topic to a category they can see that requires topic review" do
+      category.require_topic_approval = true
+      category.save!
+
+      expect(Guardian.new(moderator).can_move_topic_to_category?(category)).to eq(true)
+    end
+
+    it "does not allow a moderator to move a topic to a category they cannot see" do
+      expect(Guardian.new(moderator).can_move_topic_to_category?(private_category)).to eq(false)
+    end
+
+    it "allows a moderator to move a topic to a category they have been given access to" do
+      group.add(moderator)
+
+      expect(Guardian.new(moderator).can_move_topic_to_category?(private_category)).to eq(true)
+    end
+
+    it "allows an admin to move a topic to a category they cannot see" do
+      SiteSetting.suppress_secured_categories_from_admin = true
+      private_category.require_topic_approval = true
+      private_category.save!
+
+      expect(Guardian.new(admin).can_move_topic_to_category?(private_category)).to eq(true)
     end
   end
 

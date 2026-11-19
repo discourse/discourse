@@ -38,6 +38,12 @@ ru:
             delete: "Удалить"
         multi_select:
           title: "Множественный выбор"
+        reorderable_list:
+          policies_pinned: "Закреплена"
+          policies_required: "Обязательный"
+          table_field: "Поле"
+          table_type: "Тип"
+          cross_list_primary: "Основная"
         toasts:
           title: "Сообщения-подсказки"
         font_scale:

@@ -9,7 +9,7 @@ import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
-import BoardsConstraintFix from "./modal/boards-constraint-fix";
+import BoardsConstraintFix from "./modal/boards-constraint-fix.gjs";
 
 export default class BoardsAddFromTopicColumnSubmenu extends Component {
   @service messageBus;

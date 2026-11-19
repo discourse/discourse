@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components */
+/* eslint-disable discourse/no-test-context-set -- classic connectors read the test context */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
@@ -31,7 +32,7 @@ import { registerTemporaryModule } from "discourse/tests/helpers/temporary-modul
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
-} from "../../helpers/raise-on-deprecation";
+} from "../../helpers/raise-on-deprecation.js";
 
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";
@@ -165,9 +166,9 @@ module("Integration | Component | PluginOutlet", function (hooks) {
       innerHooks.beforeEach(function () {
         this.consoleErrorStub = sinon.stub(console, "error");
 
-        this.set("shouldDisplay", false);
-        this.set("yieldCore", false);
-        this.set("enableClashingConnector", false);
+        this.shouldDisplay = false;
+        this.yieldCore = false;
+        this.enableClashingConnector = false;
 
         registerTemporaryModule(
           `${CLASS_PREFIX}/outlet-with-default/my-connector`,
@@ -251,7 +252,7 @@ module("Integration | Component | PluginOutlet", function (hooks) {
       });
 
       test("clashing connectors for admins", async function (assert) {
-        this.set("currentUser.admin", true);
+        this.currentUser.admin = true;
         await render(this.template);
 
         this.set("shouldDisplay", true);
@@ -400,7 +401,7 @@ module("Integration | Component | PluginOutlet", function (hooks) {
   });
 
   test("Reevaluates shouldRender for argument changes", async function (assert) {
-    this.set("shouldDisplay", false);
+    this.shouldDisplay = false;
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
       async () => {
@@ -454,7 +455,7 @@ module("Integration | Component | PluginOutlet", function (hooks) {
   });
 
   test("Other outlets are not re-rendered", async function (assert) {
-    this.set("shouldDisplay", false);
+    this.shouldDisplay = false;
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
       async () => {
@@ -718,7 +719,7 @@ module(
     });
 
     test("uses simple object if provided", async function (assert) {
-      this.set("someBoolean", true);
+      this.someBoolean = true;
 
       registerTemporaryModule(`${CLASS_PREFIX}/test-name/my-connector`, {
         shouldRender(args) {
@@ -781,7 +782,7 @@ module(
     });
 
     test("uses custom component class if provided", async function (assert) {
-      this.set("someBoolean", true);
+      this.someBoolean = true;
 
       registerTemporaryModule(
         `${CLASS_PREFIX}/test-name/my-connector`,
@@ -813,7 +814,7 @@ module(
     });
 
     test("uses custom templateOnly() if provided", async function (assert) {
-      this.set("someBoolean", true);
+      this.someBoolean = true;
 
       registerTemporaryModule(
         `${CLASS_PREFIX}/test-name/my-connector`,
@@ -1169,22 +1170,20 @@ module(
         }
       );
 
-      const testState = new (class {
-        @tracked hello = "Hello world";
-      })();
+      const hello = tracked("Hello world");
 
       await render(
         <template>
           <PluginOutlet
             @name="test-name"
-            @outletArgs={{lazyHash arg1=testState.hello}}
+            @outletArgs={{lazyHash arg1=hello.value}}
           />
         </template>
       );
       assert.dom(".glimmer-test").hasText("Hello world from glimmer");
       assert.deepEqual(events, ["constructor"], "constructor called once");
 
-      testState.hello = "changed";
+      hello.value = "changed";
       await settled();
       assert.dom(".glimmer-test").hasText("changed from glimmer");
       assert.deepEqual(events, ["constructor"], "constructor not called again");

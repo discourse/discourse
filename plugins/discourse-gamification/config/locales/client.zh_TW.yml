@@ -54,7 +54,6 @@ zh_TW:
         scoring_configuration: "計分設定"
         scoring_configuration_description: "覆寫此排行榜的全域計分規則。欄位留空則使用全域預設值。"
         scorable_categories: "可計分的分類"
-        scorable_categories_help: "要納入計分的分類。留空則使用全域設定。"
         score_overrides: "分數權重"
         score_overrides_help: "覆寫每個動作的積分值。留空則使用全域預設值；設為 0 則停用。"
         weight:
@@ -86,9 +85,7 @@ zh_TW:
       close: "關閉"
       delete: "刪除"
       edit: "編輯"
-      back: "上一步"
       save: "儲存"
-      apply: "套用"
       recalculate: "重新計算分數"
       recalculating: "正在重新計算分數……"
       completed: "完成！已成功重新計算分數。"
@@ -106,6 +103,7 @@ zh_TW:
       admin:
         title: "今天還可重新計算 %{count} 次"
         name: "名稱"
+        created_by: "創建者"
         period: "遊戲化"
     discourse_workflows:
       node_unavailable:
@@ -122,3 +120,4 @@ zh_TW:
         date_description: "要獎勵的積分數。使用負值可扣除積分。"
         description: "描述"
         description_description: "積分適用的日期（YYYY-MM-DD）。預設為今天。"
+        category_id: "分類"

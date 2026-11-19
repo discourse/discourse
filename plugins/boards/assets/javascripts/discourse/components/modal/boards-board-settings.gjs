@@ -11,15 +11,14 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { slugify } from "discourse/lib/utilities";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import { eq, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { buildDefaultBoardAcl } from "../../lib/boards-access-control";
-import { loadCategories } from "../../lib/boards-categories";
-import BoardsAccessControlField from "../boards-access-control-field";
-import BoardsEditableTitle from "../boards-editable-title";
+import { buildDefaultBoardAcl } from "../../lib/boards-access-control.js";
+import { loadCategories } from "../../lib/boards-categories.js";
+import BoardsAccessControlField from "../boards-access-control-field.gjs";
+import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 const CONSTRAINT_TYPE_OPTIONS = [
   {
@@ -219,7 +218,20 @@ export default class BoardsBoardSettings extends Component {
 
   async _performSave(data) {
     try {
-      await this.args.model.onSave(data);
+      const aclEntries = data.acl || [];
+      const ownerUserIds = aclEntries
+        .filter(
+          (entry) => entry.type === "user" && entry.permission === "owner"
+        )
+        .map((entry) => entry.id);
+      const acl = aclEntries.filter((entry) => entry.permission !== "owner");
+      const boardData = { ...data, acl };
+
+      if (!this.isNew && this.args.model.board.can_manage_acl_owner) {
+        boardData.owner_user_ids = ownerUserIds;
+      }
+
+      await this.args.model.onSave(boardData);
       this.args.closeModal({ reloadAfterSave: this.reloadAfterSave });
     } catch (error) {
       popupAjaxError(error);
@@ -266,8 +278,13 @@ export default class BoardsBoardSettings extends Component {
             <form.Section>
               <BoardsAccessControlField
                 @boardId={{@model.board.id}}
+                @canManageOwners={{or
+                  this.isNew
+                  @model.board.can_manage_acl_owner
+                }}
                 @description={{i18n "boards.manage.board_access_description"}}
                 @form={{form}}
+                @isNew={{this.isNew}}
                 @onAccessLossConfirmed={{this.accessLossConfirmed}}
                 @onChange={{this.aclChanged}}
                 @title={{i18n "boards.manage.board_access"}}

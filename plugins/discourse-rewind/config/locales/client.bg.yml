@@ -17,5 +17,9 @@ bg:
         chat_usage:
           author: Вие
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} минута"
+            other: "%{count} минути"
         writing_analysis:
           menu_other: Други

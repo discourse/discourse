@@ -1,9 +1,9 @@
 import loadMorphlex from "discourse/lib/load-morphlex";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { cook } from "discourse/lib/text";
-import decorateAiThinking from "../../decorate-ai-thinking";
-import { addProgressDecoration } from "../progress-handlers";
-import StreamUpdater from "./stream-updater";
+import decorateAiThinking from "../../decorate-ai-thinking.js";
+import { addProgressDecoration } from "../progress-handlers.js";
+import StreamUpdater from "./stream-updater.js";
 
 export default class PostUpdater extends StreamUpdater {
   morphingOptions = {

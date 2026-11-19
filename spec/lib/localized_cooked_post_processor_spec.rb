@@ -65,12 +65,15 @@ RSpec.describe LocalizedCookedPostProcessor do
         )
       end
 
-      it "replaces the old upload references" do
-        old_ref_id = localization.upload_references.first.id
+      it "removes stale references while preserving surviving ones" do
+        surviving_ref_id = localization.upload_references.first.id
+        stale_upload = Fabricate(:upload)
+        stale_ref = UploadReference.create!(target: localization, upload: stale_upload)
 
         processor.post_process
 
-        expect(UploadReference.exists?(old_ref_id)).to eq(false)
+        expect(UploadReference.exists?(surviving_ref_id)).to eq(true)
+        expect(UploadReference.exists?(stale_ref.id)).to eq(false)
         expect(localization.reload.upload_references.pluck(:upload_id)).to contain_exactly(
           upload1.id,
           upload2.id,

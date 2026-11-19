@@ -3,7 +3,6 @@ import { LinkTo } from "@ember/routing";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import slice from "discourse/helpers/slice";
-import { gt } from "discourse/truth-helpers";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

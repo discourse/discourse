@@ -1,0 +1,13 @@
+.workflows-user-modal__markdown {
+  overflow-wrap: anywhere;
+  overflow-x: auto;
+
+  img {
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  pre {
+    white-space: pre-wrap;
+  }
+}

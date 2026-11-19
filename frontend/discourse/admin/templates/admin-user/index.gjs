@@ -12,7 +12,6 @@ import getURL from "discourse/lib/get-url";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, gt, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
@@ -64,15 +63,24 @@ export default <template>
         @action={{@controller.saveUsername}}
         @editing={{@controller.editingUsername}}
         @name="user.username.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingUsername"}}
         @value={{@controller.model.username}}
       />
     </div>
+
+    {{#if @controller.isBot}}
+      <div class="display-row admin-user__bot-indicator">
+        <div class="field">{{i18n "admin.user.account_type"}}</div>
+        <div class="value">{{dIcon "robot"}} {{i18n "admin.user.bot"}}</div>
+      </div>
+    {{/if}}
 
     <div class="display-row name">
       <AdminEditableField
         @action={{@controller.saveName}}
         @editing={{@controller.editingName}}
         @name="user.name.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingName"}}
         @value={{@controller.model.name}}
       />
     </div>
@@ -220,6 +228,7 @@ export default <template>
         @action={{@controller.saveTitle}}
         @editing={{@controller.editingTitle}}
         @name="user.title.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingTitle"}}
         @value={{@controller.model.title}}
       />
     </div>
@@ -455,7 +464,7 @@ export default <template>
         {{/if}}
         {{#if @controller.model.can_grant_moderation}}
           <DButton
-            class="btn-default"
+            class="btn-default grant-moderation"
             @action={{@controller.grantModeration}}
             @icon="shield-halved"
             @label="admin.user.grant_moderation"

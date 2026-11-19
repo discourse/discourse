@@ -145,18 +145,14 @@ module("Integration | ui-kit | Modifier | dScrollEdges", function (hooks) {
   });
 
   test("follows an axis change", async function (assert) {
-    class AxisState {
-      @tracked axis = "horizontal";
-    }
-
-    const state = new AxisState();
+    const axis = tracked("horizontal");
 
     await render(
       <template>
         <div
           class="axis-changing-strip"
           style="width: 100px; height: 100px; overflow: auto"
-          {{dScrollEdges axis=state.axis}}
+          {{dScrollEdges axis=axis.value}}
         >
           <div style="width: 300px; height: 300px"></div>
         </div>
@@ -172,7 +168,7 @@ module("Integration | ui-kit | Modifier | dScrollEdges", function (hooks) {
         "the initial axis is horizontal"
       );
 
-    state.axis = "vertical";
+    axis.value = "vertical";
     await settled();
     await nextFrame();
 

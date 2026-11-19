@@ -4,11 +4,30 @@ RSpec.describe UserBadgesController do
   fab!(:user)
   fab!(:admin)
   fab!(:badge)
+  fab!(:trusted_user, :trust_level_2)
 
   before { user.user_stat.update!(post_count: 1) }
 
   describe "#index" do
     fab!(:badge) { Fabricate(:badge, target_posts: true, show_posts: false) }
+    fab!(:gold_badge) do
+      Fabricate(:badge).tap { |badge| badge.update!(badge_type_id: BadgeType::Gold) }
+    end
+    fab!(:silver_badge) do
+      Fabricate(:badge).tap { |badge| badge.update!(badge_type_id: BadgeType::Silver) }
+    end
+    fab!(:bronze_badge) do
+      Fabricate(:badge).tap { |badge| badge.update!(badge_type_id: BadgeType::Bronze) }
+    end
+    fab!(:gold_grant) do
+      Fabricate(:user_badge, badge: gold_badge, user: user, granted_at: 1.hour.ago)
+    end
+    fab!(:silver_grant) do
+      Fabricate(:user_badge, badge: silver_badge, user: user, granted_at: 2.hours.ago)
+    end
+    fab!(:bronze_grant) do
+      Fabricate(:user_badge, badge: bronze_badge, user: trusted_user, granted_at: 3.hours.ago)
+    end
 
     it "does not leak private info" do
       p = create_post
@@ -43,9 +62,184 @@ RSpec.describe UserBadgesController do
       expect(response.status).to eq(200)
     end
 
-    it "requires username or badge_id to be specified" do
+    it "returns a recent grants feed when no badge id is specified" do
       get "/user_badges.json"
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([gold_grant.id, silver_grant.id, bronze_grant.id])
+    end
+
+    it "excludes disabled badges from the recent grants feed" do
+      disabled_badge = Fabricate(:badge, enabled: false)
+      Fabricate(:user_badge, badge: disabled_badge, user: trusted_user, granted_at: 30.minutes.ago)
+
+      get "/user_badges.json"
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([gold_grant.id, silver_grant.id, bronze_grant.id])
+    end
+
+    it "combines grants across multiple badge_ids in a single request" do
+      get "/user_badges.json", params: { badge_ids: "#{gold_badge.id},#{silver_badge.id}" }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to contain_exactly(gold_grant.id, silver_grant.id)
+      expect(ids).not_to include(bronze_grant.id)
+    end
+
+    it "accepts pipe-separated badge_ids" do
+      get "/user_badges.json", params: { badge_ids: "#{gold_badge.id}|#{silver_badge.id}" }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to contain_exactly(gold_grant.id, silver_grant.id)
+    end
+
+    it "filters the recent grants feed by badge_type_id" do
+      get "/user_badges.json", params: { badge_type_id: BadgeType::Gold }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to contain_exactly(gold_grant.id)
+      expect(ids).not_to include(silver_grant.id, bronze_grant.id)
+    end
+
+    it "limits the recent grants feed" do
+      get "/user_badges.json", params: { limit: 1 }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([gold_grant.id])
+    end
+
+    it "applies the feed limit to a single badge_id" do
+      newest_grant =
+        Fabricate(:user_badge, badge: gold_badge, user: trusted_user, granted_at: 30.minutes.ago)
+
+      get "/user_badges.json", params: { badge_id: gold_badge.id, limit: 1 }
+
+      expect(response.status).to eq(200)
+      user_badges = response.parsed_body["user_badge_info"]["user_badges"]
+      expect(user_badges.map { |ub| ub["id"] }).to eq([newest_grant.id])
+    end
+
+    it "returns not found for a single badge_id that is unknown or disabled" do
+      get "/user_badges.json", params: { badge_id: 999_999 }
+      expect(response.status).to eq(404)
+
+      disabled_badge = Fabricate(:badge, enabled: false)
+      get "/user_badges.json", params: { badge_id: disabled_badge.id }
+      expect(response.status).to eq(404)
+    end
+
+    it "selects a single badge by badge_name with the same feed behaviour" do
+      get "/user_badges.json", params: { badge_name: gold_badge.name, limit: 10 }
+
+      expect(response.status).to eq(200)
+      user_badges = response.parsed_body["user_badge_info"]["user_badges"]
+      expect(user_badges.map { |ub| ub["id"] }).to eq([gold_grant.id])
+    end
+
+    it "treats an empty badge_ids param as the full recent grants feed" do
+      get "/user_badges.json", params: { badge_ids: "" }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([gold_grant.id, silver_grant.id, bronze_grant.id])
+    end
+
+    it "excludes non-listable badges from the unfiltered recent grants feed" do
+      hidden_badge = Fabricate(:badge, listable: false)
+      Fabricate(:user_badge, badge: hidden_badge, user: trusted_user, granted_at: 30.minutes.ago)
+
+      get "/user_badges.json"
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([gold_grant.id, silver_grant.id, bronze_grant.id])
+    end
+
+    it "still returns grants for an explicitly requested non-listable badge" do
+      hidden_badge = Fabricate(:badge, listable: false)
+      hidden_grant =
+        Fabricate(:user_badge, badge: hidden_badge, user: trusted_user, granted_at: 1.hour.ago)
+
+      get "/user_badges.json", params: { badge_id: hidden_badge.id }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([hidden_grant.id])
+    end
+
+    it "returns no grants for a non-empty badge_ids that yields no valid ids" do
+      get "/user_badges.json", params: { badge_ids: "invalid" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user_badge_info"]["user_badges"]).to eq([])
+    end
+
+    it "keeps valid ids and drops junk from badge_ids" do
+      get "/user_badges.json", params: { badge_ids: "#{gold_badge.id},invalid" }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([gold_grant.id])
+    end
+
+    it "accepts array-style badge_ids" do
+      get "/user_badges.json", params: { badge_ids: [gold_badge.id.to_s, silver_badge.id.to_s] }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to contain_exactly(gold_grant.id, silver_grant.id)
+    end
+
+    it "returns 400 for an array-form limit" do
+      get "/user_badges.json", params: { limit: [1] }
+
       expect(response.status).to eq(400)
+    end
+
+    it "keeps the no-limit default above the explicit limit cap" do
+      51.times { Fabricate(:user_badge, badge: badge, user: Fabricate(:trust_level_2)) }
+
+      get "/user_badges.json", params: { badge_id: badge.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user_badge_info"]["user_badges"].length).to eq(51)
+    end
+
+    it "returns 400 for a blank badge_id rather than falling back to the feed" do
+      get "/user_badges.json", params: { badge_id: "" }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns 400 when badge_ids exceeds the maximum" do
+      get "/user_badges.json", params: { badge_ids: (1..101).to_a.join(",") }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns 400 for an array-form badge_type_id" do
+      get "/user_badges.json", params: { badge_type_id: [BadgeType::Gold] }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns a user's recent grants and grant_count when no badge id is specified" do
+      get "/user_badges.json", params: { username: user.username }
+
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body["user_badge_info"]
+      expect(parsed["grant_count"]).to eq(2)
+      expect(parsed["user_badges"].map { |ub| ub["id"] }).to contain_exactly(
+        gold_grant.id,
+        silver_grant.id,
+      )
     end
 
     it "does not disclose badges when public profiles are hidden" do
@@ -57,7 +251,119 @@ RSpec.describe UserBadgesController do
       expect(response.body).not_to include(user.username)
     end
 
+    context "with hidden profiles" do
+      it "excludes grants for users who hid their profile from a badge's grants feed" do
+        hidden_user = Fabricate(:user)
+        hidden_user.user_stat.update!(post_count: 1)
+        hidden_user.user_option.update!(hide_profile: true)
+        Fabricate(:user_badge, badge: gold_badge, user: hidden_user)
+
+        get "/user_badges.json", params: { badge_id: gold_badge.id }
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to eq([gold_grant.id])
+        expect(response.body).not_to include(hidden_user.username)
+      end
+
+      it "pages past hidden grants without skipping or repeating visible ones" do
+        hidden_user = Fabricate(:trust_level_2)
+        hidden_user.user_option.update!(hide_profile: true)
+        Fabricate(:user_badge, badge: gold_badge, user: hidden_user, granted_at: 90.minutes.ago)
+        oldest_grant =
+          Fabricate(:user_badge, badge: gold_badge, user: trusted_user, granted_at: 2.hours.ago)
+
+        pages =
+          [0, 1, 2].map do |offset|
+            get "/user_badges.json", params: { badge_id: gold_badge.id, limit: 1, offset: }
+            response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+          end
+
+        expect(pages).to eq([[gold_grant.id], [oldest_grant.id], []])
+      end
+
+      it "excludes grants for users who hid their profile from the recent grants feed" do
+        hidden_user = Fabricate(:user)
+        hidden_user.user_stat.update!(post_count: 1)
+        hidden_user.user_option.update!(hide_profile: true)
+        Fabricate(:user_badge, badge: gold_badge, user: hidden_user)
+
+        get "/user_badges.json"
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to contain_exactly(gold_grant.id, silver_grant.id, bronze_grant.id)
+        expect(response.body).not_to include(hidden_user.username)
+      end
+
+      it "excludes grants for hidden new user profiles from anonymous visitors" do
+        SiteSetting.hide_new_user_profiles = true
+
+        new_user = Fabricate(:user)
+        Fabricate(:user_badge, badge: gold_badge, user: new_user)
+
+        get "/user_badges.json"
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to contain_exactly(gold_grant.id, silver_grant.id, bronze_grant.id)
+        expect(response.body).not_to include(new_user.username)
+      end
+
+      it "includes hidden new user grants for viewers at trust level 2" do
+        SiteSetting.hide_new_user_profiles = true
+
+        new_user = Fabricate(:user)
+        new_grant = Fabricate(:user_badge, badge: gold_badge, user: new_user)
+
+        sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
+        get "/user_badges.json"
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to include(new_grant.id)
+      end
+
+      it "includes grants for hidden profiles when requested by staff" do
+        hidden_user = Fabricate(:user)
+        hidden_user.user_option.update!(hide_profile: true)
+        hidden_grant = Fabricate(:user_badge, badge: gold_badge, user: hidden_user)
+
+        sign_in(admin)
+        get "/user_badges.json"
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to include(hidden_grant.id)
+      end
+
+      it "includes grants for staged users whose profiles the guardian can see" do
+        SiteSetting.hide_new_user_profiles = true
+
+        staged_user = Fabricate(:staged)
+        staged_grant = Fabricate(:user_badge, badge: gold_badge, user: staged_user)
+
+        get "/user_badges.json"
+
+        expect(response.status).to eq(200)
+        ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+        expect(ids).to include(staged_grant.id)
+      end
+
+      it "does not disclose any grants when public profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+
+        get "/user_badges.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_badge_info"]["user_badges"]).to eq([])
+        expect(response.body).not_to include(user.username)
+      end
+    end
+
     it "returns not found for hidden new user profiles" do
+      SiteSetting.hide_new_user_profiles = true
+
       hidden_user = Fabricate(:trust_level_0)
       hidden_user.user_stat.update!(post_count: 1)
       Fabricate(:user_badge, user: hidden_user, badge: badge)
@@ -100,8 +406,12 @@ RSpec.describe UserBadgesController do
     fab!(:restricted_post) { Fabricate(:post, topic: restricted_topic) }
     fab!(:badge) { Fabricate(:badge, show_posts: true) }
     fab!(:user_badge) { Fabricate(:user_badge, user: user, badge: badge, post: post) }
-    fab!(:user_badge_2) { Fabricate(:user_badge, badge: badge, post: private_message_post) }
-    fab!(:user_badge_3) { Fabricate(:user_badge, badge: badge, post: restricted_post) }
+    fab!(:user_badge_2) do
+      Fabricate(:user_badge, user: trusted_user, badge: badge, post: private_message_post)
+    end
+    fab!(:user_badge_3) do
+      Fabricate(:user_badge, user: Fabricate(:trust_level_2), badge: badge, post: restricted_post)
+    end
 
     it "returns user_badges for a user" do
       get "/user-badges/#{user.username}.json"

@@ -23,6 +23,270 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
     end
   end
 
+  describe "when the commented post is moved to another topic" do
+    fab!(:source_category, :category)
+    fab!(:source_topic) do
+      Fabricate(:topic, category: source_category, subtype: Topic::POST_VOTING_SUBTYPE)
+    end
+    fab!(:destination_category, :category)
+    fab!(:destination_topic) { Fabricate(:topic, category: destination_category) }
+    fab!(:original_post) { Fabricate(:post, topic: source_topic) }
+    fab!(:answer) { Fabricate(:post, topic: source_topic) }
+    fab!(:answer_comment) { Fabricate(:post_voting_comment, post: answer) }
+
+    fab!(:moved_reviewable) do
+      PostVoting::CommentReviewQueue.new.flag_comment(
+        answer_comment,
+        flagger.guardian,
+        ReviewableScore.types[:spam],
+      )[
+        :reviewable
+      ]
+    end
+
+    it "updates the reviewable's topic and category to the post's new location" do
+      expect(moved_reviewable).to have_attributes(
+        topic_id: source_topic.id,
+        category_id: source_category.id,
+      )
+
+      PostMover.new(source_topic, admin, [answer.id]).to_topic(destination_topic.id)
+
+      expect(moved_reviewable.reload).to have_attributes(
+        topic_id: destination_topic.id,
+        category_id: destination_category.id,
+      )
+    end
+  end
+
+  describe "#build_actions" do
+    it "requests classification for keeping a deleted comment removed" do
+      comment.trash!
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_keep_deleted",
+        "agree_and_silence",
+        "agree_and_suspend",
+      )
+    end
+
+    it "requests classification for actions that restrict content or the author" do
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_silence",
+        "agree_and_suspend",
+        "agree_and_delete",
+        "delete_and_agree",
+      )
+    end
+  end
+
+  describe "#perform" do
+    it "suspends the author and deletes the flagged comment" do
+      reviewable.update!(target_created_by: comment_poster)
+
+      result =
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          reason: "spam",
+          suspend_until: 2.days.from_now,
+        )
+
+      expect(result).to be_success
+      expect(comment_poster.reload).to be_suspended
+      expect(comment.reload.deleted_at).to be_present
+      expect(reviewable.reload).to be_approved
+    end
+
+    it "keeps the content and reviewable unchanged when silence details are invalid" do
+      reviewable.update!(target_created_by: comment_poster)
+
+      result = reviewable.perform(moderator, :agree_and_silence, reason: "spam")
+
+      expect(result).not_to be_success
+      expect(comment_poster.reload).not_to be_silenced
+      expect(comment.reload.deleted_at).to be_nil
+      expect(reviewable.reload).to be_pending
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        reviewable.update!(target_created_by: comment.user)
+        freeze_time
+        enable_dsa_reporting
+      end
+
+      it "creates no statement when agree_and_keep_comment handles the post voting comment reviewable" do
+        expect {
+          expect(reviewable.perform(moderator, :agree_and_keep_comment)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "records a statement when agree_and_delete handles the post voting comment reviewable" do
+        expect { reviewable.perform(moderator, :agree_and_delete) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged voting comment was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => comment.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "records a statement when delete_and_agree handles the post voting comment reviewable" do
+        expect { reviewable.perform(moderator, :delete_and_agree) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged voting comment was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => comment.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "records a statement when agree_and_keep_deleted handles the post voting comment reviewable" do
+        comment.trash!(moderator)
+
+        expect { reviewable.perform(moderator, :agree_and_keep_deleted) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged voting comment was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => comment.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "creates no statement when agree_and_restore handles the post voting comment reviewable" do
+        comment.trash!(moderator)
+
+        expect {
+          expect(reviewable.perform(moderator, :agree_and_restore)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when disagree_and_restore handles the post voting comment reviewable" do
+        comment.trash!(moderator)
+
+        expect {
+          expect(reviewable.perform(moderator, :disagree_and_restore)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when disagree handles the post voting comment reviewable" do
+        expect { expect(reviewable.perform(moderator, :disagree)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when ignore handles the post voting comment reviewable" do
+        expect { expect(reviewable.perform(moderator, :ignore)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "records a statement when agree_and_suspend handles the post voting comment reviewable" do
+        expect {
+          reviewable.perform(
+            moderator,
+            :agree_and_suspend,
+            reason: "Spam",
+            suspend_until: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged voting comment was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => comment.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when agree_and_silence handles the post voting comment reviewable" do
+        expect {
+          reviewable.perform(
+            moderator,
+            :agree_and_silence,
+            reason: "Spam",
+            silenced_till: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged voting comment had their ability to participate restricted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => comment.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          "end_date_service_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+    end
+  end
+
   it "agree_and_keep agrees with the flag and doesn't delete the comment" do
     reviewable.perform(moderator, :agree_and_keep_comment)
 

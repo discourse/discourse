@@ -64,9 +64,7 @@ hu:
       close: "Bezárás"
       delete: "Törlés"
       edit: "Szerkesztés"
-      back: "Vissza"
       save: "Mentés"
-      apply: "Alkalmaz"
       recalculate: "Pontszámok újraszámítása"
       recalculating: "A pontszámok újraszámítása..."
       completed: "Kész! A pontszámokat sikeresen újraszámoltuk."
@@ -85,9 +83,11 @@ hu:
       admin:
         title: "Gamifikáció"
         name: "Név"
+        created_by: "Létrehozta:"
         period: "Időszak"
     discourse_workflows:
       gamification_score:
         username: "Felhasználó"
         date: "Dátum"
         description: "Leírás"
+        category_id: "Kategória"

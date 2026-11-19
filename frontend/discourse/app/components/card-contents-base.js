@@ -37,19 +37,34 @@ export default class CardContentsBase extends Component {
   @service siteSettings;
 
   canShowWhenUserProfilesHidden = false;
+
+  /** @type {string | null} */
   elementId = null; //click detection added for data-{elementId}
   eventPrefix = "user-card";
+  focusOnShow = true;
   menuIdentifier = "usercard";
   showCardBeforeLoad = true;
+  triggerEvent = "click";
+
+  /** @type {string | null} */
   triggeringLinkSelector = null;
 
   visible = false;
+
+  /** @type {string | null} */
   username = null;
+
+  /** @type {string | boolean | null} */
   loading = null;
+
+  /** @type {HTMLElement | null} */
   cardTarget = null;
+
+  /** @type {import("discourse/models/post").default | null | undefined} */
   post = null;
   isDocked = false;
 
+  /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null | undefined} */
   _menuInstance = null;
 
   @computed("topic.postStream")
@@ -75,7 +90,7 @@ export default class CardContentsBase extends Component {
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
-        ?.addEventListener("click", this._cardClickHandler);
+        ?.addEventListener(this.triggerEvent, this._cardClickHandler);
     });
 
     this.appEvents.on(
@@ -102,7 +117,7 @@ export default class CardContentsBase extends Component {
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
-        ?.removeEventListener("click", this._cardClickHandler);
+        ?.removeEventListener(this.triggerEvent, this._cardClickHandler);
     });
 
     this.appEvents.off(
@@ -303,6 +318,10 @@ export default class CardContentsBase extends Component {
     }
 
     this.element.classList.toggle("docked-card", this.isDocked);
+
+    if (!this.focusOnShow) {
+      return;
+    }
 
     // After the card is shown, focus on the first link
     //

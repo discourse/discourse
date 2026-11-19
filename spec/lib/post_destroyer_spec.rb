@@ -489,15 +489,54 @@ RSpec.describe PostDestroyer do
       DiscourseEvent.off(:topic_recovered, &topic_recovered)
     end
 
+    it "blanks and restores the post when the author deletes and undeletes it in a slow mode topic" do
+      reply = create_post(topic: post.topic)
+      original_raw = reply.raw
+      reply.topic.update!(slow_mode_seconds: 1.hour.to_i)
+      freeze_time 1.hour.from_now
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.raw).to eq(I18n.t("js.post.deleted_by_author_simple"))
+
+      freeze_time 1.hour.from_now
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.raw).to eq(original_raw)
+    end
+
+    it "keeps a moderator's edit when the author undeletes a post without a deletion revision" do
+      reply = create_post(topic: post.topic)
+      reply.revise(moderator, { raw: "This post was cleaned up by a moderator" })
+      reply.update_column(:user_deleted, true)
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.raw).to eq("This post was cleaned up by a moderator")
+    end
+
     it "maintains history when a user destroys a hidden post" do
       post.hide!(PostActionType.types[:inappropriate])
       PostDestroyer.new(post.user, post).destroy
       expect(post.revisions[0].modifications["raw"]).to be_present
     end
 
+    it "keeps a post hidden by flags hidden and flagged when the author deletes and undeletes it" do
+      flag = PostActionCreator.spam(coding_horror, post).post_action
+      post.hide!(PostActionType.types[:spam])
+
+      PostDestroyer.new(post.user, post).destroy
+      PostDestroyer.new(post.user, post).recover
+
+      expect(post.reload).to be_hidden
+      expect(post.flags).to contain_exactly(flag)
+      expect(post.topic).not_to be_visible
+    end
+
     it "resolves reviewable when author deletes their flagged post and undeletes" do
       reply = create_post(topic: post.topic)
       result = PostActionCreator.spam(coding_horror, reply)
+      PostActionCreator.inappropriate(Fabricate(:user, refresh_auto_groups: true), reply)
       reviewable = result.reviewable
 
       expect(reviewable).to be_pending
@@ -516,10 +555,12 @@ RSpec.describe PostDestroyer do
       PostDestroyer.new(reply.user, reply).recover
       expect(reply.reload.user_deleted).to eq(false)
       expect(reviewable.reload).to be_pending
-
-      recovery_note = reviewable.reviewable_notes.last
-      expect(recovery_note.user).to eq(Discourse.system_user)
-      expect(recovery_note.content).to eq(I18n.t("reviewables.post_restored_by_author"))
+      expect(reviewable.reviewable_scores).to all(
+        have_attributes(status: "pending", reviewed_by_id: nil, reviewed_at: nil),
+      )
+      expect(reviewable.reviewable_notes.pluck(:user_id, :content)).to eq(
+        [[Discourse.system_user.id, I18n.t("reviewables.post_restored_by_author")]],
+      )
 
       history = reviewable.reviewable_histories.last
       expect(history.reviewable_history_type).to eq("transitioned")
@@ -566,6 +607,43 @@ RSpec.describe PostDestroyer do
       expect(reviewable.reload).to be_ignored
     end
 
+    it "restores the flags when a moderator edits the post after the author deletes it" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      PostDestroyer.new(reply.user, reply).destroy
+      freeze_time 1.hour.from_now
+      reply.revise(moderator, { raw: "This post was cleaned up by a moderator" })
+
+      PostDestroyer.new(reply.user, reply.reload).recover
+
+      expect(reviewable.reload).to be_pending
+      expect(reply.raw).to eq("This post was cleaned up by a moderator")
+    end
+
+    it "keeps a reviewable the system ignored before the deletion ignored when the author undeletes" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      reviewable.perform(Discourse.system_user, :ignore_and_do_nothing)
+
+      freeze_time 1.hour.from_now
+      PostDestroyer.new(reply.user, reply).destroy
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reviewable.reload).to be_ignored
+    end
+
+    it "restores a reviewable when the author undeletes a post without revisions" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      PostDestroyer.new(reply.user, reply).destroy
+      reply.revisions.destroy_all
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores).to all(be_pending)
+    end
+
     it "resolves reviewable when author deletes their post via perform_delete (delete_removed_posts_after = 0)" do
       SiteSetting.delete_removed_posts_after = 0
 
@@ -583,6 +661,43 @@ RSpec.describe PostDestroyer do
 
       expect(reply.reload.deleted_at).to be_present
       expect(reviewable.reload).to be_ignored
+    end
+
+    it "ignores all pending reviewables when the author immediately deletes an unpenalized post" do
+      SiteSetting.delete_removed_posts_after = 0
+      reply = create_post(topic: post.topic)
+      flagged_reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      post_reviewable = ReviewablePost.queue_for_review(reply)
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload).to be_trashed
+      [flagged_reviewable, post_reviewable].each do |reviewable|
+        expect(reviewable.reload).to be_ignored
+        expect(reviewable.reviewable_scores).to all(
+          have_attributes(status: "ignored", reviewed_by_id: Discourse.system_user.id),
+        )
+      end
+    end
+
+    it "keeps all pending reviewables when a silenced author immediately deletes the post" do
+      SiteSetting.delete_removed_posts_after = 0
+      reply = create_post(topic: post.topic)
+      flagged_reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      post_reviewable = ReviewablePost.queue_for_review(reply)
+      UserSilencer.silence(reply.user, moderator, post_id: reply.id)
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload).to be_trashed
+      [flagged_reviewable, post_reviewable].each do |reviewable|
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.reviewable_scores).to all(be_pending)
+        expect(reviewable.reviewable_notes.last).to have_attributes(
+          user: Discourse.system_user,
+          content: I18n.t("reviewables.post_deleted_by_author_after_penalty"),
+        )
+      end
     end
 
     it "does not auto-ignore reviewable when author was silenced for the post" do
@@ -738,6 +853,20 @@ RSpec.describe PostDestroyer do
       expect(post.raw).to eq(I18n.t("js.topic.deleted_by_author_simple"))
       expect(post.user_deleted).to eq(true)
       expect(post.topic.closed).to eq(true)
+    end
+
+    it "reopens only the topic closed by the author deletion when the author undeletes it" do
+      PostDestroyer.new(post.user, post).destroy
+      PostDestroyer.new(post.user, post.reload).recover
+
+      expect(post.topic.reload).to be_open
+
+      post.topic.update_status("closed", true, moderator)
+
+      PostDestroyer.new(post.user, post.reload).destroy
+      PostDestroyer.new(post.user, post.reload).recover
+
+      expect(post.topic.reload).to be_closed
     end
 
     context "as a moderator" do
@@ -1094,6 +1223,21 @@ RSpec.describe PostDestroyer do
 
     before { Jobs::SendSystemMessage.clear }
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        enable_dsa_reporting
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the deletion notice" do
+        PostDestroyer.new(moderator, second_post).destroy
+        args = Jobs::SendSystemMessage.jobs.last["args"][0].with_indifferent_access
+        Jobs::SendSystemMessage.new.execute(args)
+
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
+    end
+
     it "deletes public post actions and agrees with flags" do
       url = second_post.url
       PostDestroyer.new(moderator, second_post).destroy
@@ -1303,6 +1447,19 @@ RSpec.describe PostDestroyer do
       reviewable_reply
     end
 
+    it "deletes hidden descendants when performed by a moderator" do
+      hidden_reply = Fabricate(:post, topic: post.topic, hidden: true)
+      PostReply.create!(post: reply, reply: hidden_reply)
+      PostDestroyer.delete_with_replies(reporter, post)
+      expect(
+        Post
+          .with_deleted
+          .where(id: [post.id, reply.id, hidden_reply.id])
+          .where.not(deleted_at: nil)
+          .pluck(:id),
+      ).to contain_exactly(post.id, reply.id, hidden_reply.id)
+    end
+
     context "when deferring reply flags" do
       let(:defer_reply_flags) { true }
 
@@ -1318,6 +1475,59 @@ RSpec.describe PostDestroyer do
       it "approves flagged replies" do
         delete_with_replies
         expect(reviewable_reply.reload).to be_approved
+      end
+
+      it "uses the flagged reply's own notice title when notifications for replies removed with a parent are disabled" do
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = false
+        Jobs::SendSystemMessage.clear
+
+        PostDestroyer.delete_with_replies(
+          reporter,
+          post,
+          post.reviewable_flag.id,
+          defer_reply_flags: false,
+          message_options: {
+            message_title: "Parent moderation decision",
+          },
+        )
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        parent_notice = notices.find { |notice| notice["user_id"] == post.user_id }
+        Jobs::SendSystemMessage.new.perform(parent_notice)
+        expect(Post.last.topic.title).to eq("Parent moderation decision")
+
+        reply_notice = notices.find { |notice| notice["user_id"] == reply.user_id }
+        Jobs::SendSystemMessage.new.perform(reply_notice)
+        expect(Post.last.topic.title).to eq(
+          I18n.t("system_messages.flags_agreed_and_post_deleted.subject_template"),
+        )
+      end
+
+      it "uses the flagged reply's own notice title when no parent reviewable ID is passed" do
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+        Jobs::SendSystemMessage.clear
+
+        PostDestroyer.delete_with_replies(
+          reporter,
+          post,
+          defer_reply_flags: false,
+          message_options: {
+            message_title: "Parent moderation decision",
+          },
+        )
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        parent_notice = notices.find { |notice| notice["user_id"] == post.user_id }
+        Jobs::SendSystemMessage.new.perform(parent_notice)
+        expect(Post.last.topic.title).to eq("Parent moderation decision")
+
+        reply_notice = notices.find { |notice| notice["user_id"] == reply.user_id }
+        Jobs::SendSystemMessage.new.perform(reply_notice)
+        expect(Post.last.topic.title).to eq(
+          I18n.t("system_messages.flags_agreed_and_post_deleted.subject_template"),
+        )
       end
     end
   end

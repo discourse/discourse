@@ -5,8 +5,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import FlairRow from "./flair-row";
-import SelectedFlair from "./selected-flair";
+import FlairRow from "./flair-row.gjs";
+import SelectedFlair from "./selected-flair.gjs";
 
 @classNames("flair-chooser")
 @selectKitOptions({

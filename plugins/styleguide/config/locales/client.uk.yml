@@ -64,6 +64,12 @@ uk:
             declined: "Останній клік правою кнопкою миші: відхилено, браузер перехопив"
         multi_select:
           title: "Множинний вибір"
+        reorderable_list:
+          policies_pinned: "Закріплені"
+          policies_required: "Обов'язкові"
+          table_field: "Поле"
+          table_type: "Тип"
+          cross_list_primary: "Основна"
         toasts:
           title: "Тости"
         font_scale:

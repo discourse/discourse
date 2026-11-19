@@ -209,6 +209,8 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "AI で提案"
       ai_decoded_transcript:
         thinking: "思考中"
         tool: "ツール"
@@ -218,6 +220,12 @@ ja:
       discourse_workflows:
         ai_agent:
           mode: "モード"
+        classify:
+          text: "テキスト"
+          upload_ids: "画像"
+          name: "名前"
+          type: "タイプ"
+          type_score: "スコア"
       ai_tool_approval:
         loading: "読み込み中..."
         tool: "操作"
@@ -227,23 +235,34 @@ ja:
         approved: "承認済み"
         rejected: "拒否"
       default_llm:
-        title: "デフォルトの LLM モデル"
+        title: "デフォルトの言語モデル"
       llm_selector:
         none: "なし"
       features:
         short_title: "機能"
         settings_save_error: "一部の設定を保存できませんでした。"
-        disabled: "(無効)"
-        groups: "グループ:"
-        llm:
-          other: "LLM:"
+        table:
+          status: "ステータス"
+          enabled: "有効"
+          feature: "機能"
+          llm: "LLM"
+          groups: "グループ"
+        who_can_use:
+          no_one: "対象者なし"
+        status:
+          "on": "オン"
+          "off": "オフ"
+        chatbot:
+          column: "チャットボット"
+          places:
+            personal_messages: "個人メッセージ"
+            chat_direct_messages: "チャットメッセージ"
+            none: "使用できません"
+        set_up: "セットアップ"
         no_llm: "LLM が選択されていません"
         no_agent: "未設定"
         no_groups: "なし"
         edit: "設定"
-        expand_list:
-          other: "(他 %{count})"
-        collapse_list: "(表示を減らす)"
         bot:
           bot: "チャットボット"
           name: "ボット"
@@ -256,10 +275,16 @@ ja:
         nav:
           enabled: "有効"
         filters:
-          all: "すべて"
           no_results: "フィルタに一致する機能は見つかりませんでした。"
           reset: "リセット"
         no_automations: "まだ自動化はありません"
+        sentiment:
+          sentiment: "センチメント"
+          emotion: "感情"
+          enabled: "有効"
+          setting_groups:
+            sentiment: "センチメント"
+            emotion: "感情"
         summarization:
           name: "要約"
           description: "訪問者がトピックを要約できる要約ボタンを使用可能にします"
@@ -278,8 +303,7 @@ ja:
             access_control: "アクセス制御"
         embeddings:
           name: "埋め込み"
-          description: "テキストのセマンティック表現を生成することで、関連トピックや AI 検索などの機能を強化します"
-          hyde: "HyDE"
+          related_topics: "関連トピック"
           setting_groups:
             model_settings: "モデル設定"
             related_topics: "関連トピック"
@@ -289,7 +313,6 @@ ja:
             settings: "基本設定"
         discord:
           name: "Discord 統合"
-          description: "Discord チャンネルを検索する機能を追加します"
           search: "Discord 検索"
           setting_groups:
             settings: "基本設定"
@@ -334,9 +357,6 @@ ja:
           schedule_topic_success:
             other: "%{count} 件の未翻訳投稿の翻訳をスケジュールしました。"
           schedule_topic_error: "翻訳をスケジュールできませんでした。もう一度お試しください。"
-          setting_groups:
-            settings: "基本設定"
-            backfill_and_limits: "バックフィルと制限"
         spam:
           name: "迷惑"
           description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで調査できるように通報します"
@@ -355,8 +375,20 @@ ja:
       translations:
         title: "翻訳"
         description: "フォーラムのすべてのコンテンツをユーザーの優先言語に自動的に翻訳します"
-        supported_locales: "サポートされている言語"
-        category_scope: "カテゴリ"
+        sections:
+          advanced: "高度"
+        settings:
+          ai_translation_category_scope:
+            label: "カテゴリ"
+          ai_translation_personal_messages:
+            label: "個人メッセージ"
+            choices:
+              none: "なし"
+              all: "すべて"
+          content_localization_language_switcher:
+            choices:
+              none: "なし"
+              all: "全員"
         model_progress:
           detail:
             retry: "再試行"
@@ -374,7 +406,7 @@ ja:
             tag:
               title: "タグ"
         admin_actions:
-          enable_translations: "自動翻訳を有効にする"
+          enabled: "有効"
         stats:
           title: "翻訳の統計"
           backfill_disabled: "バックフィルは無効です。新しい投稿のみが翻訳されます。"
@@ -405,6 +437,8 @@ ja:
         short_title: "迷惑"
         title: "迷惑処理の構成"
         select_llm: "LLM を選択してください"
+        no_llm_selected: "なし"
+        no_decision_model_selected: "なし"
         custom_instructions: "カスタム指示"
         custom_instructions_help: "AI による迷惑行為の識別を誘導しやすくする、サイト固有のカスタム指示。例: 「英語以外の投稿をより積極的にスキャンする」。"
         last_seven_days: "過去 7 日間"
@@ -678,6 +712,16 @@ ja:
         delete: "削除"
         embedding: "埋め込み"
         tool: "ツール"
+      decision_models:
+        no_preset: "なし"
+        display_name: "名前"
+        model: "モデル"
+        provider: "プロバイダー"
+        edit: "編集"
+        delete: "削除"
+        test: "テストを実行"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "名前"
         description: "説明"
@@ -695,6 +739,19 @@ ja:
         tools_modal:
           parameters: "パラメーター"
           required: "必須"
+      models:
+        new: "新しいモデル"
+        name: "名前"
+        type: "タイプ"
+        provider: "プロバイダー"
+        edit: "編集"
+        seeded_warning: "これはサイト上で事前に構成されているため、編集できません。"
+        select_type: "選択"
+        types:
+          embedding: "埋め込み"
+        filters:
+          all: "全タイプ"
+          reset: "フィルタをリセット"
       llms:
         short_title: "LLM"
         no_llms: "まだ LLM がありません"
@@ -886,7 +943,6 @@ ja:
         presets: "プリセットを選択..."
         configure_manually: "手動で構成"
         edit: "編集"
-        seeded_warning: "これはサイト上で事前に構成されているため、編集できません。"
         tests:
           title: "テストを実行"
           running: "テストを実行中…"
@@ -918,6 +974,7 @@ ja:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "カスタム"
         provider_fields:
@@ -928,9 +985,23 @@ ja:
         quick_search:
           suffix: "AI によるすべてのトピックと投稿"
       ai_artifact:
+        editor:
+          version: "バージョン"
+          default: "デフォルト"
+          option_on: "オン"
+          option_off: "オフ"
+          apply: "適用"
         expand_view_label: "表示を拡大"
         collapse_view_label: "全画面表示を終了 (ESC または「戻る」ボタン)"
         click_to_run_label: "アーティファクトを実行"
+        share: "共有"
+        create_link: "リンクを作成"
+        copied: "クリップボードにコピーしました"
+        copy_link: "リンクをコピー"
+        copy_embed: "埋め込みをコピー"
+        new_tab: "新しいタブで表示"
+        filter_all: "すべて"
+        filter_standalone: "単発"
       ai_bot:
         title: "AI ボット"
         llm: "モデル:"
@@ -990,6 +1061,7 @@ ja:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "どのようなご用件ですか？"
           submit: "質問を送信"
           disclaimer: "生成 AI は間違いを犯す可能性があります。重要な情報は確認してください。"
@@ -1007,10 +1079,7 @@ ja:
           scroll_to_bottom: "一番下にスクロール"
           editing_post: "投稿を編集中"
       sentiments:
-        dashboard:
-          title: "センチメント"
         sidebar:
-          overview: "センチメントの概要"
           analysis: "センチメント分析"
         sentiment_analysis:
           share_chart: "チャートへのリンクをコピー"
@@ -1049,6 +1118,14 @@ ja:
             compact: "コンパクト"
             expanded: "展開"
             expanded_description: "AI 要約を使用"
+      ai_search:
+        related_topics: "関連トピック"
+        related_replies:
+          other: "返信: %{count} 件"
+        tabs:
+          ask: "AI に尋ねる"
+          topics: "トピック"
+          messages: "メッセージ"
       discobot_discoveries:
         main_title: "AI に尋ねる"
         loading_convo: "会話を読み込み中"

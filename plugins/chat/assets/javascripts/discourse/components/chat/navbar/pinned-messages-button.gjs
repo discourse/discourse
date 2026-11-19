@@ -8,7 +8,6 @@ import { hasPinsDismissal } from "discourse/plugins/chat/discourse/lib/chat-pinn
 
 export default class ChatNavbarPinnedMessagesButton extends Component {
   @service router;
-  @service siteSettings;
   @service chatStateManager;
 
   pinnedMessagesLabel = i18n("chat.pinned_messages.title");
@@ -20,7 +19,6 @@ export default class ChatNavbarPinnedMessagesButton extends Component {
   // only the way back to the pins panel while the bar itself is dismissed
   get showButton() {
     return (
-      this.siteSettings.chat_pinned_messages &&
       !this.chatStateManager.isDrawerCollapsed &&
       this.args.channel?.hasPinnedMessages &&
       hasPinsDismissal(this.args.channel) &&

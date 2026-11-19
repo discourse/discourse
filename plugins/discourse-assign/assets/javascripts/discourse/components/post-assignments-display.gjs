@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { assignedToGroupPath, assignedToUserPath } from "../lib/url";
-import AssignedFirstPost from "./assigned-to-first-post";
-import AssignedToPost from "./assigned-to-post";
+import { assignedToGroupPath, assignedToUserPath } from "../lib/url.js";
+import AssignedFirstPost from "./assigned-to-first-post.gjs";
+import AssignedToPost from "./assigned-to-post.gjs";
 
 export default class PostAssignmentsDisplay extends Component {
   static shouldRender(args) {

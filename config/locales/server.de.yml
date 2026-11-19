@@ -20,6 +20,7 @@ de:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_not_found: "Kategorie nicht gefunden"
       draft_too_long: "Der Entwurf ist zu lang"
       post_not_found: "Beitrag nicht gefunden"
       topic_not_found: "Thema nicht gefunden"
@@ -540,11 +541,6 @@ de:
   too_many_mentions_newuser:
     one: "Entschuldige, neue Benutzer können nur einen anderen Benutzer in einem Beitrag erwähnen."
     other: "Entschuldige, neue Benutzer können nur %{count} Benutzer in einem Beitrag erwähnen."
-  no_embedded_media_allowed_group: "Entschuldige, du kannst keine Medienelemente in einen Beitrag einbetten."
-  no_embedded_media_allowed: "Entschuldige, neue Benutzer können keine Medienelemente in Beiträge einbetten."
-  too_many_embedded_media:
-    one: "Entschuldige, neue Benutzer können leider nur ein eingebettetes Medienelement in einen Beitrag einfügen."
-    other: "Entschuldige, neue Benutzer können leider nur %{count} eingebettete Medienelemente in einen Beitrag einfügen."
   no_attachments_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Dateien hinzufügen."
   too_many_attachments:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens eine Datei hinzufügen."
@@ -871,6 +867,7 @@ de:
     post_template: "%{replace_paragraph}\n\nBenutze die folgenden Abschnitte für eine ausführlichere Beschreibung oder um Richtlinien oder Regeln für diese Kategorie festzulegen:\n\n- Warum sollten Benutzer diese Kategorie nutzen? Wofür ist sie gedacht?\n\n- Wie genau unterscheidet sie sich von den Kategorien, die es bereits gibt?\n\n- Was sollten Themen in dieser Kategorie generell beinhalten?\n\n- Brauchen wir diese Kategorie? Können wir sie mit einer anderen Kategorie oder Unter-Kategorie zusammenführen?\n"
     errors:
       not_found: "Kategorie nicht gefunden!"
+      self_lockout: "Du bist dabei, die Berechtigungen für diese Kategorie so zu ändern, dass du selbst nicht länger Zugriff darauf hast. Bist du sicher, dass du fortfahren willst?"
       uncategorized_parent: "„Nicht kategorisiert“ kann keine übergeordnete Kategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
       depth: "Unterkategorien können nicht ineinander verschachtelt werden."
@@ -1800,7 +1797,6 @@ de:
         one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Fehlerprotokollen</a>."
         other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Fehlerprotokollen</a>."
       missing_mailgun_api_key: "Der Server ist so konfiguriert, dass E-Mails über Mailgun versendet werden, aber du hast keinen API-Schlüssel angegeben, mit dem die Webhook-Nachrichten verifiziert werden können."
-      missing_aws_sns_topic_arn: "Der Server ist so konfiguriert, dass er E-Mails über Amazon SES versendet, aber du hast noch keine SNS-Topic-ARNs auf die Positivliste gesetzt. Bounce-Benachrichtigungen werden so lange abgelehnt, bis du die gültige ARN zur <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a> hinzufügst."
       qq_mail_smtp: "Dein SMTP-Server (%{smtp_address}) ist dafür bekannt bei Discourse doppelte E-Mails zu verursachen. QQ Mail sendet keine korrekten Bestätigungen zurück, was dazu führt, dass Discourse versucht bereits versendete E-Mails erneut zu versenden. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>Siehe empfohlene Alternativen</a>."
       bad_favicon_url: "Das Favicon lässt sich nicht laden. Prüfe die Favicon-Einstellung in den <a href='%{base_path}/admin/site_settings'>Website-Einstellungen</a>."
       poll_pop3_timeout: "Die Verbindung zum POP3-Server schlägt mit einer Zeitüberschreitung fehl. Eingehende E-Mails konnten nicht abgerufen werden. Überprüfe bitte deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a> und den Dienstanbieter."
@@ -2335,7 +2331,6 @@ de:
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
     reviewable_low_priority_threshold: "Der Prioritätsfilter blendet überprüfbare Elemente aus, die diesem Score nicht entsprechen, es sei denn, der Filter „(any)“ wird verwendet."
     high_trust_flaggers_auto_hide_posts: "Beiträge von neuen Benutzern werden automatisch ausgeblendet, nachdem sie von einem Benutzer mit VS3+ als Spam gemeldet wurden"
-    allow_all_users_to_flag_illegal_content: "Anonyme Benutzer sehen die Information, dass sie den Administratoren eine E-Mail schicken müssen, um illegale Inhalte zu melden. Diese Einstellung hat Vorrang vor {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "Wenn dieses Feld leer gelassen wird, wird die Standard-E-Mail-Adresse des Website-Administrators verwendet."
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
     slow_mode_prevents_editing: "Verhindert der langsame Modus die Bearbeitung nach {{setting:editing_grace_period}}?"
@@ -2362,7 +2357,6 @@ de:
     ignore_by_title: "Ignoriere eingehende E-Mails basierend auf ihrem Betreff."
     mailgun_api_key: "Geheimer Mailgun-API-Schlüssel, um Webhook-Nachrichten zu überprüfen."
     sendgrid_verification_key: "Sendgrid-Verifizierungsschlüssel, der zur Verifizierung von Webhook-Nachrichten verwendet wird."
-    aws_sns_topic_arn_allowlist: "SNS-Themen-ARNs, die Amazon SES-Webhook-Benachrichtigungen bei Bounces senden dürfen."
     mailjet_webhook_token: "Token, das zur Verifizierung der Webhook-Payload verwendet wird. Es muss als „t“-Abfrageparameter des Webhooks übergeben werden, zum Beispiel: https://example.com/webhook/mailjet?t=supersecret"
     mailpace_webhook_token: "Token, das zur Verifizierung der Webhook-Payload verwendet wird. Es muss als „t“-Abfrageparameter des Webhooks übergeben werden, zum Beispiel: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill-Authentifizierungsschlüssel, der zur Verifizierung von Webhook-Nachrichten verwendet wird."
@@ -2490,7 +2484,6 @@ de:
     enable_names: "Zeige den vollständigen Namen des Benutzers in seinem Profil, auf der Benutzerkarte und in E-Mails an. Deaktivieren, um den vollständigen Namen überall auszublenden."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
-    short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
     default_code_lang: "Standardmäßige Syntaxhervorhebung für Programmiersprachen, die auf Markdown-Codeblöcke angewendet wird (auto, text, ruby, python usw.). Dieser Wert muss auch in der Website-Einstellung {{setting:highlighted_languages}} enthalten sein."
     autohighlight_all_code: "Wende die Syntaxhervorhebung auf HTML-&lt;code&gt;-Blöcke an, auch wenn keine Sprache angegeben ist. Um Markdown-Codeblöcke zu konfigurieren, verwende die Einstellung {{setting:default_code_lang}}."
     highlighted_languages: "Enthaltene Regeln zur Syntaxhervorhebung. (Achtung: Zu viele Sprachen können die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> für eine Demo"
@@ -2629,10 +2622,8 @@ de:
     create_post_for_category_and_tag_changes: "Um einen Flüsterbeitrag zu erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern, müssen Flüsterbeiträge aktiviert sein."
     automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder persönlichen Nachrichten verwendet werden."
     default_watched_precedence_over_muted: "Benachrichtige Benutzer über Themen in Kategorien oder mit Schlagwörtern, die sie beobachten, auch wenn diese auch mit einem Schlagwort versehen sind oder in einer Kategorie sind, die sie stummgeschaltet haben"
-    company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
+    company_name: "Name deiner Firma oder deiner Organisation."
     company_url: "URL der Website deines Unternehmens oder deiner Organisation. Optional."
-    governing_law: "Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzerklärung. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Website betreibt, registriert ist oder Geschäfte tätigt."
-    city_for_disputes: "Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten."
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Entwürfe“, indem du eine Kategorie für Themenentwürfe bestimmst. Themen in dieser Kategorie werden in den Themenlisten für Team-Mitglieder unterdrückt."
     shared_drafts_allowed_groups: "Erlaube Benutzern in diesen Gruppen, gemeinsame Entwürfe zu sehen und zu bearbeiten."
     push_notifications_prompt: "Zeige Benutzern ein Zustimmungsbanner für Push-Benachrichtigungen. Diese Einstellung löst eine Aufforderung aus, in der die Benutzer um Erlaubnis gebeten werden, ihnen Push-Benachrichtigungen senden zu dürfen. Das Banner wird nur angezeigt, wenn Push-Benachrichtigungen nicht bereits aktiviert sind, vom Gerät des Benutzers unterstützt werden und der Benutzer entweder einen Beitrag erstellt hat oder eine Progressive Web App (PWA) verwendet. Die Aufforderung wird nicht mehr angezeigt, wenn der Benutzer sie bereits abgelehnt oder die Erlaubnis erteilt/verweigert hat."
@@ -2646,9 +2637,6 @@ de:
     enable_user_status: "Benutzern erlauben, eine eigene Statusmeldung (Emoji + Beschreibung) einzustellen."
     enable_user_tips: "Tipps für neue Benutzer aktivieren, die diesen die wichtigsten Funktionen näherbringen"
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein. Beachte, dass eine Änderung dieses Titels eine Aufforderung an die Benutzer der PWA senden kann, die App entweder zu aktualisieren oder zu deinstallieren."
-    dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
-    dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
-    dashboard_general_tab_activity_metrics: "Wähle Berichte aus, die als Aktivitätsmetrik in der Registerkarte „Allgemein“ angezeigt werden."
     gravatar_enabled: "Verwende den <a href='https://gravatar.com/'>Gravatar-Dienst</a> für Benutzeravatare. Wenn diese Option deaktiviert ist, können Benutzer ihre Avatare nicht mehr auf Gravatar umstellen. Benutzer, die den Dienst bereits nutzen, sind davon nicht betroffen."
     gravatar_name: "Gib den Namen des Gravatar-Dienstanbieters an. Dieser Name wird normalerweise verwendet, um die Quelle zu identifizieren, die Gravatar-Avatare für die Website bereitstellt."
     gravatar_base_url: "Gib die URL für den Zugriff auf die API des Gravatar-Anbieters an. Diese Einstellung ist wichtig für die Umwandlung von E-Mail-Adressen in Gravatar-URLs, für die Avatar-Bilder hinterlegt werden."
@@ -2678,13 +2666,11 @@ de:
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     enable_auto_grid_images: "Schließt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Editor hochgeladen werden."
     enable_new_checkbox_style: "Aktiviere den neu gestalteten Kontrollkästchen-Stil für FormKit-Kontrollkästchen."
-    enable_new_post_reactions_menu: "Aktiviere das überarbeitete Menü für „Gefällt mir“-Angaben und Reaktionen bei Beiträgen mit Endlos-Scrolling und einer nativen mobilen Benutzererfahrung."
     enable_composer_redesign: "Aktiviere den überarbeiteten Editor."
     prioritize_recently_used_tags: "Wenn beim Erstellen oder Bearbeiten eines Themas Schlagwörter hinzugefügt werden, zeige die Schlagwörter, die das Mitglied kürzlich in seinen eigenen Themen verwendet hat, ganz oben in der Liste an – noch vor den beliebtesten Tags des Forums."
     experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
-    about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
     about_page_extra_groups: "Gruppen, die auf der Seite „Über uns“ unter den Moderatoren angezeigt werden sollen."
     about_page_extra_groups_initial_members: "Anzahl der Mitglieder, die pro Gruppe auf der „Über uns“-Seite angezeigt werden, bevor eine „Mehr anzeigen“-Schaltfläche erscheint."
     about_page_extra_groups_show_description: "Ob die Gruppenbeschreibungen auf der Seite „Über uns“ angezeigt werden sollen."
@@ -2722,7 +2708,6 @@ de:
     nested_replies_hot_preload_depth_penalty: "Die bei der Auswahl verschachtelter Antworten, die in der „heiß“-Ansicht vorab aufgeklappt werden sollen, abzuziehende Priorität für jede Tiefe."
     nested_replies_default_sort: "Standard-Sortieralgorithmus für die Ansicht mit verschachtelten Antworten."
     nested_replies_max_depth: "Maximale visuelle Verschachtelungstiefe für Antworten in einem Thread. Bei Beiträgen, die tiefer liegen, wird ein Link „Diesen Thread fortsetzen“ angezeigt."
-    nested_replies_backfill_batch_size: "Anzahl der Themen, die pro Batch zur Nacherfassung der Statistiken für verschachtelte Antworten verarbeitet werden sollen."
     nested_replies_stats_maintenance_enabled: "Statistiken zu verschachtelten Antworten auch dann beibehalten, wenn verschachtelte Antworten deaktiviert sind."
     nested_replies_cap_nesting_depth: "Begrenze die Verschachtelung von Antworten auf die maximale visuelle Tiefe. Wenn diese Option aktiviert ist, werden Antworten auf der tiefsten Ebene nicht mehr als untergeordnete Elemente, sondern als gleichrangige Elemente neu zugeordnet."
     enable_new_defaults_for_trust_level_3_requirements: "Wir haben die VS3-Standardanforderungen angepasst, damit sie für Mitglieder großer, aktiver Communitys sinnvoller sind. Falls du diese Einstellungen zuvor überschrieben hast, hat die bevorstehende Änderung keine Auswirkungen."
@@ -2823,10 +2808,29 @@ de:
       mediaconvert_output_subdirectory_required: "Die Einstellung „MediaConvert output subdirectory“ muss ausgefüllt sein."
       s3_credentials_required_for_video_conversion: "Für die Videokonvertierung werden S3-Anmeldedaten benötigt. Bitte konfiguriere S3-Zugangsschlüssel oder aktiviere das IAM-Profil."
     keywords:
+      about_banner_image: "bannerbild"
+      about_page_extra_groups: "gruppenauflistung"
+      about_page_extra_groups_initial_members: "direkt sichtbare Mitglieder"
+      about_page_extra_groups_order: "sortierreihenfolge"
+      about_page_extra_groups_show_description: "beschreibung einfügen"
       clean_up_inactive_users_after_days: "deaktiviert|inaktiv|nicht aktiviert"
+      company_url: "website"
+      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      embed_full_app: "vollständiger App-Modus"
+      extended_site_description: "beschreibung der Community"
+      large_icon: "quadratisches Symbol"
+      logo: "hauptlogo"
+      logo_dark: "hauptlogo dunkel"
+      logo_small: "kleines Logo"
+      logo_small_dark: "kleines Logo dunkel"
       navigation_menu: "Seitenleiste|Kopfzeilen-Drop-down"
       purge_unactivated_users_grace_period_days: "deaktiviert|inaktiv|nicht aktiviert"
-      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      short_site_description: "titel der Community"
+      site_contact_group_name: "website-Ansprechpartner-Gruppe"
+      site_contact_username: "website-Ansprechpartner"
+      site_description: "kurzbeschreibung der Community"
+      title: "name der Community"
+      welcome_banner_image: "hintergrundbild"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4409,34 +4413,18 @@ de:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
       subject_template_improved: "Dein Konto wurde gesperrt"
-      text_body_template: |
-        Du wurdest im Forum bis zum %{suspended_till} gesperrt.
-
-        Grund – %{reason}
     account_suspended_forever:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
       subject_template_improved: "Dein Konto wurde gesperrt"
-      text_body_template: |
-        Du wurdest im Forum gesperrt.
-
-        Grund – %{reason}
     account_silenced:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
       subject_template_improved: "Dein Konto wurde stummgeschaltet"
-      text_body_template: |
-        Du wurdest im Forum bis zum %{silenced_till} stummgeschaltet.
-
-        Grund – %{reason}
     account_silenced_forever:
       title: "Konto stummgeschaltet"
       subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
       subject_template_improved: "Dein Konto wurde stummgeschaltet"
-      text_body_template: |
-        Du wurdest im Forum stummgeschaltet.
-
-        Grund – %{reason}
     account_deleted:
       title: "Konto gelöscht"
       subject_template: "[%{email_prefix}] Dein Konto wurde gelöscht"
@@ -4902,267 +4890,8 @@ de:
       Diese Website wird von eurem [freundlichen Moderations-Team](%{base_path}/about) und *euch*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie die Dinge hier laufen sollen, eröffne ein neues Thema in %{feedback_category} und lass es uns diskutieren! Falls es ein kritisches oder dringendes Problem gibt, das nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, [kontaktiere das Team](%{base_path}/about).
   tos_topic:
     title: "Nutzungsbedingungen"
-    body: |
-      <h2 id="heading--change-me"><a href="#heading--change-me">Platzhalter</a></h2>
-
-      Lieber Forum-Admin, unten findest du eine Beispielvorlage für eine Datenschutzerklärung, die du an die Anforderungen deiner Website anpassen solltest.
-
-      Diese Bedingungen regeln derzeit nicht die Nutzung des Internetforums unter <%{base_url}>, könnten dies aber eines Tages tun. In diesem Fall musst du, um das Forum nutzen zu können, diesen Bedingungen von %{company_name} – dem Unternehmen, das das Forum betreibt – zustimmen..
-
-      Das Unternehmen bietet möglicherweise weitere Produkte und Dienstleistungen zu anderen Bedingungen an. Diese Bedingungen gelten ausschließlich für die Nutzung des Forums.
-
-      Springe zu:
-
-      - [Wichtigen Bedingungen](#heading--important-terms)
-      - [Erlaubnis zur Nutzung des Forums](#heading--permission)
-      - [Bedingungen für die Nutzung des Forums](#heading--conditions)
-      - [Zulässige Nutzung](#heading--acceptable-use)
-      - [Zulässige Inhalte](#heading--content-standards)
-      - [Rechtsdurchsetzung](#heading--enforcement)
-      - [Dein Konto](#heading--your-account)
-      - [Deine Inhalte](#heading--your-content)
-      - [Deine Pflichten](#heading--responsibility)
-      - [Haftungsausschlüsse](#heading--disclaimers)
-      - [Haftungsbeschränkungen](#heading--liability)
-      - [Feedback](#heading--feedback)
-      - [Kündigung](#heading--termination)
-      - [Streitigkeiten](#heading--disputes)
-      - [Allgemeine Bedingungen](#heading--general)
-      - [Kontakt](#heading--contact)
-      - [Änderungen](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Wichtige Bedingungen</a></h2>
-
-      ***Diese Bedingungen enthalten eine Reihe wichtiger Bestimmungen, die deine Rechte und Pflichten betreffen, wie zum Beispiel die Haftungsausschlüsse unter [Haftungsausschlüsse](#heading--disclaimers), die Beschränkungen der Haftung des Unternehmens dir gegenüber unter [Haftungsbeschränkungen](#heading--liability), deine Zustimmung, das Unternehmen für Schäden zu entschädigen, die durch deinen Missbrauch des Forums entstehen, unter [Deine Pflichten](#heading--responsibility), sowie eine Vereinbarung zur Schlichtung von Streitigkeiten unter [Streitigkeiten](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Erlaubnis zur Nutzung des Forums</a></h2>
-
-      Vorbehaltlich dieser Bedingungen erteilt dir das Unternehmen die Erlaubnis, das Forum zu nutzen. Jeder muss diesen Bedingungen zustimmen, um das Forum nutzen zu können.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Bedingungen für die Nutzung des Forums</a></h2>
-
-      Deine Berechtigung zur Nutzung des Forums unterliegt den folgenden Bedingungen:
-
-      1. Du musst mindestens achtzehn Jahre alt sein.
-
-      2. Du darfst das Forum nicht mehr nutzen, wenn das Unternehmen dich direkt kontaktiert und dir mitteilt, dass du dies nicht darfst.
-
-      3. Du musst das Forum gemäß [Zulässige Nutzung](#heading--acceptable-use) und [Zulässige Inhalte](#heading--content-standards) nutzen.
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Zulässige Nutzung</a></h2>
-
-      1. Du darfst bei der Nutzung des Forums nicht gegen das Gesetz verstoßen.
-
-      2. Du darfst das Konto eines anderen Benutzers im Forum nicht ohne dessen ausdrückliche Erlaubnis nutzen oder versuchen, es zu nutzen.
-
-      3. Du darfst Benutzernamen oder andere eindeutige Kennungen im Forum nicht kaufen, verkaufen oder anderweitig damit handeln.
-
-      4. Du darfst über das Forum keine Werbung, Kettenbriefe oder andere Werbemitteilungen versenden oder das Forum nutzen, um Adressen oder andere personenbezogene Daten für kommerzielle Mailinglisten oder Datenbanken zu sammeln.
-
-      5. Du darfst den Zugriff auf das Forum nicht automatisieren oder das Forum überwachen, beispielsweise mit einem Webcrawler, einem Browser-Plugin oder -Add-on oder einem anderen Computerprogramm, das kein Webbrowser ist. Du darfst das Forum crawlen, um es für eine öffentlich zugängliche Suchmaschine zu indexieren, falls du eine betreibst.
-
-      6. Du darfst das Forum nicht nutzen, um E-Mails an Verteilerlisten, Newsgroups oder Gruppen-Mail-Aliase zu versenden.
-
-      7. Du darfst nicht fälschlicherweise den Eindruck erwecken, dass du mit dem Unternehmen verbunden bist oder von diesem unterstützt wirst.
-
-      8. Du darfst auf anderen Webseiten keine Hyperlinks zu Bildern oder anderen Nicht-Hypertext-Inhalten des Forums setzen.
-
-      9. Du darfst keine Kennzeichnungen, die das Eigentumsrecht anzeigen, aus Materialien entfernen, die du aus dem Forum herunterlädst.
-
-      10. Du darfst keinen Teil des Forums auf anderen Websites mit `<iframe>` anzeigen.
-
-      11. Du darfst keine Sicherheits- oder Zugriffsbeschränkungen des Forums deaktivieren, umgehen oder außer Kraft setzen.
-
-      12. Du darfst die Infrastruktur des Forums nicht durch eine unangemessene Anzahl von Anfragen oder durch Anfragen belasten, die darauf abzielen, die dem Forum zugrunde liegenden Informationssysteme unangemessen zu überlasten.
-
-      13. Du darfst dich im Forum nicht als jemand anderes ausgeben.
-
-      14. Du darfst niemanden dazu ermutigen oder ihm dabei helfen, gegen diese Bedingungen zu verstoßen.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Zulässige Inhalte</a></h2>
-
-      1. Du darfst keine Inhalte im Forum veröffentlichen, die illegal, beleidigend oder anderweitig schädlich für andere sind. Dazu gehören Inhalte, die belästigend, unangemessen, beleidigend oder hasserfüllt sind.
-
-      2. Du darfst keine Inhalte im Forum veröffentlichen, die gegen das Gesetz verstoßen, die geistigen Eigentumsrechte anderer verletzen, die Privatsphäre anderer verletzen oder Vereinbarungen brechen, die du mit anderen getroffen hast.
-
-      3. Du darfst keine Inhalte im Forum veröffentlichen, die bösartigen Computercode enthalten, wie zum Beispiel Computerviren oder Spyware.
-
-      4. Du darfst keine Inhalte im Forum nur als Platzhalter veröffentlichen, um eine bestimmte Adresse, einen Benutzernamen oder eine andere eindeutige Kennung zu reservieren.
-
-      5. Du darfst das Forum nicht nutzen, um Informationen preiszugeben, zu deren Weitergabe du nicht berechtigt bist, wie zum Beispiel vertrauliche oder persönliche Daten anderer.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Rechtsdurchsetzung</a></h2>
-
-      Das Unternehmen kann Verstöße gegen diese Nutzungsbedingungen im vollen gesetzlich zulässigen Umfang untersuchen und strafrechtlich verfolgen. Das Unternehmen kann Strafverfolgungsbehörden benachrichtigen und mit ihnen zusammenarbeiten, um Verstöße gegen das Gesetz und diese Nutzungsbedingungen zu ahnden.
-
-      Das Unternehmen behält sich das Recht vor, Inhalte im Forum aus beliebigen Gründen zu ändern, zu bearbeiten und zu löschen. Wenn du der Meinung bist, dass jemand Inhalte im Forum veröffentlicht hat, die gegen diese Nutzungsbedingungen verstoßen, [melde dich sofort bei uns](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Dein Konto</a></h2>
-
-      Du musst ein Konto erstellen und dich dort anmelden, um bestimmte Funktionen des Forums nutzen zu können.
-
-      Um ein Konto zu erstellen, musst du einige Angaben zu deiner Person machen. Wenn du ein Konto erstellst, erklärst du dich damit einverstanden, mindestens eine gültige E-Mail-Adresse anzugeben und diese Adresse auf dem neuesten Stand zu halten. Du kannst dein Konto jederzeit schließen, indem du eine E-Mail an <%{contact_email}> schickst.
-
-      Du erklärst dich damit einverstanden, für alle Handlungen verantwortlich zu sein, die über dein Konto vorgenommen werden – unabhängig davon, ob sie von dir autorisiert wurden oder nicht –, bis du entweder dein Konto schließt oder das Unternehmen darüber informierst, dass dein Konto kompromittiert wurde. Du erklärst dich damit einverstanden, das Unternehmen unverzüglich zu benachrichtigen, wenn du den Verdacht hast, dass dein Konto kompromittiert wurde. Du erklärst dich damit einverstanden, ein sicheres Passwort für dein Konto zu wählen und es geheim zu halten.
-
-      Das Unternehmen kann dein Konto im Forum gemäß seinen Richtlinien zum Umgang mit urheberrechtlichen Löschanträgen einschränken, sperren oder schließen, oder wenn das Unternehmen berechtigten Grund zu der Annahme hat, dass du gegen eine Regel dieser Nutzungsbedingungen verstoßen hast.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Deine Inhalte</a></h2>
-
-      Keine Bestimmung dieser Bedingungen gewährt dem Unternehmen Eigentumsrechte an geistigem Eigentum, das du im Forum teilst, wie beispielsweise deine Kontoinformationen, Beiträge oder andere Inhalte, die du im Forum veröffentlichst. Ebenso gewährt dir keine Bestimmung dieser Bedingungen Eigentumsrechte am geistigen Eigentum des Unternehmens.
-
-      Im Verhältnis zwischen dir und dem Unternehmen trägst du die alleinige Verantwortung für die Inhalte, die du im Forum veröffentlichst. Du erklärst dich damit einverstanden, nicht fälschlicherweise den Eindruck zu erwecken, dass die von dir im Forum veröffentlichten Inhalte vom Unternehmen gesponsert oder genehmigt wurden. Diese Bedingungen verpflichten das Unternehmen nicht, von dir eingereichte Inhalte zu speichern, zu pflegen oder Kopien davon bereitzustellen sowie sie gemäß diesen Bedingungen zu ändern.
-
-      Inhalte, die du im Forum einreichst, gehören dir, und du entscheidest, welche Berechtigungen du anderen dafür erteilst. Du gewährst dem Unternehmen jedoch mindestens eine Lizenz, die von dir im Forum eingereichten Inhalte anderen Benutzern des Forums zur Verfügung zu stellen. Diese spezielle Lizenz erlaubt es dem Unternehmen, die von dir im Forum eingereichten Inhalte zu kopieren, zu veröffentlichen und zu analysieren.
-
-      Wenn von dir eingereichte Inhalte aus dem Forum entfernt werden – sei es durch dich oder durch das Unternehmen –, erlischt die Sonderlizenz des Unternehmens, sobald die letzte Kopie aus den Backups, Caches und anderen Systemen des Unternehmens verschwunden ist. Andere Lizenzen, die du auf deine eingereichten Inhalte anwendest, wie z. B. [Creative-Commons-Lizenzen](https://creativecommons.org), können auch nach der Entfernung deiner Inhalte weiterhin gelten. Diese Lizenzen können anderen oder dem Unternehmen selbst das Recht einräumen, deine Inhalte erneut über das Forum zu teilen.
-
-      Andere, die Inhalte erhalten, die du im Forum einreichst, können gegen die Bedingungen verstoßen, unter denen du deine Inhalte lizenziert hast. Du erklärst dich damit einverstanden, dass das Unternehmen dir gegenüber nicht für diese Verstöße oder deren Folgen haftet.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Deine Pflichten</a></h2>
-
-      Du erklärst dich damit einverstanden, das Unternehmen von Rechtsansprüchen Dritter freizustellen, die im Zusammenhang mit deinem Verstoß gegen diese Bedingungen oder mit einem Verstoß gegen diese Bedingungen durch andere Personen stehen, die dein Konto im Forum nutzen. Sowohl du als auch das Unternehmen verpflichten euch, die jeweils andere Seite so schnell wie möglich über alle Rechtsansprüche zu informieren, für die du das Unternehmen möglicherweise freistellen musst. Sollte das Unternehmen dich nicht unverzüglich über einen Rechtsanspruch informieren, musst du das Unternehmen nicht für Schäden entschädigen, die du bei rechtzeitiger Benachrichtigung hättest abwehren oder mindern können. Du erklärst dich damit einverstanden, dem Unternehmen die Leitung der Untersuchung, Verteidigung und Beilegung von Rechtsansprüchen zu überlassen, für die du das Unternehmen entschädigen müsstest, und bei diesen Bemühungen mitzuwirken. Das Unternehmen verpflichtet sich, ohne deine vorherige Zustimmung keinem Vergleich zuzustimmen, der ein Verschulden deinerseits einräumt oder dir Verpflichtungen auferlegt.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Haftungsausschlüsse</a></h2>
-
-      ***Du übernimmst das gesamte Risiko bei der Nutzung des Forums und der darin enthaltenen Inhalte. Soweit gesetzlich zulässig, stellen das Unternehmen und seine Anbieter das Forum „wie besehen“ und ohne jegliche Gewährleistung zur Verfügung.***
-
-      Das Forum kann Hyperlinks zu Foren und Diensten enthalten, die von Dritten betrieben werden, oder diese integrieren. Das Unternehmen übernimmt keinerlei Gewähr für von Dritten betriebene Dienste oder die von diesen bereitgestellten Inhalte. Die Nutzung von Diensten, die von Dritten betrieben werden, unterliegt möglicherweise anderen Bedingungen zwischen dir und dem jeweiligen Betreiber.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Haftungsbeschränkungen</a></h2>
-
-      ***Weder das Unternehmen noch seine Lieferanten haften dir gegenüber für Schadensersatzansprüche aufgrund von Vertragsverletzungen, die deren Mitarbeiter zum Zeitpunkt deiner Zustimmung zu diesen Bedingungen vernünftigerweise nicht hätten vorhersehen können.***
-
-      ***Soweit gesetzlich zulässig, ist die Gesamthaftung dir gegenüber für Ansprüche jeglicher Art, die mit dem Forum oder den Inhalten des Forums in Zusammenhang stehen, auf 50 US-Dollar begrenzt.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
-
-      Das Unternehmen freut sich über dein Feedback und deine Vorschläge zum Forum. Im Abschnitt [Kontakt](#heading--contact) weiter unten findest du Informationen dazu, wie du uns erreichen kannst.
-
-      Du erklärst dich damit einverstanden, dass es dem Unternehmen freisteht, auf dein Feedback und deine Vorschläge zu reagieren, und dass das Unternehmen nicht verpflichtet ist, dich darüber zu informieren, dass dein Feedback verwendet wurde, deine Zustimmung zur Verwendung einzuholen oder dich dafür zu bezahlen. Du erklärst dich damit einverstanden, kein Feedback oder keine Vorschläge einzureichen, von denen du glaubst, dass sie vertraulich sind oder dir oder anderen gehören.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Kündigung</a></h2>
-
-      Sowohl du als auch das Unternehmen könnt die in diesen Bedingungen festgelegte Vereinbarung jederzeit kündigen. Wenn unsere Vereinbarung endet, erlischt auch deine Berechtigung zur Nutzung des Forums.
-
-      Die folgenden Bestimmungen gelten auch nach Beendigung unserer Vereinbarung weiter: [Deine Inhalte](#heading--your-content), [Feedback](#heading--feedback), [Deine Pflichten](#heading--responsibility), [Haftungsausschlüsse](#heading--disclaimers), [Haftungsbeschränkungen](#heading--liability) und [Allgemeine Bedingungen](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Streitigkeiten</a></h2>
-
-      %{governing_law} gilt für alle Streitigkeiten im Zusammenhang mit diesen Bedingungen oder deiner Nutzung des Forums.
-
-      Du und das Unternehmen vereinbaren, Unterlassungsklagen im Zusammenhang mit diesen Bedingungen ausschließlich vor einem Landes- oder Bundesgericht in %{city_for_disputes} zu erheben. Weder du noch das Unternehmen werdet Einwände gegen die Zuständigkeit, den Gerichtsstand oder den Ort der Verhandlung vor diesen Gerichten erheben.
-
-      ***Abgesehen von der Beantragung einer einstweiligen Verfügung oder von Ansprüchen gemäß dem „Computer Fraud and Abuse Act“ werden du und das Unternehmen alle Streitigkeiten durch ein bindendes Schiedsverfahren der American Arbitration Association (AAA) beilegen. Das Schiedsverfahren erfolgt gemäß den „Commercial Arbitration Rules“ und den „Supplementary Procedures for Consumer-Related Disputes“ der AAA. Das Schiedsverfahren findet in %{city_for_disputes} statt. Du wirst alle Streitigkeiten als Einzelperson beilegen und nicht im Rahmen einer Sammelklage oder eines anderen repräsentativen Verfahrens, sei es als Kläger oder als Mitglied einer Sammelklage. Kein Schiedsrichter darf eine Streitigkeit ohne die Zustimmung des Unternehmens mit einem anderen Schiedsverfahren zusammenlegen.***
-
-      Jeder Schiedsspruch umfasst die Kosten des Schiedsverfahrens, angemessene Anwaltskosten und angemessene Kosten für Zeugen. Du und das Unternehmen könnt Schiedssprüche bei jedem zuständigen Gericht vollstrecken lassen.
-
-      <h2 id="heading--general"><a href="#heading--general">Allgemeine Bedingungen</a></h2>
-
-      Sollte eine Bestimmung dieser Bedingungen in ihrer vorliegenden Form nicht durchsetzbar sein, könnte aber so geändert werden, dass sie durchsetzbar wird, sollte diese Bestimmung in dem minimal notwendigen Umfang angepasst werden, um sie durchsetzbar zu machen. Andernfalls sollte diese Bestimmung gestrichen werden.
-
-      Du darfst deinen Vertrag mit dem Unternehmen nicht abtreten. Das Unternehmen darf deinen Vertrag an jedes verbundene Unternehmen des Unternehmens, an jedes andere Unternehmen, das die Kontrolle über das Unternehmen erlangt, oder an jedes andere Unternehmen, das Vermögenswerte des Unternehmens im Zusammenhang mit dem Forum erwirbt, abtreten. Jeder Versuch einer Abtretung, der gegen diese Bedingungen verstößt, ist rechtlich unwirksam.
-
-      Weder die Ausübung eines Rechts aus dieser Vereinbarung noch der Verzicht auf die Geltendmachung eines Verstoßes gegen diese Vereinbarung bedeutet einen Verzicht auf die Geltendmachung anderer Verstöße gegen diese Vereinbarung.
-
-      Diese Bedingungen enthalten alle Vereinbarungen zwischen dir und dem Unternehmen bezüglich der Nutzung des Forums. Diese Bedingungen ersetzen vollständig alle anderen Vereinbarungen über deine Nutzung des Forums, unabhängig davon, ob diese schriftlich festgehalten wurden oder nicht.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
-
-      Du kannst das Unternehmen gemäß diesen Bedingungen benachrichtigen und Fragen an das Unternehmen unter <%{contact_email}> senden.
-
-      Das Unternehmen kann dich gemäß diesen Bedingungen über die E-Mail-Adresse benachrichtigen, die du für dein Konto im Forum angegeben hast, oder durch Veröffentlichung einer Nachricht auf der Startseite des Forums oder auf deiner Profilseite.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Änderungen</a></h2>
-
-      Das Unternehmen hat diese Bedingungen zuletzt am [DATUM DER LETZTEN AKTUALISIERUNG EINFÜGEN] aktualisiert und behält sich vor, sie erneut zu aktualisieren. Das Unternehmen wird alle Aktualisierungen im Forum veröffentlichen. Bei Aktualisierungen, die wesentliche Änderungen beinhalten, verpflichtet sich das Unternehmen, dir eine E-Mail zu senden, sofern du ein Konto erstellt und eine gültige E-Mail-Adresse angegeben hast. Das Unternehmen kann Aktualisierungen auch durch spezielle Nachrichten oder Benachrichtigungen im Forum ankündigen.
-
-      Sobald du über eine Aktualisierung dieser Bedingungen informiert wirst, musst du den neuen Bedingungen zustimmen, um das Forum weiterhin nutzen zu können.
   privacy_topic:
     title: "Datenschutzerklärung"
-    body: |
-      ## [Lieber Forum-Admin, unten findest du eine Beispielvorlage für eine Datenschutzerklärung, die du an deine Website anpassen solltest.]
-
-      <a name="collect"></a>
-
-      ## [Welche Daten erfassen wir?](#collect)
-
-      Wir erfassen Daten von dir, wenn du dich auf unserer Website registrierst, und sammeln Daten, wenn du am Forum teilnimmst, indem du die hier geteilten Inhalte liest, schreibst und bewertest.
-
-      Bei der Registrierung auf unserer Website wirst du möglicherweise gebeten, deinen Namen und deine E-Mail-Adresse anzugeben. Du kannst unsere Website jedoch auch ohne Registrierung besuchen. Deine E-Mail-Adresse wird durch eine E-Mail mit einem eindeutigen Link verifiziert. Wenn dieser Link aufgerufen wird, wissen wir, dass du die E-Mail-Adresse kontrollierst.
-
-      Wenn du registriert bist und Beiträge verfasst, erfassen wir die IP-Adresse, von der der Beitrag stammt. Außerdem speichern wir möglicherweise Serverprotokolle, die die IP-Adresse jeder Anfrage an unseren Server enthalten.
-
-      <a name="use"></a>
-
-      ## [Wofür nutzen wir deine Daten?](#use)
-
-      Alle Daten, die wir von dir erfassen, können auf eine der folgenden Weisen verwendet werden:
-
-      * Um dein Erlebnis zu personalisieren – deine Daten helfen uns, besser auf deine individuellen Bedürfnisse einzugehen.
-      * Um unsere Website zu verbessern – wir sind ständig bemüht, unser Website-Angebot auf der Grundlage der Informationen und des Feedbacks, das wir von dir erhalten, zu verbessern.
-      * Zur Verbesserung des Kundenservices – deine Daten helfen uns, effektiver auf deine Kundenservice-Anfragen und Support-Bedürfnisse einzugehen.
-      * Zum Versenden regelmäßiger E-Mails – die von dir angegebene E-Mail-Adresse kann verwendet werden, um dir Informationen und Benachrichtigungen zu senden, die du zu Änderungen an Themen angefordert hast, oder als Antwort auf deinen Benutzernamen, auf Anfragen und/oder andere Wünsche oder Fragen.
-
-      <a name="protect"></a>
-
-      ## [Wie schützen wir deine Daten?](#protect)
-
-      Wir setzen eine Reihe von Sicherheitsmaßnahmen ein, um die Sicherheit deiner personenbezogenen Daten zu gewährleisten, wenn du diese eingibst, übermittelst oder darauf zugreifst.
-
-      <a name="data-retention"></a>
-
-      ## [Wie lautet die Richtlinie zur Datenaufbewahrung?](#data-retention)
-
-      Wir werden uns nach bestem Wissen und Gewissen bemühen:
-
-      * Serverprotokolle, die die IP-Adressen aller Anfragen an diesen Server enthalten, nicht länger als [ANZAHL DER TAGE] Tage aufzubewahren.
-
-      <a name="cookies"></a>
-
-      ## [Verwenden wir Cookies?](#cookies)
-
-      Ja. Cookies sind kleine Dateien, die eine Website oder deren Dienstanbieter über deinen Webbrowser auf die Festplatte deines Computers überträgt (sofern du dies zulässt). Diese Cookies ermöglichen es der Website, deinen Browser zu erkennen und – falls du ein registriertes Konto hast – diesen mit deinem registrierten Konto zu verknüpfen.
-
-      Wir nutzen Cookies, um deine Präferenzen für zukünftige Besuche zu verstehen und zu speichern sowie aggregierte Daten über den Website-Traffic und die Interaktion mit der Website zu erheben, damit wir dir in Zukunft ein besseres Website-Erlebnis und bessere Tools bieten können. Wir beauftragen möglicherweise Drittanbieter, uns dabei zu unterstützen, die Besucher unserer Website besser zu verstehen. Diesen Dienstleistern ist es nicht gestattet, die in unserem Auftrag gesammelten Daten für andere Zwecke zu nutzen als zur Unterstützung bei der Durchführung und Verbesserung unserer Geschäftstätigkeit.
-
-      <a name="disclose"></a>
-
-      ## [Geben wir irgendwelche Daten an Dritte weiter?](#disclose)
-
-      Wir verkaufen, tauschen oder geben deine personenbezogenen Daten nicht an Dritte weiter. Davon ausgenommen sind vertrauenswürdige Dritte, die uns beim Betrieb unserer Website, bei der Abwicklung unserer Geschäfte oder bei der Betreuung unserer Kunden unterstützen, sofern diese sich verpflichten, diese Daten vertraulich zu behandeln. Wir können deine Daten auch weitergeben, wenn wir der Ansicht sind, dass dies angemessen ist, um Gesetze einzuhalten, unsere Website-Richtlinien durchzusetzen oder unsere Rechte, unser Eigentum oder unsere Sicherheit sowie die anderer zu schützen. Nicht personenbezogene Besucherdaten können jedoch zu Marketing-, Werbe- oder anderen Zwecken an Dritte weitergegeben werden.
-
-      <a name="third-party"></a>
-
-      ## [Links zu Drittanbietern](#third-party)
-
-      Gelegentlich können wir nach eigenem Ermessen Produkte oder Dienstleistungen von Drittanbietern auf unserer Website einbinden oder anbieten. Diese Websites von Drittanbietern verfügen über eigene, unabhängige Datenschutzerklärungen. Wir übernehmen daher keine Verantwortung oder Haftung für die Inhalte und Aktivitäten dieser verlinkten Websites. Dennoch sind wir bestrebt, die Integrität unserer Website zu schützen, und freuen uns über jedes Feedback zu diesen Websites.
-
-      <a name="coppa"></a>
-
-      ## [Einhaltung des Children's Online Privacy Protection Act](#coppa)
-
-      Unsere Website, unsere Produkte und Dienstleistungen richten sich ausschließlich an Personen, die mindestens 18 Jahre alt sind. Befindet sich dieser Server in den USA und bist du unter 18 Jahre alt, darfst du diese Website gemäß den Bestimmungen des COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nicht nutzen.
-
-      <a name="online"></a>
-
-      ## [Ausschließliche Online-Datenschutzerklärung](#online)
-
-      Diese Online-Datenschutzerklärung gilt nur für Daten, die über unsere Website erfasst werden, und nicht für Daten, die offline erfasst werden.
-
-      <a name="consent"></a>
-
-      ## [Deine Zustimmung](#consent)
-
-      Mit der Nutzung unserer Website erklärst du dich mit unserer Datenschutzerklärung einverstanden.
-
-      <a name="changes"></a>
-
-      ## [Änderungen unserer Datenschutzerklärung](#changes)
-
-      Sollten wir uns entscheiden, unsere Datenschutzerklärung zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
-
-      Dieses Dokument steht unter der CC-BY-SA-Lizenz. Es wurde zuletzt am [DATUM DER LETZTEN AKTUALISIERUNG EINFÜGEN] aktualisiert.
   badges:
     mass_award:
       errors:
@@ -5517,7 +5246,13 @@ de:
   design_wizard:
     palette_pairs:
       default: "Standard"
+      neutral: "Neutral"
+      shades_of_blue: "Blautöne"
+      summer: "Sommer"
       dracula: "Dracula"
+      grey_amber: "Grauer Bernstein"
+      latte: "Latte"
+      dark_rose: "Dunkelrosa"
   wizard:
     title: "Discourse einrichten"
     step:
@@ -5557,6 +5292,28 @@ de:
     graph_title: "Anzahl Suchen"
   onebox:
     discourse:
+      event_all_day: "Ganztägig"
+      recurrence:
+        every_day: "Täglich"
+        every_weekday: "Jeden Wochentag"
+        every_week: "Jeden %{weekday}"
+        every_two_weeks: "Alle zwei Wochen am %{weekday}"
+        every_four_weeks: "Alle 4 Wochen am %{weekday}"
+        every_month: "Monatlich am %{ordinal} %{weekday}"
+        ordinals:
+          first: "ersten"
+          second: "zweiten"
+          third: "dritten"
+          fourth: "vierten"
+          last: "letzten"
+        weekdays:
+          sunday: "Sonntag"
+          monday: "Montag"
+          tuesday: "Dienstag"
+          wednesday: "Mittwoch"
+          thursday: "Donnerstag"
+          friday: "Freitag"
+          saturday: "Samstag"
       user_joined_community: "Beigetreten %{date}"
     google_meet:
       title: "Google-Meet-Meeting"
@@ -5567,6 +5324,10 @@ de:
       truncated_file: "Diese Datei wurde abgeschnitten."
       show_original: "Original zeigen"
     github:
+      header:
+        file: "Datei"
+        success: "Erfolg"
+        pending: "In Bearbeitung"
       binary_file: "Diese Datei ist binär."
       truncated_file: "Diese Datei wurde abgeschnitten."
       show_original: "Original zeigen"
@@ -5580,21 +5341,12 @@ de:
       review_by: "Überprüfung durch"
       pr_summary: "%{commits} Commits haben %{changed_files} Dateien durch %{additions} Ergänzungen und %{deletions} Löschungen geändert"
       no_description: "Trage zur Entwicklung von %{repo} bei, indem du ein Konto bei GitHub erstellst."
-      pr_title:
-        default: "Pull Request"
-        draft: "Entwurf Pull Request"
-        open: "Offener Pull Request"
-        approved: "Genehmigter Pull Request"
-        changes_requested: "Änderungen angefordert"
-        merged: "Zusammengeführter Pull Request"
-        closed: "Geschlossener Pull Request"
-      status_date:
-        open: "offen"
-        draft: "entworfen"
-        approved: "genehmigt"
-        changes_requested: "Änderungen angefordert"
-        merged: "Zusammengeführt am"
-        closed: "geschlossen"
+      pr_status:
+        draft: "Entwurf"
+        open: "Offen"
+        approved: "Genehmigt"
+        merged: "Zusammengeführt"
+        closed: "Geschlossen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
@@ -5686,6 +5438,10 @@ de:
       no_context:
         watched_word: "Dieser Beitrag enthält ein beobachtetes Wort. Für weitere Informationen prüfe die %{link}."
     actions:
+      answer_yes:
+        title: "Ja"
+      answer_no:
+        title: "Nein"
       agree:
         title: "Ja"
       agree_and_keep:

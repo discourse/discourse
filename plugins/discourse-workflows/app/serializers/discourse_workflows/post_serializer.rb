@@ -8,8 +8,12 @@ module DiscourseWorkflows
                :topic_slug,
                :post_number,
                :post_type,
+               :action_code,
                :reply_to_post_number,
+               :reply_to_post_id,
+               :reply_to_username,
                :post_url,
+               :url,
                :username,
                :user_id,
                :created_at,
@@ -20,8 +24,11 @@ module DiscourseWorkflows
                :score,
                :category_id,
                :category_name,
+               :category_slug,
                :tags,
                :upload_ids,
+               :image_uploads,
+               :locale,
                :raw,
                :cooked
 
@@ -43,6 +50,22 @@ module DiscourseWorkflows
       return "/404" if topic.blank?
 
       ::Post.url(topic.slug, topic.id, object.post_number)
+    end
+
+    def url
+      "#{Discourse.base_url}#{post_url}"
+    end
+
+    def reply_to_post_id
+      if object.has_attribute?(:reply_to_post_id)
+        object[:reply_to_post_id]
+      else
+        object.reply_to_post&.id
+      end
+    end
+
+    def reply_to_username
+      object.reply_to_user&.username
     end
 
     def username
@@ -69,14 +92,31 @@ module DiscourseWorkflows
       topic&.category&.name
     end
 
+    def category_slug
+      topic&.category&.slug_for_url
+    end
+
     def tags
       return [] if topic.blank? || !SiteSetting.tagging_enabled
 
-      topic.tags.visible(scope).pluck(:name)
+      topic.visible_tags(scope).map(&:name)
     end
 
     def upload_ids
       object.upload_ids
+    end
+
+    def image_uploads
+      object.uploads.filter_map do |upload|
+        next if !FileHelper.is_inline_image?(upload.original_filename)
+        next if !scope.can_see_upload?(upload)
+
+        { id: upload.id, short_url: upload.short_url }
+      end
+    end
+
+    def include_image_uploads?
+      @include_cooked
     end
 
     def include_raw?

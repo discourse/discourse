@@ -10,6 +10,25 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
+const STATUS_PRESENTATION = {
+  successful: {
+    icon: "circle-check",
+    className: "--success",
+    labelKey: "successful",
+  },
+  failed: { icon: "circle-xmark", className: "--failed", labelKey: "failed" },
+  empty: {
+    icon: "triangle-exclamation",
+    className: "--warning",
+    labelKey: "empty",
+  },
+  truncated: {
+    icon: "triangle-exclamation",
+    className: "--warning",
+    labelKey: "truncated_description",
+  },
+};
+
 function compactTokenCount(value) {
   if (value < 1_000) {
     return I18n.toNumber(value, { precision: 0 });
@@ -30,7 +49,7 @@ function compactTokenCount(value) {
 export default class AiLogRow extends Component {
   get status() {
     const log = this.args.log;
-    if (["successful", "failed"].includes(log.outcome)) {
+    if (Object.hasOwn(STATUS_PRESENTATION, log.outcome)) {
       return log.outcome;
     }
 
@@ -41,15 +60,17 @@ export default class AiLogRow extends Component {
   }
 
   get statusLabel() {
-    return i18n(`discourse_ai.logs.${this.status}`);
+    return i18n(
+      `discourse_ai.logs.${STATUS_PRESENTATION[this.status].labelKey}`
+    );
   }
 
   get statusClass() {
-    return this.status === "successful" ? "--success" : "--failed";
+    return STATUS_PRESENTATION[this.status].className;
   }
 
   get statusIcon() {
-    return this.status === "successful" ? "circle-check" : "circle-xmark";
+    return STATUS_PRESENTATION[this.status].icon;
   }
 
   get featureName() {

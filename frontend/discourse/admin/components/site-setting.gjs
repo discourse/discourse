@@ -11,7 +11,8 @@ import { LinkTo } from "@ember/routing";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { isEmpty, isNone } from "@ember/utils";
+import { isEmpty } from "@ember/utils";
+import "discourse/admin/lib/setting-field-types";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import SettingBool from "discourse/admin/components/site-settings/bool";
 import SettingCategory from "discourse/admin/components/site-settings/category";
@@ -46,6 +47,7 @@ import SettingUpload from "discourse/admin/components/site-settings/upload";
 import SettingUploadedImageList from "discourse/admin/components/site-settings/uploaded-image-list";
 import SettingUrlList from "discourse/admin/components/site-settings/url-list";
 import SettingValueList from "discourse/admin/components/site-settings/value-list";
+import { settingAnchorId } from "discourse/admin/lib/setting-anchor";
 import SiteSetting, {
   isSettingValueTrue,
 } from "discourse/admin/models/site-setting";
@@ -61,7 +63,6 @@ import { deepEqual } from "discourse/lib/object";
 import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
-import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -108,11 +109,19 @@ export default class SiteSettingComponent extends Component {
   @service messageBus;
   @service site;
 
+  /** @type {boolean | null | undefined} */
   @tracked isSecret = null;
+
+  /** @type {"enqueued" | "completed" | null} */
   @tracked status = null;
+
+  /** @type {string | null | undefined} */
   @tracked progress = null;
   updateExistingUsers = null;
   trackChanges = true;
+  linkableSetting = false;
+
+  /** @type {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void>, submit: (event?: Event) => Promise<void> } | null} */
   formApi = null;
 
   #formKitData;
@@ -147,6 +156,20 @@ export default class SiteSettingComponent extends Component {
       settingName?.includes("default_categories") ||
       settingName?.includes("default_tags")
     );
+  }
+
+  get settingAnchorId() {
+    return settingAnchorId(this.setting.setting);
+  }
+
+  get settingLinkHref() {
+    return `#${encodeURIComponent(this.settingAnchorId)}`;
+  }
+
+  get settingLinkLabel() {
+    return i18n("admin.customize.theme.setting_link_label", {
+      name: this.settingName,
+    });
   }
 
   get defaultTheme() {
@@ -193,7 +216,8 @@ export default class SiteSettingComponent extends Component {
   }
 
   get showDependsOnNotice() {
-    return this.setting.depends_on?.length > 0;
+    // Inline dependents only appear under their parent once it is satisfied.
+    return !this.args.inline && this.setting.depends_on?.length > 0;
   }
 
   get dependsOnNoticeText() {
@@ -312,7 +336,9 @@ export default class SiteSettingComponent extends Component {
   }
 
   get settingName() {
-    return this.setting.label || this.setting.humanized_name;
+    return (
+      this.setting.label || this.setting.humanized_name || this.setting.setting
+    );
   }
 
   get componentType() {
@@ -476,22 +502,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   settingIsDirty(setting) {
-    let bufferVal = this.buffered.get("value");
-    let settingVal = setting?.value;
-
-    if (setting !== this.setting) {
-      bufferVal = setting.buffered.get("value");
-    }
-
-    if (isNone(bufferVal)) {
-      bufferVal = "";
-    }
-
-    if (isNone(settingVal)) {
-      settingVal = "";
-    }
-
-    const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
+    const dirty = setting.hasPendingChanges;
 
     if (this.trackChanges) {
       if (dirty) {
@@ -646,6 +657,8 @@ export default class SiteSettingComponent extends Component {
       setting.rollback();
       setting.validationMessage = null;
     });
+
+    this.formApi?.removeErrors();
   }
 
   @action
@@ -661,6 +674,8 @@ export default class SiteSettingComponent extends Component {
         this.adminSiteSettingStore.reveal(setting.setting);
       }
     });
+
+    this.formApi?.removeErrors();
   }
 
   @action
@@ -723,27 +738,40 @@ export default class SiteSettingComponent extends Component {
         {{if this.overridden 'overridden'}}
         {{if this.isDisabled 'disabled'}}
         {{if this.isDisabledByDependency 'disabled-by-dependency'}}
-        {{if @inline 'inline-dependent-setting'}}"
+        {{if @inline 'inline-dependent-setting'}}
+        {{if this.linkableSetting 'linkable'}}"
       data-setting={{this.setting.setting}}
+      id={{if this.linkableSetting this.settingAnchorId}}
       ...attributes
     >
       <div class="setting-label">
-        <h3>
-          {{this.settingName}}
+        <div class="setting-label__heading">
+          <h3>
+            {{this.settingName}}
 
-          {{#if this.staffLogFilter}}
-            <LinkTo
-              class="staff-action-log-link"
-              title={{i18n "admin.settings.history"}}
-              @query={{hash filters=this.staffLogFilter force_refresh=true}}
-              @route="adminLogs.staffActionLogs"
-            >
-              <span class="history-icon">
-                {{dIcon "clock-rotate-left"}}
-              </span>
-            </LinkTo>
+            {{#if this.staffLogFilter}}
+              <LinkTo
+                class="staff-action-log-link"
+                title={{i18n "admin.settings.history"}}
+                @query={{hash filters=this.staffLogFilter force_refresh=true}}
+                @route="adminLogs.staffActionLogs"
+              >
+                <span class="history-icon">
+                  {{dIcon "clock-rotate-left"}}
+                </span>
+              </LinkTo>
+            {{/if}}
+          </h3>
+
+          {{#if this.linkableSetting}}
+            <a
+              aria-label={{this.settingLinkLabel}}
+              class="setting-link"
+              href={{this.settingLinkHref}}
+              title={{this.settingLinkLabel}}
+            >{{dIcon "link"}}</a>
           {{/if}}
-        </h3>
+        </div>
 
         <PluginOutlet
           @name="site-setting-after-label"

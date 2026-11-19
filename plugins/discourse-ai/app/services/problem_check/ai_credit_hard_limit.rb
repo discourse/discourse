@@ -28,7 +28,7 @@ class ProblemCheck::AiCreditHardLimit < ProblemCheck
       model_id: model.id,
       model_name: model.display_name,
       reset_date: format_reset_date(allocation.next_reset_at),
-      url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms",
+      url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-models?type=llm",
     }
 
     problem(model, override_data:)

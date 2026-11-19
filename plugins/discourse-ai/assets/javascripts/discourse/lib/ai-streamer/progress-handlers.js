@@ -1,5 +1,5 @@
 import { later } from "@ember/runloop";
-import PostUpdater from "./updaters/post-updater";
+import PostUpdater from "./updaters/post-updater.js";
 
 const PROGRESS_INTERVAL = 40;
 const GIVE_UP_INTERVAL = 600000; // 10 minutes which is our max thinking time for now

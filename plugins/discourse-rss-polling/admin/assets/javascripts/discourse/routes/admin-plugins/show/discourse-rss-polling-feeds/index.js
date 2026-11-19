@@ -2,7 +2,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
-import RssPollingFeedSettings from "../../../../../admin/models/rss-polling-feed-settings";
+import RssPollingFeedSettings from "../../../../../admin/models/rss-polling-feed-settings.js";
 
 export default class AdminPluginsShowDiscourseRssPollingFeedsIndexRoute extends DiscourseRoute {
   async model() {

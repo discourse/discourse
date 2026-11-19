@@ -277,6 +277,23 @@ class SearchIndexer
     SQL
   end
 
+  def self.hidden_tags
+    Tag.where.not(id: DiscourseTagging.visible_tags(Guardian.new).select(:id))
+  end
+
+  def self.queue_tags_posts_reindex(tag_ids)
+    return if @disabled
+
+    DB.exec(<<~SQL, tag_ids: tag_ids, version: REINDEX_VERSION)
+      UPDATE post_search_data
+      SET version = :version, search_data = ts_filter(search_data, '{A,B,D}')
+      FROM posts
+      INNER JOIN topic_tags ON topic_tags.topic_id = posts.topic_id
+      WHERE post_search_data.post_id = posts.id
+      AND topic_tags.tag_id IN (SELECT COALESCE(target_tag_id, id) FROM tags WHERE id IN (:tag_ids))
+    SQL
+  end
+
   def self.index(obj, force: false)
     return if @disabled
 
@@ -303,11 +320,12 @@ class SearchIndexer
     category_name = topic.category&.name if topic
 
     if topic
-      tags = topic.tags.select(:id, :name).to_a
+      hidden_tag_ids = hidden_tags.select(:id)
+      tags = topic.tags.where.not(id: hidden_tag_ids).select(:id, :name).to_a
 
       if tags.present?
-        tag_names =
-          (tags.map(&:name) + Tag.where(target_tag_id: tags.map(&:id)).pluck(:name)).join(" ")
+        synonyms = Tag.where(target_tag_id: tags.map(&:id)).where.not(id: hidden_tag_ids)
+        tag_names = (tags.map(&:name) + synonyms.pluck(:name)).join(" ")
       end
     end
 

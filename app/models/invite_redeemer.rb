@@ -131,7 +131,7 @@ class InviteRedeemer
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
-    user_fields = UserField.all
+    user_fields = UserField.where(show_on_signup: true)
     if user_custom_fields.present? && user_fields.present?
       field_params = user_custom_fields || {}
       fields = user.custom_fields
@@ -272,8 +272,13 @@ class InviteRedeemer
   # existing users redeeming the invite.
   def grant_moderator_from_invite
     return if !invite.moderator? || !invite.invited_by&.staff?
+    # The API can set both admin and moderator on one invite. Those are granted
+    # and logged in create_admin_grant_confirmation, so skip them here to avoid
+    # logging the same grant twice.
+    return if InviteRedeemer.admin_invite_grantable?(invite)
 
     invited_user.grant_moderation! if !invited_user.moderator?
+    StaffActionLogger.new(invite.invited_by).log_grant_moderation(invited_user)
   end
 
   # Admin invites grant moderator right away; full admin requires the inviter
@@ -315,6 +320,8 @@ class InviteRedeemer
       .where("topics.archetype = ?", Archetype.private_message)
       .where("invites.email = ?", email)
       .find_each do |topic_invite|
+        next if topic_invite.invite_id != invite.id && !topic_invite.invite.redeemable?
+
         topic = topic_invite.topic
         inviter = topic_invite.invite.invited_by
         next if inviter.blank? || !inviter.guardian.can_invite_to?(topic)

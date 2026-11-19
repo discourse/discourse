@@ -77,6 +77,12 @@ export default class ToolbarPopupMenuOptions extends Component {
   }
 
   @action
+  async onSelectSubmenuOption(close, option) {
+    await close({ focusTrigger: false });
+    await this.onSelect(option);
+  }
+
+  @action
   onRegisterApi(api) {
     this.dMenu = api;
   }
@@ -110,6 +116,9 @@ export default class ToolbarPopupMenuOptions extends Component {
           labelText,
           title,
           shortcutKeys,
+          submenu: content.submenu
+            ?.map((option) => this.#convertMenuOption(option))
+            .filter(Boolean),
         })
       );
     }
@@ -173,33 +182,78 @@ export default class ToolbarPopupMenuOptions extends Component {
           {{/if}}
           {{#each this.convertedContent as |option|}}
             <dropdown.item>
-              <DShortcut @keys={{option.shortcutKeys}} as |shortcut|>
-                <DButton
-                  aria-keyshortcuts={{shortcut.aria}}
-                  class={{dConcatClass (if (this.getActive option) "--active")}}
+              {{#if option.submenu.length}}
+                <DMenu
+                  aria-haspopup="dialog"
                   data-name={{option.name}}
-                  @action={{fn this.onSelect option}}
+                  @ariaLabel={{option.labelText}}
+                  @fallbackPlacements={{array "left-start" "bottom"}}
                   @icon={{this.getIcon option}}
-                  @translatedTitle={{option.title}}
+                  @identifier={{concat "toolbar-menu__" option.name}}
+                  @modalForMobile={{true}}
+                  @offset={{5}}
+                  @placement="right-start"
+                  @title={{option.title}}
                 >
-                  {{#if option.labelText}}
+                  <:trigger>
                     <span class="d-button-label">
-                      <span class="d-button-label__text">
-                        {{option.labelText}}
-                      </span>
-                      <shortcut.Kbd
-                        class={{dConcatClass
-                          "shortcut"
-                          (if option.alwaysShowShortcut "--always-visible")
-                        }}
-                      />
-                      {{#if option.showActiveIcon}}
-                        {{dIcon "check" class="d-button-label__active-icon"}}
-                      {{/if}}
+                      <span
+                        class="d-button-label__text"
+                      >{{option.labelText}}</span>
+                      {{dIcon "angle-right"}}
                     </span>
-                  {{/if}}
-                </DButton>
-              </DShortcut>
+                  </:trigger>
+                  <:content as |submenu|>
+                    <DDropdownMenu as |submenuDropdown|>
+                      {{#each option.submenu as |choice|}}
+                        <submenuDropdown.item>
+                          <DButton
+                            data-name={{choice.name}}
+                            @action={{fn
+                              this.onSelectSubmenuOption
+                              submenu.close
+                              choice
+                            }}
+                            @icon={{this.getIcon choice}}
+                            @translatedLabel={{choice.labelText}}
+                            @translatedTitle={{choice.title}}
+                          />
+                        </submenuDropdown.item>
+                      {{/each}}
+                    </DDropdownMenu>
+                  </:content>
+                </DMenu>
+              {{else}}
+                <DShortcut @keys={{option.shortcutKeys}} as |shortcut|>
+                  <DButton
+                    aria-keyshortcuts={{shortcut.aria}}
+                    class={{dConcatClass
+                      (if (this.getActive option) "--active")
+                    }}
+                    data-name={{option.name}}
+                    @action={{fn this.onSelect option}}
+                    @icon={{this.getIcon option}}
+                    @translatedTitle={{option.title}}
+                  >
+                    {{#if option.labelText}}
+                      <span class="d-button-label">
+                        <span class="d-button-label__text">
+                          {{option.labelText}}
+                        </span>
+                        <shortcut.Kbd
+                          class={{dConcatClass
+                            "shortcut"
+                            (if option.alwaysShowShortcut "--always-visible")
+                          }}
+                        />
+                        {{#if option.showActiveIcon}}
+                          {{dIcon "check" class="d-button-label__active-icon"}}
+                        {{/if}}
+                      </span>
+                    {{/if}}
+                  </DButton>
+                </DShortcut>
+              {{/if}}
             </dropdown.item>
           {{/each}}
         </DDropdownMenu>

@@ -1,5 +1,11 @@
 import processNode from "discourse/lib/process-node";
 
+/**
+ * @typedef {object} NestedPostNode
+ * @property {import("discourse/models/post").default} post
+ * @property {NestedPostNode[]} children
+ * @property {number | string} _renderKey
+ */
 export function processNestedRootResponse({
   data,
   params,
@@ -33,13 +39,13 @@ export function processNestedRootResponse({
     postNumber: params.post_number ? Number(params.post_number) : null,
     context: params.context ?? null,
     contextMode: false,
-    contextChain: null,
-    initialFocusedPath: [],
-    targetPostNumber: null,
+    contextChain: /** @type {NestedPostNode | null} */ (null),
+    initialFocusedPath: /** @type {NestedPostNode[]} */ ([]),
+    targetPostNumber: /** @type {number | null} */ (null),
     contextNoAncestors: false,
     ancestorsTruncated: false,
-    topAncestorPostNumber: null,
-    newRootPostIds: [],
+    topAncestorPostNumber: /** @type {number | null} */ (null),
+    newRootPostIds: /** @type {number[]} */ ([]),
     editingTopic: false,
   };
 }
@@ -86,7 +92,7 @@ export function processNestedContextResponse({
     opPost,
     sort,
     effectiveSort: data.effective_sort || sort,
-    pinnedPostIds: [],
+    pinnedPostIds: /** @type {number[]} */ ([]),
     messageBusLastId: data.message_bus_last_id,
     postNumber: Number(params.post_number),
     context: params.context ?? null,
@@ -101,7 +107,7 @@ export function processNestedContextResponse({
     rootNodes: [chainTip],
     page: 0,
     hasMoreRoots: false,
-    newRootPostIds: [],
+    newRootPostIds: /** @type {number[]} */ ([]),
     editingTopic: false,
   };
 }

@@ -32,21 +32,38 @@ export default class ReviewIndexController extends Controller {
     "score_type",
   ];
 
+  /** @type {string | null | undefined} */
   type = null;
   status = "pending";
   priority = this.siteSettings.reviewable_default_visibility;
+
+  /** @type {number | string | null} */
   category_id = null;
+
+  /** @type {import("discourse/models/result-set").default | null} */
   reviewables = null;
+
+  /** @type {number | string | null} */
   topic_id = null;
   filtersExpanded = false;
   username = "";
   reviewed_by = "";
   claimed_by = "";
   flagged_by = "";
+
+  /** @type {string | null} */
   from_date = null;
+
+  /** @type {string | null} */
   to_date = null;
+
+  /** @type {string | null} */
   sort_order = null;
+
+  /** @type {string | null} */
   additional_filters = null;
+
+  /** @type {number | string | null} */
   filterScoreType = null;
   unknownTypeSource = REVIEWABLE_UNKNOWN_TYPE_SOURCE;
 
@@ -91,10 +108,13 @@ export default class ReviewIndexController extends Controller {
 
   @computed
   get statuses() {
+    const outcomes = this.siteSettings.review_queue_consistent_answers
+      ? ["problem_confirmed", "no_problem_found"]
+      : ["approved", "rejected"];
+
     return [
       "pending",
-      "approved",
-      "rejected",
+      ...outcomes,
       "deleted",
       "ignored",
       "reviewed",
@@ -185,6 +205,8 @@ export default class ReviewIndexController extends Controller {
 
     const createdAtStatuses = ["reviewed", "all"];
     const priorityStatuses = [
+      "problem_confirmed",
+      "no_problem_found",
       "approved",
       "rejected",
       "deleted",
@@ -245,21 +267,21 @@ export default class ReviewIndexController extends Controller {
 
   @action
   updateFilterReviewedBy(selected) {
-    this.set("filterReviewedBy", selected.firstObject);
+    this.set("filterReviewedBy", selected[0]);
   }
 
   @action
   updateFilterClaimedBy(selected) {
-    this.set("filterClaimedBy", selected.firstObject);
+    this.set("filterClaimedBy", selected[0]);
   }
 
   @action
   updateFilterFlaggedBy(selected) {
-    this.set("filterFlaggedBy", selected.firstObject);
+    this.set("filterFlaggedBy", selected[0]);
   }
 
   @action
   updateFilterUsername(selected) {
-    this.set("filterUsername", selected.firstObject);
+    this.set("filterUsername", selected[0]);
   }
 }

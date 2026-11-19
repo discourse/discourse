@@ -3,7 +3,7 @@ import { trustHTML } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import AdComponent from "./ad-component";
+import AdComponent from "./ad-component.js";
 
 const adIndex = {
   above_site_header: null,

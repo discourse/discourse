@@ -4,7 +4,7 @@ return unless defined?(::DiscourseSolved)
 
 RSpec.describe DiscourseAi::Agents::Tools::MarkAsSolved do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
@@ -24,6 +24,48 @@ RSpec.describe DiscourseAi::Agents::Tools::MarkAsSolved do
   end
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
+
+  it "previews marking, replacing, and removing a solution and links to the affected post" do
+    solution_tool = tool(post_id: reply.id, solved: true, reason: "Testing")
+    heading = Nokogiri::HTML5.fragment(Chat::Message.cook(solution_tool.approval_title))
+    expect(heading.at_css("a")["href"]).to eq(topic.url)
+    expect(solution_tool.approval_changes).to eq(
+      [{ label: "Changing solution:", before: "No solution", after: "Post ##{reply.post_number}" }],
+    )
+    question = Nokogiri::HTML5.fragment(Chat::Message.cook(solution_tool.approval_question))
+    expect(question.at_css("a")["href"]).to eq(reply.url)
+    expect(solution_tool.approval_parameters).to be_empty
+    expect(topic.reload.solved).to be_nil
+
+    DiscourseSolved::AcceptAnswer.call!(
+      params: {
+        post_id: reply.id,
+      },
+      guardian: Discourse.system_user.guardian,
+    )
+    expect(tool(post_id: reply.id, solved: false, reason: "Testing").approval_changes).to eq(
+      [{ label: "Changing solution:", before: "Post ##{reply.post_number}", after: "No solution" }],
+    )
+    expect(tool(post_id: reply2.id, solved: true, reason: "Testing").approval_changes).to eq(
+      [
+        {
+          label: "Changing solution:",
+          before: "Post ##{reply.post_number}",
+          after: "Post ##{reply2.post_number}",
+        },
+      ],
+    )
+    SiteSetting.solved_allow_multiple_solutions = true
+    expect(tool(post_id: reply2.id, solved: true, reason: "Testing").approval_changes).to eq(
+      [
+        {
+          label: "Changing solution:",
+          before: "Post ##{reply.post_number}",
+          after: "Post ##{reply.post_number}, Post ##{reply2.post_number}",
+        },
+      ],
+    )
+  end
 
   it "marks a post as the accepted solution" do
     result = tool(post_id: reply.id, solved: true, reason: "This answers the question").invoke

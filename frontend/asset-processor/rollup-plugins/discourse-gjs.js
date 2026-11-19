@@ -1,4 +1,4 @@
-import { Preprocessor } from "../content-tag";
+import { Preprocessor } from "../content-tag.js";
 
 const preprocessor = new Preprocessor();
 

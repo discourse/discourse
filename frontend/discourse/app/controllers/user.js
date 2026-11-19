@@ -236,9 +236,16 @@ export default class UserController extends Controller {
     return this.viewingSelf || this.currentUser?.admin;
   }
 
-  @computed("model.name")
+  @computed("model.name", "siteSettings.enable_names")
+  get showName() {
+    return (
+      this.siteSettings.enable_names && this.model?.name?.trim().length > 0
+    );
+  }
+
+  @computed("showName")
   get nameFirst() {
-    return prioritizeNameInUx(this.model?.name);
+    return this.showName && prioritizeNameInUx(this.model.name);
   }
 
   @computed("model.badge_count")
@@ -305,7 +312,7 @@ export default class UserController extends Controller {
   // always in the DOM to be matched — collapsed, narrow and mobile all serve it
   // from the menu button instead — so the navs it replaces cannot key on it.
   get userNavPanelActive() {
-    return this.userNavSidebarStateManager.enabled;
+    return this.userNavSidebarStateManager.servesProfiles;
   }
 
   get silencingsRouteQuery() {

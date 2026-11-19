@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedArray } from "@ember/reactive/collections";
 import User from "discourse/models/user";
-import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
+import DiscoursePostEventInvitee from "./discourse-post-event-invitee.js";
 
 export default class DiscoursePostEventInvitees {
   static create(args = {}) {

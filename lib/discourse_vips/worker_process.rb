@@ -25,7 +25,7 @@ module DiscourseVips
     attr_reader :pid, :socket_path
 
     def self.shared_socket_path
-      Rails.root.join("tmp", "discourse-vips-worker", Rails.env, "socket").to_s
+      @shared_socket_path ||= Rails.root.join("tmp/vips/sock").to_s
     end
 
     def initialize(socket_path: nil)
@@ -109,14 +109,14 @@ module DiscourseVips
         File.chmod(0o700, socket_directory)
         FileUtils.rm_f(@socket_path)
       else
-        socket_directory = Dir.mktmpdir("discourse-vips-worker-", Rails.root.join("tmp").to_s)
+        socket_directory = Dir.mktmpdir("vips-")
         @socket_path = File.join(socket_directory, "socket")
       end
     end
 
     def worker_command
       load_paths = [Rails.root.join("lib").to_s]
-      %w[ffi landlock msgpack ruby-vips].each do |gem_name|
+      %w[ffi landlock logger msgpack ruby-vips].each do |gem_name|
         load_paths.concat(Gem.loaded_specs.fetch(gem_name).full_require_paths)
       end
 

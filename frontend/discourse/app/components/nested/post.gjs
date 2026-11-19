@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
@@ -24,14 +25,39 @@ import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import nestedPostUrl from "../../lib/nested-post-url";
-import processNode from "../../lib/process-node";
-import NestedPostChildren from "./post-children";
+import nestedPostUrl from "../../lib/nested-post-url.js";
+import processNode from "../../lib/process-node.js";
+import NestedPostChildren from "./post-children.gjs";
+
+const NestedPostAvatar = <template>
+  {{#if @isDeletedPlaceholder}}
+    <div class="nested-post__placeholder-avatar">
+      {{dIcon "trash-can"}}
+    </div>
+  {{else if @isIgnoredPlaceholder}}
+    <button
+      aria-label={{i18n "nested_replies.toggle_ignored_content"}}
+      class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
+      data-post-number={{@post.post_number}}
+      disabled={{@loading}}
+      type="button"
+      {{on "click" @reveal}}
+    >
+      {{#if @loading}}
+        {{dIcon "spinner" class="fa-spin"}}
+      {{else}}
+        {{dIcon "far-eye-slash"}}
+      {{/if}}
+    </button>
+  {{else}}
+    <PostAvatar @post={{@post}} @size="small" />
+  {{/if}}
+</template>;
 
 export default class NestedPost extends Component {
   @service appEvents;
@@ -152,6 +178,13 @@ export default class NestedPost extends Component {
       above: this.args.cloakAbove,
       below: this.args.cloakBelow,
     });
+  }
+
+  get avatarColorStyle() {
+    const color = this.args.post.avatar_color;
+    if (this.isMobile && /^[0-9a-f]{6}$/i.test(color ?? "")) {
+      return trustHTML(`--nested-avatar-color: #${color}`);
+    }
   }
 
   get depthClass() {
@@ -628,29 +661,24 @@ export default class NestedPost extends Component {
             {{on "mouseleave" @unhighlightParentLine}}
           ></button>
         {{/if}}
-        <div class="nested-post__gutter">
-          {{#if this.isDeletedPlaceholder}}
-            <div class="nested-post__placeholder-avatar">
-              {{dIcon "trash-can"}}
-            </div>
-          {{else if this.renderIgnoredPlaceholder}}
-            <button
-              aria-label={{i18n "nested_replies.toggle_ignored_content"}}
-              class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
-              data-post-number={{@post.post_number}}
-              disabled={{this.loadingIgnoredContent}}
-              type="button"
-              {{on "click" this.revealIgnoredContent}}
-            >
-              {{#if this.loadingIgnoredContent}}
-                {{dIcon "spinner" class="fa-spin"}}
-              {{else}}
-                {{dIcon "far-eye-slash"}}
-              {{/if}}
-            </button>
-          {{else}}
-            <PostAvatar @post={{@post}} @size="small" />
-          {{/if}}
+        <div
+          class={{dConcatClass
+            "nested-post__gutter"
+            (if this.avatarColorStyle "--avatar-color")
+          }}
+          style={{this.avatarColorStyle}}
+        >
+          {{! Mobile renders the avatar inline in the header so the gutter
+              only needs to be as wide as the thread rail. }}
+          {{#unless this.isMobile}}
+            <NestedPostAvatar
+              @isDeletedPlaceholder={{this.isDeletedPlaceholder}}
+              @isIgnoredPlaceholder={{this.renderIgnoredPlaceholder}}
+              @loading={{this.loadingIgnoredContent}}
+              @post={{@post}}
+              @reveal={{this.revealIgnoredContent}}
+            />
+          {{/unless}}
           {{#if (and this.showDepthLine (not this.effectiveCollapsed))}}
             <button
               aria-label={{this.depthLineLabel}}
@@ -693,6 +721,13 @@ export default class NestedPost extends Component {
                     "nested_replies.ignored_post_placeholder"
                   }}</span>
               {{else}}
+                {{! Mobile has no gutter avatar, so keep the poster
+                    recognisable once the header is collapsed away. }}
+                {{#if this.isMobile}}
+                  <span class="nested-post__collapsed-avatar">
+                    {{dBoundAvatarTemplate @post.avatar_template "small"}}
+                  </span>
+                {{/if}}
                 <span
                   class="nested-post__collapsed-username"
                 >{{@post.username}}</span>
@@ -711,6 +746,15 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
             >
               <div class="nested-post__placeholder-actions">
+                {{#if this.isMobile}}
+                  <NestedPostAvatar
+                    @isDeletedPlaceholder={{this.isDeletedPlaceholder}}
+                    @isIgnoredPlaceholder={{this.renderIgnoredPlaceholder}}
+                    @loading={{this.loadingIgnoredContent}}
+                    @post={{@post}}
+                    @reveal={{this.revealIgnoredContent}}
+                  />
+                {{/if}}
                 <span class="nested-post__placeholder-label">{{i18n
                     "nested_replies.deleted_post_placeholder"
                   }}</span>
@@ -751,6 +795,15 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
             >
               <div class="nested-post__placeholder-actions">
+                {{#if this.isMobile}}
+                  <NestedPostAvatar
+                    @isDeletedPlaceholder={{this.isDeletedPlaceholder}}
+                    @isIgnoredPlaceholder={{this.renderIgnoredPlaceholder}}
+                    @loading={{this.loadingIgnoredContent}}
+                    @post={{@post}}
+                    @reveal={{this.revealIgnoredContent}}
+                  />
+                {{/if}}
                 <span class="nested-post__placeholder-label">{{i18n
                     "nested_replies.ignored_post_placeholder"
                   }}</span>
@@ -777,6 +830,9 @@ export default class NestedPost extends Component {
                       <PostNotice @post={{@post}} />
                     {{/if}}
                     <div class="nested-post__header">
+                      {{#if this.isMobile}}
+                        <PostAvatar @post={{@post}} @size="small" />
+                      {{/if}}
                       <PluginOutlet
                         @name="post-metadata"
                         @outletArgs={{postOutletArgs}}
@@ -801,6 +857,17 @@ export default class NestedPost extends Component {
                         <span class="nested-post__pinned-badge">{{i18n
                             "nested_replies.pinned_reply"
                           }}</span>
+                      {{/if}}
+                      {{! Pointer-only shortcut for the depth line, which
+                          remains the accessible collapse control. }}
+                      {{#if (and this.isMobile this.showDepthLine)}}
+                        <button
+                          aria-hidden="true"
+                          class="nested-post__header-collapse"
+                          tabindex="-1"
+                          type="button"
+                          {{on "click" this.handleDepthLine}}
+                        ></button>
                       {{/if}}
                     </div>
                     <div class="nested-post__content regular">

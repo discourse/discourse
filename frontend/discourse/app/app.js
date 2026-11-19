@@ -1,16 +1,16 @@
-import "./global-compat";
-import "./setup-deprecation-workflow";
-import "./array-shim";
+import "./global-compat.js";
+import "./setup-deprecation-workflow.js";
+import "./array-shim.js";
 import "decorator-transforms/globals";
-import "./loader-shims";
-import "./ui-kit-shims";
-import "./module-shims";
-import "./discourse-common-loader-shims";
+import "./loader-shims.js";
+import "./ui-kit-shims.js";
+import "./module-shims.js";
+import "./discourse-common-loader-shims.js";
 import "@warp-drive/ember/install";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 import { registerSettings } from "discourse/lib/theme-settings-store";
-import { defineModules } from "./lib/loader-shim";
+import { defineModules } from "./lib/loader-shim.js";
 
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
@@ -20,6 +20,7 @@ import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
 import { importSync } from "@embroider/macros";
+import deprecated from "discourse/lib/deprecated";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -53,11 +54,27 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  lookup(moduleName, optional = false) {
+  lookup(moduleName, optional = false, exportNames = []) {
     if (optional && !require.has(moduleName)) {
       return {};
     }
-    return require(moduleName);
+
+    const module = require(moduleName);
+
+    for (const name of exportNames) {
+      if (!(name in module)) {
+        // TODO (discourse.missing-module-export): throw instead, so the importing theme or plugin fails to load
+        deprecated(
+          `"${moduleName}" has no export named "${name}". In a future release, this import will stop the theme or plugin from loading.`,
+          {
+            id: "discourse.missing-module-export",
+            since: "2026.11.0-latest",
+          }
+        );
+      }
+    }
+
+    return module;
   },
 };
 

@@ -1,3 +1,8 @@
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
 const privateMessagesFixtures = {
   "/topics/private-messages/eviltrout.json": {
     users: [

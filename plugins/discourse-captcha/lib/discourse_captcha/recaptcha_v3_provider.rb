@@ -32,5 +32,9 @@ module DiscourseCaptcha
 
       response_json
     end
+
+    def signup_score(response_json)
+      response_json["score"]
+    end
   end
 end

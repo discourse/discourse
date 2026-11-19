@@ -2,39 +2,42 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { findActiveLink } from "discourse/lib/sidebar/active-link";
-import ApiSection from "./api-section";
-import PanelHeader from "./panel-header";
+import { isActiveLink } from "discourse/lib/sidebar/active-link";
+import ApiSection from "./api-section.gjs";
+import PanelHeader from "./panel-header.gjs";
 
 export default class SidebarApiSections extends Component {
   @service router;
   @service sidebarState;
 
+  // A panel rendered outside the sidebar is passed in, so it doesn't follow
+  // whichever panel the sidebar shows
+  get panel() {
+    return this.args.panel ?? this.sidebarState.currentPanel;
+  }
+
+  @cached
   get sections() {
     let sectionConfigs;
 
-    if (this.sidebarState.combinedMode) {
+    if (!this.args.panel && this.sidebarState.combinedMode) {
       sectionConfigs = this.sidebarState.panels
         .filter((panel) => !panel.hidden)
         .flatMap((panel) => panel.sections);
     } else {
-      sectionConfigs = this.sidebarState.currentPanel.sections;
+      sectionConfigs = this.panel.sections;
     }
 
-    return sectionConfigs.map((Section) => {
-      const SidebarSection = prepareSidebarSectionClass(Section, this.router);
+    const options = {
+      filterable:
+        (!!this.args.panel || !this.sidebarState.combinedMode) &&
+        this.panel.filterable,
+      owner: getOwner(this),
+      router: this.router,
+      sidebarState: this.sidebarState,
+    };
 
-      const sectionInstance = new SidebarSection({
-        filterable:
-          !this.sidebarState.combinedMode &&
-          this.sidebarState.currentPanel.filterable,
-        sidebarState: this.sidebarState,
-      });
-
-      setOwner(sectionInstance, getOwner(this));
-
-      return sectionInstance;
-    });
+    return sectionConfigs.map((Section) => prepareSection(Section, options));
   }
 
   get filteredSections() {
@@ -42,7 +45,11 @@ export default class SidebarApiSections extends Component {
   }
 
   <template>
-    <PanelHeader @sections={{this.filteredSections}} />
+    <PanelHeader
+      @filteredSections={{this.filteredSections}}
+      @panel={{this.panel}}
+      @sections={{this.sections}}
+    />
 
     {{#each this.filteredSections key="name" as |section|}}
       <ApiSection
@@ -56,67 +63,99 @@ export default class SidebarApiSections extends Component {
   </template>
 }
 
-// extends the class provided for the section to add functionality we don't want to be overridable when defining custom
-// sections using the plugin API, like for example the filtering capabilities
-function prepareSidebarSectionClass(Section, routerService) {
-  return class extends Section {
-    constructor({ filterable, sidebarState }) {
-      super();
+function prepareSection(Section, options, parent) {
+  const { filterable, owner, router, sidebarState } = options;
 
-      this.filterable = filterable;
-      this.sidebarState = sidebarState;
+  class PreparedSection extends Section {
+    get sectionKey() {
+      return parent ? `${parent.sectionKey}/${this.name}` : this.name;
     }
 
     @cached
-    get filteredLinks() {
-      return this.#applyFilter(this.links);
+    get sidebarItems() {
+      const items =
+        this.items ?? this.links?.map((link) => ({ type: "link", link })) ?? [];
+
+      return items.map((item) => {
+        if (item.type === "section") {
+          const section = prepareSection(item.section, options, this);
+          return { type: "section", key: `section:${section.name}`, section };
+        }
+        return { type: "link", key: `link:${item.link.name}`, link: item.link };
+      });
+    }
+
+    @cached
+    get childSections() {
+      return this.sidebarItems
+        .filter((item) => item.type === "section")
+        .map((item) => item.section);
+    }
+
+    @cached
+    get filteredItems() {
+      return this.sidebarItems.filter((item) => {
+        if (item.type === "section") {
+          return item.section.filtered;
+        }
+        return this.#showAllLinks || this.#matchesLink(item.link);
+      });
     }
 
     @cached
     get filteredMoreLinks() {
-      return this.#applyFilter(this.moreLinks);
+      const links = this.moreLinks ?? [];
+      return this.#showAllLinks
+        ? links
+        : links.filter((link) => this.#matchesLink(link));
     }
 
     @cached
     get activeLink() {
-      return findActiveLink(
-        [...this.filteredLinks, ...(this.filteredMoreLinks || [])],
-        routerService
-      );
+      for (const item of this.filteredItems) {
+        if (item.type === "section") {
+          if (item.section.activeLink) {
+            return item.section.activeLink;
+          }
+        } else if (isActiveLink(item.link, router)) {
+          return item.link;
+        }
+      }
+
+      return this.filteredMoreLinks.find((link) => isActiveLink(link, router));
     }
 
     get filtered() {
       return (
-        !this.filterable ||
-        this.filteredLinks?.length > 0 ||
-        this.filteredMoreLinks?.length > 0
+        this.displaySection !== false &&
+        (!filterable ||
+          this.filteredItems.length > 0 ||
+          this.filteredMoreLinks.length > 0)
       );
     }
 
-    #applyFilter(links) {
-      if (!links?.length) {
-        return links;
-      }
-
-      if (!this.filterable || !this.sidebarState.filter) {
-        return links;
-      }
-
-      if (this.text?.toLowerCase()?.match(this.sidebarState.sanitizedFilter)) {
-        return links;
-      }
-
-      return links.filter((link) => {
-        return (
-          link.text
-            .toString()
-            .toLowerCase()
-            .match(this.sidebarState.sanitizedFilter) ||
-          link.keywords.navigation.some((keyword) =>
-            keyword.match(this.sidebarState.sanitizedFilter)
-          )
-        );
-      });
+    @cached
+    get matchesSectionFilter() {
+      return (
+        parent?.matchesSectionFilter ||
+        this.text?.toLowerCase().match(sidebarState.sanitizedFilter)
+      );
     }
-  };
+
+    get #showAllLinks() {
+      return !filterable || !sidebarState.filter || this.matchesSectionFilter;
+    }
+
+    #matchesLink(link) {
+      const filter = sidebarState.sanitizedFilter;
+      return (
+        link.text.toString().toLowerCase().match(filter) ||
+        link.keywords?.navigation?.some((keyword) => keyword.match(filter))
+      );
+    }
+  }
+
+  const section = new PreparedSection();
+  setOwner(section, owner);
+  return section;
 }

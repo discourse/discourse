@@ -9,7 +9,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import FlairChooser from "discourse/select-kit/components/flair-chooser";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import DTextField from "discourse/ui-kit/d-text-field";
@@ -19,18 +18,17 @@ import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+function updatePrimaryGroup(controller, value) {
+  controller.set("newPrimaryGroupInput", value);
+}
+
 export default <template>
   <div class="control-group pref-username" data-setting-name="user-username">
     <label class="control-label">{{i18n "user.username.title"}}</label>
     <UsernamePreference @user={{@controller.model}} />
   </div>
 
-  {{#unless
-    (or
-      @controller.siteSettings.discourse_connect_overrides_avatar
-      @controller.siteSettings.auth_overrides_avatar
-    )
-  }}
+  {{#if @controller.model.can_edit_avatar}}
     <div class="control-group pref-avatar" data-setting-name="user-avatar">
       <label class="control-label" id="profile-picture">{{i18n
           "user.avatar.title"
@@ -52,7 +50,7 @@ export default <template>
         />
       </div>
     </div>
-  {{/unless}}
+  {{/if}}
 
   {{#if @controller.canCheckEmails}}
     <div class="control-group pref-email" data-setting-name="user-email">
@@ -365,6 +363,7 @@ export default <template>
       <div class="controls">
         <ComboBox
           @content={{@controller.model.filteredGroups}}
+          @onChange={{fn updatePrimaryGroup @controller}}
           @options={{hash none="user.primary_group.none"}}
           @value={{@controller.newPrimaryGroupInput}}
         />

@@ -5,7 +5,7 @@ import { postRNWebviewMessage } from "discourse/lib/utilities";
 export default {
   after: "inject-objects",
   retryCount: 0,
-  isAppWebview: undefined,
+  isAppWebview: /** @type {boolean | undefined} */ (undefined),
   mediaQuery: "(prefers-color-scheme: dark)",
 
   initialize(owner) {

@@ -362,7 +362,7 @@ RSpec.describe AssetProcessor do
           { themeId: 22, entrypoints: { main: { modules: ["discourse/initializers/foo.gjs"] } } },
         )
       expect(entrypoint(result, "main")["code"]).to include(
-        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store", false, ["getObjectForTheme"])',
       )
     end
 
@@ -425,7 +425,7 @@ RSpec.describe AssetProcessor do
           { themeId: 22, entrypoints: { main: { modules: ["discourse/initializers/foo.js"] } } },
         )
       expect(entrypoint(result, "main")["code"]).to include(
-        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store", false, ["getObjectForTheme"])',
       )
     end
   end
@@ -656,6 +656,12 @@ RSpec.describe AssetProcessor do
 
   it "returns the ember version" do
     expect(AssetProcessor.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
+  end
+
+  it "identifies the loaded processor source by the digest in its bundle path" do
+    expect(AssetProcessor::BUNDLE.path.basename.to_s).to eq(
+      "asset-processor-#{AssetProcessor.digest}.js",
+    )
   end
 
   it "errors on missing relative imports for a plugin without a hyphenated name" do

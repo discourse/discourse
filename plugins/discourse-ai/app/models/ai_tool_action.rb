@@ -12,6 +12,7 @@ end
 #
 #  id              :bigint           not null, primary key
 #  tool_name       :string           not null
+#  tool_options    :jsonb            not null
 #  tool_parameters :jsonb            not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null

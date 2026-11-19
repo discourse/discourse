@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { get, hash } from "@ember/helper";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
@@ -27,6 +29,13 @@ export default class EditCategoryTypeSchemaFields extends Component {
 
   get hasSiteTexts() {
     return this.schema.site_texts?.some((entry) => this.isFieldVisible(entry));
+  }
+
+  get hasSiteSettings() {
+    const settings = this.args.transientData?.category_type_site_settings;
+    return this.schema.site_settings?.some(
+      (entry) => !entry.depends_on || settings?.[entry.depends_on]
+    );
   }
 
   get className() {
@@ -92,106 +101,120 @@ export default class EditCategoryTypeSchemaFields extends Component {
   }
 
   <template>
-    <div class={{this.className}}>
-      {{#if this.hasCustomFields}}
-        <@form.Section>
-          <@form.Object @name="custom_fields" as |customFields|>
-            {{#each this.schema.category_custom_fields as |entry|}}
-              {{#if (this.isFieldVisible entry)}}
-                <SettingDefinitionField
-                  @definition={{entry}}
-                  @form={{customFields}}
-                />
-              {{/if}}
-            {{/each}}
-          </@form.Object>
-        </@form.Section>
-      {{/if}}
-
-      {{#if this.hasCategorySettings}}
-        <@form.Section>
-          <@form.Object @name="category_type_settings" as |categorySettings|>
-            {{#each this.schema.category_settings as |entry|}}
-              {{#if (this.isFieldVisible entry)}}
-                <SettingDefinitionField
-                  @definition={{entry}}
-                  @form={{categorySettings}}
-                />
-              {{/if}}
-            {{/each}}
-          </@form.Object>
-        </@form.Section>
-      {{/if}}
-
-      {{yield to="beforeSiteSettings"}}
-
-      <@form.Emphasis
-        @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
-        @title={{i18n "category.type_settings_schema.site_settings"}}
-      >
-        {{#if this.hasSiteTexts}}
-          <@form.Object @name="site_texts" as |siteTexts|>
-            {{#each this.schema.site_texts as |entry|}}
-              {{#if (this.isFieldVisible entry)}}
-                <siteTexts.Field
-                  @description={{entry.description}}
-                  @disabled={{@isLoadingSiteTextsLocale}}
-                  @format="large"
-                  @labelFormat="full"
-                  @name={{entry.name}}
-                  @title={{entry.label}}
-                  @type="input"
-                  as |field|
-                >
-                  <div class="schema-site-text">
-                    {{#if @availableLocales}}
-                      <ComboBox
-                        class="schema-site-text__locale"
-                        @content={{@availableLocales}}
-                        @onChange={{@switchSiteTextsLocale}}
-                        @options={{hash filterable=true}}
-                        @value={{@siteTextsLocale}}
-                        @valueProperty="value"
-                      />
-                    {{/if}}
-                    <field.Control />
-                  </div>
-                </siteTexts.Field>
-              {{/if}}
-            {{/each}}
-          </@form.Object>
+    <PluginOutlet
+      @name="edit-category-type-settings"
+      @outletArgs={{lazyHash
+        category=@category
+        categoryType=@categoryType
+        form=@form
+        registerAfterReset=@registerAfterReset
+        registerValidator=@registerValidator
+        transientData=@transientData
+      }}
+    >
+      <div class={{this.className}}>
+        {{#if this.hasCustomFields}}
+          <@form.Section>
+            <@form.Object @name="custom_fields" as |customFields|>
+              {{#each this.schema.category_custom_fields as |entry|}}
+                {{#if (this.isFieldVisible entry)}}
+                  <SettingDefinitionField
+                    @definition={{entry}}
+                    @form={{customFields}}
+                  />
+                {{/if}}
+              {{/each}}
+            </@form.Object>
+          </@form.Section>
         {{/if}}
 
-        <@form.Object
-          @name="category_type_site_settings"
-          as |siteSettings data|
-        >
-          {{#each (this.groupEntries this.schema.site_settings) as |group|}}
-            {{#if group.dependsOn}}
-              {{#if (get data group.dependsOn)}}
-                <div class="--dependent">
-                  <div class="--dependent-border"></div>
-                  <div class="--dependent-fields">
-                    {{#each group.entries as |entry|}}
-                      <SettingDefinitionField
-                        @definition={{entry}}
-                        @form={{siteSettings}}
-                      />
-                    {{/each}}
-                  </div>
-                </div>
-              {{/if}}
-            {{else}}
-              {{#each group.entries as |entry|}}
-                <SettingDefinitionField
-                  @definition={{entry}}
-                  @form={{siteSettings}}
-                />
+        {{#if this.hasCategorySettings}}
+          <@form.Section>
+            <@form.Object @name="category_type_settings" as |categorySettings|>
+              {{#each this.schema.category_settings as |entry|}}
+                {{#if (this.isFieldVisible entry)}}
+                  <SettingDefinitionField
+                    @definition={{entry}}
+                    @form={{categorySettings}}
+                  />
+                {{/if}}
               {{/each}}
+            </@form.Object>
+          </@form.Section>
+        {{/if}}
+
+        {{yield to="beforeSiteSettings"}}
+
+        {{#if (or this.hasSiteSettings this.hasSiteTexts)}}
+          <@form.Emphasis
+            @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
+            @title={{i18n "category.type_settings_schema.site_settings"}}
+          >
+            {{#if this.hasSiteTexts}}
+              <@form.Object @name="site_texts" as |siteTexts|>
+                {{#each this.schema.site_texts as |entry|}}
+                  {{#if (this.isFieldVisible entry)}}
+                    <siteTexts.Field
+                      @description={{entry.description}}
+                      @disabled={{@isLoadingSiteTextsLocale}}
+                      @format="large"
+                      @labelFormat="full"
+                      @name={{entry.name}}
+                      @title={{entry.label}}
+                      @type="input"
+                      as |field|
+                    >
+                      <div class="schema-site-text">
+                        {{#if @availableLocales}}
+                          <ComboBox
+                            class="schema-site-text__locale"
+                            @content={{@availableLocales}}
+                            @onChange={{@switchSiteTextsLocale}}
+                            @options={{hash filterable=true}}
+                            @value={{@siteTextsLocale}}
+                            @valueProperty="value"
+                          />
+                        {{/if}}
+                        <field.Control />
+                      </div>
+                    </siteTexts.Field>
+                  {{/if}}
+                {{/each}}
+              </@form.Object>
             {{/if}}
-          {{/each}}
-        </@form.Object>
-      </@form.Emphasis>
-    </div>
+
+            <@form.Object
+              @name="category_type_site_settings"
+              as |siteSettings data|
+            >
+              {{#each (this.groupEntries this.schema.site_settings) as |group|}}
+                {{#if group.dependsOn}}
+                  {{#if (get data group.dependsOn)}}
+                    <div class="--dependent">
+                      <div class="--dependent-border"></div>
+                      <div class="--dependent-fields">
+                        {{#each group.entries as |entry|}}
+                          <SettingDefinitionField
+                            @definition={{entry}}
+                            @form={{siteSettings}}
+                          />
+                        {{/each}}
+                      </div>
+                    </div>
+                  {{/if}}
+                {{else}}
+                  {{#each group.entries as |entry|}}
+                    <SettingDefinitionField
+                      @definition={{entry}}
+                      @form={{siteSettings}}
+                    />
+                  {{/each}}
+                {{/if}}
+              {{/each}}
+            </@form.Object>
+          </@form.Emphasis>
+        {{/if}}
+      </div>
+    </PluginOutlet>
   </template>
 }

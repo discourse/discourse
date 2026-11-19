@@ -1,9 +1,7 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { tagName } from "@ember-decorators/component";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryTitleLink from "discourse/components/category-title-link";
@@ -21,22 +19,23 @@ import dCategoryLink, {
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 
-@tagName("")
 export default class CategoriesBoxes extends Component {
   @service discovery;
 
   get anyLogos() {
-    return this.categories.some((c) => !isEmpty(c.get("uploaded_logo.url")));
+    return this.args.categories.some(
+      (c) => !isEmpty(c.get("uploaded_logo.url"))
+    );
   }
 
   get hasSubcategories() {
-    return this.categories.some(
+    return this.args.categories.some(
       (c) => !isEmpty(categoryListSubcategories(c, { page: this.page }))
     );
   }
 
   get page() {
-    return this.categoryListPage ?? this.discovery.categoryListPage;
+    return this.args.categoryListPage ?? this.discovery.categoryListPage;
   }
 
   categoryName(category) {
@@ -59,9 +58,9 @@ export default class CategoriesBoxes extends Component {
     >
       <PluginOutlet
         @name="categories-boxes-wrapper"
-        @outletArgs={{lazyHash categories=this.categories}}
+        @outletArgs={{lazyHash categories=@categories}}
       >
-        {{#each this.categories as |c|}}
+        {{#each @categories as |c|}}
           <PluginOutlet
             @name="category-box-before-each-box"
             @outletArgs={{lazyHash category=c}}

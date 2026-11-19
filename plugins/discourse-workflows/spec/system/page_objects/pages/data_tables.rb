@@ -83,6 +83,32 @@ module PageObjects
           find(".workflows-data-table-viewer__add-row .btn-transparent").click
           self
         end
+
+        def has_column_names?(names)
+          page.has_css?(".workflows-data-table-viewer thead tr") do |header|
+            header.all(".workflows-data-table-viewer__col-name").map(&:text) == names
+          end
+        end
+
+        def click_column_menu_item(column_name, key)
+          menu =
+            PageObjects::Components::DMenu.new(
+              find(".workflows-data-table-viewer__th", text: column_name).find(
+                ".workflows-data-table-viewer__col-menu",
+              ),
+              "workflows-data-table-column-menu",
+            )
+          menu.expand
+          within(menu.portal_with_identifier_selector) do
+            find(".btn", text: I18n.t("js.discourse_workflows.data_tables.#{key}")).click
+          end
+          self
+        end
+
+        def fill_column_name(name)
+          find(".workflows-data-table-viewer__col-name-input").fill_in(with: "#{name}\n")
+          self
+        end
       end
     end
   end

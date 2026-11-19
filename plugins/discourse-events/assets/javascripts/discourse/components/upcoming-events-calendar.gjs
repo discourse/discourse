@@ -5,10 +5,10 @@ import { service } from "@ember/service";
 import moment from "moment";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import { normalizeViewForRoute } from "../lib/calendar-view-helper";
-import formatEventForCalendar from "../lib/format-event-for-calendar";
-import openEventComposer from "../lib/open-event-composer";
-import FullCalendar from "./full-calendar";
+import { normalizeViewForRoute } from "../lib/calendar-view-helper.js";
+import formatEventForCalendar from "../lib/format-event-for-calendar.js";
+import openEventComposer from "../lib/open-event-composer.js";
+import FullCalendar from "./full-calendar.gjs";
 
 export default class UpcomingEventsCalendar extends Component {
   @service composer;
@@ -27,6 +27,17 @@ export default class UpcomingEventsCalendar extends Component {
       this.currentUser.can_create_discourse_post_event &&
       this.currentUser.can_create_topic
     );
+  }
+
+  get composerCategory() {
+    if (this.args.categoryId) {
+      return Category.findById(this.args.categoryId) ?? null;
+    }
+
+    const category = Category.findById(
+      this.siteSettings.calendar_upcoming_events_default_category
+    );
+    return category?.canCreateTopic ? category : null;
   }
 
   get customButtons() {
@@ -107,9 +118,7 @@ export default class UpcomingEventsCalendar extends Component {
       currentUser: this.currentUser,
       siteSettings: this.siteSettings,
       info,
-      category: this.args.categoryId
-        ? (Category.findById(this.args.categoryId) ?? null)
-        : null,
+      category: this.composerCategory,
     });
   }
 

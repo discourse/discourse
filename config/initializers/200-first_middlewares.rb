@@ -10,7 +10,7 @@
 Rails.configuration.middleware.unshift(MessageBus::Rack::Middleware)
 
 # no reason to track this in development, that is 300+ redis calls saved per
-# page view (we serve all assets out of thin in development)
+# page view (we serve assets through the application in development)
 if !Rails.env.development? || ENV["TRACK_REQUESTS"]
   require "middleware/request_tracker"
   Rails.configuration.middleware.unshift(Middleware::RequestTracker)
@@ -89,13 +89,8 @@ if Rails.env.test?
 
   Rails.configuration.middleware.unshift BlockRequestsMiddleware
 elsif Rails.configuration.multisite
-  assets_hostnames = GlobalSetting.cdn_hostnames
-
-  if assets_hostnames.empty?
-    assets_hostnames = Discourse::Application.config.database_configuration[Rails.env]["host_names"]
-  end
-
-  RailsMultisite::ConnectionManagement.asset_hostnames = assets_hostnames
+  # Never list site hostnames: `__ws` would serve one site's pages on another's origin.
+  RailsMultisite::ConnectionManagement.asset_hostnames = GlobalSetting.cdn_hostnames
 
   # Multisite needs to be first, because the request tracker and message bus rely on it
   Rails.configuration.middleware.unshift RailsMultisite::Middleware,

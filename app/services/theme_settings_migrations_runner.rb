@@ -46,6 +46,28 @@ class ThemeSettingsMigrationsRunner
       }
 
       const map = new Map(Object.entries(settingsObj));
+      const translations = [];
+      const translationKeys = new Set();
+      const migratedSettings = new Set();
+      helpers.migrateSettingToTranslation = (settingName, translationKey) => {
+        if (typeof translationKey !== "string") {
+          throw new Error("The translation key must be a string");
+        }
+        translationKeys.add(translationKey);
+
+        if (!map.has(settingName)) {
+          return;
+        }
+
+        const value = map.get(settingName);
+        if (typeof value !== "string") {
+          throw new Error("The setting value must be a string");
+        }
+
+        migratedSettings.add(settingName);
+        translations.push({ key: translationKey, value });
+        map.delete(settingName);
+      };
       const updatedMap = migrate(map, helpers);
 
       if (!updatedMap) {
@@ -56,7 +78,11 @@ class ThemeSettingsMigrationsRunner
         throw new Error("migration_function_wrong_return_type");
       }
 
-      return Object.fromEntries(updatedMap.entries());
+      for (const settingName of migratedSettings) {
+        updatedMap.delete(settingName);
+      }
+
+      return { settings: Object.fromEntries(updatedMap.entries()), translations, translationKeys: [...translationKeys] };
     }
   JS
 
@@ -100,7 +126,10 @@ class ThemeSettingsMigrationsRunner
         )
       end
 
-      migrated_settings = execute(migration, current_settings)
+      output = execute(migration, current_settings)
+      translations = output.fetch("translations")
+      validate_translation_keys(output.fetch("translationKeys"), migration)
+      migrated_settings = output.fetch("settings")
 
       results = {
         version: migration.version,
@@ -109,6 +138,7 @@ class ThemeSettingsMigrationsRunner
         theme_field_id: migration.theme_field_id,
         settings_before: current_settings,
         settings_after: migrated_settings,
+        translations: translations,
       }
       current_settings = migrated_settings
       current_migration_version = migration.version
@@ -188,6 +218,34 @@ class ThemeSettingsMigrationsRunner
         theme_field_id: field.id,
       )
     end
+  end
+
+  def validate_translation_keys(keys, migration)
+    return if keys.empty?
+
+    field = @theme.theme_fields.find_by(target_id: Theme.targets[:translations], name: "en")
+    data = field&.raw_translation_data&.fetch(:en, {}) || {}
+    declared_keys =
+      ThemeTranslationManager
+        .list_from_hash(locale: "en", hash: data, theme: @theme)
+        .map(&:key)
+        .to_set
+
+    keys.each do |key|
+      if !declared_keys.include?(key)
+        raise_error(
+          "themes.import_error.migrations.invalid_translation_key",
+          name: migration.original_name,
+          key: key,
+        )
+      end
+    end
+  rescue ThemeTranslationParser::InvalidYaml => error
+    raise_error(
+      "themes.import_error.migrations.runtime_error",
+      name: migration.original_name,
+      error: error.message,
+    )
   end
 
   def lookup_overriden_settings

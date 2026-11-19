@@ -245,6 +245,18 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end
 
+  # Adds per-request data to PreloadStore under "<plugin name>:<key>".
+  # The block receives the request's guardian and returns a JSON-serializable
+  # value, or nil to omit the entry. Disabled plugins are skipped.
+  def register_preloaded_data(key, &block)
+    raise ArgumentError, "register_preloaded_data requires a block" if !block
+
+    DiscoursePluginRegistry.register_preloaded_data_callback(
+      { key: "#{name}:#{key}", callback: block },
+      self,
+    )
+  end
+
   # Register a handler for an action initiated by an anonymous user, to be
   # replayed against their account after they authenticate. See AnonymousAction.
   def register_anonymous_action(type, &block)
@@ -355,6 +367,46 @@ class Plugin::Instance
     TopicList.on_preload_user_ids(enabled: method(:enabled?), &block)
   end
 
+  # Preloads a user custom field for the users serialized by `/user-cards.json`,
+  # so it can be read while serializing them without N+1 queries. It is not
+  # added to the response.
+  #
+  # The field is preloaded under its string name, so read it with a string key
+  # (`user.custom_fields["field_name"]`). A symbol key raises a NotPreloadedError.
+  #
+  # @param field [String, Symbol] The name of the user custom field.
+  #
+  # @example
+  #   register_user_cards_preloaded_custom_field(:card_theme)
+  #
+  # @return [void]
+  def register_user_cards_preloaded_custom_field(field)
+    DiscoursePluginRegistry.register_user_cards_preloaded_custom_field(field.to_s, self)
+  end
+
+  # Allows plugins to load data for all the users serialized by `/user-cards.json`
+  # at once, instead of querying per user in their serializer attributes. The
+  # block runs after core has preloaded the users' associations and custom fields.
+  #
+  # @yieldparam users [Array<User>] The users that will be serialized.
+  # @yieldparam guardian [Guardian] The guardian of the requesting user.
+  #
+  # @example
+  #   add_to_class(:user, :muted_by_current_user=) { |muted| @muted_by_current_user = muted }
+  #   add_to_class(:user, :muted_by_current_user) { @muted_by_current_user }
+  #
+  #   register_user_cards_preloader do |users, guardian|
+  #     next if guardian.anonymous?
+  #
+  #     muted_ids = guardian.user.muted_users.where(id: users.map(&:id)).pluck(:id)
+  #     users.each { |user| user.muted_by_current_user = muted_ids.include?(user.id) }
+  #   end
+  #
+  # @return [void]
+  def register_user_cards_preloader(&block)
+    DiscoursePluginRegistry.register_user_cards_preloader(block, self)
+  end
+
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
   # Example usage:
   #   register_search_topic_eager_load do |opts|
@@ -405,6 +457,14 @@ class Plugin::Instance
         plugin: plugin,
         callback: callback,
       }
+    end
+  end
+
+  # Accept a scalar bot[<param_name>] when admins create a bot. The callback receives the bot
+  # and the value inside the creation transaction; raising rolls the creation back.
+  def register_bot_creation_param(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.bot_creation_params[param_name] = { plugin:, callback: }
     end
   end
 
@@ -792,6 +852,26 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_svg_icon_source(block, self)
   end
 
+  # Registers a source of extra SVG symbols, such as icons stored in the
+  # database. Unlike the sprites in a plugin's `svg-icons` directory, a symbol
+  # is only added to the SVG sprite when one of the sprite's icons uses it.
+  #
+  # The source must respond to:
+  #
+  # - `symbols(icon_ids)`, returning a hash of the requested names it has to
+  #   their `<symbol>` markup.
+  # - `search_icon_ids(keyword, limit:)`, returning up to `limit` of its icon
+  #   names that contain `keyword`, ignoring case, sorted in byte order. The
+  #   keyword is blank when the icon picker lists every icon.
+  #
+  # Both are called while the sprite is built or searched, so they must not run
+  # at boot, and their results are scoped to the current site.
+  #
+  # Call `SvgSprite.expire_cache` when the underlying data changes.
+  def register_svg_symbol_source(source)
+    DiscoursePluginRegistry.register_svg_symbol_source(source, self)
+  end
+
   def extend_content_security_policy(extension)
     csp_extensions << extension
   end
@@ -855,6 +935,11 @@ class Plugin::Instance
 
   def register_seed_data(key, value)
     seed_data[key] = value
+  end
+
+  # The callback receives the first admin after moderation has been granted.
+  def register_first_admin_bootstrap(&block)
+    DiscoursePluginRegistry.register_first_admin_bootstrap(block, self)
   end
 
   def register_seed_path_builder(&block)
@@ -947,6 +1032,10 @@ class Plugin::Instance
   #
   # This is a very rough initial implementation
   def gem(name, version, opts = {})
+    if metadata.gemfile
+      raise "Plugin #{directory_name} declares its gems in a Gemfile, `gem` can't be mixed with that"
+    end
+
     PluginGem.load(path, name, version, opts)
   end
 
@@ -1173,7 +1262,11 @@ class Plugin::Instance
   #
   # @param id [String, Symbol] stable identifier stored in the site setting
   # @param name [String] client-side translation key used in the admin setting
-  # @param path [String] application path for the homepage
+  # @param path [String, Proc] application path for the homepage, excluding any
+  #   subfolder, or a lambda returning one when it depends on settings. A lambda
+  #   is resolved when the site data is built; anonymous site data is cached
+  #   until a site setting changes, so call `Site.clear_anon_cache!` if the path
+  #   depends on anything else.
   # @param route [String] Rails controller action, in `controller#action` form
   # @param anonymous [Boolean] whether logged-out visitors may use this homepage
   # @param server_side [Boolean] whether navigation requires a full page request
@@ -1182,7 +1275,7 @@ class Plugin::Instance
   #   back to the top menu homepage
   # @param available [Proc, nil] called with `guardian:` and `request:` (which
   #   may be nil); when it returns false the visitor gets the regular top menu
-  #   homepage instead. It runs whenever the homepage is resolved, including on
+  #   homepage instead, and a lambda `path` is not sent to them. It runs whenever the homepage is resolved, including on
   #   page loads and topic list requests, so keep it cheap.
   def register_homepage(
     id,
@@ -1201,7 +1294,9 @@ class Plugin::Instance
             "homepage id must contain only lowercase letters, numbers, underscores, and hyphens"
     end
     raise ArgumentError, "homepage name must be present" if name.blank?
-    raise ArgumentError, "homepage path must start with /" if !path.to_s.start_with?("/")
+    if !path.respond_to?(:call) && !path.to_s.start_with?("/")
+      raise ArgumentError, "homepage path must start with /"
+    end
     if !route.to_s.match?(/\A[^#]+#[^#]+\z/)
       raise ArgumentError, "homepage route must use controller#action format"
     end
@@ -1230,7 +1325,7 @@ class Plugin::Instance
       {
         id: id,
         name: name,
-        path: path.to_s,
+        path: path.respond_to?(:call) ? path : path.to_s,
         route: route.to_s,
         anonymous: anonymous,
         server_side: server_side,
@@ -1400,9 +1495,8 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_stat(stat, self)
   end
 
-  # Registers a KPI tile in the admin dashboard "Highlights" section
-  # (gated by the dashboard_improvements upcoming change). The KPI is rendered
-  # as a tile linking to /admin/reports/:report.
+  # Registers a KPI tile in the admin dashboard "Highlights" section. The KPI
+  # is rendered as a tile linking to /admin/reports/:report.
   #
   # @param type [Symbol] unique identifier for the KPI. Used as the i18n key
   #   (admin.dashboard.highlights.kpi.<type>.label / .tooltip) and to
@@ -1417,9 +1511,9 @@ class Plugin::Instance
     )
   end
 
-  # Registers a whole section in the redesigned admin dashboard (gated by the
-  # dashboard_improvements upcoming change). The matching client-side section
-  # component must be registered via the JS `api.registerAdminDashboardSection`.
+  # Registers a whole section in the admin dashboard. The matching client-side
+  # section component must be registered via the JS
+  # `api.registerAdminDashboardSection`.
   #
   # @param id [String] unique section id. Matched against the persisted
   #   configuration and the client-side component registry.

@@ -103,6 +103,13 @@ Fabricator(:discourse_workflows_variable, class_name: "DiscourseWorkflows::Varia
   created_by { Fabricate(:user) }
 end
 
+Fabricator(:discourse_workflows_workflow_variable, class_name: "DiscourseWorkflows::Variable") do
+  workflow { Fabricate(:discourse_workflows_workflow) }
+  key { sequence(:key) { |n| "workflow_variable_#{n}" } }
+  variable_type "string"
+  created_by { Fabricate(:user) }
+end
+
 Fabricator(:discourse_workflows_credential, class_name: "DiscourseWorkflows::Credential") do
   name { sequence(:name) { |n| "Credential #{n}" } }
   credential_type "basic_auth"

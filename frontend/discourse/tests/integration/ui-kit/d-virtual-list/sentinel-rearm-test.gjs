@@ -23,10 +23,6 @@ function rowsThenSentinel(count) {
   ];
 }
 
-class State {
-  @tracked items = rowsThenSentinel(6);
-}
-
 // Supplemental coverage for the branch that arms both latches when the count
 // moved but neither boundary key did. A list that keeps a persistent sentinel
 // row at one end holds both boundary keys stable across a refresh, so nothing
@@ -49,7 +45,7 @@ module(
     });
 
     test("a count change between stable boundary keys re-arms both edges", async function (assert) {
-      const state = new State();
+      const items = tracked(rowsThenSentinel(6));
       const ends = [];
       const starts = [];
       const onReachEnd = () => ends.push(true);
@@ -66,7 +62,7 @@ module(
           </style>
           <DVirtualList
             @estimateSize={{estimate}}
-            @items={{state.items}}
+            @items={{items.value}}
             @key="id"
             @onReachEnd={{onReachEnd}}
             @onReachStart={{onReachStart}}
@@ -85,7 +81,7 @@ module(
       // Same first row, same sentinel last row, fewer rows between them. The
       // window never leaves either band, so the retreat path cannot account for
       // any callback that follows.
-      state.items = rowsThenSentinel(1);
+      items.value = rowsThenSentinel(1);
       await settled();
 
       assert.strictEqual(
@@ -101,7 +97,7 @@ module(
     });
 
     test("a refresh that moves neither the count nor the keys arms nothing", async function (assert) {
-      const state = new State();
+      const items = tracked(rowsThenSentinel(6));
       const ends = [];
       const onReachEnd = () => ends.push(true);
 
@@ -116,7 +112,7 @@ module(
           </style>
           <DVirtualList
             @estimateSize={{estimate}}
-            @items={{state.items}}
+            @items={{items.value}}
             @key="id"
             @onReachEnd={{onReachEnd}}
             as |item|
@@ -130,7 +126,7 @@ module(
 
       // A fresh array of equivalent rows: same keys, same count. Re-arming here
       // would answer an edge callback with another edge callback.
-      state.items = rowsThenSentinel(6);
+      items.value = rowsThenSentinel(6);
       await settled();
 
       assert.strictEqual(

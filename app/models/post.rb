@@ -117,8 +117,17 @@ class Post < ActiveRecord::Base
         -> { joins(:topic).where("topics.archetype = ?", Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where("topics.subtype = ?", subtype) }
   scope :visible, -> { joins(:topic).where("topics.visible = true").where(hidden: false) }
-  scope :secured,
-        ->(guardian) { where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user)) }
+  # Adds the rules of Guardian#can_see_post? without removing existing conditions.
+  # Admins are unchanged, including whispers. Nil means anonymous.
+  # Use with_deleted to include permitted deleted posts.
+  # Assumes an unaliased posts table; predicate overrides in plugins are not reflected.
+  scope :secured, ->(guardian = nil) { (guardian || Guardian.new).filter_visible_posts(all) }
+
+  # Post types only: does not authorize topic access or hidden/deleted state.
+  scope :with_visible_post_types,
+        ->(guardian = nil) do
+          where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user))
+        end
 
   scope :for_mailing_list,
         ->(user, since) do
@@ -191,6 +200,33 @@ class Post < ActiveRecord::Base
     @notices ||= Enum.new(custom: "custom", new_user: "new_user", returning_user: "returning_user")
   end
 
+  def self.recalculate_like_counts!(post_ids)
+    DB.exec(
+      <<~SQL,
+        UPDATE posts
+        SET like_count = (
+          SELECT COUNT(*)
+          FROM post_actions
+          WHERE post_actions.post_id = posts.id
+            AND post_actions.post_action_type_id = :like
+            AND post_actions.deleted_at IS NULL
+        ),
+        like_score = (
+          SELECT COALESCE(SUM(CASE WHEN users.moderator OR users.admin THEN :staff_like_weight ELSE 1 END), 0)
+          FROM post_actions
+          INNER JOIN users ON users.id = post_actions.user_id
+          WHERE post_actions.post_id = posts.id
+            AND post_actions.post_action_type_id = :like
+            AND post_actions.deleted_at IS NULL
+        )
+        WHERE posts.id IN (:post_ids)
+      SQL
+      post_ids:,
+      like: PostActionType::LIKE_POST_ACTION_ID,
+      staff_like_weight: SiteSetting.staff_like_weight,
+    )
+  end
+
   def self.find_by_detail(key, value)
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
@@ -252,7 +288,13 @@ class Post < ActiveRecord::Base
     if Topic.visible_post_types.include?(post_type)
       opts.merge!(topic.secure_audience_publish_messages)
     else
-      opts[:user_ids] = User.human_users.where("admin OR moderator OR id = ?", user_id).pluck(:id)
+      user_ids = User.human_users.where("admin OR moderator OR id = ?", user_id).pluck(:id)
+
+      # Hidden post types are staff-only, but a private message's audience still
+      # bounds who may learn the topic exists.
+      user_ids &= topic.secure_audience_publish_messages[:user_ids] if topic.private_message?
+
+      opts[:user_ids] = user_ids
     end
 
     MessageBus.publish(channel, message, opts) if opts[:user_ids] != [] && opts[:group_ids] != []
@@ -329,11 +371,9 @@ class Post < ActiveRecord::Base
 
     # A rule in our Markdown pipeline may have Guardian checks that require a
     # user to be present. The last editing user of the post will be more
-    # generally up to date than the creating user. For example, we use
-    # this when cooking #hashtags to determine whether we should render
-    # the found hashtag based on whether the user can access the category it
-    # is referencing.
+    # generally up to date than the creating user.
     options[:user_id] = last_editor_id
+    options[:hashtag_user_ids] = [user_id, last_editor_id, *post_revisions.pluck(:user_id)].compact
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
     options
@@ -364,7 +404,8 @@ class Post < ActiveRecord::Base
       end
     end
 
-    cooked = post_analyzer.cook(raw, options)
+    cooked =
+      post_analyzer.cook(raw, options) { |url, onebox, doc| onebox_allowed?(url, onebox, doc) }
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
@@ -377,6 +418,13 @@ class Post < ActiveRecord::Base
     end
 
     new_cooked
+  end
+
+  def onebox_allowed?(url, onebox, doc)
+    return true if !PostAnalyzer.unvalidated_media?(onebox, url)
+
+    limit = unvalidated_media_limit
+    limit.nil? || PostAnalyzer.embedded_media_count(doc) < limit
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
@@ -650,7 +698,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, message_options: {})
     return if hidden?
 
     reason ||=
@@ -692,26 +740,21 @@ class Post < ActiveRecord::Base
     # inform user
     if user.present?
       options = {
+        **Dsa::AppealInstructions.message_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason:
-          I18n.t(
-            "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path,
-            default: PostActionType.names[post_action_type_id],
-          ),
+        **message_options,
       }
 
       message = custom_message
       message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
 
-      Jobs.enqueue_in(
-        5.seconds,
-        :send_system_message,
-        user_id: user.id,
+      ModerationNotice.enqueue(
+        delay: 5.seconds,
+        user: user,
         message_type: message.to_s,
         message_options: options,
+        post_action_type_id:,
       )
     end
 
@@ -1234,6 +1277,20 @@ class Post < ActiveRecord::Base
 
   private
 
+  def unvalidated_media_limit
+    writer_ids = [user_id, last_editor_id, *post_revisions.pluck(:user_id)]
+
+    User.where(id: writer_ids).filter_map { |writer| embedded_media_limit(writer) }.min
+  end
+
+  def embedded_media_limit(writer)
+    return if writer.staff?
+    return 0 if !writer.guardian.can_embed_media?
+    return 0 if !writer.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+
+    SiteSetting.newuser_max_embedded_media if writer.trust_level == TrustLevel[0]
+  end
+
   def ensure_edit_reason_length
     return if edit_reason.blank? || edit_reason.length <= MAX_EDIT_REASON_LENGTH
 
@@ -1340,6 +1397,7 @@ end
 #
 #  idx_posts_created_at_topic_id                          (created_at,topic_id) WHERE (deleted_at IS NULL)
 #  idx_posts_deleted_posts                                (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
+#  idx_posts_search_covering                              (id) WHERE ((deleted_at IS NULL) AND (NOT hidden))
 #  idx_posts_user_id_deleted_at                           (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                                   (id DESC) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
 #  index_posts_on_deleted_by_id                           (deleted_by_id) WHERE (deleted_by_id IS NOT NULL)

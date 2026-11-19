@@ -150,7 +150,7 @@ export function findClosestMatch(input, candidates, options = {}) {
  *
  * @param {string} value - The unknown/invalid value.
  * @param {readonly string[]} validValues - List of valid values to match against.
- * @param {Object} [options] - Options passed to findClosestMatch.
+ * @param {{ minSimilarity?: number, caseSensitive?: boolean }} [options] - Options passed to findClosestMatch.
  * @returns {string} Formatted string like '"foo" (did you mean "bar"?)' or just '"foo"'.
  *
  * @example

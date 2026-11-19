@@ -28,7 +28,13 @@ module DiscourseAi
           end
 
           def option(name, type:, values: nil, default: nil)
-            Option.new(tool: self, name: name, type: type, values: values, default: default)
+            DiscourseAi::Agents::Tools::Option.new(
+              tool: self,
+              name: name,
+              type: type,
+              values: values,
+              default: default,
+            )
           end
 
           def help
@@ -49,6 +55,15 @@ module DiscourseAi
 
           def mandatory_approval?
             false
+          end
+
+          # Tools that can take minutes, so conversations can tell the user it is still working.
+          def long_running?
+            false
+          end
+
+          def available_for_context?(_context)
+            true
           end
 
           # When true, the replayed tool (after approval) is given the
@@ -110,6 +125,77 @@ module DiscourseAi
           I18n.t("discourse_ai.ai_bot.tool_description.#{name}", description_args)
         end
 
+        def approval_title
+          summary
+        end
+
+        # Replacement heading once the action ran, for tools whose target is
+        # renamed by the action itself. nil keeps the pending title.
+        def approval_resolved_title
+          nil
+        end
+
+        def approval_changes
+          []
+        end
+
+        def approval_show_description?
+          true
+        end
+
+        def approval_description_label
+          nil
+        end
+
+        def approval_details
+          details
+        end
+
+        # Used instead of approval_details when they are longer than an approval
+        # surface allows, such as a chat message. Tools with large details can
+        # override this with a compact version of the same action.
+        def compact_approval_details(max_length:)
+          notice = I18n.t("discourse_ai.ai_bot.chat_tool_approval.details_shortened")
+          available = max_length - notice.length - 2
+          return notice.truncate(max_length) if available <= 0
+
+          "#{notice}\n\n#{approval_details.to_s.truncate(available)}"
+        end
+
+        def approval_question
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.question")
+        end
+
+        def approval_parameters
+          parameters.filter_map do |key, value|
+            next if key.to_s == "reason"
+
+            parameter = {
+              label: key.to_s,
+              value: value.is_a?(String) ? value : JSON.generate(value),
+            }
+            if %w[color text_color].include?(key.to_s) && value.to_s.match?(/\A#?[0-9a-fA-F]{6}\z/)
+              parameter[:color] = value.to_s.delete_prefix("#")
+            end
+            parameter
+          end
+        end
+
+        # Approval previews are built before the tool's own permission checks
+        # run, so they must only describe targets the requesting user can see.
+        def previewable?(target)
+          case target
+          when Topic
+            guardian.can_see_topic?(target)
+          when Post
+            target.topic.present? && guardian.can_see_post?(target)
+          when Category
+            guardian.can_see_category?(target)
+          else
+            false
+          end
+        end
+
         def help
           I18n.t("discourse_ai.ai_bot.tool_help.#{name}")
         end
@@ -142,6 +228,10 @@ module DiscourseAi
 
         def invocation_limited?
           max_invocations.positive?
+        end
+
+        def work_evidence(result)
+          result.to_json
         end
 
         def chain_next_response?
@@ -279,14 +369,6 @@ module DiscourseAi
           end
 
           llm.tokenizer.truncate(text, target, strict: SiteSetting.ai_strict_token_counting)
-        end
-
-        def accepted_options
-          []
-        end
-
-        def option(name, type:)
-          Option.new(tool: self, name: name, type: type)
         end
 
         def acting_user

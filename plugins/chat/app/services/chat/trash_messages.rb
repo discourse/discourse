@@ -28,9 +28,11 @@ module Chat
 
     model :messages
     policy :can_delete_all_chat_messages
+    model :pinned_messages, optional: true
 
     transaction do
       step :trash_messages
+      step :destroy_pins
       step :destroy_notifications
       step :update_last_message_ids
       step :update_tracking_states
@@ -54,6 +56,14 @@ module Chat
 
     def trash_messages(guardian:, messages:)
       messages.each { |message| message.trash!(guardian.user) }
+    end
+
+    def fetch_pinned_messages(messages:)
+      Chat::PinnedMessage.where(chat_message_id: messages.map(&:id)).to_a
+    end
+
+    def destroy_pins(pinned_messages:)
+      pinned_messages.each(&:destroy!)
     end
 
     def destroy_notifications(messages:)
@@ -89,9 +99,13 @@ module Chat
       messages.each { |message| message.thread&.decrement_replies_count_cache }
     end
 
-    def publish_events(params:, guardian:, messages:)
+    def publish_events(params:, guardian:, messages:, pinned_messages:)
+      pinned_message_ids = pinned_messages.map(&:chat_message_id)
       messages.each do |message|
         DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
+        if pinned_message_ids.include?(message.id)
+          Chat::Publisher.publish_unpin!(message.chat_channel, message, guardian.user)
+        end
       end
       Chat::Publisher.publish_bulk_delete!(messages.first.chat_channel, params.message_ids)
     end

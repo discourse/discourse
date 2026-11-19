@@ -15,5 +15,8 @@ th:
         chat_usage:
           author: คุณ
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            other: "%{count} นาที"
         writing_analysis:
           menu_other: อื่นๆ

@@ -7,7 +7,7 @@ import escapeRegExp from "discourse/lib/escape-regexp";
 import DButton from "discourse/ui-kit/d-button";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
-import shortcutLabel from "../lib/shortcut-label";
+import shortcutLabel from "../lib/shortcut-label.js";
 
 function shortcutHint(...keys) {
   return i18n("discourse_ai.discobot_discoveries.shortcut_hint", {

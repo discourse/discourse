@@ -7,7 +7,20 @@
 lt:
   admin_js:
     discourse_templates:
-      title: "Juodraščiai"
+      title: "Šablonai"
+    admin:
+      site_settings:
+        categories:
+          discourse_templates: "Discourse šablonai"
   js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "Šablonai (teksto įvesties lauke)"
+        insert_template: "%{shortcut} Įterpti šabloną"
     templates:
+      filter_hint: "Filtruoti pagal raktinį žodį..."
+      insert_template: "Įterpti šabloną"
+      close_templates: "Uždaryti šablonų pasirinkimo įrankį"
+      copy: "Kopijuoti šabloną"
+      new_topic: "Nauja tema iš šablono"
       source: "Šaltinis"

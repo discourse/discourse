@@ -1,6 +1,7 @@
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -11,18 +12,18 @@ import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import categoryVariables from "discourse/helpers/category-variables";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import categoryStyleType from "discourse/lib/category-style-type";
+import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
-import { and, eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 const CATEGORY_HASHTAG_SELECTOR =
@@ -32,17 +33,21 @@ const LATEST_TOPICS_CACHE_MS = 5 * 60 * 1000; // 5 minutes
 
 const CategoryNameLink = <template>
   <a class="category-card__link" href={{@category.url}} ...attributes>
-    <span
-      class="category-card__style
-        {{concat '--style-' (or @category.style_type 'square')}}"
-      style={{categoryVariables @category}}
-    >
-      {{#if (and (eq @category.style_type "icon") @category.icon)}}
-        {{dIcon @category.icon}}
-      {{else if (and (eq @category.style_type "emoji") @category.emoji)}}
-        {{dReplaceEmoji (concat ":" @category.emoji ":")}}
-      {{/if}}
-    </span>
+    {{#let
+      (or (categoryStyleType @category.style_type) "square")
+      as |styleType|
+    }}
+      <span
+        class="category-card__style {{concat '--style-' styleType}}"
+        style={{categoryVariables @category}}
+      >
+        {{#if (and (eq styleType "icon") @category.icon)}}
+          {{dIcon @category.icon}}
+        {{else if (and (eq styleType "emoji") @category.emoji)}}
+          {{dEmoji @category.emoji}}
+        {{/if}}
+      </span>
+    {{/let}}
     <span class="category-card__name">{{@category.name}}</span>
     {{yield}}
   </a>
@@ -58,16 +63,25 @@ export default class CategoryCardContents extends CardContentsBase {
   avatarDataAttrKey = "id";
   avatarSelector = CATEGORY_HASHTAG_SELECTOR;
   canShowWhenUserProfilesHidden = true;
+
+  /** @type {import("discourse/models/category").default | null} */
   category = null;
+
+  /** @type {string | number | null} */
   categoryId = null;
   elementId = "category-card";
   eventPrefix = null;
+  focusOnShow = false;
+
+  /** @type {import("discourse/models/topic").default[] | null} */
   latestTopics = null;
   menuIdentifier = "category-card";
   mentionSelector = CATEGORY_HASHTAG_SELECTOR;
   showCardBeforeLoad = false;
+  triggerEvent = "pointerover";
   triggeringLinkSelector = CATEGORY_HASHTAG_SELECTOR;
 
+  #hoverTimer;
   #latestTopicsCache = new Map();
 
   @computed("category.permission")
@@ -139,10 +153,14 @@ export default class CategoryCardContents extends CardContentsBase {
   didInsertElement() {
     super.didInsertElement(...arguments);
     this.appEvents.on("dom:clean", this, this._close);
+    document.addEventListener("pointerout", this._pointerOut);
+    this.element.addEventListener("pointerover", this._cardClickHandler);
   }
 
   willDestroyElement() {
     this.appEvents.off("dom:clean", this, this._close);
+    document.removeEventListener("pointerout", this._pointerOut);
+    this.element.removeEventListener("pointerover", this._cardClickHandler);
     super.willDestroyElement(...arguments);
   }
 
@@ -240,7 +258,59 @@ export default class CategoryCardContents extends CardContentsBase {
     return { categories, complete: true };
   }
 
+  @bind
+  _cardClickHandler(event) {
+    if (event.pointerType === "touch") {
+      return;
+    }
+
+    if (this.element.contains(event.target)) {
+      cancel(this.#hoverTimer);
+      return;
+    }
+
+    const target = event.target.closest(CATEGORY_HASHTAG_SELECTOR);
+    if (
+      !target ||
+      target.closest(".card-content") ||
+      target.contains(event.relatedTarget)
+    ) {
+      return;
+    }
+
+    cancel(this.#hoverTimer);
+    if (this.cardTarget !== target) {
+      this.#hoverTimer = later(
+        () => this._show(target.dataset.id, target),
+        300
+      );
+    }
+  }
+
+  @bind
+  _pointerOut(event) {
+    if (
+      !this.element.contains(event.target) &&
+      !event.target.closest(CATEGORY_HASHTAG_SELECTOR)
+    ) {
+      return;
+    }
+
+    const nextTarget = event.relatedTarget;
+    const hashtag = event.target.closest(CATEGORY_HASHTAG_SELECTOR);
+    if (
+      nextTarget &&
+      (this.element.contains(nextTarget) || hashtag?.contains(nextTarget))
+    ) {
+      return;
+    }
+
+    cancel(this.#hoverTimer);
+    this.#hoverTimer = later(() => this._close(), 300);
+  }
+
   _close() {
+    cancel(this.#hoverTimer);
     this.setProperties({
       ancestorCategories: [],
       category: null,
@@ -270,7 +340,6 @@ export default class CategoryCardContents extends CardContentsBase {
 
       if (!category) {
         this._close();
-        DiscourseURL.routeTo(target.href);
         return;
       }
 
@@ -289,7 +358,6 @@ export default class CategoryCardContents extends CardContentsBase {
         this.cardTarget === target
       ) {
         this._close();
-        DiscourseURL.routeTo(target.href);
       }
     }
   }

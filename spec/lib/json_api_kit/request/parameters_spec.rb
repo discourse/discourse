@@ -61,6 +61,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
   end
   let(:glossary) { JsonApiKit::Glossary.kit }
   let(:parameters) { { "sort" => "-createdAt" } }
+  let(:declared_filters) { declared_parameters.fetch("filter").transform_keys { it.filter.value } }
 
   it "converts the sort into declared names and directions" do
     expect(declared_parameters).to eq("sort" => { "created_at" => :desc })
@@ -175,12 +176,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
     let(:parameters) { { "filter" => { "sort" => "created_at", "anchor" => "SomeValue" } } }
 
     it "keeps every filter value" do
-      expect(declared_parameters).to eq(
-        "filter" => {
-          "sort" => "created_at",
-          "anchor" => "SomeValue",
-        },
-      )
+      expect(declared_filters).to eq("sort" => "created_at", "anchor" => "SomeValue")
     end
   end
 
@@ -319,7 +315,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
       let(:parameters) { { "filter" => { "postedAt" => "2026-08-01" } } }
 
       it "converts the case of the filter name only" do
-        expect(declared_parameters).to eq("filter" => { "posted_at" => "2026-08-01" })
+        expect(declared_filters).to eq("posted_at" => "2026-08-01")
       end
     end
   end
@@ -336,7 +332,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
     let(:parameters) { { "filter" => { "postCount" => "SomeTopic Title" } } }
 
     it "converts the filter name only" do
-      expect(declared_parameters).to eq("filter" => { "post_count" => "SomeTopic Title" })
+      expect(declared_filters).to eq("post_count" => "SomeTopic Title")
     end
   end
 
@@ -427,13 +423,11 @@ RSpec.describe JsonApiKit::Request::Parameters do
         }
       end
 
-      it "derives the historical type before translating names" do
-        expect(declared_parameters).to eq(
+      it "derives the historical type before translating names", :aggregate_failures do
+        expect(declared_filters).to eq("title" => "A")
+        expect(declared_parameters.except("filter")).to eq(
           "sort" => {
             "title" => :asc,
-          },
-          "filter" => {
-            "title" => "A",
           },
           "page" => {
             "anchor" => {

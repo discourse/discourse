@@ -186,6 +186,14 @@ ar:
           message_4: "بلغ متوسط طول رسالتك <strong>%{length}</strong> من الأحرف"
           message_5: "قنواتك المفضلة:"
           dancing_baby_alt: "طفل راقص"
+        live_usage:
+          minutes:
+            zero: "دقيقتان (%{count})"
+            one: "دقيقة واحدة (%{count})"
+            two: "دقيقتان (%{count})"
+            few: "%{count} دقائق"
+            many: "%{count} دقيقة"
+            other: "دقيقتان (%{count})"
         invites:
           guest_book_title: سجل الزوار
           guest_book_subtitle: دعوات مجتمعك

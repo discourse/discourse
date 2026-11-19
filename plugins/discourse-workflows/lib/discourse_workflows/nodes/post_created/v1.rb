@@ -4,6 +4,9 @@ module DiscourseWorkflows
   module Nodes
     module PostCreated
       class V1 < NodeType
+        POST_TYPE_OPTIONS = %w[regular whisper].freeze
+        DEFAULT_POST_TYPE = "regular"
+
         description(
           name: "trigger:post_created",
           version: "1.0",
@@ -46,8 +49,13 @@ module DiscourseWorkflows
                 none: "discourse_workflows.post_created.group_inbox_id_placeholder",
               },
             },
-            **CATEGORY_FILTER_PROPERTIES,
-            **TAG_FILTER_PROPERTIES,
+            post_type: {
+              type: :options,
+              required: true,
+              default: DEFAULT_POST_TYPE,
+              options: POST_TYPE_OPTIONS,
+            },
+            **TOPIC_SCOPE_FILTER_PROPERTIES,
           },
         )
 
@@ -69,35 +77,36 @@ module DiscourseWorkflows
         end
 
         def valid?
-          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
-            !@opts&.dig(:skip_workflows)
+          return false if @post.blank?
+          return false if @post.topic.blank?
+          return false if @opts&.dig(:skip_workflows)
+
+          POST_TYPE_OPTIONS.include?(post_type_name)
         end
 
         def output
-          { post: post_data(@post), topic: topic_data(@post.topic), user: user_data(@post.user) }
+          {
+            post: serialize_post(@post),
+            topic: serialize_topic_list_item(@post.topic),
+            user: serialize_user(@post.user),
+          }
         end
 
         def matches?(trigger_ctx)
           topic = @post.topic
+          post_type = trigger_ctx.get_node_parameter("post_type").presence || DEFAULT_POST_TYPE
 
-          matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type", "topics")) &&
-            matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id")) &&
-            matches_category_ids?(
-              topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) &&
-            matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+          return false if post_type != post_type_name
+          return false if !matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type"))
+          return false if !matches_topic_filters?(topic, trigger_ctx)
+
+          matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id"))
         end
 
         private
 
-        def post_data(post)
-          serialize_post(post)
-        end
-
-        def user_data(user)
-          serialize_user(user)
+        def post_type_name
+          ::Post.types.key(@post.post_type).to_s
         end
       end
     end

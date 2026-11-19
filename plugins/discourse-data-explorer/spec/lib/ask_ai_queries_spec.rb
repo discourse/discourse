@@ -63,4 +63,15 @@ describe DiscourseDataExplorer::Queries do
     expect(run_query(-46).first["outcome"]).to eq("pending")
     expect(run_query(-45).last["asks"].to_i).to eq(1)
   end
+
+  it "lists all asks in the period without requiring a report or applying report exclusions" do
+    SiteSetting.ai_ask_ai_report_max_asks = 1
+    SiteSetting.ai_ask_ai_report_exclude_groups = Group::AUTO_GROUPS[:staff].to_s
+    AskAiLog.create!(user: admin, query: "Before", asked_at: Time.utc(2026, 9, 7, 23, 59, 59))
+    AskAiLog.create!(user: admin, query: "猫", asked_at: Time.utc(2026, 9, 8))
+    AskAiLog.create!(user: admin, query: "Last", asked_at: Time.utc(2026, 9, 9, 23, 59, 59))
+    AskAiLog.create!(user: admin, query: "After", asked_at: Time.utc(2026, 9, 10))
+
+    expect(run_query(-48).pluck("query")).to eq(%w[Last 猫])
+  end
 end

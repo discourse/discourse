@@ -174,6 +174,9 @@ export function searchForTerm(term, opts) {
   if (opts.typeFilter) {
     data.type_filter = opts.typeFilter;
   }
+  if (opts.skipSearchLog) {
+    data.skip_search_log = true;
+  }
   if (opts.searchForId) {
     data.search_for_id = true;
   }

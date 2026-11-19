@@ -8,7 +8,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
-import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class Types extends Component {
@@ -56,11 +55,13 @@ export default class Types extends Component {
       event.preventDefault();
       event.stopPropagation();
 
-      logSearchLinkClick({
-        searchLogId: this.args.searchLogId,
-        searchResultId: result.id,
-        searchResultType: resultType.type,
-      });
+      if (this.args.searchLogId) {
+        logSearchLinkClick({
+          searchLogId: this.args.searchLogId,
+          searchResultId: result.id,
+          searchResultType: resultType.type,
+        });
+      }
 
       const link = event.currentTarget.querySelector("a.search-link");
       if (link?.href) {

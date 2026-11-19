@@ -1,9 +1,8 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 import GoogleIcon from "discourse/components/google-icon";
 import PasskeyLoginButton from "discourse/components/passkey-login-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -13,33 +12,31 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class LoginButtons extends Component {
-  @computed("buttons.length", "showLoginWithEmailLink", "showPasskeysButton")
+  @service siteSettings;
+
   get hidden() {
     return (
       this.buttons?.length === 0 &&
-      !this.showLoginWithEmailLink &&
+      !this.args.showLoginWithEmailLink &&
       !this.showPasskeysButton
     );
   }
 
-  @computed("buttons.length")
   get multiple() {
     return this.buttons?.length > 1;
   }
 
-  @computed
+  @cached
   get buttons() {
     return findAll();
   }
 
-  @computed
   get showPasskeysButton() {
     return (
       this.siteSettings.enable_local_logins &&
       this.siteSettings.enable_passkeys &&
-      this.context === "login" &&
+      this.args.context === "login" &&
       isWebauthnSupported()
     );
   }
@@ -60,7 +57,7 @@ export default class LoginButtons extends Component {
               aria-label={{b.screenReaderTitle}}
               class="btn btn-social {{b.name}}"
               type="button"
-              {{on "click" (fn this.externalLogin b)}}
+              {{on "click" (fn @externalLogin b)}}
             >
               {{dIcon b.icon}}
               <span class="btn-social-title">{{b.title}}</span>
@@ -79,7 +76,7 @@ export default class LoginButtons extends Component {
             aria-label={{b.screenReaderTitle}}
             class="btn btn-social {{b.name}}"
             type="button"
-            {{on "click" (fn this.externalLogin b)}}
+            {{on "click" (fn @externalLogin b)}}
           >
             {{#if b.isGoogle}}
               <GoogleIcon />
@@ -94,7 +91,7 @@ export default class LoginButtons extends Component {
       {{/each}}
 
       {{#if this.showPasskeysButton}}
-        <PasskeyLoginButton @passkeyLogin={{this.passkeyLogin}} />
+        <PasskeyLoginButton @passkeyLogin={{@passkeyLogin}} />
       {{/if}}
 
       <PluginOutlet @name="after-login-buttons" />

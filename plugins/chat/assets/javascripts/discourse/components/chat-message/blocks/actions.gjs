@@ -1,4 +1,4 @@
-import Element from "./element";
+import Element from "./element.gjs";
 
 const Actions = <template>
   <div class="block__actions-wrapper">

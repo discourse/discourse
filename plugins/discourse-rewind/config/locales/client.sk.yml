@@ -18,6 +18,12 @@ sk:
           author: Vy
           author_others: "%{username}"
           status_online: "● online"
+        live_usage:
+          minutes:
+            one: "%{count} minúta"
+            few: "%{count} minúty"
+            many: "%{count} minút"
+            other: "%{count} minút"
         invites:
           label_invitations_sent: "Pozvánok bola odoslaných:"
         writing_analysis:

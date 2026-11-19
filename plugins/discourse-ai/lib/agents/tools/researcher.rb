@@ -87,6 +87,14 @@ module DiscourseAi
           end
         end
 
+        def work_evidence(result)
+          if result.is_a?(Hash) && result[:results].is_a?(Array)
+            result.merge(results: []).to_json
+          else
+            super
+          end
+        end
+
         def invoke(&blk)
           max_results = options[:max_results] || 1000
 
@@ -120,7 +128,7 @@ module DiscourseAi
           if @dry_run
             { dry_run: true, goals: @goals, filter: @filter, number_of_posts: @result_count }
           else
-            process_filter(filter, @goals, post, &blk)
+            process_filter(filter, @goals, post, guardian: guardian, &blk)
           end
         rescue StandardError => e
           { error: "Error processing research: #{e.message}" }
@@ -151,7 +159,7 @@ module DiscourseAi
         MIN_TOKENS_FOR_RESEARCH = 8000
         MIN_TOKENS_FOR_POST = 50
 
-        def process_filter(filter, goals, post, &blk)
+        def process_filter(filter, goals, post, guardian:, &blk)
           if researcher_llm.max_prompt_tokens < MIN_TOKENS_FOR_RESEARCH
             raise ArgumentError,
                   "LLM max tokens too low for research. Minimum is #{MIN_TOKENS_FOR_RESEARCH}."
@@ -175,6 +183,7 @@ module DiscourseAi
               max_tokens_per_batch: max_tokens_per_batch,
               tokenizer: researcher_llm.tokenizer,
               max_tokens_per_post: max_tokens_per_post,
+              guardian: guardian,
             )
 
           results = []
@@ -222,6 +231,7 @@ module DiscourseAi
             user: post.user,
             feature_name: context.feature_name,
             cancel_manager: context.cancel_manager,
+            execution_context: context.execution_context,
           ) { |partial| results << partial if partial.is_a?(String) }
 
           @progress_dots ||= 0

@@ -13,18 +13,18 @@ import {
   chartDatasets,
   defaultView,
   hasDates,
-} from "../lib/chart-helpers";
-import { dataExplorerStore } from "../lib/data-explorer-store";
+} from "../lib/chart-helpers.js";
+import { dataExplorerStore } from "../lib/data-explorer-store.js";
 import {
   buildColumnComponents,
   buildRelationTables,
   displayColumnNames,
   relationLabel,
-} from "../lib/result-columns";
-import DataExplorerChart from "./data-explorer-chart";
-import QueryChartEmptyState from "./query-chart-empty-state";
-import QueryResultDownloadButtons from "./query-result-download-buttons";
-import QueryRowContent from "./query-row-content";
+} from "../lib/result-columns.js";
+import DataExplorerChart from "./data-explorer-chart.gjs";
+import QueryChartEmptyState from "./query-chart-empty-state.gjs";
+import QueryResultDownloadButtons from "./query-result-download-buttons.gjs";
+import QueryRowContent from "./query-row-content.gjs";
 
 const CHART_FORMS = ["line", "bar", "stacked", "dual-axis"];
 

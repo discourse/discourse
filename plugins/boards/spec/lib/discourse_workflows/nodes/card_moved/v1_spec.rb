@@ -107,9 +107,24 @@ RSpec.describe DiscourseWorkflows::Nodes::CardMoved::V1 do
     end
 
     it "returns card and column data that conforms to the output schema" do
+      card.update!(assigned_to: manage_group)
+
       expect(trigger.output).to match_node_output_schema(described_class)
       expect(trigger.output).to include(
-        card: include("id" => card.id, "board_id" => board.id, "column_id" => new_column.id),
+        card:
+          include(
+            "id" => card.id,
+            "board_id" => board.id,
+            "column_id" => new_column.id,
+            "url" => card.url,
+            "assignee" =>
+              include(type: "group", group: include(id: manage_group.id, name: manage_group.name)),
+          ),
+        board: {
+          id: board.id,
+          name: board.name,
+          url: board.url,
+        },
         card_moved: {
           old_column: include("id" => old_column.id, "board_id" => board.id),
           new_column: include("id" => new_column.id, "board_id" => board.id),

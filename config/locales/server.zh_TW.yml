@@ -506,10 +506,6 @@ zh_TW:
   no_mentions_allowed_newuser: "抱歉，新使用者無法提及其他使用者。"
   too_many_mentions_newuser:
     other: "很抱歉，新使用者每篇貼文最多只能提及 %{count} 位其他使用者。"
-  no_embedded_media_allowed_group: "抱歉，您無法在貼文中嵌入媒體項目。"
-  no_embedded_media_allowed: "抱歉，新使用者無法在貼文中嵌入媒體項目。"
-  too_many_embedded_media:
-    other: "抱歉，新使用者在一篇貼文中最多只能放入 %{count} 個嵌入式媒體項目。"
   no_attachments_allowed: "抱歉，新使用者不能在貼文中上傳附件。"
   too_many_attachments:
     other: "很抱歉，新使用者每篇貼文最多只能加入 %{count} 個附件。"
@@ -828,6 +824,7 @@ zh_TW:
     post_template: "%{replace_paragraph}\n\n請使用以下段落提供更完整的說明，或訂定分類指南或規則：\n\n- 為什麼大家應該使用此分類？它的用途是什麼？\n\n- 它與我們現有的其他分類究竟有何不同？\n\n- 此分類中的主題通常應包含哪些內容？\n\n- 我們需要這個分類嗎？能否與其他分類或子分類合併？"
     errors:
       not_found: "找不到分類！"
+      self_lockout: "你即將變更分類權限，且這項變更會移除你自己的存取權。確定要繼續嗎？"
       uncategorized_parent: "未分類不能有父分類"
       self_parent: "子分類的父分類不能是它自己。"
       depth: "您不能將一個子分類嵌套在其他子分類下。"
@@ -1740,7 +1737,6 @@ zh_TW:
       email_polling_errored_recently:
         other: "電子郵件輪詢在過去 24 小時內產生了 %{count} 個錯誤。詳情請查看<a href='%{base_path}/logs' target='_blank'>記錄</a>。"
       missing_mailgun_api_key: "服務器被配置為通過 Mailgun 發送電子郵件，但是您尚未提供用于驗證網絡鉤子消息的 API 密鑰。"
-      missing_aws_sns_topic_arn: "伺服器已設定透過 Amazon SES 傳送電子郵件，但您尚未將任何 SNS 主題 ARN 加入允許清單。在您將合法 ARN 新增至 <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a> 前，退信通知將被拒絕。"
       qq_mail_smtp: "您的 SMTP 伺服器（%{smtp_address}）已知會導致 Discourse 重複傳送電子郵件。QQ Mail 不會傳回正確的確認，因此 Discourse 會重試已成功的傳送。<a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>查看建議的替代方案</a>。"
       bad_favicon_url: "網站圖示載入失敗。請在<a href='%{base_path}/admin/site_settings'>網站設定</a>中檢查網站圖示設定。"
       poll_pop3_timeout: "連接到 POP3 服務器超時。無法檢索收到的電子郵件。請檢查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>和服務提供者。"
@@ -2287,7 +2283,6 @@ zh_TW:
     reviewable_default_visibility: "除非滿足此優先級，否則不顯示可審核條目"
     reviewable_low_priority_threshold: "除非使用「（任何）」篩選器，否則優先篩選器會隱藏未達此分數的可審核項目。"
     high_trust_flaggers_auto_hide_posts: "新使用者的貼文遭信任等級 3 以上使用者檢舉為垃圾內容後會自動隱藏"
-    allow_all_users_to_flag_illegal_content: "匿名使用者會看到必須透過電子郵件聯絡管理員，才能檢舉違法內容的資訊。此設定優先於 {{setting:flag_post_allowed_groups}}。"
     email_address_to_report_illegal_content: "若留空，將使用預設的網站管理員電子郵件地址。"
     cooldown_hours_until_reflag: "使用者必須等待多久才能再次檢舉貼文"
     slow_mode_prevents_editing: "「慢速模式」是否會在 {{setting:editing_grace_period}} 後阻止編輯？"
@@ -2315,7 +2310,6 @@ zh_TW:
     ignore_by_title_regex: "使用規則運算式依標題忽略內送電子郵件。"
     mailgun_api_key: "用于驗證網絡鉤子消息的 Mailgun Secret API 密鑰。"
     sendgrid_verification_key: "用來驗證 Webhook 訊息的 SendGrid 驗證金鑰。"
-    aws_sns_topic_arn_allowlist: "允許傳送 Amazon SES 退信 Webhook 通知的 SNS 主題 ARN。"
     mailjet_webhook_token: "用來驗證 Webhook 承載資料的權杖。必須以 Webhook 的「t」查詢參數傳遞，例如：https://example.com/webhook/mailjet?t=supersecret"
     mailpace_webhook_token: "用來驗證 Webhook 承載資料的權杖。必須以 Webhook 的「t」查詢參數傳遞，例如：https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "用來驗證 Webhook 訊息的 Mandrill 驗證金鑰。"
@@ -2443,7 +2437,6 @@ zh_TW:
     enable_names: "在使用者的個人資料、使用者卡片和電子郵件中顯示使用者的全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在貼文中顯示使用者的全名以及他們的使用者名。"
     show_time_gap_days: "如果兩個貼文間隔此天數，在主題中顯示時間間隔。"
-    short_progress_text_threshold: "當一個主題的貼文數量超過此數值后，進度條將只顯示當前貼文數量。如果更改進度條的寬度，則可能需要更改此值。"
     default_code_lang: "套用至 Markdown 程式碼區塊的預設程式語言語法醒目提示（auto、text、ruby、python 等）。此值也必須存在於 {{setting:highlighted_languages}} 網站設定中。"
     autohighlight_all_code: "對以 HTML 撰寫的 &lt;code&gt; 區塊套用語法醒目提示，即使未指定語言。若要設定以 Markdown 撰寫的程式碼區塊，請使用 {{setting:default_code_lang}} 設定。"
     highlighted_languages: "包含的語法醒目提示規則。（警告：包含太多語言可能影響效能）示範請參閱：<a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a>"
@@ -2583,10 +2576,7 @@ zh_TW:
     create_post_for_category_and_tag_changes: "主題分類或標籤變更時建立私語貼文；需要啟用私語貼文。"
     automatically_clean_unused_tags: "每天自動刪除未被任何主題或私人訊息使用的標籤。"
     default_watched_precedence_over_muted: "如果使用者監看的分類或標籤中有主題同時屬於其已靜音項目，仍通知使用者"
-    company_name: "公司或組織名稱。若留空，將不提供標準的服務條款或隱私權聲明。"
     company_url: "公司或組織的網站 URL。選填。"
-    governing_law: "指定管轄網站法律事項（包括服務條款與隱私權政策）的司法管轄區。通常是營運網站之公司註冊或經營業務所在的國家／地區或州。"
-    city_for_disputes: "指定用來作為解決使用此論壇相關爭議之司法管轄區的城市。此資訊通常會包含在論壇服務條款等法律文件中。"
     shared_drafts_category: "通過為主題草稿指定分類來啟用共享草稿功能。此分類中的主題將在管理人員使用者的主題列表中被禁止。"
     shared_drafts_allowed_groups: "允許這些群組中的使用者查看及編輯共用草稿。"
     push_notifications_prompt: "顯示推播通知的使用者同意橫幅。此設定會顯示提示，要求使用者允許傳送推播通知。只有在尚未啟用推播通知、使用者裝置支援此功能，且使用者已發布貼文或正在使用漸進式網頁應用程式（PWA）時才會顯示。若使用者已關閉提示或已允許／拒絕權限，便不會再次顯示。"
@@ -2600,9 +2590,6 @@ zh_TW:
     enable_user_status: "允許使用者設定自訂狀態訊息（表情符號＋說明）。"
     enable_user_tips: "啟用向使用者說明主要功能的新使用者提示"
     short_title: "短標題會用於使用者主畫面、啟動器或其他空間可能受限的位置，應限制為 12 個字元。請注意，變更此標題可能會向 PWA 使用者顯示提示，要求他們更新或解除安裝應用程式。"
-    dashboard_hidden_reports: "允許從控制面板隱藏指定報告。"
-    dashboard_visible_tabs: "選擇要顯示的控制面板分頁。"
-    dashboard_general_tab_activity_metrics: "選擇要在“常規”標簽頁上顯示為活動指標的報告。"
     site_traffic_explorer_event_limit: "控制網站流量探索器處理的最近頁面瀏覽量上限。較高的限制涵蓋更多流量，但在資源較少的資料庫伺服器上可能需要更久載入或發生逾時。"
     gravatar_enabled: "使用 <a href='https://gravatar.com/'>Gravatar</a> 服務提供使用者大頭貼。停用後，使用者將無法改用 Gravatar 大頭貼，但不會影響已經使用的使用者。"
     gravatar_name: "指定 Gravatar 服務提供者的名稱。此名稱通常用於識別向網站提供 Gravatar 大頭貼的來源。"
@@ -2633,13 +2620,11 @@ zh_TW:
     lazy_load_categories_groups: "只為這些群組的使用者延遲載入分類資訊。可提升具有大量分類之網站的效能。"
     enable_auto_grid_images: "在編輯器中上傳 3 張以上圖片時，自動使用 [grid] 標籤包住圖片。"
     enable_new_checkbox_style: "啟用重新設計的 FormKit 核取方塊樣式。"
-    enable_new_post_reactions_menu: "啟用重新設計的貼文按讚與回應選單，支援無限捲動及原生行動體驗。"
     enable_composer_redesign: "啟用重新設計的編輯器。"
     prioritize_recently_used_tags: "建立或編輯主題並新增標籤時，在論壇最熱門標籤之前，先於清單頂端顯示成員最近在自己主題中使用的標籤。"
     experimental_impersonation_time_limit_minutes: "模擬身分工作階段自動結束前的持續時間。"
     page_loading_indicator: "設定在 Discourse 內進行頁面導覽時顯示的載入指示器。「旋轉圖示」是全頁指示器；「滑動列」則在畫面頂端顯示窄條。"
     show_user_menu_avatars: "在使用者選單中顯示使用者大頭貼"
-    about_page_hidden_groups: "不要在 /about 頁面顯示特定群組的成員。"
     about_page_extra_groups: "在「關於」頁面的版主下方顯示的群組。"
     about_page_extra_groups_initial_members: "在「關於」頁面上每個群組展開顯示的成員人數。"
     about_page_extra_groups_show_description: "是否在「關於」頁面包含群組說明。"
@@ -2678,7 +2663,6 @@ zh_TW:
     nested_replies_hot_preload_depth_penalty: "在熱門檢視中選擇要預先展開的巢狀回覆時，每增加一層深度便扣除的優先順序。"
     nested_replies_default_sort: "巢狀回覆檢視的預設排序演算法。"
     nested_replies_max_depth: "串接回覆的最大視覺巢狀深度。超過此深度的貼文會顯示「繼續此討論串」連結。"
-    nested_replies_backfill_batch_size: "每批巢狀回覆統計資料回填要處理的主題數量。"
     nested_replies_stats_maintenance_enabled: "即使停用巢狀回覆，仍維護巢狀回覆統計資料。"
     nested_replies_cap_nesting_depth: "將回覆巢狀深度限制在最大視覺深度。啟用後，對最深層級的回覆會重新指定為同層項目，而非子項目。"
     enable_new_defaults_for_trust_level_3_requirements: "我們已更新信任等級 3 的預設要求，使其更適合大型活躍社群的成員。如果您先前已覆寫這些設定，此即將推出的變更不會產生影響。"
@@ -2778,10 +2762,29 @@ zh_TW:
       mediaconvert_output_subdirectory_required: "必須提供 MediaConvert 輸出子目錄。"
       s3_credentials_required_for_video_conversion: "影片轉換需要 S3 認證資訊。請設定 S3 存取金鑰或啟用 IAM 設定檔。"
     keywords:
+      about_banner_image: "橫幅圖片"
+      about_page_extra_groups: "群組清單"
+      about_page_extra_groups_initial_members: "展開顯示的成員"
+      about_page_extra_groups_order: "排序順序"
+      about_page_extra_groups_show_description: "包含說明"
       clean_up_inactive_users_after_days: "已停用|非作用中|未啟用"
+      company_url: "網站"
+      default_composition_mode: "RTE|豐富文字|編輯器|Markdown|豐富文字編輯器"
+      embed_full_app: "完整應用程式模式"
+      extended_site_description: "社區描述"
+      large_icon: "方形圖示"
+      logo: "主要標誌"
+      logo_dark: "主標誌深色"
+      logo_small: "小型標誌"
+      logo_small_dark: "小標誌深色"
       navigation_menu: "側邊欄|標頭下拉式選單"
       purge_unactivated_users_grace_period_days: "已停用|非作用中|未啟用"
-      default_composition_mode: "RTE|豐富文字|編輯器|Markdown|豐富文字編輯器"
+      short_site_description: "社群標題"
+      site_contact_group_name: "網站聯絡人群組"
+      site_contact_username: "網站聯絡人名稱"
+      site_description: "社區摘要"
+      title: "社群名稱"
+      welcome_banner_image: "背景圖片"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4350,34 +4353,18 @@ zh_TW:
       title: "帳號已停權"
       subject_template: "[%{email_prefix}] 您的帳號已被停權"
       subject_template_improved: "您的帳號已被停權"
-      text_body_template: |
-        您的論壇帳號已被停權至 %{suspended_till}。
-
-        原因－%{reason}
     account_suspended_forever:
       title: "帳號已停權"
       subject_template: "[%{email_prefix}] 您的帳號已被停權"
       subject_template_improved: "您的帳號已被停權"
-      text_body_template: |
-        您的論壇帳號已被停權。
-
-        原因－%{reason}
     account_silenced:
       title: "帳號已禁言"
       subject_template: "[%{email_prefix}] 您的帳號已被禁言"
       subject_template_improved: "您的帳號已被禁言"
-      text_body_template: |
-        您的論壇帳號已被禁言至 %{silenced_till}。
-
-        原因－%{reason}
     account_silenced_forever:
       title: "帳號已禁言"
       subject_template: "[%{email_prefix}] 您的帳號已被禁言"
       subject_template_improved: "您的帳號已被禁言"
-      text_body_template: |
-        您的論壇帳號已被禁言。
-
-        原因－%{reason}
     account_deleted:
       title: "帳號已刪除"
       subject_template: "[%{email_prefix}] 您的帳號已被刪除"
@@ -4842,10 +4829,8 @@ zh_TW:
       本網站由您[友好的版主團隊](%{base_path}/about)和*您*（社群）共同營運。如果您對事情的運作方式有任何其他疑問，請在%{feedback_category}中開設新主題，我們一起討論！如果您有無法通過元主題或檢舉解決的嚴重或緊急問題，請[聯系版主](%{base_path}/about)。
   tos_topic:
     title: "服務條款"
-    body: "<h2 id=\"heading--change-me\"><a href=\"#heading--change-me\">更改我</a></h2>\n\n論壇管理員，下面是隱私權政策的示例起始模板，您需要自訂該模板以滿足您的網站需求。\n\n這些條款并不制約 <%{base_url}> 下的本網際網路論壇的使用，但有一天可能制約。這種情況下，要使用本論壇，您必須同意營運本論壇的公司 %{company_name} 的這些條款。\n\n本公司可能根據其他條款提供其他產品和服務。這些條款僅適用于本論壇的使用。\n\n跳轉到：\n\n- [重要條款](#heading--important-terms)\n- [您使用本論壇的權限](#heading--permission)\n- [論壇使用條件](#heading--conditions)\n- [可接受的使用](#heading--acceptable-use)\n- [內容標準](#heading--content-standards)\n- [執法](#heading--enforcement)\n- [您的帳號](#heading--your-account)\n- [您的內容](#heading--your-content)\n- [您的責任](#heading--responsibility)\n- [免責聲明](#heading--disclaimers)\n- [責任限制](#heading--liability)\n- [反饋](#heading--feedback)\n- [終止](#heading--termination)\n- [爭議](#heading--disputes)\n- [一般條款](#heading--general)\n- [聯系方式](#heading--contact)\n- [變更](#heading--changes)\n\n<h2 id=\"heading--important-terms\"><a href=\"#heading--important-terms\">重要條款</a></h2>\n\n***這些條款包括許多影響您的權利和責任的重要條款，如[免責聲明](#heading--disclaimers)中的免責聲明、[責任限制](#heading--liability)中本公司對您的責任限制、您同意依據[使用的責任](#heading--responsibility)賠償本公司因您濫用本論壇而造成的損失并同意依據[爭議](#heading--disputes)解決爭議。***\n\n<h2 id=\"heading--permission\"><a href=\"#heading--permission\">您使用本論壇的權限</a></h2>\n\n本公司依據這些條款向您授予使用本論壇的權限。每個人都需要同意這些條款才能使用本論壇。\n\n<h2 id=\"heading--conditions\"><a href=\"#heading--conditions\">論壇使用條件</a></h2>\n\n您使用本論壇的權限受以下條件限制：\n\n1. 您必須年滿十八周歲。\n\n2. 如果本公司直接聯系您，表示您無法再使用本論壇，您將無法再使用本論壇。\n\n3. 您必須按照[可接受的使用](#heading--acceptable-use)和[內容標準](#heading--content-standards)使用本論壇。\n\n<h2 id=\"heading--acceptable-use\"><a href=\"#heading--acceptable-use\">可接受的使用</a></h2>\n\n1. 在使用本論壇時不得違反法律。\n\n2. 未經他人特別許可，不得在本論壇上使用或試圖使用他人的帳號。\n\n3. 不得在本論壇上購買、出售或以其他方式交易使用者名或其他唯一標識符。\n\n4. 不得通過本論壇發送廣告、連鎖信或其他征求，也不得使用本論壇收集地址或其他個人資料，將其用于商業郵寄名單或資料庫。\n\n5. 不得自動訪問本論壇，或監控本論壇，如通過網路爬蟲、瀏覽器外掛程式或附加元件，或其他非 Web 瀏覽器的電腦程式。如果您運行公開的搜尋引擎，您可以爬取本論壇來為搜尋引擎建立索引。\n\n6. 不得使用本論壇向分發名單、新聞組或群組郵件別名發送電子郵件。\n\n7. 不得虛假地暗示您隸屬于本公司或得到本公司的認可。\n\n8. 不得在其他網頁上對本論壇上的圖片或其他非超文本內容建立超連結。\n\n9. 不得從在本論壇上下載的材料中刪除任何顯示專有所有權的標記。\n\n10. 不得在其他網站上使用 `<iframe>` 顯示本論壇的任何部分。\n\n11. 不得禁用、避免或規避本論壇的任何安全或訪問限制。\n\n12. 不得通過不合理的請求量，或旨在對本論壇底層的資訊系統施加不合理負載的請求，對本論壇的基礎架構造成壓力。\n\n13. 不得通過本論壇冒充他人。\n\n14. 不得鼓勵或幫助任何人違反這些條款。\n\n<h2 id=\"heading--content-standards\"><a href=\"#heading--content-standards\">內容標準</a></h2>\n\n1. 不得向本論壇提交非法、冒犯性或傷害他人的內容。這包括存在騷擾、不當、辱罵或仇恨行為的內容。\n\n2. 不得向本論壇提交違反法律、侵犯任何人的知識產權、侵犯任何人隱私或違反您與他人簽訂的協議的內容。\n\n3. 不得向本論壇提交包含惡意電腦代碼（如電腦病毒或間諜軟件）的內容。\n\n4. 不得以占位符形式向本論壇提交內容來保留特定地址、使用者名或其他唯一標識符。\n\n5. 不得使用本論壇披露您無權披露的資訊，如他人的機密或個人資訊。\n\n<h2 id=\"heading--enforcement\"><a href=\"#heading--enforcement\">執法</a></h2>\n\n本公司可以在最大的法律范圍內調查和起訴違反這些條款的行為。本公司可以通知執法部門并與之合作起訴違反法律和這些條款的行為。\n\n本公司保留出于任何理由更改、編輯和刪除本論壇內容的權利。如果您認為有人在向本論壇提交內容時違反了這些條款，請[立即聯系我們](#heading--contact)。 \n\n<h2 id=\"heading--your-account\"><a href=\"#heading--your-account\">您的帳號</a></h2>\n\n您必須創建并登錄帳號才能使用本論壇的某些功能。\n\n要創建帳號，您必須提供有關自己的一些資訊。如果您創建帳號，您同意至少提供有效的電子郵件地址，并使該地址保持最新狀態。您可以隨時通過向 <%{contact_email}> 發送電子郵件關閉您的帳號。\n\n您同意對使用您的帳號執行的所有操作負責，無論該操作是否經過您的授權，直到您關閉您的帳號或通知本公司您的帳號被盜用。如果您懷疑您的帳號被盜用，您同意立即通知本公司。您同意為您的帳號選擇安全的密碼并對其保密。\n\n根據其處理版權相關移除請求的政策，或者如果本公司合理地認為您違反了這些條款中的任何規則，本公司可能會限制、暫停或關閉您在本論壇上的帳號。\n\n<h2 id=\"heading--your-content\"><a href=\"#heading--your-content\">您的內容</a></h2>\n\n這些條款中的任何內容都不賦予本公司對您在本論壇分享的知識產權的任何所有權，例如您的帳號資訊、貼文或您提交給本論壇的其他內容。這些條款中的任何內容也不賦予您對本公司知識產權的任何所有權。\n\n在您與本公司之間，您仍然對您提交到本論壇的內容全權負責。您同意不會錯誤地暗示您提交到本論壇的內容由本公司倡議或已獲得本公司批準。這些條款并不要求本公司根據這些條款儲存、維護或提供您提交的內容的副本，也不要求本公司對其進行更改。\n\n您提交到本論壇的內容屬于您，您可以決定為他人賦予何種權限。但您至少應允許本公司向本論壇其他使用者提供您提交到本論壇的內容。該特殊許可允許公司復制、發布和分析您提交到本論壇的內容。 \n\n當您提交的內容從本論壇中刪除時，無論是由您還是由本公司刪除，當最后一份副本從公司的備份、快取和其他系統中消失時，本公司的特殊許可即告終止。您對提交的內容申請的其他許可，如[創用 CC](https://creativecommons.org)許可，可以在您的內容刪除后繼續。這些許可可能授予他人或本公司再次通過本論壇分享您的內容的權利。 \n\n接收您提交到本論壇的內容的其他人可能會違反您的內容許可條款。您同意本公司不為這些違規行為或其后果對您負責。\n\n<h2 id=\"heading--responsibility\"><a href=\"#heading--responsibility\">您的責任</a></h2>\n\n您同意賠償本公司因您違反這些條款，或因其他人使用您在本論壇上的帳號違反這些條款而被他人提起的法律索賠。您和本公司都同意盡快就您可能需要賠償本公司的任何法律索賠通知對方。如果本公司未能及時通知您某項法律索賠，您不必就您本可以通過及時通知進行辯護或減輕的損失對本公司進行賠償。您同意允許本公司控制對您必須賠償本公司的法律索賠進行的調查、辯護和解決，并配合這些努力。本公司同意，未經您事先同意，不會同意任何替您認錯或給您強加義務的和解。 \n\n<h2 id=\"heading--disclaimers\"><a href=\"#heading--disclaimers\">免責聲明</a></h2>\n\n***您接受使用本論壇和本論壇內容的所有風險。在法律允許的范圍內，本公司及其供應商按原樣提供本論壇，不提供任何保證。***\n\n本論壇可以超連結到和集成其他人營運的本論壇和服務。本公司不對他人營運的服務或可能提供的內容做出任何保證。使用他人營運的服務可能受您與營運該服務的一方之間的其他條款制約。 \n\n<h2 id=\"heading--liability\"><a href=\"#heading--liability\">責任限制</a></h2>\n\n***當您同意這些條款時，本公司及其供應商均不為其人員無法合理預見的違約損害對您承擔責任。***\n\n***在法律允許的范圍內，對于與本論壇或本論壇內容有關的任何類型的索賠，對您的全部責任將限制在 50 美元。***\n\n<h2 id=\"heading--feedback\"><a href=\"#heading--feedback\">反饋</a></h2>\n\n本公司歡迎您對本論壇提供反饋和建議。請參閱以下[聯系方式](#heading--contact)部分，了解與我們聯系的方式。\n\n您同意本公司可以自由地根據您提供的反饋和建議采取行動，并且本公司不必通知您相關反饋已被使用，也不必獲得您的使用許可或向您付款。您同意不提交您認為可能屬于您自己或他人機密或專有資訊的反饋或建議。\n\n<h2 id=\"heading--termination\"><a href=\"#heading--termination\">終止</a></h2>\n\n您或本公司可以隨時終止這些條款中所述的協議。當我們的協議終止時，您使用本論壇的權限即告終止。\n\n以下條款在我們的協議終止后仍然有效：[您的內容](#heading--your-content)、[反饋](#heading--feedback)、[您的責任](#heading--responsibility)、[免責聲明](#heading--disclaimers)、[責任限制](#heading--liability)和[一般條款](#heading--general)。\n\n<h2 id=\"heading--disputes\"><a href=\"#heading--disputes\">爭議</a></h2>\n\n%{governing_law} 將管控與這些條款或您對本論壇的使用有關的任何爭議。\n\n您和本公司同意僅在%{city_for_disputes}的州或聯邦法院尋求與這些條款相關的禁令。您和本公司均不反對這些法院的管轄權、訴訟地或審判地。\n\n***您和本公司將通過具有約束力的美國仲裁協會仲裁解決任何爭議，而不是根據《電腦欺詐和濫用法案》尋求禁令或索賠。仲裁將遵循美國仲裁協會的 Commercial Arbitration Rules（商業仲裁規則）和 Supplementary Procedures for Consumer Related Disputes（消費者相關爭議補充程式）。仲裁將在%{city_for_disputes}進行。無論您是作為原告還是集體成員，您都將以個人身份解決任何爭議，而不是作為集體訴訟或其他代表人訴訟的一部分。未經本公司許可，任何仲裁員不得將任何爭議與任何其他仲裁合并。***\n\n任何仲裁裁決都將包括仲裁費用、合理的律師費和證人的合理費用。您和本公司可以在任何有管轄權的法院進行仲裁裁決。\n\n<h2 id=\"heading--general\"><a href=\"#heading--general\">一般條款</a></h2>\n\n如果這些條款中的某項規定無法按書面規定執行，但可以通過修改使其可以執行，則應在必要的最低范圍內修改該規定，使其可以執行。否則，應刪除該規定。\n\n您不得轉讓您與本公司簽訂的協議。本公司可以將您的協議轉讓給本公司的任何附屬公司、獲得本公司控制權的任何其他公司或購買與本論壇相關的公司資產的任何其他公司。任何試圖違反這些條款進行的轉讓均不具有法律效力。\n\n行使本協議項下的任何權利和對任何違反本協議的行為不予追究均不表示對違反本協議的任何其他行為不予追究。\n\n這些條款包含了您與本公司之間就您對本論壇使用達成的所有協議條款。這些條款完全取代關于您的本論壇使用的任何其他協議，無論是否為書面協議。\n\n<h2 id=\"heading--contact\"><a href=\"#heading--contact\">聯系方式</a></h2>\n\n您可以通過以下方式根據這些條款通知本公司，以及將問題發送給本公司：<%{contact_email}>。 \n\n本公司可能會根據這些條款，使用您在本論壇上為您的帳號提供的電子郵件地址，或通過在本論壇首頁或您的帳號頁面上發布消息來通知您。\n\n<h2 id=\"heading--changes\"><a href=\"#heading--changes\">變更</a></h2>\n\n本公司上次更新這些條款的日期為 [在此處插入上次更新日期]，并可能再次更新這些條款。本公司將在本論壇上發布所有更新。對于包含重大變更的更新，如果您創建了帳號并提供了有效的電子郵件地址，本公司同意向您發送電子郵件。本公司還可能在本論壇上通過特殊消息或提醒來宣布更新。 \n\n當您注意到這些條款的更新后，您必須同意這些新條款才能繼續使用本論壇。\n"
   privacy_topic:
     title: "隱私權政策"
-    body: "## [論壇管理員，下面是一個您應該為您的網站定制的隱私權政策的示例起始模板。]\n\n<a name=\"collect\"></a>\n\n## [我們收集哪些資訊？](#collect)\n\n當您在我們的網站上注冊時，我們會收集您的資訊，當您通過閱讀、撰寫和評價本論壇上分享的內容參與本論壇時，我們會收集您的資料。\n\n在我們的網站上注冊時，您可能會被要求輸入您的姓名和電子郵件地址。不過，您可以在不注冊的情況下訪問我們的網站。您的電子郵件地址將通過包含唯一連結的電子郵件進行驗證。如果訪問了該連結，我們便知道您對該電子郵件地址有控制權。 \n\n在注冊和發帖時，我們會記錄貼文所來自的 IP 地址。我們還可能保留服務器日志，其中包含向我們的服務器發送的每個請求的 IP 地址。 \n\n<a name=\"use\"></a>\n\n## [我們使用您的資訊做什么](#use)\n\n我們從您處收集的任何資訊都可能通過下列一種方式使用：\n\n* 個性化設置您的體驗 &mdash; 您的資訊可以幫助我們更好地滿足您的個人需求。\n* 改進我們的網站 &mdash; 我們根據您提供給我們的資訊和反饋，不斷努力改進我們的網站。 \n* 改進客戶服務 &mdash; 您的資訊可以幫助我們更高效地回應您的客戶服務請求和支持需求。\n* 定期發送電子郵件 &mdash; 您提供的電子郵件地址可能被用于向您發送資訊、您請求的關于主題變更的通知、回應您的使用者名、回復查詢和/或其他請求或問題。\n\n<a name=\"protect\"></a>\n\n## [我們如何保護您的資訊？](#protect)\n\n我們采取各種安全措施，確保在您輸入、提交或訪問您的個人資訊時您個人資訊的安全。\n\n<a name=\"data-retention\"></a>\n\n## [資料保留策略是什么？](#data-retention)\n\n我們會盡最大努力：\n\n* 將服務器日志保留不超過 [天數] 天。\n\n<a name=\"cookies\"></a>\n\n## [我們使用 Cookie 嗎？](#cookies)\n\n是的。Cookie 是在您允許的情況下，網站或其服務提供者通過您的 Web 瀏覽器傳輸到您電腦硬碟上的小文件。這些 Cookie 使網站能夠識別您的瀏覽器，并且如果您有注冊帳號，將其與您的注冊帳號相關聯。\n\n我們使用 Cookie 來了解和保存您的偏好以便將來訪問，并收集關于網站流量和網站互動的匯總資料，以便將來可以提供更好的網站體驗和工具。我們可能與第三方服務提供者簽訂合同，以幫助我們更好地了解我們的網站訪客。這些服務提供者不允許使用代表我們收集的資訊，除非為了幫助我們開展和改進業務。\n\n<a name=\"disclose\"></a>\n\n## [我們是否向外界披露任何資訊？](#disclose)\n\n我們不向外界出售、交易或以其他方式轉讓您的個人識別資訊。這不包括協助我們營運網站、經營業務或為您提供服務的可信第三方，前提是這些第三方同意對這些資訊保密。當我們認為為了遵守法律、執行我們的網站政策或保護我們或他人的權利、財產或安全而適合發布時，我們也可能發布您的資訊。不過，無法識別個人身份的訪客資訊可能被提供給其他方，用于行銷、廣告或其他用途。\n\n<a name=\"third-party\"></a>\n\n## [第三方連結](#third-party)\n\n有時，我們可能自行決定在我們的網站上包含或提供第三方產品或服務。這些第三方網站具有單獨和獨立的隱私權政策。因此，我們對這些連結網站的內容和活動不承擔責任和義務。盡管如此，我們仍努力保護我們網站的完整性并歡迎對這些網站提供任何反饋。\n\n<a name=\"coppa\"></a>\n\n## [美國《兒童在線隱私保護法》合規性](#coppa)\n\n我們的網站、產品和服務全部面向 18 歲或以上人群。如果此服務器在美國，而且您未滿 18 歲，根據 COPPA（[兒童在線隱私保護法](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)），請勿使用本網站。\n\n<a name=\"online\"></a>\n\n## [僅在線隱私權政策](#online)\n\n本在線隱私權政策僅適用于通過我們的網站收集的資訊，不適用于離線收集的資訊。\n\n<a name=\"consent\"></a>\n\n## [您的同意](#consent)\n\n使用本網站，即表示您同意我們網站的隱私權政策。\n\n<a name=\"changes\"></a>\n\n## [我們隱私權政策的變更](#changes)\n\n如果我們決定更改我們的隱私權政策，我們將在此頁面上發布這些變更。 \n\n本文檔為 CC-BY-SA。它的最后更新日期為 [在此處插入最后更新日期]。\n"
   badges:
     errors:
       cant_delete_system_badge: 系統徽章無法刪除。
@@ -5195,7 +5180,13 @@ zh_TW:
       default: "默認"
       wcag: "WCAG"
       solarized: "Solarized"
+      neutral: "中性色"
+      shades_of_blue: "藍色色階"
+      summer: "夏日"
       dracula: "德古拉"
+      grey_amber: "灰琥珀色"
+      latte: "拿鐵"
+      dark_rose: "深玫瑰"
   wizard:
     title: "Discourse 設置"
     step:
@@ -5235,6 +5226,28 @@ zh_TW:
     graph_title: "搜尋計數"
   onebox:
     discourse:
+      event_all_day: "全天"
+      recurrence:
+        every_day: "每天"
+        every_weekday: "每個工作日"
+        every_week: "每週 %{weekday}"
+        every_two_weeks: "每隔一週的 %{weekday}"
+        every_four_weeks: "每 4 週的 %{weekday}"
+        every_month: "每月的%{ordinal}%{weekday}"
+        ordinals:
+          first: "第一個"
+          second: "第二個"
+          third: "第三個"
+          fourth: "第四個"
+          last: "最後一個"
+        weekdays:
+          sunday: "週日"
+          monday: "星期一"
+          tuesday: "週二"
+          wednesday: "週三"
+          thursday: "週四"
+          friday: "週五"
+          saturday: "週六"
       user_joined_community: "%{date}加入"
     google_meet:
       title: "Google Meet 會議"
@@ -5245,6 +5258,10 @@ zh_TW:
       truncated_file: "此檔案已被截斷。"
       show_original: "顯示原始內容"
     github:
+      header:
+        file: "檔案"
+        success: "成功"
+        pending: "處理中"
       binary_file: "此文件是二進制文件。"
       truncated_file: "此檔案已被截斷。"
       show_original: "顯示原始內容"
@@ -5258,20 +5275,11 @@ zh_TW:
       review_by: "審查者"
       pr_summary: "%{commits} 提交了更改的 %{changed_files} 文件，其中包含 %{additions} 項增加和 %{deletions} 項刪除"
       no_description: "通過在 GitHub 上創建帳號來為 %{repo} 開發做出貢獻。"
-      pr_title:
-        default: "拉取請求"
-        draft: "草稿拉取請求"
-        open: "打開拉取請求"
-        approved: "已批準的拉取請求"
-        changes_requested: "已請求更改"
-        merged: "已合并的拉取請求"
-        closed: "已關閉的拉取請求"
-      status_date:
-        open: "已開啟"
+      pr_status:
         draft: "草稿"
+        open: "開放"
         approved: "已批準"
-        changes_requested: "已請求更改"
-        merged: "已合并"
+        merged: "已合併"
         closed: "已關閉"
   discourse_push_notifications:
     popup:
@@ -5362,6 +5370,10 @@ zh_TW:
       no_context:
         watched_word: "此貼文包括一個關注詞。請查看%{link}了解更多資訊。"
     actions:
+      answer_yes:
+        title: "是"
+      answer_no:
+        title: "否"
       agree:
         title: "是"
       agree_and_keep:

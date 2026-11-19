@@ -31,6 +31,13 @@ module PageObjects
         find(".sidebar-section-link[data-link-name='everything']").click
       end
 
+      def click_edit_categories_dropdown_option
+        find("[data-section-name='categories'] .sidebar-section-header-dropdown").click
+        find(
+          ".sidebar-section-header-dropdown-menu-content [data-menu-option-id='edit-categories']",
+        ).click
+      end
+
       def click_outside
         width = page.evaluate_script("document.body.clientWidth")
         page.find("body").click(x: width - 1, y: 1)

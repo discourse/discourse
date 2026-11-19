@@ -23,11 +23,52 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     expect(reviewable.reload.potentially_illegal?).to eq(true)
   end
 
+  describe "#actions_for" do
+    it "requires classification for actions that restrict the flagged content or its author" do
+      reviewable = PostActionCreator.spam(user, post).reviewable
+
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_hide",
+        "agree_and_edit",
+        "delete_and_agree",
+        "delete_and_ignore",
+        "agree_and_suspend",
+        "agree_and_silence",
+        "delete_user",
+        "delete_user_block",
+      )
+    end
+  end
+
   describe "actions" do
     let!(:result) { PostActionCreator.spam(user, post) }
     let(:reviewable) { result.reviewable }
     let(:score) { result.reviewable_score }
     let(:guardian) { Guardian.new(moderator) }
+
+    it "keeps the spam flag pending and the author unsuspended when post deletion is forbidden" do
+      SiteSetting.tos_topic_id = post.topic_id
+
+      expect do
+        reviewable.perform(
+          moderator,
+          :agree_and_suspend,
+          reason: "spam",
+          suspend_until: 2.days.from_now,
+          post_action: "delete",
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(reviewable.reload).to be_pending
+      expect(score.reload).to be_pending
+      expect(post.user.reload).not_to be_suspended
+      expect(post.reload).not_to be_trashed
+      expect(
+        UserHistory.where(action: UserHistory.actions[:suspend_user], target_user_id: post.user_id),
+      ).to be_empty
+    end
 
     it "disagrees with flags without restoring a soft-deleted post" do
       post.update!(hidden: true)
@@ -250,6 +291,20 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post).not_to be_hidden
     end
 
+    it "agree_and_keep keeps flags rejected in an earlier review rejected" do
+      reviewable.perform(moderator, :disagree)
+      new_score =
+        PostActionCreator.inappropriate(
+          Fabricate(:user, refresh_auto_groups: true),
+          post,
+        ).reviewable_score
+
+      reviewable.reload.perform(moderator, :agree_and_keep)
+
+      expect(score.reload).to be_disagreed
+      expect(new_score.reload).to be_agreed
+    end
+
     describe "with reviewable claiming enabled" do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
 
@@ -295,17 +350,29 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "agree_and_suspend agrees with the flags and keeps the post" do
-      reviewable.perform(moderator, :agree_and_suspend)
+      reviewable.perform(
+        moderator,
+        :agree_and_suspend,
+        reason: "spam",
+        suspend_until: 2.days.from_now,
+      )
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post).not_to be_hidden
+      expect(post.user.reload).to be_suspended
     end
 
     it "agree_and_silence agrees with the flags and keeps the post" do
-      reviewable.perform(moderator, :agree_and_silence)
+      reviewable.perform(
+        moderator,
+        :agree_and_silence,
+        reason: "spam",
+        silenced_till: 2.days.from_now,
+      )
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post).not_to be_hidden
+      expect(post.user.reload).to be_silenced
     end
 
     it "agree_and_hide agrees with the flags and hides the post" do
@@ -504,6 +571,849 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform" do
+    context "when sending moderation notices" do
+      let(:rule) do
+        {
+          "ground" => "Community Guidelines: Be agreeable",
+          "explanation" => "Personal attacks are not allowed.",
+        }
+      end
+      let(:classification) do
+        { community_rule: rule, category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY }
+      end
+      let(:flag_reason) { I18n.t("flag_reasons.inappropriate", base_path: Discourse.base_path) }
+      let(:paragraph) do
+        "More specifically, your post violated the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}"
+      end
+
+      before do
+        enable_dsa_reporting(community_rules: [rule])
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      def existing_notice(
+        type:,
+        recipient: post.user,
+        flag_reason: self.flag_reason,
+        reply: nil,
+        appeal: true
+      )
+        options = {
+          url: post.url,
+          edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
+          flagged_post_raw_content: post.raw,
+          flagged_post_response_raw_content: reply&.raw,
+          flag_reason:,
+        }
+        if appeal
+          options.merge!(
+            body_suffix_key: "system_messages.moderation_appeal_instructions",
+            email: "appeals@example.com",
+          )
+        end
+
+        SystemMessage.create(recipient, type, options)
+      end
+
+      def expect_notice(args:, baseline:, paragraph: nil, flag_reason: self.flag_reason)
+        expected_body = baseline.raw
+        expected_body =
+          expected_body.sub(flag_reason, "#{flag_reason}\n\n#{paragraph}") if paragraph
+
+        Jobs::SendSystemMessage.new.perform(args)
+
+        expect(Post.last.raw).to eq(expected_body)
+        expect(Post.last.topic.title).to eq(baseline.topic.title)
+        expect(Post.last.topic.allowed_users).to match_array(baseline.topic.allowed_users)
+      end
+
+      it "adds the selected rule and explanation to the hiding notice for agree_and_hide" do
+        baseline = existing_notice(type: :post_hidden)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "adds the selected rule and explanation to the removal notice for delete_and_agree" do
+        baseline = existing_notice(type: :flags_agreed_and_post_deleted)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :delete_and_agree, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "adds the selected rule and explanation to the removal notice for delete_and_ignore" do
+        baseline = existing_notice(type: :flags_agreed_and_post_deleted)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :delete_and_ignore, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "explains that the original post violated the rule in reply notices for delete_and_agree_replies" do
+        reply =
+          PostCreator.create!(
+            Fabricate(:user),
+            topic_id: post.topic_id,
+            reply_to_post_number: post.post_number,
+            raw: "Please keep the discussion respectful.",
+          )
+        post.reload
+        baseline = existing_notice(type: :flags_agreed_and_post_deleted)
+        responder_reason =
+          I18n.t("flag_reasons.responder.inappropriate", base_path: Discourse.base_path)
+        responder_baseline =
+          existing_notice(
+            type: :flags_agreed_and_post_deleted_for_responders,
+            recipient: reply.user,
+            flag_reason: responder_reason,
+            reply:,
+          )
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :delete_and_agree_replies, dsa_classification: classification)
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        expect_notice(
+          args: notices.find { |notice| notice["user_id"] == post.user_id },
+          baseline:,
+          paragraph:,
+        )
+        expect_notice(
+          args: notices.find { |notice| notice["user_id"] == reply.user_id },
+          baseline: responder_baseline,
+          flag_reason: responder_reason,
+          paragraph:
+            "More specifically, the post you replied to violated the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}",
+        )
+      end
+
+      it "explains that the original post violated the rule in reply notices for delete_and_ignore_replies" do
+        reply =
+          PostCreator.create!(
+            Fabricate(:user),
+            topic_id: post.topic_id,
+            reply_to_post_number: post.post_number,
+            raw: "Please keep the discussion respectful.",
+          )
+        post.reload
+        baseline = existing_notice(type: :flags_agreed_and_post_deleted)
+        responder_reason =
+          I18n.t("flag_reasons.responder.inappropriate", base_path: Discourse.base_path)
+        responder_baseline =
+          existing_notice(
+            type: :flags_agreed_and_post_deleted_for_responders,
+            recipient: reply.user,
+            flag_reason: responder_reason,
+            reply:,
+          )
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(
+          moderator,
+          :delete_and_ignore_replies,
+          dsa_classification: classification,
+        )
+
+        notices = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first }
+        expect(notices.size).to eq(2)
+        expect_notice(
+          args: notices.find { |notice| notice["user_id"] == post.user_id },
+          baseline:,
+          paragraph:,
+        )
+        expect_notice(
+          args: notices.find { |notice| notice["user_id"] == reply.user_id },
+          baseline: responder_baseline,
+          flag_reason: responder_reason,
+          paragraph:
+            "More specifically, the post you replied to violated the following community guideline: **#{rule["ground"]}**. #{rule["explanation"]}",
+        )
+      end
+
+      it "adds the selected rule and explanation to the notice when a post is hidden again" do
+        post.update!(hidden_at: 1.day.ago)
+        baseline = existing_notice(type: :post_hidden_again)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "ignores a supplied classification when DSA reporting is disabled" do
+        SiteSetting.dsa_reporting_enabled = false
+        baseline = existing_notice(type: :post_hidden, appeal: false)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:)
+      end
+
+      it "keeps appeal instructions when DSA is enabled but no rule is selected" do
+        baseline = existing_notice(type: :post_hidden)
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide)
+
+        expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:)
+      end
+    end
+
+    context "when performing agree_and_edit on a flagged post reviewable" do
+      fab!(:flagged, :reviewable_flagged_post)
+
+      it "approves the flagged post reviewable through agree_and_edit using the author's saved revision" do
+        PostRevisor.new(flagged.post).revise!(
+          flagged.post.user,
+          { raw: "The author corrected this flagged post." },
+          force_new_version: true,
+        )
+        revision = flagged.post.revisions.last
+
+        result = flagged.perform(moderator, :agree_and_edit, post_version: revision.number)
+
+        expect(result).to be_success
+        expect(result.post_revision).to eq(revision)
+        expect(flagged.reload).to be_approved
+      end
+
+      it "rejects agree_and_edit on a flagged post reviewable when the revision predates its latest flag" do
+        PostRevisor.new(flagged.post).revise!(
+          moderator,
+          raw: "The moderator corrected this post before the latest flag.",
+        )
+        revision = flagged.post.revisions.last
+        freeze_time 1.minute.from_now
+        flagged.add_score(Fabricate(:user), PostActionType.types[:spam])
+
+        expect do
+          flagged.perform(moderator, :agree_and_edit, post_version: revision.number)
+        end.to raise_error(Discourse::InvalidParameters)
+
+        expect(flagged.reload).to be_pending
+      end
+    end
+
+    it "creates no statement for a flagged post deletion when the dsa_reporting_enabled site setting is disabled" do
+      flagged = Fabricate(:reviewable_flagged_post)
+      SiteSetting.dsa_reporting_enabled = false
+
+      expect { expect(flagged.perform(moderator, :delete_and_agree)).to be_success }.not_to change(
+        DsaStatementOfRecord,
+        :count,
+      )
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      fab!(:admin)
+      fab!(:post)
+      fab!(:reviewable) { PostActionCreator.spam(user, post).reviewable }
+
+      before do
+        freeze_time
+        enable_dsa_reporting
+      end
+
+      it "creates no statement when unsilence_user handles the flagged post reviewable" do
+        post.update!(hidden: true, user_deleted: true)
+        UserSilencer.silence(post.user, admin, post_id: post.id)
+
+        expect { expect(reviewable.perform(admin, :unsilence_user)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when unsilence_user_and_ignore handles the flagged post reviewable" do
+        post.update!(hidden: true, user_deleted: true)
+        UserSilencer.silence(post.user, admin, post_id: post.id)
+
+        expect {
+          expect(reviewable.perform(admin, :unsilence_user_and_ignore)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when a flagged post suspension fails" do
+        expect {
+          expect(
+            reviewable.perform(admin, :agree_and_suspend, reason: "Spam", suspend_until: "invalid"),
+          ).not_to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when agree_and_keep handles the flagged post reviewable" do
+        expect { expect(reviewable.perform(admin, :agree_and_keep)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "records a statement when agree_and_hide handles the flagged post reviewable" do
+        expect { reviewable.perform(admin, :agree_and_hide) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "Access to the flagged post was disabled.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        )
+      end
+
+      it "records a fully automated decision when a bot agrees with a flagged post and hides it" do
+        bot = Fabricate(:bot)
+
+        expect { reviewable.perform(bot, :agree_and_hide, guardian: admin.guardian) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "Access to the flagged post was disabled.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_FULLY",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        )
+      end
+
+      it "records an indefinite restriction when a moderator agrees with a flagged post and permanently suspends its author" do
+        expect {
+          reviewable.perform(
+            admin,
+            :agree_and_suspend,
+            reason: "Spam",
+            suspend_until: 1000.years.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => post.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+        )
+      end
+
+      it "records an indefinite restriction when a moderator agrees with a flagged post and permanently silences its author" do
+        expect {
+          reviewable.perform(
+            admin,
+            :agree_and_silence,
+            reason: "Spam",
+            silenced_till: 1000.years.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged post had their ability to participate restricted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => post.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        )
+      end
+
+      it "records a statement when agree_and_keep_hidden handles the flagged post reviewable" do
+        post.update!(hidden: true)
+
+        expect { reviewable.perform(admin, :agree_and_keep_hidden) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "Access to the flagged post was disabled.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        )
+      end
+
+      it "records a statement when agree_and_keep_deleted handles the flagged post reviewable" do
+        post.trash!(admin)
+
+        expect { reviewable.perform(admin, :agree_and_keep_deleted) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "creates no statement when agree_and_restore handles the flagged post reviewable" do
+        post.update!(user_deleted: true)
+
+        expect {
+          expect(reviewable.perform(admin, :agree_and_restore)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when disagree handles the flagged post reviewable" do
+        expect { expect(reviewable.perform(admin, :disagree)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when disagree_and_restore handles the flagged post reviewable" do
+        post.update!(hidden: true)
+
+        expect {
+          expect(reviewable.perform(admin, :disagree_and_restore)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when disagree_and_keep_deleted handles the flagged post reviewable" do
+        post.trash!(admin)
+
+        expect {
+          expect(reviewable.perform(admin, :disagree_and_keep_deleted)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "creates no statement when ignore handles the flagged post reviewable" do
+        expect { expect(reviewable.perform(admin, :ignore)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when ignore_and_do_nothing handles the flagged post reviewable" do
+        expect {
+          expect(reviewable.perform(admin, :ignore_and_do_nothing)).to be_success
+        }.not_to change(DsaStatementOfRecord, :count)
+      end
+
+      it "records a statement when delete_and_agree handles the flagged post reviewable" do
+        expect { reviewable.perform(admin, :delete_and_agree) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "records a statement when delete_and_ignore handles the flagged post reviewable" do
+        expect { reviewable.perform(admin, :delete_and_ignore) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "records a statement when agree_and_edit handles the flagged post reviewable" do
+        post.revise(admin, raw: "The moderator corrected this flagged post.")
+
+        expect {
+          reviewable.perform(admin, :agree_and_edit, post_version: post.reload.version)
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was edited.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_OTHER"],
+          "decision_visibility_other" => "Content edited",
+        )
+      end
+
+      it "records the flagged post author suspension when additional users are suspended" do
+        author = post.user
+        author.update!(created_at: 4.days.ago)
+        same_date_user = Fabricate(:user, created_at: author.created_at)
+        other_date_user = Fabricate(:user, created_at: 2.days.ago)
+
+        expect {
+          reviewable.perform(
+            admin,
+            :agree_and_suspend,
+            reason: "Related accounts",
+            suspend_until: 2.days.from_now,
+            other_user_ids: [same_date_user.id, other_date_user.id],
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        expect(author.reload).to be_suspended
+        expect(same_date_user.reload).to be_suspended
+        expect(other_date_user.reload).to be_suspended
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => post.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when agree_and_suspend handles the flagged post reviewable" do
+        expect {
+          reviewable.perform(
+            admin,
+            :agree_and_suspend,
+            reason: "Spam",
+            suspend_until: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => post.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when agree_and_suspend handles a hidden flagged post reviewable" do
+        post.update!(hidden: true)
+
+        expect {
+          reviewable.perform(
+            admin,
+            :agree_and_suspend,
+            reason: "Spam",
+            suspend_until: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => post.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when agree_and_silence handles the flagged post reviewable" do
+        expect {
+          reviewable.perform(
+            admin,
+            :agree_and_silence,
+            reason: "Spam",
+            silenced_till: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged post had their ability to participate restricted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => post.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          "end_date_service_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when agree_and_silence handles a deleted flagged post reviewable" do
+        post.trash!(admin)
+
+        expect {
+          reviewable.perform(
+            admin,
+            :agree_and_silence,
+            reason: "Spam",
+            silenced_till: 2.days.from_now,
+          )
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" =>
+            "The author of the flagged post had their ability to participate restricted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_type_other" => "User account",
+          "content_date" => post.user.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          "end_date_service_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when delete_user handles the flagged post reviewable" do
+        content_date = reviewable.target_created_by.created_at.to_date.iso8601
+
+        expect { reviewable.perform(admin, :delete_user) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post had their account deleted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => content_date,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+        )
+      end
+
+      it "records a statement when delete_user_block handles the flagged post reviewable" do
+        content_date = reviewable.target_created_by.created_at.to_date.iso8601
+
+        expect { reviewable.perform(admin, :delete_user_block) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The author of the flagged post had their account deleted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => content_date,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+        )
+      end
+
+      it "records a statement when delete_and_agree_replies handles the flagged post reviewable" do
+        reply =
+          Fabricate(
+            :post,
+            topic: post.topic,
+            reply_to_post_number: post.post_number,
+            created_at: post.created_at,
+          )
+        PostReply.create!(post_id: post.id, reply_post_id: reply.id)
+        post.update!(reply_count: 1)
+
+        expect { reviewable.perform(admin, :delete_and_agree_replies) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+
+      it "records a statement when delete_and_ignore_replies handles the flagged post reviewable" do
+        reply =
+          Fabricate(
+            :post,
+            topic: post.topic,
+            reply_to_post_number: post.post_number,
+            created_at: post.created_at,
+          )
+        PostReply.create!(post_id: post.id, reply_post_id: reply.id)
+        post.update!(reply_count: 1)
+
+        expect { reviewable.perform(admin, :delete_and_ignore_replies) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The flagged post was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "No",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_TEXT"],
+          "content_date" => post.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
+      end
+    end
+  end
+
   describe "#perform_delete_and_agree" do
     it "notifies the user about the flagged post deletion" do
       reviewable = Fabricate(:reviewable_flagged_post)
@@ -520,8 +1430,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   end
 
   describe "#perform_delete_and_agree_replies" do
-    let(:flagged_post) { Fabricate(:reviewable_flagged_post) }
-    let!(:reply) { create_reply(flagged_post.target) }
+    fab!(:flagged_post, :reviewable_flagged_post)
+    fab!(:reply) { create_reply(flagged_post.target) }
 
     before { flagged_post.target.update(reply_count: 1) }
 
@@ -570,8 +1480,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "#perform_unsilence_user" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
     let(:guardian) { Guardian.new(moderator) }
 
     it "is offered whenever the author is currently silenced" do
@@ -630,8 +1540,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "penalty_effect" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
     let(:guardian) { Guardian.new(moderator) }
 
     def effect_for(action_id)
@@ -701,8 +1611,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
   describe "#author_penalties" do
     fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:flagged_post) { Fabricate(:post, user: author) }
-
-    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
+    fab!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
 
     it "is empty when the author has no penalty" do
       expect(reviewable.author_penalties).to eq([])
@@ -796,6 +1705,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       reviewable.perform(moderator, :disagree_and_restore)
 
       assert_pm_creation_enqueued(reviewable.post.user_id, "flags_disagreed")
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        enable_dsa_reporting
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the restored post notice" do
+        reviewable = Fabricate(:reviewable_flagged_post)
+        reviewable.post.update(
+          hidden: true,
+          hidden_at: Time.zone.now,
+          hidden_reason_id: PostActionType.types[:spam],
+        )
+
+        reviewable.perform(moderator, :disagree_and_restore)
+
+        args = Jobs::SendSystemMessage.jobs.last["args"][0].with_indifferent_access
+        Jobs::SendSystemMessage.new.execute(args)
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
     end
 
     it "unsilences the user if they were silenced for the post" do

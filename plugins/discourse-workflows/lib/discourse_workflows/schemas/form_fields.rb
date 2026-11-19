@@ -5,6 +5,8 @@ module DiscourseWorkflows
     module FormFields
       MAX_FIELD_VALUE_LENGTH = 10_000
       EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
+      DISPLAY_ONLY_FIELD_TYPE = "html"
+      CHOICE_FIELD_TYPES = %w[dropdown radio].freeze
 
       ValidationResult =
         Struct.new(:errors, :data, keyword_init: true) do
@@ -134,7 +136,8 @@ module DiscourseWorkflows
       module_function
 
       def field_key(field)
-        field["field_name"].presence || field["field_label"].to_s.parameterize(separator: "_")
+        field["field_name"].presence ||
+          field["field_label"].to_s.parameterize(separator: "_", locale: SiteSetting.default_locale)
       end
 
       def with_keys(fields)
@@ -153,7 +156,7 @@ module DiscourseWorkflows
             next field if field["field_value"].present?
 
             field.merge("field_value" => normalized_query_parameters[key])
-          when "password", "html"
+          when "password", DISPLAY_ONLY_FIELD_TYPE
             field
           else
             field.merge("default_value" => normalized_query_parameters[key])
@@ -174,6 +177,38 @@ module DiscourseWorkflows
         end
       end
 
+      def resolve_trigger_configuration(parameters, workflow_id:, workflow_name:, user:)
+        ExpressionResolver.resolve_hash(
+          parameters.deep_stringify_keys,
+          context: {
+            "__execution" => {
+              "workflow_id" => workflow_id,
+              "workflow_name" => workflow_name,
+              "resume_url" => "",
+              "resumeFormUrl" => "",
+            },
+          },
+          user:,
+        )
+      end
+
+      def choice_values(field)
+        options = field["options"]
+        values = options.is_a?(Hash) ? options["values"] : options
+
+        Array
+          .wrap(values)
+          .filter_map do |option|
+            value = option.is_a?(Hash) ? option["value"] || option[:value] : option
+            case value
+            when String
+              value.presence
+            when Numeric, true
+              value.to_s
+            end
+          end
+      end
+
       def validate_submission(fields, submitted_params, query_parameters: nil)
         submitted = (submitted_params || {}).with_indifferent_access
         query_parameters = (query_parameters || {}).to_h.with_indifferent_access
@@ -181,7 +216,7 @@ module DiscourseWorkflows
         data = {}
 
         with_keys(fields).each do |field|
-          next if field["field_type"] == "html"
+          next if field["field_type"] == DISPLAY_ONLY_FIELD_TYPE
 
           key = field["key"]
 
@@ -191,6 +226,13 @@ module DiscourseWorkflows
           end
 
           value = submitted[key]
+          choice_field = CHOICE_FIELD_TYPES.include?(field["field_type"])
+
+          if choice_field && submitted.key?(key) && value != "" &&
+               !choice_values(field).include?(value)
+            errors << build_error(field, :invalid_value)
+            next
+          end
 
           if missing?(field, value)
             errors << build_error(field, :missing)
@@ -198,7 +240,7 @@ module DiscourseWorkflows
           end
 
           begin
-            coerced_value = coerce(value, field["field_type"])
+            coerced_value = choice_field ? value : coerce(value, field["field_type"])
             if valid_value?(coerced_value, field)
               data[key] = coerced_value
             else
@@ -216,7 +258,7 @@ module DiscourseWorkflows
         return false unless field["required"]
         return false if field["field_type"] == "checkbox"
         return false if field["field_type"] == "hiddenField"
-        return false if field["field_type"] == "html"
+        return false if field["field_type"] == DISPLAY_ONLY_FIELD_TYPE
 
         value.blank?
       end

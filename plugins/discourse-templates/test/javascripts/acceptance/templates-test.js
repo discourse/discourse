@@ -15,7 +15,7 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import TemplatesFixtures from "../fixtures/templates-fixtures";
+import TemplatesFixtures from "../fixtures/templates-fixtures.js";
 
 function templatesPretender(server, helper) {
   const repliesPath = "/discourse_templates";

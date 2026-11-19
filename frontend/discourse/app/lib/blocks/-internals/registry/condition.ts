@@ -9,7 +9,7 @@ import {
   createTestRegistrationWrapper,
   validateNamePattern,
   validateSourceNamespace,
-} from "./helpers";
+} from "./helpers.ts";
 
 /*
  * Registry State

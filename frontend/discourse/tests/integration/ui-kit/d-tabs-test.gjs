@@ -548,22 +548,18 @@ module("Integration | ui-kit | DTabs", function (hooks) {
   });
 
   test("re-keys a live tab when its id changes", async function (assert) {
-    class IdState {
-      @tracked id = "original";
-    }
-
-    const state = new IdState();
+    const id = tracked("original");
     const onActivate = sinon.spy();
 
     await render(
       <template>
         <DTabs
-          @active={{state.id}}
+          @active={{id.value}}
           @label="Mutable tab id"
           @onActivate={{onActivate}}
           as |tabs|
         >
-          <tabs.Tab @key={{state.id}} @label="Mutable">Panel</tabs.Tab>
+          <tabs.Tab @key={{id.value}} @label="Mutable">Panel</tabs.Tab>
         </DTabs>
       </template>
     );
@@ -571,7 +567,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     const originalTab = find('[role="tab"]');
     const originalDomId = originalTab.id;
 
-    state.id = "replacement";
+    id.value = "replacement";
     await settled();
 
     const tab = find('[role="tab"]');
@@ -579,7 +575,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
     assert.dom('[role="tablist"]').exists("the tablist remains exposed");
     assert
       .dom(tab)
-      .hasAttribute("data-d-tab", state.id, "the registry uses the new id");
+      .hasAttribute("data-d-tab", id.value, "the registry uses the new id");
     assert.notStrictEqual(
       tab.id,
       originalDomId,
@@ -836,7 +832,10 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       </template>
     );
 
-    await focus("[data-panel-input]");
+    // Native only: the `focus` helper adds a synthetic focusin in an unfocused
+    // window, with no matching focusout on removal.
+    document.querySelector("[data-panel-input]").focus();
+    await settled();
     state.showInput = false;
     await settled();
     await nextFrame();
@@ -1791,13 +1790,9 @@ module("Integration | ui-kit | DTabs", function (hooks) {
   });
 
   test("rejects a role tab impostor inserted after mount", async function (assert) {
-    class ImpostorState {
-      @tracked show = false;
-    }
-
     const expectedMessage =
       "the declaration block may contain only tab declarations — found unexpected content in the tablist";
-    const state = new ImpostorState();
+    const show = tracked(false);
     const onActivate = sinon.spy();
     let errors = 0;
     setupOnerror((error) => {
@@ -1818,7 +1813,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
         >
           <tabs.Tab @key="valid" @label="Valid">Panel</tabs.Tab>
           {{! eslint-disable ember/template-require-context-role }}
-          {{#if state.show}}<button
+          {{#if show.value}}<button
               role="tab"
               type="button"
             >Impostor</button>{{/if}}
@@ -1827,7 +1822,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       </template>
     );
 
-    state.show = true;
+    show.value = true;
     await settled();
 
     assert.strictEqual(errors, 1, "a late tab impostor raises one assertion");
@@ -1933,11 +1928,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
   });
 
   test("alternating declaration branches reusing a tab id do not false-positive the duplicate guard", async function (assert) {
-    class BranchState {
-      @tracked flip = false;
-    }
-
-    const state = new BranchState();
+    const flip = tracked(false);
     const onActivate = sinon.spy();
     let errors = 0;
     setupOnerror(() => errors++);
@@ -1950,7 +1941,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
           @onActivate={{onActivate}}
           as |tabs|
         >
-          {{#if state.flip}}
+          {{#if flip.value}}
             <tabs.Tab @key="same" @label="One">1</tabs.Tab>
           {{else}}
             <tabs.Tab @key="same" @label="Two">2</tabs.Tab>
@@ -1959,7 +1950,7 @@ module("Integration | ui-kit | DTabs", function (hooks) {
       </template>
     );
 
-    state.flip = true;
+    flip.value = true;
     await settled();
 
     assert.strictEqual(

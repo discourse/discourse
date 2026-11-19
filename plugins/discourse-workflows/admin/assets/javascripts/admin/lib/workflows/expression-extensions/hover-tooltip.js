@@ -1,5 +1,5 @@
-import { lookupWorkflowMethodDoc, walkScope } from "../expression-context";
-import { lookupDollarVarDoc } from "./dollar-vars";
+import { lookupWorkflowMethodDoc, walkScope } from "../expression-context.js";
+import { lookupDollarVarDoc } from "./dollar-vars.js";
 
 function renderTooltipContent(doc) {
   if (!doc) {

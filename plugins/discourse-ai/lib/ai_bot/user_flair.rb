@@ -5,8 +5,9 @@ module DiscourseAi::AiBot::UserFlair
   FLAIR_ICON = "discourse-ai"
 
   def self.sync_all!
-    user_ids = associated_user_ids
     group = Group.find_by(name: GROUP_NAME)
+    preserve_historical_group_users!(group) if group
+    user_ids = associated_user_ids
     return if user_ids.empty? && !group
 
     if user_ids.any?
@@ -46,16 +47,35 @@ module DiscourseAi::AiBot::UserFlair
   end
   private_class_method :sync_user!
 
+  def self.preserve_historical_group_users!(group)
+    associated_ids = AiAgent.with_user.pluck(:user_id).concat(LlmModel.with_user.pluck(:user_id))
+    user_ids =
+      group.group_users.where("user_id <= 0").where.not(user_id: associated_ids).pluck(:user_id)
+
+    user_ids.each do |user_id|
+      field =
+        UserCustomField.find_or_initialize_by(
+          user_id:,
+          name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD,
+        )
+      field.value = "true"
+      field.save! if field.changed?
+    end
+  end
+  private_class_method :preserve_historical_group_users!
+
   def self.associated_user_ids(user_ids: nil)
     agents = AiAgent.with_user
     models = LlmModel.with_user
+    legacy_users = UserCustomField.where(name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD)
 
     if user_ids
       agents = agents.where(user_id: user_ids)
       models = models.where(user_id: user_ids)
+      legacy_users = legacy_users.where(user_id: user_ids)
     end
 
-    agents.pluck(:user_id).concat(models.pluck(:user_id)).uniq
+    agents.pluck(:user_id).concat(models.pluck(:user_id)).concat(legacy_users.pluck(:user_id)).uniq
   end
   private_class_method :associated_user_ids
 

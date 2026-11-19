@@ -43,7 +43,7 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import { addUniqueValuesToArray } from "../../lib/array-tools";
+import { addUniqueValuesToArray } from "../../lib/array-tools.js";
 
 export default class PostList extends Component {
   @tracked loading = false;

@@ -31,6 +31,27 @@ da:
           title: "Sikkerhedskopier"
       read_post:
         unknown_post: "indlæg"
+      chat_tool_approval:
+        topic_states:
+          open: "Åbn"
+          closed: "Lukket"
+          active: "Aktiv"
+          deleted: "Slettet"
+        solution_post: "Indlæg #%{number}"
+        duration_label: "Varighed:"
+        user_duration:
+          one: "%{count} dag"
+          other: "%{count} dage"
+        posts_label: "Indlæg"
+        category_label: "Kategori"
+        category_fields:
+          name: "navn"
+          description: "beskrivelse"
+          color: "farve"
+          text_color: "tekst farve"
+        approve_label: "Ja"
+        reject_label: "Nej"
+        empty_value: "Tom"
       tool_summary:
         search: "Søg"
         time: "Tidspunkt"
@@ -69,6 +90,18 @@ da:
       assign:
         errors:
           not_found: "Emne ikke fundet."
+    appearance_authoring:
+      default_theme: "Standard tema"
+      colors:
+        light:
+          header_background: "Sidehoved"
+      fonts:
+        base_font: "Indholds skrifttype"
+        heading_font: "Overskrifts skrifttype"
+    mcp_theme_access:
+      none: "ingen"
+    mcp_app_setup:
+      none: "ingen"
     reviewables:
       ai_tool_action:
         approve:

@@ -9,7 +9,6 @@ import {
 import FormatSelectedContent from "discourse/select-kit/components/multi-select/format-selected-content";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SelectKitHeaderComponent from "discourse/select-kit/components/select-kit/select-kit-header";
-import { and, or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("summary")

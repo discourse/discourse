@@ -7,9 +7,8 @@ import RandomQuickTip from "discourse/components/search-menu/results/random-quic
 import RecentSearches from "discourse/components/search-menu/results/recent-searches";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import Assistant from "./assistant";
+import Assistant from "./assistant.gjs";
 
 const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   topic: AssistantItem,
@@ -211,20 +210,21 @@ export default class InitialOptions extends Component {
                 @suggestionKeyword={{this.contextTypeKeyword}}
                 @withInLabel={{this.withInLabel}}
               />
+            {{/if}}
 
-              {{#if
-                (and
-                  this.currentUser
-                  this.siteSettings.log_search_queries
-                  this.displayInitialOptions
-                )
-              }}
-                <RecentSearches
-                  @closeSearchMenu={{@closeSearchMenu}}
-                  @location={{@location}}
-                  @searchTermChanged={{@searchTermChanged}}
-                />
-              {{/if}}
+            {{! history is not a shortcut, so dropping the shortcuts keeps it }}
+            {{#if
+              (and
+                this.currentUser
+                this.siteSettings.log_search_queries
+                this.displayInitialOptions
+              )
+            }}
+              <RecentSearches
+                @closeSearchMenu={{@closeSearchMenu}}
+                @location={{@location}}
+                @searchTermChanged={{@searchTermChanged}}
+              />
             {{/if}}
           {{else}}
             <RandomQuickTip

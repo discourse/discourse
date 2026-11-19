@@ -33,6 +33,7 @@ const DOCUMENT_TYPES_STRING = DOCUMENT_TYPES.join(", ");
 export default class FileTypesList extends Component {
   @service toasts;
 
+  /** @type {string[] | null} */
   @tracked createdChoices = null;
 
   get settingValue() {
@@ -78,7 +79,7 @@ export default class FileTypesList extends Component {
         break;
     }
 
-    const oldTypes = this.args.value.split(TOKEN_SEPARATOR);
+    const oldTypes = this.settingValue;
     const newTypes = uniqueItemsFromArray([...oldTypes, ...types]);
     const diffTypes = newTypes.filter((type) => !oldTypes.includes(type));
 
@@ -98,50 +99,52 @@ export default class FileTypesList extends Component {
   }
 
   <template>
-    <ListSetting
-      @choices={{this.settingChoices}}
-      @onChange={{this.onChangeListSetting}}
-      @onChangeChoices={{this.onChangeChoices}}
-      @options={{hash allowAny=@allowAny}}
-      @settingName={{@setting.setting}}
-      @value={{this.settingValue}}
-    />
+    <div class="file-types-list">
+      <ListSetting
+        @choices={{this.settingChoices}}
+        @onChange={{this.onChangeListSetting}}
+        @onChangeChoices={{this.onChangeChoices}}
+        @options={{hash allowAny=@allowAny}}
+        @settingName={{@setting.setting}}
+        @value={{this.settingValue}}
+      />
 
-    <DButton
-      class="btn btn-small btn-default file-types-list__button image"
-      @action={{fn this.insertDefaultTypes "image"}}
-      @label="admin.site_settings.file_types_list.add_image_types"
-      @translatedTitle={{i18n
-        "admin.site_settings.file_types_list.add_types_title"
-        types=IMAGE_TYPES_STRING
-      }}
-    />
-    <DButton
-      class="btn btn-small btn-default file-types-list__button video"
-      @action={{fn this.insertDefaultTypes "video"}}
-      @label="admin.site_settings.file_types_list.add_video_types"
-      @translatedTitle={{i18n
-        "admin.site_settings.file_types_list.add_types_title"
-        types=VIDEO_TYPES_STRING
-      }}
-    />
-    <DButton
-      class="btn btn-small btn-default file-types-list__button"
-      @action={{fn this.insertDefaultTypes "audio"}}
-      @label="admin.site_settings.file_types_list.add_audio_types"
-      @translatedTitle={{i18n
-        "admin.site_settings.file_types_list.add_types_title"
-        types=AUDIO_TYPES_STRING
-      }}
-    />
-    <DButton
-      class="btn btn-small btn-default file-types-list__button document"
-      @action={{fn this.insertDefaultTypes "document"}}
-      @label="admin.site_settings.file_types_list.add_document_types"
-      @translatedTitle={{i18n
-        "admin.site_settings.file_types_list.add_types_title"
-        types=DOCUMENT_TYPES_STRING
-      }}
-    />
+      <DButton
+        class="btn btn-small btn-default file-types-list__button image"
+        @action={{fn this.insertDefaultTypes "image"}}
+        @label="admin.site_settings.file_types_list.add_image_types"
+        @translatedTitle={{i18n
+          "admin.site_settings.file_types_list.add_types_title"
+          types=IMAGE_TYPES_STRING
+        }}
+      />
+      <DButton
+        class="btn btn-small btn-default file-types-list__button video"
+        @action={{fn this.insertDefaultTypes "video"}}
+        @label="admin.site_settings.file_types_list.add_video_types"
+        @translatedTitle={{i18n
+          "admin.site_settings.file_types_list.add_types_title"
+          types=VIDEO_TYPES_STRING
+        }}
+      />
+      <DButton
+        class="btn btn-small btn-default file-types-list__button"
+        @action={{fn this.insertDefaultTypes "audio"}}
+        @label="admin.site_settings.file_types_list.add_audio_types"
+        @translatedTitle={{i18n
+          "admin.site_settings.file_types_list.add_types_title"
+          types=AUDIO_TYPES_STRING
+        }}
+      />
+      <DButton
+        class="btn btn-small btn-default file-types-list__button document"
+        @action={{fn this.insertDefaultTypes "document"}}
+        @label="admin.site_settings.file_types_list.add_document_types"
+        @translatedTitle={{i18n
+          "admin.site_settings.file_types_list.add_types_title"
+          types=DOCUMENT_TYPES_STRING
+        }}
+      />
+    </div>
   </template>
 }

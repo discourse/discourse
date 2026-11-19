@@ -30,6 +30,60 @@ RSpec.describe Email::MessageBuilder do
     expect(builder.body).to eq(body)
   end
 
+  context "with an appended paragraph" do
+    let(:builder) do
+      Email::MessageBuilder.new(
+        to_address,
+        subject: email_subject,
+        body:,
+        body_suffix_key: "system_messages.private_topic_title",
+        id: 42,
+      )
+    end
+
+    it "interpolates the paragraph after the supplied body" do
+      expect(builder.body).to eq("#{body}\n\nTopic #42")
+    end
+
+    it "uses the same locale as the email template" do
+      TranslationOverride.upsert!(:fr, "system_messages.private_topic_title", "Sujet %{id}")
+      TranslationOverride.upsert!(
+        :fr,
+        "system_messages.welcome_invite.text_body_template",
+        "Bienvenue %{username}.",
+      )
+      localized_builder =
+        Email::MessageBuilder.new(
+          to_address,
+          template: "system_messages.welcome_invite",
+          username: "Jake",
+          locale: :fr,
+          body_suffix_key: "system_messages.private_topic_title",
+          id: 42,
+        )
+
+      expect(localized_builder.body).to eq("Bienvenue Jake.\n\nSujet 42")
+    end
+
+    it "places the paragraph before unsubscribe instructions and the body modifier" do
+      modifier = ->(rendered, *) { "#{rendered}\nModified." }
+      plugin_instance = Plugin::Instance.new
+      plugin_instance.register_modifier(:message_builder_body, &modifier)
+      footer_builder =
+        Email::MessageBuilder.new(
+          to_address,
+          body:,
+          body_suffix_key: "system_messages.private_topic_title",
+          id: 42,
+          unsubscribe_instructions: "Unsubscribe here.",
+        )
+
+      expect(footer_builder.body).to eq("#{body}\n\nTopic #42\nUnsubscribe here.\nModified.")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin_instance, :message_builder_body, &modifier)
+    end
+  end
+
   it "uses the message_builder subject modifier properly" do
     plugin_instance = Plugin::Instance.new
     plugin_instance.register_modifier(:message_builder_subject, &subject_modifier_block)
@@ -113,6 +167,40 @@ RSpec.describe Email::MessageBuilder do
 
   it "disables Outlook's reaction via email feature" do
     expect(header_args["x-ms-reactions"]).to eq("disallow")
+  end
+
+  describe "#html_part" do
+    it "sanitizes the preview and instructions it adds to the HTML body" do
+      unsafe_html = "<b onclick='alert(1)'>hi</b>"
+      builder =
+        Email::MessageBuilder.new(
+          to_address,
+          html_override:
+            +"%{email_preview} %{header_instructions} %{respond_instructions} %{unsubscribe_instructions}",
+          email_preview: unsafe_html,
+          header_instructions: unsafe_html,
+          respond_instructions: unsafe_html,
+          unsubscribe_instructions: unsafe_html,
+        )
+
+      html = Nokogiri.HTML5(builder.html_part.body.to_s)
+      expect(html.css("b").map(&:to_h)).to eq([{}] * 4)
+    end
+
+    it "renders the topic title as text in customized instructions" do
+      TranslationOverride.upsert!("en", "user_notifications.header_instructions", "%{topic_title}")
+      title = "[Verify](https://evil.example) <img src=x> \\[x"
+      builder =
+        Email::MessageBuilder.new(
+          to_address,
+          html_override: +"<div id='instructions'>%{header_instructions}</div>",
+          topic_title: title,
+          url: "/t/1",
+        )
+
+      instructions = Nokogiri.HTML5(builder.html_part.body.to_s).at_css("#instructions")
+      expect(instructions.text.strip).to eq(title)
+    end
   end
 
   describe "recipient_username" do

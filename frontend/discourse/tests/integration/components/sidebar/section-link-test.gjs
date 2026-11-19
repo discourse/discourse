@@ -1,4 +1,4 @@
-import { trackedObject } from "@ember/reactive/collections";
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   find,
@@ -142,6 +142,141 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
       .doesNotHaveClass("--hovering", "emulated hover does not set the state");
   });
 
+  test("the homepage preserves sidebar scrolling when active links render or reactivate", async function (assert) {
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => "/");
+    const active = tracked(true);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <div style="height: 600px"></div>
+          <SectionLink
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{active.value}}
+          />
+          <div style="height: 600px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    assert.strictEqual(scroller.scrollTop, 0, "a fresh load stays at the top");
+
+    active.value = false;
+    await rerender();
+    scroller.scrollTop = 100;
+    active.value = true;
+    await rerender();
+
+    assert.strictEqual(
+      scroller.scrollTop,
+      100,
+      "reactivation preserves the existing scroll position"
+    );
+  });
+
+  test("returning home reveals an active link above the visible area", async function (assert) {
+    const currentURL = tracked("/categories");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => currentURL.value);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <SectionLink
+            @currentWhen={{true}}
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{true}}
+          />
+          <div style="height: 1200px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    scroller.scrollTop = 500;
+    currentURL.value = "/";
+    await rerender();
+
+    assert.dom("a.active").exists("the homepage link stays highlighted");
+    assert.true(scroller.scrollTop < 500, "returning home scrolls upward");
+    assert.true(
+      find(".sidebar-section-link-wrapper").getBoundingClientRect().top >=
+        scroller.getBoundingClientRect().top - 1,
+      "the active link is visible below the top edge"
+    );
+
+    scroller.scrollTop = 100;
+    await rerender();
+
+    assert.strictEqual(
+      scroller.scrollTop,
+      100,
+      "manual scrolling is preserved"
+    );
+  });
+
+  test("leaving the homepage reveals a link that stays active", async function (assert) {
+    const currentURL = tracked("/");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentURL")
+      .get(() => currentURL.value);
+
+    await render(
+      <template>
+        <div
+          class="sidebar-sections"
+          style="height: 200px; overflow-y: auto; display: block"
+        >
+          <div style="height: 600px"></div>
+          <SectionLink
+            @currentWhen={{true}}
+            @href="/categories"
+            @linkName="homepage"
+            @scrollIntoView={{true}}
+          />
+          <div style="height: 600px"></div>
+        </div>
+      </template>
+    );
+
+    const scroller = find(".sidebar-sections");
+    assert.dom("a.active").exists("the homepage link is active");
+    assert.strictEqual(scroller.scrollTop, 0, "home stays at the top");
+
+    currentURL.value = "/categories";
+    await rerender();
+
+    assert.dom("a.active").exists("the same link remains active");
+    assert.true(scroller.scrollTop > 0, "leaving home reveals the active link");
+
+    currentURL.value = "/";
+    await rerender();
+    scroller.scrollTop = 100;
+    await rerender();
+
+    assert.strictEqual(scroller.scrollTop, 100, "home allows manual scrolling");
+
+    currentURL.value = "/categories";
+    await rerender();
+
+    assert.true(
+      scroller.scrollTop > 100,
+      "leaving home reveals the link again"
+    );
+  });
+
   test("scrollIntoView measures against the scrolling ancestor, not the window", async function (assert) {
     // A scroller shorter than the window, with the link pushed below its
     // visible area but still well inside the viewport.
@@ -264,7 +399,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     );
   });
   test("moving an active destination between sections preserves the current scroll position", async function (assert) {
-    this.state = trackedObject({ moved: false });
+    const moved = tracked(false);
 
     await render(
       <template>
@@ -273,7 +408,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
           style="height: 200px; overflow-y: auto; display: block"
         >
           <ul style="height: 600px; margin: 0">
-            {{#unless this.state.moved}}
+            {{#unless moved.value}}
               <SectionLink
                 @href="/latest"
                 @linkName="original"
@@ -282,7 +417,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
             {{/unless}}
           </ul>
           <ul style="height: 600px; margin: 0">
-            {{#if this.state.moved}}
+            {{#if moved.value}}
               <SectionLink
                 @href="/latest"
                 @linkName="moved"
@@ -296,7 +431,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     const scroller = find(".sidebar-sections");
     scroller.scrollTop = 100;
 
-    this.state.moved = true;
+    moved.value = true;
     await rerender();
 
     assert
@@ -309,7 +444,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     );
 
     scroller.scrollTop = 300;
-    this.state.moved = false;
+    moved.value = false;
     await rerender();
 
     assert.strictEqual(
@@ -320,7 +455,8 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
   });
 
   test("new destinations and reactivated links are still revealed", async function (assert) {
-    this.state = trackedObject({ destinations: ["/latest"], active: true });
+    const destinations = tracked(["/latest"]);
+    const active = tracked(true);
 
     await render(
       <template>
@@ -330,11 +466,11 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
         >
           <div style="height: 600px"></div>
           <ul>
-            {{#each this.state.destinations as |destination|}}
+            {{#each destinations.value as |destination|}}
               <SectionLink
                 @href={{destination}}
                 @linkName="destination"
-                @scrollIntoView={{this.state.active}}
+                @scrollIntoView={{active.value}}
               />
             {{/each}}
           </ul>
@@ -346,22 +482,22 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
     assert.true(scroller.scrollTop > 0, "the initial active link is revealed");
 
     scroller.scrollTop = 0;
-    this.state.destinations = ["/top"];
+    destinations.value = ["/top"];
     await rerender();
     assert.true(scroller.scrollTop > 0, "a different destination is revealed");
 
     scroller.scrollTop = 0;
-    this.state.destinations = ["/latest"];
+    destinations.value = ["/latest"];
     await rerender();
     assert.true(
       scroller.scrollTop > 0,
       "returning to a previous destination reveals it again"
     );
 
-    this.state.active = false;
+    active.value = false;
     await rerender();
     scroller.scrollTop = 0;
-    this.state.active = true;
+    active.value = true;
     await rerender();
     assert.true(
       scroller.scrollTop > 0,

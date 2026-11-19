@@ -22,6 +22,11 @@ lv:
         context_menu:
           actions:
             delete: "Dzēst"
+        reorderable_list:
+          policies_pinned: "Piesprausts"
+          policies_required: "Nepieciešams"
+          table_type: "Tips"
+          cross_list_primary: "Primārais"
         font_scale:
           title: "Fontu sistēma"
         colors:

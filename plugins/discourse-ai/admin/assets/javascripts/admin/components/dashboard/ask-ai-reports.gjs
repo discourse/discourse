@@ -11,6 +11,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import DNativeSelect from "discourse/ui-kit/d-native-select";
+import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
 import { i18n } from "discourse-i18n";
 import AskAiReportSubjects from "discourse/plugins/discourse-ai/admin/components/dashboard/ask-ai-report-subjects";
 
@@ -39,10 +40,15 @@ const reportSettingsURL = getURL(
 export default class AskAiReports extends Component {
   @tracked reports = [];
   @tracked dataExplorerQueryId;
+  @tracked periodQueryId;
   @tracked selectedReportId;
   @tracked loading = true;
   @tracked failed = false;
   @tracked submitting = false;
+  @tracked reportOpened = false;
+  @tracked reportLoading = false;
+  @tracked reportFailed = false;
+  @tracked detailedReport;
 
   @tracked showGenerateModal = false;
   @tracked recipientGroups = [];
@@ -52,6 +58,7 @@ export default class AskAiReports extends Component {
   reportEndDate;
 
   #timer;
+  #detailRequest = 0;
 
   constructor() {
     super(...arguments);
@@ -61,6 +68,21 @@ export default class AskAiReports extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     clearTimeout(this.#timer);
+  }
+
+  get periodQueryUrl() {
+    if (!this.periodQueryId) {
+      return;
+    }
+    const params = encodeURIComponent(
+      JSON.stringify({
+        start_date: this.args.startDate,
+        end_date: this.args.endDate,
+      })
+    );
+    return getURL(
+      `/admin/plugins/discourse-data-explorer/queries/${this.periodQueryId}?params=${params}`
+    );
   }
 
   get reportQueryUrl() {
@@ -115,8 +137,53 @@ export default class AskAiReports extends Component {
   }
 
   @action
+  reportEnteredView(entry) {
+    if (entry.isIntersecting && !this.reportOpened) {
+      this.loadReport();
+    }
+  }
+
+  @action
   selectReport(id) {
     this.selectedReportId = id;
+    this.loadReport();
+  }
+
+  @action
+  async loadReport() {
+    clearTimeout(this.#timer);
+    const id = this.visibleReportId;
+    if (!id) {
+      return;
+    }
+    const request = ++this.#detailRequest;
+    this.reportOpened = true;
+    this.reportLoading = true;
+    this.reportFailed = false;
+    this.detailedReport = null;
+    try {
+      const result = await ajax(
+        `/admin/plugins/discourse-ai/ask-ai-reports/${id}`
+      );
+      if (this.isDestroying || request !== this.#detailRequest) {
+        return;
+      }
+      this.detailedReport = result.report;
+      this.reports = this.reports.map((report) =>
+        report.id === result.report.id
+          ? { ...report, report_status: result.report.report_status }
+          : report
+      );
+      this.#scheduleRefresh();
+    } catch {
+      if (!this.isDestroying && request === this.#detailRequest) {
+        this.reportFailed = true;
+      }
+    } finally {
+      if (!this.isDestroying && request === this.#detailRequest) {
+        this.reportLoading = false;
+      }
+    }
   }
 
   @action
@@ -155,9 +222,17 @@ export default class AskAiReports extends Component {
       this.reports = [
         result.report,
         ...this.reports.filter((report) => report.id !== result.report.id),
-      ].slice(0, 3);
+      ];
       this.selectedReportId = String(result.report.id);
+      this.#detailRequest++;
+      this.detailedReport = null;
+      this.reportOpened = true;
+      this.reportFailed = false;
+      this.reportLoading = false;
       this.#scheduleRefresh();
+      if (result.report.report_status === "completed") {
+        this.loadReport();
+      }
       this.closeGenerateModal();
     } catch (error) {
       popupAjaxError(error);
@@ -178,9 +253,9 @@ export default class AskAiReports extends Component {
       }
       this.reports = result.reports;
       this.dataExplorerQueryId = result.data_explorer_query_id;
+      this.periodQueryId = result.period_query_id;
       this.recipientGroups = result.recipient_groups ?? [];
       this.failed = false;
-      this.#scheduleRefresh();
     } catch {
       if (!this.isDestroying) {
         this.failed = true;
@@ -195,11 +270,10 @@ export default class AskAiReports extends Component {
   #scheduleRefresh() {
     clearTimeout(this.#timer);
     if (
-      this.reports.some((report) =>
-        ["queued", "running"].includes(report.report_status)
-      )
+      this.reportOpened &&
+      ["queued", "running"].includes(this.visibleReports[0]?.report_status)
     ) {
-      this.#timer = setTimeout(() => this.loadReports(), 5000);
+      this.#timer = setTimeout(() => this.loadReport(), 5000);
     }
   }
 
@@ -208,8 +282,8 @@ export default class AskAiReports extends Component {
       <section class="db-section__row-block">
         <div class="db-section__row-block-header">
           <h3 class="db-section__row-block-title">
-            {{#if this.reportQueryUrl}}
-              <a href={{this.reportQueryUrl}}>{{copy "title"}}</a>
+            {{#if this.periodQueryUrl}}
+              <a href={{this.periodQueryUrl}}>{{copy "title"}}</a>
             {{else}}
               {{copy "title"}}
             {{/if}}
@@ -241,14 +315,35 @@ export default class AskAiReports extends Component {
           />
         </div>
         {{#each this.visibleReports key="id" as |report|}}
-          <article class="ask-ai-reports__report">
+          <article
+            class="ask-ai-reports__report"
+            {{dObserveIntersection
+              this.reportEnteredView
+              threshold=0
+              isLoading=this.reportOpened
+            }}
+          >
             {{#if (state report)}}
               <div class="ask-ai-reports__report-header">
                 <span class="ask-ai-reports__hint">{{state report}}</span>
               </div>
             {{/if}}
-            {{#if report.subjects.length}}
-              <AskAiReportSubjects @report={{report}} />
+            {{#if this.reportLoading}}
+              <p>{{copy "loading"}}</p>
+            {{/if}}
+            {{#if this.reportFailed}}
+              <p role="alert">{{copy "load_failed"}}</p>
+              <DButton
+                class="ask-ai-reports__retry-report"
+                @action={{this.loadReport}}
+                @translatedLabel={{copy "reload"}}
+              />
+            {{/if}}
+            {{#if this.detailedReport.subjects.length}}
+              <AskAiReportSubjects
+                @report={{this.detailedReport}}
+                @reportQueryUrl={{this.reportQueryUrl}}
+              />
             {{/if}}
           </article>
         {{else}}

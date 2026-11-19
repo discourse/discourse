@@ -17,6 +17,7 @@ id:
       location: "Lokasi"
   mcp:
     errors:
+      category_not_found: "Kategori tidak ditemukan"
       draft_too_long: "Draf terlalu panjang"
       topic_not_found: "Tidak ada topik"
     oauth:
@@ -354,10 +355,6 @@ id:
   no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
   too_many_mentions_newuser:
     other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
-  no_embedded_media_allowed_group: "Maaf, Anda tidak dapat menyematkan item media dalam sebuah post."
-  no_embedded_media_allowed: "Maaf, pengguna baru tidak dapat menyematkan item media dalam post."
-  too_many_embedded_media:
-    other: "Maaf, pengguna baru hanya dapat menempatkan %{count} item media yang disematkan dalam sebuah post."
   no_attachments_allowed: "Maaf, pengguna baru tidak diijinkan untuk mengunggah file/attachment dalam posting."
   too_many_attachments:
     other: "Maaf, pengguna baru hanya diijinkan untuk mengunggah %{count} file/attachment dalam satu posting."
@@ -1330,6 +1327,9 @@ id:
       email_polling_disabled: "Anda harus mengaktifkan polling POP3 manual atau mengaktifkan poller email khusus sebelum mengaktifkan balasan melalui email."
       invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'
       invalid_search_ranking_weights: "Nilai tidak valid untuk setelan situs search_ranking_weights. Contoh: '{0.1,0.2,0.3,1.0}'. Perhatikan bahwa nilai maksimum untuk setiap bobot adalah 1,0."
+    keywords:
+      company_url: "situs web"
+      title: "nama komunitas"
   search:
     within_post: "#%{post_number} oleh %{username}"
     types:
@@ -1559,14 +1559,30 @@ id:
                 label: "Pribadi"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Setiap hari"
+        ordinals:
+          last: "terakhir"
+        weekdays:
+          sunday: "Minggu"
+          monday: "Senin"
+          tuesday: "Selasa"
+          wednesday: "Rabu"
+          thursday: "Kamis"
+          friday: "Jumat"
+          saturday: "Sabtu"
       user_joined_community: "Bergabung %{date}"
     google_meet:
       meeting_code: "Kode:"
     github:
+      header:
+        success: "Sukses"
       closed: "tertutup"
-      status_date:
-        approved: "disetujui"
-        closed: "tertutup"
+      pr_status:
+        draft: "Konsep"
+        open: "Buka"
+        approved: "Disetujui"
+        closed: "Tertutup"
   staff_action_logs:
     unknown: "tidak diketahui"
   reviewables:
@@ -1583,6 +1599,10 @@ id:
       fast_typer_time:
         other: "%{count} detik"
     actions:
+      answer_yes:
+        title: "Ya"
+      answer_no:
+        title: "Tidak"
       agree:
         title: "Ya"
       agree_and_keep:

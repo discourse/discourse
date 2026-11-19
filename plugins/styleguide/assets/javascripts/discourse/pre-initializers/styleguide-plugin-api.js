@@ -1,21 +1,21 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { addSection } from "../lib/styleguide";
+import { addSection } from "../lib/styleguide.js";
 
 /**
  * Add a section to the styleguide
  *
  * @function addStyleguideSection
  * @param {Object} section
- * @param {Component} section.component
+ * @param {() => Component | Promise<Component>} section.component - Returns the section's
+ *   component. It runs when the section is visited, so the component can load on demand.
  * @param {string} options.id
  * @param {string} options.category
  * @param {number} [options.priority]
  * @example
  *
- * import fidget from "../components/styleguide/molecules/fidget";
- *
  * api.addStyleguideSection({
- *   component: fidget,
+ *   component: async () =>
+ *     (await import("../components/styleguide/molecules/fidget.gjs")).default,
  *   id: "fidget",
  *   category: "molecules",
  *   priority: 0,

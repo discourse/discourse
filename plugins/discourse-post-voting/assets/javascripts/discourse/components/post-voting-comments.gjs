@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import PostVotingComment from "./post-voting-comment";
-import PostVotingCommentsMenu from "./post-voting-comments-menu";
+import PostVotingComment from "./post-voting-comment.gjs";
+import PostVotingCommentsMenu from "./post-voting-comments-menu.gjs";
 
 export default class PostVotingComments extends Component {
   comments = this.args.post.comments; // post.comments is a tracked array

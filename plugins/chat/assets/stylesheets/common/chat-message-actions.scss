@@ -122,6 +122,14 @@
       }
     }
 
+    &:first-child .select-kit-header:not(:hover) {
+      border-left-color: var(--primary-300);
+    }
+
+    &:first-child .select-kit-header {
+      border-radius: var(--d-border-radius);
+    }
+
     .select-kit-row {
       .texts .name {
         font-size: var(--font-0);

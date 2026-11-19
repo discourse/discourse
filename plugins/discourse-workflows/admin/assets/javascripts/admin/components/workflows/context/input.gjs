@@ -9,24 +9,26 @@ import {
   outputSummaryForNode,
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
-} from "../../../lib/workflows/data-preview";
+} from "../../../lib/workflows/data-preview.js";
 import {
   inputFieldPrefixForConnection,
   inputIndexForConnection,
   nodeOutputJsonPath,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import processFields from "../../../lib/workflows/field-processors";
-import { nodeTypeColor, nodeTypeIcon } from "../../../lib/workflows/node-types";
-import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields";
+} from "../../../lib/workflows/expression-paths.js";
+import processFields from "../../../lib/workflows/field-processors.js";
+import {
+  nodeTypeColor,
+  nodeTypeIcon,
+} from "../../../lib/workflows/node-types.js";
+import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields.js";
 import {
   ancestorOutputNodes,
   inputConnectionsForNode,
   previousNodeForConnection,
-  resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
-import DragDropHint from "./drag-drop-hint";
-import SchemaField from "./schema-field";
+} from "../../../lib/workflows/schema-graph.js";
+import DragDropHint from "./drag-drop-hint.gjs";
+import SchemaField from "./schema-field.gjs";
 
 function ancestorIconStyle(type) {
   return trustHTML(`color: ${nodeTypeColor(type)}`);
@@ -56,7 +58,26 @@ function fieldVisible(fieldDef, nodes) {
   );
 }
 
-function schemaFieldToEntry(key, def, nodes) {
+const WORKFLOW_VARIABLE_TYPE_SCHEMAS = {
+  integer: "integer",
+  category: "integer",
+  group: "integer",
+  boolean: "boolean",
+  category_list: "array",
+  group_list: "array",
+  tag_list: "array",
+  simple_list: "array",
+};
+
+function workflowVariableEntries(workflowVariables) {
+  return (workflowVariables || []).map((field) => ({
+    key: field.key,
+    type: WORKFLOW_VARIABLE_TYPE_SCHEMAS[field.variable_type] || "string",
+    id: field.key,
+  }));
+}
+
+function schemaFieldToEntry(key, def, nodes, workflowVariables) {
   const displayKey = key.replace(/^\$/, "");
   const entry = {
     key: displayKey,
@@ -64,7 +85,9 @@ function schemaFieldToEntry(key, def, nodes) {
     id: key,
   };
 
-  if (def.fields) {
+  if (key === "$workflow_vars") {
+    entry.children = workflowVariableEntries(workflowVariables);
+  } else if (def.fields) {
     entry.children = Object.entries(def.fields)
       .filter(([, childDef]) => fieldVisible(childDef, nodes))
       .map(([childKey, childDef]) => ({
@@ -86,7 +109,12 @@ function triggerProvidesCurrentUser(nodes, nodeTypesService) {
   return nodeType?.capabilities?.provides_current_user ?? false;
 }
 
-function environmentFields(expressionContext, nodes, nodeTypesService) {
+function environmentFields(
+  expressionContext,
+  nodes,
+  nodeTypesService,
+  workflowVariables
+) {
   const env = expressionContext.environment;
   if (!env) {
     return [];
@@ -101,7 +129,9 @@ function environmentFields(expressionContext, nodes, nodeTypesService) {
       }
       return true;
     })
-    .map(([symbol, def]) => schemaFieldToEntry(symbol, def, nodes));
+    .map(([symbol, def]) =>
+      schemaFieldToEntry(symbol, def, nodes, workflowVariables)
+    );
 }
 
 export default class InputContext extends Component {
@@ -111,13 +141,7 @@ export default class InputContext extends Component {
     return {
       nodes: this.args.nodes || [],
       connections: this.args.connections || [],
-      nodeTypes: this.args.nodeTypes || [],
     };
-  }
-
-  @cached
-  get declaredOutputSchemas() {
-    return resolveDeclaredOutputSchemas(this.graph);
   }
 
   @cached
@@ -169,9 +193,8 @@ export default class InputContext extends Component {
             prefix: inputFieldPrefixForConnection(connection, previousNode, {
               primaryConnection: this.primaryInputConnection,
             }),
-            graph: this.graph,
             pinnedItems,
-            declaredOutputSchemas: this.declaredOutputSchemas,
+            declaredOutputSchemas: this.args.session?.outputSchemas,
           }
         );
 
@@ -191,7 +214,8 @@ export default class InputContext extends Component {
     return environmentFields(
       this.workflowsNodeTypes.expressionContext,
       this.args.nodes || [],
-      this.workflowsNodeTypes
+      this.workflowsNodeTypes,
+      this.args.session?.variables
     );
   }
 
@@ -218,8 +242,7 @@ export default class InputContext extends Component {
               outputIndex: ancestor.outputIndex,
               node: ancestor.node,
               prefix,
-              graph: this.graph,
-              declaredOutputSchemas: this.declaredOutputSchemas,
+              declaredOutputSchemas: this.args.session?.outputSchemas,
             });
         const summary = pinnedItems
           ? { itemCount: pinnedItems.length, truncated: false }

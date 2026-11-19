@@ -1,4 +1,4 @@
-import GridNodeView from "../components/grid-node-view";
+import GridNodeView from "../components/grid-node-view.gjs";
 
 const extension = {
   nodeViews: {

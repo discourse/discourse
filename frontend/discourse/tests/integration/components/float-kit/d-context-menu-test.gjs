@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { click, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DMenus from "discourse/float-kit/components/d-menus";
@@ -301,9 +302,11 @@ module("Integration | Component | FloatKit | dContextMenu", function (hooks) {
   });
 
   test("ctx-oracle: removing the element closes the menu it opened", async function (assert) {
+    const hidden = tracked(false);
+
     await render(
       <template>
-        {{#unless this.hidden}}
+        {{#unless hidden.value}}
           <div class="ctx-host" {{dContextMenu component=Actions}}>host</div>
         {{/unless}}
         <DMenus />
@@ -313,7 +316,7 @@ module("Integration | Component | FloatKit | dContextMenu", function (hooks) {
     await rightClick(".ctx-host");
     assert.dom(".fk-d-menu").exists("the menu is open");
 
-    this.set("hidden", true);
+    hidden.value = true;
     await settled();
 
     assert.dom(".ctx-host").doesNotExist("the trigger element is gone");

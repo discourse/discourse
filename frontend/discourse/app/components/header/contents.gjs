@@ -1,19 +1,22 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import MobileTabBarBackButton from "discourse/components/mobile-tab-bar/back-button";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
-import PluginOutlet from "../plugin-outlet";
-import HeaderSearch from "./header-search";
-import HomeLogo from "./home-logo";
-import SidebarToggle from "./sidebar-toggle";
-import TopicInfo from "./topic/info";
+import PluginOutlet from "../plugin-outlet.gjs";
+import HeaderSearch from "./header-search.gjs";
+import HomeLogo from "./home-logo.gjs";
+import SidebarToggle from "./sidebar-toggle.gjs";
+import TopicInfo from "./topic/info.gjs";
 
 export default class Contents extends Component {
   @service site;
   @service header;
+  @service mobileTabBar;
+  @service documentTitle;
   @service router;
   @service navigationMenu;
   @service search;
@@ -27,15 +30,27 @@ export default class Contents extends Component {
   }
 
   get minimized() {
+    // Below a section's top level, the logo makes room for the back button
     return applyValueTransformer(
       "home-logo-minimized",
-      this.args.topicInfoVisible,
+      this.args.topicInfoVisible || this.mobileTabBar.isNestedPage,
       {
         topicInfo: this.args.topicInfo,
         sidebarEnabled: this.args.sidebarEnabled,
         showSidebar: this.args.showSidebar,
       }
     );
+  }
+
+  // A titled page names itself in the header unless it has a topic to show
+  get pageTitle() {
+    if (this.mobileTabBar.isTitledPage && !this.args.topicInfo) {
+      return this.documentTitle.pageTitle;
+    }
+  }
+
+  get visibleTopic() {
+    return this.header.topicInfoVisible ? this.header.topicInfo : null;
   }
 
   get showHeaderSearch() {
@@ -66,11 +81,10 @@ export default class Contents extends Component {
       <PluginOutlet
         @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
-            value=this.header.topic
+            value=this.visibleTopic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
             since="3.3.0.beta4-dev"
-            silence="discourse.header-service-topic"
           )
         }}
         @name="header-contents__before"
@@ -90,11 +104,17 @@ export default class Contents extends Component {
             @toggleNavigationMenu={{@toggleNavigationMenu}}
           />
         {{/if}}
+      {{else if this.mobileTabBar.isNestedPage}}
+        <MobileTabBarBackButton />
       {{/if}}
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <HomeLogo @minimized={{this.minimized}} />
+          {{#if this.pageTitle}}
+            <h1 class="mobile-tab-bar-title">{{this.pageTitle}}</h1>
+          {{else}}
+            <HomeLogo @minimized={{this.minimized}} />
+          {{/if}}
         </PluginOutlet>
       </div>
 
@@ -110,11 +130,10 @@ export default class Contents extends Component {
         <PluginOutlet
           @deprecatedArgs={{lazyHash
             topic=(deprecatedOutletArgument
-              value=this.header.topic
+              value=this.visibleTopic
               message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
               since="3.3.0.beta4-dev"
-              silence="discourse.header-service-topic"
             )
           }}
           @name="before-header-panel"
@@ -133,11 +152,10 @@ export default class Contents extends Component {
         <PluginOutlet
           @deprecatedArgs={{lazyHash
             topic=(deprecatedOutletArgument
-              value=this.header.topic
+              value=this.visibleTopic
               message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
               since="3.3.0.beta4-dev"
-              silence="discourse.header-service-topic"
             )
           }}
           @name="after-header-panel"
@@ -150,11 +168,10 @@ export default class Contents extends Component {
       <PluginOutlet
         @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
-            value=this.header.topic
+            value=this.visibleTopic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
             since="3.3.0.beta4-dev"
-            silence="discourse.header-service-topic"
           )
         }}
         @name="header-contents__after"

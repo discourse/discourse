@@ -19,7 +19,7 @@ module DiscourseAi
         url_context_result
       ].freeze
 
-      attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens
+      attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :reasoning_tokens
 
       def initialize(partial_tool_calls: false, output_thinking: false, &content_decoder)
         @partial_tool_calls = partial_tool_calls
@@ -376,6 +376,7 @@ module DiscourseAi
         return if usage.blank?
 
         usage = normalize(usage)
+        @reasoning_tokens = usage[:total_thought_tokens] if usage.key?(:total_thought_tokens)
         cached = usage[:total_cached_tokens].to_i
         @prompt_tokens = [usage[:total_input_tokens].to_i - cached, 0].max
         @cache_read_tokens = cached

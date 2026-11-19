@@ -9,11 +9,11 @@ import {
   emptyTrailingColumns,
   emptyTrailingRows,
   runCommand,
-} from "./commands";
-import dragAutoscroll from "./drag-autoscroll";
-import { columnTarget, isTable, rowTarget, tableGrid } from "./grid";
-import { TABLE_MENU_IDENTIFIER } from "./menu";
-import trackPointer from "./track-pointer";
+} from "./commands.js";
+import dragAutoscroll from "./drag-autoscroll.js";
+import { columnTarget, isTable, rowTarget, tableGrid } from "./grid.js";
+import { TABLE_MENU_IDENTIFIER } from "./menu.js";
+import trackPointer from "./track-pointer.js";
 
 const APPEND_DRAG_THRESHOLD = 4;
 const APPEND_DRAG_MAX = { column: 8, row: 12 };

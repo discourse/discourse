@@ -791,6 +791,82 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     end
   end
 
+  describe "html application layout access" do
+    let(:env_key) { Auth::DefaultCurrentUserProvider::HTML_LAYOUT_DISALLOWED_ENV }
+
+    def api_key_with_scopes(*scopes)
+      ApiKey
+        .create!(user_id: user.id, created_by_id: -1)
+        .tap do |api_key|
+          scopes.each do |resource, action|
+            ApiKeyScope.create!(api_key_id: api_key.id, resource:, action:)
+          end
+        end
+    end
+
+    def user_api_key(*scope_names)
+      Fabricate(
+        :user_api_key,
+        user: user,
+        scopes: scope_names.map { |name| UserApiKeyScope.new(name:) },
+      )
+    end
+
+    def api_key_env(api_key)
+      { "REQUEST_METHOD" => "GET", "HTTP_API_KEY" => api_key.key }
+    end
+
+    def user_api_key_env(api_key)
+      { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
+    end
+
+    it "disallows the application layout for an API key with granular scopes" do
+      test_provider = provider("/t/1/posts.json", api_key_env(api_key_with_scopes(%w[topics read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to eq(true)
+    end
+
+    it "allows the application layout for an API key without scopes" do
+      test_provider = provider("/", api_key_env(api_key_with_scopes))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "allows the application layout for a read-only API key" do
+      test_provider = provider("/", api_key_env(api_key_with_scopes(%w[global read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "allows the application layout for an API key that includes global read access" do
+      test_provider =
+        provider("/", api_key_env(api_key_with_scopes(%w[topics read], %w[global read])))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to be_nil
+    end
+
+    it "disallows the application layout for a user API key without the read or write scopes" do
+      test_provider =
+        provider("/notifications.json", user_api_key_env(user_api_key("notifications")))
+
+      expect(test_provider.current_user.id).to eq(user.id)
+      expect(test_provider.env[env_key]).to eq(true)
+    end
+
+    it "allows the application layout for a user API key with the read or write scope" do
+      %w[read write].each do |scope_name|
+        test_provider = provider("/", user_api_key_env(user_api_key(scope_name)))
+
+        expect(test_provider.current_user.id).to eq(user.id)
+        expect(test_provider.env[env_key]).to be_nil
+      end
+    end
+  end
+
   it "ignores a valid auth cookie that has been tampered with" do
     @provider = provider("/")
     @provider.log_on_user(user, {}, @provider.cookie_jar)
@@ -925,6 +1001,22 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
   describe "bootstrap first admin" do
     let(:admin) { Fabricate(:admin, last_seen_at: nil) }
+    let(:bootstrapped_users) { [] }
+    let(:bootstrap_callback) { ->(user) { bootstrapped_users << [user, user.moderator?] } }
+
+    let(:plugin) { Plugin::Instance.new }
+
+    before do
+      plugin.enabled_site_setting(:discourse_sample_plugin_enabled)
+      SiteSetting.discourse_sample_plugin_enabled = true
+      plugin.register_first_admin_bootstrap(&bootstrap_callback)
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_first_admin_bootstrap.delete_if do |entry|
+        entry[:plugin] == plugin
+      end
+    end
 
     it "grants moderation and logs the staff action on the singular admin's first login" do
       @provider = provider("/")
@@ -934,6 +1026,17 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       log = UserHistory.where(action: UserHistory.actions[:grant_moderation]).last
       expect(log.target_user_id).to eq(admin.id)
       expect(log.acting_user_id).to eq(Discourse.system_user.id)
+      expect(bootstrapped_users).to eq([[admin, true]])
+    end
+
+    it "skips bootstrap callbacks from disabled plugins" do
+      SiteSetting.discourse_sample_plugin_enabled = false
+
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+
+      expect(admin.reload.moderator).to eq(true)
+      expect(bootstrapped_users).to be_empty
     end
 
     it "is idempotent: a second login does not re-log grant_moderation" do
@@ -945,6 +1048,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
         @provider = provider("/")
         @provider.log_on_user(admin.reload, {}, @provider.cookie_jar)
       }.to_not change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }
+
+      expect(bootstrapped_users).to eq([[admin, true]])
     end
 
     it "does not grant moderation when another admin already exists" do
@@ -954,6 +1059,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(admin, {}, @provider.cookie_jar)
 
       expect(admin.reload.moderator).to eq(false)
+      expect(bootstrapped_users).to be_empty
       expect(UserHistory.where(action: UserHistory.actions[:grant_moderation]).count).to eq(0)
     end
 
@@ -964,6 +1070,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(admin, {}, @provider.cookie_jar)
 
       expect(admin.reload.moderator).to eq(false)
+      expect(bootstrapped_users).to be_empty
     end
 
     it "does not grant moderation to non-admin users" do
@@ -971,6 +1078,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(user, {}, @provider.cookie_jar)
 
       expect(user.reload.moderator).to eq(false)
+      expect(bootstrapped_users).to be_empty
     end
   end
 end

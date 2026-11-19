@@ -7,6 +7,8 @@ import DNativeSelect, {
 } from "discourse/ui-kit/d-native-select";
 import { i18n } from "discourse-i18n";
 
+const noop = () => {};
+
 module("Integration | ui-kit | DNativeSelect", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -50,7 +52,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   });
 
   test("no value", async function (assert) {
-    await render(<template><DNativeSelect /></template>);
+    await render(<template><DNativeSelect @onChange={{noop}} /></template>);
 
     assert.dnativeselect().hasSelectedOption({
       value: NO_VALUE_OPTION,
@@ -61,7 +63,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   test("selected value", async function (assert) {
     await render(
       <template>
-        <DNativeSelect @value="foo" as |s|>
+        <DNativeSelect @onChange={{noop}} @value="foo" as |s|>
           <s.Option @value="foo">The real foo</s.Option>
         </DNativeSelect>
       </template>
@@ -81,7 +83,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   test("selected falsy value", async function (assert) {
     await render(
       <template>
-        <DNativeSelect @value={{false}} as |s|>
+        <DNativeSelect @onChange={{noop}} @value={{false}} as |s|>
           <s.Option @value={{false}}>The real false</s.Option>
           <s.Option @value={{true}}>The real true</s.Option>
         </DNativeSelect>
@@ -100,20 +102,15 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   });
 
   test("keeps the selection when options are rebuilt", async function (assert) {
-    class State {
-      @tracked
-      options = [
-        { value: "foo", label: "The real foo" },
-        { value: "bar", label: "The real bar" },
-      ];
-    }
-
-    const state = new State();
+    const options = tracked([
+      { value: "foo", label: "The real foo" },
+      { value: "bar", label: "The real bar" },
+    ]);
 
     await render(
       <template>
-        <DNativeSelect @value="bar" as |s|>
-          {{#each state.options as |option|}}
+        <DNativeSelect @onChange={{noop}} @value="bar" as |s|>
+          {{#each options.value as |option|}}
             <s.Option @value={{option.value}}>{{option.label}}</s.Option>
           {{/each}}
         </DNativeSelect>
@@ -125,7 +122,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
       label: "The real bar",
     });
 
-    state.options = [
+    options.value = [
       { value: "baz", label: "The real baz" },
       { value: "foo", label: "The real foo" },
       { value: "bar", label: "The real bar" },
@@ -139,19 +136,15 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   });
 
   test("keeps the selection when the value is not a string", async function (assert) {
-    class State {
-      @tracked value = 30;
-    }
-
-    const state = new State();
-    const handleChange = (value) => (state.value = value);
+    const selectedValue = tracked(30);
+    const handleChange = (value) => (selectedValue.value = value);
 
     await render(
       <template>
         <DNativeSelect
           @includeNone={{false}}
           @onChange={{handleChange}}
-          @value={{state.value}}
+          @value={{selectedValue.value}}
           as |s|
         >
           <s.Option @value={{1}}>One</s.Option>
@@ -169,7 +162,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   test("required field", async function (assert) {
     await render(
       <template>
-        <DNativeSelect @includeNone={{false}} as |s|>
+        <DNativeSelect @includeNone={{false}} @onChange={{noop}} as |s|>
           <s.Option @value="foo">The real foo</s.Option>
         </DNativeSelect>
       </template>
@@ -179,7 +172,9 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   });
 
   test("select attributes", async function (assert) {
-    await render(<template><DNativeSelect class="test" /></template>);
+    await render(
+      <template><DNativeSelect class="test" @onChange={{noop}} /></template>
+    );
 
     assert.dom(".d-native-select.test").exists();
   });
@@ -187,7 +182,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   test("option attributes", async function (assert) {
     await render(
       <template>
-        <DNativeSelect as |s|>
+        <DNativeSelect @onChange={{noop}} as |s|>
           <s.Option class="test" @value="foo">The real foo</s.Option>
         </DNativeSelect>
       </template>

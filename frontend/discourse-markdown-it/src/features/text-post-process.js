@@ -1,5 +1,5 @@
 import MarkdownIt from "markdown-it";
-import { applyDataAttributes, parseBBCodeTag } from "./bbcode-block";
+import { applyDataAttributes, parseBBCodeTag } from "./bbcode-block.js";
 
 const { isPunctChar, isWhiteSpace } = new MarkdownIt().utils;
 

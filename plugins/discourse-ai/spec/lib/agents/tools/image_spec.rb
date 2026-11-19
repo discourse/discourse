@@ -69,7 +69,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Image do
 
   let(:llm) { DiscourseAi::Completions::Llm.proxy(gpt_35_turbo) }
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_35_turbo.name) }
+  fab!(:bot_user, :admin)
 
   describe "#process" do
     it "can generate correct info" do

@@ -7,7 +7,6 @@ import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
-import { and } from "discourse/truth-helpers";
 import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
@@ -33,9 +32,14 @@ export default class DUserInfo extends Component {
     return userPath(this.user?.username);
   }
 
-  @computed("user.name")
+  @computed("siteSettings.enable_names", "user.name")
+  get showName() {
+    return this.siteSettings.enable_names && this.user?.name?.trim().length > 0;
+  }
+
+  @computed("showName")
   get nameFirst() {
-    return prioritizeNameInUx(this.user?.name);
+    return this.showName && prioritizeNameInUx(this.user.name);
   }
 
   didInsertElement() {
@@ -76,7 +80,6 @@ export default class DUserInfo extends Component {
         >
           <span class="username-wrapper">
             {{#if this.includeLink}}
-              {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
               <a
                 aria-level={{@headingLevel}}
                 data-user-card={{@user.username}}
@@ -95,7 +98,7 @@ export default class DUserInfo extends Component {
               />
             {{/if}}
           </span>
-          {{#if @user.name}}
+          {{#if this.showName}}
             <span class="name-wrapper">
               {{#if this.includeLink}}
                 <a data-user-card={{@user.username}} href={{this.userPath}}>

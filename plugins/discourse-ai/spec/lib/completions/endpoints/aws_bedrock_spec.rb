@@ -43,6 +43,58 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     model.name = "claude-3-5-haiku"
     options = endpoint.default_options(dialect)
     expect(options[:max_tokens]).to eq(8192)
+
+    # Bedrock caps Sonnet 4.6 at 64k, unlike the Anthropic API (128k)
+    model.name = "claude-sonnet-4-6"
+    expect(endpoint.default_options(dialect)[:max_tokens]).to eq(64_000)
+
+    model.name = "claude-sonnet-99"
+    expect(endpoint.default_options(dialect)[:max_tokens]).to eq(64_000)
+
+    model.update!(name: "claude-sonnet-4-6", max_output_tokens: 2000)
+    expect(endpoint.default_options(dialect)[:max_tokens]).to eq(2000)
+  end
+
+  it "translates friendly model names to Bedrock model IDs in the request URL" do
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
+
+    content = {
+      content: [text: "hello sam"],
+      usage: {
+        input_tokens: 10,
+        output_tokens: 20,
+      },
+    }.to_json
+
+    requested_model_ids = []
+    stub_request(:post, %r{bedrock-runtime\.us-east-1\.amazonaws\.com/model/})
+      .with do |request|
+        requested_model_ids << URI.decode_www_form_component(
+          request.uri.path.split("/model/").last.sub(%r{/invoke\z}, ""),
+        )
+        true
+      end
+      .to_return(status: 200, body: content)
+
+    {
+      "claude-opus-4-1" => "anthropic.claude-opus-4-1-20250805-v1:0",
+      "claude-opus-4-1-20250805" => "anthropic.claude-opus-4-1-20250805-v1:0",
+      "claude-opus-4-5" => "anthropic.claude-opus-4-5-20251101-v1:0",
+      "claude-sonnet-4-5" => "anthropic.claude-sonnet-4-5-20250929-v1:0",
+      "claude-sonnet-4-5-20250929" => "anthropic.claude-sonnet-4-5-20250929-v1:0",
+      "claude-haiku-4-5" => "anthropic.claude-haiku-4-5-20251001-v1:0",
+      "claude-opus-4-6" => "anthropic.claude-opus-4-6-v1",
+      "claude-sonnet-4-6" => "anthropic.claude-sonnet-4-6",
+      "claude-opus-4-7" => "anthropic.claude-opus-4-7",
+      "claude-sonnet-5" => "anthropic.claude-sonnet-5",
+      "claude-fable-5-1" => "anthropic.claude-fable-5-1",
+      "claude-haiku-5-5" => "anthropic.claude-haiku-5-5",
+      "us.anthropic.claude-sonnet-4-6" => "us.anthropic.claude-sonnet-4-6",
+    }.each do |friendly_name, bedrock_id|
+      model.update!(name: friendly_name)
+      proxy.generate("hello world", user: user)
+      expect(requested_model_ids.last).to eq(bedrock_id)
+    end
   end
 
   describe "function calling" do
@@ -341,6 +393,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     it "supports thinking" do
       model.provider_params["enable_reasoning"] = true
       model.provider_params["reasoning_tokens"] = 10_000
+      model.max_output_tokens = 40_000
       model.save!
 
       proxy = DiscourseAi::Completions::Llm.proxy(model)
@@ -1335,6 +1388,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   describe "adaptive thinking" do
     it "sends adaptive thinking config when enabled" do
       model.update!(
+        max_output_tokens: 32_000,
         provider_params: {
           access_key_id: "123",
           region: "us-east-1",
@@ -1373,6 +1427,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
     it "adaptive_thinking takes priority over enable_reasoning" do
       model.update!(
+        max_output_tokens: 32_000,
         provider_params: {
           access_key_id: "123",
           region: "us-east-1",

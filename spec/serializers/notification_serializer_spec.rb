@@ -14,6 +14,21 @@ RSpec.describe NotificationSerializer do
     it "does not include external_id when sso is disabled" do
       expect(json[:notification].key?(:external_id)).to eq(false)
     end
+
+    it "removes name fields from notification data when names are disabled" do
+      SiteSetting.enable_names = false
+      notification.update!(
+        data: {
+          display_name: "Display Name",
+          name: "Name",
+          name2: "Second Name",
+          original_name: "Original Name",
+          safe_key: "safe value",
+        }.to_json,
+      )
+
+      expect(json[:notification][:data]).to eq("safe_key" => "safe value")
+    end
   end
 
   describe "#sso_enabled" do

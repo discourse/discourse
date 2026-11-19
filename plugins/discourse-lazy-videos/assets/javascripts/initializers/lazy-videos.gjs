@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import LazyVideo from "../discourse/components/lazy-video";
-import getVideoAttributes from "../lib/lazy-video-attributes";
+import LazyVideo from "../discourse/components/lazy-video.gjs";
+import getVideoAttributes from "../lib/lazy-video-attributes.js";
 
 function initLazyEmbed(api) {
   api.decorateCookedElement(

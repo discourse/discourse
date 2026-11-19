@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
+/* eslint-disable discourse/no-test-context-set -- tests classic decorators */
 import Component from "@ember/component";
 import EmberObject, { computed } from "@ember/object";
 import { clearRender, render, settled } from "@ember/test-helpers";
@@ -12,7 +13,6 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse/lib/decorators";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 // eslint-disable-next-line ember/no-classic-classes
@@ -119,7 +119,7 @@ module("Unit | Utils | decorators", function (hooks) {
 
   test("afterRender", async function (assert) {
     this.registry.register("component:foo-component", fooComponent);
-    this.set("baz", 0);
+    this.baz = 0;
 
     await render(hbs`<FooComponent @baz={{this.baz}} />`);
 
@@ -138,7 +138,7 @@ module("Unit | Utils | decorators", function (hooks) {
       EmberObjectComponent
     );
 
-    this.set("name", "Jarek");
+    this.name = "Jarek";
     await render(hbs`<EmberObjectComponent @name={{this.name}} />`);
 
     assert.dom(".ember-object-component").hasText("hello, Jarek");
@@ -155,7 +155,7 @@ module("Unit | Utils | decorators", function (hooks) {
   test("discourseComputed works in native classes", async function (assert) {
     this.registry.register("component:native-component", NativeComponent);
 
-    this.set("name", "Jarek");
+    this.name = "Jarek";
     await render(hbs`<NativeComponent @name={{this.name}} />`);
 
     assert.dom(".native-component").hasText("hello, Jarek");
@@ -215,19 +215,7 @@ module("Unit | Utils | decorators", function (hooks) {
     assert.strictEqual(stub.counter, 6);
   });
 
-  test("@observes works via .extend and native class syntax", async function (assert) {
-    let NativeClassWithObserver;
-    withSilencedDeprecations("discourse.utils-decorators-observes", () => {
-      NativeClassWithObserver = class extends EmberObject {
-        counter = 0;
-
-        @observes("value")
-        incrementCounter() {
-          this.set("counter", this.counter + 1);
-        }
-      };
-    });
-
+  test("@observes works via .extend", async function (assert) {
     // eslint-disable-next-line ember/no-classic-classes
     const ExtendWithObserver = EmberObject.extend({
       counter: 0,
@@ -237,17 +225,6 @@ module("Unit | Utils | decorators", function (hooks) {
       },
     });
 
-    const nativeClassTest = NativeClassWithObserver.create();
-    nativeClassTest.set("value", "one");
-    await settled();
-    nativeClassTest.set("value", "two");
-    await settled();
-    assert.strictEqual(
-      nativeClassTest.counter,
-      2,
-      "observer triggered for native class"
-    );
-
     const extendTest = ExtendWithObserver.create();
     extendTest.set("value", "one");
     await settled();
@@ -256,19 +233,17 @@ module("Unit | Utils | decorators", function (hooks) {
     assert.strictEqual(extendTest.counter, 2, "observer triggered for .extend");
   });
 
-  test("@on works via .extend and native class syntax", async function (assert) {
-    let NativeClassWithOn;
-    withSilencedDeprecations("discourse.utils-decorators-on", () => {
-      NativeClassWithOn = class extends EmberObject {
-        counter = 0;
+  test("@observes throws on a native class", function (assert) {
+    assert.throws(() => {
+      // eslint-disable-next-line no-unused-vars
+      class NativeClassWithObserver extends EmberObject {
+        @observes("value")
+        incrementCounter() {}
+      }
+    }, /only works with `\.extend\(\)`/);
+  });
 
-        @on("init")
-        incrementCounter() {
-          this.set("counter", this.counter + 1);
-        }
-      };
-    });
-
+  test("@on works via .extend", function (assert) {
     // eslint-disable-next-line ember/no-classic-classes
     const ExtendWithOn = EmberObject.extend({
       counter: 0,
@@ -278,14 +253,17 @@ module("Unit | Utils | decorators", function (hooks) {
       },
     });
 
-    const nativeClassTest = NativeClassWithOn.create();
-    assert.strictEqual(
-      nativeClassTest.counter,
-      1,
-      "on triggered for native class"
-    );
-
     const extendTest = ExtendWithOn.create();
     assert.strictEqual(extendTest.counter, 1, "on triggered for .extend");
+  });
+
+  test("@on throws on a native class", function (assert) {
+    assert.throws(() => {
+      // eslint-disable-next-line no-unused-vars
+      class NativeClassWithOn extends EmberObject {
+        @on("init")
+        incrementCounter() {}
+      }
+    }, /only works with `\.extend\(\)`/);
   });
 });

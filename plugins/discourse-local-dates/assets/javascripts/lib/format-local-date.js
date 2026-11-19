@@ -1,4 +1,4 @@
-import LocalDateBuilder from "./local-date-builder";
+import LocalDateBuilder from "./local-date-builder.js";
 
 /**
  * @param {string} date - Date in YYYY-MM-DD format
