@@ -8,7 +8,6 @@ require "socket"
 require "uri"
 require "net/http"
 require "securerandom"
-require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
   DEFAULT_BROWSER_START_TIMEOUT = 45
@@ -46,6 +45,8 @@ class QunitRunner
   end
 
   def run
+    ensure_playwright_chromium! if browser == "Chrome" && !@dry_run
+
     if @standalone_mode
       with_standalone_rails { run_tests }
     else
@@ -285,7 +286,7 @@ class QunitRunner
     env = {}
     env["LOAD_PLUGINS"] = should_load_plugins? ? "1" : "0"
     env["UNICORN_PORT"] = @rails_port.to_s
-    env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
+    env["TESTEM_DEFAULT_BROWSER"] = browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
     env["QUNIT_HEADLESS"] = "0" if !@headless
     env["QUNIT_BROWSER_WATCHDOG"] = @browser_watchdog ? "1" : "0"
@@ -456,10 +457,26 @@ class QunitRunner
     system("pnpm", "install", exception: true) if node_modules_outdated
   end
 
-  def detect_browser
-    ChromeInstalledChecker.run
-  rescue ChromeInstalledChecker::ChromeError => err
-    abort err.message
+  def browser
+    ENV["TESTEM_DEFAULT_BROWSER"] || "Chrome"
+  end
+
+  def ensure_playwright_chromium!
+    path =
+      IO.popen(
+        %w[node -p require('playwright-core').chromium.executablePath()],
+        chdir: rails_root,
+        err: File::NULL,
+        &:read
+      ).strip
+
+    if !$?.success? || !File.exist?(path)
+      abort "Playwright's Chromium isn't installed. Run `pnpm playwright-install` and try again."
+    end
+
+    if !system(path, "--version", out: File::NULL, err: File::NULL)
+      abort "Playwright's Chromium is installed but can't start. On Linux, install its system libraries with `pnpm exec playwright install-deps chromium`."
+    end
   end
 
   def next_available_port(start_port)
