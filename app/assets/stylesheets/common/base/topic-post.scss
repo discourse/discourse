@@ -779,7 +779,9 @@ blockquote {
   padding: 0.75em;
 }
 
-.ai-badge {
+.ai-badge,
+// Details cooked before the shared badge used this class; drop once they're rebaked.
+.ai-details-label {
   display: inline-block;
   padding: 1px 6px;
   background: var(--primary-high);
