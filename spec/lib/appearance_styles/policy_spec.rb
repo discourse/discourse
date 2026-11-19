@@ -491,6 +491,56 @@ RSpec.describe AppearanceStyles::Policy do
       )
     end
 
+    it "rejects color-mix() percentages outside 0% to 100%" do
+      %w[150% -50%].each do |percent|
+        expect_error(
+          {
+            rules: [
+              {
+                area: "post_body",
+                declarations: {
+                  "color" => "color-mix(in srgb, var(--primary) #{percent}, var(--secondary))",
+                },
+              },
+            ],
+          },
+          "color-mix() percentages must be between 0% and 100%",
+        )
+        expect_error(
+          {
+            variables: {
+              "--d-link-color" => "color-mix(in srgb, var(--primary) #{percent}, var(--secondary))",
+            },
+          },
+          "color-mix() percentages must be between 0% and 100%",
+        )
+      end
+    end
+
+    it "checks variables that rules for the same area set together" do
+      expect_error(
+        {
+          rules: [
+            {
+              area: "primary_button",
+              declarations: {
+                "--d-button-primary-bg-color" => "light-dark(#000000, #000000)",
+                "--d-button-primary-text-color" => "light-dark(#ffffff, #ffffff)",
+                "--d-button-primary-icon-color" => "light-dark(#ffffff, #ffffff)",
+              },
+            },
+            {
+              area: "primary_button",
+              declarations: {
+                "--d-button-primary-text-color" => "light-dark(#000000, #000000)",
+              },
+            },
+          ],
+        },
+        "--d-button-primary-text-color on --d-button-primary-bg-color is",
+      )
+    end
+
     it "checks text variables on a see-through background against what shows through it" do
       expect_error(
         { variables: { "--d-nav-color" => "var(--secondary)" } },

@@ -499,7 +499,11 @@ module AppearanceStyles
           begin
             [[first, second], [second, first]].all? do |under, over|
               readable?(under[:declarations].merge(over[:declarations]), path, first[:area], state)
-            end
+            end &&
+              (
+                (overrides = first[:overrides].merge(second[:overrides])).empty? ||
+                  readable_variables?(overrides, path)
+              )
           ensure
             @draft_variables = global_variables
           end
@@ -874,6 +878,7 @@ module AppearanceStyles
         end
       return if colors.any? { |hex, _| hex.nil? }
       return :translucent if colors.any? { |hex, _| hex == :translucent }
+      return if colors.any? { |_, percent| percent && !percent.between?(0, 100) }
 
       (first, first_percent), (second, second_percent) = colors
       first_percent ||= second_percent ? 100 - second_percent : 50
@@ -1021,6 +1026,10 @@ module AppearanceStyles
         when "color-mix"
           parts = CssValue.split_commas(node.children)
           return error(path, "color-mix() needs a space and two colors") if parts.size != 3
+          percents = parts.drop(1).flatten.select { |n| n.type == :dimension && n.unit == "%" }
+          if percents.any? { |n| !n.value.between?(0, 100) }
+            return error(path, "color-mix() percentages must be between 0% and 100%")
+          end
           parts
             .drop(1)
             .all? do |part|
