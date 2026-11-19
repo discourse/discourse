@@ -34,14 +34,6 @@ details {
         margin-inline-end: auto;
         overflow-wrap: anywhere;
       }
-
-      > span:nth-child(2) {
-        flex-shrink: 0;
-        font-size: var(--font-down-2);
-        background: var(--primary-medium);
-        padding: 2px 6px 0;
-        color: var(--secondary);
-      }
     }
   }
 }

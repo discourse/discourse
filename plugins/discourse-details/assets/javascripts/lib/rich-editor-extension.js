@@ -52,7 +52,7 @@ const extension = {
         {
           tag: "details.ai-quote > summary",
           contentElement: (dom) =>
-            dom.querySelector(":scope > .ai-details-label") &&
+            dom.querySelector(":scope > .ai-badge") &&
             dom.firstElementChild?.matches("span")
               ? dom.firstElementChild
               : dom,
