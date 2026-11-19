@@ -73,6 +73,9 @@ module ::Blog
       end
       default_blog = self.class.find_by(is_default: true)
       return if default_blog.nil?
+      if PathFormat.for_blog(default_blog).fixed_first_segment?(slug)
+        return errors.add(:slug, I18n.t("blog.errors.blog_slug_reserved"))
+      end
       first_segments =
         Path.where(blog_id: default_blog.id).where("LOWER(SPLIT_PART(path, '/', 2)) = ?", slug)
       errors.add(:slug, I18n.t("blog.errors.blog_slug_taken")) if first_segments.exists?

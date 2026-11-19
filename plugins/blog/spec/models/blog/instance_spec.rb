@@ -69,6 +69,20 @@ RSpec.describe Blog::Instance do
       expect(default_blog).to be_valid
     end
 
+    it "rejects a slug the main blog's path format always puts first" do
+      default_blog = described_class.find_by(is_default: true)
+      { "/news/{slug}" => "news", "/{year}/{slug}" => "2026" }.each do |format, slug|
+        default_blog.update!(path_format: format)
+        blog.slug = slug
+        expect(blog).not_to be_valid
+        expect(blog.errors[:slug]).to eq([I18n.t("blog.errors.blog_slug_reserved")])
+      end
+
+      default_blog.update!(path_format: "/{slug}")
+      blog.slug = "news"
+      expect(blog).to be_valid
+    end
+
     it "rejects the community's own hostname as a blog's domain" do
       blog.url = "https://#{Discourse.current_hostname}"
 
