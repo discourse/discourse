@@ -1,4 +1,8 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
@@ -16,33 +20,58 @@ function hostRecord(host) {
   return { id: name, name };
 }
 
-/** The held hosts, which are the only ones the picker lists. */
-function hostRecords(hosts) {
-  return hosts.map(hostRecord);
-}
-
 /**
  * Picks a host list setting's hosts, taking typed ones. A host with a wildcard or a separator is
- * never offered for creation, so it can't be stored.
+ * never offered for creation, so it can't be stored. A removed host stays listed, unticked, so
+ * it can be picked again.
  */
-const SelectHostList = <template>
-  <DSelect
-    @allowCreate={{isStorableHost}}
-    @createOption={{hostRecord}}
-    @disabled={{@disabled}}
-    @multiple={{true}}
-    @onChange={{@onChange}}
-    @options={{hostRecords @hosts}}
-    @texts={{hash
-      ariaLabel=@ariaLabel
-      placeholder=(i18n "admin.site_settings.host_list.placeholder")
-      addMorePlaceholder=(i18n
-        "admin.site_settings.host_list.add_more_placeholder"
-      )
-      noResults=(i18n "admin.site_settings.host_list.not_allowed")
-    }}
-    @value={{@hosts}}
-  />
-</template>;
+export default class SelectHostList extends Component {
+  /**
+   * Every host the list has held since the picker rendered, in the order each was first held, so
+   * a removed one keeps its row.
+   */
+  @tracked offered = [];
 
-export default SelectHostList;
+  get options() {
+    return uniqueItemsFromArray([...this.offered, ...this.args.hosts]).map(
+      hostRecord
+    );
+  }
+
+  @action
+  onChange(hosts) {
+    this.offered = uniqueItemsFromArray([
+      ...this.offered,
+      ...this.args.hosts,
+      ...hosts,
+    ]);
+    this.args.onChange(hosts);
+  }
+
+  <template>
+    <DSelect
+      @allowCreate={{isStorableHost}}
+      @createOption={{hostRecord}}
+      @disabled={{@disabled}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @options={{this.options}}
+      @texts={{hash
+        ariaLabel=@ariaLabel
+        placeholder=(i18n "admin.site_settings.host_list.placeholder")
+        addMorePlaceholder=(i18n
+          "admin.site_settings.host_list.add_more_placeholder"
+        )
+      }}
+      @value={{@hosts}}
+    >
+      <:empty as |state|>
+        {{#if state.query}}
+          {{i18n "admin.site_settings.host_list.not_allowed"}}
+        {{else}}
+          {{i18n "admin.site_settings.host_list.empty"}}
+        {{/if}}
+      </:empty>
+    </DSelect>
+  </template>
+}

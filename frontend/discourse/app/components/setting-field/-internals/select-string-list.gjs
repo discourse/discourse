@@ -49,11 +49,14 @@ const Swatch = <template>
 
 /**
  * Picks a string list setting's values: its choices, plus typed ones when `@allowAny` is set. A
- * value removed from the list stays on offer, held `@mandatory` values can't be removed, and
+ * value removed from the list stays listed, unticked, held `@mandatory` values can't be removed, and
  * `@colors` draws each value that is a hex colour as a small square.
  */
 export default class SelectStringList extends Component {
-  /** Every value the list has held since the picker rendered, so a removed one can be picked again. */
+  /**
+   * Every value the list has held since the picker rendered, in the order each was first held, so
+   * a removed one keeps its row and can be picked again.
+   */
   @tracked offered = [];
 
   /** A list with no choices to search, whose texts ask for values instead. */
@@ -71,7 +74,7 @@ export default class SelectStringList extends Component {
   get options() {
     const records = (this.args.choices ?? []).map(choiceRecord);
     const known = new Set(records.map((record) => record.id));
-    for (const value of [...this.args.values, ...this.offered]) {
+    for (const value of [...this.offered, ...this.args.values]) {
       if (!known.has(value)) {
         known.add(value);
         records.push({ id: value, name: value });
@@ -90,7 +93,6 @@ export default class SelectStringList extends Component {
       addMorePlaceholder: i18n(
         "admin.site_settings.compact_list.add_more_placeholder"
       ),
-      noResults: i18n("admin.site_settings.compact_list.not_allowed"),
     };
   }
 
@@ -126,12 +128,25 @@ export default class SelectStringList extends Component {
         {{#if option.create}}
           {{renderSelectText config "createOption" (hash label=option.label)}}
         {{else}}
-          {{#if @colors}}
-            <Swatch @value={{option.value}} />
-          {{/if}}
-          {{option.label}}
+          <span class="select-string-list__value">
+            {{~#if @colors~}}
+              <Swatch @value={{option.value}} />
+            {{~/if~}}
+            {{option.label~}}
+          </span>
         {{/if}}
       </:option>
+      <:empty as |state config|>
+        {{#if this.freeText}}
+          {{#if state.query}}
+            {{i18n "admin.site_settings.compact_list.not_allowed"}}
+          {{else}}
+            {{i18n "admin.site_settings.compact_list.empty"}}
+          {{/if}}
+        {{else}}
+          {{renderSelectText config "noResults"}}
+        {{/if}}
+      </:empty>
       <:selection as |option|>
         {{#if @colors}}
           <Swatch @value={{option.value}} />

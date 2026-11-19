@@ -1248,6 +1248,22 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
         i18n("admin.site_settings.host_list.placeholder"),
         "the empty field asks for a host"
       );
+
+    await dSelect("[data-name='my_hosts'] .d-select").open();
+    assert
+      .dom(".d-select__empty")
+      .hasText(
+        i18n("admin.site_settings.host_list.empty"),
+        "the open list says it holds no hosts, without repeating the prompt"
+      );
+
+    await dSelect("[data-name='my_hosts'] .d-select").search("*.x.com");
+    assert
+      .dom(".d-select__empty")
+      .hasText(
+        i18n("admin.site_settings.host_list.not_allowed"),
+        "a refused host says why"
+      );
   });
 
   test("host_list adds typed hosts and refuses wildcards with the new select controls", async function (assert) {
@@ -1301,8 +1317,22 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       .dom("[role='option'].--create")
       .doesNotExist("a typed separator can't be added");
 
-    await dSelect(control).remove("b.com");
+    await dSelect(control).close();
+    await dSelect(control).open();
+    assert
+      .dom("[role='option'][data-value='a.com']")
+      .hasAttribute("aria-selected", "true", "the held hosts are listed");
+
+    await click("[role='option'][data-value='b.com']");
     assert.dom(".value-probe").hasAttribute("data-value", "a.com|c.com");
+    assert
+      .dom("[role='option'][data-value='b.com']")
+      .hasAttribute(
+        "aria-selected",
+        "false",
+        "a removed host stays in the list, unticked"
+      );
+    await dSelect(control).close();
 
     await paste(`${control} [role='combobox']`, "x.com|*.y.com");
     assert
@@ -1346,6 +1376,9 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
 
     await dSelect(control).open();
     assert.dom("[role='option'][data-value='b']").exists("offers the choices");
+    assert
+      .dom("[role='option'][data-value='a']")
+      .hasAttribute("aria-selected", "true", "and lists the held values");
 
     await dSelect(control).search("custom");
     await click("[role='option'].--create");
@@ -1364,6 +1397,54 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert
       .dom("[role='option'][data-value='custom']")
       .exists("a removed entry stays on offer");
+  });
+
+  test("compact_list and host_list keep a row in place when it is unticked, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form
+          @data={{hash my_list="a|b|c" my_hosts="a.com|b.com|c.com"}}
+          as |form|
+        >
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_list"
+              type="compact_list"
+              label="My list"
+            }}
+            @form={{form}}
+          />
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_hosts"
+              type="host_list"
+              label="My hosts"
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    const rowValues = () =>
+      [...document.querySelectorAll("[role='option']")].map(
+        (row) => row.dataset.value
+      );
+
+    await dSelect("[data-name='my_list'] .d-select").open();
+    await click("[role='option'][data-value='b']");
+    assert.deepEqual(rowValues(), ["a", "b", "c"], "the value keeps its row");
+    await dSelect("[data-name='my_list'] .d-select").close();
+
+    await dSelect("[data-name='my_hosts'] .d-select").open();
+    await click("[role='option'][data-value='b.com']");
+    assert.deepEqual(
+      rowValues(),
+      ["a.com", "b.com", "c.com"],
+      "the host keeps its row"
+    );
   });
 
   test("compact_list refuses typed entries when allow_any is false, with the new select controls", async function (assert) {
@@ -1449,6 +1530,15 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
         "the empty field asks for a value"
       );
 
+    await dSelect(control).open();
+    assert
+      .dom(".d-select__empty")
+      .hasText(
+        i18n("admin.site_settings.compact_list.empty"),
+        "the open list says it holds no values, without repeating the prompt"
+      );
+    await dSelect(control).close();
+
     await dSelect(control).search("one");
     await click("[role='option'].--create");
     assert.dom(".value-probe").hasAttribute("data-value", "one");
@@ -1504,7 +1594,7 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
 
     await render(
       <template>
-        <Form @data={{hash my_colors="f00|nope" my_list="f00"}} as |form|>
+        <Form @data={{hash my_colors="f00|nope|0f0" my_list="f00"}} as |form|>
           <SettingDefinitionField
             @definition={{hash
               key="my_colors"
@@ -1540,10 +1630,11 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       .dom("[data-name='my_list'] .select-string-list__swatch")
       .doesNotExist("a list that isn't about colours shows none");
 
+    await dSelect(colors).remove("0f0");
     await dSelect(colors).open();
     assert
-      .dom("[role='option'][data-value='f00'] .select-string-list__swatch")
-      .exists("the listed colour shows its square too");
+      .dom("[role='option'][data-value='0f0'] .select-string-list__swatch")
+      .hasAttribute("style", /#0f0/, "a listed colour shows its square too");
   });
 
   test("locale_list shows language names with the new select controls", async function (assert) {

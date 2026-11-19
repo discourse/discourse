@@ -10699,10 +10699,12 @@ en:
         compact_list:
           placeholder: "Type a value to add it"
           add_more_placeholder: "Add another…"
+          empty: "No values yet"
           not_allowed: "Values can't contain |"
         host_list:
           placeholder: "Type a host to add it"
           add_more_placeholder: "Add another host…"
+          empty: "No hosts yet"
           not_allowed: "Hosts can't contain *, ? or |"
         uploaded_image_list:
           label: "Edit list"
