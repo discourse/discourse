@@ -115,6 +115,12 @@ Rules:
   categories they can see (restricted-category config reaches just the members
   allowed to view it).
 
+Mounted slots apply the latest configuration after the three-second refresh
+cooldown, including changes received while staying on the same page. Same-unit
+refreshes remove obsolete targeting keys supplied by the plugin while preserving
+keys added directly by other integrations. Category deletion removes its settings;
+category updates notify browsers to re-evaluate the viewer-visible map.
+
 ## How the ad unit is resolved
 
 For each placement the plugin resolves, in priority order, the first match:

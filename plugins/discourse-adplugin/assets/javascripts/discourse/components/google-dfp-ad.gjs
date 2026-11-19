@@ -1,4 +1,6 @@
-import { computed, set } from "@ember/object";
+import { action, computed, set } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { cancel, later } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
@@ -271,7 +273,14 @@ function defineSlot(
 
   ad.addService(window.googletag.pubads());
 
-  ads[divId] = { ad, width, height, adUnitPath: config.adUnitPath };
+  ads[divId] = {
+    ad,
+    width,
+    height,
+    adUnitPath: config.adUnitPath,
+    targetingKeys: Object.keys(config.targeting),
+    configKey: JSON.stringify(config),
+  };
   return ads[divId];
 }
 
@@ -332,6 +341,8 @@ function loadGoogle() {
 export default class GoogleDfpAd extends AdComponent {
   loadedGoogletag = false;
   lastAdRefresh = null;
+
+  #refreshTimer = null;
 
   @computed("size.width")
   get width() {
@@ -453,9 +464,14 @@ export default class GoogleDfpAd extends AdComponent {
     return new Date() - lastAdRefresh > 3000;
   }
 
-  @on("didUpdate")
+  @action
   updated() {
-    if (!this.get("showAd") || !this.get("loadedGoogletag")) {
+    if (
+      this.isDestroying ||
+      this.isDestroyed ||
+      !this.get("showAd") ||
+      !this.get("loadedGoogletag")
+    ) {
       return;
     }
 
@@ -466,10 +482,6 @@ export default class GoogleDfpAd extends AdComponent {
       return;
     }
 
-    if (!this.shouldRefreshAd()) {
-      return;
-    }
-
     const slot = ads[this.get("divId")];
     const config = dfpConfig(
       this.get("placement"),
@@ -477,6 +489,27 @@ export default class GoogleDfpAd extends AdComponent {
       this.site.mobileView,
       this.#buildDfpContext()
     );
+
+    if (!this.shouldRefreshAd()) {
+      if (slot.configKey === JSON.stringify(config)) {
+        cancel(this.#refreshTimer);
+        this.#refreshTimer = null;
+        return;
+      }
+      if (!this.#refreshTimer) {
+        this.#refreshTimer = later(
+          () => {
+            this.#refreshTimer = null;
+            this.updated();
+          },
+          3000 - (new Date() - this.lastAdRefresh)
+        );
+      }
+      return;
+    }
+
+    cancel(this.#refreshTimer);
+    this.#refreshTimer = null;
 
     this.set("lastAdRefresh", new Date());
 
@@ -499,10 +532,13 @@ export default class GoogleDfpAd extends AdComponent {
         window.googletag.display(this.get("divId"));
         window.googletag.pubads().refresh([redefined.ad]);
       } else {
-        // setConfig merges into existing slot targeting, so keys omitted from
-        // the new config (e.g. gam_keywords dropped when a category stops
-        // overriding them) would linger. Clear first for replace semantics.
-        slot.ad.clearTargeting();
+        for (const key of slot.targetingKeys) {
+          if (!Object.hasOwn(config.targeting, key)) {
+            slot.ad.clearTargeting(key);
+          }
+        }
+        slot.targetingKeys = Object.keys(config.targeting);
+        slot.configKey = JSON.stringify(config);
         slot.ad.setConfig({ targeting: config.targeting });
         window.googletag.pubads().refresh([slot.ad]);
       }
@@ -529,6 +565,7 @@ export default class GoogleDfpAd extends AdComponent {
 
   @on("willDestroyElement")
   cleanup() {
+    cancel(this.#refreshTimer);
     destroySlot(this.get("divId"));
   }
 
@@ -587,7 +624,19 @@ export default class GoogleDfpAd extends AdComponent {
   }
 
   <template>
-    <div class={{dConcatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
+    <div
+      class={{dConcatClass "google-dfp-ad" this.adUnitClass}}
+      ...attributes
+      {{didUpdate
+        this.updated
+        this.currentCategoryDfpConfig
+        this.currentCategoryId
+        this.currentCategorySlug
+        this.currentRouteName
+        this.postNumber
+        this.showAd
+      }}
+    >
       {{#if this.showAd}}
         {{#if this.site.mobileView}}
           <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2

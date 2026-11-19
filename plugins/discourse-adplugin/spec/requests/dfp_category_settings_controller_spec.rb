@@ -143,7 +143,7 @@ RSpec.describe AdPlugin::DfpCategorySettingsController do
       expect(payload[:public]).not_to have_key(private_category.id.to_s)
     end
 
-    it "drops a deleted category from the broadcast" do
+    it "drops a deleted category setting from the broadcast" do
       setting = AdPlugin::DfpCategorySetting.create!(category: category)
 
       messages =

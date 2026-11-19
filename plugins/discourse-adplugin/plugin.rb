@@ -36,9 +36,11 @@ after_initialize do
   require_relative "app/models/ad_plugin/dfp_category_setting"
   require_relative "app/models/ad_plugin/ad_impression"
   require_relative "app/models/concerns/reports/ad_plugin"
+  require_relative "lib/adplugin/category_extensions"
   require_relative "lib/adplugin/guardian_extensions"
 
   reloadable_patch do
+    Category.prepend AdPlugin::CategoryExtensions
     Guardian.prepend AdPlugin::GuardianExtensions
     Report.include(Reports::AdPlugin)
   end
@@ -65,6 +67,12 @@ after_initialize do
       get "/dfp-settings" => "ad_plugin/dfp_category_settings#index", :format => false
       get "/dfp-settings/new" => "ad_plugin/dfp_category_settings#index", :format => false
       get "/dfp-settings/:id/edit" => "ad_plugin/dfp_category_settings#index", :format => false
+    end
+  end
+
+  on(:category_updated) do |category|
+    if AdPlugin::DfpCategorySetting.exists?(category_id: category.id)
+      AdPlugin::DfpCategorySetting.publish_site_settings
     end
   end
 

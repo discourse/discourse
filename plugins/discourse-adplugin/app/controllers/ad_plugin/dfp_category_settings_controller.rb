@@ -43,7 +43,6 @@ module AdPlugin
       raise Discourse::NotFound if setting.nil?
 
       setting.destroy!
-      DfpCategorySetting.publish_site_settings
       head :no_content
     end
 

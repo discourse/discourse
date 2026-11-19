@@ -6,10 +6,14 @@ module AdPlugin
 
     self.table_name = "ad_plugin_dfp_category_settings"
 
-    belongs_to :category
+    belongs_to :category, optional: false
 
     validates :category_id, uniqueness: true
     validates :gam_adunit, :gam_keywords, :gtm_taxonomy, length: { maximum: 255 }
+
+    after_destroy_commit do
+      self.class.publish_site_settings if SiteSetting.discourse_adplugin_enabled
+    end
 
     def self.site_settings_for(scope)
       where(category_id: Category.secured(scope).select(:id)).to_h do |setting|

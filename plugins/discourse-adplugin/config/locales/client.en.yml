@@ -70,7 +70,7 @@ en:
           category_description: "Select the category that will use this configuration. Child categories need their own configuration."
           gam_adunit_description: "The full Google Ad Manager ad unit path. Leave blank to use the global ad unit."
           gam_keywords_description: "Comma-separated targeting values sent with ad requests for this category."
-          gtm_taxonomy_description: "Optional taxonomy metadata for integrations such as Google Tag Manager."
+          gtm_taxonomy_description: "Optional metadata for theme integrations. Sending it to Google Tag Manager requires a theme component."
           add: "Add category configuration"
           back: "Category configurations"
           new_title: "Add category configuration"
