@@ -6,6 +6,7 @@ import DurationControl from "discourse/components/setting-field/duration";
 import EnumControl from "discourse/components/setting-field/enum";
 import GroupControl from "discourse/components/setting-field/group";
 import GroupListControl from "discourse/components/setting-field/group-list";
+import HostListControl from "discourse/components/setting-field/host-list";
 import IconControl from "discourse/components/setting-field/icon";
 import IntegerControl from "discourse/components/setting-field/integer";
 import LocaleEnumControl from "discourse/components/setting-field/locale-enum";
@@ -134,6 +135,10 @@ registerSettingFieldType("category_list", {
 registerSettingFieldType("compact_list", {
   ...CUSTOM_CONTROL,
   renderer: CompactListControl,
+});
+registerSettingFieldType("host_list", {
+  ...CUSTOM_CONTROL,
+  renderer: HostListControl,
 });
 registerSettingFieldType("bool", {
   ...INLINE,
