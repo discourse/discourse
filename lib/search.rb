@@ -680,8 +680,8 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
-      tag_id = target_tag_id || tag_id
+      tag_id, target_tag_id = visible_tags.where_name(category_slug).pick(:id, :target_tag_id)
+      tag_id = visible_tags.where(id: target_tag_id || tag_id).pick(:id)
       if tag_id
         posts.where(<<~SQL, tag_id)
           topics.id IN (
@@ -691,7 +691,7 @@ class Search
           )
         SQL
       else
-        if tag_group_id = TagGroup.find_id_by_slug(category_slug)
+        if tag_group_id = TagGroup.visible(@guardian).find_id_by_slug(category_slug)
           posts.where(<<~SQL, tag_group_id)
             topics.id IN (
               SELECT DISTINCT(tt.topic_id)
@@ -701,6 +701,7 @@ class Search
                 FROM tag_group_memberships
                 WHERE tag_group_id = ?
               )
+              AND tt.tag_id IN (#{visible_tags.select(:id).to_sql})
             )
           SQL
 
@@ -948,7 +949,7 @@ class Search
       posts.where(
         "topics.id #{modifier} IN (
         SELECT tt.topic_id
-        FROM topic_tags tt, tags
+        FROM topic_tags tt, (#{visible_tags.to_sql}) tags
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
         HAVING to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("array_to_string(array_agg(lower(tags.name)), ' ')")}) @@ to_tsquery(#{default_ts_config}, ?)
@@ -957,7 +958,7 @@ class Search
       )
     else
       tags = resolve_tag_synonyms(match.split(","))
-      tag_ids = Tag.where_name(tags).pluck(:id)
+      tag_ids = visible_tags.where_name(tags).pluck(:id)
       return positive ? posts.none : posts if tag_ids.empty?
 
       posts.where(
@@ -970,9 +971,13 @@ class Search
     end
   end
 
+  def visible_tags
+    @visible_tags ||= DiscourseTagging.visible_tags(@guardian)
+  end
+
   def resolve_tag_synonyms(tag_names)
     synonym_map =
-      Tag
+      visible_tags
         .where_name(tag_names)
         .where.not(target_tag_id: nil)
         .includes(:target_tag)
