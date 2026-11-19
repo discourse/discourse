@@ -931,8 +931,8 @@ class SessionController < ApplicationController
   end
 
   def rate_limit_login_code_request
-    RateLimiter.new(nil, "login-code-hour-#{request.remote_ip}", 6, 1.hour).performed!
-    RateLimiter.new(nil, "login-code-min-#{request.remote_ip}", 3, 1.minute).performed!
+    RateLimiter.new(nil, "login-code-hour-#{request.remote_ip}", 30, 1.hour).performed!
+    RateLimiter.new(nil, "login-code-min-#{request.remote_ip}", 6, 1.minute).performed!
 
     invite = Invite.find_by(invite_key: params[:invite_key]) if params[:invite_key].present?
     email = (invite&.email.presence || params[:email]).to_s.strip.downcase
