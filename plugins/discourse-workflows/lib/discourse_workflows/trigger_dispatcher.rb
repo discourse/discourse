@@ -2,7 +2,13 @@
 
 module DiscourseWorkflows
   class TriggerDispatcher
-    def self.enqueue(published_trigger, trigger_data:, user_id: nil, run_at: nil)
+    def self.enqueue(
+      published_trigger,
+      trigger_data:,
+      user_id: nil,
+      run_at: nil,
+      post_button_feedback: nil
+    )
       args = {
         workflow_id: published_trigger.workflow_id,
         workflow_version_id: published_trigger.workflow_version_id,
@@ -10,6 +16,7 @@ module DiscourseWorkflows
         trigger_data: trigger_data,
       }
       args[:user_id] = user_id if user_id
+      args[:post_button_feedback] = post_button_feedback if post_button_feedback
 
       if run_at.present? && run_at > Time.current
         return Jobs.enqueue_at(run_at, Jobs::DiscourseWorkflows::ExecuteWorkflow, args)

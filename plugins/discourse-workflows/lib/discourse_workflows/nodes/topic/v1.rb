@@ -30,6 +30,7 @@ module DiscourseWorkflows
               "like_count",
               "tags",
               "upload_ids",
+              "image_uploads",
               "reply_to_post_id",
               "reply_to_username",
               "url",

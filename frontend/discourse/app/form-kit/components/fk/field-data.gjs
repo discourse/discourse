@@ -321,6 +321,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Removes the errors of the field.
+   */
+  @action
+  removeError() {
+    this.args.data.removeError(this.name);
+  }
+
+  /**
    * Validates the field value.
    * @param {string} name - The name of the field.
    * @param {unknown} value - The value of the field.

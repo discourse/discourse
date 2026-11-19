@@ -101,6 +101,10 @@
         width: 95%;
       }
 
+      .form-kit__errors-summary {
+        display: none;
+      }
+
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
         padding-right: 0;

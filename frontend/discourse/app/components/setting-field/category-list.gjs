@@ -54,6 +54,7 @@ export default class SettingFieldCategoryList extends Component {
         {{#if this.siteSettings.enable_new_select_controls}}
           <DSelectCategory
             class="category-selector"
+            @disabled={{@field.disabled}}
             @multiple={{true}}
             @onChange={{this.onChangeCategories}}
             @texts={{hash ariaLabel=@field.title}}
@@ -63,6 +64,7 @@ export default class SettingFieldCategoryList extends Component {
           <CategorySelector
             @categories={{this.selectedCategories}}
             @onChange={{this.onChangeCategories}}
+            @options={{hash disabled=@field.disabled}}
           />
         {{/if}}
       </div>

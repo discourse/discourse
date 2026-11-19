@@ -2737,120 +2737,6 @@ RSpec.describe UserNotifications do
     end
   end
 
-  describe ".account_silenced" do
-    fab!(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:silence_user]) }
-
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        enable_dsa_reporting
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "includes appeal instructions for temporary and permanent silences without a reviewable" do
-        [1.day.from_now, 1000.years.from_now].each do |deadline|
-          user.silenced_till = deadline
-
-          mail = UserNotifications.account_silenced(user, user_history:)
-
-          expect(mail.body.decoded).to include(
-            "To appeal this decision, contact appeals@example.com",
-          )
-        end
-      end
-    end
-
-    it "adds the silenced_till date in user's timezone" do
-      user.user_option.timezone = "Asia/Tbilisi" # GMT+4
-      user.silenced_till = DateTime.parse("May 25, 2020, 12:00pm")
-
-      mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-      expect(mail.body).to include("May 25, 2020,  4:00pm (UTC+04:00)")
-    end
-
-    it "uses the offset at the silence end date across daylight saving changes" do
-      user.user_option.timezone = "America/New_York"
-
-      {
-        "2027-01-15T17:00:00Z" => "UTC-05:00",
-        "2027-07-15T17:00:00Z" => "UTC-04:00",
-      }.each do |deadline, offset|
-        user.silenced_till = Time.iso8601(deadline)
-        email = UserNotifications.account_silenced(user, user_history:)
-
-        expect(email.body.decoded).to include(offset)
-      end
-    end
-
-    it "falls back to UTC for an unrecognized timezone" do
-      user.user_option.timezone = "Not/A_Timezone"
-      user.silenced_till = Time.iso8601("2027-01-15T17:00:00Z")
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).to include("UTC+00:00")
-    end
-
-    it "uses the recipient locale and customized date format and wrapper" do
-      SiteSetting.allow_user_locale = true
-      user.locale = "fr"
-      user.user_option.timezone = "Asia/Kolkata"
-      user.silenced_till = Time.iso8601("2027-01-15T12:00:00Z")
-      TranslationOverride.upsert!(:fr, "time.formats.long", "%d/%m/%Y à %H:%M")
-      TranslationOverride.upsert!(
-        :fr,
-        "user_notifications.account_silenced.date_with_timezone",
-        "%{date} (heure UTC%{offset})",
-      )
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).to include("15/01/2027 à 17:30 (heure UTC+05:30)")
-    end
-
-    it "keeps permanent silences free of an expiry date" do
-      user.silenced_till = 1000.years.from_now
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).not_to include("UTC", "until")
-    end
-
-    context "when user doesn't have timezone set" do
-      before { user.user_option.timezone = nil }
-
-      it "doesn't raise error" do
-        expect { UserNotifications.account_silenced(user) }.not_to raise_error
-      end
-
-      it "adds the silenced_till date in UTC" do
-        date = "May 25, 2020, 12:00pm"
-        user.silenced_till = DateTime.parse(date)
-
-        mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-        expect(mail.body).to include("#{date} (UTC+00:00)")
-      end
-    end
-
-    context "when user timezone is blank" do
-      before { user.user_option.timezone = "" }
-
-      it "doesn't raise error" do
-        expect { UserNotifications.account_silenced(user) }.not_to raise_error
-      end
-
-      it "adds the silenced_till date in UTC" do
-        date = "May 25, 2020, 12:00pm"
-        user.silenced_till = DateTime.parse(date)
-
-        mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-        expect(mail.body).to include("#{date} (UTC+00:00)")
-      end
-    end
-  end
-
   describe ".account_deleted" do
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, reviewable_scores: []) }
 
@@ -3107,12 +2993,6 @@ RSpec.describe UserNotifications do
 
       it "has improved version for account_suspended without email_prefix" do
         improved = I18n.t("user_notifications.account_suspended.subject_template_improved")
-
-        expect(improved).not_to include("%{email_prefix}")
-      end
-
-      it "has improved version for account_silenced without email_prefix" do
-        improved = I18n.t("user_notifications.account_silenced.subject_template_improved")
 
         expect(improved).not_to include("%{email_prefix}")
       end

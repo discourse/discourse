@@ -62,10 +62,19 @@ RSpec.describe UserSilencer do
       }.from(true).to(false)
     end
 
-    it "skips sending the email for the silence PM via post alert" do
+    it "sends an account hold notice without emailing the user" do
       NotificationEmailer.enable
       Jobs.run_immediately!
-      UserSilencer.silence(user, admin)
+      hold_text = "Your account is on hold while our team reviews your posts."
+      TranslationOverride.upsert!(
+        :en,
+        "system_messages.silenced_by_staff.text_body_template",
+        hold_text,
+      )
+      UserSilencer.silence(user, Discourse.system_user, message: :silenced_by_staff)
+      notice = Topic.private_messages_for_user(user).sole
+      expect(notice.title).to eq("Account temporarily on hold")
+      expect(notice.first_post.raw).to eq(hold_text)
       expect(ActionMailer::Base.deliveries.size).to eq(0)
     end
 
