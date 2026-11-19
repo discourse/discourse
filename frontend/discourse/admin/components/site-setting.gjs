@@ -657,6 +657,8 @@ export default class SiteSettingComponent extends Component {
       setting.rollback();
       setting.validationMessage = null;
     });
+
+    this.formApi?.removeErrors();
   }
 
   @action
@@ -672,6 +674,8 @@ export default class SiteSettingComponent extends Component {
         this.adminSiteSettingStore.reveal(setting.setting);
       }
     });
+
+    this.formApi?.removeErrors();
   }
 
   @action

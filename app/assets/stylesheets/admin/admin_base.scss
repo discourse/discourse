@@ -1262,19 +1262,16 @@ table#user-badges {
 
 .secret-value-list {
   .value {
-    flex-flow: row wrap;
     margin-left: -0.25em;
-    margin-top: -0.125em;
 
     .new-value-input {
       flex: 1 0 0px;
       margin-left: 0.25em;
+      min-width: 0;
     }
 
     .value-input,
     .new-value-input {
-      margin-top: 0.125em;
-
       &:last-of-type {
         margin-left: 0.25em;
       }
@@ -1282,31 +1279,13 @@ table#user-badges {
 
     .remove-value-btn {
       margin-left: 0.25em;
-      margin-top: 0.125em;
     }
 
-    .add-value-btn {
+    .add-value-btn,
+    .secret-value-list__reveal {
       margin-left: 0.25em;
-      margin-top: 0.125em;
 
       @include value-btn;
-    }
-  }
-}
-
-.mobile-view .secret-value-list {
-  .add-value-btn {
-    margin-bottom: 9px;
-  }
-
-  .value {
-    .value-input:last-of-type {
-      margin-left: 2.35em;
-    }
-
-    .new-value-input:first-of-type {
-      margin-right: 2.15em;
-      margin-left: 0.25em;
     }
   }
 }
