@@ -19,10 +19,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
   fab!(:post) { Fabricate(:post, topic: topic_with_tags) }
   fab!(:another_post, :post)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   it "keeps fresh research wrapper metadata but excludes already generated findings from evidence" do
     tool =

@@ -8,10 +8,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeTopicCategory do
   fab!(:category)
   fab!(:target_category, :category)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   def tool(params = nil, **kwargs)
     params ||= kwargs

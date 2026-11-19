@@ -36,11 +36,9 @@ RSpec.describe DiscourseAi::Agents::Tools::EditImage do
     )
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    toggle_enabled_bots(bots: [gpt_35_turbo])
-  end
+  include_context "with AI bot enabled"
+
+  before { toggle_enabled_bots(bots: [gpt_35_turbo]) }
 
   let(:image_upload) do
     UploadCreator.new(
