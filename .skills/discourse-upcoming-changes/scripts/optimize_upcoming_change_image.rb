@@ -32,7 +32,8 @@ actual_type = image_info.type.to_s
 puts "Optimizing #{File.basename(path)} (detected format: #{actual_type})..."
 
 output_path = File.join(File.dirname(path), "#{File.basename(path, ".*")}.png")
-image = Vips::Image.thumbnail(path, 1200, size: :down)
+image = Vips::Image.new_from_file(path, access: :sequential).autorot
+image = image.resize(1200.0 / image.width) if image.width > 1200
 ImageProcessing::OutputFile.write(output_path) { |temporary_path| image.pngsave(temporary_path) }
 
 FileHelper.optimize_image!(output_path, allow_pngquant: true)
