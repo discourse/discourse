@@ -316,6 +316,42 @@ en:
     discourse_ai:
       title: "AI"
       apply_review_suggestion: "Apply AI suggestion: %{action}"
+      review_bulk:
+        title: "AI suggestions"
+        description: "These items have an action suggested by AI. Deselect any you disagree with, then apply the rest together."
+        more_pending:
+          one: "%{count} more suggestion will appear after these are handled."
+          other: "%{count} more suggestions will appear after these are handled."
+        apply:
+          one: "Apply %{count} suggestion"
+          other: "Apply %{count} suggestions"
+        refresh: "Refresh"
+        select_all: "Select all suggestions"
+        select_item: "Select review item %{id}"
+        untitled: "Review item %{id}"
+        confidence: "%{percent}% confident"
+        none: "There are no pending review items with an AI suggestion."
+        confirm:
+          one: "Apply the suggested action to %{count} review item?"
+          other: "Apply the suggested actions to %{count} review items?"
+        confirm_destructive:
+          one: "Apply the suggested action to %{count} review item? %{destructive} of the selected actions cannot be undone."
+          other: "Apply the suggested actions to %{count} review items? %{destructive} of the selected actions cannot be undone."
+        columns:
+          item: "Item"
+          user: "User"
+          reason: "Flagged as"
+          created: "Created"
+          action: "Suggested action"
+          status: "Status"
+        status:
+          applying: "Applying…"
+          applied: "Applied"
+          handled: "Already handled"
+        blocked:
+          needs_input: "Needs more input, open the item to apply"
+          must_claim: "Claim the topic to apply"
+          claimed_by_other: "Claimed by another user"
       dsa_classification:
         suggest: "Suggest with AI"
         suggested_by_ai: "Suggested by AI"

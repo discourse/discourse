@@ -123,6 +123,8 @@ end
 Discourse::Application.routes.draw do
   mount DiscourseAi::Engine, at: "discourse-ai"
 
+  get "/review/bulk" => "discourse_ai/ai_moderation/reviewable_suggestions#index"
+
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
     get "/ask-ai-reports/:report_id/subjects/:subject_id/asks" =>
           "discourse_ai/admin/ask_ai_reports#asks",
