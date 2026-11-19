@@ -127,6 +127,17 @@ module("Unit | Components | ChatThread", function (hooks) {
     assert.true(thread.draft.broadcasted, "toggling marks the staged draft");
     assert.dom(".chat-composer__broadcast-option input").isChecked();
 
+    // editing an existing message cannot change its broadcast state
+    thread.draft.editing = true;
+    await settled();
+    assert
+      .dom(".chat-composer__broadcast-option")
+      .doesNotExist("hidden while editing");
+
+    thread.draft.editing = false;
+    await settled();
+    assert.dom(".chat-composer__broadcast-option").exists();
+
     channel.threadingEnabled = false;
     await settled();
     assert
