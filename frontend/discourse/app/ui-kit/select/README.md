@@ -1427,7 +1427,8 @@ name, in the list and in the trigger; class-style icon names such as `fa-certifi
 converted. The recipe draws both in its own `:option` and `:selection` blocks, because the select
 has no notion of an image, and sizes both with `--d-select-badge-glyph-size` (`1em` by default) so
 a list mixing them lines up. Like any `:selection` block, the glyph is hidden while a typeahead
-trigger is focused. A call site's own `:option` or `:selection` block replaces the recipe's.
+trigger is focused. Unlike other recipes, it takes no `:option` or `:selection` block from the
+call site: drawing every badge the same way is what the recipe is for.
 
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.

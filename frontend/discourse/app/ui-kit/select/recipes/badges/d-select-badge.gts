@@ -29,7 +29,6 @@ interface DSelectBadgeSignature {
       /** Receives the picked badge's id, or `null` for the none option. */
       onChange?: (badgeId: number | null) => void;
     };
-  Blocks: Pick<DSelectSignature["Blocks"], "option" | "selection">;
   Element: HTMLElement;
 }
 
@@ -59,7 +58,11 @@ const BadgeGlyph: TemplateOnlyComponent<{ Args: { badge: SelectRecord } }> =
     {{/let}}
   </template>;
 
-/** Picks one badge from a list the caller already holds, drawing its image or icon. */
+/**
+ * Picks one badge from a list the caller already holds, drawing its image or icon. Unlike other
+ * recipes it takes no `:option` or `:selection` block: drawing every badge the same way is its
+ * purpose.
+ */
 const DSelectBadge: TemplateOnlyComponent<DSelectBadgeSignature> = <template>
   <DSelect
     ...attributes
@@ -78,21 +81,13 @@ const DSelectBadge: TemplateOnlyComponent<DSelectBadgeSignature> = <template>
     @value={{@value}}
     @variant={{@variant}}
   >
-    <:option as |option config|>
-      {{#if (has-block "option")}}
-        {{yield option config to="option"}}
-      {{else}}
-        <BadgeGlyph @badge={{option.record}} />
-        {{~option.label~}}
-      {{/if}}
+    <:option as |option|>
+      <BadgeGlyph @badge={{option.record}} />
+      {{~option.label~}}
     </:option>
-    <:selection as |option config|>
-      {{#if (has-block "selection")}}
-        {{yield option config to="selection"}}
-      {{else}}
-        <BadgeGlyph @badge={{option.record}} />
-        {{~option.label~}}
-      {{/if}}
+    <:selection as |option|>
+      <BadgeGlyph @badge={{option.record}} />
+      {{~option.label~}}
     </:selection>
   </DSelect>
 </template>;

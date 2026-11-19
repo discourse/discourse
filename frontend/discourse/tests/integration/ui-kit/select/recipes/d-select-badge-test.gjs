@@ -172,27 +172,5 @@ module(
         ["4"]
       );
     });
-
-    test("a call site's blocks replace the recipe's", async function (assert) {
-      const options = badges();
-
-      await render(
-        <template>
-          <DSelectBadge @options={{options}} @value={{1}}>
-            <:option as |option|>
-              <span class="custom-row">{{option.label}}!</span>
-            </:option>
-            <:selection as |option|>
-              <span class="custom-held">{{option.label}}?</span>
-            </:selection>
-          </DSelectBadge>
-        </template>
-      );
-
-      assert.dom(".d-select__trigger .custom-held").hasText("Spark?");
-      await new DSelect().open();
-      assert.dom(".custom-row", row(2)).hasText("Gardener!");
-      assert.dom(".d-select-badge__glyph", row(2)).doesNotExist();
-    });
   }
 );
