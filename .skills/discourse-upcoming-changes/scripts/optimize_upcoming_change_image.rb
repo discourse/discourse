@@ -36,7 +36,7 @@ image = Vips::Image.thumbnail(path, 1200, size: :down)
 ImageProcessing::OutputFile.write(output_path) { |temporary_path| image.pngsave(temporary_path) }
 
 FileHelper.optimize_image!(output_path, allow_pngquant: true)
-File.delete(path) if path != output_path
+File.delete(path) unless File.identical?(path, output_path)
 
 size = File.size(output_path)
 puts "Done! Final size: #{(size / 1024.0).round(1)}KB"
