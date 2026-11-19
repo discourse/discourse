@@ -543,7 +543,7 @@ module DiscourseWorkflows
 
       # :indeterminate means a rule is anchored to an expression-valued parameter,
       # so the target must neither be dropped nor have its requirements enforced.
-      def display_state(display_options, configuration)
+      def display_state(display_options, configuration, metadata = {})
         display_options = normalize_options(display_options)
         show_rules = display_options["show"]
         hide_rules = display_options["hide"]
@@ -553,13 +553,13 @@ module DiscourseWorkflows
         indeterminate = false
 
         if show_rules.present?
-          outcome = rules_outcome(show_rules, configuration)
+          outcome = rules_outcome(show_rules, configuration, metadata)
           return :hidden if outcome == false
           indeterminate ||= outcome == :unknown
         end
 
         if hide_rules.present?
-          outcome = rules_outcome(hide_rules, configuration)
+          outcome = rules_outcome(hide_rules, configuration, metadata)
           return :hidden if outcome == true
           indeterminate ||= outcome == :unknown
         end
@@ -567,12 +567,12 @@ module DiscourseWorkflows
         indeterminate ? :indeterminate : :visible
       end
 
-      def visible?(display_options, configuration)
-        display_state(display_options, configuration) != :hidden
+      def visible?(display_options, configuration, metadata = {})
+        display_state(display_options, configuration, metadata) != :hidden
       end
 
-      def definitely_visible?(display_options, configuration)
-        display_state(display_options, configuration) == :visible
+      def definitely_visible?(display_options, configuration, metadata = {})
+        display_state(display_options, configuration, metadata) == :visible
       end
 
       private
@@ -678,7 +678,7 @@ module DiscourseWorkflows
         configuration.to_h.stringify_keys
       end
 
-      def rules_outcome(rules, configuration)
+      def rules_outcome(rules, configuration, metadata)
         unknown = false
 
         rules.each do |field_name, expected|
@@ -688,18 +688,18 @@ module DiscourseWorkflows
             next
           end
 
-          return false unless matches_rule?(expected, value)
+          return false unless matches_rule?(expected, value, metadata)
         end
 
         unknown ? :unknown : true
       end
 
-      def matches_rule?(expected, value)
+      def matches_rule?(expected, value, metadata)
         conditions = expected.is_a?(Array) ? expected : [expected]
-        conditions.any? { |condition| matches_condition?(condition, value) }
+        conditions.any? { |condition| matches_condition?(condition, value, metadata) }
       end
 
-      def matches_condition?(condition, value)
+      def matches_condition?(condition, value, metadata)
         operator = condition.is_a?(Hash) ? condition["condition"] : nil
         if operator.blank?
           return value.include?(condition) if value.is_a?(Array) && !condition.is_a?(Array)
@@ -709,6 +709,22 @@ module DiscourseWorkflows
 
         if operator.key?("exists")
           return operator["exists"] ? !empty_value?(value) : empty_value?(value)
+        end
+        if (metadata_flag = operator["metadata_flag"]).is_a?(Hash)
+          collection, flag = metadata_flag.values_at("collection", "flag")
+          return false if value.nil? || !collection.is_a?(String) || !flag.is_a?(String)
+
+          options = metadata[collection] || metadata[collection.to_sym]
+          return false unless options.is_a?(Array)
+
+          return(
+            options.any? do |option|
+              next false unless option.is_a?(Hash)
+
+              id = option.fetch("id", option[:id])
+              !id.nil? && id.to_s == value.to_s && option.fetch(flag, option[flag.to_sym]) == true
+            end
+          )
         end
 
         false

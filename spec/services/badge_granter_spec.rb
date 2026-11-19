@@ -11,6 +11,47 @@ RSpec.describe BadgeGranter do
     BadgeGranter.clear_queue!
   end
 
+  describe ".post_for_reason" do
+    fab!(:first_post, :post)
+    fab!(:reply) { Fabricate(:post, topic: first_post.topic) }
+
+    it "returns nil for a blank reason" do
+      expect(described_class.post_for_reason(" ")).to be_nil
+    end
+
+    it "rejects an external URL" do
+      expect { described_class.post_for_reason("https://example.com#{reply.url}") }.to raise_error(
+        BadgeGranter::InvalidReason,
+        I18n.t("invalid_grant_badge_reason_link"),
+      )
+    end
+
+    it "resolves a topic URL to the first post" do
+      expect(described_class.post_for_reason(first_post.topic.url)).to eq(first_post)
+    end
+
+    it "resolves a topic URL with a post number to that post" do
+      expect(described_class.post_for_reason(reply.full_url)).to eq(reply)
+    end
+
+    it "resolves a nested topic URL" do
+      topic = reply.topic
+      url = "#{Discourse.base_url}/n/#{topic.slug}/#{topic.id}/#{reply.post_number}"
+
+      expect(described_class.post_for_reason(url)).to eq(reply)
+    end
+
+    it "resolves direct post URLs" do
+      urls = [
+        "/posts/#{reply.id}.json",
+        "/p/#{reply.id}",
+        "/posts/by_number/#{reply.topic_id}/#{reply.post_number}",
+      ]
+
+      expect(urls.map { |url| described_class.post_for_reason(url) }).to eq([reply, reply, reply])
+    end
+  end
+
   describe ".revoke_ungranted_titles!" do
     let(:user) { Fabricate(:user) }
     let(:other_user) { Fabricate(:user) }

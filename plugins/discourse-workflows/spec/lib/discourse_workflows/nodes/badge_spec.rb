@@ -22,21 +22,32 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
 
     it "returns enabled badges for the chooser" do
       expect(options).to include(
-        { id: badge_2.id, name: badge_2.name },
-        { id: badge.id, name: badge.name },
+        { id: badge_2.id, name: badge_2.name, hide_reason: false },
+        { id: badge.id, name: badge.name, hide_reason: false },
       )
     end
 
     it "excludes disabled badges" do
       disabled_badge = Fabricate(:badge, name: "Disabled Badge", enabled: false)
-      expect(options).not_to include({ id: disabled_badge.id, name: disabled_badge.name })
+      expect(options.pluck(:id)).not_to include(disabled_badge.id)
+    end
+
+    it "marks built-in badges whose post visibility is locked off" do
+      badge_with_visible_posts = Fabricate(:badge, system: true, show_posts: true)
+
+      expect(options).to include(
+        a_hash_including(id: Badge::Anniversary, hide_reason: true),
+        a_hash_including(id: badge_with_visible_posts.id, hide_reason: false),
+      )
     end
 
     context "with a filter term" do
       let(:filter) { "A badge" }
 
       it "filters badges" do
-        expect(options).to contain_exactly({ id: badge_2.id, name: badge_2.name })
+        expect(options).to contain_exactly(
+          { id: badge_2.id, name: badge_2.name, hide_reason: false },
+        )
       end
     end
   end
@@ -79,6 +90,128 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
           UserBadge.where(user: user, badge: badge).count
         }
         expect(result["changed"]).to be(false)
+      end
+
+      it "associates the badge grant with the post from the reason expression" do
+        post = Fabricate(:post)
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+          "reason" => "={{ $json.post_url }}",
+        }
+
+        execute_node(configuration: config, item: { "json" => { "post_url" => post.full_url } })
+
+        expect(UserBadge.find_by!(user: user, badge: badge).post_id).to eq(post.id)
+      end
+
+      it "rejects an external reason URL" do
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+          "reason" => "https://example.com/t/42",
+        }
+
+        expect { execute_node(configuration: config, item: item) }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          I18n.t("invalid_grant_badge_reason_link"),
+        ).and not_change { UserBadge.count }
+      end
+
+      it "associates the badge grant with the topic's first post when given a prefixed topic ID" do
+        post = Fabricate(:post)
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+          "reason" => "topic:#{post.topic_id}",
+        }
+
+        execute_node(configuration: config, item: item)
+
+        expect(UserBadge.find_by!(user: user, badge: badge).post_id).to eq(post.id)
+      end
+
+      it "uses a prefixed post ID expression even when the same ID identifies a topic" do
+        topic = Fabricate(:topic, id: 50_000)
+        Fabricate(:post, topic:)
+        first_post = Fabricate(:post)
+        reply = Fabricate(:post, id: topic.id, topic: first_post.topic)
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+          "reason" => "=post:{{ $json.post_id }}",
+        }
+
+        execute_node(configuration: config, item: { "json" => { "post_id" => reply.id } })
+
+        expect(UserBadge.find_by!(user: user, badge: badge).post_id).to eq(reply.id)
+      end
+
+      it "uses a prefixed topic ID expression even when the same ID identifies a post" do
+        topic = Fabricate(:topic, id: 50_000)
+        first_post = Fabricate(:post, topic:)
+        Fabricate(:post, id: topic.id)
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+          "reason" => "=topic:{{ $json.topic.id }}",
+        }
+
+        execute_node(configuration: config, item: { "json" => { "topic" => { "id" => topic.id } } })
+
+        expect(UserBadge.find_by!(user: user, badge: badge).post_id).to eq(first_post.id)
+      end
+
+      it "requires a prefix even when an expression references a topic ID" do
+        post = Fabricate(:post)
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+          "reason" => "={{ $json.topic.id }}",
+        }
+        item = { "json" => { "topic" => { "id" => post.topic_id } } }
+
+        expect { execute_node(configuration: config, item: item) }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          I18n.t("discourse_workflows.errors.badge.reason_id_requires_prefix", id: post.topic_id),
+        ).and not_change { UserBadge.count }
+      end
+
+      it "reports missing post and topic references as node errors" do
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+        }
+
+        %w[post:0 topic:0].each do |reference|
+          expect do
+            execute_node(configuration: config.merge("reason" => reference), item: item)
+          end.to raise_error(
+            DiscourseWorkflows::NodeError,
+            I18n.t("discourse_workflows.errors.badge.reason_id_not_found", reference:),
+          ).and not_change { UserBadge.count }
+        end
+      end
+
+      it "ignores a reason when the badge's post visibility is locked off" do
+        post = Fabricate(:post)
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => Badge::Anniversary,
+          "reason" => "post:#{post.id}",
+        }
+
+        execute_node(configuration: config, item: item)
+
+        expect(UserBadge.find_by!(user: user, badge_id: Badge::Anniversary).post_id).to be_nil
       end
 
       it "reports no change when the badge is disabled" do
