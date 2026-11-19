@@ -4057,6 +4057,10 @@ uncategorized:
     default: ""
     client: true
     area: "site_admin"
+  global_notice_dismissible:
+    default: false
+    client: true
+    area: "site_admin"
   has_login_hint:
     default: false
     hidden: true
