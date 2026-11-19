@@ -1314,7 +1314,276 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       );
   });
 
-  for (const type of ["group", "group_list", "host_list"]) {
+  test("compact_list offers its choices, takes typed entries and keeps removed ones with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_list="a"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_list"
+              type="compact_list"
+              label="My list"
+              choices=(array "a" "b")
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe" data-value={{data.my_list}}></span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_list'] .d-select";
+    assert.dom(control).hasAttribute("data-name", "a");
+    assert
+      .dom(`${control} .d-select__input`)
+      .hasAttribute(
+        "placeholder",
+        i18n("d_select.add_placeholder"),
+        "a list with choices keeps the default prompt"
+      );
+
+    await dSelect(control).open();
+    assert.dom("[role='option'][data-value='b']").exists("offers the choices");
+
+    await dSelect(control).search("custom");
+    await click("[role='option'].--create");
+    assert.dom(".value-probe").hasAttribute("data-value", "a|custom");
+
+    await dSelect(control).search("x|y");
+    assert
+      .dom("[role='option'].--create")
+      .doesNotExist("a typed separator can't be added");
+
+    await dSelect(control).close();
+    await dSelect(control).remove("custom");
+    assert.dom(".value-probe").hasAttribute("data-value", "a");
+
+    await dSelect(control).open();
+    assert
+      .dom("[role='option'][data-value='custom']")
+      .exists("a removed entry stays on offer");
+  });
+
+  test("compact_list refuses typed entries when allow_any is false, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_list="a"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_list"
+              type="compact_list"
+              label="My list"
+              choices=(array "a" "b")
+              allow_any=false
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    await dSelect("[data-name='my_list'] .d-select").search("custom");
+    assert
+      .dom("[role='option'].--create")
+      .doesNotExist("no typed entry is offered");
+  });
+
+  test("compact_list locks held mandatory values with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_list="admin|moderator"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_list"
+              type="compact_list"
+              label="My list"
+              choices=(array "admin" "moderator")
+              mandatory_values="admin|system"
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_list'] .d-select";
+    assert
+      .dom(`${control} .d-select__chip[data-value='admin']`)
+      .hasClass("--locked", "a mandatory value can't be removed");
+    assert
+      .dom(`${control} .d-select__chip[data-value='moderator']`)
+      .doesNotHaveClass("--locked", "the others can");
+  });
+
+  test("compact_list without choices prompts for values with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_list=""}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_list"
+              type="compact_list"
+              label="My list"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe" data-value={{data.my_list}}></span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_list'] .d-select";
+    assert
+      .dom(`${control} .d-select__input`)
+      .hasAttribute(
+        "placeholder",
+        i18n("admin.site_settings.compact_list.placeholder"),
+        "the empty field asks for a value"
+      );
+
+    await dSelect(control).search("one");
+    await click("[role='option'].--create");
+    assert.dom(".value-probe").hasAttribute("data-value", "one");
+    assert
+      .dom(`${control} .d-select__input`)
+      .hasAttribute(
+        "placeholder",
+        i18n("admin.site_settings.compact_list.add_more_placeholder"),
+        "a field holding values asks for another"
+      );
+
+    await dSelect(control).search("x|y");
+    assert
+      .dom(".d-select__empty")
+      .hasText(
+        i18n("admin.site_settings.compact_list.not_allowed"),
+        "says why instead of reporting no results"
+      );
+  });
+
+  test("compact_list shows the names of enum values with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_list="1"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_list"
+              type="compact_list"
+              label="My list"
+              allow_any=false
+              valid_values=(array
+                (hash name="Claude" value=1) (hash name="Other model" value=2)
+              )
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe" data-value={{data.my_list}}></span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_list'] .d-select";
+    assert.dom(control).hasAttribute("data-name", "Claude");
+
+    await dSelect(control).select("2");
+    assert.dom(".value-probe").hasAttribute("data-value", "1|2");
+  });
+
+  test("compact_list draws a colour square for a colour list with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_colors="f00|nope" my_list="f00"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_colors"
+              type="compact_list"
+              label="My colors"
+            }}
+            @form={{form}}
+          />
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_list"
+              type="compact_list"
+              label="My list"
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    const colors = "[data-name='my_colors'] .d-select";
+    assert
+      .dom(
+        `${colors} .d-select__chip[data-value='f00'] .select-string-list__swatch`
+      )
+      .hasAttribute("style", /#f00/, "a held colour shows its square");
+    assert
+      .dom(
+        `${colors} .d-select__chip[data-value='nope'] .select-string-list__swatch`
+      )
+      .doesNotExist("a value that isn't a colour shows none");
+    assert
+      .dom("[data-name='my_list'] .select-string-list__swatch")
+      .doesNotExist("a list that isn't about colours shows none");
+
+    await dSelect(colors).open();
+    assert
+      .dom("[role='option'][data-value='f00'] .select-string-list__swatch")
+      .exists("the listed colour shows its square too");
+  });
+
+  test("locale_list shows language names with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.siteSettings.available_locales = [
+      { name: "French (Français)", value: "fr" },
+      { name: "German (Deutsch)", value: "de" },
+    ];
+
+    await render(
+      <template>
+        <Form @data={{hash my_locales="fr"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_locales"
+              type="locale_list"
+              label="My locales"
+              allow_any=false
+              valid_values=(array
+                (hash name="fr" value="fr") (hash name="de" value="de")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_locales'] .d-select")
+      .hasAttribute("data-name", "French (Français)");
+  });
+
+  for (const type of [
+    "group",
+    "group_list",
+    "host_list",
+    "compact_list",
+    "locale_list",
+  ]) {
     test(`${type} is disabled with its field under the new select controls`, async function (assert) {
       this.siteSettings.enable_new_select_controls = true;
       const definition = { key: "my_setting", type, label: "My setting" };

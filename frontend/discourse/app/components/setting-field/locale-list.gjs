@@ -4,8 +4,8 @@ import CompactListControl from "discourse/components/setting-field/compact-list"
 export default class SettingFieldLocaleList extends CompactListControl {
   @service languageNameLookup;
 
-  get choices() {
-    return super.choices.map(({ value }) => ({
+  get ownChoices() {
+    return super.ownChoices.map(({ value }) => ({
       value,
       name: this.languageNameLookup.getLanguageName(value),
     }));

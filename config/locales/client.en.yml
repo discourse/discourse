@@ -10696,6 +10696,10 @@ en:
         add_url: "add URL"
         add_host: "add host"
         add_group: "add group"
+        compact_list:
+          placeholder: "Type a value to add it"
+          add_more_placeholder: "Add another…"
+          not_allowed: "Values can't contain |"
         host_list:
           placeholder: "Type a host to add it"
           add_more_placeholder: "Add another host…"

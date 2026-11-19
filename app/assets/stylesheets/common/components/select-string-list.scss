@@ -1,0 +1,11 @@
+.select-string-list__swatch {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 0.75em;
+  height: 0.75em;
+  margin-inline-end: 0.33em;
+  border-radius: 2px;
+  background: var(--select-string-list-swatch);
+  box-shadow: 0 0 0 1px var(--primary-low);
+  vertical-align: baseline;
+}
