@@ -206,7 +206,7 @@ describe "Live stage speak queue" do
     using_session(:alice) do
       open_speak_queue
       within(speak_queue_menu) do
-        find(".live-speak-queue__toggle-requests").click
+        PageObjects::Components::DToggleSwitch.new(".live-speak-queue__toggle-requests").toggle
         expect(page).to have_css(".live-speak-queue__paused", wait: 10)
       end
     end

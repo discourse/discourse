@@ -849,12 +849,9 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     font-size: var(--font-0);
   }
 
-  &__toggle-requests {
+  .d-toggle-switch {
+    flex-shrink: 0;
     font-size: var(--font-down-1);
-
-    &.--paused {
-      color: var(--danger);
-    }
   }
 
   &__paused {
@@ -1118,8 +1115,10 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
       color: var(--secondary);
     }
 
+    // Dark scrim rather than a light one: avatar tiles are light in the
+    // light scheme, where a translucent white pill disappears.
     &.--speaker {
-      background: rgb(255 255 255 / 22%);
+      background: rgb(0 0 0 / 55%);
       color: #fff;
     }
   }

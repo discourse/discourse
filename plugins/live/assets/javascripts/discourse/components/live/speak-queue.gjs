@@ -1,12 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -121,19 +123,12 @@ export default class LiveSpeakQueue extends Component {
           {{i18n "live.stage.queue_title"}}
         </h3>
         {{#if this.canManage}}
-          <DButton
-            class={{dConcatClass
-              "btn-flat btn-small live-speak-queue__toggle-requests"
-              (if this.speakRequestsEnabled "--enabled" "--paused")
-            }}
-            @action={{this.toggleSpeakRequests}}
-            @disabled={{this.togglingRequests}}
-            @icon={{if this.speakRequestsEnabled "hand" "ban"}}
-            @label={{if
-              this.speakRequestsEnabled
-              "live.stage.allow_requests_toggle"
-              "live.stage.requests_paused"
-            }}
+          <DToggleSwitch
+            class="live-speak-queue__toggle-requests"
+            disabled={{this.togglingRequests}}
+            @label="live.stage.allow_requests_toggle"
+            @state={{this.speakRequestsEnabled}}
+            {{on "click" this.toggleSpeakRequests}}
           />
         {{/if}}
       </div>
