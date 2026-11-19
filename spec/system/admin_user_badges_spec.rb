@@ -50,13 +50,12 @@ describe "Admin User Badges Page" do
 
     include_examples "granting from the badge list"
 
-    it "describes each badge in plain text" do
+    it "keeps the picker at the admin form's select width, describing each badge" do
       badge.update!(description: "Thanks for <strong>helping</strong> out")
+      user_badges_page.visit_page(user)
 
-      expect(user_badges_page.visit_page(user)).to have_badge_description(
-        badge.name,
-        "Thanks for helping out",
-      )
+      expect(user_badges_page.badge_select_width).to eq(350)
+      expect(user_badges_page).to have_badge_description(badge.name, "Thanks for helping out")
     end
   end
 end

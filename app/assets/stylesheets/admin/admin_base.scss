@@ -794,6 +794,16 @@ $mobile-breakpoint: 700px;
     width: auto;
   }
 
+  // The same widths for the new select's field, so a ported picker keeps its size.
+  .d-select__trigger {
+    width: 350px;
+    max-width: 100%;
+  }
+
+  .d-select__trigger.--multiple {
+    width: 500px;
+  }
+
   .search-logs-filter {
     margin-left: auto;
 

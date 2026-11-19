@@ -20,6 +20,12 @@ module PageObjects
         PageObjects::Components::UiKit::DSelect.by_identifier("admin-user-badges-grant")
       end
 
+      def badge_select_width
+        page.evaluate_script(
+          "document.querySelector('.user-badges .d-select__trigger').getBoundingClientRect().width",
+        )
+      end
+
       def has_badge_description?(name, description)
         badge_select.open
         has_css?(
