@@ -1356,6 +1356,37 @@ RSpec.describe ReviewablesController do
           expect(response.status).to eq(200)
         end
       end
+
+      context "with revise_and_reject_post" do
+        subject(:feedback_message) do
+          author.topics_allowed.find_by!(subtype: TopicSubtype.system_message).first_post
+        end
+
+        fab!(:author, :user)
+        fab!(:restricted_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:queued_post) do
+          Fabricate(
+            :reviewable_queued_post,
+            target_created_by: author,
+            payload: {
+              raw: "Text ##{restricted_category.slug}",
+            },
+          )
+        end
+
+        before do
+          put "/review/#{queued_post.id}/perform/revise_and_reject_post.json",
+              params: {
+                version: queued_post.version,
+                revise_reason: "Other",
+                revise_feedback: "Text",
+              }
+        end
+
+        it "cooks the feedback message for its recipient" do
+          expect(feedback_message.cooked).not_to include(restricted_category.name)
+        end
+      end
     end
 
     describe "with reviewable params added via plugin API" do

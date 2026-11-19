@@ -71,7 +71,8 @@ after_initialize do
   on(:post_process_cooked) do |doc, post|
     has_group = false
 
-    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
+    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map) &&
+         !post.system_message?
       policy = doc.search(".policy").find { |node| node.ancestors("blockquote").none? }
       if policy
         post_policy = post.post_policy || post.build_post_policy
