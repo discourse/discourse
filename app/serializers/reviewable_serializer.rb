@@ -69,9 +69,12 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def bundled_actions
-    args = {}
-    args[:claimed_by] = claimed_by if @options[:claimed_topics]
-    object.actions_for(scope, args).bundles
+    @bundled_actions ||=
+      begin
+        args = {}
+        args[:claimed_by] = claimed_by if @options[:claimed_topics]
+        object.actions_for(scope, args).bundles
+      end
   end
 
   def editable_fields

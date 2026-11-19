@@ -211,6 +211,32 @@ after_initialize do
   register_reviewable_type ReviewableAiToolAction
   add_permitted_reviewable_param :reviewable_ai_tool_action, :post_id
 
+  reloadable_patch { Reviewable.has_one :ai_reviewable_suggestion }
+
+  register_modifier(:reviewable_preload_relation) do |relation, user|
+    if user.staff? && SiteSetting.ai_reviewable_action_suggestions_enabled
+      relation.preload(:ai_reviewable_suggestion)
+    else
+      relation
+    end
+  end
+
+  add_to_serializer(
+    :reviewable,
+    :ai_suggested_action_name,
+    include_condition: -> do
+      unless scope.is_staff? && object.pending? &&
+               SiteSetting.ai_reviewable_action_suggestions_enabled
+        next false
+      end
+      name = object.ai_reviewable_suggestion&.action_name
+      name.present? &&
+        bundled_actions.any? do |bundle|
+          bundle.actions.any? { |action| action.action_name == name }
+        end
+    end,
+  ) { object.ai_reviewable_suggestion.action_name }
+
   on(:reviewable_created) do |reviewable|
     if reviewable.pending? && SiteSetting.ai_reviewable_action_suggestions_enabled &&
          SiteSetting.ai_reviewable_action_decision_model.present?
