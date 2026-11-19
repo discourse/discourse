@@ -45,9 +45,20 @@ after_initialize do
 
   add_to_serializer(
     :site,
-    :blog_base_url,
+    :blogs,
     include_condition: -> { UpcomingChanges.enabled?(:blog_enabled) },
-  ) { Blog::Configuration.base_url }
+  ) do
+    Blog::Instance.cached.map do |blog|
+      {
+        id: blog.id,
+        name: blog.name,
+        base_url: Blog::Configuration.base_url(blog),
+        category_id: blog.category_id,
+        path_format: blog.path_format,
+        is_default: blog.is_default,
+      }
+    end
+  end
   add_to_serializer(:current_user, :can_blog_edit) { scope.is_blog_contributor? }
   reloadable_patch { ::Guardian.prepend(Blog::GuardianExtensions) }
   reloadable_patch { ::Topic.prepend(Blog::TopicExtensions) }
@@ -105,6 +116,19 @@ after_initialize do
   # still be changed then.
   DiscourseEvent.on(:site_setting_changed) do |name| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
     Blog::DefaultBlogMirror.sync! if Blog::DefaultBlogMirror.setting?(name.to_sym)
+  end
+
+  # "New draft" sends the blog the editor was viewing.
+  add_permitted_post_create_param(:blog_id)
+  on(:topic_created) do |topic, opts, user|
+    next if opts[:blog_id].blank? || user.nil?
+    Blog::Publication::StartOnBlog.call(
+      params: {
+        topic_id: topic.id,
+        blog_id: opts[:blog_id],
+      },
+      guardian: user.guardian,
+    )
   end
 
   on(:site_setting_changed) do |name|

@@ -124,4 +124,77 @@ RSpec.describe "Several blogs", type: :request do
       expect(response.status).to eq(404)
     end
   end
+
+  describe "in the editor" do
+    fab!(:writers, :group)
+    fab!(:writer) { Fabricate(:user, groups: [writers], refresh_auto_groups: true) }
+
+    before do
+      SiteSetting.blog_contributor_groups = writers.id.to_s
+      engineering.update!(path_format: "/{year}/{slug}")
+    end
+
+    it "starts a new draft on the blog it was written for" do
+      sign_in(writer)
+
+      post "/posts.json",
+           params: {
+             title: "Notes from the engineering offsite",
+             raw: "What we learned while planning the next quarter together.",
+             category: drafts.id,
+             blog_id: engineering.id,
+           }
+
+      expect(response.status).to eq(200)
+      publication = Blog::Publication.find_by!(topic_id: response.parsed_body["topic_id"])
+      expect(publication).to have_attributes(
+        blog_id: engineering.id,
+        path: "/#{Time.current.year}/notes-from-the-engineering-offsite",
+      )
+    end
+
+    it "moves a draft to another blog until it is published" do
+      topic = Fabricate(:topic, category: drafts, user: admin, title: "A draft that changes blogs")
+      Fabricate(:post, topic:, user: admin)
+      sign_in(admin)
+
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              blog_id: engineering.id,
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include(
+        "blog_id" => engineering.id,
+        "can_change_blog" => true,
+      )
+      publication = Blog::Publication.find_by!(topic:)
+      expect(publication.path).to eq("/#{Time.current.year}/a-draft-that-changes-blogs")
+
+      publish_blog_draft(publication, admin)
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              blog_id: Blog::Instance.default_blog.id,
+            },
+          }
+
+      expect(response.status).to eq(422)
+      expect(publication.reload.blog_id).to eq(engineering.id)
+    end
+
+    it "lists one blog's work when the editor filters by blog" do
+      article = publish_article(engineering, path: "/story", raw: "An engineering story.")
+      sign_in(admin)
+
+      get "/blog-editor.json", params: { blog: engineering.id }
+      expect(response.parsed_body["topics"].map { _1["id"] }).to contain_exactly(article.topic_id)
+      expect(response.parsed_body["blog_url"]).to eq("#{Discourse.base_url}/blog/engineering")
+
+      get "/blog-editor.json", params: { blog: 0 }
+      expect(response.status).to eq(404)
+    end
+  end
 end

@@ -49,7 +49,7 @@ export default class BlogPublicationPanel extends Component {
   @service appEvents;
   @service dialog;
   @service modal;
-  @service siteSettings;
+  @service site;
   @service toasts;
 
   @tracked busy = false;
@@ -136,7 +136,10 @@ export default class BlogPublicationPanel extends Component {
   }
 
   get pathHint() {
-    return /\{(year|month|day)\}/.test(this.siteSettings.blog_path_format)
+    const blog = this.site.blogs?.find(
+      (candidate) => candidate.id === this.publication.blog_id
+    );
+    return /\{(year|month|day)\}/.test(blog?.path_format)
       ? i18n("blog.path_hint_dated")
       : i18n("blog.path_hint");
   }
@@ -169,6 +172,10 @@ export default class BlogPublicationPanel extends Component {
 
   get hasPendingChanges() {
     return this.publication.published && this.publication.changes.length > 0;
+  }
+
+  get canPickBlog() {
+    return this.site.blogs?.length > 1 && this.publication.can_change_blog;
   }
 
   get canShowDiff() {
@@ -493,6 +500,7 @@ export default class BlogPublicationPanel extends Component {
 
   #settingsSnapshot() {
     return {
+      blog_id: this.publication?.blog_id,
       path: this.publication?.path,
       excerpt: this.publication?.excerpt || "",
       meta_description: this.publication?.meta_description || "",
@@ -1008,6 +1016,24 @@ export default class BlogPublicationPanel extends Component {
                   @onSubmit={{this.saveSettings}}
                   as |form|
                 >
+                  {{#if this.canPickBlog}}
+                    <form.Field
+                      @description={{i18n "blog.blog_field_hint"}}
+                      @format="full"
+                      @name="blog_id"
+                      @title={{i18n "blog.blog_field"}}
+                      @type="select"
+                      as |field|
+                    >
+                      <field.Control @includeNone={{false}} as |select|>
+                        {{#each this.site.blogs as |blog|}}
+                          <select.Option
+                            @value={{blog.id}}
+                          >{{blog.name}}</select.Option>
+                        {{/each}}
+                      </field.Control>
+                    </form.Field>
+                  {{/if}}
                   <form.Field
                     @description={{this.pathHint}}
                     @format="full"

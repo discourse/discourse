@@ -68,6 +68,7 @@ module ::Blog
     validate :available_path
     validate :decodable_path
     validate :valid_publication_date
+    validate :movable_to_blog, if: :will_save_change_to_blog_id?
     after_initialize :assign_blog, if: :new_record?
     before_validation :initialize_topics, on: :create
     before_save :capture_live_article, if: :will_save_change_to_published_revision_id?
@@ -294,7 +295,9 @@ module ::Blog
     end
 
     def stage_metadata(changes)
-      changes = changes.to_h.stringify_keys.slice(*METADATA)
+      changes = changes.to_h.stringify_keys
+      moved = move_to_blog(changes["blog_id"])
+      changes = changes.slice(*METADATA)
       staged = editorial_metadata
       values = staged.merge(changes)
       values["published_at"] = published_at if published_revision_id &&
@@ -302,7 +305,8 @@ module ::Blog
       live = attributes.slice(*METADATA)
       assign_attributes(values.slice(*METADATA))
       custom_path = staged["custom_path"] || path != staged["path"]
-      if !published_revision_id && changes.keys.intersect?(%w[published_at page]) && !custom_path
+      regenerate = moved || changes.keys.intersect?(%w[published_at page])
+      if !published_revision_id && regenerate && !custom_path
         self.path = generated_path(published_at) || path
       end
       return self if invalid?
@@ -454,9 +458,28 @@ module ::Blog
     end
 
     # Unsaved publications are serialized and previewed too, so they need a blog
-    # from the start. Choosing another one for a draft comes with the blog picker.
+    # from the start. A topic in a blog's public category can only be published
+    # there, since its discussion stays in that category.
     def assign_blog
-      self.blog_id ||= Instance.default_blog.id
+      category_id = topic&.category_id
+      category_blog = category_id && Instance.cached.find { |blog| blog.category_id == category_id }
+      self.blog_id ||= (category_blog || Instance.default_blog).id
+    end
+
+    # A draft moves with its unpublished settings, so a generated path follows the
+    # new blog's format.
+    def move_to_blog(id)
+      return false if id.blank? || id.to_i == blog_id
+      self.blog_id = id.to_i
+      true
+    end
+
+    # Once an article has a discussion, it belongs to that discussion's blog.
+    def movable_to_blog
+      return errors.add(:blog_id, :invalid) if Instance.find_cached(blog_id).nil?
+      return if new_record?
+      return if published_revision_id_in_database.nil? && discussion_topic_id_in_database.nil?
+      errors.add(:blog_id, I18n.t("blog.errors.blog_fixed"))
     end
 
     def capture_live_article

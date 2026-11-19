@@ -20,7 +20,9 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Blog themes and identity", function (needs) {
   needs.user({ admin: true });
   needs.settings({ blog_enabled: true });
-  needs.site({ blog_base_url: "https://blog.example.com" });
+  needs.site({
+    blogs: [{ id: 1, is_default: true, base_url: "https://blog.example.com" }],
+  });
 
   let active;
   let draft;

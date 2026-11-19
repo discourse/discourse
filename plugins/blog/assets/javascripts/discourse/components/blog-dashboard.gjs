@@ -69,6 +69,7 @@ export default class BlogDashboard extends Component {
   @service site;
   @service siteSettings;
 
+  @tracked blogFilter = "all";
   @tracked filter;
   @tracked loading = false;
   @tracked loadingMore = false;
@@ -81,15 +82,50 @@ export default class BlogDashboard extends Component {
 
   constructor() {
     super(...arguments);
-    const { filter, q } = editorFilters(
-      Object.fromEntries(searchParamsFromPath(this.router.currentURL))
+    const { filter, q, blog } = editorFilters(
+      Object.fromEntries(searchParamsFromPath(this.router.currentURL)),
+      this.site.blogs
     );
     this.filter = filter;
     this.query = q;
+    this.blogFilter = blog || "all";
+  }
+
+  get blogOptions() {
+    return [
+      { value: "all", label: i18n("blog.all_blogs") },
+      ...this.site.blogs.map((blog) => ({
+        value: String(blog.id),
+        label: blog.name,
+      })),
+    ];
   }
 
   get data() {
     return this._data || this.args.model;
+  }
+
+  // With one blog the filters stay as they were before blogs could be added.
+  get dropdownOptions() {
+    if (!this.hasSeveralBlogs) {
+      return STATUS_OPTIONS;
+    }
+    return { status: STATUS_OPTIONS, blog: this.blogOptions };
+  }
+
+  get dropdownQueryParams() {
+    return this.hasSeveralBlogs ? { status: "status", blog: "blog" } : null;
+  }
+
+  get dropdownValue() {
+    if (!this.hasSeveralBlogs) {
+      return this.filter;
+    }
+    return { status: this.filter, blog: this.blogFilter };
+  }
+
+  get hasSeveralBlogs() {
+    return (this.site.blogs?.length ?? 0) > 1;
   }
 
   get showEmptyState() {
@@ -110,9 +146,15 @@ export default class BlogDashboard extends Component {
     const category =
       Category.findById(this.siteSettings.blog_drafts_category) ||
       (await this.#ensureDraftsCategory());
-    if (category) {
-      await this.composer.openNewTopic({ category });
+    if (!category) {
+      return;
     }
+    await this.composer.openNewTopic({ category });
+    // A draft without a recorded blog belongs to the default blog.
+    const blog = this.site.blogs?.find(
+      (candidate) => String(candidate.id) === this.blogFilter
+    );
+    this.composer.model?.set("blogId", blog?.is_default ? null : blog?.id);
   }
 
   @action
@@ -122,13 +164,20 @@ export default class BlogDashboard extends Component {
   }
 
   @action
-  onStatusFilterChange(filter) {
-    this.filter = filter;
+  onDropdownFilterChange(keyOrValue, value) {
+    if (value === undefined) {
+      this.filter = keyOrValue;
+    } else if (keyOrValue === "blog") {
+      this.blogFilter = value;
+    } else {
+      this.filter = value;
+    }
     this.#load();
   }
 
   @action
   async onResetFilters() {
+    this.blogFilter = "all";
     this.filter = "all";
     this.query = "";
     await this.#load();
@@ -143,7 +192,7 @@ export default class BlogDashboard extends Component {
     this.loadingMore = true;
     try {
       const data = await ajax("/blog-editor.json", {
-        data: { page: this.page + 1, filter: this.filter, q: this.query },
+        data: { ...this.#requestFilters(), page: this.page + 1 },
       });
       if (requestId !== this.#requestId) {
         return;
@@ -195,12 +244,20 @@ export default class BlogDashboard extends Component {
     }
   }
 
+  #requestFilters() {
+    return editorFilters({
+      status: this.filter,
+      q: this.query,
+      blog: this.blogFilter,
+    });
+  }
+
   async #load() {
     const requestId = ++this.#requestId;
     this.loading = true;
     try {
       const data = await ajax("/blog-editor.json", {
-        data: { filter: this.filter, q: this.query },
+        data: this.#requestFilters(),
       });
       if (requestId === this.#requestId) {
         this._data = data;
@@ -277,14 +334,15 @@ export default class BlogDashboard extends Component {
       {{/if}}
       <DFilterControls
         @array={{this.topics}}
-        @dropdownFilterQueryParam="status"
-        @dropdownOptions={{STATUS_OPTIONS}}
-        @dropdownValue={{this.filter}}
+        @dropdownFilterQueryParam={{unless this.hasSeveralBlogs "status"}}
+        @dropdownFilterQueryParams={{this.dropdownQueryParams}}
+        @dropdownOptions={{this.dropdownOptions}}
+        @dropdownValue={{this.dropdownValue}}
         @initialTextFilter={{this.query}}
         @inputPlaceholder={{i18n "blog.editor_search_hint"}}
         @loading={{this.loading}}
         @noResultsMessage={{i18n "blog.editor_no_results"}}
-        @onDropdownFilterChange={{this.onStatusFilterChange}}
+        @onDropdownFilterChange={{this.onDropdownFilterChange}}
         @onResetFilters={{this.onResetFilters}}
         @onTextFilterChange={{this.onQueryChange}}
         @textFilterQueryParam="q"

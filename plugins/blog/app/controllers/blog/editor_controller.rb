@@ -16,11 +16,14 @@ module ::Blog
       respond_to do |format|
         format.html { render "default/empty" }
         format.json do
+          blog = Instance.find_cached(params[:blog].to_i) if params[:blog].present?
+          raise Discourse::NotFound if params[:blog].present? && blog.nil?
           topics =
             EditorQuery.call(
               guardian,
               filter: params[:filter].presence || "all",
               query: params[:q] || "",
+              blog:,
             )
           @page = [params[:page].to_i, 0].max
           selected =
@@ -45,7 +48,7 @@ module ::Blog
             Publication.publicly_visible.where(topic_id: selected.map(&:id)).pluck(:topic_id).to_set
           render json: {
                    error: Readiness.new.error,
-                   blog_url: Configuration.base_url,
+                   blog_url: Configuration.base_url(blog || Instance.default_blog),
                    more: selected.size > PAGE_SIZE,
                    topics:
                      selected
@@ -362,6 +365,7 @@ module ::Blog
           :cover_alt,
           :co_authors,
           :page,
+          :blog_id,
         )
         .to_h
     end

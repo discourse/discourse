@@ -37,6 +37,8 @@ module ::Blog
                :draft,
                :replies,
                :can_publish,
+               :blog_id,
+               :can_change_blog,
                :review_feedback_count,
                :active_review_links,
                :awaiting_approval,
@@ -177,6 +179,10 @@ module ::Blog
 
     def can_publish
       scope.is_blog_publisher?
+    end
+
+    def can_change_blog
+      object.published_revision_id.nil? && object.discussion_topic_id.nil?
     end
 
     def review_feedback_count

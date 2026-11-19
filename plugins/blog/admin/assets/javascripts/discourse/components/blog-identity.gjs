@@ -46,15 +46,20 @@ export default class BlogIdentity extends Component {
     }));
   }
 
+  // The settings on this page still configure only the default blog.
+  get blogUrl() {
+    return this.site.blogs?.find((blog) => blog.is_default)?.base_url;
+  }
+
   get blogBase() {
     // On the forum's own host the path is enough; a separate blog domain is worth showing.
-    const url = new URL(this.site.blog_base_url, window.location.origin);
+    const url = new URL(this.blogUrl, window.location.origin);
     const path = url.pathname.replace(/\/$/, "");
     return url.host === window.location.host ? path : `${url.host}${path}`;
   }
 
   get safeUrl() {
-    return `${this.site.blog_base_url}/?blog_safe_mode=1`;
+    return `${this.blogUrl}/?blog_safe_mode=1`;
   }
 
   @action
@@ -130,7 +135,7 @@ export default class BlogIdentity extends Component {
       />
       <div class="blog-identity__links">
         <a
-          href={{this.site.blog_base_url}}
+          href={{this.blogUrl}}
           rel="noopener noreferrer"
           target="_blank"
         >{{i18n "blog.admin.open_blog"}} ↗</a>

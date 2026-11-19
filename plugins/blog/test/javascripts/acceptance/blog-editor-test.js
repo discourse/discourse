@@ -517,3 +517,89 @@ acceptance("Blog composer without a drafts category", function (needs) {
       .doesNotExist("the new category accepts a short article title");
   });
 });
+
+acceptance("Blog editor with several blogs", function (needs) {
+  needs.user({ admin: true, moderator: false });
+  needs.settings({
+    blog_enabled: true,
+    blog_drafts_category: 10,
+  });
+  needs.site({
+    blogs: [
+      {
+        id: 1,
+        name: "The blog",
+        is_default: true,
+        base_url: "https://blog.example.com",
+        category_id: 3,
+        path_format: "/{slug}",
+      },
+      {
+        id: 2,
+        name: "Engineering",
+        is_default: false,
+        base_url: "https://blog.example.com/blog/engineering",
+        category_id: 4,
+        path_format: "/{year}/{slug}",
+      },
+    ],
+  });
+
+  let requests;
+
+  needs.hooks.beforeEach(() => {
+    requests = [];
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/blog-editor.json", (request) => {
+      requests.push({ ...request.queryParams });
+      return helper.response({
+        topics: [],
+        blog_url: "https://blog.example.com",
+      });
+    });
+  });
+
+  test("filters the list by blog and keeps the choice in the URL", async function (assert) {
+    await visit("/blog-editor?blog=2");
+    assert.strictEqual(
+      requests[0].blog,
+      "2",
+      "the first request uses the blog from the URL"
+    );
+    assert
+      .dom(".d-filter-controls__dropdown--blog")
+      .hasValue("2", "the blog filter is restored");
+
+    await select(".d-filter-controls__dropdown--blog", "1");
+    assert.strictEqual(
+      requests.at(-1).blog,
+      "1",
+      "choosing a blog reloads its articles"
+    );
+    assert.true(
+      currentURL().includes("blog=1"),
+      "the chosen blog is kept in the URL"
+    );
+  });
+
+  test("ignores a blog the site does not have", async function (assert) {
+    await visit("/blog-editor?blog=99");
+    assert.false(
+      "blog" in requests[0],
+      "an unknown blog falls back to all blogs"
+    );
+  });
+
+  test("starts a new draft on the blog being viewed", async function (assert) {
+    await visit("/blog-editor?blog=2");
+    await click(".d-page-header__actions .btn-primary");
+
+    assert.strictEqual(
+      this.owner.lookup("service:composer").model.blogId,
+      2,
+      "the draft is created for the filtered blog"
+    );
+  });
+});

@@ -5,6 +5,10 @@ import DButton from "discourse/ui-kit/d-button";
 export default class BlogAdminPluginActions extends Component {
   @service site;
 
+  get defaultBlogUrl() {
+    return this.site.blogs?.find((blog) => blog.is_default)?.base_url;
+  }
+
   <template>
     <@actions.Wrapped as |wrapped|>
       <DButton
@@ -15,7 +19,7 @@ export default class BlogAdminPluginActions extends Component {
         }}
         rel="noopener noreferrer"
         target="_blank"
-        @href={{this.site.blog_base_url}}
+        @href={{this.defaultBlogUrl}}
         @label="blog.admin.view_blog"
       />
     </@actions.Wrapped>
