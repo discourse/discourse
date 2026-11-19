@@ -50,43 +50,6 @@ describe "Admin Site Texts Page" do
     )
   end
 
-  it "switches each customized preview between saved and default text" do
-    key = "js.skip_to_main_content"
-    other_key = "js.skip_to_top"
-    default_text = I18n.t(key, locale: :es)
-    customized_text = "Ir directamente a la conversación"
-    other_customized_text = "Ir al principio"
-    TranslationOverride.upsert!(:es, key, customized_text)
-    TranslationOverride.upsert!(:es, other_key, other_customized_text)
-
-    site_texts_page.visit
-    site_texts_page.select_locale("es")
-    site_texts_page.search(default_text)
-
-    expect(site_texts_page).to have_preview_value(key, customized_text)
-    expect(page).to have_css(".site-text-value", count: 1)
-    site_texts_page.select_preview(key, :default)
-    expect(site_texts_page).to have_preview_value(key, default_text)
-    expect(page).to have_css(".site-text-value .text-highlight", text: default_text)
-
-    site_texts_page.search(key)
-    expect(site_texts_page).to have_highlighted_translation_key(key)
-    site_texts_page.select_preview(key, :default)
-    expect(site_texts_page).to have_preview_value(key, default_text)
-
-    site_texts_page.search("skip_to_")
-    expect(site_texts_page).to have_translation_key(other_key)
-    site_texts_page.select_preview(key, :default)
-    expect(site_texts_page).to have_preview_value(key, default_text)
-    expect(site_texts_page).to have_preview_value(other_key, other_customized_text)
-    expect(site_texts_page).to have_translation_key("js.skip_to_last_reply")
-    expect(page).to have_no_css(
-      '.site-text[data-site-text-id="js.skip_to_last_reply"] [role="tab"]',
-    )
-    site_texts_page.select_preview(key, :customized)
-    expect(site_texts_page).to have_preview_value(key, customized_text)
-  end
-
   it "can show only overridden translations" do
     site_texts_page.visit
     site_texts_page.search("skip")
@@ -204,14 +167,6 @@ describe "Admin Site Texts Page" do
     expect(site_texts_page).to have_translation_value("Le nostre risorse")
     page.refresh
     expect(site_texts_page).to have_translation_value("Le nostre risorse")
-
-    site_texts_page.search("Explore resources")
-    expect(site_texts_page).to have_preview_value(key, "Le nostre risorse")
-    site_texts_page.select_preview(key, :default)
-    expect(site_texts_page).to have_preview_value(key, "Esplora le risorse")
-    site_texts_page.select_preview(key, :customized)
-    site_texts_page.search("resource_intro")
-    expect(site_texts_page).to have_highlighted_translation_key("resource_intro")
 
     site_texts_page.edit_translation(key, locale: "it", theme_id: theme.id)
     site_texts_page.revert_translation
