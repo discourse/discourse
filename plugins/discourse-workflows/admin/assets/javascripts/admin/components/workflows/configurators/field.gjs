@@ -18,6 +18,7 @@ import {
   propertyPlaceholder,
   propertyTooltip,
 } from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class Field extends Component {
   get control() {
@@ -165,6 +166,8 @@ export default class Field extends Component {
         @connections={{@connections}}
         @credentials={{@credentials}}
         @dynamicValueHint={{this.dynamicValueHint}}
+        @ExpressionWrapper={{ExpressionWrapper}}
+        @Field={{Field}}
         @fieldName={{@fieldName}}
         @form={{@form}}
         @formApi={{@formApi}}

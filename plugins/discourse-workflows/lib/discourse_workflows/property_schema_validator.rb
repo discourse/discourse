@@ -91,10 +91,12 @@ module DiscourseWorkflows
       option_format
       set_from_option
       resets
+      signature_parameters
       value_property
     ].freeze
 
     KNOWN_UI_CONTROLS = %i[
+      ai_tool_arguments
       color
       access_control
       actor

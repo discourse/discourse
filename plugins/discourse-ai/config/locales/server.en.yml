@@ -369,6 +369,13 @@ en:
     multiple_models: "Multiple models"
 
     discourse_workflows:
+      ai_tool:
+        errors:
+          unavailable: "The selected AI tool is not available for workflow execution."
+          invalid_arguments: "The AI tool arguments are invalid"
+          invalid_schema: "The tool returned an argument schema that cannot be resolved."
+          llm_not_found: "The selected language model was not found."
+          failed: "The AI tool failed."
       ai_agent:
         errors:
           invalid_mode: "'%{mode}' is not a supported AI agent execution mode."
