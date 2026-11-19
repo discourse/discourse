@@ -335,7 +335,12 @@ class Post < ActiveRecord::Base
     # user to be present. The last editing user of the post will be more
     # generally up to date than the creating user.
     options[:user_id] = last_editor_id
-    options[:hashtag_user_ids] = [user_id, last_editor_id, *post_revisions.pluck(:user_id)].compact
+    options[:hashtag_user_ids] = [
+      user_id,
+      last_editor_id,
+      *post_revisions.pluck(:user_id),
+      *system_message_recipient_ids,
+    ].compact
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
 
@@ -567,6 +572,10 @@ class Post < ActiveRecord::Base
 
   def is_first_post?
     post_number.blank? ? topic.try(:highest_post_number) == 0 : post_number == 1
+  end
+
+  def system_message?
+    is_first_post? && topic&.subtype == TopicSubtype.system_message
   end
 
   def is_last_reply?
@@ -1234,6 +1243,12 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def system_message_recipient_ids
+    return [] if !system_message?
+
+    topic.topic_allowed_users.pluck(:user_id)
+  end
 
   def unvalidated_media_limit
     writer_ids = [user_id, last_editor_id, *post_revisions.pluck(:user_id)]
