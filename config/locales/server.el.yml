@@ -2577,12 +2577,6 @@ el:
     account_suspended_forever:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
-    account_silenced:
-      title: "Λογαριασμός σε Σίγαση"
-      subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
-    account_silenced_forever:
-      title: "Λογαριασμός σε Σίγαση"
-      subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
     account_deleted:
       title: "Λογαριασμός διαγράφηκε"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σας έχει διαγραφεί"

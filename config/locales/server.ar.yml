@@ -4451,6 +4451,8 @@ ar:
         وكإجراء وقائي، تم كتم حسابك الجديد من إنشاء ردود أو موضوعات جديدة حتى يتمكن أحد أعضاء فريق العمل من مراجعة حسابك. نأسف للإزعاج.
 
         للحصول على إرشادات إضافية، يُرجى الرجوع إلى [إرشادات المجتمع](%{base_url}/guidelines).
+    moderator_silence:
+      subject_template: "تم كتم حسابك"
     silenced_by_staff:
       title: "تم كتمك بواسطة فريق العمل"
       preview: "تم تعليق الحساب مؤقتًا."
@@ -4855,14 +4857,6 @@ ar:
       title: "تم تعليق الحساب"
       subject_template: "[%{email_prefix}] تم تعليق حسابك"
       subject_template_improved: "تم تعليق حسابك"
-    account_silenced:
-      title: "تم كتم الحساب"
-      subject_template: "[%{email_prefix}] تم كتم حسابك"
-      subject_template_improved: "تم كتم حسابك"
-    account_silenced_forever:
-      title: "تم كتم الحساب"
-      subject_template: "[%{email_prefix}] تم كتم حسابك"
-      subject_template_improved: "تم كتم حسابك"
     account_deleted:
       title: "حُذِف الحساب"
       subject_template: "[%{email_prefix}] حُذِف الحساب"

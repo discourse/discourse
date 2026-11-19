@@ -3803,12 +3803,6 @@ ja:
     account_suspended_forever:
       title: "アカウントが凍結されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
-    account_silenced:
-      title: "アカウントが投稿禁止にされました"
-      subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
-    account_silenced_forever:
-      title: "アカウントが投稿禁止にされました"
-      subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
     account_deleted:
       title: "アカウントが削除されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは削除されました"

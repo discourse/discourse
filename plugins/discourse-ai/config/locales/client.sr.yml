@@ -42,6 +42,8 @@ sr:
         type: "Tip"
         error: "Greška"
       discourse_workflows:
+        ai_tool:
+          list_item: "Predmet popisa"
         classify:
           upload_ids: "Slike"
           name: "Ime foruma"
@@ -77,6 +79,9 @@ sr:
           name: "Pretraži"
         admin_dashboard:
           highlights: "Istaknuto"
+        review_queue:
+          setting_groups:
+            settings: "Podešavanje"
         image_caption:
           setting_groups:
             settings: "Podešavanje"

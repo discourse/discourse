@@ -4443,10 +4443,8 @@ zh_TW:
           label: "已選取"
           title: "點擊後將文章移除"
         select_replies:
-          label: "選取＋回覆"
           title: "將貼文及所有回覆加入選取列表"
         select_below:
-          label: "選取 + 底下"
           title: "將此貼文及其所有以下貼文加入選取列表"
         delete: 刪除選取的貼文
         cancel: 取消選取
@@ -8876,7 +8874,6 @@ zh_TW:
         silence_duration: "這位使用者將會被靜音多久？"
         silence_reason_title: "禁言原因"
         silence_reason_placeholder: "靜音原因"
-        silence_message: "Email 訊息"
         suspended_until: "(直到%{until})"
         suspend_forever: "永久停權"
         cant_suspend: "這位使用者無法被停權。"

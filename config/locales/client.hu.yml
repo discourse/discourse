@@ -4075,10 +4075,8 @@ hu:
           label: "kiválasztott"
           title: "Kattintson a bejegyzés eltávolításához a kiválasztásból"
         select_replies:
-          label: "kiválasztás válaszokkal együtt"
           title: "A hozzászólás és összes válaszának hozzáadása a kiválasztáshoz"
         select_below:
-          label: "Kiválasztás az alatt lévőkkel együtt"
           title: "A bejegyzés és az összes utána következő hozzáadása a kiválasztáshoz"
         delete: kiválasztottak törlése
         cancel: kiválasztások visszavonása
@@ -7967,7 +7965,6 @@ hu:
         silence_duration: "Mennyi ideig lesz elnémítva a felhasználó?"
         silence_reason_title: "Némítás oka"
         silence_reason_placeholder: "Némítás oka"
-        silence_message: "E-mail üzenet"
         suspended_until: "(eddig: %{until})"
         suspend_forever: "Örökre felfüggeszteni"
         cant_suspend: "Ez a felhasználó nem lett felfüggesztve"

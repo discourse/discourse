@@ -4529,10 +4529,8 @@ fr:
           label: "sélectionné"
           title: "Cliquez pour retirer le message de la sélection"
         select_replies:
-          label: "sélectionner avec réponses"
           title: "Ajouter le message et toutes ses réponses à la sélection"
         select_below:
-          label: "sélectionner avec suivants"
           title: "Ajouter le message et tous ceux qui suivent à la sélection"
         delete: supprimer la sélection
         cancel: annuler la sélection
@@ -8863,7 +8861,6 @@ fr:
         silence_duration: "Combien de temps l'utilisateur sera-t-il mis en sourdine ?"
         silence_reason_title: "Raison de la mise en sourdine"
         silence_reason_placeholder: "Raison de la mise en sourdine"
-        silence_message: "E-mail"
         suspended_until: "(jusqu'à %{until})"
         suspend_forever: "Suspendre pour toujours"
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."

@@ -43,6 +43,8 @@ sw:
         error: "Hitilafu"
         response: "Mwitikio"
       discourse_workflows:
+        ai_tool:
+          list_item: "Listi kitu"
         classify:
           text: "Neno"
           upload_ids: "Picha"
@@ -75,6 +77,9 @@ sw:
           enabled: "Imeruhusiwa"
         search:
           name: "Tafuta"
+        review_queue:
+          setting_groups:
+            settings: "Mipangilio"
         image_caption:
           setting_groups:
             settings: "Mipangilio"

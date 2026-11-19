@@ -2255,8 +2255,6 @@ sr:
         selected: "odabrano (%{count})"
         select_post:
           label: "odaberi"
-        select_replies:
-          label: "odaberi +odgovori"
         delete: obriši odabrano
         cancel: odustani od odabranog
         select_all: odaberi sve
@@ -2675,6 +2673,7 @@ sr:
     download_calendar:
       download: "Preuzmi"
     tagging:
+      selector_tags: "Tagovi"
       selector_remove_filter: "uklonite filter"
       synonym_hint: "→ %{tag_name}"
       add_synonyms: "Dodaj"

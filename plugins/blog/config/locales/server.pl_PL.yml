@@ -5,14 +5,18 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  dashboard:
+    problem:
+      blog_not_ready: "Blog nie może publikować artykułów. %{reason} <a href='%{base_path}/admin/site_settings/category/all_results?filter=%{setting}'>Sprawdź ustawienia</a>"
+      blog_not_ready_without_setting: "Blog nie może publikować artykułów. %{reason}"
   site_settings:
-    blog_contributor_groups: Grupy, które mogą pisać i przesyłać własne szkice blogów. Udziel tym grupom również dostępu do kategorii prywatnych wersji roboczych. Nie daje to uprawnień pracownikom forum.
-    blog_editor_groups: Grupy, które mogą edytować i przesyłać dowolne widoczne dla nich szkice bloga. Udzielają również dostępu do kategorii prywatnych szkiców. Publikacja wymaga roli publikującego.
-    blog_publisher_groups: Grupy, które mogą zatwierdzać, publikować, wycofywać i planować poprawki bloga, widzą je. Wydawcy mogą zatwierdzać własne prace. Mogą również udzielać dostępu do kategorii prywatnych szkiców i uprawnień do tworzenia tematów w publicznej kategorii bloga. Administratorzy zawsze zachowują dostęp.
-    blog_enabled: "Blog zbudowany na Twojej społeczności. Pisz i recenzuj artykuły z zespołem redakcyjnym, publikuj je w /blog z własnym projektem i pozwól czytelnikom dyskutować o każdym artykule w powiązanym temacie. Skonfiguruj kategorie bloga i szkiców po ich włączeniu."
+    blog_contributor_groups: Grupy, które mogą pisać i przesyłać własne wersje robocze bloga. Grupy te widzą kategorię „prywatne szkice”. Nie daje to uprawnień pracownikom forum.
+    blog_editor_groups: Grupy, które mogą edytować i przesyłać dowolne szkice bloga, które widzą. Grupy te widzą kategorię szkiców prywatnych. Publikacja wymaga roli publikującego.
+    blog_publisher_groups: Grupy, które mogą zatwierdzać, publikować, wycofywać i planować poprawki bloga, widzą je. Wydawcy mogą zatwierdzać swoje własne prace. Grupy te widzą kategorię prywatnych szkiców i mogą rozpoczynać tematy w publicznej kategorii bloga. Administratorzy zawsze zachowują dostęp.
+    blog_enabled: "Blog zbudowany na Twojej społeczności. Pisz i recenzuj artykuły z zespołem redakcyjnym, publikuj je w serwisie /blog z własnym projektem i pozwól czytelnikom dyskutować na temat każdego artykułu w powiązanym temacie."
     blog_url: Obsługuj bloga z własnego źródła HTTPS, bez ukośnika ani ścieżki, zamiast /blog na tej stronie. Nazwa musi różnić się od nazwy hosta dyskusji. Skonfiguruj tę nazwę hosta jako alias tej strony w połączeniu z serwerem proxy i bazą danych.
-    blog_category: Pojedyncza kategoria publiczna, której wyraźnie opublikowane tematy pojawiają się na blogu. Podkategorie nie są uwzględniane. Temat nigdy nie jest publikowany wyłącznie z powodu przynależności do tej kategorii.
-    blog_drafts_category: Osobna, prywatna kategoria dla szkiców redakcyjnych. Ogranicz członkostwo do redaktorów. Publikowanie powoduje skopiowanie tylko zatwierdzonego artykułu do osobnej dyskusji w {{setting:blog_category}}. Tematy redakcyjne i odpowiedzi pozostają prywatne. Adresy URL do przesyłania nie są prywatne, gdy wyłączone jest bezpieczne przesyłanie.
+    blog_category: Kategoria publiczna, w której toczy się dyskusja na temat każdego opublikowanego artykułu. Pozostaw puste pole, aby utworzyć kategorię po opublikowaniu pierwszego artykułu. Podkategorie nie są uwzględniane. Temat nigdy nie zostanie opublikowany tylko dlatego, że znajduje się w tej kategorii.
+    blog_drafts_category: Prywatna kategoria dla szkiców. Jest tworzona i zarządzana przez bloga, a dostęp do niej mają tylko grupy ról bloga. Adresy URL do przesyłania nie są prywatne, gdy wyłączone jest bezpieczne przesyłanie.
     blog_title: Nazwa bloga wyświetlana w nawigacji, tytułach stron i kanałach.
     blog_description: Krótki opis strony głównej, kanału informacyjnego i wyszukiwarek.
     blog_about: Treść w formacie Markdown dla strony „O mnie” na blogu.
@@ -93,11 +97,19 @@ pl_PL:
     join_community: Dołącz do społeczności
     not_found_title: Ta strona jest niedostępna
     not_found_body: Być może został przeniesiony, powrócił do wersji roboczej lub nie został jeszcze opublikowany.
+    categories:
+      public: Blog
+      public_description: Dyskusje na temat opublikowanych artykułów na blogu. Każdy artykuł otrzymuje tutaj temat po opublikowaniu i każdy może na niego odpowiedzieć.
+      drafts: Szkice bloga
+      drafts_description: Szkice artykułów blogowych, zarządzane przez bloga. Tylko grupy autorów, redaktorów i wydawców bloga widzą tę kategorię, a inne grupy dodane do niej są usuwane. Zmień te grupy w ustawieniach bloga.
     errors:
       private_site: Blog wymaga witryny publicznej z wyłączonym bezpiecznym przesyłaniem. Tekst roboczy pozostaje prywatny, ale przesyłane pliki nie są objęte kontrolą dostępu bez bezpiecznego przesyłania.
       anonymous_uploads: "Blog wymaga anonimowego przesyłania i pobierania plików. Wyłącz opcję prevent_anons_from_downloading_files przed publikacją lub udostępnianiem recenzji."
-      category: Wybierz jedną publiczną kategorię bloga w ustawieniach witryny bloga.
-      drafts_category: Wybierz osobną kategorię prywatnych szkiców, do której dostęp będą miały wyłącznie skonfigurowane grupy redakcyjne lub personel, odrębną od głównej kategorii współdzielonych szkiców.
+      category: Kategoria bloga musi być publiczna. Wybierz kategorię publiczną w ustawieniach bloga lub wyczyść to ustawienie, aby utworzyć kategorię po opublikowaniu pierwszego artykułu.
+      category_unavailable: Nie udało się utworzyć publicznej kategorii bloga. Spróbuj ponownie lub wybierz kategorię w ustawieniach bloga.
+      drafts_category_unavailable: Nie udało się przygotować kategorii prywatnych szkiców. Spróbuj ponownie.
+      drafts_category_public: Kategoria „Szkice bloga” jest otwarta dla wszystkich, więc prace redakcyjne są wstrzymane. Usuń grupę „wszyscy” w ustawieniach bezpieczeństwa tej kategorii.
+      category_name_taken: "Kategoria o nazwie „%{name}” już istnieje, więc blog nie może utworzyć własnej. Wybierz publiczną kategorię bloga w ustawieniach bloga."
       published_page: Usuń publikację tego tematu ze strony przed opublikowaniem go na blogu.
       path_taken: jest zarezerwowany lub należy już do innego artykułu
       co_authors_invalid: "musi być maksymalnie %{count} różnych aktywnych użytkowników, nie licząc autora artykułu"

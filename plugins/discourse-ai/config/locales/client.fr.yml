@@ -64,6 +64,7 @@ fr:
         requires_ai: "Nécessite l'activation de l'extension AI"
       nodes:
         "action:ai_agent": "Agent d'IA"
+        "action:ai_tool": "Outil d'IA"
       node_descriptions:
         "action:ai_agent": "Exécuter un agent d'IA pour traiter des données ou générer du contenu"
     discourse_automation:
@@ -272,6 +273,16 @@ fr:
           upload_ids: "ID téléversés"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Sélectionner un agent..."
+        ai_tool:
+          tool_ref: "Outil"
+          llm_model_id: "Modèle LLM"
+          arguments: "Arguments"
+          list_item: "Élément"
+          add_list_item: "Ajouter un élément"
+        mcp_tool:
+          mcp_server_id: "Serveur MCP"
+          tool_name: "Outil"
+          arguments: "Arguments"
         classify:
           text: "Texte"
           upload_ids: "Images"
@@ -416,6 +427,9 @@ fr:
             enabled_features: "Fonctionnalités activées"
             automation: "Automatisation"
             agents: "Agents"
+        review_queue:
+          setting_groups:
+            settings: "Paramètres"
         image_caption:
           name: "Légende de l'image"
           description: "Génère des légendes générées par l'IA pour les images des publications et les met à la disposition des lecteurs et des technologies d'assistance"
@@ -1369,8 +1383,7 @@ fr:
         filter_standalone: "Indépendant"
       ai_bot:
         title: "Robot IA"
-        agent: "Agent :"
-        llm: "Modèle :"
+        agent_menu_heading: "Agent"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"
         try_again: "Réessayer"
@@ -1436,7 +1449,6 @@ fr:
           tab_label: "IA"
           header: "En quoi puis-je aider ?"
           submit: "Envoyer une question"
-          disclaimer: "L'IA générative peut commettre des erreurs. Vérifiez les informations importantes."
           placeholder: "Poser une question..."
           new: "Nouvelle question"
           min_input_length_message:
