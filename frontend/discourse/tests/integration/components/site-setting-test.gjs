@@ -709,6 +709,142 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.strictEqual(body.selectable_avatars, "/b.png");
   });
 
+  test("a color setting saves the typed hex with its prefix", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_color", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_color",
+      value: "#006699",
+      type: "color",
+    });
+
+    assert.dom(".form-kit__control-color-input-hex").hasValue("006699");
+
+    await fillIn(".form-kit__control-color-input-hex", "ff0000");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_color, "#ff0000");
+
+    await fillIn(".form-kit__control-color-input-hex", "red");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(
+      body.test_color,
+      "red",
+      "named colors are kept as typed"
+    );
+  });
+
+  test("a locale list setting names its choices from the available locales", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_locales", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English" },
+      { value: "fr", name: "Français" },
+    ];
+
+    await renderSetting({
+      setting: "test_locales",
+      value: "en",
+      type: "list",
+      list_type: "locale",
+      valid_values: [
+        { value: "en", name: "en" },
+        { value: "fr", name: "fr" },
+      ],
+    });
+
+    const locales = selectKit(".form-kit__field .list-setting");
+    await locales.expand();
+
+    assert.strictEqual(locales.rowByValue("fr").name(), "Français");
+
+    await locales.selectRowByValue("fr");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_locales, "en|fr");
+  });
+
+  test("a topic setting shows the saved topic", async function (assert) {
+    await renderSetting({
+      setting: "test_topic",
+      value: "280",
+      type: "topic",
+    });
+
+    assert
+      .dom(".form-kit__field .topic-chooser .select-kit-header")
+      .includesText("Internationalization / localization");
+  });
+
+  test("a topic setting saves the picked topic id", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_topic", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    pretender.get("/search/query", () =>
+      response({
+        topics: [{ id: 42, title: "Moderator guide" }],
+        posts: [{ id: 1, topic_id: 42 }],
+      })
+    );
+
+    await renderSetting({
+      setting: "test_topic",
+      value: "",
+      type: "topic",
+    });
+
+    const topics = selectKit(".form-kit__field .topic-chooser");
+    await topics.expand();
+    await topics.fillInFilter("guide");
+    await topics.selectRowByValue(42);
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_topic, "42");
+  });
+
+  test("a datetime setting saves the local time as UTC", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_datetime", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    const savedTime = "2026-01-15T10:00:00Z";
+    const pickedLocalTime = "2026-02-01T08:30";
+
+    await renderSetting({
+      setting: "test_datetime",
+      value: savedTime,
+      type: "datetime",
+    });
+
+    assert
+      .dom(".form-kit__field input[type='datetime-local']")
+      .hasValue(
+        moment(savedTime).local().format(moment.HTML5_FMT.DATETIME_LOCAL)
+      );
+
+    await fillIn(
+      ".form-kit__field input[type='datetime-local']",
+      pickedLocalTime
+    );
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(
+      body.test_datetime,
+      moment(pickedLocalTime).utc().format()
+    );
+  });
+
   test("a date setting saves the picked date", async function (assert) {
     let body;
     pretender.put("/admin/site_settings/test_date", (request) => {
@@ -726,6 +862,48 @@ module("Integration | Component | SiteSetting", function (hooks) {
 
     assert.strictEqual(body.test_date, "2026-01-15");
   });
+
+  for (const [type, selector, saved, shown] of [
+    ["date", "input[type='date']", "2026-01-15", "2026-01-15"],
+    [
+      "datetime",
+      "input[type='datetime-local']",
+      "2026-01-15T10:00:00Z",
+      moment("2026-01-15T10:00:00Z")
+        .local()
+        .format(moment.HTML5_FMT.DATETIME_LOCAL),
+    ],
+  ]) {
+    test(`a ${type} setting can be emptied, then reset to a non-empty default`, async function (assert) {
+      let body;
+      pretender.put("/admin/site_settings/test_when", (request) => {
+        body = parsePostData(request.requestBody);
+        return response(200, {});
+      });
+      const input = `.form-kit__field ${selector}`;
+
+      await renderSetting({
+        setting: "test_when",
+        value: saved,
+        default: saved,
+        type,
+      });
+
+      await fillIn(input, "");
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_when, "", "saves the emptied value");
+      assert.dom(input).hasValue("");
+
+      await click(".setting-controls__undo");
+
+      assert.dom(input).hasValue(shown, "reset restores the default");
+
+      await click(".setting-controls__ok");
+
+      assert.strictEqual(body.test_when, saved);
+    });
+  }
 
   test("a secret setting that is also a textarea stays readable", async function (assert) {
     await renderSetting({
@@ -1203,7 +1381,7 @@ module(
       { value: "times_new_roman", name: "Times New Roman" },
     ];
 
-    test("base_font sets body-font-X classNames on each field choice", async function (assert) {
+    test("sets body-font-X classNames on each field choice", async function (assert) {
       await renderSetting({
         category: "",
         choices: fonts,
@@ -1216,36 +1394,11 @@ module(
         type: "font_list",
         value: "arial",
       });
-      const fontSelector = selectKit(".font-selector");
+      const fontSelector = selectKit(".form-kit__field .font-selector");
       await fontSelector.expand();
 
       fonts.forEach((choice) => {
         const fontClass = `body-font-${choice.value.replace(/_/g, "-")}`;
-        assert.true(
-          fontSelector.rowByValue(choice.value).hasClass(fontClass),
-          `has ${fontClass} CSS class`
-        );
-      });
-    });
-
-    test("heading_font sets heading-font-X classNames on each field choice", async function (assert) {
-      await renderSetting({
-        category: "",
-        choices: fonts,
-        default: "",
-        description: "Heading font",
-        placeholder: null,
-        preview: null,
-        secret: false,
-        setting: "heading_font",
-        type: "font_list",
-        value: "arial",
-      });
-      const fontSelector = selectKit(".font-selector");
-      await fontSelector.expand();
-
-      fonts.forEach((choice) => {
-        const fontClass = `heading-font-${choice.value.replace(/_/g, "-")}`;
         assert.true(
           fontSelector.rowByValue(choice.value).hasClass(fontClass),
           `has ${fontClass} CSS class`
