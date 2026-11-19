@@ -81,6 +81,7 @@ class TopicViewSerializer < ApplicationSerializer
     :has_localized_content,
     :can_localize_topic,
     :is_nested_view,
+    :pinned_footer_post,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -92,6 +93,16 @@ class TopicViewSerializer < ApplicationSerializer
 
   def details
     object
+  end
+
+  def pinned_footer_post
+    return unless SiteSetting.enable_pin_post_to_topic_footer
+
+    @pinned_footer_post ||= TopicFooterPinnedPostSerializer.for_topic(object.topic, scope)
+  end
+
+  def include_pinned_footer_post?
+    pinned_footer_post.present?
   end
 
   def message_bus_last_id

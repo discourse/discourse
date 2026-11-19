@@ -102,6 +102,12 @@
   }
 }
 
+.topic-footer-pinned-post {
+  border: 1px solid var(--primary-low);
+  margin-block: var(--space-3);
+  padding: var(--space-4);
+}
+
 .topic-footer-presence {
   grid-column: 1;
   grid-row: 3;

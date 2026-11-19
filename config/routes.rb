@@ -1368,6 +1368,8 @@ Discourse::Application.routes.draw do
       put "unhide"
       put "locked"
       put "notice"
+      put "topic_footer_pin"
+      delete "topic_footer_pin", action: :topic_footer_pin
       get "replies"
       get "revisions/latest" => "posts#latest_revision"
       get "revisions/:revision" => "posts#revisions", :constraints => { revision: /\d+/ }

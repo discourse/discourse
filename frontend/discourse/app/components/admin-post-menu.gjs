@@ -3,12 +3,15 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class AdminPostMenu extends Component {
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service adminPostMenuButtons;
   @service router;
@@ -37,6 +40,23 @@ export default class AdminPostMenu extends Component {
 
   get canChangePostOwner() {
     return this.currentUser?.canChangePostOwner;
+  }
+
+  get canPinToTopicFooter() {
+    const post = this.args.data.post;
+    return (
+      this.siteSettings.enable_pin_post_to_topic_footer &&
+      this.currentUser?.staff &&
+      !post.hidden &&
+      !post.deleted &&
+      !post.topic.isPrivateMessage &&
+      post.post_type === this.site.post_types.regular
+    );
+  }
+
+  get isPinnedToTopicFooter() {
+    const post = this.args.data.post;
+    return post.topic.pinned_footer_post?.id === post.id;
   }
 
   get nestedPinButton() {
@@ -89,8 +109,39 @@ export default class AdminPostMenu extends Component {
     await this.args.data.scheduleRerender?.();
   }
 
+  @action
+  async toggleTopicFooterPin() {
+    const post = this.args.data.post;
+    const pinned = this.isPinnedToTopicFooter;
+    await this.args.close();
+
+    try {
+      const result = await ajax(`/posts/${post.id}/topic_footer_pin`, {
+        type: pinned ? "DELETE" : "PUT",
+      });
+      post.topic.set("pinned_footer_post", result.pinned_footer_post);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
   <template>
     <DDropdownMenu as |dropdown|>
+      {{#if this.canPinToTopicFooter}}
+        <dropdown.item>
+          <DButton
+            class="btn btn-transparent toggle-topic-footer-pin"
+            @action={{this.toggleTopicFooterPin}}
+            @icon="thumbtack"
+            @label={{if
+              this.isPinnedToTopicFooter
+              "topic.pinned_footer_post.unpin"
+              "topic.pinned_footer_post.pin"
+            }}
+          />
+        </dropdown.item>
+      {{/if}}
+
       {{#if this.currentUser.staff}}
         <dropdown.item>
           <DButton

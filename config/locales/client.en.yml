@@ -4671,6 +4671,11 @@ en:
       add_to_reply: "Add to a reply"
       added_to_reply: "Saved. The content will be added the next time you open a reply."
     topic:
+      pinned_footer_post:
+        title: "Pinned post"
+        pin: "Pin to topic footer"
+        unpin: "Unpin from topic footer"
+        view_original: "View original post"
       filter_to:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
