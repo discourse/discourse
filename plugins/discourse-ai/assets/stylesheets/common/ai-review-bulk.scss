@@ -70,8 +70,8 @@
   }
 
   &__row {
-    &.--blocked,
-    &.--handled {
+    &.--handled,
+    &.--blocked td:not(.ai-review-bulk__status) {
       opacity: 0.6;
     }
 

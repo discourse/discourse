@@ -7,6 +7,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { actionModalClassMap } from "discourse/components/reviewable/item";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
@@ -336,7 +337,20 @@ export default class AiReviewBulk extends Component {
                   </span>
                 </td>
                 <td class="d-table__cell ai-review-bulk__status">
-                  {{row.statusLabel}}
+                  {{#if row.blockedReason}}
+                    <DTooltip @content={{row.statusLabel}}>
+                      <:trigger>
+                        <LinkTo
+                          aria-label={{row.statusLabel}}
+                          class="ai-review-bulk__open"
+                          @model={{row.suggestion.id}}
+                          @route="review.show"
+                        >{{dIcon "up-right-from-square"}}</LinkTo>
+                      </:trigger>
+                    </DTooltip>
+                  {{else}}
+                    {{row.statusLabel}}
+                  {{/if}}
                 </td>
               </tr>
             {{/each}}

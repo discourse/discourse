@@ -39,8 +39,8 @@ RSpec.describe "Bulk applying suggested review actions" do
 
     expect(page).to have_css("#{row(edited)} .ai-review-bulk__checkbox:disabled")
     expect(page).to have_css(
-      "#{row(edited)} .ai-review-bulk__status",
-      text: I18n.t("js.discourse_ai.review_bulk.blocked.needs_input"),
+      "#{row(edited)} .ai-review-bulk__open[href='/review/#{edited.id}']" \
+        "[aria-label='#{I18n.t("js.discourse_ai.review_bulk.blocked.needs_input")}']",
     )
 
     find("#{row(skipped)} .ai-review-bulk__checkbox").click

@@ -317,7 +317,7 @@ en:
       title: "AI"
       apply_review_suggestion: "Apply AI suggestion: %{action}"
       review_bulk:
-        title: "AI suggestions"
+        title: "AI Suggestions"
         description: "These items have an action suggested by AI. Deselect any you disagree with, then apply the rest together."
         more_pending:
           one: "%{count} more suggestion will appear after these are handled."
@@ -349,9 +349,9 @@ en:
           applied: "Applied"
           handled: "Already handled"
         blocked:
-          needs_input: "Needs more input, open the item to apply"
-          must_claim: "Claim the topic to apply"
-          claimed_by_other: "Claimed by another user"
+          needs_input: "Needs more input. Open the item to apply."
+          must_claim: "Unclaimed. Open the item to claim its topic and apply."
+          claimed_by_other: "Claimed by another user. Open the item for details."
       dsa_classification:
         suggest: "Suggest with AI"
         suggested_by_ai: "Suggested by AI"
