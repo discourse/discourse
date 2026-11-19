@@ -115,7 +115,7 @@ RSpec.describe PostVoting::CommentsController do
           .first
 
       comment = answer.post_voting_comments.last
-      payload = message[:data]
+      payload = message.data
 
       expect(payload[:comment][:id]).to eq(comment.id)
       expect(payload[:comment][:user_id]).to eq(user.id)
