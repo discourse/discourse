@@ -315,7 +315,7 @@ module DiscourseDataExplorer
       format = params[:format] == "csv" ? :csv : :json
       limit =
         if format == :csv
-          csv_limit = params.fetch(:limit, QUERY_RESULT_MAX_LIMIT).to_i
+          csv_limit = fetch_int_from_params(:limit, default: QUERY_RESULT_MAX_LIMIT)
           [csv_limit, QUERY_RESULT_MAX_LIMIT].min
         else
           fetch_limit_from_params(
