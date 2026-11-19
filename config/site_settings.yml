@@ -4254,6 +4254,9 @@ uncategorized:
   always_include_topic_excerpts:
     default: false
     hidden: true
+  include_latest_reply_excerpt_on_topic_list:
+    default: false
+    area: "posts_and_topics"
 
   allow_bulk_invite:
     default: true
