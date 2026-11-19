@@ -298,33 +298,31 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     assert.false(message.expanded);
   });
 
-  test("channel manager refreshes the thread preview on the original message and on broadcasted copies", function (assert) {
+  test("channel manager refreshes the thread preview carried by the original message", function (assert) {
     const channel = this.fabricators.channel({ id: 15 });
     const originalMessage = this.fabricators.message({
       id: 300,
       channel,
       thread: this.fabricators.thread({ id: 224, channel }),
     });
+    // a broadcasted copy is serialized with thread_id and no thread object
     const broadcastedReply = this.fabricators.message({
       id: 301,
       channel,
       broadcasted: true,
-      thread: this.fabricators.thread({ id: 224, channel }),
+      thread_id: 224,
     });
-    const unrelatedReply = this.fabricators.message({
+    const unrelatedMessage = this.fabricators.message({
       id: 302,
       channel,
-      broadcasted: true,
       thread: this.fabricators.thread({ id: 225, channel }),
     });
     channel.messagesManager.addMessages([
       originalMessage,
       broadcastedReply,
-      unrelatedReply,
+      unrelatedMessage,
     ]);
-    // each message deserializes its own thread instance from its payload
-    assert.notStrictEqual(originalMessage.thread, broadcastedReply.thread);
-    unrelatedReply.thread.preview.update({ reply_count: 5 });
+    unrelatedMessage.thread.preview.update({ reply_count: 5 });
 
     const manager = new ChatChannelSubscriptionManager(this, channel);
 
@@ -342,12 +340,7 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
       "original message indicator updates"
     );
     assert.strictEqual(
-      broadcastedReply.thread.preview.replyCount,
-      8,
-      "broadcasted copy indicator updates"
-    );
-    assert.strictEqual(
-      unrelatedReply.thread.preview.replyCount,
+      unrelatedMessage.thread.preview.replyCount,
       5,
       "messages of other threads are untouched"
     );

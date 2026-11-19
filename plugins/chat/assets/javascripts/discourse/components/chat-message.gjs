@@ -271,7 +271,7 @@ export default class ChatMessage extends Component {
     return (
       (this.args.message?.channel?.threadingEnabled ||
         this.args.message?.thread?.force) &&
-      !!this.args.message?.thread
+      Boolean(this.args.message?.thread || this.args.message?.threadId)
     );
   }
 

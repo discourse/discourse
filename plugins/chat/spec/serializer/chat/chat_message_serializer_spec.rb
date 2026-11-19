@@ -427,4 +427,71 @@ describe Chat::MessageSerializer do
       end
     end
   end
+
+  describe "broadcasted thread replies" do
+    fab!(:thread) { Fabricate(:chat_thread, channel: chat_channel, title: "Thread title") }
+    fab!(:thread_reply) { Fabricate(:chat_message, chat_channel: chat_channel, thread: thread) }
+    fab!(:broadcasted_reply) do
+      Fabricate(
+        :chat_message,
+        chat_channel: chat_channel,
+        thread: thread,
+        in_reply_to: thread_reply,
+        broadcasted: true,
+      )
+    end
+
+    before { chat_channel.update!(threading_enabled: true) }
+
+    it "does not nest the thread, which would cache it without its original message" do
+      serialized = described_class.new(broadcasted_reply, scope: guardian, root: nil).as_json
+
+      expect(serialized).not_to have_key(:thread)
+      expect(serialized[:thread_id]).to eq(thread.id)
+      expect(serialized[:thread_title]).to eq("Thread title")
+      expect(serialized[:in_reply_to][:id]).to eq(thread_reply.id)
+    end
+
+    it "still nests the full thread on the original message" do
+      serialized =
+        described_class.new(
+          thread.original_message,
+          scope: guardian,
+          root: nil,
+          include_thread_original_message: true,
+        ).as_json
+
+      expect(serialized[:thread].as_json[:original_message][:id]).to eq(thread.original_message.id)
+      expect(serialized[:thread].as_json[:preview]).to be_present
+    end
+
+    context "when the thread original message is trashed" do
+      before { thread.original_message.trash! }
+
+      it "hides the referenced thread message from users who cannot moderate the channel" do
+        serialized = described_class.new(broadcasted_reply, scope: guardian, root: nil).as_json
+
+        expect(serialized[:id]).to eq(broadcasted_reply.id)
+        expect(serialized).not_to have_key(:in_reply_to)
+        expect(serialized[:thread_title]).to eq("Thread title")
+      end
+
+      it "keeps the referenced thread message for users who can moderate the channel" do
+        guardian_user.update!(moderator: true)
+
+        serialized = described_class.new(broadcasted_reply, scope: guardian, root: nil).as_json
+
+        expect(serialized[:in_reply_to][:id]).to eq(thread_reply.id)
+      end
+    end
+
+    it "keeps in_reply_to of a message outside any thread" do
+      replied_to = Fabricate(:chat_message, chat_channel: chat_channel)
+      message_1.update!(in_reply_to: replied_to)
+
+      serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
+
+      expect(serialized[:in_reply_to][:id]).to eq(replied_to.id)
+    end
+  end
 end
