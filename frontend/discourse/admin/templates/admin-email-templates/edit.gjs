@@ -74,6 +74,8 @@ export default <template>
       >
         <DButton
           class="btn-default email-template__preview"
+          rel="noopener noreferrer"
+          target="_blank"
           @href={{@controller.previewUrl}}
           @label="admin.email.preview_saved_template"
         />

@@ -2,22 +2,13 @@
 
 module Email
   class Renderer
-    LOCALE_HEADER = "X-Discourse-Email-Locale"
-    THEME_HEADER = "X-Discourse-Email-Theme"
-
     def initialize(message, opts = nil)
       @message = message
       built_message = @message.respond_to?(:message) ? @message.message : @message
       @theme_renderer = built_message.instance_variable_get(:@discourse_email_theme_renderer)
       # HTML built outside the email layout has no theme branding, so the text part gets none either.
       @html_uses_layout = @message.html_part.nil? || @theme_renderer.present?
-      @opts = (opts || {}).dup
-      @opts[:locale] = @message.header[LOCALE_HEADER]&.value.presence || @opts[:locale] ||
-        I18n.locale
-      if theme_id = @message.header[THEME_HEADER]&.value.presence
-        @opts[:theme_id] = theme_id.to_i
-        @opts[:preview_theme] = true
-      end
+      @opts = opts || {}
     end
 
     def text
@@ -65,7 +56,7 @@ module Email
       @theme_renderer ||=
         Email::ThemeRenderer.new(
           unsubscribe_url: unsubscribe_url,
-          locale: @opts[:locale],
+          locale: @opts[:locale] || I18n.locale,
           theme_id: @opts[:theme_id],
           preview_theme: @opts[:preview_theme],
         )

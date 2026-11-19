@@ -13,8 +13,7 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def test
-    params.require(:email_address)
-    ensure_test_email_recipient!(params[:email_address])
+    recipient = test_email_recipient!(:email_address)
     RateLimiter.new(
       current_user,
       "admin-email-test-send",
@@ -23,7 +22,7 @@ class Admin::EmailController < Admin::AdminController
       apply_limit_to_staff: true,
     ).performed!
     begin
-      message = TestMailer.send_test(params[:email_address])
+      message = TestMailer.send_test(recipient)
       Email::Sender.new(message, :test_message).send
 
       render json: { sent_test_email_message: I18n.t("admin.email.sent_test") }
@@ -69,11 +68,10 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def send_preview
-    params.require(:email)
-    ensure_test_email_recipient!(params[:email])
+    recipient = test_email_recipient!(:email)
     preview = email_preview
     if SiteSetting.disable_emails == "yes" ||
-         (SiteSetting.disable_emails == "non-staff" && !User.find_by_email(params[:email])&.staff?)
+         (SiteSetting.disable_emails == "non-staff" && !User.find_by_email(recipient)&.staff?)
       render json: {
                errors: [I18n.t("email_settings.preview_sends_disabled")],
              },
@@ -94,11 +92,13 @@ class Admin::EmailController < Admin::AdminController
              status: :unprocessable_entity
       return
     end
-    message = preview.message
-    message.to = params[:email]
     begin
-      I18n.with_locale(preview.locale) { Email::Sender.new(message, :email_preview).send }
-      render json: success_json
+      delivery = preview.deliver_to(recipient)
+      if delivery.is_a?(EmailLog)
+        render json: success_json
+      else
+        render_json_error(delivery&.reason || I18n.t("email_settings.preview_sends_disabled"))
+      end
     rescue => error
       render json: { errors: [error.message] }, status: :unprocessable_entity
     end
@@ -143,18 +143,20 @@ class Admin::EmailController < Admin::AdminController
 
   private
 
-  def ensure_test_email_recipient!(recipient)
+  def test_email_recipient!(parameter)
+    recipient = params.require(parameter)
+    raise Discourse::InvalidParameters unless recipient.is_a?(String)
+    recipient = recipient.strip
+
     if SiteSetting.restrict_admin_email_test_sends_to_self
-      normalized_recipient = recipient.to_s.strip.downcase
-      if !current_user.user_emails.where("lower(email) = ?", normalized_recipient).exists?
+      if !current_user.user_emails.where("lower(email) = ?", recipient.downcase).exists?
         raise Discourse::InvalidParameters.new(I18n.t("email_settings.test_email_restricted"))
       end
     end
 
     # Mail sends to every address in a list or comma-separated string, but the send checks look at one.
-    if !recipient.is_a?(String) || !Email.is_valid?(recipient.strip)
-      raise Discourse::InvalidParameters
-    end
+    raise Discourse::InvalidParameters unless Email.is_valid?(recipient)
+    recipient
   end
 
   def email_preview

@@ -12,12 +12,6 @@ module Email
           preview_theme: builder.template_args[:preview_theme],
         )
       headers(builder.header_args)
-      headers(
-        Email::Renderer::LOCALE_HEADER => (builder.template_args[:locale] || I18n.locale).to_s,
-      )
-      if builder.template_args[:preview_theme] && builder.template_args[:theme_id].present?
-        headers(Email::Renderer::THEME_HEADER => builder.template_args[:theme_id].to_s)
-      end
       mail(builder.build_args).tap do |message|
         # Share resolved branding between HTML generation and the later plain-text pass.
         message&.instance_variable_set(:@discourse_email_theme_renderer, @email_theme_renderer)

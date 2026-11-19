@@ -73,18 +73,24 @@ RSpec.describe Email::ThemeRenderer do
   it "preserves semantic containers and relative links in derived text" do
     SiteSetting.enable_email_theme_header_and_footer = true
     set_subfolder "/forum"
-    theme.set_field(
-      target: :email,
-      name: "footer",
-      value:
-        '<footer><section>Compliance <a href="/forum/faq">FAQ</a> <a href="//example.org/privacy">Privacy</a></section></footer>',
-    )
+    theme.set_field(target: :email, name: "footer", value: <<~HTML)
+        <footer><section>Compliance
+          <a href="/">Home</a>
+          <a href="guidelines">Guidelines</a>
+          <img src="./logo.png" alt="Logo">
+          <a href="/forum/faq">FAQ</a>
+          <a href="//example.org/privacy">Privacy</a>
+        </section></footer>
+      HTML
     theme.save!
 
     text = described_class.new.text("Body")
 
     expect(text).to include(
       "Compliance",
+      "[Home](#{Discourse.base_url_no_prefix}/)",
+      "[Guidelines](#{Discourse.base_url}/guidelines)",
+      "![Logo](#{Discourse.base_url}/logo.png)",
       "[FAQ](#{Discourse.base_url}/faq)",
       "[Privacy](http://example.org/privacy)",
     )

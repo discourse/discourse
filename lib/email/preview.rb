@@ -78,6 +78,13 @@ module Email
         message.html_part&.body.to_s.blank?
     end
 
+    def deliver_to(recipient)
+      message.to = recipient
+      I18n.with_locale(locale) do
+        Email::Sender.new(message, :email_preview, digest: @email_type == "digest").send
+      end
+    end
+
     def renderer
       @renderer ||=
         Email::Renderer.new(
