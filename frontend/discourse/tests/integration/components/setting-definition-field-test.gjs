@@ -1066,6 +1066,185 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert.dom(".value-probe").hasText("dog|cat|monkey");
   });
 
+  test("group_list holds, locks and offers groups with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.site.groups = [
+      { id: 0, name: "everyone" },
+      { id: 1, name: "Donuts" },
+      { id: 2, name: "Cheese cake" },
+      { id: 3, name: "Muffins" },
+    ];
+
+    await render(
+      <template>
+        <Form @data={{hash my_groups="1|3"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_groups"
+              type="group_list"
+              label="My groups"
+              disallowed_groups="0"
+              mandatory_values="1|2"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe" data-value={{data.my_groups}}></span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_groups'] .d-select";
+    assert.dom(control).hasAttribute("data-name", "Donuts,Muffins");
+    assert
+      .dom(`${control} .d-select__chip[data-value='1']`)
+      .hasClass("--locked", "a mandatory group can't be removed");
+    assert
+      .dom(`${control} .d-select__chip[data-value='3']`)
+      .doesNotHaveClass("--locked", "the other groups can");
+
+    await dSelect(control).open();
+    assert
+      .dom("[role='option'][data-value='0']")
+      .doesNotExist("a disallowed group is not offered");
+
+    await dSelect(control).select(2);
+    assert.dom(".value-probe").hasAttribute("data-value", "1|3|2");
+  });
+
+  test("group_list keeps everyone stored as everyone with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.siteSettings.granular_anonymous_and_logged_in_groups_permissions = true;
+    this.site.groups = [
+      { id: 0, name: "everyone" },
+      { id: 1, name: "Donuts" },
+      { id: 5, name: "logged_in_users" },
+      { id: 11, name: "trust_level_1" },
+    ];
+
+    await render(
+      <template>
+        <Form @data={{hash my_groups="0|11"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_groups"
+              type="group_list"
+              label="My groups"
+              currentSavedValue="0|11"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe" data-value={{data.my_groups}}></span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_groups'] .d-select";
+    assert
+      .dom(control)
+      .hasAttribute(
+        "data-name",
+        "logged_in_users,trust_level_1",
+        "shows logged_in_users in place of everyone"
+      );
+    assert
+      .dom(".value-probe")
+      .hasAttribute("data-value", "0|11", "rendering leaves the value alone");
+
+    await dSelect(control).open();
+    assert
+      .dom("[role='option'][data-value='0']")
+      .doesNotExist("everyone is not offered beside logged_in_users");
+
+    await dSelect(control).select(1);
+    assert
+      .dom(".value-probe")
+      .hasAttribute("data-value", "0|11|1", "stores everyone back as everyone");
+  });
+
+  test("group picks and clears a group with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const typeOf = (value) => typeof value;
+    this.site.groups = [
+      { id: 0, name: "everyone" },
+      { id: 1, name: "Donuts" },
+      { id: 2, name: "Cheese cake" },
+    ];
+
+    await render(
+      <template>
+        <Form @data={{hash my_group="1"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_group"
+              type="group"
+              label="My group"
+              disallowed_groups="2"
+            }}
+            @form={{form}}
+          />
+          <span
+            class="value-probe"
+            data-type={{typeOf data.my_group}}
+            data-value={{data.my_group}}
+          ></span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_group'] .d-select";
+    assert.dom(control).hasAttribute("data-name", "Donuts");
+
+    await dSelect(control).open();
+    assert
+      .dom("[role='option'][data-value='2']")
+      .doesNotExist("a disallowed group is not offered");
+    assert
+      .dom("[role='option'][data-value='0']")
+      .hasAttribute("data-name", "everyone (legacy)", "everyone is marked");
+
+    await dSelect(control).select(0);
+    assert
+      .dom(".value-probe")
+      .hasAttribute("data-value", "0", "stores the picked id")
+      .hasAttribute(
+        "data-type",
+        "string",
+        "as a string, as the setting holds it"
+      );
+
+    await dSelect(control).clear();
+    assert
+      .dom(".value-probe")
+      .hasAttribute(
+        "data-value",
+        "",
+        "a cleared setting holds an empty string"
+      );
+  });
+
+  for (const type of ["group", "group_list"]) {
+    test(`${type} is disabled with its field under the new select controls`, async function (assert) {
+      this.siteSettings.enable_new_select_controls = true;
+      const definition = { key: "my_setting", type, label: "My setting" };
+
+      await render(
+        <template>
+          <Form @data={{hash my_setting=""}} as |form|>
+            <SettingDefinitionField
+              @definition={{definition}}
+              @disabled={{true}}
+              @form={{form}}
+            />
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom("[data-name='my_setting'] .d-select__input")
+        .isDisabled("the picker follows its field");
+    });
+  }
+
   test("topic picks and clears with the new select controls", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
     const topics = [

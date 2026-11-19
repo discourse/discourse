@@ -6,8 +6,10 @@ import {
   mapEveryoneToLoggedInUsersIds,
   mapLoggedInUsersToEveryoneForStorage,
 } from "discourse/lib/group-list-setting-aliasing";
+import { settingGroupRecords } from "discourse/lib/setting-group-records";
 import { splitString } from "discourse/lib/utilities";
 import ListSetting from "discourse/select-kit/components/list-setting";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 
 const TOKEN_SEPARATOR = "|";
 
@@ -45,6 +47,25 @@ export default class SettingFieldGroupList extends Component {
       .filter(Boolean);
   }
 
+  /** The offered groups as the new picker's records, under the names the setting shows. */
+  get groupRecords() {
+    return settingGroupRecords(this.groupChoices, this.site.groups);
+  }
+
+  /** The held group ids as numbers, for the new picker. */
+  get heldGroupIds() {
+    return this.selectedIds.map(Number);
+  }
+
+  /** The held mandatory groups, which the new picker keeps from being removed. */
+  get lockedGroupIds() {
+    const mandatory = splitString(
+      this.args.definition.mandatory_values,
+      TOKEN_SEPARATOR
+    );
+    return this.heldGroupIds.filter((id) => mandatory.includes(String(id)));
+  }
+
   get selectedIds() {
     const value = this.args.field.value;
     const ids = Array.isArray(value)
@@ -76,18 +97,37 @@ export default class SettingFieldGroupList extends Component {
     this.args.field.set(storedIds.join(TOKEN_SEPARATOR));
   }
 
+  /** Stores the picked group ids, as the legacy list does. */
+  @bind
+  onPickGroups(ids) {
+    this.onChange(ids.map(String));
+  }
+
   <template>
     <@field.Control>
-      <ListSetting
-        @choices={{this.groupChoices}}
-        @mandatoryValues={{@definition.mandatory_values}}
-        @nameProperty="name"
-        @onChange={{this.onChange}}
-        @options={{hash disabled=@field.disabled}}
-        @settingName={{@definition.key}}
-        @value={{this.selectedIds}}
-        @valueProperty="id"
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DSelectGroup
+          @disabled={{@field.disabled}}
+          @lockedValues={{this.lockedGroupIds}}
+          @multiple={{true}}
+          @onChange={{this.onPickGroups}}
+          @options={{this.groupRecords}}
+          @texts={{hash ariaLabel=@field.title}}
+          @value={{this.heldGroupIds}}
+        />
+      {{else}}
+        <ListSetting
+          @choices={{this.groupChoices}}
+          @mandatoryValues={{@definition.mandatory_values}}
+          @nameProperty="name"
+          @onChange={{this.onChange}}
+          @options={{hash disabled=@field.disabled}}
+          @settingName={{@definition.key}}
+          @value={{this.selectedIds}}
+          @valueProperty="id"
+        />
+      {{/if}}
     </@field.Control>
   </template>
 }
