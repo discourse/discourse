@@ -47,6 +47,10 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Log Ruby version and YJIT status
+        run: |
+          ruby --disable=gems -v -e 'puts "YJIT enabled: #{defined?(RubyVM::YJIT) ? RubyVM::YJIT.enabled? : false}"'
+
       - name: Setup Git
         run: |
           git config --global user.email "ci@ci.invalid"

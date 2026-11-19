@@ -127,6 +127,10 @@ jobs:
           GIT_HTTP_LOW_SPEED_LIMIT: 1000
           GIT_HTTP_LOW_SPEED_TIME: 30
 
+      - name: Log Ruby version and YJIT status
+        run: |
+          LD_PRELOAD="$RUBY_ALLOCATOR" ruby --disable=gems -v -e 'puts "YJIT enabled: #{defined?(RubyVM::YJIT) ? RubyVM::YJIT.enabled? : false}"'
+
       - name: Setup Git
         run: |
           git config --global user.email "ci@ci.invalid"
