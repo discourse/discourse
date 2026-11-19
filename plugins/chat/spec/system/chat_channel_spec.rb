@@ -2,8 +2,6 @@
 
 RSpec.describe "Chat channel" do
   fab!(:current_user, :user)
-  fab!(:admin)
-  fab!(:history_authors) { Fabricate.times(2, :user) }
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, use_service: true, chat_channel: channel_1) }
 
@@ -13,20 +11,9 @@ RSpec.describe "Chat channel" do
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
 
   before do
-    chat_system_bootstrap(admin)
+    chat_system_bootstrap(current_user)
     channel_1.add(current_user)
     sign_in(current_user)
-  end
-
-  def fabricate_message_history(count)
-    Array.new(count) do |index|
-      # Alternate authors to keep adjacent messages ungrouped for scrolling tests.
-      Fabricate(
-        :chat_message,
-        chat_channel: channel_1,
-        user: history_authors[index % history_authors.length],
-      )
-    end
   end
 
   context "when has unread threads" do
@@ -88,21 +75,6 @@ RSpec.describe "Chat channel" do
   end
 
   context "when sending a message" do
-    context "with lots of messages" do
-      before { fabricate_message_history(50) }
-
-      it "loads most recent messages" do
-        unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-        chat_page.visit_channel(channel_1, message_id: message_1.id)
-
-        expect(channel_page.messages).to have_no_message(id: unloaded_message.id)
-
-        channel_page.send_message
-
-        expect(channel_page.messages).to have_message(id: unloaded_message.id)
-      end
-    end
-
     context "with two sessions opened on same channel" do
       it "syncs the messages" do
         Jobs.run_immediately!
@@ -142,10 +114,25 @@ RSpec.describe "Chat channel" do
     end
   end
 
-  context "when clicking the arrow button" do
-    before { fabricate_message_history(50) }
+  context "with more than one page of message history" do
+    fab!(:history) do
+      authors = Fabricate.times(2, :user)
+      Array.new(50) do |index|
+        # Keep adjacent messages ungrouped so the history fills the scroller.
+        Fabricate(:chat_message, chat_channel: channel_1, user: authors[index % authors.size])
+      end
+    end
 
-    it "jumps to the bottom of the channel" do
+    it "loads the most recent messages after sending a message" do
+      unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
+      chat_page.visit_channel(channel_1, message_id: message_1.id)
+      expect(channel_page.messages).to have_no_message(id: unloaded_message.id)
+
+      channel_page.send_message
+      expect(channel_page.messages).to have_message(id: unloaded_message.id)
+    end
+
+    it "jumps to the bottom of the channel when clicking the arrow" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
@@ -158,23 +145,16 @@ RSpec.describe "Chat channel" do
       expect(page).to have_css("[data-id='#{unloaded_message.id}']")
       expect(page).to have_css(".-last-read[data-id='#{unloaded_message.id}']")
     end
-  end
 
-  context "when returning to a channel where last read is not last message" do
     it "scrolls to the correct last read message" do
       channel_1.membership_for(current_user).update!(last_read_message: message_1)
-      messages = fabricate_message_history(50)
       chat_page.visit_channel(channel_1)
 
-      expect(page).to have_css("[data-id='#{messages.first.id}']")
-      expect(page).to have_no_css("[data-id='#{messages.last.id}']")
+      expect(page).to have_css("[data-id='#{history.first.id}']")
+      expect(page).to have_no_css("[data-id='#{history.last.id}']")
     end
-  end
 
-  context "when a new message is created" do
-    before { fabricate_message_history(50) }
-
-    it "holds it behind the scroll-to-bottom arrow while newer history is unloaded" do
+    it "holds a new message behind the scroll-to-bottom arrow while newer history is unloaded" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
@@ -186,6 +166,17 @@ RSpec.describe "Chat channel" do
       find(".chat-channel:not(.loading) .chat-scroll-to-bottom__button.visible").click
 
       expect(channel_page.messages).to have_message(id: new_message.id)
+    end
+
+    it "resets the active message when scrolling" do
+      chat_page.visit_channel(channel_1)
+      last_message = find(".chat-message-container:last-child")
+      last_message.hover
+      actions = ".chat-message-actions-container[data-id='#{last_message["data-id"]}']"
+      expect(page).to have_css(actions)
+
+      find(".chat-messages-scroller").scroll_to(0, -1000)
+      expect(page).to have_no_css(actions)
     end
   end
 
@@ -208,7 +199,9 @@ RSpec.describe "Chat channel" do
       channel_1.add(other_user)
     end
 
-    it "highlights the mentions" do
+    it "highlights mentions and shows the mentioned users’ statuses" do
+      Fabricate(:user_chat_mention, user: current_user, chat_message: message)
+      Fabricate(:user_chat_mention, user: other_user, chat_message: message)
       chat_page.visit_channel(channel_1)
 
       expect(page).to have_selector(".mention.--wide", text: "@here")
@@ -217,14 +210,6 @@ RSpec.describe "Chat channel" do
       expect(page).to have_selector(".mention", text: "@#{other_user.username}")
       expect(page).to have_selector(".mention", text: "@unexisting")
       expect(page).to have_selector(".mention.--bot", text: "@system")
-    end
-
-    it "renders user status on mentions" do
-      Fabricate(:user_chat_mention, user: current_user, chat_message: message)
-      Fabricate(:user_chat_mention, user: other_user, chat_message: message)
-
-      chat_page.visit_channel(channel_1)
-
       expect(page).to have_selector(
         ".mention .user-status-message img[alt='#{current_user.user_status.emoji}']",
       )
@@ -389,26 +374,6 @@ RSpec.describe "Chat channel" do
       chat_page.visit_channel(channel_1)
 
       expect(page).to have_selector("code.lang-ruby")
-    end
-  end
-
-  context "when scrolling" do
-    before { fabricate_message_history(50) }
-
-    it "resets the active message" do
-      chat_page.visit_channel(channel_1)
-      last_message = find(".chat-message-container:last-child")
-      last_message.hover
-
-      expect(page).to have_css(
-        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
-      )
-
-      find(".chat-messages-scroller").scroll_to(0, -1000)
-
-      expect(page).to have_no_css(
-        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
-      )
     end
   end
 
