@@ -22,7 +22,7 @@ import RestModel, {
 import { i18n } from "discourse-i18n";
 
 const THEME_UPLOAD_VAR = 2;
-const FIELDS_IDS = [0, 1, 5, 6];
+const FIELDS_IDS = [0, 1, 5, 6, 9];
 
 export const THEMES = "themes" as const;
 export const COMPONENTS = "components" as const;
@@ -222,6 +222,7 @@ class Theme extends RestModel {
         { id: 0, name: "common" },
         { id: 1, name: "desktop", icon: "desktop" },
         { id: 2, name: "mobile", icon: "mobile-screen-button" },
+        { id: 10, name: "email" },
       ] as {
         id: number;
         name: string;
@@ -257,6 +258,7 @@ class Theme extends RestModel {
       ],
       desktop: common,
       mobile: common,
+      email: ["header", "footer", "header_text", "footer_text"],
     };
   }
 
@@ -290,8 +292,12 @@ class Theme extends RestModel {
           error: this.hasError(target, fieldName),
         };
 
-        field.translatedName = i18n(`admin.customize.theme.${fieldName}.text`);
-        field.title = i18n(`admin.customize.theme.${fieldName}.title`);
+        const translationKey =
+          target === "email" ? `email_${fieldName}` : fieldName;
+        field.translatedName = i18n(
+          `admin.customize.theme.${translationKey}.text`
+        );
+        field.title = i18n(`admin.customize.theme.${translationKey}.title`);
 
         if (fieldName.indexOf("_tag") > 0) {
           field.icon = "far-file-lines";

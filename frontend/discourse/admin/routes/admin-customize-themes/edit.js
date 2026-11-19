@@ -6,6 +6,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminCustomizeThemesEditRoute extends Route {
   @service dialog;
   @service router;
+  @service siteSettings;
 
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
@@ -33,6 +34,15 @@ export default class AdminCustomizeThemesEditRoute extends Route {
   }
 
   setupController(controller, wrapper) {
+    if (
+      wrapper.target === "email" &&
+      (!this.siteSettings.enable_email_theme_header_and_footer ||
+        wrapper.model.id < 0 ||
+        wrapper.model.component)
+    ) {
+      this.router.replaceWith("adminCustomizeThemes.show", wrapper.model.id);
+      return;
+    }
     const fields = wrapper.model
       .get("fields")
       [wrapper.target].map((f) => f.name);

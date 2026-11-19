@@ -24,10 +24,11 @@ BYPASS_DISABLE_TYPES = %w[
 
 module Email
   class Sender
-    def initialize(message, email_type, user = nil)
+    def initialize(message, email_type, user = nil, digest: email_type.to_s == "digest")
       @message = message
       @message_attachments_index = {}
       @email_type = email_type
+      @digest = digest
       @user = user
     end
 
@@ -80,6 +81,8 @@ module Email
             body renderer.html
           end
       end
+      branded_text = renderer.text
+      @message.text_part.body = branded_text if branded_text != @message.text_part.body.to_s
 
       # Fix relative (ie upload) HTML links in markdown which do not work well in plain text emails.
       # These are the links we add when a user uploads a file or image.
@@ -253,7 +256,7 @@ module Email
       if post.present?
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
         add_attachments(post)
-      elsif @email_type.to_s == "digest"
+      elsif @digest
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
         add_attachments(*digest_posts, is_digest: true)
       end
@@ -271,7 +274,7 @@ module Email
         style.inline_secure_images(@message.attachments, @message_attachments_index)
       end
 
-      @message.html_part.body = style.to_s
+      @message.html_part.body = "#{style}\n"
 
       email_log.message_id = @message.message_id
 

@@ -10,6 +10,18 @@ acceptance("Admin - Email Templates - URL filters", function (needs) {
   });
 
   needs.pretender((server, helper) => {
+    server.get("/admin/email/templates/user_notifications.admin_login", () =>
+      helper.response({
+        email_template: {
+          id: "user_notifications.admin_login",
+          title: "Admin login",
+          subject: "Subject",
+          body: "Body",
+          interpolation_keys: [],
+          can_revert: false,
+        },
+      })
+    );
     server.get("/admin/email/templates", () =>
       helper.response({
         email_templates: [
@@ -31,6 +43,18 @@ acceptance("Admin - Email Templates - URL filters", function (needs) {
         ],
       })
     );
+  });
+
+  test("opens the saved template preview in a new tab", async function (assert) {
+    await visit("/admin/email/templates/user_notifications.admin_login");
+    assert
+      .dom(".email-template__preview")
+      .hasAttribute(
+        "href",
+        "/admin/email/preview?email_type=template%3Auser_notifications.admin_login",
+        "opens the saved template in the preview tool"
+      )
+      .hasAttribute("target", "_blank", "keeps the template editor open");
   });
 
   test("seeds and updates the URL filters", async function (assert) {

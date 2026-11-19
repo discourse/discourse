@@ -19,6 +19,17 @@ RSpec.describe "Outbound Email" do
       expect(message.header["Precedence"].value).to eq("list")
     end
 
+    it "preserves custom headers named for the email locale or theme during delivery" do
+      SiteSetting.email_custom_headers =
+        "X-Discourse-Email-Locale: external|X-Discourse-Email-Theme: my-theme"
+
+      message, result = send_email(locale: :fr)
+
+      expect(result).to be_a(EmailLog)
+      expect(message.header["X-Discourse-Email-Locale"].value).to eq("external")
+      expect(message.header["X-Discourse-Email-Theme"].value).to eq("my-theme")
+    end
+
     it "does send unique custom headers" do
       SiteSetting.email_custom_headers = "SuperUrgent: wow-cool"
       post = Fabricate(:post)

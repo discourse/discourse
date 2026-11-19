@@ -19,8 +19,8 @@ RSpec.describe Email::Renderer do
 
   let(:renderer) { Email::Renderer.new(message) }
 
-  it "escapes HTML entities from text" do
-    expect(renderer.text).to eq("Key & Peele")
+  it "preserves HTML entities in the original plain-text body" do
+    expect(renderer.text).to eq(message.text_part.body.decoded)
   end
 
   it "sanitizes the preview of a text-only email" do
@@ -28,6 +28,26 @@ RSpec.describe Email::Renderer do
     text_only.header["X-Discourse-Email-Preview"] = "<b onclick='alert(1)'>hi</b>"
 
     expect(Email::Renderer.new(text_only).html).to include("<b>hi</b>")
+  end
+
+  context "with theme email branding" do
+    before do
+      theme = Fabricate(:theme)
+      theme.set_field(target: :email, name: "header_text", value: "Theme header")
+      theme.save!
+      SiteSetting.default_theme_id = theme.id
+      SiteSetting.enable_email_theme_header_and_footer = true
+    end
+
+    it "does not brand the text part when the HTML part was built outside the email layout" do
+      expect(renderer.text).to eq(message.text_part.body.decoded)
+    end
+
+    it "brands the text part when the HTML part will come from the email layout" do
+      message = Mail.new(body: "Body")
+
+      expect(Email::Renderer.new(message).text).to eq("Theme header\n\nBody")
+    end
   end
 
   context "with email_renderer_html modifier" do
