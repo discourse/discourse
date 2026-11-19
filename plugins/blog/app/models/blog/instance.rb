@@ -59,9 +59,12 @@ module ::Blog
     private
 
     def path_format_valid
-      validator = PathFormatValidator.new
-      return if validator.valid_value?(path_format)
-      errors.add(:path_format, validator.error_message)
+      format = PathFormat.for_blog(self)
+      return errors.add(:path_format, I18n.t("blog.errors.path_format")) if !format.valid?
+      return if !is_default?
+      slug =
+        self.class.where(is_default: false).pluck(:slug).find { format.fixed_first_segment?(it) }
+      errors.add(:path_format, I18n.t("blog.errors.path_format_blog_slug", slug:)) if slug
     end
 
     # Other blogs live at /blog/<slug>, next to the default blog's own routes

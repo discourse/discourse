@@ -83,6 +83,26 @@ RSpec.describe Blog::Instance do
       expect(blog).to be_valid
     end
 
+    it "rejects a main blog path format that always starts with another blog's slug" do
+      blog.update!(slug: "news")
+      default_blog = described_class.find_by(is_default: true)
+
+      default_blog.path_format = "/news/{slug}"
+      expect(default_blog).not_to be_valid
+      expect(default_blog.errors[:path_format]).to eq(
+        [I18n.t("blog.errors.path_format_blog_slug", slug: "news")],
+      )
+      expect { SiteSetting.blog_path_format = "/news/{slug}" }.to raise_error(
+        Discourse::InvalidParameters,
+        /#{I18n.t("blog.errors.path_format_blog_slug", slug: "news")}/,
+      )
+
+      default_blog.path_format = "/{slug}"
+      expect(default_blog).to be_valid
+      blog.path_format = "/news/{slug}"
+      expect(blog).to be_valid
+    end
+
     it "rejects the community's own hostname as a blog's domain" do
       blog.url = "https://#{Discourse.current_hostname}"
 
