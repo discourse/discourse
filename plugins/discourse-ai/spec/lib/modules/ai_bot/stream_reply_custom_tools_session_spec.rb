@@ -27,11 +27,9 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
     ]
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.ai_bot_allowed_groups = "10"
-  end
+  include_context "with AI bot enabled"
+
+  before { SiteSetting.ai_bot_allowed_groups = "10" }
 
   def build_session(
     query: "test question",
