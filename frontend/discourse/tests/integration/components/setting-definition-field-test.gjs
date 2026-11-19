@@ -1223,6 +1223,33 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       );
   });
 
+  test("host_list prompts for a host while it holds none, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_hosts=""}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_hosts"
+              type="host_list"
+              label="My hosts"
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_hosts'] .d-select__input")
+      .hasAttribute(
+        "placeholder",
+        i18n("admin.site_settings.host_list.placeholder"),
+        "the empty field asks for a host"
+      );
+  });
+
   test("host_list adds typed hosts and refuses wildcards with the new select controls", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
 
@@ -1246,6 +1273,13 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert
       .dom(control)
       .hasAttribute("data-name", "a.com,b.com", "shows each held host");
+    assert
+      .dom(`${control} .d-select__input`)
+      .hasAttribute(
+        "placeholder",
+        i18n("admin.site_settings.host_list.add_more_placeholder"),
+        "a field holding hosts asks for another"
+      );
 
     await dSelect(control).search("c.com");
     await click("[role='option'].--create");
@@ -1255,6 +1289,12 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert
       .dom("[role='option'].--create")
       .doesNotExist("a wildcard host can't be added");
+    assert
+      .dom(".d-select__empty")
+      .hasText(
+        i18n("admin.site_settings.host_list.not_allowed"),
+        "says why instead of reporting no results"
+      );
 
     await dSelect(control).search("e.com|f.com");
     assert

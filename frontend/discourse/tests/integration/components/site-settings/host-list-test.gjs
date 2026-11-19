@@ -5,6 +5,7 @@ import HostList from "discourse/admin/components/site-settings/host-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | SiteSettings | HostList", function (hooks) {
   setupRenderingTest(hooks);
@@ -74,6 +75,13 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
     );
 
     assert.dom(".d-select").hasAttribute("data-name", "a.com,b.com");
+    assert
+      .dom(".d-select__input")
+      .hasAttribute(
+        "placeholder",
+        i18n("admin.site_settings.host_list.add_more_placeholder"),
+        "a field holding hosts asks for another"
+      );
 
     await dSelect(".d-select").search("c.com");
     await click("[role='option'].--create");
@@ -83,6 +91,12 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
     assert
       .dom("[role='option'].--create")
       .doesNotExist("a wildcard host can't be added");
+    assert
+      .dom(".d-select__empty")
+      .hasText(
+        i18n("admin.site_settings.host_list.not_allowed"),
+        "says why instead of reporting no results"
+      );
 
     settingValue.value = "z.com";
     await settled();
@@ -105,10 +119,18 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
           @disabled={{disabled.value}}
           @label="Blocked onebox domains"
           @setting={{setting}}
-          @value="a.com"
+          @value=""
         />
       </template>
     );
+
+    assert
+      .dom(".d-select__input")
+      .hasAttribute(
+        "placeholder",
+        i18n("admin.site_settings.host_list.placeholder"),
+        "the empty field asks for a host"
+      );
 
     await dSelect(".d-select").search("c.com");
     assert

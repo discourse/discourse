@@ -10696,6 +10696,10 @@ en:
         add_url: "add URL"
         add_host: "add host"
         add_group: "add group"
+        host_list:
+          placeholder: "Type a host to add it"
+          add_more_placeholder: "Add another host…"
+          not_allowed: "Hosts can't contain *, ? or |"
         uploaded_image_list:
           label: "Edit list"
           empty: "There are no pictures yet. Please upload one."

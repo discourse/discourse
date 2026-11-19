@@ -8,6 +8,7 @@ import {
 } from "discourse/components/setting-field/host-list";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { i18n } from "discourse-i18n";
 
 export default class HostList extends Component {
   @service siteSettings;
@@ -51,7 +52,14 @@ export default class HostList extends Component {
           @multiple={{true}}
           @onChange={{this.onChange}}
           @options={{this.hostRecords}}
-          @texts={{hash ariaLabel=@label}}
+          @texts={{hash
+            ariaLabel=@label
+            placeholder=(i18n "admin.site_settings.host_list.placeholder")
+            addMorePlaceholder=(i18n
+              "admin.site_settings.host_list.add_more_placeholder"
+            )
+            noResults=(i18n "admin.site_settings.host_list.not_allowed")
+          }}
           @value={{this.settingValue}}
         />
       {{else}}

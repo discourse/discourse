@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { splitString } from "discourse/lib/utilities";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { i18n } from "discourse-i18n";
 
 const TOKEN_SEPARATOR = "|";
 const WILDCARD = /[?*]/;
@@ -52,7 +53,14 @@ export default class SettingFieldHostList extends Component {
           @multiple={{true}}
           @onChange={{this.onChange}}
           @options={{this.hostRecords}}
-          @texts={{hash ariaLabel=@field.title}}
+          @texts={{hash
+            ariaLabel=@field.title
+            placeholder=(i18n "admin.site_settings.host_list.placeholder")
+            addMorePlaceholder=(i18n
+              "admin.site_settings.host_list.add_more_placeholder"
+            )
+            noResults=(i18n "admin.site_settings.host_list.not_allowed")
+          }}
           @value={{this.hosts}}
         />
       {{else}}
