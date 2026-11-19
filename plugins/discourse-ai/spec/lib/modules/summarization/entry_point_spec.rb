@@ -338,15 +338,6 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
     describe "post_edited event" do
       fab!(:post) { Fabricate(:post, user: Fabricate(:user, refresh_auto_groups: true)) }
 
-      let(:replacement_job_args) do
-        {
-          topic_id: post.topic_id,
-          locale: SiteSetting.default_locale,
-          force_regenerate: true,
-          drop_on_failure: true,
-        }
-      end
-
       def fabricate_gist(**attrs)
         Fabricate(
           :topic_ai_gist,
@@ -361,59 +352,116 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
         post.revise(post.user, { raw: "#{post.raw} edited #{SecureRandom.hex(4)}" })
       end
 
-      context "when an edit replaces text that no revision keeps" do
-        it "keeps the gist and schedules its replacement" do
-          gist = fabricate_gist
-          summary = Fabricate(:ai_summary, target: post.topic)
+      def replacement_jobs
+        Jobs::ReplaceStaleTopicSummary.jobs.map { |job| job["args"].first }
+      end
 
-          expect_enqueued_with(job: :fast_track_topic_gist, args: replacement_job_args) do
-            edit_without_revision
-          end
+      context "when an edit replaces text that no revision keeps" do
+        it "keeps the summaries and schedules their replacement" do
+          gist = fabricate_gist
+          summary = Fabricate(:ai_summary, target: post.topic, locale: "en")
+          other_locale_summary = Fabricate(:ai_summary, target: post.topic, locale: "ja")
+
+          edit_without_revision
 
           expect(PostRevision.where(post:)).to be_empty
-          expect(AiSummary.exists?(gist.id)).to eq(true)
-          expect(AiSummary.exists?(summary.id)).to eq(false)
+          expect(AiSummary.where(target: post.topic)).to contain_exactly(
+            gist,
+            summary,
+            other_locale_summary,
+          )
+          expect(replacement_jobs).to contain_exactly(
+            a_hash_including(
+              "topic_id" => post.topic_id,
+              "summary_type" => "gist",
+              "locale" => "en",
+            ),
+            a_hash_including(
+              "topic_id" => post.topic_id,
+              "summary_type" => "complete",
+              "locale" => "en",
+            ),
+            a_hash_including(
+              "topic_id" => post.topic_id,
+              "summary_type" => "complete",
+              "locale" => "ja",
+            ),
+          )
         end
 
-        it "leaves gists generated before the edited version alone" do
+        it "leaves summaries generated before the edited version alone" do
           gist = fabricate_gist(updated_at: 1.day.ago)
 
           edit_without_revision
 
-          expect(AiSummary.exists?(gist.id)).to eq(true)
-          expect(Jobs::FastTrackTopicGist.jobs).to be_empty
+          expect(AiSummary.where(target: post.topic)).to contain_exactly(gist)
+          expect(replacement_jobs).to be_empty
         end
 
-        it "drops the gist when gists are disabled" do
-          gist = fabricate_gist
-          SiteSetting.ai_summary_gists_enabled = false
+        it "drops the summaries when summarization is disabled" do
+          fabricate_gist
+          SiteSetting.ai_summarization_enabled = false
 
           edit_without_revision
 
-          expect(AiSummary.exists?(gist.id)).to eq(false)
-          expect(Jobs::FastTrackTopicGist.jobs).to be_empty
+          expect(AiSummary.where(target: post.topic)).to be_empty
+          expect(replacement_jobs).to be_empty
+        end
+
+        it "drops the summaries when a moderator edits someone else's post" do
+          fabricate_gist
+
+          post.revise(Fabricate(:moderator), { raw: "#{post.raw} redacted" }, skip_revision: true)
+
+          expect(AiSummary.where(target: post.topic)).to be_empty
+          expect(replacement_jobs).to be_empty
+        end
+
+        it "drops the summaries when a category moderator edits someone else's post" do
+          fabricate_gist
+          group = Fabricate(:group)
+          category_moderator = Fabricate(:user, groups: [group], refresh_auto_groups: true)
+          SiteSetting.enable_category_group_moderation = true
+          category = Fabricate(:category)
+          Fabricate(:category_moderation_group, category:, group:)
+          post.topic.update!(category:)
+
+          post.revise(category_moderator, { raw: "#{post.raw} redacted" }, skip_revision: true)
+
+          expect(AiSummary.where(target: post.topic)).to be_empty
+          expect(replacement_jobs).to be_empty
+        end
+
+        it "keeps the summaries when a moderator edits their own post" do
+          gist = fabricate_gist
+          post.user.update!(moderator: true)
+
+          edit_without_revision
+
+          expect(AiSummary.where(target: post.topic)).to contain_exactly(gist)
+          expect(replacement_jobs.size).to eq(1)
         end
 
         context "when the post's replacements are rate limited" do
           before do
             RateLimiter.enable
-            RateLimiter.new(nil, "ai-gist-replacement-#{post.id}", 3, 1.hour).clear!
+            RateLimiter.new(nil, "ai-summary-replacement-#{post.id}", 3, 1.hour).clear!
           end
 
           after { RateLimiter.disable }
 
-          it "drops the gist instead of scheduling another replacement" do
+          it "drops the summaries instead of scheduling another replacement" do
             gist = fabricate_gist
 
             3.times { edit_without_revision }
 
-            expect(AiSummary.exists?(gist.id)).to eq(true)
-            expect(Jobs::FastTrackTopicGist.jobs.size).to eq(3)
+            expect(AiSummary.where(target: post.topic)).to contain_exactly(gist)
+            expect(replacement_jobs.size).to eq(3)
 
             edit_without_revision
 
-            expect(AiSummary.exists?(gist.id)).to eq(false)
-            expect(Jobs::FastTrackTopicGist.jobs.size).to eq(3)
+            expect(AiSummary.where(target: post.topic)).to be_empty
+            expect(replacement_jobs.size).to eq(3)
           end
         end
       end
@@ -425,27 +473,38 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
       fab!(:first_post) { Fabricate(:post, topic:) }
       fab!(:reply) { Fabricate(:post, topic:) }
       fab!(:gist) { Fabricate(:topic_ai_gist, target: topic, locale: SiteSetting.default_locale) }
-      fab!(:summary) { Fabricate(:ai_summary, target: topic) }
+      fab!(:summary) { Fabricate(:ai_summary, target: topic, locale: SiteSetting.default_locale) }
 
-      it "keeps the gist and schedules its replacement when a reply is destroyed" do
-        expect_enqueued_with(
-          job: :fast_track_topic_gist,
-          args: {
-            topic_id: topic.id,
-            locale: SiteSetting.default_locale,
-            force_regenerate: true,
-            drop_on_failure: true,
-          },
-        ) { PostDestroyer.new(admin, reply).destroy }
+      it "drops every summary when staff destroys someone else's reply" do
+        PostDestroyer.new(admin, reply).destroy
 
-        expect(AiSummary.where(target: topic)).to contain_exactly(gist)
+        expect(AiSummary.where(target: topic)).to be_empty
+        expect(Jobs::ReplaceStaleTopicSummary.jobs).to be_empty
+      end
+
+      it "keeps the summaries and schedules their replacement when an author deletes their reply" do
+        PostDestroyer.new(reply.user, reply).destroy
+
+        expect(AiSummary.where(target: topic)).to contain_exactly(gist, summary)
+        expect(
+          Jobs::ReplaceStaleTopicSummary.jobs.map { |job| job["args"].first["summary_type"] },
+        ).to contain_exactly("gist", "complete")
+      end
+
+      it "keeps the summaries when the system removes a reply its author already deleted" do
+        reply.update!(user_deleted: true)
+
+        PostDestroyer.new(Discourse.system_user, reply, context: "delayed removal").destroy
+
+        expect(AiSummary.where(target: topic)).to contain_exactly(gist, summary)
+        expect(Jobs::ReplaceStaleTopicSummary.jobs.size).to eq(2)
       end
 
       it "drops every summary when the topic is destroyed" do
         PostDestroyer.new(admin, first_post).destroy
 
         expect(AiSummary.where(target: topic)).to be_empty
-        expect(Jobs::FastTrackTopicGist.jobs).to be_empty
+        expect(Jobs::ReplaceStaleTopicSummary.jobs).to be_empty
       end
     end
 

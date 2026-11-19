@@ -64,36 +64,6 @@ RSpec.describe Jobs::FastTrackTopicGist do
         expect(ai_gist.reload.summarized_text).to eq("gist")
       end
 
-      context "when replacing a gist of content that was removed" do
-        let(:args) do
-          { topic_id: topic.id, locale: "en", force_regenerate: true, drop_on_failure: true }
-        end
-
-        it "replaces the gist in place" do
-          DiscourseAi::Completions::Llm.with_prepared_responses([tool_call]) { job.execute(args) }
-
-          expect(ai_gist.reload.summarized_text).to eq(updated_gist)
-        end
-
-        it "drops the gist when generation fails" do
-          other_locale_gist = Fabricate(:topic_ai_gist, target: topic, locale: "ja")
-
-          DiscourseAi::Completions::Llm.with_prepared_responses([RuntimeError.new("LLM failed")]) do
-            expect { job.execute(args) }.to raise_error(RuntimeError, "LLM failed")
-          end
-
-          expect(AiSummary.gist.where(target: topic)).to contain_exactly(other_locale_gist)
-        end
-
-        it "drops the gist when no summarizer is available" do
-          SiteSetting.ai_summary_gists_agent = -999_999
-
-          job.execute(args)
-
-          expect(AiSummary.gist.where(target: topic)).to be_empty
-        end
-      end
-
       it "regenerates an outdated gist using the latest data" do
         Fabricate(:post, topic:, post_number: 3)
 

@@ -41,15 +41,19 @@ class AiSummary < ActiveRecord::Base
   end
 
   # Drops a topic's summaries, or only those updated since `time` when given.
-  # When stale gists exist, the block decides whether they are kept to be replaced in place.
+  # When the block returns true, the stale summaries are kept, to be replaced in place.
+  #
+  # @return [Array<AiSummary>] the stale summaries that were kept
   def self.drop_since!(topic_id, time = nil)
     transaction do
       Topic.with_deleted.where(id: topic_id).lock.pick(:id)
 
       stale = where(target_type: "Topic", target_id: topic_id)
       stale = stale.where("updated_at >= ?", time) if time
-      stale = stale.where.not(summary_type: :gist) if block_given? && stale.gist.exists? && yield
+      next stale.to_a if block_given? && stale.exists? && yield
+
       stale.delete_all
+      []
     end
   end
 
