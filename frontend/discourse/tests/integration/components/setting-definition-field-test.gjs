@@ -7,6 +7,7 @@ import Site from "discourse/models/site";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
+import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -1222,7 +1223,58 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       );
   });
 
-  for (const type of ["group", "group_list"]) {
+  test("host_list adds typed hosts and refuses wildcards with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_hosts="a.com|b.com"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_hosts"
+              type="host_list"
+              label="My hosts"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe" data-value={{data.my_hosts}}></span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_hosts'] .d-select";
+    assert
+      .dom(control)
+      .hasAttribute("data-name", "a.com,b.com", "shows each held host");
+
+    await dSelect(control).search("c.com");
+    await click("[role='option'].--create");
+    assert.dom(".value-probe").hasAttribute("data-value", "a.com|b.com|c.com");
+
+    await dSelect(control).search("*.d.com");
+    assert
+      .dom("[role='option'].--create")
+      .doesNotExist("a wildcard host can't be added");
+
+    await dSelect(control).search("e.com|f.com");
+    assert
+      .dom("[role='option'].--create")
+      .doesNotExist("a typed separator can't be added");
+
+    await dSelect(control).remove("b.com");
+    assert.dom(".value-probe").hasAttribute("data-value", "a.com|c.com");
+
+    await paste(`${control} [role='combobox']`, "x.com|*.y.com");
+    assert
+      .dom(".value-probe")
+      .hasAttribute(
+        "data-value",
+        "a.com|c.com|x.com",
+        "a pasted list adds its hosts and skips the wildcard"
+      );
+  });
+
+  for (const type of ["group", "group_list", "host_list"]) {
     test(`${type} is disabled with its field under the new select controls`, async function (assert) {
       this.siteSettings.enable_new_select_controls = true;
       const definition = { key: "my_setting", type, label: "My setting" };
