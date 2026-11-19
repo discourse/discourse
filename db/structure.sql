@@ -2304,7 +2304,8 @@ CREATE TABLE public.blog_paths (
     publication_id bigint NOT NULL,
     path character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    blog_id bigint NOT NULL
 );
 
 
@@ -2362,7 +2363,8 @@ CREATE TABLE public.blog_publications (
     cover_alt character varying DEFAULT ''::character varying NOT NULL,
     word_count integer,
     co_author_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
-    page boolean DEFAULT false NOT NULL
+    page boolean DEFAULT false NOT NULL,
+    blog_id bigint NOT NULL
 );
 
 
@@ -20286,6 +20288,13 @@ CREATE UNIQUE INDEX idx_ai_summaries_on_target_type_and_locale ON public.ai_summ
 
 
 --
+-- Name: idx_blog_publications_on_blog_id_published_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_blog_publications_on_blog_id_published_at ON public.blog_publications USING btree (blog_id, published, published_at);
+
+
+--
 -- Name: idx_blog_publications_scheduled_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21952,10 +21961,10 @@ CREATE UNIQUE INDEX index_blog_instances_on_url ON public.blog_instances USING b
 
 
 --
--- Name: index_blog_paths_on_path; Type: INDEX; Schema: public; Owner: -
+-- Name: index_blog_paths_on_blog_id_and_path; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_blog_paths_on_path ON public.blog_paths USING btree (path);
+CREATE UNIQUE INDEX index_blog_paths_on_blog_id_and_path ON public.blog_paths USING btree (blog_id, path);
 
 
 --
@@ -21977,13 +21986,6 @@ CREATE UNIQUE INDEX index_blog_publications_on_discussion_topic_id ON public.blo
 --
 
 CREATE UNIQUE INDEX index_blog_publications_on_draft_topic_id ON public.blog_publications USING btree (draft_topic_id);
-
-
---
--- Name: index_blog_publications_on_published_and_published_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_blog_publications_on_published_and_published_at ON public.blog_publications USING btree (published, published_at);
 
 
 --
@@ -26815,6 +26817,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261118215054'),
+('20261118184327'),
+('20261118184323'),
 ('20261118172233'),
 ('20261117234001'),
 ('20261117200926'),

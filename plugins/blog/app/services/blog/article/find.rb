@@ -4,9 +4,10 @@ class Blog::Article::Find
   include Service::Base
 
   params do
+    attribute :blog_id, :integer
     attribute :path, :string
 
-    validates :path, presence: true
+    validates :blog_id, :path, presence: true
   end
 
   model :stored_path
@@ -16,7 +17,7 @@ class Blog::Article::Find
   private
 
   def fetch_stored_path(params:)
-    Blog::Path.find_by(path: params.path)
+    Blog::Path.find_by(blog_id: params.blog_id, path: params.path)
   end
 
   def fetch_publication(stored_path:)

@@ -8,6 +8,7 @@ module ::Blog
 
     SLUG_FORMAT = /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/
     URL_FORMAT = %r{\Ahttps://[a-z0-9.-]+(?::[0-9]+)?\z}
+    DEFAULT_SLUG = "blog"
 
     belongs_to :category, optional: true
 
@@ -21,7 +22,37 @@ module ::Blog
     validates :is_default, uniqueness: true, if: :is_default?
     validate :path_format_valid
 
+    after_commit { self.class.clear_cache }
+
     scope :ordered, -> { order(:position, :id) }
+
+    # Blogs are read on every request, from hostname checks to topic validation, so
+    # they come from memory. Cached rows are shared, so they are read-only.
+    def self.cached
+      cache.defer_get_set("all") { ordered.to_a.each(&:readonly!).freeze }
+    end
+
+    def self.cache
+      @cache ||= DistributedCache.new("blog_instances")
+    end
+
+    def self.clear_cache
+      cache.clear(after_commit: false)
+    end
+
+    # The fixture creates the row on every site, so the fallback only covers a
+    # database that has not been seeded yet.
+    def self.default_blog
+      cached.find(&:is_default?) || new(is_default: true, slug: DEFAULT_SLUG)
+    end
+
+    def self.find_cached(id)
+      cached.find { |blog| blog.id == id }
+    end
+
+    def self.category_ids
+      cached.filter_map(&:category_id)
+    end
 
     private
 

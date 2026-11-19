@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
-# Lets every publisher group start discussions in the public category. Only adds
-# access: the category belongs to the admin, so nothing they granted is removed.
+# Lets every publisher group start discussions in a blog's public category. Only
+# adds access: the category belongs to the admin, so nothing they granted is removed.
 class Blog::AddPublishersToPublicCategory
   include Service::Base
+
+  params do
+    attribute :category_id, :integer
+
+    validates :category_id, presence: true
+  end
 
   model :category
   only_if(:publishers_lack_access) do
@@ -13,8 +19,8 @@ class Blog::AddPublishersToPublicCategory
 
   private
 
-  def fetch_category
-    Blog::ManagedCategories.public_category
+  def fetch_category(params:)
+    Category.find_by(id: params.category_id)
   end
 
   # Without any group permissions, everyone can already start topics.

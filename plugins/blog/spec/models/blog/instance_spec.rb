@@ -60,4 +60,28 @@ RSpec.describe Blog::Instance do
       expect(blog.errors).to include(:is_default)
     end
   end
+
+  describe ".default_blog" do
+    it "reflects a saved change to the default blog" do
+      described_class.default_blog
+      described_class.find_by(is_default: true).update!(name: "Field notes")
+
+      expect(described_class.default_blog.name).to eq("Field notes")
+    end
+  end
+
+  describe ".category_ids" do
+    it "lists the public category of every blog" do
+      first_category = Fabricate(:category)
+      second_category = Fabricate(:category)
+      described_class.find_by(is_default: true).update!(category_id: first_category.id)
+      described_class.create!(
+        name: "Engineering",
+        slug: "engineering",
+        category_id: second_category.id,
+      )
+
+      expect(described_class.category_ids).to contain_exactly(first_category.id, second_category.id)
+    end
+  end
 end

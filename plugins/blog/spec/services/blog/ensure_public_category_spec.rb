@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe Blog::EnsurePublicCategory do
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:blog_id) }
+  end
+
   describe ".call" do
-    subject(:result) { described_class.call(**dependencies) }
+    subject(:result) { described_class.call(params: { blog_id: blog.id }, **dependencies) }
 
     fab!(:publishers, :group)
 
+    let(:blog) { Blog::Instance.default_blog }
     let(:dependencies) { {} }
 
     before { SiteSetting.blog_publisher_groups = publishers.id.to_s }
@@ -53,6 +58,7 @@ RSpec.describe Blog::EnsurePublicCategory do
           [publishers.id, CategoryGroup.permission_types[:full]],
         )
         expect(SiteSetting.blog_category.to_i).to eq(category.id)
+        expect(blog.reload.category_id).to eq(category.id)
         expect(category.topic.first_post.raw).to eq(I18n.t("blog.categories.public_description"))
         expect(
           UserHistory.where(
@@ -70,6 +76,17 @@ RSpec.describe Blog::EnsurePublicCategory do
           Group::AUTO_GROUPS[:everyone],
           publishers.id,
         )
+      end
+    end
+
+    context "with a blog other than the default" do
+      let(:blog) { Blog::Instance.create!(name: "Engineering notes", slug: "engineering") }
+
+      it "names the category after the blog and stores it on the blog only" do
+        expect(result).to run_successfully
+        expect(result[:category].name).to eq("Engineering notes")
+        expect(blog.reload.category_id).to eq(result[:category].id)
+        expect(SiteSetting.blog_category).to be_blank
       end
     end
 
