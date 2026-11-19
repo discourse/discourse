@@ -18,7 +18,7 @@ module DiscourseDataExplorer
 
     def index
       limit = INDEX_LIMIT
-      offset = params[:offset].to_i
+      offset = [params[:offset].to_i, 0].max
       filter = params[:filter]
       tag_names = QueryTag.normalize_all((params[:tags].presence || params[:tag]).to_s.split(","))
 
@@ -55,25 +55,25 @@ module DiscourseDataExplorer
 
       total_rows = persisted_count + unpersisted_defaults.size
 
-      # On the first page, fit defaults within the limit so the page size
-      # stays consistent. On subsequent pages, only DB results are returned.
-      if offset == 0
-        db_limit = [limit - unpersisted_defaults.size, 0].max
-        paginated = base_scope.limit(db_limit).to_a
-        queries = paginated + unpersisted_defaults
-        next_offset = paginated.size
-      else
-        paginated = base_scope.offset(offset).limit(limit).to_a
-        queries = paginated
-        next_offset = offset + limit
-      end
+      # A page of defaults can fill the limit without advancing the DB offset.
+      defaults_offset =
+        params[:defaults_offset]&.to_i || (offset.zero? ? 0 : unpersisted_defaults.size)
+      defaults_offset = [defaults_offset, 0].max
+      defaults_page = unpersisted_defaults.drop(defaults_offset).first(limit)
+      persisted_page = base_scope.offset(offset).limit(limit - defaults_page.size).to_a
+      queries = persisted_page + defaults_page
+      next_offset = offset + persisted_page.size
+      next_defaults_offset = defaults_offset + defaults_page.size
+      more_defaults = next_defaults_offset < unpersisted_defaults.size
 
       json = serialize_data(queries, QuerySerializer, root: "queries")
       json["total_rows_queries"] = total_rows
       json["extras"] = { "tags" => DiscourseDataExplorer::Query.available_tags }
 
-      if next_offset < persisted_count
+      if next_offset < persisted_count || more_defaults
         load_more_params = { offset: next_offset }
+        load_more_params[:defaults_offset] = next_defaults_offset if next_offset.zero? ||
+          more_defaults
         load_more_params[:filter] = filter if filter.present?
         load_more_params[:tags] = tag_names.join(",") if tag_names.present?
         load_more_params[:order] = order_column if order_column != "last_run_at"

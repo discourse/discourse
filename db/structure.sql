@@ -1541,7 +1541,10 @@ CREATE TABLE public.ask_ai_logs (
     ask_tab_opened_after_ms integer DEFAULT 0 NOT NULL,
     ask_answer_seen_after_ms integer,
     ask_result_clicked_tab character varying DEFAULT ''::character varying NOT NULL,
-    ask_result_clicked_after_ms integer DEFAULT 0 NOT NULL
+    ask_result_clicked_after_ms integer DEFAULT 0 NOT NULL,
+    cache_hit boolean DEFAULT false NOT NULL,
+    answer_deferred_reason character varying,
+    cache_evictions integer DEFAULT 0 NOT NULL
 );
 
 
@@ -26811,6 +26814,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261118215054'),
 ('20261118172233'),
 ('20261117234001'),
 ('20261117200926'),
