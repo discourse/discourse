@@ -212,6 +212,7 @@ en:
           recurrence_until_must_be_a_valid_date: "Recurrence end date must be a valid date."
           invalid_max_attendees: "Max attendees must be a number between 1 and %{maximum}."
           invalid_reminders: "Invalid reminders: %{reminders}."
+          too_many_reminders: "An event can have at most %{maximum} reminders."
           invalid_recurrence: "Recurrence must be one of: %{recurrences}."
           invalid_timezone: "Timezone not recognized."
           invalid_url: "URL must be a valid web address."

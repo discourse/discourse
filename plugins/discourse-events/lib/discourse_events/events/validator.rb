@@ -107,8 +107,13 @@ module DiscourseEvents
         end
 
         if extracted_event[:reminders].present?
-          invalid_reminders =
-            extracted_event[:reminders].split(",").reject { |r| Event.valid_reminder?(r) }
+          split_reminders = extracted_event[:reminders].split(",")
+
+          if split_reminders.length > Event::MAX_REMINDERS
+            add_error("too_many_reminders", maximum: Event::MAX_REMINDERS)
+          end
+
+          invalid_reminders = split_reminders.reject { |r| Event.valid_reminder?(r) }
           if invalid_reminders.any?
             add_error("invalid_reminders", reminders: invalid_reminders.join(", "))
           end

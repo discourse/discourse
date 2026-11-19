@@ -568,6 +568,24 @@ describe Post do
           end
         end
 
+        context "when too many reminders are added which exceed MAX_REMINDERS" do
+          it "raises an error" do
+            reminders =
+              Array
+                .new(DiscourseEvents::Events::Event::MAX_REMINDERS + 1) do |i|
+                  "notification.#{i}.minutes"
+                end
+                .join(",")
+
+            expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.too_many_reminders",
+                maximum: DiscourseEvents::Events::Event::MAX_REMINDERS,
+              ),
+            )
+          end
+        end
+
         context "when url is too long" do
           it "raises an error" do
             url = "https://example.com/#{"a" * DiscourseEvents::Events::Event::MAX_URL_LENGTH}"
