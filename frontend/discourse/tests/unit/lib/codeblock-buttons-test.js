@@ -76,4 +76,22 @@ module("Unit | Lib | codeblock-buttons", function (hooks) {
       );
     });
   }
+
+  test("adds a label outside the code without changing the clipboard contents", async function (assert) {
+    this.buttons = new CodeblockButtons({ showLanguage: true });
+    const container = fixture();
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+    code.className = "lang-bash";
+    code.textContent = "    echo ok\n";
+    pre.appendChild(code);
+    container.appendChild(pre);
+
+    this.buttons.attachToGeneric(container);
+    assert.dom(":scope > .codeblock-language", pre).hasText("bash");
+    container.querySelector(".copy-cmd").click();
+    await Promise.resolve();
+
+    assert.true(this.writeText.calledOnceWithExactly("    echo ok\n"));
+  });
 });

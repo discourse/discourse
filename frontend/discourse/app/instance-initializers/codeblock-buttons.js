@@ -16,8 +16,9 @@ export default {
         const post = helper.getModel();
         const cb = new CodeblockButtons({
           site,
-          showFullscreen: true,
-          showCopy: true,
+          showFullscreen: siteSettings.show_copy_button_on_codeblocks,
+          showCopy: siteSettings.show_copy_button_on_codeblocks,
+          showLanguage: siteSettings.show_codeblock_language_labels,
         });
 
         // must be done after render so we can check the scroll width
@@ -29,7 +30,10 @@ export default {
         return cb.cleanup;
       }
 
-      if (siteSettings.show_copy_button_on_codeblocks) {
+      if (
+        siteSettings.show_copy_button_on_codeblocks ||
+        siteSettings.show_codeblock_language_labels
+      ) {
         api.decorateCookedElement(_attachCommands, {
           onlyStream: true,
         });

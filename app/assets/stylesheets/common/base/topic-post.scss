@@ -1285,6 +1285,13 @@ pre {
   }
 }
 
+.codeblock-language {
+  display: block;
+  padding: var(--space-1) var(--space-2);
+  background: var(--hljs-bg);
+  color: var(--primary-high);
+}
+
 .codeblock-buttons {
   display: block;
   position: relative;
