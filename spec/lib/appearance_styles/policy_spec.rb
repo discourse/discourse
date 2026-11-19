@@ -613,6 +613,40 @@ RSpec.describe AppearanceStyles::Policy do
       )
     end
 
+    it "checks text an area inherits instead of the color it replaces" do
+      expect_valid(
+        rules: [
+          {
+            area: "welcome_banner",
+            declarations: {
+              "background-color" => "light-dark(#000000, #000000)",
+              "color" => "light-dark(#ffffff, #ffffff)",
+            },
+          },
+        ],
+      )
+      expect_error(
+        {
+          rules: [
+            {
+              area: "welcome_banner",
+              declarations: {
+                "background-color" => "light-dark(#000000, #000000)",
+              },
+            },
+            {
+              area: "welcome_banner",
+              media: "mobile",
+              declarations: {
+                "color" => "light-dark(#ffffff, #ffffff)",
+              },
+            },
+          ],
+        },
+        "text on background is",
+      )
+    end
+
     it "checks the color the draft gives a token, not the default" do
       expect_error(
         { variables: { "--token-color-surface" => "var(--primary)" } },
