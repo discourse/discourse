@@ -1430,6 +1430,11 @@ a list mixing them lines up. Like any `:selection` block, the glyph is hidden wh
 trigger is focused. Unlike other recipes, it takes no `:option` or `:selection` block from the
 call site: drawing every badge the same way is what the recipe is for.
 
+`@descriptions` adds each badge's description under its name in the list, for pickers where the
+name alone doesn't say what is being granted. Descriptions may hold markup, so the recipe reads
+them as plain text without loading or running anything in them, and cuts one longer than 200
+characters short (the server allows 500).
+
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 

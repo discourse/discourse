@@ -22,6 +22,14 @@ module PageObjects
         PageObjects::Components::UiKit::DSelect.by_identifier("grant-badge")
       end
 
+      def has_badge_description?(name, description)
+        badge_select.open
+        has_css?(
+          "#{badge_select.option_selector}[data-name='#{name}'] .d-select__option-description",
+          exact_text: description,
+        )
+      end
+
       def grant
         within(modal) { find(".d-modal__footer .btn").click }
       end

@@ -41,6 +41,13 @@ describe "Granting Badges" do
       with_select_controls(true)
 
       include_examples "granting from the post"
+
+      it "describes each badge in plain text" do
+        badge_to_grant.update!(description: "Thanks for <strong>helping</strong> out")
+        visit_topic_and_open_badge_modal(post)
+
+        expect(badge_modal).to have_badge_description(badge_to_grant.name, "Thanks for helping out")
+      end
     end
   end
 

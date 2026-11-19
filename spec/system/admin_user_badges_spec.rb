@@ -49,5 +49,14 @@ describe "Admin User Badges Page" do
     with_select_controls(true)
 
     include_examples "granting from the badge list"
+
+    it "describes each badge in plain text" do
+      badge.update!(description: "Thanks for <strong>helping</strong> out")
+
+      expect(user_badges_page.visit_page(user)).to have_badge_description(
+        badge.name,
+        "Thanks for helping out",
+      )
+    end
   end
 end

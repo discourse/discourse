@@ -20,6 +20,14 @@ module PageObjects
         PageObjects::Components::UiKit::DSelect.by_identifier("admin-user-badges-grant")
       end
 
+      def has_badge_description?(name, description)
+        badge_select.open
+        has_css?(
+          "#{badge_select.option_selector}[data-name='#{name}'] .d-select__option-description",
+          exact_text: description,
+        )
+      end
+
       def has_grantable_badge?(name)
         if SiteSetting.enable_new_select_controls
           badge_select.open

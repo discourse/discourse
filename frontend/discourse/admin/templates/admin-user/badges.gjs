@@ -49,6 +49,7 @@ export default <template>
               {{#if @controller.siteSettings.enable_new_select_controls}}
                 <DSelectBadge
                   @ariaLabelledBy="admin-user-badges-grant-label"
+                  @descriptions={{true}}
                   @identifier="admin-user-badges-grant"
                   @onChange={{fn (mut @controller.selectedBadgeId)}}
                   @options={{@controller.availableBadges}}
