@@ -688,4 +688,30 @@ describe McpController do
       [message.id],
     )
   end
+
+  context "when a tool creates a topic that needs approval" do
+    subject(:tool_result) do
+      call_tool(
+        "discourse_create_topic",
+        {
+          title: "A topic made through the MCP endpoint",
+          raw: "A complete topic body for approval.",
+        },
+      )
+      response.parsed_body.dig("result", "structuredContent")
+    end
+
+    before do
+      authorize
+      Fabricate(:watched_word, word: "approval", action: WatchedWord.actions[:require_approval])
+    end
+
+    it "returns the queued state" do
+      expect(tool_result).to include("queued" => true, "topic_id" => nil)
+    end
+
+    it "publishes no topic" do
+      expect { tool_result }.not_to change { Topic.where(user:).count }
+    end
+  end
 end
