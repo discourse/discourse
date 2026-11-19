@@ -393,6 +393,90 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".tag-chooser").hasClass("is-disabled");
   });
 
+  test("a group list setting saves the picked groups as a pipe-delimited value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_groups", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_groups",
+      value: "1",
+      type: "group_list",
+    });
+
+    const groups = selectKit(".form-kit__field .list-setting");
+    await groups.expand();
+    await groups.selectRowByValue("2");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_groups, "1|2");
+  });
+
+  test("a compact list setting saves the picked choices as a pipe-delimited value", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_list", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_list",
+      value: "a",
+      type: "list",
+      list_type: "compact",
+      choices: ["a", "b"],
+    });
+
+    const list = selectKit(".form-kit__field .list-setting");
+    await list.expand();
+    await list.selectRowByValue("b");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_list, "a|b");
+  });
+
+  test("a category list setting saves an emptied selection", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_categories", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+    const categoryId = Site.current().categories[0].id;
+
+    await renderSetting({
+      setting: "test_categories",
+      value: String(categoryId),
+      type: "category_list",
+    });
+
+    const categories = selectKit(".form-kit__field .category-selector");
+    await categories.expand();
+    await categories.deselectItemByValue(categoryId);
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_categories, "");
+  });
+
+  test("a date setting saves the picked date", async function (assert) {
+    let body;
+    pretender.put("/admin/site_settings/test_date", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_date",
+      value: "",
+      type: "date",
+    });
+    await fillIn(".form-kit__field input[type='date']", "2026-01-15");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_date, "2026-01-15");
+  });
+
   test("a secret setting that is also a textarea stays readable", async function (assert) {
     await renderSetting({
       setting: "test_setting",

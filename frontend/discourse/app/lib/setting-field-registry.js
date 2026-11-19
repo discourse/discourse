@@ -74,7 +74,11 @@ registerSettingFieldType("email", {
   type: "input-email",
   adminReady: true,
 });
-registerSettingFieldType("date", { ...ROW, type: "input-date" });
+registerSettingFieldType("date", {
+  ...ROW,
+  type: "input-date",
+  adminReady: true,
+});
 registerSettingFieldType("password", {
   ...ROW,
   type: "password",
@@ -120,18 +124,15 @@ registerSettingFieldType("tag_group_list", {
   renderer: TagGroupListControl,
 });
 registerSettingFieldType("group_list", {
-  ...ROW,
-  type: "custom",
+  ...CUSTOM_CONTROL,
   renderer: GroupListControl,
 });
 registerSettingFieldType("category_list", {
-  ...ROW,
-  type: "custom",
+  ...CUSTOM_CONTROL,
   renderer: CategoryListControl,
 });
 registerSettingFieldType("compact_list", {
-  ...ROW,
-  type: "custom",
+  ...CUSTOM_CONTROL,
   renderer: CompactListControl,
 });
 registerSettingFieldType("bool", {
