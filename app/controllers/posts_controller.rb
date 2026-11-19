@@ -75,6 +75,7 @@ class PostsController < ApplicationController
           .limit(50)
       rss_description = I18n.t("rss_description.private_posts")
 
+      posts = guardian.filter_hidden_posts(posts)
       posts = posts.where(topic_id: all_allowed) if !current_user.admin?
     else
       posts =
