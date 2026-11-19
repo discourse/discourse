@@ -507,7 +507,7 @@ class UserNotifications < ActionMailer::Base
     end
 
     allowed_post_types = [Post.types[:regular]]
-    allowed_post_types << Post.types[:whisper] if topic_user.try(:user).try(:staff?)
+    allowed_post_types << Post.types[:whisper] if user.whisperer?
 
     context_posts =
       Post
