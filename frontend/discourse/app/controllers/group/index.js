@@ -274,7 +274,7 @@ export default class GroupIndexController extends Controller {
   updateOrder(field, asc) {
     this.setProperties({
       order: field,
-      asc,
+      asc: asc ?? false,
     });
   }
 

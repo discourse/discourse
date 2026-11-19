@@ -35,6 +35,40 @@ acceptance("Group Members - Anonymous", function () {
         "it should display the right filter placeholder"
       );
   });
+
+  test("Member sort headings record descending order in the URL", async function (assert) {
+    await visit("/g/discourse");
+
+    await click("#table-header-toggle-added_at");
+    assert.deepEqual(
+      Object.fromEntries(new URL(currentURL(), location.origin).searchParams),
+      { order: "added_at", asc: "false" },
+      "the first click records descending order"
+    );
+
+    await click("#table-header-toggle-added_at");
+    assert.deepEqual(
+      Object.fromEntries(new URL(currentURL(), location.origin).searchParams),
+      { order: "added_at" },
+      "the second click restores the default direction"
+    );
+  });
+
+  test("Member sort links without a direction default to ascending", async function (assert) {
+    await visit("/g/discourse?order=added_at");
+
+    assert
+      .dom(".directory-table__column-header--added")
+      .hasAttribute("aria-sort", "ascending", "preserves the original default");
+  });
+
+  test("Member sort links keep a descending direction", async function (assert) {
+    await visit("/g/discourse?order=added_at&asc=false");
+
+    assert
+      .dom(".directory-table__column-header--added")
+      .hasAttribute("aria-sort", "descending", "honors the linked direction");
+  });
 });
 
 acceptance("Group Members", function (needs) {
