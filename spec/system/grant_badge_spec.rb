@@ -42,11 +42,20 @@ describe "Granting Badges" do
 
       include_examples "granting from the post"
 
-      it "describes each badge in plain text" do
+      it "describes each badge, and clears the picked one instead of listing none" do
         badge_to_grant.update!(description: "Thanks for <strong>helping</strong> out")
         visit_topic_and_open_badge_modal(post)
 
         expect(badge_modal).to have_badge_description(badge_to_grant.name, "Thanks for helping out")
+        expect(badge_modal).to have_no_none_option
+
+        badge_modal.select_badge(badge_to_grant.name)
+        expect(badge_modal).to have_grant_enabled
+
+        badge_modal.badge_select.clear
+
+        expect(badge_modal.badge_select).to have_no_selected_name(badge_to_grant.name)
+        expect(badge_modal).to have_grant_disabled
       end
     end
   end

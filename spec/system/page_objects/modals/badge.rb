@@ -34,6 +34,18 @@ module PageObjects
         within(modal) { find(".d-modal__footer .btn").click }
       end
 
+      def has_no_none_option?
+        has_no_css?("#{badge_select.option_selector}.--none")
+      end
+
+      def has_grant_enabled?
+        within(modal) { has_css?(".d-modal__footer .btn-primary:not([disabled])") }
+      end
+
+      def has_grant_disabled?
+        within(modal) { has_css?(".d-modal__footer .btn-primary[disabled]") }
+      end
+
       def has_success_flash_visible?
         within(modal) { has_css?(".alert-success") }
       end
