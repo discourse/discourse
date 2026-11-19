@@ -89,7 +89,7 @@ interface WelcomeBannerSignature {
       default: "center",
       enum: ALIGNMENTS,
       ui: {
-        control: "segmented",
+        control: "select",
         label: i18n("blocks.builtin.welcome_banner.alignment"),
         optionLabels: {
           left: i18n("blocks.builtin.welcome_banner.alignments.left"),

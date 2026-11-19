@@ -173,14 +173,14 @@ export default class EditorShell extends Component {
             {{dIcon "wand-magic-sparkles"}}
             <span class="toolbar-title">Wireframe</span>
             <DButton
-              class="btn-flat wireframe-btn-undo"
+              class="btn-flat btn-small wireframe-btn-undo"
               @action={{this.undo}}
               @disabled={{if this.wireframeMutationEngine.canUndo false true}}
               @icon="arrow-rotate-left"
               @title="wireframe.chrome.undo"
             />
             <DButton
-              class="btn-flat wireframe-btn-redo"
+              class="btn-flat btn-small wireframe-btn-redo"
               @action={{this.redo}}
               @disabled={{if this.wireframeMutationEngine.canRedo false true}}
               @icon="arrow-rotate-right"
@@ -202,13 +202,13 @@ export default class EditorShell extends Component {
               @onToggleDim={{this.toggleDimNonEditable}}
             />
             <DButton
-              class="btn-primary wireframe-btn-save"
+              class="btn-primary btn-small wireframe-btn-save"
               @action={{this.save}}
               @icon="cloud-arrow-up"
               @label="wireframe.changes.save"
             />
             <DButton
-              class="btn-flat wireframe-btn-exit"
+              class="btn-flat btn-small wireframe-btn-exit"
               @action={{this.exit}}
               @ariaLabel="wireframe.chrome.exit"
               @icon="xmark"

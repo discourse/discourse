@@ -42,7 +42,7 @@ const ViewSettingsMenu: TemplateOnlyComponent<ViewSettingsMenuSignature> =
       @identifier="wireframe-view-settings"
       @placement="bottom-end"
       @title={{i18n "wireframe.chrome.view_menu"}}
-      @triggerClass="btn-flat wireframe-view-toggle"
+      @triggerClass="btn-flat btn-small wireframe-view-toggle"
     >
       <:content>
         <div class="wireframe-view-settings">

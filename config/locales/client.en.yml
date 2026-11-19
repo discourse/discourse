@@ -37,7 +37,6 @@ en:
         return_to_cli: "You can now return to your terminal or application."
     blocks:
       frame:
-        group: "Style"
         style: "Style"
         styles:
           plain: "Plain"

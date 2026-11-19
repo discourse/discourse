@@ -68,8 +68,7 @@ export function frameArgs({
       default: "panel",
       enum: [...FRAME_STYLES],
       ui: {
-        control: "segmented",
-        group: i18n("blocks.frame.group"),
+        control: "select",
         label: i18n("blocks.frame.style"),
         optionLabels: {
           plain: i18n("blocks.frame.styles.plain"),

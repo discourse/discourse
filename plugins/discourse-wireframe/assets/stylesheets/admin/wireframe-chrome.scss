@@ -2169,22 +2169,6 @@ body.wireframe-active {
   }
 }
 
-/* The fixed-width box constrains the thumbnail: an inline SVG only honors a
-   percentage width against a sized parent, and the explicit aspect ratio keeps
-   it from collapsing to zero height. */
-
-.wireframe-inspector__preview {
-  flex: none;
-  width: 48px;
-}
-
-.wireframe-inspector__thumbnail {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 120 / 80;
-}
-
 .wireframe-inspector__header {
   display: flex;
   align-items: center;

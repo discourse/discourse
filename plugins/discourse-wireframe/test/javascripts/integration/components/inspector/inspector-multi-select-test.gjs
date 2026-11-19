@@ -140,7 +140,7 @@ module(
         .exists("the single-block form header shows");
     });
 
-    test("shows a block preview beside the name for a single selection", async function (assert) {
+    test("shows no block preview beside the name for a single selection", async function (assert) {
       this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
 
       await render(
@@ -151,7 +151,7 @@ module(
 
       assert
         .dom(".wireframe-inspector__header .wireframe-inspector__thumbnail")
-        .exists("the selected block's preview renders beside its name");
+        .doesNotExist("the header shows only the block's name");
     });
 
     test("shows no block preview for a multi-selection", async function (assert) {

@@ -180,8 +180,8 @@ module(
       await render(<template><InspectorPanel /></template>);
 
       assert
-        .dom(".wireframe-inspector__thumbnail.wireframe-outlet-thumbnail")
-        .exists("the header renders the designed outlet thumbnail");
+        .dom(".wireframe-inspector__thumbnail")
+        .doesNotExist("the header shows no thumbnail");
       assert
         .dom(".wireframe-inspector__header .d-icon-table-cells")
         .doesNotExist(
@@ -211,11 +211,6 @@ module(
           "Heading",
           "the header prefers the block's friendly displayName over the raw name"
         );
-      // A normal block keeps the generic BlockThumbnail path — the outlet
-      // thumbnail branch must not leak into non-outlet selections.
-      assert
-        .dom(".wireframe-inspector__thumbnail.wireframe-outlet-thumbnail")
-        .doesNotExist("a normal block never renders the outlet thumbnail");
     });
 
     test("the inspector uses the layout variant name", async function (assert) {

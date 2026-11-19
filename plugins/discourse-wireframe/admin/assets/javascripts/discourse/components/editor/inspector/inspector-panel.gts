@@ -6,7 +6,6 @@ import { type ComponentLike } from "@glint/template";
 import FKAlertUntyped from "discourse/form-kit/components/fk/alert";
 import { isPartKey } from "discourse/lib/blocks/-internals/composite";
 import type BlocksService from "discourse/services/blocks";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DTabs from "discourse/ui-kit/d-tabs";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -19,8 +18,6 @@ import InspectorLayoutForm from "discourse/plugins/discourse-wireframe/discourse
 import InspectorMetadataSection from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-metadata-section";
 import InspectorOutletSection from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-outlet-section";
 import InspectorRawJson from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-raw-json";
-import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-thumbnail";
-import OutletThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/outlet-thumbnail";
 import { layoutPaletteDisplayName } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
 import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
@@ -191,15 +188,6 @@ export default class InspectorPanel extends Component {
       this.metadata?.shortName ??
       this.data?.name
     );
-  }
-
-  /**
-   * Whether the header should render a thumbnail preview. True for an outlet
-   * root (which shows its own designed thumbnail regardless of the layout
-   * block's metadata) and for any selection that carries block metadata.
-   */
-  get showPreview() {
-    return this.isOutletRoot || this.metadata != null;
   }
 
   /**
@@ -383,22 +371,6 @@ export default class InspectorPanel extends Component {
       </div>
     {{else if this.hasSelection}}
       <div class="wireframe-inspector__header">
-        {{#if this.showPreview}}
-          <div class="wireframe-inspector__preview">
-            {{#if this.isOutletRoot}}
-              {{! An outlet is a page region, not a block, so it gets its own
-                  designed thumbnail rather than the implicit root layout
-                  block's icon placeholder. }}
-              <OutletThumbnail class="wireframe-inspector__thumbnail" />
-            {{else}}
-              <BlockThumbnail
-                class="wireframe-inspector__thumbnail"
-                @icon={{or this.metadata.icon "cube"}}
-                @thumbnail={{this.metadata.thumbnail}}
-              />
-            {{/if}}
-          </div>
-        {{/if}}
         <span class="wireframe-inspector__block-name">
           {{this.displayTitle}}
         </span>
