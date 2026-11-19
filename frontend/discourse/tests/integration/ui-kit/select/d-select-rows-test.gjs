@@ -139,7 +139,7 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     );
   });
 
-  test("pointer selection emits null, closes, and restores the placeholder", async function (assert) {
+  test("pointer selection emits null, closes, and shows the none label as the value", async function (assert) {
     const onChange = sinon.spy();
     await render(
       <template><NoneRowHost @onChange={{onChange}} @value={{2}} /></template>
@@ -157,12 +157,11 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
     assert.dom("[role='listbox']").doesNotExist("the pointer pick closes");
     assert
       .dom("[role='combobox']")
-      .hasValue("", "the trigger no longer displays the old selection")
-      .hasAttribute(
-        "placeholder",
-        "Pick one",
-        "the empty trigger shows its placeholder"
-      );
+      .hasValue(
+        "None",
+        "the trigger shows the none label in place of the old selection"
+      )
+      .doesNotHaveAttribute("placeholder", "none is a value, not a prompt");
     assert
       .dom(".d-select__presentation")
       .doesNotExist("no selection presentation encodes the none label");
