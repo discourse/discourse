@@ -197,7 +197,7 @@ export default class VariantPresenter
     }
     if (
       this.#getArgs().multiple ||
-      !this.#engine.hasValue ||
+      !this.showsValue ||
       (this.isStatic && !this.isDisabled)
     ) {
       return this.selectionLabel;
@@ -389,7 +389,7 @@ export default class VariantPresenter
         }) || undefined
       );
     }
-    return this.#engine.hasValue ? this.fallbackSelectionLabel : undefined;
+    return this.showsValue ? this.fallbackSelectionLabel : undefined;
   }
 
   get selectionLabel(): string | undefined {
@@ -495,7 +495,20 @@ export default class VariantPresenter
   }
 
   get fallbackSelectionLabel(): string {
-    return this.#engine.getSingleSelectionLabel(this.#engine.value);
+    return (
+      this.heldNoneLabel ??
+      this.#engine.getSingleSelectionLabel(this.#engine.value)
+    );
+  }
+
+  /** The none option's label while an empty single select shows it as its value. */
+  get heldNoneLabel(): string | null {
+    return this.#engine.heldNoneLabel;
+  }
+
+  /** Whether the field shows a value: a chosen one, or none standing for an empty one. */
+  get showsValue(): boolean {
+    return this.#engine.hasValue || this.heldNoneLabel !== null;
   }
 
   /**

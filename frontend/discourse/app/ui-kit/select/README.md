@@ -581,7 +581,7 @@ unknown key silently.
 | `ariaLabel` | `d_select.label` "Options" | | Names the trigger, the list and the panel. Required |
 | `labelWithValue` | `d_select.label_with_value` | `label`, `value` | Name of a button trigger, or a disabled static one, while a value is held. A focusable static combobox exposes its value itself. Required |
 | `labelWithCount` | `d_select.label_with_count` | `label`, `count` | Compact multi trigger name. Required |
-| `placeholder` | `d_select.placeholder` "Select…", or `d_select.add_placeholder` "Add…" when multiple | | Trigger and input with nothing held |
+| `placeholder` | `d_select.placeholder` "Select…", or `d_select.add_placeholder` "Add…" when multiple | | Trigger and input with nothing held, unless a none option shows instead |
 | `addMorePlaceholder` | `d_select.add_placeholder` "Add…" | `selected`, `minimum`, `maximum` | Multi-select input after the chips, while another value can be added |
 | `searchPlaceholder` | `d_select.search_placeholder` "Search…" | | Panel and modal search field |
 | `noResults` | `d_select.no_results` | | Empty state, drawn and announced |
@@ -589,7 +589,7 @@ unknown key silently.
 | `maximum` | `d_select.max_reached` | `count` | Limit line at `@maximum`, announced |
 | `minimum` | `d_select.min_not_reached` | `count`, `selected` | Limit line below `@minimum`, announced |
 | `maxLoaded` | `d_select.filter_to_narrow` | | Hint at `@maxLoaded`, announced |
-| `noneLabel` | `d_select.none` "None" | | The none option, with `@noneOption` |
+| `noneLabel` | `d_select.none` "None" | | The none option, with `@noneOption`, and the field's value while nothing is chosen |
 | `loadingLabel` | `d_select.loading` "Loading…" | | Loading status, with `@loadingStatus` |
 | `loadError` | `d_select.load_error` | | Error box. Required |
 | `retry` | `d_select.retry` | | Retry button. Required |
@@ -1149,7 +1149,10 @@ Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
   `position: "end"`), from a snapshot of the filter and value. No query filters them and no
   content step sees them. A source option with an extra option's value is dropped, so the
   extra option keeps it; the same record object in both asserts in development.
-- `@noneOption` adds the single-select "none" option, worded by the `noneLabel` text; `@maximum` and `@minimum` cap the selection
+- `@noneOption` adds the single-select "none" option, worded by the `noneLabel` text. Choosing none
+  and choosing nothing are the same value, so while nothing is chosen the field shows that label as
+  its value instead of the `placeholder` text. A field that should prompt for a choice leaves the
+  none option out, and uses `@clearable` if the value can be cleared. `@maximum` and `@minimum` cap the selection
   and announce the limit.
 - Held options stay listed and marked as selected, which keeps the selection reachable for
   assistive technology. `@hideSelected` exists, but is not a default to copy from the old
@@ -1489,7 +1492,7 @@ by mechanism.
 
 - Single and multiple selection, with chips and per-chip removal (`@multiple`).
 - A first-class "none" option on single-select (`@noneOption`, worded by `noneLabel`): a selectable
-  option that clears the value to `null` and reads as selected while nothing is chosen. Always present while browsing, and
+  option that clears the value to `null`, reads as selected while nothing is chosen, and is what the field shows then. Always present while browsing, and
   filtered out under an active query so a non-matching search still reaches the empty state.
 - Client (`@options`) and server (`@load`) sources; true pagination with tail reveal and an
   optional server ceiling (`@maxLoaded`, uncapped by default); opaque paging cursors;

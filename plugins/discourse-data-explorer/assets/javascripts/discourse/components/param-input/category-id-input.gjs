@@ -33,7 +33,6 @@ export default class CategoryIdInput extends Component {
           @texts={{hash
             ariaLabel=@field.title
             noneLabel=(i18n "category.none")
-            placeholder=(i18n "category.none")
           }}
           @value={{this.data.value}}
         />

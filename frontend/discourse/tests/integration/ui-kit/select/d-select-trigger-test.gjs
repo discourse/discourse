@@ -3385,3 +3385,150 @@ module(
     });
   }
 );
+
+class NoneHost extends Component {
+  @tracked value = this.args.value ?? null;
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @ariaLabelledBy={{@ariaLabelledBy}}
+      @identifier="test-select"
+      @noneOption={{@noneOption}}
+      @onChange={{this.onChange}}
+      @options={{ITEMS}}
+      @texts={{hash
+        ariaLabel=@ariaLabel
+        noneLabel="(none)"
+        placeholder="Pick a fruit"
+      }}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+  </template>
+}
+
+class NoneSelectionHost extends NoneHost {
+  <template>
+    <DSelect
+      @identifier="test-select"
+      @noneOption={{true}}
+      @onChange={{this.onChange}}
+      @options={{ITEMS}}
+      @texts={{hash noneLabel="(none)" placeholder="Pick a fruit"}}
+      @value={{this.value}}
+    >
+      <:selection as |option|>
+        <span class="held-name">{{option.label}}</span>
+      </:selection>
+    </DSelect>
+  </template>
+}
+
+module("Integration | ui-kit | select | DSelect (none held)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("a typeahead shows the none label while nothing is chosen", async function (assert) {
+    await render(<template><NoneHost @noneOption={{true}} /></template>);
+
+    assert.dom(".d-select__input").hasValue("(none)");
+    assert
+      .dom(".d-select__input")
+      .doesNotHaveAttribute("placeholder", "none is a value, not a prompt");
+
+    await click(".d-select__input");
+    await click("[role='option'][data-value='2']");
+    assert.dom(".d-select__input").hasValue("Banana");
+
+    await click(".d-select__input");
+    await click("[role='option'].--none");
+    assert
+      .dom(".d-select__input")
+      .hasValue("(none)", "picking none shows it again");
+  });
+
+  test("a typeahead with a :selection block shows the none label", async function (assert) {
+    await render(<template><NoneSelectionHost /></template>);
+
+    assert.dom(".d-select__input").hasValue("(none)");
+    assert
+      .dom(".d-select__trigger .held-name")
+      .doesNotExist("the block only draws a chosen option");
+  });
+
+  test("typing searches instead of the none label, and leaving restores it", async function (assert) {
+    await render(<template><NoneHost @noneOption={{true}} /></template>);
+
+    await fillIn(".d-select__input", "ban");
+    assert.deepEqual(
+      findAll("[role='option']").map((option) => option.dataset.value),
+      ["2"],
+      "the query is what was typed"
+    );
+
+    await triggerKeyEvent(".d-select__input", "keydown", "Escape");
+    await triggerKeyEvent(".d-select__input", "keydown", "Escape");
+    assert.dom(".d-select__input").hasValue("(none)");
+  });
+
+  test("a static control shows the none label as its value", async function (assert) {
+    await render(
+      <template>
+        <NoneHost @ariaLabel="Fruit" @noneOption={{true}} @variant="static" />
+      </template>
+    );
+
+    assert.dom(".d-select__trigger .d-select__value").hasText("(none)");
+    assert.dom(".d-select__trigger .d-select__placeholder").doesNotExist();
+  });
+
+  test("a button control announces the none label as its value", async function (assert) {
+    await render(
+      <template>
+        <NoneHost @ariaLabel="Fruit" @noneOption={{true}} @variant="button" />
+      </template>
+    );
+
+    assert
+      .dom(".d-select__trigger")
+      .hasAttribute("aria-label", "Fruit, (none)");
+  });
+
+  test("a labelled static control reads the none label as its value", async function (assert) {
+    await render(
+      <template>
+        <span id="fruit-caption">Fruit</span>
+        <NoneHost
+          @ariaLabelledBy="fruit-caption"
+          @noneOption={{true}}
+          @variant="static"
+        />
+      </template>
+    );
+
+    const names = find(".d-select__trigger")
+      .getAttribute("aria-labelledby")
+      .split(" ")
+      .map((id) => document.getElementById(id)?.textContent.trim());
+    assert.deepEqual(names, ["Fruit", "(none)"]);
+  });
+
+  test("on mobile, the field shows the none label", async function (assert) {
+    forceMobile();
+    await render(<template><NoneHost @noneOption={{true}} /></template>);
+
+    assert.dom(".d-select__trigger .d-select__presentation").hasText("(none)");
+    assert.dom(".d-select__trigger .d-select__placeholder").doesNotExist();
+  });
+
+  test("without a none option, an empty field shows the placeholder", async function (assert) {
+    await render(<template><NoneHost /></template>);
+
+    assert.dom(".d-select__input").hasValue("");
+    assert.dom(".d-select__input").hasAttribute("placeholder", "Pick a fruit");
+  });
+});

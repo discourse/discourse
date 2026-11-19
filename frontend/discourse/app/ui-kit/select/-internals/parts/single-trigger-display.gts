@@ -148,6 +148,12 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
               {{/unless}}
             </:content>
           </DAsyncContent>
+        {{else if @presenter.heldNoneLabel}}
+          {{#unless @editing}}
+            <span class="d-select__presentation">
+              {{@presenter.heldNoneLabel}}
+            </span>
+          {{/unless}}
         {{else if @placeholder}}
           {{#unless @editing}}
             <span class="d-select__presentation">
@@ -250,7 +256,10 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           }}
           @disabled={{@presenter.isDisabled}}
           @displayValue={{if
-            (or @pending (and @hasSelectionBlock (not @triggerFocused)))
+            (or
+              @pending
+              (and @hasSelectionBlock @engine.hasValue (not @triggerFocused))
+            )
             ""
             @presenter.fallbackSelectionLabel
           }}
@@ -267,7 +276,10 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           {{! No placeholder once a value is chosen: the value is shown either in this input
             (default) or in the sibling selection presentation (with a :selection block),
             so a placeholder would otherwise sit next to it. }}
-          @placeholder={{unless (or @pending @engine.hasValue) @placeholder}}
+          @placeholder={{unless
+            (or @pending @presenter.showsValue)
+            @placeholder
+          }}
           @readonly={{@presenter.isReadonly}}
           @registerInput={{@registerInput}}
           @selectLabelOnAppear={{@hasSelectionBlock}}
@@ -311,7 +323,11 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           {{/if}}
         </:content>
         <:empty>
-          {{#if @placeholder}}
+          {{#if @presenter.heldNoneLabel}}
+            <span class="d-select__value">
+              {{@presenter.heldNoneLabel}}
+            </span>
+          {{else if @placeholder}}
             <span class="d-select__placeholder">
               {{@placeholder}}
             </span>

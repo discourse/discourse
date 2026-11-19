@@ -1104,6 +1104,17 @@ export default class SelectEngine {
     return this.#selectionActions.hasValue;
   }
 
+  /**
+   * The none option's label while it is what an empty single select holds, or `null`. Picking
+   * none and choosing nothing are the same value, so the field shows none rather than a prompt.
+   */
+  get heldNoneLabel(): string | null {
+    if (this.hasValue || this.pending) {
+      return null;
+    }
+    return this.#args.noneLabel;
+  }
+
   /** Whether any non-null id in the normalized selection currently resolves as unresolved. */
   get hasUnresolvedSelection(): boolean {
     const value = this.value;

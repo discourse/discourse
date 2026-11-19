@@ -20,12 +20,7 @@ export default class NoneSelectExample extends Component {
       @noneOption={{true}}
       @onChange={{this.onChange}}
       @options={{TIMEZONES}}
-      @texts={{hash
-        noneLabel=(i18n "styleguide.sections.select.none_label")
-        placeholder=(i18n
-          "styleguide.sections.select.placeholders.choose_timezone"
-        )
-      }}
+      @texts={{hash noneLabel=(i18n "styleguide.sections.select.none_label")}}
       @value={{this.value}}
     />
   </template>
