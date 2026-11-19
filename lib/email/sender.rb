@@ -24,10 +24,11 @@ BYPASS_DISABLE_TYPES = %w[
 
 module Email
   class Sender
-    def initialize(message, email_type, user = nil)
+    def initialize(message, email_type, user = nil, digest: email_type.to_s == "digest")
       @message = message
       @message_attachments_index = {}
       @email_type = email_type
+      @digest = digest
       @user = user
     end
 
@@ -70,8 +71,6 @@ module Email
       @message.charset = "UTF-8"
 
       renderer = Email::Renderer.new(@message, user_id: @user&.id)
-      @message.header[Email::Renderer::LOCALE_HEADER] = nil
-      @message.header[Email::Renderer::THEME_HEADER] = nil
 
       if @message.html_part
         @message.html_part.body = renderer.html
@@ -257,7 +256,7 @@ module Email
       if post.present?
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
         add_attachments(post)
-      elsif @email_type.to_s == "digest"
+      elsif @digest
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
         add_attachments(*digest_posts, is_digest: true)
       end

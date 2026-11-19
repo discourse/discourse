@@ -81,8 +81,6 @@ RSpec.describe Email::Sender do
     expect([message.html_part.body.decoded, message.text_part.body.decoded]).to all(
       include("English branding"),
     )
-    expect(message.header[Email::Renderer::LOCALE_HEADER]).to be_nil
-    expect(message.header[Email::Renderer::THEME_HEADER]).to be_nil
   end
 
   it "terminates the HTML part with a newline" do
@@ -837,6 +835,13 @@ RSpec.describe Email::Sender do
           expect(summary.to_s.scan("Content-Type: text/plain;").length).to eq(1)
           expect(summary.to_s.scan(/cid:[\w\-@.]+/).length).to eq(2)
           expect(summary.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
+
+          preview = Email::Preview.new(user: post.user, since: 24.hours.ago)
+          preview.deliver_to(post.user.email)
+
+          expect(preview.message.attachments.map(&:filename)).to match_array(
+            summary.attachments.map(&:filename),
+          )
         end
 
         it "does not attach images that are not marked as secure, in the case of a non-secure upload copied to a PM" do

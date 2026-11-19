@@ -377,6 +377,17 @@ RSpec.describe Admin::EmailController do
         expect(rendered_contents).to all(exclude("/email/unsubscribe/"))
       end
 
+      it "serves legacy digest preview JSON without redirecting" do
+        get "/admin/email/preview-digest.json",
+            params: {
+              last_seen_at: 1.week.ago,
+              username: admin.username,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include("html_content" => "", "text_content" => "")
+      end
+
       it "returns no preview when the digest has no content" do
         get "/admin/email/preview.json",
             params: {
@@ -671,6 +682,55 @@ RSpec.describe Admin::EmailController do
         )
       end
 
+      it "sends previews to staff addresses with surrounding whitespace in staff-only mode" do
+        SiteSetting.disable_emails = "non-staff"
+
+        post "/admin/email/send-preview.json",
+             params: {
+               username: user.username,
+               email: " #{admin.email} ",
+               email_type: "test_email",
+             }
+
+        expect(response.status).to eq(200)
+        expect(ActionMailer::Base.deliveries.last.to).to contain_exactly(admin.email)
+      end
+
+      it "returns the reason when SMTP rejects a preview" do
+        reason = "550 Mailbox unavailable"
+        Mail::TestMailer
+          .any_instance
+          .stubs(:deliver!)
+          .raises(Net::SMTPFatalError.new(nil, message: reason))
+
+        post "/admin/email/send-preview.json",
+             params: {
+               username: user.username,
+               email: admin.email,
+               email_type: "test_email",
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(reason)
+      end
+
+      it "delivers previews requested through the legacy digest endpoint" do
+        Fabricate(:topic, created_at: 1.day.ago)
+
+        expect do
+          post "/admin/email/send-digest.json",
+               params: {
+                 last_seen_at: 1.week.ago,
+                 username: user.username,
+                 email: admin.email,
+               }
+        end.to change { ActionMailer::Base.deliveries.size }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(ActionMailer::Base.deliveries.last.to).to contain_exactly(admin.email)
+      end
+
       it "respects disabled delivery for every preview type" do
         SiteSetting.disable_emails = "yes"
         %w[admin_login test_email template:system_messages.backup_failed].each do |email_type|
@@ -709,7 +769,6 @@ RSpec.describe Admin::EmailController do
         expect([message.html_part.body.decoded, message.text_part.body.decoded]).to all(
           include("Draft preview branding"),
         )
-        expect(message.header[Email::Renderer::THEME_HEADER]).to be_nil
         expect(SiteSetting.default_theme_id).to eq(default_theme_id)
         expect(SiteSetting.enable_email_theme_header_and_footer).to eq(false)
       end

@@ -70,17 +70,14 @@ module Email
       document
         .css("header, footer, section, nav, main, article, address, figure, figcaption, hgroup")
         .each { |node| node.name = "div" }
+      base = Addressable::URI.parse("#{Discourse.base_url}/")
       document
-        .css("[href], [src]")
-        .each do |node|
-          %w[href src].each do |attribute|
-            next if (url = node[attribute]).blank?
-            node[attribute] = if url.start_with?("//")
-              "#{URI(Discourse.base_url).scheme}:#{url}"
-            else
-              UrlHelper.absolute_without_cdn(url)
-            end
-          end
+        .xpath(".//@href | .//@src")
+        .each do |attribute|
+          next if attribute.value.blank?
+          attribute.value = base.join(attribute.value).to_s
+        rescue Addressable::URI::InvalidURIError
+          attribute.remove
         end
       HtmlToMarkdown.new(document.to_html).to_markdown
     end
