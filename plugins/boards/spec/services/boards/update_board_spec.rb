@@ -214,6 +214,53 @@ RSpec.describe Boards::UpdateBoard do
           )
         end
       end
+
+      context "when the constraints exclude a card that the user cannot see" do
+        fab!(:category)
+        fab!(:other_category, :category)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:matching_card) do
+          Fabricate(:boards_topic_card, board:, column:, topic: Fabricate(:topic, category:))
+        end
+        fab!(:visible_card) do
+          Fabricate(
+            :boards_topic_card,
+            board:,
+            column:,
+            topic: Fabricate(:topic, category: other_category),
+          )
+        end
+        fab!(:hidden_card) do
+          Fabricate(
+            :boards_topic_card,
+            board:,
+            column:,
+            topic: Fabricate(:topic, category: private_category),
+          )
+        end
+
+        let(:raw) { { "category_ids" => [category.id] } }
+
+        context "when the user can see all cards" do
+          let(:dependencies) { { guardian: admin.guardian } }
+
+          it "removes all cards that the constraints exclude" do
+            expect { result }.to change { board.cards.ids }.to(contain_exactly(matching_card.id))
+          end
+        end
+
+        it "removes the visible card" do
+          expect { result }.to change { Boards::Card.exists?(visible_card.id) }.to(false)
+        end
+
+        it "keeps the card that the user cannot see" do
+          expect { result }.not_to change { Boards::Card.exists?(hidden_card.id) }
+        end
+
+        it "counts only the visible card" do
+          expect(result[:cards_removed_count]).to eq(1)
+        end
+      end
     end
   end
 end
