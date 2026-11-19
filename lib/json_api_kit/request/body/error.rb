@@ -9,7 +9,12 @@ module JsonApiKit
             def detail(error, location) = description.call(error, location)
           end
 
-        JSON_TYPES = { object: "an object", string: "a string" }.freeze
+        JSON_TYPES = {
+          object: "an object",
+          string: "a string",
+          array: "an array",
+          object_or_null: "an object or null",
+        }.freeze
         DEFAULT_RULE = Rule.new("400", ->(error, _) { error.message })
         RULES = {
           :json_type =>
@@ -31,13 +36,19 @@ module JsonApiKit
             ),
           [:"data.id", :unsupported] =>
             Rule.new("403", ->(*) { "This endpoint does not accept client-generated IDs." }),
+          %i[type equal_to] =>
+            Rule.new(
+              "409",
+              ->(error, _) { "type must be #{error.options[:count]} for this relationship." },
+            ),
+          :missing => Rule.new("400", ->(_, location) { "#{location.name} is required." }),
           %i[errors incompatible] =>
             Rule.new("400", ->(*) { "data and errors must not appear in the same document." }),
         }.freeze
 
-        def initialize(error, document:)
+        def initialize(error, document: nil, location: Location.for(error.attribute, document:))
           @error = error
-          @location = Location.for(error.attribute, document:)
+          @location = location
           @rule =
             RULES.fetch([error.attribute, error.type]) { RULES.fetch(error.type, DEFAULT_RULE) }
           super()

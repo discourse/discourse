@@ -20,13 +20,13 @@ module JsonApiKitPostSpec
     attribute :full_name, :string, writable: true
     attribute :flair_icon
 
-    has_many :users, resource: UserResource
+    has_many :users, resource: UserResource, writable: true
   end
 
   class CreateGroup
     include Service::Base
 
-    params(from_resource: GroupResource, only: %i[name public_admission]) do
+    params(from_resource: GroupResource, only: %i[name public_admission user_ids]) do
       attribute :bio_raw, :string
 
       validates :name, presence: true
@@ -42,7 +42,9 @@ module JsonApiKitPostSpec
     end
 
     def create_group(params:, guardian:)
-      Group.create(**params, users: [guardian.user])
+      Group.create(
+        **params.merge(user_ids: params.users_provided? ? params.user_ids : [guardian.user.id]),
+      )
     end
   end
 
@@ -154,6 +156,26 @@ RSpec.describe JsonApiKitPostSpec::GroupsController, type: :request do
     end
 
     it_behaves_like "a created group"
+
+    context "when the client supplies related users" do
+      fab!(:member, :user)
+
+      let(:primary) do
+        super().merge(
+          "relationships" => {
+            "users" => {
+              "data" => [{ "type" => "users", "id" => member.id.to_s }],
+            },
+          },
+        )
+      end
+
+      it "creates the group with the supplied users", :aggregate_failures do
+        expect { create_group }.to change(Group, :count).by(1)
+        expect(response).to have_http_status(:created)
+        expect(group.user_ids).to contain_exactly(member.id)
+      end
+    end
 
     context "when the client uses an older version" do
       let(:version) { JsonApiKit::Timeline::FIRST_RELEASE.to_s }
