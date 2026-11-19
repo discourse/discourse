@@ -97,6 +97,7 @@ en:
       invalid_directory_period: "Invalid directory period"
       invalid_reply_mode: "Invalid reply mode"
       post_not_found: "Post not found"
+      post_not_created: "The post could not be created"
       user_directory_disabled: "The user directory is disabled"
       filter_only_for_filtered_view: "Filter is only supported by the filtered view"
       filter_required: "A nonblank filter is required for the filtered view"
