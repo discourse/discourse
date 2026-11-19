@@ -1,6 +1,10 @@
 import EmojiListControl from "discourse/admin/components/setting-field/emoji-list";
+import FileSizeRestrictionControl from "discourse/admin/components/setting-field/file-size-restriction";
+import FileTypesListControl from "discourse/admin/components/setting-field/file-types-list";
 import SecretListControl from "discourse/admin/components/setting-field/secret-list";
 import SimpleListControl from "discourse/admin/components/setting-field/simple-list";
+import UploadControl from "discourse/admin/components/setting-field/upload";
+import UploadedImageListControl from "discourse/admin/components/setting-field/uploaded-image-list";
 import ValueListControl, {
   VARIANTS as VALUE_LIST_VARIANTS,
 } from "discourse/admin/components/setting-field/value-list";
@@ -20,6 +24,10 @@ const RENDERERS = {
   simple_list: SimpleListControl,
   emoji_list: EmojiListControl,
   secret_list: SecretListControl,
+  upload: UploadControl,
+  file_size_restriction: FileSizeRestrictionControl,
+  file_types_list: FileTypesListControl,
+  uploaded_image_list: UploadedImageListControl,
 };
 
 for (const [type, renderer] of Object.entries(RENDERERS)) {

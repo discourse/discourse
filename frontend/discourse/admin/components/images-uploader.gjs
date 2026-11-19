@@ -27,7 +27,7 @@ export default class ImagesUploader extends Component {
   <template>
     <span ...attributes>
       <label
-        class="btn"
+        class="btn btn-default"
         disabled={{this.uploadingOrProcessing}}
         title={{i18n "admin.site_settings.uploaded_image_list.upload.title"}}
       >
