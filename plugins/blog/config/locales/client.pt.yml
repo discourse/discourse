@@ -52,6 +52,8 @@ pt:
         edit: Editar
         status: Estado
         replies: Respostas
+        title: Título
+      all: Todos
       drafts: Rascunhos
       preview: Pré-visualização
       unpublish: Anular a publicação

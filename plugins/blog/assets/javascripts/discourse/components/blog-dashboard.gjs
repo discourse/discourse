@@ -66,6 +66,7 @@ export default class BlogDashboard extends Component {
   @service composer;
   @service currentUser;
   @service router;
+  @service site;
   @service siteSettings;
 
   @tracked filter;
@@ -106,8 +107,12 @@ export default class BlogDashboard extends Component {
 
   @action
   async newDraft() {
-    const category = Category.findById(this.siteSettings.blog_drafts_category);
-    await this.composer.openNewTopic({ category });
+    const category =
+      Category.findById(this.siteSettings.blog_drafts_category) ||
+      (await this.#ensureDraftsCategory());
+    if (category) {
+      await this.composer.openNewTopic({ category });
+    }
   }
 
   @action
@@ -172,6 +177,19 @@ export default class BlogDashboard extends Component {
         { type: "POST" }
       );
       DiscourseURL.routeTo(publication.source_url);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  // The drafts category is created the first time anyone starts a draft.
+  async #ensureDraftsCategory() {
+    try {
+      const category = await ajax("/blog-editor/drafts-category.json", {
+        type: "POST",
+      });
+      this.siteSettings.blog_drafts_category = category.id;
+      return this.site.updateCategory(category);
     } catch (error) {
       popupAjaxError(error);
     }

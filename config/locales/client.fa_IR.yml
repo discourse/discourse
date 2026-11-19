@@ -2565,6 +2565,7 @@ fa_IR:
         size_too_small: "%{provided_file_size} کوچکتر از حداقل مجاز %{min_file_size}است"
     emoji_picker:
       filter_placeholder: جستجوی شکلک
+      no_results: "هیچ نتیجه‌ای وجود ندارد"
       smileys_&_emotion: احساس ها و لبخندها
       people_&_body: افراد و بدن
       animals_&_nature: حیوانات و طبیعت
@@ -2598,6 +2599,10 @@ fa_IR:
       emoji: "شکلک :)"
       more_emoji: "بیشتر…"
       options: "گزینه‌ها"
+      ai_content:
+        code: "کد"
+        quote: "نقل‌قول"
+        details: "جزئیات"
       whisper: "زمزمه"
       unlist: "از فهرست پاک شده"
       add_warning: "این یک هشدار رسمی است."
@@ -3584,10 +3589,8 @@ fa_IR:
           label: "انتخاب شده"
           title: "برای حذف پست از حالت انتخاب کلیک کنید"
         select_replies:
-          label: "انتخاب کردن + جواب دادن"
           title: "پست و تمام پاسخ های آن را به انتخاب اضافه کنید"
         select_below:
-          label: "انتخاب نوشته  + موارد زیر آن"
           title: "پست و همه پس از آن را به انتخاب اضافه کنید"
         delete: حذف انتخاب شده ها
         cancel: لغو انتخاب
@@ -3605,6 +3608,7 @@ fa_IR:
         clear_all: "پاکسازی همه"
         actions: "عملیات گروهی"
     post:
+      ai_generated: "هوش مصنوعی"
       confirm_delete: "آیا مطمئن هستید که می‌خواهید این پست را حذف کنید؟"
       quote_reply: "نقل‌قول"
       quote_reply_shortcut: "نقل قول (یا q را فشار دهید)"
@@ -4547,6 +4551,14 @@ fa_IR:
       forward: "به جلو"
       share: "اشتراک‌گذاری"
       dismiss: "نخواستیم"
+    mobile_tab_bar:
+      create: "ایجاد"
+      more: "بیشتر"
+      back: "بازگشت"
+      topics: "موضوعات"
+      drafts:
+        one: "پیش‌نویس «%{count}»"
+        other: "پیش‌نویس «%{count}»"
     safe_mode:
       enabled: "حالت امن فعال شده، برای خروج از حالت امن این پنجره مرورگر را ببندید."
     image_removed: "(تصویر حذف شد)"
@@ -5741,13 +5753,6 @@ fa_IR:
           company_name: "نام"
           company_url: "وب‌سایت"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "قانون حاکم"
-          governing_law_placeholder: "استان، ایالت یا کشور"
-          governing_law_help: |
-            حوزه قضایی شرایط قانونی سایت را مشخص کنید؛ معمولاً جایی که شرکت ثبت شده یا در آن فعالیت می کند.
-          city_for_disputes_placeholder: "شهر"
-          city_for_disputes_help: |
-            شهر حل و فصل اختلافات حقوقی مربوط به این انجمن را مشخص کنید.
           extra_groups:
             groups: "گروه‌ها"
           locale_selector:
@@ -6750,7 +6755,6 @@ fa_IR:
         silence_duration: "کاربر تا چه مدت در حالت سکوت خواهد بود؟"
         silence_reason_title: "دلیل سکوت"
         silence_reason_placeholder: "دلیل سکوت"
-        silence_message: "پیام ایمیل"
         suspended_until: "(تا %{until})"
         suspend_forever: "تعلیق برای همیشه"
         cant_suspend: "این کاربر نمی‌تواند معلق شود."

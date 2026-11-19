@@ -40,6 +40,8 @@ th:
         edit: แก้ไข
         status: สถานะ
         replies: ตอบ
+        title: ชื่อเรื่อง
+      all: ทั้งหมด
       drafts: แบบร่าง
       preview: แสดงตัวอย่าง
       unpublish: ไม่เผยแพร่

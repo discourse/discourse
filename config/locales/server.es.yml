@@ -520,11 +520,6 @@ es:
   too_many_mentions_newuser:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en una publicación."
     other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en una publicación."
-  no_embedded_media_allowed_group: "Lo sentimos, no puedes insertar elementos multimedia en una publicación."
-  no_embedded_media_allowed: "Lo sentimos, los nuevos usuarios no pueden insertar elementos multimedia en las publicaciones."
-  too_many_embedded_media:
-    one: "Lo sentimos, los nuevos usuarios solo pueden poner un elemento multimedia incrustado en una publicación."
-    other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} elementos multimedia incrustados en una publicación."
   no_attachments_allowed: "Lo sentimos, los usuarios nuevos no pueden adjuntar archivos en publicaciones."
   too_many_attachments:
     one: "Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por publicación"
@@ -2438,8 +2433,6 @@ es:
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se utilicen en ningún tema o mensaje personal a diario."
     default_watched_precedence_over_muted: "Notificar a los usuarios sobre temas en categorías o etiquetas que están observando y que también pertenezcan a una que hayan silenciado"
     company_name: "Nombre de tu empresa u organización."
-    governing_law: "Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y la Política de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades."
-    city_for_disputes: "Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro."
     shared_drafts_category: "Activa la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del personal."
     shared_drafts_allowed_groups: "Permite a los usuarios de estos grupos ver y editar Borradores compartidos."
     push_notifications_prompt: "Mostrar un banner de consentimiento del usuario para las notificaciones push. Este ajuste activa un aviso pidiendo permiso a los usuarios para enviarles notificaciones push. Solo aparece cuando las notificaciones push no están ya activadas, son compatibles con el dispositivo del usuario y este ha realizado una publicación o está utilizando una Aplicación Web Progresiva (PWA). El aviso no se volverá a mostrar si el usuario ya lo ha descartado o ha concedido/denegado el permiso."
@@ -4056,12 +4049,6 @@ es:
     account_suspended_forever:
       title: "Cuenta suspendida"
       subject_template: "[%{email_prefix}] Tu cuenta ha sido suspendida"
-    account_silenced:
-      title: "Cuenta silenciada"
-      subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
-    account_silenced_forever:
-      title: "Cuenta silenciada"
-      subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
     account_deleted:
       title: "Cuenta eliminada"
       subject_template: "[%{email_prefix}] Tu cuenta se ha eliminado"

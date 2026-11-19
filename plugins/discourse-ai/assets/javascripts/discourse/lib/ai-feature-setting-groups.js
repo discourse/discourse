@@ -42,6 +42,18 @@ export const AI_FEATURE_SETTING_GROUPS = {
     },
   ],
 
+  review_queue: [
+    {
+      key: "settings",
+      titleKey: "discourse_ai.features.review_queue.setting_groups.settings",
+      settings: [
+        "ai_reviewable_action_suggestions_enabled",
+        "ai_reviewable_action_decision_model",
+        "ai_reviewable_action_min_confidence",
+      ],
+    },
+  ],
+
   image_caption: [
     {
       key: "settings",

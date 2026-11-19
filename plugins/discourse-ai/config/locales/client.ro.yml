@@ -64,6 +64,11 @@ ro:
       discourse_workflows:
         ai_agent:
           mode: "Mod"
+        ai_tool:
+          arguments: "Argumente"
+          list_item: "Element listă"
+        mcp_tool:
+          arguments: "Argumente"
         classify:
           text: "Text"
           upload_ids: "Imagini"
@@ -100,6 +105,9 @@ ro:
           enabled: "Activate"
         search:
           name: "Caută"
+        review_queue:
+          setting_groups:
+            settings: "Setări"
         image_caption:
           setting_groups:
             settings: "Setări"

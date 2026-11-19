@@ -1842,6 +1842,8 @@ sr:
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
+      ai_content:
+        details: "Detalji"
       add_warning: "Ovo je službeno upozorenje."
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "sačuvano lokalno"
@@ -2253,8 +2255,6 @@ sr:
         selected: "odabrano (%{count})"
         select_post:
           label: "odaberi"
-        select_replies:
-          label: "odaberi +odgovori"
         delete: obriši odabrano
         cancel: odustani od odabranog
         select_all: odaberi sve
@@ -2673,6 +2673,7 @@ sr:
     download_calendar:
       download: "Preuzmi"
     tagging:
+      selector_tags: "Tagovi"
       selector_remove_filter: "uklonite filter"
       synonym_hint: "→ %{tag_name}"
       add_synonyms: "Dodaj"
@@ -2718,6 +2719,15 @@ sr:
       back: "Nazad"
       share: "Podeli"
       dismiss: "Odbaci"
+    mobile_tab_bar:
+      create: "Kreiraj"
+      more: "Više"
+      back: "Nazad"
+      topics: "Teme"
+      drafts:
+        one: "Skice (%{count})"
+        few: "Skice (%{count})"
+        other: "Skice (%{count})"
     pause_notifications:
       title: "Pauzirajte obaveštenja za..."
     trust_levels:

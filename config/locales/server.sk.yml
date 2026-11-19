@@ -584,13 +584,6 @@ sk:
     few: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     many: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     other: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
-  no_embedded_media_allowed_group: "Ľutujeme, do príspevku nemôžete vložiť mediálne položky."
-  no_embedded_media_allowed: "Je nám ľúto, ale noví používatelia nemôžu vkladať mediálne položky do príspevkov."
-  too_many_embedded_media:
-    one: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba jednu vloženú mediálnu položku."
-    few: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba %{count} vložených mediálnych položiek."
-    many: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba %{count} vložených mediálnych položiek."
-    other: "Je nám ľúto, ale noví používatelia môžu do príspevku vložiť len %{count} vložené mediálne položky."
   no_attachments_allowed: "Ľutujeme, noví používatelia nemôžu vkladať prílohy do príspevkov."
   too_many_attachments:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku."
@@ -2504,8 +2497,6 @@ sk:
     create_post_for_category_and_tag_changes: "Vytvorenie šepkaného príspevku pri zmene kategórie alebo značky témy, vyžaduje, aby boli povolené šepkané príspevky."
     automatically_clean_unused_tags: "Automaticky odstráňte značky, ktoré sa nepoužívajú na žiadne témy alebo osobné správy na dennej báze."
     company_name: "Názov vašej spoločnosti alebo organizácie."
-    governing_law: "Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a zásad ochrany osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká."
-    city_for_disputes: "Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra."
     shared_drafts_category: "Povoľte funkciu Zdieľané koncepty určením kategórie pre koncepty tém. Témy v tejto kategórii budú pre používateľov zo zoznamu tém odstránené."
     shared_drafts_allowed_groups: "Povoľte používateľom v týchto skupinách vidieť a upravovať zdieľané návrhy."
     push_notifications_prompt: "Zobrazenie bannera so súhlasom používateľa pre push oznámenia. Toto nastavenie spustí výzvu, ktorá požiada používateľov o povolenie posielať im push oznámenia. Zobrazí sa len vtedy, keď push oznámenia ešte nie sú povolené, zariadenie používateľa ich podporuje a používateľ buď odoslal príspevok, alebo používa progresívnu webovú aplikáciu (PWA). Výzva sa už nezobrazí, ak ju používateľ už zamietol alebo udelil/odmietol povolenie."
@@ -4036,12 +4027,6 @@ sk:
     account_suspended_forever:
       title: "Účet pozastavený"
       subject_template: "[%{email_prefix}] Váš účet bol pozastavený"
-    account_silenced:
-      title: "Účet umlčaný"
-      subject_template: "[%{email_prefix}] Váš účet bol stíšený"
-    account_silenced_forever:
-      title: "Účet umlčaný"
-      subject_template: "[%{email_prefix}] Váš účet bol stíšený"
     account_deleted:
       title: "Účet bol odstránený"
       subject_template: "[%{email_prefix}] Vaše konto bolo vymazané"

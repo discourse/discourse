@@ -688,19 +688,6 @@ fr:
         notify_moderators: "Ce message requiert l'attention d'un responsable pour une autre raison non répertoriée ci-dessus."
       flagging:
         action: "Signaler un message"
-      emoji_picker:
-        favorites: "Fréquemment utilisé"
-        smileys_&_emotion: "Smileys et émotions"
-        objects: "Objets"
-        people_&_body: "Personnes et corps"
-        travel_&_places: "Voyages et lieux"
-        animals_&_nature: "Animaux et nature"
-        food_&_drink: "Nourriture et boissons"
-        activities: "Activités"
-        flags: "Signalements"
-        symbols: "Symboles"
-        search_placeholder: "Recherche par nom d'émoji et alias…"
-        no_results: "Aucun résultat"
       thread:
         title: "Titre"
         view_thread: Afficher le fil

@@ -87,6 +87,12 @@ describe PrettyText do
       )
     end
 
+    it "renders multi-line block math in a blockquote without the quote markers" do
+      expect(PrettyText.cook("> $$\n> a\n> b\n> $$")).to match_html(
+        "<blockquote>\n<div class=\"math\">\na\nb\n</div>\n</blockquote>",
+      )
+    end
+
     it "does not render unclosed blocks as math" do
       expect(PrettyText.cook("$$a\na\n$$\"")).to match_html("<p>$$a<br>\na<br>\n$$\"</p>")
     end

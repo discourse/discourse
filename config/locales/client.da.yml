@@ -2404,6 +2404,7 @@ da:
       to: Til
     emoji_picker:
       filter_placeholder: Søg efter humørikon
+      no_results: "Ingen resultater"
       smileys_&_emotion: Smilys og følelser
       people_&_body: Mennesker og krop
       animals_&_nature: Dyr og natur
@@ -2437,6 +2438,10 @@ da:
       emoji: "Emoji :)"
       more_emoji: "mere…"
       options: "Indstillinger"
+      ai_content:
+        code: "Kode"
+        quote: "Citér"
+        details: "Detaljer"
       whisper: "hvisken"
       unlist: "Ikke listede"
       add_warning: "Dette er en officiel advarsel."
@@ -3302,10 +3307,8 @@ da:
           label: "valgte"
           title: "Klik for at fjerne indlæg fra valg"
         select_replies:
-          label: "vælg +svar"
           title: "Tilføj indlæg og alle dets svar til valg"
         select_below:
-          label: "vælg + nedenfor"
           title: "Tilføj indlæg og alt efter det til valg"
         delete: slet valgte
         cancel: glem valg
@@ -4145,6 +4148,15 @@ da:
       forward: "Fremad"
       share: "Del"
       dismiss: "Skjul"
+    mobile_tab_bar:
+      new_topic: "Nyt emne"
+      create: "Opret"
+      more: "Flere"
+      back: "Tilbage"
+      topics: "Emner"
+      drafts:
+        one: "Kladder (%{count})"
+        other: "Kladder (%{count})"
     safe_mode:
       enabled: "Sikker tilstand er slået til - for at forlade sikker tilstand, så luk dette browservindue"
     image_removed: "(billede fjernet)"
@@ -5141,10 +5153,6 @@ da:
           your_organization: "Din organisation"
           company_name: "Navn"
           company_url: "Hjemmeside"
-          governing_law: "Gældende lov"
-          governing_law_placeholder: "Provins, stat eller land"
-          city_for_disputes: "By for tvister"
-          city_for_disputes_placeholder: "By"
           extra_groups:
             groups: "Grupper"
           locale_selector:
@@ -6004,7 +6012,6 @@ da:
         silence_modal_title: "Mådehold (silence) Bruger"
         silence_duration: "Hvor længe vil brugeren være mådeholdt (silenced)?"
         silence_reason_placeholder: "Årsag for mådeholdenhed (silence)"
-        silence_message: "Email Besked"
         suspended_until: "(indtil %{until})"
         cant_suspend: "Denne bruger kan ikke suspenderes."
         delete_posts_failed: "Der opstod et problem med at slette indlægene."

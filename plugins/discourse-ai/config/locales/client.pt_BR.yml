@@ -54,6 +54,9 @@ pt_BR:
             delete_ai_secret: "Excluir segredo de IA"
             update_ai_spam_settings: "Atualizar configurações de spam de IA"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_tool": "Ferramenta de IA"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,14 @@ pt_BR:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        ai_tool:
+          tool_ref: "Ferramenta"
+          arguments: "Argumentos"
+          list_item: "Item da lista"
+          add_list_item: "Adicionar item"
+        mcp_tool:
+          tool_name: "Ferramenta"
+          arguments: "Argumentos"
         classify:
           text: "Texto"
           upload_ids: "Imagens"
@@ -350,6 +361,9 @@ pt_BR:
             access_permissions: "Acessos e permissões"
             enabled_features: "Recursos habilitados"
             automation: "Automação"
+        review_queue:
+          setting_groups:
+            settings: "Definições"
         image_caption:
           setting_groups:
             settings: "Definições"
@@ -1043,7 +1057,6 @@ pt_BR:
         filter_standalone: "Independente"
       ai_bot:
         title: "Bot de IA"
-        llm: "Modelo:"
         pm_warning: "Todas as mensagens do chatbot de IA são monitoradas regularmente por moderadores(as)."
         cancel_streaming: "Parar resposta"
         try_again: "Tentar novamente"
@@ -1100,9 +1113,9 @@ pt_BR:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "IA"
           header: "Como posso ajudar?"
           submit: "Enviar pergunta"
-          disclaimer: "A IA generativa pode cometer erros. Confira as informações principais."
           placeholder: "Faça uma pergunta..."
           new: "Nova pergunta"
           min_input_length_message:

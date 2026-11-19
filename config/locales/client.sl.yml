@@ -2057,6 +2057,10 @@ sl:
     composer:
       emoji: "Emoji :)"
       options: "Možnosti"
+      ai_content:
+        code: "Koda"
+        quote: "Citiraj"
+        details: "Podrobnosti"
       whisper: "šepet"
       unlist: "izločeno"
       add_warning: "To je uradno opozorilo."
@@ -2834,10 +2838,8 @@ sl:
           label: "izbran"
           title: "Kliknite za odstranitev prispevka iz izbranih"
         select_replies:
-          label: "izberi +odgovore"
           title: "Dodaj prispevek in vse njegove odgovore med izbrane"
         select_below:
-          label: "izberi +nadaljnje"
           title: "Dodaj prispevek in vse nadaljnje med izbrane"
         delete: izbriši izbrano
         cancel: prekliči izbiro
@@ -3614,6 +3616,16 @@ sl:
       forward: "Naprej"
       share: "Deli"
       dismiss: "Opusti"
+    mobile_tab_bar:
+      create: "Ustvari"
+      more: "Več"
+      back: "Nazaj"
+      topics: "Tem"
+      drafts:
+        one: "Osnutki (%{count})"
+        two: "Osnutki (%{count})"
+        few: "Osnutki (%{count})"
+        other: "Osnutki (%{count})"
     safe_mode:
       enabled: "Varni način je vklopljen, za izklop varnega načina zaprite okno brskalnika."
     image_removed: "(slika odstranjena)"
@@ -4705,7 +4717,6 @@ sl:
         silence_modal_title: "Utišaj uporabnika/co"
         silence_duration: "Za kako dolgo bo uporabnik utišan?"
         silence_reason_placeholder: "Razlog za utišanje"
-        silence_message: "E-sporočilo za uporabnika"
         suspended_until: "(do %{until})"
         cant_suspend: "Ta uporabnik ne more biti suspendiran."
         penalty_post_actions: "Kaj bi rad naredil/a z asociiranim prispevkom?"

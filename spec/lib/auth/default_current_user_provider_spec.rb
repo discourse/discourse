@@ -1001,6 +1001,22 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
   describe "bootstrap first admin" do
     let(:admin) { Fabricate(:admin, last_seen_at: nil) }
+    let(:bootstrapped_users) { [] }
+    let(:bootstrap_callback) { ->(user) { bootstrapped_users << [user, user.moderator?] } }
+
+    let(:plugin) { Plugin::Instance.new }
+
+    before do
+      plugin.enabled_site_setting(:discourse_sample_plugin_enabled)
+      SiteSetting.discourse_sample_plugin_enabled = true
+      plugin.register_first_admin_bootstrap(&bootstrap_callback)
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_first_admin_bootstrap.delete_if do |entry|
+        entry[:plugin] == plugin
+      end
+    end
 
     it "grants moderation and logs the staff action on the singular admin's first login" do
       @provider = provider("/")
@@ -1010,6 +1026,17 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       log = UserHistory.where(action: UserHistory.actions[:grant_moderation]).last
       expect(log.target_user_id).to eq(admin.id)
       expect(log.acting_user_id).to eq(Discourse.system_user.id)
+      expect(bootstrapped_users).to eq([[admin, true]])
+    end
+
+    it "skips bootstrap callbacks from disabled plugins" do
+      SiteSetting.discourse_sample_plugin_enabled = false
+
+      @provider = provider("/")
+      @provider.log_on_user(admin, {}, @provider.cookie_jar)
+
+      expect(admin.reload.moderator).to eq(true)
+      expect(bootstrapped_users).to be_empty
     end
 
     it "is idempotent: a second login does not re-log grant_moderation" do
@@ -1021,6 +1048,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
         @provider = provider("/")
         @provider.log_on_user(admin.reload, {}, @provider.cookie_jar)
       }.to_not change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }
+
+      expect(bootstrapped_users).to eq([[admin, true]])
     end
 
     it "does not grant moderation when another admin already exists" do
@@ -1030,6 +1059,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(admin, {}, @provider.cookie_jar)
 
       expect(admin.reload.moderator).to eq(false)
+      expect(bootstrapped_users).to be_empty
       expect(UserHistory.where(action: UserHistory.actions[:grant_moderation]).count).to eq(0)
     end
 
@@ -1040,6 +1070,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(admin, {}, @provider.cookie_jar)
 
       expect(admin.reload.moderator).to eq(false)
+      expect(bootstrapped_users).to be_empty
     end
 
     it "does not grant moderation to non-admin users" do
@@ -1047,6 +1078,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       @provider.log_on_user(user, {}, @provider.cookie_jar)
 
       expect(user.reload.moderator).to eq(false)
+      expect(bootstrapped_users).to be_empty
     end
   end
 end

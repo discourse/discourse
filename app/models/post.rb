@@ -373,7 +373,12 @@ class Post < ActiveRecord::Base
     # user to be present. The last editing user of the post will be more
     # generally up to date than the creating user.
     options[:user_id] = last_editor_id
-    options[:hashtag_user_ids] = [user_id, last_editor_id, *post_revisions.pluck(:user_id)].compact
+    options[:hashtag_user_ids] = [
+      user_id,
+      last_editor_id,
+      *post_revisions.pluck(:user_id),
+      *system_message_recipient_ids,
+    ].compact
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
     options
@@ -616,6 +621,10 @@ class Post < ActiveRecord::Base
     post_number.blank? ? topic.try(:highest_post_number) == 0 : post_number == 1
   end
 
+  def system_message?
+    is_first_post? && topic&.subtype == TopicSubtype.system_message
+  end
+
   def is_last_reply?
     topic.try(:highest_post_number) == post_number && post_number != 1
   end
@@ -698,7 +707,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, message_options: {})
     return if hidden?
 
     reason ||=
@@ -743,24 +752,18 @@ class Post < ActiveRecord::Base
         **Dsa::AppealInstructions.message_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason:
-          I18n.t(
-            "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path,
-            default: PostActionType.names[post_action_type_id],
-          ),
+        **message_options,
       }
 
       message = custom_message
       message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
 
-      Jobs.enqueue_in(
-        5.seconds,
-        :send_system_message,
-        user_id: user.id,
+      ModerationNotice.enqueue(
+        delay: 5.seconds,
+        user: user,
         message_type: message.to_s,
         message_options: options,
+        post_action_type_id:,
       )
     end
 
@@ -1282,6 +1285,12 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def system_message_recipient_ids
+    return [] if !system_message?
+
+    topic.topic_allowed_users.pluck(:user_id)
+  end
 
   def unvalidated_media_limit
     writer_ids = [user_id, last_editor_id, *post_revisions.pluck(:user_id)]

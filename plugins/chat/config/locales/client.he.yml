@@ -629,19 +629,6 @@ he:
         notify_moderators: "הודעה זו דורשת את התערבות הסגל מסיבות אחרות שאינן מופיעות לעיל."
       flagging:
         action: "סימון הודעה בדגל"
-      emoji_picker:
-        favorites: "נפוצים"
-        smileys_&_emotion: "חייכנים ורגשות"
-        objects: "עצמים"
-        people_&_body: "אנשים וגוף"
-        travel_&_places: "טיולים ומקומות"
-        animals_&_nature: "חיות וטבע"
-        food_&_drink: "מזון ומשקאות"
-        activities: "פעילויות"
-        flags: "דגלים"
-        symbols: "סמלים"
-        search_placeholder: "חיפוש לפי שם וכינוי של האמוג׳י…"
-        no_results: "אין תוצאות"
       thread:
         title: "כותרת"
         view_thread: הצגת שרשור

@@ -1753,6 +1753,10 @@ ca:
     composer:
       emoji: "Emoji :)"
       options: "Opcions"
+      ai_content:
+        code: "Codi"
+        quote: "Cita"
+        details: "Detalls"
       whisper: "xiuxiueig"
       unlist: "invisible"
       add_warning: "Aquest és un avís oficial."
@@ -2382,10 +2386,8 @@ ca:
           label: "seleccionat"
           title: "Feu clic per a eliminar una publicació de la selecció"
         select_replies:
-          label: "tria+respostes"
           title: "Afegeix una publicació i totes les seves respostes a la selecció"
         select_below:
-          label: "selecciona +sota"
           title: "Afegeix una publicació i totes les següents a la selecció"
         delete: suprimeix seleccionats
         cancel: cancel·la seleccionats
@@ -3025,6 +3027,14 @@ ca:
       back: "Enrere"
       share: "Comparteix"
       dismiss: "Descarta-ho"
+    mobile_tab_bar:
+      create: "Crea"
+      more: "Més"
+      back: "Enrere"
+      topics: "Temes"
+      drafts:
+        one: "Esborranys (%{count})"
+        other: "Esborranys (%{count})"
     safe_mode:
       enabled: "El mode segur està activat. Per a sortir-ne tanqueu aquesta finestra del navegador."
     trust_levels:
@@ -4302,7 +4312,6 @@ ca:
         silence_modal_title: "Usuari silenciat"
         silence_duration: "Quant de temps estarà silenciat l'usuari?"
         silence_reason_placeholder: "Raó del silenciament"
-        silence_message: "Missatge de correu"
         suspended_until: "(fins a %{until})"
         cant_suspend: "Aquest usuari no pot ser suspès."
         delete_posts_failed: "Hi ha hagut un problema suprimint les publicacions."

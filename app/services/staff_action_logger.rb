@@ -1055,6 +1055,31 @@ class StaffActionLogger
     )
   end
 
+  def log_web_hook_operation(
+    web_hook,
+    action:,
+    destination_origin:,
+    destination_fingerprint:,
+    changed_fields: [],
+    event_id: nil
+  )
+    # Destinations and changed values can contain credentials.
+    details = [
+      "destination_origin: #{destination_origin}",
+      "destination_fingerprint: #{destination_fingerprint}",
+    ]
+    details << "changed_fields: #{changed_fields.join(", ")}" if changed_fields.present?
+    details << "event_id: #{event_id}" if event_id
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[action],
+        admin_only: true,
+        context: "webhook_id: #{web_hook.id}",
+        details: details.join("\n"),
+      ),
+    )
+  end
+
   def log_web_hook_deactivate(web_hook, response_http_status, opts = {})
     context = ["webhook_id: #{web_hook.id}", "webhook_response_status: #{response_http_status}"]
 

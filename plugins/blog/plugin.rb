@@ -34,6 +34,9 @@ register_homepage(
 )
 
 after_initialize do
+  register_problem_check ProblemCheck::BlogNotReady
+  register_seedfu_fixtures(Rails.root.join("plugins/blog/db/fixtures"))
+
   if defined?(Rack::MiniProfiler)
     %w[/blog-highlight/ /blog/blog-highlight/].each do |path|
       Rack::MiniProfiler.config.skip_paths << "#{Discourse.base_path}#{path}"
@@ -66,14 +69,14 @@ after_initialize do
     include_condition: -> do
       object.is_first_post? && object.word_count.to_i >= 250 &&
         Blog::Configuration.public_enabled? &&
-        object.topic.category_id == SiteSetting.blog_category.to_i
+        Blog::Instance.category_ids.include?(object.topic.category_id)
     end,
   ) do
     if publication = object.topic.blog_live_publication
       {
         url: publication.url,
         excerpt: publication.display_excerpt,
-        blog_name: SiteSetting.blog_title,
+        blog_name: publication.blog.name,
       }
     end
   end
@@ -96,6 +99,26 @@ after_initialize do
         end
     end
     @blog_publication
+  end
+
+  # Not `on`, which skips events while the plugin is disabled: the settings can
+  # still be changed then.
+  DiscourseEvent.on(:site_setting_changed) do |name| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
+    Blog::DefaultBlogMirror.sync! if Blog::DefaultBlogMirror.setting?(name.to_sym)
+  end
+
+  on(:site_setting_changed) do |name|
+    name = name.to_sym
+    if name == :blog_publisher_groups
+      Blog::Instance.category_ids.each do |category_id|
+        Blog::AddPublishersToPublicCategory.call(params: { category_id: })
+      end
+    end
+    if name == :blog_category
+      Blog::AddPublishersToPublicCategory.call(params: { category_id: SiteSetting.blog_category })
+    end
+    next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
+    Blog::EnsureDraftsCategory.call(options: { create_missing: false })
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

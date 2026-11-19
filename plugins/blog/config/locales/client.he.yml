@@ -57,7 +57,11 @@ he:
         edit: עריכה
         status: מצב
         replies: תשובות
+        title: כותרת
+        page: עמוד
+      all: הכול
       drafts: טיוטות
+      pages: עמודים
       preview: תצוגה מקדימה
       unpublish: משיכת הפרסום
       appearance_link: מראה

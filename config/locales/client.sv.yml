@@ -2303,6 +2303,8 @@ sv:
         size_too_large: "%{provided_file_size} är större än den högsta tillåtna %{max_file_size}"
     emoji_picker:
       filter_placeholder: Sök efter emoji
+      search_placeholder: "Sök efter emojinamn och alias..."
+      favorites: "Används ofta"
       smileys_&_emotion: Smileys och känslor
       people_&_body: Människor och kropp
       animals_&_nature: Djur och natur
@@ -2334,6 +2336,10 @@ sv:
       emoji: "Emoji :)"
       more_emoji: "mer…"
       options: "Alternativ"
+      ai_content:
+        code: "Kod"
+        quote: "Citat"
+        details: "Detaljer"
       whisper: "viska"
       unlist: "avlistad"
       add_warning: "Det här är en officiell varning."
@@ -3286,10 +3292,8 @@ sv:
           label: "markerad"
           title: "Klicka för att ta bort inlägg från markering"
         select_replies:
-          label: "välj +svar"
           title: "Lägg till inlägg samt alla tillhörande svar till markering"
         select_below:
-          label: "välj +nedanför"
           title: "Lägg till inlägg, samt allting efter det, till markering"
         delete: radera markerade
         cancel: avbryt markering
@@ -4160,6 +4164,14 @@ sv:
       forward: "Framåt"
       share: "Dela"
       dismiss: "Avfärda"
+    mobile_tab_bar:
+      create: "Skapa"
+      more: "Mer"
+      back: "Tillbaka"
+      topics: "Ämnen"
+      drafts:
+        one: "Utkast (%{count})"
+        other: "Utkast (%{count})"
     safe_mode:
       enabled: "Säkert läge är aktiverat och för att lämna säkert läge stänger du detta webbläsarfönster"
     image_removed: "(bild borttagen)"
@@ -5148,8 +5160,6 @@ sv:
           company_name: "Namn"
           company_url: "Webbplats"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Gällande lag"
-          city_for_disputes: "Domstol vid tvister"
           extra_groups:
             groups: "Grupper"
           locale_selector:
@@ -6006,7 +6016,6 @@ sv:
         silence_modal_title: "Tysta användaren"
         silence_duration: "Hur länge ska användaren vara tystad?"
         silence_reason_placeholder: "Anledning till att tysta"
-        silence_message: "E-postmeddelande"
         suspended_until: "(till %{until})"
         suspend_forever: "Stäng av för alltid"
         cant_suspend: "Denna användare kan inte uteslutas."

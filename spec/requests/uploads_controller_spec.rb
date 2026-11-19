@@ -1019,6 +1019,36 @@ RSpec.describe UploadsController do
       expect(result[0]["short_path"]).to eq(upload.short_path)
     end
 
+    it "rejects batches over the limit" do
+      sign_in(user)
+      short_urls = Array.new(UploadsController::MAX_LOOKUP_SHORT_URLS + 1) { |i| "video#{i}" }
+
+      post "/uploads/lookup-urls.json", params: { short_urls: }
+
+      expect(response.status).to eq(413)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("upload.too_many_short_urls", count: UploadsController::MAX_LOOKUP_SHORT_URLS),
+      )
+    end
+
+    it "looks up a repeated short url once" do
+      sign_in(user)
+      video = Fabricate(:upload)
+      thumbnail_short_url = Upload.base62_sha1(video.sha1)
+
+      queries =
+        track_sql_queries do
+          post "/uploads/lookup-urls.json",
+               params: {
+                 short_urls: [thumbnail_short_url] * (UploadsController::MAX_LOOKUP_SHORT_URLS + 1),
+               }
+        end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.map { |result| result["url"] }).to contain_exactly(video.url)
+      expect(queries.count { |sql| sql.include?("original_filename") }).to eq(1)
+    end
+
     describe "secure uploads" do
       let(:upload) { Fabricate(:upload_s3, secure: true) }
 

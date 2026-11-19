@@ -728,6 +728,11 @@ after_initialize do
   if Rails.env.local?
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
   end
+
+  register_first_admin_bootstrap do |user|
+    # Don't want to greet new admins with the ugly channel retention reminder
+    user.user_option.update!(dismissed_channel_retention_reminder: true)
+  end
 end
 
 after_initialize do

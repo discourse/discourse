@@ -75,4 +75,17 @@ module("Integration | ui-kit | DToggleSwitch", function (hooks) {
       .dom(".d-toggle-switch__checkbox")
       .doesNotHaveAttribute("aria-labelledby");
   });
+
+  test("attributes reach the switch button", async function (assert) {
+    await render(
+      <template>
+        <DToggleSwitch aria-label="Enable" disabled={{true}} @state={{false}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .isDisabled("the button takes the disabled attribute")
+      .hasAria("label", "Enable", "the button takes the aria-label");
+  });
 });

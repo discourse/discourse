@@ -1358,8 +1358,6 @@ zh_CN:
       cannot_restore: "该更改所取代的内容已不复存在，因此网站无法切换回原来的版本。"
       failed: "无法进行更改。"
       saved: "网站已保存，未做任何更改。分享预览链接，然后询问是否上线。上线后字体会发生变化。"
-      live: "%{name} 已上线。"
-      switched_back: "已从 %{name}切换回来。"
       palettes_target: "当前主题的新调色板， %{theme}"
       existing_palettes_target: "%{palette} 调色板是 %{theme} 可以使用的最接近的调色板。"
       already_closest: "%{theme} 已经使用了 %{palette}，这是它可以使用的最接近的调色板，因此它的颜色不需要更改。字体仍然可以通过 base_font 和 heading_font 设置进行更改。"

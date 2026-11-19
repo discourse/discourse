@@ -57,7 +57,11 @@ ru:
         edit: Изменить
         status: Статус
         replies: Ответы
+        title: Название
+        page: страница
+      all: Все
       drafts: Черновики
+      pages: страниц
       preview: Предпросмотр
       unpublish: Отменить публикацию
       appearance_link: Внешний вид

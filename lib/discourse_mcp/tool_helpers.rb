@@ -3,6 +3,7 @@
 module DiscourseMcp
   module ToolHelpers
     MAX_READ_LENGTH = 50_000
+    PRIVATE_MESSAGE_DRAFT_ACTION = "privateMessage"
 
     module_function
 
@@ -135,7 +136,7 @@ module DiscourseMcp
       user
     end
 
-    def visible_post!(post_id, request_context)
+    def visible_post!(post_id, request_context, access: :read)
       guardian = request_context.guardian
       post = Post.with_deleted.find_by(id: post_id)
       topic = Topic.with_deleted.find_by(id: post&.topic_id)
@@ -145,7 +146,7 @@ module DiscourseMcp
         raise DiscourseMcp::ToolError, I18n.t("mcp.errors.post_not_found")
       end
 
-      ensure_private_message_scope!(topic, request_context, access: :read)
+      ensure_private_message_scope!(topic, request_context, access:)
       post
     end
 
@@ -155,10 +156,17 @@ module DiscourseMcp
       request_context.ensure_scopes!("mcp:private-messages:#{access}")
     end
 
-    def ensure_private_message_draft_scope!(draft_key, request_context, access:)
+    def ensure_private_message_draft_scope!(
+      draft_key,
+      request_context,
+      access:,
+      action: nil,
+      archetype: nil
+    )
       topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
       private_message_draft =
         draft_key.start_with?(Draft::NEW_PRIVATE_MESSAGE) ||
+          action == PRIVATE_MESSAGE_DRAFT_ACTION || archetype == Archetype.private_message ||
           (
             topic_id &&
               Topic.with_deleted.exists?(id: topic_id.to_i, archetype: Archetype.private_message)
@@ -166,6 +174,28 @@ module DiscourseMcp
       return if !private_message_draft
 
       request_context.ensure_scopes!("mcp:private-messages:#{access}")
+    end
+
+    def ensure_private_message_stored_draft_scope!(draft, request_context, access:)
+      return if draft.blank?
+
+      ensure_private_message_draft_scope!(
+        draft.draft_key,
+        request_context,
+        access:,
+        action: draft_action(draft),
+        archetype: draft_archetype(draft),
+      )
+    end
+
+    def draft_action(draft)
+      data = draft&.parsed_data
+      data["action"] if data.is_a?(Hash)
+    end
+
+    def draft_archetype(draft)
+      data = draft&.parsed_data
+      data["archetypeId"] if data.is_a?(Hash)
     end
 
     def ensure_current_author!(arguments, user)

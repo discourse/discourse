@@ -204,42 +204,12 @@ module Boards
         board = Boards::Board.find(params[:id])
         guardian.ensure_can_manage_board!(board)
 
-        new_category_ids = Array(params[:category_ids]).map(&:to_i).reject(&:zero?)
-        new_tag_ids =
-          if params[:tag_names].present?
-            Tag.where(name: Array(params[:tag_names])).pluck(:id)
-          else
-            []
-          end
+        category_ids = Array(params[:category_ids]).map(&:to_i).reject(&:zero?)
+        tag_ids = Tag.visible(guardian).where_name(Array(params[:tag_names])).pluck(:id)
+        cards_to_remove =
+          board.cards.topic_visible_to(guardian).outside_constraints(category_ids:, tag_ids:).count
 
-        cat_empty = new_category_ids.empty?
-        tag_empty = new_tag_ids.empty?
-
-        if cat_empty && tag_empty
-          count = 0
-        else
-          count =
-            DB.query_single(
-              <<~SQL,
-              SELECT COUNT(*) FROM discourse_kanban_cards c
-              JOIN topics t ON t.id = c.topic_id
-              WHERE c.board_id = :board_id AND c.card_type = #{Boards::Card.card_types[:topic]}
-                AND NOT (
-                  (:cat_empty OR t.category_id = ANY(:category_ids))
-                  AND (:tag_empty OR EXISTS (
-                    SELECT 1 FROM topic_tags tt WHERE tt.topic_id = t.id AND tt.tag_id = ANY(:tag_ids)
-                  ))
-                )
-            SQL
-              board_id: board.id,
-              category_ids: "{#{new_category_ids.join(",")}}",
-              tag_ids: "{#{new_tag_ids.join(",")}}",
-              cat_empty: cat_empty,
-              tag_empty: tag_empty,
-            ).first
-        end
-
-        render json: { cards_to_remove: count }
+        render json: { cards_to_remove: }
       end
 
       def archive

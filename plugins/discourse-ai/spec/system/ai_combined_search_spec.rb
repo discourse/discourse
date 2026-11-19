@@ -447,9 +447,50 @@ describe "AI combined search" do
       search.open_topic(inside)
       expect(PageObjects::Pages::Topic.new).to have_topic_title(inside.title)
       search.open_header
-      search.expect_query("", header: true)
-      search.expect_no_search
+      search.expect_query("widget configuration", header: true)
+      search.expect_tab("context", label: category.name)
+      search.expect_topic_results(inside)
       expect(requests.size).to eq(2)
+
+      # kept from another page, so enter searches here rather than opening it
+      search.submit(header: true)
+      wait_for_request("widget configuration", after: 2)
+      expect(requests.last.fetch(:scope)).to eq("topic:#{inside.id}")
+      search.expect_tab_label("context", "This topic")
+    end
+
+    it "credits a category result click to the query the reader typed" do
+      SiteSetting.log_search_queries = true
+
+      visit category.url
+      search.open_header
+      ask(query, header: true)
+      search.expect_tab("context", label: category.name)
+      search.open_topic(inside)
+      expect(PageObjects::Pages::Topic.new).to have_topic_title(inside.title)
+
+      try_until_success do
+        expect(
+          SearchLog.where(user: user).pluck(:term, :search_result_type, :search_result_id),
+        ).to contain_exactly([query, SearchLog.search_result_types[:topic], inside_post.id])
+      end
+    end
+
+    it "keeps a search made in a topic once the reader leaves it, without its topic tab" do
+      visit inside.url
+      search.open_header
+      ask("widget configuration?", header: true)
+      search.expect_tab("context", label: "This topic")
+      search.select_tab("topics")
+      search.open_topic(outside)
+      expect(PageObjects::Pages::Topic.new).to have_topic_title(outside.title)
+
+      search.open_header
+      search.expect_query("widget configuration?", header: true)
+      search.expect_no_tab("context")
+      search.expect_tab("topics")
+      search.expect_topic_results(inside, outside)
+      expect(requests.size).to eq(1)
     end
 
     it "lets the reader search this topic, ask about missing passages or search the whole site" do
@@ -594,10 +635,20 @@ describe "AI combined search" do
       search.expect_tab("ask")
       expect_opening("spring gardening", tab: "ask", reason: "searched_again")
 
-      # Disjoint queries avoid searched_again; verify each independent opening reason.
-      ask("green thumb")
-      search.expect_tab("ask")
-      expect_opening("green thumb", tab: "ask", reason: "no_keyword_matches")
+      previous_count = requests.size
+      search.search("green thumb")
+      search.expect_tab("topics")
+      expect_opening(
+        "green thumb",
+        tab: "topics",
+        reason: "answer_deferred",
+        ask_outcome: "skipped",
+        answer_deferred_reason: "exact_user_match",
+      )
+      expect(requests.size).to eq(previous_count)
+
+      search.select_tab("ask")
+      wait_for_request("green thumb", after: previous_count)
 
       ask("gardening?")
       search.expect_tab("ask")
@@ -609,6 +660,45 @@ describe "AI combined search" do
       search.expect_topic_results(gardening_topics.second)
       expect_opening('"small spaces"', tab: "topics", reason: "syntax", ask_outcome: "skipped")
       expect(requests.size).to eq(4)
+    end
+  end
+
+  context "when recalling recent searches" do
+    before do
+      SearchLog.log(
+        term: "account recovery",
+        search_type: :header,
+        ip_address: "127.0.0.1",
+        user_id: user.id,
+      )
+    end
+
+    it "offers history from a page with a search context" do
+      visit topic_1.url
+      search.open_header
+
+      search.expect_recent("account recovery")
+    end
+
+    it "lists a search just run once, ahead of older ones" do
+      visit "/about"
+      search.open_header
+      ask("login help", header: true)
+
+      search.fill_query("", header: true)
+
+      search.expect_recent("login help", "account recovery")
+    end
+
+    it "lists a search whose answer was deferred" do
+      visit "/about"
+      search.open_header
+      search.search('"login help"', header: true)
+      expect(page).to have_css(".ai-search-tabs")
+
+      search.fill_query("", header: true)
+
+      search.expect_recent('"login help"', "account recovery")
     end
   end
 end

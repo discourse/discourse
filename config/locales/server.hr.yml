@@ -347,12 +347,6 @@ hr:
     one: "Žao nam je, novi korisnici mogu spomenuti samo jednog korisnika u objavi."
     few: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
     other: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
-  no_embedded_media_allowed_group: "Nažalost, ne možete ugraditi medijske stavke u post."
-  no_embedded_media_allowed: "Nažalost, novi korisnici ne mogu ugraditi medijske stavke u objave."
-  too_many_embedded_media:
-    one: "Žao nam je, novi korisnici mogu dodati samo jedan prilog u objavu."
-    few: "Žao nam je, novi korisnici mogu dodati najviše %{count} priloga u objavu."
-    other: "Žao nam je, novi korisnici mogu dodati najviše %{count} priloga u objavu."
   no_attachments_allowed: "Žao nam je novi korisnici ne mogu stavljati privitke u objave."
   too_many_attachments:
     one: "Žao nam je, novi korisnici mogu dodati samo jedan prilog u objavu."
@@ -2268,12 +2262,6 @@ hr:
     account_suspended_forever:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je suspendiran"
-    account_silenced:
-      title: "Korisnički račun je utišan"
-      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
-    account_silenced_forever:
-      title: "Korisnički račun je utišan"
-      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
     account_exists:
       title: "Korisnički račun već postoji"
       subject_template: "[%{email_prefix}] Korisnički račun već postoji"

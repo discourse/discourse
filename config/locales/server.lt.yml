@@ -358,8 +358,6 @@ lt:
     many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
   no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
-  no_embedded_media_allowed_group: "Deja, jūs negalite įterpti medijos elementų į įrašą."
-  no_embedded_media_allowed: "Atsiprašome, nauji vartotojai negali įterpti medijos elementų į įrašus."
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
   links_require_trust: "Atsiprašome, negalite įtraukti nuorodų į savo įrašus."
@@ -2134,12 +2132,6 @@ lt:
     account_suspended_forever:
       title: "Paskyra sustabdyta"
       subject_template: "[%{email_prefix}] Jūsų paskyra buvo sustabdyta"
-    account_silenced:
-      title: "Paskyra nutildyta"
-      subject_template: "[%{email_prefix}] Jūsų paskyra buvo nutildyta"
-    account_silenced_forever:
-      title: "Paskyra nutildyta"
-      subject_template: "[%{email_prefix}] Jūsų paskyra buvo nutildyta"
     account_exists:
       title: "Paskyra jau egzistuoja"
       subject_template: "[%{email_prefix}] Paskyra jau egzistuoja"

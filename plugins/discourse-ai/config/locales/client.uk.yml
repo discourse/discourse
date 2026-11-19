@@ -71,6 +71,7 @@ uk:
         requires_ai: "Потрібно увімкнути плагін штучного інтелекту"
       nodes:
         "action:ai_agent": "Агент ШІ"
+        "action:ai_tool": "Інструмент ШІ"
       node_descriptions:
         "action:ai_agent": "Запустити штучний інтелект для обробки даних або створення контенту"
     discourse_automation:
@@ -288,6 +289,16 @@ uk:
           upload_ids: "Ідентифікатори завантажень"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Виберіть агента..."
+        ai_tool:
+          tool_ref: "Інструмент"
+          llm_model_id: "Модель LLM"
+          arguments: "Аргументи"
+          list_item: "Елемент списку"
+          add_list_item: "Додати елемент"
+        mcp_tool:
+          mcp_server_id: "Сервер MCP"
+          tool_name: "Інструмент"
+          arguments: "Аргументи"
         classify:
           text: "Текст"
           upload_ids: "Зображення"
@@ -433,6 +444,9 @@ uk:
             enabled_features: "Увімкнені функції"
             automation: "Автоматизація"
             agents: "Агенти"
+        review_queue:
+          setting_groups:
+            settings: "Налаштування"
         image_caption:
           name: "Підпис до зображення"
           description: "Генерує субтитри ШІ на зображення текстів та робить їх доступними для читачів та допоміжних технологій"
@@ -1646,8 +1660,7 @@ uk:
         unavailable: "Це посилання на бесіду більше недоступне. Ви все ще можете відкликати її."
       ai_bot:
         title: "ШІ-бот"
-        agent: "Агент:"
-        llm: "Модель:"
+        agent_menu_heading: "Агент"
         pm_warning: "Повідомлення чат-ботів ШІ регулярно контролюються модераторами."
         cancel_streaming: "Зупинити відповідь"
         try_again: "Спробуйте ще раз"
@@ -1714,9 +1727,9 @@ uk:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "ШІ"
           header: "Чим я можу допомогти?"
           submit: "Надішліть запитання"
-          disclaimer: "Генеративний ШІ може помилятися. Перевіряйте важливу інформацію."
           placeholder: "Поставити запитання..."
           new: "Нове запитання."
           min_input_length_message:

@@ -2295,6 +2295,7 @@ ro:
         size_too_small: "%{provided_file_size} este mai mică decât valoarea minimă permisă %{min_file_size}"
     emoji_picker:
       filter_placeholder: Caută emoji
+      no_results: "Fără rezultate"
       objects: Obiecte
       flags: Semnalări
       recent: Folosite recent
@@ -2307,6 +2308,10 @@ ro:
     composer:
       emoji: "Emoji :)"
       options: "Opțiuni"
+      ai_content:
+        code: "Cod"
+        quote: "Citează"
+        details: "Detalii"
       whisper: "discret"
       unlist: "nelistat"
       add_warning: "Aceasta este o avertizare oficială."
@@ -3023,10 +3028,7 @@ ro:
           label: "selectat"
           title: "Apasă pentru a exclude postarea din selecție"
         select_replies:
-          label: "selectează +răspunsuri"
           title: "Adaugă postarea și toate răspunsurile la selecție"
-        select_below:
-          label: "selectează +tot ce urmează"
         delete: șterge selecția
         cancel: anulare selecție
         select_all: selectează tot
@@ -3760,6 +3762,16 @@ ro:
       back: "Înapoi"
       share: "Distribuie"
       dismiss: "Înlătură"
+    mobile_tab_bar:
+      new_topic: "Subiect nou"
+      create: "Creează"
+      more: "Mai multe"
+      back: "Înapoi"
+      topics: "Discuții"
+      drafts:
+        one: "Ciorne (%{count})"
+        few: "Ciorne (%{count})"
+        other: "Ciorne (%{count})"
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
     theme_preview_notice: "Momentan previzualizezi o temă, închide această filă sau fereastră de navigator pentru a reveni la configurația normală a site-ului."
@@ -4702,12 +4714,6 @@ ro:
           company_name: "Nume"
           company_url: "Site web"
           company_url_placeholder: "https://example-co.com"
-          governing_law_placeholder: "Provincie, stat sau țară"
-          governing_law_help: |
-            Specifică jurisdicția pentru termenii legali ai site-ului, de obicei locul în care compania este înregistrată sau își desfășoară activitatea.
-          city_for_disputes_placeholder: "Oraș"
-          city_for_disputes_help: |
-            Specifică orașul pentru soluționarea litigiilor legale legate de acest forum.
           extra_groups:
             heading: "Listare grup"
             description: "Grupuri suplimentare de afișat pe pagina „Despre”."
@@ -5428,7 +5434,6 @@ ro:
         suspended_by: "Suspendat de"
         silence_reason: "Motiv"
         silence_modal_title: "Suspendă utilizatorul"
-        silence_message: "Mesaj email"
         suspended_until: "(până la %{until})"
         cant_suspend: "Utilizatorul nu poate fi suspendat."
         penalty_post_actions: "Ce dorești să faci cu postarea asociată?"

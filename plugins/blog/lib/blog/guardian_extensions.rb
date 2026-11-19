@@ -88,7 +88,7 @@ module ::Blog
     end
 
     def blog_article_topic?(topic)
-      categories = [SiteSetting.blog_category.to_i, SiteSetting.blog_drafts_category.to_i]
+      categories = [*Instance.category_ids, SiteSetting.blog_drafts_category.to_i]
       return false if topic.private_message?
       return false if topic.shared_draft?
       return false if !categories.include?(topic.category_id)

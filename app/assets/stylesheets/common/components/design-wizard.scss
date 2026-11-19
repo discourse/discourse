@@ -694,12 +694,18 @@ html.design-wizard-floating {
     border-radius: var(--d-border-radius);
     background: var(--content-background);
 
+    .d-button-label {
+      @include ellipsis;
+      min-width: 0;
+    }
+
     &:hover {
       background: var(--content-background);
     }
   }
 
   &__font-select-caret.d-icon.d-icon-angle-down.svg-icon {
+    flex-shrink: 0;
     margin-inline-start: var(--space-1);
     color: var(--primary-medium);
   }

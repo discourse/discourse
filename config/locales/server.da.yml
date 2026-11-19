@@ -347,11 +347,6 @@ da:
   too_many_mentions_newuser:
     one: "Beklager, nye brugere kan kun nævne en bruger i et indlæg."
     other: "Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg."
-  no_embedded_media_allowed_group: "Beklager, du kan ikke integrere medieelementer i et indlæg."
-  no_embedded_media_allowed: "Beklager, men nye brugere kan ikke integrere medieelementer i indlæg."
-  too_many_embedded_media:
-    one: "Beklager, nye brugere kan kun indsætte ét indlejret medieelement i et indlæg."
-    other: "Beklager, nye brugere kan kun indsætte %{count} indlejrede medieelementer i et indlæg."
   no_attachments_allowed: "Beklager, nye brugere kan ikke vedhæfte filer i indlæg."
   too_many_attachments:
     one: "Beklager, nye brugere kan kun vedhæfte en fil i et indlæg."
@@ -2596,12 +2591,6 @@ da:
     account_suspended_forever:
       title: "Konto Suspenderet"
       subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
-    account_silenced:
-      title: "Konto gjort tavs"
-      subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
-    account_silenced_forever:
-      title: "Konto gjort tavs"
-      subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
     account_exists:
       title: "Konto findes allerede"
       subject_template: "[%{email_prefix}] Kontoen findes allerede"

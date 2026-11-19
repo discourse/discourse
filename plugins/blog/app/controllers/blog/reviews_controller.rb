@@ -56,6 +56,9 @@ module ::Blog
         on_failed_policy(:blog_is_ready) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_failed_policy(:topic_is_reviewable) { raise Discourse::InvalidAccess }
         on_failed_policy(:within_review_limit) do
           raise Discourse::InvalidParameters.new(I18n.t("blog.review.limit"))

@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { cancel, next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
@@ -164,6 +165,9 @@ export default class LiveWebrtcService extends Service {
   #roster;
   #transcription;
   #localRecording;
+
+  #videoWatchers = new Map();
+  #watchUpdates = new Map();
 
   constructor() {
     super(...arguments);
@@ -514,6 +518,9 @@ export default class LiveWebrtcService extends Service {
     this.#livekit.destroy();
     this.#signaling.destroy();
 
+    this.#watchUpdates.forEach((timer) => cancel(timer));
+    this.#watchUpdates.clear();
+    this.#videoWatchers.clear();
     this.watchingRoomId = null;
     this.#cameraRestorePromise = null;
     this.#queuedCameraRestoreRoomId = null;
@@ -1093,7 +1100,7 @@ export default class LiveWebrtcService extends Service {
       this.#pttManager.startListening();
     }
 
-    if (this.watchingRoomId === room.id) {
+    if (this.isWatchingRoom(room.id)) {
       this.setWatching(room.id, true);
     }
 
@@ -1470,11 +1477,45 @@ export default class LiveWebrtcService extends Service {
     return this.#localVideo.setInputDevice(deviceId);
   }
 
+  // A page and a widget can overlap during route transitions. Neither owns the
+  // other surface's subscription: only the last release may stop watching.
+  acquireVideoWatch(roomId, { keepVideo } = {}) {
+    const token = {};
+    let watchers = this.#videoWatchers.get(roomId);
+    if (!watchers) {
+      watchers = new Set();
+      this.#videoWatchers.set(roomId, watchers);
+    }
+    watchers.add(token);
+    if (watchers.size === 1) {
+      this.#scheduleWatchUpdate(roomId);
+    }
+
+    return () => {
+      if (!watchers.delete(token)) {
+        return;
+      }
+      if (!watchers.size) {
+        this.#scheduleWatchUpdate(roomId, keepVideo);
+      }
+    };
+  }
+
+  isWatchingRoom(roomId) {
+    return (
+      this.#videoWatchers.get(roomId)?.size > 0 ||
+      this.watchingRoomId === roomId
+    );
+  }
+
   setWatching(roomId, watching, options = {}) {
     if (watching) {
       this.watchingRoomId = roomId;
     } else if (this.watchingRoomId === roomId) {
-      this.watchingRoomId = null;
+      this.watchingRoomId =
+        [...this.#videoWatchers].findLast(
+          ([, watchers]) => watchers.size
+        )?.[0] ?? null;
     }
 
     if (!this.#activeRoomIds.has(roomId)) {
@@ -1613,6 +1654,27 @@ export default class LiveWebrtcService extends Service {
     } catch {
       // ignore storage errors
     }
+  }
+
+  #scheduleWatchUpdate(roomId, keepVideo) {
+    cancel(this.#watchUpdates.get(roomId));
+    if (this.isDestroying) {
+      return;
+    }
+    // Coalesce render/teardown in either order, outside tracked rendering.
+    this.#watchUpdates.set(
+      roomId,
+      next(() => {
+        this.#watchUpdates.delete(roomId);
+        const watching = this.#videoWatchers.get(roomId)?.size > 0;
+        if (!watching) {
+          this.#videoWatchers.delete(roomId);
+        }
+        this.setWatching(roomId, watching, {
+          keepVideo: keepVideo ?? this.isActiveRoom(roomId),
+        });
+      })
+    );
   }
 
   #setActiveRoomId(roomId) {
@@ -2005,6 +2067,11 @@ export default class LiveWebrtcService extends Service {
       );
     } else if (payload.type === "kicked") {
       this.#handleKicked(roomId);
+    } else if (payload.type === "chat_disabled") {
+      this.toasts.default({
+        duration: 8000,
+        data: { message: i18n("live.chat.disabled_for_group_call") },
+      });
     } else if (payload.type === "room_updated") {
       this.#handleRoomUpdated(roomId);
     } else if (payload.type === "recording") {
@@ -2073,7 +2140,7 @@ export default class LiveWebrtcService extends Service {
     participant.is_deafened = this.deafened;
     participant.is_video_on = this.localVideoKind === "camera";
     participant.is_screen_sharing = this.localVideoKind === "screen";
-    participant.watching_video = this.watchingRoomId === roomId;
+    participant.watching_video = this.isWatchingRoom(roomId);
 
     const room = this.liveRooms?.roomById(roomId);
     if (room?.membership?.role_name) {

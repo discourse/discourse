@@ -97,6 +97,16 @@ RSpec.describe Blog::EditorQuery do
       )
     end
 
+    it "narrows the list to the articles of one blog" do
+      other_blog = Blog::Instance.create!(name: "Engineering", slug: "engineering")
+      source_publication.update_columns(blog_id: other_blog.id)
+
+      expect(topic_ids(admin.guardian, blog: other_blog)).to contain_exactly(source.id)
+      expect(topic_ids(admin.guardian, blog: Blog::Instance.default_blog)).to contain_exactly(
+        live_article.id,
+      )
+    end
+
     it "orders by most recent update, breaking ties by newest topic" do
       freeze_time
       tied = [writer_draft, unpublished_article, live_article, source]
@@ -111,6 +121,9 @@ RSpec.describe Blog::EditorQuery do
     end
 
     it "hides topics, and articles whose working copy, the user cannot see" do
+      drafts.set_permissions(:staff => :full, writers.name => :full)
+      drafts.save!
+
       expect(topic_ids(editor.guardian)).to contain_exactly(unpublished_article.id)
     end
 

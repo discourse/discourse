@@ -101,12 +101,14 @@ module ::Blog
     def self.activate(theme)
       if theme["preset"]
         PluginStore.set(STORE, "active", theme.slice("id", "preset"))
+        DefaultBlogMirror.sync!
         return theme
       end
 
       snapshot = theme.merge("snapshot" => SecureRandom.uuid)
       PluginStore.set(STORE, "snapshot:#{snapshot["snapshot"]}", snapshot)
       PluginStore.set(STORE, "active", snapshot)
+      DefaultBlogMirror.sync!
       snapshot
     end
 

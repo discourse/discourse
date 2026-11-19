@@ -330,10 +330,6 @@ ko:
   no_mentions_allowed_newuser: "신규 사용자는 다른 사용자를 멘션할 수 없습니다."
   too_many_mentions_newuser:
     other: "신규 사용자는 게시물에서 %{count}명의 사용자만 멘션할 수 있습니다."
-  no_embedded_media_allowed_group: "죄송합니다. 게시물에 미디어 항목을 포함할 수 없습니다."
-  no_embedded_media_allowed: "신규 사용자는 게시물에 미디어 항목을 임베드할 수 없습니다."
-  too_many_embedded_media:
-    other: "신규 사용자는 게시물에 미디어 항목을 %{count}개만 임베드할 수 있습니다."
   no_attachments_allowed: "신규 사용자는 게시물에 파일을 첨부할 수 없습니다."
   too_many_attachments:
     other: "신규 사용자는 게시물에 %{count}개의 파일만 첨부할 수 있습니다."
@@ -2948,12 +2944,6 @@ ko:
     account_suspended_forever:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-    account_silenced:
-      title: "계정이 차단됨"
-      subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-    account_silenced_forever:
-      title: "계정이 차단됨"
-      subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"

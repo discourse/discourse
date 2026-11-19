@@ -3058,6 +3058,9 @@ fr:
         size_too_small: "%{provided_file_size} est inférieur au minimum autorisé de %{min_file_size}"
     emoji_picker:
       filter_placeholder: Rechercher un émoji
+      search_placeholder: "Recherche par nom d'émoji et alias…"
+      no_results: "Aucun résultat"
+      favorites: "Fréquemment utilisé"
       smileys_&_emotion: Frimousses et émotions
       people_&_body: Personnes et corps
       animals_&_nature: Animaux et nature
@@ -3187,6 +3190,10 @@ fr:
       emoji: "Émoji :)"
       more_emoji: "plus…"
       options: "Options"
+      ai_content:
+        code: "Code"
+        quote: "Citer"
+        details: "Détails"
       whisper: "murmure"
       unlist: "invisible"
       add_warning: "Ceci est un avertissement officiel."
@@ -4522,10 +4529,8 @@ fr:
           label: "sélectionné"
           title: "Cliquez pour retirer le message de la sélection"
         select_replies:
-          label: "sélectionner avec réponses"
           title: "Ajouter le message et toutes ses réponses à la sélection"
         select_below:
-          label: "sélectionner avec suivants"
           title: "Ajouter le message et tous ceux qui suivent à la sélection"
         delete: supprimer la sélection
         cancel: annuler la sélection
@@ -4554,6 +4559,7 @@ fr:
         actions: "Actions groupées"
     post:
       accessible_heading: "publication de %{username} %{date}"
+      ai_generated: "IA"
       heading_anchor: "Lien d'en-tête"
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"
@@ -5766,6 +5772,15 @@ fr:
       forward: "Avancer"
       share: "Partager"
       dismiss: "Ignorer"
+    mobile_tab_bar:
+      new_topic: "Nouveau sujet"
+      create: "Créer"
+      more: "Plus"
+      back: "Retour"
+      topics: "Sujets"
+      drafts:
+        one: "Brouillons (%{count})"
+        other: "Brouillons (%{count})"
     safe_mode:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
     theme_preview_notice: "Vous prévisualisez actuellement un thème. Fermez cet onglet ou cette fenêtre de navigateur pour revenir à la configuration normale de votre site."
@@ -7595,14 +7610,6 @@ fr:
           company_name_placeholder: "ExempleCo"
           company_url: "Site Web"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Droit applicable"
-          governing_law_placeholder: "Province, État ou pays"
-          governing_law_help: |
-            Précisez la juridiction pour les conditions juridiques du site. Il s'agit généralement de l'endroit où l'entreprise est enregistrée ou opère.
-          city_for_disputes: "Ville pour les litiges"
-          city_for_disputes_placeholder: "Ville"
-          city_for_disputes_help: |
-            Précisez la ville où résoudre les litiges juridiques liés à ce forum.
           extra_groups:
             heading: "Liste des groupes"
             description: "Groupes supplémentaires à afficher sur la page À propos."
@@ -8854,7 +8861,6 @@ fr:
         silence_duration: "Combien de temps l'utilisateur sera-t-il mis en sourdine ?"
         silence_reason_title: "Raison de la mise en sourdine"
         silence_reason_placeholder: "Raison de la mise en sourdine"
-        silence_message: "E-mail"
         suspended_until: "(jusqu'à %{until})"
         suspend_forever: "Suspendre pour toujours"
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."

@@ -174,6 +174,12 @@ it:
       discourse_workflows:
         ai_agent:
           mode: "Modalità"
+        ai_tool:
+          tool_ref: "Strumento"
+          list_item: "Elemento lista"
+          add_list_item: "Aggiungi elemento"
+        mcp_tool:
+          tool_name: "Strumento"
         classify:
           text: "Testo"
           upload_ids: "Immagini"
@@ -268,6 +274,9 @@ it:
           post_illustrator: "Assistente messaggi illustrati"
           setting_groups:
             automation: "Automazione"
+        review_queue:
+          setting_groups:
+            settings: "Impostazioni"
         image_caption:
           setting_groups:
             settings: "Impostazioni"
@@ -880,7 +889,6 @@ it:
         filter_standalone: "Evento autonomo"
       ai_bot:
         title: "Bot IA"
-        llm: "Modello:"
         pm_warning: "I messaggi del chatbot IA vengono controllati regolarmente dai moderatori."
         cancel_streaming: "Interrompi risposta"
         try_again: "Riprova"
@@ -937,9 +945,9 @@ it:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "IA"
           header: "Come posso aiutarti?"
           submit: "Invia domanda"
-          disclaimer: "L'IA generativa può sbagliarsi. Verifica sempre le informazioni importanti."
           placeholder: "Fai una domanda..."
           new: "Nuova domanda"
           min_input_length_message:

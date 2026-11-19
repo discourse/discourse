@@ -57,6 +57,7 @@ en:
             coverage: "%{count} of %{total} questions analyzed"
           questions: "Questions asked"
           askers: "Users asking"
+          cache_hits: "Cached answers returned"
           latency: "Answer latency"
           latency_tooltip: "Average time from when the server accepts a query until it sends the first answer update, including queue time. This excludes network delivery time to the user."
           seconds: "%{seconds} s"
@@ -125,10 +126,14 @@ en:
         requires_ai_translation: "Requires AI translation to be configured"
       nodes:
         "action:ai_agent": "AI Agent"
+        "action:ai_tool": "AI Tool"
+        "action:mcp_tool": "MCP Tool"
         "action:classify": "Classify"
         "trigger:post_locale_detected": "Post language detected"
       node_descriptions:
         "action:ai_agent": "Run an AI agent to process data or generate content"
+        "action:ai_tool": "Run an AI tool once for each input item"
+        "action:mcp_tool": "Call a tool on a configured MCP server"
         "action:classify": "Ask a decision model questions about each item"
         "trigger:post_locale_detected": "Fires when the language of a new or edited post is detected"
     discourse_automation:
@@ -310,8 +315,10 @@ en:
 
     discourse_ai:
       title: "AI"
+      apply_review_suggestion: "Apply AI suggestion: %{action}"
       dsa_classification:
         suggest: "Suggest with AI"
+        suggested_by_ai: "Suggested by AI"
         updated: "Classification updated"
         no_suggestion: "The AI could not suggest a classification"
       copied: "Copied"
@@ -352,6 +359,29 @@ en:
           upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Every upload must reach the model or the node fails: images need vision on the agent and the LLM, documents need their file type enabled on the LLM."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Select an agent..."
+        ai_tool:
+          tool_ref: "Tool"
+          llm_model_id: "LLM model"
+          arguments: "Arguments"
+          loading_arguments: "Loading tool arguments…"
+          list_item: "List item"
+          add_list_item: "Add item"
+          remove_list_item: "Remove item"
+          invalid_json: "Fix or revert the JSON before executing this step."
+          revert_json: "Revert JSON edit"
+          json_arguments: "Arguments as JSON"
+          json_arguments_description: "Enter this tool’s arguments as a JSON object, using the exact keys listed below."
+          invalid_arguments: "The saved arguments are not an object. Clear them to edit individual arguments."
+          clear_arguments: "Clear arguments"
+          stale_argument: "Saved argument “%{name}” is not in the tool’s current signature."
+          remove_argument: "Remove argument"
+          true_value: "True"
+          false_value: "False"
+        mcp_tool:
+          mcp_server_id: "MCP server"
+          mcp_server_id_description: "Arguments are sent to this server using its configured credentials, if any."
+          tool_name: "Tool"
+          arguments: "Arguments"
         classify:
           decision_model_id: "Decision model"
           text: "Text"
@@ -585,6 +615,15 @@ en:
             enabled_features: "Enabled Features"
             automation: "Automation"
             agents: "Agents"
+
+        review_queue:
+          name: "Review queue suggestions"
+          description: "Uses a decision model to suggest staff actions for new review items"
+          add_model: "Add a decision model"
+          no_models: "Add a decision model to start generating review queue suggestions."
+          reviewable_action: "Suggest a review action"
+          setting_groups:
+            settings: "Settings"
 
         image_caption:
           name: "Image Caption"
@@ -1912,8 +1951,9 @@ en:
 
       ai_bot:
         title: "AI bot"
-        agent: "Agent:"
-        llm: "Model:"
+        agent_menu_heading: "Agent"
+        model_menu_heading: "Language model"
+        manage_language_models: "Manage language models"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
         try_again: "Try again"
@@ -1994,7 +2034,7 @@ en:
             body: "Get answers from AI, and keep your conversations here to come back to later."
           header: "What can I help with?"
           submit: "Submit question"
-          disclaimer: "Generative AI can make mistakes. Verify important information."
+          disclaimer: "AI can make mistakes. Verify important information."
           placeholder: "Ask a question..."
           new: "New Question"
           min_input_length_message:
@@ -2068,6 +2108,8 @@ en:
           one: "%{count} reply"
           other: "%{count} replies"
         answer_label: "AI answer"
+        cached_answer: "From your previous search (%{age})"
+        refresh_answer: "Generate fresh answer"
         follow_up_label: "Ask a follow-up question"
         follow_up_placeholder: "Ask a follow-up…"
         ask: "Ask"
@@ -2079,6 +2121,7 @@ en:
           topics: "Topics"
           this_topic: "This topic"
           messages: "Messages"
+          answer_ready: "Answer ready"
           no_answer: "No AI answer found"
         no_keyword_matches: "No keyword matches found."
         no_answer: "AI couldn’t find a clear answer. %{askLink}"

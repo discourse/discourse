@@ -2902,6 +2902,9 @@ sk:
         size_too_small: "%{provided_file_size} je menšia ako minimálna povolená hodnota %{min_file_size}"
     emoji_picker:
       filter_placeholder: Vyhľadávanie emoji
+      search_placeholder: "Hľadať podľa názvu emoji a aliasu..."
+      no_results: "Žiadne výsledky"
+      favorites: "Často používané"
       smileys_&_emotion: Smajlíky a emócie
       people_&_body: Ľudia a telo
       animals_&_nature: Zvieratá a príroda
@@ -2935,6 +2938,10 @@ sk:
       emoji: "Emoji :)"
       more_emoji: "viac…"
       options: "Možnosti"
+      ai_content:
+        code: "Kód"
+        quote: "Citácia"
+        details: "Detaily"
       whisper: "šepot"
       unlist: "nezaradený"
       add_warning: "Toto je oficiálne varovanie."
@@ -4096,10 +4103,8 @@ sk:
           label: "vybraté"
           title: "Kliknutím odstránite príspevok z výberu"
         select_replies:
-          label: "označ +odpovede"
           title: "Pridať príspevok a všetky jeho odpovede do výberu"
         select_below:
-          label: "vyberte + nižšie"
           title: "Pridať príspevok a všetky po ňom do výberu"
         delete: zmaž označené
         cancel: zrušiť výber
@@ -4119,6 +4124,7 @@ sk:
         clear_all: "Vymazať všetko"
         actions: "Hromadné akcie"
     post:
+      ai_generated: "AI"
       confirm_delete: "Naozaj chcete odstrániť tento príspevok?"
       quote_reply: "Citácia"
       quote_reply_shortcut: "Citovať (alebo stlačte q)"
@@ -5192,6 +5198,17 @@ sk:
       forward: "Vpred"
       share: "Zdieľať"
       dismiss: "Zahodiť"
+    mobile_tab_bar:
+      new_topic: "Nová téma"
+      create: "Vytvoriť"
+      more: "Viac"
+      back: "Späť"
+      topics: "Témy"
+      drafts:
+        one: "Návrhy (%{count})"
+        few: "Návrhy (%{count})"
+        many: "Návrhy (%{count})"
+        other: "Návrhy (%{count})"
     safe_mode:
       enabled: "Núdzový režim je povolený, ak chcete ukončiť núdzový režim zatvorte toto okno prehliadača"
     theme_preview_notice: "Momentálne zobrazujete ukážku motívu, zatvorte túto kartu alebo okno prehliadača, aby ste sa vrátili k normálnej konfigurácii stránky."
@@ -6696,14 +6713,6 @@ sk:
           company_name: "Meno"
           company_url: "Webová stránka"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Platné právo"
-          governing_law_placeholder: "Provincia, štát alebo krajina"
-          governing_law_help: |
-            Uveďte jurisdikciu pre právne podmienky stránky, zvyčajne tam, kde je spoločnosť registrovaná alebo kde pôsobí.
-          city_for_disputes: "Mesto pre spory"
-          city_for_disputes_placeholder: "Mesto"
-          city_for_disputes_help: |
-            Uveďte mesto na riešenie právnych sporov týkajúcich sa tohto fóra.
           extra_groups:
             heading: "Zoznam skupín"
             description: "Ďalšie skupiny, ktoré sa zobrazujú na stránke O nás."
@@ -7871,7 +7880,6 @@ sk:
         silence_duration: "Na ako dlho bude používateľ umlčaný?"
         silence_reason_title: "Dôvod ticha"
         silence_reason_placeholder: "Dôvod ticha"
-        silence_message: "E-mailová správa"
         suspended_until: "(do %{until})"
         suspend_forever: "Pozastaviť navždy"
         cant_suspend: "Tohto používateľa nemožno pozastaviť."

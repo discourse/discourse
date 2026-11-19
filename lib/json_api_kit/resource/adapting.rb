@@ -21,6 +21,10 @@ module JsonApiKit
               Adapters.const_get(declaration.to_s.camelize, false)
             end
         end
+
+        private
+
+        def adapter_definition = adapter.definition_for(self)
       end
 
       def adapter = @adapter ||= self.class.adapter.new(self)

@@ -144,12 +144,6 @@ te:
         short:
           one: "%{count} రోజు"
           other: "%{count} రోజులు"
-      emoji_picker:
-        objects: "వస్తువులు"
-        activities: "కార్యకలాపాలు"
-        flags: "కేతనాలు"
-        symbols: "చిహ్నాలు"
-        no_results: "ఫలితాలు లేవు"
       thread:
         title: "శీర్షిక"
         replies:

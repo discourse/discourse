@@ -3206,6 +3206,9 @@ ru:
         size_too_small: "Размер файла %{provided_file_size} меньше минимально допустимого — %{min_file_size}"
     emoji_picker:
       filter_placeholder: Поиск эмодзи
+      search_placeholder: "Поиск по названию эмодзи и псевдониму…"
+      no_results: "Нет результатов"
+      favorites: "Часто используемые"
       smileys_&_emotion: Смайлики и эмоции
       people_&_body: Люди и части тел
       animals_&_nature: Животные и природа
@@ -3257,6 +3260,10 @@ ru:
       emoji: "Эмодзи :)"
       more_emoji: "ещё…"
       options: "Параметры"
+      ai_content:
+        code: "Код"
+        quote: "Ответить с цитированием"
+        details: "Детали"
       whisper: "скрытое сообщение"
       unlist: "тема скрыта"
       add_warning: "Официальное предупреждение."
@@ -4522,10 +4529,8 @@ ru:
           label: "выбрано"
           title: "Нажмите, чтобы удалить сообщение из подборки"
         select_replies:
-          label: "выбрать + ответы"
           title: "Добавить сообщение и все ответы на него в подборку"
         select_below:
-          label: "выбрать + все ниже"
           title: "Добавить сообщение и все последующие в подборку"
         delete: удалить выбранные
         cancel: отменить
@@ -4553,6 +4558,7 @@ ru:
         actions: "Массовые действия"
     post:
       accessible_heading: "пост от %{username} %{date}"
+      ai_generated: "AI"
       confirm_delete: "Действительно удалить сообщение?"
       quote_reply: "Ответить с цитированием"
       quote_reply_shortcut: "Цитировать (или нажмите q)"
@@ -5740,6 +5746,17 @@ ru:
       forward: "Вперёд"
       share: "Поделиться"
       dismiss: "Закрыть"
+    mobile_tab_bar:
+      new_topic: "Новая тема"
+      create: "Создать"
+      more: "Ещё"
+      back: "Назад"
+      topics: "Новые темы"
+      drafts:
+        one: "Черновики (%{count})"
+        few: "Черновики (%{count})"
+        many: "Черновики (%{count})"
+        other: "Черновики (%{count})"
     safe_mode:
       enabled: "Включён безопасный режим. Чтобы выйти из него, закройте это окно браузера."
     theme_preview_notice: "Сейчас вы просматриваете тему. Закройте эту вкладку или окно браузера, чтобы вернуться к обычной конфигурации сайта."
@@ -7373,14 +7390,6 @@ ru:
           company_name: "Название"
           company_url: "Веб-сайт"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Регулирующее законодательство"
-          governing_law_placeholder: "Провинция, штат или страна"
-          governing_law_help: |
-            Укажите юрисдикцию, в которой применяются юридические условия сайта, как правило, там, где зарегистрирована или осуществляет свою деятельность компания.
-          city_for_disputes: "Город для разрешения споров"
-          city_for_disputes_placeholder: "Город"
-          city_for_disputes_help: |
-            Укажите город для разрешения правовых споров, связанных с данным форумом.
           extra_groups:
             heading: "Список групп"
             description: "Дополнительные группы, которые нужно показывать на странице «О нас»."
@@ -8601,7 +8610,6 @@ ru:
         silence_duration: "Как долго пользователь будет заморожен?"
         silence_reason_title: "Причина заморозки"
         silence_reason_placeholder: "Причина заморозки"
-        silence_message: "Сообщение на электронную почту"
         suspended_until: "(блокировка до %{until})"
         suspend_forever: "Бессрочная блокировка"
         cant_suspend: "Этого пользователя нельзя заблокировать."

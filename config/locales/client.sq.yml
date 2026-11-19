@@ -2485,6 +2485,9 @@ sq:
       emoji: "Emoji :)"
       more_emoji: "më shumë…"
       options: "Opsione"
+      ai_content:
+        code: "Kodi"
+        details: "Detaje"
       whisper: "pëshpëritje"
       unlist: "çlistuar"
       add_warning: "Ky është një paralajmërim zyrtar."
@@ -3410,8 +3413,6 @@ sq:
         selected: "të zgjedhura (%{count})"
         select_post:
           label: "zgjidh"
-        select_replies:
-          label: "select +replies"
         delete: fshij të përzgjedhurat
         cancel: anulo përzgjedhjen
         select_all: përzgjidhi të gjitha
@@ -3920,6 +3921,14 @@ sq:
       back: "Kthehu mbrapa"
       share: "Shpërndaje"
       dismiss: "Hiqe"
+    mobile_tab_bar:
+      create: "Krijo"
+      more: "Më shumë"
+      back: "Kthehu mbrapa"
+      topics: "Topics"
+      drafts:
+        one: "Drafte (%{count})"
+        other: "Drafte (%{count})"
     trust_levels:
       names:
         newuser: "anëtar i ri"

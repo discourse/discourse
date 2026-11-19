@@ -29,7 +29,7 @@ jobs:
           sparse-checkout: script/bundle_analysis
           persist-credentials: false
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: bundle-analysis
           path: ${{ runner.temp }}/bundle-analysis

@@ -65,6 +65,7 @@ zh_TW:
         requires_ai: "需要啟用 AI 插件"
       nodes:
         "action:ai_agent": "AI 智能體"
+        "action:ai_tool": "AI 工具"
       node_descriptions:
         "action:ai_agent": "運行 AI 智能體來處理資料或生成內容"
     discourse_automation:
@@ -280,6 +281,16 @@ zh_TW:
           upload_ids: "上傳 ID"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "選擇智能體…"
+        ai_tool:
+          tool_ref: "工具"
+          llm_model_id: "LLM 模型"
+          arguments: "參數"
+          list_item: "清單項目"
+          add_list_item: "新增項目"
+        mcp_tool:
+          mcp_server_id: "MCP 服務器"
+          tool_name: "工具"
+          arguments: "參數"
         classify:
           text: "文字"
           upload_ids: "圖像"
@@ -424,6 +435,9 @@ zh_TW:
             enabled_features: "啟用的功能"
             automation: "自動化"
             agents: "智能體"
+        review_queue:
+          setting_groups:
+            settings: "設置"
         image_caption:
           name: "圖片說明"
           description: "為貼文圖片生成 AI 說明，將其提供給讀者和輔助閱讀技術。"
@@ -1446,8 +1460,7 @@ zh_TW:
         filter_standalone: "獨立活動"
       ai_bot:
         title: "AI 機器人"
-        agent: "智能體："
-        llm: "模型："
+        agent_menu_heading: "智能體"
         pm_warning: "版主會定期監控 AI 聊天機器人消息。"
         cancel_streaming: "停止回復"
         try_again: "重試"
@@ -1514,9 +1527,9 @@ zh_TW:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "我能幫上什么忙？"
           submit: "提交問題"
-          disclaimer: "生成式 AI 可能會犯錯。請驗證重要資訊。"
           placeholder: "提問…"
           new: "新問題"
           min_input_length_message:

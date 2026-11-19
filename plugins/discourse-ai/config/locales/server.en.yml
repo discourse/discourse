@@ -203,6 +203,9 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
+    ai_reviewable_action_suggestions_enabled: "Generate action suggestions for new review queue items."
+    ai_reviewable_action_decision_model: "Send new pending review items, including flagged private content, to this decision model for action suggestions. Leave blank to disable."
+    ai_reviewable_action_min_confidence: "Minimum confidence required to save a suggested review action, from 0 to 1."
     ai_dsa_classification_decision_model: "Choose the model used to suggest community rules and categories during DSA classification. Leave blank to disable suggestions."
     ai_translation_locale_detector_decision_model: "Decision model that detects the language of content before it is translated. Content in a language it cannot place confidently is left to the locale detector agent. Leave blank to detect every language with the agent."
     ai_translation_category_scope: "Choose which categories AI translation can use. Include and exclude options use {{setting:ai_translation_categories}}. Personal messages are controlled by {{setting:ai_translation_personal_messages}}."
@@ -366,6 +369,13 @@ en:
     multiple_models: "Multiple models"
 
     discourse_workflows:
+      ai_tool:
+        errors:
+          unavailable: "The selected AI tool is not available for workflow execution."
+          invalid_arguments: "The AI tool arguments are invalid"
+          invalid_schema: "The tool returned an argument schema that cannot be resolved."
+          llm_not_found: "The selected language model was not found."
+          failed: "The AI tool failed."
       ai_agent:
         errors:
           invalid_mode: "'%{mode}' is not a supported AI agent execution mode."

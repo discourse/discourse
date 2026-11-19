@@ -3542,6 +3542,9 @@ uk:
         size_too_small: "%{provided_file_size} є меншим за мінімальний дозволений %{min_file_size}"
     emoji_picker:
       filter_placeholder: Шукати emoji
+      search_placeholder: "Пошук за назвою та псевдонімом emoji..."
+      no_results: "Немає результатів"
+      favorites: "Часто використовувані"
       smileys_&_emotion: Смайли та емотикони
       people_&_body: Люди та частини тіл
       animals_&_nature: Тварини та Природа
@@ -3678,6 +3681,10 @@ uk:
       emoji: "Емодзі :)"
       more_emoji: "ще"
       options: "Параметри"
+      ai_content:
+        code: "Код"
+        quote: "Цитата"
+        details: "Подробиці"
       whisper: "шепотіння"
       unlist: "приховане зі стрічок"
       add_warning: "Це офіційне попередження."
@@ -5275,10 +5282,8 @@ uk:
           label: "обраний"
           title: "Натисніть, щоб видалити допис з вибірки"
         select_replies:
-          label: "select +replies"
           title: "Додати допис та всі відповіді до виділеного"
         select_below:
-          label: "вибрати + все нижче"
           title: "Додати допис та все після нього до виділеного"
         delete: видалити вибрані
         cancel: скасувати вибір
@@ -5311,6 +5316,7 @@ uk:
         actions: "Масові дії"
     post:
       accessible_heading: "публікація від %{username} %{date}"
+      ai_generated: "ШІ"
       heading_anchor: "Посилання заголовка"
       confirm_delete: "Ви справді бажаєте вилучити цей допис?"
       quote_reply: "Цитата"
@@ -6654,6 +6660,17 @@ uk:
       forward: "Вперед"
       share: "Поширити"
       dismiss: "Відкинути"
+    mobile_tab_bar:
+      new_topic: "Нова тема"
+      create: "Створити"
+      more: "Більше"
+      back: "Назад"
+      topics: "Теми"
+      drafts:
+        one: "Чернетки (%{count})"
+        few: "Чернетки (%{count})"
+        many: "Чернетки (%{count})"
+        other: "Чернетки (%{count})"
     safe_mode:
       enabled: "Включено безпечний режим, щоб вийти з безпечного режиму, закрийте поточне вікно браузера"
     theme_preview_notice: "Зараз ви переглядаєте тему, закрийте цю вкладку або вікно браузера, щоб повернутися до звичайної конфігурації сайту."
@@ -8983,14 +9000,6 @@ uk:
           company_name_placeholder: "ПрикладКо"
           company_url: "Вебсайт"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Регулювальне право"
-          governing_law_placeholder: "Провінція, штат або країна"
-          governing_law_help: |
-            Вкажіть юрисдикцію для юридичних умов сайту, як правило, там, де зареєстрована або працює компанія.
-          city_for_disputes: "Місто для судових спорів"
-          city_for_disputes_placeholder: "Місто"
-          city_for_disputes_help: |
-            Вкажіть місто для вирішення судових спорів, пов'язаних з цим форумом.
           extra_groups:
             heading: "Список груп"
             description: "Додаткові групи для відображення на сторінці «Про нас»."
@@ -10278,7 +10287,6 @@ uk:
         silence_duration: "Як довго користувач буде відключений?"
         silence_reason_title: "Причина заморожування"
         silence_reason_placeholder: "Причина відключення"
-        silence_message: "Повідомлення пошти"
         suspended_until: "(Поки не буде %{until})"
         suspend_forever: "Призупинити назавжди"
         cant_suspend: "Цього користувача не можна заморозити."

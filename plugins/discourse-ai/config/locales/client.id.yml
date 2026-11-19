@@ -131,6 +131,9 @@ id:
         search:
           name: "Cari"
           ask_ai: "Tanya AI"
+        review_queue:
+          setting_groups:
+            settings: "Pengaturan"
         image_caption:
           setting_groups:
             settings: "Pengaturan"
@@ -348,7 +351,6 @@ id:
           apply: "menerapkan"
         filter_all: "Semua"
       ai_bot:
-        llm: "Model:"
         pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."
         cancel_streaming: "Berhenti membalas"
         default_pm_prefix: "[PM bot AI tanpa judul]"
@@ -377,6 +379,7 @@ id:
           claude-3-haiku: "Claude 3 Haiku"
           claude-2: "Claude 2"
         conversations:
+          tab_label: "AI"
           today: "Hari ini"
           last_7_days: "7 hari terakhir"
           last_30_days: "30 hari terakhir"

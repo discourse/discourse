@@ -780,12 +780,16 @@ blockquote {
 }
 
 .ai-badge {
-  padding: 2px 6px 0;
-  background: var(--primary-medium);
+  display: inline-block;
+  padding: 1px 6px;
+  background: var(--primary-high);
   color: var(--secondary);
+  border: 1px solid transparent;
+  border-radius: var(--d-border-radius);
   font-family: var(--font-family);
-  font-size: var(--font-down-2);
-  line-height: var(--cooked-line-height);
+  font-size: var(--font-down-1);
+  font-weight: 400;
+  line-height: var(--line-height-medium);
   white-space: nowrap;
 
   &::before {
@@ -793,7 +797,8 @@ blockquote {
   }
 }
 
-blockquote > .ai-badge {
+blockquote > .ai-badge,
+blockquote > .post__contents-cooked-quote > .ai-badge {
   float: inline-end;
   margin-inline-start: 0.75em;
 }
@@ -814,6 +819,7 @@ pre[data-code-ai="true"] {
   .codeblock-button-wrapper {
     align-items: center;
     padding-inline-end: 1rem;
+    padding-top: calc(1.5 * var(--space-1));
 
     > .ai-badge {
       margin-inline-start: 0.5rem;

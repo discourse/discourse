@@ -1869,6 +1869,10 @@ gl:
     composer:
       emoji: "Emoji :)"
       options: "Opcións"
+      ai_content:
+        code: "Código"
+        quote: "Cita"
+        details: "Detalles"
       whisper: "rumor"
       unlist: "fóra da lista"
       add_warning: "Este é un aviso oficial."
@@ -2597,10 +2601,8 @@ gl:
           label: "seleccionado"
           title: "Prema para eliminar a publicación da selección"
         select_replies:
-          label: "seleccionar +respostas"
           title: "Engadir a publicación e todas as respostas asociadas á selección"
         select_below:
-          label: "seleccione +seguintes"
           title: "Engadir publicación e todas as posteriores á selección"
         delete: eliminar seleccionados
         cancel: cancelar a selección
@@ -3333,6 +3335,11 @@ gl:
       forward: "Reenviar"
       share: "Compartir"
       dismiss: "Desbotar"
+    mobile_tab_bar:
+      create: "Crear"
+      more: "Máis"
+      back: "Volver"
+      topics: "Temas"
     safe_mode:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"
@@ -4750,7 +4757,6 @@ gl:
         silence_modal_title: "Silenciar o usuario"
         silence_duration: "Canto tempo estará silenciado o usuario?"
         silence_reason_placeholder: "Razón do silencio"
-        silence_message: "Mensaxe de correo"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."

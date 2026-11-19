@@ -1509,6 +1509,9 @@ th:
     composer:
       emoji: "อีโมจิ :)"
       options: "ตัวเลือก"
+      ai_content:
+        quote: "อ้างอิง"
+        details: "รายละเอียด"
       whisper: "กระซิบ"
       add_warning: "นี่คือคำเตือนอย่างเป็นทางการ"
       posting_not_on_topic: "กระทู้ไหนที่คุณต้องการตอบ"
@@ -2073,10 +2076,8 @@ th:
           label: "เลือกแล้ว"
           title: "คลิกเพื่อลบโพสต์จากการเลือก"
         select_replies:
-          label: "เลือก + ตอบ"
           title: "เพิ่มโพสต์และคำตอบทั้งหมดไปยังการเลือก"
         select_below:
-          label: "เลือก+ด้านล่าง"
           title: "เพิ่มโพสต์และทุกอย่างหลังจากนั้นไปยังการเลือก"
         delete: ลบที่เลือก
         cancel: ยกเลิกการเลือก
@@ -2576,6 +2577,11 @@ th:
       forward: "ส่งต่อ"
       share: "แบ่งปัน"
       dismiss: "ซ่อน"
+    mobile_tab_bar:
+      create: "สร้าง"
+      more: "อื่น"
+      back: "กลับ"
+      topics: "หัวข้อ"
     trust_levels:
       names:
         member: "สมาชิก"
@@ -3445,7 +3451,6 @@ th:
         suspend_message: "ข้อความอีเมล"
         suspended_by: "ระงับการใช้งานโดย"
         silence_reason: "เหตุผล"
-        silence_message: "ข้อความอีเมล"
         suspended_until: "(จนกระทั่ง%{until})"
         cant_suspend: "ไม่สามารถระงับผู้ใช้งานนี้ได้"
         delete_posts_failed: "มีปัญหาขณะกำลังลบโพสต์"

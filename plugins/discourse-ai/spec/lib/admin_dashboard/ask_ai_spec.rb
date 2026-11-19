@@ -30,6 +30,7 @@ describe DiscourseAi::AdminDashboard::AskAi do
       asked_at: "2026-09-02 23:59:59",
       ask_outcome: :answered,
       time_to_first_answer_ms: 8000,
+      cache_hit: true,
     )
     AskAiLog.create!(
       user: admin,
@@ -37,12 +38,13 @@ describe DiscourseAi::AdminDashboard::AskAi do
       asked_at: "2026-09-03 00:00:00",
       ask_outcome: :answered,
       time_to_first_answer_ms: 9000,
+      cache_hit: true,
     )
 
     result =
       described_class.build(start_date: "2026-09-01", end_date: "2026-09-02", current_user: admin)
 
-    expect(result).to include(questions: 6, askers: 2, average_first_answer_ms: 4000)
+    expect(result).to include(questions: 6, askers: 2, average_first_answer_ms: 4000, cache_hits: 1)
     expect(result[:daily_asks]).to eq([{ x: "2026-09-01", y: 5 }, { x: "2026-09-02", y: 1 }])
     expect(result[:outcomes]).to eq(
       [

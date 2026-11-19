@@ -402,11 +402,6 @@ sv:
   too_many_mentions_newuser:
     one: "Tyvärr kan besökare bara nämna en annan användare i ett inlägg."
     other: "Tyvärr kan besökare bara nämna %{count} användare i ett inlägg."
-  no_embedded_media_allowed_group: "Tyvärr kan du inte bädda in media i ett inlägg."
-  no_embedded_media_allowed: "Tyvärr kan nya användare inte bädda in media i inlägg."
-  too_many_embedded_media:
-    one: "Tyvärr kan nya användare bara lägga in ett enda inbäddat medieobjekt i ett inlägg."
-    other: "Tyvärr kan nya användare bara lägga in %{count} inbäddade medieobjekt i ett inlägg."
   no_attachments_allowed: "Tyvärr kan nya användare inte bifoga filer till inlägg."
   too_many_attachments:
     one: "Tyvärr kan nya användare bara bifoga en fil till ett inlägg."
@@ -3186,12 +3181,6 @@ sv:
     account_suspended_forever:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
-    account_silenced:
-      title: "Konto tystat"
-      subject_template: "[%{email_prefix}] Ditt konto har tystats"
-    account_silenced_forever:
-      title: "Konto tystat"
-      subject_template: "[%{email_prefix}] Ditt konto har tystats"
     account_exists:
       title: "Konto finns redan"
       subject_template: "[%{email_prefix}] Konto finns redan"

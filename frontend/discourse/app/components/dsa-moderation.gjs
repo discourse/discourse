@@ -86,7 +86,9 @@ const Body = <template>
     <div hidden={{@flow.showContinue}}>
       <DsaModerationDetails
         @disabled={{@flow.isUpdatingClassification}}
+        @fieldHints={{@flow.fieldHints}}
         @formId={{@flow.formId}}
+        @onFieldSet={{@flow.editField}}
         @onRegisterApi={{@flow.registerFormApi}}
         @onSubmit={{@flow.classify}}
         @options={{@flow.options}}
@@ -118,15 +120,17 @@ const Footer = <template>
       @translatedLabel={{@submitLabel}}
     />
   {{/if}}
-  {{#if (and @flow.enabled (not @flow.showContinue) @flow.reviewableId)}}
-    <PluginOutlet
-      @name="dsa-classification-footer"
-      @outletArgs={{lazyHash
-        disabled=(or @disabled @flow.isUpdatingClassification)
-        reviewableId=@flow.reviewableId
-        updateClassification=@flow.updateClassification
-      }}
-    />
+  {{#if (and @flow.enabled @flow.reviewableId)}}
+    <div class="dsa-classification-footer" hidden={{@flow.showContinue}}>
+      <PluginOutlet
+        @name="dsa-classification-footer"
+        @outletArgs={{lazyHash
+          disabled=(or @disabled @flow.isUpdatingClassification)
+          reviewableId=@flow.reviewableId
+          updateClassification=@flow.updateClassification
+        }}
+      />
+    </div>
   {{/if}}
   {{#if @flow.showBack}}
     <DButton
@@ -147,7 +151,8 @@ const Footer = <template>
 
 export default class DsaModeration extends Component {
   @tracked classificationStep = false;
-  @tracked classificationUpdate = null;
+  @tracked fieldHints = {};
+  @tracked isUpdatingClassification = false;
 
   formId = `dsa-moderation-${guidFor(this)}`;
   #setClassification;
@@ -176,10 +181,6 @@ export default class DsaModeration extends Component {
     return this.args.reviewableId;
   }
 
-  get isUpdatingClassification() {
-    return this.classificationUpdate !== null;
-  }
-
   get showTitleHelp() {
     return this.enabled && !this.hasActionDetails && !this.nextStepLabel;
   }
@@ -199,7 +200,6 @@ export default class DsaModeration extends Component {
 
   @action
   back() {
-    this.classificationUpdate = null;
     this.classificationStep = false;
   }
 
@@ -235,24 +235,42 @@ export default class DsaModeration extends Component {
   }
 
   @action
-  async updateClassification(load) {
+  async editField(value, { name, set }) {
+    if (this.fieldHints[name]) {
+      const hints = { ...this.fieldHints };
+      delete hints[name];
+      this.fieldHints = hints;
+    }
+    await set(name, value);
+  }
+
+  @action
+  async updateClassification(load, hint) {
     if (this.isUpdatingClassification) {
       return;
     }
 
-    const update = Symbol();
-    this.classificationUpdate = update;
+    this.isUpdatingClassification = true;
     try {
       const { community_rule, category } = await load();
-      if (!this.isDestroying && this.classificationUpdate === update) {
-        await this.#setClassification({
-          ...(community_rule && { community_rule }),
-          ...(category && { category }),
-        });
+      if (this.isDestroying) {
+        return;
       }
+      const values = {
+        ...(this.options.community_rules.length > 1 &&
+          community_rule && { community_rule }),
+        ...(category && { category }),
+      };
+      await this.#setClassification(values);
+      const fields = Object.keys(values);
+      this.fieldHints = {
+        ...this.fieldHints,
+        ...Object.fromEntries(fields.map((field) => [field, hint])),
+      };
+      return fields.length > 0;
     } finally {
-      if (!this.isDestroying && this.classificationUpdate === update) {
-        this.classificationUpdate = null;
+      if (!this.isDestroying) {
+        this.isUpdatingClassification = false;
       }
     }
   }

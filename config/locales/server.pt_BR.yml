@@ -517,11 +517,6 @@ pt_BR:
   too_many_mentions_newuser:
     one: "Desculpe, usuários(as) novos(as) podem mencionar apenas um(a) usuário(as) em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem mencionar apenas %{count} usuários(as) em uma postagem."
-  no_embedded_media_allowed_group: "Desculpe, não é possível incorporar itens de mídia nesta postagem."
-  no_embedded_media_allowed: "Desculpe, novos(as) usuários(as) não podem incorporar itens de mídia em postagens."
-  too_many_embedded_media:
-    one: "Desculpe, novos(as) usuários(as) só podem inserir um item de mídia incorporado em uma postagem."
-    other: "Desculpe, novos(as) usuários(as) só podem inserir %{count} item de mídia incorporado em uma postagem."
   no_attachments_allowed: "Desculpe, novos(as) usuários(as) não podem inserir anexos nas postagens."
   too_many_attachments:
     one: "Desculpe, novos(as) usuários(as) podem inserir apenas %{count} anexo em uma postagem."
@@ -2418,8 +2413,6 @@ pt_BR:
     automatically_clean_unused_tags: "Exclua automaticamente etiquetas que não estão sendo utilizadas em tópicos ou mensagens pessoais todos os dias."
     default_watched_precedence_over_muted: "Notificar os usuários sobre tópicos em categorias ou tags que eles estão acompanhando e que também pertencem a um tópico que eles silenciaram"
     company_name: "Nome da sua empresa ou organização."
-    governing_law: "Especifique a jurisdição que rege os aspectos legais do site, inclusive os Termos de Serviço e a Política de Privacidade. Geralmente é o país onde a empresa que opera o site está registrada ou faz negócios"
-    city_for_disputes: "Especifique a cidade que será usada como jurisdição para a resolução de disputas relacionadas ao uso deste fórum. Geralmente essa informação está inclusa nos documentos legais, como os Termos de Serviço do fórum."
     shared_drafts_category: "Ative o recurso Rascunhos compartilhados ao designar uma categoria para rascunhos de tópicos. Os tópicos nesta categoria serão bloqueados das listas de tópicos para usuários da equipe."
     shared_drafts_allowed_groups: "Permita que os(as) usuários(as) destes grupos visualizem e editem os Rascunhos compartilhados."
     push_notifications_prompt: "Exiba ao(à) usuário(a) um banner de consentimento para notificações por push. Esta configuração aciona uma janela que solicita aos(às) usuários(as) permissão para o envio de notificações por push. É exibida apenas se as notificações por push não estiverem habilitadas, forem compatíveis com o dispositivo do(a) usuário(a) e este(a) tiver feito uma postagem ou estiver usando um Progressive Web App (PWA). A janela não será exibida novamente se o(a) usuário(a) já a tiver fechado ou concedido/negado permissão."
@@ -3960,12 +3953,6 @@ pt_BR:
     account_suspended_forever:
       title: "Conta suspensa"
       subject_template: "%{email_prefix}, sua conta foi suspensa"
-    account_silenced:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] Sua conta foi silenciada"
-    account_silenced_forever:
-      title: "Conta silenciada"
-      subject_template: "%{email_prefix}, sua conta foi silenciada"
     account_deleted:
       title: "Conta excluída"
       subject_template: "%{email_prefix}, sua conta foi excluída"

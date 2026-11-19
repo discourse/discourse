@@ -3,7 +3,7 @@ import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
-import { isHTMLSafe } from "@ember/template";
+import { isTrustedHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -930,7 +930,7 @@ export default class Composer extends RestModel {
   @computed("title")
   get titleLength() {
     const title = this.title || "";
-    if (isHTMLSafe(title)) {
+    if (isTrustedHTML(title)) {
       return title.toString().length;
     }
     return title.replace(/\s+/gim, " ").trim().length;

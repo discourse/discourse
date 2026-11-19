@@ -2997,6 +2997,9 @@ zh_TW:
         size_too_small: "%{provided_file_size} 小於允許的最小值 %{min_file_size}"
     emoji_picker:
       filter_placeholder: 搜尋表情符號
+      search_placeholder: "按表情符號名稱和別名搜尋…"
+      no_results: "沒有結果"
+      favorites: "常用"
       smileys_&_emotion: 表情符號
       people_&_body: 人們
       animals_&_nature: 動物與自然
@@ -3127,6 +3130,10 @@ zh_TW:
       emoji: "表情符號 :)"
       more_emoji: "更多…"
       options: "選項"
+      ai_content:
+        code: "程式碼"
+        quote: "引用"
+        details: "詳細資訊"
       whisper: "密談"
       unlist: "不公開"
       add_warning: "這是正式警告。"
@@ -4436,10 +4443,8 @@ zh_TW:
           label: "已選取"
           title: "點擊後將文章移除"
         select_replies:
-          label: "選取＋回覆"
           title: "將貼文及所有回覆加入選取列表"
         select_below:
-          label: "選取 + 底下"
           title: "將此貼文及其所有以下貼文加入選取列表"
         delete: 刪除選取的貼文
         cancel: 取消選取
@@ -4466,6 +4471,7 @@ zh_TW:
         actions: "批次操作"
     post:
       accessible_heading: "%{username} 於 %{date} 發布的貼文"
+      ai_generated: "AI"
       heading_anchor: "標題連結"
       confirm_delete: "確定要刪除此貼文嗎？"
       quote_reply: "引用"
@@ -5637,6 +5643,14 @@ zh_TW:
       forward: "前進"
       share: "分享"
       dismiss: "忽略"
+    mobile_tab_bar:
+      new_topic: "新主題"
+      create: "創建"
+      more: "更多"
+      back: "上一步"
+      topics: "主題"
+      drafts:
+        other: "草稿（%{count}）"
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
     theme_preview_notice: "您當前正在預覽佈景主題，請關閉此瀏覽器標籤頁或窗口以返回到正常網站配置。"
@@ -7622,14 +7636,6 @@ zh_TW:
           company_name_placeholder: "ExampleCo"
           company_url: "網站"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "適用於法律"
-          governing_law_placeholder: "省、州或國家"
-          governing_law_help: |
-            指定網站法律條款的司法管轄區，通常是公司註冊地或營運地。
-          city_for_disputes: "爭議城市"
-          city_for_disputes_placeholder: "城市"
-          city_for_disputes_help: |
-            指定解決與該論壇相關的法律糾紛的城市。
           extra_groups:
             heading: "群組清單"
             description: "要顯示在「關於」頁面的額外群組。"
@@ -8868,7 +8874,6 @@ zh_TW:
         silence_duration: "這位使用者將會被靜音多久？"
         silence_reason_title: "禁言原因"
         silence_reason_placeholder: "靜音原因"
-        silence_message: "Email 訊息"
         suspended_until: "(直到%{until})"
         suspend_forever: "永久停權"
         cant_suspend: "這位使用者無法被停權。"

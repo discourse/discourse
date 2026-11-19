@@ -19,7 +19,7 @@ RSpec.describe "Live admin navigation" do
       text: I18n.t("admin_js.admin.plugins.change_settings_short"),
     )
 
-    %w[dashboard_title rooms_title recordings_title].each do |label|
+    %w[reports_title rooms_title recordings_title].each do |label|
       title = I18n.t("js.live.admin.#{label}")
       find(tabs, text: title, exact_text: true).click
 

@@ -317,11 +317,6 @@ gl:
   too_many_mentions_newuser:
     one: "Sentímolo, mais os novos usuarios só poden mencionar un usuario nunha publicación."
     other: "Sentímolo, mais os novos usuarios só poden mencionar a %{count} usuarios nunha publicación."
-  no_embedded_media_allowed_group: "Non pode inserir elementos multimedia nunha publicación."
-  no_embedded_media_allowed: "Os novos usuarios non poden inserir elementos multimedia nas publicacións."
-  too_many_embedded_media:
-    one: "Os novos usuarios só poden inserir un elemento multimedia nunha publicación."
-    other: "Os novos usuarios só poden inserir %{count} elementos multimedia nunha publicación."
   no_attachments_allowed: "Sentímolo, mais os novos usuarios non poden anexar ficheiros nas publicacións."
   too_many_attachments:
     one: "Sentímolo, mais os novos usuarios só poden anexar un ficheiro nunha publicación."
@@ -2853,12 +2848,6 @@ gl:
     account_suspended_forever:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
-    account_silenced:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
-    account_silenced_forever:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] A súa conta foi silenciada"
     account_exists:
       title: "A conta xa existe"
       subject_template: "[%{email_prefix}] A conta xa existe"

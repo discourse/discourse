@@ -6,10 +6,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadSiteSetting do
   fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   def tool(setting_name, context: DiscourseAi::Agents::BotContext.new)
     described_class.new(
