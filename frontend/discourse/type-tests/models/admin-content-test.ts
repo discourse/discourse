@@ -199,6 +199,7 @@ expectTypeOf(siteText).toExtend<RestModel>();
 store.createRecord("site-text", {
   id: "js.composer.reply",
   value: "Reply",
+  override_value: null,
   status: "up_to_date",
   old_default: null,
   new_default: null,
@@ -208,6 +209,10 @@ store.createRecord("site-text", {
 });
 expectTypeOf(siteText.id).toEqualTypeOf<string>();
 expectTypeOf(siteText.value).toEqualTypeOf<string>();
+expectTypeOf(siteText.override_value).toEqualTypeOf<string | null>();
+expectTypeOf(siteText.preview_default).toEqualTypeOf<
+  string | null | undefined
+>();
 expectTypeOf(siteText.status).toEqualTypeOf<TextStatus | "unknown">();
 expectTypeOf(siteText.old_default).toEqualTypeOf<string | null>();
 expectTypeOf(siteText.new_default).toEqualTypeOf<string | null>();
@@ -222,6 +227,8 @@ expectTypeOf(siteText.revert("en")).resolves.toEqualTypeOf<
   Pick<
     SiteText,
     | "value"
+    | "override_value"
+    | "preview_default"
     | "can_revert"
     | "overridden"
     | "status"

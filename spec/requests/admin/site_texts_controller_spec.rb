@@ -223,8 +223,9 @@ RSpec.describe Admin::SiteTextsController do
 
             expected_search_result =
               expected_translations.map do |key, value|
-                overridden =
-                  defined?(expected_overridden) ? expected_overridden[key] || false : false
+                override_fields =
+                  defined?(expected_override_fields) ? expected_override_fields.fetch(key, {}) : {}
+                overridden = override_fields.present?
                 interpolation_keys =
                   (
                     if defined?(expected_interpolation_keys)
@@ -239,10 +240,11 @@ RSpec.describe Admin::SiteTextsController do
                   status: "up_to_date",
                   old_default: nil,
                   new_default: nil,
+                  override_value: nil,
                   can_revert: overridden,
                   overridden:,
                   interpolation_keys:,
-                }
+                }.merge(override_fields)
               end
 
             expect(site_texts).to match_array(expected_search_result)
@@ -321,7 +323,20 @@ RSpec.describe Admin::SiteTextsController do
           let(:expected_interpolation_keys) do
             { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
           end
-          let(:expected_overridden) { { one: true, few: true } }
+          let(:expected_override_fields) do
+            {
+              one: {
+                override_value: "ONE",
+                preview_default: "%{count} colour",
+                new_default: "%{count} colour",
+              },
+              few: {
+                override_value: "FEW",
+                preview_default: "%{count} цвета",
+                new_default: "%{count} colours",
+              },
+            }
+          end
 
           include_examples "finds correct plural keys"
         end

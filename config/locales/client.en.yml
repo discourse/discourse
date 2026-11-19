@@ -10474,6 +10474,10 @@ en:
         description: "You can customize any of the text on your forum."
         search: "Search text or translation keys"
         search_label: "Search"
+        preview:
+          label: "Text preview for %{key}"
+          customized: "Your text"
+          default: "Default"
         theme: "Theme or component"
         all_themes: "All site texts"
         theme_disabled: "Disabled"
