@@ -32,7 +32,7 @@ module DiscourseMcp
             request_context.guardian,
             notifications,
           )
-        notifications = filter_reviewable_mentions_by_scope(notifications, request_context)
+        notifications = filter_reviewable_notifications_by_scope(notifications, request_context)
         notifications = Notification.filter_disabled_badge_notifications(notifications)
         notifications = Notification.populate_acting_user(notifications)
         serialized =
@@ -46,12 +46,11 @@ module DiscourseMcp
         ToolHelpers.text_and_structured(notifications: serialized)
       end
 
-      # Reviewable mentions carry no topic, so the PM gate above never sees them;
-      # hold them to the scopes the moderation tools require instead.
-      def self.filter_reviewable_mentions_by_scope(notifications, request_context)
+      # Review notifications can omit the topic, so they need the reviewable's scopes.
+      def self.filter_reviewable_notifications_by_scope(notifications, request_context)
         reviewable_ids =
           notifications
-            .select(&:reviewable_mention?)
+            .select(&:reviewable_linked?)
             .map { |notification| notification.data_hash[:reviewable_id].to_i }
             .uniq
         return notifications if reviewable_ids.empty?
@@ -82,11 +81,11 @@ module DiscourseMcp
           end
 
         notifications.reject do |notification|
-          notification.reviewable_mention? &&
+          notification.reviewable_linked? &&
             !allowed_ids.include?(notification.data_hash[:reviewable_id].to_i)
         end
       end
-      private_class_method :filter_reviewable_mentions_by_scope
+      private_class_method :filter_reviewable_notifications_by_scope
     end
   end
 end

@@ -8,6 +8,26 @@ class ReviewableHistory < ActiveRecord::Base
 
   alias_attribute :type, :reviewable_history_type
   enum :type, { created: 0, transitioned: 1, edited: 2, claimed: 3, unclaimed: 4 }
+
+  after_create_commit :enqueue_staff_queued_post_notification
+
+  def staff_queued_post_notification_groups
+    return unless transitioned?
+
+    if approved?
+      SiteSetting.staff_queued_post_approval_notification_groups_map
+    elsif rejected?
+      SiteSetting.staff_queued_post_rejection_notification_groups_map
+    end
+  end
+
+  private
+
+  def enqueue_staff_queued_post_notification
+    if staff_queued_post_notification_groups.present? && reviewable.is_a?(ReviewableQueuedPost)
+      Jobs.enqueue(:notify_staff_queued_post_review, history_id: id)
+    end
+  end
 end
 
 # == Schema Information

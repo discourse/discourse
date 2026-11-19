@@ -37,6 +37,8 @@ export interface NotificationData {
   bookmarkable_type?: string;
   bookmarkable_id?: number;
   reviewable_id?: number;
+  reviewable_history_id?: number;
+  outcome?: "approved" | "rejected";
   reviewable_note_id?: number;
   upcoming_change_names?: string[];
   upcoming_change_humanized_names?: string[];

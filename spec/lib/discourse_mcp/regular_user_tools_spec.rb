@@ -303,6 +303,30 @@ describe DiscourseMcp::Tools do
       ).to contain_exactly(topic_reviewable.id)
     end
 
+    it "requires the moderation scope to return staff queued-post notifications" do
+      Jobs.run_immediately!
+      group = Fabricate(:group)
+      group.add(moderator)
+      SiteSetting.staff_queued_post_approval_notification_groups = group.id.to_s
+      reviewable = Fabricate(:reviewable_queued_post)
+      expect(reviewable.perform(admin, :approve_post)).to be_success
+      context = request_context(moderator)
+      allow(context).to receive(:has_scopes?).and_return(true)
+
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+      expect(result[:notifications].pluck(:notification_type)).to eq(
+        [Notification.types[:staff_queued_post_review]],
+      )
+
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::MODERATION_READ,
+      ).and_return(false)
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+      expect(result[:notifications]).to be_empty
+    end
+
     it "lists only the caller's notifications from visible topics" do
       visible_notification = Fabricate(:notification, user:)
       Fabricate(:notification, user: other_user)
