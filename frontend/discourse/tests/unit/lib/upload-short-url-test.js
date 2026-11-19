@@ -295,7 +295,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
       );
     });
     const shortUrls = Array.from(
-      { length: 1001 },
+      { length: 101 },
       (_, index) => `upload://${index}.png`
     );
 
@@ -304,11 +304,11 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
       ajax
     );
 
-    assert.deepEqual(batchSizes, [1000, 1]);
-    assert.strictEqual(uploads.length, 1001);
-    assert.deepEqual(lookupCachedUploadUrl("upload://1000.png"), {
-      url: "/upload://1000.png",
-      short_path: "/s/upload://1000.png",
+    assert.deepEqual(batchSizes, [100, 1]);
+    assert.strictEqual(uploads.length, 101);
+    assert.deepEqual(lookupCachedUploadUrl("upload://100.png"), {
+      url: "/upload://100.png",
+      short_path: "/s/upload://100.png",
     });
   });
 

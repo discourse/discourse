@@ -55,7 +55,7 @@ export const MISSING = "missing";
  * The server rejects a lookup with more short urls than this. Keep it in sync
  * with `UploadsController::MAX_LOOKUP_SHORT_URLS`.
  */
-const MAX_SHORT_URLS_PER_REQUEST = 1000;
+const MAX_SHORT_URLS_PER_REQUEST = 100;
 
 /**
  * Looks up the urls of uploads on the server and caches them. A short url the

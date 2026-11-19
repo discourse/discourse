@@ -22,7 +22,7 @@ class UploadsController < ApplicationController
   before_action(only: %i[_show_secure_deprecated show_secure]) { external_store_check }
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
-  MAX_LOOKUP_SHORT_URLS = 1000
+  MAX_LOOKUP_SHORT_URLS = 100
 
   def create
     # capture current user for block later on
