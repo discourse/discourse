@@ -355,7 +355,7 @@ GEM
     matrix (0.4.3)
     maxminddb (0.1.22)
     memory_profiler (1.1.0)
-    message_bus (5.0.0)
+    message_bus (5.1.0)
       logger
       rack (> 2, < 4)
     messageformat-wrapper (1.1.0)
@@ -1131,7 +1131,7 @@ CHECKSUMS
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   maxminddb (0.1.22) sha256=50933be438fbed9dceabef4163eab41884bd8830d171fdb8f739bee769c4907e
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
-  message_bus (5.0.0) sha256=9bbb413b8103140885172db6d0674a2eb95c18c98faca0acfdc1126ec5a4c0cf
+  message_bus (5.1.0) sha256=5d8cf364a102d7359ca5f8974b7e8b065b694b3e24285b4990e5ddcc334ec175
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   migrations-converters (0.0.1)

@@ -101,6 +101,7 @@ module BackupRestore
     def flush_redis
       redis = Discourse.redis
       redis.scan_each(match: "*") { |key| redis.del(key) unless key == SidekiqPauser::PAUSED_KEY }
+      MessageBus.backend_instance.expire_all_backlogs!(site_id: @current_db)
     end
 
     def clear_sidekiq_queues
