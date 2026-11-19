@@ -30,7 +30,6 @@ export default class SettingFieldHostList extends Component {
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if this.siteSettings.enable_new_select_controls}}
         <HostListSelect
-          @allowAny={{true}}
           @ariaLabel={{@field.title}}
           @disabled={{@field.disabled}}
           @hosts={{this.hosts}}

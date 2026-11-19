@@ -31,7 +31,6 @@ export default class HostList extends Component {
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if this.siteSettings.enable_new_select_controls}}
         <HostListSelect
-          @allowAny={{@allowAny}}
           @ariaLabel={{@label}}
           @disabled={{@disabled}}
           @hosts={{this.settingValue}}

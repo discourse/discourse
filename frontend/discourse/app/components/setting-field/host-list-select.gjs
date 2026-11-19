@@ -22,12 +22,12 @@ function hostRecords(hosts) {
 }
 
 /**
- * Picks a host list setting's hosts, taking typed ones when `@allowAny` is set. A host with a
- * wildcard or a separator is never offered for creation, so it can't be stored.
+ * Picks a host list setting's hosts, taking typed ones. A host with a wildcard or a separator is
+ * never offered for creation, so it can't be stored.
  */
 const HostListSelect = <template>
   <DSelect
-    @allowCreate={{if @allowAny isStorableHost}}
+    @allowCreate={{isStorableHost}}
     @createOption={{hostRecord}}
     @disabled={{@disabled}}
     @multiple={{true}}

@@ -65,7 +65,6 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
     await render(
       <template>
         <HostList
-          @allowAny={{true}}
           @changeValueCallback={{changeValue}}
           @label="Blocked onebox domains"
           @setting={{setting}}
@@ -105,7 +104,7 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
       .hasAttribute("data-name", "z.com", "renders a value set by the caller");
   });
 
-  test("takes no typed hosts when the setting refuses them, and follows @disabled, under the new select controls", async function (assert) {
+  test("prompts for a host while it holds none, and follows @disabled, under the new select controls", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
     const setting = { setting: "blocked_onebox_domains" };
     const disabled = tracked(false);
@@ -114,7 +113,6 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
     await render(
       <template>
         <HostList
-          @allowAny={{false}}
           @changeValueCallback={{changeValue}}
           @disabled={{disabled.value}}
           @label="Blocked onebox domains"
@@ -132,12 +130,6 @@ module("Integration | Component | SiteSettings | HostList", function (hooks) {
         "the empty field asks for a host"
       );
 
-    await dSelect(".d-select").search("c.com");
-    assert
-      .dom("[role='option'].--create")
-      .doesNotExist("no typed host is offered");
-
-    await dSelect(".d-select").close();
     disabled.value = true;
     await settled();
     assert
