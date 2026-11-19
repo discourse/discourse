@@ -72,6 +72,11 @@ RSpec.describe Blog::BlogTheme::Activate do
         expect(Blog::BlogTheme.snapshot(result.active_theme["snapshot"])).to eq(result.active_theme)
       end
 
+      it "records the snapshot on the default blog" do
+        active_theme = result.active_theme
+        expect(Blog::Instance.find_by(is_default: true).active_theme).to eq(active_theme)
+      end
+
       it "keeps only the newest snapshots" do
         stub_const(Blog::BlogTheme, :MAX_SNAPSHOTS, 1) do
           previous = activate_blog_theme(theme, user: Discourse.system_user)

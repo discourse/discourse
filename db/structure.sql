@@ -2255,6 +2255,47 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 
 --
+-- Name: blog_instances; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_instances (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    about text DEFAULT ''::text NOT NULL,
+    slug character varying NOT NULL,
+    url character varying,
+    category_id integer,
+    path_format character varying DEFAULT '/{slug}'::character varying NOT NULL,
+    posts_per_page integer DEFAULT 10 NOT NULL,
+    active_theme jsonb,
+    is_default boolean DEFAULT false NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: blog_instances_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_instances_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_instances_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_instances_id_seq OWNED BY public.blog_instances.id;
+
+
+--
 -- Name: blog_paths; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14731,6 +14772,13 @@ ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badge
 
 
 --
+-- Name: blog_instances id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_instances ALTER COLUMN id SET DEFAULT nextval('public.blog_instances_id_seq'::regclass);
+
+
+--
 -- Name: blog_paths id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17363,6 +17411,14 @@ ALTER TABLE ONLY public.badge_types
 
 ALTER TABLE ONLY public.badges
     ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_instances blog_instances_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_instances
+    ADD CONSTRAINT blog_instances_pkey PRIMARY KEY (id);
 
 
 --
@@ -21865,6 +21921,34 @@ CREATE INDEX index_badges_on_badge_type_id ON public.badges USING btree (badge_t
 --
 
 CREATE UNIQUE INDEX index_badges_on_name ON public.badges USING btree (name);
+
+
+--
+-- Name: index_blog_instances_on_category_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_instances_on_category_id ON public.blog_instances USING btree (category_id);
+
+
+--
+-- Name: index_blog_instances_on_is_default; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_instances_on_is_default ON public.blog_instances USING btree (is_default) WHERE is_default;
+
+
+--
+-- Name: index_blog_instances_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_instances_on_slug ON public.blog_instances USING btree (slug);
+
+
+--
+-- Name: index_blog_instances_on_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_instances_on_url ON public.blog_instances USING btree (url);
 
 
 --
@@ -26731,6 +26815,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261118215054'),
+('20261118172233'),
 ('20261117234001'),
 ('20261117200926'),
 ('20261113163304'),

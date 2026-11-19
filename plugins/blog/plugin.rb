@@ -35,6 +35,7 @@ register_homepage(
 
 after_initialize do
   register_problem_check ProblemCheck::BlogNotReady
+  register_seedfu_fixtures(Rails.root.join("plugins/blog/db/fixtures"))
 
   if defined?(Rack::MiniProfiler)
     %w[/blog-highlight/ /blog/blog-highlight/].each do |path|
@@ -98,6 +99,12 @@ after_initialize do
         end
     end
     @blog_publication
+  end
+
+  # Not `on`, which skips events while the plugin is disabled: the settings can
+  # still be changed then.
+  DiscourseEvent.on(:site_setting_changed) do |name| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
+    Blog::DefaultBlogMirror.sync! if Blog::DefaultBlogMirror.setting?(name.to_sym)
   end
 
   on(:site_setting_changed) do |name|
