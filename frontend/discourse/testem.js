@@ -6,12 +6,17 @@ const colors = require("@colors/colors/safe");
 require("./patch-testem-output")();
 require("./patch-testem-browser-watchdog")();
 
-const SANDBOX_DISABLE_VALUES = ["1", "true"];
-const sandboxDisabled =
-  process.env.CI ||
-  SANDBOX_DISABLE_VALUES.includes(
-    (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
-  );
+const browser = process.env.TESTEM_DEFAULT_BROWSER || "Chrome";
+
+function playwrightChromiumPath() {
+  const executable = require("playwright-core").chromium.executablePath();
+  if (!fs.existsSync(executable)) {
+    throw new Error(
+      "Playwright's Chromium isn't installed. Run `pnpm playwright-install` and try again."
+    );
+  }
+  return executable;
+}
 
 class Reporter extends TapReporter {
   failReports = [];
@@ -259,7 +264,7 @@ class Reporter extends TapReporter {
 module.exports = {
   test_page: "tests?hidepassed",
   disable_watching: true,
-  launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
+  launch_in_ci: [browser],
   tap_failed_tests_only: false,
   parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
   socket_server_options: {
@@ -272,23 +277,9 @@ module.exports = {
   browser_disconnect_timeout: 30,
   chrome_stderr_info_only: true,
   browser_args: {
-    Chromium: [
-      // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
-      sandboxDisabled ? "--no-sandbox" : null,
-      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
-      "--disable-dev-shm-usage",
-      "--disable-software-rasterizer",
-      "--disable-search-engine-choice-screen",
-      "--mute-audio",
-      `--remote-debugging-port=${process.env.CI ? 0 : 3001}`,
-      "--window-size=1440,900",
-      "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
-      "--disable-background-networking",
-    ].filter(Boolean),
     Chrome: [
-      // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
-      sandboxDisabled ? "--no-sandbox" : null,
+      // Playwright also launches Chromium without the sandbox, which containers need
+      "--no-sandbox",
       process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
@@ -304,6 +295,10 @@ module.exports = {
   },
   reporter: Reporter,
 };
+
+if (browser === "Chrome") {
+  module.exports.browser_paths = { Chrome: playwrightChromiumPath() };
+}
 
 if (process.env.TESTEM_FIREFOX_PATH) {
   module.exports.browser_paths ||= {};

@@ -1,3 +1,6 @@
+publicHoistPattern:
+- playwright
+- playwright-core
 strictPeerDependencies: true
 strictDepBuilds: true
 onlyBuiltDependencies:
