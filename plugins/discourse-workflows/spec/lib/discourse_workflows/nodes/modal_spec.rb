@@ -54,6 +54,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Modal::V1 do
       expect(message.data[:modal_id]).to match(/\A\h{16}\z/)
       expect(message.data[:title]).to eq("Approve topic?")
       expect(message.data[:body]).to eq("Please choose an option")
+      expect(message.data[:cooked_body]).to be_nil
 
       buttons = message.data[:buttons]
       expect(buttons.map { |button| button["value"] }).to eq(%w[approve reject])
@@ -67,6 +68,31 @@ RSpec.describe DiscourseWorkflows::Nodes::Modal::V1 do
           target_user_id: user.id,
         ),
       )
+    end
+
+    context "with a Markdown body" do
+      fab!(:upload)
+
+      let(:execution_configuration) do
+        config.merge(
+          "body_format" => "markdown",
+          "body" =>
+            "![Original screenshot](#{upload.short_url})\n\n```text\nfirst line\n    <b>second line</b>\n```\n\n<script>unexpected()</script>",
+        )
+      end
+
+      it "publishes a cooked image and code block without executable markup" do
+        messages =
+          MessageBus.track_publish(described_class.user_channel(user.id)) do
+            described_class.new(parameters: execution_configuration).execute(execution_context)
+          end
+
+        expect(messages.first.data[:body]).to be_nil
+        doc = Nokogiri::HTML5.fragment(messages.first.data[:cooked_body])
+        expect(doc.at_css("img[alt='Original screenshot']")["src"]).to eq(upload.url)
+        expect(doc.at_css("pre code").text).to eq("first line\n    <b>second line</b>\n")
+        expect(doc.css("script, b")).to be_empty
+      end
     end
 
     context "with a configured target user" do
