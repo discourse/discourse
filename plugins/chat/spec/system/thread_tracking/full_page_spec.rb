@@ -142,6 +142,8 @@ describe "Thread tracking state | full page" do
         expect(sidebar_page).to have_no_unread_channel(channel)
         chat_page.visit_channel(other_channel)
         travel_to(1.minute.from_now)
+        # An unwanted view update must be later than the reply for this assertion to catch it.
+        BrowserTime.freeze(page, Time.current)
         Fabricate(:chat_message, thread: thread, use_service: true)
         expect(sidebar_page).to have_unread_channel(channel)
       end
