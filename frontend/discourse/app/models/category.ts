@@ -160,6 +160,8 @@ export interface CategoryFields {
   is_special?: true;
   is_uncategorized?: true;
   topic_template?: string | null;
+  topic_creation_prompt?: string | null;
+  topic_creation_prompt_max_trust_level?: number | null;
   topic_title_placeholder?: string | null;
   has_children?: boolean | null;
   subcategory_count?: number | null;
@@ -1170,6 +1172,9 @@ export default class Category extends RestModel {
         category_setting_attributes: this.category_setting,
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
+        topic_creation_prompt: this.topic_creation_prompt,
+        topic_creation_prompt_max_trust_level:
+          this.topic_creation_prompt_max_trust_level,
         topic_title_placeholder: this.topic_title_placeholder,
         form_template_ids: this.form_template_ids,
         all_topics_wiki: this.all_topics_wiki,

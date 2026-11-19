@@ -116,6 +116,8 @@ class Category < ActiveRecord::Base
             }
 
   validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
+  validates :topic_creation_prompt, length: { maximum: 1000 }, allow_nil: true
+  validates :topic_creation_prompt_max_trust_level, inclusion: { in: 0..4 }, allow_nil: true
   validates :search_priority, inclusion: { in: Searchable::PRIORITIES.values }
 
   validate :emoji_exists
@@ -1571,6 +1573,8 @@ end
 #  subcategory_list_style                    :string(50)       default("rows_with_featured_topics")
 #  text_color                                :string(6)        default("FFFFFF"), not null
 #  topic_count                               :integer          default(0), not null
+#  topic_creation_prompt                     :text
+#  topic_creation_prompt_max_trust_level     :integer
 #  topic_featured_link_allowed               :boolean          default(TRUE)
 #  topic_template                            :text
 #  topic_title_placeholder                   :string

@@ -23,6 +23,8 @@ class BasicCategorySerializer < ApplicationSerializer
              :notification_level,
              :can_edit,
              :topic_template,
+             :topic_creation_prompt,
+             :topic_creation_prompt_max_trust_level,
              :topic_title_placeholder,
              :has_children,
              :subcategory_count,
@@ -81,6 +83,14 @@ class BasicCategorySerializer < ApplicationSerializer
 
   def notification_level
     object.notification_level
+  end
+
+  def include_topic_creation_prompt?
+    object.topic_creation_prompt.present?
+  end
+
+  def include_topic_creation_prompt_max_trust_level?
+    include_topic_creation_prompt? && !object.topic_creation_prompt_max_trust_level.nil?
   end
 
   def custom_fields

@@ -1937,7 +1937,9 @@ CREATE TABLE public.categories (
     emoji character varying,
     icon character varying,
     locale character varying(20),
-    topic_title_placeholder character varying
+    topic_title_placeholder character varying,
+    topic_creation_prompt text,
+    topic_creation_prompt_max_trust_level smallint
 );
 
 
@@ -26816,6 +26818,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261118235733'),
 ('20261118215054'),
 ('20261118184327'),
 ('20261118184323'),
