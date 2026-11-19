@@ -1,3 +1,4 @@
+import randomUUID from "discourse/lib/random-uuid";
 import { isStaticDataMap } from "../../../lib/workflows/static-data.js";
 import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note.js";
 import {
@@ -190,7 +191,7 @@ export function parseWorkflowImport(text) {
 
   const allImportedNodes = data.nodes.map((n) =>
     WorkflowNode.create({
-      clientId: crypto.randomUUID(),
+      clientId: randomUUID(),
       type: n.type,
       typeVersion: n.typeVersion,
       name: importedNodeName(n),
