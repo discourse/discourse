@@ -40,8 +40,8 @@ describe Jobs::SiteSettingUpdateDefaultTags do
             )
           end
 
-        expect(messages[0][:data][:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
-        expect(messages[0][:data][:status]).to eq("completed")
+        expect(messages[0].data[:group_ids]).to eq([Group::AUTO_GROUPS[:admins]])
+        expect(messages[0].data[:status]).to eq("completed")
       end
     end
   end
