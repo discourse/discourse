@@ -238,7 +238,8 @@ module Chat
 
     def self.publish_bulk_delete!(chat_channel, deleted_message_ids)
       channel_permissions = permissions(chat_channel)
-      broadcasted_ids = Chat::Message.where(id: deleted_message_ids, broadcasted: true).pluck(:id)
+      broadcasted_ids =
+        Chat::Message.with_deleted.where(id: deleted_message_ids, broadcasted: true).pluck(:id)
       Chat::Thread
         .grouped_messages(message_ids: deleted_message_ids)
         .each do |group|
