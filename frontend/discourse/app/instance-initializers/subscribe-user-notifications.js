@@ -10,13 +10,18 @@ import {
 } from "discourse/lib/desktop-notifications";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
+import { getRenderDirector } from "discourse/lib/notification-types-manager";
 import {
   isPushNotificationsEnabled,
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import { currentThemeId } from "discourse/lib/theme-selector";
+import DiscourseURL from "discourse/lib/url";
 import Notification from "discourse/models/notification";
+import { i18n } from "discourse-i18n";
+
+const NOTIFICATION_TOAST_CLASS = "desktop-notification-toast";
 
 class SubscribeUserNotificationsInit {
   @service appEvents;
@@ -28,6 +33,9 @@ class SubscribeUserNotificationsInit {
   @service site;
   @service siteSettings;
   @service store;
+  @service toasts;
+
+  #lastObservedNotificationId = 0;
 
   constructor(owner) {
     setOwner(this, owner);
@@ -186,6 +194,8 @@ class SubscribeUserNotificationsInit {
     );
     const lastNotification = data.last_notification?.notification;
 
+    this.#maybeShowNotificationToast(lastNotification, data, oldAllUnread);
+
     if (stale?.hasResults && lastNotification) {
       const oldNotifications = stale.results.get("content");
       const staleIndex = oldNotifications.findIndex(
@@ -298,6 +308,85 @@ class SubscribeUserNotificationsInit {
         this.appEvents
       );
     }
+  }
+
+  #maybeShowNotificationToast(notification, data, oldUnreadCount) {
+    if (!notification || notification.id <= this.#lastObservedNotificationId) {
+      return;
+    }
+    this.#lastObservedNotificationId = notification.id;
+
+    if (
+      !this.siteSettings.enable_desktop_notification_toasts ||
+      !this.currentUser.user_option?.show_notification_toasts ||
+      this.currentUser.isInDoNotDisturb() ||
+      this.site.mobileView ||
+      this.capabilities.isMobileDevice ||
+      EmbedMode.enabled ||
+      document.visibilityState !== "visible" ||
+      notification.read ||
+      notification.id <= data.seen_notification_id ||
+      !(data.all_unread_notifications_count > oldUnreadCount)
+    ) {
+      return;
+    }
+
+    const type = this.site.notificationLookup[notification.notification_type];
+    const excluded =
+      this.siteSettings.desktop_notification_toast_excluded_types;
+    if (excluded?.split("|").includes(type)) {
+      return;
+    }
+
+    const director = getRenderDirector(
+      type,
+      Notification.create(notification),
+      this.currentUser,
+      this.siteSettings,
+      this.site
+    );
+    const active = this.toasts.activeToasts.filter(
+      (toast) => toast.options.class === NOTIFICATION_TOAST_CLASS
+    );
+    const maxStack = this.siteSettings.desktop_notification_toast_max_stack;
+    for (const toast of active.slice(
+      0,
+      Math.max(0, active.length - maxStack + 1)
+    )) {
+      this.toasts.close(toast);
+    }
+
+    const href = director.linkHref;
+    const sender = director.label;
+    const topic = notification.data.topic_title;
+    this.toasts.default({
+      class: NOTIFICATION_TOAST_CLASS,
+      views: ["desktop"],
+      duration:
+        this.siteSettings.desktop_notification_toast_duration_seconds * 1000,
+      data: {
+        icon: type ? director.icon : "bell",
+        title: director.linkTitle || i18n("notifications.desktop_toast.title"),
+        message:
+          sender && topic
+            ? i18n("notifications.desktop_toast.sender_and_topic", {
+                sender,
+                topic,
+              })
+            : sender || topic,
+        actions: href
+          ? [
+              {
+                label: i18n("notifications.desktop_toast.open"),
+                action: ({ close }) => {
+                  close();
+                  DiscourseURL.routeTo(href);
+                },
+              },
+            ]
+          : [],
+      },
+    });
   }
 }
 

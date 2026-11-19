@@ -1,10 +1,14 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class NotificationsController extends Controller {
+  @service currentUser;
+  @service siteSettings;
+
   subpageTitle = i18n("user.preferences_nav.notifications");
 
   likeNotificationFrequencies = [
@@ -29,6 +33,7 @@ export default class NotificationsController extends Controller {
         "new_topic_duration_minutes",
         "notification_level_when_replying",
         "notify_on_linked_posts",
+        "show_notification_toasts",
         "push_notification_level",
         "enable_upcoming_change_available_notifications",
         "user_notification_schedule",
@@ -43,6 +48,15 @@ export default class NotificationsController extends Controller {
     return this.model
       .save(this.saveAttrNames)
       .then(() => {
+        if (
+          this.siteSettings.enable_desktop_notification_toasts &&
+          this.currentUser?.id === this.model.id
+        ) {
+          this.currentUser.set(
+            "user_option.show_notification_toasts",
+            this.model.user_option.show_notification_toasts
+          );
+        }
         this.set("saved", true);
       })
       .catch(popupAjaxError);

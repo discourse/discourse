@@ -123,6 +123,10 @@ class Notification < ActiveRecord::Base
     SQL
   end
 
+  def self.toast_type_names
+    types.keys.map(&:to_s)
+  end
+
   def self.types
     @types ||=
       Enum.new(

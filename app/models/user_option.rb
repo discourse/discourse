@@ -365,6 +365,7 @@ end
 #  push_notification_level                        :integer          default("all"), not null
 #  seen_popups                                    :integer          is an Array
 #  send_shortcut                                  :integer          default("enter"), not null
+#  show_notification_toasts                       :boolean          default(FALSE), not null
 #  show_original_content                          :boolean          default(FALSE), not null
 #  show_thread_title_prompts                      :boolean          default(TRUE), not null
 #  sidebar_link_to_filtered_list                  :boolean          default(FALSE), not null
