@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module ::Blog
-  # Until blogs are edited in the admin, the blog settings and the active theme
-  # remain the source of truth for the default blog, so its row copies them.
-  # Effective values are copied, so settings overridden in the environment apply.
+  # Until blogs are edited in the admin, the blog settings remain the source of
+  # truth for the default blog, so its row copies them. Effective values are
+  # copied, so settings overridden in the environment apply.
   module DefaultBlogMirror
     COLUMNS = {
       blog_title: :name,
@@ -24,8 +24,12 @@ module ::Blog
     def self.sync!
       blog = Instance.find_or_initialize_by(is_default: true) { |new_blog| new_blog.slug = "blog" }
       blog.assign_attributes(COLUMNS.to_h { |setting, column| [column, SiteSetting.get(setting)] })
-      blog.active_theme = PluginStore.get(BlogTheme::STORE, "active")
+      # Activation writes the row now. A row without a theme, created here or by
+      # the migration on a site upgrading past the blogs table, starts from the
+      # theme the old code activated.
+      blog.active_theme ||= PluginStore.get(BlogTheme::STORE, "active")
       blog.save!(validate: false)
+      blog
     end
   end
 end
