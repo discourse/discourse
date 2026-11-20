@@ -50,7 +50,8 @@ module Chat
     end
 
     def can_interact_with_message(guardian:, message:)
-      guardian.can_join_chat_channel?(message.chat_channel)
+      guardian.can_join_chat_channel?(message.chat_channel) &&
+        guardian.can_see_chat_message_thread?(message)
     end
 
     def fetch_interaction(guardian:, message:, action:)

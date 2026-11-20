@@ -547,6 +547,85 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    describe "#can_see_chat_thread?" do
+      fab!(:threading_channel) { Fabricate(:chat_channel, threading_enabled: true) }
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: threading_channel, user: user)
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: threading_channel, original_message: original_message)
+      end
+
+      it "returns true while the original message is visible" do
+        expect(guardian.can_see_chat_thread?(thread)).to eq(true)
+      end
+
+      context "when the original message is trashed" do
+        before { original_message.trash! }
+
+        it "returns false for a regular user" do
+          expect(guardian.can_see_chat_thread?(thread)).to eq(false)
+        end
+
+        it "returns true for a chat moderator" do
+          expect(staff_guardian.can_see_chat_thread?(thread)).to eq(true)
+        end
+      end
+
+      it "returns false when the original message was purged" do
+        original_message.destroy!
+        thread.reload
+
+        expect(guardian.can_see_chat_thread?(thread)).to eq(false)
+        expect(staff_guardian.can_see_chat_thread?(thread)).to eq(false)
+      end
+
+      context "when the thread is not effective" do
+        fab!(:inline_original_message) do
+          Fabricate(:chat_message, chat_channel: channel, user: user)
+        end
+        fab!(:inline_thread) do
+          Fabricate(:chat_thread, channel: channel, original_message: inline_original_message)
+        end
+
+        it "returns true for an anonymous reader of a public channel" do
+          expect(Guardian.new.can_see_chat_thread?(inline_thread)).to eq(true)
+        end
+
+        context "when the original message is trashed" do
+          before { inline_original_message.trash! }
+
+          it "returns true because the reply is an ordinary channel message" do
+            expect(guardian.can_see_chat_thread?(inline_thread)).to eq(true)
+          end
+        end
+      end
+
+      context "when a thread is forced in a channel with threading disabled" do
+        fab!(:forced_original_message) do
+          Fabricate(:chat_message, chat_channel: channel, user: user)
+        end
+        fab!(:forced_thread) do
+          Fabricate(
+            :chat_thread,
+            channel: channel,
+            original_message: forced_original_message,
+            force: true,
+          )
+        end
+
+        before { forced_original_message.trash! }
+
+        it "returns false for a regular user" do
+          expect(guardian.can_see_chat_thread?(forced_thread)).to eq(false)
+        end
+
+        it "returns true for a chat moderator" do
+          expect(staff_guardian.can_see_chat_thread?(forced_thread)).to eq(true)
+        end
+      end
+    end
+
     describe "#can_moderate_chat?" do
       context "for category channel" do
         fab!(:category) { Fabricate(:category, read_restricted: true) }
@@ -1226,6 +1305,36 @@ RSpec.describe Chat::GuardianExtensions do
 
         it "returns false" do
           expect(other_guardian.can_manage_chat_message_pin?(dm_message)).to eq(false)
+        end
+      end
+    end
+
+    context "when the message is a reply whose thread original message was trashed" do
+      fab!(:threading_pin_channel) { Fabricate(:category_channel, threading_enabled: true) }
+      fab!(:original_message) { Fabricate(:chat_message, chat_channel: threading_pin_channel) }
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: threading_pin_channel, original_message: original_message)
+      end
+      fab!(:reply) { Fabricate(:chat_message, chat_channel: threading_pin_channel, thread: thread) }
+
+      before do
+        SiteSetting.chat_pinning_messages_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
+        original_message.trash!
+      end
+
+      it "returns false for a pinning group member who cannot see the thread" do
+        expect(guardian.can_manage_chat_message_pin?(reply)).to eq(false)
+      end
+
+      it "returns true for a chat moderator" do
+        expect(staff_guardian.can_manage_chat_message_pin?(reply)).to eq(true)
+      end
+
+      context "when the channel does not use threads" do
+        before { threading_pin_channel.update!(threading_enabled: false) }
+
+        it "returns true because the reply is an ordinary channel message" do
+          expect(guardian.can_manage_chat_message_pin?(reply)).to eq(true)
         end
       end
     end

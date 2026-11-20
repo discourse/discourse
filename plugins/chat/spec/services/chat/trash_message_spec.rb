@@ -192,6 +192,21 @@ RSpec.describe Chat::TrashMessage do
             expect(thread.reload.last_message).to eq(message)
           end
 
+          it "does not publish the thread preview when the thread's original message was trashed" do
+            thread.channel.update!(threading_enabled: true)
+            Fabricate(
+              :chat_message,
+              chat_channel: thread.channel,
+              thread: thread,
+              created_at: message.created_at - 1.hour,
+            )
+            thread.original_message.trash!
+
+            messages = MessageBus.track_publish("/chat/#{message.chat_channel_id}") { result }
+
+            expect(messages).to be_empty
+          end
+
           context "when there are no other messages left in the thread except the original message" do
             it "updates the thread last_message_id to the original message" do
               expect(thread.last_message).to eq(message)
