@@ -536,6 +536,169 @@ describe "MCP content access" do
     end
   end
 
+  it "requires private-message read scope before revealing private-message draft state" do
+    private_key = "topic_#{message.topic_id}"
+    compose_key = Draft::NEW_PRIVATE_MESSAGE
+    authorize("mcp:drafts:read")
+
+    [private_key, compose_key].each do |draft_key|
+      call_tool("discourse_get_draft", { draft_key: })
+      aggregate_failures(draft_key) { expect_missing_scope("mcp:private-messages:read") }
+    end
+
+    Draft.set(user, private_key, 0, { reply: "Existing private reply" }.to_json)
+    call_tool("discourse_get_draft", { draft_key: private_key, sequence: 0 })
+    expect_missing_scope("mcp:private-messages:read")
+    expect(response.body).not_to include("Existing private reply")
+  end
+
+  it "requires private-message scopes for drafts that declare a private-message action" do
+    draft_key = Draft::NEW_TOPIC
+    authorize("mcp:drafts:read", "mcp:drafts:write")
+
+    call_tool(
+      "discourse_save_draft",
+      {
+        draft_key:,
+        reply: "Private message body",
+        title: "Private message title",
+        action: "privateMessage",
+        sequence: 0,
+      },
+    )
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.exists?(user_id: user.id, draft_key:)).to eq(false)
+
+    Draft.set(
+      user,
+      draft_key,
+      0,
+      { reply: "Stored private reply", action: "privateMessage" }.to_json,
+    )
+    call_tool("discourse_get_draft", { draft_key: })
+    expect_missing_scope("mcp:private-messages:read")
+    expect(response.body).not_to include("Stored private reply")
+
+    call_tool("discourse_delete_draft", { draft_key:, sequence: 0 })
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.exists?(user_id: user.id, draft_key:)).to eq(true)
+
+    authorize(
+      "mcp:drafts:read",
+      "mcp:drafts:write",
+      "mcp:private-messages:read",
+      "mcp:private-messages:write",
+    )
+    call_tool("discourse_get_draft", { draft_key: })
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "data", "reply")).to eq(
+      "Stored private reply",
+    )
+
+    call_tool("discourse_delete_draft", { draft_key:, sequence: 0 })
+    expect(response.status).to eq(200)
+    expect(Draft.exists?(user_id: user.id, draft_key:)).to eq(false)
+  end
+
+  it "requires private-message write scope when overwriting a stored private-message draft" do
+    draft_key = Draft::NEW_TOPIC
+    stored_reply = "Stored private reply"
+    Draft.set(user, draft_key, 0, { reply: stored_reply, action: "privateMessage" }.to_json)
+    authorize("mcp:drafts:read", "mcp:drafts:write")
+
+    call_tool("discourse_save_draft", { draft_key:, reply: "Overwritten reply", sequence: 0 })
+
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq(stored_reply)
+
+    call_tool(
+      "discourse_save_draft",
+      { draft_key:, reply: "Overwritten reply", action: "reply", sequence: 0 },
+    )
+
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq(stored_reply)
+
+    authorize("mcp:drafts:write", "mcp:private-messages:write")
+    call_tool("discourse_save_draft", { draft_key:, reply: "Permitted overwrite", sequence: 0 })
+
+    expect(response.status).to eq(200)
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq("Permitted overwrite")
+  end
+
+  it "requires private-message scopes when a stored draft marks the private-message archetype" do
+    draft_key = "topic_#{Fabricate(:topic, user:).id}"
+    stored_reply = "Stored archetype reply"
+    Draft.set(
+      user,
+      draft_key,
+      0,
+      { reply: stored_reply, action: "reply", archetypeId: "private_message" }.to_json,
+    )
+    authorize("mcp:drafts:read", "mcp:drafts:write")
+
+    call_tool("discourse_save_draft", { draft_key:, reply: "Overwritten reply", sequence: 0 })
+
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq(stored_reply)
+
+    call_tool("discourse_get_draft", { draft_key:, sequence: 0 })
+    expect_missing_scope("mcp:private-messages:read")
+    expect(response.body).not_to include(stored_reply)
+
+    call_tool("discourse_delete_draft", { draft_key:, sequence: 0 })
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq(stored_reply)
+
+    authorize("mcp:drafts:write", "mcp:private-messages:write")
+    call_tool("discourse_save_draft", { draft_key:, reply: "Permitted overwrite", sequence: 0 })
+
+    expect(response.status).to eq(200)
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq("Permitted overwrite")
+  end
+
+  it "saves stored non-private drafts without private-message scopes" do
+    draft_key = Draft::NEW_TOPIC
+    Draft.set(
+      user,
+      draft_key,
+      0,
+      { reply: "Public draft reply", action: "createTopic", archetypeId: "regular" }.to_json,
+    )
+    authorize("mcp:drafts:write")
+
+    call_tool("discourse_save_draft", { draft_key:, reply: "Updated public reply", sequence: 0 })
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "saved")).to eq(true)
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq("Updated public reply")
+  end
+
+  it "excludes bookmarks on trashed private messages without the read scope" do
+    user.update!(admin: true)
+    Group.refresh_automatic_groups_for_user!(user)
+    bookmark =
+      Fabricate(:bookmark, user:, bookmarkable: message, name: "Trashed private bookmark note")
+    message.topic.trash!
+    authorize
+
+    call_tool("discourse_bookmark_list", {})
+
+    expect(response.status).to eq(200)
+    expect(
+      response.parsed_body.dig("result", "structuredContent", "bookmarks").pluck("id"),
+    ).to be_empty
+    expect(response.body).not_to include(bookmark.name)
+
+    authorize("mcp:private-messages:read")
+    call_tool("discourse_bookmark_list", {})
+
+    expect(response.status).to eq(200)
+    expect(
+      response.parsed_body.dig("result", "structuredContent", "bookmarks").pluck("id"),
+    ).to contain_exactly(bookmark.id)
+  end
+
   it "requires the read scope for private-message resources and draft prompts" do
     authorize
     { "topic" => message.topic_id, "post" => message.id }.each do |type, id|

@@ -15,6 +15,17 @@ const CSS_CLASSES = {
 
 const PREVIEW_RENDER_DELAY = 200;
 const ORIGINAL_TEXT_ATTR = "data-math-original";
+
+/**
+ * The source of a `.math` element, which KaTeX replaces with its rendered
+ * output.
+ *
+ * @param {Element} elem
+ * @returns {string}
+ */
+export function mathSource(elem) {
+  return elem.getAttribute(ORIGINAL_TEXT_ATTR) ?? elem.textContent;
+}
 const pendingMathJaxTypesets = new WeakMap();
 const SAFE_HTML_ID_REGEX = /^[A-Za-z_][A-Za-z0-9_.:-]*$/;
 

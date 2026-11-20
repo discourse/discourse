@@ -1,4 +1,5 @@
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { i18n } from "discourse-i18n";
 import {
   buildWorkflowExportPayload,
@@ -117,6 +118,48 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
         main: [[], [{ node: "Log", type: "main", index: 0 }]],
       },
     });
+  });
+
+  test("parseWorkflowImport connects nodes when crypto.randomUUID is unavailable", function (assert) {
+    const randomUUID = sinon.stub(crypto, "randomUUID").value(undefined);
+    let result;
+    try {
+      result = parseWorkflowImport(
+        JSON.stringify({
+          nodes: [
+            { id: "trigger", type: "trigger:manual", name: "Start" },
+            { id: "action", type: "action:log", name: "Log" },
+          ],
+          connections: {
+            Start: { main: [[{ node: "Log", type: "main", index: 0 }]] },
+          },
+        })
+      );
+    } finally {
+      randomUUID.restore();
+    }
+
+    const [source, target] = result.nodes;
+    const uuidV4 =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+    assert.true(uuidV4.test(source.clientId), "the trigger gets a UUID v4");
+    assert.true(uuidV4.test(target.clientId), "the action gets a UUID v4");
+    assert.notStrictEqual(
+      source.clientId,
+      target.clientId,
+      "the IDs are distinct"
+    );
+    assert.strictEqual(result.connections.length, 1, "the edge is imported");
+    assert.strictEqual(
+      result.connections[0].sourceClientId,
+      source.clientId,
+      "the edge starts at the imported trigger"
+    );
+    assert.strictEqual(
+      result.connections[0].targetClientId,
+      target.clientId,
+      "the edge ends at the imported action"
+    );
   });
 
   test("parseWorkflowImport strips credential references", function (assert) {

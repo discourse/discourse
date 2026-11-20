@@ -499,6 +499,8 @@
   button {
     justify-content: left;
     text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 

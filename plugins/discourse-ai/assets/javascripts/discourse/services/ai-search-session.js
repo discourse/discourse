@@ -85,6 +85,7 @@ export default class AiSearchSession extends Service {
   // opening tab was chosen
   #tabLog = null;
   #answerArrived = false;
+  #refreshingAnswer = false;
   #deferredAskLogId = null;
   // kept apart from `scope`, which is dropped on leaving a topic, so a
   // deferred answer is still for the place it was asked about
@@ -122,6 +123,14 @@ export default class AiSearchSession extends Service {
       (this.discoveries.answerable === false ||
         Boolean(this.discoveries.errorMessage) ||
         this.discoveries.discoveryTimedOut)
+    );
+  }
+
+  get answerReady() {
+    return (
+      this.answerSettled &&
+      this.discoveries.answerable === true &&
+      Boolean(this.discoveries.discovery)
     );
   }
 
@@ -197,6 +206,7 @@ export default class AiSearchSession extends Service {
     this.#askedScopeKey = scope?.key ?? null;
     this.scopeFallback = false;
     this.fallbackScopeLabel = null;
+    this.#refreshingAnswer = false;
 
     this.discoveries.dismissDiscovery();
     const asked = this.#ask(query, { trigger });
@@ -220,6 +230,7 @@ export default class AiSearchSession extends Service {
 
   reset() {
     this.#tabLog = null;
+    this.#refreshingAnswer = false;
     this.#deferredAskLogId = null;
     this.#askedScopeKey = null;
     this.query = "";
@@ -284,6 +295,23 @@ export default class AiSearchSession extends Service {
     this.#noteAnswerSeen();
   }
 
+  @action
+  refreshAnswer() {
+    if (!this.discoveries.cachedAnswerAt) {
+      return;
+    }
+
+    this.#refreshingAnswer = true;
+    this.#tabChosenByReader = true;
+    this.scopeFallback = false;
+    this.fallbackScopeLabel = null;
+    this.discoveries.dismissDiscovery();
+    this.#ask(this.query, {
+      trigger: "refresh",
+      freshAnswer: true,
+    });
+  }
+
   /**
    * Records the first result opened from a search still on screen.
    *
@@ -322,7 +350,7 @@ export default class AiSearchSession extends Service {
     }
 
     const isCurrent = update.request_id === this.discoveries.activeRequestId;
-    if (isCurrent && update.phase === "rewritten") {
+    if (isCurrent && update.phase === "rewritten" && !this.#refreshingAnswer) {
       this.#applyRewrite(update);
     }
     if (isCurrent && update.scope_fallback && this.scope) {
@@ -611,15 +639,15 @@ export default class AiSearchSession extends Service {
     this.#showSelectedResults();
   }
 
-  #ask(query, { trigger }) {
-    // a fresh request every time, so the rewrite is always published
+  #ask(query, { trigger, freshAnswer = false }) {
     return this.discoveries.triggerDiscovery(query, {
-      scope: this.scope?.key,
+      scope: this.#askedScopeKey,
       trigger,
       intentHeuristic: readsAsQuestion(query) ? "answer" : "lookup",
       classifyIntent:
         !!this.siteSettings.ai_ask_ai_search_intent_decision_model,
-      deferIfPrecise: true,
+      deferIfPrecise: !freshAnswer,
+      freshAnswer,
     });
   }
 

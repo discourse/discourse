@@ -4401,10 +4401,8 @@ cs:
           label: "vybrané"
           title: "Kliknutím odstraníte příspěvek z výběru"
         select_replies:
-          label: "vybrat +odpovědi"
           title: "Přidej příspěvek a všechny jeho odpovědi do výběru"
         select_below:
-          label: "vybrat +níže"
           title: "Přidat příspěvek a vše po něm do výběru"
         delete: smazat označené
         cancel: zrušit výběr
@@ -8442,7 +8440,6 @@ cs:
         silence_duration: "Na jak dlouhou dobu bude uživatel ztišený?"
         silence_reason_title: "Důvod ztišení"
         silence_reason_placeholder: "Důvod ztišení "
-        silence_message: "e-mailová zpráva"
         suspended_until: "(až %{until})"
         suspend_forever: "Pozastavit navždy"
         cant_suspend: "Tento uživatel nemůže být pozastaven"

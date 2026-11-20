@@ -73,6 +73,42 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(i18nScope(dataTableNodeType), "data_table_node");
   });
 
+  test("drops fields hidden by the selected option's metadata only when the selection is fixed", function (assert) {
+    const schema = {
+      option_id: { type: "integer" },
+      detail: {
+        display_options: {
+          hide: {
+            option_id: [
+              {
+                condition: {
+                  metadata_flag: { collection: "options", flag: "hide_detail" },
+                },
+              },
+            ],
+          },
+        },
+      },
+    };
+    const metadata = { options: [{ id: 2, hide_detail: true }] };
+    const configuration = { option_id: "2", detail: "Details" };
+    const dynamicConfiguration = {
+      ...configuration,
+      option_id: "={{ $json.option_id }}",
+    };
+
+    assert.deepEqual(
+      pruneModeHiddenFields(schema, configuration, metadata),
+      { option_id: "2" },
+      "a fixed selection drops the hidden value"
+    );
+    assert.deepEqual(
+      pruneModeHiddenFields(schema, dynamicConfiguration, metadata),
+      dynamicConfiguration,
+      "an expression keeps the value available"
+    );
+  });
+
   test("resolves translated labels, descriptions, and placeholders", function (assert) {
     assert.strictEqual(propertyLabel("action:topic", "title"), "Title");
     assert.strictEqual(propertyLabel(ifNodeType, "combinator"), "Match mode");
@@ -97,6 +133,13 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(
       propertyDescription("trigger:schedule", "minutesInterval"),
       "Must be in range 1-59"
+    );
+    assert.strictEqual(
+      propertyDescription("action:badge", "reason", {
+        ui: { description_key: "admin.badges.reason_help" },
+      }),
+      "A link to a post or topic",
+      "uses the field's configured translation key"
     );
     assert.strictEqual(
       propertyPlaceholder("trigger:webhook", "path"),

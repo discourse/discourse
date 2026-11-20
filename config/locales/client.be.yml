@@ -1660,6 +1660,10 @@ be:
         public: "Публічная"
       change_timestamp:
         action: "змяніць пазнаку часу"
+      multi_select:
+        select: "Выбраць"
+        select_post:
+          label: "Выбраць"
     post_list:
       title: "Апошнія паведамленні"
     post:

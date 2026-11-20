@@ -14,6 +14,8 @@ module JsonApiKit
       end
 
       class_methods do
+        delegate :anchored_by?, to: :adapter_definition
+
         def anchor(name, &condition)
           self.declared_anchors = declared_anchors + [adapter.anchor(name, &condition)]
         end
@@ -22,10 +24,6 @@ module JsonApiKit
 
         def anchor_accepts?(anchoring)
           declared_anchor(anchoring.name).try { it.accepts?(anchoring) } || false
-        end
-
-        def anchored_by?(anchor_name:, ordering:)
-          adapter.anchored_by?(self, anchor_name:, ordering:)
         end
 
         def anchors(guardian) = new(guardian:).anchors(guardian)

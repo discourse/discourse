@@ -4,6 +4,10 @@ module DiscourseMcp
   module Tools
     class ListNotifications
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      # Chat content is delegated separately from forum content; this notification
+      # type embeds the watched thread's root message text.
+      CHAT_READ_SCOPE = "chat:read"
+      CHAT_NOTIFICATION_TYPES = %i[chat_watched_thread].freeze
       OUTPUT_SCHEMA = OutputSchema.object(notifications: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
@@ -15,6 +19,7 @@ module DiscourseMcp
             .includes(:topic)
             .order(id: :desc)
             .limit(limit)
+        notifications = filter_chat_notifications_by_scope(notifications, request_context)
         if !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ)
           notifications =
             notifications
@@ -45,6 +50,17 @@ module DiscourseMcp
           end
         ToolHelpers.text_and_structured(notifications: serialized)
       end
+
+      # Applied to the relation so chat notifications never consume the caller's
+      # page, and later pages cannot reveal them either.
+      def self.filter_chat_notifications_by_scope(notifications, request_context)
+        return notifications if request_context.has_scopes?(CHAT_READ_SCOPE)
+
+        notifications.where.not(
+          notification_type: CHAT_NOTIFICATION_TYPES.map { |type| Notification.types[type] },
+        )
+      end
+      private_class_method :filter_chat_notifications_by_scope
 
       # Review notifications can omit the topic, so they need the reviewable's scopes.
       def self.filter_reviewable_notifications_by_scope(notifications, request_context)

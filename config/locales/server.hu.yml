@@ -3892,12 +3892,6 @@ hu:
     account_suspended_forever:
       title: "Fiók felfüggesztve"
       subject_template: "[%{email_prefix}] Fiókja fel lett függesztve"
-    account_silenced:
-      title: "Fiók elnémítva"
-      subject_template: "[%{email_prefix}] Fiókja el lett némítva"
-    account_silenced_forever:
-      title: "Fiók elnémítva"
-      subject_template: "[%{email_prefix}] Fiókja el lett némítva"
     account_deleted:
       title: "Fiók törölve"
       subject_template: "[%{email_prefix}] A fiókját törölték"

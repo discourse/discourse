@@ -13,6 +13,24 @@ RSpec.describe Blog::Readiness do
       expect(readiness.problems).to be_empty
     end
 
+    it "reports the category problems of the blog it is given" do
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      blog =
+        Blog::Instance.create!(name: "Engineering", slug: "engineering", category: private_category)
+
+      expect(described_class.new(blog).problems).to contain_exactly(have_attributes(key: :category))
+      expect(readiness.problems).to be_empty
+    end
+
+    it "reports a name clash only for the default blog, which creates its category on publish" do
+      SiteSetting.blog_category = ""
+      Fabricate(:category, name: "Blog")
+      blog = Blog::Instance.create!(name: "Blog", slug: "engineering")
+
+      expect(readiness.problems).to contain_exactly(have_attributes(key: :category_name_taken))
+      expect(described_class.new(blog).problems).to be_empty
+    end
+
     it "reports a login-required site" do
       SiteSetting.login_required = true
 

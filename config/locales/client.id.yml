@@ -1978,6 +1978,9 @@ id:
       change_owner:
         placeholder: "username pemilik yang baru"
       multi_select:
+        select: "Pilih"
+        select_post:
+          label: "Pilih"
         selected_post:
           label: "dipilih"
         deselect_all: batalkan pilihan semua

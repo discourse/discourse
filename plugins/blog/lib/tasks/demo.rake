@@ -27,7 +27,8 @@ namespace :blog do
     abort "Demo content is only available in development" unless Rails.env.development?
     admin = Blog::DemoUsers.admin
     drafts = Blog::EnsureDraftsCategory.call![:category]
-    public_category = Blog::EnsurePublicCategory.call
+    public_category =
+      Blog::EnsurePublicCategory.call(params: { blog_id: Blog::Instance.default_blog.id })
     if public_category.failure?
       abort(Blog::Readiness.new.error || "The blog category could not be created")
     end

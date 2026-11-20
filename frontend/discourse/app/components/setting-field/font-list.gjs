@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import FontSelector from "discourse/select-kit/components/font-selector";
 
 export default class SettingFieldFontList extends Component {
@@ -15,6 +16,7 @@ export default class SettingFieldFontList extends Component {
       <FontSelector
         @content={{this.choices}}
         @onChange={{@field.set}}
+        @options={{hash disabled=@field.disabled}}
         @value={{@field.value}}
       />
     </@field.Control>

@@ -3413,8 +3413,6 @@ sq:
         selected: "të zgjedhura (%{count})"
         select_post:
           label: "zgjidh"
-        select_replies:
-          label: "select +replies"
         delete: fshij të përzgjedhurat
         cancel: anulo përzgjedhjen
         select_all: përzgjidhi të gjitha

@@ -172,6 +172,12 @@ sk:
         error: "Chyba"
         response: "Odpoveď"
       discourse_workflows:
+        ai_tool:
+          tool_ref: "Nástroj"
+          list_item: "Položka zoznamu"
+          add_list_item: "Pridať položku"
+        mcp_tool:
+          tool_name: "Nástroj"
         classify:
           text: "Text"
           upload_ids: "Obrázky"
@@ -263,6 +269,9 @@ sk:
           post_illustrator: "Ilustrátor príspevkov"
           setting_groups:
             automation: "Automatizácia"
+        review_queue:
+          setting_groups:
+            settings: "Nastavení"
         image_caption:
           setting_groups:
             settings: "Nastavení"
@@ -880,7 +889,6 @@ sk:
         filter_standalone: "Samostatný"
       ai_bot:
         title: "AI bot"
-        llm: "Model:"
         pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
         cancel_streaming: "Zastaviť odpoveď"
         try_again: "Skúste to znova"
@@ -939,7 +947,6 @@ sk:
           tab_label: "AI"
           header: "S čím môžem pomôcť?"
           submit: "Odoslať otázku"
-          disclaimer: "Generatívna AI môže robiť chyby. Overte si dôležité informácie."
           placeholder: "Položte otázku..."
           new: "Nová otázka"
           min_input_length_message:

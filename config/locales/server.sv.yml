@@ -3181,12 +3181,6 @@ sv:
     account_suspended_forever:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
-    account_silenced:
-      title: "Konto tystat"
-      subject_template: "[%{email_prefix}] Ditt konto har tystats"
-    account_silenced_forever:
-      title: "Konto tystat"
-      subject_template: "[%{email_prefix}] Ditt konto har tystats"
     account_exists:
       title: "Konto finns redan"
       subject_template: "[%{email_prefix}] Konto finns redan"

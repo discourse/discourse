@@ -50,6 +50,8 @@ ko:
         error: "에러"
         response: "응답"
       discourse_workflows:
+        ai_tool:
+          list_item: "목록 항목"
         classify:
           text: "텍스트"
           upload_ids: "이미지"
@@ -105,6 +107,9 @@ ko:
         inference:
           setting_groups:
             settings: "기본 설정"
+        review_queue:
+          setting_groups:
+            settings: "설정"
         image_caption:
           setting_groups:
             settings: "설정"

@@ -49,7 +49,30 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
       "Invoke a separate write tool call for every requested change, including repeated requests and multiple changes in the same message.",
       "Previous tool calls never apply to later requests.",
       "Only say that a change is pending approval when the write tool returned a pending approval result in the current turn.",
-      "Every change requires human approval.",
+      "Changes you submit through write tools require human approval.",
+      "Manual changes in the admin UI do not go through the assistant's approval queue.",
+    )
+  end
+
+  it "requests succinct answers while preserving essential guidance" do
+    prompt = assistant.craft_prompt(DiscourseAi::Agents::BotContext.new)
+
+    expect(prompt.system_message_text).to include(
+      "Be succinct and stingy with words.",
+      "Aim for under 80 words unless the user requests detail or the task requires it.",
+      "Keep essential warnings, permissions, approval status, and verified links.",
+    )
+  end
+
+  it "grounds UI and side-effect guidance in evidence" do
+    prompt = assistant.craft_prompt(DiscourseAi::Agents::BotContext.new)
+
+    expect(prompt.system_message_text).to include(
+      "Ground UI steps, permissions, and side effects in tool results or documentation.",
+      "If exact UI details are unverified, describe the intended configuration instead of guessing labels.",
+      "Dependencies indicate prerequisites, not settings or data that will be deleted.",
+      "For private categories, explain group permissions rather than guessing visibility controls",
+      "Staff means admins and moderators, not high-trust users.",
     )
   end
 

@@ -3687,10 +3687,8 @@ pt:
           label: "selecionado"
           title: "Clique para desseleccionar a mensagem"
         select_replies:
-          label: "selecione +respostas"
           title: "Adicionar o post e todas as suas respostas à seleção"
         select_below:
-          label: "Selecione +abaixo"
           title: "Adicionar a postagem e tudo após ela à seleção"
         delete: eliminar selecionados
         cancel: cancelar seleção

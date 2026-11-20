@@ -3396,10 +3396,8 @@ nb_NO:
           label: "valgt"
           title: "Klikk for å fjerne innlegg fra utvalg"
         select_replies:
-          label: "velg +svar"
           title: "Legg til innlegg og alle dets svar i utvalg"
         select_below:
-          label: "velg +under"
           title: "Legg til innlegg og alle etter det til utvalget"
         delete: fjern valgte
         cancel: avbryt valg
@@ -5526,7 +5524,6 @@ nb_NO:
         silence_modal_title: "Demp bruker"
         silence_duration: "Hvor lenge skal brukeren dempes?"
         silence_reason_placeholder: "Årsak til demping"
-        silence_message: "E-postmelding"
         suspended_until: "(til %{until})"
         cant_suspend: "Brukeren kan ikke utestenges."
         penalty_post_actions: "Hva ønsker du å gjøre med det assosierte innlegg"

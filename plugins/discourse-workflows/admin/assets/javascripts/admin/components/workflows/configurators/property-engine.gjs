@@ -78,7 +78,7 @@ export default class PropertyEngineConfigurator extends Component {
 
   <template>
     {{#each this.allFields key="name" as |field|}}
-      {{#if (fieldVisible field @configuration)}}
+      {{#if (fieldVisible field @configuration this.metadata)}}
         {{#let (this.controlEntry field) as |entry|}}
           {{#if (eq entry.kind "structural")}}
             <entry.renderer

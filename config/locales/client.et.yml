@@ -2092,10 +2092,8 @@ et:
           label: "valitud"
           title: "Klõpsa postituse valikust eemaldamiseks"
         select_replies:
-          label: "vali +vastused"
           title: "Lisa postitus ja kõik selle vastused valikusse"
         select_below:
-          label: "vali +allpool"
           title: "Lisa postitus ja kõik sellest allpool olev valikusse"
         delete: kustuta valitud
         cancel: tühista valimine

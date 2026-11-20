@@ -2919,10 +2919,8 @@ ko:
           label: "선택됨"
           title: "클릭하여 선택에서 게시물 제거"
         select_replies:
-          label: "선택 + 댓글"
           title: "게시물과 모든 댓글을 선택에 추가"
         select_below:
-          label: "선택 + 이후 게시물"
           title: "게시물 및 이후 게시물 선택에 추가"
         delete: 선택 삭제됨
         cancel: 선택을 취소
@@ -5225,7 +5223,6 @@ ko:
         silence_modal_title: "사용자 차단"
         silence_duration: "이 사용자를 언제까지 차단할까요?"
         silence_reason_placeholder: "차단 이유"
-        silence_message: "메시지 이메일 전송"
         suspended_until: "(%{until}까지)"
         cant_suspend: "이 사용자는 정지할 수 없습니다."
         delete_posts_failed: "게시물을 삭제하는 중에 문제가 발생했습니다."

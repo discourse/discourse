@@ -3,26 +3,11 @@ import { action } from "@ember/object";
 import { cancel, later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import randomUUID from "discourse/lib/random-uuid";
 import { i18n } from "discourse-i18n";
 import SmoothStreamer from "../lib/smooth-streamer.gjs";
 
 const DISCOVERY_TIMEOUT_MS = 20000;
-
-function buildRequestId(cryptoProvider = globalThis.crypto) {
-  if (cryptoProvider.randomUUID) {
-    return cryptoProvider.randomUUID();
-  }
-
-  const bytes = new Uint8Array(16);
-  cryptoProvider.getRandomValues(bytes);
-  bytes[6] = (bytes[6] % 16) + 64;
-  bytes[8] = (bytes[8] % 64) + 128;
-  const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
-
-  return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex
-    .slice(6, 8)
-    .join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10).join("")}`;
-}
 
 export default class DiscobotDiscoveries extends Service {
   // We use this to retain state after search menu gets closed.
@@ -40,6 +25,7 @@ export default class DiscobotDiscoveries extends Service {
   @tracked answerable = null;
   @tracked errorMessage = "";
   @tracked discoveryTitle = "";
+  @tracked cachedAnswerAt = null;
   @tracked suggestedFollowUp = "";
   @tracked recentAsks = [];
 
@@ -132,6 +118,7 @@ export default class DiscobotDiscoveries extends Service {
     this.smoothStreamer.updateResult(update, "ai_discover_reply");
 
     if (update.done) {
+      this.cachedAnswerAt = update.cached_at ?? null;
       const message =
         update.answerable === false
           ? i18n("discourse_ai.discobot_discoveries.no_answer")
@@ -151,6 +138,7 @@ export default class DiscobotDiscoveries extends Service {
     this.answerable = null;
     this.errorMessage = "";
     this.discoveryTitle = "";
+    this.cachedAnswerAt = null;
     this.suggestedFollowUp = "";
     this.smoothStreamer.resetStreaming();
   }
@@ -214,6 +202,7 @@ export default class DiscobotDiscoveries extends Service {
       classifyIntent,
       deferIfPrecise,
       deferredAskLogId,
+      freshAnswer,
     } = {}
   ) {
     const normalizedQuery = query?.trim();
@@ -234,7 +223,7 @@ export default class DiscobotDiscoveries extends Service {
       return;
     }
 
-    const requestId = buildRequestId();
+    const requestId = randomUUID();
     this.loadingDiscoveries = true;
     this.activeRequestId = requestId;
     // a search that may defer its answer is not an ask until the server says so
@@ -259,6 +248,7 @@ export default class DiscobotDiscoveries extends Service {
           ...(classifyIntent && { classify_intent: true }),
           ...(deferIfPrecise && { defer_if_precise: true }),
           ...(deferredAskLogId && { deferred_ask_log_id: deferredAskLogId }),
+          ...(freshAnswer && { fresh_answer: true }),
         },
       });
 
@@ -337,10 +327,12 @@ export default class DiscobotDiscoveries extends Service {
   }
 
   #noteAsking(query) {
-    this.a11y.announce(
-      i18n("discourse_ai.discobot_discoveries.asking"),
-      "polite"
-    );
+    if (this.loadingDiscoveries) {
+      this.a11y.announce(
+        i18n("discourse_ai.discobot_discoveries.asking"),
+        "polite"
+      );
+    }
     this.rememberAsk(query);
   }
 }

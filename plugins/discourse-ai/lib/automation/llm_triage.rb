@@ -333,6 +333,7 @@ module DiscourseAi
                   "discourse_automation.scriptables.llm_triage.notify_author_pm.body",
                   username: post.user.username,
                   topic_title: post.topic.title,
+                  base_url: Discourse.base_url,
                   post_url: post.url,
                 )
 

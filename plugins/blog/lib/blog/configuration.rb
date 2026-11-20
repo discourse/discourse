@@ -21,29 +21,29 @@ module ::Blog
     end
 
     # Without a custom domain the blog lives under PATH_PREFIX on the forum.
-    def self.custom_domain?
-      SiteSetting.blog_url.present? && URI(SiteSetting.blog_url).host != Discourse.current_hostname
+    def self.custom_domain?(blog = Instance.default_blog)
+      blog.url.present? && URI(blog.url).host != Discourse.current_hostname
     rescue URI::InvalidURIError
       false
     end
 
-    def self.origin
-      custom_domain? ? SiteSetting.blog_url : Discourse.base_url_no_prefix
+    def self.origin(blog = Instance.default_blog)
+      custom_domain?(blog) ? blog.url : Discourse.base_url_no_prefix
     end
 
-    def self.base_url
-      custom_domain? ? SiteSetting.blog_url : "#{Discourse.base_url}#{PATH_PREFIX}"
+    def self.base_url(blog = Instance.default_blog)
+      custom_domain?(blog) ? blog.url : "#{Discourse.base_url}#{PATH_PREFIX}"
     end
 
-    def self.url(path = "", preview_token: nil)
-      url = "#{base_url}#{path}"
+    def self.url(path = "", blog: Instance.default_blog, preview_token: nil)
+      url = "#{base_url(blog)}#{path}"
       return url if preview_token.blank?
       "#{url}#{path.include?("?") ? "&" : "?"}#{{ blog_theme_preview: preview_token }.to_query}"
     end
 
     # The reader keeps the prefix on a custom domain too, so one client route serves both modes.
-    def self.review_url
-      "#{custom_domain? ? origin : Discourse.base_url}#{PATH_PREFIX}/review"
+    def self.review_url(blog = Instance.default_blog)
+      "#{custom_domain?(blog) ? origin(blog) : Discourse.base_url}#{PATH_PREFIX}/review"
     end
 
     def self.blog_host?(request)

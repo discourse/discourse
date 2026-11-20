@@ -3591,12 +3591,6 @@ cs:
     account_suspended_forever:
       title: "Účet pozastaven"
       subject_template: "[%{email_prefix}] Váš účet byl pozastaven"
-    account_silenced:
-      title: "Účet ztišen"
-      subject_template: "[%{email_prefix}] Váš účet byl ztišen"
-    account_silenced_forever:
-      title: "Účet ztišen"
-      subject_template: "[%{email_prefix}] Váš účet byl ztišen"
     account_exists:
       title: "Účet již existuje"
       subject_template: "[%{email_prefix}] Účet již existuje"

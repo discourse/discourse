@@ -133,6 +133,44 @@ RSpec.describe Blog::Publication do
     end
   end
 
+  describe "blogs" do
+    fab!(:other_blog) do
+      Blog::Instance.create!(
+        name: "Engineering",
+        slug: "engineering",
+        url: "https://engineering.example.com",
+      )
+    end
+
+    it "belongs to the default blog unless another is chosen" do
+      expect(described_class.for_topic(topic).blog).to eq(Blog::Instance.default_blog)
+    end
+
+    it "lets each blog hold an article at the same path" do
+      first = described_class.create!(topic: Fabricate(:topic), path: "/shared-story")
+      first.paths.create!(path: "/shared-story")
+      other =
+        described_class.create!(topic: Fabricate(:topic), path: "/shared-story", blog: other_blog)
+      other.paths.create!(path: "/shared-story")
+
+      expect(described_class.new(topic: Fabricate(:topic), path: "/shared-story")).not_to be_valid
+      expect(other.paths.sole.blog_id).to eq(other_blog.id)
+    end
+
+    it "falls back to the default blog when none is recorded" do
+      publication = described_class.new(topic:, path: "/story")
+      publication.blog_id = nil
+
+      expect(publication.blog).to eq(Blog::Instance.default_blog)
+    end
+
+    it "builds its URL from its own blog" do
+      publication = described_class.new(topic:, path: "/story", blog: other_blog)
+
+      expect(publication.url).to eq("https://engineering.example.com/story")
+    end
+  end
+
   describe ".for_topic" do
     it "suffixes the topic id when the topic's slug is reserved" do
       reserved_topic = Fabricate(:topic)

@@ -4033,6 +4033,8 @@ de:
         Als Vorsichtsmaßnahme wurde dein neues Konto stummgeschaltet und du kannst keine neuen Antworten oder Themen erstellen, bis ein Team-Mitglied dein Konto überprüft. Wir entschuldigen uns für die Unannehmlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+    moderator_silence:
+      subject_template: "Dein Konto wurde stummgeschaltet"
     silenced_by_staff:
       title: "Stummgeschaltet vom Team"
       preview: "Konto vorübergehend gesperrt."
@@ -4417,14 +4419,6 @@ de:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
       subject_template_improved: "Dein Konto wurde gesperrt"
-    account_silenced:
-      title: "Konto stummgeschaltet"
-      subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
-      subject_template_improved: "Dein Konto wurde stummgeschaltet"
-    account_silenced_forever:
-      title: "Konto stummgeschaltet"
-      subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
-      subject_template_improved: "Dein Konto wurde stummgeschaltet"
     account_deleted:
       title: "Konto gelöscht"
       subject_template: "[%{email_prefix}] Dein Konto wurde gelöscht"
