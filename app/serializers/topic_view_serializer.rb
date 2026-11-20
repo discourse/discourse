@@ -98,11 +98,7 @@ class TopicViewSerializer < ApplicationSerializer
   def pinned_footer_post
     return unless SiteSetting.enable_pin_post_to_topic_footer
 
-    @pinned_footer_post ||= TopicFooterPinnedPostSerializer.for_topic(object.topic, scope)
-  end
-
-  def include_pinned_footer_post?
-    pinned_footer_post.present?
+    TopicFooterPinnedPostSerializer.for_topic(object.topic, scope)
   end
 
   def message_bus_last_id

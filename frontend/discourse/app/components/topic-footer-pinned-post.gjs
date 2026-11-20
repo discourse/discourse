@@ -1,4 +1,4 @@
-import { trustHTML } from "@ember/template";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { i18n } from "discourse-i18n";
@@ -12,9 +12,7 @@ export default <template>
           <DUserAvatar @size="small" @user={{post}} />
           <DUserLink @user={{post}}>{{post.username}}</DUserLink>
         {{/if}}
-        <div class="cooked">
-          {{trustHTML post.cooked}}
-        </div>
+        <DDecoratedHtml class="cooked" @html={{post.cooked}} />
         <a href={{post.relative_url}}>{{i18n
             "topic.pinned_footer_post.view_original"
           }}</a>

@@ -5459,7 +5459,7 @@ RSpec.describe PostsController do
 
         reply.update!(hidden: true)
         get "/t/#{reply.topic_id}.json"
-        expect(response.parsed_body).not_to have_key("pinned_footer_post")
+        expect(response.parsed_body).to include("pinned_footer_post" => nil)
       end
 
       it "does not let staff pin a whisper" do
