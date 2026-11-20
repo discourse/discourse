@@ -67,21 +67,37 @@ class UserNotifications < ActionMailer::Base
   def signup_after_reject(user, opts = {})
     locale = user_locale(user)
     template = "user_notifications.signup_after_reject"
+    without_reason = "#{template}_without_reason"
     reason = opts[:reject_reason]
-    if reason.to_s.match?(/\A[[:space:]]*\z/)
-      body_template = signup_rejection_body_without_reason(template:, locale:)
-    end
-
-    build_email(
-      user.email,
+    email_options = {
       template:,
-      body_template:,
       **Dsa::AppealInstructions.message_options,
       locale:,
       reason:,
       reject_reason: reason,
       recipient_user: user,
-    )
+    }
+
+    if reason.to_s.match?(/\A[[:space:]]*\z/)
+      alternate_body = "#{without_reason}.text_body_template"
+      overrides = I18n.overrides_by_locale(locale)
+      if overrides.key?(alternate_body) ||
+           (
+             I18n.t(alternate_body, locale:, fallback: false, default: nil) &&
+               !TranslationOverride.exists?(
+                 locale: I18n.fallbacks[locale],
+                 translation_key: "#{template}.text_body_template",
+               )
+           )
+        # Use the original subject unless the site customizes this variant.
+        unless overrides.key?("#{without_reason}.subject_template")
+          subject = Email::MessageBuilder.new(user.email, email_options).subject
+        end
+        email_options[:template] = without_reason
+      end
+    end
+
+    build_email(user.email, email_options).tap { |message| message.subject = subject if subject }
   end
 
   def suspicious_login(user, opts = {})
@@ -997,21 +1013,6 @@ class UserNotifications < ActionMailer::Base
   end
 
   private
-
-  def signup_rejection_body_without_reason(template:, locale:)
-    default = "#{template}.text_body_template"
-    without_reason = "#{template}.text_body_template_without_reason"
-
-    I18n.fallbacks[locale].each do |fallback|
-      break if I18n.overrides_by_locale(fallback).key?(default)
-      if I18n.t(without_reason, locale: fallback, fallback: false, default: nil)
-        return without_reason
-      end
-      break if I18n.t(default, locale: fallback, fallback: false, default: nil)
-    end
-
-    nil
-  end
 
   def build_user_email_token_by_template(template, user, email_token)
     build_email(

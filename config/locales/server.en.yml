@@ -5549,7 +5549,10 @@ en:
         Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
-      text_body_template_without_reason: |
+    signup_after_reject_without_reason:
+      title: "Signup rejection without a reason"
+      subject_template: "You've been rejected on %{site_name}"
+      text_body_template: |
         Hello,
 
         This is an automated message from %{site_name} to let you know that a staff member declined your registration.

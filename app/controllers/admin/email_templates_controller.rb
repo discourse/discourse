@@ -114,6 +114,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         user_notifications.signup
         user_notifications.signup_after_approval
         user_notifications.signup_after_reject
+        user_notifications.signup_after_reject_without_reason
         user_notifications.suspicious_login
         user_notifications.user_group_mentioned
         user_notifications.user_group_mentioned_pm
