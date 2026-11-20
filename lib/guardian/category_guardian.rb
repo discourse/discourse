@@ -14,12 +14,12 @@ module CategoryGuardian
   end
 
   def can_edit_category_as_group_moderator?(category)
-    category && category_group_moderator_can_edit_settings?(category.id) &&
-      can_see_category?(category)
+    category && !can_edit_category?(category) &&
+      category_group_moderator_can_edit_settings?(category.id) && can_see_category?(category)
   end
 
   def can_edit_categories_as_group_moderator?
-    SiteSetting.category_group_moderators_can_edit_categories && !is_staff? && !is_silenced? &&
+    SiteSetting.category_group_moderators_can_edit_categories && !is_silenced? &&
       moderated_category_ids.present?
   end
 

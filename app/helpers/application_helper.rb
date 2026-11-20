@@ -1064,7 +1064,9 @@ module ApplicationHelper
       is_staff: staff?,
     }
 
-    setup_data[:category_editor_only] = true if guardian.can_edit_categories_as_group_moderator?
+    if !staff? && guardian.can_edit_categories_as_group_moderator?
+      setup_data[:category_editor_only] = true
+    end
 
     if Rails.env.development?
       setup_data[:svg_icon_list] = SvgSprite.all_icons(theme_id)

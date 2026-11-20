@@ -2,6 +2,8 @@
 
 class CategoryUpdater
   MAX_DESCRIPTION_LENGTH = CategoryCreator::MAX_DESCRIPTION_LENGTH
+  GROUP_MODERATOR_MAX_TEMPLATE_LENGTH = 10_000
+  GROUP_MODERATOR_MAX_FEATURED_TOPICS = 10
   GROUP_MODERATOR_FIELDS = %i[
     allow_badges
     color
@@ -70,6 +72,7 @@ class CategoryUpdater
       guardian.ensure_can_edit_category_as_group_moderator!(category)
       attributes.slice!(*GROUP_MODERATOR_FIELDS)
       log_attributes.slice!(*GROUP_MODERATOR_FIELDS)
+      return false unless valid_group_moderator_attributes?
     else
       guardian.ensure_can_edit!(category)
     end
@@ -109,6 +112,26 @@ class CategoryUpdater
   end
 
   private
+
+  def valid_group_moderator_attributes?
+    template = attributes[:topic_template]
+    if template && template != category.topic_template &&
+         template.size > GROUP_MODERATOR_MAX_TEMPLATE_LENGTH
+      category.errors.add(:topic_template, :too_long, count: GROUP_MODERATOR_MAX_TEMPLATE_LENGTH)
+    end
+
+    count = attributes[:num_featured_topics]
+    if count && count.to_i != category.num_featured_topics &&
+         count.to_i > GROUP_MODERATOR_MAX_FEATURED_TOPICS
+      category.errors.add(
+        :num_featured_topics,
+        :less_than_or_equal_to,
+        count: GROUP_MODERATOR_MAX_FEATURED_TOPICS,
+      )
+    end
+
+    category.errors.empty?
+  end
 
   attr_reader :guardian,
               :category,

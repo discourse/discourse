@@ -1158,6 +1158,19 @@ RSpec.describe CategoriesController do
         expect(category.custom_fields).not_to have_key("extra")
       end
 
+      it "rejects oversized category templates and featured topic counts" do
+        SiteSetting.category_group_moderators_can_edit_categories = true
+
+        put "/categories/#{category.id}.json",
+            params: {
+              topic_template: "a" * 10_001,
+              num_featured_topics: 11,
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body.fetch("errors").size).to eq(2)
+      end
+
       it "denies edits to other categories and deletion of a moderated category" do
         SiteSetting.category_group_moderators_can_edit_categories = true
         other_category = Fabricate(:category)

@@ -86,6 +86,9 @@
         "notification_level": {
           "type": "integer"
         },
+        "can_edit_as_group_moderator": {
+          "type": "boolean"
+        },
         "can_edit": {
           "type": "boolean"
         },
