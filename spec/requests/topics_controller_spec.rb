@@ -1425,6 +1425,19 @@ RSpec.describe TopicsController do
   end
 
   describe "#status" do
+    it "preserves a category group moderator's permission to reply at TL4" do
+      SiteSetting.enable_category_group_moderation = true
+      SiteSetting.tl4_can_post_in_closed_topics = false
+      group = Fabricate(:group, users: [trust_level_4])
+      Fabricate(:category_moderation_group, category: topic.category, group:)
+      topic.update!(closed: true)
+      sign_in(trust_level_4)
+
+      post "/posts.json", params: { topic_id: topic.id, raw: "A group moderator's reply" }
+
+      expect(response).to have_http_status(:ok)
+    end
+
     it "records the closure and restricts replies when closed topic posting for TL4 is disabled" do
       Fabricate(:post, topic:)
       sign_in(trust_level_4)

@@ -87,7 +87,10 @@ module TopicGuardian
   end
 
   def can_create_post_on_topic?(topic)
-    return false if topic.present? && topic.closed? && tl4_closed_topic_reply_restricted?
+    if topic.present? && topic.closed? && tl4_closed_topic_reply_restricted? &&
+         !is_category_group_moderator?(topic.category)
+      return false
+    end
 
     can_create_post_on_topic_with_base_permissions?(topic)
   end
