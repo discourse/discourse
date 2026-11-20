@@ -77,12 +77,29 @@ module("Unit | Lib | codeblock-buttons", function (hooks) {
     });
   }
 
+  test("omits the label for a defaulted language", function (assert) {
+    this.buttons = new CodeblockButtons({ showLanguage: true });
+    const container = fixture();
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+    code.className = "lang-ruby";
+    pre.appendChild(code);
+    container.appendChild(pre);
+
+    this.buttons.attachToGeneric(container);
+
+    assert
+      .dom(".codeblock-language", pre)
+      .doesNotExist("the fence has no explicit language");
+  });
+
   test("adds a label outside the code without changing the clipboard contents", async function (assert) {
     this.buttons = new CodeblockButtons({ showLanguage: true });
     const container = fixture();
     const pre = document.createElement("pre");
     const code = document.createElement("code");
     code.className = "lang-bash";
+    pre.dataset.codeLanguage = "bash";
     code.textContent = "    echo ok\n";
     pre.appendChild(code);
     container.appendChild(pre);

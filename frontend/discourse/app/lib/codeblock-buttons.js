@@ -98,12 +98,10 @@ export default class CodeblockButtons {
   }
 
   #addLanguageLabel(codeBlock, pre) {
-    const languageClass = [...codeBlock.classList].find((name) =>
-      /^lang-[\w+#.-]+$/.test(name)
-    );
-    const language = languageClass?.slice("lang-".length);
+    const language = pre.dataset.codeLanguage;
     if (
       !language ||
+      !/^[\w+-]+$/.test(language) ||
       NO_LANGUAGE_LABEL.has(language.toLowerCase()) ||
       pre.querySelector(":scope > .codeblock-language")
     ) {
