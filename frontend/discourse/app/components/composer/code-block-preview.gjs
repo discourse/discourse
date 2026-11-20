@@ -49,8 +49,8 @@ export default class CodeBlockPreview extends Component {
         @options.preview
         as |Preview|
       }}<Preview
-          @source={{@node.textContent}}
           @node={{@node}}
+          @source={{@node.textContent}}
         />{{/let}}</div>{{~! strip whitespace ~}}
   </template>
 }
