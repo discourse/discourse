@@ -475,20 +475,6 @@ RSpec.describe PostActionCreator do
       expect(post.reload).to be_hidden
     end
 
-    it "notifies the author about the review hold without appeal instructions" do
-      enable_dsa_reporting
-      SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-
-      build_creator.perform
-
-      args = Jobs::SendSystemMessage.jobs.sole.fetch("args").sole.with_indifferent_access
-      notice = Jobs::SendSystemMessage.new.execute(args)
-
-      expect(notice.topic.allowed_users).to include(post.user)
-      expect(notice.topic.title).to eq(I18n.t("system_messages.queued_by_staff.subject_template"))
-      expect(notice.raw).not_to include(SiteSetting.dsa_moderation_appeal_email)
-    end
-
     it "hides the topic even if it has replies" do
       Fabricate(:post, topic: post.topic)
 

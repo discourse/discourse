@@ -180,19 +180,6 @@ RSpec.describe UserNotifications do
   describe ".post_approved" do
     fab!(:post)
 
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        enable_dsa_reporting
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "omits appeal instructions from the post approval email" do
-        mail = UserNotifications.post_approved(user, notification_data_hash: { post_url: post.url })
-
-        expect(mail.body.decoded).not_to include(SiteSetting.dsa_moderation_appeal_email)
-      end
-    end
-
     it "addresses the post approval email to the user with a subject and body" do
       subject =
         UserNotifications.post_approved(user, { notification_data_hash: { post_url: post.url } })

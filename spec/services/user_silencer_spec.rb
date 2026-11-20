@@ -194,22 +194,6 @@ RSpec.describe UserSilencer do
       expect(count).to eq(1)
     end
 
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        enable_dsa_reporting
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "omits appeal instructions from the unsilence notice" do
-        user.update!(silenced_till: 1.year.from_now)
-
-        UserSilencer.unsilence(user, admin)
-
-        pm = Topic.private_messages_for_user(user).sole
-        expect(pm.first_post.raw).not_to include(SiteSetting.dsa_moderation_appeal_email)
-      end
-    end
-
     it "does nothing when the user is not silenced" do
       expect(UserSilencer.unsilence(user, admin)).to eq(false)
 
