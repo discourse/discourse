@@ -14,12 +14,15 @@ class AppearanceChange::DraftTheme
 
   params base_class: AppearanceChange::PalettesContract do
     attribute :styles
+    attribute :base_theme_id, :integer
     attribute :replaces_theme_id, :integer
   end
 
   policy :can_create_theme
   policy :local_themes_allowed
   policy :can_create_color_scheme
+  step :resolve_base_theme
+  policy :supported_base_theme
   only_if(:new_version) { policy :replaceable_theme }
   step :check_styles
 
@@ -49,6 +52,31 @@ class AppearanceChange::DraftTheme
     guardian.can_create_color_scheme?
   end
 
+  def resolve_base_theme(params:)
+    source = Theme.find_by(id: params.replaces_theme_id) || Theme.find_default
+    context[:base_theme_id] = params.base_theme_id
+    if params.base_theme_id.nil? && params.replaces_theme_id.present? &&
+         AppearanceStyles::SyncedTheme.horizon?(source)
+      context[:base_theme_id] = Theme::CORE_THEMES["horizon"]
+    end
+    context[:source_theme] = source
+  end
+
+  def supported_base_theme(base_theme_id:, guardian:, source_theme:)
+    base_theme_id.nil? ||
+      (
+        base_theme_id == Theme::CORE_THEMES["horizon"] &&
+          guardian.can_edit_theme?(Theme.horizon_theme) && source_theme &&
+          AppearanceStyles::SyncedTheme.horizon?(source_theme) &&
+          guardian.can_edit_theme?(source_theme) &&
+          source_theme.child_themes.all? { |component| guardian.can_edit_theme?(component) } &&
+          guardian.can_edit_theme_relations?(
+            source_theme,
+            child_theme_ids: source_theme.child_theme_ids,
+          )
+      )
+  end
+
   def new_version(params:)
     params.replaces_theme_id.present?
   end
@@ -58,12 +86,13 @@ class AppearanceChange::DraftTheme
     AppearanceChange.replaceable?(theme) && guardian.can_edit_theme?(theme)
   end
 
-  def check_styles(params:)
+  def check_styles(params:, base_theme_id:)
     return context[:css] = "" if params.styles.blank?
 
     result =
       AppearanceStyles::Policy.call(
         params.styles,
+        base_theme_id:,
         palettes: {
           light: params.light_colors.to_hash,
           dark: params.dark_colors.to_hash,
@@ -93,11 +122,22 @@ class AppearanceChange::DraftTheme
 
   # The compile is the last check: a theme that saves with an SCSS error
   # would show without its styles.
-  def add_styles(theme:, css:)
-    return if css.blank?
+  def add_styles(theme:, css:, params:, source_theme:, base_theme_id:)
+    if base_theme_id
+      AppearanceStyles::SyncedTheme.create!(
+        theme:,
+        source: source_theme,
+        # stored the same way as on the change, so the two match
+        styles: css.present? ? params.styles || {} : {},
+        css:,
+      )
+    else
+      return if css.blank?
 
-    theme.set_field(target: :common, name: :scss, value: css)
-    theme.save!
+      theme.set_field(target: :common, name: :scss, value: css)
+      theme.save!
+    end
+
     error = theme.theme_fields.find_by(target_id: Theme.targets[:common], name: "scss")&.error
     fail!(error) if error.present?
   end
@@ -108,7 +148,8 @@ class AppearanceChange::DraftTheme
     theme:,
     light_color_scheme:,
     dark_color_scheme:,
-    css:
+    css:,
+    base_theme_id:
   )
     AppearanceChange.create(
       kind: :theme,
@@ -120,6 +161,7 @@ class AppearanceChange::DraftTheme
       styles: css.present? ? params.styles.deep_stringify_keys : {},
       css:,
       replaces_theme_id: params.replaces_theme_id,
+      base_theme_id:,
       user: guardian.user,
     )
   end

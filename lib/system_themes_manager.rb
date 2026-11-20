@@ -28,6 +28,20 @@ class SystemThemesManager
 
     theme.update_column(:enabled, true) unless theme.enabled?
 
+    if theme_name == "horizon"
+      source_digest = AppearanceStyles::SyncedTheme.source_digest(theme)
+      Theme
+        .where.not(appearance_sync: nil)
+        .find_each do |copy|
+          AppearanceStyles::SyncedTheme.resync!(copy, source_digest:)
+        rescue StandardError => error
+          # A bad copy must not prevent the system theme or other copies updating.
+          Rails.logger.warn(
+            "Horizon copy #{copy.id} could not sync: #{error.class}: #{error.message}",
+          )
+        end
+    end
+
     Stylesheet::Manager.clear_theme_cache!
   end
 

@@ -192,7 +192,9 @@ class CurrentUserSerializer < BasicUserSerializer
   def include_can_run_design_wizard?
     return false if !object.admin?
 
-    theme_ids = DesignWizard::Themes.ids + AppearanceChange.managed_theme_ids
+    managed_ids = AppearanceChange.managed_theme_ids
+    shared_component_ids = ChildTheme.where(parent_theme_id: managed_ids).pluck(:child_theme_id)
+    theme_ids = DesignWizard::Themes.ids + managed_ids + shared_component_ids
     theme_ids.include?(SiteSetting.default_theme_id) && !Theme.where.not(id: theme_ids).exists?
   end
 

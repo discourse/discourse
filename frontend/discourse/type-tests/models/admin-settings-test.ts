@@ -137,6 +137,7 @@ expectTypeOf(theme.id).toEqualTypeOf<number>();
 expectTypeOf(theme.name).toEqualTypeOf<string>();
 expectTypeOf(theme.description).toEqualTypeOf<string | null>();
 expectTypeOf(theme.component).toEqualTypeOf<boolean>();
+expectTypeOf(theme.horizon_synced).toEqualTypeOf<boolean>();
 // Only the default theme sends `default`.
 expectTypeOf(theme.default).toEqualTypeOf<boolean | undefined>();
 expectTypeOf(theme.color_scheme_id).toEqualTypeOf<number | null>();

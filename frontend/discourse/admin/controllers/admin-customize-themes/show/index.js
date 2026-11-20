@@ -102,19 +102,24 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     return this.model?.childThemes?.map?.((item) => item.name) ?? [];
   }
 
-  @computed("settings.length")
+  // A copy synced with Horizon is edited by detaching it first, so its
+  // files, settings and components aren't offered for editing until then.
+  @computed("settings.length", "model.horizon_synced")
   get hasSettings() {
-    return !isEmpty(this.settings);
+    return !this.model?.horizon_synced && !isEmpty(this.settings);
   }
 
-  @computed("translations.length")
+  @computed("translations.length", "model.horizon_synced")
   get hasTranslations() {
-    return !isEmpty(this.translations);
+    return !this.model?.horizon_synced && !isEmpty(this.translations);
   }
 
-  @computed("model.themeable_site_settings.length")
+  @computed("model.themeable_site_settings.length", "model.horizon_synced")
   get hasThemeableSiteSettings() {
-    return !isEmpty(this.model?.themeable_site_settings);
+    return (
+      !this.model?.horizon_synced &&
+      !isEmpty(this.model?.themeable_site_settings)
+    );
   }
 
   @computed("model.settings")

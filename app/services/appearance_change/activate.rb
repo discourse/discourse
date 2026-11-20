@@ -20,6 +20,7 @@ class AppearanceChange::Activate
   policy :can_edit_theme
   policy :not_applied
   policy :palettes_exist
+  policy :theme_unchanged
   only_if(:replaces_version) { policy :can_edit_versions }
   model :replaced_state
   step :record_pending_activation
@@ -43,6 +44,10 @@ class AppearanceChange::Activate
 
   def not_applied(appearance_change:)
     !appearance_change.applied?
+  end
+
+  def theme_unchanged(appearance_change:)
+    appearance_change.theme_unchanged?
   end
 
   def palettes_exist(appearance_change:)
@@ -79,6 +84,8 @@ class AppearanceChange::Activate
   # Making a version live renames the one it replaces and may remove the one
   # before that, so the administrator has to be able to change both.
   def can_edit_versions(guardian:, appearance_change:)
+    return false if !AppearanceChange.replaceable?(appearance_change.replaces_theme)
+
     appearance_change.versions_changed_on_activation.all? do |theme|
       guardian.can_edit_theme_relations?(theme, child_theme_ids: [], parent_theme_ids: [])
     end

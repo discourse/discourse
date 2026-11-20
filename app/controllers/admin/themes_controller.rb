@@ -108,6 +108,14 @@ class Admin::ThemesController < Admin::AdminController
 
       if theme_id.present? && (existing_theme = Theme.find_by(id: theme_id))
         guardian.ensure_can_edit_theme!(existing_theme)
+        if existing_theme.appearance_sync.present?
+          return(
+            render_json_error(
+              I18n.t("themes.horizon_copy_requires_detach"),
+              status: :unprocessable_entity,
+            )
+          )
+        end
       end
 
       begin
@@ -187,6 +195,22 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
     guardian.ensure_can_edit_theme!(@theme)
+    original_json = ThemeSerializer.new(@theme, root: false).to_json
+    if @theme.appearance_sync.present?
+      if theme_params[:detach_from_horizon].to_s == "true"
+        @theme.appearance_sync = nil
+      elsif (
+            theme_params.keys &
+              %w[theme_fields settings translations component child_theme_ids parent_theme_ids]
+          ).any?
+        return(
+          render_json_error(
+            I18n.t("themes.horizon_copy_requires_detach"),
+            status: :unprocessable_entity,
+          )
+        )
+      end
+    end
     child_theme_ids = theme_params[:child_theme_ids]
     parent_theme_ids = theme_params[:parent_theme_ids]
     # switching between theme and component drops the relations on one side
@@ -200,7 +224,6 @@ class Admin::ThemesController < Admin::AdminController
       raise Discourse::InvalidAccess
     end
 
-    original_json = ThemeSerializer.new(@theme, root: false).to_json
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 
@@ -333,6 +356,14 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
     guardian.ensure_can_edit_theme!(@theme)
+    if @theme.appearance_sync.present?
+      return(
+        render_json_error(
+          I18n.t("themes.horizon_copy_requires_detach"),
+          status: :unprocessable_entity,
+        )
+      )
+    end
 
     setting_name = params[:name].to_sym
     new_value = params[:value] || nil
@@ -348,6 +379,17 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def update_theme_site_setting
+    theme = Theme.find_by(id: params[:id])
+    if theme&.appearance_sync.present?
+      guardian.ensure_can_edit_theme!(theme)
+      return(
+        render_json_error(
+          I18n.t("themes.horizon_copy_requires_detach"),
+          status: :unprocessable_entity,
+        )
+      )
+    end
+
     Themes::ThemeSiteSettingManager.call(
       params: {
         theme_id: params[:id],
@@ -506,6 +548,7 @@ class Admin::ThemesController < Admin::AdminController
           :component,
           :enabled,
           :auto_update,
+          :detach_from_horizon,
           :locale,
           settings: {
           },

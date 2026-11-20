@@ -85,6 +85,19 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   @action
+  detachFromHorizon() {
+    return this.dialog.yesNoConfirm({
+      message: i18n("admin.customize.theme.horizon_detach_confirm"),
+      didConfirm: () => {
+        return this.model
+          .save({ detach_from_horizon: true })
+          .then(() => this.model.set("horizon_synced", false))
+          .catch(popupAjaxError);
+      },
+    });
+  }
+
+  @action
   destroyTheme() {
     return this.dialog.yesNoConfirm({
       message: i18n("admin.customize.delete_confirm", {
