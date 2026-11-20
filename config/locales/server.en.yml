@@ -4834,7 +4834,7 @@ en:
 
         %{decision}
 
-        **Reason:** %{reason}
+        Reason: %{reason}
 
         You can still read discussions, but you can’t participate in them while your account is silenced.
 
@@ -4872,7 +4872,7 @@ en:
 
         The new user [%{username}](%{user_url}) was automatically silenced.
 
-        Reason - %{reason}
+        Reason: %{reason}
 
         Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
@@ -5271,7 +5271,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
 
-        Reason - %{reason}
+        Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5284,7 +5284,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your account has been suspended.
 
-        Reason - %{reason}
+        Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5539,10 +5539,13 @@ en:
     signup_after_reject:
       title: "Signup After Reject"
       subject_template: "You've been rejected on %{site_name}"
+      reason_line: "\n\nReason: %{reason}"
       text_body_template: |
-        A staff member rejected your account on %{site_name}.
+        Hello,
 
-        %{reject_reason}
+        This is an automated message from %{site_name} to let you know that a staff member declined your registration.%{reason_line}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     signup:
       title: "Signup"
