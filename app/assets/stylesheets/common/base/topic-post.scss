@@ -1289,6 +1289,10 @@ pre {
   }
 }
 
+.post-external-link__icon {
+  margin-inline-start: var(--space-1);
+}
+
 .codeblock-buttons {
   display: block;
   position: relative;
