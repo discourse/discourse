@@ -112,9 +112,10 @@ class InviteRedeemer
       available_username = UserNameSuggester.suggest(email)
     end
 
-    user = User.where(staged: true).with_email(email.strip.downcase).first
-    user.unstage! if user
-    user ||= User.new
+    signup_email = email.strip.downcase
+    user = User.where(staged: true).with_email(signup_email).first || User.new
+    authenticator = UserAuthenticator.new(user, session, require_password: false)
+    authenticator.unstage!(signup_email:) if user.staged?
 
     user.attributes = {
       email: email,
@@ -155,8 +156,6 @@ class InviteRedeemer
       user.password = password
       user.password_required!
     end
-
-    authenticator = UserAuthenticator.new(user, session, require_password: false)
 
     if !authenticator.has_authenticator? && !SiteSetting.enable_local_logins
       raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))
