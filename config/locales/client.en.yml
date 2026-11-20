@@ -6539,7 +6539,8 @@ en:
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
-    theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+    theme_preview_notice: "You are currently previewing a theme."
+    exit_theme_preview: "Exit preview"
     theme_preview_failed: "Failed to preview theme because it doesn't exist, or you don't have permission to access it."
 
     image_removed: "(image removed)"
@@ -10486,6 +10487,7 @@ en:
           text: "Text"
           textarea: "Textarea"
           date: "Date"
+          number: "Number"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"
@@ -10705,7 +10707,7 @@ en:
           modal_title: Badge Groupings
         granted_by: Granted By
         granted_at: Granted At
-        reason_help: (A link to a post or topic)
+        reason_help: A link to a post or topic
         save: Save
         delete: Delete
         delete_confirm: Are you sure you want to delete this badge?

@@ -384,7 +384,7 @@ export interface UserFields {
     seen_at: string;
     is_active?: boolean;
   }[];
-  user_fields?: Record<string, string | string[] | boolean | null>;
+  user_fields?: Record<string, string | string[] | number | boolean | null>;
   user_notification_schedule?: Partial<
     Record<`day_${0 | 1 | 2 | 3 | 4 | 5 | 6}_${"start" | "end"}_time`, number>
   > & { id?: number; user_id?: number; enabled: boolean };

@@ -2962,6 +2962,8 @@ be:
           dropdown: "Выпадаючы спіс"
       site_text:
         search_label: "Пошук"
+        preview:
+          default: "Прадвызначаная"
         theme_disabled: "Адключаныя"
         edit: "рэдагаваць"
         revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"

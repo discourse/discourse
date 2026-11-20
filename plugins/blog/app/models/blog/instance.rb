@@ -21,6 +21,8 @@ module ::Blog
     validates :posts_per_page, numericality: { only_integer: true, in: 1..30 }
     validates :is_default, uniqueness: true, if: :is_default?
     validate :path_format_valid
+    validate :slug_routable, unless: :is_default?
+    validate :url_not_forum_host
 
     after_commit { self.class.clear_cache }
 
@@ -57,9 +59,36 @@ module ::Blog
     private
 
     def path_format_valid
-      validator = PathFormatValidator.new
-      return if validator.valid_value?(path_format)
-      errors.add(:path_format, validator.error_message)
+      format = PathFormat.for_blog(self)
+      return errors.add(:path_format, I18n.t("blog.errors.path_format")) if !format.valid?
+      return if !is_default?
+      slug =
+        self.class.where(is_default: false).pluck(:slug).find { format.fixed_first_segment?(it) }
+      errors.add(:path_format, I18n.t("blog.errors.path_format_blog_slug", slug:)) if slug
+    end
+
+    # Other blogs live at /blog/<slug>, next to the default blog's own routes
+    # and articles, so a slug must not be either.
+    def slug_routable
+      return if slug.blank?
+      if (Publication::RESERVED_SEGMENTS + Routes::RESERVED_EXACT_SEGMENTS).include?(slug)
+        return errors.add(:slug, I18n.t("blog.errors.blog_slug_reserved"))
+      end
+      default_blog = self.class.find_by(is_default: true)
+      return if default_blog.nil?
+      if PathFormat.for_blog(default_blog).fixed_first_segment?(slug)
+        return errors.add(:slug, I18n.t("blog.errors.blog_slug_reserved"))
+      end
+      first_segments =
+        Path.where(blog_id: default_blog.id).where("LOWER(SPLIT_PART(path, '/', 2)) = ?", slug)
+      errors.add(:slug, I18n.t("blog.errors.blog_slug_taken")) if first_segments.exists?
+    end
+
+    def url_not_forum_host
+      return if url.blank? || URI(url).host != Discourse.current_hostname
+      errors.add(:url, I18n.t("blog.errors.blog_url_forum_host"))
+    rescue URI::InvalidURIError
+      nil
     end
   end
 end

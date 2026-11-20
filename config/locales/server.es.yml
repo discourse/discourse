@@ -3115,20 +3115,6 @@ es:
       title: "Publicación oculta"
       preview: "Publicación oculta debido a que miembros de la comunidad la han denunciado."
       subject_template: "Publicación ocultada debido a denuncias de la comunidad"
-      text_body_template: |
-        Hola:
-
-        Este es un mensaje automático de %{site_name} para informarte que tu publicación ha sido ocultada.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Esta publicación se ocultó debido a denuncias de la comunidad. Por esto, por favor, considera cómo podrías editar tus publicaciones teniendo en cuenta esta respuesta de la comunidad. **Podrás editar tu publicación dentro de %{edit_delay} minutos y la misma dejará de estar oculta automáticamente.**
-
-        Sin embargo, si la comunidad oculta la publicación una segunda vez, se mantendrá oculta hasta que un miembro del equipo la gestione.
-
-        Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject_edit_post: "Puedes editar tu mensaje original a continuación y volver a enviarlo para hacer los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Puedes editar tu publicación original a continuación y volver a enviarla para realizar los cambios sugeridos."
     reviewable_queued_post_revise_and_reject_edit_topic: "Puedes editar la publicación original de tu tema a continuación y volver a enviarlo para hacer los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta."
@@ -3181,31 +3167,9 @@ es:
       title: "Publicación ocultada de nuevo"
       preview: "Publicación oculta de nuevo por miembros de la comunidad."
       subject_template: "Publicación ocultada debido a denuncias de la comunidad, se ha informado al personal"
-      text_body_template: |
-        Hola:
-
-        Este es un mensaje automático de %{site_name} para informarte que tu publicación ha sido ocultada de nuevo.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del equipo.**
-
-        Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     queued_by_staff:
       title: "La publicación requiere aprobación"
       subject_template: "Publicación oculta por el personal, esperando aprobación"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que hemos ocultado tu publicación.
-
-        <%{base_url}%{url}>
-
-        Tu publicación ha sido ocultada hasta que la revisemos.
-
-        Para más información, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     flags_disagreed:
       title: "Publicación denunciada recuperada por el personal"
       subject_template: "Publicación denunciada recuperada por el personal"
@@ -3711,16 +3675,6 @@ es:
     user_automatically_silenced_with_reason:
       title: "Usuario silenciado automáticamente"
       subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
-      text_body_template: |
-        Este es un mensaje automático.
-
-        El nuevo usuario [%{username}](%{user_url}) se ha silenciado automáticamente.
-
-        Motivo: %{reason}
-
-        Por favor, [revisa las denuncias](%{base_url}/review). Si %{username} se ha silenciado incorrectamente, haz clic en el botón de dejar de silenciar en [la página de administración de este usuario](%{user_url}).
-
-        Este umbral puede cambiarse a través de la opción «silence_new_user».
     spam_post_blocked:
       title: "Publicación con spam bloqueada"
       subject_template: "Publicaciones del usuario nuevo %{username} bloqueadas debido a la repetición de enlaces."
@@ -4230,10 +4184,6 @@ es:
     signup_after_reject:
       title: "Registro: después de rechazo"
       subject_template: "Te han rechazado la cuenta en %{site_name}"
-      text_body_template: |
-        Un miembro del equipo de %{site_name} ha rechazado la creación de tu cuenta.
-
-        %{reject_reason}
     signup:
       title: "Regístrate"
       preview: "Confirma tu cuenta."

@@ -24,6 +24,7 @@ type FieldKind =
   | "text"
   | "textarea"
   | "date"
+  | "number"
   | "confirm"
   | "dropdown"
   | "multiselect";

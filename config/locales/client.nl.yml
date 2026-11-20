@@ -8491,6 +8491,8 @@ nl:
       site_text:
         description: "Je kunt elke tekst op je forum aanpassen."
         search_label: "Zoeken"
+        preview:
+          default: "Standaard"
         theme_disabled: "Uitgeschakeld"
         filters: "Filters"
         status:
@@ -8664,7 +8666,7 @@ nl:
           modal_title: Badgegroeperingen
         granted_by: Toegekend door
         granted_at: Toegekend op
-        reason_help: (Een link naar een bericht of topic)
+        reason_help: Een link naar een bericht of topic
         save: Opslaan
         delete: Verwijderen
         delete_confirm: Weet je zeker dat je deze badge wilt verwijderen?

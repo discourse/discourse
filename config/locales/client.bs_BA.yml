@@ -4524,6 +4524,8 @@ bs_BA:
           dropdown: "Ispustiti"
       site_text:
         search_label: "Pretraži"
+        preview:
+          default: "Uobičajen"
         theme_disabled: "Neomogućen"
         edit: "Edit"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
@@ -4604,7 +4606,7 @@ bs_BA:
           modal_title: Grupiranje bedževa
         granted_by: Dat od
         granted_at: Dato na
-        reason_help: (Veza do posta ili teme)
+        reason_help: Veza do posta ili teme
         save: Sačuvaj
         delete: Obriši
         delete_confirm: Are you sure you want to delete this badge?

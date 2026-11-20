@@ -82,6 +82,10 @@ en:
       no_pinned_messages: "No pinned messages in this channel."
       pin_message: "Pin message"
       unpin_message: "Unpin message"
+      broadcast_to_channel: "Send to #%{channelName}"
+      remove_broadcast_from_channel: "Remove from #%{channelName}"
+      broadcast_to_dm: "Also send in main DM"
+      remove_broadcast_from_dm: "Remove from main DM"
       pinned: "Pinned"
       browse_all_channels: "Browse all channels"
       see_in: "See in"
@@ -586,6 +590,8 @@ en:
         bold_text: "strong text"
         code_text: "code text"
         send: "Send"
+        broadcast_label: "Also send to #%{channelName}"
+        broadcast_label_dm: "Also send in main DM"
 
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
@@ -794,6 +800,8 @@ en:
           one: "%{count} reply"
           other: "%{count} replies"
         label: Thread
+        broadcast_also_sent_to: "Sent to"
+        broadcast_sent_from_thread: "Sent from thread"
         close: "Close Thread"
         original_message:
           started_by: "Started by"

@@ -64,6 +64,7 @@ pl_PL:
             coverage: "Przeanalizowano %{count} z %{total} pytań"
           questions: "Zadane pytania"
           askers: "Użytkownicy pytają"
+          cache_hits: "Zwrócono buforowane odpowiedzi"
           latency: "Opóźnienie odpowiedzi"
           latency_tooltip: "Średni czas od momentu przyjęcia zapytania przez serwer do wysłania pierwszej aktualizacji odpowiedzi, wliczając czas oczekiwania w kolejce. Nie obejmuje to czasu dostarczenia zapytania przez sieć do użytkownika."
           seconds: "%{seconds} s"
@@ -319,6 +320,7 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      apply_review_suggestion: "Zastosuj sugestię AI: %{action}"
       dsa_classification:
         suggest: "Zasugeruj za pomocą AI"
         suggested_by_ai: "Propozycja od AI"
@@ -2145,6 +2147,8 @@ pl_PL:
           many: "%{count} odpowiedzi"
           other: "%{count} odpowiedzi"
         answer_label: "Odpowiedź AI"
+        cached_answer: "Z poprzedniego wyszukiwania (%{age})"
+        refresh_answer: "Wygeneruj nową odpowiedź"
         follow_up_label: "Zadaj pytanie uzupełniające"
         follow_up_placeholder: "Zadaj kolejne pytanie…"
         ask: "Zapytaj"
@@ -2156,6 +2160,7 @@ pl_PL:
           topics: "Tematy"
           this_topic: "Ten temat"
           messages: "Wiadomości"
+          answer_ready: "Odpowiedź gotowa"
           no_answer: "Nie znaleziono odpowiedzi AI"
         no_keyword_matches: "Nie znaleziono pasujących słów kluczowych."
         no_answer: "AI nie znalazła jednoznacznej odpowiedzi. %{askLink}"

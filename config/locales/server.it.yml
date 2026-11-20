@@ -2939,20 +2939,6 @@ it:
     post_hidden:
       title: "Messaggio Nascosto"
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-      text_body_template: |
-        Ciao,
-
-        Questo è un messaggio automatico da %{site_name} per farti sapere che il tuo messaggio è stato nascosto.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Questo messaggio è stato nascosto perché segnalato dalla comunità, quindi cerca di riscriverlo tenendo conto del loro feedback. **Puoi modificare il tuo messaggio dopo %{edit_delay} minuti e ritornerà visibile.**
-
-        Tuttavia, se il messaggio verrà nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che non interverrà lo staff.
-
-        Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Feedback sul tuo messaggio"
       subject_template: "Feedback sul tuo messaggio in %{topic_title}"
@@ -2962,31 +2948,9 @@ it:
     post_hidden_again:
       title: "Messaggio nascosto nuovamente"
       subject_template: "Messaggio nascosto dalle segnalazioni della comunità. Lo staff è stato informato"
-      text_body_template: |
-        Ciao,
-
-        Questo è un messaggio automatico da %{site_name} per farti sapere che il tuo messaggio è stato nuovamente nascosto.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        La comunità ha segnalato questo messaggio ed è ora nascosto. **Siccome questo messaggio è stato nascosto più di una volta, il tuo messaggio rimarrà nascosto fino all'intervento dello staff.**
-
-        Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     queued_by_staff:
       title: "Messaggio da approvare"
       subject_template: "Messaggio nascosto dallo staff, in attesa di approvazione"
-      text_body_template: |
-        Ciao,
-
-        Questo è un messaggio automatico generato da %{site_name} per informarti che il tuo messaggio è stato nascosto.
-
-        <%{base_url}%{url}>
-
-        Il tuo messaggio rimarrà nascosto finché un membro dello staff non lo avrà esaminato.
-
-        Per ulteriori indicazioni, consulta le nostre [linee guida della comunità](%{base_url}/guidelines).
     flags_disagreed:
       title: "Messaggio segnalato ripristinato dallo saff"
       subject_template: "Messaggio segnalato ripristinato dallo saff"
@@ -3864,10 +3828,6 @@ it:
     signup_after_reject:
       title: "Registrazione dopo un rifiuto"
       subject_template: "Sei stato rifiutato su %{site_name}"
-      text_body_template: |
-        Un membro dello staff ha rifiutato il tuo account su %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Iscrizione"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo account"

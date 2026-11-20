@@ -50,6 +50,9 @@ ug:
           title: "خەت نۇسخا سىستېمىسى"
         colors:
           title: "رەڭ"
+        design_variables:
+          type: "تىپى"
+          default: "كۆڭۈلدىكى"
         dialog:
           title: "سۆزلەشكۈ"
         icons:

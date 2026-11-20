@@ -3153,22 +3153,6 @@ sk:
     post_hidden:
       title: "Príspevok je skrytý"
       subject_template: "Príspevok skrytý kvôli označeniam komunity"
-      text_body_template: |
-        ### Preklad
-
-        **Ahoj,**
-
-        Toto je automatická správa od %{site_name}, ktorá vás informuje, že váš príspevok bol skrytý.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Tento príspevok bol skrytý kvôli upozorneniam od komunity, preto zvážte, ako môžete upraviť svoj príspevok podľa ich spätnej väzby. **Svoj príspevok môžete upraviť po %{edit_delay} minútach a automaticky bude opäť zobrazený.**
-
-        Ak však bude príspevok skrytý komunitou druhýkrát, zostane skrytý, kým ho nevybaví personál.
-
-        Pre ďalšie pokyny sa pozrite na naše [pravidlá komunity](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Spätná väzba na váš príspevok"
       subject_template: "Spätná väzba na váš príspevok v %{topic_title}"
@@ -3178,33 +3162,9 @@ sk:
     post_hidden_again:
       title: "Príspevok je opäť skrytý"
       subject_template: "Príspevok skrytý kvôli označeniam komunity, personál bol informovaný"
-      text_body_template: |
-        Dobrý deň,
-
-        Toto je automatická správa z %{site_name} , ktorá vás informuje, že váš príspevok bol opäť skrytý.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Komunita označila tento príspevok a teraz je skrytý. **Vzhľadom na to, že tento príspevok bol skrytý viac ako raz, váš príspevok teraz zostane skrytý, kým sa ním nebude zaoberať člen personálu **.
-
-        Ďalšie pokyny nájdete v našich [komunitných pravidlách](%{base_url}/guidelines).
     queued_by_staff:
       title: "Príspevok vyžaduje schválenie"
       subject_template: "Príspevok skrytý personálom, čaká na schválenie"
-      text_body_template: |
-        ### Preklad
-
-        **Ahoj,**
-
-        Toto je automatická správa od %{site_name}, ktorá vás informuje, že váš príspevok bol skrytý.
-
-        <%{base_url}%{url}>
-
-        Váš príspevok zostane skrytý, kým ho nepreskúma člen personálu.
-
-        Pre ďalšie pokyny sa pozrite na naše [pravidlá komunity](%{base_url}/guidelines).
     flags_disagreed:
       title: "Personál obnovil označený príspevok"
       subject_template: "Personál obnovil označený príspevok"
@@ -4197,10 +4157,6 @@ sk:
     signup_after_reject:
       title: "Registrácia po odmietnutí"
       subject_template: "Boli ste odmietnutí na stránke %{site_name}"
-      text_body_template: |
-        Člen personálu zamietol vaše konto na stránke %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registrácia"
       subject_template: "[%{email_prefix}] Potvrďte svoj nový účet"

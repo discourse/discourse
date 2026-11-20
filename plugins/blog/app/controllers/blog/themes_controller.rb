@@ -58,14 +58,14 @@ module ::Blog
                    ThemePresets.all + BlogTheme.all,
                    each_serializer: BlogThemeSerializer,
                  ).as_json,
-               active: BlogTheme.active,
+               active: BlogTheme.active_for(Instance.default_blog),
              }
     end
 
     def show
       render json: {
                theme: BlogThemeSerializer.new(BlogTheme.find(params[:id]), root: false).as_json,
-               active: BlogTheme.active,
+               active: BlogTheme.active_for(Instance.default_blog),
              }
     end
 
@@ -129,6 +129,7 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_failed_policy(:can_manage_themes) { raise Discourse::InvalidAccess }
+        on_model_not_found(:blog) { raise Discourse::NotFound }
         on_model_not_found(:theme) { raise Discourse::NotFound }
         on_failed_policy(:revision_is_current) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)

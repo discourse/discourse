@@ -50,6 +50,9 @@ es:
           title: "Sistema de fuentes"
         colors:
           title: "Colores"
+        design_variables:
+          type: "Tipo"
+          default: "Por defecto"
         dialog:
           title: "Diálogo"
         drag_and_drop:

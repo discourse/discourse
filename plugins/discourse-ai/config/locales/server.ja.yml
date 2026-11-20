@@ -34,12 +34,6 @@ ja:
         description: "大規模言語モデルを使って投稿に優先順位を付けます"
         notify_author_pm:
           subject: "投稿はレビューのため、一時的に削除されました"
-          body: |
-            @%{username}、こんにちは。
-
-            「%{topic_title}」のあなたの投稿は一時的に削除され、モデレーターによるレビュー待ちとなっています。承認されると、自動的に復元されます。
-
-            参照: %{post_url}
       llm_report:
         title: AI を使った定期レポート
         description: "大規模言語モデルに基づく定期レポート"

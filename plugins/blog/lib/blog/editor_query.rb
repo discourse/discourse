@@ -5,8 +5,6 @@ module ::Blog
     FILTERS = %w[all drafts published unpublished pages].freeze
     MAX_QUERY_LENGTH = 100
 
-    # A blog narrows the list to articles assigned to it. Topics without a
-    # publication yet belong to no blog.
     def self.call(guardian, filter: "all", query: "", blog: nil)
       raise Discourse::InvalidParameters.new(:filter) if FILTERS.exclude?(filter)
       if !query.is_a?(String) || query.length > MAX_QUERY_LENGTH
@@ -46,7 +44,7 @@ module ::Blog
               .select(:topic_id),
         )
       topics = topics.where(user_id: guardian.user.id) unless guardian.is_blog_editor?
-      topics = topics.where(id: Publication.where(blog_id: blog.id).select(:topic_id)) if blog
+      topics = in_blog(topics, blog) if blog
 
       live_ids = Publication.publicly_visible.select("blog_publications.topic_id")
       topics =
@@ -91,5 +89,18 @@ module ::Blog
 
       topics.order(updated_at: :desc, id: :desc)
     end
+
+    # A topic without a publication yet belongs where it would be published, as
+    # in Publication#assign_blog: its public category's blog, otherwise the default.
+    def self.in_blog(topics, blog)
+      unassigned_categories = [blog.category_id]
+      unassigned_categories << SiteSetting.blog_drafts_category.to_i if blog.is_default?
+      topics.where(id: Publication.where(blog_id: blog.id).select(:topic_id)).or(
+        topics
+          .where.not(id: Publication.select(:topic_id))
+          .where(category_id: unassigned_categories.compact),
+      )
+    end
+    private_class_method :in_blog
   end
 end

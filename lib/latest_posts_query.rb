@@ -39,6 +39,7 @@ class LatestPostsQuery
         .includes(user: %i[primary_group flair_group])
         .includes(:reply_to_user)
         .limit(PAGE_SIZE)
+    posts = guardian.filter_hidden_posts(posts)
     posts = posts.where(topic_id: allowed_topics) if !user.admin?
     before_post_id ? posts.where("posts.id < ?", before_post_id) : posts
   end

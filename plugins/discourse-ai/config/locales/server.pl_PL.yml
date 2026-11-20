@@ -62,11 +62,9 @@ pl_PL:
         notify_author_pm:
           subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
           body: |
-            Cześć @%{username},
+            Cześć, @%{username},
 
-            Twój post w „%{topic_title}” został tymczasowo usunięty i umieszczony w kolejce do sprawdzenia przez moderatora. Po zatwierdzeniu zostanie automatycznie przywrócony.
-
-            Źródło: %{post_url}
+            Twój wpis w „%{topic_title}” został tymczasowo usunięty i umieszczony w kolejce do sprawdzenia przez moderatora. Po zatwierdzeniu zostanie automatycznie przywrócony i będziesz mógł ponownie [wyświetlić swój wpis](%{base_url}%{post_url}).
       llm_report:
         title: Raport okresowy z wykorzystaniem AI
         description: "Okresowy raport oparty na dużym modelu językowym"
@@ -368,6 +366,7 @@ pl_PL:
           invalid_arguments: "Argumenty narzędzia AI są nieprawidłowe"
           invalid_schema: "Narzędzie zwróciło schemat argumentów, którego nie można rozwiązać."
           llm_not_found: "Wybrany model języka nie został znaleziony."
+          failed: "Narzędzie AI zawiodło."
       ai_agent:
         errors:
           invalid_mode: "„%{mode}” nie jest obsługiwanym trybem wykonywania agenta AI."
@@ -1425,6 +1424,12 @@ pl_PL:
       not_allowed: "Tylko administratorzy mogą zmieniać wygląd witryny."
       unavailable: "Zmiana wyglądu witryny nie jest tutaj dostępna."
       themes_unavailable: "Tworzenie nowych motywów nie jest dostępne na tej stronie. Zamiast tego mogę zmienić kolory i czcionki bieżącego motywu."
+      styles_unavailable: "Style inne niż kolory i czcionki nie są dostępne na tej stronie. Zamiast tego mogę zmienić kolory i czcionki bieżącego motywu."
+      styles_failed: "Nie udało mi się napisać stylów, które przeszłyby testy bezpieczeństwa motywu. Poproś administratora o inny opis zmiany lub zaproponuj stworzenie jej za pomocą własnej aplikacji AI."
+      more_styles: "Więcej zmian stylu"
+      theme_changed: "Ten motyw został zmieniony od czasu zapisania, więc nie mogę go udostępnić. Ustaw go jako domyślny w Administracja > Wygląd > Motywy albo poproś mnie o nową wersję."
+      new_version_target: "Nowa wersja %{name}, zapisana jako wersja robocza do momentu publikacji. Aktualna wersja jest zachowywana, więc możesz do niej wrócić."
+      styles_unsupported: "Te style nie mogą wprowadzić tej zmiany: %{requests}. Zamiast tego zaproponuj zbudowanie jej przy użyciu własnej aplikacji AI administratora."
       name_required: "Nadaj paletom lub motywom krótką nazwę."
       brand_color_required: "Podaj kolor marki lub adres strony internetowej, z której mają zostać pobrane kolory."
       invalid_color: "Użyj kolorów szesnastkowych, takich jak #635bff. Te kolory są nieprawidłowe: %{colors}"

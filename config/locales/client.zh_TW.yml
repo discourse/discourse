@@ -9187,6 +9187,8 @@ zh_TW:
       site_text:
         description: "您可以自訂論壇上的任何文字。"
         search_label: "搜索"
+        preview:
+          default: "默認"
         theme_disabled: "已停用"
         filters: "過濾器"
         status:
@@ -9359,7 +9361,7 @@ zh_TW:
           modal_title: 徽章群組
         granted_by: 升級者為
         granted_at: 升級在
-        reason_help: (連結至貼文或話題)
+        reason_help: 連結至貼文或話題
         save: 儲存
         delete: 刪除
         delete_confirm: 你確定要刪除徽章 ?

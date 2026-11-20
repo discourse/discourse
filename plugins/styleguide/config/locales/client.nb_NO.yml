@@ -34,6 +34,9 @@ nb_NO:
           title: "Font System"
         colors:
           title: "Farger"
+        design_variables:
+          type: "Type"
+          default: "Forvalg"
         icons:
           title: "Ikoner"
           full_list: "Se hele listen over Font Awesome Icons"

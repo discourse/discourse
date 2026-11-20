@@ -50,6 +50,9 @@ nl:
           title: "Lettertypesysteem"
         colors:
           title: "Kleuren"
+        design_variables:
+          type: "Type"
+          default: "Standaard"
         dialog:
           title: "Dialoog"
         drag_and_drop:

@@ -573,6 +573,7 @@ Discourse::Application.routes.draw do
           collection do
             get "/themes" => "customize#themes"
             get "/components" => "customize#components"
+            get "/popular-themes" => "customize#popular_themes"
             get "/theme-site-settings" => "customize#theme_site_settings"
           end
         end

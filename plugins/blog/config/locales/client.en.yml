@@ -289,6 +289,7 @@ en:
       editor_title: Blog editor
       editor_description: Drafts stay private until you publish them. Edit an article to publish, schedule, or correct it.
       editor_table:
+        blog: Blog
         edit: Edit
         status: Status
         published: Published
@@ -303,6 +304,7 @@ en:
       new_draft: New draft
       settings: Configure blog settings
       all: All
+      all_blogs: All blogs
       drafts: Drafts
       published: Published
       visit_blog: Visit blog
@@ -315,6 +317,8 @@ en:
         Remove this article from the blog? The topic and its replies
         will remain public in the community. Existing copies in feeds and search engines
         cannot be recalled.
+      blog_field: Blog
+      blog_field_hint: Until it is first published, an article can move to another blog.
       path: Article path
       path_hint:
         Start with / and use lowercase letters, numbers, hyphens, and optional

@@ -66,7 +66,7 @@ RSpec.describe Blog::BlogTheme::Update do
           "revision" => 2,
         )
         expect(Blog::BlogTheme.find(theme["id"])).to eq(result.revised_theme)
-        expect(Blog::BlogTheme.active).to eq(active)
+        expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)).to eq(active)
       end
 
       it "logs the save" do

@@ -3576,6 +3576,8 @@ sw:
           dropdown: "Shusha Chini"
       site_text:
         search_label: "Tafuta"
+        preview:
+          default: "Halisi"
         theme_disabled: "Imezuiwa"
         filters: "Inachujwa"
         edit: "Hariri"
@@ -3647,7 +3649,7 @@ sw:
           modal_title: VIkundi vya beji
         granted_by: Imetolewa na
         granted_at: Imetolewa wakati wa
-        reason_help: (Kiungo cha taarifa au ujumbe)
+        reason_help: Kiungo cha taarifa au ujumbe
         save: Hifadhi
         delete: Futa
         delete_confirm: Una uhakika unata kufuta hii beji?

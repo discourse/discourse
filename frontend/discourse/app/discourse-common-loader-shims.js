@@ -72,9 +72,6 @@ loaderShim("discourse-common/lib/loader-shim", () =>
 loaderShim("discourse-common/lib/object", () =>
   importSync("discourse/lib/object")
 );
-loaderShim("discourse-common/lib/popular-themes", () =>
-  importSync("discourse/lib/popular-themes")
-);
 loaderShim("discourse-common/lib/suffix-trie", () =>
   importSync("discourse/lib/suffix-trie")
 );

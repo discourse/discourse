@@ -1425,14 +1425,17 @@ CREATE TABLE public.appearance_changes (
     kind integer NOT NULL,
     name character varying NOT NULL,
     theme_id integer NOT NULL,
-    light_color_scheme_id integer NOT NULL,
-    dark_color_scheme_id integer NOT NULL,
+    light_color_scheme_id integer,
+    dark_color_scheme_id integer,
     site_settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     previous_state jsonb DEFAULT '{}'::jsonb NOT NULL,
     user_id integer NOT NULL,
     activated_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    styles jsonb DEFAULT '{}'::jsonb NOT NULL,
+    css text DEFAULT ''::text NOT NULL,
+    replaces_theme_id integer
 );
 
 
@@ -3948,7 +3951,8 @@ CREATE TABLE public.chat_messages (
     streaming boolean DEFAULT false NOT NULL,
     excerpt character varying(1000),
     created_by_sdk boolean DEFAULT false NOT NULL,
-    blocks jsonb
+    blocks jsonb,
+    broadcasted boolean DEFAULT false NOT NULL
 );
 
 
@@ -26816,6 +26820,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261120183731'),
+('20261119153028'),
 ('20261118215054'),
 ('20261118184327'),
 ('20261118184323'),
@@ -26830,6 +26836,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261110093228'),
 ('20261110093224'),
 ('20261110080540'),
+('20261109184113'),
 ('20261109074217'),
 ('20261109060019'),
 ('20261106020035'),

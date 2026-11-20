@@ -31,6 +31,9 @@ sr:
           title: "Систем фонтова"
         colors:
           title: "Boje"
+        design_variables:
+          type: "Tip"
+          default: "Подразумевано"
         icons:
           title: "Ikonice"
           full_list: "Pogledaj sve Font Awesome ikonice"

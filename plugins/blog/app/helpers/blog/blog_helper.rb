@@ -11,7 +11,7 @@ module ::Blog
     end
 
     def blog_theme
-      @blog_theme ||= BlogTheme.active
+      @blog_theme ||= BlogTheme.active_for(current_blog)
     end
 
     def blog_customizations_disabled?

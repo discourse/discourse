@@ -2476,20 +2476,6 @@ sv:
     post_hidden:
       title: "Inlägget dolt"
       subject_template: "Inlägg dolt på grund av att det flaggats av forumets medlemmar"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt meddelande har dolts.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ett flertal forummedlemmar flaggade det här meddelandet innan det doldes. Tänk på hur du kan ändra ditt meddelande för att reflektera deras respons. **Du kan redigera ditt meddelande efter %{edit_delay} minuter, då kommer det automatiskt att visas igen.**
-
-        Däremot, om meddelandet flaggas av medlemmarna och döljs en andra gång så kommer det fortsatt att döljas tills det har hanterats av personal.
-
-        För ytterligare information, se våra [forumriktlinjer](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Feedback om ditt inlägg"
       subject_template: "Feedback på ditt inlägg i %{topic_title}"
@@ -2499,31 +2485,9 @@ sv:
     post_hidden_again:
       title: "Inlägget dolt igen"
       subject_template: "Inlägget döljdes på grund av att det flaggats av forumets medlemmar, personal har aviserats"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt meddelande har dolts på nytt.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ett flertal forummedlemmar flaggade det här meddelandet innan det doldes. **Eftersom ditt inlägg har dolts mer än en gång kommer det att förbli dolt tills ärendet har hanterats av personalen.**
-
-        För ytterligare information, se våra [gemensamma riktlinjer](%{base_url}/guidelines).
     queued_by_staff:
       title: "Inlägget måste godkännas"
       subject_template: "Inlägg dolt av personalen i väntan på godkännande"
-      text_body_template: |
-        Hej,
-
-        Detta är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt inlägg är dolt.
-
-        <%{base_url}%{url}>
-
-        Ditt inlägg förblir dolt tills personalen kan granska det.
-
-        För mer information, se våra [forumriktlinjer](%{base_url}/guidelines).
     flags_disagreed:
       title: "Flaggat inlägg återställt av personal"
       subject_template: "Flaggat inlägg återställt av personal"
@@ -3308,10 +3272,6 @@ sv:
     signup_after_reject:
       title: "Registrering efter avslag"
       subject_template: "Du har avvisats på %{site_name}"
-      text_body_template: |
-        Personal avvisade ditt konto på %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Bli medlem"
       subject_template: "%{email_prefix} Bekräfta ditt nya konto"

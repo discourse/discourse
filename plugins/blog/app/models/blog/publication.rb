@@ -68,6 +68,7 @@ module ::Blog
     validate :available_path
     validate :decodable_path
     validate :valid_publication_date
+    validate :movable_to_blog, if: :will_save_change_to_blog_id?
     after_initialize :assign_blog, if: :new_record?
     before_validation :initialize_topics, on: :create
     before_save :capture_live_article, if: :will_save_change_to_published_revision_id?
@@ -132,7 +133,7 @@ module ::Blog
       slug = visible_slug(slug).presence || topic.id.to_s
       date ||= Time.current
       path = format.render(slug:, id: topic.id, date:, max_length: MAX_PATH_LENGTH)
-      return path if !reserved_path?(path)
+      return path if !reserved_path?(path) && !blog_slug_path?(path, blog)
 
       format.render(slug: "#{slug}-#{topic.id}", id: topic.id, date:, max_length: MAX_PATH_LENGTH)
     end
@@ -165,6 +166,14 @@ module ::Blog
       path.to_s.split("/").intersect?(%w[. ..])
     end
 
+    # Other blogs live at /blog/<slug>, so the default blog's articles may not
+    # start with a blog's slug.
+    def self.blog_slug_path?(path, blog)
+      return false if !blog&.is_default?
+      segment = path.to_s.downcase.split("/")[1]
+      Instance.cached.any? { |other| !other.is_default? && other.slug == segment }
+    end
+
     def self.reserved_path?(path)
       segments = path.to_s.downcase.split("/").drop(1)
       # Some blog routes accept an optional format, so "/about.json" resolves like "/about".
@@ -179,6 +188,13 @@ module ::Blog
     def blog
       return Instance.default_blog if blog_id.nil?
       Instance.find_cached(blog_id) || super
+    end
+
+    # Once an article has a discussion, it belongs to that discussion's blog. A
+    # topic already in a blog's public category becomes its own discussion.
+    def blog_movable?
+      published_revision_id_in_database.nil? && discussion_topic_id_in_database.nil? &&
+        category_blog.nil?
     end
 
     def publicly_visible?
@@ -286,7 +302,9 @@ module ::Blog
     end
 
     def stage_metadata(changes)
-      changes = changes.to_h.stringify_keys.slice(*METADATA)
+      changes = changes.to_h.stringify_keys
+      moved = move_to_blog(changes["blog_id"])
+      changes = changes.slice(*METADATA)
       staged = editorial_metadata
       values = staged.merge(changes)
       values["published_at"] = published_at if published_revision_id &&
@@ -294,7 +312,8 @@ module ::Blog
       live = attributes.slice(*METADATA)
       assign_attributes(values.slice(*METADATA))
       custom_path = staged["custom_path"] || path != staged["path"]
-      if !published_revision_id && changes.keys.intersect?(%w[published_at page]) && !custom_path
+      regenerate = moved || changes.keys.intersect?(%w[published_at page])
+      if !published_revision_id && regenerate && !custom_path
         self.path = generated_path(published_at) || path
       end
       return self if invalid?
@@ -402,7 +421,7 @@ module ::Blog
     end
 
     def path_available?(candidate)
-      !Path.where(blog_id:, path: candidate).where.not(publication_id: id).exists?
+      !Path.where(blog_id: blog.id, path: candidate).where.not(publication_id: id).exists?
     end
 
     def draft_date_changed?(value)
@@ -446,9 +465,38 @@ module ::Blog
     end
 
     # Unsaved publications are serialized and previewed too, so they need a blog
-    # from the start. Choosing another one for a draft comes with the blog picker.
+    # from the start. A topic in a blog's public category can only be published
+    # there, since its discussion stays in that category.
     def assign_blog
-      self.blog_id ||= Instance.default_blog.id
+      self.blog_id ||= (category_blog || Instance.default_blog).id
+    end
+
+    def category_blog
+      category_id = topic&.category_id
+      category_id && Instance.cached.find { |blog| blog.category_id == category_id }
+    end
+
+    # A publisher approved and scheduled the article for the blog it was on, so
+    # moving it needs a new approval.
+    def move_to_blog(id)
+      return false if id.blank? || id.to_i == blog_id
+      self.blog_id = id.to_i
+      assign_attributes(
+        submitted_revision: nil,
+        approved_revision: nil,
+        scheduled_revision: nil,
+        scheduled_at: nil,
+        scheduler_id: nil,
+        schedule_token: nil,
+      )
+      true
+    end
+
+    def movable_to_blog
+      return errors.add(:blog_id, :invalid) if Instance.find_cached(blog_id).nil?
+      return if blog_movable?
+      return if new_record? && blog_id == category_blog&.id
+      errors.add(:blog_id, I18n.t("blog.errors.blog_fixed"))
     end
 
     def capture_live_article
@@ -524,7 +572,7 @@ module ::Blog
       return false if persisted? && !will_save_change_to_path?
       # Dated archive imports may use the otherwise reserved editorial prefix.
       return false if path.to_s.match?(%r{\A/blog/archive/\d{4}/\d{2}/\d{2}/[^/]+\z})
-      self.class.reserved_path?(path)
+      self.class.reserved_path?(path) || self.class.blog_slug_path?(path, blog)
     end
 
     def valid_publication_date

@@ -22,6 +22,9 @@ te:
           cross_list_primary: "ప్రాథమిక"
         colors:
           title: "రంగులు"
+        design_variables:
+          type: "రకం"
+          default: "అప్రమేయ"
         categories:
           title: "వర్గాలు"
         navigation:

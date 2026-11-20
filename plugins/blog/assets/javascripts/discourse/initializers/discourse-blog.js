@@ -8,6 +8,7 @@ export default {
   initialize(container) {
     const appEvents = container.lookup("service:app-events");
     const settings = container.lookup("service:site-settings");
+    const site = container.lookup("service:site");
     if (!settings.blog_enabled) {
       return;
     }
@@ -22,15 +23,18 @@ export default {
         });
       }
       api.renderInOutlet("topic-above-post-stream", BlogPublicationPanel);
+      // Set by "New draft" in the editor.
+      api.serializeOnCreate("blog_id", "blogId");
+      api.serializeToDraft("blogId");
       // Article titles like "Contact" are shorter than a forum topic title needs to be.
       // Read the settings each time: the blog creates its categories mid-session.
       api.registerValueTransformer(
         "composer-minimum-title-length",
         ({ value, context }) => {
           const blogCategoryIds = [
-            settings.blog_category,
-            settings.blog_drafts_category,
-          ].map((id) => parseInt(id, 10));
+            ...(site.blogs || []).map((blog) => blog.category_id),
+            parseInt(settings.blog_drafts_category, 10),
+          ];
           return blogCategoryIds.includes(context.composer.categoryId)
             ? 1
             : value;

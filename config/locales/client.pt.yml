@@ -6025,6 +6025,8 @@ pt:
           dropdown: "Lista pendente"
       site_text:
         search_label: "Procurar"
+        preview:
+          default: "Predefinição"
         theme_disabled: "Desativado"
         filters: "Filtros"
         edit: "Editar"
@@ -6099,7 +6101,7 @@ pt:
           modal_title: Grupos de Crachás
         granted_by: Concedido Por
         granted_at: Concedido Em
-        reason_help: (Uma ligação para uma publicação ou tópico)
+        reason_help: Uma ligação para uma publicação ou tópico
         save: Guardar
         delete: Apagar
         delete_confirm: Tem a certeza que quer eliminar este crachá?

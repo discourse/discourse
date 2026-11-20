@@ -10,6 +10,16 @@ chat:
       status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397571"
+  chat_thread_improvements:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/417837"
+      allow_enabled_for:
+        - everyone
   enable_public_channels:
     default: true
     client: true

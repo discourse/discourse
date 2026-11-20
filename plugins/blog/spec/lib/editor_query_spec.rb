@@ -97,12 +97,25 @@ RSpec.describe Blog::EditorQuery do
       )
     end
 
-    it "narrows the list to the articles of one blog" do
-      other_blog = Blog::Instance.create!(name: "Engineering", slug: "engineering")
+    it "narrows the list to one blog, counting topics without a publication where they would publish" do
+      engineering_category = Fabricate(:category)
+      other_blog =
+        Blog::Instance.create!(
+          name: "Engineering",
+          slug: "engineering",
+          category: engineering_category,
+        )
       source_publication.update_columns(blog_id: other_blog.id)
+      engineering_topic = Fabricate(:topic, category: engineering_category, user: admin)
 
-      expect(topic_ids(admin.guardian, blog: other_blog)).to contain_exactly(source.id)
+      expect(topic_ids(admin.guardian, blog: other_blog)).to contain_exactly(
+        source.id,
+        engineering_topic.id,
+      )
       expect(topic_ids(admin.guardian, blog: Blog::Instance.default_blog)).to contain_exactly(
+        draft.id,
+        writer_draft.id,
+        unpublished_article.id,
         live_article.id,
       )
     end

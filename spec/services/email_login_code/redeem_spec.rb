@@ -149,6 +149,33 @@ RSpec.describe EmailLoginCode::Redeem do
             expect(user.custom_fields["user_field_#{hidden_field.id}"]).to be_nil
           end
         end
+
+        context "with optional number fields" do
+          fab!(:age_field) { Fabricate(:user_field, field_type: "number", requirement: "optional") }
+          fab!(:score_field) do
+            Fabricate(:user_field, field_type: "number", requirement: "optional")
+          end
+
+          let(:params) do
+            {
+              email:,
+              code:,
+              username:,
+              user_fields: {
+                user_field.id.to_s => "Dev",
+                age_field.id.to_s => " 42 ",
+                score_field.id.to_s => "abc",
+              },
+            }
+          end
+
+          it "stores numbers and discards values that aren't numbers" do
+            user = result[:user]
+
+            expect(user.custom_fields["user_field_#{age_field.id}"]).to eq("42")
+            expect(user.custom_fields["user_field_#{score_field.id}"]).to be_nil
+          end
+        end
       end
 
       context "when a required field is hidden from signup" do
@@ -179,6 +206,14 @@ RSpec.describe EmailLoginCode::Redeem do
 
         it { is_expected.to run_successfully }
       end
+    end
+
+    context "when a required number field gets a value that isn't a number" do
+      fab!(:user_field) { Fabricate(:user_field, field_type: "number") }
+
+      let(:params) { { email:, code:, username:, user_fields: { user_field.id.to_s => "abc" } } }
+
+      it { is_expected.to fail_a_policy(:required_fields_provided) }
     end
 
     context "when a full name is required at signup" do

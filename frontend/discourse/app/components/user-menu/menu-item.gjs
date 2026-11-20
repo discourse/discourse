@@ -74,12 +74,20 @@ export default class UserMenuItem extends Component {
     });
   }
 
+  @action
+  onAuxClick(event) {
+    if (event.button === 1) {
+      return this.onClick(event);
+    }
+  }
+
   <template>
     <li class={{this.className}}>
       <a
         href={{this.linkHref}}
         title={{this.linkTitle}}
         {{on "click" this.onClick}}
+        {{on "auxclick" this.onAuxClick}}
       >
         {{#if this.iconComponent}}
           <this.iconComponent @data={{this.iconComponentArgs}} />

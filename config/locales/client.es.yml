@@ -8418,6 +8418,8 @@ es:
       site_text:
         description: "Puedes personalizar cualquier texto de tu foro."
         search_label: "Buscar"
+        preview:
+          default: "Por defecto"
         theme_disabled: "Desactivado"
         filters: "Filtros"
         status:
@@ -8584,7 +8586,7 @@ es:
           modal_title: Grupos de medallas
         granted_by: Concedido por
         granted_at: Concedido en
-        reason_help: (Enlace a una publicación o tema)
+        reason_help: Enlace a una publicación o tema
         save: Guardar
         delete: Eliminar
         delete_confirm: '¿Seguro que quieres eliminar esta medalla?'

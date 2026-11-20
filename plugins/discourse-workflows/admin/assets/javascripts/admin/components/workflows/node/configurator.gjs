@@ -272,13 +272,21 @@ export default class NodeConfigurator extends Component {
     const configurationDirty =
       JSON.stringify(this.persistedConfiguration) !==
       JSON.stringify(
-        pruneModeHiddenFields(this.propertySchema, this.initialConfiguration)
+        pruneModeHiddenFields(
+          this.propertySchema,
+          this.initialConfiguration,
+          this.resolvedNodeType?.metadata
+        )
       );
     return nameDirty || configurationDirty;
   }
 
   get persistedConfiguration() {
-    return pruneModeHiddenFields(this.propertySchema, this.configuration);
+    return pruneModeHiddenFields(
+      this.propertySchema,
+      this.configuration,
+      this.resolvedNodeType?.metadata
+    );
   }
 
   get showSaveStatus() {

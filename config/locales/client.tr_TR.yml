@@ -8517,6 +8517,8 @@ tr_TR:
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
         search_label: "Ara"
+        preview:
+          default: "Varsayılan"
         theme_disabled: "Devre Dışı"
         filters: "Filtreler"
         status:
@@ -8690,7 +8692,7 @@ tr_TR:
           modal_title: Rozet Gruplamaları
         granted_by: 'Veren:'
         granted_at: 'Verme zamanı:'
-        reason_help: (Bir gönderi veya konuya bağlantı)
+        reason_help: Bir gönderi veya konuya bağlantı
         save: Kaydet
         delete: Sil
         delete_confirm: Bu rozeti silmek istediğinizden emin misiniz?
