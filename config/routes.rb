@@ -1439,6 +1439,10 @@ Discourse::Application.routes.draw do
 
     resources :post_action_users, only: %i[index]
     resources :post_readers, only: %i[index]
+    get "/post_readers/:id/staff_report" => "post_readers#staff_report",
+        :defaults => {
+          format: :json,
+        }
     resources :post_actions, only: %i[create destroy]
     resources :user_actions, only: %i[index show]
 

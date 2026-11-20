@@ -323,6 +323,10 @@ basic:
       - reply
       - addTranslation
     area: "posts_and_topics"
+  enable_post_readers_modal:
+    default: false
+    client: true
+    area: "posts_and_topics"
   post_menu_hidden_items:
     client: true
     type: list
