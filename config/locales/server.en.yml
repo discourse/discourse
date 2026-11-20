@@ -4167,7 +4167,7 @@ en:
 
         We've reviewed your post in [%{topic_title}](%{topic_url}) and have some feedback for you.
 
-        **Reason:** %{reason}
+        Reason: %{reason}
 
         Feedback: %{feedback}
 
@@ -4190,7 +4190,7 @@ en:
 
         We've reviewed your new topic titled "%{topic_title}" and have some feedback for you.
 
-        **Reason:** %{reason}
+        Reason: %{reason}
 
         Feedback: %{feedback}
 
@@ -4836,7 +4836,7 @@ en:
 
         %{decision}
 
-        **Reason:** %{reason}
+        Reason: %{reason}
 
         You can still read discussions, but you can’t participate in them while your account is silenced.
 
@@ -4874,7 +4874,7 @@ en:
 
         The new user [%{username}](%{user_url}) was automatically silenced.
 
-        **Reason:** %{reason}
+        Reason: %{reason}
 
         Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
@@ -5273,7 +5273,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
 
-        **Reason:** %{reason}
+        Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5286,7 +5286,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your account has been suspended.
 
-        **Reason:** %{reason}
+        Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5544,7 +5544,7 @@ en:
       text_body_template: |
         Hello,
 
-        A staff member at %{site_name} reviewed your account and declined your registration.
+        This is an automated message from %{site_name} to let you know that a staff member declined your registration.
 
         %{reject_reason}
 
