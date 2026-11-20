@@ -748,20 +748,21 @@ class Post < ActiveRecord::Base
 
     # inform user
     if user.present?
+      message_type = (custom_message || (hiding_again ? :post_hidden_again : :post_hidden)).to_s
+      appeal_options =
+        message_type == "queued_by_staff" ? {} : Dsa::AppealInstructions.message_options
+
       options = {
-        **Dsa::AppealInstructions.message_options,
+        **appeal_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
         **message_options,
       }
 
-      message = custom_message
-      message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
-
       ModerationNotice.enqueue(
         delay: 5.seconds,
         user: user,
-        message_type: message.to_s,
+        message_type: message_type,
         message_options: options,
         post_action_type_id:,
       )

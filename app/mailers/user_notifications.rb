@@ -56,7 +56,6 @@ class UserNotifications < ActionMailer::Base
     build_email(
       user.email,
       template: "user_notifications.post_approved",
-      **Dsa::AppealInstructions.message_options,
       locale: locale,
       base_url: Discourse.base_url,
       post_url: post_url,
