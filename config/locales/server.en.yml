@@ -5541,12 +5541,11 @@ en:
     signup_after_reject:
       title: "Signup After Reject"
       subject_template: "You've been rejected on %{site_name}"
+      reason_line: "Reason: %{reject_reason}"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that a staff member declined your registration.
-
-        %{reject_reason}
+        This is an automated message from %{site_name} to let you know that a staff member declined your registration.%{reject_reason_line}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
