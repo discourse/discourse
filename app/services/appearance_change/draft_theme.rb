@@ -127,7 +127,8 @@ class AppearanceChange::DraftTheme
       AppearanceStyles::SyncedTheme.create!(
         theme:,
         source: source_theme,
-        styles: params.styles || {},
+        # stored the same way as on the change, so the two match
+        styles: css.present? ? params.styles || {} : {},
         css:,
       )
     else

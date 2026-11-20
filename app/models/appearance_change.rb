@@ -308,13 +308,16 @@ class AppearanceChange < ActiveRecord::Base
   def disposable_theme?
     (
       !edited_since_saved?(theme) ||
+        # Horizon updates and version renames touch a synced copy too, so for
+        # those it's what an administrator could change by hand that counts.
         (
           base_theme_id && theme_unchanged? &&
             [
               name,
               self.class.version_name(name, :draft),
               self.class.version_name(name, :previous),
-            ].include?(theme.name)
+            ].include?(theme.name) && theme.color_scheme_id == light_color_scheme_id &&
+            theme.dark_color_scheme_id == dark_color_scheme_id
         )
     ) && !theme.default? && !theme.user_selectable? && theme_unchanged? &&
       AppearanceChange.where(
@@ -339,7 +342,6 @@ end
 #
 #  id                    :bigint           not null, primary key
 #  activated_at          :datetime
-#  base_theme_id         :integer
 #  css                   :text             default(""), not null
 #  kind                  :integer          not null
 #  name                  :string           not null
@@ -348,6 +350,7 @@ end
 #  styles                :jsonb            not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  base_theme_id         :integer
 #  dark_color_scheme_id  :integer
 #  light_color_scheme_id :integer
 #  replaces_theme_id     :integer
@@ -357,5 +360,5 @@ end
 # Indexes
 #
 #  index_appearance_changes_on_base_theme_id  (base_theme_id)
-#  index_appearance_changes_on_theme_id  (theme_id)
+#  index_appearance_changes_on_theme_id       (theme_id)
 #

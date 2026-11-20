@@ -367,6 +367,32 @@ RSpec.describe "Synced Horizon appearance changes", type: :request do
     }.not_to change(Theme, :count)
   end
 
+  it "notices an update to Horizon that only changes its modifiers" do
+    before = AppearanceStyles::SyncedTheme.source_digest
+    modifiers = Theme.horizon_theme.theme_modifier_set
+    modifiers.update!(svg_icons: [*modifiers.svg_icons, "phase-three-icon"])
+
+    expect(AppearanceStyles::SyncedTheme.source_digest).not_to eq(before)
+  end
+
+  it "keeps a draft copy whose palettes an administrator changed by hand" do
+    change = save_change
+    change.theme.update!(color_scheme: Fabricate(:color_scheme))
+
+    change.discard!
+
+    expect(Theme.exists?(change.theme_id)).to eq(true)
+  end
+
+  it "saves a copy without styles that can still be made live" do
+    styles.replace(variables: {}, rules: [])
+    change = save_change
+
+    expect(change.theme_unchanged?).to eq(true)
+    activate(change)
+    expect(change.theme.reload).to be_default
+  end
+
   it "doesn't import copies again when bundled Horizon hasn't changed" do
     change = save_change
     activate(change)

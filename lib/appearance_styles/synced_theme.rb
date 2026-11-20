@@ -69,15 +69,19 @@ class AppearanceStyles::SyncedTheme
     end
   end
 
-  # Bundled Horizon's own files, so a copy is only imported again when they
-  # change, not every time core syncs its system themes (on every deploy).
+  # What bundled Horizon ships: its files and the modifiers its about.json
+  # sets. A copy is only imported again when these change, not every time
+  # core syncs its system themes (on every deploy).
   def self.source_digest(source = Theme.horizon_theme)
     Digest::SHA256.hexdigest(
       JSON.generate(
-        source
-          .theme_fields
-          .order(:target_id, :name, :type_id)
-          .pluck(:target_id, :name, :type_id, :value, :upload_id),
+        fields:
+          source
+            .theme_fields
+            .order(:target_id, :name, :type_id)
+            .pluck(:target_id, :name, :type_id, :value, :upload_id),
+        modifiers:
+          source.theme_modifier_set.attributes.except("id", "theme_id", "created_at", "updated_at"),
       ),
     )
   end
