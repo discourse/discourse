@@ -8,7 +8,7 @@ class StaffMessageFormat
     return "\n\n#{details.delete_prefix("\n\n")}" unless reason_given
 
     heading = I18n.t("system_messages.moderation_reason_heading", locale:)
-    "\n\n**#{heading}**  \n#{details}"
+    "\n\n**#{heading}**\n\n#{details}"
   end
 
   def initialize(type, reason, message = nil)

@@ -2824,7 +2824,7 @@ RSpec.describe UserNotifications do
 
       mail = UserNotifications.account_deleted("user@example.com", reviewable)
 
-      expect(mail.body.decoded).to include("**Reason**  \n#{custom_flag.description}")
+      expect(mail.body.decoded).to include("**Reason**\n\n#{custom_flag.description}")
       expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
     end
   end
@@ -2961,16 +2961,17 @@ RSpec.describe UserNotifications do
   end
 
   describe ".signup_after_reject" do
-    it "places a bold reason on the line above the staff note" do
-      SiteSetting.traditional_markdown_linebreaks = true
-      note = "Membership is limited to workshop organizers."
+    it "keeps the bold reason heading separate from the staff note's Markdown" do
+      note = "---\n\nMembership is limited to workshop organizers."
 
       mail = UserNotifications.signup_after_reject(user, reject_reason: note)
       html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
 
-      expect(html.at_css("strong").text).to eq("Reason")
-      expect(html.at_css("strong + br").next_sibling.text.strip).to eq(note)
-      expect(mail.body.decoded).to include("**Reason**  \n#{note}")
+      expect(html.at_css("p > strong").text).to eq("Reason")
+      expect(html.at_css("p:has(strong) + hr + p").text).to eq(
+        "Membership is limited to workshop organizers.",
+      )
+      expect(mail.body.decoded).to include("**Reason**\n\n#{note}")
     end
 
     it "omits the reason section for absent or blank reasons" do
