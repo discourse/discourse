@@ -80,7 +80,7 @@ RSpec.describe User::Silence do
         [user, other_user].each do |recipient|
           topic = Topic.private_messages_for_user(recipient).sole
           expect(topic.title).to eq("Your account has been silenced")
-          expect(topic.first_post.raw).to include("**Reason:** spam\n\nit was spam")
+          expect(topic.first_post.raw).to include("**Reason**  \nspam\n\nit was spam")
         end
         expect(Topic.private_messages_for_user(user).sole.first_post.raw).to include(
           "5:30pm (UTC+05:30)",

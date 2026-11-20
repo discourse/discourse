@@ -235,6 +235,9 @@ module Jobs
         email_args[:user_history] = UserHistory.where(id: args[:user_history_id]).first
       end
 
+      if args.key?(:suspension_reason_given)
+        email_args[:suspension_reason_given] = args[:suspension_reason_given]
+      end
       email_args[:reject_reason] = args[:reject_reason]
 
       message =

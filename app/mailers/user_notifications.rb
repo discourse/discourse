@@ -66,12 +66,14 @@ class UserNotifications < ActionMailer::Base
 
   def signup_after_reject(user, opts = {})
     locale = user_locale(user)
+    reject_reason = opts[:reject_reason]
     build_email(
       user.email,
       template: "user_notifications.signup_after_reject",
       **Dsa::AppealInstructions.message_options,
       locale: locale,
-      reject_reason: opts[:reject_reason],
+      reject_reason:,
+      reason_section: StaffMessageFormat.reason_section(reject_reason, locale:),
       recipient_user: user,
     )
   end
@@ -188,7 +190,8 @@ class UserNotifications < ActionMailer::Base
       email,
       template: "user_notifications.account_deleted",
       **Dsa::AppealInstructions.message_options,
-      flag_reason: flag_reason,
+      flag_reason:,
+      reason_section: StaffMessageFormat.reason_section(flag_reason),
     )
   end
 
@@ -198,6 +201,9 @@ class UserNotifications < ActionMailer::Base
     return unless user_history = opts[:user_history]
 
     locale = user_locale(user)
+    reason = user_history.details
+    reason_given = opts.fetch(:suspension_reason_given) { !reason.to_s.start_with?("\n\n") }
+    reason_section = StaffMessageFormat.reason_section(reason, reason_given:, locale:)
 
     if user.suspended_forever?
       build_email(
@@ -205,7 +211,8 @@ class UserNotifications < ActionMailer::Base
         template: "user_notifications.account_suspended_forever",
         **Dsa::AppealInstructions.message_options,
         locale:,
-        reason: user_history.details,
+        reason:,
+        reason_section:,
         recipient_user: user,
       )
     else
@@ -218,7 +225,8 @@ class UserNotifications < ActionMailer::Base
         template: "user_notifications.account_suspended",
         **Dsa::AppealInstructions.message_options,
         locale:,
-        reason: user_history.details,
+        reason:,
+        reason_section:,
         suspended_till:
           I18n.t(
             "user_notifications.account_suspended.date_with_timezone",

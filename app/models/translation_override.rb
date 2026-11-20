@@ -36,6 +36,13 @@ class TranslationOverride < ActiveRecord::Base
       optional_cat
       optional_tags
     ],
+    %w[
+      system_messages.moderator_silence.text_body_template
+      user_notifications.account_suspended.text_body_template
+      user_notifications.account_suspended_forever.text_body_template
+    ] => %w[reason],
+    %w[user_notifications.account_deleted.text_body_template] => %w[flag_reason],
+    %w[user_notifications.signup_after_reject.text_body_template] => %w[reject_reason],
     %w[system_messages.welcome_user] => %w[username name name_or_username],
     %w[js.welcome_banner.header] => %w[site_name],
     %w[email_from] => %w[site_name],

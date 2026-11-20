@@ -4134,6 +4134,7 @@ en:
 
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
+    moderation_reason_heading: "Reason"
     moderation_appeal_instructions: "To appeal this decision, contact %{email}"
     moderation_reason: "More specifically, your post violated the following community guideline: **%{ground}**. %{explanation}"
     moderation_reason_for_responders: "More specifically, the post you replied to violated the following community guideline: **%{ground}**. %{explanation}"
@@ -4834,9 +4835,7 @@ en:
       text_body_template: |
         Hello,
 
-        %{decision}
-
-        **Reason:** %{reason}
+        %{decision}%{reason_section}
 
         You can still read discussions, but you can’t participate in them while your account is silenced.
 
@@ -5271,9 +5270,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
-
-        Reason - %{reason}
+        This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.%{reason_section}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5284,9 +5281,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your account has been suspended.
-
-        Reason - %{reason}
+        This is an automated message from %{site_name} to let you know that your account has been suspended.%{reason_section}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5297,11 +5292,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from [%{site_name}](%{base_url}) to let you know that the user account associated with this email address has been deleted by a staff member.
+        This is an automated message from %{site_name} to let you know that a staff member deleted your account.%{reason_section}
 
-        %{flag_reason}
-
-        Please review our [community guidelines](%{base_url}/guidelines) for details.
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_exists:
       title: "Account already exists"
@@ -5542,9 +5535,11 @@ en:
       title: "Signup After Reject"
       subject_template: "You've been rejected on %{site_name}"
       text_body_template: |
-        A staff member rejected your account on %{site_name}.
+        Hello,
 
-        %{reject_reason}
+        This is an automated message from %{site_name} to let you know that a staff member rejected your account.%{reason_section}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     signup:
       title: "Signup"

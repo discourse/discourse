@@ -134,7 +134,13 @@ class UserSilencer
         )
       end
 
-    { decision:, reason:, from_system: true }
+    {
+      decision:,
+      reason:,
+      reason_section:
+        StaffMessageFormat.reason_section(reason, reason_given: @opts[:reason].present?, locale:),
+      from_system: true,
+    }
   end
 
   def formatted_silence_end

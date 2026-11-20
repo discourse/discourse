@@ -3,6 +3,14 @@
 # This is used for formatting Suspension/Silencing messages.
 # It can be extended by plugins to provide custom message formats.
 class StaffMessageFormat
+  def self.reason_section(details, reason_given: true, locale: I18n.locale)
+    return "" if details.blank?
+    return "\n\n#{details.delete_prefix("\n\n")}" unless reason_given
+
+    heading = I18n.t("system_messages.moderation_reason_heading", locale:)
+    "\n\n**#{heading}**  \n#{details}"
+  end
+
   def initialize(type, reason, message = nil)
     @type = type
     @reason = reason

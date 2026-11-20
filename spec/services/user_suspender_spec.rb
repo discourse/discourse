@@ -114,6 +114,19 @@ RSpec.describe UserSuspender do
       end
     end
 
+    it "keeps the staff message separate from the reason in the delivered email" do
+      suspend_user
+      Jobs::CriticalUserEmail.drain
+
+      email = ActionMailer::Base.deliveries.find { |delivery| delivery.to == [user.email] }
+      expect(email.text_part.body.decoded).to include(
+        "**Reason**  \nbecause\n\nyou have been suspended",
+      )
+      html = Nokogiri::HTML5.fragment(email.html_part.body.decoded)
+      expect(html.at_css("strong + br").next_sibling.text.strip).to eq("because")
+      expect(html.at_css("p:has(strong) + p").text).to eq("you have been suspended")
+    end
+
     context "when a message is not provided" do
       let(:suspender) do
         UserSuspender.new(

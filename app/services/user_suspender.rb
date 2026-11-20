@@ -88,6 +88,7 @@ class UserSuspender
         type: "account_suspended",
         user_id: @user.id,
         user_history_id: @user_history.id,
+        suspension_reason_given: @reason.present?,
       )
     end
 
