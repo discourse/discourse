@@ -39,12 +39,15 @@ module Jobs
         table_name = DiscourseAi::Embeddings::Schema::TOPICS_TABLE
         vector_def = vector.vdef
 
+        archetypes = [Archetype.default]
+        archetypes << Archetype.private_message if SiteSetting.ai_embeddings_generate_for_pms
+
         topics =
           Topic
             .joins(
               "LEFT JOIN #{table_name} ON #{table_name}.topic_id = topics.id AND #{table_name}.model_id = #{vector_def.id}",
             )
-            .where(archetype: Archetype.default)
+            .where(archetype: archetypes)
             .where(deleted_at: nil)
             .order("topics.bumped_at DESC")
 
@@ -90,6 +93,7 @@ module Jobs
             )
             .where(deleted_at: nil)
             .where(post_type: Post.types[:regular])
+        posts = posts.public_posts if !SiteSetting.ai_embeddings_generate_for_pms
 
         # First, we'll try to backfill embeddings for posts that have none
         posts

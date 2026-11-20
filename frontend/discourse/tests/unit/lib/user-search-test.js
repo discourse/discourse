@@ -1,7 +1,10 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import userSearch from "discourse/lib/user-search";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  middlewareRateLimit,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 
 module("Unit | Utility | user-search", function (hooks) {
@@ -97,6 +100,58 @@ module("Unit | Utility | user-search", function (hooks) {
     results = await userSearch({ term: "hello", categoryId: 2 });
     assert.strictEqual(results[0].username, "category_2");
     assert.strictEqual(results.length, 1);
+  });
+
+  test("it keeps mention search results separate from other search contexts", async function (assert) {
+    const contexts = [];
+    pretender.get("/u/search/users", (request) => {
+      const context = request.queryParams.search_context;
+      contexts.push(context);
+      return response({
+        users: [{ username: context === "mention" ? "mention_user" : "user" }],
+      });
+    });
+
+    let results = await userSearch({ term: "user" });
+    assert.strictEqual(
+      results[0].username,
+      "user",
+      "an ordinary search uses the default context"
+    );
+
+    results = await userSearch({ term: "user", searchContext: "mention" });
+    assert.strictEqual(
+      results[0].username,
+      "mention_user",
+      "mention searches do not reuse ordinary search results"
+    );
+
+    results = await userSearch({ term: "user", searchContext: "mention" });
+    assert.strictEqual(
+      results[0].username,
+      "mention_user",
+      "results are cached within the mention context"
+    );
+    assert.deepEqual(
+      contexts,
+      [undefined, "mention"],
+      "only mention searches send the mention context"
+    );
+  });
+
+  test("it searches the given url without reusing results cached for another one", async function (assert) {
+    pretender.get("/custom/search", () =>
+      response({ users: [{ username: "custom_user" }] })
+    );
+
+    let results = await userSearch({ term: "hello" });
+    assert.strictEqual(results[0].username, "TeaMoe");
+
+    results = await userSearch({ term: "hello", url: "/custom/search" });
+    assert.deepEqual(
+      results.map((r) => r.username),
+      ["custom_user"]
+    );
   });
 
   test("it returns cancel when eager completing with no results", async function (assert) {
@@ -289,6 +344,29 @@ module("Unit | Utility | user-search", function (hooks) {
         `Should include '${groupName}' group`
       );
     });
+  });
+
+  test("it stops searching while the advertised rate limit wait is running", async function (assert) {
+    let requestCount = 0;
+    pretender.get("/u/search/users", () => {
+      requestCount++;
+      return middlewareRateLimit(60);
+    });
+
+    let result = await userSearch({ term: "ratelimited" });
+    assert.strictEqual(
+      result,
+      CANCELLED_STATUS,
+      "the rejection is handled instead of bubbling up"
+    );
+
+    result = await userSearch({ term: "ratelimitedtoo" });
+    assert.strictEqual(result, CANCELLED_STATUS);
+    assert.strictEqual(
+      requestCount,
+      1,
+      "no further request is sent before the wait is over"
+    );
   });
 
   test("it protects cached results from mutation by consumers", async function (assert) {

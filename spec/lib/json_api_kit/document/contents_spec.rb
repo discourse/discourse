@@ -12,18 +12,17 @@ RSpec.describe JsonApiKit::Document::Contents do
   let(:other_topic_record) { record_of(other_topic, "topics") }
   let(:records) { [record_of(topic, "topics", "user" => linkage(author_record))] }
   let(:related_records) { [author_record] }
-
   let(:guardian) { Guardian.new }
 
   def record_of(model, type, relationships = {})
     JsonApiKit::Record.new(
-      JsonApiKit::Pagination::Row.new(record: model, segment: nil),
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: model, segment: nil),
       JsonApiKit::Declarations::Fields.for(
         nil,
         guardian:,
         attributes: [],
         relationships: [],
-        schema: JsonApiKit::Schema.new(model.class),
+        type:,
       ),
       type:,
       relationships:,
@@ -37,7 +36,7 @@ RSpec.describe JsonApiKit::Document::Contents do
       expect(contents.primary.map(&:record)).to eq([topic])
     end
 
-    context "when a path reads a primary record a second time" do
+    context "when a path holds a primary record a second time" do
       let(:related_records) { [author_record, record_of(topic, "topics", "tags" => linkage)] }
 
       it "holds the relationships of both readings" do
@@ -59,7 +58,7 @@ RSpec.describe JsonApiKit::Document::Contents do
       expect(contents.related.map(&:record)).to eq([author])
     end
 
-    context "when a path reads a primary record a second time" do
+    context "when a path holds a primary record a second time" do
       let(:related_records) { [author_record, record_of(topic, "topics")] }
 
       it "drops that record" do
@@ -84,7 +83,7 @@ RSpec.describe JsonApiKit::Document::Contents do
       end
     end
 
-    context "when two paths read one record" do
+    context "when two paths hold one record" do
       let(:related_records) do
         [author_record, record_of(author, "users", "groups" => linkage(record_of(group, "groups")))]
       end

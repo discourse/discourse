@@ -10,7 +10,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   test("highlighting code", async function (assert) {
     await render(
       <template>
-        <DHighlightedCode @lang="ruby" @code="def test; end" />
+        <DHighlightedCode @code="def test; end" @lang="ruby" />
       </template>
     );
 
@@ -22,7 +22,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
 
     await render(
       <template>
-        <DHighlightedCode @lang="ruby" @code={{longCodeBlock}} />
+        <DHighlightedCode @code={{longCodeBlock}} @lang="ruby" />
       </template>
     );
 
@@ -32,7 +32,7 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   test("highlighting code with lang=auto", async function (assert) {
     await render(
       <template>
-        <DHighlightedCode @lang="auto" @code="def test; end" />
+        <DHighlightedCode @code="def test; end" @lang="auto" />
       </template>
     );
 
@@ -48,22 +48,18 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   });
 
   test("re-highlights the code when it changes", async function (assert) {
-    class State {
-      @tracked code = "def foo; end";
-    }
-
-    const testState = new State();
+    const code = tracked("def foo; end");
 
     await render(
       <template>
-        <DHighlightedCode @lang="ruby" @code={{testState.code}} />
-        {{testState.code}}
+        <DHighlightedCode @code={{code.value}} @lang="ruby" />
+        {{code.value}}
       </template>
     );
 
     assert.dom("code.lang-ruby.hljs .hljs-title").hasText("foo");
 
-    testState.code = "def bar; end";
+    code.value = "def bar; end";
     await settled();
 
     assert.dom("code.lang-ruby.hljs .hljs-title").hasText("bar");

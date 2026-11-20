@@ -31,7 +31,7 @@ module(
       });
 
       this.post = post;
-      this.set("post", post);
+      this.post = post;
 
       // positive case for menu to always show
       this.siteSettings.content_localization_enabled = true;
@@ -136,9 +136,9 @@ module(
       await render(
         <template>
           <PostTranslationsModal
-            @model={{this.model}}
             @closeModal={{noop}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );
@@ -251,9 +251,9 @@ module(
       await render(
         <template>
           <PostTranslationsModal
-            @model={{this.model}}
             @closeModal={{noop}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );
@@ -307,9 +307,9 @@ module(
       await render(
         <template>
           <PostTranslationsModal
-            @model={{this.model}}
             @closeModal={{noop}}
             @inline={{true}}
+            @model={{this.model}}
           />
         </template>
       );

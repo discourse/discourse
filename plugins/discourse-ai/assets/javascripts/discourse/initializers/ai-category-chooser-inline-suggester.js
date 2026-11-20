@@ -3,8 +3,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import { chooserSuggestionContext } from "../lib/chooser-suggestion-context";
-import { showComposerAiHelper } from "../lib/show-ai-helper";
+import { chooserSuggestionContext } from "../lib/chooser-suggestion-context.js";
+import { showComposerAiHelper } from "../lib/show-ai-helper.js";
 
 const SUGGEST_ID = "ai-category-suggest";
 
@@ -50,7 +50,7 @@ async function applyBestSuggestion(component, selectKit, context) {
       { method: "POST", data }
     );
 
-    if (component.isDestroying || component.isDestroyed) {
+    if (component.isDestroying) {
       return;
     }
 
@@ -68,7 +68,7 @@ async function applyBestSuggestion(component, selectKit, context) {
     popupAjaxError(error);
   } finally {
     state.loading = false;
-    if (!component.isDestroying && !component.isDestroyed) {
+    if (!component.isDestroying) {
       selectKit.set("isLoading", false);
     }
   }

@@ -84,25 +84,29 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DDateInput`, `DDatePicker`, `DTimeInput`, `DDateTimeInput`, `DDateTimeInputRange`, `DFutureDateInput`, `DRelativeTimePicker`, `DTimeShortcutPicker`, `DCalendarDateTimeInput` | Dates, times, and ranges.                   | [Date/time inputs](https://meta.discourse.org/styleguide/atoms/date-time-inputs) |
 | `DOtp`, `DSecondFactorInput`                                                                                                                                                   | One-time codes.                             | [OTP](https://meta.discourse.org/styleguide/atoms/otp)                           |
 | `DFilterInput`, `DFilterControls`                                                                                                                                              | Filter a list.                              |                                                                                  |
-| `DColorPicker`, `DIconGridPicker`, `DPickFilesButton`                                                                                                                          | Specialised pickers.                        |                                                                                  |
+| `DIconGridPicker`, `DPickFilesButton`                                                                                                                                          | Specialised pickers.                        |                                                                                  |
 | `DCharCounter`, `DInputTip`, `DPopupInputTip`                                                                                                                                  | Feedback attached to an input.              | [Char counter](https://meta.discourse.org/styleguide/molecules/char-counter)     |
 | `DAccessControl`, `DAccessControlField`                                                                                                                                        | Edit access control lists.                  |                                                                                  |
 | `DEditor`                                                                                                                                                                      | The composer's markdown editor.             |                                                                                  |
 
 ## Page chrome and layout
 
-| Primitive                                               | Use it for                                                                   | Styleguide                                                                       |
-| ------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `DPageHeader`, `DPageSubheader`                         | Titles, breadcrumbs, tabs, and actions of an admin or settings page.         |                                                                                  |
-| `DBreadcrumbsContainer`, `DBreadcrumbsItem`             | Breadcrumb trails registered from routes.                                    | [Breadcrumbs](https://meta.discourse.org/styleguide/molecules/bread-crumbs)      |
-| `DNavItem`, `DNavigationItem`, `DHorizontalOverflowNav` | Navigation bars, including ones that scroll horizontally when they overflow. | [Navigation bar](https://meta.discourse.org/styleguide/molecules/navigation-bar) |
-| `DResponsiveTable`, `DTableHeaderToggle`                | Tables that stay usable on narrow viewports, with sortable column headers.   |                                                                                  |
-| `DVirtualList`                                          | Long lists that render only the rows in view.                                | [Virtual list](https://meta.discourse.org/styleguide/molecules/virtual-list)     |
-| `DStatTiles`                                            | Rows of headline numbers.                                                    |                                                                                  |
-| `DTapTileGrid`, `DTapTile`                              | Grids of tappable choices.                                                   |                                                                                  |
-| `DPostAccordion`, `DPostAccordionItem`                  | Collapsible sections.                                                        |                                                                                  |
-| `DResizeHandles`, `DResizeSeparator`                    | User-resizable regions.                                                      | [Drag and drop](https://meta.discourse.org/styleguide/molecules/drag-and-drop)   |
-| `DSaveControls`                                         | The save button and "saved" feedback of a settings form.                     |                                                                                  |
+| Primitive                                               | Use it for                                                                                                                     | Styleguide                                                                             |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `DPageHeader`, `DPageSubheader`                         | Titles, breadcrumbs, tabs, and actions of an admin or settings page.                                                           |                                                                                        |
+| `DBreadcrumbsContainer`, `DBreadcrumbsItem`             | Breadcrumb trails registered from routes.                                                                                      | [Breadcrumbs](https://meta.discourse.org/styleguide/molecules/bread-crumbs)            |
+| `DNavItem`, `DNavigationItem`, `DHorizontalOverflowNav` | Navigation bars; the overflow nav is built on `DOverflowControls`.                                                             | [Navigation bar](https://meta.discourse.org/styleguide/molecules/navigation-bar)       |
+| `DOverflowControls`                                     | Scrollable strips with edge fades, chevrons on whichever edges can still scroll, press-and-hold, and a way to reveal one item. | [Overflow controls](https://meta.discourse.org/styleguide/molecules/overflow-controls) |
+| `DTabs`                                                 | Tab panels switched in place, with the strip, keyboard cursor, and ARIA pairing built in.                                      | [Tabs](https://meta.discourse.org/styleguide/molecules/tabs)                           |
+| `DResponsiveTable`, `DTableHeaderToggle`                | Tables that stay usable on narrow viewports, with sortable column headers.                                                     |                                                                                        |
+| `DVirtualList`                                          | Long lists that render only the rows in view.                                                                                  | [Virtual list](https://meta.discourse.org/styleguide/molecules/virtual-list)           |
+| `DReorderableList`, `DReorderableListGroup`             | Lists the user can reorder by drag, a move menu, or the keyboard. The group lets a row move between lists.                     | [Reorderable list](https://meta.discourse.org/styleguide/molecules/reorderable-list)   |
+| `DStatTiles`                                            | Rows of headline numbers.                                                                                                      |                                                                                        |
+| `DTapTileGrid`, `DTapTile`                              | Grids of tappable choices.                                                                                                     |                                                                                        |
+| `DPostAccordion`, `DPostAccordionItem`                  | Collapsible sections.                                                                                                          |                                                                                        |
+| `DResizeHandles`, `DResizeSeparator`                    | User-resizable regions.                                                                                                        | [Drag and drop](https://meta.discourse.org/styleguide/molecules/drag-and-drop)         |
+| `DSaveControls`                                         | The save button and "saved" feedback of a settings form.                                                                       |                                                                                        |
+| `DFloatingControlBar`                                   | A bar pinned to the bottom of the page offering to save or discard unsaved changes.                                            |                                                                                        |
 
 ## Loading, empty, and feedback states
 
@@ -126,6 +130,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DInterpolatedTranslation`, `DCountI18n` | Translations whose placeholders are components or counts.                     |
 | `DRelativeDate`                          | A live-updating relative timestamp.                                           |
 | `DCdnImg`, `DLightDarkImg`               | Images that follow the CDN and the colour scheme.                             |
+| `DAnimatedEmoji`                         | An emoji animated where an animation exists, static otherwise.                |
 
 ## Users, avatars, and categories
 
@@ -149,6 +154,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `d-roving-focus`                                                                  | Arrow-key navigation over a group of items (a toolbar, listbox, menu, or tree) with a single tab stop, via roving tabindex or `aria-activedescendant`. See [Roving focus](https://meta.discourse.org/styleguide/molecules/roving-focus). |
 | `d-close-on-click-outside`                                                        | Dismiss an overlay when the user clicks elsewhere.                                                                                                                                                                                       |
 | `d-on-resize`, `d-observe-intersection`, `d-scroll-into-view`                     | React to layout and visibility.                                                                                                                                                                                                          |
+| `d-scroll-edges`                                                                  | Stamp a scroll container's overflow and edge state as data attributes, for a strip that brings its own chrome. Pair it with the `scroll-strip` stylesheet mixin, which paints the edge fades from those attributes.                      |
 | `d-autocomplete`                                                                  | Attach an autocomplete popup to a text input.                                                                                                                                                                                            |
 | `d-swipe`, `d-pointer-drag`, `d-resize-edge`, `d-drag-dwell`, `d-drag-and-drop-*` | Gestures. See [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md).                                                                                                                                                 |
 
@@ -161,7 +167,7 @@ When you add one:
 - **Name it `d-<name>`** and put it at `frontend/discourse/app/ui-kit/d-<name>.gts` (or `helpers/d-<name>.js`, `modifiers/d-<name>.ts`). See [Splitting a large primitive](#splitting-a-large-primitive) when one file is not enough.
 - **Write it in TypeScript with a `Signature`** (`Args`, `Blocks`, `Element`) and TSDoc on the class and every public argument. The kit is platform-level code, so accurate types matter more here than elsewhere; `d-shortcut.gts`, `d-skeleton.gts`, `d-resize-separator.gts`, and `modifiers/d-drag-dwell.ts` are good models. See [Types](27-types.md).
 - **Forward `...attributes`** to the element consumers will want to target, and declare that element in the `Element` type so the type checker allows attributes and modifiers on it.
-- **Use BEM class names rooted at the component name** (older primitives predate this rule; new ones must follow it), `d-<name>`, `d-<name>__part`, `d-<name>--modifier`, and put the stylesheet at `app/assets/stylesheets/common/components/d-<name>.scss`, registered in `_index.scss`. Use colour and spacing tokens only; no hard-coded colours. See [CSS guidelines](26-css-guidelines-bem.md).
+- **Use BEM class names rooted at the component name** (older primitives predate this rule; new ones must follow it), `d-<name>`, `d-<name>__part`, and a standalone `.--modifier`, and put the stylesheet at `app/assets/stylesheets/common/ui-kit/d-<name>.scss`, registered in `_index.scss`. Use colour and spacing tokens only; no hard-coded colours. See [CSS guidelines](26-css-guidelines-bem.md).
 - **Prefer named blocks over boolean arguments** when the consumer supplies content, and yield a small API object when the consumer needs to call back into the component.
 - **Take strings already translated.** A primitive receives display text as a plain `string` argument (`@label`, `@title`) that the consumer has already passed through `i18n()`; it never resolves translation keys itself. The kit does not know which locale file a consumer's key lives in, and a key-taking argument forces a parallel `@translatedX` argument for every string. `d-resize-separator.gts` documents its `label` this way. `DButton`'s `@label`-as-key plus `@translatedLabel` pair predates this rule; do not copy it.
 - **Gate development-only warnings and assertions on `DEBUG`** from `@glimmer/env`. It is a build-time constant, so the gated code and its messages are stripped from production bundles; `d-resize-handles.gts` and `modifiers/d-roving-focus/diagnostics.ts` do this.
@@ -181,7 +187,7 @@ ui-kit/
       constants.ts                 # values shared by more than one collaborator
       engine/                      # the headless logic: state, algebra, resolution
       coordinators/                # non-rendering classes the component constructs once
-      parts/                       # rendering subcomponents that add no wrapper DOM
+      parts/                       # rendering subcomponents that own part of the public DOM
       modifiers/                   # element-attached behaviour private to this primitive
   modifiers/
     d-gesture.ts                   # a modifier entry follows the same shape
@@ -195,11 +201,11 @@ Use the buckets that apply; a two-file split needs only `types.ts`. What goes wh
 - **`types.ts`** holds every interface, including the ones the entry re-exports as public API. It is the documentation home for the argument reference, so the entry's `Args` block can point at it.
 - **`-internals/engine/`** is the headless layer: state, filtering, the move or selection algebra, value resolution. It has no DOM and no component reference, which is what makes it unit-testable on its own.
 - **`-internals/coordinators/`** are plain classes the component constructs once and configures downward with thunks (`() => this.args.x`); they never hold a reference back to the component. Announcers, menu coordinators, and load-feedback timers live here.
-- **`-internals/parts/`** are the rendering subcomponents. They receive the stable helper objects (the engine, a presenter) plus per-slot inputs, and add no wrapper DOM of their own.
+- **`-internals/parts/`** are the rendering subcomponents. They receive the stable helper objects (the engine, a presenter) plus per-slot inputs, and render the elements of the primitive's public DOM, the ones its stylesheet and tests target. They add no wrapper beyond that contract.
 - **`-internals/constants.ts`** exists so two collaborators that must agree on a value (a menu identifier, a selector) import it rather than restating it.
 - **`README.md`** explains the split: what each collaborator owns, the invariants that cross files, and the design decisions a future reader would otherwise undo.
 
-Something shared by several primitives, rather than private to one, goes in `ui-kit/-internals/<topic>/` (cursor navigation, for example), still off-limits to consumers.
+Something shared by several primitives, rather than private to one, goes in `ui-kit/-internals/<topic>/` (`scroll-strip`, for example, which the overflow controls and the tab strip share), still off-limits to consumers. [Private modules](32-private-modules.md) covers where a shared mechanism goes and how to move one out of a single owner.
 
 # Blast radius and backward compatibility
 
@@ -226,6 +232,29 @@ Every primitive is browsable at `/styleguide/<category>/<section>`, and the sect
 
 A section should be designed, with multiple examples that each isolate one capability. `sections/molecules/drag-and-drop.gjs` is the model: it groups its examples with `StyleguideGroups`, and each `Example` carries a title, a `@kind`, a description of what the example demonstrates, a `@tryThis` prompt telling the reader what to do, an optional `@note` on the subtlety it exposes, and the source via `@code` so the reader can copy it. Aim for one example per argument or behaviour worth understanding (types, positions, disabled state, nesting, custom preview, and so on), rather than a single kitchen-sink demo.
 
+## DMultiSelect footer actions
+
+`DMultiSelect` accepts an optional `footer` block below the search results, including when
+there are no matching results. The block receives the menu API; await `menu.close()` before
+opening another dialog so focus moves to the new dialog. Without a footer block, no footer
+or divider is rendered. Set `@matchTriggerWidth={{true}}` when a caller needs the menu to
+match the trigger width; this is opt-in and independent of the footer.
+
+```hbs
+<DMultiSelect
+  @matchTriggerWidth={{true}}
+  @loadFn={{this.loadItems}}
+  @selection={{this.selection}}
+  @onChange={{this.selectItems}}
+>
+  <:selection as |item|>{{item.name}}</:selection>
+  <:result as |item|>{{item.name}}</:result>
+  <:footer as |menu|>
+    <DButton @action={{fn this.createItem menu}} @label="create" @icon="plus" />
+  </:footer>
+</DMultiSelect>
+```
+
 # Related guides
 
 - [FormKit](22-form-kit.md) for forms.
@@ -234,3 +263,4 @@ A section should be designed, with multiple examples that each isolate one capab
 - [Designing for devices](28-designing-for-devices.md) and [responsive widths](29-designing-for-responsive-widths.md).
 - [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md) for the modifiers that handle input.
 - [Types](27-types.md) for the Glint and TypeScript conventions the kit follows.
+- [Private modules](32-private-modules.md) for where `-internals` code goes.

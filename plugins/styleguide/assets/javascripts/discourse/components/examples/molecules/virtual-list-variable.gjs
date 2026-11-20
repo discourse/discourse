@@ -25,20 +25,20 @@ export default class VirtualListVariableExample extends Component {
 
   <template>
     <DVirtualList
+      aria-label="Variable height virtual list"
+      @as="ul"
+      @estimateSize={{this.estimateSize}}
+      @itemRole="listitem"
       @items={{this.rows}}
       @key="id"
-      @as="ul"
-      @role="list"
-      @itemRole="listitem"
       @ownedRow={{true}}
-      @estimateSize={{this.estimateSize}}
-      aria-label="Variable height virtual list"
+      @role="list"
       as |item row|
     >
       <li
-        class="styleguide-virtual-list__vrow"
         aria-posinset={{row.posinset}}
         aria-setsize={{row.setSize}}
+        class="styleguide-virtual-list__vrow"
         {{row.place row.start row.index}}
         {{row.measure}}
       >

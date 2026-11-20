@@ -58,7 +58,7 @@ RSpec.describe "Nested view scroll restoration" do
     saved_position = nested_view.current_scroll_position
 
     nested_view.visit_nested(topic)
-    expect(nested_view).to have_root_post_count(20)
+    expect(nested_view).to have_root_post(target_post)
 
     try_until_success(reason: "scroll anchor restores after paginated roots load") do
       expect(nested_view).to have_root_post_count(40)

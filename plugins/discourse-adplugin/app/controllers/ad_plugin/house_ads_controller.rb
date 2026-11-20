@@ -31,7 +31,7 @@ module AdPlugin
     end
 
     def create
-      ad = HouseAd.new(house_ad_params)
+      ad = HouseAd.new(house_ad_params.except(:routes))
       if ad.save
         sync_routes(ad, house_ad_params[:routes])
         render_json_dump(

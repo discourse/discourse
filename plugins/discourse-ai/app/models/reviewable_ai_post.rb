@@ -3,14 +3,14 @@
 require_dependency "reviewable"
 
 class ReviewableAiPost < Reviewable
-  # Penalties are handled by the modal after the action is performed
+  include ReviewableActionBuilder
+
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
+  end
+
   def self.action_aliases
-    {
-      agree_and_keep_hidden: :agree_and_keep,
-      agree_and_silence: :agree_and_keep,
-      agree_and_suspend: :agree_and_keep,
-      disagree_and_restore: :disagree,
-    }
+    { agree_and_keep_hidden: :agree_and_keep, disagree_and_restore: :disagree }
   end
 
   def build_actions(actions, guardian, args)
@@ -20,17 +20,35 @@ class ReviewableAiPost < Reviewable
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
     if !post.user_deleted? && !post.hidden?
-      build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree)
+      build_action(
+        actions,
+        :agree_and_hide,
+        icon: "far-eye-slash",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
     end
 
     if post.hidden?
-      build_action(actions, :agree_and_keep_hidden, icon: "far-eye-slash", bundle: agree)
+      build_action(
+        actions,
+        :agree_and_keep_hidden,
+        icon: "far-eye-slash",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
     else
       build_action(actions, :agree_and_keep, icon: "far-eye", bundle: agree)
     end
 
     if guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: agree)
+      build_action(
+        actions,
+        :delete_and_agree,
+        icon: "trash-can",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
       if post.reply_count > 0
         build_action(
           actions,
@@ -38,6 +56,7 @@ class ReviewableAiPost < Reviewable
           icon: "trash-can",
           bundle: agree,
           confirm: true,
+          dsa_classification_required: true,
         )
       end
     end
@@ -49,6 +68,7 @@ class ReviewableAiPost < Reviewable
         icon: "ban",
         bundle: agree,
         client_action: "suspend",
+        dsa_classification_required: true,
       )
       build_action(
         actions,
@@ -56,10 +76,13 @@ class ReviewableAiPost < Reviewable
         icon: "microphone-slash",
         bundle: agree,
         client_action: "silence",
+        dsa_classification_required: true,
       )
     end
 
-    delete_user_actions(actions, agree) if guardian.can_delete_user?(target_created_by)
+    if guardian.can_delete_user?(target_created_by)
+      delete_user_actions(actions, agree, dsa_classification_required: true)
+    end
 
     build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree) if post.user_deleted?
 
@@ -79,7 +102,13 @@ class ReviewableAiPost < Reviewable
     build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
 
     if guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: disagree_bundle)
+      build_action(
+        actions,
+        :delete_and_ignore,
+        icon: "trash-can",
+        bundle: disagree_bundle,
+        dsa_classification_required: true,
+      )
       if post.reply_count > 0
         build_action(
           actions,
@@ -87,6 +116,7 @@ class ReviewableAiPost < Reviewable
           icon: "trash-can",
           confirm: true,
           bundle: disagree_bundle,
+          dsa_classification_required: true,
         )
       end
     end
@@ -96,6 +126,20 @@ class ReviewableAiPost < Reviewable
     post.hide!(reviewable_scores.first.reviewable_score_type)
 
     agree
+  end
+
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_keep(performed_by, args)
   end
 
   def perform_agree_and_keep(_performed_by, _args)
@@ -167,6 +211,73 @@ class ReviewableAiPost < Reviewable
 
   private
 
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_hide, :agree_and_keep_hidden
+      {
+        decision_facts:
+          "The post was flagged by an automated system and access to it was disabled.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision:,
+      }
+    when :delete_and_agree, :delete_and_ignore, :delete_and_agree_replies,
+         :delete_and_ignore_replies
+      {
+        decision_facts: "The post was flagged by an automated system and removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: post.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision:,
+      }
+    when :agree_and_suspend
+      user = post.user.reload
+
+      {
+        decision_facts: "The author of a post flagged by an automated system was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "Yes",
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = post.user.reload
+
+      {
+        decision_facts:
+          "The author of a post flagged by an automated system had their ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "Yes",
+        automated_decision:,
+      }.compact
+    when :delete_user, :delete_user_block
+      user = post.user
+
+      {
+        decision_facts:
+          "The author of a post flagged by an automated system had their account deleted.",
+        decision_account: "DECISION_ACCOUNT_TERMINATED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision:,
+      }
+    end
+  end
+
   def post
     @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
@@ -199,9 +310,10 @@ class ReviewableAiPost < Reviewable
     button_class: nil,
     bundle: nil,
     client_action: nil,
-    confirm: false
+    confirm: false,
+    dsa_classification_required: false
   )
-    actions.add(id, bundle: bundle) do |action|
+    actions.add(id, bundle:, dsa_classification_required:) do |action|
       prefix = "reviewables.actions.#{id}"
       action.icon = icon
       action.button_class = button_class
@@ -241,7 +353,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

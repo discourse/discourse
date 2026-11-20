@@ -35,10 +35,10 @@ export default class PostMenuEditButton extends Component {
       }}
       ...attributes
       @action={{@buttonActions.editPost}}
+      @ariaLabel="post.controls.edit"
       @icon={{if @post.wiki "far-pen-to-square" "pencil"}}
       @label={{if this.showLabel "post.controls.edit_action"}}
       @title="post.controls.edit"
-      @ariaLabel="post.controls.edit"
     />
   </template>
 }

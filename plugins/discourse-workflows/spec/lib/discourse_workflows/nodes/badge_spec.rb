@@ -22,21 +22,32 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
 
     it "returns enabled badges for the chooser" do
       expect(options).to include(
-        { id: badge_2.id, name: badge_2.name },
-        { id: badge.id, name: badge.name },
+        { id: badge_2.id, name: badge_2.name, hide_reason: false },
+        { id: badge.id, name: badge.name, hide_reason: false },
       )
     end
 
     it "excludes disabled badges" do
       disabled_badge = Fabricate(:badge, name: "Disabled Badge", enabled: false)
-      expect(options).not_to include({ id: disabled_badge.id, name: disabled_badge.name })
+      expect(options.pluck(:id)).not_to include(disabled_badge.id)
+    end
+
+    it "marks built-in badges whose post visibility is locked off" do
+      badge_with_visible_posts = Fabricate(:badge, system: true, show_posts: true)
+
+      expect(options).to include(
+        a_hash_including(id: Badge::Anniversary, hide_reason: true),
+        a_hash_including(id: badge_with_visible_posts.id, hide_reason: false),
+      )
     end
 
     context "with a filter term" do
       let(:filter) { "A badge" }
 
       it "filters badges" do
-        expect(options).to contain_exactly({ id: badge_2.id, name: badge_2.name })
+        expect(options).to contain_exactly(
+          { id: badge_2.id, name: badge_2.name, hide_reason: false },
+        )
       end
     end
   end
@@ -60,6 +71,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
         expect(result["username"]).to eq(user.username)
         expect(result["badge_id"]).to eq(badge.id)
         expect(result["badge_name"]).to eq(badge.name)
+        expect(result["changed"]).to be(true)
         expect(UserBadge.exists?(user: user, badge: badge)).to be(true)
         expect(result).to match_node_output_schema(described_class)
       end
@@ -73,9 +85,129 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
           "badge_id" => badge.id.to_s,
         }
 
-        expect { execute_node(configuration: config, item: item) }.not_to change {
+        result = nil
+        expect { result = execute_node(configuration: config, item: item) }.not_to change {
           UserBadge.where(user: user, badge: badge).count
         }
+        expect(result["changed"]).to be(false)
+      end
+
+      context "with a reason" do
+        let(:grant_config) do
+          { "operation" => "grant", "username" => user.username, "badge_id" => badge.id.to_s }
+        end
+
+        def granted_post_id(badge_id: badge.id)
+          UserBadge.find_by!(user:, badge_id:).post_id
+        end
+
+        it "associates the grant with the post from a URL expression" do
+          post = Fabricate(:post)
+
+          execute_node(
+            configuration: grant_config.merge("reason" => "={{ $json.post_url }}"),
+            item: {
+              "json" => {
+                "post_url" => post.full_url,
+              },
+            },
+          )
+
+          expect(granted_post_id).to eq(post.id)
+        end
+
+        it "rejects an external URL" do
+          expect {
+            execute_node(
+              configuration: grant_config.merge("reason" => "https://example.com/t/42"),
+              item:,
+            )
+          }.to raise_error(
+            DiscourseWorkflows::NodeError,
+            I18n.t("invalid_grant_badge_reason_link"),
+          ).and not_change { UserBadge.count }
+        end
+
+        it "associates the grant with the topic's first post for a prefixed topic ID" do
+          post = Fabricate(:post)
+
+          execute_node(
+            configuration: grant_config.merge("reason" => "topic:#{post.topic_id}"),
+            item:,
+          )
+
+          expect(granted_post_id).to eq(post.id)
+        end
+
+        it "associates the grant with the post for a prefixed post ID expression" do
+          reply = Fabricate(:post, topic: Fabricate(:post).topic)
+
+          execute_node(
+            configuration: grant_config.merge("reason" => "=post:{{ $json.post_id }}"),
+            item: {
+              "json" => {
+                "post_id" => reply.id,
+              },
+            },
+          )
+
+          expect(granted_post_id).to eq(reply.id)
+        end
+
+        it "requires a prefix for a bare ID" do
+          post = Fabricate(:post)
+
+          expect {
+            execute_node(
+              configuration: grant_config.merge("reason" => "={{ $json.topic_id }}"),
+              item: {
+                "json" => {
+                  "topic_id" => post.topic_id,
+                },
+              },
+            )
+          }.to raise_error(
+            DiscourseWorkflows::NodeError,
+            I18n.t("discourse_workflows.errors.badge.reason_id_requires_prefix", id: post.topic_id),
+          ).and not_change { UserBadge.count }
+        end
+
+        it "reports missing post and topic references as node errors" do
+          %w[post:0 topic:0].each do |reference|
+            expect {
+              execute_node(configuration: grant_config.merge("reason" => reference), item:)
+            }.to raise_error(
+              DiscourseWorkflows::NodeError,
+              I18n.t("discourse_workflows.errors.badge.reason_id_not_found", reference:),
+            ).and not_change { UserBadge.count }
+          end
+        end
+
+        it "ignores the reason when the badge's post visibility is locked off" do
+          post = Fabricate(:post)
+
+          execute_node(
+            configuration:
+              grant_config.merge("badge_id" => Badge::Anniversary, "reason" => "post:#{post.id}"),
+            item:,
+          )
+
+          expect(granted_post_id(badge_id: Badge::Anniversary)).to be_nil
+        end
+      end
+
+      it "reports no change when the badge is disabled" do
+        badge.update!(enabled: false)
+
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["changed"]).to be(false)
       end
 
       it "raises when granting as the anonymous actor" do
@@ -102,9 +234,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
           "badge_id" => badge.id.to_s,
         }
 
-        execute_node(configuration: config, item: item)
+        result = execute_node(configuration: config, item: item)
 
         expect(UserBadge.exists?(user: user, badge: badge)).to be(false)
+        expect(result["changed"]).to be(true)
       end
 
       it "is idempotent when user does not have the badge" do
@@ -124,6 +257,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
           "username" => user.username,
           "badge_id" => badge.id,
           "badge_name" => badge.name,
+          "changed" => false,
         )
       end
     end
@@ -137,7 +271,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "User 'nonexistent_user' not found",
+        node_error_message(:not_found, scope: :actor, username: "nonexistent_user"),
       )
     end
 

@@ -21,7 +21,7 @@ RSpec.describe Discourse do
   describe "running_in_rack" do
     after { ENV.delete("DISCOURSE_RUNNING_IN_RACK") }
 
-    it "should not be running in rack" do
+    it "is not running in Rack" do
       expect(Discourse.running_in_rack?).to eq(false)
       ENV["DISCOURSE_RUNNING_IN_RACK"] = "1"
       expect(Discourse.running_in_rack?).to eq(true)
@@ -95,17 +95,13 @@ RSpec.describe Discourse do
     it "applies worker-specific database variable overrides in a production environment" do
       test_database_config = Rails.application.config.database_configuration["test"]
 
-      temp_discourse_conf = Tempfile.new("discourse.conf")
-      temp_discourse_conf.write <<~TEXT
-      db_name = #{test_database_config["database"]}
-      db_username = ""
-      db_variables_statement_timeout = 10s
-      unicorn_worker_db_variables_statement_timeout = 100s
-      TEXT
-      temp_discourse_conf.rewind
+      ENV["DISCOURSE_DB_NAME"] = test_database_config["database"]
+      ENV["DISCOURSE_DB_USERNAME"] = ""
+      ENV["DISCOURSE_DB_VARIABLES_STATEMENT_TIMEOUT"] = "10s"
+      ENV["DISCOURSE_UNICORN_WORKER_DB_VARIABLES_STATEMENT_TIMEOUT"] = "100s"
 
       Rails.stubs(:env).returns(ActiveSupport::StringInquirer.new("production"))
-      GlobalSetting.configure!(path: temp_discourse_conf.path, use_blank_provider: false)
+      GlobalSetting.configure!(use_blank_provider: false)
       GlobalSetting.load_defaults
 
       Discourse.apply_worker_db_variables_overrides
@@ -120,8 +116,6 @@ RSpec.describe Discourse do
       ].each { |method| GlobalSetting.singleton_class.remove_method(method) }
 
       allow(Rails).to receive(:env).and_call_original
-      temp_discourse_conf&.close
-      temp_discourse_conf&.unlink
     end
   end
 
@@ -250,12 +244,28 @@ RSpec.describe Discourse do
 
   describe "enabled_authenticators" do
     it "only returns enabled authenticators" do
+      SiteSetting.twitter_consumer_key = "consumer_key"
+      SiteSetting.twitter_consumer_secret = "consumer_secret"
+
       expect(Discourse.enabled_authenticators.length).to be(0)
       expect { SiteSetting.enable_twitter_logins = true }.to change {
         Discourse.enabled_authenticators.length
       }.by(1)
       expect(Discourse.enabled_authenticators.length).to be(1)
       expect(Discourse.enabled_authenticators.first).to be_instance_of(Auth::TwitterAuthenticator)
+    end
+
+    it "does not return an enabled authenticator once its credentials are removed" do
+      SiteSetting.twitter_consumer_key = "consumer_key"
+      SiteSetting.twitter_consumer_secret = "consumer_secret"
+      SiteSetting.enable_twitter_logins = true
+
+      expect { SiteSetting.twitter_consumer_secret = "" }.to change {
+        Discourse.enabled_authenticators.length
+      }.by(-1)
+
+      expect(SiteSetting.enable_twitter_logins).to eq(true)
+      expect(Discourse.enabled_authenticators).to be_empty
     end
   end
 
@@ -279,6 +289,36 @@ RSpec.describe Discourse do
     it "returns the system user otherwise" do
       SiteSetting.site_contact_username = ""
       expect(Discourse.site_contact_user.username).to eq("system")
+    end
+  end
+
+  describe "#site_contact_group" do
+    fab!(:group) { Fabricate(:group, name: "support") }
+
+    it "returns nothing when the setting is blank" do
+      SiteSetting.site_contact_group_name = ""
+      expect(Discourse.site_contact_group).to eq(nil)
+    end
+
+    it "resolves the stored group id" do
+      SiteSetting.site_contact_group_name = group.id.to_s
+      expect(Discourse.site_contact_group).to eq(group)
+    end
+
+    it "returns nothing when the group no longer exists" do
+      SiteSetting.site_contact_group_name = group.id.to_s
+      group.destroy!
+      expect(Discourse.site_contact_group).to eq(nil)
+    end
+
+    it "resolves a group name regardless of case" do
+      SiteSetting.stubs(:site_contact_group_name).returns("SUPPORT")
+      expect(Discourse.site_contact_group).to eq(group)
+    end
+
+    it "does not read a group id out of a value that merely starts with a digit" do
+      SiteSetting.stubs(:site_contact_group_name).returns("0support")
+      expect(Discourse.site_contact_group).to eq(nil)
     end
   end
 
@@ -447,13 +487,13 @@ RSpec.describe Discourse do
 
       after { Discourse.reset_job_exception_stats! }
 
-      it "should not fail on incorrectly shaped hash" do
+      it "handles an incorrectly shaped hash" do
         expect do
           Discourse.handle_job_exception(FakeTestError.new, { job: "test" })
         end.to raise_error(FakeTestError)
       end
 
-      it "should collect job exception stats" do
+      it "collects job exception statistics" do
         # see MiniScheduler Manager which reports it like this
         # https://github.com/discourse/mini_scheduler/blob/2b2c1c56b6e76f51108c2a305775469e24cf2b65/lib/mini_scheduler/manager.rb#L95
         exception_context = {
@@ -487,7 +527,7 @@ RSpec.describe Discourse do
       end
     end
 
-    it "should not fail when called" do
+    it "runs without an error" do
       exception = StandardError.new
 
       expect do Discourse.handle_job_exception(exception, nil, nil) end.to raise_error(
@@ -785,9 +825,12 @@ RSpec.describe Discourse do
   end
 
   describe ".anonymous_locale" do
-    def locale_for(cookie: nil, path: "/")
-      env = cookie ? { "HTTP_COOKIE" => "locale=#{cookie}" } : {}
-      Discourse.anonymous_locale(ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)))
+    def locale_for(cookie: nil, path: "/", env: {}, include_param: true)
+      env = env.merge("HTTP_COOKIE" => "locale=#{cookie}") if cookie
+      Discourse.anonymous_locale(
+        ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)),
+        include_param:,
+      )
     end
 
     before do
@@ -850,6 +893,29 @@ RSpec.describe Discourse do
       it "still prefers the locale param over the cookie" do
         SiteSetting.set_locale_from_param = true
 
+        expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
+      end
+    end
+
+    context "without the locale param" do
+      before do
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.set_locale_from_accept_language_header = true
+      end
+
+      it "resolves the locale the plain URL would serve" do
+        expect(locale_for(cookie: "es", path: "/?tl=fr", include_param: false)).to eq("es")
+        expect(
+          locale_for(
+            path: "/?tl=fr",
+            env: {
+              "HTTP_ACCEPT_LANGUAGE" => "ja",
+            },
+            include_param: false,
+          ),
+        ).to eq("ja")
+        expect(locale_for(path: "/?tl=fr", include_param: false)).to eq("en")
         expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
       end
     end

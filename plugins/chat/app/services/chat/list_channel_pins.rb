@@ -33,9 +33,9 @@ module Chat
     def fetch_pins(channel:)
       user_includes =
         if SiteSetting.enable_user_status
-          %i[user_status user_option primary_group]
+          %i[user_status user_option flair_group primary_group]
         else
-          %i[user_option primary_group]
+          %i[user_option flair_group primary_group]
         end
 
       # timeline order (oldest message first), so the list reads like the channel

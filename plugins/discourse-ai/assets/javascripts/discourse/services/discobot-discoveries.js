@@ -3,31 +3,17 @@ import { action } from "@ember/object";
 import { cancel, later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import randomUUID from "discourse/lib/random-uuid";
 import { i18n } from "discourse-i18n";
-import SmoothStreamer from "../lib/smooth-streamer";
+import SmoothStreamer from "../lib/smooth-streamer.gjs";
 
 const DISCOVERY_TIMEOUT_MS = 20000;
-
-function buildRequestId(cryptoProvider = globalThis.crypto) {
-  if (cryptoProvider.randomUUID) {
-    return cryptoProvider.randomUUID();
-  }
-
-  const bytes = new Uint8Array(16);
-  cryptoProvider.getRandomValues(bytes);
-  bytes[6] = (bytes[6] % 16) + 64;
-  bytes[8] = (bytes[8] % 64) + 128;
-  const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
-
-  return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex
-    .slice(6, 8)
-    .join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10).join("")}`;
-}
 
 export default class DiscobotDiscoveries extends Service {
   // We use this to retain state after search menu gets closed.
   // Similar to discourse/discourse#25504
   @service a11y;
+  @service appEvents;
 
   @tracked discovery = "";
   @tracked lastQuery = "";
@@ -39,6 +25,7 @@ export default class DiscobotDiscoveries extends Service {
   @tracked answerable = null;
   @tracked errorMessage = "";
   @tracked discoveryTitle = "";
+  @tracked cachedAnswerAt = null;
   @tracked suggestedFollowUp = "";
   @tracked recentAsks = [];
 
@@ -56,6 +43,25 @@ export default class DiscobotDiscoveries extends Service {
     super.willDestroy(...arguments);
     this.cancelDiscoveryTimeout();
     this.smoothStreamer.resetStreaming();
+  }
+
+  get showDiscoveryTitle() {
+    return Boolean(
+      this.discovery.length > 0 ||
+      this.sources.length > 0 ||
+      this.loadingDiscoveries ||
+      this.discoveryTimedOut ||
+      this.answerable === false ||
+      this.errorMessage
+    );
+  }
+
+  get isStreaming() {
+    return this.smoothStreamer.isStreaming;
+  }
+
+  get streamedText() {
+    return this.smoothStreamer?.renderedText;
   }
 
   async onDiscoveryUpdate(update) {
@@ -79,6 +85,9 @@ export default class DiscobotDiscoveries extends Service {
 
     if (update.answerable !== undefined) {
       this.answerable = update.answerable;
+      if (update.done && update.answerable === false) {
+        this.appEvents.trigger("discourse-ai:answer-failed");
+      }
     }
 
     if (update.ai_discover_follow_up !== undefined) {
@@ -109,6 +118,7 @@ export default class DiscobotDiscoveries extends Service {
     this.smoothStreamer.updateResult(update, "ai_discover_reply");
 
     if (update.done) {
+      this.cachedAnswerAt = update.cached_at ?? null;
       const message =
         update.answerable === false
           ? i18n("discourse_ai.discobot_discoveries.no_answer")
@@ -128,6 +138,7 @@ export default class DiscobotDiscoveries extends Service {
     this.answerable = null;
     this.errorMessage = "";
     this.discoveryTitle = "";
+    this.cachedAnswerAt = null;
     this.suggestedFollowUp = "";
     this.smoothStreamer.resetStreaming();
   }
@@ -176,27 +187,24 @@ export default class DiscobotDiscoveries extends Service {
     this.lastQuery = "";
   }
 
-  get showDiscoveryTitle() {
-    return Boolean(
-      this.discovery.length > 0 ||
-      this.sources.length > 0 ||
-      this.loadingDiscoveries ||
-      this.discoveryTimedOut ||
-      this.answerable === false ||
-      this.errorMessage
-    );
-  }
-
-  get isStreaming() {
-    return this.smoothStreamer.isStreaming;
-  }
-
-  get streamedText() {
-    return this.smoothStreamer?.renderedText;
-  }
-
+  /**
+   * @returns {Promise<Object|undefined>} the server's reply when a request was
+   *   made, which carries the decision model's intent when one was asked for
+   */
   @action
-  async triggerDiscovery(query) {
+  async triggerDiscovery(
+    query,
+    {
+      scope,
+      trigger,
+      triggerReason,
+      intentHeuristic,
+      classifyIntent,
+      deferIfPrecise,
+      deferredAskLogId,
+      freshAnswer,
+    } = {}
+  ) {
     const normalizedQuery = query?.trim();
 
     // an answer that failed or timed out is worth asking again, even though the
@@ -215,24 +223,47 @@ export default class DiscobotDiscoveries extends Service {
       return;
     }
 
-    const requestId = buildRequestId();
+    const requestId = randomUUID();
     this.loadingDiscoveries = true;
     this.activeRequestId = requestId;
+    // a search that may defer its answer is not an ask until the server says so
+    if (!deferIfPrecise) {
+      this.#noteAsking(normalizedQuery);
+    }
 
     this.scheduleDiscoveryTimeout();
 
     try {
       this.lastQuery = normalizedQuery;
-      this.rememberAsk(normalizedQuery);
 
       const response = await ajax("/discourse-ai/discoveries/reply", {
         type: "POST",
-        data: { query: normalizedQuery, request_id: requestId },
+        data: {
+          query: normalizedQuery,
+          request_id: requestId,
+          ...(scope && { scope }),
+          ...(trigger && { trigger }),
+          ...(triggerReason && { trigger_reason: triggerReason }),
+          ...(intentHeuristic && { intent_heuristic: intentHeuristic }),
+          ...(classifyIntent && { classify_intent: true }),
+          ...(deferIfPrecise && { defer_if_precise: true }),
+          ...(deferredAskLogId && { deferred_ask_log_id: deferredAskLogId }),
+          ...(freshAnswer && { fresh_answer: true }),
+        },
       });
 
       if (response.request_id !== requestId) {
         throw new Error("Discovery request ID mismatch");
       }
+      if (deferIfPrecise && this.activeRequestId === requestId) {
+        if (response.answer_deferred) {
+          this.cancelDiscoveryTimeout();
+          this.loadingDiscoveries = false;
+        } else {
+          this.#noteAsking(normalizedQuery);
+        }
+      }
+      return response;
     } catch {
       if (this.activeRequestId === requestId) {
         this.failDiscovery(
@@ -256,6 +287,7 @@ export default class DiscobotDiscoveries extends Service {
     this.activeRequestId = "";
     this.smoothStreamer.resetStreaming();
     this.a11y.announce(message, "assertive");
+    this.appEvents.trigger("discourse-ai:answer-failed");
   }
 
   timeoutDiscovery() {
@@ -275,6 +307,7 @@ export default class DiscobotDiscoveries extends Service {
       i18n("discourse_ai.discobot_discoveries.timed_out"),
       "assertive"
     );
+    this.appEvents.trigger("discourse-ai:answer-failed");
   }
 
   scheduleDiscoveryTimeout() {
@@ -291,5 +324,15 @@ export default class DiscobotDiscoveries extends Service {
       cancel(this.discoveryTimeout);
       this.discoveryTimeout = null;
     }
+  }
+
+  #noteAsking(query) {
+    if (this.loadingDiscoveries) {
+      this.a11y.announce(
+        i18n("discourse_ai.discobot_discoveries.asking"),
+        "polite"
+      );
+    }
+    this.rememberAsk(query);
   }
 }

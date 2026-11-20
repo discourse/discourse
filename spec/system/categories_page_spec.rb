@@ -6,6 +6,7 @@ RSpec.describe "Categories Page" do
   fab!(:subcategory) { Fabricate(:category, parent_category: category) }
   fab!(:topics) { Fabricate.times(3, :topic_with_op, category: subcategory) }
   let(:category_page) { PageObjects::Pages::Category.new }
+
   before { CategoryFeaturedTopic.feature_topics }
 
   describe "hashtag icons in category descriptions" do
@@ -28,6 +29,7 @@ RSpec.describe "Categories Page" do
 
   describe "subcategories_with_featured_topics" do
     before { SiteSetting.desktop_category_page_style = "subcategories_with_featured_topics" }
+
     it "displays subcategories and topics" do
       category_page.visit_categories
 

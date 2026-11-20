@@ -26,11 +26,51 @@ RSpec.describe ReviewableSerializer do
     expect(json[:removed_topic_id]).to eq reviewable.topic_id
   end
 
-  it "will not throw an error when the payload is `nil`" do
+  it "does not raise an error when the payload is nil" do
     reviewable.payload = nil
     json =
       ReviewableQueuedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
     expect(json["payload"]).to be_blank
+  end
+
+  it "resolves note mentions in a constant number of queries" do
+    SiteSetting.enable_mentions = true
+    users = Fabricate.times(3, :user)
+    Fabricate(
+      :reviewable_note,
+      reviewable: reviewable,
+      user: admin,
+      content: "@#{users.first.username}",
+    )
+    loaded_reviewable = Reviewable.viewable_by(admin).find(reviewable.id)
+    described_class.new(loaded_reviewable, scope: admin.guardian).as_json
+    queries_for_one =
+      track_sql_queries { described_class.new(loaded_reviewable, scope: admin.guardian).as_json }
+
+    users
+      .drop(1)
+      .each do |user|
+        Fabricate(
+          :reviewable_note,
+          reviewable: reviewable,
+          user: admin,
+          content: "@#{user.username}",
+        )
+      end
+    loaded_reviewable = Reviewable.viewable_by(admin).find(reviewable.id)
+    described_class.new(loaded_reviewable, scope: admin.guardian).as_json
+    json = nil
+    queries_for_many =
+      track_sql_queries do
+        json = described_class.new(loaded_reviewable, scope: admin.guardian).as_json
+      end
+
+    expect(queries_for_many.size).to eq(queries_for_one.size)
+    mentions =
+      json
+        .fetch(:reviewable_notes)
+        .flat_map { |note| Nokogiri::HTML5.fragment(note[:cooked]).css("a.mention").map(&:text) }
+    expect(mentions).to contain_exactly(*users.map { |user| "@#{user.username}" })
   end
 
   describe "urls" do

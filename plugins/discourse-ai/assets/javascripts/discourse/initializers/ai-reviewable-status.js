@@ -14,16 +14,17 @@ export default {
       api.registerReviewableComponent(
         "ReviewableAiChatMessage",
         async () =>
-          (await import("../components/reviewable/ai-chat-message")).default
+          (await import("../components/reviewable/ai-chat-message.gjs")).default
       );
       api.registerReviewableComponent(
         "ReviewableAiPost",
-        async () => (await import("../components/reviewable/ai-post")).default
+        async () =>
+          (await import("../components/reviewable/ai-post.gjs")).default
       );
       api.registerReviewableComponent(
         "ReviewableAiToolAction",
         async () =>
-          (await import("../components/reviewable/ai-tool-action")).default
+          (await import("../components/reviewable/ai-tool-action.gjs")).default
       );
     });
   },

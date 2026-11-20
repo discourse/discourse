@@ -31,17 +31,17 @@ module("Integration | Component | ColorInput", function (hooks) {
 
   module("with fallback hex value provided", function (innerHooks) {
     innerHooks.beforeEach(function () {
-      this.set("fallbackHexValue", "abcdef");
+      this.fallbackHexValue = "abcdef";
     });
 
     test("with empty hex value", async function (assert) {
-      this.set("hexValue", "");
+      this.hexValue = "";
 
       await render(
         <template>
           <ColorInput
-            @hexValue={{this.hexValue}}
             @fallbackHexValue={{this.fallbackHexValue}}
+            @hexValue={{this.hexValue}}
           />
         </template>
       );
@@ -53,13 +53,13 @@ module("Integration | Component | ColorInput", function (hooks) {
     });
 
     test("with hex value", async function (assert) {
-      this.set("hexValue", "123456");
+      this.hexValue = "123456";
 
       await render(
         <template>
           <ColorInput
-            @hexValue={{this.hexValue}}
             @fallbackHexValue={{this.fallbackHexValue}}
+            @hexValue={{this.hexValue}}
           />
         </template>
       );

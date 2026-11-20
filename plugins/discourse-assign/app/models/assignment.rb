@@ -59,8 +59,16 @@ class Assignment < ActiveRecord::Base
     assigned_to.is_a?(Group)
   end
 
-  def assigned_users
-    Array.wrap(assigned_to.try(:users) || assigned_to)
+  def assigned_users(user_id: nil)
+    if assigned_to_group?
+      members = assigned_to.users
+      members = members.where(id: user_id) if user_id
+      members.to_a
+    elsif user_id.nil? || assigned_to&.id == user_id
+      Array.wrap(assigned_to)
+    else
+      []
+    end
   end
 
   def post
@@ -68,9 +76,11 @@ class Assignment < ActiveRecord::Base
     target
   end
 
-  def create_missing_notifications!
-    assigned_users.each do |user|
+  def create_missing_notifications!(user_id: nil)
+    assigned_users(user_id:).each do |user|
       next if user.notifications.for_assignment(self).exists?
+      # Group members don't necessarily have access to every target assigned to the group.
+      next if !user.guardian.can_see?(target)
       DiscourseAssign::CreateNotification.call(
         assignment: self,
         user: user,
@@ -101,7 +111,7 @@ class Assignment < ActiveRecord::Base
     return if !assigned_to
 
     allowed_user_ids =
-      DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(target || topic)
+      DiscourseAssign::AssignmentPermissions.assignable_user_ids(target || topic).pluck(:id)
     return if allowed_user_ids.blank?
 
     serializer_class = assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
@@ -128,7 +138,7 @@ class Assignment < ActiveRecord::Base
   end
 
   def validate_status
-    if SiteSetting.enable_assign_status && !Assignment.statuses.include?(self.status)
+    if SiteSetting.enable_assign_status && !Assignment.statuses.include?(status)
       errors.add(:status, :invalid)
     end
   end

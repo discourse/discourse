@@ -15,8 +15,10 @@ import HistoryModal from "discourse/components/modal/history";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 import PublishPageModal from "discourse/components/modal/publish-page";
 import RawEmailModal from "discourse/components/modal/raw-email";
+import ReportIllegalContentModal from "discourse/components/modal/report-illegal-content";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import topicTitleToken from "discourse/lib/topic-title-token";
@@ -30,12 +32,15 @@ const SCROLL_DELAY = 500;
 export default class TopicRoute extends DiscourseRoute {
   @service a11y;
   @service composer;
-  @service screenTrack;
   @service currentUser;
+  @service screenTrack;
   @service modal;
   @service router;
 
+  /** @type {ReturnType<typeof import("discourse/lib/later").default> | null} */
   scheduledReplace = null;
+
+  /** @type {number | null} */
   lastScrollPos = null;
   isTransitioning = false;
   queryParams = {
@@ -79,8 +84,16 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showFlags(model) {
+    if (!this.currentUser && this.siteSettings.dsa_reporting_enabled) {
+      this.modal.show(ReportIllegalContentModal, {
+        model: { contentUrl: getAbsoluteURL(model.urlWithNumber) },
+      });
+      return;
+    }
+
     this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
       model: {
+        allowIllegalContentReport: true,
         flagTarget: new PostFlag(),
         flagModel: model,
         setHidden: () => model.set("hidden", true),
@@ -93,6 +106,7 @@ export default class TopicRoute extends DiscourseRoute {
     const model = this.modelFor("topic");
     this.modal.show(FlagModal, {
       model: {
+        allowIllegalContentReport: true,
         flagTarget: new TopicFlag(),
         flagModel: model,
         setHidden: () => model.set("hidden", true),
@@ -282,39 +296,6 @@ export default class TopicRoute extends DiscourseRoute {
     return true;
   }
 
-  // replaceState can be very slow on Android Chrome. This function debounces replaceState
-  // within a topic until scrolling stops
-  _replaceUnlessScrolling(url, topicId) {
-    const { currentRouteName } = this.router;
-
-    const stillOnTopicRoute = currentRouteName?.split(".")[0] === "topic";
-    if (!stillOnTopicRoute) {
-      return;
-    }
-
-    const stillOnSameTopic = this.modelFor("topic").id === topicId;
-    if (!stillOnSameTopic) {
-      return;
-    }
-
-    const currentPos = document.scrollingElement.scrollTop;
-    if (currentPos === this.lastScrollPos) {
-      DiscourseURL.replaceState(`${url}${window.location.hash}`);
-      return;
-    }
-
-    this.setProperties({
-      lastScrollPos: currentPos,
-      scheduledReplace: discourseLater(
-        this,
-        "_replaceUnlessScrolling",
-        url,
-        topicId,
-        SCROLL_DELAY
-      ),
-    });
-  }
-
   setupParams(topic, params) {
     const postStream = topic.get("postStream");
     postStream.filter = get(params, "filter");
@@ -408,5 +389,38 @@ export default class TopicRoute extends DiscourseRoute {
     schedule("afterRender", () =>
       this.appEvents.trigger("header:update-topic", model)
     );
+  }
+
+  // replaceState can be very slow on Android Chrome. This function debounces replaceState
+  // within a topic until scrolling stops
+  _replaceUnlessScrolling(url, topicId) {
+    const { currentRouteName } = this.router;
+
+    const stillOnTopicRoute = currentRouteName?.split(".")[0] === "topic";
+    if (!stillOnTopicRoute) {
+      return;
+    }
+
+    const stillOnSameTopic = this.modelFor("topic").id === topicId;
+    if (!stillOnSameTopic) {
+      return;
+    }
+
+    const currentPos = document.scrollingElement.scrollTop;
+    if (currentPos === this.lastScrollPos) {
+      DiscourseURL.replaceState(`${url}${window.location.hash}`);
+      return;
+    }
+
+    this.setProperties({
+      lastScrollPos: currentPos,
+      scheduledReplace: discourseLater(
+        this,
+        "_replaceUnlessScrolling",
+        url,
+        topicId,
+        SCROLL_DELAY
+      ),
+    });
   }
 }

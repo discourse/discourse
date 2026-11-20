@@ -6,12 +6,7 @@ module DiscourseAi
       return false if !SiteSetting.ai_summarization_enabled
 
       if target.class == Topic && target.private_message?
-        allowed =
-          SiteSetting.ai_pm_summarization_allowed_groups_map.any? do |group_id|
-            user.group_ids.include?(group_id)
-          end
-
-        return false if !allowed
+        return false if !in_any_groups?(SiteSetting.ai_pm_summarization_allowed_groups_map)
       end
 
       can_summarize = can_request_summary?
@@ -28,11 +23,8 @@ module DiscourseAi
       if (ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_summary_gists_agent)).blank?
         return false
       end
-      agent_groups = ai_agent.allowed_group_ids.to_a
-      return true if agent_groups.include?(Group::AUTO_GROUPS[:everyone])
-      return false if anonymous?
 
-      agent_groups.any? { |group_id| user.group_ids.include?(group_id) }
+      in_any_groups?(ai_agent.allowed_group_ids.to_a)
     end
 
     def can_request_gists?
@@ -57,7 +49,7 @@ module DiscourseAi
         return false
       end
 
-      ai_agent.allowed_group_ids.to_a.any? { |group_id| user.group_ids.include?(group_id) }
+      in_any_groups?(ai_agent.allowed_group_ids.to_a)
     end
 
     def can_debug_ai_bot_conversation?(target)
@@ -70,7 +62,7 @@ module DiscourseAi
         return false
       end
 
-      user.in_any_groups?(SiteSetting.ai_bot_debugging_allowed_groups_map)
+      in_any_groups?(SiteSetting.ai_bot_debugging_allowed_groups_map)
     end
 
     def can_send_pm_to_ai_bot?(target)
@@ -89,7 +81,7 @@ module DiscourseAi
         return false
       end
 
-      return false if !user.in_any_groups?(SiteSetting.ai_bot_public_sharing_allowed_groups_map)
+      return false if !in_any_groups?(SiteSetting.ai_bot_public_sharing_allowed_groups_map)
 
       # In future we may add other valid targets for AI conversation sharing,
       # for now we only support topics.
@@ -115,6 +107,12 @@ module DiscourseAi
       end
 
       true
+    end
+
+    def can_inspect_ai_shares?(owner)
+      return false if anonymous? || !owner
+
+      owner.id == user.id || is_admin?
     end
 
     def can_destroy_shared_ai_bot_conversation?(conversation)

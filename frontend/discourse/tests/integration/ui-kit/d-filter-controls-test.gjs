@@ -1,10 +1,22 @@
 import { tracked } from "@glimmer/tracking";
 import Evented from "@ember/object/evented";
+import { run } from "@ember/runloop";
 import Service from "@ember/service";
-import { click, fillIn, render, select, settled } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  render,
+  rerender,
+  select,
+  settled,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
+import { i18n } from "discourse-i18n";
 
 const SAMPLE_DATA = [
   {
@@ -56,8 +68,38 @@ class RouterStub extends Service.extend(Evented) {
 module("Integration | ui-kit | DFilterControls", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("supports inline controls and a checkbox-only filter drawer", async function (assert) {
+    await render(
+      <template>
+        <DFilterControls
+          @filterDropdownsExpanded={{false}}
+          @forceShowDropdownFilterToggle={{true}}
+          @showTextFilter={{false}}
+          @toggleLabel="Filters"
+        >
+          <:inlineFilters><input aria-label="Inline control" /></:inlineFilters>
+          <:additionalFilters><label><input type="checkbox" />Only customized</label></:additionalFilters>
+        </DFilterControls>
+      </template>
+    );
+    assert
+      .dom('[aria-label="Inline control"]')
+      .exists("inline controls stay visible");
+    assert
+      .dom(".d-filter-controls__toggle-filters")
+      .hasText("Filters", "toggle accepts a label");
+    assert.dom('input[type="checkbox"]').doesNotExist("drawer starts closed");
+    await click(".d-filter-controls__toggle-filters");
+    assert
+      .dom('input[type="checkbox"]')
+      .exists("drawer exposes additional filters");
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .doesNotExist("no empty select is rendered");
+  });
+
   test("renders text filter input", async function (assert) {
-    this.set("data", SAMPLE_DATA);
+    this.data = SAMPLE_DATA;
 
     await render(
       <template>
@@ -80,23 +122,20 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("can hide the text filter without affecting other controls", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
-      category: SAMPLE_DROPDOWN_OPTIONS,
-    });
-    this.set("resetCount", 0);
-    this.set("onReset", () => this.set("resetCount", this.resetCount + 1));
+    const dropdownOptions = { category: SAMPLE_DROPDOWN_OPTIONS };
+    let resetCount = 0;
+    const onReset = () => resetCount++;
 
     await render(
       <template>
         <DFilterControls
-          @array={{this.data}}
-          @dropdownOptions={{this.dropdownOptions}}
+          @array={{SAMPLE_DATA}}
+          @dropdownOptions={{dropdownOptions}}
+          @onResetFilters={{onReset}}
           @showTextFilter={{false}}
-          @onResetFilters={{this.onReset}}
         >
           <:actions>
-            <button type="button" class="custom-action">Custom action</button>
+            <button class="custom-action" type="button">Custom action</button>
           </:actions>
           <:content as |filteredData|>
             <div class="results">{{filteredData.length}}</div>
@@ -117,7 +156,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     await select(".d-filter-controls__dropdown--category", "feature");
     await click(".d-filter-controls__reset");
 
-    assert.strictEqual(this.resetCount, 1, "calls the reset callback once");
+    assert.strictEqual(resetCount, 1, "calls the reset callback once");
     assert
       .dom(".d-filter-controls__dropdown--category")
       .hasValue("all", "resets dropdown filters");
@@ -147,20 +186,20 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("supports additional filters and includes them in reset state", async function (assert) {
-    this.set("additionalFiltersActive", false);
-    this.set("resetCount", 0);
-    this.set("onReset", () => this.set("resetCount", this.resetCount + 1));
+    const additionalFiltersActive = tracked(false);
+    let resetCount = 0;
+    const onReset = () => resetCount++;
 
     await render(
       <template>
         <DFilterControls
+          @additionalFiltersActive={{additionalFiltersActive.value}}
           @array={{SAMPLE_DATA}}
-          @additionalFiltersActive={{this.additionalFiltersActive}}
+          @onResetFilters={{onReset}}
           @showTextFilter={{false}}
-          @onResetFilters={{this.onReset}}
         >
           <:additionalFilters>
-            <input class="custom-filter" aria-label="Custom filter" />
+            <input aria-label="Custom filter" class="custom-filter" />
           </:additionalFilters>
         </DFilterControls>
       </template>
@@ -169,29 +208,30 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".custom-filter").exists("renders the additional filter");
     assert
       .dom(".d-filter-controls__reset")
-      .doesNotExist("hides reset while the additional filter is inactive");
+      .isDisabled("disables reset while the additional filter is inactive");
 
-    this.set("additionalFiltersActive", true);
+    additionalFiltersActive.value = true;
+    await rerender();
 
     assert
       .dom(".d-filter-controls__reset")
-      .exists("shows reset while the additional filter is active");
+      .isEnabled("enables reset while the additional filter is active");
 
     await click(".d-filter-controls__reset");
 
-    assert.strictEqual(this.resetCount, 1, "calls the reset callback once");
+    assert.strictEqual(resetCount, 1, "calls the reset callback once");
   });
 
   test("filters data by text (client-side)", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name", "description"]);
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name", "description"];
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @inputPlaceholder="Search..."
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -215,8 +255,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("renders single dropdown filter", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = SAMPLE_DROPDOWN_OPTIONS;
 
     await render(
       <template>
@@ -241,8 +281,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("can collapse a single dropdown behind the filter toggle", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = SAMPLE_DROPDOWN_OPTIONS;
 
     await render(
       <template>
@@ -273,17 +313,27 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".d-filter-controls__dropdown")
       .exists("reveals the dropdown after toggling filters");
+
+    await select(".d-filter-controls__dropdown", "feature");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .exists({ count: 1 }, "shows a single reset button")
+      .isEnabled("enables reset for the active dropdown");
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .doesNotExist("does not duplicate reset outside the drawer controls");
   });
 
   test("can show expanded dropdowns without a filter toggle", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = {
       category: SAMPLE_DROPDOWN_OPTIONS,
       status: [
         { label: "All statuses", value: "all" },
         { label: "Enabled", value: "enabled" },
       ],
-    });
+    };
 
     await render(
       <template>
@@ -311,35 +361,9 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .exists({ count: 1 }, "shows reset when an expanded filter is active");
   });
 
-  test("shows one reset button with a forced single-dropdown toggle", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
-
-    await render(
-      <template>
-        <DFilterControls
-          @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
-          @dropdownOptions={{this.dropdownOptions}}
-          @forceShowDropdownFilterToggle={{true}}
-        />
-      </template>
-    );
-
-    await fillIn(".filter-input", "first");
-
-    assert
-      .dom(".d-filter-controls__reset")
-      .exists({ count: 1 }, "shows a single reset button");
-    assert
-      .dom(".d-filter-controls > .d-filter-controls__reset")
-      .doesNotExist("does not show a second reset button after the dropdowns");
-  });
-
   test("filters data by single dropdown (client-side)", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = SAMPLE_DROPDOWN_OPTIONS;
 
     await render(
       <template>
@@ -373,8 +397,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("marks the dropdown active when its value differs from the default", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = SAMPLE_DROPDOWN_OPTIONS;
 
     await render(
       <template>
@@ -405,16 +429,16 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("combines text and dropdown filters (client-side)", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name", "description"]);
-    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name", "description"];
+    this.dropdownOptions = SAMPLE_DROPDOWN_OPTIONS;
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @dropdownOptions={{this.dropdownOptions}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -443,15 +467,16 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".item[data-id='3']").exists("shows the correct item");
   });
 
-  test("shows reset button when filters are active", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
+  test("keeps reset visible and enables it only for active filters", async function (assert) {
+    const searchableProps = ["name"];
+    const loading = tracked(undefined);
 
     await render(
       <template>
         <DFilterControls
-          @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
+          @array={{SAMPLE_DATA}}
+          @loading={{loading.value}}
+          @searchableProps={{searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -466,8 +491,38 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
 
     assert
       .dom(".d-filter-controls__reset")
-      .doesNotExist("no reset button initially");
+      .isDisabled("reset is visible and disabled initially");
+    assert
+      .dom(".d-filter-controls__reset .d-button-label")
+      .doesNotExist("Reset has no visible text label");
+    assert
+      .dom(".d-filter-controls__reset")
+      .hasAttribute(
+        "title",
+        i18n("filter_controls.reset"),
+        "provides a tooltip"
+      )
+      .hasAttribute(
+        "aria-label",
+        i18n("filter_controls.reset"),
+        "provides an accessible name"
+      );
 
+    await fillIn(".filter-input", "first");
+
+    assert.dom(".item").exists({ count: 1 }, "filters matching items");
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .isEnabled("enables reset when the search has results");
+
+    loading.value = true;
+    await settled();
+
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .isEnabled("reset stays available during a reload");
+
+    loading.value = false;
     await fillIn(".filter-input", "nonexistent");
 
     assert
@@ -475,12 +530,26 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .exists("shows no results message");
     assert
       .dom(".d-filter-controls__reset")
-      .exists("shows reset button after filtering");
+      .isEnabled("enables reset after filtering");
+    assert
+      .dom(".d-filter-controls__no-results .d-filter-controls__reset")
+      .hasText(i18n("filter_controls.reset"), "labels the empty-state reset");
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset .d-button-label")
+      .doesNotExist("keeps the toolbar reset icon-only");
+
+    await click(".d-filter-controls > .d-filter-controls__reset");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .isDisabled("reset stays visible after restoring defaults");
+    assert.dom(".item").exists({ count: 3 }, "restores all items");
+    assert.dom(".filter-input").hasValue("", "clears the search");
   });
 
   test("can hide the built-in no-results state", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
 
     await render(
       <template>
@@ -503,8 +572,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("can hide the reset button", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
 
     await render(
       <template>
@@ -523,99 +592,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .doesNotExist("does not render the reset button");
   });
 
-  test("reset button clears filters", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-
-    await render(
-      <template>
-        <DFilterControls
-          @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
-        >
-          <:content as |filteredData|>
-            <div class="results">
-              {{#each filteredData as |item|}}
-                <div class="item" data-id={{item.id}}>{{item.name}}</div>
-              {{/each}}
-            </div>
-          </:content>
-        </DFilterControls>
-      </template>
-    );
-
-    await fillIn(".filter-input", "first");
-
-    assert.dom(".item").exists({ count: 1 }, "shows filtered results");
-
-    await fillIn(".filter-input", "firstblah");
-    assert
-      .dom(".item")
-      .doesNotExist("does not show any results when filters find none");
-
-    await click(".d-filter-controls__reset");
-
-    assert.dom(".item").exists({ count: 3 }, "shows all items after reset");
-    assert.dom(".filter-input").hasValue("", "clears text input");
-  });
-
-  test("shows the reset button next to the input when a text filter finds results", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-
-    await render(
-      <template>
-        <DFilterControls
-          @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
-        >
-          <:content as |filteredData|>
-            <div class="results">
-              {{#each filteredData as |item|}}
-                <div class="item" data-id={{item.id}}>{{item.name}}</div>
-              {{/each}}
-            </div>
-          </:content>
-        </DFilterControls>
-      </template>
-    );
-
-    await fillIn(".filter-input", "first");
-    assert
-      .dom(".d-filter-controls > .d-filter-controls__reset")
-      .exists("shows the reset button beside the input");
-  });
-
-  test("keeps the reset button visible while loading", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("onTextFilterChange", () => {});
-
-    await render(
-      <template>
-        <DFilterControls
-          @array={{this.data}}
-          @onTextFilterChange={{this.onTextFilterChange}}
-          @loading={{true}}
-        >
-          <:content as |filteredData|>
-            <div class="results">
-              {{#each filteredData as |item|}}
-                <div class="item" data-id={{item.id}}>{{item.name}}</div>
-              {{/each}}
-            </div>
-          </:content>
-        </DFilterControls>
-      </template>
-    );
-
-    await fillIn(".filter-input", "first");
-    assert
-      .dom(".d-filter-controls > .d-filter-controls__reset")
-      .exists("reset button stays put during a reload");
-  });
-
   test("respects minItemsForFilter parameter", async function (assert) {
-    this.set("data", [SAMPLE_DATA[0]]);
+    this.data = [SAMPLE_DATA[0]];
 
     await render(
       <template>
@@ -640,10 +618,10 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("calls onTextFilterChange callback for server-side filtering", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("textFilterCallback", (event) => {
+    this.data = SAMPLE_DATA;
+    this.textFilterCallback = (event) => {
       assert.step(`text-filter:${event.target.value}`);
-    });
+    };
 
     await render(
       <template>
@@ -668,14 +646,14 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("calls onDropdownFilterChange callback for server-side filtering", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", [
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = [
       { label: "All", value: "all" },
       { label: "Feature", value: "feature" },
-    ]);
-    this.set("dropdownFilterCallback", (value) => {
+    ];
+    this.dropdownFilterCallback = (value) => {
       assert.step(`dropdown-filter:${value}`);
-    });
+    };
 
     await render(
       <template>
@@ -704,18 +682,18 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("calls onResetFilters callback for server-side filtering", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-    this.set("resetCallback", () => {
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
+    this.resetCallback = () => {
       assert.step("reset-filters");
-    });
+    };
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @onResetFilters={{this.resetCallback}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -735,16 +713,16 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("skips client-side filtering when server callbacks provided", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-    this.set("textFilterCallback", () => {});
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
+    this.textFilterCallback = () => {};
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @onTextFilterChange={{this.textFilterCallback}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -768,13 +746,13 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("yields to actions block", async function (assert) {
-    this.set("data", SAMPLE_DATA);
+    this.data = SAMPLE_DATA;
 
     await render(
       <template>
         <DFilterControls @array={{this.data}}>
           <:actions>
-            <button type="button" class="custom-action">Custom Action</button>
+            <button class="custom-action" type="button">Custom Action</button>
           </:actions>
           <:content as |filteredData|>
             <div class="results">
@@ -793,7 +771,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("yields to aboveContent block", async function (assert) {
-    this.set("data", SAMPLE_DATA);
+    this.data = SAMPLE_DATA;
 
     await render(
       <template>
@@ -818,15 +796,15 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("shows custom no results message", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @noResultsMessage="No items found matching your criteria"
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -850,8 +828,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("does not show dropdown filter when only one option", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", [{ label: "All", value: "all" }]);
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = [{ label: "All", value: "all" }];
 
     await render(
       <template>
@@ -876,8 +854,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("renders multiple dropdowns", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = {
       category: [
         { label: "All", value: "all" },
         { label: "Feature", value: "feature" },
@@ -886,7 +864,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
         { label: "All", value: "all" },
         { label: "Enabled", value: "enabled" },
       ],
-    });
+    };
 
     await render(
       <template>
@@ -923,8 +901,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("filters data by multiple dropdowns (client-side)", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = {
       category: [
         { label: "All", value: "all", filterFn: () => true },
         {
@@ -941,7 +919,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
           filterFn: (item) => item.enabled,
         },
       ],
-    });
+    };
 
     await render(
       <template>
@@ -981,9 +959,9 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("resets multiple dropdowns correctly", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-    this.set("dropdownOptions", {
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
+    this.dropdownOptions = {
       category: [
         { label: "All", value: "all", filterFn: () => true },
         {
@@ -992,14 +970,14 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
           filterFn: (item) => item.category === "feature",
         },
       ],
-    });
+    };
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
           @dropdownOptions={{this.dropdownOptions}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -1024,8 +1002,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("calls onDropdownFilterChange with key and value for multiple dropdowns", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = {
       category: [
         { label: "All", value: "all" },
         { label: "Feature", value: "feature" },
@@ -1034,10 +1012,10 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
         { label: "All", value: "all" },
         { label: "Enabled", value: "enabled" },
       ],
-    });
-    this.set("dropdownFilterCallback", (key, value) => {
+    };
+    this.dropdownFilterCallback = (key, value) => {
       assert.step(`dropdown-filter:${key}:${value}`);
-    });
+    };
 
     await render(
       <template>
@@ -1067,8 +1045,8 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("supports custom default values for multiple dropdowns", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = {
       category: [
         { label: "All", value: "all", filterFn: () => true },
         {
@@ -1077,15 +1055,15 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
           filterFn: (item) => item.category === "feature",
         },
       ],
-    });
-    this.set("defaultDropdownValue", { category: "feature" });
+    };
+    this.defaultDropdownValue = { category: "feature" };
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @dropdownOptions={{this.dropdownOptions}}
           @defaultDropdownValue={{this.defaultDropdownValue}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -1115,18 +1093,18 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   test("query param sync args are inert without a live router", async function (assert) {
     // outside a real route (router.currentURL is null, as in rendering
     // tests) the query param args must neither crash nor affect filtering
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
-    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
+    this.dropdownOptions = SAMPLE_DROPDOWN_OPTIONS;
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @searchableProps={{this.searchableProps}}
-          @dropdownOptions={{this.dropdownOptions}}
-          @textFilterQueryParam="filter"
           @dropdownFilterQueryParam="category"
+          @dropdownOptions={{this.dropdownOptions}}
+          @searchableProps={{this.searchableProps}}
+          @textFilterQueryParam="filter"
         >
           <:content as |filteredData|>
             <div class="results">
@@ -1153,17 +1131,83 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".item").exists({ count: 3 }, "reset still works");
   });
 
-  test("initialTextFilter still seeds when a query param arg is set", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("searchableProps", ["name"]);
+  test("keeps a cleared search out of the URL when filters change", async function (assert) {
+    this.owner.unregister("service:router");
+    this.owner.register("service:router", RouterStub);
+    const router = this.owner.lookup("service:router");
+    const pendingURLs = [];
+    sinon.stub(DiscourseURL, "replaceState").callsFake((url) => {
+      if (router.currentURL !== url) {
+        pendingURLs.push(url);
+      }
+    });
+    const applyPendingURLs = () => {
+      for (const url of pendingURLs.splice(0)) {
+        router.currentURL = url;
+      }
+    };
+
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
+    this.dropdownOptions = SAMPLE_DROPDOWN_OPTIONS;
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
+          @dropdownFilterQueryParam="category"
+          @dropdownOptions={{this.dropdownOptions}}
+          @onResetFilters={{applyPendingURLs}}
           @searchableProps={{this.searchableProps}}
           @textFilterQueryParam="filter"
+        >
+          <:content as |filteredData|>
+            {{#each filteredData as |item|}}
+              <div class="item">{{item.name}}</div>
+            {{/each}}
+          </:content>
+        </DFilterControls>
+      </template>
+    );
+
+    const input = find(".d-filter-controls__input");
+    const category = find(".d-filter-controls__dropdown");
+    await fillIn(input, "second");
+    run(applyPendingURLs);
+    assert.strictEqual(router.currentURL, "/admin/example?filter=second");
+
+    await fillIn(input, "");
+    await select(category, "feature");
+    run(applyPendingURLs);
+
+    assert.dom(input).hasValue("");
+    assert.dom(".item").exists({ count: 2 });
+    assert.strictEqual(router.currentURL, "/admin/example?category=feature");
+
+    await select(category, "all");
+    run(applyPendingURLs);
+    assert.strictEqual(router.currentURL, "/admin/example");
+
+    await fillIn(input, "first");
+    await click(".d-filter-controls__reset");
+    run(applyPendingURLs);
+
+    assert.dom(input).hasValue("");
+    assert.dom(".item").exists({ count: 3 });
+    assert.strictEqual(router.currentURL, "/admin/example");
+  });
+
+  test("initialTextFilter still seeds when a query param arg is set", async function (assert) {
+    this.data = SAMPLE_DATA;
+    this.searchableProps = ["name"];
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
           @initialTextFilter="third"
+          @searchableProps={{this.searchableProps}}
+          @textFilterQueryParam="filter"
         >
           <:content as |filteredData|>
             <div class="results">
@@ -1184,18 +1228,18 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     this.owner.unregister("service:router");
     this.owner.register("service:router", RouterStub);
 
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = {
       category: SAMPLE_DROPDOWN_OPTIONS,
-    });
-    this.set("dropdownFilterQueryParams", { category: "category" });
+    };
+    this.dropdownFilterQueryParams = { category: "category" };
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @dropdownOptions={{this.dropdownOptions}}
           @dropdownFilterQueryParams={{this.dropdownFilterQueryParams}}
+          @dropdownOptions={{this.dropdownOptions}}
           @filterDropdownsExpanded={{false}}
         >
           <:content as |filteredData|>
@@ -1227,14 +1271,14 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("shows a custom empty state in a yield when showEmptyState is true and the array is empty", async function (assert) {
-    this.set("data", []);
+    this.data = [];
 
     await render(
       <template>
         <DFilterControls
           @array={{this.data}}
-          @showCustomEmptyState={{true}}
           @minItemsForFilter={{1}}
+          @showCustomEmptyState={{true}}
         >
           <:content>
             N/A
@@ -1252,12 +1296,12 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
   });
 
   test("reports the drawer state when the filter toggle is used", async function (assert) {
-    this.set("data", SAMPLE_DATA);
-    this.set("dropdownOptions", {
+    this.data = SAMPLE_DATA;
+    this.dropdownOptions = {
       category: SAMPLE_DROPDOWN_OPTIONS,
-    });
+    };
     const states = [];
-    this.set("onToggle", (expanded) => states.push(expanded));
+    this.onToggle = (expanded) => states.push(expanded);
 
     await render(
       <template>
@@ -1279,5 +1323,171 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       [true, false],
       "each toggle reports the resulting expanded state"
     );
+  });
+
+  module("sorting", function (nestedHooks) {
+    const SORT_OPTIONS = [
+      {
+        label: "Newest",
+        value: "newest",
+        compareFn: (a, b) => b.id - a.id,
+      },
+      {
+        label: "Name",
+        value: "name",
+        compareFn: (a, b) => a.name.localeCompare(b.name),
+      },
+      { label: "Server", value: "server" },
+    ];
+
+    nestedHooks.beforeEach(function () {
+      this.data = SAMPLE_DATA;
+      this.sortOptions = SORT_OPTIONS;
+    });
+
+    function itemOrder() {
+      return [...document.querySelectorAll(".item")].map((item) =>
+        Number(item.dataset.id)
+      );
+    }
+
+    async function chooseSort(value) {
+      await click(".d-filter-controls__sort-trigger");
+      await click(`.d-filter-controls__sort-option[data-sort='${value}']`);
+    }
+
+    const Example = <template>
+      <DFilterControls
+        @array={{@data}}
+        @dropdownOptions={{SAMPLE_DROPDOWN_OPTIONS}}
+        @onSortChange={{@onSortChange}}
+        @sortOptions={{@sortOptions}}
+        @sortQueryParam={{@sortQueryParam}}
+      >
+        <:content as |filteredData|>
+          {{#each filteredData as |item|}}
+            <div class="item" data-id={{item.id}}>{{item.name}}</div>
+          {{/each}}
+        </:content>
+      </DFilterControls>
+    </template>;
+
+    test("sorts filtered items by the first option by default", async function (assert) {
+      await render(
+        <template>
+          <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+        </template>
+      );
+
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Newest");
+      assert.deepEqual(itemOrder(), [3, 2, 1]);
+
+      await select(".d-filter-controls__dropdown", "feature");
+      assert.deepEqual(itemOrder(), [3, 1]);
+    });
+
+    test("changes the sort from the menu", async function (assert) {
+      const changes = [];
+      this.onSortChange = (value) => changes.push(value);
+
+      await render(
+        <template>
+          <Example
+            @data={{this.data}}
+            @onSortChange={{this.onSortChange}}
+            @sortOptions={{this.sortOptions}}
+          />
+        </template>
+      );
+
+      await chooseSort("name");
+
+      assert.deepEqual(changes, ["name"]);
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
+      assert
+        .dom(".d-filter-controls__sort-trigger")
+        .hasAttribute("aria-label", "Sort by: Name");
+      assert.deepEqual(itemOrder(), [1, 2, 3]);
+
+      await click(".d-filter-controls__sort-trigger");
+      assert
+        .dom(".d-filter-controls__sort-option[data-sort='name']")
+        .hasAttribute("aria-current", "true");
+      assert
+        .dom(".d-filter-controls__sort-option[data-sort='newest']")
+        .doesNotHaveAttribute("aria-current");
+    });
+
+    test("keeps the given order for an option without compareFn", async function (assert) {
+      await render(
+        <template>
+          <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+        </template>
+      );
+
+      await chooseSort("server");
+
+      assert.deepEqual(itemOrder(), [1, 2, 3]);
+    });
+
+    test("doesn't show a menu for a single option", async function (assert) {
+      this.sortOptions = SORT_OPTIONS.slice(0, 1);
+
+      await render(
+        <template>
+          <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+        </template>
+      );
+
+      assert.dom(".d-filter-controls__sort-trigger").doesNotExist();
+    });
+
+    test("keeps the sort when filters are reset", async function (assert) {
+      await render(
+        <template>
+          <Example @data={{this.data}} @sortOptions={{this.sortOptions}} />
+        </template>
+      );
+
+      await chooseSort("name");
+      await select(".d-filter-controls__dropdown", "feature");
+      await click(".d-filter-controls__reset");
+
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
+      assert.deepEqual(itemOrder(), [1, 2, 3]);
+    });
+
+    test("follows the URL and ignores values that aren't options", async function (assert) {
+      this.owner.unregister("service:router");
+      this.owner.register("service:router", RouterStub);
+      const router = this.owner.lookup("service:router");
+      router.currentURL = "/admin/example?sort=name";
+
+      await render(
+        <template>
+          <Example
+            @data={{this.data}}
+            @sortOptions={{this.sortOptions}}
+            @sortQueryParam="sort"
+          />
+        </template>
+      );
+
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
+      assert.deepEqual(itemOrder(), [1, 2, 3]);
+
+      router.changeURL("/admin/example?sort=bogus");
+      await settled();
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Newest");
+      assert.deepEqual(itemOrder(), [3, 2, 1]);
+
+      router.changeURL("/admin/example?sort=name");
+      await settled();
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Name");
+
+      router.changeURL("/admin/example?sort=constructor");
+      await settled();
+      assert.dom(".d-filter-controls__sort-trigger").hasText("Newest");
+    });
   });
 });

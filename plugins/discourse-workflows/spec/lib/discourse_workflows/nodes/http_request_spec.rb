@@ -42,7 +42,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         "headers" => include("content-type" => "application/json"),
         "status_code" => 200,
       )
-      expect(result).to have_key("status_message")
+      expect(result).to match_node_output_schema(described_class, configuration: config)
     end
 
     it "splits top-level JSON array responses into separate output items" do
@@ -153,6 +153,19 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         DiscourseWorkflows::NodeError,
         %r{HTTP GET https://api\.example\.com/fail failed with status 404},
       )
+    end
+
+    it "keeps HTML response bodies in the plain error only" do
+      body = '<img src="x" onerror="alert(1)"><strong>Not found</strong>'
+      stub_request(:get, "https://api.example.com/fail").to_return(status: 404, body:)
+      config = { "method" => "GET", "url" => "https://api.example.com/fail" }
+
+      expect { execute_node(configuration: config, item:) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+      ) do |error|
+        expect(error.message).to end_with(": #{body}")
+        expect(error.html).to be_nil
+      end
     end
 
     it "raises an error for server errors" do

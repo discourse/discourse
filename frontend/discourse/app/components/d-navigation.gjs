@@ -9,7 +9,9 @@ import BreadCrumbs from "discourse/components/bread-crumbs";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
 import CreateTopicButton from "discourse/components/create-topic-button";
+import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
 import NavigationBar from "discourse/components/navigation-bar";
+import NavigationOptionsMenu from "discourse/components/navigation-options-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagInfoButton from "discourse/components/tag-info-button";
 import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
@@ -17,12 +19,15 @@ import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import NavItem from "discourse/models/nav-item";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
 import TagCategoryAdminDropdown from "discourse/select-kit/components/tag-category-admin-dropdown";
-import { and, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import dScrollEdges from "discourse/ui-kit/modifiers/d-scroll-edges";
 
 @tagName("")
 export default class DNavigation extends Component {
@@ -30,6 +35,27 @@ export default class DNavigation extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service discovery;
+  @service mobileTabBar;
+
+  #topicCreator = {
+    canCreate: () => this.canCreateTopic,
+    create: () => this.clickCreateTopicButton(),
+  };
+
+  init() {
+    super.init(...arguments);
+    this.discovery.topicCreator = this.#topicCreator;
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    // The next list may already have registered its own
+    if (this.discovery.topicCreator === this.#topicCreator) {
+      this.discovery.topicCreator = null;
+    }
+  }
 
   @computed("siteSettings.fixed_category_positions")
   get fixedCategoryPositions() {
@@ -203,6 +229,12 @@ export default class DNavigation extends Component {
     });
   }
 
+  // With the tab bar, the list's options sit in the menu beside its views,
+  // which tag intersections go without, so they keep the controls here
+  get optionsInTabBar() {
+    return this.mobileTabBar.enabled && !this.additionalTags;
+  }
+
   @computed("showResetNew", "filterType", "currentUser.unified_new_enabled")
   get showNewDismissCombo() {
     return (
@@ -215,6 +247,16 @@ export default class DNavigation extends Component {
   @computed("filterType")
   get notCategoriesRoute() {
     return this.filterType !== "categories";
+  }
+
+  // The tab bar's lists show the dropdowns everywhere but the category list,
+  // which they'd only filter down to itself
+  get showBreadCrumbs() {
+    return !(
+      this.mobileTabBar.enabled &&
+      !this.notCategoriesRoute &&
+      !this.category
+    );
   }
 
   @action
@@ -272,7 +314,11 @@ export default class DNavigation extends Component {
 
   @action
   clickCreateTopicButton() {
-    this.createTopic();
+    applyBehaviorTransformer(
+      "create-topic-button-click",
+      () => this.createTopic(),
+      { category: this.category, tag: this.tag }
+    );
   }
 
   @action
@@ -286,13 +332,15 @@ export default class DNavigation extends Component {
   }
 
   <template>
-    <BreadCrumbs
-      @categories={{this.categories}}
-      @category={{this.category}}
-      @noSubcategories={{this.noSubcategories}}
-      @tag={{this.tag}}
-      @additionalTags={{this.additionalTags}}
-    />
+    {{#if this.showBreadCrumbs}}
+      <BreadCrumbs
+        @additionalTags={{this.additionalTags}}
+        @categories={{this.categories}}
+        @category={{this.category}}
+        @noSubcategories={{this.noSubcategories}}
+        @tag={{this.tag}}
+      />
+    {{/if}}
 
     <PluginOutlet
       @name="after-breadcrumbs"
@@ -306,38 +354,89 @@ export default class DNavigation extends Component {
 
     {{#unless this.additionalTags}}
       {{! nav bar doesn't work with tag intersections }}
-      <NavigationBar
-        @navItems={{this.navItems}}
-        @filterMode={{this.filterMode}}
-        @category={{this.category}}
-        @tag={{this.tag}}
-      />
+      {{#if this.mobileTabBar.enabled}}
+        {{! Within the thumb's reach, in the strip the tab bar keeps for a
+          section's views; it's gone while the bar is hidden }}
+        <MobileTabBarViews>
+          {{! Fades the edge with views past it, as the tabs do }}
+          <NavigationBar
+            @category={{this.category}}
+            @countAsBadge={{true}}
+            @filterMode={{this.filterMode}}
+            @navItems={{this.navItems}}
+            @tag={{this.tag}}
+            {{dScrollEdges}}
+          />
+          {{! Admins can fix category positions to reorder; others reorder
+            only once they're fixed }}
+          <NavigationOptionsMenu
+            @bulkSelectHelper={{@bulkSelectHelper}}
+            @canChangeCategorySettings={{and
+              this.showCategoryAdmin
+              this.currentUser.admin
+            }}
+            @canReorderCategories={{and
+              this.showCategoryAdmin
+              (or this.currentUser.admin this.fixedCategoryPositions)
+            }}
+            @dismissRead={{@dismissRead}}
+            @model={{@model}}
+            @reorderCategories={{this.reorderCategories}}
+            @resetNew={{@resetNew}}
+            @showBulkSelect={{this.showBulkSelectInNavControls}}
+            @showDismissRead={{@showDismissRead}}
+            @showNewDismissCombo={{this.showNewDismissCombo}}
+            @showResetNew={{@showResetNew}}
+          />
+        </MobileTabBarViews>
+      {{else}}
+        <NavigationBar
+          @category={{this.category}}
+          @filterMode={{this.filterMode}}
+          @navItems={{this.navItems}}
+          @tag={{this.tag}}
+        />
+      {{/if}}
     {{/unless}}
 
     <div class="navigation-controls">
-      {{#if this.showBulkSelectInNavControls}}
+      {{#if (and this.showBulkSelectInNavControls (not this.optionsInTabBar))}}
         <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
       {{/if}}
 
-      <TopicDismissButtons
-        @position="top"
-        @selectedTopics={{@bulkSelectHelper.selected}}
-        @model={{@model}}
-        @showResetNew={{@showResetNew}}
-        @showNewDismissCombo={{this.showNewDismissCombo}}
-        @showDismissRead={{@showDismissRead}}
-        @resetNew={{@resetNew}}
-        @dismissRead={{@dismissRead}}
-      />
+      {{#unless this.optionsInTabBar}}
+        <TopicDismissButtons
+          @dismissRead={{@dismissRead}}
+          @model={{@model}}
+          @position="top"
+          @resetNew={{@resetNew}}
+          @selectedTopics={{@bulkSelectHelper.selected}}
+          @showDismissRead={{@showDismissRead}}
+          @showNewDismissCombo={{this.showNewDismissCombo}}
+          @showResetNew={{@showResetNew}}
+        />
+      {{/unless}}
 
       {{#if this.showCategoryAdmin}}
-        {{#if this.fixedCategoryPositions}}
+        {{#if this.mobileTabBar.enabled}}
+          {{! The row is the list's own, so creating takes it; the list's
+            settings sit in the options beside its views }}
+          <DButton
+            class="btn-default"
+            id="create-category"
+            @action={{this.createCategory}}
+            @icon="plus"
+            @label="category.create"
+          />
+        {{else if this.fixedCategoryPositions}}
           <CategoriesAdminDropdown
             @onChange={{this.selectCategoryAdminDropdownAction}}
             @options={{hash triggerOnChangeOnTab=false}}
           />
         {{else}}
           <DButton
+            class="btn-default"
+            id="create-category"
             @action={{this.createCategory}}
             @icon="plus"
             @label={{if
@@ -345,8 +444,6 @@ export default class DNavigation extends Component {
               "categories.category"
               "category.create"
             }}
-            class="btn-default"
-            id="create-category"
           />
         {{/if}}
       {{/if}}
@@ -354,37 +451,37 @@ export default class DNavigation extends Component {
       {{#if this.showCombinedAdminDropdown}}
         <TagCategoryAdminDropdown
           @category={{this.category}}
-          @tag={{this.tag}}
           @onChange={{this.handleTagCategoryAdmin}}
           @options={{hash triggerOnChangeOnTab=false}}
+          @tag={{this.tag}}
         />
       {{else}}
         {{#if (and this.category this.showCategoryEdit)}}
           <DButton
+            class="btn-default edit-category"
             @action={{this.editCategory}}
             @icon="wrench"
             @title="category.edit_title"
-            class="btn-default edit-category"
           />
         {{/if}}
 
         {{#if this.showTagEdit}}
           <DButton
-            @action={{this.editTag}}
-            @icon="wrench"
-            @ariaLabel="tagging.edit"
-            @title="tagging.edit"
-            id="edit-tag"
             class="btn-default"
+            id="edit-tag"
+            @action={{this.editTag}}
+            @ariaLabel="tagging.edit"
+            @icon="wrench"
+            @title="tagging.edit"
           />
         {{/if}}
       {{/if}}
 
       {{#if this.showTagInfoButton}}
         <TagInfoButton
-          @toggleInfo={{@toggleTagInfo}}
           @active={{@showTagInfo}}
           @loading={{@loadingTagInfo}}
+          @toggleInfo={{@toggleTagInfo}}
         />
       {{/if}}
 
@@ -400,17 +497,20 @@ export default class DNavigation extends Component {
         }}
       />
 
-      <CreateTopicButton
-        @canCreateTopic={{this.canCreateTopic}}
-        @action={{this.clickCreateTopicButton}}
-        @label={{this.createTopicLabel}}
-        @icon={{this.createTopicIcon}}
-        @btnTypeClass={{if
-          this.siteSettings.modernize_foundation_theme
-          "btn-primary"
-        }}
-        @showDrafts={{if (gt this.draftCount 0) true false}}
-      />
+      {{! The tab bar's create button starts topics and opens drafts }}
+      {{#unless this.mobileTabBar.enabled}}
+        <CreateTopicButton
+          @action={{this.clickCreateTopicButton}}
+          @btnTypeClass={{if
+            this.siteSettings.modernize_foundation_theme
+            "btn-primary"
+          }}
+          @canCreateTopic={{this.canCreateTopic}}
+          @icon={{this.createTopicIcon}}
+          @label={{this.createTopicLabel}}
+          @showDrafts={{if (gt this.draftCount 0) true false}}
+        />
+      {{/unless}}
 
       <PluginOutlet
         @name="after-create-topic-button"
@@ -430,9 +530,9 @@ export default class DNavigation extends Component {
             {{#unless this.category.deleted}}
               <CategoryNotificationsTracking
                 @levelId={{this.categoryNotificationLevel}}
-                @showFullTitle={{false}}
-                @showCaret={{false}}
                 @onChange={{this.changeCategoryNotificationLevel}}
+                @showCaret={{false}}
+                @showFullTitle={{false}}
               />
             {{/unless}}
           {{/if}}
@@ -444,8 +544,8 @@ export default class DNavigation extends Component {
           {{! don't show tag notification menu on category pages }}
           {{#if this.showTagNotifications}}
             <TagNotificationsTracking
-              @onChange={{this.changeTagNotificationLevel}}
               @levelId={{this.tagNotification.notification_level}}
+              @onChange={{this.changeTagNotificationLevel}}
             />
           {{/if}}
         {{/unless}}

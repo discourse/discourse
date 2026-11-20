@@ -25,6 +25,7 @@ register_asset "stylesheets/common/ai-decoded-transcript.scss"
 
 register_asset "stylesheets/admin/ai-features-editor.scss", :admin
 register_asset "stylesheets/admin/ai-logs.scss", :admin
+register_asset "stylesheets/admin/ai-tool-arguments.scss", :admin
 
 register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 
@@ -41,6 +42,7 @@ register_asset "stylesheets/modules/admin-dashboard/common/admin-dashboard-highl
 register_asset "stylesheets/modules/ai-bot/common/bot-replies.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-agent.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
+register_asset "stylesheets/modules/ai-bot/common/ai-search.scss"
 register_asset "stylesheets/modules/ai-bot/mobile/ai-agent.scss", :mobile
 
 register_asset "stylesheets/modules/ai-bot-conversations/common.scss"
@@ -84,12 +86,53 @@ require_relative "lib/mcp/oauth_flow"
 
 # Other plugins can register features through this register.
 DiscoursePluginRegistry.define_filtered_register(:external_ai_features)
+DiscoursePluginRegistry.define_filtered_register(:external_ai_tools)
 
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end
 
 after_initialize do
+  reloadable_patch { ::BotUser.prepend DiscourseAi::BotUserExtensions }
+
+  add_to_serializer(
+    :admin_user_list,
+    :sources,
+    respect_plugin_enabled: false,
+    include_condition: -> { scope.is_admin? && object.bot? && @options[:user_ids].present? },
+  ) do
+    # Collection serializers share options, keeping these lookups bounded to one batch per page.
+    sources_by_user_id =
+      @options[:discourse_ai_bot_sources] ||= DiscourseAi::AiBot::Sources.for_user_ids(
+        @options[:user_ids],
+      )
+    sources_by_user_id.fetch(object.id, [])
+  end
+
+  # Disabling an agent deactivates its bot; a disabled plugin only dims them in the list.
+  add_to_serializer(
+    :admin_user_list,
+    :bot_inactive,
+    respect_plugin_enabled: false,
+    include_condition: -> do
+      !SiteSetting.discourse_ai_enabled && scope.is_admin? && object.bot? &&
+        @options[:user_ids].present?
+    end,
+  ) do
+    sources_by_user_id =
+      @options[:discourse_ai_bot_sources] ||= DiscourseAi::AiBot::Sources.for_user_ids(
+        @options[:user_ids],
+      )
+    sources_by_user_id.fetch(object.id, []).present?
+  end
+
+  register_admin_dashboard_section(
+    id: "ask_ai",
+    enabled: -> { SiteSetting.ai_ask_ai_enabled },
+  ) do |start_date:, end_date:, current_user:|
+    DiscourseAi::AdminDashboard::AskAi.build(start_date:, end_date:, current_user:)
+  end
+
   register_modifier(:site_setting_result) do |setting_result|
     if setting_result[:setting] == :ai_discover_enabled && !SiteSetting.ai_discover_enabled
       setting_result[:disabled] = true
@@ -116,10 +159,11 @@ after_initialize do
   require_relative "discourse_automation/llm_tagger"
 
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node do
-      require_relative "discourse_workflows/nodes/ai_agent/v1"
-      DiscourseWorkflows::Nodes::AiAgent::V1
-    end
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiTool::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::McpTool::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::Classify::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::PostLocaleDetected::V1 }
   end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
@@ -139,13 +183,66 @@ after_initialize do
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
+  register_problem_check ProblemCheck::AiSpamScanErrors
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
+  register_problem_check ProblemCheck::AiAskAiExternalSource
+
+  register_modifier(:reviewable_automated_detection) do |automated, reviewable|
+    scores = reviewable.reviewable_scores
+
+    automated ||
+      scores
+        .where(
+          "context LIKE ?",
+          "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
+        )
+        .or(
+          scores.where(
+            user_id: SiteSetting.ai_spam_detection_user_id.presence,
+            reviewable_score_type: ReviewableScore.types[:spam],
+          ),
+        )
+        .exists?
+  end
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
   register_reviewable_type ReviewableAiToolAction
   add_permitted_reviewable_param :reviewable_ai_tool_action, :post_id
+
+  reloadable_patch { Reviewable.has_one :ai_reviewable_suggestion }
+
+  register_modifier(:reviewable_preload_relation) do |relation, user|
+    if user.staff? && SiteSetting.ai_reviewable_action_suggestions_enabled
+      relation.preload(:ai_reviewable_suggestion)
+    else
+      relation
+    end
+  end
+
+  add_to_serializer(
+    :reviewable,
+    :ai_suggested_action_name,
+    include_condition: -> do
+      unless scope.is_staff? && object.pending? &&
+               SiteSetting.ai_reviewable_action_suggestions_enabled
+        next false
+      end
+      name = object.ai_reviewable_suggestion&.action_name
+      name.present? &&
+        bundled_actions.any? do |bundle|
+          bundle.actions.any? { |action| action.action_name == name }
+        end
+    end,
+  ) { object.ai_reviewable_suggestion.action_name }
+
+  on(:reviewable_created) do |reviewable|
+    if reviewable.pending? && SiteSetting.ai_reviewable_action_suggestions_enabled &&
+         SiteSetting.ai_reviewable_action_decision_model.present?
+      Jobs.enqueue(:suggest_reviewable_action, reviewable_id: reviewable.id)
+    end
+  end
 
   on(:reviewable_transitioned_to) do |new_status, reviewable|
     ModelAccuracy.adjust_model_accuracy(new_status, reviewable)
@@ -155,6 +252,12 @@ after_initialize do
   end
 
   on(:user_destroyed) do |user|
+    AiArtifactKeyValue.where(user_id: user.id).delete_all
+    AiArtifactShareKeyValue.where(
+      ai_artifact_share_id: AiArtifactShare.where(user_id: user.id).select(:id),
+    ).delete_all
+    AiArtifactShareKeyValue.where(user_id: user.id).delete_all
+    AiArtifactShare.where(user_id: user.id).delete_all
     DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
     DiscourseAi::Discoveries.clear_recent_asks(user_id: user.id)
     AiAgent.detach_user!(user.id)
@@ -215,6 +318,10 @@ after_initialize do
     DiscourseAi::PostImageCaptions.process_cooked(doc, post, locale: post_localization.locale)
   end
 
+  register_modifier(:deliver_push_notification_localization_pending) do |pending, post, user|
+    pending || DiscourseAi::Translation.post_localization_pending?(post, user.effective_locale)
+  end
+
   register_modifier(:post_search_index_text) do |text, post_id, cooked, locale|
     DiscourseAi::PostImageCaptions.append_to_search_text(text, post_id, cooked, locale: locale)
   end
@@ -223,7 +330,10 @@ after_initialize do
     DiscourseAi::PostImageCaptions.remove_existing_caption_metadata(doc)
   end
 
-  add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
+  add_api_key_scope(
+    :ai,
+    { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update], path_params: %i[id] } },
+  )
 
   add_api_key_scope(
     :ai,
@@ -236,12 +346,14 @@ after_initialize do
           discourse_ai/admin/ai_artifacts#update
           discourse_ai/admin/ai_artifacts#destroy
         ],
+        path_params: %i[id],
       },
     },
   )
 
   plugin_icons = %w[
     chart-column
+    scale-balanced
     spell-check
     language
     images
@@ -254,11 +366,24 @@ after_initialize do
     face-meh
     face-angry
     circle-info
+    discourse-ai
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 
   add_model_callback(DiscourseAutomation::Automation, :after_save) do
     DiscourseAi::Configuration::Feature.feature_cache.flush!
+  end
+
+  add_model_callback(AiAgent, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
+  end
+
+  add_model_callback(LlmModel, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
   end
 
   add_custom_reviewable_filter(

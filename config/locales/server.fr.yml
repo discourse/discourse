@@ -5,6 +5,29 @@
 # https://translate.discourse.org/
 
 fr:
+  markdown_endpoints:
+    latest: "Récents"
+    categories: "Catégories"
+    tags: "Étiquettes"
+    previous_page: "Page précédente"
+    next_page: "Page suivante"
+    replies: "Réponses"
+    last_updated: "Dernière mise à jour "
+    event:
+      location: "Emplacement"
+      link: "Insérer un lien"
+      date_with_timezone: "%{date} (%{timezone})"
+  mcp:
+    errors:
+      category_not_found: "Catégorie introuvable"
+      draft_too_long: "Le brouillon est trop long"
+      post_not_found: "Publication introuvable"
+      topic_not_found: "Sujet non trouvé"
+      user_not_found: "Utilisateur introuvable"
+    oauth:
+      resource: "Serveur MCP"
+      deny: "Refuser"
+      approve: "Autoriser"
   llms_txt:
     sections:
       optional: "Facultatif"
@@ -518,11 +541,6 @@ fr:
   too_many_mentions_newuser:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un même message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un même message."
-  no_embedded_media_allowed_group: "Nous sommes désolés, vous ne pouvez pas inclure des éléments multimédias dans une publication."
-  no_embedded_media_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas inclure de médias dans leurs messages."
-  too_many_embedded_media:
-    one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure qu'un seul média dans leurs messages."
-    other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure que %{count} médias dans leurs messages."
   no_attachments_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
   too_many_attachments:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent ajouter qu'un seul fichier dans leurs messages."
@@ -849,6 +867,7 @@ fr:
     post_template: "%{replace_paragraph}\n\nUtilisez les paragraphes suivants pour une plus longue description ou pour établir des règles :\n\n- À quoi sert cette catégorie ? Pourquoi les utilisateurs choisiraient-ils cette catégorie pour leur discussion ?\n\n- En quoi est-elle différente des autres catégories existantes ?\n\n- Quels sont les sujets qui devraient figurer dans cette catégorie ?\n\n- Avons-nous besoin de cette catégorie ? Devrions-nous fusionner celle-ci avec une autre catégorie ?\n"
     errors:
       not_found: "Catégorie non trouvée !"
+      self_lockout: "Vous êtes sur le point de modifier les permissions de la catégorie de manière à supprimer votre propre accès. Voulez-vous vraiment continuer ?"
       uncategorized_parent: "La catégorie « Sans catégorie » ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
@@ -860,6 +879,7 @@ fr:
       description_too_long:
         one: "La description est trop longue (maximum %{count} caractère)."
         other: "La description est trop longue (maximum %{count} caractères)."
+      special_category_permissions: "Cette catégorie est préconfigurée et ses paramètres de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas l'utiliser, supprimez-la plutôt que de la réutiliser."
       permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente. Les groupes suivants ont accès à une des sous-catégories, mais n'ont pas accès à la catégorie parente : %{group_names}."
       disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
       disallowed_tags_generic: "Ce sujet contient des étiquettes interdites."
@@ -1040,6 +1060,7 @@ fr:
       windows: "Microsoft Windows"
       unknown: "système d'exploitation inconnu"
   admin_site_traffic_explorer:
+    unknown: "Inconnu"
     traffic_types:
       logged_in: "Utilisateurs connectés"
       anonymous: "Anonymes"
@@ -1193,7 +1214,7 @@ fr:
   uploads:
     marked_insecure_from_theme_component_reason: "fichier utilisé dans un composant de thème"
   unsubscribe:
-    title: "Se désabonner"
+    unsubscribe: "Se désabonner"
     stop_watching_topic: "Arrêter de surveiller ce sujet, %{link}"
     mute_topic: "Ignorer toutes les notifications pour ce sujet, %{link}"
     unwatch_category: "Arrêter de surveiller les sujets de la catégorie %{category}"
@@ -1762,13 +1783,7 @@ fr:
       sidekiq_check: 'Sidekiq n''est pas en cours d''exécution. De nombreuses tâches, comme l''envoi d''e-mails, sont exécutées de manière asynchrone par Sidekiq. Veuillez vous assurer qu''au moins un processus Sidekiq est en cours d''exécution. <a href="https://github.com/mperham/sidekiq" target="_blank">En savoir plus sur Sidekiq ici</a>.'
       queue_size: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est assez élevé. Cela peut indiquer un problème avec les processus Sidekiq ou que ces derniers ne sont pas assez nombreux pour traiter efficacement les tâches."
       ram: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
-      google_oauth2_config: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les valeurs de l''identifiant client et le secret client ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">paramètres du site</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consultez ce guide pour en savoir plus</a>.'
-      facebook_config: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">Paramètres</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Consultez ce guide pour en savoir plus</a>.'
-      twitter_config: 'Le serveur est configuré pour permettre l''authentification par X (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">Paramètres</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Consultez ce guide pour en savoir plus</a>.'
-      github_config: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">Paramètres</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consultez ce guide pour en savoir plus</a>.'
       github_onebox_backoff: "GitHub limite le débit du serveur, de sorte que les liens GitHub peuvent ne pas être prévisualisés tant que la limite n'est pas réinitialisée. La configuration de {{setting:github_onebox_access_tokens}} augmente la limite de manière significative."
-      s3_upload_config: 'Le serveur est configuré pour envoyer les sauvegardes à S3, mais au moins l''un des paramètres suivants n''est pas défini : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Accédez aux <a href="%{base_path}/admin/site_settings">paramètres du site</a> et actualisez les paramètres. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consultez « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
-      s3_backup_config: 'Le serveur est configuré pour envoyer les sauvegardes à S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Accédez aux <a href="%{base_path}/admin/site_settings">Paramètres</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consultez « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
       s3_cdn: 'Le serveur est configuré pour envoyer les fichiers à S3, mais aucun CDN S3 n''est configuré. Cela peut entraîner des coûts S3 élevés et réduire les performances du site. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consultez « Utiliser un espace de stockage d''objets pour les envois » pour en savoir plus</a>.'
       image_magick: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">téléchargez directement la dernière version</a>.'
       failing_emails: 'Il y a %{num_failed_jobs} tâches d''envoi d''e-mail échouées. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de messagerie. <a href="%{base_path}/sidekiq/retries" target="_blank">Consultez également les processus en échec dans Sidekiq</a>.'
@@ -1781,7 +1796,6 @@ fr:
         one: "La vérification des e-mails a généré une erreur au cours des dernières 24 heures. Consultez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour en savoir plus."
         other: "La vérification des e-mails a généré %{count} erreurs au cours des dernières 24 heures. Consultez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour en savoir plus."
       missing_mailgun_api_key: "Le serveur est configuré pour envoyer des e-mails via Mailgun, mais vous n'avez pas fourni la clé d'API nécessaire pour vérifier les messages webhook."
-      missing_aws_sns_topic_arn: "Le serveur est configuré pour envoyer des e-mails via Amazon SES, mais vous n'avez autorisé aucun ARN de sujet SNS. Les notifications de rebond seront rejetées jusqu'à ce que vous ajoutiez l'ARN légitime à <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a>."
       qq_mail_smtp: "Votre serveur SMTP (%{smtp_address}) est connu pour provoquer des envois d'e-mails en double avec Discourse. QQ Mail ne renvoie pas d'accusés de réception corrects, ce qui oblige Discourse à réessayer des envois qui ont déjà réussi. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>Consultez les alternatives recommandées</a>."
       bad_favicon_url: "Impossible de charger le favicon. Vérifiez le paramètre favicon dans les <a href='%{base_path}/admin/site_settings'>paramètres du site</a>"
       poll_pop3_timeout: "La connexion au serveur POP3 arrive à expiration. Les e-mails entrants n'ont pas pu être récupérés. Vérifiez vos paramètres POP3 <a href='%{base_path}/admin/site_settings/category/email'></a> et votre fournisseur de services."
@@ -2000,7 +2014,7 @@ fr:
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
     site_contact_username: "Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé."
-    site_contact_group_name: "Nom valide d'un groupe qui est invité à participer à tous les messages directs envoyés automatiquement."
+    site_contact_group_name: "Le groupe qui est invité reçoit automatiquement des messages directs."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message de bienvenue avec un guide de démarrage rapide."
     send_tl1_welcome_message: "Envoyer à tous les utilisateurs de niveau de confiance 1 un message de bienvenue."
     send_tl2_promotion_message: "Envoyer aux nouveaux utilisateurs de niveau de confiance 2 un message à propos de la promotion."
@@ -2071,7 +2085,6 @@ fr:
     discourse_connect_allowed_redirect_domains: "Limitez à ces domaines les chemins de retour fournis par DiscourseConnect (par défaut, le chemin de retour doit se trouver sur le site actuel). Utilisez * pour autoriser n'importe quel domaine comme chemin de retour. Les caractères génériques de sous-domaine (*.foobar.com) ne sont pas autorisés."
     enable_local_logins: "Activer l'authentification locale avec nom d'utilisateur et mot de passe. ATTENTION : si ce paramètre est désactivé, il vous sera peut-être impossible de vous connecter si vous n'avez pas configuré au moins une méthode d'authentification alternative."
     enable_local_logins_via_email: "Permettre aux utilisateurs de demander qu'un lien de connexion en un clic leur soit envoyé par e-mail."
-    enable_local_logins_via_code: "Autoriser les membres à s'inscrire et à se connecter plus rapidement au moyen de codes à usage unique envoyés par e-mail (OTP)."
     allow_passkeys_for_2fa: "Autoriser les utilisateurs à utiliser une clé d'accès pour satisfaire à l'authentification à deux facteurs lors de la confirmation d'une action sensible."
     allow_new_registrations: "Autoriser l'inscription des nouveaux utilisateurs. Décocher pour empêcher la création de nouveau compte."
     enable_signup_cta: "Afficher un rappel aux visiteurs pour les encourager à créer un compte."
@@ -2317,7 +2330,6 @@ fr:
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils aient ce niveau de priorité"
     reviewable_low_priority_threshold: "Le filtre de niveau de priorité masque les éléments à examiner dont le score est inférieur au niveau spécifié, sauf lorsque le filtre « (tous) » est appliqué."
     high_trust_flaggers_auto_hide_posts: "Les publications des nouveaux utilisateurs seront automatiquement masquées après avoir été signalées comme contenu indésirable par un utilisateur d'un niveau de confiance 3 et plus"
-    allow_all_users_to_flag_illegal_content: "Les utilisateurs anonymes verront des informations leur indiquant qu'ils doivent envoyer un e-mail aux administrateurs pour signaler du contenu illégal. Ce paramètre est prioritaire sur {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "Si ce champ est laissé vide, l'adresse e-mail par défaut de l'administrateur du site sera utilisée."
     cooldown_hours_until_reflag: "Combien de temps les utilisateurs doivent attendre avant de pouvoir signaler à nouveau un message"
     slow_mode_prevents_editing: "Le mode lent empêche-t-il la modification après {{setting:editing_grace_period}} ?"
@@ -2344,7 +2356,6 @@ fr:
     ignore_by_title: "Ignorer les e-mails entrants selon leur titre."
     mailgun_api_key: "Clé d'API secrète de Mailgun utilisée pour vérifier les messages du webhook."
     sendgrid_verification_key: "Clé de vérification Sendgrid utilisée pour vérifier les messages du webhook."
-    aws_sns_topic_arn_allowlist: "ARN de sujets SNS autorisés à envoyer des notifications de webhook pour les rejets d'e-mails Amazon SES."
     mailjet_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/mailjet?t=supersecret"
     mailpace_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Clé d'authentification Mandrill utilisée pour vérifier les messages du webhook."
@@ -2472,7 +2483,6 @@ fr:
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les e-mails. Décocher pour masquer les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son nom d'utilisateur."
     show_time_gap_days: "Si deux messages sont publiés avec ce nombre de jours d'écart, afficher cette durée dans le sujet."
-    short_progress_text_threshold: "Si le nombre de messages dans un sujet dépasse cette valeur, la barre de progression affichera uniquement le nombre de messages actuel. Si vous modifiez la largeur de la barre de progression, vous devrez peut-être modifier cette valeur."
     default_code_lang: "Langage de programmation utilisé par défaut pour la coloration syntaxique des blocs de code Markdown (auto, text, ruby, python, etc.). Cette valeur doit également figurer dans le paramètre de site {{setting:highlighted_languages}}."
     autohighlight_all_code: "Applique la coloration syntaxique aux blocs &lt;code&gt; créés en HTML, même s'ils ne précisent aucun langage. Pour configurer les blocs de code créés en Markdown, utilisez le paramètre {{setting:default_code_lang}}."
     highlighted_languages: "Règles de surlignage de la syntaxe incluses. (Attention : inclure trop de langues peut avoir un impact sur les performances). Consultez <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pour obtenir une démonstration"
@@ -2611,10 +2621,8 @@ fr:
     create_post_for_category_and_tag_changes: "Créez une publication chuchotée lorsque la catégorie ou les étiquettes d'un sujet changent. Cette option nécessite l'activation des publications chuchotées."
     automatically_clean_unused_tags: "Supprimez automatiquement les étiquettes qui ne sont utilisées dans aucun sujet ou message direct au quotidien."
     default_watched_precedence_over_muted: "Informe les utilisateurs des sujets appartenant à des catégories ou portant des étiquettes qu'ils surveillent, même s'ils appartiennent également à une catégorie ou portent une étiquette qu'ils ont mise en sourdine"
-    company_name: "Nom de votre entreprise ou organisation. Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis."
+    company_name: "Nom de votre entreprise ou organisation."
     company_url: "URL du site Web de votre entreprise ou organisation. Facultatif."
-    governing_law: "Précisez la juridiction qui régit les aspects juridiques du site, y compris les Conditions d'utilisation et la Politique de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités."
-    city_for_disputes: "Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum."
     shared_drafts_category: "Activez la fonction Brouillons partagés en désignant une catégorie pour les brouillons de sujet. Les sujets repris dans cette catégorie ne figureront pas dans les listes de sujets pour les responsables."
     shared_drafts_allowed_groups: "Autorisez les utilisateurs de ces groupes à voir et à modifier les brouillons partagés."
     push_notifications_prompt: "Affichez une bannière de consentement de l'utilisateur pour les notifications push. Ce paramètre déclenche une invite demandant aux utilisateurs l'autorisation de leur envoyer des notifications push. Elle apparaît uniquement lorsque les notifications push ne sont pas déjà activées, sont prises en charge par l'appareil de l'utilisateur et que celui-ci a publié un message ou utilise une Progressive Web App (PWA). L'invite ne sera pas affichée à nouveau si l'utilisateur l'a déjà rejetée ou si l'autorisation a déjà été accordée ou refusée."
@@ -2628,9 +2636,6 @@ fr:
     enable_user_status: "Autorisez les utilisateurs à définir un message d'état personnalisé (émoji + description)."
     enable_user_tips: "Activer les nouveaux conseils d'utilisation qui décrivent les fonctionnalités clés aux utilisateurs"
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, dans le lanceur ou à d'autres endroits où l'espace peut être limité. Il ne doit pas dépasser 12 caractères. Notez que la modification de ce titre peut afficher une invite aux utilisateurs de la PWA leur demandant de mettre à jour ou de désinstaller l'application."
-    dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
-    dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
-    dashboard_general_tab_activity_metrics: "Sélectionnez les rapports à afficher comme indicateurs d'activité dans l'onglet général."
     gravatar_enabled: "Utilise le service <a href='https://gravatar.com/'>Gravatar</a> pour les avatars des utilisateurs. La désactivation de cette option empêchera les utilisateurs de choisir Gravatar pour leur avatar, mais n'aura aucune incidence sur ceux qui l'utilisent déjà."
     gravatar_name: "Spécifiez le nom du fournisseur de services Gravatar. Ce nom est généralement utilisé pour identifier la source fournissant des avatars Gravatar au site."
     gravatar_base_url: "Spécifiez l'URL d'accès à l'API du fournisseur Gravatar. Ce paramètre est essentiel pour convertir les adresses e-mail en URL Gravatar dans lesquelles les images d'avatar sont stockées."
@@ -2660,13 +2665,11 @@ fr:
     lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
     enable_auto_grid_images: "Encapsule automatiquement les images dans des balises [grid] lorsque 3 images ou plus sont téléversées dans l'éditeur."
     enable_new_checkbox_style: "Active le nouveau style des cases à cocher FormKit."
-    enable_new_post_reactions_menu: "Active le menu repensé des mentions J'aime et des réactions aux publications, avec défilement infini et expérience mobile native."
     enable_composer_redesign: "Active le panneau d'édition repensé."
     prioritize_recently_used_tags: "Lors de l'ajout d'étiquettes pendant la création ou la modification d'un sujet, affiche en haut de la liste les étiquettes récemment utilisées par le membre sur ses propres sujets, avant les étiquettes les plus populaires du forum."
     experimental_impersonation_time_limit_minutes: "Durée avant la fin automatique d'une session pendant laquelle un administrateur se fait passer pour un autre utilisateur."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
-    about_page_hidden_groups: "N'affichez pas les membres de groupes spécifiques sur la page /about."
     about_page_extra_groups: "Groupes à afficher sur la page À propos sous les modérateurs."
     about_page_extra_groups_initial_members: "Nombre de membres à développer pour chaque groupe sur la page À propos."
     about_page_extra_groups_show_description: "Indique s'il faut inclure les descriptions des groupes sur la page À propos."
@@ -2704,7 +2707,6 @@ fr:
     nested_replies_hot_preload_depth_penalty: "Priorité soustraite à chaque niveau de profondeur lors de la sélection des réponses imbriquées à développer à l'avance dans la vue par popularité."
     nested_replies_default_sort: "Algorithme de tri par défaut pour l'affichage des réponses imbriquées."
     nested_replies_max_depth: "Profondeur visuelle maximale des réponses organisées en fil. Les publications situées au-delà de cette profondeur affichent un lien 'Continuer ce fil'."
-    nested_replies_backfill_batch_size: "Nombre de sujets à traiter dans chaque lot de rattrapage des statistiques sur les réponses imbriquées."
     nested_replies_stats_maintenance_enabled: "Conserve les statistiques sur les réponses imbriquées même lorsque celles-ci sont désactivées."
     nested_replies_cap_nesting_depth: "Limite l'imbrication des réponses à la profondeur visuelle maximale. Lorsque ce paramètre est activé, les réponses au niveau le plus profond sont rattachées comme réponses de même niveau au lieu d'être imbriquées davantage."
     enable_new_defaults_for_trust_level_3_requirements: "Nous avons mis à jour les exigences par défaut du niveau de confiance 3 afin qu'elles soient plus raisonnables pour les membres des communautés importantes et actives. Si vous aviez déjà remplacé ces paramètres par des valeurs personnalisées, cette modification n'aura aucun effet."
@@ -2725,7 +2727,6 @@ fr:
       invalid_email: "Adresse e-mail invalide."
       invalid_username: "Il n'y a aucun utilisateur ayant ce nom d'utilisateur."
       valid_username: "Ce nom d'utilisateur est déjà pris."
-      invalid_group: "Il n'y a aucun groupe ayant ce nom."
       invalid_svg: "L'image SVG n'est pas valide. Elle doit contenir un élément SVG et ne contenir aucun script ni gestionnaire d'événements."
       invalid_upload: "Le téléversement n'est pas valide ou n'existe pas."
       invalid_topic: "Aucun sujet ne possède cet ID."
@@ -2794,7 +2795,6 @@ fr:
       markdown_linkify_tlds: "Vous ne pouvez pas inclure la valeur « * »."
       google_oauth2_hd_groups: "Vous devez configurer tous les paramètres « google oauth2 HD » avant d'activer ce paramètre."
       discourse_id_registration: "Échec de l'inscription automatique auprès de Discourse ID. Cela peut être dû à des problèmes de connectivité réseau, à des restrictions de pare-feu ou à l'indisponibilité du service Discourse ID. Consultez les journaux du serveur pour en savoir plus ou contactez l'assistance."
-      linkedin_oidc_credentials: "Vous devez configurer les informations d'identification OIDC de LinkedIn (« linkedin_oidc_client_id » et « linkedin_oidc_client_secret ») avant d'activer ce paramètre."
       search_tokenize_chinese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_chinese »."
       search_tokenize_japanese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_japanese »."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Vous ne pouvez pas activer DiscourseConnect si la 2FA est obligatoire."
@@ -2807,10 +2807,29 @@ fr:
       mediaconvert_output_subdirectory_required: "Le sous-répertoire de sortie de MediaConvert est requis."
       s3_credentials_required_for_video_conversion: "Les identifiants S3 sont requis pour la conversion vidéo. Veuillez configurer les clés d'accès S3 ou activer le profil IAM."
     keywords:
+      about_banner_image: "image de bannière"
+      about_page_extra_groups: "liste des groupes"
+      about_page_extra_groups_initial_members: "liste étendue des membres"
+      about_page_extra_groups_order: "ordre de tri"
+      about_page_extra_groups_show_description: "inclure une description"
       clean_up_inactive_users_after_days: "désactivé|inactif|non activé"
+      company_url: "site Web"
+      default_composition_mode: "rte|texte enrichi|éditeur|markdown|éditeur enrichi"
+      embed_full_app: "mode application complet"
+      extended_site_description: "description de la communauté"
+      large_icon: "icône carrée"
+      logo: "logo principal"
+      logo_dark: "logo principal sombre"
+      logo_small: "petit logo"
+      logo_small_dark: "petit logo sombre"
       navigation_menu: "barre latérale|menu déroulant d'en-tête"
       purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
-      default_composition_mode: "rte|texte enrichi|éditeur|markdown|éditeur enrichi"
+      short_site_description: "titre de la communauté"
+      site_contact_group_name: "groupe de contact du site"
+      site_contact_username: "nom du contact du site"
+      site_description: "résumé de la communauté"
+      title: "nom de la communauté"
+      welcome_banner_image: "image d'arrière-plan"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2886,8 +2905,6 @@ fr:
       tags_any: "Afficher les sujets avec l'une des étiquettes spécifiées (séparés par des virgules)"
       tags_all: "Afficher les sujets avec toutes les étiquettes spécifiées (séparées par des plus)"
       exclude_tag: "Exclure les sujets avec une étiquette spécifique"
-      exclude_tags_any: "Exclure les sujets avec l'une des étiquettes spécifiées (séparés par des virgules)"
-      exclude_tags_all: "Exclure les sujets comportant toutes les étiquettes spécifiées (séparées par des plus)"
       tag_group: "Afficher les sujets dont les étiquettes appartiennent à un groupe de balises spécifique"
       exclude_tag_group: "Exclure les sujets comportant des balises d'un groupe de balises spécifique"
       activity_before: "Afficher les sujets dont la dernière activité est antérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
@@ -2897,7 +2914,6 @@ fr:
       created_before: "Afficher les sujets créés avant une date (AAAA-MM-JJ ou il y a quelques jours)"
       created_after: "Afficher les sujets créés après une date (AAAA-MM-JJ ou il y a quelques jours)"
       created_by: "Afficher les sujets créés par un utilisateur ou un groupe précis"
-      created_by_user: "Afficher les sujets créés par un nom d'utilisateur ou un groupe (sans @)"
       created_by_multiple: "Afficher les sujets créés par l'un des utilisateurs ou groupes indiqués (séparés par des virgules)"
       latest_post_before: "Afficher les sujets dont la dernière publication est antérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
       latest_post_after: "Afficher les sujets dont la dernière publication est postérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
@@ -3110,6 +3126,7 @@ fr:
     wrong_invite_code: "Le code d'invitation est invalide."
     reserved_username: "Ce nom d'utilisateur n'est pas autorisé."
     missing_user_field: "Vous n'avez pas rempli tous les champs d'utilisateur obligatoires"
+    missing_username: "Veuillez entrer un nom d'utilisateur"
     missing_full_name: "Saisissez votre nom complet"
     auth_complete: "Authentification terminée."
     click_to_continue: "Cliquez ici pour continuer."
@@ -4019,6 +4036,8 @@ fr:
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez pas publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
+    moderator_silence:
+      subject_template: "Votre compte a été mis en sourdine"
     silenced_by_staff:
       title: "Mis en sourdine par un responsable"
       preview: "Compte temporairement suspendu."
@@ -4399,34 +4418,10 @@ fr:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
       subject_template_improved: "Votre compte a été suspendu"
-      text_body_template: |
-        Votre compte sur le forum a été suspendu jusqu'à %{suspended_till}.
-
-        Motif : %{reason}
     account_suspended_forever:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
       subject_template_improved: "Votre compte a été suspendu"
-      text_body_template: |
-        Votre compte a été suspendu du forum.
-
-        Motif : %{reason}
-    account_silenced:
-      title: "Compte mis en sourdine"
-      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
-      subject_template_improved: "Votre compte a été mis en sourdine"
-      text_body_template: |
-        Votre compte sur le forum a été mis en sourdine jusqu'à %{silenced_till}.
-
-        Motif : %{reason}
-    account_silenced_forever:
-      title: "Compte mis en sourdine"
-      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
-      subject_template_improved: "Votre compte a été mis en sourdine"
-      text_body_template: |
-        Votre compte a été mis en sourdine sur le forum.
-
-        Motif : %{reason}
     account_deleted:
       title: "Compte supprimé"
       subject_template: "[%{email_prefix}] Votre compte a été supprimé"
@@ -4617,7 +4612,7 @@ fr:
 
         Pour accéder à votre nouveau compte, vous pouvez utiliser le lien suivant :
 
-        %{base_url}
+        %{login_url}
 
         Dans le cas où le lien ci-dessus ne serait pas utilisable, nous vous invitons à le copier-coller dans la barre d'adresse de votre navigateur.
 
@@ -4899,92 +4894,8 @@ fr:
       Ce site est géré par votre [équipe amicale de modérateurs](%{base_path}/about) et *vous*, la communauté. Si vous avez d'autres questions sur la façon dont les choses devraient fonctionner ici, ouvrez un nouveau sujet dans %{feedback_category} et discutons-en ! Si vous rencontrez un problème critique ou urgent qui ne peut pas être traité par un méta-sujet ou un indicateur, [contactez les modérateurs](%{base_path}/about).
   tos_topic:
     title: "Conditions générales d'utilisation"
-    body: "<h2 id=\"heading--change-me\"><a href=\"#heading--change-me\">À modifier</a></h2> \n\nAdministrateur du forum, vous trouverez ci-dessous un exemple de modèle initial de politique de confidentialité à personnaliser en fonction des besoins de votre site.\n\nLes présentes conditions ne régissent pas actuellement l'utilisation du forum Internet accessible à l'adresse <%{base_url}>, mais pourraient le faire à l'avenir. Dans ce cas, pour utiliser le forum, vous devrez accepter les présentes conditions conclues avec %{company_name}, l'entreprise qui exploite le forum.\n\nL'entreprise peut proposer d'autres produits et services soumis à des conditions différentes. Les présentes conditions s'appliquent uniquement à l'utilisation du forum.\n\nAccéder directement aux sections suivantes :\n\n- [Dispositions importantes](#heading--important-terms)\n- [Votre droit d'utiliser le forum](#heading--permission)\n- [Conditions d'utilisation du forum](#heading--conditions)\n- [Utilisation acceptable](#heading--acceptable-use)\n- [Normes relatives au contenu](#heading--content-standards)\n- [Application](#heading--enforcement)\n- [Votre compte](#heading--your-account)\n- [Votre contenu](#heading--your-content)\n- [Votre responsabilité](#heading--responsibility)\n- [Exclusions de garantie](#heading--disclaimers)\n- [Limitation de responsabilité](#heading--liability)\n- [Commentaires](#heading--feedback)\n- [Résiliation](#heading--termination)\n- [Litiges](#heading--disputes)\n- [Dispositions générales](#heading--general)\n- [Contact](#heading--contact)\n- [Modifications](#heading--changes)\n\n<h2 id=\"heading--important-terms\"><a href=\"#heading--important-terms\">Dispositions importantes</a></h2>\n\n***Les présentes conditions comprennent plusieurs dispositions importantes qui ont une incidence sur vos droits et vos responsabilités, notamment les exclusions de garantie figurant dans la section [Exclusions de garantie](#heading--disclaimers), les limitations de la responsabilité de l'entreprise envers vous figurant dans la section [Limitation de responsabilité](#heading--liability), votre engagement à indemniser l'entreprise pour les dommages causés par votre utilisation abusive du forum dans la section [Votre responsabilité](#heading--responsibility), ainsi qu'un accord prévoyant le recours à l'arbitrage pour régler les litiges dans la section [Litiges](#heading--disputes).***\n\n<h2 id=\"heading--permission\"><a href=\"#heading--permission\">Votre droit d'utiliser le forum</a></h2>\n\nSous réserve des présentes conditions, l'entreprise vous accorde le droit d'utiliser le forum. Toute personne souhaitant utiliser le forum doit accepter les présentes conditions.\n\n<h2 id=\"heading--conditions\"><a href=\"#heading--conditions\">Conditions d'utilisation du forum</a></h2>\n\nVotre droit d'utiliser le forum est soumis aux conditions suivantes :\n\n1. Vous devez être âgé d'au moins dix-huit ans.\n\n2. Vous ne pouvez plus utiliser le forum si l'entreprise vous informe directement que vous n'y êtes plus autorisé.\n\n3. Vous devez utiliser le forum conformément aux sections [Utilisation acceptable](#heading--acceptable-use) et [Normes relatives au contenu](#heading--content-standards).\n\n<h2 id=\"heading--acceptable-use\"><a href=\"#heading--acceptable-use\">Utilisation acceptable</a></h2>\n\n1. Vous ne pouvez pas enfreindre la loi en utilisant le forum.\n\n2. Vous ne pouvez pas utiliser ou tenter d'utiliser le compte d'une autre personne sur le forum sans son autorisation expresse.\n\n3. Vous ne pouvez pas acheter, vendre ou échanger de quelque autre manière que ce soit des noms d'utilisateur ou d'autres identifiants uniques sur le forum.\n\n4. Vous ne pouvez pas envoyer de publicités, de chaînes de lettres ou d'autres sollicitations par l'intermédiaire du forum, ni utiliser le forum pour collecter des adresses ou d'autres données personnelles destinées à des listes de diffusion ou à des bases de données commerciales.\n\n5. Vous ne pouvez pas automatiser l'accès au forum ni surveiller celui-ci à l'aide, par exemple, d'un robot d'exploration Web, d'une extension ou d'un module complémentaire de navigateur, ou de tout autre programme informatique qui n'est pas un navigateur Web. Vous pouvez explorer le forum afin de l'indexer pour un moteur de recherche accessible au public, si vous exploitez un tel moteur.\n\n6. Vous ne pouvez pas utiliser le forum pour envoyer des e-mails à des listes de diffusion, des groupes de discussion ou des alias de messagerie de groupe.\n\n7. Vous ne pouvez pas laisser entendre à tort que vous êtes affilié à l'entreprise ou approuvé par celle-ci.\n\n8. Vous ne pouvez pas créer, sur d'autres pages Web, de liens directs vers des images ou d'autres contenus non hypertextuels hébergés sur le forum.\n\n9. Vous ne pouvez pas supprimer les mentions indiquant la propriété exclusive des éléments que vous téléchargez depuis le forum.\n\n10. Vous ne pouvez pas afficher une quelconque partie du forum sur d'autres sites Web au moyen d'un élément `<iframe>`.\n\n11. Vous ne pouvez pas désactiver, éviter ou contourner les restrictions de sécurité ou d'accès du forum.\n\n12. Vous ne pouvez pas imposer une charge excessive à l'infrastructure du forum au moyen d'un volume déraisonnable de requêtes ou de requêtes conçues pour surcharger de manière déraisonnable les systèmes d'information qui sous-tendent le forum.\n\n13. Vous ne pouvez pas vous faire passer pour une autre personne par l'intermédiaire du forum.\n\n14. Vous ne pouvez pas encourager ou aider quiconque à enfreindre les présentes conditions.\n\n<h2 id=\"heading--content-standards\"><a href=\"#heading--content-standards\">Normes relatives au contenu</a></h2>\n\n1. Vous ne pouvez pas soumettre au forum de contenu illégal, offensant ou autrement préjudiciable à autrui. Cela comprend notamment les contenus relevant du harcèlement ou d'un comportement inapproprié, abusif ou haineux.\n\n2. Vous ne pouvez pas soumettre au forum de contenu qui enfreint la loi, porte atteinte aux droits de propriété intellectuelle d'une personne, viole la vie privée d'une personne ou contrevient à des accords conclus avec des tiers.\n\n3. Vous ne pouvez pas soumettre au forum de contenu comportant un code informatique malveillant, tel qu'un virus informatique ou un logiciel espion.\n\n4. Vous ne pouvez pas soumettre de contenu au forum dans le seul but de réserver une adresse, un nom d'utilisateur ou un autre identifiant unique.\n\n5. Vous ne pouvez pas utiliser le forum pour divulguer des informations que vous n'avez pas le droit de communiquer, telles que des informations confidentielles ou personnelles concernant d'autres personnes.\n\n<h2 id=\"heading--enforcement\"><a href=\"#heading--enforcement\">Application</a></h2>\n\nL'entreprise peut enquêter sur les violations des présentes conditions et engager des poursuites dans toute la mesure permise par la loi. Elle peut informer les autorités chargées de l'application de la loi et coopérer avec elles dans le cadre de poursuites relatives à des violations de la loi ou des présentes conditions.\n\nL'entreprise se réserve le droit de modifier, d'expurger ou de supprimer du contenu du forum pour quelque motif que ce soit. Si vous estimez qu'une personne a soumis au forum du contenu qui enfreint les présentes conditions, [contactez-nous immédiatement](#heading--contact).\n\n<h2 id=\"heading--your-account\"><a href=\"#heading--your-account\">Votre compte</a></h2>\n\nVous devez créer un compte et vous y connecter pour utiliser certaines fonctionnalités du forum.\n\nPour créer un compte, vous devez fournir certaines informations vous concernant. Si vous créez un compte, vous acceptez de fournir au minimum une adresse e-mail valide et de la maintenir à jour. Vous pouvez fermer votre compte à tout moment en envoyant un e-mail à <%{contact_email}>.\n\nVous acceptez d'être responsable de toute action effectuée au moyen de votre compte, qu'elle ait été autorisée par vous ou non, jusqu'à ce que vous fermiez votre compte ou informiez l'entreprise que celui-ci a été compromis. Vous acceptez d'informer immédiatement l'entreprise si vous soupçonnez que votre compte a été compromis. Vous acceptez de choisir un mot de passe sécurisé pour votre compte et de le garder secret.\n\nL'entreprise peut restreindre, suspendre ou fermer votre compte sur le forum conformément à sa politique de traitement des demandes de retrait liées aux droits d'auteur, ou si elle estime raisonnablement que vous avez enfreint l'une des règles énoncées dans les présentes conditions.\n\n<h2 id=\"heading--your-content\"><a href=\"#heading--your-content\">Votre contenu</a></h2>\n\nAucune disposition des présentes conditions ne confère à l'entreprise un quelconque droit de propriété sur les éléments de propriété intellectuelle que vous partagez avec le forum, tels que les informations de votre compte, vos publications ou tout autre contenu que vous soumettez au forum. De même, aucune disposition des présentes conditions ne vous confère un quelconque droit de propriété sur la propriété intellectuelle de l'entreprise.\n\nDans vos relations avec l'entreprise, vous demeurez seul responsable du contenu que vous soumettez au forum. Vous acceptez de ne pas laisser entendre à tort que le contenu que vous soumettez au forum est parrainé ou approuvé par l'entreprise. Les présentes conditions n'obligent pas l'entreprise à stocker, conserver ou fournir des copies du contenu que vous soumettez, ni à le modifier conformément aux présentes conditions.\n\nLe contenu que vous soumettez au forum vous appartient et vous décidez des permissions que vous accordez à d'autres personnes à son égard. Vous accordez toutefois au minimum à l'entreprise une licence lui permettant de mettre ce contenu à la disposition des autres utilisateurs du forum. Cette licence particulière autorise l'entreprise à copier, publier et analyser le contenu que vous soumettez au forum.\n\nLorsque le contenu que vous avez soumis est supprimé du forum, que ce soit par vous ou par l'entreprise, la licence particulière accordée à l'entreprise prend fin lorsque la dernière copie disparaît de ses sauvegardes, de ses caches et de ses autres systèmes. D'autres licences que vous appliquez au contenu que vous soumettez, telles que les licences [Creative Commons](https://creativecommons.org), peuvent rester en vigueur après la suppression de votre contenu. Ces licences peuvent autoriser d'autres personnes, ou l'entreprise elle-même, à partager de nouveau votre contenu par l'intermédiaire du forum.\n\nLes personnes qui reçoivent le contenu que vous soumettez au forum peuvent enfreindre les conditions de la licence que vous leur accordez. Vous acceptez que l'entreprise ne soit pas responsable envers vous de ces violations ni de leurs conséquences.\n\n<h2 id=\"heading--responsibility\"><a href=\"#heading--responsibility\">Votre responsabilité</a></h2>\n\nVous acceptez de garantir l'entreprise contre toute réclamation juridique formulée par des tiers et liée à votre violation des présentes conditions, ou à leur violation par d'autres personnes utilisant votre compte sur le forum. Vous et l'entreprise acceptez de vous informer mutuellement, dans les meilleurs délais, de toute réclamation juridique pour laquelle vous pourriez être tenu d'indemniser l'entreprise. Si l'entreprise tarde à vous informer d'une réclamation juridique, vous ne serez pas tenu de l'indemniser pour les dommages contre lesquels vous auriez pu vous défendre ou que vous auriez pu limiter si vous aviez été informé rapidement. Vous acceptez de laisser l'entreprise contrôler l'enquête, la défense et le règlement des réclamations juridiques pour lesquelles vous seriez tenu de l'indemniser, et de coopérer à ces démarches. L'entreprise accepte de ne conclure aucun règlement reconnaissant une faute de votre part ou vous imposant des obligations sans votre accord préalable.\n\n<h2 id=\"heading--disclaimers\"><a href=\"#heading--disclaimers\">Exclusions de garantie</a></h2>\n\n***Vous assumez tous les risques liés à l'utilisation du forum et de son contenu. Dans toute la mesure permise par la loi, l'entreprise et ses fournisseurs mettent le forum à disposition en l'état, sans aucune garantie de quelque nature que ce soit.***\n\nLe forum peut contenir des liens vers des forums et services exploités par des tiers et les intégrer. L'entreprise ne fournit aucune garantie concernant les services exploités par des tiers ni le contenu qu'ils peuvent proposer. L'utilisation de services exploités par des tiers peut être régie par d'autres conditions conclues entre vous et l'exploitant du service concerné.\n\n<h2 id=\"heading--liability\"><a href=\"#heading--liability\">Limitation de responsabilité</a></h2>\n\n***Ni l'entreprise ni ses fournisseurs ne seront responsables envers vous des dommages-intérêts résultant d'une violation contractuelle que leur personnel ne pouvait raisonnablement prévoir au moment où vous avez accepté les présentes conditions.***\n\n***Dans toute la mesure permise par la loi, la responsabilité totale envers vous au titre de toute réclamation liée au forum ou à son contenu sera limitée à 50 USD.***\n\n<h2 id=\"heading--feedback\"><a href=\"#heading--feedback\">Commentaires</a></h2>\n\nL'entreprise accueille volontiers vos commentaires et suggestions concernant le forum. Consultez la section [Contact](#heading--contact) ci-dessous pour savoir comment nous contacter.\n\nVous acceptez que l'entreprise soit libre de donner suite aux commentaires et suggestions que vous lui fournissez, sans être tenue de vous informer de leur utilisation, d'obtenir votre autorisation ni de vous rémunérer. Vous acceptez de ne pas soumettre de commentaires ou de suggestions que vous estimez confidentiels ou exclusifs, qu'ils vous appartiennent ou appartiennent à des tiers.\n\n<h2 id=\"heading--termination\"><a href=\"#heading--termination\">Résiliation</a></h2>\n\nVous ou l'entreprise pouvez mettre fin à tout moment à l'accord décrit dans les présentes conditions. Lorsque notre accord prend fin, votre droit d'utiliser le forum prend également fin.\n\nLes dispositions suivantes demeurent en vigueur après la fin de notre accord : [Votre contenu](#heading--your-content), [Commentaires](#heading--feedback), [Votre responsabilité](#heading--responsibility), [Exclusions de garantie](#heading--disclaimers), [Limitation de responsabilité](#heading--liability) et [Dispositions générales](#heading--general).\n\n<h2 id=\"heading--disputes\"><a href=\"#heading--disputes\">Litiges</a></h2>\n\nTout litige lié aux présentes conditions ou à votre utilisation du forum sera régi par le droit de %{governing_law}.\n\nVous et l'entreprise acceptez de demander toute injonction liée aux présentes conditions uniquement devant un tribunal d'État ou un tribunal fédéral situé à %{city_for_disputes}. Ni vous ni l'entreprise ne contesterez la compétence, le ressort ou le lieu de ces tribunaux.\n\n***Sauf lorsqu'il s'agit de demander une injonction ou de présenter une réclamation au titre du Computer Fraud and Abuse Act, vous et l'entreprise réglerez tout litige au moyen d'un arbitrage contraignant administré par l'American Arbitration Association. L'arbitrage sera mené conformément aux règles d'arbitrage commercial et aux procédures complémentaires relatives aux litiges de consommation de l'AAA. Il se déroulera à %{city_for_disputes}. Vous réglerez tout litige à titre individuel, et non dans le cadre d'une action collective ou d'une autre procédure représentative, que ce soit en qualité de demandeur ou de membre d'un groupe. Aucun arbitre ne pourra joindre un litige à une autre procédure d'arbitrage sans l'autorisation de l'entreprise.***\n\nToute sentence arbitrale comprendra les frais d'arbitrage, les honoraires raisonnables d'avocat et les frais raisonnables liés aux témoins. Vous et l'entreprise pourrez faire exécuter les sentences arbitrales devant tout tribunal compétent.\n\n<h2 id=\"heading--general\"><a href=\"#heading--general\">Dispositions générales</a></h2>\n\nSi une disposition des présentes conditions est inapplicable telle qu'elle est rédigée, mais pourrait le devenir moyennant une modification, elle devra être modifiée dans la mesure minimale nécessaire pour la rendre applicable. Dans le cas contraire, elle devra être supprimée.\n\nVous ne pouvez pas céder votre accord avec l'entreprise. L'entreprise peut céder cet accord à toute société affiliée, à toute autre entreprise qui en prend le contrôle ou à toute autre entreprise qui acquiert des actifs liés au forum. Toute tentative de cession contraire aux présentes conditions est sans effet juridique.\n\nNi l'exercice d'un droit prévu par le présent accord, ni la renonciation à invoquer une violation du présent accord ne constitue une renonciation à invoquer toute autre violation de celui-ci.\n\nLes présentes conditions constituent l'intégralité de l'accord conclu entre vous et l'entreprise concernant l'utilisation du forum. Elles remplacent entièrement tout autre accord, écrit ou non, relatif à votre utilisation du forum.\n\n<h2 id=\"heading--contact\"><a href=\"#heading--contact\">Contact</a></h2>\n\nVous pouvez adresser à l'entreprise toute notification prévue par les présentes conditions, ainsi que toute question, à l'adresse <%{contact_email}>.\n\nL'entreprise peut vous adresser toute notification prévue par les présentes conditions à l'adresse e-mail que vous fournissez pour votre compte sur le forum, ou en publiant un message sur la page d'accueil du forum ou sur la page de votre compte.\n\n<h2 id=\"heading--changes\"><a href=\"#heading--changes\">Modifications</a></h2>\n\nL'entreprise a mis à jour les présentes conditions pour la dernière fois le [INSÉRER ICI LA DATE DE LA DERNIÈRE MISE À JOUR] et pourra les modifier à nouveau. Elle publiera toutes les mises à jour sur le forum. Lorsque les mises à jour comportent des modifications importantes, l'entreprise accepte de vous en informer par e-mail si vous avez créé un compte et fourni une adresse e-mail valide. Elle peut également annoncer les mises à jour au moyen de messages ou d'alertes spécifiques sur le forum.\n\nDès que vous recevez une notification concernant une mise à jour des présentes conditions, vous devez accepter les nouvelles conditions pour continuer à utiliser le forum.\n"
   privacy_topic:
     title: "Politique de confidentialité"
-    body: |
-      ## [Administrateur du forum, vous trouverez ci-dessous un exemple de modèle de départ de politique de confidentialité à personnaliser en fonction de votre site.]
-
-      <a name="collect"></a>
-
-      ## [Quelles informations recueillons-nous ?](#collect)
-
-      Nous recueillons des informations vous concernant lorsque vous vous inscrivez sur notre site et collectons des données lorsque vous participez au forum en lisant, rédigeant et évaluant le contenu qui y est partagé.
-
-      Lors de votre inscription sur notre site, il peut vous être demandé de saisir votre nom et votre adresse e-mail. Vous pouvez toutefois consulter notre site sans vous inscrire. Votre adresse e-mail sera vérifiée au moyen d'un e-mail contenant un lien unique. Si ce lien est consulté, nous savons que vous contrôlez cette adresse e-mail.
-
-      Lorsque vous êtes inscrit et publiez du contenu, nous enregistrons l'adresse IP depuis laquelle la publication a été envoyée. Nous pouvons également conserver des journaux de serveur contenant l'adresse IP associée à chaque requête adressée à notre serveur.
-
-      <a name="use"></a>
-
-      ## [À quelles fins utilisons-nous vos informations ?](#use)
-
-      Les informations que nous recueillons à votre sujet peuvent être utilisées de l'une des manières suivantes :
-
-      * Pour personnaliser votre expérience &mdash; vos informations nous aident à mieux répondre à vos besoins individuels.
-      * Pour améliorer notre site &mdash; nous nous efforçons continuellement d'améliorer les services proposés sur notre site en fonction des informations et des commentaires que nous recevons de votre part.
-      * Pour améliorer le service client &mdash; vos informations nous aident à répondre plus efficacement à vos demandes d'assistance et à vos besoins.
-      * Pour envoyer périodiquement des e-mails &mdash; l'adresse e-mail que vous fournissez peut être utilisée pour vous envoyer des informations, les notifications que vous demandez concernant les modifications apportées aux sujets ou les réponses à votre nom d'utilisateur, répondre à vos demandes, ainsi qu'à d'autres requêtes ou questions.
-
-      <a name="protect"></a>
-
-      ## [Comment protégeons-nous vos informations ?](#protect)
-
-      Nous mettons en œuvre diverses mesures de sécurité afin de préserver la confidentialité de vos informations personnelles lorsque vous les saisissez, les transmettez ou y accédez.
-
-      <a name="data-retention"></a>
-
-      ## [Quelle est notre politique de conservation des données ?](#data-retention)
-
-      Nous nous efforcerons de bonne foi de respecter les principes suivants :
-
-      * Ne pas conserver pendant plus de [NOMBRE DE JOURS] jours les journaux du serveur contenant l'adresse IP de toutes les requêtes adressées à ce serveur.
-
-      <a name="cookies"></a>
-
-      ## [Utilisons-nous des cookies ?](#cookies)
-
-      Oui. Les cookies sont de petits fichiers qu'un site ou son prestataire transfère sur le disque dur de votre ordinateur par l'intermédiaire de votre navigateur Web, si vous l'autorisez. Ces cookies permettent au site de reconnaître votre navigateur et, si vous possédez un compte, de l'associer à celui-ci.
-
-      Nous utilisons des cookies pour comprendre et enregistrer vos préférences en vue de vos prochaines visites, ainsi que pour compiler des données agrégées concernant le trafic et les interactions sur le site, afin de pouvoir proposer à l'avenir de meilleurs services et outils. Nous pouvons faire appel à des prestataires tiers afin de mieux comprendre les visiteurs de notre site. Ces prestataires ne sont pas autorisés à utiliser les informations recueillies pour notre compte, sauf pour nous aider à exercer et à améliorer nos activités.
-
-      <a name="disclose"></a>
-
-      ## [Divulguons-nous des informations à des tiers ?](#disclose)
-
-      Nous ne vendons, n'échangeons ni ne transférons de quelque autre manière que ce soit à des tiers les informations permettant de vous identifier personnellement. Cette disposition ne s'applique pas aux tiers de confiance qui nous aident à exploiter notre site, à exercer nos activités ou à vous fournir des services, sous réserve qu'ils acceptent de préserver la confidentialité de ces informations. Nous pouvons également divulguer vos informations lorsque nous estimons que cette divulgation est nécessaire pour respecter la loi, faire appliquer les politiques de notre site ou protéger nos droits, nos biens ou notre sécurité, ainsi que ceux de tiers. Toutefois, des informations ne permettant pas d'identifier personnellement les visiteurs peuvent être communiquées à d'autres parties à des fins de marketing, de publicité ou à d'autres fins.
-
-      <a name="third-party"></a>
-
-      ## [Liens vers des sites tiers](#third-party)
-
-      Nous pouvons occasionnellement, à notre discrétion, inclure ou proposer sur notre site des produits ou services fournis par des tiers. Ces sites tiers disposent de politiques de confidentialité distinctes et indépendantes. Nous déclinons donc toute responsabilité quant au contenu et aux activités de ces sites liés. Nous nous efforçons néanmoins de préserver l'intégrité de notre site et accueillons volontiers tout commentaire concernant ces sites.
-
-      <a name="coppa"></a>
-
-      ## [Respect de la loi sur la protection de la vie privée des enfants en ligne](#coppa)
-
-      Notre site, nos produits et nos services s'adressent exclusivement aux personnes âgées d'au moins 18 ans. Si ce serveur se trouve aux États-Unis et que vous avez moins de 18 ans, conformément aux exigences de la COPPA ([Loi sur la protection de la vie privée des enfants en ligne](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utilisez pas ce site.
-
-      <a name="online"></a>
-
-      ## [Politique de confidentialité en ligne uniquement](#online)
-
-      La présente politique de confidentialité en ligne s'applique uniquement aux informations recueillies par l'intermédiaire de notre site et non à celles recueillies hors ligne.
-
-      <a name="consent"></a>
-
-      ## [Votre consentement](#consent)
-
-      En utilisant notre site, vous consentez à notre politique de confidentialité en ligne.
-
-      <a name="changes"></a>
-
-      ## [Modifications de notre politique de confidentialité](#changes)
-
-      Si nous décidons de modifier notre politique de confidentialité, nous publierons les modifications sur cette page.
-
-      Ce document est placé sous licence CC-BY-SA. Il a été mis à jour pour la dernière fois le [INSÉRER ICI LA DATE DE LA DERNIÈRE MISE À JOUR].
   badges:
     mass_award:
       errors:
@@ -5243,6 +5154,10 @@ fr:
   performance_report:
     initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
     initial_topic_title: Rapports de performances du site
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Trop de lignes dans le fichier CSV. Veuillez fournir un fichier CSV contenant un maximum de %{count} entrée."
+      other: "Trop de lignes dans le fichier CSV. Veuillez fournir un fichier CSV contenant un maximum de %{count} entrées."
   tags:
     title: "Étiquettes"
     groups:
@@ -5335,7 +5250,13 @@ fr:
   design_wizard:
     palette_pairs:
       default: "Par défaut"
+      neutral: "Neutre"
+      shades_of_blue: "Nuances de bleu"
+      summer: "Été"
       dracula: "Dracula"
+      grey_amber: "Gris ambre"
+      latte: "Café crème"
+      dark_rose: "Rose foncé"
   wizard:
     title: "Configuration de Discourse"
     step:
@@ -5375,6 +5296,28 @@ fr:
     graph_title: "Nombre de recherches"
   onebox:
     discourse:
+      event_all_day: "Toute la journée"
+      recurrence:
+        every_day: "Tous les jours"
+        every_weekday: "Chaque jour de la semaine"
+        every_week: "Chaque %{weekday}"
+        every_two_weeks: "Tous les deux %{weekday}"
+        every_four_weeks: "Toutes les 4 semaines le %{weekday}"
+        every_month: "Le %{ordinal} %{weekday} de chaque mois"
+        ordinals:
+          first: "premier"
+          second: "deuxième"
+          third: "troisième"
+          fourth: "quatrième"
+          last: "dernier"
+        weekdays:
+          sunday: "Dimanche"
+          monday: "Lundi"
+          tuesday: "Mardi"
+          wednesday: "Mercredi"
+          thursday: "Jeudi"
+          friday: "Vendredi"
+          saturday: "Samedi"
       user_joined_community: "S'est inscrit(e) le %{date}"
     google_meet:
       title: "Réunion Google Meet"
@@ -5385,6 +5328,10 @@ fr:
       truncated_file: "Ce fichier a été tronqué."
       show_original: "afficher l'original"
     github:
+      header:
+        file: "Fichier"
+        success: "Succès"
+        pending: "En cours"
       binary_file: "Ce fichier est binaire."
       truncated_file: "Ce fichier a été tronqué."
       show_original: "afficher l'original"
@@ -5398,21 +5345,12 @@ fr:
       review_by: "Révision par"
       pr_summary: "%{commits} validations ont modifié %{changed_files} fichiers avec %{additions} ajouts et %{deletions} suppressions"
       no_description: "Contribuez au développement de %{repo} en créant un compte sur GitHub."
-      pr_title:
-        default: "Demande de tirage"
-        draft: "Brouillon de demande de tirage"
-        open: "Demande de tirage ouverte"
-        approved: "Demande de tirage approuvée"
-        changes_requested: "Modifications demandées"
-        merged: "Demande de tirage fusionnée"
-        closed: "Demande de tirage fermée"
-      status_date:
-        open: "ouvert"
-        draft: "créée comme brouillon"
-        approved: "approuvé "
-        changes_requested: "modifications demandées"
-        merged: "fusionnée"
-        closed: "fermé"
+      pr_status:
+        draft: "Brouillon"
+        open: "Ouvert"
+        approved: "Approuvé"
+        merged: "Fusionnée"
+        closed: "Fermé"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vous a mentionné(e) dans « %{topic} » - %{site_title}'
@@ -5504,6 +5442,10 @@ fr:
       no_context:
         watched_word: "Cet article contient un mot surveillé. Consultez le %{link} pour en savoir plus."
     actions:
+      answer_yes:
+        title: "Oui"
+      answer_no:
+        title: "Non"
       agree:
         title: "Oui"
       agree_and_keep:
@@ -5536,8 +5478,6 @@ fr:
         complete: "Publication masquée. L'utilisateur a été averti."
       agree_and_edit:
         title: "Modifier la publication"
-        description: "Acceptez le signalement et ouvrez une fenêtre de composition pour modifier le message."
-        complete: "Signalement confirmé, vous pouvez maintenant modifier la publication."
       delete:
         title: "Supprimer"
         complete: "Publication supprimée."
@@ -5563,6 +5503,9 @@ fr:
         title: "Rétablir la publication"
         description: "Rejeter le signalement et restaurer la publication"
         complete: "Publication restaurée."
+      disagree_and_keep_deleted:
+        title: "Conserver la suppression de la publication"
+        complete: "Publication maintenue supprimée."
       disagree_bundle:
         title: "Non"
       disagree:
@@ -5645,30 +5588,6 @@ fr:
       approve_and_unhide:
         title: "Oui"
         complete: "Publication approuvée et visible"
-      post_actions:
-        bundle_title: "Que souhaitez-vous faire de la publication ?"
-      delete_post:
-        title: "Supprimer la publication"
-        description: "Supprimer cette publication"
-        complete: "Publication supprimée"
-      hide_post:
-        title: "Masquer la publication"
-        description: "Masquer cette publication au public"
-        complete: "Publication masquée"
-      unhide_post:
-        title: "Afficher la publication"
-        description: "Rendre cette publication visible pour tous les utilisateurs"
-        complete: "Publication de nouveau visible"
-      restore_post:
-        title: "Rétablir la publication"
-        description: "Restaurer cette publication supprimée"
-        complete: "Publication restaurée"
-      edit_post:
-        title: "Modifier la publication"
-        description: "Modifier le contenu de cette publication"
-        complete: "Publication modifiée"
-      user_actions:
-        bundle_title: "Que souhaitez-vous faire concernant cet utilisateur ?"
       silence_user:
         title: "Désactiver l'utilisateur"
         complete: "Utilisateur désactivé"

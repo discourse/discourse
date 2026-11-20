@@ -3,7 +3,6 @@ import BasicTopicList from "discourse/components/basic-topic-list";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import routeAction from "discourse/helpers/route-action";
-import { or } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
@@ -17,39 +16,39 @@ export default <template>
 
   {{#if @controller.noContent}}
     <DEmptyState
-      @title={{@controller.model.emptyState.title}}
       @body={{@controller.model.emptyState.body}}
+      @title={{@controller.model.emptyState.title}}
     />
   {{else}}
-    <DLoadMore @action={{@controller.loadMore}} class="paginated-topics-list">
+    <DLoadMore class="paginated-topics-list" @action={{@controller.loadMore}}>
       <TopicDismissButtons
-        @position="top"
-        @selectedTopics={{@controller.bulkSelectHelper.selected}}
-        @model={{@controller.model}}
-        @showResetNew={{@controller.showResetNew}}
-        @showDismissRead={{@controller.showDismissRead}}
-        @resetNew={{@controller.resetNew}}
         @dismissRead={{if
           @controller.showDismissRead
           (routeAction "dismissReadTopics")
         }}
+        @model={{@controller.model}}
+        @position="top"
+        @resetNew={{@controller.resetNew}}
+        @selectedTopics={{@controller.bulkSelectHelper.selected}}
+        @showDismissRead={{@controller.showDismissRead}}
+        @showResetNew={{@controller.showResetNew}}
       />
 
       {{#if (or @controller.model.loadingBefore @controller.incomingCount)}}
         <div class="show-mores">
           <a
-            tabindex="0"
-            href
-            {{on "click" @controller.showInserted}}
             class="alert alert-info clickable
               {{if @controller.model.loadingBefore 'loading'}}"
+            href
+            tabindex="0"
+            {{on "click" @controller.showInserted}}
           >
             <DCountI18n
-              @key="topic_count_latest"
               @count={{or
                 @controller.model.loadingBefore
                 @controller.incomingCount
               }}
+              @key="topic_count_latest"
             />
             {{#if @model.loadingBefore}}
               {{dLoadingSpinner size="small"}}
@@ -59,31 +58,31 @@ export default <template>
       {{/if}}
 
       <BasicTopicList
-        @topicList={{@controller.model}}
+        @ascending={{@controller.ascending}}
+        @bulkSelectHelper={{@controller.bulkSelectHelper}}
+        @canBulkSelect={{@controller.canBulkSelect}}
+        @changeSort={{@controller.changeSort}}
+        @focusLastVisitedTopic={{true}}
         @hideCategory={{@controller.hideCategory}}
+        @listContext={{@controller.listContext}}
+        @order={{@controller.order}}
         @showPosters={{@controller.showPosters}}
         @tagsForUser={{@controller.tagsForUser}}
-        @canBulkSelect={{@controller.canBulkSelect}}
-        @bulkSelectHelper={{@controller.bulkSelectHelper}}
-        @changeSort={{@controller.changeSort}}
-        @order={{@controller.order}}
-        @ascending={{@controller.ascending}}
-        @focusLastVisitedTopic={{true}}
-        @listContext={{@controller.listContext}}
+        @topicList={{@controller.model}}
       />
 
       {{#if @controller.showBottomDismissButtons}}
         <TopicDismissButtons
-          @position="bottom"
-          @selectedTopics={{@controller.bulkSelectHelper.selected}}
-          @model={{@controller.model}}
-          @showResetNew={{@controller.showResetNew}}
-          @showDismissRead={{@controller.showDismissRead}}
-          @resetNew={{@controller.resetNew}}
           @dismissRead={{if
             @controller.showDismissRead
             (routeAction "dismissReadTopics")
           }}
+          @model={{@controller.model}}
+          @position="bottom"
+          @resetNew={{@controller.resetNew}}
+          @selectedTopics={{@controller.bulkSelectHelper.selected}}
+          @showDismissRead={{@controller.showDismissRead}}
+          @showResetNew={{@controller.showResetNew}}
         />
       {{/if}}
       <DConditionalLoadingSpinner

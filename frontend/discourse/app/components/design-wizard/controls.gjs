@@ -6,23 +6,16 @@ import { service } from "@ember/service";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
 import FontsSection from "discourse/components/design-wizard/fonts-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
-import IntroSection from "discourse/components/design-wizard/intro-section";
-import SearchSection from "discourse/components/design-wizard/search-section";
+import LogoSection from "discourse/components/design-wizard/logo-section";
 import Section from "discourse/components/design-wizard/section";
 import ThemeSection from "discourse/components/design-wizard/theme-section";
-import WelcomeBannerSection from "discourse/components/design-wizard/welcome-banner-section";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-const STEPS = ["theme", "colors", "homepage"];
+export const STEPS = ["theme", "colors", "homepage"];
 
 export default class DesignWizardControls extends Component {
   @service designWizard;
-
-  goToStepLabel(index) {
-    return i18n("design_wizard.step_label", { index: index + 1 });
-  }
 
   get currentStep() {
     return STEPS[this.designWizard.stepIndex] ?? STEPS[0];
@@ -46,6 +39,25 @@ export default class DesignWizardControls extends Component {
   // would either be lost or save selections the reload is about to discard
   get busy() {
     return this.designWizard.applyingTheme;
+  }
+
+  get stepProgress() {
+    return i18n("design_wizard.step_progress", {
+      current: this.designWizard.stepIndex + 1,
+      total: STEPS.length,
+    });
+  }
+
+  get stepTitle() {
+    return i18n(`design_wizard.steps.${this.currentStep}.title`);
+  }
+
+  get stepDescription() {
+    return i18n(`design_wizard.steps.${this.currentStep}.description`);
+  }
+
+  goToStepLabel(index) {
+    return i18n("design_wizard.step_label", { index: index + 1 });
   }
 
   @action
@@ -96,18 +108,13 @@ export default class DesignWizardControls extends Component {
   }
 
   @action
-  selectPair(pairKey) {
-    this.designWizard.selectPair(pairKey);
+  selectPalette(mode, pairKey) {
+    this.designWizard.selectPalette(mode, pairKey);
   }
 
   @action
-  selectColorMode(mode) {
-    this.designWizard.selectColorMode(mode);
-  }
-
-  @action
-  toggleUserSelectable() {
-    this.designWizard.toggleUserSelectable();
+  selectPaletteMode(paletteMode) {
+    this.designWizard.selectPaletteMode(paletteMode);
   }
 
   @action
@@ -131,23 +138,13 @@ export default class DesignWizardControls extends Component {
   }
 
   @action
-  toggleWelcomeBanner() {
-    this.designWizard.selectWelcomeBanner(!this.designWizard.welcomeBanner);
+  uploadLogo(upload) {
+    this.designWizard.selectLogo(upload);
   }
 
   @action
-  selectWelcomeBannerLocation(location) {
-    this.designWizard.selectWelcomeBannerLocation(location);
-  }
-
-  @action
-  selectSearchExperience(experience) {
-    this.designWizard.selectSearchExperience(experience);
-  }
-
-  @action
-  startFlow() {
-    this.designWizard.dismissIntro();
+  removeLogo() {
+    this.designWizard.selectLogo(null);
   }
 
   @action
@@ -158,119 +155,116 @@ export default class DesignWizardControls extends Component {
   <template>
     <div class="design-wizard__content">
       <header class="design-wizard__header">
-        <h2 id="design-wizard-title">
-          {{i18n "design_wizard.title"}}
-        </h2>
-        <span class="design-wizard__subtitle">
-          {{i18n "design_wizard.subtitle"}}
-        </span>
+        {{#if this.designWizard.docked}}
+          <span class="design-wizard__step-progress">
+            {{this.stepProgress}}
+          </span>
+        {{/if}}
+        <h2 class="design-wizard__title">{{this.stepTitle}}</h2>
+        <p class="design-wizard__description">{{this.stepDescription}}</p>
       </header>
 
-      {{#if this.designWizard.showIntro}}
-        <IntroSection @onStart={{this.startFlow}} />
-      {{else}}
-        <div class="design-wizard__sections">
-          {{#if (eq this.currentStep "theme")}}
-            <Section @title={{i18n "design_wizard.sections.theme"}}>
-              <ThemeSection
-                @themes={{this.designWizard.data.themes}}
-                @currentTheme={{this.designWizard.data.current_theme}}
-                @selectedThemeId={{this.designWizard.themeId}}
-                @applying={{this.busy}}
-                @onSelect={{this.selectTheme}}
-              />
-            </Section>
-          {{else if (eq this.currentStep "colors")}}
-            <Section @title={{i18n "design_wizard.sections.colors"}}>
-              <ColorsSection
-                @pairs={{this.designWizard.pairs}}
-                @selectedPairKey={{this.designWizard.selectedPair.key}}
-                @selectedPairName={{this.designWizard.selectedPair.name}}
-                @colorMode={{this.designWizard.effectiveColorMode}}
-                @darkOnly={{this.designWizard.selectedPair.dark_only}}
-                @userSelectable={{this.designWizard.palettesUserSelectable}}
-                @onSelectPair={{this.selectPair}}
-                @onSelectMode={{this.selectColorMode}}
-                @onToggleUserSelectable={{this.toggleUserSelectable}}
-              />
-            </Section>
-
-            <Section @title={{i18n "design_wizard.sections.fonts"}}>
-              <FontsSection
-                @bodyFont={{this.designWizard.bodyFont}}
-                @headingFont={{this.designWizard.headingFont}}
-                @onSelectBodyFont={{this.selectBodyFont}}
-                @onSelectHeadingFont={{this.selectHeadingFont}}
-              />
-            </Section>
-          {{else}}
-            <Section @title={{i18n "design_wizard.sections.homepage"}}>
-              <HomepageSection
-                @themeId={{this.designWizard.themeId}}
-                @homepage={{this.designWizard.homepage}}
-                @categoryPageStyle={{this.designWizard.categoryPageStyle}}
-                @onSelectHomepage={{this.selectHomepage}}
-                @onSelectCategoryPageStyle={{this.selectCategoryPageStyle}}
-              />
-            </Section>
-
-            <Section @title={{i18n "design_wizard.sections.welcome_banner"}}>
-              <WelcomeBannerSection
-                @enabled={{this.designWizard.welcomeBanner}}
-                @location={{this.designWizard.welcomeBannerLocation}}
-                @onToggle={{this.toggleWelcomeBanner}}
-                @onSelectLocation={{this.selectWelcomeBannerLocation}}
-              />
-            </Section>
-
-            <Section @title={{i18n "design_wizard.sections.search"}}>
-              <SearchSection
-                @searchExperience={{this.designWizard.searchExperience}}
-                @onSelect={{this.selectSearchExperience}}
-              />
-            </Section>
-          {{/if}}
-        </div>
-
-        <footer class="design-wizard__actions">
-          <div class="design-wizard__step-dots">
-            {{#each STEPS as |step index|}}
-              <button
-                type="button"
-                class="design-wizard__step-dot
-                  {{if (eq step this.currentStep) '--active'}}"
-                aria-label={{this.goToStepLabel index}}
-                aria-current={{if (eq step this.currentStep) "true"}}
-                disabled={{this.busy}}
-                {{on "click" (fn this.goToStep index)}}
-              ></button>
-            {{/each}}
-          </div>
-          <DButton
-            @action={{this.back}}
-            @label="design_wizard.back"
-            @disabled={{if this.busy true this.isFirstStep}}
-            class="btn-flat design-wizard__back"
-          />
-          {{#if this.isLastStep}}
-            <DButton
-              @action={{this.save}}
-              @label="design_wizard.save"
-              @isLoading={{this.designWizard.saving}}
+      <div class="design-wizard__sections">
+        {{#if (eq this.currentStep "theme")}}
+          <Section @type="theme">
+            <ThemeSection
+              @applying={{this.busy}}
+              @currentTheme={{this.designWizard.data.current_theme}}
+              @onSelect={{this.selectTheme}}
+              @selectedThemeId={{this.designWizard.themeId}}
+              @themes={{this.designWizard.data.themes}}
+            />
+          </Section>
+        {{else if (eq this.currentStep "colors")}}
+          <Section @title={{i18n "design_wizard.sections.logo"}} @type="logo">
+            <LogoSection
               @disabled={{this.busy}}
-              class="btn-primary design-wizard__save"
+              @logoUrl={{this.designWizard.logo}}
+              @onRemove={{this.removeLogo}}
+              @onUpload={{this.uploadLogo}}
             />
-          {{else}}
-            <DButton
-              @action={{this.next}}
-              @label="design_wizard.next"
-              @isLoading={{this.designWizard.saving}}
-              @disabled={{if this.busy true this.needsThemeChoice}}
-              class="btn-primary design-wizard__next"
+          </Section>
+
+          <Section
+            @title={{i18n "design_wizard.sections.colors"}}
+            @type="colors"
+          >
+            <ColorsSection
+              @darkPairs={{this.designWizard.darkPairs}}
+              @lightPairs={{this.designWizard.lightPairs}}
+              @onSelectPalette={{this.selectPalette}}
+              @onSelectPaletteMode={{this.selectPaletteMode}}
+              @paletteMode={{this.designWizard.paletteMode}}
+              @selectedDarkKey={{this.designWizard.selectedDarkPair.key}}
+              @selectedLightKey={{this.designWizard.selectedLightPair.key}}
+              @showsDarkPalettes={{this.designWizard.showsDarkPalettes}}
+              @showsLightPalettes={{this.designWizard.showsLightPalettes}}
             />
-          {{/if}}
-        </footer>
-      {{/if}}
+          </Section>
+        {{else}}
+          <Section @title={{i18n "design_wizard.sections.fonts"}} @type="fonts">
+            <FontsSection
+              @bodyFont={{this.designWizard.bodyFont}}
+              @headingFont={{this.designWizard.headingFont}}
+              @onSelectBodyFont={{this.selectBodyFont}}
+              @onSelectHeadingFont={{this.selectHeadingFont}}
+            />
+          </Section>
+
+          <Section
+            @title={{i18n "design_wizard.sections.homepage"}}
+            @type="homepage"
+          >
+            <HomepageSection
+              @additionalHomepages={{this.designWizard.additionalHomepages}}
+              @categoryPageStyle={{this.designWizard.categoryPageStyle}}
+              @homepage={{this.designWizard.homepage}}
+              @onSelectCategoryPageStyle={{this.selectCategoryPageStyle}}
+              @onSelectHomepage={{this.selectHomepage}}
+              @themeId={{this.designWizard.themeId}}
+            />
+          </Section>
+        {{/if}}
+      </div>
+
+      <footer class="design-wizard__actions">
+        <div class="design-wizard__step-dots">
+          {{#each STEPS as |step index|}}
+            <button
+              aria-current={{if (eq step this.currentStep) "true"}}
+              aria-label={{this.goToStepLabel index}}
+              class="design-wizard__step-dot
+                {{if (eq step this.currentStep) '--active'}}"
+              disabled={{this.busy}}
+              type="button"
+              {{on "click" (fn this.goToStep index)}}
+            ></button>
+          {{/each}}
+        </div>
+        <DButton
+          class="btn-flat design-wizard__back"
+          @action={{this.back}}
+          @disabled={{if this.busy true this.isFirstStep}}
+          @label="design_wizard.back"
+        />
+        {{#if this.isLastStep}}
+          <DButton
+            class="btn-primary design-wizard__save"
+            @action={{this.save}}
+            @disabled={{this.busy}}
+            @isLoading={{this.designWizard.saving}}
+            @label="design_wizard.save"
+          />
+        {{else}}
+          <DButton
+            class="btn-primary design-wizard__next"
+            @action={{this.next}}
+            @disabled={{if this.busy true this.needsThemeChoice}}
+            @isLoading={{this.designWizard.saving}}
+            @label="design_wizard.next"
+          />
+        {{/if}}
+      </footer>
     </div>
   </template>
 }

@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ShowUserNotes from "../../components/show-user-notes";
-import { showUserNotes } from "../../lib/user-notes";
+import ShowUserNotes from "discourse/plugins/discourse-user-notes/discourse/components/show-user-notes";
+import { showUserNotes } from "discourse/plugins/discourse-user-notes/discourse/lib/user-notes";
 
 export default class AddUserNotesButton extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
@@ -29,8 +29,8 @@ export default class AddUserNotesButton extends Component {
 
   <template>
     <ShowUserNotes
-      @show={{this.showUserNotes}}
       @count={{this.userNotesCount}}
+      @show={{this.showUserNotes}}
     />
   </template>
 }

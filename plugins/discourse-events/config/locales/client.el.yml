@@ -33,7 +33,15 @@ el:
               label: ID Θέματος
     discourse_events:
       title: "Συμβάντα"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Εγγραφή"
       preferences:
+        reminders:
+          preferences:
+            notification: "Ειδοποίηση"
+            none: "Κανένα"
         all_events_description: "Όλες οι εκδηλώσεις του φόρουμ"
         my_events_description: "Εκδηλώσεις στις οποίες θα παραστείτε ή ενδιαφέρεστε"
       disable_holiday: "Απενεργοποίηση"
@@ -228,8 +236,13 @@ el:
     group_timezones:
       search: "Αναζήτηση..."
       group_availability: "Διαθεσιμότητα %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Θέματος"
     discourse_post_event:
       new_event: "Νέα εκδήλωση"
+      onebox:
+        all_day: "Όλη μέρα"
       notifications:
         before_event_reminder: "Μια εκδήλωση πρόκειται να ξεκινήσει"
         after_event_reminder: "Μια εκδήλωση έχει λήξει"
@@ -259,6 +272,9 @@ el:
       edit_event: "Επεξεργασία εκδήλωσης"
       export_event: "Εξαγωγή εκδήλωσης"
       created_by: "Δημιουργήθηκε από"
+      other_hosts:
+        one: "και %{count} ακόμα"
+        other: "και %{count} ακόμα"
       bulk_invite: "Μαζική πρόσκληση"
       close_event: "Κλείσιμο εκδήλωσης"
       open_event: "Άνοιγμα εκδήλωσης"
@@ -269,6 +285,7 @@ el:
         filter_placeholder: "Φιλτράρισμα χρηστών"
         remove_invitee: "Αφαίρεση προσκεκλημένου από τη λίστα"
         add_invitee: "Προσθήκη προσκεκλημένου στη λίστα"
+        this_event: "Αυτή η εκδήλωση"
       bulk_invite_modal:
         confirm: "επιβεβαίωση"
         text: "Ανέβασμα αρχείου CSV"
@@ -328,7 +345,6 @@ el:
               one: "%{count} χρήστης προσκλήθηκε"
               other: "%{count} χρήστες προσκλήθηκαν"
         event:
-          expired: "Έληξε"
           closed: "Κλειστή"
           full: "Πλήρης"
           status:
@@ -341,6 +357,8 @@ el:
             private:
               title: "Ιδιωτική"
               description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
+      recording_modal:
+        save: "Αποθήκευση"
       composer:
         name_placeholder: "Όνομα εκδήλωσης"
         end_date_placeholder: "Ημερομηνία λήξης"

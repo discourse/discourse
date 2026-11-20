@@ -26,7 +26,7 @@ RSpec.describe ImportExport::Importer do
     end
 
     context "with categories and groups" do
-      it "works" do
+      it "imports categories, their topics, and groups without adding users" do
         data = import_data.dup
         data[:topics] = nil
         data[:users] = nil

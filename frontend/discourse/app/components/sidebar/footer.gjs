@@ -41,21 +41,21 @@ export default class SidebarFooter extends Component {
 
           {{#if this.showManageSectionsButton}}
             <DButton
-              @icon="plus"
-              @action={{this.manageSections}}
-              @title="sidebar.sections.custom.add"
-              @ariaLabel="sidebar.sections.custom.add"
               class="btn-flat sidebar-footer-actions-button add-section"
+              @action={{this.manageSections}}
+              @ariaLabel="sidebar.sections.custom.add"
+              @icon="plus"
+              @title="sidebar.sections.custom.add"
             />
           {{/if}}
 
           {{#if this.site.desktopView}}
             <DButton
+              class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
               @action={{this.showKeyboardShortcuts}}
-              @title="keyboard_shortcuts_help.title"
               @ariaLabel="keyboard_shortcuts_help.title"
               @icon="keyboard"
-              class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
+              @title="keyboard_shortcuts_help.title"
             />
           {{/if}}
         </div>

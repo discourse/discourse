@@ -4,7 +4,17 @@ module DiscourseAi::ChatBotHelper
   def toggle_enabled_bots(bots: [])
     SiteSetting.ai_bot_enabled = true if bots.any?
     SiteSetting.ai_bot_enabled_llms = bots.map(&:id).join("|")
-    DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
+  end
+
+  def prepare_ai_bot_fixtures(bots:)
+    SiteSetting.provider.save(:discourse_ai_enabled, "t", SiteSetting.types[:bool])
+    SiteSetting.provider.save(:ai_bot_enabled, "t", SiteSetting.types[:bool])
+    SiteSetting.provider.save(
+      :ai_bot_enabled_llms,
+      bots.map(&:id).join("|"),
+      SiteSetting.types[:list],
+    )
+    SiteSetting.refresh!
   end
 
   def assign_fake_provider_to(setting_name)
@@ -22,6 +32,22 @@ module DiscourseAi::ChatBotHelper
   def enable_legacy_discover
     SiteSetting.provider.save(:ai_discover_enabled, "t", SiteSetting.types[:bool])
     SiteSetting.refresh!
+  end
+end
+
+RSpec.shared_context "with AI bot enabled" do
+  # Provision the built-in agents' users once, inside the group's transaction.
+  # Per-example activation still provisions any agents created by the example's fixtures.
+  if respond_to?(:before_all)
+    before_all do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.ai_bot_enabled = true
+    end
+  end
+
+  before do
+    SiteSetting.discourse_ai_enabled = true
+    SiteSetting.ai_bot_enabled = true
   end
 end
 

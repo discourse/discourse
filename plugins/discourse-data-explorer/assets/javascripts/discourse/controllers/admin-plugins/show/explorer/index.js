@@ -8,33 +8,236 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import getURL from "discourse/lib/get-url";
+import { applyQueryParams } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import { findQueries } from "discourse/plugins/discourse-data-explorer/discourse/data/builders/queries";
 
 export default class PluginsExplorerController extends Controller {
   @service dialog;
   @service router;
   @service store;
+  @service toasts;
+  @service warpStore;
 
   @tracked sortByProperty = "last_run_at";
   @tracked sortDescending = true;
-  @tracked params;
   @tracked loading = false;
   @tracked searchLoading = false;
+  @tracked queryTags = [];
+  @tracked tags = "";
+  @tracked pages = [];
+  @tracked loadingMore = false;
+  @tracked deletedQueryIds = [];
 
-  queryParams = ["id"];
-  explain = false;
+  queryParams = ["id", "tags"];
   acceptedImportFileTypes = ["application/json"];
-  order = null;
-  form = null;
+  #latestQueryRequest;
   _currentFilter = "";
 
-  get parsedParams() {
-    return this.params ? JSON.parse(this.params) : null;
+  get fetchParams() {
+    return {
+      search: this._currentFilter,
+      tags: this.currentTags,
+      sort: this.sortByProperty,
+      descending: this.sortDescending,
+    };
   }
 
-  addCreatedRecord(record) {
-    this.model.content.push(record);
-    this.router.transitionTo("adminPlugins.show.explorer.edit", record.id);
+  get queries() {
+    return this.pages
+      .flatMap((page) => page.data)
+      .filter((query) => !this.deletedQueryIds.includes(query.id));
+  }
+
+  get canLoadMore() {
+    return !!this.pages.at(-1)?.links?.next;
+  }
+
+  get hasTagFilter() {
+    return this.currentTags.length > 0;
+  }
+
+  get currentTags() {
+    return this.tags ? this.tags.split(",") : [];
+  }
+
+  get textFilter() {
+    return this._currentFilter;
+  }
+
+  get tagSelection() {
+    return this.currentTags.map((tag) => ({ id: tag, name: tag }));
+  }
+
+  reset(document, queryTags) {
+    this.#latestQueryRequest = null;
+    this.searchLoading = false;
+    this.pages = [document];
+    this.queryTags = queryTags;
+  }
+
+  @bind
+  scrollTop() {
+    window.scrollTo(0, 0);
+  }
+
+  @action
+  async import(files) {
+    try {
+      this.loading = true;
+      const file = files[0];
+      const record = await this._importQuery(file);
+      this.router.transitionTo("adminPlugins.show.explorer.edit", record.id);
+    } catch (e) {
+      if (e.jqXHR) {
+        popupAjaxError(e);
+      } else if (e instanceof SyntaxError) {
+        this.dialog.alert(i18n("explorer.import.unparseable_json"));
+      } else if (e instanceof TypeError) {
+        this.dialog.alert(i18n("explorer.import.wrong_json"));
+      } else {
+        this.dialog.alert(i18n("errors.desc.unknown"));
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  @action
+  async toggleDashboard(query, closeMenu) {
+    await closeMenu();
+
+    const mounted = query.dashboardMounted;
+    try {
+      await ajax("/admin/dashboard/reports/mount", {
+        type: mounted ? "DELETE" : "POST",
+        data: { source: "data_explorer_query", identifier: String(query.id) },
+      });
+      query.dashboardMounted = !mounted;
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n(
+            mounted ? "explorer.dashboard.removed" : "explorer.dashboard.added"
+          ),
+        },
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  async deleteQuery(query, closeMenu) {
+    await closeMenu();
+
+    this.dialog.deleteConfirm({
+      message: i18n("explorer.delete_confirm"),
+      didConfirm: async () => {
+        try {
+          await ajax(
+            `/admin/plugins/discourse-data-explorer/queries/${query.id}`,
+            { type: "DELETE" }
+          );
+          this.deletedQueryIds = [...this.deletedQueryIds, query.id];
+          this.toasts.success({
+            duration: "short",
+            data: { message: i18n("explorer.delete_success") },
+          });
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
+  }
+
+  @action
+  onTextFilterChange(event) {
+    this._currentFilter = event.target?.value || "";
+    this.#latestQueryRequest = null;
+    this.searchLoading = true;
+    discourseDebounce(this, this._fetchQueries, INPUT_DELAY);
+  }
+
+  @action
+  async loadTags(searchTerm) {
+    const term = (searchTerm || "").toLowerCase();
+    return this.queryTags
+      .filter((tag) => tag.toLowerCase().includes(term))
+      .map((tag) => ({ id: tag, name: tag }));
+  }
+
+  @action
+  onTagFilterChange(selection) {
+    this.tags = selection.map((tag) => tag.name).join(",");
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
+  addTagFilter(tagName, event) {
+    event?.preventDefault();
+
+    if (this.currentTags.includes(tagName)) {
+      return;
+    }
+
+    this.tags = [...this.currentTags, tagName].join(",");
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
+  tagFilterHref(tagName) {
+    return getURL(
+      applyQueryParams(this.router.urlFor("adminPlugins.show.explorer.index"), {
+        tags: tagName,
+      })
+    );
+  }
+
+  @action
+  onResetFilters() {
+    this._currentFilter = "";
+    this.tags = "";
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
+  updateSortProperty(property) {
+    if (this.sortByProperty === property) {
+      this.sortDescending = !this.sortDescending;
+    } else {
+      this.sortByProperty = property;
+      this.sortDescending = true;
+    }
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
+  async loadMore() {
+    if (this.loadingMore || !this.canLoadMore) {
+      return;
+    }
+
+    const last = this.pages.at(-1);
+    this.loadingMore = true;
+    try {
+      const page = await last.next();
+      // Drop the page if the list was replaced meanwhile.
+      if (this.pages.at(-1) === last) {
+        this.pages = [...this.pages, page];
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingMore = false;
+    }
   }
 
   async _importQuery(file) {
@@ -67,119 +270,25 @@ export default class PluginsExplorerController extends Controller {
     });
   }
 
-  @bind
-  scrollTop() {
-    window.scrollTo(0, 0);
-  }
+  async _fetchQueries() {
+    const request = (this.#latestQueryRequest = {});
 
-  @action
-  async import(files) {
     try {
-      this.loading = true;
-      const file = files[0];
-      const record = await this._importQuery(file);
-      this.addCreatedRecord(record);
+      const { content } = await this.warpStore.request(
+        findQueries(this.fetchParams)
+      );
+
+      if (request === this.#latestQueryRequest) {
+        this.pages = [content];
+      }
     } catch (e) {
-      if (e.jqXHR) {
+      if (request === this.#latestQueryRequest) {
         popupAjaxError(e);
-      } else if (e instanceof SyntaxError) {
-        this.dialog.alert(i18n("explorer.import.unparseable_json"));
-      } else if (e instanceof TypeError) {
-        this.dialog.alert(i18n("explorer.import.wrong_json"));
-      } else {
-        this.dialog.alert(i18n("errors.desc.unknown"));
-        // eslint-disable-next-line no-console
-        console.error(e);
       }
     } finally {
-      this.loading = false;
+      if (request === this.#latestQueryRequest) {
+        this.searchLoading = false;
+      }
     }
-  }
-
-  @action
-  onTextFilterChange(event) {
-    this._currentFilter = event.target?.value || "";
-    this.searchLoading = true;
-    discourseDebounce(this, this._fetchQueries, INPUT_DELAY);
-  }
-
-  @action
-  onResetFilters() {
-    this._currentFilter = "";
-    this.searchLoading = true;
-    this._fetchQueries();
-  }
-
-  @action
-  updateSortProperty(property) {
-    if (this.sortByProperty === property) {
-      this.sortDescending = !this.sortDescending;
-    } else {
-      this.sortByProperty = property;
-      this.sortDescending = true;
-    }
-    this.searchLoading = true;
-    this._fetchQueries();
-  }
-
-  @action
-  async loadMore() {
-    const loadedMore = await this.model?.loadMore();
-    if (loadedMore) {
-      this._setGroupNames(this.model.content);
-    }
-  }
-
-  get _fetchParams() {
-    const params = {};
-    if (this._currentFilter) {
-      params.filter = this._currentFilter;
-    }
-    if (this.sortByProperty !== "last_run_at") {
-      params.order = this.sortByProperty;
-    }
-    if (!this.sortDescending) {
-      params.ascending = "true";
-    }
-    return params;
-  }
-
-  async _fetchQueries() {
-    try {
-      const result = await ajax(
-        "/admin/plugins/discourse-data-explorer/queries.json",
-        { data: this._fetchParams }
-      );
-
-      const queries = result.queries.map((q) =>
-        this.store.createRecord("query", q)
-      );
-
-      this.model.content.splice(0, this.model.content.length, ...queries);
-      this.model.totalRows = result.total_rows_queries || queries.length;
-      this.model.loadMoreUrl = result.load_more_queries || null;
-
-      this._setGroupNames(queries);
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.searchLoading = false;
-    }
-  }
-
-  _setGroupNames(queries) {
-    if (!this.groups) {
-      return;
-    }
-    const groupNames = {};
-    this.groups.forEach((g) => {
-      groupNames[g.id] = g.name;
-    });
-    queries.forEach((query) => {
-      query.set(
-        "group_names",
-        (query.group_ids || []).map((id) => groupNames[id])
-      );
-    });
   }
 }

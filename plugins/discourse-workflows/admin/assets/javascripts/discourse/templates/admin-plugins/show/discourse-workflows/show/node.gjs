@@ -2,7 +2,7 @@ import WorkflowsEditor from "discourse/plugins/discourse-workflows/admin/compone
 
 export default <template>
   <WorkflowsEditor
-    @workflow={{@controller.model.workflow}}
     @initialNodeId={{@controller.model.initialNodeId}}
+    @workflow={{@controller.model.workflow}}
   />
 </template>

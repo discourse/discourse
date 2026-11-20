@@ -83,6 +83,19 @@ export function setup(helper) {
 
 ## Discourse specific extensions
 
+### Generating hashtag references in Ruby
+
+Use `HashtagAutocompleteService#hashtags_for` to build references for generated Markdown:
+
+```ruby
+HashtagAutocompleteService.new(user.guardian).hashtags_for("tag", ["bug", "support"]).join(" ")
+```
+
+If a visible category has the slug `bug`, the result is `#bug::tag #support`.
+Pass names already filtered for the viewer's visibility. Order and case are
+preserved, collisions are checked against higher-priority types, and a name the
+hashtag rule cannot match falls back to plain text.
+
 ### BBCode
 
 Discourse contains 2 rulers you can use for custom BBCode tags. An inline and block level ruler.

@@ -9,13 +9,13 @@ const UpcomingChangeBadge = <template>
   <span
     class={{dConcatClass
       "d-table-badge upcoming-change__badge"
-      "--has-tooltip"
+      (if @hasTooltip "--has-tooltip")
       @badgeClass
     }}
   >
     <span class="d-table-badge__content upcoming-change__badge-content">
       {{dIcon @icon}}
-      {{i18n @badgeLabelKey}}
+      {{if @label @label (i18n @badgeLabelKey)}}
     </span>
     {{yield}}
   </span>
@@ -57,12 +57,13 @@ export default class UpcomingChangeBadges extends Component {
       >
         <:trigger>
           <UpcomingChangeBadge
-            @icon="flask"
             @badgeClass={{concat "--status-" @upcomingChange.status}}
             @badgeLabelKey={{concat
               "admin.upcoming_changes.statuses."
               @upcomingChange.status
             }}
+            @hasTooltip={{true}}
+            @icon="flask"
           >
 
             <span class="d-table-badge__info upcoming-change__badge-info">
@@ -73,23 +74,31 @@ export default class UpcomingChangeBadges extends Component {
       </DTooltip>
 
       <UpcomingChangeBadge
-        @icon={{this.impactRoleIcon @upcomingChange.impact_role}}
         @badgeClass={{concat "--impact-role-" @upcomingChange.impact_role}}
         @badgeLabelKey={{concat
           "admin.upcoming_changes.impact_roles."
           @upcomingChange.impact_role
         }}
+        @icon={{this.impactRoleIcon @upcomingChange.impact_role}}
       />
 
       <UpcomingChangeBadge
-        @icon={{this.impactTypeIcon @upcomingChange.impact_type}}
         @badgeClass={{concat "--impact-type-" @upcomingChange.impact_type}}
         @badgeLabelKey={{concat
           "admin.upcoming_changes.impact_types."
           @upcomingChange.impact_type
           "_type"
         }}
+        @icon={{this.impactTypeIcon @upcomingChange.impact_type}}
       />
+
+      {{#if @plugin}}
+        <UpcomingChangeBadge
+          @badgeClass="--plugin upcoming-change__plugin"
+          @icon="plug"
+          @label={{@plugin}}
+        />
+      {{/if}}
     </div>
   </template>
 }

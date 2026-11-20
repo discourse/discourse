@@ -3,7 +3,7 @@ import { trustHTML } from "@ember/template";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 import { isCollapsible } from "discourse/plugins/chat/discourse/components/chat-message-collapser";
-import ChatMessageCollapser from "./chat-message-collapser";
+import ChatMessageCollapser from "./chat-message-collapser.gjs";
 
 export default class ChatMessageText extends Component {
   get isEdited() {
@@ -20,14 +20,14 @@ export default class ChatMessageText extends Component {
         <ChatMessageCollapser
           @cooked={{@cooked}}
           @decorate={{@decorate}}
-          @uploads={{@uploads}}
           @onToggleCollapse={{@onToggleCollapse}}
+          @uploads={{@uploads}}
         />
       {{else}}
         <DDecoratedHtml
-          @html={{trustHTML @cooked}}
-          @decorate={{@decorate}}
           @className="chat-cooked"
+          @decorate={{@decorate}}
+          @html={{trustHTML @cooked}}
         />
       {{/if}}
 

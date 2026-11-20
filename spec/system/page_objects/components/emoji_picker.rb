@@ -12,7 +12,9 @@ module PageObjects
       end
 
       def search_emoji(emoji_name)
-        find(".emoji-picker .filter-input").fill_in(with: emoji_name)
+        # `fill_in` types the last character as a separate input event; when the two
+        # land a debounce apart, results for the partial term render and are then replaced
+        locator(".emoji-picker .filter-input").fill(emoji_name)
       end
 
       def has_emoji?(emoji_name)

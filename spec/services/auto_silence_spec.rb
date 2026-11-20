@@ -150,7 +150,7 @@ RSpec.describe SpamRule::AutoSilence do
     let(:post2) { Fabricate(:post, user: user) }
 
     context "with higher trust levels or staff" do
-      it "should not autosilence any of them" do
+      it "does not automatically silence any users" do
         PostActionCreator.spam(flagger, post)
         PostActionCreator.spam(flagger2, post)
 

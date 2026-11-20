@@ -1,0 +1,16 @@
+<aside class="onebox live-room-onebox">
+  <article class="onebox-body live-room-onebox__body">
+    <h3 class="live-room-onebox__title">
+      <a href="{{url}}">
+        <svg class="fa d-icon d-icon-{{icon}} svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+          <use href="#{{icon}}"></use>
+        </svg>
+        <span class="live-room-onebox__name">{{name}}</span>
+      </a>
+    </h3>
+    <div class="live-room-onebox__type">{{room_type_label}}</div>
+    {{#description}}
+      <div class="live-room-onebox__description">{{{description}}}</div>
+    {{/description}}
+  </article>
+</aside>

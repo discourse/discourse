@@ -17,21 +17,21 @@ export default <template>
         }}</label>
 
       <PreferenceCheckbox
-        @labelKey="user.experimental_sidebar.link_to_filtered_list_checkbox_description"
-        @checked={{@controller.newSidebarLinkToFilteredList}}
         class="pref-link-to-filtered-list"
+        @checked={{@controller.newSidebarLinkToFilteredList}}
+        @labelKey="user.experimental_sidebar.link_to_filtered_list_checkbox_description"
       />
       <PreferenceCheckbox
-        @labelKey="user.experimental_sidebar.show_count_new_items_checkbox_description"
-        @checked={{@controller.newSidebarShowCountOfNewItems}}
         class="pref-show-count-new-items"
+        @checked={{@controller.newSidebarShowCountOfNewItems}}
+        @labelKey="user.experimental_sidebar.show_count_new_items_checkbox_description"
       />
     </div>
   </div>
 
   <DSaveControls
-    @model={{@controller.model}}
     @action={{@controller.save}}
+    @model={{@controller.model}}
     @saved={{@controller.saved}}
   />
 </template>

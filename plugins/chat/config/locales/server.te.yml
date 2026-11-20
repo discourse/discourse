@@ -7,6 +7,10 @@
 te:
   chat:
     deleted_chat_username: తొలగించారు
+    crawler:
+      thread_replies:
+        one: "%{count} ప్రత్యుత్తరం"
+        other: "%{count} ప్రత్యుత్తరాలు"
     reviewables:
       actions:
         no_action_message:

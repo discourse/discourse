@@ -24,6 +24,10 @@ it:
         remove: "Rimuovi questo \"Mi piace\""
         cant_remove: "Non puoi più rimuovere il tuo Mi piace"
         unauthenticated: "Registrati o accedi per mettere mi piace a questo post"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Aggiunta"
+        changes_removed: "Rimosso"
     notifications:
       reaction_1_user_multiple_posts:
         one: "ha reagito a %{count} tuo messaggio"

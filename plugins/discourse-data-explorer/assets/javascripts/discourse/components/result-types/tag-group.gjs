@@ -1,11 +1,5 @@
 const Group = <template>
-  {{#if @ctx.tag_group}}
-    <a
-      href="{{@ctx.baseuri}}/tag_groups/{{@ctx.id}}"
-    >{{@ctx.tag_group.name}}</a>
-  {{else}}
-    {{@ctx.id}}
-  {{/if}}
+  <a href="{{@ctx.baseuri}}/tag_groups/{{@ctx.id}}">{{@ctx.tag_group.name}}</a>
 </template>;
 
 export default Group;

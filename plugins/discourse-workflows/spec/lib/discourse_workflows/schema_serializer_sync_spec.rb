@@ -35,8 +35,9 @@ RSpec.describe DiscourseWorkflows::Schema do
     ]
   end
 
-  def serialized_keys(serializer_class, object)
-    MultiJson.load(serializer_class.new(object, scope: guardian, root: false).to_json).keys
+  def serialized_keys(serializer_class, object, **options)
+    serializer = serializer_class.new(object, scope: guardian, root: false, **options)
+    MultiJson.load(serializer.to_json).keys
   end
 
   def expect_ledger(declared, emitted, unemitted: [], undeclared: [])
@@ -53,24 +54,11 @@ RSpec.describe DiscourseWorkflows::Schema do
     )
   end
 
-  it "matches BasicUserSerializer" do
-    expect_ledger(
-      described_class::BASIC_USER_PROPERTIES,
-      serialized_keys(BasicUserSerializer, user),
-    )
-  end
-
   it "matches DiscourseWorkflows::PostSerializer" do
     expect_ledger(
       described_class::POST_PROPERTIES,
-      serialized_keys(DiscourseWorkflows::PostSerializer, post),
-      unemitted: %w[
-        cooked
-        cooked_truncated
-        cooked_original_length
-        raw_truncated
-        raw_original_length
-      ],
+      serialized_keys(DiscourseWorkflows::PostSerializer, post, include_cooked: true),
+      unemitted: %w[cooked_truncated cooked_original_length raw_truncated raw_original_length],
     )
   end
 
@@ -87,7 +75,7 @@ RSpec.describe DiscourseWorkflows::Schema do
     expect_ledger(
       described_class::TOPIC_PROPERTIES,
       serialized_keys(DiscourseWorkflows::TopicListItemSerializer, post.topic),
-      unemitted: %w[first_post_id visibility_reason_id],
+      unemitted: %w[visibility_reason_id],
       undeclared: topic_undeclared,
     )
   end

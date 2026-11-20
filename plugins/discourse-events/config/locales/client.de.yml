@@ -40,11 +40,17 @@ de:
           load_error: "Du hast das Webinar verlassen oder wir können Zoom auf dieser Seite nicht laden."
           too_early: "Du kannst dem Webinar kurz vor Beginn des Ereignisses beitreten"
           view_topic: "Thema des Ereignisses anzeigen"
+          guest_prompt:
+            register: "Registrieren"
         chat:
           rsvp_to_event: "Melde dich für das Ereignis an, um mit dem Chatten zu beginnen"
           rsvp_to_event_with_link: "Melde dich bei <a href='%{url}'>dem Ereignis</a> an, um mit dem Chatten zu beginnen"
           rsvp_body: "Tausch dich vor, während und nach dem Ereignis mit anderen Teilnehmern aus."
       preferences:
+        reminders:
+          preferences:
+            notification: "Benachrichtigung"
+            none: "Keine Erfassung"
         all_events_description: "Alle Forum-Ereignisse"
         my_events_description: "Ereignisse, die du besuchst oder an denen du interessiert bist"
       on_holiday: "Im Urlaub"
@@ -342,8 +348,13 @@ de:
     group_timezones:
       search: "Suche …"
       group_availability: "%{group} Verfügbarkeit"
+    discourse_workflows:
+      post_event:
+        topic_id: "Themen-ID"
     discourse_post_event:
       new_event: "Neues Ereignis"
+      onebox:
+        all_day: "Ganztägig"
       notifications:
         before_event_reminder: "Ein Ereignis beginnt in Kürze"
         after_event_reminder: "Ein Ereignis wurde beendet"
@@ -373,6 +384,9 @@ de:
       edit_event: "Ereignis bearbeiten"
       export_event: "Ereignis exportieren"
       created_by: "Erstellt von"
+      other_hosts:
+        one: "und %{count} andere Person"
+        other: "und %{count} andere"
       bulk_invite: "Masseneinladung"
       close_event: "Ereignis beenden"
       open_event: "Ereignis öffnen"
@@ -383,6 +397,7 @@ de:
         filter_placeholder: "Benutzer filtern"
         remove_invitee: "Eingeladene Person aus der Liste entfernen"
         add_invitee: "Eingeladene Person zur Liste hinzufügen"
+        this_event: "Dieser Termin"
       bulk_invite_modal:
         confirm: "bestätigen"
         text: "CSV-Datei hochladen"
@@ -443,7 +458,6 @@ de:
               one: "%{count} Benutzer eingeladen"
               other: "%{count} Benutzer eingeladen"
         event:
-          expired: "Abgelaufen"
           closed: "Geschlossen"
           full: "Voll"
           status:
@@ -456,6 +470,8 @@ de:
             private:
               title: "Privat"
               description: "An einem privaten Ereignis können nur eingeladene Benutzer teilnehmen."
+      recording_modal:
+        save: "Speichern"
       composer:
         name_placeholder: "Name des Ereignisses"
         end_date_placeholder: "Enddatum"
@@ -587,6 +603,8 @@ de:
           placeholder: "Optional, standardmäßig Titel des Themas"
         invitees:
           label: "Eingeladene Gruppen"
+        hosts:
+          label: "Hosts"
         event_type:
           label: "Art der Teilnahme"
           public:

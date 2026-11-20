@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::OnboardingEventsController < Admin::AdminController
-  STEPS = %w[select_theme invite_collaborators start_posting].freeze
+  STEPS = UserHistory::ADMIN_ONBOARDING_STEPS
 
   def create
     logger = StaffActionLogger.new(current_user)

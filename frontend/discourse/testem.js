@@ -1,22 +1,56 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
 const fs = require("fs");
+const path = require("path");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
+const {
+  buildReport,
+  renderReportSummary,
+} = require("./lib/deprecation-report");
 
 require("./patch-testem-output")();
 require("./patch-testem-browser-watchdog")();
 
-const SANDBOX_DISABLE_VALUES = ["1", "true"];
-const sandboxDisabled =
-  process.env.CI ||
-  SANDBOX_DISABLE_VALUES.includes(
-    (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
-  );
+const browser = process.env.TESTEM_DEFAULT_BROWSER || "Chrome";
+
+function playwrightChromiumPath() {
+  const executable = require("playwright-core").chromium.executablePath();
+  if (!fs.existsSync(executable)) {
+    throw new Error(
+      "Playwright's Chromium isn't installed. Run `pnpm playwright-install` and try again."
+    );
+  }
+  return executable;
+}
+
+const REPO_ROOT = path.resolve(__dirname, "..", "..");
+
+/**
+ * Label identifying which CI run group produced a report, so the artifacts of a
+ * single workflow run stay distinguishable.
+ *
+ * @returns {string}
+ */
+function deprecationReportGroup() {
+  const explicit = process.env.DEPRECATION_REPORT_GROUP;
+  if (explicit) {
+    return explicit.replace(/[^\w.-]+/g, "-");
+  }
+
+  if (process.env.THEME_TEST_PAGES) {
+    return "frontend-themes";
+  } else if (process.env.PLUGIN_TARGETS) {
+    return "frontend-plugins";
+  }
+
+  return "frontend-core";
+}
 
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
   deprecationCountsByOrigin = new Map();
+  deprecationDetails = new Map();
 
   constructor() {
     super(...arguments);
@@ -45,6 +79,17 @@ class Reporter extends TapReporter {
       const originMap = this.deprecationCountsByOrigin.get(originKey);
       const originCount = originMap.get(id) || 0;
       originMap.set(id, originCount + 1);
+    } else if (tag === "deprecation-details") {
+      // Entries are reported when first seen and re-reported when their count
+      // grows, so the highest count wins.
+      for (const detail of metadata.details || []) {
+        const existing = this.deprecationDetails.get(detail.key);
+        if (!existing) {
+          this.deprecationDetails.set(detail.key, detail);
+        } else if (detail.count > existing.count) {
+          existing.count = detail.count;
+        }
+      }
     } else if (tag === "summary-line") {
       this.out.write(`\n${metadata.message}\n`);
     } else {
@@ -128,108 +173,74 @@ class Reporter extends TapReporter {
     }
   }
 
-  generateDeprecationTable() {
-    const maxIdLength = Math.max(
-      ...Array.from(this.deprecationCounts.keys()).map((k) => k.length)
-    );
-
-    let msg = this.buildTableHeader(["id", "count"], [maxIdLength, 5]);
-
-    for (const [id, count] of this.deprecationCounts.entries()) {
-      const countString = count.toString();
-      msg += `| ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
-    }
-
-    return msg;
-  }
-
-  generateDeprecationsByOriginTable() {
-    const allDeprecationIds = this.collectAllDeprecationIds();
-    const maxIdLength = Math.max(
-      ...Array.from(allDeprecationIds).map((id) => id.length)
-    );
-    const origins = Array.from(this.deprecationCountsByOrigin.keys()).sort();
-    const maxOriginLength = Math.max(...origins.map((o) => o.length), 6);
-
-    let msg = this.buildTableHeader(
-      ["origin", "id", "count"],
-      [maxOriginLength, maxIdLength, 5]
-    );
-
-    for (const origin of origins) {
-      const originMap = this.deprecationCountsByOrigin.get(origin);
-      const sortedIds = Array.from(originMap.keys()).sort();
-
-      for (const id of sortedIds) {
-        const count = originMap.get(id);
-        const countString = count.toString();
-        msg += `| ${origin.padEnd(maxOriginLength)} | ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
-      }
-    }
-
-    return msg;
-  }
-
-  collectAllDeprecationIds() {
-    const allIds = new Set();
-    for (const originMap of this.deprecationCountsByOrigin.values()) {
-      for (const id of originMap.keys()) {
-        allIds.add(id);
-      }
-    }
-    return allIds;
-  }
-
-  buildTableHeader(columnNames, columnWidths) {
-    let header = "| ";
-    let separator = "| ";
-
-    for (let i = 0; i < columnNames.length; i++) {
-      const name = columnNames[i];
-      const width = columnWidths[i];
-      header += `${name.padEnd(width)} | `;
-      separator += `${"".padEnd(width, "-")} | `;
-    }
-
-    return header + "\n" + separator + "\n";
-  }
-
   reportDeprecations() {
-    if (this.deprecationCounts.size === 0) {
+    if (
+      this.deprecationCounts.size === 0 &&
+      this.deprecationDetails.size === 0
+    ) {
       this.out.write("\n[Deprecation Counter] No deprecations logged\n\n");
       return;
     }
 
-    const table = this.generateDeprecationTable();
-    let deprecationMessage =
-      "[Deprecation Counter] Test run completed with deprecations:\n\n" + table;
-
-    let originTable = null;
-    if (this.deprecationCountsByOrigin.size > 0) {
-      originTable = this.generateDeprecationsByOriginTable();
-      deprecationMessage += "\nDeprecations by test origin:\n\n" + originTable;
-    }
-
-    this.writeGitHubSummary(table, originTable);
-    this.out.write(`\n${deprecationMessage}\n\n`);
-  }
-
-  writeGitHubSummary(table, originTable) {
-    if (!process.env.GITHUB_ACTIONS || !process.env.GITHUB_STEP_SUMMARY) {
+    const report = this.writeDeprecationReport();
+    if (!report) {
       return;
     }
 
-    let jobSummary =
-      "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n";
-    jobSummary += table;
+    this.out.write(
+      `\n${renderReportSummary(report.document, {
+        reportLocation: `\`${report.path}\``,
+      })}\n`
+    );
 
-    if (originTable) {
-      jobSummary += "\n\nDeprecations by test origin:\n\n" + originTable;
+    if (process.env.GITHUB_ACTIONS && process.env.GITHUB_STEP_SUMMARY) {
+      fs.appendFileSync(
+        process.env.GITHUB_STEP_SUMMARY,
+        `${renderReportSummary(report.document, {
+          reportLocation: "the `js-deprecation-report` artifact",
+        })}\n`
+      );
+    }
+  }
+
+  /**
+   * Writes the machine-readable report which pairs every deprecation with the
+   * spec that triggered it and the source location it came from.
+   *
+   * @returns {?{path: string, document: Object}}
+   */
+  writeDeprecationReport() {
+    const group = deprecationReportGroup();
+    const dir =
+      process.env.DEPRECATION_REPORT_DIR ||
+      path.join(REPO_ROOT, "tmp", "deprecation-reports");
+
+    let document;
+    try {
+      document = buildReport({
+        group,
+        entries: Array.from(this.deprecationDetails.values()),
+        totals: Object.fromEntries(this.deprecationCounts),
+        totalsByOrigin: Object.fromEntries(
+          Array.from(this.deprecationCountsByOrigin, ([origin, counts]) => [
+            origin,
+            Object.fromEntries(counts),
+          ])
+        ),
+      });
+    } catch (error) {
+      this.out.write(
+        `\n[Deprecation Counter] Failed to build detailed report: ${error}\n`
+      );
+      return null;
     }
 
-    jobSummary += "\n\n";
+    fs.mkdirSync(dir, { recursive: true });
 
-    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
+    const file = path.join(dir, `${group}-${process.pid}.json`);
+    fs.writeFileSync(file, `${JSON.stringify(document, null, 2)}\n`);
+
+    return { path: path.relative(REPO_ROOT, file), document };
   }
 
   finish() {
@@ -259,7 +270,7 @@ class Reporter extends TapReporter {
 module.exports = {
   test_page: "tests?hidepassed",
   disable_watching: true,
-  launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
+  launch_in_ci: [browser],
   tap_failed_tests_only: false,
   parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
   socket_server_options: {
@@ -272,29 +283,15 @@ module.exports = {
   browser_disconnect_timeout: 30,
   chrome_stderr_info_only: true,
   browser_args: {
-    Chromium: [
-      // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
-      sandboxDisabled ? "--no-sandbox" : null,
-      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
-      "--disable-dev-shm-usage",
-      "--disable-software-rasterizer",
-      "--disable-search-engine-choice-screen",
-      "--mute-audio",
-      `--remote-debugging-port=${process.env.CI ? 0 : 3001}`,
-      "--window-size=1440,900",
-      "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
-      "--disable-background-networking",
-    ].filter(Boolean),
     Chrome: [
-      // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
-      sandboxDisabled ? "--no-sandbox" : null,
+      // Playwright also launches Chromium without the sandbox, which containers need
+      "--no-sandbox",
       process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      `--remote-debugging-port=${process.env.CI ? 0 : 3001}`,
+      "--remote-debugging-port=0",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
@@ -304,6 +301,10 @@ module.exports = {
   },
   reporter: Reporter,
 };
+
+if (browser === "Chrome") {
+  module.exports.browser_paths = { Chrome: playwrightChromiumPath() };
+}
 
 if (process.env.TESTEM_FIREFOX_PATH) {
   module.exports.browser_paths ||= {};

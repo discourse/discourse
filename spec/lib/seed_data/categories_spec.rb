@@ -52,7 +52,7 @@ RSpec.describe SeedData::Categories do
       it "overwrites permissions when permissions are forced" do
         category = Category.last
         category.set_permissions(everyone: :full)
-        category.save!
+        category.save!(validate: false)
 
         expect(category.category_groups.count).to eq(0)
 
@@ -66,7 +66,7 @@ RSpec.describe SeedData::Categories do
       it "overwrites permissions even when subcategory has less restrictive permissions" do
         category = Category.last
         category.set_permissions(everyone: :full)
-        category.save!
+        category.save!(validate: false)
 
         group = Fabricate(:group)
 

@@ -36,11 +36,9 @@ RSpec.describe DiscourseAi::Agents::Tools::EditImage do
     )
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    toggle_enabled_bots(bots: [gpt_35_turbo])
-  end
+  include_context "with AI bot enabled"
+
+  before { toggle_enabled_bots(bots: [gpt_35_turbo]) }
 
   let(:image_upload) do
     UploadCreator.new(
@@ -49,7 +47,7 @@ RSpec.describe DiscourseAi::Agents::Tools::EditImage do
     ).create_for(user.id)
   end
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_35_turbo.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(gpt_35_turbo) }
   let(:progress_blk) { Proc.new {} }
 

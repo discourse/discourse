@@ -4,13 +4,10 @@ RSpec.describe DiscourseAi::Agents::Tools::SettingContext,
                if: system("which rg", out: File::NULL) do
   fab!(:llm_model)
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   describe "#execute" do
     it "returns the context for core setting" do

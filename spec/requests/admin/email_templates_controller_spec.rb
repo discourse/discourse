@@ -19,13 +19,25 @@ RSpec.describe Admin::EmailTemplatesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "should work if you are an admin" do
+      it "allows an administrator to update the template" do
         get "/admin/email/templates.json"
 
         expect(response.status).to eq(200)
 
         json = response.parsed_body
         expect(json["email_templates"]).to be_present
+      end
+
+      it "includes the password reset code template" do
+        get "/admin/email/templates.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["email_templates"]).to include(
+          a_hash_including(
+            "id" => "password_reset_code_mailer",
+            "interpolation_keys" => %w[code minutes site_name],
+          ),
+        )
       end
 
       it "returns overridden = true if subject or body has translation_overrides record" do

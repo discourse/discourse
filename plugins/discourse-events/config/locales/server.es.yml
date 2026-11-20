@@ -40,6 +40,8 @@ es:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Recordatorio de evento"
   site_settings:
     map_events_to_color: "Asigna un color a cada etiqueta o categoría."
     map_events_title: "Reemplaza «Eventos» en el título de la barra lateral «Próximos eventos» por categoría."
@@ -69,6 +71,15 @@ es:
     sidebar_show_upcoming_events: "Muestra el enlace de los próximos eventos en la barra lateral en «Más»."
     calendar_first_day_of_week: "Establece el primer día de la semana para la visualización del calendario. Las opciones son sábado, domingo o lunes."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} está a punto de comenzar"
+        ongoing: "%{title} está en curso"
+        after: "%{title} ha terminado"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  y %{count} otros"
+        other: "  y %{count} otros"
     category_type:
       default_calendar_view:
         day: "Día"
@@ -103,11 +114,9 @@ es:
           raw_invitees_length: "Un evento está limitado a %{count} usuarios / grupos."
           raw_invitees:
             only_group: "Un evento acepta solo nombres de grupos."
-          ends_at_before_starts_at: "Un evento no puede terminar antes de que comience."
           max_attendees_reached: "Este evento está completo."
           start_must_be_present_and_a_valid_date: "Un evento requiere una fecha de inicio válida."
           end_must_be_a_valid_date: "La fecha de finalización debe ser una fecha válida."
-          invalid_recurrence: "La recurrencia debe ser una de las siguientes: cada mes, cada semana, cada dos semanas, cada cuatro semanas, cada día, cada día de la semana."
           invalid_timezone: "Zona horaria no reconocida."
           acting_user_not_allowed_to_create_event: "El usuario actual no tiene permiso para crear eventos."
           acting_user_not_allowed_to_act_on_this_event: "El usuario actual no puede actuar en este evento."

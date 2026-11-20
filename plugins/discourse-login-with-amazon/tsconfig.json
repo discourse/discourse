@@ -5,15 +5,5 @@
     "admin/assets/javascripts/**/*",
     "assets/javascripts/**/*",
     "test/javascripts/**/*"
-  ],
-  "compilerOptions": {
-    "paths": {
-      "discourse/plugins/discourse-login-with-amazon/*": [
-        "./assets/javascripts/*"
-      ],
-      "discourse/plugins/discourse-login-with-amazon/admin/*": [
-        "./admin/assets/javascripts/admin/*"
-      ]
-    }
-  }
+  ]
 }

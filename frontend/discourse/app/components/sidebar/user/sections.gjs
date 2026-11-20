@@ -25,10 +25,10 @@ import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-dr
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import dDragDwell from "discourse/ui-kit/modifiers/d-drag-dwell";
 import { i18n } from "discourse-i18n";
-import ApiSections from "../api-sections";
-import CategoriesSection from "./categories-section";
-import CustomSections from "./custom-sections";
-import TagsSection from "./tags-section";
+import ApiSections from "../api-sections.gjs";
+import CategoriesSection from "./categories-section.gjs";
+import CustomSections from "./custom-sections.gjs";
+import TagsSection from "./tags-section.gjs";
 
 /**
  * How long the revealed drop zone stays inert. Revealing shifts everything
@@ -57,6 +57,10 @@ export default class SidebarUserSections extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.#armTimer);
+  }
+
+  get mainPanel() {
+    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
   }
 
   /**
@@ -143,10 +147,6 @@ export default class SidebarUserSections extends Component {
     this.modal.show(SidebarSectionForm, {
       model: { link },
     });
-  }
-
-  get mainPanel() {
-    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
   }
 
   /**
@@ -237,9 +237,9 @@ export default class SidebarUserSections extends Component {
       <CustomSections
         @collapsable={{@collapsableSections}}
         @enableLinkDrop={{@enableLinkDrop}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
       {{#if this.zoneRevealed}}
@@ -247,12 +247,12 @@ export default class SidebarUserSections extends Component {
             custom section. Pointer-only, like the drag it serves; creating a
             section by keyboard keeps its own path. }}
         <div
+          aria-hidden="true"
           class={{dConcatClass
             "sidebar-link-drop-target"
             (unless this.zoneArmed "is-arming")
             (if this.zoneHovered "is-active")
           }}
-          aria-hidden="true"
           {{dDragAndDropExternalTarget
             accepts=WEB_LINK_KINDS
             canDrop=this.canDropLink
@@ -282,9 +282,9 @@ export default class SidebarUserSections extends Component {
 
       <CategoriesSection
         @collapsable={{@collapsableSections}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
       {{#if this.currentUser.display_sidebar_tags}}

@@ -13,7 +13,7 @@ module("Integration | ui-kit | DStatTiles", function (hooks) {
     await render(
       <template>
         <DStatTiles as |tiles|>
-          <tiles.Tile @value="12555999" @label={{label}} />
+          <tiles.Tile @label={{label}} @value="12555999" />
         </DStatTiles>
       </template>
     );
@@ -30,7 +30,7 @@ module("Integration | ui-kit | DStatTiles", function (hooks) {
     await render(
       <template>
         <DStatTiles as |tiles|>
-          <tiles.Tile @value="12555999" @label={{label}} />
+          <tiles.Tile @label={{label}} @value="12555999" />
         </DStatTiles>
       </template>
     );
@@ -42,7 +42,7 @@ module("Integration | ui-kit | DStatTiles", function (hooks) {
     await render(
       <template>
         <DStatTiles as |tiles|>
-          <tiles.Tile @value="12555999" @label={{label}} @tooltip={{content}} />
+          <tiles.Tile @label={{label}} @tooltip={{content}} @value="12555999" />
         </DStatTiles>
       </template>
     );
@@ -57,9 +57,9 @@ module("Integration | ui-kit | DStatTiles", function (hooks) {
       <template>
         <DStatTiles as |tiles|>
           <tiles.Tile
-            @value="12555999"
             @label={{label}}
             @url="https://meta.discourse.org"
+            @value="12555999"
           />
         </DStatTiles>
       </template>
@@ -74,11 +74,26 @@ module("Integration | ui-kit | DStatTiles", function (hooks) {
     await render(
       <template>
         <DStatTiles @format="compact" as |tiles|>
-          <tiles.Tile @value="1" @label={{label}} />
+          <tiles.Tile @label={{label}} @value="1" />
         </DStatTiles>
       </template>
     );
 
     assert.dom(".d-stat-tiles.--compact").exists();
+  });
+
+  test("shows @formattedValue instead of formatting @value", async function (assert) {
+    await render(
+      <template>
+        <DStatTiles as |tiles|>
+          <tiles.Tile @formattedValue="1h 30m" @label={{label}} @value="5400" />
+        </DStatTiles>
+      </template>
+    );
+
+    assert
+      .dom(".d-stat-tile__value")
+      .hasText("1h 30m", "the preformatted value is shown")
+      .hasAttribute("title", "5400", "the raw value stays the title");
   });
 });

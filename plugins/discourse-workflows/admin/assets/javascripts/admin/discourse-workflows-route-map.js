@@ -1,6 +1,8 @@
 export default {
   resource: "admin.adminPlugins.show",
   path: "/plugins",
+  bundleName: "workflows-admin",
+
   map() {
     this.route("discourse-workflows", { path: "workflows" }, function () {
       this.route("new");
@@ -9,7 +11,12 @@ export default {
         this.route("executions", function () {
           this.route("show", { path: "/:execution_id" });
         });
-        this.route("settings");
+        this.route("settings", function () {});
+        this.route("variables", function () {
+          this.route("manage");
+          this.route("new");
+          this.route("edit", { path: "/:variable_id/edit" });
+        });
         this.route("versions");
       });
     });

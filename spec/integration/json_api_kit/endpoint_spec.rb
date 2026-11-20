@@ -32,11 +32,14 @@ RSpec.describe "a JSON:API endpoint", type: :request do
   let(:profile_media_type) { JsonApiKit::Pagination::Profile::MEDIA_TYPE }
   let(:profile) { "https://jsonapi.org/profiles/ethanresnick/cursor-pagination" }
   let(:path) { "/api/topics" }
+  let(:version) { JsonApiKit::Timeline.current.to_s }
   let(:headers) { {} }
+  let(:subfolder) { nil }
   let(:parsed_body) { JSON.parse(response.body) }
   let(:error) { parsed_body["errors"].sole }
 
   before do
+    set_subfolder(subfolder) if subfolder
     allow(Discourse).to receive(:warn_exception)
     Rails.application.routes.disable_clear_and_finalize = true
     Rails.application.routes.draw do
@@ -48,7 +51,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       get "/api/forbidden" => "json_api_kit_spec/failing#forbidden"
     end
     Rails.application.routes.disable_clear_and_finalize = false
-    get path, headers:, params: query
+    get path, headers: { "HTTP_API_VERSION" => version, **headers }, params: query
   end
 
   after { Rails.application.reload_routes! }
@@ -77,7 +80,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
 
       it "reports a missing declaration" do
         expect(Discourse).to have_received(:warn_exception) do |error, _|
-          expect(error).to be_a(JsonApiKit::BaseController::MissingDeclaration)
+          expect(error).to be_a(JsonApiKit::EndpointController::Serving::MissingDeclaration)
           expect(error.message).to match(/declare the resource it serves/)
         end
       end
@@ -123,7 +126,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
         {
           data: [topic_object(newest, fields:), topic_object(middle, fields:)],
           included: [],
-          links: links_of(next: page_url(after: cursor_of_record(middle), size: 2)),
+          links: links_of(next: page_url(size: 2, after: cursor_of_record(middle))),
         }.deep_stringify_keys,
       )
     end
@@ -131,20 +134,20 @@ RSpec.describe "a JSON:API endpoint", type: :request do
     context "when the request anchors the page on one row" do
       let(:query) do
         {
-          "sort" => "created_at",
+          "sort" => "createdAt",
           "page" => {
             "anchor" => {
               "id" => oldest.id.to_s,
             },
-            "before_size" => "0",
-            "after_size" => "1",
+            "beforeSize" => "0",
+            "afterSize" => "1",
           },
         }
       end
       let(:next_link) { URI.parse(parsed_body.dig("links", "next")) }
 
       it "sends the rows after the window when a client follows the next link" do
-        get "#{next_link.path}?#{next_link.query}"
+        get "#{next_link.path}?#{next_link.query}", headers: { "HTTP_API_VERSION" => version }
 
         expect(JSON.parse(response.body)["data"].map { it["id"] }).to eq([newest.id.to_s])
       end
@@ -187,6 +190,20 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       )
     end
 
+    context "when Discourse runs in a subfolder" do
+      let(:subfolder) { "/forum" }
+      let(:query) { { "fields" => { "topics" => "title,posts" }, "include" => "posts" } }
+      let(:topic_url) { "http://test.localhost/forum/api/topics/#{middle.id}" }
+
+      it "keeps the subfolder in resource and relationship links", :aggregate_failures do
+        expect(parsed_body.dig("data", "links", "self")).to eq(topic_url)
+        expect(parsed_body.dig("data", "relationships", "posts", "links")).to include(
+          "self" => "#{topic_url}/relationships/posts",
+          "related" => "#{topic_url}/posts",
+        )
+      end
+    end
+
     context "when no record has that id" do
       let(:path) { "/api/topics/0" }
 
@@ -215,13 +232,17 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       )
     end
 
-    context "when Discourse answers the error itself" do
+    context "when Discourse reports a missing resource" do
       let(:path) { "/api/missing" }
 
       it { expect(response).to have_http_status(:not_found) }
 
-      it "sends JSON" do
-        expect(response.media_type).to eq("application/json")
+      it "sends the JSON:API media type" do
+        expect(response.media_type).to eq(profile_media_type)
+      end
+
+      it "sends a JSON:API error" do
+        expect(error).to eq(not_found.deep_stringify_keys)
       end
     end
   end

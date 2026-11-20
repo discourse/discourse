@@ -13,8 +13,8 @@ export default class FKTooltip extends Component {
       {{else}}
         <DTooltip
           class="form-kit__tooltip"
-          @icon="circle-question"
           @content={{@field.tooltip}}
+          @icon="circle-question"
         />
       {{/if}}
     {{/if}}

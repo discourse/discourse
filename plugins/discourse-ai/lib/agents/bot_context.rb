@@ -3,6 +3,8 @@
 module DiscourseAi
   module Agents
     class BotContext
+      MAX_IDENTICAL_MCP_FAILURES = 3
+
       attr_accessor :messages,
                     :topic_id,
                     :post_id,
@@ -39,7 +41,14 @@ module DiscourseAi
                     :current_agent_id,
                     :turn_token_budget,
                     :tool_invocation_counts,
-                    :completion_limit_reached
+                    :completion_limit_reached,
+                    :user_turn_count,
+                    :protected_message_count,
+                    :history_snapshot,
+                    :partial_raw_context,
+                    # Called with (tool, progress) whenever a tool reports progress, even when
+                    # skip_show_thinking hides the placeholders that would otherwise show it.
+                    :tool_progress_callback
       def initialize(
         post: nil,
         topic: nil,
@@ -243,10 +252,35 @@ module DiscourseAi
         @mcp_state&.dig(server_id.to_i, :session_id)
       end
 
-      def store_mcp_session(server_id, session_id)
+      def mcp_failure_limit_reached?
+        !!@mcp_failure_limit_reached
+      end
+
+      def record_mcp_failure(server_id:, tool_name:, message:, arguments: {})
+        @mcp_failure_counts ||= Hash.new(0)
+        signature = [server_id, tool_name, arguments.deep_stringify_keys.deep_dup, message]
+        @mcp_failure_counts[signature] += 1
+        @mcp_failure_limit_reached ||= @mcp_failure_counts[signature] >= MAX_IDENTICAL_MCP_FAILURES
+      end
+
+      def reset_mcp_failures!
+        @mcp_failure_counts = nil
+        @mcp_failure_limit_reached = false
+      end
+
+      def record_mcp_success(server_id:, tool_name:, arguments: {})
+        @mcp_failure_counts&.delete_if do |(server, tool, input, _), _count|
+          server == server_id && tool == tool_name && input == arguments.deep_stringify_keys
+        end
+      end
+
+      def mcp_protocol_version_for(server_id)
+        @mcp_state&.dig(server_id.to_i, :protocol_version)
+      end
+
+      def store_mcp_session(server_id, session_id, protocol_version: nil)
         @mcp_state ||= {}
-        state = (@mcp_state[server_id.to_i] ||= { session_id: nil })
-        state[:session_id] = session_id
+        @mcp_state[server_id.to_i] = { session_id: session_id, protocol_version: protocol_version }
       end
     end
   end

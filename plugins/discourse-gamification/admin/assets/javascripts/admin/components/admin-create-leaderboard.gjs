@@ -40,9 +40,8 @@ export default class AdminCreateLeaderboard extends Component {
           message: i18n("gamification.leaderboard.create_success"),
         },
       });
-      this.args.onCancel();
       this.router.transitionTo(
-        "adminPlugins.show.discourse-gamification-leaderboards.show",
+        "adminPlugins.show.discourse-gamification-leaderboards.edit",
         leaderboard.id
       );
     } catch (err) {
@@ -52,41 +51,42 @@ export default class AdminCreateLeaderboard extends Component {
     }
   }
 
+  @action
+  cancel() {
+    this.router.transitionTo(
+      "adminPlugins.show.discourse-gamification-leaderboards"
+    );
+  }
+
   <template>
-    <div class="new-leaderboard-container">
-      <Form
-        @data={{this.formData}}
-        @onSubmit={{this.createNewLeaderboard}}
-        class="new-leaderboard-form"
-        as |form|
+    <Form
+      class="new-leaderboard-form"
+      @data={{this.formData}}
+      @onSubmit={{this.createNewLeaderboard}}
+      as |form|
+    >
+      <form.Field
+        class="new-leaderboard__name"
+        @name="name"
+        @title={{i18n "gamification.leaderboard.name"}}
+        @type="input"
+        @validation="required"
+        as |field|
       >
-        <form.Row>
-          <form.Field
-            @name="name"
-            @title={{i18n "gamification.leaderboard.name"}}
-            @showTitle={{false}}
-            class="new-leaderboard__name"
-            @validation="required"
-            @type="input"
-            as |field|
-          >
-            <field.Control
-              placeholder={{i18n "gamification.leaderboard.name_placeholder"}}
-            />
-          </form.Field>
+        <field.Control
+          placeholder={{i18n "gamification.leaderboard.name_placeholder"}}
+        />
+      </form.Field>
 
-        </form.Row>
-        <form.Actions>
-          <form.Submit />
+      <form.Actions>
+        <form.Submit />
 
-          <form.Button
-            @action={{@onCancel}}
-            class="new-leaderboard__cancel form-kit__button btn-default"
-            @label="gamification.cancel"
-            @title="gamification.cancel"
-          />
-        </form.Actions>
-      </Form>
-    </div>
+        <form.Button
+          class="new-leaderboard__cancel btn-default"
+          @action={{this.cancel}}
+          @label="gamification.cancel"
+        />
+      </form.Actions>
+    </Form>
   </template>
 }

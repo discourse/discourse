@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
-import AiToolEditorForm from "./ai-tool-editor-form";
+import AiToolEditorForm from "./ai-tool-editor-form.gjs";
 
 export default class AiToolEditor extends Component {
   @service store;
@@ -26,17 +26,17 @@ export default class AiToolEditor extends Component {
 
   <template>
     <BackButton
-      @route="adminPlugins.show.discourse-ai-tools"
       @label="discourse_ai.tools.back"
+      @route="adminPlugins.show.discourse-ai-tools"
     />
 
     <AiToolEditorForm
-      @model={{@model}}
-      @tools={{@tools}}
-      @secrets={{@secrets}}
       @editingModel={{this.editingModel}}
       @isNew={{@model.isNew}}
+      @model={{@model}}
+      @secrets={{@secrets}}
       @selectedPreset={{this.selectedPreset}}
+      @tools={{@tools}}
     />
   </template>
 }

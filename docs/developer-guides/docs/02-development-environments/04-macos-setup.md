@@ -24,6 +24,7 @@ You will need the following packages on your system:
 - [Redis][redis_link]
 - [Node.js][node_link]
 - [pnpm][pnpm_link]
+- [libvips][libvips_link]
 - [MailHog][mh_link]\*\*
 - [ImageMagick][imagemagick_link]\*\*
 
@@ -139,6 +140,7 @@ Happy hacking! And to get started with that, see [Beginner’s Guide to Creating
 [pg_link]: http://www.postgresql.org/
 [sqlite_link]: https://sqlite.org/
 [redis_link]: http://redis.io/
+[libvips_link]: https://github.com/libvips/libvips/wiki#building-and-installing
 [imagemagick_link]: http://www.imagemagick.org/
 [pnpm_link]: https://pnpm.io/
 [mh_link]: https://github.com/mailhog/MailHog

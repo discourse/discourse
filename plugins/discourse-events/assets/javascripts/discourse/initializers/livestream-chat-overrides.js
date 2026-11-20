@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import ResponsiveLivestreamChatIcon from "../components/livestream/responsive-livestream-chat-icon";
+import ResponsiveLivestreamChatIcon from "../components/livestream/responsive-livestream-chat-icon.gjs";
 
 const GOING = "going";
 

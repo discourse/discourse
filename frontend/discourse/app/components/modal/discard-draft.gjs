@@ -19,27 +19,27 @@ export default class DiscardDraftModal extends Component {
 
   <template>
     <DModal
-      @closeModal={{this.cancelDiscard}}
       class="discard-draft-modal --stacked"
+      @closeModal={{this.cancelDiscard}}
       @hideHeader={{true}}
     >
       <:body>
-        <div class="instructions" role="heading" aria-level="1">
+        <div aria-level="1" class="instructions" role="heading">
           {{i18n @model.confirmMessageKey}}
         </div>
       </:body>
 
       <:footer>
         <DButton
+          class="btn-danger discard-draft-modal__discard-btn"
+          @action={{this.discardDraft}}
           @icon="trash-can"
           @label={{@model.discardButtonKey}}
-          @action={{this.discardDraft}}
-          class="btn-danger discard-draft-modal__discard-btn"
         />
         <DButton
-          @label="cancel_value"
-          @action={{this.cancelDiscard}}
           class="btn-transparent discard-draft-modal__cancel-btn"
+          @action={{this.cancelDiscard}}
+          @label="cancel_value"
         />
       </:footer>
     </DModal>

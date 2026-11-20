@@ -73,6 +73,7 @@ RSpec.describe FoundUserSerializer do
 
     context "when status is disabled in site settings" do
       before { SiteSetting.enable_user_status = false }
+
       let(:serializer) { FoundUserSerializer.new(user, root: false, include_status: true) }
 
       it "doesn't add user status" do

@@ -4,10 +4,19 @@ RSpec.describe WebHookEvent do
   let(:event) { WebHookEvent.new(status: 200, web_hook: Fabricate(:web_hook)) }
   let(:failed_event) { WebHookEvent.new(status: 400, web_hook: Fabricate(:web_hook)) }
 
+  it "removes its redelivery marker when destroyed" do
+    event.save!
+    marker = RedeliveringWebhookEvent.create!(web_hook_event: event)
+
+    event.destroy!
+
+    expect(RedeliveringWebhookEvent.exists?(marker.id)).to eq(false)
+  end
+
   describe ".purge_old" do
     before { SiteSetting.retain_web_hook_events_period_days = 1 }
 
-    it "should be able to purge old web hook events" do
+    it "purges old webhook events" do
       web_hook = Fabricate(:web_hook)
       web_hook_event = WebHookEvent.create!(status: 200, web_hook: web_hook)
       WebHookEvent.create!(status: 200, web_hook: web_hook, created_at: 2.days.ago)

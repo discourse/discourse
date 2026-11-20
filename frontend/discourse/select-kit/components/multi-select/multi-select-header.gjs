@@ -9,7 +9,6 @@ import {
 import FormatSelectedContent from "discourse/select-kit/components/multi-select/format-selected-content";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 import SelectKitHeaderComponent from "discourse/select-kit/components/select-kit/select-kit-header";
-import { and, or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @tagName("summary")
@@ -89,8 +88,8 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
             }}
               {{#each this.selectedContent as |item|}}
                 <SelectedChoiceComponent
-                  @selectKit={{this.selectKit}}
                   @item={{item}}
+                  @selectKit={{this.selectKit}}
                 />
               {{/each}}
             {{/let}}
@@ -101,9 +100,9 @@ export default class MultiSelectHeader extends SelectKitHeaderComponent {
             as |FilterComponent|
           }}
             <FilterComponent
-              @selectKit={{this.selectKit}}
-              @id={{concat this.selectKit.uniqueID "-filter"}}
               @hidePlaceholderWithSelection={{true}}
+              @id={{concat this.selectKit.uniqueID "-filter"}}
+              @selectKit={{this.selectKit}}
             />
           {{/let}}
         </div>

@@ -2,30 +2,21 @@ import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
 import {
   fieldVisible,
+  fixedCollectionRows,
   normalizeOptions,
   normalizeSchema,
   propertyLabel,
   propertyOptionLabel,
-} from "../../../lib/workflows/property-engine";
-import {
-  summarizeOutputKey,
-  summarizeOutputKeyIsDerived,
-} from "../../../lib/workflows/summarize-output-key";
-import FieldPathControl from "./field-path-control";
-import FixedCollection from "./fixed-collection";
+} from "../../../lib/workflows/property-engine.js";
+import FieldPathControl from "./field-path-control.gjs";
+import FixedCollection from "./fixed-collection.gjs";
 
 function isVisible(field, item) {
   return field ? fieldVisible(field, item) : false;
 }
 
 function isDerived(item) {
-  return summarizeOutputKeyIsDerived(item || {});
-}
-
-function derivedPlaceholder(item) {
-  return summarizeOutputKeyIsDerived(item || {})
-    ? summarizeOutputKey(item || {})
-    : "";
+  return !String(item?.output_field_name ?? "").trim();
 }
 
 export default class SummarizeAggregations extends Component {
@@ -36,6 +27,22 @@ export default class SummarizeAggregations extends Component {
   fieldTitle = (name) => {
     return propertyLabel(this.args.nodeDefinition, name);
   };
+
+  derivedPlaceholder = (item, index) => {
+    return isDerived(item) ? (this.rowOutputKeys[index] ?? "") : "";
+  };
+
+  get rowOutputKeys() {
+    const rowCount = fixedCollectionRows(
+      this.args.configuration?.[this.args.fieldName]
+    ).length;
+    const keys = Object.keys(
+      this.args.session?.outputSchemas?.[this.args.node?.clientId]?.[0]
+        ?.properties || {}
+    );
+
+    return keys.length < rowCount ? [] : keys.slice(keys.length - rowCount);
+  }
 
   get rowFields() {
     const group = (this.args.schema?.options || [])[0] || { values: {} };
@@ -70,58 +77,62 @@ export default class SummarizeAggregations extends Component {
 
   <template>
     <FixedCollection
-      @form={{@form}}
-      @formApi={{@formApi}}
       @configuration={{@configuration}}
       @connections={{@connections}}
       @credentials={{@credentials}}
       @fieldName={{@fieldName}}
-      @showLabel={{false}}
+      @form={{@form}}
+      @formApi={{@formApi}}
       @node={{@node}}
       @nodeDefinition={{@nodeDefinition}}
       @nodeParameters={{@nodeParameters}}
       @nodes={{@nodes}}
       @nodeType={{@nodeType}}
       @nodeTypes={{@nodeTypes}}
+      @onChange={{@onChange}}
       @schema={{@schema}}
       @session={{@session}}
+      @showLabel={{false}}
       as |row|
     >
       <div class="workflows-summarize-row">
         <div class="workflows-summarize-row__line">
           <row.object.Field
-            @name="aggregation"
-            @title={{this.fieldTitle "aggregation"}}
-            @showTitle={{false}}
             class="workflows-summarize-row__lead"
+            @name="aggregation"
+            @showTitle={{false}}
+            @title={{this.fieldTitle "aggregation"}}
+            @type="select"
             as |field|
           >
-            <field.Select @includeNone={{false}} as |select|>
+            <field.Control @includeNone={{false}} as |select|>
               {{#each this.aggregationOptions key="value" as |choice|}}
                 <select.Option @value={{choice.value}}>
                   {{choice.label}}
                 </select.Option>
               {{/each}}
-            </field.Select>
+            </field.Control>
           </row.object.Field>
 
           {{#if (isVisible (this.fieldSchema "field") row.item)}}
             <row.object.Field
-              @name="field"
-              @title={{this.fieldTitle "field"}}
-              @showTitle={{false}}
               class="workflows-summarize-row__control"
+              @name="field"
+              @showTitle={{false}}
+              @title={{this.fieldTitle "field"}}
+              @type="custom"
               as |field|
             >
-              <FieldPathControl
-                @field={{field}}
-                @schema={{this.fieldSchema "field"}}
-                @node={{@node}}
-                @nodes={{@nodes}}
-                @nodeTypes={{@nodeTypes}}
-                @connections={{@connections}}
-                @session={{@session}}
-              />
+              <field.Control>
+                <FieldPathControl
+                  @connections={{@connections}}
+                  @field={{field}}
+                  @node={{@node}}
+                  @nodes={{@nodes}}
+                  @schema={{this.fieldSchema "field"}}
+                  @session={{@session}}
+                />
+              </field.Control>
             </row.object.Field>
           {{/if}}
         </div>
@@ -135,19 +146,20 @@ export default class SummarizeAggregations extends Component {
             </span>
 
             <row.object.Field
-              @name="separate_by"
-              @title={{this.fieldTitle "separate_by"}}
-              @showTitle={{false}}
               class="workflows-summarize-row__control"
+              @name="separate_by"
+              @showTitle={{false}}
+              @title={{this.fieldTitle "separate_by"}}
+              @type="select"
               as |field|
             >
-              <field.Select @includeNone={{false}} as |select|>
+              <field.Control @includeNone={{false}} as |select|>
                 {{#each this.separatorOptions key="value" as |choice|}}
                   <select.Option @value={{choice.value}}>
                     {{choice.label}}
                   </select.Option>
                 {{/each}}
-              </field.Select>
+              </field.Control>
             </row.object.Field>
           </div>
         {{/if}}
@@ -161,13 +173,14 @@ export default class SummarizeAggregations extends Component {
             </span>
 
             <row.object.Field
-              @name="custom_separator"
-              @title={{this.fieldTitle "custom_separator"}}
-              @showTitle={{false}}
               class="workflows-summarize-row__control"
+              @name="custom_separator"
+              @showTitle={{false}}
+              @title={{this.fieldTitle "custom_separator"}}
+              @type="input"
               as |field|
             >
-              <field.Input />
+              <field.Control />
             </row.object.Field>
           </div>
         {{/if}}
@@ -180,18 +193,19 @@ export default class SummarizeAggregations extends Component {
           </span>
 
           <row.object.Field
-            @name="output_field_name"
-            @title={{this.fieldTitle "output_field_name"}}
-            @showTitle={{false}}
-            @placeholder={{derivedPlaceholder row.item}}
             class="workflows-summarize-row__control
               {{if
                 (isDerived row.item)
                 'workflows-summarize-row__control--derived'
               }}"
+            @name="output_field_name"
+            @placeholder={{this.derivedPlaceholder row.item row.index}}
+            @showTitle={{false}}
+            @title={{this.fieldTitle "output_field_name"}}
+            @type="input"
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </row.object.Field>
         </div>
       </div>

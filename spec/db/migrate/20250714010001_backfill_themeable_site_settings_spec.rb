@@ -14,7 +14,7 @@ RSpec.describe BackfillThemeableSiteSettings do
 
   after { ActiveRecord::Migration.verbose = @original_verbose }
 
-  it "works" do
+  it "backfills themeable site settings" do
     DB.exec(
       "INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
       VALUES ('enable_welcome_banner', :data_type, :value, NOW(), NOW())",

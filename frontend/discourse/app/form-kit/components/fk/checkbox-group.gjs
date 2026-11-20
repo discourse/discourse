@@ -5,8 +5,8 @@ import FKFieldset from "discourse/form-kit/components/fk/fieldset";
 const FKCheckboxGroup = <template>
   <FKFieldset
     class="form-kit__checkbox-group"
-    @title={{@title}}
     @description={{@description}}
+    @title={{@title}}
   >
     {{yield
       (hash

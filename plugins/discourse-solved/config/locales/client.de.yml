@@ -67,6 +67,12 @@ de:
                 slower: "%{duration} langsamer"
                 tooltip: "Der Trend der durchschnittlichen Antwortzeit."
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Änderungen"
+        changes_removed: "Entfernt"
+        tag_names: "Schlagwörter"
+        tag_names_description: "Nur für Themen auslösen, die mindestens eines dieser Schlagwörter haben"
     notifications:
       alt:
         solved:

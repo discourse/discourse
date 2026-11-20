@@ -245,6 +245,25 @@
             "null"
           ]
         },
+        "permission_groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          }
+        },
         "available_groups": {
           "type": "array",
           "items": {
@@ -383,6 +402,12 @@
               "icon": {
                 "type": "string"
               },
+              "svg_icon": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
               "available": {
                 "type": "boolean"
               },
@@ -399,6 +424,7 @@
               "title",
               "description",
               "icon",
+              "svg_icon",
               "available",
               "visible",
               "configuration_schema"

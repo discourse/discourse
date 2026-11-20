@@ -13,21 +13,21 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("default", async function (assert) {
-      this.set("value", 1);
+      this.value = 1;
       setDefaultState(this, 1, { i18nPrefix: "pre", i18nPostfix: "post" });
 
       await render(
         <template>
           <NotificationsButton
-            @value={{this.value}}
             @options={{hash
               i18nPrefix=this.i18nPrefix
               i18nPostfix=this.i18nPostfix
             }}
+            @value={{this.value}}
           />
         </template>
       );

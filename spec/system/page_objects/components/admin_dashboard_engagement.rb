@@ -71,6 +71,24 @@ module PageObjects
         has_no_css?("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
       end
 
+      def has_activity_row_with_parent?(category)
+        has_css?("#{ACTIVITY_CATEGORY_CELL} #{parent_then_child_badges(category)}")
+      end
+
+      def has_selected_activity_category_with_parent?(category)
+        has_css?(
+          "#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+            "#{parent_then_child_badges(category)}",
+        )
+      end
+
+      def has_selected_whos_posting_category_with_parent?(category)
+        has_css?(
+          "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+            "#{parent_then_child_badges(category)}",
+        )
+      end
+
       def compare_groups_modal
         @compare_groups_modal ||=
           PageObjects::Components::ManageableRowListModal.new(
@@ -107,6 +125,13 @@ module PageObjects
       def has_headline?(title, summary)
         has_css?("#{SECTION} .db-section__subintro h3", exact_text: title) &&
           has_css?("#{SECTION} .db-section__subintro p", exact_text: summary)
+      end
+
+      private
+
+      def parent_then_child_badges(category)
+        ".badge-category__wrapper:has(.badge-category[data-category-id='#{category.parent_category_id}']) + " \
+          ".badge-category__wrapper .badge-category[data-category-id='#{category.id}']"
       end
     end
   end

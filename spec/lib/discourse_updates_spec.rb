@@ -46,6 +46,7 @@ RSpec.describe DiscourseUpdates do
     context "when a good version check request happened recently" do
       context "when server is up-to-date" do
         let(:time) { 12.hours.ago }
+
         before { stub_data(Discourse::VERSION::STRING, 0, time) }
 
         it "returns all the version fields" do
@@ -62,6 +63,7 @@ RSpec.describe DiscourseUpdates do
 
       context "when server is not up-to-date" do
         let(:time) { 12.hours.ago }
+
         before { stub_data("0.9.0", 2, time) }
 
         it "returns all the version fields" do
@@ -117,11 +119,13 @@ RSpec.describe DiscourseUpdates do
 
       context "when installed is latest" do
         before { stub_data(Discourse::VERSION::STRING, 1, 8.hours.ago) }
+
         include_examples "queue version check and report that version is ok"
       end
 
       context "when installed does not match latest version, but missing_versions_count is 0" do
         before { stub_data("0.10.10.123", 0, 8.hours.ago) }
+
         include_examples "queue version check and report that version is ok"
       end
     end
@@ -146,11 +150,13 @@ RSpec.describe DiscourseUpdates do
 
     context "when missing_versions_count is 0" do
       before { stub_data("0.9.7", 0, 8.hours.ago) }
+
       include_examples "when last_installed_version is old"
     end
 
     context "when missing_versions_count is not 0" do
       before { stub_data("0.9.7", 1, 8.hours.ago) }
+
       include_examples "when last_installed_version is old"
     end
   end
@@ -187,7 +193,7 @@ RSpec.describe DiscourseUpdates do
 
       Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
       Discourse.redis.del "new_features_last_seen_user_#{admin2.id}"
-      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
     end
 
     after { DiscourseUpdates.clean_state }
@@ -379,6 +385,8 @@ RSpec.describe DiscourseUpdates do
             height: 66,
           },
         )
+
+        DiscourseUpdates.refresh_latest_new_feature_created_at!
       end
 
       it "marks the injected item as seen" do
@@ -400,44 +408,57 @@ RSpec.describe DiscourseUpdates do
       ]
     end
 
-    before do
-      stub_permanent_upcoming_changes!([])
-      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
-    end
+    before { stub_permanent_upcoming_changes!([]) }
 
     after { DiscourseUpdates.clean_state }
 
-    it "returns the max created_at from merged features" do
-      result = DiscourseUpdates.latest_new_feature_created_at
-      expect(result).to be_within(1.second).of(newest_date)
+    it "returns the timestamp derived when the feed was stored" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
+
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_within(1.second).of(newest_date)
     end
 
-    it "caches the result in Redis on subsequent calls" do
-      DiscourseUpdates.latest_new_feature_created_at
+    it "never derives the timestamp itself" do
+      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+      GitUtils.expects(:has_commit?).never
+      DiscourseUpdates.expects(:merge_new_features_with_upcoming_changes).never
 
-      Discourse.redis.set("new_features", MultiJson.dump([]))
-      result = DiscourseUpdates.latest_new_feature_created_at
-      expect(result).to be_within(1.second).of(newest_date)
-    end
-
-    it "returns nil when no features exist" do
-      Discourse.redis.set("new_features", MultiJson.dump([]))
       expect(DiscourseUpdates.latest_new_feature_created_at).to be_nil
     end
 
-    it "is invalidated by update_new_features" do
-      DiscourseUpdates.latest_new_feature_created_at
+    it "returns the cached value even when the stored feed is unreadable" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
+
+      Discourse.redis.set("new_features", "invalid json")
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_within(1.second).of(newest_date)
+    end
+
+    it "returns nil when no features exist" do
+      DiscourseUpdates.update_new_features(MultiJson.dump([]))
+
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_nil
+    end
+
+    it "is refreshed by update_new_features" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
 
       new_date = 1.minute.ago
       new_features = [{ "emoji" => "🤾", "title" => "Brand New", "created_at" => new_date }]
       DiscourseUpdates.update_new_features(MultiJson.dump(new_features))
 
-      result = DiscourseUpdates.latest_new_feature_created_at
-      expect(result).to be_within(1.second).of(new_date)
+      expect(DiscourseUpdates.latest_new_feature_created_at).to be_within(1.second).of(new_date)
+    end
+
+    it "is cleared when the refreshed feed has no features left" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_present
+
+      DiscourseUpdates.update_new_features(MultiJson.dump([]))
+      expect(Discourse.redis.get("latest_new_feature_created_at")).to be_nil
     end
 
     it "is invalidated by clean_state" do
-      DiscourseUpdates.latest_new_feature_created_at
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
       expect(Discourse.redis.get("latest_new_feature_created_at")).to be_present
 
       DiscourseUpdates.clean_state
@@ -445,7 +466,7 @@ RSpec.describe DiscourseUpdates do
     end
   end
 
-  describe "has_unseen_features? caching" do
+  describe "has_unseen_features?" do
     fab!(:admin)
     let!(:feature_date) { 5.minutes.ago }
     let!(:sample_features) do
@@ -454,23 +475,39 @@ RSpec.describe DiscourseUpdates do
 
     before do
       stub_permanent_upcoming_changes!([])
-      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+      DiscourseUpdates.clean_state
     end
 
     after { DiscourseUpdates.clean_state }
 
-    it "uses the cached timestamp instead of recomputing on repeated calls" do
-      DiscourseUpdates.latest_new_feature_created_at
+    it "uses the cached timestamp instead of recomputing" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
 
       Discourse.redis.set("new_features", "invalid json")
       expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
     end
 
     it "returns false when the latest feature timestamp equals last_seen" do
+      DiscourseUpdates.update_new_features(MultiJson.dump(sample_features))
+
       freeze_time do
         Discourse.redis.set("new_features_last_seen_user_#{admin.id}", feature_date.iso8601)
         expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
       end
+    end
+
+    it "queues a refresh, instead of deriving inline, when the timestamp is missing" do
+      Discourse.redis.set("new_features", MultiJson.dump(sample_features))
+      GitUtils.expects(:has_commit?).never
+
+      expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
+      expect(Jobs::RefreshLatestNewFeature.jobs.size).to eq(1)
+    end
+
+    it "only queues one refresh per throttle window" do
+      3.times { DiscourseUpdates.has_unseen_features?(admin.id) }
+
+      expect(Jobs::RefreshLatestNewFeature.jobs.size).to eq(1)
     end
   end
 
@@ -543,7 +580,7 @@ RSpec.describe DiscourseUpdates do
           new_features = [feed_feature.deep_dup]
           result = described_class.merge_new_features_with_upcoming_changes(new_features)
           expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
-            :enable_upload_debug_mode,
+            "enable_upload_debug_mode",
           )
         end
       end
@@ -555,7 +592,91 @@ RSpec.describe DiscourseUpdates do
           new_features = [feed_feature.deep_dup]
           result = described_class.merge_new_features_with_upcoming_changes(new_features)
           expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
-            :enable_upload_debug_mode,
+            "enable_upload_debug_mode",
+          )
+        end
+      end
+
+      def record_status_change(new_value, was_conditionally_displayed: nil)
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: upcoming_change_setting_name,
+          event_data: {
+            "previous_value" => "stable",
+            "new_value" => new_value,
+            "was_conditionally_displayed" => was_conditionally_displayed,
+          }.compact,
+        )
+      end
+
+      context "when the upcoming change setting has been removed" do
+        let(:upcoming_change_setting_name) { "enable_removed_feature" }
+
+        it "keeps the feed item when the change was permanent and displayed on this site" do
+          record_status_change("permanent", was_conditionally_displayed: true)
+
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).to include(
+            "enable_removed_feature",
+          )
+        end
+
+        it "keeps the feed item when the permanent status predates display tracking" do
+          record_status_change("permanent")
+
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).to include(
+            "enable_removed_feature",
+          )
+        end
+
+        it "excludes the feed item when the change was hidden on this site" do
+          record_status_change("permanent", was_conditionally_displayed: false)
+
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
+            "enable_removed_feature",
+          )
+        end
+
+        it "keeps the feed item when no upcoming changes are currently permanent" do
+          stub_permanent_upcoming_changes!([])
+          record_status_change("permanent", was_conditionally_displayed: true)
+
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).to include(
+            "enable_removed_feature",
+          )
+        end
+
+        it "excludes the feed item when the change was not permanent on this site" do
+          record_status_change("beta")
+
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
+            "enable_removed_feature",
+          )
+        end
+
+        it "excludes the feed item when this site never recorded the change" do
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
+            "enable_removed_feature",
+          )
+        end
+      end
+
+      context "when the upcoming change is permanent but hidden on this site" do
+        # Conditionally hidden changes are left out of the permanent list even
+        # though the setting still exists.
+        before { stub_permanent_upcoming_changes!([]) }
+
+        it "excludes the feed item even though this site recorded it as permanent" do
+          record_status_change("permanent")
+
+          result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
+          expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
+            "enable_upload_debug_mode",
           )
         end
       end

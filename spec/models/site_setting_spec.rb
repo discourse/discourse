@@ -1,6 +1,93 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
+  describe ".site_logo_dimensions" do
+    it "exposes upload dimensions by URL and refreshes them when a logo changes" do
+      logo = Fabricate(:upload, width: 600, height: 200)
+      dark_logo = Fabricate(:upload, width: 500, height: 150)
+      SiteSetting.logo = logo
+      SiteSetting.logo_dark = dark_logo
+
+      dimensions = JSON.parse(SiteSetting.client_settings_json)["site_logo_dimensions"]
+
+      expect(dimensions[SiteSetting.site_logo_url]).to eq("width" => 600, "height" => 200)
+      expect(dimensions[SiteSetting.site_logo_dark_url]).to eq("width" => 500, "height" => 150)
+
+      SiteSetting.logo = Fabricate(:upload, width: 400, height: 100)
+
+      dimensions = JSON.parse(SiteSetting.client_settings_json)["site_logo_dimensions"]
+      expect(dimensions[SiteSetting.site_logo_url]).to eq("width" => 400, "height" => 100)
+      expect(dimensions).not_to have_key(SiteSetting.full_cdn_url(logo.url))
+    end
+  end
+
+  describe ".dsa_reporting_enabled=" do
+    it "requires a community rule before enabling reporting" do
+      expect { SiteSetting.dsa_reporting_enabled = true }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.dsa_community_rules_required"),
+      )
+      expect(SiteSetting.dsa_reporting_enabled).to eq(false)
+
+      SiteSetting.dsa_community_rules = [
+        { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+      ].to_json
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect(SiteSetting.dsa_reporting_enabled).to eq(true)
+    end
+  end
+
+  describe ".dsa_community_rules=" do
+    let(:rule) { { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." } }
+
+    it "requires reporting to be disabled before removing the last community rule" do
+      SiteSetting.dsa_community_rules = [rule].to_json
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect { SiteSetting.dsa_community_rules = "[]" }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.dsa_community_rules_in_use"),
+      )
+      expect(JSON.parse(SiteSetting.dsa_community_rules)).to eq([rule.stringify_keys])
+
+      SiteSetting.dsa_reporting_enabled = false
+      SiteSetting.dsa_community_rules = "[]"
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules)).to eq([])
+    end
+
+    it "accepts a 500 character contractual ground and rejects 501 characters" do
+      rule[:ground] = "é" * 500
+
+      SiteSetting.dsa_community_rules = [rule].to_json
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules).sole.fetch("ground")).to eq(rule[:ground])
+
+      rule[:ground] << "é"
+
+      expect { SiteSetting.dsa_community_rules = [rule].to_json }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "accepts a 500 character explanation and rejects 501 characters" do
+      rule[:explanation] = "é" * 500
+
+      SiteSetting.dsa_community_rules = [rule].to_json
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules).sole.fetch("explanation")).to eq(
+        rule[:explanation],
+      )
+
+      rule[:explanation] << "é"
+
+      expect { SiteSetting.dsa_community_rules = [rule].to_json }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+  end
+
   describe "topic_title_length" do
     it "returns a range of min/max topic title length" do
       expect(SiteSetting.topic_title_length).to eq(
@@ -65,6 +152,16 @@ RSpec.describe SiteSetting do
 
       SiteSetting.update_pending_users_reminder_default = true
       expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(60)
+    end
+  end
+
+  describe "whispers_allowed_groups" do
+    it "defaults to staff while the update_whispers_allowed_groups_default change is enabled" do
+      expect(SiteSetting.whispers_allowed_groups).to eq("")
+
+      SiteSetting.update_whispers_allowed_groups_default = true
+      expect(SiteSetting.whispers_allowed_groups).to eq(Group::AUTO_GROUPS[:staff].to_s)
+      expect(Fabricate(:moderator)).to be_a_whisperer
     end
   end
 
@@ -152,6 +249,26 @@ RSpec.describe SiteSetting do
         expect(SiteSetting.anonymous_homepage).to eq("directory")
 
         plugin.stubs(:enabled?).returns(false)
+        expect(SiteSetting.homepage).to eq("categories")
+        expect(SiteSetting.anonymous_homepage).to eq("categories")
+      end
+
+      it "falls back when a registered plugin homepage's enabled condition fails" do
+        plugin = Plugin::Instance.new
+        plugin.stubs(:enabled?).returns(true)
+        plugin.register_homepage(
+          "directory",
+          name: "discourse_directory.navigation.title",
+          path: "/directory",
+          route: "discourse_directory/directory#index",
+          anonymous: true,
+          enabled: -> { SiteSetting.enable_user_directory },
+        )
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "directory"
+
+        SiteSetting.enable_user_directory = false
+
         expect(SiteSetting.homepage).to eq("categories")
         expect(SiteSetting.anonymous_homepage).to eq("categories")
       end
@@ -247,7 +364,7 @@ RSpec.describe SiteSetting do
   end
 
   describe "cached settings" do
-    it "should recalculate cached setting when dependent settings are changed" do
+    it "recalculates a cached setting when its dependencies change" do
       SiteSetting.blocked_attachment_filenames = "foo"
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo/)
 
@@ -295,7 +412,7 @@ RSpec.describe SiteSetting do
     end
 
     it "includes only settings for the specified category" do
-      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(13)
+      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(11)
     end
   end
 
@@ -406,6 +523,7 @@ RSpec.describe SiteSetting do
 
   describe "creating upload references for type objects settings with upload fields" do
     let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
+
     fab!(:upload)
     fab!(:upload2, :upload)
 
@@ -642,6 +760,59 @@ RSpec.describe SiteSetting do
       SiteSetting.default_locale = "en"
 
       expect(SiteSetting.content_localization_locales).to eq(["en"])
+    end
+  end
+
+  describe ".ensure_consistency!" do
+    it "resets category settings whose category no longer exists" do
+      SiteSetting.default_composer_category = "999999"
+      SiteSetting.general_category_id = 999_999
+      SiteSetting.max_topics_per_day = 999
+
+      SiteSetting.ensure_consistency!
+
+      expect(SiteSetting.default_composer_category).to eq("")
+      expect(SiteSetting.general_category_id).to eq(-1)
+      expect(SiteSetting.max_topics_per_day).to eq(999)
+      expect(SiteSetting.uncategorized_category_id).not_to eq(-1)
+      expect(UserHistory.where(subject: "default_composer_category").last.details).to include(
+        "(id 999999) no longer exists",
+      )
+    end
+
+    it "disallows uncategorized topics when the uncategorized category no longer exists" do
+      SiteSetting.uncategorized_category_id = 999_999
+
+      SiteSetting.ensure_consistency!
+
+      expect(SiteSetting.uncategorized_category_id).to eq(
+        SiteSetting.defaults[:uncategorized_category_id],
+      )
+      expect(SiteSetting.allow_uncategorized_topics).to eq(false)
+    end
+  end
+
+  describe ".should_download_images?" do
+    before { SiteSetting.disabled_image_download_domains = "evil.com" }
+
+    it "skips downloads for an exactly disabled host" do
+      expect(SiteSetting.should_download_images?("http://evil.com/a.png")).to eq(false)
+    end
+
+    it "skips downloads for a disabled host requested with different casing" do
+      expect(SiteSetting.should_download_images?("http://EVIL.com/a.png")).to eq(false)
+    end
+
+    it "skips downloads for a disabled host requested as a trailing-dot FQDN" do
+      expect(SiteSetting.should_download_images?("http://evil.com./a.png")).to eq(false)
+    end
+
+    it "downloads images from a subdomain of a disabled host" do
+      expect(SiteSetting.should_download_images?("http://cdn.evil.com/a.png")).to eq(true)
+    end
+
+    it "downloads images from a host that only shares a suffix" do
+      expect(SiteSetting.should_download_images?("http://notevil.com/a.png")).to eq(true)
     end
   end
 end

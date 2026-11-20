@@ -1,4 +1,5 @@
 import { trustHTML } from "@ember/template";
+import InvitationGate from "discourse/components/invitation-gate";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
@@ -24,7 +25,13 @@ export default <template>
           <PluginOutlet @name="above-static" />
 
           <div class="login-content">
-            {{trustHTML @controller.model.html}}
+            {{#if @controller.login.showInvitationGate}}
+              <InvitationGate
+                @externalLogin={{@controller.login.externalLogin}}
+              />
+            {{else}}
+              {{trustHTML @controller.model.html}}
+            {{/if}}
           </div>
 
           <PluginOutlet @name="below-static" />
@@ -33,22 +40,25 @@ export default <template>
             @outletArgs={{lazyHash model=@controller.model}}
           />
 
-          <div class="body-page-button-container">
-            {{#if @controller.application.canSignUp}}
-              <DButton
-                @action={{routeAction "showCreateAccount"}}
-                @label="sign_up"
-                class="btn-primary sign-up-button"
-              />
-            {{/if}}
+          {{#unless @controller.login.showInvitationGate}}
+            <div class="body-page-button-container">
+              {{#if @controller.application.canSignUp}}
+                <DButton
+                  class="btn-primary sign-up-button"
+                  @action={{routeAction "showCreateAccount"}}
+                  @label="sign_up"
+                />
+              {{/if}}
 
-            <DButton
-              @action={{routeAction "showLogin"}}
-              @icon="user"
-              @label="log_in"
-              class="btn-primary login-button"
-            />
-          </div>
+              <DButton
+                class="btn-primary login-button"
+                @action={{routeAction "showLogin"}}
+                @icon="user"
+                @label="log_in"
+              />
+            </div>
+
+          {{/unless}}
 
           <PluginOutlet
             @name="below-login-buttons"

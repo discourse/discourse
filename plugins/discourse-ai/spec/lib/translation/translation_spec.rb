@@ -115,4 +115,50 @@ describe DiscourseAi::Translation do
       expect(described_class.category_allowed?(private_category.id)).to eq(false)
     end
   end
+
+  describe ".post_localization_pending?" do
+    fab!(:post)
+
+    before do
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      freeze_time
+    end
+
+    it "is true while the post's locale hasn't been detected" do
+      expect(described_class.post_localization_pending?(post, "ja")).to eq(true)
+    end
+
+    it "is true until the translation into the locale is stored" do
+      post.update_columns(locale: "en")
+      expect(described_class.post_localization_pending?(post, "ja")).to eq(true)
+
+      Fabricate(:post_localization, post: post, locale: "ja")
+      expect(described_class.post_localization_pending?(post.reload, "ja")).to eq(false)
+    end
+
+    it "is false when the post is already in the locale" do
+      post.update_columns(locale: "ja")
+      expect(described_class.post_localization_pending?(post, "ja")).to eq(false)
+    end
+
+    it "is false for locales that aren't translated into" do
+      expect(described_class.post_localization_pending?(post, "fr")).to eq(false)
+    end
+
+    it "is false for older posts" do
+      post.update_columns(created_at: (described_class::PENDING_LOCALIZATION_WINDOW + 1.minute).ago)
+      expect(described_class.post_localization_pending?(post, "ja")).to eq(false)
+    end
+
+    it "is false for posts that aren't translated automatically" do
+      SiteSetting.ai_translation_category_scope = "exclude_strict"
+      SiteSetting.ai_translation_categories = post.topic.category_id.to_s
+      expect(described_class.post_localization_pending?(post, "ja")).to eq(false)
+    end
+
+    it "is false when translation is disabled" do
+      SiteSetting.ai_translation_enabled = false
+      expect(described_class.post_localization_pending?(post, "ja")).to eq(false)
+    end
+  end
 end

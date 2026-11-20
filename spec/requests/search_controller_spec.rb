@@ -86,6 +86,16 @@ RSpec.describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "rejects oversized search text in full-page and header searches" do
+      term = (1..51).map { |number| "word#{number}" }.join(" ")
+
+      get "/search.json", params: { q: term }
+      expect(response.status).to eq(400)
+
+      get "/search/query.json", params: { term: term }
+      expect(response.status).to eq(400)
+    end
+
     it "can search correctly" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
@@ -226,7 +236,7 @@ RSpec.describe SearchController do
     end
 
     context "when searching by topic id" do
-      it "should not be restricted by minimum search term length" do
+      it "is not restricted by the minimum search-term length" do
         SiteSetting.min_search_term_length = 20_000
 
         get "/search/query.json",
@@ -242,7 +252,7 @@ RSpec.describe SearchController do
         expect(data["topics"][0]["id"]).to eq(awesome_post.topic_id)
       end
 
-      it "should return the right result" do
+      it "returns the topic matching the requested ID" do
         get "/search/query.json",
             params: {
               term: user_post.topic_id,
@@ -259,6 +269,25 @@ RSpec.describe SearchController do
   end
 
   describe "#query" do
+    context "when anonymous search is disabled" do
+      before { SiteSetting.allow_anonymous_search = false }
+
+      it "requires an anonymous user to log in" do
+        get "/search/query.json", params: { term: "wookie" }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+      end
+
+      it "allows a logged-in user" do
+        sign_in(user)
+
+        get "/search/query.json", params: { term: "wookie" }
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search/query.json", params: { term: "wookie" }
@@ -273,6 +302,17 @@ RSpec.describe SearchController do
       log = SearchLog.where(id: search_log_id).first
       expect(log).to be_present
       expect(log.term).to eq("wookie")
+    end
+
+    it "returns results without logging a derived query" do
+      SiteSetting.log_search_queries = true
+      term = "awesome topic:#{awesome_topic.id}"
+
+      get "/search/query.json", params: { term: term, skip_search_log: true }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["posts"].pluck("id")).to eq([awesome_post.id])
+      expect(SearchLog.where(term: term)).to be_empty
     end
 
     it "logs the pageview session the search was made from" do
@@ -403,6 +443,26 @@ RSpec.describe SearchController do
   end
 
   describe "#show" do
+    context "when an anonymous user cannot search" do
+      before { SiteSetting.allow_anonymous_search = false }
+
+      it "redirects an HTML request to login and preserves the destination" do
+        get "/search", params: { q: "猫" }
+
+        expect(response).to redirect_to("/login")
+        expect(URI.parse(response.cookies["destination_url"]).request_uri).to eq(
+          "/search?q=%E7%8C%AB",
+        )
+      end
+
+      it "rejects a JSON request" do
+        get "/search.json", params: { q: "wookie" }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+      end
+    end
+
     it "doesn't raise an error when search term not specified" do
       get "/search"
       expect(response.status).to eq(200)
@@ -512,6 +572,25 @@ RSpec.describe SearchController do
               q: "awesome",
               context: "tag",
               context_id: restricted_tag.name,
+              skip_context: false,
+            }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "doesn’t work for tags restricted to a private category" do
+        category_tag = Fabricate(:tag)
+        awesome_topic.tags << category_tag
+        CategoryTag.create!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          tag: category_tag,
+        )
+
+        get "/search.json",
+            params: {
+              q: "awesome",
+              context: "tag",
+              context_id: category_tag.name,
               skip_context: false,
             }
 
@@ -762,6 +841,18 @@ RSpec.describe SearchController do
   end
 
   context "with search context" do
+    it "returns a 400 for a string search context on full-page search" do
+      get "/search.json", params: { q: "test", search_context: "user" }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns a 400 for a string search context on search queries" do
+      get "/search/query.json", params: { term: "test", search_context: "user" }
+
+      expect(response.status).to eq(400)
+    end
+
     it "raises an error with an invalid context type" do
       get "/search/query.json",
           params: {

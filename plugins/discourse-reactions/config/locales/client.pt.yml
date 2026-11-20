@@ -21,6 +21,10 @@ pt:
       main_reaction:
         add: "Gostar desta publicação"
         remove: "Remover este gosto"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Adicionado(a)"
+        changes_removed: "Removido"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       titles:

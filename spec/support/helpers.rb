@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-GIT_INITIAL_BRANCH_SUPPORTED =
-  Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
-
 module Helpers
   extend ActiveSupport::Concern
 
   class NotAThemeError < StandardError
   end
+
   class NotAComponentThemeError < StandardError
   end
 
@@ -90,6 +88,56 @@ module Helpers
 
   def email(email_name)
     fixture_file("emails/#{email_name}.eml")
+  end
+
+  def nested_mime_email(
+    multipart_levels,
+    from: "two@foo.com",
+    to: "team@bar.com",
+    subject: "Nested",
+    date: "Fri, 15 Jan 2016 00:12:43 +0100"
+  )
+    body = +""
+    multipart_levels.times do |i|
+      body << "Content-Type: multipart/mixed; boundary=\"level#{i}\"\n\n--level#{i}\n"
+    end
+    body << "Content-Type: text/plain\n\nhello\n"
+
+    <<~EMAIL
+      Return-Path: <#{from}>
+      From: #{from}
+      To: #{to}
+      Subject: #{subject}
+      Date: #{date}
+      Message-ID: <nested@foo.bar.mail>
+      MIME-Version: 1.0
+      #{body}
+    EMAIL
+  end
+
+  def wide_mime_email(
+    parts,
+    from: "two@foo.com",
+    to: "team@bar.com",
+    subject: "Wide",
+    date: "Fri, 15 Jan 2016 00:12:43 +0100"
+  )
+    body = +""
+    parts.times { body << "--wide\nContent-Type: text/plain\n\nhello\n" }
+    body << "--wide--\n"
+
+    <<~EMAIL
+      Return-Path: <#{from}>
+      From: #{from}
+      To: #{to}
+      Subject: #{subject}
+      Date: #{date}
+      Message-ID: <wide@foo.bar.mail>
+      MIME-Version: 1.0
+      Content-Type: multipart/mixed; boundary="wide"
+
+      #{body}
+    EMAIL
   end
 
   def create_staff_only_tags(tag_names)
@@ -180,7 +228,7 @@ module Helpers
   def setup_git_repo(files)
     repo_dir = Dir.mktmpdir
     system(
-      "git -C #{repo_dir} init -q . #{"--initial-branch=main" if GIT_INITIAL_BRANCH_SUPPORTED}",
+      "git -C #{repo_dir} init -q . #{"--initial-branch=main" if git_initial_branch_supported?}",
       exception: true,
     )
     system("git -C #{repo_dir} config user.email 'someone@cool.com'", exception: true)
@@ -198,6 +246,11 @@ module Helpers
       exception: false,
     )
     repo_dir
+  end
+
+  def git_initial_branch_supported?
+    @git_initial_branch_supported ||=
+      Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
   end
 
   def setup_remote_upstream(path)
@@ -220,13 +273,14 @@ module Helpers
   end
 
   def stub_const(target, const, value)
-    old = target.const_get(const)
-    target.send(:remove_const, const)
+    previously_defined = target.const_defined?(const, false)
+    old = target.const_get(const, false) if previously_defined
+    target.send(:remove_const, const) if previously_defined
     target.const_set(const, value)
     yield
   ensure
     target.send(:remove_const, const)
-    target.const_set(const, old)
+    target.const_set(const, old) if previously_defined
   end
 
   def track_sql_queries
@@ -332,7 +386,22 @@ module Helpers
   def enable_current_plugin
     plugin = Discourse.plugins_by_name[directory_from_caller.split("/").last]
     return if plugin.enabled?
+    return if enable_auth_provider(plugin.enabled_site_setting)
     SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
+  end
+
+  # Only blank settings are filled, so a spec can set anything it reads first.
+  # Ten digits is the one placeholder every credential `regex:` accepts.
+  def enable_auth_provider(name)
+    authenticator =
+      Discourse.authenticators.find { it.enable_setting == name.to_sym || it.name == name.to_s }
+    return false if authenticator.nil?
+
+    authenticator.required_settings.each do |setting|
+      SiteSetting.set(setting, "1234567890") if SiteSetting.get(setting).blank?
+    end
+    SiteSetting.set(authenticator.enable_setting, true)
+    true
   end
 
   def mock_upcoming_change_metadata(metadata)

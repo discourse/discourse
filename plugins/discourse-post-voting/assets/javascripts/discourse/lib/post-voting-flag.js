@@ -54,6 +54,11 @@ export default class PostVotingFlag extends Flag {
         take_action: opts.takeAction,
         queue_for_review: opts.queue_for_review,
       },
-    }).catch((error) => popupAjaxError(error));
+    })
+      .then(() => true)
+      .catch((error) => {
+        popupAjaxError(error);
+        return false;
+      });
   }
 }

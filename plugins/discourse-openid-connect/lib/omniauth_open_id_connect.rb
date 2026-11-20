@@ -12,6 +12,7 @@ module OmniAuth
     class OpenIDConnect < OmniAuth::Strategies::OAuth2
       class NonceVerifyError < StandardError
       end
+
       class SubVerifyError < StandardError
       end
 
@@ -24,6 +25,7 @@ module OmniAuth
       option :passthrough_authorize_options, [:p]
       option :passthrough_token_options, [:p]
       option :claims, nil
+      option :email_claim, "email"
 
       option :client_options,
              site: nil,
@@ -133,6 +135,7 @@ module OmniAuth
           discover! if options[:discovery]
 
           oauth2_callback_phase = super
+          raise env["omniauth.error"] if env["omniauth.error"].is_a?(Faraday::Error)
           return oauth2_callback_phase if env["omniauth.error"]
 
           oauth2_callback_phase
@@ -205,9 +208,10 @@ module OmniAuth
 
       info do
         data_source = options.use_userinfo ? userinfo_response : id_token_info
+        email = data_source[options.email_claim]
         prune!(
           name: data_source["name"],
-          email: data_source["email"],
+          email: email.is_a?(String) ? email : nil,
           first_name: data_source["given_name"],
           last_name: data_source["family_name"],
           nickname: data_source["preferred_username"],
@@ -252,7 +256,8 @@ module OmniAuth
         return super if options.use_userinfo
         response =
           client.request(:post, options[:client_options][:token_url], body: get_token_options)
-        ::OAuth2::AccessToken.from_hash(client, response.parsed)
+        parsed = response.parsed
+        ::OAuth2::AccessToken.new(client, parsed["id_token"].to_s, parsed)
       end
     end
   end

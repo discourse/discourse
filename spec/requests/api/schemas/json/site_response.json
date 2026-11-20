@@ -155,7 +155,7 @@
         "suggested_edit_accepted": {
           "type": "integer"
         },
-        "voice_invitation": {
+        "live_invitation": {
           "type": "integer"
         }
       },
@@ -515,6 +515,9 @@
       }
     },
     "can_create_tag": {
+      "type": "boolean"
+    },
+    "can_search": {
       "type": "boolean"
     },
     "can_tag_topics": {
@@ -1027,6 +1030,12 @@
           "icon": {
             "type": "string"
           },
+          "svg_icon": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "available": {
             "type": "boolean"
           },
@@ -1044,6 +1053,7 @@
           "title",
           "description",
           "icon",
+          "svg_icon",
           "available",
           "visible",
           "configuration_schema"
@@ -1069,6 +1079,7 @@
     "post_action_types",
     "topic_flag_types",
     "can_create_tag",
+    "can_search",
     "can_tag_topics",
     "can_tag_pms",
     "tags_filter_regexp",

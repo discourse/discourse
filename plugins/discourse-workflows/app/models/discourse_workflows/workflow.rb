@@ -41,6 +41,10 @@ module DiscourseWorkflows
              class_name: "DiscourseWorkflows::WorkflowTagMapping",
              foreign_key: "workflow_id",
              dependent: :delete_all
+    has_many :variables,
+             class_name: "DiscourseWorkflows::Variable",
+             foreign_key: "workflow_id",
+             dependent: :delete_all
     has_many :tags,
              -> { order(:name) },
              class_name: "DiscourseWorkflows::WorkflowTag",
@@ -84,6 +88,14 @@ module DiscourseWorkflows
           ->(name) do
             where("discourse_workflows_workflows.name ILIKE ?", "%#{sanitize_sql_like(name)}%")
           end
+    scope :filter_by_name_or_username,
+          ->(filter) do
+            matching_users =
+              User.where("username_lower LIKE ?", "%#{sanitize_sql_like(filter.downcase)}%")
+            filter_by_name(filter).or(where(created_by_id: matching_users.select(:id))).or(
+              where(updated_by_id: matching_users.select(:id)),
+            )
+          end
     scope :filter_by_trigger_type,
           ->(type) do
             where(
@@ -104,9 +116,9 @@ module DiscourseWorkflows
               SQL
           end
 
-    def self.filtered(name: nil, trigger_type: nil, exclude_id: nil, tags: nil)
+    def self.filtered(filter: nil, trigger_type: nil, exclude_id: nil, tags: nil)
       scope = all
-      scope = scope.filter_by_name(name) if name.present?
+      scope = scope.filter_by_name_or_username(filter) if filter.present?
       scope = scope.filter_by_trigger_type(trigger_type) if trigger_type.present?
       scope = scope.filter_by_tags(tags) if tags.present?
       scope = scope.where.not(id: exclude_id) if exclude_id
@@ -142,6 +154,7 @@ module DiscourseWorkflows
         nodes: nodes,
         connections: connections,
         settings: settings || {},
+        variables_schema: variables_schema,
         autosaved: autosaved,
         authors: authors,
         created_by: user,
@@ -157,6 +170,7 @@ module DiscourseWorkflows
         nodes: nodes,
         connections: connections,
         settings: settings || {},
+        variables_schema: variables_schema,
         autosaved: false,
         authors: authors,
         created_by: user,
@@ -194,14 +208,17 @@ module DiscourseWorkflows
     end
 
     def restore_from_version!(version, user:)
-      update!(
-        name: version.name,
-        nodes: version.nodes || [],
-        connections: version.connections || {},
-        settings: version.settings || {},
-        version_id: version.version_id,
-        updated_by: user,
-      )
+      transaction do
+        update!(
+          name: version.name,
+          nodes: version.nodes || [],
+          connections: version.connections || {},
+          settings: version.settings || {},
+          version_id: version.version_id,
+          updated_by: user,
+        )
+        restore_variables_from!(version.variables_schema, user:)
+      end
     end
 
     def published?
@@ -223,8 +240,13 @@ module DiscourseWorkflows
           nodes: nodes || [],
           connections: connections || {},
           settings: settings || {},
+          variables_schema: variables_schema,
         }.to_json,
       )
+    end
+
+    def variables_schema
+      variables.order(:id).map(&:to_version_entry)
     end
 
     def find_node_in(node_collection, node_id)
@@ -375,6 +397,25 @@ module DiscourseWorkflows
         error_workflow_id: nil,
         updated_at: Time.current,
       )
+    end
+
+    def restore_variables_from!(schema, user:)
+      desired_by_key = Array(schema).index_by { |field| field["key"] }
+      existing_by_key = variables.index_by(&:key)
+
+      keys_to_remove = existing_by_key.keys - desired_by_key.keys
+      variables.where(key: keys_to_remove).delete_all if keys_to_remove.any?
+
+      desired_by_key.each do |key, field|
+        record = existing_by_key[key]
+        record ||= variables.new(key: key, created_by: user)
+        record.update!(
+          description: field["description"],
+          variable_type: field["type"],
+          type_options: field["type_options"] || {},
+          value: field["value"],
+        )
+      end
     end
   end
 end

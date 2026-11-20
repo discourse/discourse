@@ -14,7 +14,7 @@ module("Component | ChatThreadHeader", function (hooks) {
 
     await render(
       <template>
-        <Header @thread={{this.thread}} @channel={{this.thread.channel}} />
+        <Header @channel={{this.thread.channel}} @thread={{this.thread}} />
       </template>
     );
 

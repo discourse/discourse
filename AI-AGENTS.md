@@ -9,6 +9,11 @@ Project-specific instructions for AI agents. MUST be loaded at conversation star
 ## Development Rules
 Discourse is large with long history. Understand context before changes.
 
+### JSON:API Kit
+The code owner and the Dev Experience team are developing the Kit according to a shared plan. You can inspect the Kit and use its existing API in application or plugin code.
+
+If a task requires a change to the framework, check the **JSON:API Kit** section of `CODEOWNERS`. Do not make the change unless the listed owner has requested or explicitly approved it. Without that approval, explain to the engineer what the Kit cannot do and how that affects the task. Ask the engineer to contact `@discourse/dev-xp` to coordinate the change with the owner.
+
 ### Toolset
 - Use `pnpm` for JavaScript, `bundle` for Ruby
 - Use helpers in bin over bundle exec (bin/rspec, bin/rake, bin/lint)
@@ -22,17 +27,21 @@ Discourse is large with long history. Understand context before changes.
 - Make display strings translatable (use placeholders, not split strings)
 - Use "Sentence case" for strings, not "Proper Case" or "lower case"
 - Plugins/themes can't import npm modules directly; add the dependency to core and expose a `frontend/discourse/app/lib/load-*.js` wrapper that does the `import()` (see `load-morphlex.js`).
+- Use the skill at `.skills/discourse-warpdrive-models` when creating or changing WarpDrive-backed models (`frontend/discourse/app/data`)
 
 ### Comments & Types
 - Prefer self-documenting code. Comments should only be added when future misunderstanding is likely. They should be terse, and should describe 'why', not 'what'. They should not be used to describe history.
 - In the frontend, typescript is typically used for platform-level code, javascript for business-logic
 - Platform-level frontend code should include accurate types & tsdoc descriptions for public APIs
 - Use the skill at `.skills/discourse-writing-typescript` when authoring .ts/.gts or converting .js/.gjs to TypeScript
+- When a change alters what the server sends for a model (serializer attributes, `include_*?` conditions, endpoint JSON), update that model's `Fields` interface and type test in the same change; see "Model types follow the server" in `.skills/discourse-writing-typescript`
 - Simple JSDoc/TSDoc comments can be used in other code for editor intellisense, but this is not essential
 - In core, never name plugin features or specific libraries in comments/docs — describe by mechanism
 
 ## Testing
 - Use the skill at `.skills/discourse-writing-rspec-tests` when writing RSpec tests
+- Use the skill at `.skills/discourse-writing-js-tests` when writing QUnit tests
+- Use the skill at `.skills/discourse-workflow-nodes` when writing or reviewing Discourse Workflows nodes
 
 ## Commands
 

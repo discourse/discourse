@@ -3,6 +3,12 @@
 module PageObjects
   module Components
     class Captcha < PageObjects::Components::Base
+      def complete_hcaptcha
+        within_frame(find("#h-captcha-field iframe")) { find("#checkbox").click }
+        expect(page).to have_field("h-captcha-response", with: /.+/, visible: :all)
+        self
+      end
+
       def has_hcaptcha_container?
         page.has_css?("#h-captcha-field")
       end
@@ -17,6 +23,14 @@ module PageObjects
 
       def has_no_recaptcha_container?
         page.has_no_css?("#g-recaptcha")
+      end
+
+      def has_recaptcha_v3_container?
+        page.has_css?("#g-recaptcha-v3")
+      end
+
+      def has_no_recaptcha_v3_container?
+        page.has_no_css?("#g-recaptcha-v3")
       end
 
       def has_captcha_error?

@@ -11,6 +11,50 @@ RSpec.describe BadgeGranter do
     BadgeGranter.clear_queue!
   end
 
+  describe ".post_for_reason" do
+    fab!(:first_post, :post)
+    fab!(:reply) { Fabricate(:post, topic: first_post.topic) }
+
+    let(:guardian) { user.guardian }
+
+    it "returns nil for a blank reason" do
+      expect(described_class.post_for_reason(" ", guardian:)).to be_nil
+    end
+
+    it "rejects an external URL" do
+      expect {
+        described_class.post_for_reason("https://example.com#{reply.url}", guardian:)
+      }.to raise_error(BadgeGranter::InvalidReason, I18n.t("invalid_grant_badge_reason_link"))
+    end
+
+    it "resolves a topic URL to the first post" do
+      expect(described_class.post_for_reason(first_post.topic.url, guardian:)).to eq(first_post)
+    end
+
+    it "resolves a topic URL with a post number to that post" do
+      expect(described_class.post_for_reason(reply.full_url, guardian:)).to eq(reply)
+    end
+
+    it "resolves a nested topic URL" do
+      topic = reply.topic
+      url = "#{Discourse.base_url}/n/#{topic.slug}/#{topic.id}/#{reply.post_number}"
+
+      expect(described_class.post_for_reason(url, guardian:)).to eq(reply)
+    end
+
+    it "resolves direct post URLs" do
+      urls = [
+        "/posts/#{reply.id}.json",
+        "/p/#{reply.id}",
+        "/posts/by_number/#{reply.topic_id}/#{reply.post_number}",
+      ]
+
+      expect(urls.map { |url| described_class.post_for_reason(url, guardian:) }).to eq(
+        [reply, reply, reply],
+      )
+    end
+  end
+
   describe ".revoke_ungranted_titles!" do
     let(:user) { Fabricate(:user) }
     let(:other_user) { Fabricate(:user) }
@@ -154,7 +198,7 @@ RSpec.describe BadgeGranter do
       b.badge_id = Badge::FirstLike
     end
 
-    it "should grant missing badges" do
+    it "grants missing badges" do
       nice_topic = Badge.find(Badge::NiceTopic)
       good_topic = Badge.find(Badge::GoodTopic)
 
@@ -181,7 +225,7 @@ RSpec.describe BadgeGranter do
       expect(good_topic.grant_count).to eq(1)
     end
 
-    it "should grant badges in the user locale" do
+    it "grants badges in the user's locale" do
       SiteSetting.allow_user_locale = true
 
       nice_topic = Badge.find(Badge::NiceTopic)
@@ -377,6 +421,27 @@ RSpec.describe BadgeGranter do
 
       expect(user_badge.granted_at).to eq_time(1.year.ago)
       expect(Notification.where(user:).count).to eq(0)
+    end
+
+    it "suppresses notifications without changing grant side effects" do
+      events =
+        DiscourseEvent.track_events { BadgeGranter.grant(badge, user, suppress_notification: true) }
+
+      expect(UserBadge.exists?(badge:, user:)).to eq(true)
+      expect(badge.reload.grant_count).to eq(1)
+      expect(user.user_stat.reload.distinct_badge_count).to eq(1)
+      expect(Notification.where(user:)).to be_empty
+      expect(events.map { |event| event[:event_name] }).to include(:user_badge_granted)
+    end
+
+    it "does not override existing notification suppression when false" do
+      freeze_time
+      bronze_badge = Fabricate(:badge, badge_type: BadgeType.find(BadgeType::Bronze))
+
+      BadgeGranter.grant(bronze_badge, user, created_at: 1.year.ago, suppress_notification: false)
+
+      expect(UserBadge.exists?(badge: bronze_badge, user:)).to eq(true)
+      expect(Notification.where(user:)).to be_empty
     end
 
     it "handles deleted badge" do

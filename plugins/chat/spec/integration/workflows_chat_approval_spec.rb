@@ -162,7 +162,7 @@ RSpec.describe "Chat approval workflows end-to-end" do
     final_output = execution.reload.execution_data.context_data.dig("Final", 0, "json")
     expect(execution.status).to eq("success")
     expect(final_output).to include("request_id" => 42, "completed" => true)
-    expect(final_output.keys).not_to include("value", "channel", "user")
+    expect(final_output.keys).not_to include("value", "channel", "user", "actor")
   end
 
   it "fails a timed-out V2 workflow with the approval timeout error" do

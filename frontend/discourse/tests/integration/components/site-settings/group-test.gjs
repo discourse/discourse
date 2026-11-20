@@ -20,20 +20,17 @@ module("Integration | Component | group site-setting", function (hooks) {
       },
     ];
 
-    this.set(
-      "setting",
-      SiteSetting.create({
-        category: "foo",
-        default: "",
-        description: "Choose a group",
-        placeholder: null,
-        preview: null,
-        secret: false,
-        setting: "foo_bar",
-        type: "group",
-        value: "1",
-      })
-    );
+    this.setting = SiteSetting.create({
+      category: "foo",
+      default: "",
+      description: "Choose a group",
+      placeholder: null,
+      preview: null,
+      secret: false,
+      setting: "foo_bar",
+      type: "group",
+      value: "1",
+    });
 
     await render(
       <template><SiteSettingComponent @setting={{this.setting}} /></template>
@@ -86,21 +83,18 @@ module("Integration | Component | group site-setting", function (hooks) {
       },
     ];
 
-    this.set(
-      "setting",
-      SiteSetting.create({
-        category: "foo",
-        default: "",
-        description: "Choose a group",
-        placeholder: null,
-        preview: null,
-        secret: false,
-        setting: "foo_bar",
-        type: "group",
-        disallowed_groups: "0",
-        value: "",
-      })
-    );
+    this.setting = SiteSetting.create({
+      category: "foo",
+      default: "",
+      description: "Choose a group",
+      placeholder: null,
+      preview: null,
+      secret: false,
+      setting: "foo_bar",
+      type: "group",
+      disallowed_groups: "0",
+      value: "",
+    });
 
     await render(
       <template><SiteSettingComponent @setting={{this.setting}} /></template>

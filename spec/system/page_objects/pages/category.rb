@@ -72,8 +72,8 @@ module PageObjects
       end
 
       def save_settings
-        if page.has_css?(".admin-changes-banner", wait: 0)
-          find(".admin-changes-banner .btn-primary").click
+        if page.has_css?(".d-floating-control-bar", wait: 0)
+          find(".d-floating-control-bar .btn-primary").click
         else
           find("#save-category").click
         end
@@ -182,6 +182,21 @@ module PageObjects
       def has_no_setting_tab?(tab_name)
         tab_css = ".edit-category-#{tab_name}"
         page.has_no_css?(tab_css)
+      end
+
+      def has_changes_banner?
+        page.has_css?(".d-floating-control-bar")
+      end
+
+      def has_powered_by_discourse?
+        page.has_css?(".powered-by-discourse")
+      end
+
+      def changes_banner_is_clear_of_powered_by_discourse?
+        page.evaluate_script(<<~JS)
+          document.querySelector(".d-floating-control-bar").getBoundingClientRect().bottom <=
+            document.querySelector(".powered-by-discourse").getBoundingClientRect().top
+        JS
       end
 
       def has_category_title?(title)

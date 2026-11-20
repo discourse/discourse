@@ -8,7 +8,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import NotificationFixture from "../fixtures/notifications-fixtures";
+import NotificationFixture from "../fixtures/notifications-fixtures.js";
 
 function assignCurrentUserToTopic(needs) {
   needs.pretender((server, helper) => {
@@ -124,6 +124,12 @@ acceptance("Assigned topic", function (needs) {
         "title",
         '<script>alert("xss")</script>',
         "shows indirect assign notes"
+      );
+    assert
+      .dom(".discourse-tags > li:has(.assigned-to)")
+      .exists(
+        { count: 2 },
+        "user and group assignment each render in their own li"
       );
     assert
       .dom("#topic-footer-dropdown-reassign")

@@ -6,7 +6,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
+import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator.gjs";
 
 export default class ChatChannelName extends Component {
   @service currentUser;
@@ -72,9 +72,9 @@ export default class ChatChannelName extends Component {
 
         {{#if this.showUserStatus}}
           <DUserStatusMessage
-            @status={{get this.users "0.status"}}
-            @showDescription={{if this.site.mobileView "true"}}
             class="chat-channel__user-status-message"
+            @showDescription={{if this.site.mobileView "true"}}
+            @status={{get this.users "0.status"}}
           />
         {{/if}}
 

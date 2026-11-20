@@ -10,7 +10,7 @@ module("Integration | Component | AdminReportRelatedItems", function (hooks) {
   test("renders users with profile links", async function (assert) {
     const clock = fakeTime("2026-08-20T12:00:00", null, true);
 
-    this.set("relatedItems", {
+    this.relatedItems = {
       users: [
         {
           user: {
@@ -23,17 +23,17 @@ module("Integration | Component | AdminReportRelatedItems", function (hooks) {
           timestamp: "2026-08-18T08:42:00Z",
         },
       ],
-    });
-    this.set("relatedItemsTotals", { users: 3 });
+    };
+    this.relatedItemsTotals = { users: 3 };
 
     try {
       await render(
         <template>
           <AdminReportRelatedItems
+            @endDate="2026-08-18"
             @relatedItems={{this.relatedItems}}
             @relatedItemsTotals={{this.relatedItemsTotals}}
             @startDate="2026-07-17"
-            @endDate="2026-08-18"
             @type="new_contributors"
           />
         </template>
@@ -69,7 +69,7 @@ module("Integration | Component | AdminReportRelatedItems", function (hooks) {
   });
 
   test("preserves report dates in positive UTC offsets", async function (assert) {
-    this.set("relatedItems", {
+    this.relatedItems = {
       users: [
         {
           user: {
@@ -81,16 +81,16 @@ module("Integration | Component | AdminReportRelatedItems", function (hooks) {
           timestamp: "2026-08-18T08:42:00Z",
         },
       ],
-    });
-    this.set("startDate", moment.parseZone("2026-07-26T00:00:00+08:00"));
-    this.set("endDate", moment.parseZone("2026-08-27T00:00:00+08:00"));
+    };
+    this.startDate = moment.parseZone("2026-07-26T00:00:00+08:00");
+    this.endDate = moment.parseZone("2026-08-27T00:00:00+08:00");
 
     await render(
       <template>
         <AdminReportRelatedItems
+          @endDate={{this.endDate}}
           @relatedItems={{this.relatedItems}}
           @startDate={{this.startDate}}
-          @endDate={{this.endDate}}
           @type="signups"
         />
       </template>

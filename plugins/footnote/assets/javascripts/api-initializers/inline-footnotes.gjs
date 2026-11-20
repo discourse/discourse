@@ -13,19 +13,19 @@ class InlineFootnote extends Component {
 
   <template>
     <DTooltip
+      @closeOnClickOutside={{true}}
+      @closeOnScroll={{false}}
       @identifier="inline-footnote"
       @interactive={{true}}
-      @closeOnScroll={{false}}
-      @closeOnClickOutside={{true}}
     >
       <:trigger>
         {{! eslint-disable ember/template-no-invalid-link-text }}
         <a
           class="expand-footnote"
+          data-footnote-content={{@data.footnoteContent}}
+          data-footnote-id={{@data.footnoteId}}
           href
           role="button"
-          data-footnote-id={{@data.footnoteId}}
-          data-footnote-content={{@data.footnoteContent}}
           {{on "click" this.preventDefault}}
         ></a>
       </:trigger>

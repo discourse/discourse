@@ -3,17 +3,21 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import BufferedProxy from "discourse/lib/buffered-proxy";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteTextEdit extends Controller {
   @service dialog;
+  @service siteSettings;
 
   @tracked siteText;
+
+  /** @type {number | string | null} */
+  @tracked themeId = null;
   saved = false;
-  queryParams = ["locale"];
+  queryParams = ["locale", { themeId: "theme_id" }];
 
   #activeTextarea = null;
   #lastCursorPos = null;
@@ -31,9 +35,59 @@ export default class AdminSiteTextEdit extends Controller {
     return this.siteText.value === this.get("buffered.value"); // TODO (devxp) we need a buffered proxy that works with tracked properties
   }
 
+  @computed("siteText.{default_text,new_default,value,overridden,can_revert}")
+  get defaultText() {
+    if (
+      this.siteText.default_text !== null &&
+      this.siteText.default_text !== undefined
+    ) {
+      return this.siteText.default_text;
+    }
+    if (
+      this.siteText.new_default !== null &&
+      this.siteText.new_default !== undefined
+    ) {
+      return this.siteText.new_default;
+    }
+    if (!this.siteText.overridden && !this.siteText.can_revert) {
+      return this.siteText.value;
+    }
+    return null;
+  }
+
+  get defaultTextLabel() {
+    const locale = this.siteText.default_locale;
+    if (!locale) {
+      return i18n("admin.site_text.default_text");
+    }
+    const language =
+      this.siteSettings.available_locales.find(
+        (entry) => entry.value === locale
+      )?.name ?? locale;
+    return i18n("admin.site_text.default_text_language", { language });
+  }
+
+  @computed("siteText.status")
+  get isInvalid() {
+    return this.siteText?.status === "invalid_interpolation_keys";
+  }
+
   @computed("siteText.status")
   get isOutdated() {
     return this.siteText?.status === "outdated";
+  }
+
+  @computed("siteText.status")
+  get isUnknown() {
+    return this.siteText?.status === "unknown";
+  }
+
+  @computed("buffered.value", "siteText.interpolation_keys")
+  get interpolationKeysWithStatus() {
+    return computeInterpolationKeysWithStatus(
+      this.get("buffered.value"),
+      this.siteText.interpolation_keys
+    );
   }
 
   @action
@@ -123,13 +177,5 @@ export default class AdminSiteTextEdit extends Controller {
         this.siteText.set("status", "up_to_date");
       })
       .catch(popupAjaxError);
-  }
-
-  @computed("buffered.value", "siteText.interpolation_keys")
-  get interpolationKeysWithStatus() {
-    return computeInterpolationKeysWithStatus(
-      this.get("buffered.value"),
-      this.siteText.interpolation_keys
-    );
   }
 }

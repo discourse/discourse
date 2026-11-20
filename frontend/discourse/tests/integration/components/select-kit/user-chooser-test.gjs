@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UserChooser from "discourse/select-kit/components/user-chooser";
@@ -8,11 +9,11 @@ module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("displays usernames", async function (assert) {
-    this.set("value", ["bob", "martin"]);
+    this.value = ["bob", "martin"];
 
     await render(<template><UserChooser @value={{this.value}} /></template>);
 
@@ -20,9 +21,14 @@ module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   });
 
   test("can remove a username", async function (assert) {
-    this.set("value", ["bob", "martin"]);
+    const value = tracked(["bob", "martin"]);
+    const onChange = (newValue) => (value.value = newValue);
 
-    await render(<template><UserChooser @value={{this.value}} /></template>);
+    await render(
+      <template>
+        <UserChooser @onChange={{onChange}} @value={{value.value}} />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.deselectItemByValue("bob");
@@ -30,11 +36,11 @@ module("Integration | Component | SelectKit | UserChooser", function (hooks) {
   });
 
   test("can display default search results", async function (assert) {
-    this.set("options", {
+    this.options = {
       customSearchOptions: {
         defaultSearchResults: [{ username: "foo" }, { username: "bar" }],
       },
-    });
+    };
 
     await render(
       <template><UserChooser @options={{this.options}} /></template>

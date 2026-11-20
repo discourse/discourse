@@ -2,9 +2,9 @@ import AdminAreaSettings from "discourse/admin/components/admin-area-settings";
 
 export default <template>
   <AdminAreaSettings
-    @area="emojis"
-    @path="/admin/config/emoji/settings"
-    @filter={{@controller.filter}}
     @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+    @area="emojis"
+    @filter={{@controller.filter}}
+    @path="/admin/config/emoji/settings"
   />
 </template>

@@ -8,28 +8,28 @@ export default class NestedTopicActions extends Component {
 
   <template>
     <TopicFooterButtons
-      @topic={{@topic}}
-      @toggleMultiSelect={{this.topicController.toggleMultiSelect}}
-      @showTopicSlowModeUpdate={{this.topicRoute.showTopicSlowModeUpdate}}
-      @deleteTopic={{this.topicController.deleteTopic}}
-      @recoverTopic={{this.topicController.recoverTopic}}
-      @toggleClosed={{this.topicController.toggleClosed}}
-      @toggleArchived={{this.topicController.toggleArchived}}
-      @toggleVisibility={{this.topicController.toggleVisibility}}
-      @showTopicTimerModal={{this.topicRoute.showTopicTimerModal}}
-      @showFeatureTopic={{this.topicRoute.showFeatureTopic}}
-      @showChangeTimestamp={{this.topicRoute.showChangeTimestamp}}
-      @resetBumpDate={{this.topicController.resetBumpDate}}
-      @convertToPublicTopic={{this.topicController.convertToPublicTopic}}
-      @convertToPrivateMessage={{this.topicController.convertToPrivateMessage}}
-      @toggleBookmark={{this.topicController.toggleBookmark}}
-      @showFlagTopic={{this.topicRoute.showFlagTopic}}
-      @toggleArchiveMessage={{this.topicController.toggleArchiveMessage}}
-      @editFirstPost={{this.topicController.editFirstPost}}
-      @deferTopic={{this.topicController.deferTopic}}
-      @replyToPost={{this.topicController.replyToPost}}
-      @showCreate={{false}}
       class="nested-view__topic-actions"
+      @convertToPrivateMessage={{this.topicController.convertToPrivateMessage}}
+      @convertToPublicTopic={{this.topicController.convertToPublicTopic}}
+      @deferTopic={{this.topicController.deferTopic}}
+      @deleteTopic={{this.topicController.deleteTopic}}
+      @editFirstPost={{this.topicController.editFirstPost}}
+      @recoverTopic={{this.topicController.recoverTopic}}
+      @replyToPost={{this.topicController.replyToPost}}
+      @resetBumpDate={{this.topicController.resetBumpDate}}
+      @showChangeTimestamp={{this.topicRoute.showChangeTimestamp}}
+      @showCreate={{false}}
+      @showFeatureTopic={{this.topicRoute.showFeatureTopic}}
+      @showFlagTopic={{this.topicRoute.showFlagTopic}}
+      @showTopicSlowModeUpdate={{this.topicRoute.showTopicSlowModeUpdate}}
+      @showTopicTimerModal={{this.topicRoute.showTopicTimerModal}}
+      @toggleArchived={{this.topicController.toggleArchived}}
+      @toggleArchiveMessage={{this.topicController.toggleArchiveMessage}}
+      @toggleBookmark={{this.topicController.toggleBookmark}}
+      @toggleClosed={{this.topicController.toggleClosed}}
+      @toggleMultiSelect={{this.topicController.toggleMultiSelect}}
+      @toggleVisibility={{this.topicController.toggleVisibility}}
+      @topic={{@topic}}
     />
   </template>
 }

@@ -3,11 +3,16 @@
 require_dependency "reviewable"
 
 class ReviewableAiChatMessage < Reviewable
+  include ReviewableActionBuilder
+
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
+  end
+
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_delete,
-      agree_and_silence: :agree_and_delete,
-      agree_and_suspend: :agree_and_delete,
+      agree_and_keep_deleted: :agree_and_keep_message,
       delete_and_agree: :agree_and_delete,
     }
   end
@@ -42,9 +47,21 @@ class ReviewableAiChatMessage < Reviewable
 
     if chat_message.deleted_at?
       build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree)
-      build_action(actions, :agree_and_keep_deleted, icon: "far-eye-slash", bundle: agree)
+      build_action(
+        actions,
+        :agree_and_keep_deleted,
+        icon: "far-eye-slash",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
     else
-      build_action(actions, :agree_and_delete, icon: "trash-can", bundle: agree)
+      build_action(
+        actions,
+        :agree_and_delete,
+        icon: "trash-can",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
       build_action(actions, :agree_and_keep_message, icon: "far-eye", bundle: agree)
     end
 
@@ -55,6 +72,7 @@ class ReviewableAiChatMessage < Reviewable
         icon: "ban",
         bundle: agree,
         client_action: "suspend",
+        dsa_classification_required: true,
       )
       build_action(
         actions,
@@ -62,6 +80,7 @@ class ReviewableAiChatMessage < Reviewable
         icon: "microphone-slash",
         bundle: agree,
         client_action: "silence",
+        dsa_classification_required: true,
       )
     end
 
@@ -81,7 +100,13 @@ class ReviewableAiChatMessage < Reviewable
     build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
 
     unless chat_message.deleted_at?
-      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
+      build_action(
+        actions,
+        :delete_and_agree,
+        icon: "trash-can",
+        bundle: disagree_bundle,
+        dsa_classification_required: true,
+      )
     end
   end
 
@@ -91,6 +116,20 @@ class ReviewableAiChatMessage < Reviewable
 
   def perform_agree_and_restore(performed_by, args)
     agree { chat_message.recover! }
+  end
+
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_delete(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_delete(performed_by, args)
   end
 
   def perform_agree_and_delete(performed_by, args)
@@ -114,6 +153,51 @@ class ReviewableAiChatMessage < Reviewable
   end
 
   private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_delete, :delete_and_agree, :delete_and_ignore, :agree_and_keep_deleted,
+         :agree_and_keep_hidden
+      {
+        decision_facts: "The chat message was flagged by an automated system and removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: chat_message.created_at.to_date.iso8601,
+        automated_detection: "Yes",
+        automated_decision:,
+      }
+    when :agree_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_facts:
+          "The author of a chat message flagged by an automated system was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "Yes",
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_facts:
+          "The author of a chat message flagged by an automated system had their ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "Yes",
+        automated_decision:,
+      }.compact
+    end
+  end
 
   def agree
     yield if block_given?
@@ -148,9 +232,10 @@ class ReviewableAiChatMessage < Reviewable
     button_class: nil,
     bundle: nil,
     client_action: nil,
-    confirm: false
+    confirm: false,
+    dsa_classification_required: false
   )
-    actions.add(id, bundle: bundle) do |action|
+    actions.add(id, bundle:, dsa_classification_required:) do |action|
       prefix = "reviewables.actions.#{id}"
       action.icon = icon
       action.button_class = button_class
@@ -190,7 +275,7 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

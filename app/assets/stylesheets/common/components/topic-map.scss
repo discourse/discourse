@@ -403,9 +403,8 @@
       right: -0.25em;
       bottom: -0.15em;
       font-size: var(--font-down-3);
-      width: 1.5em;
-      height: 1.5em;
-      background-size: contain;
+
+      --avatar-flair-size: 1.5em;
     }
   }
 

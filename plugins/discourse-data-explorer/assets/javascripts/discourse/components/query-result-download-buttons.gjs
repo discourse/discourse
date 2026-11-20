@@ -94,10 +94,10 @@ export default class QueryResultDownloadButtons extends Component {
 
   <template>
     <DMenu
-      @identifier="query-result-export"
-      @triggerClass="btn-default query-result-export__trigger query-result-download-buttons"
-      @placement="bottom-end"
       ...attributes
+      @identifier="query-result-export"
+      @placement="bottom-end"
+      @triggerClass="btn-default query-result-export__trigger query-result-download-buttons"
     >
       <:trigger>
         {{dIcon "download"}}
@@ -109,25 +109,25 @@ export default class QueryResultDownloadButtons extends Component {
           {{#if this.hasResults}}
             <dropdown.item>
               <DButton
+                class="btn-transparent query-result-export__results-json"
                 @action={{fn this.downloadResultJson dMenu}}
                 @label="explorer.export_as.results_json"
-                class="btn-transparent query-result-export__results-json"
               />
             </dropdown.item>
             <dropdown.item>
               <DButton
+                class="btn-transparent query-result-export__results-csv"
                 @action={{fn this.downloadResultCsv dMenu}}
                 @label="explorer.export_as.results_csv"
-                class="btn-transparent query-result-export__results-csv"
               />
             </dropdown.item>
           {{/if}}
           {{#if @includeQueryExport}}
             <dropdown.item>
               <DButton
+                class="btn-transparent query-result-export__query-json"
                 @action={{fn this.downloadQueryJson dMenu}}
                 @label="explorer.export_as.query_json"
-                class="btn-transparent query-result-export__query-json"
               />
             </dropdown.item>
           {{/if}}

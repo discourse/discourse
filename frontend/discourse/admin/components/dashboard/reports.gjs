@@ -10,6 +10,7 @@ import DashboardReportEmptyState from "discourse/admin/components/dashboard/repo
 import DashboardReportErrorState from "discourse/admin/components/dashboard/report-error-state";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
+import ManageReportsReorderable from "discourse/admin/components/modal/manage-reports-reorderable";
 import { lookupAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { loadDashboardReports } from "discourse/admin/lib/dashboard-reports-loader";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -19,7 +20,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { eq, gt } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -125,11 +125,18 @@ class FollowPointer extends Modifier {
 export default class DashboardReports extends Component {
   @service currentUser;
   @service modal;
+  @service siteSettings;
 
   @tracked cards = [];
   @tracked loading = false;
+
+  /** @type {{ key: string, rows: number, cols: number } | null} */
   @tracked liveResize = null;
+
+  /** @type {{ key: string, rect: { left: number, top: number, width: number, height: number } } | null} */
   @tracked freeFollow = null;
+
+  /** @type {string | null} */
   @tracked activeResizeKey = null;
 
   measureCard = (handle) => handle.closest(".db-report__card");
@@ -253,7 +260,13 @@ export default class DashboardReports extends Component {
 
   @action
   openReportsConfig() {
-    this.modal.show(ManageReports, {
+    // TODO (ui-kit-reorderable-list-cleanup) drop the branch and the legacy
+    // component once the change ships.
+    const Modal = this.siteSettings.enable_new_reordering_controls
+      ? ManageReportsReorderable
+      : ManageReports;
+
+    this.modal.show(Modal, {
       model: { onApplied: this.onLayoutChanged },
     });
   }
@@ -435,129 +448,136 @@ export default class DashboardReports extends Component {
 
   <template>
     <DashboardSection
-      @title={{i18n "admin.dashboard.sections.reports.title"}}
-      @description={{i18n "admin.dashboard.reports_section.description"}}
+      ...attributes
       @bordered={{false}}
-      @layout="grid"
+      @description={{i18n "admin.dashboard.reports_section.description"}}
+      @endDate={{@endDate}}
+      @headerAction={{if this.canEdit this.openReportsConfig}}
       @headerActionIcon={{if this.canEdit "gear"}}
       @headerActionLabel="admin.dashboard.reports_section.header_action"
-      @headerAction={{if this.canEdit this.openReportsConfig}}
+      @layout="grid"
       @startDate={{@startDate}}
-      @endDate={{@endDate}}
-      ...attributes
+      @title={{i18n "admin.dashboard.sections.reports.title"}}
     >
-      {{#if @fetchError}}
-        <div class="db-section__error" role="alert">
-          {{i18n "admin.dashboard.sections.reports.fetch_error"}}
-        </div>
-      {{else}}
-        <div
-          class="db-reports"
-          {{didUpdate this.loadPayloads @data @startDate @endDate}}
-        >
-          {{#each this.effectiveCards key="key" as |card|}}
-            {{#if (eq card.key this.freeFollow.key)}}
+      <:default>
+        {{#if @fetchError}}
+          <div class="db-section__error" role="alert">
+            {{i18n "admin.dashboard.sections.reports.fetch_error"}}
+          </div>
+        {{else}}
+          <div
+            class="db-reports"
+            {{didUpdate this.loadPayloads @data @startDate @endDate}}
+          >
+            {{#each this.effectiveCards key="key" as |card|}}
+              {{#if (eq card.key this.freeFollow.key)}}
+                <div
+                  class={{dConcatClass
+                    "db-report__card"
+                    "--resize-placeholder"
+                    (if (gt card.cols 1) "--wide")
+                    (if (gt card.rows 1) (concat "--rows-" card.rows))
+                  }}
+                  data-column={{this.columnFor card.key}}
+                  {{AnimateReflow this.resizeSignature}}
+                ></div>
+              {{/if}}
               <div
-                {{AnimateReflow this.resizeSignature}}
                 class={{dConcatClass
                   "db-report__card"
-                  "--resize-placeholder"
                   (if (gt card.cols 1) "--wide")
                   (if (gt card.rows 1) (concat "--rows-" card.rows))
+                  (if (eq card.key this.freeFollow.key) "--floating")
                 }}
                 data-column={{this.columnFor card.key}}
-              ></div>
-            {{/if}}
-            <div
-              {{FollowPointer (this.followRectFor card.key)}}
-              {{AnimateReflow
-                this.resizeSignature
-                disabled=(eq card.key this.freeFollow.key)
-              }}
-              class={{dConcatClass
-                "db-report__card"
-                (if (gt card.cols 1) "--wide")
-                (if (gt card.rows 1) (concat "--rows-" card.rows))
-                (if (eq card.key this.freeFollow.key) "--floating")
-              }}
-              data-identifier={{card.key}}
-              data-column={{this.columnFor card.key}}
-            >
-              <div class="db-report__header">
-                <a href={{card.url}} class="db-report__name">{{card.title}}</a>
-                {{#if card.label}}
-                  <div
-                    class={{dConcatClass
-                      "db-report__label"
-                      (concat "--" card.source)
-                    }}
-                    data-source={{card.source}}
-                  >{{card.label}}</div>
+                data-identifier={{card.key}}
+                {{FollowPointer (this.followRectFor card.key)}}
+                {{AnimateReflow
+                  this.resizeSignature
+                  disabled=(eq card.key this.freeFollow.key)
+                }}
+              >
+                <div class="db-report__header">
+                  <a
+                    class="db-report__name"
+                    href={{card.url}}
+                  >{{card.title}}</a>
+                  {{#if card.label}}
+                    <div
+                      class={{dConcatClass
+                        "db-report__label"
+                        (concat "--" card.source)
+                      }}
+                      data-source={{card.source}}
+                    >{{card.label}}</div>
+                  {{/if}}
+                </div>
+                <div class="db-report__chart">
+                  <DConditionalLoadingSpinner
+                    @condition={{card.isLoading}}
+                    @size="small"
+                  >
+                    {{#if card.error}}
+                      <DashboardReportErrorState />
+                    {{else if card.payload.empty}}
+                      <DashboardReportEmptyState />
+                    {{else if card.payload}}
+                      {{#let
+                        (lookupAdminDashboardReportRenderer card.source)
+                        as |Renderer|
+                      }}
+                        {{#if Renderer}}
+                          <Renderer
+                            @filters={{hash
+                              startDate=@startDate
+                              endDate=@endDate
+                            }}
+                            @item={{card}}
+                            @payload={{card.payload}}
+                          />
+                        {{/if}}
+                      {{/let}}
+                    {{/if}}
+                  </DConditionalLoadingSpinner>
+                </div>
+                {{#if (this.canResize card)}}
+                  <DResizeHandles
+                    @directions={{this.handleDirectionsFor card}}
+                    @draggingClass="--resizing"
+                    @handleClass="db-report__resize-handle"
+                    @measure={{this.measureCard}}
+                    @onResize={{fn this.onCardResize card}}
+                    @onResizeCancel={{fn this.onCardResizeCancel card}}
+                    @onResizeEnd={{fn this.onCardResizeEnd card}}
+                    @onResizeStart={{fn this.onCardResizeStart card}}
+                    @threshold={{8}}
+                  />
                 {{/if}}
               </div>
-              <div class="db-report__chart">
-                <DConditionalLoadingSpinner
-                  @condition={{card.isLoading}}
-                  @size="small"
-                >
-                  {{#if card.error}}
-                    <DashboardReportErrorState />
-                  {{else if card.payload.empty}}
-                    <DashboardReportEmptyState />
-                  {{else if card.payload}}
-                    {{#let
-                      (lookupAdminDashboardReportRenderer card.source)
-                      as |Renderer|
-                    }}
-                      {{#if Renderer}}
-                        <Renderer
-                          @item={{card}}
-                          @payload={{card.payload}}
-                          @filters={{hash
-                            startDate=@startDate
-                            endDate=@endDate
-                          }}
-                        />
-                      {{/if}}
-                    {{/let}}
-                  {{/if}}
-                </DConditionalLoadingSpinner>
-              </div>
-              {{#if (this.canResize card)}}
-                <DResizeHandles
-                  @directions={{this.handleDirectionsFor card}}
-                  @handleClass="db-report__resize-handle"
-                  @draggingClass="--resizing"
-                  @threshold={{8}}
-                  @measure={{this.measureCard}}
-                  @onResizeStart={{fn this.onCardResizeStart card}}
-                  @onResize={{fn this.onCardResize card}}
-                  @onResizeEnd={{fn this.onCardResizeEnd card}}
-                  @onResizeCancel={{fn this.onCardResizeCancel card}}
-                />
-              {{/if}}
-            </div>
-          {{/each}}
+            {{/each}}
 
-          {{#if this.addTileVisible}}
-            <button
-              {{AnimateReflow this.resizeSignature}}
-              type="button"
-              class="db-report__add-report"
-              aria-label={{i18n "admin.dashboard.reports_section.add"}}
-              {{on "click" this.openReportsConfig}}
-            >
-              <span>{{dIcon "plus"}}
-                {{i18n "admin.dashboard.reports_section.add"}}</span>
-            </button>
-          {{/if}}
-        </div>
-      {{/if}}
+            {{#if this.addTileVisible}}
+              <button
+                aria-label={{i18n "admin.dashboard.reports_section.add"}}
+                class="db-report__add-report"
+                type="button"
+                {{AnimateReflow this.resizeSignature}}
+                {{on "click" this.openReportsConfig}}
+              >
+                <span>{{dIcon "plus"}}
+                  {{i18n "admin.dashboard.reports_section.add"}}</span>
+              </button>
+            {{/if}}
+          </div>
+        {{/if}}
+      </:default>
 
-      <PluginOutlet
-        @name="admin-dashboard-reports-section-after"
-        @outletArgs={{lazyHash startDate=@startDate endDate=@endDate}}
-      />
+      <:footer>
+        <PluginOutlet
+          @name="admin-dashboard-reports-section-after"
+          @outletArgs={{lazyHash startDate=@startDate endDate=@endDate}}
+        />
+      </:footer>
     </DashboardSection>
   </template>
 }

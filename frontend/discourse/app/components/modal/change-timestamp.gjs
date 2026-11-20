@@ -64,9 +64,9 @@ export default class ChangeTimestamp extends Component {
         </p>
         <form>
           <DatePickerPast
-            @value={{readonly this.date}}
             @containerId="date-container"
             @onSelect={{fn (mut this.date)}}
+            @value={{readonly this.date}}
           />
           <Input @type="time" @value={{this.time}} />
         </form>
@@ -75,8 +75,8 @@ export default class ChangeTimestamp extends Component {
       <:footer>
         <DButton
           class="btn-primary"
-          @disabled={{this.buttonDisabled}}
           @action={{this.changeTimestamp}}
+          @disabled={{this.buttonDisabled}}
           @label={{if this.saving "saving" "topic.change_timestamp.action"}}
         />
       </:footer>

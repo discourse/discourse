@@ -8,6 +8,10 @@ ca:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Data"
+          outcomes:
+            failed: "Fallits"
         reports:
           filters:
             sort_by:
@@ -39,6 +43,15 @@ ca:
         type: "Tipus"
         error: "Error"
         response: "Reacció"
+      discourse_workflows:
+        ai_tool:
+          list_item: "Element de llista"
+        classify:
+          text: "Text"
+          upload_ids: "Imatges"
+          name: "Nom"
+          type: "Tipus"
+          type_score: "Puntuació"
       ai_tool_approval:
         loading: "Carregant..."
         tool: "Acció"
@@ -50,20 +63,26 @@ ca:
       llm_selector:
         none: "Cap"
       features:
-        disabled: "(desactivat)"
-        groups: "Grups:"
+        table:
+          status: "Estat"
+          enabled: "Activat"
+          groups: "Grups"
+        chatbot:
+          places:
+            none: "No disponible"
         no_groups: "Cap"
         edit: "Configuració"
-        expand_list:
-          one: "(%{count} més)"
-          other: "(%{count} més)"
         nav:
           enabled: "Activat"
         filters:
-          all: "Tots"
           reset: "Restableix"
+        sentiment:
+          enabled: "Activat"
         search:
           name: "Cerca"
+        review_queue:
+          setting_groups:
+            settings: "Configuració"
         image_caption:
           setting_groups:
             settings: "Configuració"
@@ -73,7 +92,17 @@ ca:
         select_option: "Trieu una opció..."
       translations:
         title: "Traduccions"
-        category_scope: "Categories"
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
+          ai_translation_personal_messages:
+            choices:
+              none: "Cap"
+              all: "Tots"
+          content_localization_language_switcher:
+            choices:
+              none: "Ningú"
+              all: "Tothom"
         model_progress:
           detail:
             columns:
@@ -88,6 +117,8 @@ ca:
               title: "Categories"
             tag:
               title: "Etiquetes"
+        admin_actions:
+          enabled: "Activat"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -104,6 +135,8 @@ ca:
             other: "%{count} publicacions"
       spam:
         short_title: "Brossa"
+        no_llm_selected: "Cap"
+        no_decision_model_selected: "Cap"
         last_seven_days: "Els darrers 7 dies"
         enable: "Activa"
         test_modal:
@@ -191,6 +224,12 @@ ca:
         edit: "Edita"
         delete: "Suprimeix"
         embedding: "Incrustant"
+      decision_models:
+        no_preset: "Cap"
+        display_name: "Nom"
+        provider: "Proveïdor"
+        edit: "Edita"
+        delete: "Suprimeix"
       mcp_servers:
         name: "Nom"
         description: "Descripció"
@@ -204,6 +243,15 @@ ca:
         delete: "Suprimeix"
         tools_modal:
           required: "Necessari"
+      models:
+        name: "Nom"
+        type: "Tipus"
+        provider: "Proveïdor"
+        edit: "Edita"
+        types:
+          embedding: "Incrustant"
+        filters:
+          all: "Tots els tipus"
       llms:
         display_name: "Nom"
         provider: "Proveïdor"
@@ -248,6 +296,13 @@ ca:
         providers:
           google: "Google"
           fake: "Personalitzat"
+      ai_artifact:
+        editor:
+          version: "Versió"
+          default: "Per defecte"
+          apply: "Aplica"
+        share: "Comparteix"
+        filter_all: "Tots"
       ai_bot:
         debug_ai_modal:
           duration_label: "Duració:"
@@ -272,6 +327,13 @@ ca:
             category: "Categoria"
           table:
             total_count: "Total"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
+        tabs:
+          topics: "Temes"
+          messages: "Missatges"
       discobot_discoveries:
         legacy:
           regular_results: "Temes"

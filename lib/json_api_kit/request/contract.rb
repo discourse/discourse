@@ -19,6 +19,19 @@ module JsonApiKit
 
       INDIFFERENT_HASH = IndifferentHashType.new
 
+      class << self
+        def for(parameters, resource:, glossary:)
+          new(
+            **parameters.deep_dup,
+            options: {
+              resource:,
+              glossary:,
+              raw_parameters: parameters.with_indifferent_access,
+            },
+          )
+        end
+      end
+
       include RawAttributes
 
       validate :check_shapes
@@ -29,9 +42,13 @@ module JsonApiKit
         super
       end
 
+      def refusals = Mapper.new(errors, glossary:).to_a
+
       private
 
       def resource = options[:resource]
+
+      def glossary = options[:glossary]
 
       def raw_parameters = options[:raw_parameters]
 
@@ -53,16 +70,29 @@ module JsonApiKit
 
       def check_parameters(parameters, contract, prefix = nil)
         (parameters.keys - contract.attribute_names).each do |name|
-          errors.add(
-            [prefix, name].compact.join(".").to_sym,
-            :unknown_parameter,
-            message: "unknown parameter",
-          )
+          unknown_parameter_members(name, parameters[name]).each do |members|
+            errors.add(
+              [prefix, name].compact.join(".").to_sym,
+              :unknown_parameter,
+              members:,
+              message: "unknown parameter",
+            )
+          end
         end
         contract.attribute_types.each do |name, type|
           next unless type.is_a?(Service::NestedContractType) && attributes[name]
           check_parameters(parameters[name], type.contract_class, name)
         end
+      end
+
+      def unknown_parameter_members(name, value)
+        return [[]] if Parameters::FAMILIES.key?(name)
+        enum_for(:each_parameter_member, value)
+      end
+
+      def each_parameter_member(value, members = [], &block)
+        return yield(members) unless value.is_a?(Hash) && value.present?
+        value.each { |name, member| each_parameter_member(member, [*members, name], &block) }
       end
     end
   end

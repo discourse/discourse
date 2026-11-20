@@ -5,7 +5,7 @@ import {
   nodeTypeI18nScope,
   resolveNodeTypeVersion,
   translatedOrNull,
-} from "./node-types";
+} from "./node-types.js";
 
 function cloneValue(value) {
   return value === undefined ? undefined : structuredClone(value);
@@ -108,13 +108,16 @@ export function propertyLabel(nodeDefinitionOrType, fieldName) {
   );
 }
 
-export function propertyDescription(nodeDefinitionOrType, fieldName) {
+export function propertyDescription(nodeDefinitionOrType, fieldName, schema) {
+  const descriptionKey = fieldUi(schema).description_key;
   const labelKey = localeKeyPart(fieldName);
 
   return (
+    (descriptionKey && translatedOrNull(descriptionKey)) ||
     translatedOrNull(
       `${i18nBase(nodeDefinitionOrType)}.${labelKey}_description`
-    ) || translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
+    ) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
   );
 }
 
@@ -159,6 +162,8 @@ function dynamicValueKey(schema = {}, fieldName) {
         : "group_id";
     case "tags":
       return "tag_names";
+    case "topic":
+      return "topic_ids";
     case "user":
       return ui.multiple ? "usernames" : "username";
     case "user_or_group":
@@ -304,6 +309,30 @@ export function fixedCollectionRows(value, groupName = "values") {
   return [];
 }
 
+const MATERIALIZED_CONTAINER_TYPES = [
+  "collection",
+  "fixed_collection",
+  "assignment_collection",
+  "array",
+];
+
+export function applySchemaDefaults(schema = {}, config = {}) {
+  for (const [key, fieldSchema] of Object.entries(schema)) {
+    if (config[key] != null) {
+      continue;
+    }
+
+    const type = fieldType(fieldSchema);
+    if (fieldSchema.default !== undefined) {
+      config[key] = cloneValue(fieldSchema.default);
+    } else if (MATERIALIZED_CONTAINER_TYPES.includes(type)) {
+      config[key] = fallbackValueForType(type);
+    }
+  }
+
+  return config;
+}
+
 export function fieldType(schema = {}) {
   return schema.type || "string";
 }
@@ -328,6 +357,7 @@ export function propertyOptionLabel(nodeDefinitionOrType, fieldName, option) {
 const TYPE_TO_CONTROL = {
   boolean: "boolean",
   icon: "icon",
+  emoji: "emoji",
   options: "select",
   multi_options: "multi_combo_box",
   collection: "collection",
@@ -354,7 +384,7 @@ export function fieldSupportsExpression(schema = {}) {
     return Boolean(ui.expression);
   }
 
-  return ["string", "integer", "number", "float", "icon"].includes(
+  return ["string", "integer", "number", "float", "icon", "emoji"].includes(
     fieldType(schema)
   );
 }
@@ -404,6 +434,69 @@ export function isExpression(value) {
   return typeof value === "string" && value.startsWith("=");
 }
 
+/**
+ * Returns the body of an expression value that is exactly one `{{ ... }}`,
+ * e.g. `$json.id` for `={{ $json.id }}`, and null otherwise.
+ */
+export function wholeExpressionBody(value) {
+  if (!isExpression(value)) {
+    return null;
+  }
+
+  const template = value.slice(1).trim();
+  if (!template.startsWith("{{")) {
+    return null;
+  }
+
+  return findMatchingClose(template, 2) === template.length - 2
+    ? template.slice(2, -2).trim() || null
+    : null;
+}
+
+/**
+ * Whether the value is an expression with nothing to evaluate, e.g. `=` or
+ * `={{ }}`. Mirrors ExpressionResolver.empty_expression? on the server.
+ */
+export function isEmptyExpression(value) {
+  return isExpression(value) && /^=\s*(\{\{\s*\}\})?\s*$/.test(value);
+}
+
+/**
+ * Whether a field renders its boolean toggle inline, which only applies
+ * outside expression mode.
+ *
+ * @param {object} schema - The field schema.
+ * @param {any} value - The field's current value.
+ * @returns {boolean}
+ */
+export function usesInlineBooleanControl(schema, value) {
+  return fieldControl(schema) === "boolean" && !isExpression(value);
+}
+
+/** Mirrors ExpressionResolver.find_matching_close on the server. */
+function findMatchingClose(template, start) {
+  let depth = 1;
+  let cursor = start;
+
+  while (cursor < template.length - 1) {
+    const pair = template.slice(cursor, cursor + 2);
+
+    if (pair === "{{") {
+      depth++;
+      cursor += 2;
+    } else if (pair === "}}") {
+      if (--depth === 0) {
+        return cursor;
+      }
+      cursor += 2;
+    } else {
+      cursor++;
+    }
+  }
+
+  return null;
+}
+
 export function credentialTypesForSlot(slot = {}) {
   return slot.credential_types || [slot.credential_type].filter(Boolean);
 }
@@ -431,7 +524,7 @@ export function credentialSlotAnchorField(slot = {}) {
  * expression-valued parameter cannot be settled in the editor, so the target
  * stays visible rather than vanishing along with its validations.
  */
-export function fieldDisplayState(schema = {}, configuration = {}) {
+export function fieldDisplayState(schema = {}, configuration = {}, metadata) {
   if (fieldUi(schema).hidden) {
     return "hidden";
   }
@@ -440,14 +533,14 @@ export function fieldDisplayState(schema = {}, configuration = {}) {
   let indeterminate = false;
 
   if (display_options?.show) {
-    const outcome = rulesOutcome(display_options.show, configuration);
+    const outcome = rulesOutcome(display_options.show, configuration, metadata);
     if (outcome === false) {
       return "hidden";
     }
     indeterminate ||= outcome === "unknown";
   }
   if (display_options?.hide) {
-    const outcome = rulesOutcome(display_options.hide, configuration);
+    const outcome = rulesOutcome(display_options.hide, configuration, metadata);
     if (outcome === true) {
       return "hidden";
     }
@@ -457,15 +550,38 @@ export function fieldDisplayState(schema = {}, configuration = {}) {
   return indeterminate ? "indeterminate" : "visible";
 }
 
-export function fieldVisible(schema = {}, configuration = {}) {
-  return fieldDisplayState(schema, configuration) !== "hidden";
+export function fieldVisible(schema = {}, configuration = {}, metadata) {
+  return fieldDisplayState(schema, configuration, metadata) !== "hidden";
 }
 
-export function fieldDefinitelyVisible(schema = {}, configuration = {}) {
-  return fieldDisplayState(schema, configuration) === "visible";
+export function fieldDefinitelyVisible(
+  schema = {},
+  configuration = {},
+  metadata
+) {
+  return fieldDisplayState(schema, configuration, metadata) === "visible";
 }
 
-function rulesOutcome(rules, configuration) {
+export function pruneModeHiddenFields(
+  schema = {},
+  configuration = {},
+  metadata
+) {
+  const pruned = { ...configuration };
+
+  for (const [name, field] of Object.entries(schema)) {
+    if (fieldUi(field).hidden) {
+      continue;
+    }
+    if (fieldDisplayState(field, configuration, metadata) === "hidden") {
+      delete pruned[name];
+    }
+  }
+
+  return pruned;
+}
+
+function rulesOutcome(rules, configuration, metadata) {
   let unknown = false;
 
   for (const [fieldName, expected] of Object.entries(rules)) {
@@ -474,7 +590,7 @@ function rulesOutcome(rules, configuration) {
       unknown = true;
       continue;
     }
-    if (!matchesRule(expected, value)) {
+    if (!matchesRule(expected, value, metadata)) {
       return false;
     }
   }
@@ -482,15 +598,17 @@ function rulesOutcome(rules, configuration) {
   return unknown ? "unknown" : true;
 }
 
-function matchesRule(expected, value) {
+function matchesRule(expected, value, metadata) {
   if (!Array.isArray(expected)) {
-    return matchesCondition(expected, value);
+    return matchesCondition(expected, value, metadata);
   }
 
-  return expected.some((condition) => matchesCondition(condition, value));
+  return expected.some((condition) =>
+    matchesCondition(condition, value, metadata)
+  );
 }
 
-function matchesCondition(condition, value) {
+function matchesCondition(condition, value, metadata) {
   const operator = condition?.condition;
   if (!operator) {
     if (Array.isArray(value) && !Array.isArray(condition)) {
@@ -505,6 +623,20 @@ function matchesCondition(condition, value) {
 
   if (Object.hasOwn(operator, "exists")) {
     return operator.exists ? !isEmptyValue(value) : isEmptyValue(value);
+  }
+  if (operator.metadata_flag) {
+    const { collection, flag } = operator.metadata_flag;
+    const options = metadata?.[collection];
+    return (
+      value != null &&
+      Array.isArray(options) &&
+      options.some(
+        (option) =>
+          option?.id != null &&
+          String(option.id) === String(value) &&
+          option[flag] === true
+      )
+    );
   }
 
   return false;

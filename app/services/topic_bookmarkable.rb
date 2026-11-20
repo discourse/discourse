@@ -24,8 +24,8 @@ class TopicBookmarkable < BaseBookmarkable
 
   def self.list_query(user, guardian)
     topics = Topic.listable_topics.secured(guardian)
-    pms = Topic.private_messages_for_user(user)
-    first_posts = guardian.filter_hidden_posts(Post.secured(guardian).where(deleted_at: nil))
+    pms = Topic.private_messages.allowed_to_user(user)
+    first_posts = Post.secured(guardian)
     topic_bookmarks =
       user
         .bookmarks_of_type("Topic")

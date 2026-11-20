@@ -1,5 +1,6 @@
 @import "./vendor/normalize";
 @import "./vendor/normalize-ext";
+@import "./common/tokens";
 @import "./common/foundation/base";
 @import "./color_definitions";
 @import "./common/components/buttons";
@@ -171,6 +172,8 @@ footer {
 
 .logo {
   float: right;
+  width: auto;
+  height: auto;
   max-height: 30px;
 }
 

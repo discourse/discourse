@@ -36,26 +36,26 @@ export default class ConvertToPublicTopic extends Component {
 
   <template>
     <DModal
-      @title={{i18n "topic.make_public.title"}}
-      @closeModal={{@closeModal}}
       class="convert-to-public-topic"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "topic.make_public.title"}}
     >
       <:body>
         <div class="instructions">
           {{i18n "topic.make_public.choose_category"}}
         </div>
         <CategoryChooser
-          @value={{this.publicCategoryId}}
           @onChange={{fn (mut this.publicCategoryId)}}
+          @value={{this.publicCategoryId}}
         />
       </:body>
       <:footer>
         <DButton
           class="btn-primary"
           @action={{this.makePublic}}
-          @label="composer.modal_ok"
           @disabled={{this.saving}}
+          @label="composer.modal_ok"
         />
         <DButton
           class="btn-flat d-modal-cancel"

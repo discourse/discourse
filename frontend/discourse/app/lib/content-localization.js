@@ -12,7 +12,7 @@ export const LOCALE_COOKIE_EXPIRY = 365;
  * whether the `locale` cookie is honoured. Keep the two in sync: a cookie that is honoured
  * without the corresponding UI leaves visitors stuck in a locale they cannot change back.
  *
- * @param {Object} siteSettings - the siteSettings service
+ * @param {{ content_localization_enabled: boolean, allow_user_locale: boolean, content_localization_language_switcher: string, content_localization_supported_locales: string }} siteSettings - the siteSettings service
  * @returns {boolean}
  */
 export function languageSwitcherEnabled(siteSettings) {

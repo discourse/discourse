@@ -9,6 +9,7 @@ import { trustHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
+import { decorateImageControls } from "discourse/lib/composer/image-controls";
 import { cook } from "discourse/lib/text";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DDecoratedHtml, {
@@ -32,7 +33,7 @@ class DecoratedPreviewCookText extends Component {
     const rawText = this.args.rawText;
     const cooked = await waitForPromise(cook(rawText, { previewing: true }));
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -45,6 +46,7 @@ class DecoratedPreviewCookText extends Component {
 
   @action
   decoratePreview(preview, helper) {
+    decorateImageControls(preview);
     applyHtmlDecorators(preview, helper);
     resolveAllShortUrls(ajax, this.siteSettings, preview);
   }
@@ -100,8 +102,8 @@ export default class DEditorOriginalTranslationPreview extends Component {
             {{/if}}
             <div class="d-editor-translation-preview-header__raw-toggle">
               <DToggleSwitch
-                @state={{this.showRawMarkdown}}
                 @label="composer.translations.show_raw_markdown"
+                @state={{this.showRawMarkdown}}
                 {{on "click" this.toggleRawMarkdown}}
               />
             </div>
@@ -112,15 +114,15 @@ export default class DEditorOriginalTranslationPreview extends Component {
 
         <div class="d-editor-translation-preview-header__controls">
           <button
-            type="button"
             class="btn btn-flat btn-small {{if this.showOriginal 'active'}}"
+            type="button"
             {{on "click" (fn this.setView "original")}}
           >
             {{i18n "composer.translations.original"}}
           </button>
           <button
-            type="button"
             class="btn btn-flat btn-small {{unless this.showOriginal 'active'}}"
+            type="button"
             {{on "click" (fn this.setView "translation")}}
           >
             {{i18n "composer.translations.translation"}}

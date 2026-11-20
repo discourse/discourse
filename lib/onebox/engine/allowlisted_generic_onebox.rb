@@ -229,13 +229,18 @@ module Onebox
 
       def is_embedded?
         return false if data[:html].blank?
-        provider_hosts = AllowlistedGenericOnebox.html_providers[data[:provider_name]]
-        return true if provider_hosts && AllowlistedGenericOnebox.host_matches(uri, provider_hosts)
-        return false unless data[:html]["iframe"]
+        return true if trusted_html_provider?
 
-        fragment = Nokogiri::HTML5.fragment(data[:html])
-        src = fragment.at_css("iframe")&.[]("src")
-        options[:allowed_iframe_regexes]&.any? { |r| src =~ r }
+        iframes = Nokogiri::HTML5.fragment(data[:html]).css("iframe")
+        iframes.present? &&
+          iframes.all? do |iframe|
+            options[:allowed_iframe_regexes]&.any? { |regex| iframe["src"] =~ regex }
+          end
+      end
+
+      def trusted_html_provider?
+        provider_hosts = AllowlistedGenericOnebox.html_providers[data[:provider_name]]
+        !!provider_hosts && AllowlistedGenericOnebox.host_matches(uri, provider_hosts)
       end
 
       def force_article_html?
@@ -248,8 +253,8 @@ module Onebox
 
         <<~HTML
         <iframe src="#{escaped_url}"
-                width="#{data[:player_width] || "100%"}"
-                height="#{data[:player_height]}"
+                width="#{ERB::Util.html_escape(data[:player_width] || "100%")}"
+                height="#{ERB::Util.html_escape(data[:player_height])}"
                 scrolling="no"
                 frameborder="0">
         </iframe>
@@ -274,7 +279,7 @@ module Onebox
         width = data[:image_width] || data[:thumbnail_width] || data[:width]
         height = data[:image_height] || data[:thumbnail_height] || data[:height]
 
-        "<img src='#{escaped_src}' alt='#{alt}' width='#{width}' height='#{height}' class='onebox'>"
+        "<img src='#{escaped_src}' alt='#{ERB::Util.html_escape(alt)}' width='#{ERB::Util.html_escape(width)}' height='#{ERB::Util.html_escape(height)}' class='onebox'>"
       end
 
       def video_html
@@ -283,9 +288,9 @@ module Onebox
 
         <<-HTML
           <video
-            title='#{data[:title]}'
-            width='#{data[:video_width]}'
-            height='#{data[:video_height]}'
+            title='#{ERB::Util.html_escape(data[:title])}'
+            width='#{ERB::Util.html_escape(data[:video_width])}'
+            height='#{ERB::Util.html_escape(data[:video_height])}'
             style='max-width:100%'
             poster='#{escaped_image_src}'
             controls=''
@@ -297,15 +302,20 @@ module Onebox
 
       def embedded_html
         fragment = Nokogiri::HTML5.fragment(data[:html])
-        fragment.css("img").each { |img| img["class"] = "thumbnail" }
-        if iframe = fragment.at_css("iframe")
+        if trusted_html_provider?
+          fragment.css("img").each { |img| img["class"] = "thumbnail" }
+          return fragment.to_html
+        end
+
+        iframes = fragment.css("iframe")
+        iframes.each do |iframe|
           iframe.remove_attribute("style")
           iframe["width"] = data[:width] || "100%"
           iframe["height"] = data[:height] if data[:height].present?
           iframe["scrolling"] = "no"
           iframe["frameborder"] = "0"
         end
-        fragment.to_html
+        iframes.to_html
       end
     end
   end

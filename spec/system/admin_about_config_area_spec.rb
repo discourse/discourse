@@ -25,12 +25,10 @@ describe "Admin About Config Area Page" do
       SiteSetting.contact_email = "kitty@litterbox.com"
       SiteSetting.contact_url = "https://hello.com"
       SiteSetting.site_contact_username = admin.username
-      SiteSetting.site_contact_group_name = admin.groups.first.name
+      SiteSetting.site_contact_group_name = admin.groups.first.id.to_s
 
       SiteSetting.company_name = "kitty company inc."
       SiteSetting.company_url = "https://kitty.company"
-      SiteSetting.governing_law = "kitty jurisdiction"
-      SiteSetting.city_for_disputes = "no disputes allowed"
 
       SiteSetting.about_page_extra_groups = "#{extra_group_1.id}|#{extra_group_2.id}"
       SiteSetting.about_page_extra_groups_initial_members = 5
@@ -74,12 +72,6 @@ describe "Admin About Config Area Page" do
       )
       expect(config_area.your_organization_section.company_url_input.value).to eq(
         "https://kitty.company",
-      )
-      expect(config_area.your_organization_section.governing_law_input.value).to eq(
-        "kitty jurisdiction",
-      )
-      expect(config_area.your_organization_section.city_for_disputes_input.value).to eq(
-        "no disputes allowed",
       )
 
       expect(config_area.group_listing_section.groups_input.value).to eq(
@@ -219,7 +211,7 @@ describe "Admin About Config Area Page" do
       expect(SiteSetting.contact_email).to eq("owneremail@owner.com")
       expect(SiteSetting.contact_url).to eq("https://website.owner.com/blah")
       expect(SiteSetting.site_contact_username).to eq(admin.username)
-      expect(SiteSetting.site_contact_group_name).to eq(group.name)
+      expect(SiteSetting.site_contact_group_name).to eq(group.id.to_s)
     end
   end
 
@@ -229,16 +221,12 @@ describe "Admin About Config Area Page" do
 
       config_area.your_organization_section.company_name_input.fill_in("lil' company")
       config_area.your_organization_section.company_url_input.fill_in("https://lil.company")
-      config_area.your_organization_section.governing_law_input.fill_in("wild west law")
-      config_area.your_organization_section.city_for_disputes_input.fill_in("teeb el shouq")
 
       config_area.your_organization_section.submit
       expect(config_area.your_organization_section).to have_saved_successfully
 
       expect(SiteSetting.company_name).to eq("lil' company")
       expect(SiteSetting.company_url).to eq("https://lil.company")
-      expect(SiteSetting.governing_law).to eq("wild west law")
-      expect(SiteSetting.city_for_disputes).to eq("teeb el shouq")
     end
   end
 

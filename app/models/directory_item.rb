@@ -196,10 +196,8 @@ class DirectoryItem < ActiveRecord::Base
       visible_posts AS (
         SELECT p.id
         FROM posts p
-        JOIN visible_topics vt ON vt.id = p.topic_id
-        WHERE p.deleted_at IS NULL
-          AND p.post_type = :regular_post_type
-          AND NOT p.hidden
+        JOIN topics t ON t.id = p.topic_id
+        WHERE #{UserStat::COUNTABLE_POST_CONDITIONS}
       )
       SELECT
         ua.user_id,

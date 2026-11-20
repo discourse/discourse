@@ -1,9 +1,11 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
+import { findQueries } from "discourse/plugins/discourse-data-explorer/discourse/data/builders/queries";
 
 export default class AdminPluginsExplorerIndex extends DiscourseRoute {
   @service router;
+  @service warpStore;
 
   beforeModel(transition) {
     // Redirect old `?id=123` URLs to query details.
@@ -15,31 +17,22 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
     }
   }
 
-  async model() {
-    if (!this.currentUser.admin) {
-      // display "Only available to admins" message
-      return { model: null, schema: null, disallow: true, groups: null };
-    }
-
-    const [groups, model] = await Promise.all([
-      ajax("/admin/plugins/discourse-data-explorer/groups.json"),
-      this.store.findAll("query"),
+  async model(_params, transition) {
+    const controller = this.controllerFor("adminPlugins.show.explorer.index");
+    const [{ content }, queryTags] = await Promise.all([
+      this.warpStore.request(
+        findQueries({
+          ...controller.fetchParams,
+          tags: transition.to.queryParams.tags?.split(","),
+        })
+      ),
+      ajax("/admin/plugins/discourse-data-explorer/queries/tags.json"),
     ]);
 
-    const groupNames = {};
-    groups.forEach((g) => {
-      groupNames[g.id] = g.name;
-    });
-    model.content.forEach((query) => {
-      query.set(
-        "group_names",
-        (query.group_ids || []).map((id) => groupNames[id])
-      );
-    });
-    return { model, groups };
+    return { document: content, queryTags };
   }
 
-  setupController(controller, model) {
-    controller.setProperties(model);
+  setupController(controller, { document, queryTags }) {
+    controller.reset(document, queryTags);
   }
 }

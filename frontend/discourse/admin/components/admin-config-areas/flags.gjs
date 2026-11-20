@@ -9,6 +9,8 @@ import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `flags-reorderable.gjs` replaces it.
 export default class AdminConfigAreasFlags extends Component {
   @service site;
 
@@ -77,11 +79,11 @@ export default class AdminConfigAreasFlags extends Component {
         <tbody class="d-table__body">
           {{#each this.flags as |flag|}}
             <AdminFlagItem
-              @flag={{flag}}
-              @moveFlagCallback={{this.moveFlagCallback}}
               @deleteFlagCallback={{this.deleteFlagCallback}}
+              @flag={{flag}}
               @isFirstFlag={{this.isFirstFlag flag}}
               @isLastFlag={{this.isLastFlag flag}}
+              @moveFlagCallback={{this.moveFlagCallback}}
             />
           {{/each}}
         </tbody>

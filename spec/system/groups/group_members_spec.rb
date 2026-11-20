@@ -2,13 +2,14 @@
 
 describe "Group members" do
   let(:group_page) { PageObjects::Pages::Group.new }
+
   fab!(:admin)
   fab!(:group)
 
   before { sign_in(admin) }
 
   describe "adds a user to the group" do
-    it "should show that the user is already in the group" do
+    it "shows that the user is already in the group" do
       group_page.visit(group).add_users.select_user_and_add(admin)
 
       expect(

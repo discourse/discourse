@@ -110,6 +110,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
 
   context "when params is blank" do
     let(:params) { nil }
+
     it "raises a MalformedPublicKeyCredentialError" do
       expect { service.authenticate_security_key }.to raise_error(
         DiscourseWebauthn::MalformedPublicKeyCredentialError,
@@ -120,6 +121,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
 
   context "when params is not blank and not a hash" do
     let(:params) { "test" }
+
     it "raises a MalformedPublicKeyCredentialError" do
       expect { service.authenticate_security_key }.to raise_error(
         DiscourseWebauthn::MalformedPublicKeyCredentialError,

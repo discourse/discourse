@@ -19,18 +19,16 @@ if defined?(DiscourseWorkflows)
             available: -> { SiteSetting.discourse_post_event_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_post_event",
             output_contracts: [
-              {
-                schema:
-                  DiscourseEvents::Events::Workflows::Schema::EVENT_PARTICIPATION_CHANGED_OUTPUT_SCHEMA,
-              },
+              { schema: PostEventSchema::EVENT_PARTICIPATION_CHANGED_OUTPUT_SCHEMA },
             ],
             properties: PostEventScoping::SCOPE_PROPERTIES,
             i18n_scope: PostEventScoping::I18N_SCOPE,
           )
 
-          def initialize(invitee, *)
+          def initialize(invitee, payload = {})
             super(parameters: {})
             @invitee = invitee
+            @actor = payload[:acting_user]
           end
 
           # Re-submitting an unchanged RSVP still publishes, so without the
@@ -44,9 +42,9 @@ if defined?(DiscourseWorkflows)
 
           def output
             {
-              event: event_data(starts_at: event.starts_at, ends_at: event.ends_at),
-              post: post_data,
-              topic: topic_data(topic),
+              event: serialize_event(starts_at: event.starts_at, ends_at: event.ends_at),
+              post: serialize_event_post,
+              topic: serialize_topic_list_item(topic),
               user: serialize_user(user),
               participation: {
                 status: removed? ? nil : status_name(@invitee.status),
@@ -54,7 +52,8 @@ if defined?(DiscourseWorkflows)
                 removed: removed?,
                 recurring: !removed? && !!@invitee.recurring,
               },
-              stats: stats_data,
+              stats: serialize_event_stats,
+              actor: serialize_user(@actor),
             }
           end
 

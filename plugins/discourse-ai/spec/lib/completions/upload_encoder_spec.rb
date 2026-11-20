@@ -81,6 +81,16 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     XML
   end
 
+  describe ".normalize_upload_ids" do
+    it "accepts arrays, JSON and comma separated decimal ids" do
+      expect(
+        [[3, "3", [4]], "[5, 5]", "6, 7", "010", "0x1a", nil].map do |ids|
+          described_class.normalize_upload_ids(ids)
+        end,
+      ).to eq([[3, 4], [5], [6, 7], [10], [], []])
+    end
+  end
+
   it "automatically converts gifs to pngs" do
     upload = UploadCreator.new(gif, "1x1.gif").create_for(Discourse.system_user.id)
     encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)
@@ -207,6 +217,25 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     expect(skips.map { |skip| skip[:upload_id] }).to eq([upload.id])
     expect(skips.first[:filename]).to eq("avatar.jxl")
     expect(skips.first[:message]).to include("unsupported image format")
+  end
+
+  it "records documents whose attachment type the caller does not accept" do
+    SiteSetting.authorized_extensions += "|pdf"
+    upload = Fabricate(:upload, original_filename: "report.pdf", extension: "pdf")
+    skips = []
+
+    described_class.encode(
+      upload_ids: [upload.id],
+      max_pixels: MAX_PIXELS,
+      allowed_kinds: %i[image document],
+      allowed_attachment_types: ["docx"],
+      skips: skips,
+    )
+
+    expect(skips.first).to include(
+      upload_id: upload.id,
+      message: "pdf attachments are not accepted by this model",
+    )
   end
 
   it "reaches the collector a prompt was handed" do
@@ -442,8 +471,8 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
       expect(encoded.first).not_to have_key(:base64)
     end
 
-    %w[docx xlsx odt ods].each do |extension|
-      it "logs #{extension} conversion failures and skips the upload" do
+    shared_examples "skipping failed document conversions" do |extension:|
+      it "logs the conversion failure and skips the upload" do
         upload =
           create_doc_upload(contents: "raw #{extension} bytes", filename: "sample.#{extension}")
 
@@ -461,6 +490,22 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
         )
         expect(encoded).to be_empty
       end
+    end
+
+    context "with a DOCX document" do
+      include_examples "skipping failed document conversions", extension: "docx"
+    end
+
+    context "with an XLSX document" do
+      include_examples "skipping failed document conversions", extension: "xlsx"
+    end
+
+    context "with an ODT document" do
+      include_examples "skipping failed document conversions", extension: "odt"
+    end
+
+    context "with an ODS document" do
+      include_examples "skipping failed document conversions", extension: "ods"
     end
 
     it "routes .html uploads through the html converter" do

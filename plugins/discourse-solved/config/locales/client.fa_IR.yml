@@ -23,6 +23,11 @@ fa_IR:
                 lt_1h: "< ۱ ساعت"
                 gt_24h: "> ۲۴ ساعت"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "تغییرات"
+        changes_removed: "پاک شد"
+        tag_names: "برچسب‌ها"
     notifications:
       alt:
         solved:

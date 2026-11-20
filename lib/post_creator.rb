@@ -35,6 +35,7 @@ class PostCreator
   #                             call `enqueue_jobs` after the transaction is committed.
   #   hidden_reason_id        - Reason for hiding the post (optional)
   #   skip_validations        - Do not validate any of the content in the post
+  #   skip_rate_limits        - Do not apply the author's post rate limits
   #   skip_staff_author_pm_membership_sync - Do not add the post author to private message allowed users when a staff guardian authorizes the post
   #   draft_key               - the key of the draft we are creating (will be deleted on success)
   #   advance_draft           - Destroy draft after creating post or topic
@@ -101,7 +102,8 @@ class PostCreator
     @topic = nil
     @post = nil
 
-    if @user.suspended? && !skip_validations?
+    group_inbox_email = @opts[:via_email] && @opts[:is_group_inbox_message]
+    if @user.suspended? && !skip_validations? && !group_inbox_email
       errors.add(:base, I18n.t(:user_is_suspended))
       return false
     end
@@ -200,6 +202,8 @@ class PostCreator
   end
 
   def create
+    raise Discourse::SiteArchived if SiteSetting.site_archived
+
     if valid?
       transaction do
         build_post_stats
@@ -607,7 +611,7 @@ class PostCreator
   end
 
   def save_post
-    @post.disable_rate_limits! if skip_validations?
+    @post.disable_rate_limits! if skip_validations? || @opts[:skip_rate_limits]
     @post.skip_validation = skip_validations?
     saved = @post.save
     rollback_from_errors!(@post) unless saved

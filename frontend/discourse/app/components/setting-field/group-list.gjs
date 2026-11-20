@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import {
@@ -78,13 +79,14 @@ export default class SettingFieldGroupList extends Component {
   <template>
     <@field.Control>
       <ListSetting
-        @value={{this.selectedIds}}
         @choices={{this.groupChoices}}
-        @settingName={{@definition.key}}
         @mandatoryValues={{@definition.mandatory_values}}
         @nameProperty="name"
-        @valueProperty="id"
         @onChange={{this.onChange}}
+        @options={{hash disabled=@field.disabled}}
+        @settingName={{@definition.key}}
+        @value={{this.selectedIds}}
+        @valueProperty="id"
       />
     </@field.Control>
   </template>

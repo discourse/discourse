@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   fillIn,
@@ -10,13 +11,46 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
+import emojisFixtures from "discourse/tests/fixtures/emojis-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 import I18n, { i18n } from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
+
+async function renderEngine(context, { withFormApi = false } = {}) {
+  const formApi = tracked(undefined);
+  const registerApi = withFormApi ? (api) => (formApi.value = api) : undefined;
+
+  await render(
+    <template>
+      <Form
+        @data={{context.configuration}}
+        @onRegisterApi={{registerApi}}
+        as |form transientData|
+      >
+        <PropertyEngineConfigurator
+          @configuration={{transientData}}
+          @connections={{context.connections}}
+          @form={{form}}
+          @formApi={{formApi.value}}
+          @node={{context.node}}
+          @nodes={{context.nodes}}
+          @nodeType={{context.nodeType}}
+          @nodeTypes={{context.nodeTypes}}
+          @onChange={{context.onChange}}
+          @schema={{context.schema}}
+          @session={{context.session}}
+        />
+      </Form>
+    </template>
+  );
+
+  return formApi.value;
+}
 
 module("Integration | Component | workflows property engine", function (hooks) {
   setupRenderingTest(hooks);
@@ -47,30 +81,16 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("preserves focus for scalar fields while typing", async function (assert) {
-    this.setProperties({
-      configuration: { title: "" },
-      nodeType: "action:topic",
-      schema: {
-        title: {
-          type: "string",
-          required: true,
-        },
+    this.configuration = { title: "" };
+    this.nodeType = "action:topic";
+    this.schema = {
+      title: {
+        type: "string",
+        required: true,
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     await fillIn("input", "Hello");
 
@@ -78,51 +98,51 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom("input").isFocused();
   });
 
-  test("validates optional integer fields that do not support expressions", async function (assert) {
-    this.setProperties({
-      configuration: { post_number: "" },
-      formApi: null,
-      nodeType: "trigger:post_button",
-      schema: {
-        post_number: {
-          type: "integer",
-          required: false,
-          min: 1,
-          no_data_expression: true,
-        },
-      },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
-
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
+  test("picks emojis for emoji fields", async function (assert) {
+    pretender.get("/emojis.json", () =>
+      response(emojisFixtures["/emojis.json"])
     );
+    pretender.get("/emojis/search-aliases.json", () => response([]));
 
-    await this.formApi.submit();
+    this.configuration = { reaction: null };
+    this.nodeType = "action:topic";
+    this.schema = {
+      reaction: {
+        type: "emoji",
+        no_data_expression: true,
+      },
+    };
+
+    const formApi = await renderEngine(this, { withFormApi: true });
+
+    await click(".btn-emoji");
+    await emojiPicker(".emoji-picker").select("grinning");
+
+    assert.strictEqual(formApi.get("reaction"), "grinning");
+  });
+
+  test("validates optional integer fields that do not support expressions", async function (assert) {
+    this.configuration = { post_number: "" };
+    this.nodeType = "trigger:post_button";
+    this.schema = {
+      post_number: {
+        type: "integer",
+        required: false,
+        min: 1,
+        no_data_expression: true,
+      },
+    };
+
+    const formApi = await renderEngine(this, { withFormApi: true });
+
+    await formApi.submit();
     assert
       .form()
       .field("post_number")
       .hasNoErrors("the optional field is valid while blank");
 
     await fillIn("input[name='post_number']", "1.5");
-    await this.formApi.submit();
+    await formApi.submit();
     assert
       .form()
       .field("post_number")
@@ -132,7 +152,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       );
 
     await fillIn("input[name='post_number']", "2");
-    await this.formApi.submit();
+    await formApi.submit();
     assert
       .form()
       .field("post_number")
@@ -140,43 +160,20 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("expression-enabled integer fields accept expressions", async function (assert) {
-    this.setProperties({
-      configuration: { post_number: "={{ $json.post_number }}" },
-      formApi: null,
-      nodeType: "trigger:post_button",
-      schema: {
-        post_number: {
-          type: "integer",
-          min: 1,
-        },
+    this.configuration = { post_number: "={{ $json.post_number }}" };
+    this.nodeType = "trigger:post_button";
+    this.schema = {
+      post_number: {
+        type: "integer",
+        min: 1,
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom(".workflows-variable-input").includesText("post_number");
 
-    await this.formApi.submit();
+    await formApi.submit();
     assert
       .form()
       .field("post_number")
@@ -187,34 +184,19 @@ module("Integration | Component | workflows property engine", function (hooks) {
     I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
       "Only visible to the agent";
 
-    this.setProperties({
-      configuration: { raw: "" },
-      nodeType: "action:post",
-      nodeTypes: [{ identifier: "action:post", name: "action:post" }],
-      schema: {
-        raw: {
-          type: "string",
-          ui: {
-            control: "textarea",
-          },
+    this.configuration = { raw: "" };
+    this.nodeType = "action:post";
+    this.nodeTypes = [{ identifier: "action:post", name: "action:post" }];
+    this.schema = {
+      raw: {
+        type: "string",
+        ui: {
+          control: "textarea",
         },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".form-kit__container-description")
@@ -232,35 +214,20 @@ module("Integration | Component | workflows property engine", function (hooks) {
     I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
       "Only visible to the agent";
 
-    this.setProperties({
-      configuration: { raw: "" },
-      nodeType: "action:post",
-      nodeTypes: [{ identifier: "action:post", name: "action:post" }],
-      schema: {
-        raw: {
-          type: "string",
-          ui: {
-            control: "textarea",
-            show_label: false,
-          },
+    this.configuration = { raw: "" };
+    this.nodeType = "action:post";
+    this.nodeTypes = [{ identifier: "action:post", name: "action:post" }];
+    this.schema = {
+      raw: {
+        type: "string",
+        ui: {
+          control: "textarea",
+          show_label: false,
         },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".fk-d-tooltip__trigger").doesNotExist();
     assert
@@ -269,209 +236,148 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("renders checkbox controls from metadata", async function (assert) {
-    this.setProperties({
-      configuration: {
-        category_ids: [1],
-        include_subcategories: true,
-      },
-      formApi: null,
-      nodeType: "trigger:topic_created",
-      schema: {
-        category_ids: {
-          type: "array",
-          ui: {
-            control: "category",
-            multiple: true,
-          },
+    this.configuration = {
+      category_ids: [1],
+      include_subcategories: true,
+    };
+    this.nodeType = "trigger:topic_created";
+    this.schema = {
+      category_ids: {
+        type: "array",
+        ui: {
+          control: "category",
+          multiple: true,
         },
-        include_subcategories: {
-          type: "boolean",
-          ui: {
-            control: "checkbox",
-          },
-          display_options: {
-            show: {
-              category_ids: [{ condition: { exists: true } }],
-            },
+      },
+      include_subcategories: {
+        type: "boolean",
+        ui: {
+          control: "checkbox",
+        },
+        display_options: {
+          show: {
+            category_ids: [{ condition: { exists: true } }],
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom("input[type='checkbox']").isChecked();
 
     await click("input[type='checkbox']");
 
-    assert.false(this.formApi.get("include_subcategories"));
+    assert.false(formApi.get("include_subcategories"));
   });
 
   test("hides fields conditioned on a category list when it is empty", async function (assert) {
-    this.setProperties({
-      configuration: {
-        category_ids: [],
-        include_subcategories: true,
-      },
-      nodeType: "trigger:topic_created",
-      schema: {
-        category_ids: {
-          type: "array",
-          ui: {
-            control: "category",
-            multiple: true,
-          },
+    this.configuration = {
+      category_ids: [],
+      include_subcategories: true,
+    };
+    this.nodeType = "trigger:topic_created";
+    this.schema = {
+      category_ids: {
+        type: "array",
+        ui: {
+          control: "category",
+          multiple: true,
         },
-        include_subcategories: {
-          type: "boolean",
-          ui: {
-            control: "checkbox",
-          },
-          display_options: {
-            show: {
-              category_ids: [{ condition: { exists: true } }],
-            },
+      },
+      include_subcategories: {
+        type: "boolean",
+        ui: {
+          control: "checkbox",
+        },
+        display_options: {
+          show: {
+            category_ids: [{ condition: { exists: true } }],
           },
         },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".category-selector").exists();
     assert.dom("input[type='checkbox']").doesNotExist();
   });
 
   test("renders user seen trigger options as a compact condition group", async function (assert) {
-    this.setProperties({
-      configuration: {
-        group_ids: [],
-        trigger_on_first_seen: true,
-        trigger_on_not_seen_for_more_than: false,
-        not_seen_for_amount: 30,
-        not_seen_for_unit: "days",
-      },
-      formApi: null,
-      nodeType: "trigger:user_seen",
-      nodeTypes: [
-        {
-          identifier: "trigger:user_seen",
-          name: "trigger:user_seen",
-          version: "1.0",
-          metadata: {
-            groups: [
-              { id: 1, name: "support" },
-              { id: 2, name: "moderators" },
-            ],
-          },
-        },
-      ],
-      schema: {
-        trigger_conditions: {
-          type: "custom",
-          ui: {
-            control: "user_seen_trigger_options",
-          },
-        },
-        group_ids: {
-          type: "multi_options",
-          default: [],
-          type_options: {
-            load_options_method: "groups",
-          },
-          control_options: {
-            filterable: true,
-            name_property: "name",
-            value_property: "id",
-          },
-        },
-        trigger_on_first_seen: {
-          type: "boolean",
-          default: true,
-          ui: {
-            hidden: true,
-          },
-        },
-        trigger_on_not_seen_for_more_than: {
-          type: "boolean",
-          default: false,
-          ui: {
-            hidden: true,
-          },
-        },
-        not_seen_for_amount: {
-          type: "integer",
-          default: 30,
-          min: 1,
-          ui: {
-            hidden: true,
-          },
-        },
-        not_seen_for_unit: {
-          type: "options",
-          default: "days",
-          options: ["hours", "days", "weeks", "months"],
-          ui: {
-            hidden: true,
-          },
+    this.configuration = {
+      group_ids: [],
+      trigger_on_first_seen: true,
+      trigger_on_not_seen_for_more_than: false,
+      not_seen_for_amount: 30,
+      not_seen_for_unit: "days",
+    };
+    this.nodeType = "trigger:user_seen";
+    this.nodeTypes = [
+      {
+        identifier: "trigger:user_seen",
+        name: "trigger:user_seen",
+        version: "1.0",
+        metadata: {
+          groups: [
+            { id: 1, name: "support" },
+            { id: 2, name: "moderators" },
+          ],
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
+    ];
+    this.schema = {
+      trigger_conditions: {
+        type: "custom",
+        ui: {
+          control: "user_seen_trigger_options",
+        },
       },
-    });
+      group_ids: {
+        type: "multi_options",
+        default: [],
+        type_options: {
+          load_options_method: "groups",
+        },
+        control_options: {
+          filterable: true,
+          name_property: "name",
+          value_property: "id",
+        },
+      },
+      trigger_on_first_seen: {
+        type: "boolean",
+        default: true,
+        ui: {
+          hidden: true,
+        },
+      },
+      trigger_on_not_seen_for_more_than: {
+        type: "boolean",
+        default: false,
+        ui: {
+          hidden: true,
+        },
+      },
+      not_seen_for_amount: {
+        type: "integer",
+        default: 30,
+        min: 1,
+        ui: {
+          hidden: true,
+        },
+      },
+      not_seen_for_unit: {
+        type: "options",
+        default: "days",
+        options: ["hours", "days", "weeks", "months"],
+        ui: {
+          hidden: true,
+        },
+      },
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await waitFor("input[name='trigger_on_first_seen']:checked");
 
@@ -500,7 +406,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await groupSelector.selectRowByValue("2");
 
     assert.deepEqual(
-      this.formApi.get("group_ids").map(String),
+      formApi.get("group_ids").map(String),
       ["2"],
       "selected group IDs are saved"
     );
@@ -508,9 +414,9 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click("input[name='trigger_on_not_seen_for_more_than']");
     await waitFor("input[name='not_seen_for_amount']");
 
-    assert.true(this.formApi.get("trigger_on_not_seen_for_more_than"));
-    assert.strictEqual(this.formApi.get("not_seen_for_amount"), 30);
-    assert.strictEqual(this.formApi.get("not_seen_for_unit"), "days");
+    assert.true(formApi.get("trigger_on_not_seen_for_more_than"));
+    assert.strictEqual(formApi.get("not_seen_for_amount"), 30);
+    assert.strictEqual(formApi.get("not_seen_for_unit"), "days");
     assert.dom(".form-kit__container.workflows-user-seen-duration").exists();
     assert.dom("input[name='not_seen_for_amount']").hasValue("30");
     assert.dom("select[name='not_seen_for_unit']").hasValue("days");
@@ -518,51 +424,28 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await fillIn("input[name='not_seen_for_amount']", "45");
     await select("select[name='not_seen_for_unit']", "weeks");
 
-    assert.strictEqual(String(this.formApi.get("not_seen_for_amount")), "45");
-    assert.strictEqual(this.formApi.get("not_seen_for_unit"), "weeks");
+    assert.strictEqual(String(formApi.get("not_seen_for_amount")), "45");
+    assert.strictEqual(formApi.get("not_seen_for_unit"), "weeks");
   });
 
   test("can clear optional category controls", async function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
 
-    this.setProperties({
-      configuration: {
-        category_id: 2,
-      },
-      formApi: null,
-      nodeType: "trigger:topic_created",
-      schema: {
-        category_id: {
-          type: "integer",
-          required: false,
-          ui: {
-            control: "category",
-          },
+    this.configuration = {
+      category_id: 2,
+    };
+    this.nodeType = "trigger:topic_created";
+    this.schema = {
+      category_id: {
+        type: "integer",
+        required: false,
+        ui: {
+          control: "category",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const categoryChooser = selectKit(".category-chooser");
     const header = categoryChooser.header();
@@ -572,50 +455,27 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     await click(header.el().querySelector(".btn-clear"));
 
-    assert.strictEqual(this.formApi.get("category_id"), "");
+    assert.strictEqual(formApi.get("category_id"), "");
   });
 
   test("hides the clear button on category controls when uncategorized topics are disallowed", async function (assert) {
     this.siteSettings.allow_uncategorized_topics = false;
 
-    this.setProperties({
-      configuration: {
-        category_id: 2,
-      },
-      formApi: null,
-      nodeType: "trigger:topic_created",
-      schema: {
-        category_id: {
-          type: "integer",
-          required: false,
-          ui: {
-            control: "category",
-          },
+    this.configuration = {
+      category_id: 2,
+    };
+    this.nodeType = "trigger:topic_created";
+    this.schema = {
+      category_id: {
+        type: "integer",
+        required: false,
+        ui: {
+          control: "category",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this, { withFormApi: true });
 
     const categoryChooser = selectKit(".category-chooser");
     const header = categoryChooser.header();
@@ -627,64 +487,40 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("can clear optional group controls", async function (assert) {
-    this.setProperties({
-      configuration: {
-        group_inbox_id: 2,
-      },
-      formApi: null,
-      nodeType: "trigger:topic_created",
-      nodeTypes: [
-        {
-          identifier: "trigger:topic_created",
-          metadata: {
-            groups: [
-              { id: 1, name: "support" },
-              { id: 2, name: "moderators" },
-            ],
-          },
-        },
-      ],
-      schema: {
-        group_inbox_id: {
-          type: "integer",
-          required: false,
-          type_options: {
-            load_options_method: "groups",
-          },
-          ui: {
-            control: "group_select",
-          },
-          control_options: {
-            filterable: true,
-            name_property: "name",
-            value_property: "id",
-          },
+    this.configuration = {
+      group_inbox_id: 2,
+    };
+    this.nodeType = "trigger:topic_created";
+    this.nodeTypes = [
+      {
+        identifier: "trigger:topic_created",
+        metadata: {
+          groups: [
+            { id: 1, name: "support" },
+            { id: 2, name: "moderators" },
+          ],
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
+    ];
+    this.schema = {
+      group_inbox_id: {
+        type: "integer",
+        required: false,
+        type_options: {
+          load_options_method: "groups",
+        },
+        ui: {
+          control: "group_select",
+        },
+        control_options: {
+          filterable: true,
+          name_property: "name",
+          value_property: "id",
+        },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const groupSelector = selectKit(".combo-box");
     const header = groupSelector.header();
@@ -694,77 +530,52 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     await click(header.el().querySelector(".btn-clear"));
 
-    assert.strictEqual(this.formApi.get("group_inbox_id"), null);
+    assert.strictEqual(formApi.get("group_inbox_id"), null);
   });
 
   test("renders preloaded automatic group option by name", async function (assert) {
-    this.setProperties({
-      configuration: {
-        operation: "check_membership",
-        group_id: 14,
-      },
-      formApi: null,
-      node: {
-        clientId: "node-1",
-        type: "action:group",
-        typeVersion: "1.0",
-      },
-      nodeType: "action:group",
-      nodeTypes: [
-        {
-          identifier: "action:group",
-          name: "action:group",
-          version: "1.0",
-          metadata: {
-            groups: [
-              { id: 0, name: "everyone" },
-              { id: 14, name: "trust_level_2" },
-            ],
-          },
-        },
-      ],
-      schema: {
-        group_id: {
-          type: "integer",
-          required: true,
-          type_options: {
-            load_options_method: "groups",
-          },
-          ui: {
-            control: "group_select",
-          },
-          control_options: {
-            filterable: true,
-            name_property: "name",
-            value_property: "id",
-          },
+    this.configuration = {
+      operation: "check_membership",
+      group_id: 14,
+    };
+    this.node = {
+      clientId: "node-1",
+      type: "action:group",
+      typeVersion: "1.0",
+    };
+    this.nodeType = "action:group";
+    this.nodeTypes = [
+      {
+        identifier: "action:group",
+        name: "action:group",
+        version: "1.0",
+        metadata: {
+          groups: [
+            { id: 0, name: "everyone" },
+            { id: 14, name: "trust_level_2" },
+          ],
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
+    ];
+    this.schema = {
+      group_id: {
+        type: "integer",
+        required: true,
+        type_options: {
+          load_options_method: "groups",
+        },
+        ui: {
+          control: "group_select",
+        },
+        control_options: {
+          filterable: true,
+          name_property: "name",
+          value_property: "id",
+        },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this, { withFormApi: true });
 
     const groupSelector = selectKit(".combo-box");
 
@@ -778,46 +589,32 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("preserves focus for collection fields while typing", async function (assert) {
-    this.setProperties({
-      configuration: {
-        headers: { values: [{ key: "", value: "" }] },
-      },
-      nodeType: "action:http_request",
-      schema: {
-        headers: {
-          type: "fixed_collection",
-          options: [
-            {
-              name: "values",
-              values: {
-                key: {
-                  type: "string",
-                  required: true,
-                },
-                value: {
-                  type: "string",
-                  required: true,
-                },
+    this.configuration = {
+      headers: { values: [{ key: "", value: "" }] },
+    };
+    this.nodeType = "action:http_request";
+    this.schema = {
+      headers: {
+        type: "fixed_collection",
+        options: [
+          {
+            name: "values",
+            values: {
+              key: {
+                type: "string",
+                required: true,
+              },
+              value: {
+                type: "string",
+                required: true,
               },
             },
-          ],
-        },
+          },
+        ],
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     let [keyInput] = findAll(
       ".workflows-property-engine__collection-row input"
@@ -832,49 +629,26 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("renders collection options as addable fields", async function (assert) {
-    this.setProperties({
-      configuration: { updates: {} },
-      formApi: null,
-      nodeType: "action:user",
-      schema: {
-        updates: {
-          type: "collection",
-          type_options: {
-            add_optional_field_button_text:
-              "discourse_workflows.property_engine.add_field",
-          },
-          options: [
-            {
-              name: "title",
-              type: "string",
-              required: false,
-            },
-          ],
+    this.configuration = { updates: {} };
+    this.nodeType = "action:user";
+    this.schema = {
+      updates: {
+        type: "collection",
+        type_options: {
+          add_optional_field_button_text:
+            "discourse_workflows.property_engine.add_field",
         },
+        options: [
+          {
+            name: "title",
+            type: "string",
+            required: false,
+          },
+        ],
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom(".workflows-property-engine__collection-row").doesNotExist();
     assert
@@ -893,53 +667,30 @@ module("Integration | Component | workflows property engine", function (hooks) {
       "Updated title"
     );
 
-    assert.deepEqual(this.formApi.get("updates"), { title: "Updated title" });
+    assert.deepEqual(formApi.get("updates"), { title: "Updated title" });
 
     await click(".workflows-property-engine__collection-delete");
 
-    assert.deepEqual(this.formApi.get("updates"), {});
+    assert.deepEqual(formApi.get("updates"), {});
   });
 
   test("renders collection boolean options inline", async function (assert) {
-    this.setProperties({
-      configuration: { updates: {} },
-      formApi: null,
-      nodeType: "action:user",
-      schema: {
-        updates: {
-          type: "collection",
-          options: [
-            {
-              name: "trust_level_locked",
-              type: "boolean",
-              required: false,
-            },
-          ],
-        },
+    this.configuration = { updates: {} };
+    this.nodeType = "action:user";
+    this.schema = {
+      updates: {
+        type: "collection",
+        options: [
+          {
+            name: "trust_level_locked",
+            type: "boolean",
+            required: false,
+          },
+        ],
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(".workflows-property-engine__add-attrs-btn");
     await waitFor(".dropdown-menu__item .btn-transparent");
@@ -953,7 +704,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
         ".workflows-property-engine__collection-row .d-toggle-switch__checkbox"
       )
       .hasAttribute("aria-checked", "false");
-    assert.deepEqual(this.formApi.get("updates"), {
+    assert.deepEqual(formApi.get("updates"), {
       trust_level_locked: false,
     });
 
@@ -961,150 +712,104 @@ module("Integration | Component | workflows property engine", function (hooks) {
       ".workflows-property-engine__collection-row .d-toggle-switch__checkbox"
     );
 
-    assert.deepEqual(this.formApi.get("updates"), {
+    assert.deepEqual(formApi.get("updates"), {
       trust_level_locked: true,
     });
   });
 
   test("renders fixed collections with missing group data", async function (assert) {
-    this.setProperties({
-      configuration: { entries: {} },
-      formApi: null,
-      nodeType: "action:log",
-      schema: {
-        entries: {
-          type: "fixed_collection",
-          type_options: {
-            multiple_values: true,
-          },
-          options: [
-            {
-              name: "values",
-              values: {
-                key: {
-                  type: "string",
-                  required: true,
-                  no_data_expression: true,
-                },
-                value: {
-                  type: "string",
-                  required: true,
-                },
+    this.configuration = { entries: {} };
+    this.nodeType = "action:log";
+    this.schema = {
+      entries: {
+        type: "fixed_collection",
+        type_options: {
+          multiple_values: true,
+        },
+        options: [
+          {
+            name: "values",
+            values: {
+              key: {
+                type: "string",
+                required: true,
+                no_data_expression: true,
+              },
+              value: {
+                type: "string",
+                required: true,
               },
             },
-          ],
-        },
+          },
+        ],
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom(".workflows-property-engine__collection-row").doesNotExist();
 
     await click(".btn-default");
 
     assert.dom(".workflows-property-engine__collection-row").exists();
-    assert.strictEqual(this.formApi.get("entries.values").length, 1);
+    assert.strictEqual(formApi.get("entries.values").length, 1);
   });
 
   test("edits optional fixed collection styles and icons without expressions", async function (assert) {
-    this.setProperties({
-      configuration: {
-        buttons: {
-          values: [{ label: "Approve", value: "approve" }],
-        },
+    this.configuration = {
+      buttons: {
+        values: [{ label: "Approve", value: "approve" }],
       },
-      formApi: null,
-      nodeType: "action:chat_approval",
-      schema: {
-        buttons: {
-          type: "fixed_collection",
-          options: [
-            {
-              name: "values",
-              values: {
-                label: {
-                  type: "string",
-                  required: true,
-                  no_data_expression: true,
-                },
-                value: {
-                  type: "string",
-                  required: true,
-                  no_data_expression: true,
-                },
-                style: {
-                  type: "options",
-                  required: false,
-                  options: [
-                    "default",
-                    "primary",
-                    "danger",
-                    "success",
-                    "flat",
-                    "transparent",
-                  ],
-                  no_data_expression: true,
-                  control_options: {
-                    none: "none_placeholder",
-                  },
-                },
-                icon: {
-                  type: "icon",
-                  required: false,
-                  no_data_expression: true,
+    };
+    this.nodeType = "action:chat_approval";
+    this.schema = {
+      buttons: {
+        type: "fixed_collection",
+        options: [
+          {
+            name: "values",
+            values: {
+              label: {
+                type: "string",
+                required: true,
+                no_data_expression: true,
+              },
+              value: {
+                type: "string",
+                required: true,
+                no_data_expression: true,
+              },
+              style: {
+                type: "options",
+                required: false,
+                options: [
+                  "default",
+                  "primary",
+                  "danger",
+                  "success",
+                  "flat",
+                  "transparent",
+                ],
+                no_data_expression: true,
+                control_options: {
+                  none: "none_placeholder",
                 },
               },
+              icon: {
+                type: "icon",
+                required: false,
+                no_data_expression: true,
+              },
             },
-          ],
-          type_options: {
-            multiple_values: true,
           },
+        ],
+        type_options: {
+          multiple_values: true,
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const row = ".workflows-property-engine__collection-row";
     const styleField = '[data-name="buttons.values.0.style"]';
@@ -1119,7 +824,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await select(`${styleField} select`, "primary");
 
     assert.strictEqual(
-      this.formApi.get("buttons.values.0.style"),
+      formApi.get("buttons.values.0.style"),
       "primary",
       "the nested style is selected"
     );
@@ -1135,7 +840,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click("[data-icon-id='gear']");
 
     assert.strictEqual(
-      this.formApi.get("buttons.values.0.icon"),
+      formApi.get("buttons.values.0.icon"),
       "gear",
       "the nested icon is selected"
     );
@@ -1147,80 +852,56 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(`${iconField} .d-icon-grid-picker__clear`);
 
     assert.strictEqual(
-      this.formApi.get("buttons.values.0.style"),
+      formApi.get("buttons.values.0.style"),
       null,
       "the nested style is cleared"
     );
     assert.strictEqual(
-      this.formApi.get("buttons.values.0.icon"),
+      formApi.get("buttons.values.0.icon"),
       null,
       "the nested icon is cleared"
     );
   });
 
   test("reorders sortable fixed collection items", async function (assert) {
-    this.setProperties({
-      configuration: {
-        buttons: {
-          values: [
-            { label: "Approve", value: "approve" },
-            { label: "Deny", value: "deny" },
-          ],
-        },
+    this.configuration = {
+      buttons: {
+        values: [
+          { label: "Approve", value: "approve" },
+          { label: "Deny", value: "deny" },
+        ],
       },
-      formApi: null,
-      nodeType: "action:chat_approval",
-      onChange: sinon.spy(),
-      schema: {
-        buttons: {
-          type: "fixed_collection",
-          type_options: {
-            multiple_values: true,
-            sortable: true,
-          },
-          options: [
-            {
-              name: "values",
-              values: {
-                label: {
-                  type: "string",
-                  required: true,
-                  no_data_expression: true,
-                },
-                value: {
-                  type: "string",
-                  required: true,
-                  no_data_expression: true,
-                },
+    };
+    this.nodeType = "action:chat_approval";
+    this.onChange = sinon.spy();
+    this.schema = {
+      buttons: {
+        type: "fixed_collection",
+        type_options: {
+          multiple_values: true,
+          sortable: true,
+        },
+        options: [
+          {
+            name: "values",
+            values: {
+              label: {
+                type: "string",
+                required: true,
+                no_data_expression: true,
+              },
+              value: {
+                type: "string",
+                required: true,
+                no_data_expression: true,
               },
             },
-          ],
-        },
+          },
+        ],
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-            @onChange={{this.onChange}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const moveItemSelector = (direction, position) =>
       `[aria-label="${i18n(
@@ -1243,7 +924,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(moveUpButtons[1]);
 
     assert.deepEqual(
-      this.formApi.get("buttons.values"),
+      formApi.get("buttons.values"),
       [
         { label: "Deny", value: "deny" },
         { label: "Approve", value: "approve" },
@@ -1259,7 +940,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(moveDownButtons[0]);
 
     assert.deepEqual(
-      this.formApi.get("buttons.values"),
+      formApi.get("buttons.values"),
       [
         { label: "Approve", value: "approve" },
         { label: "Deny", value: "deny" },
@@ -1275,48 +956,34 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("does not add reorder controls to non-sortable fixed collections", async function (assert) {
-    this.setProperties({
-      configuration: {
-        entries: {
-          values: [{ key: "first" }, { key: "second" }],
-        },
+    this.configuration = {
+      entries: {
+        values: [{ key: "first" }, { key: "second" }],
       },
-      nodeType: "action:log",
-      schema: {
-        entries: {
-          type: "fixed_collection",
-          type_options: {
-            multiple_values: true,
-          },
-          options: [
-            {
-              name: "values",
-              values: {
-                key: {
-                  type: "string",
-                  required: true,
-                  no_data_expression: true,
-                },
+    };
+    this.nodeType = "action:log";
+    this.schema = {
+      entries: {
+        type: "fixed_collection",
+        type_options: {
+          multiple_values: true,
+        },
+        options: [
+          {
+            name: "values",
+            values: {
+              key: {
+                type: "string",
+                required: true,
+                no_data_expression: true,
               },
             },
-          ],
-        },
+          },
+        ],
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".workflows-property-engine__collection-order-controls")
@@ -1327,44 +994,30 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("labels fixed collection remove buttons for items without a name", async function (assert) {
-    this.setProperties({
-      configuration: { entries: { values: [{ aggregation: "count" }] } },
-      nodeType: "action:log",
-      schema: {
-        entries: {
-          type: "fixed_collection",
-          type_options: {
-            multiple_values: true,
-          },
-          options: [
-            {
-              name: "values",
-              values: {
-                aggregation: {
-                  type: "string",
-                  required: true,
-                  no_data_expression: true,
-                },
+    this.configuration = { entries: { values: [{ aggregation: "count" }] } };
+    this.nodeType = "action:log";
+    this.schema = {
+      entries: {
+        type: "fixed_collection",
+        type_options: {
+          multiple_values: true,
+        },
+        options: [
+          {
+            name: "values",
+            values: {
+              aggregation: {
+                type: "string",
+                required: true,
+                no_data_expression: true,
               },
             },
-          ],
-        },
+          },
+        ],
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".workflows-property-engine__collection-delete")
@@ -1376,44 +1029,30 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("labels fixed collection remove buttons with the item name", async function (assert) {
-    this.setProperties({
-      configuration: { entries: { values: [{ name: "Alpha" }] } },
-      nodeType: "action:log",
-      schema: {
-        entries: {
-          type: "fixed_collection",
-          type_options: {
-            multiple_values: true,
-          },
-          options: [
-            {
-              name: "values",
-              values: {
-                name: {
-                  type: "string",
-                  required: true,
-                  no_data_expression: true,
-                },
+    this.configuration = { entries: { values: [{ name: "Alpha" }] } };
+    this.nodeType = "action:log";
+    this.schema = {
+      entries: {
+        type: "fixed_collection",
+        type_options: {
+          multiple_values: true,
+        },
+        options: [
+          {
+            name: "values",
+            values: {
+              name: {
+                type: "string",
+                required: true,
+                no_data_expression: true,
               },
             },
-          ],
-        },
+          },
+        ],
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-property-engine__collection-delete").hasAria(
       "label",
@@ -1424,55 +1063,41 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("only titles the fixed collection add button when a maximum exists", async function (assert) {
-    this.setProperties({
-      configuration: { entries: { values: [] }, capped: { values: [] } },
-      nodeType: "action:log",
-      schema: {
-        entries: {
-          type: "fixed_collection",
-          type_options: {
-            multiple_values: true,
-          },
-          options: [
-            {
-              name: "values",
-              values: {
-                key: { type: "string", required: true },
-              },
-            },
-          ],
+    this.configuration = { entries: { values: [] }, capped: { values: [] } };
+    this.nodeType = "action:log";
+    this.schema = {
+      entries: {
+        type: "fixed_collection",
+        type_options: {
+          multiple_values: true,
         },
-        capped: {
-          type: "fixed_collection",
-          max_items: 1,
-          type_options: {
-            multiple_values: true,
-          },
-          options: [
-            {
-              name: "values",
-              values: {
-                key: { type: "string", required: true },
-              },
+        options: [
+          {
+            name: "values",
+            values: {
+              key: { type: "string", required: true },
             },
-          ],
-        },
+          },
+        ],
       },
-    });
+      capped: {
+        type: "fixed_collection",
+        max_items: 1,
+        type_options: {
+          multiple_values: true,
+        },
+        options: [
+          {
+            name: "values",
+            values: {
+              key: { type: "string", required: true },
+            },
+          },
+        ],
+      },
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const addButtons = findAll(".form-kit__section .btn-default");
 
@@ -1486,58 +1111,52 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("renders condition builder controls inside the property engine", async function (assert) {
-    this.setProperties({
-      configuration: {
-        conditions: [],
+    this.configuration = {
+      conditions: [],
+    };
+    this.node = {
+      clientId: "branch",
+      type: "condition:if",
+      name: "Branch",
+    };
+    this.nodes = [
+      {
+        clientId: "trigger",
+        type: "trigger:manual",
+        name: "Trigger",
       },
-      formApi: null,
-      node: {
+      {
+        clientId: "secondary",
+        type: "action:http_request",
+        name: "Secondary",
+      },
+      {
         clientId: "branch",
         type: "condition:if",
         name: "Branch",
       },
-      nodes: [
-        {
-          clientId: "trigger",
-          type: "trigger:manual",
-          name: "Trigger",
-        },
-        {
-          clientId: "secondary",
-          type: "action:http_request",
-          name: "Secondary",
-        },
-        {
-          clientId: "branch",
-          type: "condition:if",
-          name: "Branch",
-        },
-      ],
-      connections: [
-        {
-          sourceClientId: "trigger",
-          targetClientId: "branch",
-        },
-        {
-          sourceClientId: "secondary",
-          targetClientId: "branch",
-          targetInputIndex: 1,
-        },
-      ],
-      nodeTypes: [],
-      nodeType: "condition:if",
-      schema: {
-        conditions: {
-          type: "array",
-          ui: {
-            control: "condition_builder",
-          },
+    ];
+    this.connections = [
+      {
+        sourceClientId: "trigger",
+        targetClientId: "branch",
+      },
+      {
+        sourceClientId: "secondary",
+        targetClientId: "branch",
+        targetInputIndex: 1,
+      },
+    ];
+    this.nodeTypes = [];
+    this.nodeType = "condition:if";
+    this.schema = {
+      conditions: {
+        type: "array",
+        ui: {
+          control: "condition_builder",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
     this.session.lastExecutionRunData = {
       Trigger: [
         {
@@ -1588,32 +1207,11 @@ module("Integration | Component | workflows property engine", function (hooks) {
       ],
     };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @connections={{this.connections}}
-            @node={{this.node}}
-            @nodes={{this.nodes}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(".workflows-empty-state .btn-primary");
 
-    const conditions = this.formApi.get("conditions");
+    const conditions = formApi.get("conditions");
     assert.strictEqual(conditions.length, 1);
     assert.dom(".workflows-property-engine__collection-row").exists();
     assert
@@ -1638,102 +1236,63 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.strictEqual(
-      this.formApi.get("conditions.0.leftValue"),
+      formApi.get("conditions.0.leftValue"),
       '={{ $json["topic title"]["post-count"] }}'
     );
   });
 
   test("condition builder supports declared integer and array fields", async function (assert) {
-    this.setProperties({
-      configuration: { conditions: [] },
-      formApi: null,
-      node: {
-        clientId: "branch",
-        type: "condition:if",
-        name: "Branch",
-      },
-      nodes: [
+    this.session.outputSchemas = {
+      trigger: [
         {
-          clientId: "trigger",
-          type: "trigger:sample",
-          typeVersion: "1.0",
-          name: "Trigger",
-        },
-        {
-          clientId: "branch",
-          type: "condition:if",
-          name: "Branch",
-        },
-      ],
-      connections: [
-        {
-          sourceClientId: "trigger",
-          targetClientId: "branch",
-        },
-      ],
-      nodeTypes: [
-        {
-          name: "trigger:sample",
-          versions: {
-            "1.0": {
-              output_contracts: [
-                {
-                  schema: {
-                    type: "object",
-                    properties: {
-                      post: {
-                        type: "object",
-                        properties: {
-                          id: { type: "integer" },
-                          mixed: { type: ["integer", "string"] },
-                          tags: {
-                            type: "array",
-                            items: { type: "string" },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
+          type: "object",
+          properties: {
+            post: {
+              type: "object",
+              properties: {
+                id: { type: "integer" },
+                mixed: { type: ["integer", "string"] },
+                tags: { type: "array", items: { type: "string" } },
+              },
             },
           },
         },
       ],
-      nodeType: "condition:if",
-      schema: {
-        conditions: {
-          type: "array",
-          ui: { control: "condition_builder" },
-        },
+    };
+    this.configuration = { conditions: [] };
+    this.node = {
+      clientId: "branch",
+      type: "condition:if",
+      name: "Branch",
+    };
+    this.nodes = [
+      {
+        clientId: "trigger",
+        type: "trigger:sample",
+        typeVersion: "1.0",
+        name: "Trigger",
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
+      {
+        clientId: "branch",
+        type: "condition:if",
+        name: "Branch",
       },
-    });
+    ];
+    this.connections = [
+      {
+        sourceClientId: "trigger",
+        targetClientId: "branch",
+      },
+    ];
+    this.nodeType = "condition:if";
+    this.schema = {
+      conditions: {
+        type: "array",
+        ui: { control: "condition_builder" },
+      },
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @connections={{this.connections}}
-            @node={{this.node}}
-            @nodes={{this.nodes}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(".workflows-empty-state .btn-primary");
 
@@ -1753,7 +1312,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.deepEqual(
-      this.formApi.get("conditions.0.operator"),
+      formApi.get("conditions.0.operator"),
       {
         operation: "equals",
         type: "number",
@@ -1764,39 +1323,86 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("renders webhook URL previews from schema controls", async function (assert) {
-    this.setProperties({
-      configuration: { path: "my-hook" },
-      nodeType: "trigger:webhook",
-      schema: {
-        path: {
-          type: "string",
-        },
-        url_preview: {
-          type: "custom",
-          ui: {
-            control: "url_preview",
-          },
+    this.configuration = { path: "my-hook" };
+    this.nodeType = "trigger:webhook";
+    this.schema = {
+      path: {
+        type: "string",
+      },
+      url_preview: {
+        type: "custom",
+        ui: {
+          control: "url_preview",
         },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".workflows-url-preview code")
       .includesText("/workflows/webhooks/my-hook");
+  });
+
+  test("summarize placeholders use server output keys and add/remove notify changes", async function (assert) {
+    this.session.outputSchemas = {
+      "summarize-1": [
+        {
+          type: "object",
+          properties: { region: {}, sum_a_total: {}, sum_b_total: {} },
+        },
+      ],
+    };
+    this.configuration = {
+      fields_to_summarize: {
+        values: [
+          { aggregation: "sum", field: "a.total", output_field_name: "" },
+          { aggregation: "sum", field: "b.total", output_field_name: "" },
+        ],
+      },
+    };
+    this.node = { clientId: "summarize-1", type: "action:summarize" };
+    this.nodeType = "action:summarize";
+    this.onChange = sinon.spy();
+    this.schema = {
+      fields_to_summarize: {
+        type: "fixed_collection",
+        ui: { control: "summarize_aggregations" },
+        type_options: { multiple_values: true },
+        options: [
+          {
+            name: "values",
+            values: {
+              aggregation: {
+                type: "options",
+                options: ["sum"],
+                no_data_expression: true,
+              },
+              field: { type: "string", no_data_expression: true },
+              output_field_name: {
+                type: "string",
+                no_data_expression: true,
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    await renderEngine(this);
+
+    assert.deepEqual(
+      findAll(".workflows-summarize-row__control--derived input").map(
+        (input) => input.placeholder
+      ),
+      ["sum_a_total", "sum_b_total"]
+    );
+
+    await click(".workflows-property-engine__collection-delete");
+    assert.true(this.onChange.calledOnce);
+
+    await click("button.btn-default:has(.d-icon-plus)");
+    assert.true(this.onChange.calledTwice);
   });
 
   test("renders form trigger test and production URL controls", async function (assert) {
@@ -1815,38 +1421,23 @@ module("Integration | Component | workflows property engine", function (hooks) {
       }
     );
 
-    this.setProperties({
-      configuration: {},
-      node: {
-        clientId: "trigger-1",
-        type: "trigger:form",
-        webhookId: "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
-      },
-      nodeType: "trigger:form",
-      schema: {
-        url_preview: {
-          type: "custom",
-          ui: {
-            control: "url_preview",
-          },
+    this.configuration = {};
+    this.node = {
+      clientId: "trigger-1",
+      type: "trigger:form",
+      webhookId: "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+    };
+    this.nodeType = "trigger:form";
+    this.schema = {
+      url_preview: {
+        type: "custom",
+        ui: {
+          control: "url_preview",
         },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-url-preview-mode__button").exists({ count: 2 });
     assert
@@ -1883,37 +1474,22 @@ module("Integration | Component | workflows property engine", function (hooks) {
       }
     );
 
-    this.setProperties({
-      configuration: { path: "my-hook" },
-      node: { clientId: "webhook-1", type: "trigger:webhook" },
-      nodeType: "trigger:webhook",
-      schema: {
-        path: {
-          type: "string",
-        },
-        url_preview: {
-          type: "custom",
-          ui: {
-            control: "url_preview",
-          },
+    this.configuration = { path: "my-hook" };
+    this.node = { clientId: "webhook-1", type: "trigger:webhook" };
+    this.nodeType = "trigger:webhook";
+    this.schema = {
+      path: {
+        type: "string",
+      },
+      url_preview: {
+        type: "custom",
+        ui: {
+          control: "url_preview",
         },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".workflows-url-preview-mode__button").exists({ count: 2 });
     assert
@@ -1936,38 +1512,15 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("renders icon fields with the form-kit icon control", async function (assert) {
-    this.setProperties({
-      configuration: { icon: "gear" },
-      formApi: null,
-      nodeType: "trigger:topic_admin_button",
-      schema: {
-        icon: {
-          type: "icon",
-        },
+    this.configuration = { icon: "gear" };
+    this.nodeType = "trigger:topic_admin_button";
+    this.schema = {
+      icon: {
+        type: "icon",
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     assert.dom(".form-kit__control-icon").exists();
     assert.dom(".form-kit__control-icon").hasAttribute("data-value", "gear");
@@ -1982,46 +1535,23 @@ module("Integration | Component | workflows property engine", function (hooks) {
       '.workflows-property-engine__mode-control input[value="dynamic"]'
     );
 
-    assert.strictEqual(this.formApi.get("icon"), "=bolt");
+    assert.strictEqual(formApi.get("icon"), "=bolt");
     assert.dom(".workflows-variable-input").exists();
   });
 
   test("shows expected value hints in dynamic mode", async function (assert) {
-    this.setProperties({
-      configuration: { channel_id: "2" },
-      formApi: null,
-      nodeType: "action:send_chat_message",
-      schema: {
-        channel_id: {
-          type: "integer",
-          ui: {
-            dynamic_value: "chat_channel_id",
-          },
+    this.configuration = { channel_id: "2" };
+    this.nodeType = "action:send_chat_message";
+    this.schema = {
+      channel_id: {
+        type: "integer",
+        ui: {
+          dynamic_value: "chat_channel_id",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this, { withFormApi: true });
 
     assert.dom(".workflows-property-engine__dynamic-hint").doesNotExist();
 
@@ -2035,106 +1565,123 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("select fields render with correct initial value", async function (assert) {
-    this.setProperties({
-      configuration: { combinator: "or" },
-      nodeType: "condition:if",
-      schema: {
-        combinator: {
-          type: "options",
-          options: ["and", "or"],
-          default: "and",
-          no_data_expression: true,
-        },
+    this.configuration = { combinator: "or" };
+    this.nodeType = "condition:if";
+    this.schema = {
+      combinator: {
+        type: "options",
+        options: ["and", "or"],
+        default: "and",
+        no_data_expression: true,
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom("select").hasValue("or");
   });
 
-  test("renders combo boxes from metadata and applies option patches", async function (assert) {
-    this.setProperties({
-      configuration: {
-        agent_force_default_llm: true,
-        agent_id: 2,
-        agent_name: "",
-        llm_model_id: 99,
+  test("updates badge reason visibility when the selected badge changes", async function (assert) {
+    this.configuration = { operation: "grant", badge_id: 1 };
+    this.nodeType = "action:badge";
+    this.nodeTypes = [
+      {
+        identifier: "action:badge",
+        metadata: {
+          badges: [
+            { id: 1, name: "Community badge", hide_reason: false },
+            { id: 2, name: "Anniversary", hide_reason: true },
+          ],
+        },
       },
-      formApi: null,
-      nodeType: "action:ai_agent",
-      nodeTypes: [
-        {
-          identifier: "action:ai_agent",
-          metadata: {
-            agents: [
-              { id: 1, name: "Support Bot", force_default_llm: false },
-              { id: 2, name: "Helper Bot", force_default_llm: true },
+    ];
+    this.schema = {
+      badge_id: {
+        type: "integer",
+        type_options: { load_options_method: "badges" },
+        ui: { control: "combo_box" },
+        control_options: { value_property: "id", name_property: "name" },
+      },
+      reason: {
+        type: "string",
+        display_options: {
+          show: { operation: ["grant"] },
+          hide: {
+            badge_id: [
+              {
+                condition: {
+                  metadata_flag: { collection: "badges", flag: "hide_reason" },
+                },
+              },
             ],
-            i18n_prefix: "discourse_ai.discourse_workflows",
-          },
-        },
-      ],
-      schema: {
-        agent_id: {
-          type: "integer",
-          required: true,
-          type_options: {
-            load_options_method: "agents",
-          },
-          no_data_expression: true,
-          ui: {
-            control: "combo_box",
-          },
-          control_options: {
-            filterable: true,
-            name_property: "name",
-            none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
-            resets: ["llm_model_id"],
-            set_from_option: {
-              agent_force_default_llm: "force_default_llm",
-              agent_name: "name",
-            },
-            value_property: "id",
           },
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
+    assert.dom('input[name="reason"]').exists("a badge can show its reason");
+
+    const badgeChooser = selectKit(".combo-box");
+    await badgeChooser.expand();
+    await badgeChooser.selectRowByValue(2);
+    assert
+      .dom('input[name="reason"]')
+      .doesNotExist("the selected badge can never display its reason");
+
+    await badgeChooser.expand();
+    await badgeChooser.selectRowByValue(1);
+    assert
+      .dom('input[name="reason"]')
+      .exists("switching back restores the reason field");
+  });
+
+  test("renders combo boxes from metadata and applies option patches", async function (assert) {
+    this.configuration = {
+      agent_force_default_llm: true,
+      agent_id: 2,
+      agent_name: "",
+      llm_model_id: 99,
+    };
+    this.nodeType = "action:ai_agent";
+    this.nodeTypes = [
+      {
+        identifier: "action:ai_agent",
+        metadata: {
+          agents: [
+            { id: 1, name: "Support Bot", force_default_llm: false },
+            { id: 2, name: "Helper Bot", force_default_llm: true },
+          ],
+          i18n_prefix: "discourse_ai.discourse_workflows",
+        },
+      },
+    ];
+    this.schema = {
+      agent_id: {
+        type: "integer",
+        required: true,
+        type_options: {
+          load_options_method: "agents",
+        },
+        no_data_expression: true,
+        ui: {
+          control: "combo_box",
+        },
+        control_options: {
+          filterable: true,
+          name_property: "name",
+          none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
+          resets: ["llm_model_id"],
+          set_from_option: {
+            agent_force_default_llm: "force_default_llm",
+            agent_name: "name",
+          },
+          value_property: "id",
+        },
+      },
+    };
+
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const selector = selectKit(".combo-box");
     assert.strictEqual(selector.header().value(), "2");
@@ -2143,66 +1690,51 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await selector.expand();
     await selector.selectRowByValue("1");
 
-    assert.strictEqual(String(this.formApi.get("agent_id")), "1");
-    assert.false(this.formApi.get("agent_force_default_llm"));
-    assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
-    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+    assert.strictEqual(String(formApi.get("agent_id")), "1");
+    assert.false(formApi.get("agent_force_default_llm"));
+    assert.strictEqual(formApi.get("agent_name"), "Support Bot");
+    assert.strictEqual(formApi.get("llm_model_id"), null);
   });
 
   test("renders combo box actions with the selected field value as a route model", async function (assert) {
     const router = this.owner.lookup("service:router");
     const transitionTo = sinon.stub(router, "transitionTo");
 
-    this.setProperties({
-      configuration: {
-        workflow_id: null,
-      },
-      nodeType: "action:workflow_call",
-      nodeTypes: [
-        {
-          identifier: "action:workflow_call",
-          metadata: {
-            callable_workflows: [{ id: 8, name: "Child workflow" }],
-          },
-        },
-      ],
-      schema: {
-        workflow_id: {
-          type: "integer",
-          required: true,
-          type_options: {
-            load_options_method: "callable_workflows",
-          },
-          no_data_expression: true,
-          ui: {
-            control: "combo_box",
-          },
-          control_options: {
-            action_icon: "up-right-from-square",
-            action_label: "discourse_workflows.workflow_call.open_workflow",
-            action_route: "adminPlugins.show.discourse-workflows.show",
-            action_route_models: [{ source: "field_value" }],
-            name_property: "name",
-            value_property: "id",
-          },
+    this.configuration = {
+      workflow_id: null,
+    };
+    this.nodeType = "action:workflow_call";
+    this.nodeTypes = [
+      {
+        identifier: "action:workflow_call",
+        metadata: {
+          callable_workflows: [{ id: 8, name: "Child workflow" }],
         },
       },
-    });
+    ];
+    this.schema = {
+      workflow_id: {
+        type: "integer",
+        required: true,
+        type_options: {
+          load_options_method: "callable_workflows",
+        },
+        no_data_expression: true,
+        ui: {
+          control: "combo_box",
+        },
+        control_options: {
+          action_icon: "up-right-from-square",
+          action_label: "discourse_workflows.workflow_call.open_workflow",
+          action_route: "adminPlugins.show.discourse-workflows.show",
+          action_route_models: [{ source: "field_value" }],
+          name_property: "name",
+          value_property: "id",
+        },
+      },
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert
       .dom(".workflows-property-engine__select-with-action > .btn")
@@ -2214,7 +1746,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert
       .dom(".workflows-property-engine__select-with-action > .btn")
-      .hasText("Open workflow");
+      .hasAttribute("title", "Open workflow")
+      .hasAria("label", "Open workflow");
 
     await click(".workflows-property-engine__select-with-action > .btn");
 
@@ -2245,159 +1778,116 @@ module("Integration | Component | workflows property engine", function (hooks) {
       }
     );
 
-    this.setProperties({
-      configuration: {
-        agent_force_default_llm: true,
-        agent_id: null,
-        agent_name: "",
-        agent_resolved_llm_name: "",
-        llm_model_id: 99,
+    this.configuration = {
+      agent_force_default_llm: true,
+      agent_id: null,
+      agent_name: "",
+      agent_resolved_llm_name: "",
+      llm_model_id: 99,
+    };
+    this.node = {
+      clientId: "node-1",
+      type: "action:ai_agent",
+      typeVersion: "1.0",
+    };
+    this.nodeType = "action:ai_agent";
+    this.nodeTypes = [
+      {
+        identifier: "action:ai_agent",
+        name: "action:ai_agent",
+        version: "1.0",
       },
-      formApi: null,
-      node: {
-        clientId: "node-1",
-        type: "action:ai_agent",
-        typeVersion: "1.0",
-      },
-      nodeType: "action:ai_agent",
-      nodeTypes: [
-        {
-          identifier: "action:ai_agent",
-          name: "action:ai_agent",
-          version: "1.0",
+    ];
+    this.schema = {
+      agent_id: {
+        type: "integer",
+        required: true,
+        type_options: {
+          load_options_method: "agents",
         },
-      ],
-      schema: {
-        agent_id: {
-          type: "integer",
-          required: true,
-          type_options: {
-            load_options_method: "agents",
+        no_data_expression: true,
+        ui: {
+          control: "combo_box",
+        },
+        control_options: {
+          filterable: true,
+          name_property: "name",
+          resets: ["llm_model_id"],
+          set_from_option: {
+            agent_force_default_llm: "force_default_llm",
+            agent_name: "name",
+            agent_resolved_llm_name: "resolved_llm_name",
           },
-          no_data_expression: true,
-          ui: {
-            control: "combo_box",
-          },
-          control_options: {
-            filterable: true,
-            name_property: "name",
-            resets: ["llm_model_id"],
-            set_from_option: {
-              agent_force_default_llm: "force_default_llm",
-              agent_name: "name",
-              agent_resolved_llm_name: "resolved_llm_name",
-            },
-            value_property: "id",
-          },
-        },
-        agent_force_default_llm: {
-          type: "boolean",
-        },
-        agent_name: {
-          type: "string",
-        },
-        agent_resolved_llm_name: {
-          type: "string",
-        },
-        llm_model_id: {
-          type: "integer",
+          value_property: "id",
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
+      agent_force_default_llm: {
+        type: "boolean",
       },
-    });
+      agent_name: {
+        type: "string",
+      },
+      agent_resolved_llm_name: {
+        type: "string",
+      },
+      llm_model_id: {
+        type: "integer",
+      },
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const selector = selectKit(".combo-box");
     await selector.expand();
     await waitFor(".combo-box .select-kit-row[data-value='1']");
     await selector.selectRowByValue("1");
 
-    assert.strictEqual(String(this.formApi.get("agent_id")), "1");
-    assert.false(this.formApi.get("agent_force_default_llm"));
-    assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
-    assert.strictEqual(
-      this.formApi.get("agent_resolved_llm_name"),
-      "Default LLM"
-    );
-    assert.strictEqual(this.formApi.get("llm_model_id"), null);
+    assert.strictEqual(String(formApi.get("agent_id")), "1");
+    assert.false(formApi.get("agent_force_default_llm"));
+    assert.strictEqual(formApi.get("agent_name"), "Support Bot");
+    assert.strictEqual(formApi.get("agent_resolved_llm_name"), "Default LLM");
+    assert.strictEqual(formApi.get("llm_model_id"), null);
     assert.true(requests.length >= 1);
     assert.strictEqual(requests[0].methodName, "agents");
   });
 
   test("renders combo box dynamic none labels from configuration", async function (assert) {
-    this.setProperties({
-      configuration: {
-        agent_resolved_llm_name: "Workflow LLM",
-        llm_model_id: null,
-      },
-      nodeType: "action:ai_agent",
-      nodeTypes: [
-        {
-          identifier: "action:ai_agent",
-          metadata: {
-            llm_models: [{ id: 1, name: "Override LLM" }],
-          },
-        },
-      ],
-      schema: {
-        llm_model_id: {
-          type: "integer",
-          required: false,
-          type_options: {
-            load_options_method: "llm_models",
-          },
-          no_data_expression: true,
-          ui: {
-            control: "combo_box",
-          },
-          control_options: {
-            name_property: "name",
-            none: "discourse_ai.discourse_workflows.ai_agent.llm_model_default",
-            none_label_field: "agent_resolved_llm_name",
-            none_label_i18n_key:
-              "discourse_ai.discourse_workflows.ai_agent.llm_model_default_with_name",
-            value_property: "id",
-          },
+    this.configuration = {
+      agent_resolved_llm_name: "Workflow LLM",
+      llm_model_id: null,
+    };
+    this.nodeType = "action:ai_agent";
+    this.nodeTypes = [
+      {
+        identifier: "action:ai_agent",
+        metadata: {
+          llm_models: [{ id: 1, name: "Override LLM" }],
         },
       },
-    });
+    ];
+    this.schema = {
+      llm_model_id: {
+        type: "integer",
+        required: false,
+        type_options: {
+          load_options_method: "llm_models",
+        },
+        no_data_expression: true,
+        ui: {
+          control: "combo_box",
+        },
+        control_options: {
+          name_property: "name",
+          none: "discourse_ai.discourse_workflows.ai_agent.llm_model_default",
+          none_label_field: "agent_resolved_llm_name",
+          none_label_i18n_key:
+            "discourse_ai.discourse_workflows.ai_agent.llm_model_default_with_name",
+          value_property: "id",
+        },
+      },
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     const selector = selectKit(".combo-box");
 
@@ -2419,76 +1909,51 @@ module("Integration | Component | workflows property engine", function (hooks) {
       }
     );
 
-    this.setProperties({
-      configuration: {
-        operation: "get",
-        topic_id: "21",
-        custom_field_names: [],
-      },
-      formApi: null,
-      node: {
-        clientId: "node-1",
-        type: "action:topic",
-        typeVersion: "1.0",
-      },
-      nodeType: "action:topic",
-      nodeTypes: [
-        {
-          identifier: "action:topic",
-          name: "action:topic",
-          version: "1.0",
-          metadata: {
-            topic_custom_fields: [{ id: "system", name: "system" }],
-          },
-        },
-      ],
-      schema: {
-        custom_field_names: {
-          type: "multi_options",
-          options: [],
-          type_options: {
-            load_options_depends_on: ["operation", "topic_id"],
-            load_options_method: "topic_custom_fields",
-          },
-          control_options: {
-            filterable: true,
-            name_property: "name",
-            value_property: "id",
-          },
+    this.configuration = {
+      operation: "get",
+      topic_id: "21",
+      custom_field_names: [],
+    };
+    this.node = {
+      clientId: "node-1",
+      type: "action:topic",
+      typeVersion: "1.0",
+    };
+    this.nodeType = "action:topic";
+    this.nodeTypes = [
+      {
+        identifier: "action:topic",
+        name: "action:topic",
+        version: "1.0",
+        metadata: {
+          topic_custom_fields: [{ id: "system", name: "system" }],
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
+    ];
+    this.schema = {
+      custom_field_names: {
+        type: "multi_options",
+        options: [],
+        type_options: {
+          load_options_depends_on: ["operation", "topic_id"],
+          load_options_method: "topic_custom_fields",
+        },
+        control_options: {
+          filterable: true,
+          name_property: "name",
+          value_property: "id",
+        },
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @node={{this.node}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{this.nodeTypes}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const selector = selectKit(".multi-select");
     await selector.expand();
     await waitFor(".multi-select .select-kit-row[data-value='foo']");
     await selector.selectRowByValue("foo");
 
-    assert.deepEqual(this.formApi.get("custom_field_names"), ["foo"]);
+    assert.deepEqual(formApi.get("custom_field_names"), ["foo"]);
     assert.strictEqual(selector.header().label(), "foo");
     assert.true(requests.length >= 1);
     assert.strictEqual(requests[0].methodName, "topic_custom_fields");
@@ -2500,43 +1965,20 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("multi_input fields accept arbitrary ids and convert between fixed and dynamic", async function (assert) {
-    this.setProperties({
-      configuration: { upload_ids: [] },
-      formApi: null,
-      nodeType: "action:ai_agent",
-      schema: {
-        upload_ids: {
-          type: "array",
-          required: false,
-          ui: {
-            control: "multi_input",
-            expression: true,
-          },
+    this.configuration = { upload_ids: [] };
+    this.nodeType = "action:ai_agent";
+    this.schema = {
+      upload_ids: {
+        type: "array",
+        required: false,
+        ui: {
+          control: "multi_input",
+          expression: true,
         },
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const selector = selectKit(".multi-select");
 
@@ -2547,7 +1989,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await selector.selectRowByValue("34");
 
     assert.deepEqual(
-      this.formApi.get("upload_ids"),
+      formApi.get("upload_ids"),
       ["12", "34"],
       "stores entered ids"
     );
@@ -2557,7 +1999,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.strictEqual(
-      this.formApi.get("upload_ids"),
+      formApi.get("upload_ids"),
       '={{ ["12","34"] }}',
       "converts the fixed list into a dynamic expression"
     );
@@ -2567,49 +2009,26 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.deepEqual(
-      this.formApi.get("upload_ids"),
+      formApi.get("upload_ids"),
       ["12", "34"],
       "converts the dynamic expression back into a fixed list"
     );
   });
 
   test("boolean assignment values convert between fixed and dynamic", async function (assert) {
-    this.setProperties({
-      configuration: {
-        fields: {
-          assignments: [{ name: "active", type: "boolean", value: false }],
-        },
+    this.configuration = {
+      fields: {
+        assignments: [{ name: "active", type: "boolean", value: false }],
       },
-      formApi: null,
-      nodeType: "action:workflow_call",
-      schema: {
-        fields: {
-          type: "assignment_collection",
-        },
+    };
+    this.nodeType = "action:workflow_call";
+    this.schema = {
+      fields: {
+        type: "assignment_collection",
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const row = ".workflows-property-engine__collection-row";
 
@@ -2628,7 +2047,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       .dom(`${row} .workflows-variable-input`)
       .exists("swaps the toggle for an expression input");
     assert.strictEqual(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "=false",
       "seeds the expression with the previous fixed value"
     );
@@ -2638,85 +2057,48 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.false(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "converts the expression back into a fixed boolean, not the string 'false'"
     );
   });
 
   test("boolean assignment values saved as expressions render in dynamic mode", async function (assert) {
-    this.setProperties({
-      configuration: {
-        fields: {
-          assignments: [
-            { name: "active", type: "boolean", value: "={{ $json.enabled }}" },
-          ],
-        },
+    this.configuration = {
+      fields: {
+        assignments: [
+          { name: "active", type: "boolean", value: "={{ $json.enabled }}" },
+        ],
       },
-      nodeType: "action:workflow_call",
-      schema: {
-        fields: {
-          type: "assignment_collection",
-        },
+    };
+    this.nodeType = "action:workflow_call";
+    this.schema = {
+      fields: {
+        type: "assignment_collection",
       },
-    });
+    };
 
-    await render(
-      <template>
-        <Form @data={{this.configuration}} as |form transientData|>
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    await renderEngine(this);
 
     assert.dom(".form-kit__control-toggle").doesNotExist();
     assert.dom(".workflows-variable-input").includesText("enabled");
   });
 
   test("switching an assignment to boolean keeps an expression it already holds", async function (assert) {
-    this.setProperties({
-      configuration: {
-        fields: {
-          assignments: [
-            { name: "active", type: "string", value: "={{ $json.enabled }}" },
-          ],
-        },
+    this.configuration = {
+      fields: {
+        assignments: [
+          { name: "active", type: "string", value: "={{ $json.enabled }}" },
+        ],
       },
-      formApi: null,
-      nodeType: "action:workflow_call",
-      schema: {
-        fields: {
-          type: "assignment_collection",
-        },
+    };
+    this.nodeType = "action:workflow_call";
+    this.schema = {
+      fields: {
+        type: "assignment_collection",
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await select(
       ".workflows-property-engine__collection-row select",
@@ -2724,7 +2106,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.strictEqual(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "={{ $json.enabled }}",
       "keeps the expression when the type changes"
     );
@@ -2735,56 +2117,33 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("resets plain assignment values that don't fit the new type", async function (assert) {
-    this.setProperties({
-      configuration: {
-        fields: {
-          assignments: [{ name: "active", type: "string", value: "hello" }],
-        },
+    this.configuration = {
+      fields: {
+        assignments: [{ name: "active", type: "string", value: "hello" }],
       },
-      formApi: null,
-      nodeType: "action:workflow_call",
-      schema: {
-        fields: {
-          type: "assignment_collection",
-        },
+    };
+    this.nodeType = "action:workflow_call";
+    this.schema = {
+      fields: {
+        type: "assignment_collection",
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     const typeSelect = ".workflows-property-engine__collection-row select";
 
     await select(typeSelect, "boolean");
 
     assert.false(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "a string is not carried into the toggle as truthy"
     );
 
     await select(typeSelect, "array");
 
     assert.strictEqual(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "",
       "a boolean is not carried into the JSON editor"
     );
@@ -2792,50 +2151,27 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
   // Rows are keyed by index, so the survivor reuses the deleted row's component.
   test("removing a boolean assignment row keeps the survivor's expression", async function (assert) {
-    this.setProperties({
-      configuration: {
-        fields: {
-          assignments: [
-            { name: "flagged", type: "boolean", value: false },
-            { name: "active", type: "boolean", value: "={{ $json.enabled }}" },
-          ],
-        },
+    this.configuration = {
+      fields: {
+        assignments: [
+          { name: "flagged", type: "boolean", value: false },
+          { name: "active", type: "boolean", value: "={{ $json.enabled }}" },
+        ],
       },
-      formApi: null,
-      nodeType: "action:workflow_call",
-      schema: {
-        fields: {
-          type: "assignment_collection",
-        },
+    };
+    this.nodeType = "action:workflow_call";
+    this.schema = {
+      fields: {
+        type: "assignment_collection",
       },
-      registerApi: (api) => {
-        this.set("formApi", api);
-      },
-    });
+    };
 
-    await render(
-      <template>
-        <Form
-          @data={{this.configuration}}
-          @onRegisterApi={{this.registerApi}}
-          as |form transientData|
-        >
-          <PropertyEngineConfigurator
-            @form={{form}}
-            @formApi={{this.formApi}}
-            @configuration={{transientData}}
-            @nodeType={{this.nodeType}}
-            @schema={{this.schema}}
-            @session={{this.session}}
-          />
-        </Form>
-      </template>
-    );
+    const formApi = await renderEngine(this, { withFormApi: true });
 
     await click(findAll(".workflows-property-engine__collection-delete")[0]);
 
     assert.strictEqual(
-      this.formApi.get("fields.assignments.0.value"),
+      formApi.get("fields.assignments.0.value"),
       "={{ $json.enabled }}",
       "leaves the surviving expression untouched"
     );

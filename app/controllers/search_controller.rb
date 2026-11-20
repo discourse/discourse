@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  before_action :ensure_can_search, only: %i[show query]
   before_action :block_crawler, only: :show
   before_action :cancel_overloaded_search, only: [:query]
   skip_before_action :check_xhr, only: :show
@@ -107,7 +108,7 @@ class SearchController < ApplicationController
       search_args[:type_filter] = type if type
     end
 
-    search_args[:search_type] = :header
+    search_args[:search_type] = :header unless params[:skip_search_log] == "true"
     search_args[:ip_address] = request.remote_ip
     search_args[:user_agent] = request.user_agent
     search_args[:session_id] = pageview_session_id
@@ -165,6 +166,16 @@ class SearchController < ApplicationController
   end
 
   protected
+
+  def ensure_can_search
+    return if guardian.can_search?
+
+    if request.format.html?
+      redirect_to_login
+    else
+      ensure_logged_in
+    end
+  end
 
   def pageview_session_id
     request.headers["HTTP_DISCOURSE_PAGEVIEW_SESSION_ID"]
@@ -249,6 +260,10 @@ class SearchController < ApplicationController
     return if params[:skip_context] == "true"
 
     search_context = params[:search_context]
+    if search_context && !search_context.is_a?(ActionController::Parameters)
+      raise Discourse::InvalidParameters.new(:search_context)
+    end
+
     unless search_context
       if (context = params[:context]) && (id = params[:context_id])
         search_context = { type: context, id: id, name: id }
@@ -270,9 +285,7 @@ class SearchController < ApplicationController
       elsif "topic" == search_context[:type]
         context_obj = Topic.find_by(id: search_context[:id].to_i)
       elsif "tag" == search_context[:type]
-        if !DiscourseTagging.hidden_tag_names(guardian).include?(search_context[:id])
-          context_obj = Tag.where_name(search_context[:id]).first
-        end
+        context_obj = DiscourseTagging.visible_tags(guardian).where_name(search_context[:id]).first
       end
 
       type_filter = nil

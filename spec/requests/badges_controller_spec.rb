@@ -7,7 +7,7 @@ RSpec.describe BadgesController do
   before { SiteSetting.enable_badges = true }
 
   describe "#index" do
-    it "should return a list of all badges" do
+    it "returns all badges" do
       get "/badges.json"
 
       expect(response.status).to eq(200)
@@ -125,14 +125,14 @@ RSpec.describe BadgesController do
   end
 
   describe "#show" do
-    it "should return a badge" do
+    it "returns the badge" do
       get "/badges/#{badge.id}.json"
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["badge"]).to be_present
     end
 
-    it "should mark the notification as viewed" do
+    it "marks the notification as viewed" do
       sign_in(user)
       user_badge = BadgeGranter.grant(badge, user)
       expect(user_badge.notification.read).to eq(false)
@@ -144,6 +144,23 @@ RSpec.describe BadgesController do
       get "/badges/#{badge.id}.rss"
       expect(response.status).to eq(200)
       expect(response.media_type).to eq("application/rss+xml")
+    end
+
+    it "does not include hidden profiles in the rss feed" do
+      hidden_user = Fabricate(:user)
+      hidden_user.user_stat.update!(post_count: 1)
+      hidden_user.user_option.update!(hide_profile: true)
+      visible_user = Fabricate(:user)
+      visible_user.user_stat.update!(post_count: 1)
+      [visible_user, hidden_user].each do |grantee|
+        Fabricate(:user_badge, badge: badge, user: grantee, granted_by: Discourse.system_user)
+      end
+
+      get "/badges/#{badge.id}.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(visible_user.username)
+      expect(response.body).not_to include(hidden_user.username)
     end
   end
 

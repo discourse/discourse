@@ -10,6 +10,10 @@ export default class AdminSidebarStateManager extends Service {
 
   keywords = {};
 
+  get modals() {
+    return { adminSearch: AdminSearchModal };
+  }
+
   setLinkKeywords(link_name, keywords) {
     if (!this.keywords[link_name]) {
       this.keywords[link_name] = {
@@ -47,10 +51,6 @@ export default class AdminSidebarStateManager extends Service {
     this.sidebarState.setPanel(MAIN_PANEL);
     this.sidebarState.isForcingSidebar = false;
     this.sidebarState.forcingSidebarPanel = null;
-  }
-
-  get modals() {
-    return { adminSearch: AdminSearchModal };
   }
 
   #forceAdminSidebar() {

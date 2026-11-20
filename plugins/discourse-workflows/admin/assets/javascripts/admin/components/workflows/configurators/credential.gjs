@@ -7,8 +7,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
-import CredentialModal from "../credential/modal";
-import ExpressionWrapper from "./expression-wrapper";
+import CredentialModal from "../credential/modal.gjs";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class Credential extends Component {
   @service modal;
@@ -18,20 +18,6 @@ export default class Credential extends Component {
   constructor() {
     super(...arguments);
     this.#loadCredentials();
-  }
-
-  async #loadCredentials() {
-    try {
-      const credentialType =
-        this.credentialTypes.length === 1 ? this.credentialTypes[0] : null;
-      const url = credentialType
-        ? `/admin/plugins/discourse-workflows/credentials.json?type=${credentialType}`
-        : "/admin/plugins/discourse-workflows/credentials.json";
-      const result = await ajax(url);
-      this.credentials = result.credentials;
-    } catch (e) {
-      popupAjaxError(e);
-    }
   }
 
   get credentialTypes() {
@@ -99,14 +85,28 @@ export default class Credential extends Component {
     });
   }
 
+  async #loadCredentials() {
+    try {
+      const credentialType =
+        this.credentialTypes.length === 1 ? this.credentialTypes[0] : null;
+      const url = credentialType
+        ? `/admin/plugins/discourse-workflows/credentials.json?type=${credentialType}`
+        : "/admin/plugins/discourse-workflows/credentials.json";
+      const result = await ajax(url);
+      this.credentials = result.credentials;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
   <template>
     <ExpressionWrapper
-      @field={{if @field @field (hash value=this.value)}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{if @field @field (hash value=this.value)}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       {{#if @label}}
         <label class="workflows-property-engine__label">{{@label}}</label>
@@ -114,18 +114,18 @@ export default class Credential extends Component {
       <div class="workflows-property-engine__select-with-action">
         <ComboBox
           @content={{this.options}}
-          @value={{this.value}}
           @nameProperty="name"
-          @valueProperty="id"
           @onChange={{this.handleChange}}
           @options={{hash none="discourse_workflows.credentials.select_type"}}
+          @value={{this.value}}
+          @valueProperty="id"
         />
         {{#unless this.value}}
           <DButton
-            @action={{this.setupCredential}}
-            @label="discourse_workflows.credentials.set_up_credential"
-            @icon="plus"
             class="btn-default"
+            @action={{this.setupCredential}}
+            @icon="plus"
+            @label="discourse_workflows.credentials.set_up_credential"
           />
         {{/unless}}
       </div>

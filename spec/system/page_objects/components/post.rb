@@ -38,6 +38,14 @@ module PageObjects
         post.find(".contents > .cooked")
       end
 
+      def click_category_hashtag(category)
+        post.find("a.hashtag-cooked[data-type='category'][data-id='#{category.id}']").click
+      end
+
+      def hover_category_hashtag(category)
+        post.find("a.hashtag-cooked[data-type='category'][data-id='#{category.id}']").hover
+      end
+
       def has_cooked_content?(value)
         cooked_content.has_content?(value)
       end

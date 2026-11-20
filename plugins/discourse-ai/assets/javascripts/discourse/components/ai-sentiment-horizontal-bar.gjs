@@ -1,7 +1,6 @@
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const AiSentimentHorizontalBar = <template>

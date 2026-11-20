@@ -39,6 +39,35 @@ describe "Composer - ProseMirror - Event Editor" do
   end
 
   describe "field interactions" do
+    it "lets the author opt into guest viewing in advanced settings" do
+      SiteSetting.chat_enabled = true
+      stub_request(:get, "https://zoom.us/j/1234567890").to_return(status: 404)
+
+      open_composer
+      composer.toggle_rich_editor
+      composer.fill_content(
+        "[event location=\"https://zoom.us/j/1234567890\" start=\"2025-03-21 15:41\"]\n[/event]",
+      )
+      composer.toggle_rich_editor
+
+      switches = ".composer-event__livestream-switch"
+      expect(rich).to have_css(switches, count: 1, visible: :all)
+      rich.find(switches, visible: :all).ancestor("label").click
+
+      expect(rich).to have_css(switches, count: 1, visible: :all)
+      rich.find(".composer-event__more-dropdown button").click
+
+      form = PageObjects::Components::FormKit.new(".post-event-builder-modal form")
+      guest_viewing = form.field("allowAnonymousLivestream")
+      expect(guest_viewing).to be_unchecked
+      guest_viewing.check
+      find(".post-event-builder-modal .d-modal__footer .btn-primary").click
+      expect(page).to have_no_css(".post-event-builder-modal")
+
+      composer.toggle_rich_editor
+      expect(find(".d-editor-input").value).to include("allowAnonymousLivestream=true")
+    end
+
     it "shows placeholders and handles external link detection" do
       open_composer
       composer.toggle_rich_editor
@@ -182,8 +211,9 @@ describe "Composer - ProseMirror - Event Editor" do
       max_attendees_input.fill_in(with: "25")
       expect(max_attendees_input.value).to eq("25")
 
-      # Negative input gets cleared
-      max_attendees_input.fill_in(with: "-10")
+      # Negative input gets cleared; typed key by key so the last keystroke is what makes it negative
+      max_attendees_input.fill_in(with: "")
+      max_attendees_input.send_keys("-5")
       expect(max_attendees_input.value).to eq("")
 
       # Typing 0 disables attendance

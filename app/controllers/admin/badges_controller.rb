@@ -52,53 +52,33 @@ class Admin::BadgesController < Admin::AdminController
     raise Discourse::InvalidParameters if csv_file.try(:tempfile).nil? || badge.nil?
 
     if !badge.enabled?
-      render_json_error(
-        I18n.t("badges.mass_award.errors.badge_disabled", badge_name: badge.display_name),
-        status: 422,
-      )
-      return
+      error = I18n.t("badges.mass_award.errors.badge_disabled", badge_name: badge.display_name)
+      return render_json_error(error, status: 422)
     end
 
     replace_badge_owners = params[:replace_badge_owners] == "true"
     ensure_users_have_badge_once = params[:grant_existing_holders] != "true"
     if !ensure_users_have_badge_once && !badge.multiple_grant?
-      render_json_error(
-        I18n.t(
-          "badges.mass_award.errors.cant_grant_multiple_times",
-          badge_name: badge.display_name,
-        ),
-        status: 422,
-      )
-      return
+      error =
+        I18n.t("badges.mass_award.errors.cant_grant_multiple_times", badge_name: badge.display_name)
+      return render_json_error(error, status: 422)
     end
 
-    line_number = 1
-    usernames = []
     emails = []
-    File.open(csv_file) do |csv|
-      csv.each_line do |line|
-        line = CSV.parse_line(line).first&.strip
-        line_number += 1
+    usernames = []
 
-        if line.present?
-          if line.include?("@")
-            emails << line
-          else
-            usernames << line
-          end
-        end
+    CSV.foreach(csv_file) do |row|
+      entry = row.first&.strip
+      next if entry.blank?
 
-        if emails.size + usernames.size > MAX_CSV_LINES
-          return(
-            render_json_error I18n.t(
-                                "badges.mass_award.errors.too_many_csv_entries",
-                                count: MAX_CSV_LINES,
-                              ),
-                              status: 400
-          )
-        end
+      entry.include?("@") ? emails << entry : usernames << entry
+
+      if emails.size + usernames.size > MAX_CSV_LINES
+        error = I18n.t("badges.mass_award.errors.too_many_csv_entries", count: MAX_CSV_LINES)
+        return render_json_error(error, status: 400)
       end
     end
+
     BadgeGranter.revoke_all(badge) if replace_badge_owners
 
     results =
@@ -115,9 +95,9 @@ class Admin::BadgesController < Admin::AdminController
              unmatched_entries_count: results[:unmatched_entries_count],
            },
            status: :ok
-  rescue CSV::MalformedCSVError
-    render_json_error I18n.t("badges.mass_award.errors.invalid_csv", line_number: line_number),
-                      status: 400
+  rescue CSV::MalformedCSVError => e
+    error = I18n.t("badges.mass_award.errors.invalid_csv", line_number: e.line_number)
+    render_json_error(error, status: 400)
   end
 
   def badge_types

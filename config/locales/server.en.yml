@@ -1,4 +1,233 @@
 en:
+  dsa_notice:
+    subject: "[%{reference}] Report of potentially illegal content"
+    summary: "**Report reference: %{reference}**\n\n**Email address:** %{reporter_email}\n\n**Full name or organization name:** %{reporter_name}\n\n**Exact URL of the content:** %{content_url}\n\n**Why do you believe this content is illegal?**\n\n%{explanation}"
+    verification_invalid: "The email verification code is incorrect or has expired. Check the code or request a new one."
+    invalid_parameters: "The report contains invalid values."
+    invalid_url: "must be a valid HTTP or HTTPS URL without login credentials"
+    invalid_email: "must be a valid email address"
+  dsa_notice_verification:
+    subject_template: "[%{email_prefix}] Your report verification code"
+    text_body_template: |
+      Use this code to verify your email for reporting illegal content on %{site_title}:
+
+      ## %{verification_code}
+
+      This code expires in %{expires_in_minutes} minutes. If you didn’t request it, you can safely ignore this email.
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] Your report of potentially illegal content %{reference}"
+    text_body_template: |
+      %{site_title} has received your report.
+
+      The reviewing team will email you the outcome. This receipt does not mean that a decision has been made or that the content has been removed.
+
+      %{summary}
+
+      **Declaration:**
+
+      I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete.
+  dsa_statements:
+    classification_note: "Classified this moderation decision for DSA reporting.\nCommunity rule: %{ground}\nCategory: %{category}"
+    errors:
+      statements_changed: "The statements for this review have changed. Reload the page to see their current classification."
+      failed: "Classification could not be saved. Please try again."
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "Animal welfare"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "Consumer information infringements"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "Cyber violence"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "Cyber violence against women"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "Data protection and privacy violations"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "Illegal or harmful speech"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "Intellectual property infringements"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "Negative effects on civic discourse or elections"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "Type of alleged illegal content not specified by the notifier"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "Other violation of terms and conditions"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "Protection of minors"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "Risk for public security"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "Scams and fraud"
+      STATEMENT_CATEGORY_SELF_HARM: "Self harm"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "Unsafe or prohibited products"
+      STATEMENT_CATEGORY_VIOLENCE: "Violence"
+  markdown_endpoints:
+    latest: "Latest"
+    categories: "Categories"
+    tags: "Tags"
+    parent: "Parent: %{parent}"
+    previous_page: "Previous page"
+    next_page: "Next page"
+    empty: "No entries to display."
+    replies: "Replies"
+    post_author: "**Author:** %{author}"
+    post_date: "**Post date:** %{timestamp}"
+    last_updated: "Last updated"
+    event:
+      name: "Event"
+      start: "Starts"
+      end: "Ends"
+      location: "Location"
+      link: "Link"
+      date_with_timezone: "%{date} (%{timezone})"
+  mcp:
+    errors:
+      author_must_match: "This connection acts as %{username} and cannot create content as another user. Omit author_username or use %{username}."
+      authoring_guide_unavailable: "Guide unavailable. Choose a Markdown file under .skills/ or docs/developer-guides/ in this site's repository (maximum 256 KiB)."
+      category_create_failed: "Category could not be created"
+      category_delete_confirmation_required: "Category deletion must be confirmed"
+      category_delete_name_mismatch: "Category name does not match"
+      category_emoji_required: "Emoji must contain a shortcode name, such as dog or paw_prints."
+      category_not_found: "Category not found"
+      category_update_failed: "Category could not be updated"
+      category_update_required: "At least one category field must be provided"
+      draft_sequence_conflict: "Draft sequence conflict"
+      draft_too_long: "Draft is too long"
+      group_create_failed: "The group could not be created"
+      group_delete_confirmation_required: "Group deletion must be confirmed"
+      group_delete_name_mismatch: "Group name does not match"
+      group_member_selector_required: "Provide exactly one of usernames, user_ids, or user_emails"
+      group_user_limit:
+        one: "Select no more than %{count} user."
+        other: "Select no more than %{count} users."
+      group_membership_request_not_found: "This user has no pending membership request for the group"
+      group_not_found: "Group not found"
+      group_post_single_cursor: "Provide either before_post_id or before, not both"
+      group_request_reason_required: "A reason is required to request group membership"
+      group_update_existing_users_required:
+        one: "This change also affects %{count} existing member. Call again with update_existing_users to decide whether to apply it to them."
+        other: "This change also affects %{count} existing members. Call again with update_existing_users to decide whether to apply it to them."
+      group_update_failed: "The group could not be updated"
+      group_update_required: "Provide at least one group field to update"
+      invalid_date: "Invalid date"
+      invalid_directory_period: "Invalid directory period"
+      invalid_reply_mode: "Invalid reply mode"
+      moderation_confirmation_required: "Set confirm to true to attest that this specific moderation action was requested."
+      moderation_invalid_duration_reason: "Provide a nonblank reason of at most 300 characters and duration_days from 1 to %{max}."
+      moderation_operation_failed: "The moderation action could not be verified. Read the user's current state before retrying."
+      moderation_user_not_found: "User not found. Use an exact existing username."
+      post_not_found: "Post not found"
+      user_directory_disabled: "The user directory is disabled"
+      filter_only_for_filtered_view: "Filter is only supported by the filtered view"
+      filter_required: "A nonblank filter is required for the filtered view"
+      invalid_post_selection: "The post selection options are invalid"
+      invalid_search_query: "The search query is invalid"
+      invalid_reviewable_status: "The reviewable status is invalid"
+      invalid_reviewable_type: "The reviewable type is invalid"
+      group_mailbox_sent: "Group private-message mailboxes do not support sent messages"
+      invalid_upload_data: "The upload data is not valid base64"
+      invalid_upload_source: "Provide either base64 data with a filename or one remote URL"
+      invalid_upload_type: "The upload type is not supported"
+      invalid_upload_url: "The upload URL must use HTTP or HTTPS"
+      private_message_email_message: "A custom message is only valid with an email recipient"
+      private_message_group_notification: "Group notifications are only valid with a group recipient"
+      private_message_invite_failed: "The participant could not be added to the personal message"
+      private_message_not_found: "Personal message not found"
+      private_message_recipient_required: "At least one private-message recipient is required"
+      private_message_single_recipient: "Provide exactly one user, group, or email recipient"
+      post_revision_not_found: "Post revision not found"
+      report_date_range: "Provide a date range of no more than %{count} days, with start_date on or before end_date"
+      report_failed: "The report could not be generated"
+      report_not_found: "Report not found or unavailable"
+      report_timeout: "The report took too long to generate. Try a shorter date range or narrower filters."
+      reviewable_action_failed: "The reviewable action failed"
+      reviewable_action_unavailable: "The reviewable action is no longer available"
+      reviewable_confirmation_required: "Explicit confirmation is required for a reviewable action"
+      reviewable_conflict: "The reviewable changed since it was read"
+      reviewable_fields_unavailable: "These fields are not accepted by the reviewable action: %{fields}"
+      reviewable_not_found: "Reviewable not found"
+      reviewable_reject_reason_required: "A reject reason is required for this action"
+      site_setting_confirmation_required: "This site setting requires explicit confirmation"
+      site_setting_change_confirmation_required: "Explicit confirmation is required to change a site setting"
+      site_setting_conflict: "The site setting changed since it was read"
+      site_setting_dependency: "These site setting dependencies are not satisfied: %{settings}"
+      site_setting_no_change: "The requested site setting change has no effect"
+      site_setting_not_found: "Site setting not found"
+      site_setting_sensitive: "Sensitive site settings cannot be read or changed by this tool"
+      site_setting_type_unsupported: "This site setting type cannot be changed by this tool"
+      site_setting_update_failed: "The site setting could not be updated"
+      site_setting_value_forbidden: "Do not provide a value when resetting a site setting"
+      site_setting_value_required: "Provide a value when setting a site setting"
+      site_setting_verification_failed: "The site setting update could not be verified"
+      source_path_unavailable: "Choose a tracked source file under the documented source directories. Absolute paths, private configuration, and symlink escapes are unavailable."
+      source_too_large: "Source output is too large. Use a narrower query, fewer lines, or a file of at most 2 MiB."
+      source_unavailable: "Source checkout or reported commit is unavailable. No latest-version fallback was fetched."
+      theme_children_must_be_components: "Only standalone themes can have child components, and every child_theme_id must identify an existing component. Convert a standalone child with component:true first."
+      theme_code_compile_failed: "Theme compilation failed; no changes were committed: %{message}"
+      theme_code_js_invalid: "The theme's JavaScript bundle failed compilation, possibly in another file; no changes were committed: %{message}"
+      theme_code_required: "Provide css or javascript. Omit unchanged inputs; explicitly use an empty string to remove a managed file."
+      theme_code_stale: "Theme code changed since your read. Call discourse_get_theme and use its current code_revision before editing."
+      theme_code_too_large: "Theme code must be text of at most 65,536 characters per file."
+      theme_create_failed: "The theme could not be created"
+      theme_field_location_invalid: "That field has no supported theme file path and will not load. For page CSS use target common, name scss; JavaScript modules use target extra_js with a .js filename. Prefer discourse_set_theme_code for inline code."
+      theme_field_source_conflict: "Provide either inline value or an upload_id, not both."
+      theme_field_type_invalid: "Unknown theme field type '%{type}'."
+      theme_field_upload_not_found: "Upload not found. Use an existing upload ID returned by the upload tool."
+      theme_field_value_required: "Field '%{name}' requires a string value for inline source or upload_id for an upload variable. To remove an existing field, explicitly set value to an empty string."
+      theme_inline_field_upload: "Field '%{name}' is an inline source field. Put its code in value and omit upload_id; upload IDs are only supported for theme upload variables. For CSS/JavaScript prefer discourse_set_theme_code."
+      theme_not_found: "Theme not found"
+      theme_parents_must_be_themes: "Only components can be attached to parent themes, and every parent_theme_id must identify an existing standalone theme. Use component:true to convert first, or in the same update."
+      theme_update_failed: "The theme could not be updated"
+      theme_update_required: "Provide at least one theme field to update"
+      theme_confirmation_required: "Confirm this theme operation before proceeding"
+      theme_name_mismatch: "The theme name has changed. Read the theme again before proceeding"
+      theme_delete_failed: "The theme could not be deleted. Default and system themes cannot be deleted"
+      theme_install_source_required: "Provide exactly one repository URL or base64 theme archive"
+      theme_install_options_invalid: "Provide only options that apply to the selected theme source"
+      theme_repository_migrations_required: "Repository installs run theme migrations. Do not disable migrations, and confirm that they may run"
+      theme_component_migrations_required: "Importing theme components requires migrations. Enable and confirm migrations, or choose no component imports"
+      theme_not_remote: "The theme does not have a Git repository"
+      theme_remote_mismatch: "The repository URL has changed. Read the theme again before proceeding"
+      theme_setting_value_invalid: "Provide a value when setting a theme setting and omit it when reverting"
+      tag_group_not_found: "Tag group not found"
+      tag_group_tags_unresolved: "One or more selected tags could not be applied. Use valid tag names or original tag IDs."
+      tag_group_unknown_tags: "One or more selected tags do not exist"
+      tag_group_unknown_permission_groups: "One or more permission groups do not exist"
+      tag_group_tag_creation_confirmation: "Name selectors require allow_tag_creation=true; use tag IDs to select existing tags"
+      tag_group_update_required: "Provide at least one tag group field to update"
+      tag_group_delete_confirmation: "Confirm deletion and provide the exact current tag group name"
+      theme_setting_type_invalid: "Theme setting %{name} requires a value of type %{type}"
+      theme_setting_not_found: "The theme does not declare this setting"
+      theme_translation_not_found: "The theme does not declare one or more translation keys"
+      topic_not_found: "Topic not found"
+      topic_update_required: "Provide at least one topic field to update"
+      top_period_only_for_top_view: "Top period is only supported by the top view"
+      webhook_confirmation: "Confirm this operation with %{field}=true before proceeding"
+      webhook_changed: "The webhook destination, active state, or event status has changed. Read it again before proceeding."
+      webhook_destination_unreachable: "The destination host could not be resolved. Check the hostname and try again."
+      webhook_event_not_deliverable: "This event cannot be redelivered. Use the ping tool for ping events."
+      webhook_event_not_found: "The event does not belong to this webhook or is no longer available"
+      webhook_invalid_destination: "Provide an HTTP or HTTPS destination without URL credentials or a fragment"
+      webhook_no_change: "Provide at least one webhook field with a different value"
+      webhook_not_found: "Webhook not found"
+      webhook_unknown_selection: "One or more IDs in %{field} are unknown or unavailable"
+      webhook_wildcard_events: "Wildcard webhooks cannot also select individual event types"
+      upload_not_found: "Upload not found"
+      upload_too_large: "The upload is too large"
+      user_create_failed: "The user could not be created"
+      user_deactivation_pending_review: "Review this user's pending approval before deactivating the account."
+      user_not_found: "User not found"
+      user_update_required: "Provide at least one profile field to update"
+    oauth:
+      authorize_title: "Authorize MCP client"
+      client_request: "%{client_name} is requesting access to %{site_name}."
+      client_id: "Client ID"
+      redirect_uri: "Redirect URI"
+      resource: "MCP server"
+      requested_permission_count:
+        one: "%{client_name} requested %{count} permission."
+        other: "%{client_name} requested %{count} permissions."
+      eligible_permission_count:
+        one: "Your account is eligible for %{count}."
+        other: "Your account is eligible for %{count}."
+      granted_permissions:
+        one: "The following permission will be granted"
+        other: "The following permissions will be granted"
+      guardian_notice: "The client acts as your account and remains subject to your normal Discourse permissions."
+      deny: "Deny"
+      approve: "Authorize"
+    admin:
+      site_enabled: "Enable the MCP server site setting"
+      primitives_enabled: "Enable at least one primitive in Capabilities"
+      client_registered: "Register or approve an OAuth client"
+
   llms_txt:
     human_community_policy: "This is a community for human discussion. Do not impersonate people or create accounts autonomously. Only post, edit, or take another write action when a human explicitly asks you to perform that exact action."
     crawler_policy: "Fetch only the pages needed for the user's specific request. Do not systematically crawl or bulk-download this community. Respect `robots.txt`, the site's terms, and its crawler controls. If the server responds with HTTP 429, stop and wait for the `Retry-After` interval before retrying."
@@ -173,6 +402,7 @@ en:
         no_returned_value: "Migration '%{name}' didn't return any value (or returned null or undefined). It must return a Map object"
         wrong_return_type: "Migration '%{name}' returned an unknown data type. It must return a Map object"
         runtime_error: "Migration '%{name}' encountered the following runtime error: %{error}"
+        invalid_translation_key: "Migration '%{name}' cannot move a setting to translation key '%{key}' because it is not declared as text in the theme's English locale file"
         unknown_setting_returned_by_migration: "Migrations '%{name}' returned a setting '%{setting_name}' which is not declared in the theme's settings.yml file"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
@@ -181,6 +411,15 @@ en:
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
       optimized_link: Optimized image links are ephemeral and should not be included in theme source code.
     settings_errors:
+      translatable_requires_translation_key: "The '%{schema}' schema has translatable fields and must declare a 'translation_key' property with type string and required: true."
+      translatable_requires_string: "The translatable property '%{property}' must have type string."
+      object_translation_metadata: "The translations option for '%{path}' must be a mapping."
+      object_translation_locale: "The default_locale for '%{path}' must be one supported language; got %{value}."
+      object_translation_identifier: "The identifier at '%{path}' (%{value}) must start with a lowercase letter, contain only lowercase letters, numbers, and underscores, and be at most 80 characters."
+      object_translation_duplicate: "The identifier '%{value}' at '%{path}' is already used in this collection."
+      object_translation_length: "The translation key '%{path}' exceeds 400 bytes."
+      object_translation_property: "The translatable field or collection '%{path}' must start with a lowercase letter and contain only lowercase letters, numbers, and underscores."
+      object_translation_key_conflict: "The object setting %{setting} reserves %{key} for its text. Rename the setting or move locale-file translations out of this namespace before saving."
       invalid_yaml: "Provided YAML is invalid."
       data_type_inclusion: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list`, `enum` and `upload`"
       name_too_long: "There is a setting with a too long name. Maximum length is 255"
@@ -202,6 +441,7 @@ en:
       resolve_group_membership_requires_group_list: "resolve_group_membership requires list_type: group"
       resolve_group_membership_requires_groups_property: "resolve_group_membership can only be used with type: groups in object schemas. Invalid property: %{property}"
       objects:
+        invalid_objects: "Value must be an array of objects."
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
         humanize_invalid_type: "The property at JSON Pointer '%{property_json_pointer}' must be of type %{type}."
@@ -323,8 +563,10 @@ en:
         auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
+        authentication_failed_error: "Happens when incoming email authentication requires review, but the action takes effect immediately and cannot be queued."
         from_reply_by_address_error: "Happens when the From header matches the reply by email address."
         inactive_user_error: "Happens when the sender is not active."
+        suspended_user_error: "Happens when the sender has been suspended."
         silenced_user_error: "Happens when the sender has been silenced."
         bad_destination_address: "Happens when none of the email addresses in To/Cc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
@@ -337,9 +579,11 @@ en:
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
         email_alias_not_allowed: "Happens when the sender's address is an alias of an address already registered to an account, and normalized emails are required to be unique."
+        site_archived_error: "Happens when the site is in archive mode."
       unrecognized_error: "Unrecognized Error"
     secure_uploads_placeholder: "Redacted: This site has secure uploads enabled, visit the topic or click View Media to see the attached uploads."
     view_redacted_media: "View Media"
+    view_diagram: "View diagram"
 
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -408,6 +652,8 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
+      dsa_community_rules_required: "Add at least one community rule before enabling DSA reporting."
+      dsa_community_rules_in_use: "Disable DSA reporting before removing all community rules."
       site_settings_are_deprecated: "The following settings are deprecated: %{old_names}. Use %{new_names} instead"
       site_settings_are_hidden: "You are not allowed to change hidden settings: %{setting_names}"
       site_settings_are_shadowed_globally: "You cannot change those settings because they are globally configured: %{setting_names}"
@@ -533,9 +779,11 @@ en:
   authenticator_not_found: "Authentication method does not exist, or has been disabled."
   authenticator_no_connect: "This authentication provider does not allow connection to an existing forum account."
   invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
+  scoped_api_key_html_not_allowed: "API keys with scopes cannot be used to request HTML pages. Request the JSON format instead."
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  site_archived_error: "This site is in archive mode. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
@@ -601,11 +849,11 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_embedded_media_allowed_group: "Sorry, you can't embed media items in a post."
-  no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
+  no_embedded_media_allowed_group: "Sorry, you can't include images, videos, or audio in posts. You can link to them within a sentence instead."
+  no_embedded_media_allowed: "Sorry, new users can't include images, videos, or audio in posts. You can link to them within a sentence instead."
   too_many_embedded_media:
-    one: "Sorry, new users can only put one embedded media item in a post."
-    other: "Sorry, new users can only put %{count} embedded media items in a post."
+    one: "Sorry, new users can only include one image, video, or audio file in a post."
+    other: "Sorry, new users can only include %{count} images, videos, or audio files in a post."
   no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   too_many_attachments:
     one: "Sorry, new users can only put one attachment in a post."
@@ -677,6 +925,7 @@ en:
   edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
   reverted_to_version: "reverted to version #%{version}"
+  cannot_unlist_hidden_revision: "A hidden revision can't be unlisted. Show it first, then unlist it."
   cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts in this topic is not currently allowed during slow mode."
 
   excerpt_image: "image"
@@ -712,6 +961,7 @@ en:
         one: "Default notification level can't be set on groups larger than %{count} user. Incorrect group: %{group_name}"
         other: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
+      flair_upload_not_owned: "You can only use an image you have uploaded as the group flair."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
         one: "'%{username}' is already a member of this group."
@@ -727,6 +977,8 @@ en:
         one: "Maximum %{count} user can be added at once"
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
+      users_not_found: "No user accounts match: %{values}"
+      conflicting_notification_defaults: "Each category or tag can have only one default notification level."
       cannot_add_emails: "Only usernames can be used to add members to this group. To invite by email, use the Invite button."
       counting_too_many_email_domains:
         one: "Maximum %{count} email domain can be counted at once"
@@ -967,6 +1219,7 @@ en:
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, or to establish category guidelines or rules:\n\n- Why should people use this category? What is it for?\n\n- How exactly is this different than the other categories we already have?\n\n- What should topics in this category generally contain?\n\n- Do we need this category? Can we merge with another category, or subcategory?\n"
     errors:
       not_found: "Category not found!"
+      self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
@@ -978,6 +1231,8 @@ en:
       description_too_long:
         one: "Description is too long (maximum is %{count} character)."
         other: "Description is too long (maximum is %{count} characters)."
+      special_category_permissions: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
+      anonymous_permissions_not_supported: "Use the everyone group to allow anonymous users to access a category."
       permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
@@ -1179,6 +1434,7 @@ en:
 
   admin_site_traffic_explorer:
     direct_or_unknown: "Direct / unknown"
+    unknown: "Unknown"
     traffic_types:
       logged_in: "Logged in"
       anonymous: "Anonymous"
@@ -1201,6 +1457,7 @@ en:
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
+    email_change_not_allowed: "This account has been active before, so it can only be reactivated using its current email address."
     admin_confirm:
       title: "Confirm Admin Account"
       description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
@@ -1346,7 +1603,8 @@ en:
     marked_insecure_from_theme_component_reason: "upload used in theme component"
 
   unsubscribe:
-    title: "Unsubscribe"
+    title: "Unsubscribe %{email}"
+    unsubscribe: "Unsubscribe"
     stop_watching_topic: "Stop watching this topic, %{link}"
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
@@ -1913,6 +2171,8 @@ en:
       description: "Show number of associated accounts grouped by login provider. Applicable only when social login methods are enabled."
 
   dashboard:
+    reports:
+      cap_reached: "The dashboard already shows the maximum of %{max} reports. Remove one before adding another."
     problem:
       twitter_login: 'Twitter login appears to not be working at the moment. Check the credentials in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.'
       group_email_credentials: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
@@ -1924,13 +2184,13 @@ en:
       sidekiq_check: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
       queue_size: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
       ram: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
-      google_oauth2_config: 'The server is configured to allow signup and login with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
-      facebook_config: 'The server is configured to allow signup and login with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
-      twitter_config: 'The server is configured to allow signup and login with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
-      github_config: 'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
+      google_oauth2_config: '{{setting:enable_google_oauth2_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
+      facebook_config: '{{setting:enable_facebook_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
+      twitter_config: '{{setting:enable_twitter_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
+      github_config: '{{setting:enable_github_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
       github_onebox_backoff: "GitHub is rate-limiting the server, so GitHub links may not preview until the limit resets. Configuring {{setting:github_onebox_access_tokens}} raises the limit significantly."
-      s3_upload_config: 'The server is configured to upload files to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
-      s3_backup_config: 'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+      s3_upload_config: '{{setting:enable_s3_uploads}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+      s3_backup_config: '{{setting:backup_location}} is set to S3, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
       s3_cdn: 'The server is configured to upload files to S3, but there is no S3 CDN configured. This can lead to expensive S3 costs and slower site performance. <a href="https://meta.discourse.org/t/-/148916" target="_blank">See "Using Object Storage for Uploads" to learn more</a>.'
       image_magick: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
@@ -1943,7 +2203,7 @@ en:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
-      missing_aws_sns_topic_arn: "The server is configured to send emails via Amazon SES but you haven't allowlisted any SNS topic ARNs. Bounce notifications will be rejected until you add the legitimate ARN to <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a>."
+      missing_aws_sns_topic_arn: "This server is configured to send email via Amazon SES. If you use Amazon SNS to deliver bounce notifications to Discourse, you must add your SNS topic ARN to <a href='%{base_path}/admin/site_settings/category/email?filter=aws_sns_topic_arn_allowlist'>aws_sns_topic_arn_allowlist</a>. SNS webhook notifications from unlisted topics are rejected."
       qq_mail_smtp: "Your SMTP server (%{smtp_address}) is known to cause duplicate emails with Discourse. QQ Mail does not return proper acknowledgments, causing Discourse to retry sends that already succeeded. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>See recommended alternatives</a>."
       bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
       poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
@@ -1963,6 +2223,10 @@ en:
     unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
+    dsa_reporting_enabled: "Enable EU Digital Services Act (DSA) reporting and moderation tools. Requires {{setting:dsa_community_rules}}."
+    dsa_notice_group: "Group receiving illegal content reports and reporter contact details. Defaults to admins."
+    dsa_moderation_appeal_email: "Email address shown in moderation emails and system messages when DSA reporting is enabled. Leave blank to omit appeal instructions from those messages."
+    dsa_community_rules: "Define rules from your Terms of Service or community guidelines. Each rule’s reference and explanation are included in DSA statements of reasons when selected by a moderator."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
@@ -1987,6 +2251,7 @@ en:
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
     max_emojis_in_title: "Maximum allowed emojis in topic title.  If the set value is zero, it prevents the use of any emojis in topic titles."
     min_search_term_length: "Minimum valid search term length in characters"
+    allow_anonymous_search: "Allow anonymous visitors to use /search. When disabled, anonymous visitors cannot access /search and interface controls that use /search are hidden."
     search_tokenize_chinese: "Force search to tokenize Chinese even on non Chinese sites"
     search_tokenize_japanese: "Force search to tokenize Japanese even on non Japanese sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
@@ -2180,7 +2445,7 @@ en:
     share_links: "Determine which items appear on the share dialog, and in what order."
     allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
-    site_contact_group_name: "A valid name of a group that gets invited to all automatically sent personal messages."
+    site_contact_group_name: "The group that gets invited to all automatically sent personal messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
@@ -2265,10 +2530,10 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
-    enable_local_logins_via_code: "Allow members to sign up and log in faster using one-time email codes (OTPs)."
+    enable_local_logins_via_code: "Allow members to sign up, accept invitations, and log in with one-time email codes (OTPs), without requiring a password."
     enable_random_usernames: 'Generates random usernames for accounts created with a one-time email code using the format "adjective + noun + two random numbers" (example: QuietFalcon34). New members can change their username during the signup process.'
-    random_username_adjectives: 'Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined.'
-    random_username_nouns: 'Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined.'
+    random_username_adjectives: "Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined."
+    random_username_nouns: "Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined."
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2280,6 +2545,7 @@ en:
     google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for the possible values."
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
     google_oauth2_hd_groups: 'Retrieve users'' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information, see <a target="_blank" href="https://meta.discourse.org/t/226850">this Meta topic</a>.'
+    google_oauth2_hd_groups_allowed: "Only allow users who belong to at least one of these Google groups to log in with Google. Enter each group's ID or email address. Requires {{setting:google_oauth2_hd}}, {{setting:google_oauth2_hd_groups_service_account_admin_email}}, and {{setting:google_oauth2_hd_groups_service_account_json}}. Group lookup failures deny login. Leave blank to allow any user in the hosted domain."
     google_oauth2_hd_groups_service_account_admin_email: "An email address belonging to a Google Workspace administrator account. Will be used with the service account credentials to fetch group information."
     google_oauth2_hd_groups_service_account_json: "JSON formatted key information for the Service Account. Will be used to fetch group information."
     google_oauth2_verbose_logging: "Log verbose Google OAuth2 related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2305,6 +2571,7 @@ en:
     linkedin_oidc_client_id: "Client ID for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     linkedin_oidc_client_secret: "Client secret for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
 
+    site_archived: "Put the site in archive mode. Reads and login remain available; new content, likes, and other write actions are disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
@@ -2574,7 +2841,7 @@ en:
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
-    allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over {{setting:flag_post_allowed_groups}}."
+    allow_all_users_to_flag_illegal_content: "Let anyone report illegal content, including trust level 0 and silenced users. Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow mode' prevent editing, after {{setting:editing_grace_period}}?"
@@ -2606,7 +2873,7 @@ en:
     ignore_by_title_regex: "Ignore incoming emails based on their title using a regular expression."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
-    aws_sns_topic_arn_allowlist: "SNS topic ARNs allowed to send Amazon SES bounce webhook notifications."
+    aws_sns_topic_arn_allowlist: "SNS topics allowed to send Amazon SES bounce notifications to this site's AWS webhook endpoint. In Amazon SNS → Topics, copy the full Topic ARN configured for bounce notifications in Amazon SES, for example: arn:aws:sns:eu-west-1:123456789012:DiscourseBounces. Add each ARN as a separate entry. Leave empty if you do not use SNS for bounce notifications. <a href='https://docs.aws.amazon.com/ses/latest/dg/configure-sns-notifications.html'>Setup instructions</a>."
     mailjet_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailjet?t=supersecret"
     mailpace_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill authentication key used to verify webhook messages."
@@ -2784,7 +3051,6 @@ en:
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
-    short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to markdown code blocks (auto, text, ruby, python etc.). This value must also be present in the {{setting:highlighted_languages}} site setting."
     autohighlight_all_code: "Apply syntax highlighting to HTML-authored &lt;code&gt; blocks, even if they didn't specify a language. To configure markdown-authored code blocks, use the {{setting:default_code_lang}} setting."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> for a demo"
@@ -2908,6 +3174,19 @@ en:
     default_sidebar_show_count_of_new_items: "Make navigation menu links show count of new items instead of badges by default."
     default_sidebar_switch_panel_position: "Position of button on sidebar to switch to chat"
 
+    mcp_server_enabled: "Enable the site's Model Context Protocol server. MCP clients act as an authorized Discourse user and remain subject to normal permissions."
+    mcp_server_instructions: "Optional instructions sent to MCP clients to explain how to use this server."
+    mcp_cache_ttl_ms: "How long MCP clients may consider a cacheable response fresh, in milliseconds. Set to 0 to make responses immediately stale."
+    mcp_oauth_client_id_metadata_policy: "Choose whether OAuth clients can register using Client ID Metadata Documents (CIMD). Admin-registered clients are always allowed. Users must still approve requested access."
+    mcp_oauth_client_id_metadata_domains: "Hosts allowed to provide Client ID Metadata Documents when {{setting:mcp_oauth_client_id_metadata_policy}} is set to approved domains. Subdomains are not included unless listed separately."
+    mcp_access_token_lifetime_minutes: "How long an MCP access token remains valid, in minutes."
+    mcp_refresh_token_lifetime_days: "How long an MCP refresh token family remains valid, in days."
+    mcp_authorization_code_lifetime_seconds: "How long a single-use MCP OAuth authorization code remains valid, in seconds."
+    mcp_global_rate_limit_per_minute: "Maximum MCP requests accepted per user, client, and IP address each minute. Expensive tools can apply stricter limits."
+    mcp_audit_log_retention_days: "Number of days to retain bounded MCP security audit records."
+    mcp_max_request_bytes: "Maximum accepted MCP request body size in bytes."
+    mcp_max_response_bytes: "Maximum MCP response size in bytes."
+
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retain_web_hook_events_aggregate_days: "Number of days to retain web hook event aggregate records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
@@ -2947,10 +3226,8 @@ en:
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or personal messages on a daily basis."
     default_watched_precedence_over_muted: "Notify users about topics in categories or tags that they are watching that also belong to one they have muted"
 
-    company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
+    company_name: "Name of your company or organization."
     company_url: "Website URL for your company or organization. Optional."
-    governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
-    city_for_disputes: "Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service."
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
     shared_drafts_allowed_groups: "Allow users in these groups to see and edit Shared Drafts."
@@ -2959,6 +3236,8 @@ en:
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
     enable_desktop_push_notifications: "Activate push notifications for the desktop interface. This feature enables real-time alerts from the site directly to your desktop, enhancing engagement and ensuring users are always updated. However, the effectiveness of this feature relies on browser support for push notifications."
     push_notification_time_window_mins: "Wait (n) minutes before sending push notification. Helps prevent push notifications from being sent to an active online user."
+    push_notification_trusted_hosts: "Push services whose subscriptions are delivered immediately and tolerate temporary outages. Subdomains are included. Subscriptions on other hosts are limited to two per user, delivered one at a time across the site, and removed after two failed or slow deliveries."
+    push_notification_localization_max_wait_mins: "Longest time (in minutes) to hold a push notification for a new post while its translation into the recipient's language is produced. Set to 0 to send without waiting."
 
     base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
     heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
@@ -2971,9 +3250,6 @@ en:
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
 
-    dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
-    dashboard_visible_tabs: "Choose which dashboard tabs are visible."
-    dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
     site_traffic_explorer_event_limit: "Controls the maximum number of recent pageviews the Site Traffic Explorer processes. Higher limits cover more traffic but may take longer to load or time out on lower-resource database servers."
 
     gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
@@ -3008,13 +3284,17 @@ en:
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
-    enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_composer_redesign: "Enable the redesigned composer."
+    enable_new_reordering_controls: "Use the shared reordering controls on list settings, admin lists, the user directory columns and sidebar links, giving each one the same drag handle, move menu and keyboard support."
+    enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
+    review_queue_consistent_answers: "Frame every review queue question so \"Yes\" always means there is a problem, and label reviewed items \"Problem confirmed\" or \"No problem found\" for every type."
+    enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
+    enable_user_menu_mentions_tab: "Add a Mentions tab to the user menu that shows direct @username mentions separately from replies and group mentions."
     show_user_menu_avatars: "Show user avatars in the user menu"
-    about_page_hidden_groups: "Do not show members of specific groups on the /about page."
+    about_page_hidden_groups: "Do not show admins or moderators who are also members of these specific groups on the /about page."
     about_page_extra_groups: "Groups to show on the about page below the moderators."
     about_page_extra_groups_initial_members: "Number of members to expand on each group on the about page."
     about_page_extra_groups_show_description: "Whether to include the group descriptions on the about page."
@@ -3053,12 +3333,13 @@ en:
     nested_replies_hot_preload_depth_penalty: "Priority subtracted for each level of depth when choosing nested replies to pre-expand in hot view."
     nested_replies_default_sort: "Default sort algorithm for nested replies view."
     nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
-    nested_replies_backfill_batch_size: "Number of topics to process per nested reply stats backfill batch."
+    nested_replies_backfill_batch_size: "Maximum number of topics to inspect per nested reply stats backfill batch. Set to 0 to disable automatic backfill. Explicit stats preparation still processes at least one topic per batch."
     nested_replies_stats_maintenance_enabled: "Maintain nested reply statistics even while nested replies are disabled."
     nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The {{setting:faq_url}} setting works as before."
+    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is hovered if the user has permission to view that category."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
@@ -3068,7 +3349,12 @@ en:
     improved_crawler_detection: "Enables improved crawler tracking which can better detect likely crawlers and ensure traffic reporting is more accurate."
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
     update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
+    enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons: "We are updating the defaults for the {{setting:hide_suspension_reasons}} and {{setting:hide_silencing_reasons}} settings to hide these reasons from public view. If you have previously changed either setting, this change will have no effect on that setting."
+    update_whispers_allowed_groups_default: "We are updating the default for the {{setting:whispers_allowed_groups}} setting to allow staff to post whispers by default. If you have previously changed this setting, your configuration will not change unless you reset the setting."
+    sidebar_user_navigation: "Moves the navigation for user pages — profile, activity, notifications, messages, invites and preferences — out of the horizontal tab bars and into a dedicated sidebar panel, the way the admin area works. On mobile the panel is served from the hamburger menu."
+    mobile_footer_navigation: "Replaces the mobile header's menu button with a tab bar at the bottom of the screen. The footer navigation has a tab for each area of the site, a global menu button, and a button for writing new content. Plugins can add their own menu items and secondary menus using a new API."
     enable_generated_llms_txt: "Generates a concise /llms.txt when no custom file is uploaded. The document describes public discovery routes, the preferred Discourse MCP interface, and responsible agent access. To tune automated access, configure {{setting:slow_down_crawler_user_agents}} and {{setting:slow_down_crawler_rate}}."
+    enable_markdown_endpoints: "Serve supported topics and topic lists as Markdown through .md URLs and requests with an Accept: text/markdown header. Normal visibility and profile privacy rules always apply."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3077,7 +3363,7 @@ en:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
-      invalid_group: "There's no group with that name."
+      invalid_group: "There's no such group."
       invalid_svg: "The SVG image is invalid. It must contain an SVG element and no scripts or event handlers."
       invalid_upload: "The upload is invalid or does not exist."
       invalid_topic: "There's no topic with that ID."
@@ -3146,13 +3432,15 @@ en:
         other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
+      google_oauth2_hd_groups_allowed: "You must configure the Google OAuth2 hosted domain and group service account settings before adding allowed groups."
       discourse_id_registration: "Failed to automatically register with Discourse ID. This could be due to network connectivity issues, firewall restrictions, or the Discourse ID service being unreachable. Please check server logs for more details or contact support."
-      linkedin_oidc_credentials: "You must configure LinkedIn OIDC credentials ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') before enabling this setting."
+      auth_provider_credentials_missing: "You must set %{settings} before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
+      uncategorized_category_missing: '''allow uncategorized topics'' cannot be enabled because the "Uncategorized" category no longer exists.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
@@ -3162,10 +3450,36 @@ en:
       s3_credentials_required_for_video_conversion: "S3 credentials are required for video conversion. Please configure S3 access keys or enable IAM profile."
 
     keywords:
+      about_banner_image: "banner image"
+      about_page_extra_groups: "group listing"
+      about_page_extra_groups_initial_members: "expanded members"
+      about_page_extra_groups_order: "sort order"
+      about_page_extra_groups_show_description: "include description"
+      allow_user_locale: "let users choose their language"
       clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
+      company_url: "website"
+      content_localization_crawler_param: "let search engines index translations"
+      content_localization_enabled: "show translations to readers"
+      content_localization_supported_locales: "translate into"
+      content_localization_use_default_locale_when_unsupported: "fall back to the default language"
+      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      embed_full_app: "full app mode"
+      extended_site_description: "community description"
+      large_icon: "square icon"
+      logo: "primary logo"
+      logo_dark: "primary logo dark"
+      logo_small: "small logo"
+      logo_small_dark: "small logo dark"
       navigation_menu: "sidebar|header dropdown"
       purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
-      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
+      set_locale_from_param: "language links"
+      short_site_description: "community title"
+      site_archived: "enable archive mode|disable archive mode"
+      site_contact_group_name: "site contact group"
+      site_contact_username: "site contact name"
+      site_description: "community summary"
+      title: "community name"
+      welcome_banner_image: "background image"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -3247,8 +3561,6 @@ en:
       tags_any: "Show topics with any of the specified tags (comma-separated)"
       tags_all: "Show topics with all of the specified tags (plus-separated)"
       exclude_tag: "Exclude topics with a specific tag"
-      exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
-      exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
@@ -3258,7 +3570,6 @@ en:
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
       created_by: "Show topics created by a specific user or group"
-      created_by_user: "Show topics created by username or group (without @)"
       created_by_multiple: "Show topics created by any of the specified users or groups (comma-separated)"
       latest_post_before: "Show topics with last post before a date (YYYY-MM-DD or days ago)"
       latest_post_after: "Show topics with last post after a date (YYYY-MM-DD or days ago)"
@@ -3281,6 +3592,7 @@ en:
       status_public: "Show topics in public categories"
       status_noreplies: "Show topics with no replies"
       status_single_user: "Show topics with a single participant"
+      status_scheduled: "Show topics scheduled to publish to a category"
       in_pinned: "Show pinned topics"
       in_bookmarked: "Show topics you've bookmarked"
       in_watching: "Show topics you're watching"
@@ -3292,6 +3604,7 @@ en:
       in_new_replies: "Show topics with new replies"
       in_new_topics: "Show new topics"
       in_unseen: "Show topics you haven't seen"
+      in_untagged: "Show topics without any tags"
       order_activity: "Sort by last activity (newest first)"
       order_activity_asc: "Sort by last activity (oldest first)"
       order_category: "Sort by category name (Z-A)"
@@ -3306,6 +3619,8 @@ en:
       order_likes_op_asc: "Sort by likes on first post (least first)"
       order_posters: "Sort by number of participants (most first)"
       order_posters_asc: "Sort by number of participants (least first)"
+      order_posts: "Sort by number of replies (most first)"
+      order_posts_asc: "Sort by number of replies (least first)"
       order_title: "Sort by title (Z-A)"
       order_title_asc: "Sort by title (A-Z)"
       order_views: "Sort by view count (most first)"
@@ -3375,6 +3690,12 @@ en:
     existing_message_moderator_post:
       one: "A post was merged into an existing message: %{topic_link}"
       other: "%{count} posts were merged into an existing message: %{topic_link}"
+    new_topic_moderator_post_no_link:
+      one: "A post was split to a new topic."
+      other: "%{count} posts were split to a new topic."
+    existing_topic_moderator_post_no_link:
+      one: "A post was merged into an existing topic."
+      other: "%{count} posts were merged into an existing topic."
 
   change_owner:
     post_revision_text: "Ownership transferred"
@@ -3484,6 +3805,8 @@ en:
     wrong_invite_code: "The invite code you entered was incorrect."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the required user fields"
+    missing_user_field_details: "Complete the required user field '%{name}' (ID: %{id})."
+    missing_username: "Please enter a username"
     missing_full_name: "Please enter your full name"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
@@ -3552,6 +3875,9 @@ en:
       must_end_with_alphanumeric: "must end with a letter or a number"
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
       must_not_end_with_confusing_suffix: "must not end with a confusing suffix like .json or .png etc."
+      contains_blocked_words:
+        one: "contains the blocked word '%{words}'"
+        other: "contains blocked words: %{words}"
     email:
       blank: "can't be blank."
       invalid: "is invalid."
@@ -3598,6 +3924,16 @@ en:
     subject_template: "%{code} is your login code"
     text_body_template: |
       Use this code to finish logging in to %{site_name}:
+
+      ## %{code}
+
+      This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
+
+  password_reset_code_mailer:
+    title: "Password reset code"
+    subject_template: "%{code} is your password reset code"
+    text_body_template: |
+      Use this code to reset your password on %{site_name}:
 
       ## %{code}
 
@@ -3798,6 +4134,9 @@ en:
 
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
+    moderation_appeal_instructions: "To appeal this decision, contact %{email}"
+    moderation_reason: "More specifically, your post violated the following community guideline: **%{ground}**. %{explanation}"
+    moderation_reason_for_responders: "More specifically, the post you replied to violated the following community guideline: **%{ground}**. %{explanation}"
 
     post_hidden:
       title: "Post Hidden"
@@ -4187,6 +4526,17 @@ en:
 
         Your account associated with this email address is not activated. Please activate your account before sending emails in.
 
+    email_reject_suspended_user:
+      title: "Email Reject Suspended User"
+      subject_template: "[%{email_prefix}] Email issue -- Suspended User"
+      subject_template_improved: "%{email_prefix}: Email issue -- suspended user"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The account associated with this email address is suspended. Suspended accounts can't create posts or send messages by email.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
+
     email_reject_silenced_user:
       title: "Email Reject Silenced User"
       subject_template: "[%{email_prefix}] Email issue -- Silenced User"
@@ -4398,6 +4748,15 @@ en:
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 
+    email_reject_site_archived:
+      title: "Email Reject Site Archived"
+      subject_template: "[%{email_prefix}] Email issue -- Site Archived"
+      subject_template_improved: "%{email_prefix}: Email issue -- site archived"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        This site is archived and doesn't accept new posts.
+
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
@@ -4470,6 +4829,23 @@ en:
         As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    moderator_silence:
+      date_with_timezone: "%{date} (UTC%{offset})"
+      title: "Moderator silence"
+      subject_template: "Your account has been silenced"
+      timed: "This is an automated message from %{site_name} to let you know that a moderator silenced your account until %{silenced_till}."
+      indefinite: "This is an automated message from %{site_name} to let you know that a moderator silenced your account indefinitely."
+      text_body_template: |
+        Hello,
+
+        %{decision}
+
+        **Reason:** %{reason}
+
+        You can still read discussions, but you can’t participate in them while your account is silenced.
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
+
     silenced_by_staff:
       title: "Silenced by Staff"
       preview: "Account temporarily placed on hold."
@@ -4892,40 +5268,31 @@ en:
         %{respond_instructions}
 
     account_suspended:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"
       text_body_template: |
-        You have been suspended from the forum until %{suspended_till}.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_suspended_forever:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"
       text_body_template: |
-        You have been suspended from the forum.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been suspended.
 
         Reason - %{reason}
 
-    account_silenced:
-      title: "Account Silenced"
-      subject_template: "[%{email_prefix}] Your account has been silenced"
-      subject_template_improved: "Your account has been silenced"
-      text_body_template: |
-        You have been silenced from the forum until %{silenced_till}.
-
-        Reason - %{reason}
-
-    account_silenced_forever:
-      title: "Account Silenced"
-      subject_template: "[%{email_prefix}] Your account has been silenced"
-      subject_template_improved: "Your account has been silenced"
-      text_body_template: |
-        You have been silenced from the forum.
-
-        Reason - %{reason}
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_deleted:
       title: "Account Deleted"
@@ -4963,6 +5330,17 @@ en:
         If you did not choose to disable two-factor authentication (2FA), someone may have compromised your account.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
+
+    account_associated:
+      title: "New associated account"
+      subject_template: "[%{email_prefix}] New associated account"
+      subject_template_improved: "New associated account"
+      text_body_template: |
+        A %{provider_name} account was just linked to your account at %{site_name}. It can now be used to log in.
+
+        If this was you, there’s nothing else you need to do.
+
+        If this was not you, someone may have access to your account. [Review your associated accounts](%{base_url}/my/preferences/account), [review your existing sessions](%{base_url}/my/preferences/security), and consider changing your password.
 
     digest:
       why: "A brief summary of %{site_link} since %{since}"
@@ -5154,7 +5532,7 @@ en:
         A staff member approved your account on %{site_name}.
 
         You can now access your new account by logging in at:
-        %{base_url}
+        %{login_url}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
@@ -5251,6 +5629,9 @@ en:
 
   upload:
     edit_reason: "downloaded local copies of images"
+    too_many_short_urls:
+      one: "Can't look up more than %{count} URL in a single request."
+      other: "Can't look up more than %{count} URLs in a single request."
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     images_only: "Sorry, you can only upload images for this setting."
     pasted_image_filename: "Pasted image"
@@ -5258,6 +5639,7 @@ en:
     file_missing: "Sorry, you must provide a file to upload."
     empty: "Sorry, but the file you provided is empty."
     failed: "Sorry, but your upload failed. Please try again."
+    ico_as_avatar: "Sorry, ICO images cannot be used as avatars."
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."
@@ -5315,6 +5697,11 @@ en:
     group_smtp_post_deleted: "post has been deleted"
     group_smtp_topic_deleted: "topic has been deleted"
     group_smtp_disabled_for_group: "smtp has been disabled for the group"
+
+  appearance_changes:
+    dark_palette_name: "%{name} Dark"
+    draft_name: "%{name} (draft)"
+    previous_name: "%{name} (previous)"
 
   color_schemes:
     base_theme_name: "Base"
@@ -5455,268 +5842,9 @@ en:
 
   tos_topic:
     title: "Terms of Service"
-    body: |
-      <h2 id="heading--change-me"><a href="#heading--change-me">Change Me</a></h2>
-
-      Forum Admin, please find below an example starting template for a privacy policy that you should customise to meet your site's needs.
-
-      These terms do not, but might one day, govern use of the Internet forum at <%{base_url}>. In that event, to use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
-
-      The company may offer other products and services, under different terms. These terms apply only to use of the forum.
-
-      Skip to:
-
-      - [Important Terms](#heading--important-terms)
-      - [Your Permission to Use the Forum](#heading--permission)
-      - [Conditions for Use of the Forum](#heading--conditions)
-      - [Acceptable Use](#heading--acceptable-use)
-      - [Content Standards](#heading--content-standards)
-      - [Enforcement](#heading--enforcement)
-      - [Your Account](#heading--your-account)
-      - [Your Content](#heading--your-content)
-      - [Your Responsibility](#heading--responsibility)
-      - [Disclaimers](#heading--disclaimers)
-      - [Limits on Liability](#heading--liability)
-      - [Feedback](#heading--feedback)
-      - [Termination](#heading--termination)
-      - [Disputes](#heading--disputes)
-      - [General Terms](#heading--general)
-      - [Contact](#heading--contact)
-      - [Changes](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Important Terms</a></h2>
-
-      ***These terms include a number of important provisions that affect your rights and responsibilities, such as the disclaimers in [Disclaimers](#heading--disclaimers), limits on the company's liability to you in [Limits on Liability](#heading--liability), your agreement to cover the company for damages caused by your misuse of the forum in [Responsibility for Your Use](#heading--responsibility), and an agreement to arbitrate disputes in [Disputes](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Your Permission to Use the Forum</a></h2>
-
-      Subject to these terms, the company gives you permission to use the forum. Everyone needs to agree to these terms to use the forum.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Conditions for Use of the Forum</a></h2>
-
-      Your permission to use the forum is subject to the following conditions:
-
-      1. You must be at least eighteen years old.
-
-      2. You may no longer use the forum if the company contacts you directly to say that you may not.
-
-      3. You must use the forum in accordance with [Acceptable Use](#heading--acceptable-use) and [Content Standards](#heading--content-standards).
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptable Use</a></h2>
-
-      1. You may not break the law using the forum.
-
-      2. You may not use or try to use another's account on the forum without their specific permission.
-
-      3. You may not buy, sell, or otherwise trade in user names or other unique identifiers on the forum.
-
-      4. You may not send advertisements, chain letters, or other solicitations through the forum, or use the forum to gather addresses or other personal data for commercial mailing lists or databases.
-
-      5. You may not automate access to the forum, or monitor the forum, such as with a web crawler, browser plug-in or add-on, or other computer program that is not a web browser. You may crawl the forum to index it for a publicly available search engine, if you run one.
-
-      6. You may not use the forum to send e-mail to distribution lists, newsgroups, or group mail aliases.
-
-      7. You may not falsely imply that you're affiliated with or endorsed by the company.
-
-      8. You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
-
-      9. You may not remove any marks showing proprietary ownership from materials you download from the forum.
-
-      10. You may not show any part of the forum on other websites with `<iframe>`.
-
-      11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
-
-      12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
-
-      13. You may not impersonate others through the forum.
-
-      14. You may not encourage or help anyone in violation of these terms.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
-
-      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, abusive, or hateful conduct.
-
-      2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
-
-      3. You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
-
-      4. You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
-
-      5. You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
-
-      The company may investigate and prosecute violations of these terms to the fullest legal extent. The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
-
-      The company reserves the right to change, redact, and delete content on the forum for any reason. If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
-
-      You must create and log into an account to use some features of the forum.
-
-      To create an account, you must provide some information about yourself. If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date. You may close your account at any time by e-mailing <%{contact_email}>.
-
-      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised. You agree to notify the company immediately if you suspect your account has been compromised. You agree to select a secure password for your account, and keep it secret.
-
-      The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
-
-      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum. Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
-
-      Between you and the company, you remain solely responsible for content you submit to the forum. You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company. These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
-
-      Content you submit to the forum belongs to you, and you decide what permission to give others for it. But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum. That special license allows the company to copy, publish, and analyze content you submit to the forum.
-
-      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems. Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed. Those licenses may give others, or the company itself, the right to share your content through the forum again.
-
-      Others who receive content you submit to the forum may violate the terms on which you license your content. You agree that the company will not be liable to you for those violations or their consequences.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
-
-      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum. Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible. If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice. You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts. The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
-
-      ***You accept all risk of using the forum and content on the forum. As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
-
-      The forum may hyperlink to and integrate forums and services run by others. The company does not make any warranty about services run by others, or content they may provide. Use of services run by others may be governed by other terms between you and the one running service.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
-
-      ***Neither the company nor its suppliers will be liable to you for breach-of-contract damages their personnel could not have reasonably foreseen when you agreed to these terms.***
-
-      ***As far as the law allows, the total liability to you for claims of any kind that are related to the forum or content on the forum will be limited to $50.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
-
-      The company welcomes your feedback and suggestions for the forum. See the [Contact](#heading--contact) section below for ways to get in touch with us.
-
-      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you. You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
-
-      Either you or the company may end the agreement written out in these terms at any time. When our agreement ends, your permission to use the forum also ends.
-
-      The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Disputes</a></h2>
-
-      %{governing_law} will govern any dispute related to these terms or your use of the forum.
-
-      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}. Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
-
-      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration. Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes. Arbitration will happen in %{city_for_disputes}. You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member. No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
-
-      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses. You and the company may enter arbitration awards in any court with jurisdiction.
-
-      <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
-
-      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable. Otherwise, that provision should be removed.
-
-      You may not assign your agreement with the company. The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum. Any attempted assignment against these terms has no legal effect.
-
-      Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
-
-      These terms embody all the terms of agreement between you and the company about use of the forum. These terms entirely replace any other agreements about your use of the forum, written or not.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
-
-      You may notify the company under these terms, and send questions to the company, at <%{contact_email}>.
-
-      The company may notify you under these terms using the e-mail address you provide for your account on the forum, or by posting a message to the homepage of the forum or your account page.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
-
-      The company last updated these terms on [INSERT LAST UPDATE DATE HERE], and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
-
-      Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
 
   privacy_topic:
     title: "Privacy Policy"
-    body: |
-      ## [Forum Admin, please find below an example starting template for a privacy policy that you should customise to your site.]
-
-      <a name="collect"></a>
-
-      ## [What information do we collect?](#collect)
-
-      We collect information from you when you register on our site and gather data when you participate in the forum by reading, writing, and evaluating the content shared here.
-
-      When registering on our site, you may be asked to enter your name and e-mail address. You may, however, visit our site without registering. Your e-mail address will be verified by an email containing a unique link. If that link is visited, we know that you control the e-mail address.
-
-      When registered and posting, we record the IP address that the post originated from. We also may retain server logs which include the IP address of every request to our server.
-
-      <a name="use"></a>
-
-      ## [What do we use your information for?](#use)
-
-      Any of the information we collect from you may be used in one of the following ways:
-
-      * To personalize your experience &mdash; your information helps us to better respond to your individual needs.
-      * To improve our site &mdash; we continually strive to improve our site offerings based on the information and feedback we receive from you.
-      * To improve customer service &mdash; your information helps us to more effectively respond to your customer service requests and support needs.
-      * To send periodic emails &mdash; The email address you provide may be used to send you information, notifications that you request about changes to topics or in response to your user name, respond to inquiries, and/or other requests or questions.
-
-      <a name="protect"></a>
-
-      ## [How do we protect your information?](#protect)
-
-      We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information.
-
-      <a name="data-retention"></a>
-
-      ## [What is your data retention policy?](#data-retention)
-
-      We will make a good faith effort to:
-
-      * Retain server logs containing the IP address of all requests to this server no more than [NUMBER OF DAYS] days.
-
-      <a name="cookies"></a>
-
-      ## [Do we use cookies?](#cookies)
-
-      Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow). These cookies enable the site to recognize your browser and, if you have a registered account, associate it with your registered account.
-
-      We use cookies to understand and save your preferences for future visits and compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future. We may contract with third-party service providers to assist us in better understanding our site visitors. These service providers are not permitted to use the information collected on our behalf except to help us conduct and improve our business.
-
-      <a name="disclose"></a>
-
-      ## [Do we disclose any information to outside parties?](#disclose)
-
-      We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information. This does not include trusted third parties who assist us in operating our site, conducting our business, or servicing you, so long as those parties agree to keep this information confidential. We may also release your information when we believe release is appropriate to comply with the law, enforce our site policies, or protect ours or others rights, property, or safety. However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.
-
-      <a name="third-party"></a>
-
-      ## [Third party links](#third-party)
-
-      Occasionally, at our discretion, we may include or offer third party products or services on our site. These third party sites have separate and independent privacy policies. We therefore have no responsibility or liability for the content and activities of these linked sites. Nonetheless, we seek to protect the integrity of our site and welcome any feedback about these sites.
-
-      <a name="coppa"></a>
-
-      ## [Children's Online Privacy Protection Act Compliance](#coppa)
-
-      Our site, products and services are all directed to people who are at least 18 years old or older. If this server is in the USA, and you are under the age of 18, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
-
-      <a name="online"></a>
-
-      ## [Online Privacy Policy Only](#online)
-
-      This online privacy policy applies only to information collected through our site and not to information collected offline.
-
-      <a name="consent"></a>
-
-      ## [Your Consent](#consent)
-
-      By using our site, you consent to our web site privacy policy.
-
-      <a name="changes"></a>
-
-      ## [Changes to our Privacy Policy](#changes)
-
-      If we decide to change our privacy policy, we will post those changes on this page.
-
-      This document is CC-BY-SA. It was last updated [INSERT LAST UPDATE DATE HERE].
 
   badges:
     errors:
@@ -5981,6 +6109,11 @@ en:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports
 
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entry."
+      other: "Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entries."
+
   tags:
     title: "Tags"
     groups:
@@ -5995,6 +6128,9 @@ en:
       one: "You can apply up to %{count} tag to a topic."
       other: "You can apply up to %{count} tags to a topic."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    upload_too_many_rows:
+      one: "Too many rows in the CSV file. Please upload no more than %{count} row at a time."
+      other: "Too many rows in the CSV file. Please upload no more than %{count} rows at a time."
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
       invalid_name: "Invalid tag name."
@@ -6017,6 +6153,9 @@ en:
         one: 'Only available in the "%{category_names}" category'
         other: "Only available in: %{category_names}"
       restricted_to_truncated: "Only available in: %{category_names}, and %{more_count} more"
+      required_tag_group:
+        one: 'Select %{count} more tag from the "%{tag_group_name}" tag group before using this tag'
+        other: 'Select %{count} more tags from the "%{tag_group_name}" tag group before using this tag'
       synonym: 'Please use "%{tag_name}" instead'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
       one_tag_per_topic_group: 'Conflicts with "%{tag_names}" (only one allowed per topic)'
@@ -6073,6 +6212,9 @@ en:
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
   design_wizard:
+    themes:
+      concord:
+        description: "A chat-first layout with a single list of categories, chat channels and voice rooms."
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
       site_settings_update_failed: "The site settings could not be updated."
@@ -6080,7 +6222,13 @@ en:
       default: "Default"
       wcag: "WCAG"
       solarized: "Solarized"
+      neutral: "Neutral"
+      shades_of_blue: "Shades of Blue"
+      summer: "Summer"
       dracula: "Dracula"
+      grey_amber: "Grey Amber"
+      latte: "Latte"
+      dark_rose: "Dark Rose"
   wizard:
     title: "Discourse Setup"
     step:
@@ -6123,6 +6271,29 @@ en:
 
   onebox:
     discourse:
+      event_all_day: "All day"
+      recurrence:
+        every_day: "Every day"
+        every_weekday: "Every weekday"
+        every_week: "Every %{weekday}"
+        every_two_weeks: "Every other %{weekday}"
+        every_four_weeks: "Every 4 weeks on %{weekday}"
+        every_month: "The %{ordinal} %{weekday} of every month"
+        until: "%{recurrence} until %{date}"
+        ordinals:
+          first: "first"
+          second: "second"
+          third: "third"
+          fourth: "fourth"
+          last: "last"
+        weekdays:
+          sunday: "Sunday"
+          monday: "Monday"
+          tuesday: "Tuesday"
+          wednesday: "Wednesday"
+          thursday: "Thursday"
+          friday: "Friday"
+          saturday: "Saturday"
       user_joined_community: "Joined %{date}"
     google_meet:
       title: "Google Meet meeting"
@@ -6133,6 +6304,23 @@ en:
       truncated_file: "This file has been truncated."
       show_original: "show original"
     github:
+      header:
+        repository: "Repository"
+        folder: "Folder"
+        file: "File"
+        binary_file: "Binary file"
+        gist: "Gist"
+        open_issue: "Open issue"
+        closed_issue: "Closed issue"
+        commit: "Commit"
+        comment: "Comment"
+        review: "Review comment"
+        pull_request: "Pull request"
+        success: "Success"
+        failure: "Failure"
+        pending: "In progress"
+        unknown: "Unknown or queued"
+        check_run: "Check run"
       binary_file: "This file is binary."
       truncated_file: "This file has been truncated."
       show_original: "show original"
@@ -6146,21 +6334,13 @@ en:
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
       no_description: "Contribute to %{repo} development by creating an account on GitHub."
-      pr_title:
-        default: "Pull Request"
-        draft: "Draft Pull Request"
-        open: "Open Pull Request"
-        approved: "Approved Pull Request"
-        changes_requested: "Changes Requested"
-        merged: "Merged Pull Request"
-        closed: "Closed Pull Request"
-      status_date:
-        open: "opened"
-        draft: "drafted"
-        approved: "approved"
-        changes_requested: "changes requested"
-        merged: "merged"
-        closed: "closed"
+      pr_status:
+        draft: "Draft"
+        open: "Open"
+        approved: "Approved"
+        changes_requested: "Changes requested"
+        merged: "Merged"
+        closed: "Closed"
 
   discourse_push_notifications:
     popup:
@@ -6183,6 +6363,7 @@ en:
     unknown: "unknown"
     site_setting:
       update_existing_users: "update existing users? %{value}"
+      missing_category_reset: "Reset to its default because the category it pointed to (id %{category_id}) no longer exists."
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
@@ -6258,6 +6439,12 @@ en:
         watched_word: "This post included a Watched Word. Check the %{link} for more."
 
     actions:
+      answer_yes:
+        title: "Yes"
+        delete_post_title: "Yes, delete post"
+        keep_post_deleted_title: "Yes, keep post deleted"
+      answer_no:
+        title: "No"
       agree:
         title: "Yes"
       agree_and_keep:
@@ -6290,8 +6477,8 @@ en:
         complete: "Post hidden, user has been notified."
       agree_and_edit:
         title: "Edit post"
-        description: "Agree with flag and open a composer window to edit the post."
-        complete: "Flag acknowledged, you can now edit the post."
+        description: "Agree with flag once you save the edit."
+        complete: "Post edited and flag acknowledged."
       delete:
         title: "Delete"
         complete: "Post deleted."
@@ -6317,6 +6504,10 @@ en:
         title: "Restore post"
         description: "Disagree with flag and restore post"
         complete: "Post restored."
+      disagree_and_keep_deleted:
+        title: "Keep post deleted"
+        description: "Disagree with flag and keep the post deleted."
+        complete: "Post kept deleted."
       disagree_bundle:
         title: "No"
       disagree:
@@ -6341,11 +6532,16 @@ en:
         title: "Unsilence user and ignore"
         description: "Unsilence the user and remove the flag from the queue without restoring the deleted post."
         complete: "User unsilenced and flag ignored."
+      unsilence_user:
+        title: "Unsilence author"
+        description: "Lift the silence on the author. This flag stays in the queue."
+        complete: "Author unsilenced."
       approve:
         title: "Yes"
         complete: "Post approved."
       approve_post:
         title: "Yes"
+        action_title: "Approve post"
         complete: "Post approved."
       approve_post_closed:
         title: "Yes"
@@ -6409,31 +6605,6 @@ en:
       approve_and_unhide:
         title: "Yes"
         complete: "Post approved and unhidden"
-      # New separated post actions
-      post_actions:
-        bundle_title: "What do you want to do with the post?"
-      delete_post:
-        title: "Delete post"
-        description: "Delete this post"
-        complete: "Post deleted"
-      hide_post:
-        title: "Hide post"
-        description: "Hide this post from public view"
-        complete: "Post hidden"
-      unhide_post:
-        title: "Unhide post"
-        description: "Make this post visible to all users"
-        complete: "Post unhidden"
-      restore_post:
-        title: "Restore post"
-        description: "Restore this deleted post"
-        complete: "Post restored"
-      edit_post:
-        title: "Edit post"
-        description: "Edit this post content"
-        complete: "Post edited"
-      user_actions:
-        bundle_title: "What do you want to do with the user?"
       silence_user:
         title: "Silence user"
         description: "Prevent the user from posting or sending messages"
@@ -6466,6 +6637,10 @@ en:
     mute_error: "Sorry, you can't mute that user."
     error: "Sorry, you cannot change the notification level for that user."
     invalid_value: '"%{value}" is not a valid notification level.'
+
+  google_oauth2:
+    not_in_allowed_group: "Authentication failed. You are not a member of a permitted Google group."
+    group_lookup_failed: "Authentication failed. Your Google group membership could not be verified."
 
   discord:
     not_in_allowed_guild: "Authentication failed. You are not a member of a permitted Discord guild."

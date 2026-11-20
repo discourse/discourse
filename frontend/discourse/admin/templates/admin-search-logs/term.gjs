@@ -16,21 +16,21 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="admin-title">
     <PeriodChooser
-      @period={{@controller.period}}
       @onChange={{fn (mut @controller.period)}}
+      @period={{@controller.period}}
     />
     <ComboBox
-      @content={{@controller.searchTypeOptions}}
-      @value={{@controller.searchType}}
-      @onChange={{fn (mut @controller.searchType)}}
       class="search-logs-filter"
+      @content={{@controller.searchTypeOptions}}
+      @onChange={{fn (mut @controller.searchType)}}
+      @value={{@controller.searchType}}
     />
   </div>
 
   <h2>
     <LinkTo
-      @route="full-page-search"
       @query={{hash q=@controller.term}}
+      @route="full-page-search"
     >{{@controller.term}}</LinkTo>
   </h2>
 
@@ -45,15 +45,15 @@ export default <template>
       {{#each @controller.model.search_result.posts as |result|}}
         <div class="fps-result">
           <div class="author">
-            <a href={{result.userPath}} data-user-card={{result.username}}>
+            <a data-user-card={{result.username}} href={{result.userPath}}>
               {{dAvatar result imageSize="large"}}
             </a>
           </div>
 
           <div class="fps-topic">
             <div class="topic">
-              <a href={{result.url}} class="search-link">
-                <TopicStatus @topic={{result.topic}} @disableActions={{true}} />
+              <a class="search-link" href={{result.url}}>
+                <TopicStatus @disableActions={{true}} @topic={{result.topic}} />
                 <span class="topic-title">
                   {{#if result.useTopicTitleHeadline}}
                     {{trustHTML result.topicTitleHeadline}}

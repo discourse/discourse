@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
@@ -47,7 +47,7 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
 
     await render(
       <template>
-        <DLightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
       </template>
     );
 
@@ -90,7 +90,7 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
 
     await render(
       <template>
-        <DLightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
       </template>
     );
 
@@ -140,7 +140,7 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
 
     await render(
       <template>
-        <DLightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
       </template>
     );
 
@@ -190,7 +190,7 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
 
     await render(
       <template>
-        <DLightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
       </template>
     );
 
@@ -207,5 +207,31 @@ module("Integration | ui-kit | DLightDarkImg", function (hooks) {
         darkSrc.url,
         "the source srcset is the dark image"
       );
+  });
+
+  test("a forced color mode overrides the system preference", async function (assert) {
+    this.session.set("defaultColorSchemeIsDark", false);
+    this.session.set("darkModeAvailable", true);
+    const interfaceColor = getOwner(this).lookup("service:interface-color");
+
+    interfaceColor.forceDarkMode({ flipStylesheets: false });
+    await render(
+      <template>
+        <DLightDarkImg @darkImg={{darkSrc}} @lightImg={{lightSrc}} />
+      </template>
+    );
+    assert
+      .dom("picture source")
+      .hasAttribute(
+        "media",
+        "all",
+        "a forced dark mode always shows the dark image"
+      );
+
+    interfaceColor.forceLightMode({ flipStylesheets: false });
+    await settled();
+    assert
+      .dom("picture source")
+      .hasAttribute("media", "none", "a forced light mode never shows it");
   });
 });

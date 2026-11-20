@@ -45,7 +45,7 @@ export default class TopicCell extends Component {
         @outletArgs={{lazyHash topic=@topic}}
       />
 
-      <span class="link-top-line" role="heading" aria-level="2">
+      <span aria-level="2" class="link-top-line" role="heading">
         {{~! no whitespace ~}}
         <PluginOutlet
           @name="topic-list-before-status"
@@ -57,13 +57,13 @@ export default class TopicCell extends Component {
           @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
         >
           {{~! no whitespace ~}}
-          <TopicStatus @topic={{@topic}} @context="topic-list" />
+          <TopicStatus @context="topic-list" @topic={{@topic}} />
           {{~! no whitespace ~}}
           <TopicLink
+            class="raw-link raw-topic-link"
+            @topic={{@topic}}
             {{on "focus" this.onTitleFocus}}
             {{on "blur" this.onTitleBlur}}
-            @topic={{@topic}}
-            class="raw-link raw-topic-link"
           />
           {{~#if @topic.featured_link~}}
             &nbsp;
@@ -112,17 +112,26 @@ export default class TopicCell extends Component {
             @outletArgs={{lazyHash topic=@topic}}
           />
 
-          {{dDiscourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          <PluginOutlet
+            @name="topic-list-tags-wrapper"
+            @outletArgs={{lazyHash
+              topic=@topic
+              tags=@topic.visibleListTags
+              tagsForUser=@tagsForUser
+            }}
+          >
+            {{dDiscourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          </PluginOutlet>
 
           {{#if this.participantGroups}}
             <ParticipantGroups @groups={{this.participantGroups}} />
           {{/if}}
 
           <ActionList
-            @topic={{@topic}}
-            @postNumbers={{@topic.liked_post_numbers}}
-            @icon="heart"
             class="likes"
+            @icon="heart"
+            @postNumbers={{@topic.liked_post_numbers}}
+            @topic={{@topic}}
           />
         </PluginOutlet>
       </div>

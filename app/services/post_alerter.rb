@@ -59,18 +59,34 @@ class PostAlerter
               payload,
               user,
             )
-          MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+
+          live_payload = payload
+          if SiteSetting.content_localization_enabled
+            translated =
+              I18n.with_locale(user.effective_locale) do
+                ContentLocalization.translated_notification_fields(
+                  topic: post.topic,
+                  post: post,
+                  scope: user.guardian,
+                )
+              end
+            translated.delete(:excerpt) if excerpt
+            live_payload = payload.merge(translated)
+          end
+
+          MessageBus.publish("/notification-alert/#{user.id}", live_payload, user_ids: [user.id])
         end
       end
 
-      push_notification(user, payload)
+      # A caller-provided excerpt isn't the post's text, so its translation doesn't apply.
+      push_notification(user, payload, keep_excerpt: excerpt.present?)
 
       # deprecated. use push_notification instead
       DiscourseEvent.trigger(:post_notification_alert, user, payload)
     end
   end
 
-  def self.push_notification(user, payload)
+  def self.push_notification(user, payload, keep_excerpt: false)
     return if user.do_not_disturb?
 
     # This DiscourseEvent needs to be independent of the push_notification_filters for some use cases.
@@ -91,10 +107,13 @@ class PostAlerter
       delay = (push_window - (Time.now - user.last_seen_at) / 60)
     end
 
+    job_args = { user_id: user.id, payload: payload }
+    job_args[:keep_excerpt] = true if keep_excerpt
+
     if delay.present?
-      Jobs.enqueue_in(delay.minutes, :deliver_push_notification, user_id: user.id, payload: payload)
+      Jobs.enqueue_in(delay.minutes, :deliver_push_notification, **job_args)
     else
-      Jobs.enqueue(:deliver_push_notification, user_id: user.id, payload: payload)
+      Jobs.enqueue(:deliver_push_notification, **job_args)
     end
   end
 
@@ -138,7 +157,7 @@ class PostAlerter
       (post.post_type == Post.types[:whisper] && post.action_code.nil?)
   end
 
-  def after_save_post(post, new_record = false)
+  def after_save_post(post, new_record = false, added_mentions: nil)
     notified = [post.user, post.last_editor].uniq
 
     DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
@@ -160,12 +179,18 @@ class PostAlerter
       end
 
       if mentioned_users
+        if added_mentions
+          mentioned_users =
+            mentioned_users.select { |user| added_mentions.include?(user.username_lower) }
+        end
         mentioned_users = only_allowed_users(mentioned_users, post)
         mentioned_users = mentioned_users - pm_watching_users(post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
+        next if added_mentions && !added_mentions.include?(group.name.downcase)
+
         users = only_allowed_users(users, post)
         to_notify =
           DiscoursePluginRegistry.apply_modifier(
@@ -178,7 +203,7 @@ class PostAlerter
           notify_users(to_notify, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
 
-      if mentioned_here
+      if mentioned_here && (!added_mentions || added_mentions.include?(SiteSetting.here_mention))
         users = expand_here_mention(post, exclude_ids: notified.map(&:id))
         users = only_allowed_users(users, post)
         notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
@@ -336,9 +361,9 @@ class PostAlerter
     )
   end
 
-  def unread_posts(user, topic)
-    Post
-      .secured(Guardian.new(user))
+  def unread_posts(user, topic, guardian: user.guardian)
+    guardian
+      .filter_visible_posts(Post.all, topic: topic)
       .where(
         "post_number > COALESCE((
                SELECT last_read_post_number FROM topic_users tu
@@ -381,12 +406,12 @@ class PostAlerter
   # Bucket membership is the scope here — we don't re-apply the watching/reply_to
   # filters that #unread_posts uses, since a recipient is by definition the
   # parent author (or OP for bucket 1).
-  def unread_posts_in_bucket(user, topic, bucket_post_number)
+  def unread_posts_in_bucket(user, topic, bucket_post_number, guardian: user.guardian)
     last_read =
       TopicUser.where(user_id: user.id, topic_id: topic.id).pick(:last_read_post_number) || 0
 
     scope =
-      Post.secured(Guardian.new(user)).where(topic_id: topic.id).where("post_number > ?", last_read)
+      guardian.filter_visible_posts(Post.all, topic: topic).where("post_number > ?", last_read)
 
     if bucket_post_number == Notification::TOPIC_ROOT_BUCKET
       # Post 1 is the root itself, not a reply to it.
@@ -406,9 +431,10 @@ class PostAlerter
     unread_posts_in_bucket(user, topic, bucket_post_number).count
   end
 
-  def destroy_notifications(user, types, topic, bucket_post_number: nil)
+  def destroy_notifications(user, types, topic, bucket_post_number: nil, guardian: nil)
     return if user.blank?
-    return unless Guardian.new(user).can_see?(topic)
+    guardian ||= user.guardian
+    return unless guardian.can_see?(topic)
 
     User.transaction do
       scope = user.notifications.where(notification_type: types, topic_id: topic.id)
@@ -544,7 +570,8 @@ class PostAlerter
 
     return if type == Notification.types[:linked] && !user.user_option.notify_on_linked_posts
 
-    return if !Guardian.new(user).can_receive_post_notifications?(post)
+    guardian = user.guardian
+    return if !guardian.can_receive_post_notifications?(post)
 
     return if user.staged? && topic.category&.mailinglist_mirror?
 
@@ -620,11 +647,12 @@ class PostAlerter
           [Notification.types[:replied]],
           topic,
           bucket_post_number: bucket_post_number,
+          guardian: guardian,
         )
       else
         types = COLLAPSED_NOTIFICATION_TYPES
         types -= [Notification.types[:replied]] if topic.nested_view?
-        destroy_notifications(user, types, topic)
+        destroy_notifications(user, types, topic, guardian: guardian)
       end
       collapsed = true
     end
@@ -633,13 +661,14 @@ class PostAlerter
     original_username = opts[:display_username].presence || post.username
 
     if collapsed
-      if bucket_post_number
-        post = first_unread_post_in_bucket(user, topic, bucket_post_number) || post
-        count = unread_count_in_bucket(user, topic, bucket_post_number)
-      else
-        post = first_unread_post(user, topic) || post
-        count = unread_count(user, topic)
-      end
+      unread =
+        if bucket_post_number
+          unread_posts_in_bucket(user, topic, bucket_post_number, guardian: guardian)
+        else
+          unread_posts(user, topic, guardian: guardian)
+        end
+      post = unread.order(:post_number).first || post
+      count = unread.count
       if count > 1
         consolidated_count = count
         I18n.with_locale(user.effective_locale) do
@@ -652,9 +681,11 @@ class PostAlerter
 
     topic_title = topic.title
     # when sending a private message email, keep the original title
-    if topic.private_message? && modifications = post.revisions.map(&:modifications)
-      if first_title_modification = modifications.find { |m| m.has_key?("title") }
-        topic_title = first_title_modification["title"][0]
+    if topic.private_message?
+      title_revision = post.revisions.find { |revision| revision.modifications.has_key?("title") }
+
+      if title_revision && can_see_original_title?(user, post, title_revision)
+        topic_title = title_revision.modifications["title"][0]
       end
     end
 
@@ -672,7 +703,7 @@ class PostAlerter
       notification_data[:consolidated_count] = consolidated_count if consolidated_count
     end
 
-    if display_name = opts[:display_name] || post.user.name
+    if SiteSetting.enable_names? && (display_name = opts[:display_name] || post.user.name)
       notification_data[:display_name] = display_name
     end
 
@@ -738,8 +769,8 @@ class PostAlerter
     )
   end
 
-  def push_notification(user, payload)
-    self.class.push_notification(user, payload)
+  def push_notification(user, payload, keep_excerpt: false)
+    self.class.push_notification(user, payload, keep_excerpt:)
   end
 
   def expand_group_mentions(groups, post)
@@ -1109,6 +1140,12 @@ class PostAlerter
   end
 
   private
+
+  def can_see_original_title?(user, post, title_revision)
+    guardian = Guardian.new(user)
+    guardian.can_see_post_revision?(title_revision) &&
+      guardian.can_view_post_version?(post, title_revision.number)
+  end
 
   def each_user_in_batches(users)
     # This is race-condition-safe, unlike #find_in_batches

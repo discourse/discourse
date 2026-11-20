@@ -29,6 +29,24 @@ RSpec.describe InviteGuardian do
     end
   end
 
+  describe "#can_see_invite_key?" do
+    it "is false without a logged in user" do
+      expect(Guardian.new(nil).can_see_invite_key?(user)).to be_falsey
+    end
+
+    it "is true when looking at your own invites" do
+      expect(Guardian.new(user).can_see_invite_key?(user)).to be_truthy
+    end
+
+    it "is false for moderators looking at another user's invites" do
+      expect(Guardian.new(moderator).can_see_invite_key?(user)).to be_falsey
+    end
+
+    it "is true for admins looking at another user's invites" do
+      expect(Guardian.new(admin).can_see_invite_key?(user)).to be_truthy
+    end
+  end
+
   describe "#can_see_invite_emails?" do
     it "is false without a logged in user" do
       expect(Guardian.new(nil).can_see_invite_emails?(user)).to be_falsey
@@ -120,6 +138,7 @@ RSpec.describe InviteGuardian do
         SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         user.update!(trust_level: 2)
       end
+
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       fab!(:topic)
       fab!(:private_topic) { Fabricate(:topic, category: category) }
@@ -170,16 +189,16 @@ RSpec.describe InviteGuardian do
 
         let(:topic) { Fabricate(:topic, category: category) }
 
-        it "should return true for an admin user" do
+        it "returns true for an admin" do
           expect(Guardian.new(admin).can_invite_to?(topic)).to eq(true)
         end
 
-        it "should return true for a group owner" do
+        it "returns true for a group owner" do
           group_owner.update!(trust_level: 2)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
         end
 
-        it "should return false for a normal user" do
+        it "returns false for a regular user" do
           expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)
         end
       end
@@ -192,7 +211,7 @@ RSpec.describe InviteGuardian do
         let(:group_owner) { Fabricate(:user).tap { |user| automatic_group.add_owner(user) } }
         let(:topic) { Fabricate(:topic, category: category) }
 
-        it "should return false for all type of users" do
+        it "returns false for every user type" do
           expect(Guardian.new(admin).can_invite_to?(topic)).to eq(false)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(false)
           expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)

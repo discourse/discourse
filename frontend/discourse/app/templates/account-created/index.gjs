@@ -11,8 +11,8 @@ export default <template>
   </div>
   {{#if @controller.accountCreated.show_controls}}
     <ActivationControls
-      @sendActivationEmail={{@controller.sendActivationEmail}}
       @editActivationEmail={{@controller.editActivationEmail}}
+      @sendActivationEmail={{@controller.sendActivationEmail}}
     />
   {{/if}}
 </template>

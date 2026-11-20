@@ -1,23 +1,5 @@
-import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
-import DPageHeader from "discourse/ui-kit/d-page-header";
-import { i18n } from "discourse-i18n";
-
 export default <template>
-  <DPageHeader
-    @titleLabel={{i18n "admin.config.site_texts.title"}}
-    @descriptionLabel={{i18n "admin.config.site_texts.header_description"}}
-    @hideTabs={{true}}
-  >
-    <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-      <DBreadcrumbsItem
-        @path="/admin/customize/site_texts"
-        @label={{i18n "admin.config.site_texts.title"}}
-      />
-    </:breadcrumbs>
-  </DPageHeader>
-
-  <div class="row site-texts">
+  <div class="site-texts">
     {{outlet}}
   </div>
 </template>

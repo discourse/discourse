@@ -35,6 +35,18 @@ RSpec.describe BackupRestore::SystemInterface, type: :multisite do
         expect(Discourse.redis.get("bar")).to eq("default-bar")
       end
     end
+
+    it "removes only the MessageBus backlogs of the current site" do
+      test_multisite_connection("default") { MessageBus.publish("/restore-test", "default") }
+
+      test_multisite_connection("second") do
+        MessageBus.publish("/restore-test", "second")
+        system_interface.flush_redis
+      end
+
+      expect(MessageBus.backlog("/restore-test", 0, "second")).to be_empty
+      expect(MessageBus.backlog("/restore-test", 0, "default").map(&:data)).to eq(["default"])
+    end
   end
 
   describe "#listen_for_shutdown_signal" do

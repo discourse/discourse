@@ -56,7 +56,7 @@ class AdminUserActionSerializer < ApplicationSerializer
   end
 
   def title
-    topic&.title
+    ContentLocalization.translated_topic_title(topic, scope) || topic&.title
   end
 
   def category_id

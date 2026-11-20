@@ -19,6 +19,10 @@ ug:
                 lt_1h: "< 1 سائەت"
                 gt_24h: "> 24 سائەت"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes_removed: "چىقىرىۋېتىلدى"
+        tag_names: "بەلگە"
     notifications:
       alt:
         solved:

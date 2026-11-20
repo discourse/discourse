@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -21,10 +20,19 @@ function formatDate(value, pattern) {
 export default class DashboardDateRangePicker extends Component {
   @service site;
 
+  /** @type {import("moment").Moment | null} */
   @tracked pendingStart = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked pendingEnd = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked hoveredDay = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked focusedDay = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked viewStartMonthOverride = null;
 
   focusDay = modifier((element, [shouldFocus]) => {
@@ -117,6 +125,7 @@ export default class DashboardDateRangePicker extends Component {
     return moment.weekdaysMin(true);
   }
 
+  /** @returns {import("moment").Moment | null} */
   get hoverRangeEnd() {
     if (
       this.committed ||
@@ -129,8 +138,17 @@ export default class DashboardDateRangePicker extends Component {
     return this.hoveredDay;
   }
 
+  /** @returns {import("moment").Moment | null} */
   get hoverRangeStart() {
     return this.hoverRangeEnd ? this.pendingStart : null;
+  }
+
+  get startInputValue() {
+    return this.currentStart ? this.currentStart.format("YYYY/MM/DD") : "";
+  }
+
+  get endInputValue() {
+    return this.currentEnd ? this.currentEnd.format("YYYY/MM/DD") : "";
   }
 
   @action
@@ -202,6 +220,10 @@ export default class DashboardDateRangePicker extends Component {
     );
   }
 
+  /**
+   * @param {import("moment").Moment} day
+   * @returns {boolean | null}
+   */
   @action
   isHoverEndDay(day) {
     return (
@@ -383,14 +405,6 @@ export default class DashboardDateRangePicker extends Component {
     }
   }
 
-  get startInputValue() {
-    return this.currentStart ? this.currentStart.format("YYYY/MM/DD") : "";
-  }
-
-  get endInputValue() {
-    return this.currentEnd ? this.currentEnd.format("YYYY/MM/DD") : "";
-  }
-
   parseTypedDate(value) {
     const parsed = moment(value, "YYYY/MM/DD", true);
     if (!parsed.isValid()) {
@@ -461,19 +475,19 @@ export default class DashboardDateRangePicker extends Component {
   <template>
     <div class="d-date-range-picker">
       <div
+        aria-label={{i18n "date_range_picker.presets.label"}}
         class="d-date-range-picker__presets"
         role="group"
-        aria-label={{i18n "date_range_picker.presets.label"}}
         {{this.scrollActivePresetIntoView}}
       >
         {{#each this.presetItems as |preset|}}
           <button
-            type="button"
+            aria-current={{if preset.active "true"}}
             class={{dConcatClass
               "d-date-range-picker__preset"
               (if preset.active "is-active")
             }}
-            aria-current={{if preset.active "true"}}
+            type="button"
             {{on "click" (fn this.selectPreset preset)}}
           >
             {{preset.label}}
@@ -493,9 +507,9 @@ export default class DashboardDateRangePicker extends Component {
                   {{#if (eq index 0)}}
                     <DButton
                       class="btn-transparent d-date-range-picker__nav --prev"
-                      @icon="chevron-left"
-                      @ariaLabel="dates.previous_month"
                       @action={{fn this.shiftMonth -1}}
+                      @ariaLabel="dates.previous_month"
+                      @icon="chevron-left"
                     />
                   {{/if}}
                   <span class="d-date-range-picker__month-title">
@@ -504,21 +518,21 @@ export default class DashboardDateRangePicker extends Component {
                   {{#if (eq index this.lastMonthIndex)}}
                     <DButton
                       class="btn-transparent d-date-range-picker__nav --next"
-                      @icon="chevron-right"
-                      @ariaLabel="dates.next_month"
                       @action={{fn this.shiftMonth 1}}
+                      @ariaLabel="dates.next_month"
+                      @icon="chevron-right"
                     />
                   {{/if}}
                 </div>
-                <div class="d-date-range-picker__weekdays" aria-hidden="true">
+                <div aria-hidden="true" class="d-date-range-picker__weekdays">
                   {{#each this.weekdayLabels as |dow|}}
                     <span>{{dow}}</span>
                   {{/each}}
                 </div>
                 <div
+                  aria-label={{formatDate month "MMMM YYYY"}}
                   class="d-date-range-picker__grid"
                   role="grid"
-                  aria-label={{formatDate month "MMMM YYYY"}}
                   {{on "keydown" this.handleKeyDown}}
                 >
                   {{#each (this.weeksFor month) as |week|}}
@@ -528,14 +542,14 @@ export default class DashboardDateRangePicker extends Component {
                           <span aria-hidden="true"></span>
                         {{else}}
                           <button
-                            type="button"
-                            role="gridcell"
-                            class={{this.dayClass day}}
-                            tabindex={{if (this.isFocusedDay day) "0" "-1"}}
-                            aria-selected={{this.isAriaSelected day}}
                             aria-disabled={{if (this.isDisabledDay day) "true"}}
                             aria-label={{formatDate day "LL"}}
+                            aria-selected={{this.isAriaSelected day}}
+                            class={{this.dayClass day}}
                             disabled={{this.isDisabledDay day}}
+                            role="gridcell"
+                            tabindex={{if (this.isFocusedDay day) "0" "-1"}}
+                            type="button"
                             {{this.focusDay
                               (this.shouldProgrammaticallyFocusDay day)
                             }}
@@ -556,24 +570,24 @@ export default class DashboardDateRangePicker extends Component {
 
         <div class="d-date-range-picker__inputs">
           <input
-            type="text"
+            aria-label={{i18n "date_range_picker.start_date"}}
+            autocomplete="off"
             class="d-date-range-picker__input"
             inputmode="numeric"
-            autocomplete="off"
             placeholder={{i18n "date_range_picker.date_placeholder"}}
-            aria-label={{i18n "date_range_picker.start_date"}}
+            type="text"
             value={{this.startInputValue}}
             {{on "focus" this.focusStartInput}}
             {{on "change" this.commitStartInput}}
             {{on "keydown" this.commitInputOnEnter}}
           />
           <input
-            type="text"
+            aria-label={{i18n "date_range_picker.end_date"}}
+            autocomplete="off"
             class="d-date-range-picker__input"
             inputmode="numeric"
-            autocomplete="off"
             placeholder={{i18n "date_range_picker.date_placeholder"}}
-            aria-label={{i18n "date_range_picker.end_date"}}
+            type="text"
             value={{this.endInputValue}}
             {{on "focus" this.focusEndInput}}
             {{on "change" this.commitEndInput}}
@@ -583,15 +597,15 @@ export default class DashboardDateRangePicker extends Component {
 
         <div class="d-date-range-picker__footer">
           <DButton
+            class="btn-default d-date-range-picker__cancel"
             @action={{this.cancel}}
             @label="cancel"
-            class="btn-default d-date-range-picker__cancel"
           />
           <DButton
-            @action={{this.apply}}
-            @label="date_range_picker.apply"
-            @disabled={{this.applyDisabled}}
             class="btn-primary d-date-range-picker__apply"
+            @action={{this.apply}}
+            @disabled={{this.applyDisabled}}
+            @label="date_range_picker.apply"
           />
         </div>
       </div>

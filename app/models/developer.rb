@@ -6,6 +6,11 @@ class Developer < ActiveRecord::Base
   after_destroy :rebuild_cache
   after_save :rebuild_cache
 
+  def self.configured_email?(value)
+    Rails.configuration.respond_to?(:developer_emails) &&
+      Rails.configuration.developer_emails.include?(value&.strip&.downcase)
+  end
+
   def self.id_cache
     @id_cache ||= DistributedCache.new("developer_ids")
   end

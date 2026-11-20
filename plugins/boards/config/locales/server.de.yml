@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 de:
+  boards:
+    onebox:
+      created_by: "Erstellt von %{username}"
+      updated_by: "Aktualisiert von %{username}"

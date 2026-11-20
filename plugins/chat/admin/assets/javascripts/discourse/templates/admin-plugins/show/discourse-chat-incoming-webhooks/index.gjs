@@ -5,23 +5,23 @@ import AdminChatIncomingWebhooksList from "discourse/plugins/chat/admin/componen
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/plugins/chat/hooks"
     @label={{i18n "chat.incoming_webhooks.title"}}
+    @path="/admin/plugins/chat/hooks"
   />
 
   <div class="discourse-chat-incoming-webhooks admin-detail">
     <DPageSubheader
-      @titleLabel={{i18n "chat.incoming_webhooks.title"}}
       @descriptionLabel={{i18n "chat.incoming_webhooks.instructions"}}
+      @titleLabel={{i18n "chat.incoming_webhooks.title"}}
     >
       <:actions as |actions|>
         <actions.Primary
+          class="admin-incoming-webhooks-new"
+          @icon="plus"
           @label="chat.incoming_webhooks.new"
-          @title="chat.incoming_webhooks.new"
           @route="adminPlugins.show.discourse-chat-incoming-webhooks.new"
           @routeModels="chat"
-          @icon="plus"
-          class="admin-incoming-webhooks-new"
+          @title="chat.incoming_webhooks.new"
         />
       </:actions>
     </DPageSubheader>

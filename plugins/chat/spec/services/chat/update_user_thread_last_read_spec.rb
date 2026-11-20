@@ -10,7 +10,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:chatters, :group)
-    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
+    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id], last_seen_at: 1.minute.ago) }
     fab!(:thread) { Fabricate(:chat_thread, old_om: true) }
     fab!(:reply_1) { Fabricate(:chat_message, thread: thread, chat_channel_id: thread.channel.id) }
 
@@ -76,7 +76,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
         end
 
         context "when the message doesn’t exist" do
-          it "fails" do
+          it "fails to find the message" do
             params[:message_id] = 999
             is_expected.to fail_to_find_a_model(:message)
           end
@@ -128,6 +128,13 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
             .where(read: false)
             .count
         }.by(-1)
+      end
+
+      it "publishes the updated notifications state" do
+        params[:message_id] = reply_3.id
+        messages = MessageBus.track_publish("/notification/#{current_user.id}") { result }
+
+        expect(messages).not_to be_empty
       end
     end
   end

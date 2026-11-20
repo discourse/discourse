@@ -221,5 +221,17 @@ module(
 
       assert.dom(".preview-stub").hasText("-after", "the preview catches up");
     });
+
+    test("source without a language ignores default_code_lang", async function (assert) {
+      this.siteSettings.default_code_lang = "javascript";
+
+      const [editorClass] = await setupRichEditor(assert, "");
+      await insertBlock(editorClass.view, 'console.log("Hello, world!");');
+      await toggleSource(editorClass.view);
+
+      assert
+        .dom("pre.preview-source [class^='hljs-']")
+        .doesNotExist("the source stays plain text");
+    });
   }
 );

@@ -11,10 +11,10 @@ const GetARoomComposerMessage = <template>
     {{trustHTML @message.body}}
 
     <DButton
-      @label="user.private_message"
-      @icon="envelope"
-      @action={{fn @switchPM @message}}
       class="btn-primary"
+      @action={{fn @switchPM @message}}
+      @icon="envelope"
+      @label="user.private_message"
     />
   </div>
 </template>;

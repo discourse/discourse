@@ -16,7 +16,7 @@
  * a route it does not know, and is not always a full router service — in
  * rendering tests it is a stand-in — so every lookup goes through here.
  *
- * @param {Object} link
+ * @param {{ currentWhen?: boolean | string, href?: string, value?: string, route?: string, model?: unknown, models?: unknown[], query?: Record<string, unknown> }} link
  * @param {RouterService} router
  * @returns {boolean}
  */

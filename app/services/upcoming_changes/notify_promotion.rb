@@ -36,6 +36,7 @@ class UpcomingChanges::NotifyPromotion
 
   policy :setting_is_available
   policy :change_should_be_displayed
+  policy :change_dependencies_met
   policy :meets_or_exceeds_status
   policy :promotion_not_already_handled
   policy :admin_has_not_manually_toggled
@@ -64,6 +65,10 @@ class UpcomingChanges::NotifyPromotion
 
   def change_should_be_displayed(params:)
     UpcomingChanges::ConditionalDisplay.should_display?(params.setting_name)
+  end
+
+  def change_dependencies_met(params:)
+    UpcomingChanges.change_dependencies_met?(params.setting_name)
   end
 
   def meets_or_exceeds_status(params:)

@@ -100,9 +100,10 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
 
       it "returns a fresh cached summary" do
         summary = create_cached_summary(topic)
-        get "/discourse-ai/summarization/t/#{topic.id}.json"
+        queries = track_sql_queries { get "/discourse-ai/summarization/t/#{topic.id}.json" }
 
         expect(response.status).to eq(200)
+        expect(queries.grep(/FROM "llm_models"/)).to be_empty
 
         response_summary = response.parsed_body
         expect(response_summary.dig("ai_topic_summary", "summarized_text")).to eq(
@@ -156,6 +157,82 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         get "/discourse-ai/summarization/t/#{topic.id}.json"
 
         expect(response.status).to eq(404)
+      end
+
+      it "does not expose a cached summary after a post revision is hidden or deleted" do
+        revision = Fabricate(:post_revision, post: post_2)
+
+        create_cached_summary(topic)
+        revision.hide!
+        get "/discourse-ai/summarization/t/#{topic.id}.json"
+        expect(response.status).to eq(404)
+
+        create_cached_summary(topic)
+        post_2.trash!
+        revision.destroy!
+        get "/discourse-ai/summarization/t/#{topic.id}.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "only replaces a cached summary when a post's content is edited without a revision" do
+        original_raw = post_2.raw
+        PostRevisor.new(post_2).revise!(post_2.user, raw: "#{original_raw} with a typo")
+        summary = create_cached_summary(topic)
+        title_edit = { title: "A brand new title" }
+        admin = Fabricate(:admin)
+
+        PostRevisor.new(post_1).revise!(post_1.user, title_edit, skip_revision: true)
+        PostRevisor.new(post_1).revise!(admin, raw: "This edit keeps a revision")
+        PostRevisor.new(post_1).revise!(admin, raw: "This edit updates that revision")
+        expect(Jobs::ReplaceStaleTopicSummary.jobs).to be_empty
+
+        expect_enqueued_with(
+          job: :replace_stale_topic_summary,
+          args: {
+            topic_id: topic.id,
+            summary_type: "complete",
+            locale: summary.locale,
+          },
+        ) { PostRevisor.new(post_2).revise!(post_2.user, raw: original_raw) }
+      end
+
+      it "replaces a cached summary when a new revision omits the content it replaces" do
+        PostRevisor.new(post_2).revise!(post_2.user, raw: "#{post_2.raw} with a secret")
+        summary = create_cached_summary(topic)
+
+        expect_enqueued_with(
+          job: :replace_stale_topic_summary,
+          args: {
+            topic_id: topic.id,
+            summary_type: "complete",
+            locale: summary.locale,
+          },
+        ) do
+          PostRevisor.new(post_2).revise!(
+            post_2.user,
+            raw: "This edit has a reason",
+            edit_reason: "typo",
+          )
+        end
+
+        expect(post_2.post_revisions.pluck(:modifications).to_s).not_to include("with a secret")
+      end
+
+      it "replaces a cached summary when an edit rewrites the title its revision kept" do
+        PostRevisor.new(post_1).revise!(post_1.user, title: "A sensitive title for this topic")
+        summary = create_cached_summary(topic)
+        edit = { title: "A redacted title for this topic", raw: "#{post_1.raw} and more" }
+
+        expect_enqueued_with(
+          job: :replace_stale_topic_summary,
+          args: {
+            topic_id: topic.id,
+            summary_type: "complete",
+            locale: summary.locale,
+          },
+        ) { PostRevisor.new(post_1).revise!(post_1.user, edit) }
+
+        expect(post_1.post_revisions.pluck(:modifications).to_s).not_to include("sensitive")
       end
 
       it "returns a summary" do
@@ -329,8 +406,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       before { sign_in(admin) }
 
       it "raises an error" do
-        topics = 31.times.map { Fabricate(:topic) }
-        topic_ids = topics.map(&:id)
+        topic_ids = (1..31).to_a
 
         put "/discourse-ai/summarization/regen_gist", params: { topic_ids: topic_ids }
 
@@ -422,8 +498,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       before { sign_in(admin) }
 
       it "raises an error" do
-        topics = 31.times.map { Fabricate(:topic) }
-        topic_ids = topics.map(&:id)
+        topic_ids = (1..31).to_a
 
         put "/discourse-ai/summarization/regen_summary", params: { topic_ids: topic_ids }
 

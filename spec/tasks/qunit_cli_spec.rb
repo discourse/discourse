@@ -23,7 +23,33 @@ describe "bin/qunit" do
     Dir.glob("#{Rails.root.join("frontend/discourse/tests/integration/**/*-test.js")}").first
   end
 
-  let(:chat_test_file) { Dir.glob("#{Rails.root.join("plugins/chat/test/**/*-test.js")}").first }
+  let(:plugin_directory) { "qunit-cli-spec-#{Process.pid}" }
+  let(:plugin_name) { "qunit-cli-spec-plugin-#{Process.pid}" }
+  let(:other_plugin_name) { "qunit-cli-spec-other-#{Process.pid}" }
+  let(:plugin_test_file) do
+    Rails.root.join("plugins", plugin_directory, "test/javascripts/unit/example-test.js").to_s
+  end
+
+  def create_plugin(directory, name)
+    plugin_path = Rails.root.join("plugins", directory)
+    FileUtils.mkdir_p(plugin_path.join("test/javascripts/unit"))
+    File.write(plugin_path.join("plugin.rb"), "# name: #{name}\n")
+    FileUtils.touch(plugin_path.join("test/javascripts/unit/example-test.js"))
+  end
+
+  before do
+    create_plugin(plugin_directory, plugin_name)
+    create_plugin(other_plugin_name, other_plugin_name)
+  end
+
+  after do
+    FileUtils.rm_rf(Rails.root.join("plugins", plugin_directory))
+    FileUtils.rm_rf(Rails.root.join("plugins", other_plugin_name))
+  end
+
+  def core_test_files_in(dir)
+    Dir.glob(Rails.root.join("frontend/discourse/tests/#{dir}/**/*-test.{js,gjs,ts,gts}")).sort
+  end
 
   let(:default_watchdog_env) do
     {
@@ -115,6 +141,7 @@ describe "bin/qunit" do
         "PLUGIN_TARGETS" => a_string_matching(/,/),
       ),
     )
+    expect(result.env["PLUGIN_TARGETS"].split(",")).to include(plugin_name, other_plugin_name)
   end
 
   it "allows running tests for multiple plugins" do
@@ -146,7 +173,7 @@ describe "bin/qunit" do
   end
 
   it "allows running specific plugin test file" do
-    result = run(chat_test_file)
+    result = run(plugin_test_file)
     expect(result.status).to eq(0)
     expect(result.launched_server).to eq(false)
 
@@ -156,12 +183,9 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        "target=chat&testem=1",
+        "target=#{plugin_name}&testem=1",
         "--file-path",
-        chat_test_file.sub(
-          "#{Rails.root.join("plugins/chat/test/javascripts/")}",
-          "discourse/plugins/chat/",
-        ),
+        "discourse/plugins/#{plugin_name}/unit/example-test.js",
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
@@ -177,8 +201,45 @@ describe "bin/qunit" do
     )
   end
 
+  it "targets the plugin when given a plugin directory without a trailing slash" do
+    result = run("plugins/#{plugin_directory}")
+    expect(result.status).to eq(0)
+    expect(result.args).to include("target=#{plugin_name}&testem=1")
+    expect(result.env).to include("LOAD_PLUGINS" => "1")
+  end
+
+  it "passes core directories as a path prefix" do
+    result = run("frontend/discourse/tests/integration/components")
+    expect(result.status).to eq(0)
+    expect(result.args).to include("--file-path", "./integration/components/")
+  end
+
+  it "skips the path filter for the core tests root" do
+    result = run("frontend/discourse/tests")
+    expect(result.status).to eq(0)
+    expect(result.args).not_to include("--file-path")
+  end
+
+  it "passes plugin directories as a path prefix" do
+    result = run("plugins/#{plugin_directory}/test/javascripts")
+    expect(result.status).to eq(0)
+    expect(result.args).to include("--file-path", "discourse/plugins/#{plugin_name}/")
+  end
+
+  it "rejects directories outside the test directories" do
+    result = run("frontend/discourse")
+    expect(result.status).to eq(1)
+    expect(result.err).to include("frontend/discourse is not a test directory")
+  end
+
+  it "aborts when a file list is too long for the test page URL" do
+    result = run(*core_test_files_in("acceptance"))
+    expect(result.status).to eq(1)
+    expect(result.err).to include("Too many test files", "Pass directories instead")
+  end
+
   it "prevents running files from multiple targets" do
-    result = run(core_test_file, chat_test_file)
+    result = run(core_test_file, plugin_test_file)
     expect(result.status).to eq(1)
     expect(result.out).to include(
       "Error: Cannot mix multiple plugin/core targets when running specific files",
@@ -245,5 +306,20 @@ describe "bin/qunit" do
 
     expect(result.status).to eq(1)
     expect(result.err).to include("--browser-inactivity-timeout must be greater than 0")
+  end
+
+  it "asks for Playwright's Chromium to be installed when it is missing" do
+    Dir.mktmpdir do |dir|
+      _out, err, status =
+        Open3.capture3(
+          { "PLAYWRIGHT_BROWSERS_PATH" => dir },
+          "bin/qunit",
+          core_test_file,
+          chdir: Rails.root.to_s,
+        )
+
+      expect(status.exitstatus).to eq(1)
+      expect(err).to include("Run `pnpm playwright-install`")
+    end
   end
 end

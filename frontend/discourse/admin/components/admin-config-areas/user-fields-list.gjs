@@ -8,6 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `user-fields-list-reorderable.gjs` replaces it.
 export default class AdminConfigAreasUserFieldsList extends Component {
   @service dialog;
   @service toasts;
@@ -90,20 +92,20 @@ export default class AdminConfigAreasUserFieldsList extends Component {
           <tbody class="d-table__body">
             {{#each this.sortedFields as |field|}}
               <AdminUserFieldItem
-                @userField={{field}}
-                @fieldTypes={{this.fieldTypes}}
                 @destroyAction={{this.destroyField}}
-                @moveUpAction={{this.moveUp}}
+                @fieldTypes={{this.fieldTypes}}
                 @moveDownAction={{this.moveDown}}
+                @moveUpAction={{this.moveUp}}
+                @userField={{field}}
               />
             {{/each}}
           </tbody>
         </table>
       {{else}}
         <AdminConfigAreaEmptyList
+          @ctaClass="admin-user_fields__add-emoji"
           @ctaLabel="admin.user_fields.add"
           @ctaRoute="adminUserFields.new"
-          @ctaClass="admin-user_fields__add-emoji"
           @emptyLabel="admin.user_fields.no_user_fields"
         />
       {{/if}}

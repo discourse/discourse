@@ -2,17 +2,15 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::ChangeTopicTags do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:post)
   fab!(:tag1, :tag) { Fabricate(:tag, name: "alpha") }
   fab!(:tag2, :tag) { Fabricate(:tag, name: "beta") }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  include_context "with AI bot enabled"
+
+  before { SiteSetting.tagging_enabled = true }
 
   def tool(params = nil, **kwargs)
     params ||= kwargs
@@ -21,6 +19,25 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeTopicTags do
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
   let(:topic) { post.topic }
+
+  it "previews complete tag sets for append, replacement, and removal" do
+    topic.tags << tag1
+    tags_tool = tool(topic_id: topic.id, tags: ["Beta!"], reason: "Adding tag")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(tags_tool.approval_title))
+    expect(title.at_css("a").text).to eq(topic.title)
+    expect(title.at_css("a")["href"]).to eq(topic.url)
+    expect(tags_tool.approval_changes).to eq(
+      [{ label: "Changing tags:", before: "alpha", after: "alpha, beta" }],
+    )
+    expect(tags_tool.approval_parameters).to be_empty
+    expect(
+      tool(topic_id: topic.id, tags: ["beta"], replace: true, reason: "Retagging").approval_changes,
+    ).to eq([{ label: "Changing tags:", before: "alpha", after: "beta" }])
+    expect(
+      tool(topic_id: topic.id, tags: [], replace: true, reason: "Removing").approval_changes,
+    ).to eq([{ label: "Changing tags:", before: "alpha", after: "No tags" }])
+    expect(topic.reload.tags.pluck(:name)).to eq(["alpha"])
+  end
 
   it "sets tags on the topic" do
     result = tool(topic_id: topic.id, tags: %w[alpha beta], reason: "Adding relevant tags").invoke

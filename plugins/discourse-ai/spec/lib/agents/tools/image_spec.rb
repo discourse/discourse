@@ -61,15 +61,13 @@ RSpec.describe DiscourseAi::Agents::Tools::Image do
     )
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    toggle_enabled_bots(bots: [gpt_35_turbo])
-  end
+  include_context "with AI bot enabled"
+
+  before { toggle_enabled_bots(bots: [gpt_35_turbo]) }
 
   let(:llm) { DiscourseAi::Completions::Llm.proxy(gpt_35_turbo) }
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_35_turbo.name) }
+  fab!(:bot_user, :admin)
 
   describe "#process" do
     it "can generate correct info" do

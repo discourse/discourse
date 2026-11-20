@@ -66,12 +66,12 @@ export default class SolvedStatusFilter extends Component {
     {{#if this.siteSettings.solved_enabled}}
       <li>
         <ComboBox
+          class="solved-status-filter"
           @content={{this.statuses}}
+          @onChange={{this.changeStatus}}
+          @options={{hash caretDownIcon="angle-right" caretUpIcon="angle-down"}}
           @value={{this.status}}
           @valueProperty="value"
-          @options={{hash caretDownIcon="angle-right" caretUpIcon="angle-down"}}
-          @onChange={{this.changeStatus}}
-          class="solved-status-filter"
         />
       </li>
     {{/if}}

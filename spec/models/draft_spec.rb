@@ -10,6 +10,18 @@ RSpec.describe Draft do
 
   it { is_expected.to have_many(:upload_references).dependent(:delete_all) }
 
+  describe ".allowed_draft_posts_for_user" do
+    it "preloads the user's hidden posts but not another author's" do
+      own_hidden = Fabricate(:post, topic: post.topic, user: user, hidden: true)
+      other_hidden = Fabricate(:post, topic: post.topic, hidden: true)
+      ids = [post.id, own_hidden.id, other_hidden.id]
+      expect(Draft.allowed_draft_posts_for_user(user).where(id: ids)).to contain_exactly(
+        post,
+        own_hidden,
+      )
+    end
+  end
+
   describe "system user" do
     it "can not set drafts" do
       # fake a sequence
@@ -68,26 +80,26 @@ RSpec.describe Draft do
     expect(Draft.get(Fabricate(:user), "test", 0)).to eq nil
   end
 
-  it "should overwrite draft data correctly" do
+  it "overwrites draft data correctly" do
     seq = Draft.set(user, "test", 0, "data")
     seq = Draft.set(user, "test", seq, "new data")
     expect(Draft.get(user, "test", seq)).to eq "new data"
   end
 
-  it "should increase the sequence on every save" do
+  it "increments the sequence on every save" do
     seq = Draft.set(user, "test", 0, "data")
     expect(seq).to eq(0)
     seq = Draft.set(user, "test", 0, "data")
     expect(seq).to eq(1)
   end
 
-  it "should clear drafts on request" do
+  it "clears drafts on request" do
     Draft.set(user, "test", 0, "data")
     Draft.clear(user, "test", 0)
     expect(Draft.get(user, "test", 0)).to eq nil
   end
 
-  it "should cross check with DraftSequence table" do
+  it "cross-checks the DraftSequence table" do
     Draft.set(user, "test", 0, "old")
     expect(Draft.get(user, "test", 0)).to eq "old"
 
@@ -111,7 +123,7 @@ RSpec.describe Draft do
     )
   end
 
-  it "should disregard old draft if sequence decreases" do
+  it "disregards an old draft when the sequence decreases" do
     Draft.set(user, "test", 0, "data")
     DraftSequence.next!(user, "test")
     Draft.set(user, "test", 1, "hello")
@@ -123,7 +135,7 @@ RSpec.describe Draft do
     expect(Draft.get(user, "test", 1)).to eq "hello"
   end
 
-  it "should disregard draft sequence if force_save is true" do
+  it "disregards the draft sequence when force_save is true" do
     Draft.set(user, "test", 0, "data")
     DraftSequence.next!(user, "test")
     Draft.set(user, "test", 1, "hello")
@@ -193,19 +205,19 @@ RSpec.describe Draft do
 
     let(:stream) { Draft.stream(user: user) }
 
-    it "should include the correct number of drafts in the stream" do
+    it "includes the correct number of drafts in the stream" do
       Draft.set(user, "test", 0, '{"reply":"hey.","action":"createTopic","title":"Hey"}')
       Draft.set(user, "test2", 0, '{"reply":"howdy"}')
       expect(stream.count).to eq(2)
     end
 
-    it "should include the right topic id in a draft reply in the stream" do
+    it "includes the expected topic ID for a draft reply in the stream" do
       Draft.set(user, "topic_#{public_topic.id}", 0, '{"reply":"hi"}')
       draft_row = stream.first
       expect(draft_row.topic_id).to eq(public_topic.id)
     end
 
-    it "should include the right draft username in the stream" do
+    it "includes the expected draft username in the stream" do
       Draft.set(user, "topic_#{public_topic.id}", 0, '{"reply":"hey"}')
       draft_row = stream.first
       expect(draft_row.user.username).to eq(user.username)

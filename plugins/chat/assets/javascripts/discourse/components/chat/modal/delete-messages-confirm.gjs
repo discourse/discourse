@@ -36,8 +36,8 @@ export default class DeleteMessagesConfirm extends Component {
         <DButton
           class="btn-primary"
           @action={{this.delete}}
-          @label="delete"
           @icon="trash-can"
+          @label="delete"
         />
         <DModalCancel @close={{@closeModal}} />
       </:footer>

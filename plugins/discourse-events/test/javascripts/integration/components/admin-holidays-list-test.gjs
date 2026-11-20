@@ -7,10 +7,10 @@ module("Integration | Component | AdminHolidaysList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displaying a list of the provided holidays", async function (assert) {
-    this.set("holidays", [
+    this.holidays = [
       { date: "2022-01-01", name: "New Year's Day" },
       { date: "2022-01-17", name: "Martin Luther King, Jr. Day" },
-    ]);
+    ];
 
     await render(
       <template><AdminHolidaysList @holidays={{this.holidays}} /></template>

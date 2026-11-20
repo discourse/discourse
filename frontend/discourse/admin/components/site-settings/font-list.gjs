@@ -19,9 +19,9 @@ export default class FontList extends Component {
 
   <template>
     <FontSelector
-      @value={{@value}}
       @content={{this.choices}}
       @onChange={{@changeValueCallback}}
+      @value={{@value}}
     />
   </template>
 }

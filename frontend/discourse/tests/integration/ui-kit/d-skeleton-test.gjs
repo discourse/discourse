@@ -49,7 +49,7 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
 
   test("@variant selects the shape and @count repeats the item", async function (assert) {
     await render(
-      <template><DSkeleton @variant="circle" @count={{3}} /></template>
+      <template><DSkeleton @count={{3}} @variant="circle" /></template>
     );
 
     assert.dom(".d-skeleton__item").exists({ count: 3 });
@@ -79,7 +79,7 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
   test("dimensions apply via inline custom properties", async function (assert) {
     await render(
       <template>
-        <DSkeleton @variant="rect" @width="50%" @height="4em" @radius="1em" />
+        <DSkeleton @height="4em" @radius="1em" @variant="rect" @width="50%" />
       </template>
     );
 
@@ -151,9 +151,9 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
     await render(
       <template>
         <DSkeleton
+          @height="var(--d-input-height)"
           @variant="rect"
           @width="calc(100% - 2ch)"
-          @height="var(--d-input-height)"
         />
       </template>
     );
@@ -178,10 +178,10 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
     await render(
       <template>
         <DSkeleton
-          @variant="text"
           @count={{3}}
-          @width="100%"
           @lastLineWidth="55%"
+          @variant="text"
+          @width="100%"
         />
       </template>
     );
@@ -208,7 +208,7 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
   test("@lastLineWidth is ignored for a single item", async function (assert) {
     await render(
       <template>
-        <DSkeleton @variant="text" @width="100%" @lastLineWidth="55%" />
+        <DSkeleton @lastLineWidth="55%" @variant="text" @width="100%" />
       </template>
     );
 
@@ -332,7 +332,7 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
 
   test("@size is a square shorthand", async function (assert) {
     await render(
-      <template><DSkeleton @variant="circle" @size="3em" /></template>
+      <template><DSkeleton @size="3em" @variant="circle" /></template>
     );
 
     assert
@@ -346,7 +346,7 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
   test("@width wins over the @size shorthand", async function (assert) {
     await render(
       <template>
-        <DSkeleton @variant="circle" @size="3em" @width="8em" />
+        <DSkeleton @size="3em" @variant="circle" @width="8em" />
       </template>
     );
 
@@ -365,7 +365,7 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
   test("@radius overrides the circle default", async function (assert) {
     await render(
       <template>
-        <DSkeleton @variant="circle" @size="3em" @radius="4px" />
+        <DSkeleton @radius="4px" @size="3em" @variant="circle" />
       </template>
     );
 
@@ -448,7 +448,7 @@ module("Integration | ui-kit | DSkeleton", function (hooks) {
     // `style` carries the dimensions, so the component keeps it by declaring it
     // after ...attributes. Everything a caller legitimately needs is a token.
     await render(
-      <template><DSkeleton @width="8ch" style="margin-top: 1em" /></template>
+      <template><DSkeleton style="margin-top: 1em" @width="8ch" /></template>
     );
 
     assert

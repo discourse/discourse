@@ -19,7 +19,7 @@ module(
 
       await render(
         <template>
-          <PostCountOrBadges @topic={{topic}} @postBadgesEnabled={{true}} />
+          <PostCountOrBadges @postBadgesEnabled={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -38,7 +38,7 @@ module(
 
       await render(
         <template>
-          <PostCountOrBadges @topic={{topic}} @postBadgesEnabled={{true}} />
+          <PostCountOrBadges @postBadgesEnabled={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -57,7 +57,7 @@ module(
 
       await render(
         <template>
-          <PostCountOrBadges @topic={{topic}} @postBadgesEnabled={{true}} />
+          <PostCountOrBadges @postBadgesEnabled={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -75,7 +75,7 @@ module(
 
       await render(
         <template>
-          <PostCountOrBadges @topic={{topic}} @postBadgesEnabled={{true}} />
+          <PostCountOrBadges @postBadgesEnabled={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -93,7 +93,7 @@ module(
 
       await render(
         <template>
-          <PostCountOrBadges @topic={{topic}} @postBadgesEnabled={{true}} />
+          <PostCountOrBadges @postBadgesEnabled={{true}} @topic={{topic}} />
         </template>
       );
 

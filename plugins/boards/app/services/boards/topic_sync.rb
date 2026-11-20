@@ -8,6 +8,8 @@ module Boards
       return unless SiteSetting.boards_enabled?
 
       board = Board.includes(:columns).find(board.id) unless board.association(:columns).loaded?
+      return if board.archived?
+
       columns = board.columns.to_a
 
       # 1. Build topic-to-columns mapping via simple queries
@@ -85,7 +87,7 @@ module Boards
             plan:,
             existing_cards: snapshot[:existing_cards],
             max_positions: snapshot[:max_positions],
-            board_groups: snapshot[:board_groups],
+            board_audiences: snapshot[:board_audiences],
           )
         end
       end
@@ -99,29 +101,37 @@ module Boards
                  COALESCE(
                    ARRAY_AGG(DISTINCT acl_group_id) FILTER (WHERE acl_group_id IS NOT NULL),
                    '{}'::bigint[]
-                 ) AS allowed_group_ids
+                 ) AS allowed_group_ids,
+                 COALESCE(
+                   ARRAY_AGG(DISTINCT acl_user_id) FILTER (WHERE acl_user_id IS NOT NULL),
+                   '{}'::bigint[]
+                 ) AS allowed_user_ids
           FROM discourse_kanban_cards c
           JOIN discourse_kanban_boards b ON b.id = c.board_id
           LEFT JOIN access_control_lists acl
             ON acl.target_id = b.id
            AND acl.target_type = 'Boards::Board'
-           AND acl.permission IN ('view', 'edit', 'manage')
+           AND acl.permission IN ('view', 'edit', 'manage', 'owner')
           LEFT JOIN LATERAL UNNEST(acl.allowed_group_ids) AS acl_groups(acl_group_id) ON TRUE
-          WHERE c.topic_id = :topic_id
+          LEFT JOIN LATERAL UNNEST(acl.allowed_user_ids) AS acl_users(acl_user_id) ON TRUE
+          WHERE c.topic_id = :topic_id AND NOT b.archived
           GROUP BY c.id, c.board_id
         SQL
 
       return if rows.empty?
 
       deleted_by_board = {}
-      board_groups = {}
+      board_audiences = {}
       rows.each do |row|
         (deleted_by_board[row.board_id] ||= []) << row.card_id
-        board_groups[row.board_id] ||= row.allowed_group_ids || []
+        board_audiences[row.board_id] ||= {
+          group_ids: row.allowed_group_ids || [],
+          user_ids: row.allowed_user_ids || [],
+        }
       end
 
-      Card.where(topic_id: topic_id).delete_all
-      publish_sync_changes(board_groups:, deleted_by_board:, created_cards: [])
+      Card.where(id: rows.map(&:card_id)).delete_all
+      publish_sync_changes(board_audiences:, deleted_by_board:, created_cards: [])
     end
 
     def self.fetch_sync_snapshot(topic)
@@ -137,7 +147,7 @@ module Boards
           SELECT b.id AS board_id, c.id AS column_id, c.tag_id AS column_tag_id
           FROM discourse_kanban_boards b
           JOIN discourse_kanban_columns c ON c.board_id = b.id
-          WHERE (b.category_ids != '{}' OR b.tag_ids != '{}')
+          WHERE NOT b.archived AND (b.category_ids != '{}' OR b.tag_ids != '{}')
             AND (b.category_ids = '{}' OR :topic_category_id = ANY(b.category_ids))
             AND (b.tag_ids = '{}' OR b.tag_ids && :topic_tag_ids)
             AND (c.tag_id IS NULL OR c.tag_id = ANY(:topic_tag_ids))
@@ -153,14 +163,19 @@ module Boards
                  COALESCE(
                    ARRAY_AGG(DISTINCT acl_group_id) FILTER (WHERE acl_group_id IS NOT NULL),
                    '{}'::bigint[]
-                 ) AS allowed_group_ids
+                 ) AS allowed_group_ids,
+                 COALESCE(
+                   ARRAY_AGG(DISTINCT acl_user_id) FILTER (WHERE acl_user_id IS NOT NULL),
+                   '{}'::bigint[]
+                 ) AS allowed_user_ids
           FROM discourse_kanban_boards b
           LEFT JOIN access_control_lists acl
             ON acl.target_id = b.id
            AND acl.target_type = 'Boards::Board'
-           AND acl.permission IN ('view', 'edit', 'manage')
+           AND acl.permission IN ('view', 'edit', 'manage', 'owner')
           LEFT JOIN LATERAL UNNEST(acl.allowed_group_ids) AS acl_groups(acl_group_id) ON TRUE
-          WHERE b.id IN (
+          LEFT JOIN LATERAL UNNEST(acl.allowed_user_ids) AS acl_users(acl_user_id) ON TRUE
+          WHERE NOT b.archived AND b.id IN (
             SELECT board_id FROM matching
             UNION ALL
             SELECT board_id FROM discourse_kanban_cards WHERE topic_id = :topic_id
@@ -169,36 +184,36 @@ module Boards
         )
         SELECT 'existing'::text AS source, ec.card_id, ec.board_id, ec.column_id,
                NULL::bigint AS column_tag_id, NULL::bigint AS max_pos,
-               NULL::bigint[] AS allowed_group_ids
+               NULL::bigint[] AS allowed_group_ids, NULL::bigint[] AS allowed_user_ids
         FROM (
           SELECT c.id AS card_id, c.board_id, c.column_id
           FROM discourse_kanban_cards c
           JOIN discourse_kanban_boards b ON b.id = c.board_id
-          WHERE c.topic_id = :topic_id
+          WHERE c.topic_id = :topic_id AND NOT b.archived
             AND (b.category_ids != '{}' OR b.tag_ids != '{}')
           FOR UPDATE OF c
         ) ec
         UNION ALL
         SELECT 'matching'::text, NULL, m.board_id, m.column_id,
                m.column_tag_id, NULL,
-               NULL
+               NULL, NULL
         FROM matching m
         UNION ALL
         SELECT 'max_pos'::text, NULL, NULL, mp.column_id,
                NULL, mp.max_pos,
-               NULL
+               NULL, NULL
         FROM max_positions mp
         UNION ALL
         SELECT 'board'::text, NULL, bi.board_id, NULL,
                NULL, NULL,
-               bi.allowed_group_ids
+               bi.allowed_group_ids, bi.allowed_user_ids
         FROM board_info bi
       SQL
 
       existing_cards = []
       matching_placements = []
       max_positions = {}
-      board_groups = {}
+      board_audiences = {}
 
       DB
         .query(
@@ -220,11 +235,14 @@ module Boards
           when "max_pos"
             max_positions[row.column_id] = row.max_pos
           when "board"
-            board_groups[row.board_id] = row.allowed_group_ids || []
+            board_audiences[row.board_id] = {
+              group_ids: row.allowed_group_ids || [],
+              user_ids: row.allowed_user_ids || [],
+            }
           end
         end
 
-      { existing_cards:, matching_placements:, max_positions:, board_groups: }
+      { existing_cards:, matching_placements:, max_positions:, board_audiences: }
     end
     private_class_method :fetch_sync_snapshot
 
@@ -279,7 +297,7 @@ module Boards
     end
     private_class_method :compute_sync_plan
 
-    def self.execute_sync_changes(topic:, plan:, existing_cards:, max_positions:, board_groups:)
+    def self.execute_sync_changes(topic:, plan:, existing_cards:, max_positions:, board_audiences:)
       # Delete — derive board mapping from existing_cards snapshot (no extra query)
       deleted_by_board = {}
       if plan[:remove_card_ids].present?
@@ -326,7 +344,7 @@ module Boards
       end
 
       # Publish
-      publish_sync_changes(board_groups:, deleted_by_board:, created_cards:)
+      publish_sync_changes(board_audiences:, deleted_by_board:, created_cards:)
     end
     private_class_method :execute_sync_changes
 
@@ -353,26 +371,27 @@ module Boards
     end
     private_class_method :trim_excess_cards
 
-    def self.publish_sync_changes(board_groups:, deleted_by_board:, created_cards:)
-      deleted_by_board.each do |board_id, card_ids|
-        card_ids.each do |card_id|
-          publish_to_board(board_groups, board_id, type: "card_deleted", card_id: card_id)
-        end
-      end
+    def self.publish_sync_changes(board_audiences:, deleted_by_board:, created_cards:)
+      archived_ids = Board.where(id: board_audiences.keys, archived: true).pluck(:id)
+      board_audiences = board_audiences.except(*archived_ids)
 
-      created_cards.each do |card|
-        payload = CardSerializer.new(card, root: false).as_json.except("topic", :topic)
-        publish_to_board(board_groups, card.board_id, type: "card_created", card: payload)
+      board_ids = (deleted_by_board.keys + created_cards.map(&:board_id)).uniq
+      board_ids.each do |board_id|
+        publish_to_board(board_audiences, board_id, type: "board_updated")
       end
     end
     private_class_method :publish_sync_changes
 
-    def self.publish_to_board(board_groups, board_id, data)
-      group_ids = board_groups[board_id]
-      return if group_ids.nil?
+    def self.publish_to_board(board_audiences, board_id, data)
+      audience = board_audiences[board_id]
+      return if audience.nil?
+
+      group_ids = audience[:group_ids]
+      user_ids = audience[:user_ids]
       opts = {}
-      if group_ids.present? && !group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
-        opts[:group_ids] = group_ids
+      if !group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
+        opts[:group_ids] = group_ids if group_ids.present?
+        opts[:user_ids] = user_ids if user_ids.present?
       end
       MessageBus.publish(
         "#{Publisher::CHANNEL_PREFIX}/#{board_id}",

@@ -21,21 +21,21 @@ export default <template>
       <div class="controls">
         <div class="inline-form">
           <label for="last-seen">{{i18n "admin.email.last_seen_user"}}</label>
-          <DatePickerPast @value={{@controller.lastSeen}} @id="last-seen" />
+          <DatePickerPast @id="last-seen" @value={{@controller.lastSeen}} />
           <label>{{i18n "admin.email.user"}}:</label>
           <EmailGroupUserChooser
-            @value={{@controller.username}}
             @onChange={{@controller.updateUsername}}
             @options={{hash
               maximum=1
               caretDownIcon="angle-down"
               caretUpIcon="angle-up"
             }}
+            @value={{@controller.username}}
           />
           <DButton
+            class="btn-primary digest-refresh-button"
             @action={{@controller.refresh}}
             @label="admin.email.refresh"
-            class="btn-primary digest-refresh-button"
           />
           <div class="toggle">
             <label>{{i18n "admin.email.format"}}</label>
@@ -43,17 +43,17 @@ export default <template>
               <span>{{i18n "admin.email.html"}}</span>
               |
               <a
+                class="show-text-link"
                 href
                 {{on "click" @controller.toggleShowHtml}}
-                class="show-text-link"
               >
                 {{i18n "admin.email.text"}}
               </a>
             {{else}}
               <a
+                class="show-html-link"
                 href
                 {{on "click" @controller.toggleShowHtml}}
-                class="show-html-link"
               >{{i18n "admin.email.html"}}</a>
               |
               <span>{{i18n "admin.email.text"}}</span>
@@ -74,14 +74,14 @@ export default <template>
               {{else}}
                 <label>{{i18n "admin.email.send_digest_label"}}</label>
                 <DTextField
-                  @value={{@controller.email}}
                   @placeholderKey="admin.email.test_email_address"
+                  @value={{@controller.email}}
                 />
                 <DButton
+                  class="btn-default"
                   @action={{@controller.sendEmail}}
                   @disabled={{@controller.sendEmailDisabled}}
                   @label="admin.email.send_digest"
-                  class="btn-default"
                 />
                 {{#if @controller.sentEmail}}
                   <span class="result-message">{{i18n
@@ -99,8 +99,8 @@ export default <template>
               <p>{{i18n "admin.email.no_result"}}</p>
             {{else}}
               <iframe
-                title={{i18n "admin.email.html_preview"}}
                 srcdoc={{@controller.model.html_content}}
+                title={{i18n "admin.email.html_preview"}}
               ></iframe>
             {{/if}}
           {{else}}

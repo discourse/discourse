@@ -6,6 +6,13 @@
 
 bg:
   js:
+    code_editor:
+      search:
+        next: "Напред"
+        previous: "Предишни"
+        close: "Затвори"
+      fold:
+        to: "до"
     user_api_key:
       deny: "Отмени"
       copied: "Копирано!"
@@ -21,6 +28,7 @@ bg:
     access_control:
       manage:
         access_permission_editor: "Редактор"
+        access_permission_owner: "Собественик"
         access_permission_remove: "Премахване"
     number:
       format:
@@ -158,7 +166,6 @@ bg:
         last_7_days: "Последните 7 дни"
         last_30_days: "Последните 30 дни"
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикация #%{postNumber} от @%{username}"
       close: "затвори"
       facebook: "Споделете във Facebook"
@@ -205,6 +212,8 @@ bg:
     topic_admin_menu: "действия по темата"
     skip_to_main_content: "Прескачане към основното съдържание"
     skip_user_nav: "Преминаване към съдържанието на профила"
+    reorder:
+      removed: "Премахнат %{label}"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
     emails_are_disabled_non_staff: "Изходящият имейл е деактивиран за потребители, които не са от екипа"
     software_update_prompt:
@@ -288,9 +297,6 @@ bg:
     max_of_count:
       one: "максимално от %{count}"
       other: "максимално от %{count}"
-    character_count:
-      one: "%{count} символ"
-      other: "%{count} символа"
     period_chooser:
       aria_label: "Филтриране по период"
     related_messages:
@@ -298,16 +304,13 @@ bg:
       pill: "Свързани съобщения"
     suggested_topics:
       pm_title: "Предложени съобщения"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Назад"
     design_wizard:
       back: "Назад"
       next: "Напред"
       sections:
-        theme: "Тема"
         homepage: "Начална страница"
-        search: "Търсене"
+      fonts:
+        base_font: "Тяло"
       homepage:
         topics: "Теми"
         categories: "Категории"
@@ -451,6 +454,8 @@ bg:
       title:
         search: "Търси съобщения"
         placeholder: "въведете тук заглавието на съобщението, url или ID"
+    dsa_statements:
+      category: "Категория"
     review:
       show_more: "Покажи повече"
       show_less: "Покажи по-малко"
@@ -609,6 +614,7 @@ bg:
           title: "Всичко"
       context_question:
         delimiter: "или"
+        something_wrong_with_post: "Има ли нещо нередно с тази публикация?"
       types:
         reviewable_flagged_post:
           title: "Маркирана публикация"
@@ -631,6 +637,9 @@ bg:
       user_label: "Потребител"
       timeline:
         target_deleted: "Публикацията е изтрита"
+      author_penalty:
+        toast:
+          undo: "Отмени"
       notes:
         delete: "Изтрий"
       topic_label: "Тема"
@@ -1174,7 +1183,6 @@ bg:
       admin: "%{user} е админ"
       moderator_tooltip: "Този потребител е модератор"
       admin_tooltip: "Този потребител е админ"
-      silenced_tooltip: "Този потребител е заглушен"
       suspended_notice: "Този потребител е отстранен до %{date}."
       suspended_permanently: "Този потребител е спрян."
       suspended_reason: "Причина:"
@@ -1232,6 +1240,12 @@ bg:
       tracked_topics_link: "Покажи "
       automatically_unpin_topics: "Автоматично отключете темите когато стигнете най-долу на форума"
       apps: "Приложения"
+      mcp_authorizations:
+        details: "Детайли"
+        never: "Никога"
+        status: "Статус"
+        statuses:
+          active: "Активни"
       revoke_access: "Прекратяване на достъпа"
       undo_revoke_access: "Отмяна прекратяване на достъпа"
       api_approved: "Одобрени:"
@@ -1412,7 +1426,6 @@ bg:
         upload_title: "Качете изображение"
         image_is_not_a_square: "Внимание: изрязахмеИзрязахме вашата снимка,снимка защото не е с квадратна форма."
         logo_small: "Малко лого на сайта. Използва се по подразбиране."
-        use_custom: "Или качете персонализиран аватар:"
       change_profile_background:
         title: "Заглавен ред на профила"
         instructions: "Заглавните редове на профилите ще бъдат центрирани и имат ширина по подразбиране от 1110px."
@@ -1845,7 +1858,7 @@ bg:
       hide_forever: "не благодаря"
       hidden_for_session: "Добре, ще те попитаме утре. Винаги можете да използвате „Вход“ и за създаване на акаунт."
       intro: "Здравейте! Изглежда, че следите дискусията, но все още не сте създали собствен профил."
-      value_prop: "Уморихте ли се да превъртате едни и същи публикации? Когато създадете акаунт, винаги ще се връщате там, до където сте стигнали. С акаунт можете също да получавате известия за нови отговори, да запазвате отметки и да използвате харесвания, за да благодарите на другите. Всички можем да работим заедно, за да направим тази общност страхотна. :heart:"
+      value_prop: "Уморихте ли се да превъртате едни и същи публикации? Когато създадете акаунт, винаги ще се връщате там, до където сте стигнали. С акаунт можете също да получавате известия за нови отговори, да запазвате отметки и да използвате харесвания, за да благодарите на другите. Всички можем да работим заедно, за да направим тази общност страхотна."
     offline_indicator:
       no_internet: "Няма интернет връзка."
       refresh_page: "Опресняване на страницата"
@@ -2093,6 +2106,7 @@ bg:
       default: Персонализирани емоджи
     filter_controls:
       reset: "Нулиране"
+      sort_label: "Сортирай по"
     shared_drafts:
       title: "Споделени чернови"
       notice: "Тази тема е видима само за тези, които могат да публикуват споделени чернови."
@@ -2102,6 +2116,10 @@ bg:
     composer:
       emoji: "Емошънка :)"
       options: "Опции"
+      ai_content:
+        code: "Код"
+        quote: "Цитат"
+        details: "Детайли"
       whisper: "шепот"
       unlist: "скрити"
       add_warning: "Това е официално предупреждение."
@@ -2146,8 +2164,7 @@ bg:
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
       discard: "Отхвърляне"
-      title_placeholder: "За какво става дума в дискусията с едно изречение?"
-      title_placeholder_redesign: "Заглавие"
+      title_placeholder: "Заглавие"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
       edit_reason_placeholder: "Защо редактирате ?"
       topic_featured_link_placeholder: "Въведете връзка, показана със заглавие."
@@ -2775,10 +2792,8 @@ bg:
           label: "избрани"
           title: "Кликнете, за да премахнете публикацията от избора"
         select_replies:
-          label: "избери +отговори "
           title: "Добавете публикация и всички нейни отговори към избора"
         select_below:
-          label: "изберете + по-долу"
           title: "Добавете публикация и всичко след нея към избор"
         delete: изтрий избраните
         cancel: прекрати избирането
@@ -2918,14 +2933,14 @@ bg:
           notify_moderators: "Маркирахте това за модерация"
           notify_user: "Изпратихте лично съобщение на този потребител"
       revisions:
+        visibility:
+          hidden:
+            title: "Скрит"
         controls:
           first: "Първа ревизия"
           previous: "Предишна ревизия"
           next: "Следваща ревизия"
           last: "Последна ревизия"
-          hide: "Скрий ревизията"
-          show: "Покажи ревизията"
-          destroy: "Изтриване на ревизии"
           destroy_confirm: "Сигурни ли сте, че искате да изтриете всички ревизии на тази публикация? Това действие е необратимо."
           edit_wiki: "Редактиране на Wiki"
           edit_post: "Редактиране на публикацията"
@@ -3000,6 +3015,7 @@ bg:
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
       delete_error: "Възникна грешка по време на изтриването на категорията. "
       no_description: "Моля, добавете описание за тази категория. "
+      latest_topics: "Последни теми"
       description_expand: "Покажи повече"
       description_collapse: "Покажи по-малко"
       already_used: "Този цвят вече е използван за друга категория. "
@@ -3155,6 +3171,7 @@ bg:
       with_topics: "%{filter} теми"
       with_category: "%{filter} %{category} теми"
       filter:
+        reset: "изчисти"
         button:
           label: "Филтър"
       latest:
@@ -3367,6 +3384,14 @@ bg:
       back: "Назад"
       share: "Споделяне"
       dismiss: "Отмени"
+    mobile_tab_bar:
+      create: "Създай"
+      more: "Повече"
+      back: "Назад"
+      topics: "Теми"
+      drafts:
+        one: "Чернови (%{count})"
+        other: "Чернови (%{count})"
     pause_notifications:
       label: "Пауза на известията"
       options:
@@ -3469,18 +3494,6 @@ bg:
         type_mismatch:
           default: "Моля, въведете валидна стойност."
           email: "Моля, въведете валиден имейл адрес."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Въведете"
-      edit:
-        modal:
-          cancel: "прекрати"
-          create: "Запази "
-          reason: "Защо редактирате ?"
-      spreadsheet:
-        show: "Покажи"
-        about: "Относно"
     filter:
       description:
         yesterday: "Вчера"
@@ -3519,10 +3532,10 @@ bg:
           title: "Приставки"
       upcoming_changes:
         name: "Име"
-        enabled: "Да е включен"
+        enabled: "Да е включен?"
+        feedback: "Обратна връзка"
+        settings: "Настройки"
         preview: "Преглед"
-        enabled_for_options:
-          everyone: "Всички"
         impact_roles:
           admins: "Админи"
           moderators: "Модератори"
@@ -3537,9 +3550,62 @@ bg:
           impact_role_admins: "Админи"
           impact_role_moderators: "Модератори"
           impact_role_staff: "Персонал"
+        sort:
+          status: "Статус"
+          name: "Име"
       config:
         developer:
           title: "Разработчик"
+        mcp:
+          tabs:
+            access: "Достъп"
+            activity: "Активност"
+          overview:
+            status: "Статус"
+          access:
+            title: "Достъп"
+            group: "Група"
+            groups: "Групи"
+            actions: "Действия"
+            edit: "Редактирай"
+            delete: "Изтрий"
+          primitives:
+            group_by_options:
+              kind: "Тип"
+            kind: "Тип"
+          clients:
+            actions: "Действия"
+            block: "Блокирай "
+            presets:
+              custom: "По избор"
+            automatic: "Автоматично"
+          authorizations:
+            user: "Потребител"
+            status: "Статус"
+            actions: "Действия"
+          activity:
+            time: "Време "
+            user: "Потребител"
+            duration: "Продължителност"
+          values:
+            server_status:
+              disabled: "Деактивирани"
+            client_trust:
+              approved: "Одобрена"
+            authorization_status:
+              active: "Активни"
+            activity_outcome:
+              error: "Грешка"
+            primitive_state:
+              enabled: "Да е включен"
+              disabled: "Деактивирани"
+            primitive_kind:
+              all: "Всички видове"
+            filter:
+              all: "Всички"
+          never: "Никога"
+          actions:
+            revoke: "Анулирай"
         emojis:
           title: "Емотикони"
         files:
@@ -3661,28 +3727,11 @@ bg:
         version: "Версия"
         up_to_date: "Вие сте с последна версия!"
         updates_available: "Налична е актуализация."
-        no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
-        stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
-        installed_version: "Инсталирани"
-        github: "GitHub"
         dismiss_notice: "Игнорирай"
         new_features:
           learn_more: "Научете повече..."
-        last_checked: "Последна проверка"
         refresh_problems: "Обнови"
-        no_problems: "Не бяха открити проблеми."
-        moderators: "Модератори:"
-        admins: "Админи:"
-        suspended: "Отстранени:"
-        private_messages_short: "Съобщения"
-        private_messages_title: "Съобщения"
-        mobile_title: "Мобилен"
         backups: "Бекъп"
-        traffic_short: "Трафик"
-        traffic: "Приложение уеб заявки"
-        show_traffic_report: "Покажи детайлен репорт на трафика"
-        general_tab: "Основни"
-        security_tab: "Сигурност"
         report_filter_any: "всеки"
         disabled: Деактивирани
         sections:
@@ -3719,10 +3768,7 @@ bg:
         site_traffic:
           series:
             anonymous: "Анонимен"
-        period:
-          last_7_days: "Последните 7 дни"
-          last_30_days: "Последните 30 дни"
-          custom: "По избор"
+          crawler_learn_more: "Научете повече"
         reports:
           today: "Днес"
           yesterday: "Вчера"
@@ -3947,7 +3993,6 @@ bg:
           label: "Качи"
           title: "Качи бекъп за тази инстанция"
           uploading: "Качване…"
-          error: "Появи се грешка при качването на '%{filename}': %{message}"
         settings: "Настройки"
         operations:
           failed: "Задачата се провали. Моля проверете логовете."
@@ -4023,6 +4068,7 @@ bg:
           collapse: Намали
           upload: "Качване"
           discard: "Отхвърляне"
+          leave: "Напусни"
           installed: "Инсталирани"
           install_popular: "Популярни"
           about_theme: "Относно"
@@ -4334,6 +4380,9 @@ bg:
           suspended: "Отстранени"
           staged: "Поставен"
         approved: "Одобрен?"
+        bots:
+          name: "Име"
+          username: "Потребителско име"
         titles:
           pending: "Потребители, изискващи преглед"
           newuser: "Потребители с Ниво на доверие 0 (нов)"
@@ -4501,12 +4550,10 @@ bg:
           confirm: "Потвърждение"
           dropdown: "Падащо"
       site_text:
-        search: "Търсене на текст които искате да редактирате"
+        search_label: "Търсене"
+        theme_disabled: "Деактивирани"
         edit: "Редактирай"
-        revert: "Върни промените"
         revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
-        go_back: "Към търсачката"
-        recommended: "За вашите нужди, Ви препоръчваме да редактирате следният текст:"
         show_overriden: "Избери само презаписаните"
         outdated:
           dismiss: "Отмени"

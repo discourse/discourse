@@ -11,10 +11,9 @@ const url = process.argv[2];
 console.log(`Starting Discourse Smoke Test for ${url}`);
 
 const browser = await chromium.launch({
-  channel: "chrome",
+  channel: "chromium",
   // when debugging locally setting the SHOW_BROWSER env variable can be very helpful
   headless: process.env.SHOW_BROWSER === undefined,
-  args: ["--no-sandbox"],
 });
 
 const contextOptions = {

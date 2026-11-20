@@ -5,15 +5,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import UsersPopup from "discourse/components/user/users-popup";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import CustomReaction from "../models/discourse-reactions-custom-reaction";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji.js";
+import CustomReaction from "../models/discourse-reactions-custom-reaction.js";
 
 export default class DiscourseReactionsUsersMenu extends Component {
   @service router;
+  @service siteSettings;
 
   @tracked activeFilter = null;
 
@@ -85,7 +85,9 @@ export default class DiscourseReactionsUsersMenu extends Component {
   }
 
   get showFilters() {
-    return this.reactions.length > 1;
+    // Every reaction renders as the like icon without emoji, so per-reaction
+    // filters would be indistinguishable.
+    return this.siteSettings.enable_emoji && this.reactions.length > 1;
   }
 
   get titleText() {
@@ -130,27 +132,27 @@ export default class DiscourseReactionsUsersMenu extends Component {
         {{#if this.showFilters}}
           <div class="users-popup__header">
             <button
-              type="button"
               class={{dConcatClass
                 "users-popup__filter"
                 (unless this.activeFilter "is-active")
               }}
               data-reaction-filter="all"
+              type="button"
               {{on "click" (fn this.selectFilter null)}}
             >
               {{i18n "discourse_reactions.users_popup.all"}}
             </button>
             {{#each this.reactions as |reaction|}}
               <button
-                type="button"
                 class={{dConcatClass
                   "users-popup__filter"
                   (if (eq reaction.id this.activeFilter) "is-active")
                 }}
                 data-reaction-filter={{reaction.id}}
+                type="button"
                 {{on "click" (fn this.selectFilter reaction.id)}}
               >
-                {{dEmoji reaction.id}}
+                {{discourseReactionsEmoji reaction.id}}
                 <span>{{reaction.count}}</span>
               </button>
             {{/each}}
@@ -160,7 +162,10 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
       <:reaction as |user|>
         {{#if user.reaction}}
-          {{dEmoji user.reaction class="users-popup__reaction"}}
+          {{discourseReactionsEmoji
+            user.reaction
+            class="users-popup__reaction"
+          }}
         {{else}}
           {{dIcon "d-liked" class="users-popup__reaction"}}
         {{/if}}

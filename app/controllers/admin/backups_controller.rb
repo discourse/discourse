@@ -24,6 +24,21 @@ class Admin::BackupsController < Admin::AdminController
                          :abort_multipart,
                          :batch_presign_multipart_parts
 
+  # Backups are ops, not content — an archived site should still be
+  # backup-able, restorable, and downloadable.
+  allow_when_archived :create,
+                      :cancel,
+                      :email,
+                      :destroy,
+                      :restore,
+                      :rollback,
+                      :readonly,
+                      :upload_backup_chunk,
+                      :create_multipart,
+                      :complete_multipart,
+                      :abort_multipart,
+                      :batch_presign_multipart_parts
+
   def index
     respond_to do |format|
       format.html do
@@ -231,28 +246,6 @@ class Admin::BackupsController < Admin::AdminController
     end
 
     render body: nil
-  end
-
-  def create_upload_url
-    params.require(:filename)
-    filename = params.fetch(:filename)
-
-    unless valid_extension?(filename)
-      return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz"))
-    end
-    return render_json_error(I18n.t("backup.invalid_filename")) unless valid_filename?(filename)
-
-    store = BackupRestore::BackupStore.create
-
-    begin
-      upload_url = store.generate_upload_url(filename)
-    rescue BackupRestore::BackupStore::BackupFileExists
-      return render_json_error(I18n.t("backup.file_exists"))
-    rescue BackupRestore::BackupStore::StorageError => e
-      return render_json_error(e)
-    end
-
-    render json: success_json.merge(url: upload_url)
   end
 
   private

@@ -1,7 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse/lib/get-url";
+import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class ChatMessageFlag {
@@ -23,25 +23,20 @@ export default class ChatMessageFlag {
     return "chat.flagging.action";
   }
 
+  anonymousFlagDescription(message, email) {
+    return i18n("chat.anonymous_flagging.description", {
+      email,
+      channel_title: message.channel.escapedTitle,
+      url: getAbsoluteURL(message.url),
+    });
+  }
+
   targetsTopic() {
     return false;
   }
 
   editable() {
     return false;
-  }
-
-  _rewriteFlagDescriptions(flags) {
-    return flags.map((flag) => {
-      flag.set(
-        "description",
-        i18n(`chat.flags.${flag.name_key}`, {
-          basePath: getURL(""),
-          defaultValue: flag.description,
-        })
-      );
-      return flag;
-    });
   }
 
   flagsAvailable(flagModal) {
@@ -82,8 +77,23 @@ export default class ChatMessageFlag {
         take_action: opts.takeAction,
         queue_for_review: opts.queue_for_review,
       });
+      return true;
     } catch (error) {
       popupAjaxError(error);
+      return false;
     }
+  }
+
+  _rewriteFlagDescriptions(flags) {
+    return flags.map((flag) => {
+      flag.set(
+        "description",
+        i18n(`chat.flags.${flag.name_key}`, {
+          basePath: getURL(""),
+          defaultValue: flag.description,
+        })
+      );
+      return flag;
+    });
   }
 }

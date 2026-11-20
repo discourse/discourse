@@ -9,21 +9,21 @@ declare const px: number;
 
 const Negatives = <template>
   {{! @glint-expect-error - a focusable separator with no accessible name is announced as a bare splitter, so the label is required }}
-  <DResizeSeparator @value={{px}} @min={{px}} @max={{px}} />
+  <DResizeSeparator @max={{px}} @min={{px}} @value={{px}} />
 
   <DResizeSeparator
     {{! @glint-expect-error - a separator resizes along one of two axes }}
     @axis="diagonal"
-    @value={{px}}
-    @min={{px}}
-    @max={{px}}
     @label="Resize"
+    @max={{px}}
+    @min={{px}}
+    @value={{px}}
   />
 
   <DResizeSeparator
+    @label="Resize"
     {{! @glint-expect-error - the box is an element or a function returning one }}
     @measure={{px}}
-    @label="Resize"
   />
 </template>;
 

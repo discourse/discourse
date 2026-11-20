@@ -15,39 +15,39 @@ function renderComponent(context) {
   return render(
     <template>
       <NestedPost
-        @post={{context.post}}
-        @children={{context.children}}
-        @topic={{context.topic}}
-        @depth={{context.depth}}
-        @path={{context.path}}
-        @sort="top"
-        @replyToPost={{noop}}
-        @editPost={{noop}}
-        @deletePost={{noop}}
-        @recoverPost={{noop}}
-        @showFlags={{noop}}
-        @showHistory={{noop}}
         @changeNotice={{noop}}
         @changePostOwner={{noop}}
-        @grantBadge={{noop}}
-        @lockPost={{noop}}
-        @unlockPost={{noop}}
-        @permanentlyDeletePost={{noop}}
-        @rebakePost={{noop}}
-        @showPagePublish={{noop}}
-        @togglePostType={{noop}}
-        @toggleWiki={{noop}}
-        @unhidePost={{noop}}
+        @children={{context.children}}
+        @collapseFromDepth={{context.collapseFromDepth}}
+        @deletePost={{noop}}
+        @depth={{context.depth}}
+        @editPost={{noop}}
         @expansionState={{context.expansionState}}
         @fetchedChildrenCache={{context.fetchedChildrenCache}}
         @focusPost={{context.focusPost}}
-        @registerPost={{registerPost}}
-        @collapseFromDepth={{context.collapseFromDepth}}
+        @grantBadge={{noop}}
+        @lockPost={{noop}}
         @multiSelect={{context.multiSelect}}
-        @togglePostSelection={{context.togglePostSelection}}
-        @selectReplies={{context.selectReplies}}
-        @selectBelow={{context.selectBelow}}
+        @path={{context.path}}
+        @permanentlyDeletePost={{noop}}
+        @post={{context.post}}
         @postSelected={{context.postSelected}}
+        @rebakePost={{noop}}
+        @recoverPost={{noop}}
+        @registerPost={{registerPost}}
+        @replyToPost={{noop}}
+        @selectBelow={{context.selectBelow}}
+        @selectReplies={{context.selectReplies}}
+        @showFlags={{noop}}
+        @showHistory={{noop}}
+        @showPagePublish={{noop}}
+        @sort="top"
+        @togglePostSelection={{context.togglePostSelection}}
+        @togglePostType={{noop}}
+        @toggleWiki={{noop}}
+        @topic={{context.topic}}
+        @unhidePost={{noop}}
+        @unlockPost={{noop}}
       />
     </template>
   );
@@ -161,7 +161,7 @@ module("Integration | Component | Nested | Post", function (hooks) {
     );
   });
 
-  test("mobile collapsed posts keep an avatar in the gutter", async function (assert) {
+  test("mobile collapsed posts keep an avatar in the collapsed bar", async function (assert) {
     const site = getOwner(this).lookup("service:site");
     sinon.stub(site, "mobileView").value(true);
 
@@ -170,11 +170,11 @@ module("Integration | Component | Nested | Post", function (hooks) {
 
     assert.dom(".nested-post__article").doesNotExist("collapses the post body");
     assert
-      .dom(".nested-post__gutter .topic-avatar")
-      .exists("renders the post avatar area in the mobile gutter");
+      .dom(".nested-post__collapsed-bar .nested-post__collapsed-avatar img")
+      .exists("renders the poster avatar in the collapsed bar");
     assert
-      .dom(".nested-post__collapsed-avatar")
-      .doesNotExist("does not duplicate the avatar in the collapsed bar");
+      .dom(".nested-post__gutter .topic-avatar")
+      .doesNotExist("keeps the mobile gutter avatar-free");
   });
 
   test("post registration can update post topic", async function (assert) {
@@ -186,7 +186,6 @@ module("Integration | Component | Nested | Post", function (hooks) {
     });
     let registered = false;
     const register = (post) => {
-      post.topic;
       post.topic = updatedTopic;
       registered = true;
     };

@@ -25,9 +25,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -46,9 +46,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -78,9 +78,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="nope"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="nope"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -98,9 +98,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -116,9 +116,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="data">data body</Group>
@@ -133,9 +133,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -154,9 +154,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="data">data body</Group>
@@ -181,9 +181,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -207,9 +207,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start" as |Example|>
@@ -265,10 +265,10 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
-          @groups={{GROUPS}}
-          @section={{SECTION}}
           @active="start"
           @ariaLabel="Select examples"
+          @groups={{GROUPS}}
+          @section={{SECTION}}
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -284,16 +284,14 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
   // failure. The `scrollTop()` in the same handler is deliberately NOT claimed here: it
   // early-returns under `isTesting()`, so no test can observe it.
   test("swapping the active group swaps the rendered body", async function (assert) {
-    const state = new (class {
-      @tracked active = "start";
-    })();
+    const active = tracked("start");
 
     await render(
       <template>
         <StyleguideGroups
+          @active={{active.value}}
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active={{state.active}}
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -304,7 +302,7 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
 
     assert.dom("[data-test-styleguide-group='start']").exists();
 
-    state.active = "data";
+    active.value = "data";
     await settled();
 
     assert.dom("[data-test-styleguide-group='data']").exists();
@@ -323,16 +321,14 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     // mid-sentence, and a message-only assertion would not notice.
     a11y.announce = (message, type) => announced.push([message, type]);
 
-    const state = new (class {
-      @tracked active = "start";
-    })();
+    const active = tracked("start");
 
     await render(
       <template>
         <StyleguideGroups
+          @active={{active.value}}
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active={{state.active}}
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -343,7 +339,7 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
 
     assert.deepEqual(announced, [], "nothing is announced on first render");
 
-    state.active = "data";
+    active.value = "data";
     await settled();
 
     assert.deepEqual(
@@ -357,21 +353,19 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
   // group, that node unmounts with the group, focus falls to <body>, and only then is it ours
   // to recover.
   test("restores focus when the outgoing group took it down with it", async function (assert) {
-    const state = new (class {
-      @tracked active = "start";
-    })();
+    const active = tracked("start");
 
     await render(
       <template>
         <StyleguideGroups
+          @active={{active.value}}
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active={{state.active}}
           as |Group|
         >
           <Group @id="start"><button
-              type="button"
               id="inside"
+              type="button"
             >x</button></Group>
           <Group @id="data">data body</Group>
         </StyleguideGroups>
@@ -381,7 +375,7 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await focus("#inside");
     assert.dom("#inside").isFocused("precondition: focus is inside the group");
 
-    state.active = "data";
+    active.value = "data";
     await settled();
 
     assert.dom("[data-test-styleguide-group='data']").isFocused();
@@ -390,16 +384,14 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
   // The other half of the guard. Focus that SURVIVES the swap is not ours to move — taking it
   // would yank the reader out of the subnav they are still using.
   test("leaves surviving focus alone", async function (assert) {
-    const state = new (class {
-      @tracked active = "start";
-    })();
+    const active = tracked("start");
 
     await render(
       <template>
         <StyleguideGroups
+          @active={{active.value}}
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active={{state.active}}
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -410,7 +402,7 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
 
     await focus("[data-test-styleguide-subnav-link='data']");
 
-    state.active = "data";
+    active.value = "data";
     await settled();
 
     assert
@@ -425,9 +417,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -450,9 +442,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="dat">typo body</Group>
@@ -478,9 +470,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="start">start body</Group>

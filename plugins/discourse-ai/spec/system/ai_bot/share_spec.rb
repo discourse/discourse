@@ -2,7 +2,8 @@
 RSpec.describe "Share conversation" do
   fab!(:admin) { Fabricate(:admin, username: "ai_sharer") }
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model("gpt-4") }
+  fab!(:agent) { Fabricate(:ai_agent, name: "Share Agent", default_llm: gpt_4).tap(&:ensure_user!) }
+  let(:bot_user) { agent.user }
 
   let(:pm) do
     Fabricate(
@@ -36,8 +37,6 @@ RSpec.describe "Share conversation" do
     toggle_enabled_bots(bots: [gpt_4])
     sign_in(admin)
 
-    bot_user.update!(username: "gpt-4")
-
     Group.refresh_automatic_groups!
 
     cdp.allow_clipboard
@@ -61,7 +60,7 @@ RSpec.describe "Share conversation" do
     expect(clip_text).not_to eq("")
 
     conversation = <<~TEXT.strip
-      <details class='ai-quote'>
+      <details class='ai-quote' data-ai-generated='true'>
       <summary>
       <span>This is my special PM</span>
       <span title='Conversation with AI'>AI</span>
@@ -78,6 +77,8 @@ RSpec.describe "Share conversation" do
     TEXT
 
     expect(conversation).to eq(clip_text)
+    cooked = Nokogiri::HTML5.fragment(PrettyText.cook(clip_text))
+    expect(cooked.at_css("details.ai-quote")["data-ai-generated"]).to eq("true")
   end
 
   it "can share a conversation" do
@@ -94,7 +95,7 @@ RSpec.describe "Share conversation" do
     expect(clip_text).not_to eq("")
 
     conversation = <<~TEXT.strip
-      <details class='ai-quote'>
+      <details class='ai-quote' data-ai-generated='true'>
       <summary>
       <span>This is my special PM</span>
       <span title='Conversation with AI'>AI</span>
@@ -104,7 +105,7 @@ RSpec.describe "Share conversation" do
 
       test test test user reply 1
 
-      **gpt-4:**
+      **#{bot_user.username}:**
 
       test test test bot reply 1
       </details>
@@ -122,7 +123,7 @@ RSpec.describe "Share conversation" do
     expect(clip_text).not_to eq("")
 
     conversation = <<~TEXT.strip
-      <details class='ai-quote'>
+      <details class='ai-quote' data-ai-generated='true'>
       <summary>
       <span>This is my special PM</span>
       <span title='Conversation with AI'>AI</span>
@@ -132,7 +133,7 @@ RSpec.describe "Share conversation" do
 
       test test test user reply 2
 
-      **gpt-4:**
+      **#{bot_user.username}:**
 
       test test test bot reply 2
 
@@ -140,7 +141,7 @@ RSpec.describe "Share conversation" do
 
       test test test user reply 3
 
-      **gpt-4:**
+      **#{bot_user.username}:**
 
       test test test bot reply 3
       </details>

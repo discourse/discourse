@@ -1,10 +1,13 @@
 import { tracked } from "@glimmer/tracking";
+import { service } from "@ember/service";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { i18n } from "discourse-i18n";
 
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
 export default class MyPostsSectionLink extends BaseSectionLink {
+  @service mobileTabBar;
+
   @tracked draftCount = this.currentUser?.draft_count;
 
   constructor() {
@@ -17,20 +20,6 @@ export default class MyPostsSectionLink extends BaseSectionLink {
         this._updateDraftCount
       );
     }
-  }
-
-  teardown() {
-    if (this.shouldDisplay) {
-      this.appEvents.off(
-        USER_DRAFTS_CHANGED_EVENT,
-        this,
-        this._updateDraftCount
-      );
-    }
-  }
-
-  _updateDraftCount() {
-    this.draftCount = this.currentUser.draft_count;
   }
 
   get showCount() {
@@ -94,8 +83,9 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     }
   }
 
+  // The tab bar offers drafts from its create button instead
   get _hasDraft() {
-    return this.draftCount > 0;
+    return this.draftCount > 0 && !this.mobileTabBar.enabled;
   }
 
   get defaultPrefixValue() {
@@ -121,5 +111,19 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   get shouldDisplay() {
     return this.currentUser;
+  }
+
+  teardown() {
+    if (this.shouldDisplay) {
+      this.appEvents.off(
+        USER_DRAFTS_CHANGED_EVENT,
+        this,
+        this._updateDraftCount
+      );
+    }
+  }
+
+  _updateDraftCount() {
+    this.draftCount = this.currentUser.draft_count;
   }
 }

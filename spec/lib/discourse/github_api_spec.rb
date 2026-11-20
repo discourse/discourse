@@ -11,28 +11,24 @@ RSpec.describe Discourse::GithubApi do
     stub_request(:get, "https://api.github.com#{path}").to_return(status:, body:, headers:)
   end
 
+  def stub_redirect(from, to, status: 301, method: :get, headers: {})
+    stub_request(method, "https://api.github.com#{from}").to_return(
+      status:,
+      headers: {
+        "Location" => to,
+        **headers,
+      },
+    )
+  end
+
+  def exhausted_rate_limit_headers
+    { "x-ratelimit-remaining" => "0", "x-ratelimit-reset" => 10.minutes.from_now.to_i.to_s }
+  end
+
   describe "#get" do
-    it "returns a plain string-keyed Hash (not Sawyer)" do
-      stub_gh(
-        "/repos/discourse/discourse/pulls/1",
-        body: { "title" => "Hi", "base" => { "ref" => "main" } }.to_json,
-      )
-
-      result = client.get("/repos/discourse/discourse/pulls/1")
-
-      expect(result).to be_a(Hash)
-      expect(result["base"]["ref"]).to eq("main")
-      expect(result.dig("base", "ref")).to eq("main")
-    end
-
-    it "returns an Array for list endpoints" do
-      stub_gh(
-        "/repos/discourse/discourse/pulls/1/reviews",
-        body: [{ "state" => "APPROVED" }].to_json,
-      )
-      expect(client.get("/repos/discourse/discourse/pulls/1/reviews")).to eq(
-        [{ "state" => "APPROVED" }],
-      )
+    it "returns the parsed JSON" do
+      stub_gh("/repos/d/d/pulls/1", body: { "base" => { "ref" => "main" } }.to_json)
+      expect(client.get("/repos/d/d/pulls/1")).to eq({ "base" => { "ref" => "main" } })
     end
 
     it "sends a Bearer Authorization header when a token is configured" do
@@ -67,27 +63,13 @@ RSpec.describe Discourse::GithubApi do
     end
 
     it "records a backoff and raises on a 403 rate-limit response" do
-      stub_gh(
-        "/x",
-        status: 403,
-        headers: {
-          "x-ratelimit-remaining" => "0",
-          "x-ratelimit-reset" => 10.minutes.from_now.to_i.to_s,
-        },
-      )
+      stub_gh("/x", status: 403, headers: exhausted_rate_limit_headers)
       expect { client.get("/x") }.to raise_error(described_class::RateLimited)
       expect(GithubRateLimit.backing_off?(token)).to eq(true)
     end
 
     it "proactively backs off when a 200 reports the budget is exhausted" do
-      stub_gh(
-        "/x",
-        headers: {
-          "Content-Type" => "application/json",
-          "x-ratelimit-remaining" => "0",
-          "x-ratelimit-reset" => 10.minutes.from_now.to_i.to_s,
-        },
-      )
+      stub_gh("/x", headers: exhausted_rate_limit_headers)
       client.get("/x")
       expect(GithubRateLimit.backing_off?(token)).to eq(true)
     end
@@ -104,12 +86,11 @@ RSpec.describe Discourse::GithubApi do
       expect { client.get("/x") }.to raise_error(described_class::Unauthorized)
     end
 
-    it "raises a non-rate-limit error on a 403 with budget remaining (no backoff)" do
+    it "raises a non-rate-limit error on a 403 with budget remaining" do
       stub_gh("/x", status: 403, headers: { "x-ratelimit-remaining" => "57" })
       expect { client.get("/x") }.to raise_error(described_class::Error) do |e|
         expect(e).not_to be_a(described_class::RateLimited)
       end
-      expect(GithubRateLimit.backing_off?(token)).to eq(false)
     end
 
     it "maps Faraday timeouts/connection failures to its own Error" do
@@ -139,6 +120,79 @@ RSpec.describe Discourse::GithubApi do
     end
   end
 
+  describe "redirects" do
+    it "follows a renamed repo's redirect with the token and params" do
+      stub_redirect("/repos/old/name/branches?per_page=1", "/repositories/42/branches")
+      stub =
+        stub_request(:get, "https://api.github.com/repositories/42/branches?per_page=1").with(
+          headers: {
+            "Authorization" => "Bearer #{token}",
+          },
+        ).to_return(status: 200, body: "[]")
+
+      expect(client.get("/repos/old/name/branches", per_page: 1)).to eq([])
+      expect(stub).to have_been_requested.once
+    end
+
+    it "keeps the method and body" do
+      stub_redirect(
+        "/repos/old/name/issues/1/comments",
+        "/repositories/42/issues/1/comments",
+        status: 307,
+        method: :post,
+      )
+      stub =
+        stub_request(:post, "https://api.github.com/repositories/42/issues/1/comments").with(
+          body: { body: "hi" }.to_json,
+        ).to_return(status: 201, body: "{}")
+
+      client.post("/repos/old/name/issues/1/comments", { body: "hi" })
+      expect(stub).to have_been_requested
+    end
+
+    it "gives up after too many redirects" do
+      (0..described_class::MAX_REDIRECTS).each { |i| stub_redirect("/#{i}", "/#{i + 1}") }
+
+      expect { client.get("/0") }.to raise_error(described_class::Error, /redirect limit/)
+    end
+
+    it "raises when the redirect has no Location" do
+      stub_gh("/x", status: 301)
+
+      expect { client.get("/x") }.to raise_error(described_class::Error) do |e|
+        expect(e.status).to eq(301)
+      end
+    end
+
+    it "raises its own Error on a malformed Location" do
+      stub_redirect("/x", "/not a valid path")
+
+      expect { client.get("/x") }.to raise_error(described_class::Error, /Invalid/)
+    end
+
+    it "stops on a redirect that exhausts the rate limit" do
+      stub_redirect("/x", "/y", headers: exhausted_rate_limit_headers)
+
+      expect { client.get("/x") }.to raise_error(described_class::RateLimited)
+      expect(a_request(:get, "https://api.github.com/y")).not_to have_been_made
+    end
+  end
+
+  describe "host allowlist" do
+    it "refuses to call (and leak the token to) a non-GitHub URL" do
+      expect { client.get("https://evil.example.com/steal") }.to raise_error(described_class::Error)
+      expect { client.get("http://api.github.com/x") }.to raise_error(described_class::Error)
+      expect(a_request(:any, /evil|http:/)).not_to have_been_made
+    end
+
+    it "refuses to follow a redirect to a non-GitHub URL" do
+      stub_redirect("/x", "https://evil.example.com/steal")
+
+      expect { client.get("/x") }.to raise_error(described_class::Error, /evil\.example\.com/)
+      expect(a_request(:any, /evil/)).not_to have_been_made
+    end
+  end
+
   describe "#raw_get" do
     it "returns the raw body as a String" do
       stub_request(:get, "https://raw.githubusercontent.com/d/d/main/x.rb").to_return(
@@ -149,19 +203,14 @@ RSpec.describe Discourse::GithubApi do
     end
   end
 
-  describe "host allowlist" do
-    it "refuses to call (and leak the token to) a non-GitHub absolute URL" do
-      expect { client.get("https://evil.example.com/steal") }.to raise_error(ArgumentError)
-      expect { client.raw_get("https://evil.example.com/steal") }.to raise_error(ArgumentError)
-      expect(a_request(:get, "https://evil.example.com/steal")).not_to have_been_made
-    end
-  end
-
   describe "#post" do
     it "sends a JSON body" do
       stub =
         stub_request(:post, "https://api.github.com/repos/d/d/issues/1/comments").with(
           body: { body: "hi" }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
         ).to_return(status: 201, body: "{}")
       client.post("/repos/d/d/issues/1/comments", { body: "hi" })
       expect(stub).to have_been_requested

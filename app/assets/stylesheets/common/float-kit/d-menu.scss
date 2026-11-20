@@ -5,7 +5,7 @@
   max-width: 600px;
   display: flex;
   padding: 0;
-  z-index: z("dropdown");
+  z-index: calc(z("composer", "dropdown") + 1);
 
   &__trigger {
     .touch & {

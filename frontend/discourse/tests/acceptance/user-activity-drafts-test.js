@@ -1,6 +1,6 @@
 import { currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "../helpers/qunit-helpers";
+import { acceptance } from "../helpers/qunit-helpers.js";
 
 acceptance("User Activity / Drafts - empty state", function (needs) {
   needs.user();

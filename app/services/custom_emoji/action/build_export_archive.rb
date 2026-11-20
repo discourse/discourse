@@ -33,6 +33,7 @@ class CustomEmoji::Action::BuildExportArchive < Service::ActionBase
 
   def write_manifest(temp_dir)
     CSV.open(File.join(temp_dir, MANIFEST_FILENAME), "w") do |csv|
+      csv.to_io.write(Encodings::BOM)
       csv << MANIFEST_HEADERS
       emojis.each do |emoji|
         csv << [emoji.name, CustomEmoji.normalize_group(emoji.group), image_filename(emoji)]
@@ -41,6 +42,6 @@ class CustomEmoji::Action::BuildExportArchive < Service::ActionBase
   end
 
   def image_filename(emoji)
-    "#{emoji.name}.#{emoji.upload.extension}"
+    CGI.escape("#{emoji.name}.#{emoji.upload.extension}")
   end
 end

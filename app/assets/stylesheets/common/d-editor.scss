@@ -315,14 +315,12 @@
 
 .d-editor-button-bar__wrap {
   position: relative;
+  flex-shrink: 0;
   min-width: 0;
   overflow: clip;
   border-start-start-radius: inherit;
   border-start-end-radius: inherit;
-
-  :where(body:not(.uc-enable-composer-redesign) &) {
-    margin-inline: var(--space-2);
-  }
+  margin-inline: var(--space-2);
 }
 
 .d-editor-button-bar {
@@ -334,8 +332,6 @@
   padding-block: var(--space-1);
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   max-width: 100%;
 
   // the toolbar can be rendered outside .d-editor-textarea-wrapper, so the
@@ -343,10 +339,6 @@
   &.--disabled {
     opacity: 0.5;
     pointer-events: none;
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
   }
 
   .btn:focus-visible {

@@ -1,3 +1,4 @@
+/* eslint-disable discourse/no-tracked-state-class -- tests `@tracked` class fields */
 import { cached, tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";

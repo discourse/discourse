@@ -6,9 +6,9 @@ import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 export default class GroupInfo extends Component {
   <template>
     <PluginOutlet
+      @defaultGlimmer={{true}}
       @name="group-info-details"
       @outletArgs={{lazyHash group=@group}}
-      @defaultGlimmer={{true}}
     >
       <span class="group-info-details">
         <span class="group-info-name">

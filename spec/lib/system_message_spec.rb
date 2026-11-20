@@ -10,7 +10,29 @@ RSpec.describe SystemMessage do
 
     before { SiteSetting.site_contact_username = admin.username }
 
-    it "should create a post correctly" do
+    it "appends a paragraph in the recipient locale to a custom body before the plugin event" do
+      SiteSetting.allow_user_locale = true
+      user.update!(locale: "fr")
+      TranslationOverride.upsert!(:fr, "system_messages.private_topic_title", "Sujet %{id}")
+      expected_raw = "Custom outcome.\n\nSujet 42"
+
+      event =
+        DiscourseEvent.track(:before_system_message_sent) do
+          SystemMessage.create(
+            user,
+            :plugin_notice,
+            message_title: "Custom notice",
+            message_raw: "Custom outcome.",
+            body_suffix_key: "system_messages.private_topic_title",
+            id: 42,
+          )
+        end
+
+      expect(Post.last.raw).to eq(expected_raw)
+      expect(event[:params].first[:post_creator_args].last[:raw]).to eq(expected_raw)
+    end
+
+    it "creates the expected post" do
       system_message = SystemMessage.new(user)
       post = system_message.create(:welcome_invite)
       topic = post.topic
@@ -62,16 +84,12 @@ RSpec.describe SystemMessage do
       expect(post.raw).to eq("override body")
     end
 
-    it "should allow site_contact_group_name" do
+    it "invites the site contact group" do
       group = Fabricate(:group)
-      SiteSetting.site_contact_group_name = group.name
+      SiteSetting.site_contact_group_name = group.id.to_s
 
       post = SystemMessage.create(user, :welcome_invite)
       expect(post.topic.allowed_groups).to contain_exactly(group)
-
-      group.update!(name: "anewname")
-      post = SystemMessage.create(user, :welcome_invite)
-      expect(post.topic.allowed_groups).to eq([])
     end
 
     it "sends event with post object" do

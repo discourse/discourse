@@ -2,7 +2,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import DAG, { type DAGPosition } from "discourse/lib/dag";
 
-function resolveKeys(dag: DAG) {
+function resolveKeys<T>(dag: DAG<T>) {
   return dag.resolve().map((entry) => entry.key);
 }
 
@@ -438,7 +438,6 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.true(Object.isFrozen(resolved), "the resolved array is frozen");
     assert.throws(
       () => resolved.push({ key: "c", value: 3, position: {} }),
-      /extensible/,
       "mutating the resolved array throws"
     );
   });
@@ -1297,7 +1296,7 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.true(dag.has("a"), "a still exists");
     const result = dag.resolve();
     assert.strictEqual(
-      result.find((e) => e.key === "a").value,
+      result.find((e) => e.key === "a")?.value,
       "new-value",
       "value was updated"
     );

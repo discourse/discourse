@@ -1,7 +1,7 @@
 import {
   getCalendarButtonsText,
   getCurrentBcp47Locale,
-} from "./calendar-locale";
+} from "./calendar-locale.js";
 
 export default function fullCalendarDefaultOptions() {
   return {

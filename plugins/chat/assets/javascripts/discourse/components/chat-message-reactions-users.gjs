@@ -7,7 +7,6 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import UsersPopup from "discourse/components/user/users-popup";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
@@ -182,12 +181,12 @@ export default class ChatMessageReactionsUsers extends Component {
           >
             {{#each this.reactions as |reaction|}}
               <button
-                type="button"
                 class={{dConcatClass
                   "users-popup__filter"
                   (if (eq reaction.emoji this.activeFilter) "is-active")
                 }}
                 data-reaction-filter={{reaction.emoji}}
+                type="button"
                 {{on "click" (fn this.selectFilter reaction.emoji)}}
               >
                 {{dEmoji reaction.emoji skipTitle=true}}

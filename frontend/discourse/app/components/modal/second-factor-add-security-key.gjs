@@ -20,6 +20,8 @@ export default class SecondFactorAddSecurityKey extends Component {
   @service capabilities;
 
   @tracked loading = false;
+
+  /** @type {string | null} */
   @tracked errorMessage = null;
   @tracked securityKeyName;
 
@@ -189,10 +191,10 @@ export default class SecondFactorAddSecurityKey extends Component {
           <div class="control-group">
             <div class="controls">
               <Input
-                @value={{this.securityKeyName}}
                 id="security-key-name"
-                placeholder="security key name"
                 maxlength={{this.maxSecondFactorNameLength}}
+                placeholder="security key name"
+                @value={{this.securityKeyName}}
               />
             </div>
           </div>

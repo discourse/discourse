@@ -1,14 +1,14 @@
-import SortableColumn from "./sortable-column";
+import SortableColumn from "./sortable-column.gjs";
 
 const OpLikesCell = <template>
   <SortableColumn
-    @sortable={{@sortable}}
+    @activeOrder={{@activeOrder}}
+    @ascending={{@ascending}}
+    @changeSort={{@changeSort}}
+    @name="likes"
     @number="true"
     @order="op_likes"
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name="likes"
+    @sortable={{@sortable}}
   />
 </template>;
 

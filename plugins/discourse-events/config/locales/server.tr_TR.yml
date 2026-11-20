@@ -40,6 +40,8 @@ tr_TR:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Etkinlik hatırlatıcısı"
   site_settings:
     map_events_to_color: "Her etikete veya kategoriye bir renk atayın."
     map_events_title: "Her kategori için \"Yaklaşan Etkinlikler\" kenar çubuğu başlığındaki \"Etkinlikler\"in üzerine yazar."
@@ -69,6 +71,15 @@ tr_TR:
     sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
     calendar_first_day_of_week: "Takvim görüntüsü için haftanın ilk gününü ayarlayın. Seçenekler Cumartesi, Pazar veya Pazartesi'dir."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} başlamak üzere"
+        ongoing: "%{title} devam ediyor"
+        after: "%{title} sona erdi"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  ve %{count} üye daha"
+        other: "  ve %{count} üye daha"
     category_type:
       default_calendar_view:
         day: "Gün"
@@ -103,11 +114,9 @@ tr_TR:
           raw_invitees_length: "Bir etkinlik %{count} kullanıcı/grupla sınırlıdır."
           raw_invitees:
             only_group: "Bir etkinlik yalnızca grup adlarını kabul eder."
-          ends_at_before_starts_at: "Bir etkinlik başlamadan bitemez."
           max_attendees_reached: "Bu etkinlik dolmuştur."
           start_must_be_present_and_a_valid_date: "Bir etkinlik için geçerli bir başlangıç tarihi gerekir."
           end_must_be_a_valid_date: "Bitiş tarihi geçerli bir tarih olmalıdır."
-          invalid_recurrence: "Yineleme şunlardan biri olmalıdır: her_ay, her_hafta, her_iki_hafta, her_dört_hafta, her_gün, her_hafta içi."
           invalid_timezone: "Saat dilimi tanınmadı."
           acting_user_not_allowed_to_create_event: "Mevcut kullanıcının etkinlik oluşturmasına izin verilmiyor."
           acting_user_not_allowed_to_act_on_this_event: "Mevcut kullanıcının bu etkinlik üzerinde işlem yapmasına izin verilmiyor."

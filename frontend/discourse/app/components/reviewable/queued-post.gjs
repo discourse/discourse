@@ -44,7 +44,7 @@ export default class ReviewableQueuedPost extends Component {
           <ReviewableTags @tags={{@reviewable.payload.tags}} />
           {{#if @reviewable.payload.via_email}}
             {{#if this.canViewRawEmail}}
-              <a href {{on "click" this.showRawEmail}} class="show-raw-email">
+              <a class="show-raw-email" href {{on "click" this.showRawEmail}}>
                 {{dIcon "envelope" title="post.via_email"}}
               </a>
             {{else}}
@@ -57,7 +57,10 @@ export default class ReviewableQueuedPost extends Component {
       <div class="review-item__meta-label">{{i18n "review.review_user"}}</div>
 
       <div class="review-item__meta-flagged-user">
-        <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
+        <ReviewableCreatedBy
+          @penalties={{@reviewable.author_penalties}}
+          @user={{@reviewable.target_created_by}}
+        />
       </div>
     </div>
 
@@ -69,8 +72,8 @@ export default class ReviewableQueuedPost extends Component {
 
         <span>
           <PluginOutlet
-            @name="after-reviewable-queued-post-body"
             @connectorTagName="div"
+            @name="after-reviewable-queued-post-body"
             @outletArgs={{lazyHash model=@reviewable}}
           />
         </span>

@@ -40,10 +40,15 @@ module PageObjects
       end
 
       def drag_card_to_column(card_title, target_column_title)
-        find(".discourse-boards-card", text: card_title).drag_to(
-          find(".discourse-boards-column", text: /#{Regexp.escape(target_column_title)}/i),
-          html5: true,
-          delay: 0.4,
+        card = find(".discourse-boards-card[data-drag-source]", text: card_title)
+        column =
+          find(
+            ".discourse-boards-column[data-drop-target]",
+            text: /#{Regexp.escape(target_column_title)}/i,
+          )
+        drag_and_drop(
+          source: ".discourse-boards-card[data-card-id='#{card["data-card-id"]}']",
+          target: ".discourse-boards-column[data-column-id='#{column["data-column-id"]}']",
         )
         self
       end
@@ -52,8 +57,12 @@ module PageObjects
         has_css?(".discourse-boards-board-viewer__title", text: title)
       end
 
-      def card_draggable?(card_title)
-        find(".discourse-boards-card", text: card_title)["draggable"] == "true"
+      def has_draggable_card?(card_title)
+        has_css?(".discourse-boards-card[data-drag-source]", text: card_title)
+      end
+
+      def has_no_draggable_card?(card_title)
+        has_css?(".discourse-boards-card:not([data-drag-source])", text: card_title)
       end
 
       def has_tag_on_card?(card_title, tag_name)

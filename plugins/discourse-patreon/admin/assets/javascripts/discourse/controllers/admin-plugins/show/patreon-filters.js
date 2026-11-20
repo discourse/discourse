@@ -13,15 +13,15 @@ export default class AdminPluginsPatreonController extends Controller {
 
   editing = FilterRule.create({ group_id: null });
 
-  prettyPrintReward(reward) {
-    return `$${reward.amount_cents / 100} - ${reward.title}`;
-  }
-
   @computed("rewards")
   get rewardsNames() {
     return Object.values(this.rewards)
       .filter((r) => r.id >= 0)
       .map((r) => this.prettyPrintReward(r));
+  }
+
+  prettyPrintReward(reward) {
+    return `$${reward.amount_cents / 100} - ${reward.title}`;
   }
 
   @action

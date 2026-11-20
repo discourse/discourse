@@ -766,7 +766,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
           end
         end
     rescue => err
-      raise SettingsError, err.message unless self.database
+      raise SettingsError, err.message unless database
     end
 
     def parser
@@ -774,21 +774,15 @@ class ImportScripts::Smf2 < ImportScripts::Base
         OptionParser.new(nil, 12) do |o|
           o.banner = "Usage:\t#{File.basename($0)} <SMFROOT> [options]\n"
           o.banner = "${o.banner}\t#{File.basename($0)} -d <DATABASE> [options]"
-          o.on("-h HOST", :REQUIRED, "MySQL server hostname [\"#{self.host}\"]") do |s|
-            self.host = s
-          end
-          o.on("-u USER", :REQUIRED, "MySQL username [\"#{self.username}\"]") do |s|
-            self.username = s
-          end
+          o.on("-h HOST", :REQUIRED, "MySQL server hostname [\"#{host}\"]") { |s| self.host = s }
+          o.on("-u USER", :REQUIRED, "MySQL username [\"#{username}\"]") { |s| self.username = s }
           o.on(
             "-p [PASS]",
             :OPTIONAL,
             "MySQL password. Without argument, reads password from STDIN.",
           ) { |s| self.password = s || :ask }
           o.on("-d DBNAME", :REQUIRED, "Name of SMF database") { |s| self.database = s }
-          o.on("-f PREFIX", :REQUIRED, "Table names prefix [\"#{self.prefix}\"]") do |s|
-            self.prefix = s
-          end
+          o.on("-f PREFIX", :REQUIRED, "Table names prefix [\"#{prefix}\"]") { |s| self.prefix = s }
           o.on("-t TIMEZONE", :REQUIRED, "Timezone used by SMF2 [auto-detected from PHP]") do |s|
             self.timezone = s
           end

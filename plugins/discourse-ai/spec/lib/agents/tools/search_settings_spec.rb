@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::SearchSettings do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
   let(:fake_settings) do
@@ -18,11 +18,9 @@ RSpec.describe DiscourseAi::Agents::Tools::SearchSettings do
     ]
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    toggle_enabled_bots(bots: [llm_model])
-  end
+  include_context "with AI bot enabled"
+
+  before { toggle_enabled_bots(bots: [llm_model]) }
 
   def search_settings(query, mock: true)
     search = described_class.new({ query: query }, bot_user: bot_user, llm: llm)
@@ -53,7 +51,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SearchSettings do
       results = search_settings("a", mock: false).invoke
 
       expect(results[:rows].length).to be > 30
-      expect(results[:rows][0].length).to eq(1)
+      expect(results[:rows][0].length).to eq(2)
     end
 
     it "can return descriptions if there are few matches" do
@@ -62,6 +60,17 @@ RSpec.describe DiscourseAi::Agents::Tools::SearchSettings do
       expect(results[:rows].length).to eq(2)
 
       expect(results[:rows][0][1]).not_to eq(nil)
+    end
+
+    it "returns a setting link with the installation base path" do
+      set_subfolder "/community"
+
+      results = search_settings("default_locale").invoke
+
+      url_column = results[:column_names].index("url")
+      expect(results[:rows][0][url_column]).to eq(
+        "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=default_locale",
+      )
     end
   end
 end

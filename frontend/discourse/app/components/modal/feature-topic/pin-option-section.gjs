@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -15,10 +14,7 @@ export const MAX_GLOBALLY_PINNED_TOPICS = 4;
 export default class PinOptionSection extends Component {
   @service dialog;
 
-  @cached
-  get formData() {
-    return { pinUntil: this.args.dateValue };
-  }
+  formData = { pinUntil: this.args.dateValue };
 
   @action
   validatePinUntil(name, value, { addError }) {
@@ -32,8 +28,7 @@ export default class PinOptionSection extends Component {
   }
 
   @action
-  handleDateSet(value, { set }) {
-    set("pinUntil", value);
+  handleDateSet(name, value) {
     this.args.onDateChange?.(value);
   }
 
@@ -51,15 +46,16 @@ export default class PinOptionSection extends Component {
 
   <template>
     <Form
-      @data={{this.formData}}
-      @onSubmit={{this.handleSubmit}}
       class="feature-section"
+      @data={{this.formData}}
+      @onSet={{this.handleDateSet}}
+      @onSubmit={{this.handleSubmit}}
       as |form|
     >
       <div class="feature-section__description">
         {{#if @statsMessage}}
           <p>
-            <DConditionalLoadingSpinner @size="small" @condition={{@loading}}>
+            <DConditionalLoadingSpinner @condition={{@loading}} @size="small">
               {{trustHTML @statsMessage}}
             </DConditionalLoadingSpinner>
           </p>
@@ -71,11 +67,10 @@ export default class PinOptionSection extends Component {
 
         <form.Field
           @name="pinUntil"
-          @title={{i18n "topic.feature_topic.pin_until"}}
           @showTitle={{false}}
+          @title={{i18n "topic.feature_topic.pin_until"}}
           @type="custom"
           @validate={{this.validatePinUntil}}
-          @onSet={{this.handleDateSet}}
           as |field|
         >
           <field.Control>

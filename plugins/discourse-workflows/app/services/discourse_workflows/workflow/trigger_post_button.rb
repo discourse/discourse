@@ -8,14 +8,19 @@ module DiscourseWorkflows
       attribute :workflow_id, :integer
       attribute :trigger_node_id, :string
       attribute :post_id, :integer
+      attribute :client_id, :string
+      attribute :request_id, :string
 
       validates :trigger_node_id, presence: true
       validates :post_id, presence: true
+      validates :client_id, length: { maximum: 64 }, allow_nil: true
+      validates :request_id, format: { with: /\A[0-9a-f-]{36}\z/ }, allow_nil: true
     end
 
     model :published_trigger
     policy :can_use_post_button
     model :post
+    model :topic
     policy :can_see_post
     policy :can_trigger_for_post
     step :enqueue_workflow
@@ -27,17 +32,12 @@ module DiscourseWorkflows
         DiscourseWorkflows::Workflow::Action::FindPublishedTriggers.call(
           trigger_type: "trigger:post_button",
           filter: ->(published_trigger) do
-            published_trigger.trigger_node_id == params.trigger_node_id
+            published_trigger.trigger_node_id == params.trigger_node_id &&
+              (!params.workflow_id || published_trigger.workflow_id == params.workflow_id)
           end,
         )
 
-      if params.workflow_id
-        return(
-          matches.find { |published_trigger| published_trigger.workflow_id == params.workflow_id }
-        )
-      end
-
-      matches.one? ? matches.first : nil
+      matches.first if matches.one?
     end
 
     def can_use_post_button(published_trigger:, guardian:)
@@ -48,7 +48,11 @@ module DiscourseWorkflows
     end
 
     def fetch_post(params:)
-      Post.find_by(id: params.post_id)
+      Post.with_deleted.find_by(id: params.post_id)
+    end
+
+    def fetch_topic(post:)
+      post.topic = Topic.with_deleted.find_by(id: post.topic_id)
     end
 
     def can_see_post(post:, guardian:)
@@ -62,12 +66,17 @@ module DiscourseWorkflows
       )
     end
 
-    def enqueue_workflow(published_trigger:, post:, guardian:)
-      trigger = DiscourseWorkflows::Nodes::PostButton::V1.new(post)
+    def enqueue_workflow(published_trigger:, post:, guardian:, params:)
       DiscourseWorkflows::TriggerDispatcher.enqueue(
         published_trigger,
-        trigger_data: trigger.output,
+        trigger_data: NodeData.node_type(published_trigger.trigger_node).new(post).output,
         user_id: guardian.user.id,
+        post_button_feedback:
+          (
+            if params.client_id.present? && params.request_id.present?
+              { client_id: params.client_id, request_id: params.request_id }
+            end
+          ),
       )
     end
   end

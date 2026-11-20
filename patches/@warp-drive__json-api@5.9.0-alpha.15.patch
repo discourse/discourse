@@ -1,0 +1,30 @@
+diff --git a/dist/index.js b/dist/index.js
+index a9490fa509546ef484eddb61c5433dc15f127214..aab49f54e6c95d1f94a7ba4baa6d0565de820f61 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1,8 +1,7 @@
+ import { graphFor, peekGraph, isBelongsTo } from '@warp-drive/core/graph/-private';
+ import { logGroup, isResourceKey, assertPrivateCapabilities, isRequestKey } from '@warp-drive/core/store/-private';
+ import Fuse from 'fuse.js';
+-import jsonToAst from 'json-to-ast';
+-import { macroCondition, getGlobalConfig } from '@embroider/macros';
++import { macroCondition, getGlobalConfig, importSync } from '@embroider/macros';
+ 
+ function validateDocumentFields(schema, jsonApiDoc) {
+   const {
+@@ -214,9 +213,12 @@ class Reporter {
+     this.capabilities = capabilities;
+     this.contextDocument = doc;
+     this.jsonStr = JSON.stringify(doc.content, null, 2);
+-    this.ast = jsonToAst(this.jsonStr, {
+-      loc: true
+-    });
++    if (macroCondition(getGlobalConfig().WarpDrive.env.DEBUG)) {
++      const jsonToAst = importSync('json-to-ast').default;
++      this.ast = jsonToAst(this.jsonStr, {
++        loc: true
++      });
++    }
+   }
+   searchTypes(type) {
+     if (!this._typeFilter) {

@@ -146,11 +146,18 @@ class PostSerializer < BasicPostSerializer
   end
 
   def topic_title
-    topic&.title
+    ContentLocalization.translated_topic_title(topic, scope) || topic&.title
   end
 
   def topic_html_title
-    topic&.fancy_title
+    ContentLocalization.translated_topic_fancy_title(topic, scope) || topic&.fancy_title
+  end
+
+  def excerpt
+    translated_cooked = ContentLocalization.translated_post_cooked(object, scope)
+    return object.excerpt if !translated_cooked
+
+    Post.excerpt(translated_cooked, nil, post: object)
   end
 
   def posts_count
@@ -462,10 +469,12 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_bookmark
+    return @post_bookmark if defined?(@post_bookmark)
+
     if @topic_view.present?
-      @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
+      @post_bookmark = @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
     else
-      @post_bookmark ||= Bookmark.find_by(user: scope.user, bookmarkable: object)
+      @post_bookmark = Bookmark.find_by(user: scope.user, bookmarkable: object)
     end
   end
 
@@ -747,7 +756,9 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable
-    @reviewable ||=
+    return @reviewable if defined?(@reviewable)
+
+    @reviewable =
       Reviewable
         .where(target: object, type: Reviewable.sti_names)
         .includes(:reviewable_scores)

@@ -47,33 +47,33 @@ export default class NestedFloatingActions extends Component {
       />
 
       {{#if this.currentUser}}
-        <TopicNotificationsButton @topic={{@topic}} @expanded={{false}} />
+        <TopicNotificationsButton @expanded={{false}} @topic={{@topic}} />
       {{/if}}
 
       <TopicAdminMenu
-        @topic={{@topic}}
-        @toggleMultiSelect={{this.topicController.toggleMultiSelect}}
+        @convertToPrivateMessage={{this.topicController.convertToPrivateMessage}}
+        @convertToPublicTopic={{this.topicController.convertToPublicTopic}}
         @deleteTopic={{this.topicController.deleteTopic}}
         @recoverTopic={{this.topicController.recoverTopic}}
-        @toggleClosed={{this.topicController.toggleClosed}}
-        @toggleArchived={{this.topicController.toggleArchived}}
-        @toggleVisibility={{this.topicController.toggleVisibility}}
         @resetBumpDate={{this.topicController.resetBumpDate}}
-        @convertToPublicTopic={{this.topicController.convertToPublicTopic}}
-        @convertToPrivateMessage={{this.topicController.convertToPrivateMessage}}
+        @showChangeTimestamp={{this.topicRoute.showChangeTimestamp}}
+        @showFeatureTopic={{this.topicRoute.showFeatureTopic}}
         @showTopicSlowModeUpdate={{this.topicRoute.showTopicSlowModeUpdate}}
         @showTopicTimerModal={{this.topicRoute.showTopicTimerModal}}
-        @showFeatureTopic={{this.topicRoute.showFeatureTopic}}
-        @showChangeTimestamp={{this.topicRoute.showChangeTimestamp}}
+        @toggleArchived={{this.topicController.toggleArchived}}
+        @toggleClosed={{this.topicController.toggleClosed}}
+        @toggleMultiSelect={{this.topicController.toggleMultiSelect}}
+        @toggleVisibility={{this.topicController.toggleVisibility}}
+        @topic={{@topic}}
       />
 
       {{#if this.showReplyButton}}
         <DButton
           class="btn-primary nested-view__floating-reply"
+          title={{i18n "topic.reply.help"}}
           @action={{this.reply}}
           @icon="reply"
           @label="topic.reply.title"
-          title={{i18n "topic.reply.help"}}
         />
       {{/if}}
     </div>

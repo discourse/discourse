@@ -4,7 +4,6 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -52,7 +51,7 @@ export default class ReferencePropertyPicker extends Component {
   focusFilter(element) {
     // Next frame, so focus wins over the editor reclaiming it.
     requestAnimationFrame(() => {
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         element.focus();
       }
     });
@@ -122,14 +121,14 @@ export default class ReferencePropertyPicker extends Component {
       <div class="workflows-reference-picker__header">
         {{#if this.hasProperties}}
           <input
-            type="text"
+            aria-label={{i18n
+              "discourse_workflows.reference_pill.filter_placeholder"
+            }}
             class="workflows-reference-picker__filter"
             placeholder={{i18n
               "discourse_workflows.reference_pill.filter_placeholder"
             }}
-            aria-label={{i18n
-              "discourse_workflows.reference_pill.filter_placeholder"
-            }}
+            type="text"
             {{didInsert this.focusFilter}}
             {{on "input" this.updateQuery}}
             {{on "keydown" this.onKeydown}}
@@ -141,8 +140,8 @@ export default class ReferencePropertyPicker extends Component {
         {{/if}}
 
         <button
-          type="button"
           class="workflows-reference-picker__edit"
+          type="button"
           {{on "click" this.edit}}
         >
           {{dIcon "code"}}
@@ -160,12 +159,12 @@ export default class ReferencePropertyPicker extends Component {
           {{#each this.filteredProperties as |property index|}}
             <li>
               <button
-                type="button"
                 class={{dConcatClass
                   "workflows-reference-picker__option"
                   (if (eq index this.activeIndex) "--active")
                   (if (eq property.name this.current) "--current")
                 }}
+                type="button"
                 {{on "click" (fn this.select property.name)}}
                 {{on "mouseenter" (fn this.setActive index)}}
               >

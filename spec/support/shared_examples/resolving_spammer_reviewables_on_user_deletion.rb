@@ -25,12 +25,12 @@ RSpec.shared_examples "resolving a spammer's reviewables on user deletion" do
     user_review = ReviewableUser.create_for(spammer)
     review_every_post = ReviewablePost.queue_for_review(Fabricate(:post, user: spammer))
 
-    action, resolved_status =
+    action =
       case acted_reviewable.type
       when "ReviewableFlaggedPost", "ReviewableAiPost"
-        ["post-delete_user_block", :approved]
+        "post-delete_user_block"
       when "ReviewableQueuedPost"
-        ["delete_user", :rejected]
+        "delete_user"
       end
 
     all = [acted_reviewable, flag, queued_post, user_review, review_every_post]
@@ -48,18 +48,18 @@ RSpec.shared_examples "resolving a spammer's reviewables on user deletion" do
 
     review_page.delete_user_from_reviewable(acted_reviewable, action)
 
-    expect(review_page).to have_reviewable_with_status(acted_reviewable, resolved_status)
-    expect(review_page).to have_reviewable_with_approved_status(flag)
-    expect(review_page).to have_reviewable_with_rejected_status(queued_post)
-    expect(review_page).to have_reviewable_with_rejected_status(user_review)
-    expect(review_page).to have_reviewable_with_rejected_status(review_every_post)
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(acted_reviewable)
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(flag)
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post)
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(user_review)
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(review_every_post)
 
     using_session(:other_tab) do
-      expect(review_page).to have_reviewable_with_status(acted_reviewable, resolved_status)
-      expect(review_page).to have_reviewable_with_approved_status(flag)
-      expect(review_page).to have_reviewable_with_rejected_status(queued_post)
-      expect(review_page).to have_reviewable_with_rejected_status(user_review)
-      expect(review_page).to have_reviewable_with_rejected_status(review_every_post)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(acted_reviewable)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(flag)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(user_review)
+      expect(review_page).to have_reviewable_with_problem_confirmed_status(review_every_post)
     end
   end
 end

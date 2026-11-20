@@ -196,7 +196,7 @@ describe TopicQuery do
       group_assigned_topic
     end
 
-    it "should return the right topics" do
+    it "returns messages assigned to the user or their group" do
       expect(TopicQuery.new(user).list_private_messages_assigned(user).topics).to contain_exactly(
         assigned_topic,
         group_assigned_topic,

@@ -13,16 +13,16 @@ subset of checks.
    across the boundary. Suffix the imported service class binding with `Service`; leave the
    injection property and module path unchanged.
 2. Type public fields, method parameters, and returns precisely. Type private state where
-   inference would be null-only, empty-collection-only, or otherwise misleading. Do not rely
-   on the loose repository tsconfig to accept implicit `any`.
+   inference would be null-only, empty-collection-only, or otherwise misleading. Do not leave
+   implicit `any`: `pnpm lint:types` rejects it.
 3. Add useful TSDoc to the typed public API: exported type fields, service
    fields/methods/parameters, and every component `Signature` arg, block, nested arg field,
    and yielded tuple value.
 4. Remove redundant legacy `@param {Type}`, `@returns {Type}`, `@type`, and `@property
    {Type}` tags. Preserve useful prose as untyped TSDoc tags.
-5. Search for bare `@service`, explicit or implicit `any`, suppression directives, stale
-   typed JSDoc, and undocumented casts. Passing `ember-tsc` does not prove these are absent
-   under the loose global configuration.
+5. Search for explicit `any`, suppression directives, stale typed JSDoc, and undocumented
+   casts. `pnpm lint:types` catches implicit `any`, including a bare `@service` in a
+   `.ts`/`.gts` file, but not these.
 6. Inspect each core dependency before defining a local type. Prefer the canonical type,
    including one inferred from unconverted JavaScript. If a verified runtime field is
    missing, use the narrowest extension and a `TODO(typescript-pending)` naming the gap and
@@ -36,10 +36,18 @@ subset of checks.
    look typed.
 9. Run `bin/lint --fix` and re-read the file after formatting and member ordering.
    Converting previously unchecked JavaScript can expose lint failures in untouched-looking
-   code; those failures belong to the conversion.
+   code; those failures belong to the conversion. The rename also turns on `tsdoc/syntax`,
+   which lints only TypeScript files. It rejects bare `{{...}}`, HTML tags and `>` in doc
+   comments, so fence template examples (```` ```hbs ````) and wrap inline usage in backticks.
 10. Audit explicit `.js`/`.gjs` imports after each rename and run the relevant runtime tests.
     Tests may remain JavaScript when their conversion is out of scope, but their imports and
     runtime coverage must still work.
+11. Sweep the stopgaps the conversion may retire. Search the whole repo, plugins and themes
+    included, for `TODO(typescript-pending)` notes, `ComponentLike`/`HelperLike`/
+    `ModifierLike` casts and suppression directives that mention the converted module or
+    its exports. Many notes describe the gap rather than naming the module, so read every
+    note's text, not only name matches. Remove each stopgap the new types now cover, then
+    rerun `pnpm lint:types`. Leave a note whose gap is still open.
 
 ## Incremental evidence versus completion
 

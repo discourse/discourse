@@ -61,6 +61,21 @@ export default class Section {
     return Boolean(this.#canEditLinks) && !this.section.section_type;
   }
 
+  get headerActions() {
+    if (this.#canEditLinks) {
+      return [
+        {
+          action: () => this.openForm(),
+          title: i18n("sidebar.sections.custom.edit"),
+        },
+      ];
+    }
+  }
+
+  get headerActionIcon() {
+    return "pencil";
+  }
+
   async openForm(link, linkDropIndex) {
     const json = await ajax(`/sidebar_sections/${this.section.id}.json`).catch(
       popupAjaxError
@@ -105,26 +120,11 @@ export default class Section {
     }
   }
 
-  get headerActions() {
-    if (this.#canEditLinks) {
-      return [
-        {
-          action: () => this.openForm(),
-          title: i18n("sidebar.sections.custom.edit"),
-        },
-      ];
-    }
-  }
-
-  get headerActionIcon() {
-    return "pencil";
-  }
-
   /**
    * Commits a dragged row's drop into this section: a drop from this very
    * section reorders it, one from another section transfers the link here.
    *
-   * @param {Object} dragData - The drag source's payload: `sectionId`,
+   * @param {{ sectionId: number, linkId: number, public: boolean }} dragData - The drag source's payload: `sectionId`,
    *   `linkId`, and whether the source section is `public`.
    * @param {number|undefined} dropIndex - The measured drop offset;
    *   undefined appends.

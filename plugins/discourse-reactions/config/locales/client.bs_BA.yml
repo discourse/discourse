@@ -11,5 +11,8 @@ bs_BA:
         all: "Sve"
       main_reaction:
         add: "Lajkuj ovaj post"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Doodano"
     notifications:
       reaction_2_users: "%{username}, %{username2}"

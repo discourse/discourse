@@ -10,6 +10,10 @@ sq:
       labels:
         username: Emri i përdoruesit
   discourse_events:
+    reminder:
+      additional_guests:
+        one: "  dhe %{count} të tjera"
+        other: "  dhe %{count} të tjerë"
     category_type:
       default_calendar_view:
         day: "Day"

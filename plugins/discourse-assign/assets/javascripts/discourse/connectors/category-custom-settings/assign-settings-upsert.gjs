@@ -41,17 +41,17 @@ export default class AssignSettingsUpsert extends Component {
     return this.globalAssignAllowedGroupIds.join("|");
   }
 
+  get assignableGroups() {
+    return (this.site.groups || [])
+      .filter((group) => group.id !== AUTO_GROUPS.everyone.id)
+      .map((group) => ({ ...group, id: group.id.toString() }));
+  }
+
   groupIdsFromValue(value) {
     return (value || "")
       .split("|")
       .filter(Boolean)
       .filter((groupId) => parseInt(groupId, 10) !== AUTO_GROUPS.everyone.id);
-  }
-
-  get assignableGroups() {
-    return (this.site.groups || [])
-      .filter((group) => group.id !== AUTO_GROUPS.everyone.id)
-      .map((group) => ({ ...group, id: group.id.toString() }));
   }
 
   @action
@@ -77,32 +77,32 @@ export default class AssignSettingsUpsert extends Component {
       <form.Section @title={{i18n "discourse_assign.assign.title"}}>
         <form.Object @name="custom_fields" as |customFields|>
           <customFields.Field
-            @name={{CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS}}
-            @title={{i18n "discourse_assign.additional_assign_allowed_groups"}}
             @description={{i18n
               "discourse_assign.additional_assign_allowed_groups_description"
             }}
-            @onSet={{this.onChangeAssignAllowedGroups}}
-            @type="custom"
             @format="full"
+            @name={{CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS}}
+            @onSet={{this.onChangeAssignAllowedGroups}}
+            @title={{i18n "discourse_assign.additional_assign_allowed_groups"}}
+            @type="custom"
             as |field|
           >
             <field.Control>
               <GroupChooser
                 @content={{this.assignableGroups}}
-                @value={{this.additionalAssignAllowedGroupIds}}
                 @mandatoryValues={{this.assignAllowedMandatoryGroupIds}}
                 @onChange={{field.set}}
+                @value={{this.additionalAssignAllowedGroupIds}}
               />
             </field.Control>
           </customFields.Field>
 
           <customFields.Field
-            @name="enable_unassigned_filter"
-            @title={{i18n "discourse_assign.add_unassigned_filter"}}
-            @onSet={{this.onToggleUnassignedFilter}}
-            @type="checkbox"
             @format="full"
+            @name="enable_unassigned_filter"
+            @onSet={{this.onToggleUnassignedFilter}}
+            @title={{i18n "discourse_assign.add_unassigned_filter"}}
+            @type="checkbox"
             as |field|
           >
             <field.Control checked={{this.enableUnassignedFilter}} />

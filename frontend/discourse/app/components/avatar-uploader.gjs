@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -11,7 +10,7 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class AvatarUploader extends Component {
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "avatar-uploader",
     type: "avatar",
     validateUploadedFilesOptions: {
@@ -53,23 +52,23 @@ export default class AvatarUploader extends Component {
   <template>
     <span ...attributes>
       <input
-        id="custom-profile-upload"
-        {{didInsert this.uppyUpload.setup}}
-        class="hidden-upload-field"
-        disabled={{this.uppyUpload.uploading}}
-        type="file"
         accept="image/*"
         aria-hidden="true"
+        class="hidden-upload-field"
+        disabled={{this.uppyUpload.uploading}}
+        id="custom-profile-upload"
+        type="file"
+        {{didInsert this.uppyUpload.setup}}
       />
       <DButton
-        @translatedLabel={{this.uploadLabel}}
-        @icon="far-image"
-        @disabled={{this.uppyUpload.uploading}}
-        @action={{this.chooseImage}}
-        @title="user.change_avatar.upload_title"
         class="btn-default avatar-uploader__button"
-        data-uploaded={{this.customAvatarUploaded}}
         data-avatar-upload-id={{this.uploadedAvatarId}}
+        data-uploaded={{this.customAvatarUploaded}}
+        @action={{this.chooseImage}}
+        @disabled={{this.uppyUpload.uploading}}
+        @icon="far-image"
+        @title="user.change_avatar.upload_title"
+        @translatedLabel={{this.uploadLabel}}
       />
 
       {{#if this.imageIsNotASquare}}

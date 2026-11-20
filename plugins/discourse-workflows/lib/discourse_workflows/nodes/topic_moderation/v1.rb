@@ -32,14 +32,7 @@ module DiscourseWorkflows
               type: :string,
               required: true,
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-            },
+            **actor_property,
           },
         )
 
@@ -76,7 +69,7 @@ module DiscourseWorkflows
           )
 
           topic.reload
-          { topic: exec_ctx.serialize_topic(topic, guardian: actor.guardian) }
+          { topic: serialize_topic(topic, guardian: actor.guardian) }
         end
       end
     end

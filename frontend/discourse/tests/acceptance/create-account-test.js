@@ -147,6 +147,81 @@ acceptance("Create Account", function () {
   });
 });
 
+acceptance("Create Account with email code available", function (needs) {
+  needs.settings({
+    enable_local_logins_via_code: true,
+    enable_local_logins_via_email: true,
+  });
+
+  test("defaults to email-only signup", async function (assert) {
+    await visit("/signup");
+
+    assert
+      .dom(".code-login-form__email-step")
+      .exists("shows email-code signup");
+    assert
+      .dom("#new-account-password")
+      .doesNotExist("does not show a password field");
+  });
+
+  test("uses traditional signup when an invite code is required", async function (assert) {
+    this.siteSettings.require_invite_code = true;
+
+    await visit("/signup");
+
+    assert.dom(".code-login-form").doesNotExist();
+    assert.dom("#inviteCode").exists();
+    assert.dom("#new-account-password").exists();
+
+    await fillIn("#new-account-email", "invited@example.com");
+    await fillIn("#new-account-username", "invited-user");
+    await fillIn("#new-account-password", "a secure password");
+    await fillIn("#new-account-name", "Invited User");
+    await fillIn("#inviteCode", "SECRET");
+
+    pretender.post("/u", (request) => {
+      const data = parsePostData(request.requestBody);
+      assert.step("create account");
+      assert.strictEqual(data.email, "invited@example.com");
+      assert.strictEqual(data.invite_code, "SECRET");
+      return response({ success: true });
+    });
+
+    await click(".signup-fullpage .btn-primary");
+
+    assert.verifySteps(["create account"]);
+  });
+
+  test("restores a verified signup after a full page load", async function (assert) {
+    this.owner.lookup("service:session-store").setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "verified@example.com",
+        expiresAt: Date.now() + 60_000,
+        signupToken: "signup-token",
+        username: "",
+      },
+    });
+
+    await visit("/signup");
+
+    assert
+      .dom(".code-login-form__account-details-step")
+      .exists("restores the account details step");
+    assert
+      .dom(".code-login-form__hidden-email")
+      .hasValue("verified@example.com", "preserves the verified email");
+  });
+
+  test("uses traditional signup when email-code signup is unavailable", async function (assert) {
+    this.siteSettings.enable_local_logins_via_email = false;
+    await visit("/signup");
+
+    assert.dom("#new-account-password").exists("shows traditional signup");
+    assert.dom(".code-login-form").doesNotExist("does not show code signup");
+  });
+});
+
 acceptance("Create Account - full name requirement", function () {
   test("full name required", async function (assert) {
     const site = Site.current();

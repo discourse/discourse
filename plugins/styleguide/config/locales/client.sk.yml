@@ -32,8 +32,18 @@ sk:
           title: "Pole pre dátum a čas"
         menus:
           title: "Menu"
+        context_menu:
+          actions:
+            duplicate: "Duplikát"
+            delete: "Odstrániť"
         multi_select:
           title: "Viacnásobný výber"
+        reorderable_list:
+          policies_pinned: "Pripnutý"
+          policies_required: "Povinné"
+          table_field: "Pole"
+          table_type: "Typ"
+          cross_list_primary: "Primárne"
         toasts:
           title: "Toasty"
         font_scale:

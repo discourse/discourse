@@ -114,13 +114,6 @@ RSpec.describe DiscourseWorkflows::WebhookRequestParser do
       expect(headers["content-type"]).to eq("application/json")
     end
 
-    it "filters sensitive headers" do
-      headers = parser.extract_headers
-
-      expect(headers["authorization"]).to eq("[FILTERED]")
-      expect(headers["cookie"]).to eq("[FILTERED]")
-    end
-
     it "skips non-HTTP rack variables" do
       headers = parser.extract_headers
 

@@ -32,8 +32,18 @@ es:
           title: "Campos de entrada de fecha/hora"
         menus:
           title: "Menús"
+        context_menu:
+          actions:
+            duplicate: "Duplicar"
+            delete: "Eliminar"
         multi_select:
           title: "Selección múltiple"
+        reorderable_list:
+          policies_pinned: "Anclado"
+          policies_required: "Obligatorio"
+          table_field: "Campo"
+          table_type: "Tipo"
+          cross_list_primary: "Principal"
         toasts:
           title: "Ventanas emergentes"
         font_scale:

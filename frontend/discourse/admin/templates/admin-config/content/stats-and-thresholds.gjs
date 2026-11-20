@@ -2,10 +2,10 @@ import AdminAreaSettings from "discourse/admin/components/admin-area-settings";
 
 export default <template>
   <AdminAreaSettings
-    @area="stats_and_thresholds"
-    @path="/admin/config/content/stats-and-thresholds"
-    @filter={{@controller.filter}}
     @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+    @area="stats_and_thresholds"
+    @filter={{@controller.filter}}
+    @path="/admin/config/content/stats-and-thresholds"
     @showBreadcrumb={{false}}
   />
 </template>

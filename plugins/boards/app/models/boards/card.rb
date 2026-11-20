@@ -28,77 +28,113 @@ module Boards
 
     scope :with_column, -> { where.not(column_id: nil) }
     scope :ordered, -> { order(:position, :id) }
+    scope :topic_visible_to,
+          ->(guardian) do
+            where(card_type: :topic).where(
+              Topic
+                .listable_topics
+                .secured(guardian)
+                .where("topics.id = discourse_kanban_cards.topic_id")
+                .where.not(id: Category.where.not(topic_id: nil).select(:topic_id))
+                .arel
+                .exists,
+            )
+          end
+
+    class << self
+      def outside_constraints(category_ids:, tag_ids:)
+        return none if category_ids.blank? && tag_ids.blank?
+
+        where(card_type: :topic).where.not(
+          topics_matching(category_ids:, tag_ids:)
+            .where("topics.id = discourse_kanban_cards.topic_id")
+            .arel
+            .exists,
+        )
+      end
+
+      def normalize_tag_ids!(values)
+        normalized_tag_ids = normalize_tag_id_values!(values)
+
+        unknown_tag_ids = tag_ids_missing_from_database(normalized_tag_ids)
+        return normalized_tag_ids if unknown_tag_ids.empty?
+
+        raise Discourse::InvalidParameters.new(
+                I18n.t("boards.errors.unknown_tag_ids", tag_ids: unknown_tag_ids.join(",")),
+              )
+      end
+
+      def normalize_visible_tag_ids!(values, guardian)
+        normalized_tag_ids = normalize_tag_ids!(values)
+        return normalized_tag_ids if normalized_tag_ids.blank? || guardian&.is_admin?
+
+        visible_tag_ids =
+          DiscourseTagging.visible_tags(guardian).where(id: normalized_tag_ids).pluck(:id)
+        hidden_tag_ids = normalized_tag_ids - visible_tag_ids
+        return normalized_tag_ids if hidden_tag_ids.empty?
+
+        raise Discourse::InvalidParameters.new(
+                I18n.t("boards.errors.unknown_tag_ids", tag_ids: hidden_tag_ids.join(",")),
+              )
+      end
+
+      def ordered_tags(tag_ids)
+        normalized_tag_ids = normalize_tag_id_values!(tag_ids)
+        return [] if normalized_tag_ids.blank?
+
+        tags_by_id = Tag.where(id: normalized_tag_ids).index_by(&:id)
+        normalized_tag_ids.filter_map { |tag_id| tags_by_id[tag_id] }
+      end
+
+      def preload_tags(cards)
+        cards = Array(cards)
+        return cards if cards.empty?
+
+        all_tag_ids = cards.flat_map(&:tag_ids).uniq
+        tags_by_id = all_tag_ids.empty? ? {} : Tag.where(id: all_tag_ids).index_by(&:id)
+
+        cards.each do |card|
+          sorted = card.tag_ids.filter_map { |id| tags_by_id[id] }.sort_by { |t| t.name.to_s }
+          card.instance_variable_set(:@tags, sorted)
+        end
+
+        cards
+      end
+
+      private
+
+      def topics_matching(category_ids:, tag_ids:)
+        constraints = {
+          category_id: category_ids.presence,
+          id: tag_ids.presence && TopicTag.where(tag_id: tag_ids).select(:topic_id),
+        }
+
+        Topic.with_deleted.where(constraints.compact)
+      end
+
+      def tag_ids_missing_from_database(tag_ids)
+        return [] if tag_ids.blank?
+
+        existing_tag_ids = Tag.where(id: tag_ids).pluck(:id)
+        tag_ids - existing_tag_ids
+      end
+
+      def normalize_tag_id_values!(values)
+        raw_values = Array(values)
+        raw_values.compact_blank.map { |value| Integer(value) }.reject(&:zero?).uniq
+      rescue ArgumentError, TypeError
+        raise Discourse::InvalidParameters.new(
+                I18n.t("boards.errors.unknown_tag_ids", tag_ids: raw_values.join(",")),
+              )
+      end
+    end
 
     def url
       "#{Discourse.base_url}/boards/#{board.slug}/#{board.id}/cards/#{id}"
     end
 
-    def self.normalize_tag_ids!(values)
-      normalized_tag_ids = normalize_tag_id_values!(values)
-
-      unknown_tag_ids = tag_ids_missing_from_database(normalized_tag_ids)
-      return normalized_tag_ids if unknown_tag_ids.empty?
-
-      raise Discourse::InvalidParameters.new(
-              I18n.t("boards.errors.unknown_tag_ids", tag_ids: unknown_tag_ids.join(",")),
-            )
-    end
-
-    def self.normalize_visible_tag_ids!(values, guardian)
-      normalized_tag_ids = normalize_tag_ids!(values)
-      return normalized_tag_ids if normalized_tag_ids.blank? || guardian&.is_admin?
-
-      visible_tag_ids =
-        DiscourseTagging.visible_tags(guardian).where(id: normalized_tag_ids).pluck(:id)
-      hidden_tag_ids = normalized_tag_ids - visible_tag_ids
-      return normalized_tag_ids if hidden_tag_ids.empty?
-
-      raise Discourse::InvalidParameters.new(
-              I18n.t("boards.errors.unknown_tag_ids", tag_ids: hidden_tag_ids.join(",")),
-            )
-    end
-
-    def self.ordered_tags(tag_ids)
-      normalized_tag_ids = normalize_tag_id_values!(tag_ids)
-      return [] if normalized_tag_ids.blank?
-
-      tags_by_id = Tag.where(id: normalized_tag_ids).index_by(&:id)
-      normalized_tag_ids.filter_map { |tag_id| tags_by_id[tag_id] }
-    end
-
-    def self.preload_tags(cards)
-      cards = Array(cards)
-      return cards if cards.empty?
-
-      all_tag_ids = cards.flat_map(&:tag_ids).uniq
-      tags_by_id = all_tag_ids.empty? ? {} : Tag.where(id: all_tag_ids).index_by(&:id)
-
-      cards.each do |card|
-        sorted = card.tag_ids.filter_map { |id| tags_by_id[id] }.sort_by { |t| t.name.to_s }
-        card.instance_variable_set(:@tags, sorted)
-      end
-
-      cards
-    end
-
     def tags
       @tags ||= Tag.where(id: tag_ids).order(:name).to_a
-    end
-
-    def self.tag_ids_missing_from_database(tag_ids)
-      return [] if tag_ids.blank?
-
-      existing_tag_ids = Tag.where(id: tag_ids).pluck(:id)
-      tag_ids - existing_tag_ids
-    end
-
-    def self.normalize_tag_id_values!(values)
-      raw_values = Array(values)
-      raw_values.compact_blank.map { |value| Integer(value) }.reject(&:zero?).uniq
-    rescue ArgumentError, TypeError
-      raise Discourse::InvalidParameters.new(
-              I18n.t("boards.errors.unknown_tag_ids", tag_ids: raw_values.join(",")),
-            )
     end
 
     def recency_at
@@ -114,17 +150,11 @@ module Boards
       topic&.title
     end
 
-    def unicode_resolved_title
+    def unicode_title
       Emoji.gsub_emoji_to_unicode(resolved_title)
     end
 
-    def unicode_title
-      Emoji.gsub_emoji_to_unicode(title)
-    end
-
     private
-
-    private_class_method :normalize_tag_id_values!, :tag_ids_missing_from_database
 
     def set_updated_by_id
       self.updated_by_id = created_by_id
@@ -159,7 +189,7 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  assigned_to_type   :string
-#  card_type          :integer          default("floater"), not null
+#  card_type          :integer          default(0), not null
 #  column_changed_at  :datetime         not null
 #  due_at             :datetime
 #  inline_onebox_data :jsonb

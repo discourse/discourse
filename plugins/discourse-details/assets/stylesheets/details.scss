@@ -23,6 +23,39 @@ details {
       background-color: rgb(var(--primary-rgb), 0.05);
     }
   }
+
+  &.ai-quote {
+    > summary {
+      display: flex;
+      align-items: center;
+
+      > span:first-child {
+        min-inline-size: 0;
+        margin-inline-end: auto;
+        overflow-wrap: anywhere;
+      }
+
+      > .ai-badge,
+      > .ai-details-label {
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+// Posts cooked before the shared badge keep this class until rebaked; nothing rebakes them automatically.
+.ai-details-label {
+  display: inline-block;
+  padding: 1px 6px;
+  background: var(--primary-high);
+  color: var(--secondary);
+  border: 1px solid transparent;
+  border-radius: var(--d-border-radius);
+  font-family: var(--font-family);
+  font-size: var(--font-down-1);
+  font-weight: 400;
+  line-height: var(--line-height-medium);
+  white-space: nowrap;
 }
 
 details.details__boxed {
@@ -50,7 +83,7 @@ summary:first-of-type {
 
 summary::before {
   content: "\25BA";
-  margin-right: 0.25em;
+  margin-inline-end: 0.25em;
 }
 
 details[open] > summary::before,

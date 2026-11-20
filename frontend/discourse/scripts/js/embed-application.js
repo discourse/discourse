@@ -22,6 +22,43 @@
     }
   }
 
+  // Poll for the topic to be created so we can render comments as soon as
+  // possible instead of waiting for the full meta-refresh interval.
+  //
+  // Use exponential backoff with full jitter so clients landing on the same
+  // article don't synchronise their polls (thundering herd on /embed/status).
+  // The poll URL is left cacheable so the shared anonymous response cache can
+  // serve concurrent polls instead of hitting the database.
+  const POLL_MIN_DELAY = 1500;
+  const POLL_MAX_DELAY = 10000;
+
+  function pollForTopic() {
+    let retryDelay = POLL_MIN_DELAY;
+
+    const scheduleNextPoll = () => {
+      const wait = Math.random() * retryDelay;
+      retryDelay = Math.min(retryDelay * 2, POLL_MAX_DELAY);
+      setTimeout(poll, wait);
+    };
+
+    const poll = () => {
+      const pollUrl = new URL(window.location.href);
+      pollUrl.pathname = pollUrl.pathname.replace(/\/comments$/, "/status");
+      fetch(pollUrl, { headers: { Accept: "application/json" } })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.topic_id) {
+            window.location.reload();
+            return;
+          }
+          scheduleNextPoll();
+        })
+        .catch(scheduleNextPoll);
+    };
+
+    scheduleNextPoll();
+  }
+
   window.onload = function () {
     // get state info from data attribute
     let embedState = document.querySelector("[data-embed-state]");
@@ -39,6 +76,10 @@
       state,
       embedId,
     });
+
+    if (state === "loading") {
+      pollForTopic();
+    }
 
     let postLinks = document.querySelectorAll("a[data-link-to-post]"),
       i;

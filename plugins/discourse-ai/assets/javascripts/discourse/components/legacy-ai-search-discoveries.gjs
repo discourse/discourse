@@ -16,8 +16,8 @@ import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import AiBlinkingAnimation from "./ai-blinking-animation";
-import AiIndicatorWave from "./ai-indicator-wave";
+import AiBlinkingAnimation from "./ai-blinking-animation.gjs";
+import AiIndicatorWave from "./ai-indicator-wave.gjs";
 
 export default class LegacyAiSearchDiscoveries extends Component {
   @service search;
@@ -46,29 +46,6 @@ export default class LegacyAiSearchDiscoveries extends Component {
       "full-page-search:trigger-search",
       this,
       this.triggerDiscovery
-    );
-  }
-
-  @bind
-  _updateDiscovery(update) {
-    if (this.query === update.query && !update.request_id) {
-      this.legacyDiscoveries.onDiscoveryUpdate(update);
-    }
-  }
-
-  @bind
-  unsubscribe() {
-    this.messageBus.unsubscribe(
-      "/discourse-ai/discoveries",
-      this._updateDiscovery
-    );
-  }
-
-  @bind
-  subscribe() {
-    this.messageBus.subscribe(
-      "/discourse-ai/discoveries",
-      this._updateDiscovery
     );
   }
 
@@ -135,6 +112,22 @@ export default class LegacyAiSearchDiscoveries extends Component {
     }
 
     return "discourse_ai.discobot_discoveries.legacy.continue_convo";
+  }
+
+  @bind
+  unsubscribe() {
+    this.messageBus.unsubscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
+  }
+
+  @bind
+  subscribe() {
+    this.messageBus.subscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
   }
 
   @action
@@ -204,6 +197,13 @@ export default class LegacyAiSearchDiscoveries extends Component {
     }
   }
 
+  @bind
+  _updateDiscovery(update) {
+    if (this.query === update.query && !update.request_id) {
+      this.legacyDiscoveries.onDiscoveryUpdate(update);
+    }
+  }
+
   <template>
     <div
       class="ai-search-discoveries"
@@ -229,17 +229,17 @@ export default class LegacyAiSearchDiscoveries extends Component {
             {{on "click" this.handleDiscoveryClick}}
           >
             <DCookText
-              @rawText={{this.legacyDiscoveries.streamedText}}
               class="cooked"
+              @rawText={{this.legacyDiscoveries.streamedText}}
             />
           </article>
 
           {{#if this.canShowExpandtoggle}}
             <DButton
               class="btn-flat btn-text ai-search-discoveries__toggle"
-              @label={{this.toggleLabel}}
-              @icon={{this.toggleIcon}}
               @action={{this.toggleDiscovery}}
+              @icon={{this.toggleIcon}}
+              @label={{this.toggleLabel}}
             />
           {{/if}}
         {{/if}}
@@ -248,9 +248,9 @@ export default class LegacyAiSearchDiscoveries extends Component {
       {{#if this.canContinueConversation}}
         <div class="ai-search-discoveries__continue-conversation">
           <DButton
+            class="btn-default btn-small"
             @action={{this.continueConversation}}
             @label={{this.continueConvoBtnLabel}}
-            class="btn-default btn-small"
           >
             <AiIndicatorWave @loading={{this.loadingConversationTopic}} />
           </DButton>

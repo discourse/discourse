@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
@@ -49,7 +50,7 @@ export default class WorkflowsUserModal extends Component {
     // While awaiting, the server's close_modal broadcast may have already
     // closed this modal — and the workflow may have shown the next one.
     // Closing again here would close that new modal instead.
-    if (!this.isDestroying && !this.isDestroyed) {
+    if (!this.isDestroying) {
       this.args.closeModal();
     }
   }
@@ -68,13 +69,18 @@ export default class WorkflowsUserModal extends Component {
 
   <template>
     <DModal
-      @title={{@model.title}}
-      @closeModal={{@closeModal}}
-      @beforeClose={{this.propagateDismissal}}
       class="workflows-user-modal"
+      @beforeClose={{this.propagateDismissal}}
+      @closeModal={{@closeModal}}
+      @hideFooter={{not this.buttons.length}}
+      @title={{@model.title}}
     >
       <:body>
-        {{#if @model.body}}
+        {{#if @model.cooked_body}}
+          <div class="workflows-user-modal__markdown cooked">{{trustHTML
+              @model.cooked_body
+            }}</div>
+        {{else if @model.body}}
           <p class="workflows-user-modal__body">{{@model.body}}</p>
         {{/if}}
       </:body>
@@ -82,9 +88,9 @@ export default class WorkflowsUserModal extends Component {
         {{#each this.buttons as |button|}}
           <DButton
             class={{button.styleClass}}
-            @translatedLabel={{button.label}}
             @action={{fn this.respond button}}
             @disabled={{this.submitting}}
+            @translatedLabel={{button.label}}
           />
         {{/each}}
       </:footer>

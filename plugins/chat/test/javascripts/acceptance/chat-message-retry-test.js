@@ -1,7 +1,11 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  controllerRateLimit,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 const CHANNEL_ID = 11;
 
@@ -56,6 +60,35 @@ acceptance("Retry message on send failure", function (needs) {
     assert
       .dom(".chat-message-error__retry-btn")
       .exists("shows the retry button after a network error");
+
+    await click(".chat-message-error__retry-btn");
+
+    assert
+      .dom(".chat-message-error__retry-btn")
+      .doesNotExist("clears the retry button after a successful resend");
+  });
+
+  test("keeps the message and offers a retry when rate limited", async function (assert) {
+    pretender.post(`/chat/${CHANNEL_ID}`, () => {
+      sendAttempt += 1;
+      return sendAttempt === 1
+        ? controllerRateLimit(1)
+        : response({ success: "OK" });
+    });
+
+    await visit(`/chat/c/-/${CHANNEL_ID}`);
+    await fillIn(".chat-composer__input", "hello there");
+    await click(".chat-composer .-send");
+
+    await waitFor(".chat-message-error__retry-btn");
+
+    assert
+      .dom(".chat-message-text")
+      .hasText("hello there", "keeps the message the user typed");
+
+    assert
+      .dom(".chat-message-error__retry-btn-title")
+      .hasText(i18n("chat.retry_staged_message.rate_limited_title"));
 
     await click(".chat-message-error__retry-btn");
 

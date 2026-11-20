@@ -1,4 +1,10 @@
-import { fillIn, render } from "@ember/test-helpers";
+import {
+  fillIn,
+  findAll,
+  render,
+  triggerEvent,
+  typeIn,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import CompactEventEditor from "discourse/plugins/discourse-events/discourse/components/compact-event-editor";
@@ -39,6 +45,46 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
         "https://meet.example.com/legacy",
         "a defined url is reachable on the compact screen, not just in advanced"
       );
+  });
+
+  test("offers a recording field once a livestream has ended", async function (assert) {
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2020-07-01T10:00:00Z"),
+        endsAt: moment("2020-07-01T11:00:00Z"),
+      })
+    );
+
+    assert.dom(".composer-event__recording-input").exists();
+  });
+
+  test("offers no recording field before a livestream has ended", async function (assert) {
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2099-07-01T10:00:00Z"),
+        endsAt: moment("2099-07-01T11:00:00Z"),
+      })
+    );
+
+    assert.dom(".composer-event__recording-input").doesNotExist();
+  });
+
+  test("emits the recording as it is typed", async function (assert) {
+    let state;
+    await renderEditor(
+      stateWith({
+        livestream: true,
+        startsAt: moment("2020-07-01T10:00:00Z"),
+        endsAt: moment("2020-07-01T11:00:00Z"),
+      }),
+      (newState) => (state = newState)
+    );
+
+    await fillIn(".composer-event__recording-input", "https://youtu.be/abc");
+
+    assert.strictEqual(state.recording, "https://youtu.be/abc");
   });
 
   test("offers no url row for an event that has none", async function (assert) {
@@ -171,5 +217,106 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
         "Add location",
         "location stops advertising URLs once url is a separate row"
       );
+  });
+
+  test("defaults the end date to the day after the start date", async function (assert) {
+    const initialState = stateWith({
+      allDay: true,
+      startsAt: moment("2027-07-14T00:00:00Z"),
+      endsAt: null,
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    assert
+      .dom(findAll(".composer-event__date-input")[1])
+      .hasAttribute("min", "2027-07-14");
+
+    const endDateInput = findAll(".composer-event__date-input")[1];
+    endDateInput.showPicker = () => {};
+    await triggerEvent(endDateInput, "focus");
+
+    assert.strictEqual(lastState.endsAt.format("YYYY-MM-DD"), "2027-07-15");
+    assert.dom(endDateInput).hasValue("2027-07-15");
+
+    const startDateInput = findAll(".composer-event__date-input")[0];
+    startDateInput.value = "2027-08-20";
+    await triggerEvent(startDateInput, "change");
+
+    assert
+      .dom(findAll(".composer-event__date-input")[1])
+      .hasAttribute("min", "2027-08-20");
+  });
+
+  test("clamps end an hour after start when the picked end time is not after start", async function (assert) {
+    const initialState = stateWith({
+      endsAt: moment("2026-07-01T12:00:00Z"),
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await fillIn(findAll(".composer-event__time-input")[1], "10:00");
+
+    assert.strictEqual(
+      lastState.endsAt.toISOString(),
+      "2026-07-01T11:00:00.000Z",
+      "an end time at or before start is pushed an hour past start"
+    );
+  });
+
+  test("the end date picker is bounded by the start date", async function (assert) {
+    const initialState = stateWith({
+      allDay: true,
+      startsAt: moment("2026-07-01"),
+      endsAt: null,
+    });
+    await renderEditor(initialState);
+
+    assert
+      .dom(findAll(".composer-event__date-input")[1])
+      .hasAttribute(
+        "min",
+        "2026-07-01",
+        "days before the start are greyed out"
+      );
+  });
+
+  test("picking the start day as the end day keeps a one-day all-day event", async function (assert) {
+    const initialState = stateWith({
+      allDay: true,
+      startsAt: moment("2026-07-01"),
+      endsAt: null,
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await fillIn(findAll(".composer-event__date-input")[1], "2026-07-01");
+
+    assert.strictEqual(
+      lastState.endsAt.format("YYYY-MM-DD"),
+      "2026-07-01",
+      "an equal boundary is a valid one-day range"
+    );
+    assert
+      .dom(findAll(".composer-event__date-input")[1])
+      .hasValue("2026-07-01", "the picked day stays in the field");
+  });
+
+  test("typing a multi-digit reminder value keeps every digit", async function (assert) {
+    const initialState = stateWith({
+      reminders: [
+        { type: "notification", value: 1, unit: "minutes", period: "before" },
+      ],
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await typeIn(".composer-event__reminder-value", "55");
+
+    assert.strictEqual(
+      lastState.reminders[0].value,
+      155,
+      "each keystroke lands in the reminder value"
+    );
   });
 });

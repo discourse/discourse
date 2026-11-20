@@ -30,7 +30,7 @@ module Boards
       title =
         I18n.t(
           "boards.onebox.inline_to_card",
-          card_name: card.unicode_resolved_title,
+          card_name: card.unicode_title,
           board_name: board.unicode_name,
         )
 

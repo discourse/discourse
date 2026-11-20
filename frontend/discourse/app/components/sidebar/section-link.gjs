@@ -9,11 +9,9 @@ import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
-import { eq, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import SectionLinkPrefix from "./section-link-prefix";
+import SectionLinkPrefix from "./section-link-prefix.gjs";
 
 /**
  * Checks if a given string is a valid color hex code.
@@ -43,6 +41,7 @@ export default class SectionLink extends Component {
   @service capabilities;
   @service currentUser;
   @service router;
+  @service sidebarState;
 
   @tracked hovering = false;
   @tracked hoverActionActive = false;
@@ -80,14 +79,6 @@ export default class SectionLink extends Component {
 
     if (this.args.linkClass) {
       classNames.push(this.args.linkClass);
-    }
-
-    if (this.args.class) {
-      deprecated("SectionLink's @class arg has been renamed to @linkClass", {
-        id: "discourse.section-link-class-arg",
-        since: "3.2.0.beta4",
-      });
-      classNames.push(this.args.class);
     }
 
     if (this.args.href && this.args.href === this.args.exactUrlMatch?.value) {
@@ -196,11 +187,48 @@ export default class SectionLink extends Component {
 
   @bind
   maybeScrollIntoView(element) {
+    this.#revealLink(element);
+  }
+
+  @bind
+  revealActiveLink(element) {
+    this.#revealLink(element, { force: true });
+  }
+
+  #revealLink(element, { force = false } = {}) {
     if (!this.args.scrollIntoView) {
       return;
     }
 
     schedule("afterRender", () => {
+      if (
+        this.isDestroying ||
+        !element.isConnected ||
+        !this.args.scrollIntoView
+      ) {
+        return;
+      }
+
+      const container = element.closest(".sidebar-sections");
+      const destination = element.querySelector("a")?.href;
+
+      // Reinserting the same destination in another section is not navigation.
+      if (
+        container &&
+        destination &&
+        !this.sidebarState.shouldRevealLink(container, destination, {
+          force,
+          linkRoute: this.args.route,
+        })
+      ) {
+        return;
+      }
+
+      if (!this.sidebarState.canScrollDownToActiveLink) {
+        scrollUpToReveal(element);
+        return;
+      }
+
       if (isFullyScrolledIntoView(element)) {
         return;
       }
@@ -215,30 +243,34 @@ export default class SectionLink extends Component {
   <template>
     {{#if this.shouldDisplay}}
       <li
+        class={{this.wrapperClass}}
+        data-list-item-name={{@linkName}}
+        ...attributes
         {{didInsert this.maybeScrollIntoView}}
-        {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
+        {{didUpdate
+          this.revealActiveLink
+          @scrollIntoView
+          this.sidebarState.canScrollDownToActiveLink
+        }}
         {{on "mouseenter" this.hoveringSectionLink}}
         {{on "mouseleave" this.stopHoveringSectionLink}}
-        data-list-item-name={{@linkName}}
-        class={{this.wrapperClass}}
-        ...attributes
       >
         {{#if @href}}
           <a
+            class={{this.linkClass}}
+            data-link-name={{@linkName}}
+            draggable={{if @suppressNativeDrag false}}
             href={{@href}}
             rel="noopener noreferrer"
             target={{this.target}}
-            draggable={{if @suppressNativeDrag false}}
             title={{@title}}
-            data-link-name={{@linkName}}
-            class={{this.linkClass}}
           >
             <SectionLinkPrefix
+              @prefixBadge={{@prefixBadge}}
+              @prefixColor={{this.prefixColor}}
+              @prefixCSSClass={{@prefixCSSClass}}
               @prefixType={{@prefixType}}
               @prefixValue={{@prefixValue}}
-              @prefixCSSClass={{@prefixCSSClass}}
-              @prefixColor={{this.prefixColor}}
-              @prefixBadge={{@prefixBadge}}
             />
 
             <span
@@ -279,11 +311,11 @@ export default class SectionLink extends Component {
             {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" this.runHoverAction}}
-                  type="button"
-                  title={{@hoverTitle}}
                   aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
+                  title={{@hoverTitle}}
+                  type="button"
+                  {{on "click" this.runHoverAction}}
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{dIcon @hoverValue class="hover-icon"}}
@@ -294,21 +326,21 @@ export default class SectionLink extends Component {
           </a>
         {{else}}
           <LinkTo
-            @route={{@route}}
-            @query={{or @query (hash)}}
-            @models={{this.models}}
-            @current-when={{this.resolvedCurrentWhen}}
+            class={{this.linkClass}}
+            data-link-name={{@linkName}}
             draggable={{if @suppressNativeDrag false}}
             title={{@title}}
-            data-link-name={{@linkName}}
-            class={{this.linkClass}}
+            @current-when={{this.resolvedCurrentWhen}}
+            @models={{this.models}}
+            @query={{or @query (hash)}}
+            @route={{@route}}
           >
             <SectionLinkPrefix
+              @prefixBadge={{@prefixBadge}}
+              @prefixColor={{this.prefixColor}}
+              @prefixCSSClass={{@prefixCSSClass}}
               @prefixType={{@prefixType}}
               @prefixValue={{@prefixValue}}
-              @prefixCSSClass={{@prefixCSSClass}}
-              @prefixColor={{this.prefixColor}}
-              @prefixBadge={{@prefixBadge}}
             />
 
             <span
@@ -348,11 +380,11 @@ export default class SectionLink extends Component {
             {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" this.runHoverAction}}
-                  type="button"
-                  title={{@hoverTitle}}
                   aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
+                  title={{@hoverTitle}}
+                  type="button"
+                  {{on "click" this.runHoverAction}}
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{dIcon @hoverValue class="hover-icon"}}
@@ -365,6 +397,28 @@ export default class SectionLink extends Component {
       </li>
     {{/if}}
   </template>
+}
+
+function scrollUpToReveal(element) {
+  let node = element.parentElement;
+
+  while (node && node !== document.body) {
+    const { overflowY } = getComputedStyle(node);
+
+    if (overflowY === "auto" || overflowY === "scroll") {
+      const bounds = node.getBoundingClientRect();
+      const scale = bounds.height / node.offsetHeight || 1;
+      const offset =
+        (element.getBoundingClientRect().top - bounds.top) / scale -
+        node.clientTop;
+
+      if (offset < 0) {
+        node.scrollTop += offset;
+      }
+    }
+
+    node = node.parentElement;
+  }
 }
 
 function isFullyScrolledIntoView(element) {

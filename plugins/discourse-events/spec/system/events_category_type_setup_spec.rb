@@ -5,7 +5,7 @@ RSpec.describe "Events Category Type Setup" do
 
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
-  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+  let(:banner) { PageObjects::Components::DFloatingControlBar.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
   before do

@@ -15,22 +15,6 @@ export default class EverythingSectionLink extends BaseSectionLink {
     this.#refreshCounts();
   }
 
-  onTopicTrackingStateChange() {
-    this.#refreshCounts();
-  }
-
-  #refreshCounts() {
-    if (!this.currentUser) {
-      return;
-    }
-
-    this.totalUnread = this.topicTrackingState.countUnread();
-
-    if (this.totalUnread === 0 || this.#unifiedNewEnabled) {
-      this.totalNew = this.topicTrackingState.countNew();
-    }
-  }
-
   get showCount() {
     return this.currentUser?.sidebarShowCountOfNewItems;
   }
@@ -113,5 +97,21 @@ export default class EverythingSectionLink extends BaseSectionLink {
 
   get #unifiedNewEnabled() {
     return !!this.currentUser?.unified_new_enabled;
+  }
+
+  onTopicTrackingStateChange() {
+    this.#refreshCounts();
+  }
+
+  #refreshCounts() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.totalUnread = this.topicTrackingState.countUnread();
+
+    if (this.totalUnread === 0 || this.#unifiedNewEnabled) {
+      this.totalNew = this.topicTrackingState.countNew();
+    }
   }
 }

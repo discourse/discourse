@@ -40,6 +40,8 @@ nl:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Evenementherinnering"
   site_settings:
     map_events_to_color: "Wijs een kleur toe aan elke tag of categorie."
     map_events_title: "Overschrijft 'Evenementen' in de zijbalktitel 'Aankomende evenementen' per categorie."
@@ -69,6 +71,15 @@ nl:
     sidebar_show_upcoming_events: "Geef een link naar aankomende evenementen weer in de zijbalk onder 'Meer'."
     calendar_first_day_of_week: "Stel de eerste dag van de week in voor de kalenderweergave. Opties zijn zaterdag, zondag en maandag."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} gaat beginnen"
+        ongoing: "%{title} is gaande"
+        after: "%{title} is afgelopen"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  en %{count} ander"
+        other: "  en %{count} anderen"
     category_type:
       default_calendar_view:
         day: "Dag"
@@ -103,11 +114,9 @@ nl:
           raw_invitees_length: "Een evenement is beperkt tot %{count} gebruikers/groepen."
           raw_invitees:
             only_group: "Een evenement accepteert alleen groepsnamen."
-          ends_at_before_starts_at: "Een evenement kan niet eindigen voordat het begint."
           max_attendees_reached: "Dit evenement is vol."
           start_must_be_present_and_a_valid_date: "Een evenement vereist een geldige begindatum."
           end_must_be_a_valid_date: "Einddatum moet een geldige datum zijn."
-          invalid_recurrence: "Herhaling moet een van de volgende zijn: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Tijdzone niet herkend."
           acting_user_not_allowed_to_create_event: "Huidige gebruiker mag geen evenementen maken."
           acting_user_not_allowed_to_act_on_this_event: "Huidige gebruiker mag niets doen met dit evenement."

@@ -21,19 +21,19 @@ export default class RejectReasonReviewableModal extends Component {
 
   <template>
     <DModal
+      class="reject-reason-reviewable-modal"
       @bodyClass="reject-reason-reviewable-modal__explain-reviewable"
       @closeModal={{@closeModal}}
       @title={{i18n "review.reject_reason.title"}}
-      class="reject-reason-reviewable-modal"
     >
       <:body>
         <Textarea @value={{this.rejectReason}} />
         <div class="control-group">
           <label>
             <Input
-              @type="checkbox"
               class="reject-reason-reviewable-modal__send_email--inline"
               @checked={{this.sendEmail}}
+              @type="checkbox"
             />
             {{i18n "review.reject_reason.send_email"}}
           </label>
@@ -42,12 +42,12 @@ export default class RejectReasonReviewableModal extends Component {
 
       <:footer>
         <DButton
-          @icon="trash-can"
-          @action={{this.perform}}
-          @label="admin.user.delete"
           class="btn-danger"
+          @action={{this.perform}}
+          @icon="trash-can"
+          @label="admin.user.delete"
         />
-        <DButton @action={{@closeModal}} @label="cancel" class="cancel" />
+        <DButton class="cancel" @action={{@closeModal}} @label="cancel" />
       </:footer>
     </DModal>
   </template>

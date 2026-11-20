@@ -7,7 +7,7 @@ RSpec.describe AllowedIpAddressValidator do
   let(:validator) { described_class.new(attributes: :ip_address) }
 
   context "when ip address should be blocked" do
-    it "should add an error" do
+    it "adds an error" do
       ScreenedIpAddress.stubs(:should_block?).returns(true)
       validate
       expect(record.errors[:ip_address]).to be_present
@@ -18,7 +18,7 @@ RSpec.describe AllowedIpAddressValidator do
   end
 
   context "when ip address isn't allowed for registration" do
-    it "should add an error" do
+    it "adds an error" do
       SpamHandler.stubs(:should_prevent_registration_from_ip?).returns(true)
       validate
       expect(record.errors[:ip_address]).to be_present
@@ -31,7 +31,7 @@ RSpec.describe AllowedIpAddressValidator do
   end
 
   context "when ip address should not be blocked" do
-    it "shouldn't add an error" do
+    it "does not add an error" do
       ScreenedIpAddress.stubs(:should_block?).returns(false)
       validate
       expect(record.errors[:ip_address]).not_to be_present
@@ -39,7 +39,7 @@ RSpec.describe AllowedIpAddressValidator do
   end
 
   context "when ip_address is nil" do
-    it "shouldn't add an error" do
+    it "does not add an error" do
       ScreenedIpAddress.expects(:should_block?).never
       record.ip_address = nil
       validate

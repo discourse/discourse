@@ -49,7 +49,7 @@ RSpec.describe Jobs::ReviewablePriorities do
       let(:high_threshold) { 13.0 }
       let(:score_to_hide_post) { 8.66 }
 
-      it "will set priorities based on the maximum score" do
+      it "sets priorities based on the maximum score" do
         other_reviewable.destroy!
         Jobs::ReviewablePriorities.new.execute({})
 

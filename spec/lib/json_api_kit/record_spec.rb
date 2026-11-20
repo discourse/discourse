@@ -23,20 +23,21 @@ RSpec.describe JsonApiKit::Record do
       attribute :username
     end
   end
-  let(:row) { JsonApiKit::Pagination::Row.new(record: topic, segment: nil) }
+  let(:row) { JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: topic, segment: nil) }
   let(:author_record) do
     described_class.new(
-      JsonApiKit::Pagination::Row.new(record: author, segment: nil),
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: author, segment: nil),
       users_resource.fields(guardian:),
       type: "users",
     )
   end
   let(:relationships) { {} }
   let(:namespace) { nil }
+  let(:title) { JsonApiKit::Name::Field.new(value: "title", type: "topics") }
 
   describe "#attributes" do
     it "renders the fields that the resource declares" do
-      expect(record.attributes).to eq("title" => topic.title)
+      expect(record.attributes).to eq(title => topic.title)
     end
   end
 
@@ -98,7 +99,7 @@ RSpec.describe JsonApiKit::Record do
     end
 
     it "renders its own fields" do
-      expect(merged.attributes).to eq("title" => topic.title)
+      expect(merged.attributes).to eq(title => topic.title)
     end
 
     it "leaves this record unchanged" do

@@ -81,8 +81,6 @@ fa_IR:
           other: "آیا مطمئنید که می خواهید این %{count} پیام را حذف کنید؟"
       channel_settings:
         title: "تنظیمات کانال"
-        edit: "ویرایش"
-        add: "اضافه کردن"
         close_channel: "بستن کانال"
         open_channel: "باز کردن کانال"
         archive_channel: "بایگانی کانال"
@@ -115,7 +113,6 @@ fa_IR:
         process_started: "روند حذف کانال شروع شده است. این پنجره به زودی بسته می شود، دیگر کانال حذف شده را در هیچ کجا نخواهید دید."
       channels_list_popup:
         browse: "مرور کانال‌ها"
-        create: "کانال جدید"
       close: "بستن"
       remove: "پاک کردن"
       collapse: "جمع کردن کشو چت"
@@ -130,8 +127,6 @@ fa_IR:
       muted: "خاموش"
       joined: "ملحق شده"
       empty_state:
-        direct_message_cta: "شروع گفتگوی شخصی"
-        direct_message: "شما همچنین می‌توانید یک گفتگو شخصی را با یک یا چند کاربر شروع کنید."
         title: "هیچ کانالی پیدا نشد"
         my_threads: "شما هنوز هیچ موضوعی ندارید. موضوعاتی که در آنها شرکت می کنید در اینجا نمایش داده می شوند."
       email_frequency:
@@ -222,7 +217,6 @@ fa_IR:
       about_view:
         associated_topic: موضوع مرتبط
         associated_category: دسته‌بندی مرتبط
-        title: عنوان
         name: نام
         description: توضیح
       channel_info:
@@ -230,19 +224,18 @@ fa_IR:
         back_to_channel: "بازگشت"
         tabs:
           members: اعضاء
+          preferences: تنظیمات
           settings: تنظیمات
           search: جستجو
         remove_member: "پاک کردن"
+        members_title: "%{channel} عضو"
       new_message_modal:
         filter: "فیلتر"
       channel_edit_name_slug_modal:
-        title: ویرایش کانال
         input_placeholder: افزودن نام
         name: نام کانال
       channel_edit_description_modal:
-        title: ویرایش توضیحات
         input_placeholder: افزودن توضیحات
-        description: به بقیه افراد بگویید که این کانال در مورد چی هست
       direct_message_creator:
         add_to_channel: "افزودن به کانال"
         title: پیام جدید
@@ -283,11 +276,11 @@ fa_IR:
         always: "برای تمام فعالیت‌ها"
       settings:
         channel_wide_mentions_label: "اجازه داده به استفاده از اشاره @all و @here"
-        channel_wide_mentions_description: "به کاربران اجازه دهید به همه اعضای #%{channel} با @all یا فقط افرادی که در حال حاضر فعال هستند با @here، آگاه‌سازی کنند."
         auto_join_users_label: "افزودن خودکار کاربران"
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
+        muted_until_hint: "تا %{until}"
         threading_disabled: "غیرفعال"
         muted_on: "روشن"
         muted_off: "خاموش"
@@ -296,8 +289,6 @@ fa_IR:
         save: "ذخیره کردن"
         saved: "ذخیره شد"
         unfollow: "ترک کردن"
-        admin_title: "مدیر کل"
-        settings_title: "تنظیمات"
         category_label: "دسته‌بندی"
         history_label: "تاریخچه"
         members_label: "اعضاء"
@@ -310,9 +301,13 @@ fa_IR:
           relevance: "ارتباطات"
           latest: "آخرین"
       direct_messages:
-        new: "ایجاد گفتگوی شخصی"
         create: "برو"
         cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
+      channel_list:
+        options:
+          filter: "فیلتر"
+        filter:
+          mentions: "اشاره‌ها"
       incoming_webhooks:
         back: "بازگشت"
         channel_placeholder: "یک کانال را انتخاب کنید"
@@ -350,16 +345,6 @@ fa_IR:
         short:
           one: "%{count} روز"
           other: "%{count} روز"
-      emoji_picker:
-        favorites: "اغلب استفاده می‌شه"
-        objects: "اشیا"
-        people_&_body: "مردم و بدن"
-        travel_&_places: "سفر و مکان‌ها"
-        animals_&_nature: "حیوانات و طبیعت"
-        activities: "فعالیت ها"
-        flags: "پرچم‌ها"
-        symbols: "نشانه ها"
-        no_results: "هیج نتیجه‌ای نداشت"
       thread:
         title: "عنوان"
         view_thread: مشاهده موضوع
@@ -431,8 +416,6 @@ fa_IR:
         chat:
           title: گفتگو
     sidebar:
-      start_new_dm:
-        title: ایجاد گفتگوی شخصی
       panels:
         chat:
           label: "گفتگو"
@@ -440,8 +423,11 @@ fa_IR:
       chat_message_created:
         channel_id: "کانال"
       send_chat_message:
+        targets:
+          channel: "کانال"
         channel_id: "کانال"
         message: "پیام"
+        actor_username: "فرستنده"
       chat_approval:
         message: "پیام"
         buttons: "دکمه‌ها"

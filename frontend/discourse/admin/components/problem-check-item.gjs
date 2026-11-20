@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { notEq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
@@ -66,7 +65,7 @@ export default class ProblemCheckItem extends Component {
         <div class="d-table__mobile-label">{{i18n
             "admin.config.problem_checks.target"
           }}</div>
-        {{#if (notEq @tracker.target "__NULL__")}}
+        {{#if (neq @tracker.target "__NULL__")}}
           {{@tracker.target}}
         {{/if}}
       </td>
@@ -82,17 +81,17 @@ export default class ProblemCheckItem extends Component {
         <div class="d-table__cell-actions">
           {{#if @tracker.ignored}}
             <DButton
-              @action={{fn this.watch @tracker}}
-              @label="admin.config.problem_checks.watch"
-              @icon="eye"
               class="btn-default btn-small"
+              @action={{fn this.watch @tracker}}
+              @icon="eye"
+              @label="admin.config.problem_checks.watch"
             />
           {{else}}
             <DButton
-              @action={{fn this.ignore @tracker}}
-              @label="admin.config.problem_checks.ignore"
-              @icon="eye-slash"
               class="btn-default btn-small"
+              @action={{fn this.ignore @tracker}}
+              @icon="eye-slash"
+              @label="admin.config.problem_checks.ignore"
             />
           {{/if}}
         </div>

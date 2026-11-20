@@ -35,6 +35,8 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::SEARCH,
               enabled_by_setting: "ai_discover_enabled",
               visible_if: -> { SiteSetting.ai_discover_enabled },
+              # Discover is deprecated: once turned off it is hidden and cannot be re-enabled.
+              toggleable: false,
             ),
             new(
               "ask_ai",
@@ -43,6 +45,9 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::SEARCH,
               enabled_by_setting: "ai_ask_ai_enabled",
               agent_ids_lookup: -> { lookup_ask_ai_agent_ids },
+              metadata_lookup: -> do
+                decision_model_metadata(DiscourseAi::Discoveries::Intent.decision_model)
+              end,
             ),
           ]
         end
@@ -54,6 +59,10 @@ module DiscourseAi
               "ai_discord_search_agent",
               DiscourseAi::Configuration::Module::DISCORD_ID,
               DiscourseAi::Configuration::Module::DISCORD,
+              agentless_if: -> { !DiscourseAi::Discord.agent_mode? },
+              metadata_lookup: -> do
+                DiscourseAi::Discord.agent_mode? ? {} : { agentless_note: "forum_search" }
+              end,
             ),
           ]
         end
@@ -88,48 +97,67 @@ module DiscourseAi
               "ai_helper_proofreader_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
+              access_by_agent_groups: true,
             ),
             new(
               "title_suggestions",
               "ai_helper_title_suggestions_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
+              access_by_agent_groups: true,
             ),
             new(
               "explain",
               "ai_helper_explain_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
+              access_by_agent_groups: true,
             ),
             new(
               "smart_dates",
               "ai_helper_smart_dates_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
+              access_by_agent_groups: true,
             ),
             new(
               "markdown_tables",
               "ai_helper_markdown_tables_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
+              access_by_agent_groups: true,
             ),
             new(
               "translator",
               "ai_helper_translator_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
+              access_by_agent_groups: true,
             ),
             new(
               "custom_prompt",
               "ai_helper_custom_prompt_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
+              access_by_agent_groups: true,
             ),
             new(
               "post_illustrator",
               "ai_helper_post_illustrator_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
+              access_by_agent_groups: true,
+              metadata_lookup: -> do
+                tools =
+                  AiAgent.find_by(
+                    id: SiteSetting.ai_helper_post_illustrator_agent,
+                  )&.automatic_image_tools
+                tools.nil? ? {} : { automatic_image_tools: tools }
+              end,
+              setup_note_lookup: -> do
+                agent = AiAgent.find_by(id: SiteSetting.ai_helper_post_illustrator_agent)
+                "no_image_generation_tool" if !agent&.has_image_generation_tool?
+              end,
             ),
             new(
               "chat_thread_titles",
@@ -150,6 +178,7 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::BOT,
               agent_ids_lookup: -> { lookup_bot_agent_ids },
               llm_models_lookup: -> { lookup_bot_llms },
+              metadata_lookup: -> { { chatbot_agents: chatbot_agents_metadata } },
             ),
           ]
         end
@@ -161,6 +190,28 @@ module DiscourseAi
               "ai_image_caption_agent",
               DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
               DiscourseAi::Configuration::Module::IMAGE_CAPTION,
+            ),
+          ]
+        end
+
+        def review_queue_model
+          DecisionModel.find_by(id: SiteSetting.ai_reviewable_action_decision_model.presence)
+        end
+
+        def review_queue_features
+          feature_cache[:review_queue] ||= [
+            new(
+              "reviewable_action",
+              nil,
+              DiscourseAi::Configuration::Module::REVIEW_QUEUE_ID,
+              DiscourseAi::Configuration::Module::REVIEW_QUEUE,
+              metadata_lookup: -> do
+                model = review_queue_model
+                decision_model_metadata(model).merge(
+                  backend: "decision_model",
+                  ready: model.present?,
+                )
+              end,
             ),
           ]
         end
@@ -181,10 +232,32 @@ module DiscourseAi
         def embeddings_features
           feature_cache[:embeddings] ||= [
             new(
+              "related_topics",
+              nil,
+              DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
+              DiscourseAi::Configuration::Module::EMBEDDINGS,
+              enabled_by_setting: "ai_embeddings_semantic_related_topics_enabled",
+            ),
+            new(
+              "semantic_search",
+              nil,
+              DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
+              DiscourseAi::Configuration::Module::EMBEDDINGS,
+              enabled_by_setting: "ai_embeddings_semantic_search_enabled",
+            ),
+            new(
+              "quick_search",
+              nil,
+              DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
+              DiscourseAi::Configuration::Module::EMBEDDINGS,
+              enabled_by_setting: "ai_embeddings_semantic_quick_search_enabled",
+            ),
+            new(
               "hyde",
               "ai_embeddings_semantic_search_hyde_agent",
               DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
               DiscourseAi::Configuration::Module::EMBEDDINGS,
+              enabled_by_setting: "ai_embeddings_semantic_search_use_hyde",
             ),
           ]
         end
@@ -202,9 +275,31 @@ module DiscourseAi
           ]
         end
 
+        def sentiment_features
+          feature_cache[:sentiment] ||= %w[sentiment emotion].map do |type|
+            summary = -> { DiscourseAi::Sentiment::PostClassification.classifier_summary_for(type) }
+
+            new(
+              type,
+              "ai_sentiment_#{type}_agent",
+              DiscourseAi::Configuration::Module::SENTIMENT_ID,
+              DiscourseAi::Configuration::Module::SENTIMENT,
+              enabled_by_setting:
+                type == "sentiment" ? "ai_sentiment_enabled" : "ai_sentiment_emotion_enabled",
+              agent_ids_lookup: -> { summary.call.fetch(:agent_ids, []) },
+              llm_models_lookup: -> { summary.call.fetch(:llm_models, []) },
+              metadata_lookup: -> do
+                summary.call.slice(:backend, :ready, :decision_model, :classification_model)
+              end,
+            )
+          end
+        end
+
+        # Agents people can talk to, matching what the chatbot offers: it needs a bot user.
         def lookup_bot_agent_ids
           AiAgent
             .where(enabled: true)
+            .where.not(user_id: nil)
             .where.not(id: SiteSetting.ai_image_caption_agent.to_i)
             .where(
               "allow_chat_channel_mentions OR allow_chat_direct_messages OR allow_topic_mentions OR allow_personal_messages",
@@ -212,10 +307,54 @@ module DiscourseAi
             .pluck(:id)
         end
 
+        # Every enabled agent that could be a chatbot, with where people can reach it.
+        def chatbot_agents_metadata
+          agents =
+            AiAgent
+              .where(enabled: true)
+              .where.not(id: SiteSetting.ai_image_caption_agent.to_i)
+              .order(:name)
+              .select(&:supports_bot_user?)
+          chatbot_ids = lookup_bot_agent_ids.to_set
+          group_names =
+            Group.where(id: agents.flat_map(&:allowed_group_ids).uniq).pluck(:id, :name).to_h
+          llm_names =
+            LlmModel.where(id: agents.filter_map(&:default_llm_id)).pluck(:id, :display_name).to_h
+
+          agents.map do |agent|
+            {
+              id: agent.id,
+              name: agent.name,
+              chatbot: chatbot_ids.include?(agent.id),
+              personal_messages: agent.allow_personal_messages,
+              topic_mentions: agent.allow_topic_mentions,
+              chat_direct_messages: agent.allow_chat_direct_messages,
+              chat_channel_mentions: agent.allow_chat_channel_mentions,
+              allowed_groups:
+                agent.allowed_group_ids.filter_map do |id|
+                  { id:, name: group_names[id] } if group_names[id]
+                end,
+              llm:
+                if (name = llm_names[agent.default_llm_id])
+                  { id: agent.default_llm_id, name: }
+                end,
+            }
+          end
+        end
+
+        # A decision model that works alongside the feature's agents, which still handle what it
+        # cannot decide.
+        def decision_model_metadata(decision_model)
+          return {} if decision_model.blank?
+
+          { decision_model: { id: decision_model.id, display_name: decision_model.display_name } }
+        end
+
         def lookup_ask_ai_agent_ids
           [
             SiteSetting.ai_ask_ai_agent,
             SiteSetting.ai_ask_ai_query_rewriter_agent,
+            SiteSetting.ai_ask_ai_report_agent,
             SiteSetting.ai_ask_ai_follow_up_agent,
           ].map(&:to_i).reject(&:zero?).uniq
         end
@@ -234,6 +373,11 @@ module DiscourseAi
               "ai_translation_locale_detector_agent",
               DiscourseAi::Configuration::Module::TRANSLATION_ID,
               DiscourseAi::Configuration::Module::TRANSLATION,
+              metadata_lookup: -> do
+                decision_model_metadata(
+                  DiscourseAi::Translation::DecisionLocaleDetector.decision_model,
+                )
+              end,
             ),
             new(
               "post_raw_translator",
@@ -353,9 +497,11 @@ module DiscourseAi
             image_caption_features,
             translation_features,
             bot_features,
+            review_queue_features,
             spam_features,
             embeddings_features,
             admin_dashboard_features,
+            sentiment_features,
             ai_automation_report_scripts,
             ai_automation_triage_scripts,
           ].flatten
@@ -370,6 +516,9 @@ module DiscourseAi
               module_id,
               entry[:module_name].to_s,
               enabled_by_setting: entry[:enabled_by_setting],
+              metadata_lookup: -> do
+                entry[:entry_point] ? { entry_point: entry[:entry_point] } : {}
+              end,
             )
           end
 
@@ -389,8 +538,13 @@ module DiscourseAi
         enabled_by_setting: "",
         agent_ids_lookup: nil,
         llm_models_lookup: nil,
+        metadata_lookup: nil,
         require_enabled_agent: false,
-        visible_if: nil
+        visible_if: nil,
+        toggleable: true,
+        access_by_agent_groups: false,
+        setup_note_lookup: nil,
+        agentless_if: nil
       )
         @name = name
         @agent_setting = agent_setting
@@ -399,8 +553,17 @@ module DiscourseAi
         @enabled_by_setting = enabled_by_setting
         @agent_ids_lookup = agent_ids_lookup
         @llm_models_lookup = llm_models_lookup
+        @metadata_lookup = metadata_lookup
         @require_enabled_agent = require_enabled_agent
         @visible_if = visible_if
+        @toggleable = toggleable
+        @access_by_agent_groups = access_by_agent_groups
+        @setup_note_lookup = setup_note_lookup
+        @agentless_if = agentless_if
+      end
+
+      def metadata
+        @metadata_lookup ? @metadata_lookup.call : {}
       end
 
       def llm_models
@@ -445,12 +608,41 @@ module DiscourseAi
         @visible_if.blank? || @visible_if.call
       end
 
+      def toggle_setting
+        @enabled_by_setting.presence if @toggleable
+      end
+
+      # Whether the feature works without an agent, such as embeddings lookups.
+      def agentless?
+        return @agentless_if.call if @agentless_if
+
+        agent_setting.blank? && @agent_ids_lookup.nil? && @metadata_lookup.nil?
+      end
+
+      # Whether users can only use the feature when they are in its agent's allowed groups.
+      def access_by_agent_groups?
+        @access_by_agent_groups
+      end
+
+      # @return [String, nil] why the feature cannot work until something else is set up
+      def setup_note
+        @setup_note_lookup&.call
+      end
+
       def enabled?
+        return false if setup_note.present?
+        return false if access_by_agent_groups? && !agents_have_allowed_groups?
         return agent_enabled? if @enabled_by_setting.blank?
         return false unless SiteSetting.respond_to?(@enabled_by_setting)
         return false if !SiteSetting.get(@enabled_by_setting)
 
         agent_enabled?
+      end
+
+      def agents_have_allowed_groups?
+        agent_ids.any? do |agent_id|
+          AiAgent.find_by_id_from_cache(agent_id)&.allowed_group_ids.present?
+        end
       end
 
       def agent_enabled?
@@ -462,7 +654,7 @@ module DiscourseAi
         if @agent_ids_lookup
           @agent_ids_lookup.call
         else
-          return [] unless SiteSetting.respond_to?(agent_setting)
+          return [] if agent_setting.blank? || !SiteSetting.respond_to?(agent_setting)
           id = SiteSetting.get(agent_setting).to_i
           id != 0 ? [id] : []
         end

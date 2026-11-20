@@ -14,6 +14,9 @@ th:
               staff: "ทีมงาน"
               member: "สมาชิก"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "ป้าย"
     notifications:
       alt:
         solved:

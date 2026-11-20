@@ -1,15 +1,304 @@
 import { getOwner } from "@ember/owner";
-import { fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  clearRender,
+  click,
+  fillIn,
+  find,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DockedComposer from "discourse/components/docked-composer";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | DockedComposer", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     pretender.get("/emojis/search-aliases.json", () => response([]));
+  });
+
+  test("submits typing time without counting time spent idle", async function (assert) {
+    const clock = fakeTime("2026-11-16T00:00:00", null, true);
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return { ok: true };
+    };
+
+    try {
+      await render(
+        <template>
+          <DockedComposer
+            @composerEvents={{false}}
+            @draftKey="test-typing-time"
+            @onSubmit={{handleSubmit}}
+          />
+        </template>
+      );
+
+      clock.tick(10_000);
+      await fillIn(".d-editor-input", "First");
+      await fillIn(".d-editor-input", "First comment");
+      await fillIn(".d-editor-input", "First comment complete");
+      clock.tick(10_000);
+      await click(".docked-composer__submit-btn");
+
+      assert.strictEqual(
+        submission.typingTime,
+        300,
+        "idle time does not count as typing"
+      );
+    } finally {
+      clock.restore();
+    }
+  });
+
+  test("retains timing after a rejected submission and resets it after success", async function (assert) {
+    const submissions = [];
+    const handleSubmit = (data) => {
+      submissions.push(data);
+      return submissions.length > 1;
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-typing-retry"
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+
+    await fillIn(".d-editor-input", "First comment");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[0].typingTime,
+      100,
+      "the first attempt includes its typing time"
+    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("First comment", "rejected submission keeps the comment");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[1].typingTime,
+      submissions[0].typingTime,
+      "retry keeps the recorded typing time"
+    );
+
+    await fillIn(".d-editor-input", "Second");
+    await fillIn(".d-editor-input", "Second comment");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[2].typingTime,
+      200,
+      "the next comment starts with fresh timing"
+    );
+  });
+
+  test("replacing the text starts a fresh typing measurement", async function (assert) {
+    let composerApi;
+    let submission;
+    const registerApi = (api) => {
+      composerApi = api;
+    };
+    const handleSubmit = (data) => {
+      submission = data;
+      return { ok: true };
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-replace-typing"
+          @onRegisterApi={{registerApi}}
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+
+    await fillIn(".d-editor-input", "A discarded reply");
+    composerApi.setReply("An existing post");
+    await settled();
+    await fillIn(".d-editor-input", "An existing post edited");
+    await click(".docked-composer__submit-btn");
+
+    assert.strictEqual(
+      submission.typingTime,
+      100,
+      "only the edit counts toward the new measurement"
+    );
+  });
+
+  test("counts every input when keystrokes arrive within 100 milliseconds", async function (assert) {
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return { ok: true };
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-rapid-typing"
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+
+    const editor = find(".d-editor-input");
+    for (const character of "hello") {
+      editor.value += character;
+      editor.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    await settled();
+    await click(".docked-composer__submit-btn");
+
+    assert.strictEqual(
+      submission.raw,
+      "hello",
+      "the rapid input reaches the submitted comment"
+    );
+    assert.strictEqual(
+      submission.typingTime,
+      500,
+      "each input counts like the regular composer"
+    );
+  });
+
+  test("restores typing time when the composer is recreated", async function (assert) {
+    const submissions = [];
+    const handleSubmit = (data) => {
+      submissions.push(data);
+      return submissions.length > 1;
+    };
+    const composer = <template>
+      <DockedComposer
+        @composerEvents={{false}}
+        @draftKey="test-restored-draft-timing"
+        @onSubmit={{handleSubmit}}
+      />
+    </template>;
+
+    await render(composer);
+    await fillIn(".d-editor-input", "First");
+    await fillIn(".d-editor-input", "First draft");
+    await fillIn(".d-editor-input", "First draft ready");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[0].typingTime,
+      300,
+      "the draft has recorded typing time"
+    );
+
+    await clearRender();
+    await render(composer);
+    assert
+      .dom(".d-editor-input")
+      .hasValue("First draft ready", "the draft text is restored");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[1].typingTime,
+      300,
+      "the restored draft retains its typing time"
+    );
+
+    await clearRender();
+    await render(composer);
+    assert
+      .dom(".d-editor-input")
+      .hasValue("", "successful submission clears the saved draft");
+    await fillIn(".d-editor-input", "A new comment");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submissions[2].typingTime,
+      100,
+      "a new comment has fresh timing"
+    );
+  });
+
+  test("ignores saved timing when an older client changes the draft text", async function (assert) {
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return false;
+    };
+    const composer = <template>
+      <DockedComposer
+        @composerEvents={{false}}
+        @draftKey="test-changed-legacy-draft"
+        @onSubmit={{handleSubmit}}
+      />
+    </template>;
+
+    await render(composer);
+    await fillIn(".d-editor-input", "First");
+    await fillIn(".d-editor-input", "First draft");
+    await fillIn(".d-editor-input", "First draft ready");
+    await clearRender();
+
+    const changedDraft = "A different draft from an older client";
+    this.owner.lookup("service:key-value-store").set({
+      key: "test-changed-legacy-draft",
+      value: changedDraft,
+    });
+    await render(composer);
+    await click(".docked-composer__submit-btn");
+
+    assert.strictEqual(
+      submission.raw,
+      changedDraft,
+      "the changed draft text is preserved"
+    );
+    assert.strictEqual(
+      submission.typingTime,
+      0,
+      "another draft's timing is not reused"
+    );
+  });
+
+  test("restores existing text only drafts without interpreting their contents", async function (assert) {
+    const legacyDraft = '{"reply":"legacy draft text","typingTime":9000}';
+    this.owner.lookup("service:key-value-store").set({
+      key: "test-legacy-draft-timing",
+      value: legacyDraft,
+    });
+    let submission;
+    const handleSubmit = (data) => {
+      submission = data;
+      return false;
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-legacy-draft-timing"
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(legacyDraft, "the original draft is preserved exactly");
+    await click(".docked-composer__submit-btn");
+    assert.strictEqual(
+      submission.raw,
+      legacyDraft,
+      "JSON text remains comment content"
+    );
+    assert.strictEqual(
+      submission.typingTime,
+      0,
+      "missing historical timing is not fabricated"
+    );
   });
 
   test("submits on bare Enter by default", async function (assert) {
@@ -22,9 +311,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
           @composerEvents={{false}}
           @draftKey="test-submit-enter"
+          @onSubmit={{handleSubmit}}
         />
       </template>
     );
@@ -48,9 +337,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
           @composerEvents={{false}}
           @draftKey="test-send-shortcut-option"
+          @onSubmit={{handleSubmit}}
         />
       </template>
     );
@@ -81,9 +370,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
           @composerEvents={{false}}
           @draftKey="test-send-shortcut-ctrl"
+          @onSubmit={{handleSubmit}}
         />
       </template>
     );
@@ -109,10 +398,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
-          @submitOnEnter={{true}}
           @composerEvents={{false}}
           @draftKey="test-send-shortcut-override"
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{true}}
         />
       </template>
     );
@@ -136,10 +425,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
-          @submitOnEnter={{false}}
           @composerEvents={{false}}
           @draftKey="test-no-submit-enter"
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{false}}
         />
       </template>
     );
@@ -163,10 +452,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
-          @submitOnEnter={{false}}
           @composerEvents={{false}}
           @draftKey="test-ctrl-enter"
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{false}}
         />
       </template>
     );
@@ -189,10 +478,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @onSubmit={{handleSubmit}}
-          @submitOnEnter={{false}}
           @composerEvents={{false}}
           @draftKey="test-meta-enter"
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{false}}
         />
       </template>
     );
@@ -210,10 +499,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
       <template>
         <DockedComposer
           @autoResize={{true}}
-          @resizable={{true}}
-          @maxResizeOffset={{200}}
           @composerEvents={{false}}
           @draftKey="test-auto-resize"
+          @maxResizeOffset={{200}}
+          @resizable={{true}}
         />
       </template>
     );
@@ -232,10 +521,10 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @resizable={{true}}
-          @maxResizeOffset={{200}}
           @composerEvents={{false}}
           @draftKey="test-resize-max"
+          @maxResizeOffset={{200}}
+          @resizable={{true}}
         />
       </template>
     );
@@ -255,9 +544,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @resizable={{true}}
           @composerEvents={{false}}
           @draftKey="test-resize-default"
+          @resizable={{true}}
         />
       </template>
     );
@@ -277,9 +566,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @resizable={{true}}
           @composerEvents={{false}}
           @draftKey="test-resize-arrows"
+          @resizable={{true}}
         />
       </template>
     );
@@ -316,9 +605,9 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await render(
       <template>
         <DockedComposer
-          @resizable={{true}}
           @composerEvents={{false}}
           @draftKey="test-resize-home"
+          @resizable={{true}}
         />
       </template>
     );

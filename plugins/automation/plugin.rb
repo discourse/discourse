@@ -120,6 +120,7 @@ after_initialize do
       trigger_automation: {
         actions: %w[discourse_automation/automations#trigger],
         params: %i[context],
+        path_params: %i[id],
         formats: :json,
       },
     },

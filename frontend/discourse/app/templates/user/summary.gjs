@@ -29,70 +29,70 @@ export default <template>
         <ul>
           <li class="stats-days-visited">
             <DUserStat
-              @value={{@controller.model.days_visited}}
               @label="user.summary.days_visited"
+              @value={{@controller.model.days_visited}}
             />
           </li>
           <li class="stats-time-read">
             <DUserStat
-              @value={{@controller.timeRead}}
               @label="user.summary.time_read"
               @rawTitle={{i18n
                 "user.summary.time_read_title"
                 duration=@controller.timeReadMedium
               }}
               @type="string"
+              @value={{@controller.timeRead}}
             />
           </li>
           {{#if @controller.showRecentTimeRead}}
             <li class="stats-recent-read">
               <DUserStat
-                @value={{@controller.recentTimeRead}}
                 @label="user.summary.recent_time_read"
                 @rawTitle={{i18n
                   "user.summary.recent_time_read_title"
                   duration=@controller.recentTimeReadMedium
                 }}
                 @type="string"
+                @value={{@controller.recentTimeRead}}
               />
             </li>
           {{/if}}
           <li class="stats-topics-entered">
             <DUserStat
-              @value={{@controller.model.topics_entered}}
               @label="user.summary.topics_entered"
+              @value={{@controller.model.topics_entered}}
             />
           </li>
           <li class="stats-posts-read">
             <DUserStat
-              @value={{@controller.model.posts_read_count}}
               @label="user.summary.posts_read"
+              @value={{@controller.model.posts_read_count}}
             />
           </li>
           {{#if @controller.model.can_see_user_actions}}
             <li class="stats-likes-given linked-stat">
               <LinkTo @route="userActivity.likesGiven">
                 <DUserStat
-                  @value={{@controller.model.likes_given}}
                   @icon="heart"
                   @label="user.summary.likes_given"
+                  @value={{@controller.model.likes_given}}
                 />
               </LinkTo>
             </li>
           {{else}}
             <li class="stats-likes-given">
               <DUserStat
-                @value={{@controller.model.likes_given}}
                 @icon="heart"
                 @label="user.summary.likes_given"
+                @value={{@controller.model.likes_given}}
               />
             </li>
           {{/if}}
           <li class="stats-likes-received">
             <DUserStat
-              @value={{@controller.model.likes_received}}
               @icon="heart"
               @label="user.summary.likes_received"
+              @value={{@controller.model.likes_received}}
             />
           </li>
           {{#if @controller.model.bookmark_count}}
@@ -100,16 +100,16 @@ export default <template>
               <li class="stats-bookmark-count linked-stat">
                 <LinkTo @route="userActivity.bookmarks">
                   <DUserStat
-                    @value={{@controller.model.bookmark_count}}
                     @label="user.summary.bookmark_count"
+                    @value={{@controller.model.bookmark_count}}
                   />
                 </LinkTo>
               </li>
             {{else}}
               <li class="stats-bookmark-count">
                 <DUserStat
-                  @value={{@controller.model.bookmark_count}}
                   @label="user.summary.bookmark_count"
+                  @value={{@controller.model.bookmark_count}}
                 />
               </li>
             {{/if}}
@@ -118,16 +118,16 @@ export default <template>
             <li class="stats-topic-count linked-stat">
               <LinkTo @route="userActivity.topics">
                 <DUserStat
-                  @value={{@controller.model.topic_count}}
                   @label="user.summary.topic_count"
+                  @value={{@controller.model.topic_count}}
                 />
               </LinkTo>
             </li>
           {{else}}
             <li class="stats-topic-count">
               <DUserStat
-                @value={{@controller.model.topic_count}}
                 @label="user.summary.topic_count"
+                @value={{@controller.model.topic_count}}
               />
             </li>
           {{/if}}
@@ -135,22 +135,22 @@ export default <template>
             <li class="stats-post-count linked-stat">
               <LinkTo @route="userActivity.replies">
                 <DUserStat
-                  @value={{@controller.model.post_count}}
                   @label="user.summary.post_count"
+                  @value={{@controller.model.post_count}}
                 />
               </LinkTo>
             </li>
           {{else}}
             <li class="stats-post-count">
               <DUserStat
-                @value={{@controller.model.post_count}}
                 @label="user.summary.post_count"
+                @value={{@controller.model.post_count}}
               />
             </li>
           {{/if}}
           <PluginOutlet
-            @name="user-summary-stat"
             @connectorTagName="li"
+            @name="user-summary-stat"
             @outletArgs={{lazyHash
               model=@controller.model
               user=@controller.user
@@ -167,35 +167,35 @@ export default <template>
 
     <div class="top-section replies-and-topics-section">
       <UserSummarySection
-        @title="top_replies"
         class="replies-section pull-left"
+        @title="top_replies"
       >
         <UserSummaryTopicsList
-          @type="replies"
           @items={{@controller.model.replies}}
+          @type="replies"
           @user={{@controller.user}}
           as |reply|
         >
           <UserSummaryTopic
             @createdAt={{reply.createdAt}}
-            @topic={{reply.topic}}
             @likes={{reply.like_count}}
+            @topic={{reply.topic}}
             @url={{reply.url}}
           />
         </UserSummaryTopicsList>
       </UserSummarySection>
 
-      <UserSummarySection @title="top_topics" class="topics-section pull-right">
+      <UserSummarySection class="topics-section pull-right" @title="top_topics">
         <UserSummaryTopicsList
-          @type="topics"
           @items={{@controller.model.topics}}
+          @type="topics"
           @user={{@controller.user}}
           as |topic|
         >
           <UserSummaryTopic
             @createdAt={{topic.created_at}}
-            @topic={{topic}}
             @likes={{topic.like_count}}
+            @topic={{topic}}
             @url={{topic.url}}
           />
         </UserSummaryTopicsList>
@@ -203,23 +203,23 @@ export default <template>
     </div>
 
     <div class="top-section links-and-replied-to-section">
-      <UserSummarySection @title="top_links" class="links-section pull-left">
+      <UserSummarySection class="links-section pull-left" @title="top_links">
         {{#if @controller.model.links.length}}
           <ul>
             {{#each @controller.model.links as |link|}}
               <li>
                 {{! eslint-disable ember/template-link-rel-noopener }}
                 <a
+                  aria-label={{i18n "topic_map.clicks" count=link.clicks}}
                   class="domain"
+                  data-clicks={{link.clicks}}
                   href={{link.url}}
-                  title={{link.title}}
                   rel="noopener {{unless
                     @controller.user.removeNoFollow
                     'nofollow ugc'
                   }}"
                   target="_blank"
-                  data-clicks={{link.clicks}}
-                  aria-label={{i18n "topic_map.clicks" count=link.clicks}}
+                  title={{link.title}}
                 >
                   {{shortenUrl link.url}}
                 </a>
@@ -238,43 +238,43 @@ export default <template>
       </UserSummarySection>
 
       <UserSummarySection
-        @title="most_replied_to_users"
         class="summary-user-list replied-section pull-right"
+        @title="most_replied_to_users"
       >
         <UserSummaryUsersList
           @none="no_replies"
           @users={{@controller.model.most_replied_to_users}}
           as |user|
         >
-          <UserSummaryUser @user={{user}} @icon="reply" @countClass="replies" />
+          <UserSummaryUser @countClass="replies" @icon="reply" @user={{user}} />
         </UserSummaryUsersList>
       </UserSummarySection>
     </div>
 
     <div class="top-section most-liked-section">
       <UserSummarySection
-        @title="most_liked_by"
         class="summary-user-list liked-by-section pull-left"
+        @title="most_liked_by"
       >
         <UserSummaryUsersList
           @none="no_likes"
           @users={{@controller.model.most_liked_by_users}}
           as |user|
         >
-          <UserSummaryUser @user={{user}} @icon="heart" @countClass="likes" />
+          <UserSummaryUser @countClass="likes" @icon="heart" @user={{user}} />
         </UserSummaryUsersList>
       </UserSummarySection>
 
       <UserSummarySection
-        @title="most_liked_users"
         class="summary-user-list liked-section pull-right"
+        @title="most_liked_users"
       >
         <UserSummaryUsersList
           @none="no_likes"
           @users={{@controller.model.most_liked_users}}
           as |user|
         >
-          <UserSummaryUser @user={{user}} @icon="heart" @countClass="likes" />
+          <UserSummaryUser @countClass="likes" @icon="heart" @user={{user}} />
         </UserSummaryUsersList>
       </UserSummarySection>
     </div>
@@ -282,8 +282,8 @@ export default <template>
     {{#if @controller.model.top_categories.length}}
       <div class="top-section top-categories-section">
         <UserSummarySection
-          @title="top_categories"
           class="summary-category-list pull-left"
+          @title="top_categories"
         >
           <table>
             <thead>
@@ -310,18 +310,18 @@ export default <template>
                     </td>
                     <td class="topic-count">
                       <UserSummaryCategorySearch
-                        @user={{@controller.user}}
                         @category={{category}}
-                        @searchOnlyFirstPosts={{true}}
                         @count={{category.topic_count}}
+                        @searchOnlyFirstPosts={{true}}
+                        @user={{@controller.user}}
                       />
                     </td>
                     <td class="reply-count">
                       <UserSummaryCategorySearch
-                        @user={{@controller.user}}
                         @category={{category}}
-                        @searchOnlyFirstPosts={{false}}
                         @count={{category.post_count}}
+                        @searchOnlyFirstPosts={{false}}
+                        @user={{@controller.user}}
                       />
                     </td>
                   </PluginOutlet>
@@ -359,7 +359,7 @@ export default <template>
         {{/if}}
 
         {{#if @controller.moreBadges}}
-          <LinkTo @route="user.badges" @model={{@controller.user}} class="more">
+          <LinkTo class="more" @model={{@controller.user}} @route="user.badges">
             {{i18n "user.summary.more_badges"}}
           </LinkTo>
         {{/if}}

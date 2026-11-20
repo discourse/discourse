@@ -1,11 +1,12 @@
 import { tracked } from "@glimmer/tracking";
-import { click, find, render, triggerEvent } from "@ember/test-helpers";
+import { click, fillIn, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import DefaultInputControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/default-input-control";
 import ExpressionWrapper from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/expression-wrapper";
+import Field from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field";
 import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 
 function variableTransfer(variable) {
@@ -14,18 +15,6 @@ function variableTransfer(variable) {
     getData: (type) =>
       type === WORKFLOW_VARIABLE_MIME ? JSON.stringify(variable) : "",
   };
-}
-
-class TestField {
-  @tracked value;
-
-  constructor(value) {
-    this.value = value;
-  }
-
-  set(newValue) {
-    this.value = newValue;
-  }
 }
 
 module(
@@ -63,6 +52,37 @@ module(
         );
       } else {
         delete document.caretPositionFromPoint;
+      }
+    });
+
+    test("accepts fractional numbers and floats without relaxing integer inputs", async function (assert) {
+      for (const type of ["number", "float", "integer"]) {
+        this.configuration = { amount: null };
+        this.schema = { type };
+
+        await render(
+          <template>
+            <Form @data={{this.configuration}} as |form transientData|>
+              <Field
+                @configuration={{transientData}}
+                @fieldName="amount"
+                @form={{form}}
+                @label="Amount"
+                @schema={{this.schema}}
+              />
+            </Form>
+          </template>
+        );
+
+        await fillIn("input[type=number]", "123.45");
+        assert.strictEqual(
+          find("form").checkValidity(),
+          type !== "integer",
+          `${type} uses its numeric precision for native form validation`
+        );
+
+        await fillIn("input[type=number]", "123");
+        assert.true(find("form").checkValidity(), `${type} accepts integers`);
       }
     });
 
@@ -124,7 +144,7 @@ module(
     });
 
     test("appends a variable when dropping on the mode control", async function (assert) {
-      this.field = new TestField("Existing prompt");
+      this.field = tracked("Existing prompt");
       this.schema = { type: "string" };
 
       await render(
@@ -156,7 +176,7 @@ module(
     });
 
     test("preserves populated single-line text controls", async function (assert) {
-      this.field = new TestField("Existing title");
+      this.field = tracked("Existing title");
       this.schema = { type: "string" };
 
       await render(
@@ -188,7 +208,7 @@ module(
     });
 
     test("keeps replacement behavior for string-valued non-text controls", async function (assert) {
-      this.field = new TestField("first");
+      this.field = tracked("first");
       this.schema = { type: "string" };
 
       await render(
@@ -220,7 +240,7 @@ module(
     });
 
     test("converts fixed arrays to whole expressions", async function (assert) {
-      this.field = new TestField(["sam", "alice"]);
+      this.field = tracked(["sam", "alice"]);
       this.schema = { type: "array" };
 
       await render(
@@ -247,7 +267,7 @@ module(
     });
 
     test("converts comma-separated dynamic values to fixed arrays", async function (assert) {
-      this.field = new TestField("=sam,alice");
+      this.field = tracked("=sam,alice");
       this.schema = { type: "array" };
 
       await render(
@@ -274,7 +294,7 @@ module(
     });
 
     test("converts dynamic array literals to fixed arrays", async function (assert) {
-      this.field = new TestField('={{ ["sam","alice"] }}');
+      this.field = tracked('={{ ["sam","alice"] }}');
       this.schema = { type: "array" };
 
       await render(

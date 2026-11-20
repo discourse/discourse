@@ -8,7 +8,7 @@ import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import EmbedMode from "discourse/lib/embed-mode";
 import DButton from "discourse/ui-kit/d-button";
-import AiSummaryModal from "../../components/modal/ai-summary-modal";
+import AiSummaryModal from "../../components/modal/ai-summary-modal.gjs";
 
 export default class AiSummaryTrigger extends Component {
   @service aiCredits;
@@ -98,11 +98,11 @@ export default class AiSummaryTrigger extends Component {
           {{this.creditLimitTooltipModifier}}
         >
           <DButton
-            @label="summary.buttons.generate"
-            @icon="discourse-sparkles"
+            class="btn-default ai-summarization-button"
             @action={{this.openAiSummaryModal}}
             @disabled={{this.isDisabled}}
-            class="btn-default ai-summarization-button"
+            @icon="discourse-sparkles"
+            @label="summary.buttons.generate"
           />
         </section>
       {{/if}}

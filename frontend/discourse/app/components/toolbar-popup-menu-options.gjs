@@ -51,6 +51,25 @@ export default class ToolbarPopupMenuOptions extends Component {
     this.dMenu?.destroy();
   }
 
+  get convertedContent() {
+    return this.args.content
+      .map(this.#convertMenuOption.bind(this))
+      .filter(Boolean);
+  }
+
+  get textManipulationState() {
+    return this.args.context?.textManipulation?.state;
+  }
+
+  get triggerLabel() {
+    const label = this.args.triggerLabel;
+    if (typeof label === "function") {
+      return label({ state: this.textManipulationState });
+    }
+
+    return label;
+  }
+
   @action
   async onSelect(option) {
     await this.dMenu?.close();
@@ -58,8 +77,28 @@ export default class ToolbarPopupMenuOptions extends Component {
   }
 
   @action
+  async onSelectSubmenuOption(close, option) {
+    await close({ focusTrigger: false });
+    await this.onSelect(option);
+  }
+
+  @action
   onRegisterApi(api) {
     this.dMenu = api;
+  }
+
+  @action
+  getActive(option) {
+    return option.active?.({ state: this.textManipulationState });
+  }
+
+  @action
+  getIcon(config) {
+    if (typeof config.icon === "function") {
+      return config.icon?.({ state: this.textManipulationState });
+    }
+
+    return config.icon;
   }
 
   #convertMenuOption(content) {
@@ -77,6 +116,9 @@ export default class ToolbarPopupMenuOptions extends Component {
           labelText,
           title,
           shortcutKeys,
+          submenu: content.submenu
+            ?.map((option) => this.#convertMenuOption(option))
+            .filter(Boolean),
         })
       );
     }
@@ -109,54 +151,21 @@ export default class ToolbarPopupMenuOptions extends Component {
     return `${title} (${formatShortcut(shortcutKeys).label})`;
   }
 
-  get convertedContent() {
-    return this.args.content
-      .map(this.#convertMenuOption.bind(this))
-      .filter(Boolean);
-  }
-
-  get textManipulationState() {
-    return this.args.context?.textManipulation?.state;
-  }
-
-  @action
-  getActive(option) {
-    return option.active?.({ state: this.textManipulationState });
-  }
-
-  @action
-  getIcon(config) {
-    if (typeof config.icon === "function") {
-      return config.icon?.({ state: this.textManipulationState });
-    }
-
-    return config.icon;
-  }
-
-  get triggerLabel() {
-    const label = this.args.triggerLabel;
-    if (typeof label === "function") {
-      return label({ state: this.textManipulationState });
-    }
-
-    return label;
-  }
-
   <template>
     <DMenu
-      @identifier={{concat "toolbar-menu__" @class}}
-      @groupIdentifier="toolbar-menu"
-      @onRegisterApi={{this.onRegisterApi}}
-      @onShow={{@onOpen}}
-      @modalForMobile={{true}}
-      @placement="bottom"
+      tabindex="-1"
+      title={{@title}}
+      @class="toolbar-popup-menu-options"
       @fallbackPlacements={{array "top"}}
+      @groupIdentifier="toolbar-menu"
+      @identifier={{concat "toolbar-menu__" @class}}
+      @modalForMobile={{true}}
       @offset={{5}}
       @onKeydown={{@onKeydown}}
-      tabindex="-1"
+      @onRegisterApi={{this.onRegisterApi}}
+      @onShow={{@onOpen}}
+      @placement="bottom"
       @triggerClass={{dConcatClass "toolbar__button" @class}}
-      @class="toolbar-popup-menu-options"
-      title={{@title}}
     >
       <:trigger>
         {{dIcon (this.getIcon this.args)}}
@@ -173,33 +182,78 @@ export default class ToolbarPopupMenuOptions extends Component {
           {{/if}}
           {{#each this.convertedContent as |option|}}
             <dropdown.item>
-              <DShortcut @keys={{option.shortcutKeys}} as |shortcut|>
-                <DButton
-                  class={{dConcatClass (if (this.getActive option) "--active")}}
+              {{#if option.submenu.length}}
+                <DMenu
+                  aria-haspopup="dialog"
                   data-name={{option.name}}
-                  aria-keyshortcuts={{shortcut.aria}}
-                  @action={{fn this.onSelect option}}
+                  @ariaLabel={{option.labelText}}
+                  @fallbackPlacements={{array "left-start" "bottom"}}
                   @icon={{this.getIcon option}}
-                  @translatedTitle={{option.title}}
+                  @identifier={{concat "toolbar-menu__" option.name}}
+                  @modalForMobile={{true}}
+                  @offset={{5}}
+                  @placement="right-start"
+                  @title={{option.title}}
                 >
-                  {{#if option.labelText}}
+                  <:trigger>
                     <span class="d-button-label">
-                      <span class="d-button-label__text">
-                        {{option.labelText}}
-                      </span>
-                      <shortcut.Kbd
-                        class={{dConcatClass
-                          "shortcut"
-                          (if option.alwaysShowShortcut "--always-visible")
-                        }}
-                      />
-                      {{#if option.showActiveIcon}}
-                        {{dIcon "check" class="d-button-label__active-icon"}}
-                      {{/if}}
+                      <span
+                        class="d-button-label__text"
+                      >{{option.labelText}}</span>
+                      {{dIcon "angle-right"}}
                     </span>
-                  {{/if}}
-                </DButton>
-              </DShortcut>
+                  </:trigger>
+                  <:content as |submenu|>
+                    <DDropdownMenu as |submenuDropdown|>
+                      {{#each option.submenu as |choice|}}
+                        <submenuDropdown.item>
+                          <DButton
+                            data-name={{choice.name}}
+                            @action={{fn
+                              this.onSelectSubmenuOption
+                              submenu.close
+                              choice
+                            }}
+                            @icon={{this.getIcon choice}}
+                            @translatedLabel={{choice.labelText}}
+                            @translatedTitle={{choice.title}}
+                          />
+                        </submenuDropdown.item>
+                      {{/each}}
+                    </DDropdownMenu>
+                  </:content>
+                </DMenu>
+              {{else}}
+                <DShortcut @keys={{option.shortcutKeys}} as |shortcut|>
+                  <DButton
+                    aria-keyshortcuts={{shortcut.aria}}
+                    class={{dConcatClass
+                      (if (this.getActive option) "--active")
+                    }}
+                    data-name={{option.name}}
+                    @action={{fn this.onSelect option}}
+                    @icon={{this.getIcon option}}
+                    @translatedTitle={{option.title}}
+                  >
+                    {{#if option.labelText}}
+                      <span class="d-button-label">
+                        <span class="d-button-label__text">
+                          {{option.labelText}}
+                        </span>
+                        <shortcut.Kbd
+                          class={{dConcatClass
+                            "shortcut"
+                            (if option.alwaysShowShortcut "--always-visible")
+                          }}
+                        />
+                        {{#if option.showActiveIcon}}
+                          {{dIcon "check" class="d-button-label__active-icon"}}
+                        {{/if}}
+                      </span>
+                    {{/if}}
+                  </DButton>
+                </DShortcut>
+              {{/if}}
             </dropdown.item>
           {{/each}}
         </DDropdownMenu>

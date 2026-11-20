@@ -13,9 +13,9 @@ export default <template>
         @outletArgs={{lazyHash model=@model buffered=@buffered}}
       >
         <CategoryChooser
-          @value={{@buffered.category_id}}
-          @onChange={{@topicCategoryChanged}}
           class="small"
+          @onChange={{@topicCategoryChanged}}
+          @value={{@buffered.category_id}}
         />
       </PluginOutlet>
     </div>
@@ -28,7 +28,6 @@ export default <template>
         @outletArgs={{lazyHash model=@model buffered=@buffered}}
       >
         <MiniTagChooser
-          @value={{@buffered.tags}}
           @onChange={{@topicTagsChanged}}
           @options={{hash
             filterable=true
@@ -38,29 +37,30 @@ export default <template>
             useHeaderFilter=true
             prioritizeRecentTags=true
           }}
+          @value={{@buffered.tags}}
         />
       </PluginOutlet>
     </div>
   {{/if}}
 
   <PluginOutlet
-    @name="edit-topic"
     @connectorTagName="div"
+    @name="edit-topic"
     @outletArgs={{lazyHash model=@model buffered=@buffered}}
   />
 
   <div class="edit-controls">
     <DButton
-      @action={{@onSave}}
-      @icon="check"
-      @ariaLabel="composer.save_edit"
       class="btn-primary submit-edit"
+      @action={{@onSave}}
+      @ariaLabel="composer.save_edit"
+      @icon="check"
     />
     <DButton
-      @action={{@onCancel}}
-      @icon="xmark"
-      @ariaLabel="composer.cancel"
       class="btn-default cancel-edit"
+      @action={{@onCancel}}
+      @ariaLabel="composer.cancel"
+      @icon="xmark"
     />
     {{yield}}
   </div>

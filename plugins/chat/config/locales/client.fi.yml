@@ -81,8 +81,6 @@ fi:
           other: "Haluatko varmasti poistaa nämä %{count} viestiä?"
       channel_settings:
         title: "Kanavan asetukset"
-        edit: "Muokkaa"
-        add: "Lisää"
         close_channel: "Sulje kanava"
         open_channel: "Avaa kanava"
         archive_channel: "Arkistoi kanava"
@@ -116,7 +114,7 @@ fi:
         process_started: "Kanavan poistoprosessi on alkanut. Tämä modaalinen ikkuna sulkeutuu pian, etkä näe enää poistettua kanavaa missään."
       channels_list_popup:
         browse: "Selaa kanavia"
-        create: "Uusi kanava"
+        create: "Uusi kanava..."
       close: "Sulje"
       remove: "Poista"
       collapse: "Tiivistä chat-laatikko"
@@ -131,8 +129,6 @@ fi:
       muted: "vaimennettu"
       joined: "liittyi"
       empty_state:
-        direct_message_cta: "Aloita henkilökohtainen chat"
-        direct_message: "Voit myös aloittaa henkilökohtaisen chatin yhden tai useamman käyttäjän kanssa."
         title: "Kanavia ei löytynyt"
         my_threads: "Sinulla ei ole vielä ketjuja. Ketjut, joihin osallistut, näytetään täällä."
       email_frequency:
@@ -276,21 +272,22 @@ fi:
       members_view:
         filter_placeholder: Etsi jäseniä
         add_member: Lisää jäsen
-        back_to_settings: "Takaisin asetuksiin"
       about_view:
         associated_topic: Linkitetty ketju
         associated_category: Linkitetty alue
-        title: Otsikko
         name: Nimi
         description: Kuvaus
       channel_info:
         back_to_all_channels: "Kaikki kanavat"
         back_to_channel: "Takaisin"
+        nav_label: "Kanavan tiedot"
         tabs:
           members: Jäsenet
+          preferences: Asetukset
           settings: Asetukset
           search: Haku
         remove_member: "Poista"
+        members_title: "%{channel} jäsentä"
       new_message_modal:
         title: Lähetä viesti
         add_user_long: <kbd>vaihto + napsautus</kbd> tai <kbd>vaihto + enter</kbd><span>Lisää @%{username}</span>
@@ -310,14 +307,11 @@ fi:
         create_new_group_chat: "Luo ryhmäkeskustelu"
         group_with_too_many_members: "sisältää liian monta jäsentä (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
         slug_description: URL-osoitteessa käytetään kanavan polkutunnusta kanavan nimen sijaan
         name: Kanavan nimi
       channel_edit_description_modal:
-        title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus
-        description: Kerro ihmisille, mistä tässä kanavassa on kyse
       direct_message_creator:
         add_to_channel: "Lisää kanavalle"
         title: Uusi viesti
@@ -411,7 +405,6 @@ fi:
         always: "Kaikessa toiminnassa"
       settings:
         channel_wide_mentions_label: "Salli @all- ja @here-maininnat"
-        channel_wide_mentions_description: "Salli käyttäjien ilmoittaa kaikille kanavan #%{channel} käyttäjille @all-maininnalla tai niille, jotka ovat aktiivisia kyseisellä hetkellä, @here-maininnalla"
         channel_threading_label: "Ketjutus"
         channel_threading_description: "Kun ketjutus on käytössä, chat-viestin vastaukset luovat erillisen keskustelun, joka on olemassa pääkanavan rinnalla."
         auto_join_users_label: "Lisää käyttäjiä automaattisesti"
@@ -422,6 +415,9 @@ fi:
         follow: "Liity"
         followed: "Liittyi"
         mute: "Vaimenna kanava"
+        muted_until_hint: "%{until} asti"
+        mute_options:
+          "off": "Pois käytöstä"
         threading_enabled: "Käytössä"
         threading_disabled: "Pois käytöstä"
         muted_on: "Käytössä"
@@ -431,9 +427,6 @@ fi:
         save: "Tallenna"
         saved: "Tallennettu"
         unfollow: "Poistu"
-        admin_title: "Ylläpitäjä"
-        settings_title: "Asetukset"
-        info_title: "Kanavan tiedot"
         category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Jäsenet"
@@ -457,14 +450,21 @@ fi:
       direct_messages:
         title: "Yksityisviestit"
         aria_label: "Vaihda yksityisviesteihin"
-        new: "Luo yksityis-chat"
+        new_group: "Uusi ryhmäkeskustelu"
         create: "Siirry"
-        leave: "Poistu tästä henkilökohtaisesta chatista"
-        close: "Sulje tämä henkilökohtainen chat"
+        leave: "Poistu kanavalta"
+        close: "Sulje kanava"
         cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."
       channel_list:
         title: "Kanavat"
         aria_label: "Vaihda kanavaluetteloon"
+        options:
+          filter: "Suodatin"
+        filter:
+          all: "Kaikki kanavat"
+          mentions: "Maininnat"
+        sort:
+          priority: "Prioriteetti"
       incoming_webhooks:
         back: "Takaisin"
         channel_placeholder: "Valitse kanava"
@@ -540,19 +540,6 @@ fi:
         notify_moderators: "Tämä viesti vaatii henkilökunnan huomion muusta syystä, jota ei ole mainittu edellä."
       flagging:
         action: "Liputa viesti"
-      emoji_picker:
-        favorites: "Usein käytetyt"
-        smileys_&_emotion: "Hymiöt ja tunteet"
-        objects: "Esineet"
-        people_&_body: "Ihmiset ja keho"
-        travel_&_places: "Matkailu ja paikat"
-        animals_&_nature: "Eläimet ja luonto"
-        food_&_drink: "Ruoka ja juoma"
-        activities: "Aktiviteetit"
-        flags: "Liput"
-        symbols: "Symbolit"
-        search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
-        no_results: "Ei tuloksia"
       thread:
         title: "Otsikko"
         view_thread: Näytä ketju
@@ -614,11 +601,6 @@ fi:
           direct_html: '<span>%{username}</span> <span>mainitsi sinut kanavalla "%{channel}"</span>'
           other_plain: 'mainitsi kohteen %{identifier} kanavalla "%{channel}"'
           other_html: '<span>%{username}</span> <span>mainitsi kohteen %{identifier} kanavalla "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "mainitsi sinut henkilökohtaisessa chatissa"
-          direct_html: "<span>%{username}</span> <span>mainitsi sinut henkilökohtaisessa chatissa</span>"
-          other_plain: "mainitsi kohteen %{identifier} henkilökohtaisessa chatissa"
-          other_html: "<span>%{username}</span> <span>mainitsi kohteen %{identifier} henkilökohtaisessa chatissa</span>"
         chat_message: "Uusi chat-viesti"
         chat_quoted: "%{username} lainasi chat-viestiäsi"
       titles:
@@ -687,8 +669,6 @@ fi:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        title: Luo yksityis-chat
       panels:
         chat:
           label: "Chat"
@@ -698,8 +678,11 @@ fi:
       chat_message_created:
         channel_id: "Kanava"
       send_chat_message:
+        targets:
+          channel: "Kanava"
         channel_id: "Kanava"
         message: "Viesti"
+        actor_username: "Lähettäjä"
       chat_approval:
         message: "Viesti"
         buttons: "Painikkeet"

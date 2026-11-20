@@ -3,6 +3,8 @@
 class Search
   DIACRITICS = /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
   HIGHLIGHT_CSS_CLASS = "search-highlight"
+  MAX_SEARCH_TERM_LENGTH = 500
+  MAX_SEARCH_TERM_WORDS = 50
 
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
@@ -679,8 +681,7 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
-      tag_id = target_tag_id || tag_id
+      tag_id = DiscourseTagging.visible_tag_ids_resolving_synonyms([category_slug], @guardian).first
       if tag_id
         posts.where(<<~SQL, tag_id)
           topics.id IN (
@@ -690,7 +691,7 @@ class Search
           )
         SQL
       else
-        if tag_group_id = TagGroup.find_id_by_slug(category_slug)
+        if tag_group_id = TagGroup.visible(@guardian).find_id_by_slug(category_slug)
           posts.where(<<~SQL, tag_group_id)
             topics.id IN (
               SELECT DISTINCT(tt.topic_id)
@@ -700,6 +701,7 @@ class Search
                 FROM tag_group_memberships
                 WHERE tag_group_id = ?
               )
+              AND tt.tag_id IN (#{visible_tags.select(:id).to_sql})
             )
           SQL
 
@@ -790,7 +792,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at < ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -800,7 +802,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at > ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -947,7 +949,7 @@ class Search
       posts.where(
         "topics.id #{modifier} IN (
         SELECT tt.topic_id
-        FROM topic_tags tt, tags
+        FROM topic_tags tt, (#{visible_tags.to_sql}) tags
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
         HAVING to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("array_to_string(array_agg(lower(tags.name)), ' ')")}) @@ to_tsquery(#{default_ts_config}, ?)
@@ -955,8 +957,7 @@ class Search
         Search.unaccent(tags.join("&")),
       )
     else
-      tags = resolve_tag_synonyms(match.split(","))
-      tag_ids = Tag.where_name(tags).pluck(:id)
+      tag_ids = DiscourseTagging.visible_tag_ids_resolving_synonyms(match.split(","), @guardian)
       return positive ? posts.none : posts if tag_ids.empty?
 
       posts.where(
@@ -969,9 +970,13 @@ class Search
     end
   end
 
+  def visible_tags
+    @visible_tags ||= DiscourseTagging.visible_tags(@guardian)
+  end
+
   def resolve_tag_synonyms(tag_names)
     synonym_map =
-      Tag
+      visible_tags
         .where_name(tag_names)
         .where.not(target_tag_id: nil)
         .includes(:target_tag)
@@ -1020,7 +1025,7 @@ class Search
           nil
         elsif word =~ /\Atopic:(\d+)\z/i
           topic_id = $1.to_i
-          if topic_id > 1
+          if topic_id > 0
             topic = Topic.find_by(id: topic_id)
             @search_context = topic if @guardian.can_see?(topic)
           end
@@ -1110,6 +1115,7 @@ class Search
     end
 
     return nil unless @guardian.can_see?(post)
+    return nil if @opts[:exclude_private_messages] && post.topic.private_message?
 
     @results.add(post)
     @results
@@ -1128,15 +1134,26 @@ class Search
     secure_category_ids
 
     categories =
-      Category
-        .includes(:category_search_data)
-        .where("category_search_data.search_data @@ #{ts_query}")
-        .references(:category_search_data)
-        .order("topics_month DESC")
-        .secured(@guardian)
-        .limit(limit)
+      Category.includes(:category_search_data).references(:category_search_data).secured(@guardian)
+    matching_categories = categories.where("category_search_data.search_data @@ #{ts_query}")
 
-    categories.each { |category| @results.add(category) }
+    if SiteSetting.content_localization_enabled
+      localizations = CategoryLocalization.matching_locale(I18n.locale)
+      if SiteSetting.content_localization_use_default_locale_when_unsupported
+        localizations =
+          localizations.or(CategoryLocalization.matching_locale(SiteSetting.default_locale))
+      end
+      localized_category_ids =
+        localizations.where(
+          "to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("category_localizations.name")}) @@ #{ts_query}",
+        ).select(:category_id)
+      matching_categories = matching_categories.or(categories.where(id: localized_category_ids))
+    end
+
+    matching_categories
+      .order("topics_month DESC")
+      .limit(limit)
+      .each { |category| @results.add(category) }
   end
 
   def user_search
@@ -1201,14 +1218,23 @@ class Search
   def tags_search
     return unless SiteSetting.tagging_enabled
 
-    Tag
-      .browsable(@guardian)
-      .includes(:tag_search_data)
-      .where("tag_search_data.search_data @@ #{ts_query}")
-      .references(:tag_search_data)
-      .order("name asc")
-      .limit(limit)
-      .each { |tag| @results.add(tag) }
+    tags = Tag.browsable(@guardian).includes(:tag_search_data).references(:tag_search_data)
+    matching_tags = tags.where("tag_search_data.search_data @@ #{ts_query}")
+
+    if SiteSetting.content_localization_enabled
+      localizations = TagLocalization.matching_locale(I18n.locale)
+      if SiteSetting.content_localization_use_default_locale_when_unsupported
+        localizations =
+          localizations.or(TagLocalization.matching_locale(SiteSetting.default_locale))
+      end
+      localized_tag_ids =
+        localizations.where(
+          "to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("tag_localizations.name")}) @@ #{ts_query}",
+        ).select(:tag_id)
+      matching_tags = matching_tags.or(tags.where(id: localized_tag_ids))
+    end
+
+    matching_tags.order("name asc").limit(limit).each { |tag| @results.add(tag) }
   end
 
   def exclude_topics_search
@@ -1276,7 +1302,8 @@ class Search
         posts = posts.where("#{user_search_fields} ILIKE ?", "%#{term_without_quote}%")
       else
         posts = posts.where(post_number: 1) if @in_title
-        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+        weight_filter = weights == "ABCD" ? nil : weights
+        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter:)}")
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
         exact_terms.each do |exact|
@@ -1287,6 +1314,9 @@ class Search
     end
 
     posts = apply_filters(posts)
+    if @opts[:exclude_private_messages]
+      posts = posts.where.not(topics: { archetype: Archetype.private_message })
+    end
 
     # If we have a search context, prioritize those posts first
     posts =
@@ -1434,6 +1464,15 @@ class Search
   end
 
   def ts_rank_cd(weight_filter:, prefix_match: true)
+    # Cover-density ranking becomes expensive when many terms repeat in a post.
+    if @term.present? &&
+         (
+           @term.length > MAX_SEARCH_TERM_LENGTH ||
+             @term.scan(/[[:alnum:]]+/).length > MAX_SEARCH_TERM_WORDS
+         )
+      raise Discourse::InvalidParameters.new(:term)
+    end
+
     <<~SQL
       TS_RANK_CD(
         #{SiteSetting.search_ranking_weights.present? ? "'#{SiteSetting.search_ranking_weights}'," : ""}

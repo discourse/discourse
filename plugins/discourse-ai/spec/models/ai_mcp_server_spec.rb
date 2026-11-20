@@ -222,6 +222,67 @@ RSpec.describe AiMcpServer do
     expect(server.oauth_token_store.refresh_token).to be_blank
   end
 
+  describe "#record_health_error!" do
+    fab!(:server, :ai_mcp_server)
+
+    it "records a new failure" do
+      freeze_time
+
+      expect(server.record_health_error!("Connection blocked")).to eq(true)
+      server.reload
+      expect(server.last_health_status).to eq("error")
+      expect(server.last_health_error).to eq("Connection blocked")
+      expect(server.last_checked_at).to eq_time(Time.zone.now)
+    end
+
+    it "skips the write when the same failure is already recorded" do
+      server.record_health_error!("Connection blocked")
+      first_checked_at = server.reload.last_checked_at
+
+      freeze_time 1.hour.from_now
+      expect(server.record_health_error!("Connection blocked")).to eq(false)
+      expect(server.reload.last_checked_at).to eq_time(first_checked_at)
+    end
+
+    it "writes the failure once when two loaded instances record it" do
+      first = AiMcpServer.find(server.id)
+      second = AiMcpServer.find(server.id)
+
+      expect(first.record_health_error!("Connection blocked")).to eq(true)
+      expect(second.record_health_error!("Connection blocked")).to eq(false)
+      expect(second.last_health_status).to eq("error")
+    end
+
+    it "records the failure again after another instance clears it on reconnect" do
+      retained = AiMcpServer.find(server.id)
+      retained.record_health_error!("Reconnect required")
+      AiMcpServer.find(server.id).mark_oauth_authorized!
+
+      expect(retained.record_health_error!("Reconnect required")).to eq(true)
+      server.reload
+      expect(server.last_health_status).to eq("error")
+      expect(server.last_health_error).to eq("Reconnect required")
+    end
+
+    it "records a different failure" do
+      server.record_health_error!("Connection blocked")
+
+      expect(server.record_health_error!("Reconnect required")).to eq(true)
+      expect(server.reload.last_health_error).to eq("Reconnect required")
+    end
+  end
+
+  it "clears a recorded health failure when OAuth is reconnected" do
+    server = Fabricate(:ai_mcp_server)
+    server.record_health_error!("Reconnect required")
+
+    server.mark_oauth_authorized!
+
+    server.reload
+    expect(server.last_health_status).to eq("unknown")
+    expect(server.last_health_error).to be_nil
+  end
+
   it "memoizes serialized tools for count calculations" do
     server = Fabricate(:ai_mcp_server)
 

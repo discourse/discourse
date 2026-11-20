@@ -33,10 +33,10 @@ module("Integration | Component | Dashboard | Search", function (hooks) {
     await render(
       <template>
         <DashboardSearch
-          @search={{search}}
-          @period="last_30_days"
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @period="last_30_days"
+          @search={{search}}
+          @startDate={{startDate}}
         />
       </template>
     );
@@ -71,7 +71,7 @@ module("Integration | Component | Dashboard | Search", function (hooks) {
 
     await render(
       <template>
-        <DashboardSearch @search={{search}} @period="last_30_days" />
+        <DashboardSearch @period="last_30_days" @search={{search}} />
       </template>
     );
 

@@ -60,7 +60,13 @@ RSpec.describe Chat::CategoryChannel do
       let(:private_category) { Fabricate(:private_category, group: group) }
       let(:channel) { Fabricate(:category_channel, chatable: private_category) }
 
-      it "returns groups with access to the associated category" do
+      it "returns groups with permission to post in the associated category" do
+        readonly_group = Fabricate(:group)
+        private_category.category_groups.create!(
+          group: readonly_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+
         expect(allowed_group_ids).to contain_exactly(*staff_groups, group.id)
       end
     end
@@ -118,6 +124,21 @@ RSpec.describe Chat::CategoryChannel do
         channel.validate!
         expect(channel.slug).to eq("some-category-stuff")
       end
+
+      it "truncates the slug when the name is long" do
+        channel.name = "word " * 40
+        expect(channel).to be_valid
+        expect(channel.slug.length).to be <= Chat::Channel::SLUG_MAX_LENGTH
+        expect(channel.slug).to start_with("word-word")
+        expect(channel.slug).not_to end_with("-")
+      end
+
+      it "leaves the slug blank when a long encoded slug can't be truncated" do
+        SiteSetting.slug_generation_method = "encoded"
+        channel.name = "测试" * 6
+        expect(channel).to be_valid
+        expect(channel.slug).to eq("")
+      end
     end
 
     context "when slug is provided" do
@@ -126,6 +147,7 @@ RSpec.describe Chat::CategoryChannel do
           SiteSetting.slug_generation_method = "encoded"
           channel.slug = "测试"
         end
+
         after { SiteSetting.slug_generation_method = "ascii" }
 
         it "creates a slug with the correct escaping" do

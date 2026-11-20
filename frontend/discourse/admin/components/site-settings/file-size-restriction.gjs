@@ -13,11 +13,11 @@ export default class FileSizeRestriction extends Component {
 
   <template>
     <FileSizeInput
-      @sizeValueKB={{@value}}
-      @onChangeSize={{this.changeSize}}
       @max={{@setting.max}}
       @min={{@setting.min}}
+      @onChangeSize={{this.changeSize}}
       @setValidationMessage={{@setValidationMessage}}
+      @sizeValueKB={{@value}}
     />
   </template>
 }

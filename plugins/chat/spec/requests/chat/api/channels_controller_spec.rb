@@ -120,6 +120,20 @@ RSpec.describe Chat::Api::ChannelsController do
                 )
               end
             end
+
+            context "when the only group with access is destroyed" do
+              before { group_1.destroy! }
+
+              it "returns nothing" do
+                expect(channel_1.chatable.reload.read_restricted).to eq(true)
+                expect(channel_1.chatable.category_groups).to be_empty
+
+                get "/chat/api/channels"
+
+                expect(response.status).to eq(200)
+                expect(response.parsed_body["channels"]).to be_blank
+              end
+            end
           end
         end
       end
@@ -130,6 +144,35 @@ RSpec.describe Chat::Api::ChannelsController do
         it "doesn't return direct message channels" do
           get "/chat/api/channels"
           expect(response.parsed_body["channels"]).to be_blank
+        end
+      end
+
+      context "when filtering with an unsupported chatable type" do
+        fab!(:channel_1, :category_channel)
+        fab!(:private_message_topic)
+
+        it "does not reveal private-message topic existence" do
+          get "/chat/api/channels",
+              params: {
+                chatable_id: private_message_topic.id,
+                chatable_type: "Topic",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
+
+          get "/chat/api/channels",
+              params: {
+                chatable_id: Topic.maximum(:id) + 1,
+                chatable_type: "Topic",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+            [channel_1.id],
+          )
         end
       end
 
@@ -230,6 +273,28 @@ RSpec.describe Chat::Api::ChannelsController do
         get "/chat/api/channels/-999"
 
         expect(response.status).to eq(403)
+      end
+
+      it "returns public channel data when guest reading is enabled" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+        channel = Fabricate(:category_channel)
+
+        get "/chat/api/channels/#{channel.id}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.fetch("channel")).to include(
+          "id" => channel.id,
+          "meta" => a_hash_including("can_join_chat_channel" => false, "user_silenced" => true),
+        )
+      end
+
+      it "hides private category channels when guest reading is enabled" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
+        channel = Fabricate(:private_category_channel)
+
+        get "/chat/api/channels/#{channel.id}"
+
+        expect(response.status).to eq(404)
       end
     end
 

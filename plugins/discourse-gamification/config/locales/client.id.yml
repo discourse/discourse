@@ -23,9 +23,7 @@ id:
       close: "Tutup"
       delete: "Hapus"
       edit: "Ubah"
-      back: "Kembali"
       save: "Simpan"
-      apply: "menerapkan"
       update_range:
         last_10_days: "10 hari terakhir"
         last_30_days: "30 hari terakhir"
@@ -39,3 +37,4 @@ id:
         username: "Pengguna"
         date: "Tanggal"
         description: "Deskripsi"
+        category_id: "Kategori"

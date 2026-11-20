@@ -19,6 +19,7 @@ zh_CN:
         countdown:
           passed: 日期已过
       title: 插入日期/时间
+      edit: 编辑日期/时间
       edit_date: 编辑 %{date}
       create:
         form:

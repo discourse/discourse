@@ -4,13 +4,14 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `manageable-row-list-item-reorderable.gjs` replaces it.
 export default class ManageableRowListItem extends Component {
   @service site;
 
@@ -105,24 +106,24 @@ export default class ManageableRowListItem extends Component {
       {{#if this.site.mobileView}}
         <div class="manageable-row-list__order-mobile">
           <DButton
-            @icon="arrow-up"
+            class="manageable-row-list__arrow btn-transparent"
             @action={{fn @onMoveUp @row}}
             @disabled={{eq @index 0}}
+            @icon="arrow-up"
             @translatedAriaLabel={{i18n
               (concat @ariaLabelPrefix ".move_up")
               title=@row.title
             }}
-            class="manageable-row-list__arrow btn-transparent"
           />
           <DButton
-            @icon="arrow-down"
+            class="manageable-row-list__arrow btn-transparent"
             @action={{fn @onMoveDown @row}}
             @disabled={{eq @index @lastEnabledIndex}}
+            @icon="arrow-down"
             @translatedAriaLabel={{i18n
               (concat @ariaLabelPrefix ".move_down")
               title=@row.title
             }}
-            class="manageable-row-list__arrow btn-transparent"
           />
         </div>
       {{/if}}
@@ -142,8 +143,6 @@ export default class ManageableRowListItem extends Component {
       </div>
 
       <DToggleSwitch
-        @state={{@row.enabled}}
-        disabled={{@toggleDisabled}}
         aria-label={{i18n
           (if
             @row.enabled
@@ -152,6 +151,8 @@ export default class ManageableRowListItem extends Component {
           )
           title=@row.title
         }}
+        disabled={{@toggleDisabled}}
+        @state={{@row.enabled}}
         {{on "click" (fn @onToggle @row)}}
       />
     </li>

@@ -3,9 +3,9 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <PostList
+    @emptyText={{i18n "groups.empty.posts"}}
+    @fetchMorePosts={{@controller.fetchMorePosts}}
     @posts={{@controller.model}}
     @titlePath="topic_html_title"
-    @fetchMorePosts={{@controller.fetchMorePosts}}
-    @emptyText={{i18n "groups.empty.posts"}}
   />
 </template>

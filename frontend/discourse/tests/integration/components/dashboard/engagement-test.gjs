@@ -40,9 +40,9 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     await render(
       <template>
         <DashboardEngagement
+          @endDate={{end}}
           @engagement={{engagement}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -69,10 +69,10 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     await render(
       <template>
         <DashboardEngagement
+          @endDate={{end}}
           @engagement={{null}}
           @fetchError={{true}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );
@@ -85,9 +85,9 @@ module("Integration | Component | Dashboard | Engagement", function (hooks) {
     await render(
       <template>
         <DashboardEngagement
+          @endDate={{end}}
           @engagement={{null}}
           @startDate={{start}}
-          @endDate={{end}}
         />
       </template>
     );

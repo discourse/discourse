@@ -7,6 +7,10 @@
 sw:
   chat:
     deleted_chat_username: imefutwa
+    crawler:
+      thread_replies:
+        one: "%{count} jibu"
+        other: "%{count} majibu"
     errors:
       not_accepting_dms: "Samahani, %{username}haikubali jumbe kwa sasa"
     reviewables:

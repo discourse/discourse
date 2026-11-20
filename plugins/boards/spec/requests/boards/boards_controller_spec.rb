@@ -91,6 +91,25 @@ RSpec.describe Boards::Api::BoardsController do
       slugs = response.parsed_body["boards"].map { |b| b["slug"] }
       expect(slugs).to contain_exactly("editable")
     end
+
+    it "returns owners for every board with one batched ACL lookup" do
+      co_owner = Fabricate(:user)
+      first_board = Fabricate(:boards_board, name: "First", created_by: admin)
+      second_board = Fabricate(:boards_board, name: "Second", created_by: co_owner)
+      AccessControlList.find_by!(target: first_board, permission: Acl::Permissions::OWNER).update!(
+        allowed_user_ids: [admin.id, co_owner.id],
+      )
+
+      sign_in(admin)
+      queries = track_sql_queries { get "/boards/api/boards.json" }
+
+      boards = response.parsed_body["boards"].index_by { |board| board["id"] }
+      expect(boards[first_board.id]["owners"].pluck("id")).to contain_exactly(admin.id, co_owner.id)
+      expect(boards[second_board.id]["owners"].pluck("id")).to contain_exactly(co_owner.id)
+
+      owner_acl_queries = queries.grep(/FROM "access_control_lists".*"target_id" IN .*"permission"/)
+      expect(owner_acl_queries.size).to eq(1)
+    end
   end
 
   describe "GET /boards/api/boards/available" do
@@ -246,6 +265,75 @@ RSpec.describe Boards::Api::BoardsController do
       expect(response.body).not_to include(hidden_tag.name)
     end
 
+    it "hides restricted tags attached to topic cards from anonymous board readers" do
+      hidden_tag = Fabricate(:tag, name: "staff-topic")
+      visible_tag = Fabricate(:tag, name: "public-topic")
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      topic = Fabricate(:topic, category:, tags: [hidden_tag, visible_tag])
+      board =
+        Fabricate(
+          :boards_board,
+          name: "Public Roadmap",
+          slug: "public-roadmap-topics",
+          created_by: admin,
+        )
+      Fabricate(
+        :access_control_list,
+        target: board,
+        permission: "view",
+        allowed_group_ids: [Group::AUTO_GROUPS[:anonymous_users]],
+      )
+      column = board.columns.create!(title: "Visible", position: 0)
+      board.cards.create!(card_type: :topic, topic:, column:, position: 0, created_by: admin)
+
+      get "/boards/api/boards/#{board.id}.json"
+
+      expect(response.status).to eq(200)
+      topic_data = response.parsed_body["columns"].first["cards"].first["topic"]
+      expect(topic_data["tags"]).to contain_exactly(visible_tag.name)
+      expect(response.body).not_to include(hidden_tag.name)
+    end
+
+    it "uses one tag visibility query for all topic cards" do
+      hidden_tag = Fabricate(:tag, name: "staff-topic")
+      visible_tag = Fabricate(:tag, name: "public-topic")
+      other_visible_tag = Fabricate(:tag, name: "another-public-topic")
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      board =
+        Fabricate(
+          :boards_board,
+          name: "Public Roadmap",
+          slug: "public-roadmap-topic-tags",
+          created_by: admin,
+        )
+      Fabricate(
+        :access_control_list,
+        target: board,
+        permission: "view",
+        allowed_group_ids: [Group::AUTO_GROUPS[:anonymous_users]],
+      )
+      column = board.columns.create!(title: "Visible", position: 0)
+      [visible_tag, other_visible_tag].each do |tag|
+        topic = Fabricate(:topic, category:, tags: [hidden_tag, tag])
+        board.cards.create!(
+          card_type: :topic,
+          topic:,
+          column:,
+          position: board.cards.count,
+          created_by: admin,
+        )
+      end
+
+      queries = track_sql_queries { get "/boards/api/boards/#{board.id}.json" }
+      visibility_queries = queries.grep(/"tag_group_memberships"/)
+      topic_tags =
+        response.parsed_body["columns"].first["cards"].map { |card| card["topic"]["tags"] }
+
+      expect(response.status).to eq(200)
+      expect(topic_tags).to contain_exactly([visible_tag.name], [other_visible_tag.name])
+      expect(visibility_queries.size).to eq(1)
+    end
+
     it "hides restricted tags attached to floater cards from users who can read the board" do
       hidden_tag = Fabricate(:tag, name: "staff-floater")
       visible_tag = Fabricate(:tag, name: "public-floater")
@@ -325,7 +413,7 @@ RSpec.describe Boards::Api::BoardsController do
       expect(response.parsed_body["board"]["can_manage"]).to eq(false)
     end
 
-    it "includes the creator's username and avatar_template" do
+    it "includes the owners' usernames and avatar templates" do
       board =
         Fabricate(:boards_board, name: "Creator Test", slug: "creator-test", created_by: admin)
       board.columns.create!(title: "Col", position: 0)
@@ -334,10 +422,9 @@ RSpec.describe Boards::Api::BoardsController do
       get "/boards/api/boards/#{board.id}.json"
 
       expect(response.status).to eq(200)
-      created_by = response.parsed_body["board"]["created_by"]
-      expect(created_by).to be_present
-      expect(created_by["username"]).to eq(admin.username)
-      expect(created_by["avatar_template"]).to eq(admin.avatar_template)
+      owners = response.parsed_body["board"]["owners"]
+      expect(owners.sole["username"]).to eq(admin.username)
+      expect(owners.sole["avatar_template"]).to eq(admin.avatar_template)
     end
 
     it "includes topic details for detailed cards" do
@@ -514,7 +601,105 @@ RSpec.describe Boards::Api::BoardsController do
     end
   end
 
-  describe "POST /boards/api/boards" do
+  describe "#create" do
+    it "accepts all supported ACL permissions and retains mandatory admin access" do
+      sign_in(manager)
+
+      post "/boards/api/boards.json",
+           params: {
+             board: {
+               name: "Permission board",
+               slug: "permission-board",
+               acl: [
+                 { type: "group", id: read_group.id, permission: "view" },
+                 { type: "group", id: write_group.id, permission: "edit" },
+                 { type: "group", id: manage_group.id, permission: "manage" },
+               ],
+             },
+           }
+
+      expect(response.status).to eq(201)
+      board = Boards::Board.find(response.parsed_body["board"]["id"])
+      expect(
+        AccessControlList.where(target: board).pluck(:permission, :allowed_group_ids),
+      ).to contain_exactly(
+        ["view", [read_group.id]],
+        ["edit", [write_group.id]],
+        ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+        ["owner", []],
+      )
+      expect(
+        AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids,
+      ).to contain_exactly(manager.id)
+    end
+
+    it "rejects initial co-owner ids from a non-admin" do
+      sign_in(manager)
+
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Co-owned board",
+                 slug: "co-owned-board",
+                 owner_user_ids: [outsider.id],
+               },
+             }
+      end.not_to change { Boards::Board.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
+    it "rejects an invalid permission name without creating a board, columns, or ACLs" do
+      sign_in(manager)
+
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Invalid permissions",
+                 slug: "invalid-permissions",
+                 columns: [{ title: "Backlog" }],
+                 acl: [
+                   { type: "group", id: read_group.id, permission: "view" },
+                   { type: "group", id: manage_group.id, permission: "bogus" },
+                 ],
+               },
+             }
+      end.not_to change {
+        [
+          Boards::Board.count,
+          Boards::Column.count,
+          AccessControlList.count,
+          Boards::BoardHistory.count,
+        ]
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
+    it "rejects an ACL payload that assigns ownership to another user" do
+      sign_in(manager)
+
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Spoofed owner",
+                 slug: "spoofed-owner",
+                 acl: [{ type: "user", id: outsider.id, permission: "owner" }],
+               },
+             }
+      end.not_to change {
+        [Boards::Board.count, AccessControlList.count, Boards::BoardHistory.count]
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
     it "creates a board for users in the manage group" do
       sign_in(manager)
 
@@ -554,10 +739,164 @@ RSpec.describe Boards::Api::BoardsController do
       post "/boards/api/boards.json", params: { board: { name: "Nope", slug: "nope" } }
 
       expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("boards.errors.board_create_forbidden")])
+    end
+
+    it "returns the creation policy's custom failure reason" do
+      sign_in(manager)
+      reason = "The account has reached its board limit."
+      Boards::Policy::CanCreateBoard.any_instance.stubs(:call).returns(false)
+      Boards::Policy::CanCreateBoard.any_instance.stubs(:reason).returns(reason)
+
+      expect do
+        post "/boards/api/boards.json", params: { board: { name: "Nope", slug: "nope" } }
+      end.not_to change { Boards::Board.count }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq([reason])
+      expect(response.parsed_body["skip_error_prefix"]).to eq(true)
     end
   end
 
-  describe "PUT /boards/api/boards/:id" do
+  describe "#update" do
+    fab!(:acl_board) do
+      Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+    end
+
+    it "saves settings with the replacement owner after the previous owner is deleted" do
+      departing_owner = Fabricate(:user)
+      board = Fabricate(:boards_board, created_by: departing_owner)
+      UserDestroyer.new(admin).destroy(departing_owner)
+      sign_in(admin)
+
+      put "/boards/api/boards/#{board.id}.json",
+          params: {
+            board: {
+              name: "Reassigned board",
+              owner_user_ids: [admin.id],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(board.reload.name).to eq("Reassigned board")
+      expect(response.parsed_body["board"]["owners"].pluck("id")).to eq([admin.id])
+    end
+
+    it "accepts all supported ACL permissions and retains mandatory admin access" do
+      sign_in(manager)
+
+      put "/boards/api/boards/#{acl_board.id}.json",
+          params: {
+            board: {
+              acl: [
+                { type: "group", id: read_group.id, permission: "view" },
+                { type: "group", id: write_group.id, permission: "edit" },
+                { type: "group", id: manage_group.id, permission: "manage" },
+              ],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(
+        AccessControlList.where(target: acl_board).pluck(:permission, :allowed_group_ids),
+      ).to contain_exactly(
+        ["view", [read_group.id]],
+        ["edit", [write_group.id]],
+        ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+        ["owner", []],
+      )
+      expect(
+        AccessControlList.find_by!(target: acl_board, permission: "owner").allowed_user_ids,
+      ).to contain_exactly(admin.id)
+    end
+
+    it "rejects an invalid permission name and preserves the board and its existing ACLs" do
+      sign_in(manager)
+      previous_attributes = acl_board.attributes
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      expect do
+        put "/boards/api/boards/#{acl_board.id}.json",
+            params: {
+              board: {
+                name: "Invalid update",
+                acl: [
+                  { type: "group", id: read_group.id, permission: "view" },
+                  { type: "group", id: manage_group.id, permission: "bogus" },
+                ],
+              },
+            }
+      end.not_to change { Boards::BoardHistory.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(acl_board.reload.attributes).to eq(previous_attributes)
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
+    end
+
+    it "rejects an ACL payload that replaces the existing owner" do
+      sign_in(manager)
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      expect do
+        put "/boards/api/boards/#{acl_board.id}.json",
+            params: {
+              board: {
+                acl: [
+                  { type: "group", id: manage_group.id, permission: "manage" },
+                  { type: "user", id: outsider.id, permission: "owner" },
+                ],
+              },
+            }
+      end.not_to change { Boards::BoardHistory.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
+      expect(acl_board.reload.created_by_id).to eq(admin.id)
+    end
+
+    it "allows an owner to remove themselves when another owner remains" do
+      board = Fabricate(:boards_board, created_by: manager)
+      AccessControlList.find_by!(target: board, permission: "owner").update!(
+        allowed_user_ids: [manager.id, outsider.id],
+      )
+      sign_in(manager)
+
+      put "/boards/api/boards/#{board.id}.json",
+          params: {
+            board: {
+              owner_user_ids: [outsider.id],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids).to eq(
+        [outsider.id],
+      )
+    end
+
+    it "rejects owner changes from a board manager who is not an owner" do
+      sign_in(manager)
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      put "/boards/api/boards/#{acl_board.id}.json",
+          params: {
+            board: {
+              owner_user_ids: [admin.id, outsider.id],
+            },
+          }
+
+      expect(response.status).to eq(422)
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
+    end
+
     it "updates board attributes for users in the manage group" do
       board =
         Fabricate(
@@ -626,6 +965,141 @@ RSpec.describe Boards::Api::BoardsController do
       put "/boards/api/boards/#{board.id}.json", params: { board: { name: "Hacked" } }
 
       expect(response.status).to eq(403)
+    end
+
+    context "when the constraints exclude a card that the user cannot see" do
+      subject(:update_response) do
+        put "/boards/api/boards/#{board.id}.json",
+            params: {
+              board: {
+                category_ids: [category.id],
+              },
+            }
+        response.parsed_body
+      end
+
+      fab!(:board) do
+        Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+      end
+      fab!(:column) { Fabricate(:boards_column, board:) }
+      fab!(:hidden_card) do
+        Fabricate(
+          :boards_topic_card,
+          board:,
+          column:,
+          topic:
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
+        )
+      end
+
+      before { sign_in(manager) }
+
+      context "when the constraints exclude a visible card too" do
+        fab!(:visible_card) do
+          Fabricate(:boards_topic_card, board:, column:, topic: Fabricate(:topic))
+        end
+
+        it "returns the count of the visible cards" do
+          expect(update_response["cards_removed_count"]).to eq(1)
+        end
+      end
+
+      it "returns no count" do
+        expect(update_response.keys).to contain_exactly("board")
+      end
+    end
+  end
+
+  describe "POST /boards/api/boards/:id/constraint-preview" do
+    subject(:preview) do
+      post "/boards/api/boards/#{board.id}/constraint-preview.json", params: constraints
+      response
+    end
+
+    fab!(:other_category, :category)
+    fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+    fab!(:public_tag, :tag)
+    fab!(:staff_tag, :tag)
+    fab!(:board) do
+      Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+    end
+    fab!(:column) { Fabricate(:boards_column, board:) }
+    fab!(:matching_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category:, tags: [public_tag]),
+      )
+    end
+    fab!(:visible_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category: other_category),
+      )
+    end
+    fab!(:hidden_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category: private_category, tags: [staff_tag]),
+      )
+    end
+
+    let(:constraints) { { category_ids: [category.id] } }
+    let(:cards_to_remove) { preview.parsed_body["cards_to_remove"] }
+
+    before { Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [staff_tag]) }
+
+    context "when the user cannot manage the board" do
+      before { sign_in(writer) }
+
+      it "denies access" do
+        expect(preview).to have_http_status(:forbidden)
+      end
+    end
+
+    context "when the user can see all cards of the board" do
+      before { sign_in(admin) }
+
+      it "counts all cards that the constraints exclude" do
+        expect(cards_to_remove).to eq(2)
+      end
+    end
+
+    context "when the user cannot see a card of the board" do
+      before { sign_in(manager) }
+
+      context "when the constraints have a category that the user cannot see" do
+        let(:constraints) { { category_ids: [private_category.id] } }
+
+        it "counts the visible cards" do
+          expect(cards_to_remove).to eq(2)
+        end
+      end
+
+      context "when the constraints have a tag that the user can see" do
+        let(:constraints) { { tag_names: [public_tag.name] } }
+
+        it "counts the visible cards without the tag" do
+          expect(cards_to_remove).to eq(1)
+        end
+      end
+
+      context "when the constraints have a tag that the user cannot see" do
+        let(:constraints) { { tag_names: [staff_tag.name] } }
+
+        it "ignores the tag" do
+          expect(cards_to_remove).to eq(0)
+        end
+      end
+
+      it "counts only the visible cards that the constraints exclude" do
+        expect(cards_to_remove).to eq(1)
+      end
     end
   end
 
@@ -759,6 +1233,154 @@ RSpec.describe Boards::Api::BoardsController do
       delete "/boards/api/boards/#{board.id}.json"
 
       expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#archive" do
+    fab!(:board) { Fabricate(:boards_board, additional_manage_groups: [manage_group]) }
+
+    it "returns archived state for a manager outside the global management group" do
+      SiteSetting.boards_manage_board_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      sign_in(manager)
+
+      post "/boards/api/boards/#{board.id}/archive.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["board"]).to include(
+        "archived" => true,
+        "can_unarchive" => true,
+        "can_manage" => false,
+      )
+    end
+
+    it "rejects an authenticated user without Manage permission" do
+      sign_in(outsider)
+
+      post "/boards/api/boards/#{board.id}/archive.json"
+
+      expect(response.status).to eq(403)
+      expect(board.reload).not_to be_archived
+    end
+
+    it "returns not found for an absent board" do
+      sign_in(manager)
+
+      post "/boards/api/boards/0/archive.json"
+
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "#unarchive" do
+    fab!(:board) do
+      Fabricate(
+        :boards_board,
+        slug: "archived-board",
+        archived: true,
+        original_slug: "roadmap",
+        additional_manage_groups: [manage_group],
+      )
+    end
+
+    it "returns restored state after accepting a replacement slug" do
+      Fabricate(:boards_board, slug: "roadmap")
+      sign_in(manager)
+
+      post "/boards/api/boards/#{board.id}/unarchive.json", params: { slug: "restored-roadmap" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["board"]).to include(
+        "archived" => false,
+        "slug" => "restored-roadmap",
+      )
+    end
+
+    it "returns validation errors when the old slug has been claimed" do
+      Fabricate(:boards_board, slug: "roadmap")
+      sign_in(manager)
+
+      post "/boards/api/boards/#{board.id}/unarchive.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(board.reload).to be_archived
+    end
+
+    it "rejects unarchiving without Manage permission" do
+      sign_in(outsider)
+
+      post "/boards/api/boards/#{board.id}/unarchive.json"
+
+      expect(response.status).to eq(403)
+      expect(board.reload).to be_archived
+    end
+  end
+
+  describe "archive visibility across board listings" do
+    fab!(:open_board, :boards_board)
+    fab!(:archived_board) { Fabricate(:boards_board, slug: "archived-board", archived: true) }
+
+    it "includes archived boards in the index but excludes them from available boards" do
+      sign_in(admin)
+
+      get "/boards/api/boards.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["boards"].map { |board| board["id"] }).to contain_exactly(
+        open_board.id,
+        archived_board.id,
+      )
+
+      get "/boards/api/boards/available.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["boards"].map { |board| board["id"] }).to eq([open_board.id])
+    end
+  end
+
+  describe "archived board mutation protection" do
+    fab!(:board) { Fabricate(:boards_board, slug: "archived-board", archived: true) }
+    fab!(:column) { Fabricate(:boards_column, board:) }
+    fab!(:card) { Fabricate(:boards_card, board:, column:) }
+
+    it "rejects board edits, deletion, and column reordering even for an administrator" do
+      sign_in(admin)
+
+      put "/boards/api/boards/#{board.id}.json", params: { board: { name: "Changed" } }
+      expect(response.status).to eq(403)
+
+      post "/boards/api/boards/#{board.id}/move-column.json",
+           params: {
+             column_id: column.id,
+             direction: 1,
+           }
+      expect(response.status).to eq(403)
+
+      delete "/boards/api/boards/#{board.id}.json"
+      expect(response.status).to eq(403)
+      expect(board.reload).to be_archived
+    end
+  end
+
+  describe "repeated archival" do
+    it "restores the current slug across multiple archive cycles" do
+      board = Fabricate(:boards_board, slug: "roadmap")
+      sign_in(admin)
+
+      post "/boards/api/boards/#{board.id}/archive.json"
+      expect(response.status).to eq(200)
+      Fabricate(:boards_board, slug: "roadmap")
+      post "/boards/api/boards/#{board.id}/unarchive.json", params: { slug: "new-roadmap" }
+      expect(response.status).to eq(200)
+      post "/boards/api/boards/#{board.id}/archive.json"
+      expect(response.status).to eq(200)
+      post "/boards/api/boards/#{board.id}/unarchive.json"
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["board"]).to include("slug" => "new-roadmap", "archived" => false)
+      expect(board.history.order(:id).pluck(:action)).to eq(
+        %w[board_archived board_unarchived board_archived board_unarchived],
+      )
     end
   end
 end

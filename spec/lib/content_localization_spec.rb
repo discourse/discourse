@@ -170,6 +170,42 @@ describe ContentLocalization do
     end
   end
 
+  describe "translated value helpers" do
+    fab!(:post)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      post.topic.update!(locale: "ja")
+      post.update!(locale: "ja")
+      I18n.locale = "de"
+    end
+
+    it "returns the localization, or nil when there is none or no record" do
+      scope = create_scope
+
+      expect(ContentLocalization.translated_post_cooked(post, scope)).to be_nil
+      expect(ContentLocalization.translated_topic_title(post.topic, scope)).to be_nil
+      expect(ContentLocalization.translated_post_cooked(nil, scope)).to be_nil
+      expect(ContentLocalization.translated_topic_title(nil, scope)).to be_nil
+
+      Fabricate(:post_localization, post: post, locale: "de", cooked: "<p>uebersetzt</p>")
+      Fabricate(
+        :topic_localization,
+        topic: post.topic,
+        locale: "de",
+        title: "Titel",
+        fancy_title: "Fancy Titel",
+      )
+      post.reload.topic.reload
+
+      expect(ContentLocalization.translated_post_cooked(post, scope)).to eq("<p>uebersetzt</p>")
+      expect(ContentLocalization.translated_topic_title(post.topic, scope)).to eq("Titel")
+      expect(ContentLocalization.translated_topic_fancy_title(post.topic, scope)).to eq(
+        "Fancy Titel",
+      )
+    end
+  end
+
   describe ".show_translated_category?" do
     fab!(:category)
 

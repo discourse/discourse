@@ -7,7 +7,11 @@ module Jobs
       if post&.topic && post.raw.present?
         opts = args[:options] || {}
         new_record = true == args[:new_record]
-        PostAlerter.new(opts).after_save_post(post, new_record)
+        PostAlerter.new(opts).after_save_post(
+          post,
+          new_record,
+          added_mentions: args[:added_mentions],
+        )
       end
     end
   end

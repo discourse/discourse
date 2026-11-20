@@ -14,13 +14,10 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadPost do
         ```
       MARKDOWN
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   describe "#invoke" do
     it "returns one exact post with structured identity and verbatim Markdown" do

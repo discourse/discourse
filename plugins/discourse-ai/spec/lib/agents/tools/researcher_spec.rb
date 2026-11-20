@@ -5,7 +5,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
   after { SearchIndexer.disable }
 
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
 
@@ -19,9 +19,25 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
   fab!(:post) { Fabricate(:post, topic: topic_with_tags) }
   fab!(:another_post, :post)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
+  include_context "with AI bot enabled"
+
+  it "keeps fresh research wrapper metadata but excludes already generated findings from evidence" do
+    tool =
+      described_class.new(
+        {},
+        bot_user: bot_user,
+        llm: llm,
+        context: DiscourseAi::Agents::BotContext.new(user: user),
+      )
+    result = {
+      dry_run: false,
+      goals: "Find facts",
+      filter: "topic:1",
+      results: ["Generated finding"],
+    }
+    expect(JSON.parse(tool.work_evidence(result))).to eq(result.merge(results: []).as_json)
+    failure = { error: "Research unavailable" }
+    expect(tool.work_evidence(failure)).to eq(failure.to_json)
   end
 
   it "uses custom researcher_llm and applies token limits correctly" do
@@ -73,6 +89,33 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
   end
 
   describe "#invoke" do
+    it "excludes non-text completion events from research results" do
+      thinking =
+        DiscourseAi::Completions::Thinking.new(
+          message: "Researching privately",
+          provider_info: {
+            gemini_interactions: {
+              steps: [{ signature: "signed-context" }],
+            },
+          },
+        )
+      researcher =
+        described_class.new(
+          { filter: "topic:#{topic_with_tags.id}", goals: "analyze topic content", dry_run: false },
+          bot_user: bot_user,
+          llm: llm,
+          context: DiscourseAi::Agents::BotContext.new(user: user, post: post),
+        )
+
+      results = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([["Public findings", thinking]]) do
+        researcher.llm = llm_model.to_llm
+        results = researcher.invoke(&progress_blk)
+      end
+
+      expect(results[:results]).to eq(["Public findings"])
+    end
+
     it "can correctly filter to a topic id" do
       researcher =
         described_class.new(
@@ -182,6 +225,82 @@ RSpec.describe DiscourseAi::Agents::Tools::Researcher do
       expect(results[:goals]).to eq("find relevant content")
       expect(results[:filter]).to eq("category:research-category username:#{user.username}")
       expect(results[:results].first).to include("Found: Relevant content 1")
+    end
+
+    context "when a topic has a tag that only staff can see" do
+      subject(:research_prompt) do
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [["Research completed"]],
+          llm: llm_model,
+        ) do |_, _, prompts|
+          researcher.invoke(&progress_blk)
+          prompts.first.messages.find { |message| message[:type] == :user }[:content]
+        end
+      end
+
+      fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+      fab!(:staff_tag) { Fabricate(:tag, name: "staff-tag") }
+      fab!(:staff_tag_group) do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [staff_tag.name])
+      end
+
+      let(:researcher) do
+        described_class.new(
+          {
+            filter: "topic:#{topic_with_tags.id}",
+            goals: "analyze tagged content",
+            dry_run: false,
+          },
+          agent_options: {
+            "researcher_llm" => llm_model.id,
+            "include_private" => include_private,
+          },
+          bot_user: bot_user,
+          llm: nil,
+          context: DiscourseAi::Agents::BotContext.new(user: requester, post: post),
+        )
+      end
+      let(:include_private) { false }
+
+      before { topic_with_tags.tags = [tag_research, staff_tag] }
+
+      context "when the requester is a regular user" do
+        let(:requester) { user }
+
+        it "omits the tag from the research prompt" do
+          expect(research_prompt).not_to include(staff_tag.name)
+        end
+
+        it "keeps the public tag in the research prompt" do
+          expect(research_prompt).to include(tag_research.name)
+        end
+      end
+
+      context "when the requester is a staff member" do
+        let(:requester) { moderator }
+
+        it "omits the tag from the research prompt" do
+          expect(research_prompt).not_to include(staff_tag.name)
+        end
+      end
+
+      context "when private content is included for a staff member" do
+        let(:requester) { moderator }
+        let(:include_private) { true }
+
+        it "includes the tag in the research prompt" do
+          expect(research_prompt).to include(staff_tag.name)
+        end
+      end
+
+      context "when private content is included for a regular user" do
+        let(:requester) { user }
+        let(:include_private) { true }
+
+        it "omits the tag from the research prompt" do
+          expect(research_prompt).not_to include(staff_tag.name)
+        end
+      end
     end
   end
 end

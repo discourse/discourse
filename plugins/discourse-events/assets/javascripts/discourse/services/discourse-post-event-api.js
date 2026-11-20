@@ -1,4 +1,5 @@
 import Service from "@ember/service";
+import moment from "moment";
 import { ajax } from "discourse/lib/ajax";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 import DiscoursePostEventInvitee from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-invitee";
@@ -14,6 +15,10 @@ export default class DiscoursePostEventApi extends Service {
   eventsPromise = null;
 
   #eventsByTopicId = new Map();
+
+  get #basePath() {
+    return "/discourse-post-event";
+  }
 
   // cached per topic id so the live composer preview (which re-cooks on every
   // keystroke) only hits the endpoint once per linked topic; failed requests
@@ -69,7 +74,10 @@ export default class DiscoursePostEventApi extends Service {
   }
 
   async listEventInvitees(event, data = {}) {
-    const result = await this.#getRequest(`/events/${event.id}/invitees`, data);
+    const result = await this.#getRequest(`/events/${event.id}/invitees`, {
+      ...data,
+      occurrence_starts_at: this.#normalizedOccurrenceStartsAt(event),
+    });
     return DiscoursePostEventInvitees.create(result);
   }
 
@@ -104,6 +112,10 @@ export default class DiscoursePostEventApi extends Service {
     event.shouldDisplayInvitees =
       result.invitee.meta.event_should_display_invitees;
 
+    if (event.isFutureOccurrence) {
+      event.filterForFutureOccurrence();
+    }
+
     const capacity = Number(event.maxAttendees);
     if (!Number.isNaN(capacity) && capacity > 0) {
       event.atCapacity = Number(event.stats.going) >= capacity;
@@ -123,7 +135,11 @@ export default class DiscoursePostEventApi extends Service {
       event.watchingInvitee = null;
     }
 
-    if (invitee?.status === "going" && Number(event.stats?.going) > 0) {
+    if (
+      invitee?.status === "going" &&
+      (!event.isFutureOccurrence || invitee.recurring) &&
+      Number(event.stats?.going) > 0
+    ) {
       event.stats.going = Number(event.stats.going) - 1;
     }
 
@@ -153,6 +169,10 @@ export default class DiscoursePostEventApi extends Service {
     event.shouldDisplayInvitees =
       result.invitee.meta.event_should_display_invitees;
 
+    if (event.isFutureOccurrence) {
+      event.filterForFutureOccurrence();
+    }
+
     const capacity = Number(event.maxAttendees);
     if (!Number.isNaN(capacity) && capacity > 0) {
       event.atCapacity = Number(event.stats.going) >= capacity;
@@ -161,8 +181,21 @@ export default class DiscoursePostEventApi extends Service {
     return invitee;
   }
 
-  get #basePath() {
-    return "/discourse-post-event";
+  #normalizedOccurrenceStartsAt(event) {
+    if (!event.startsAt) {
+      return null;
+    }
+
+    let startsAt;
+    if (event.allDay) {
+      startsAt = moment.utc(event.startsAt, "YYYY-MM-DD", true);
+    } else if (event.showLocalTime) {
+      startsAt = moment.tz(event.startsAt, event.timezone || "UTC");
+    } else {
+      startsAt = moment.parseZone(event.startsAt);
+    }
+
+    return startsAt.isValid() ? startsAt.utc().toISOString() : null;
   }
 
   #getRequest(endpoint, data = {}) {

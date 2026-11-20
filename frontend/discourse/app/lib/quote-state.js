@@ -2,9 +2,14 @@ import { tracked } from "@glimmer/tracking";
 import { waitForPromise } from "@ember/test-waiters";
 import toMarkdown from "discourse/lib/to-markdown";
 
+/**
+ * @typedef {{ full?: boolean, username?: string, post?: string | number, topic?: string | number }} QuoteOptions
+ */
 export default class QuoteState {
+  /** @type {string | number | null | undefined} */
   @tracked postId = null;
 
+  /** @type {QuoteOptions | null | undefined} */
   #opts = null;
   #selectedHtml = null;
   #cookedHtml = null;
@@ -20,6 +25,7 @@ export default class QuoteState {
     return template.content.textContent ?? "";
   }
 
+  /** @returns {QuoteOptions | null | undefined} */
   get opts() {
     return this.#opts;
   }
@@ -54,24 +60,6 @@ export default class QuoteState {
     };
   }
 
-  async #computeMarkdown() {
-    try {
-      const promises = [toMarkdown(this.#selectedHtml)];
-      if (this.#cookedHtml) {
-        promises.push(toMarkdown(this.#cookedHtml));
-      }
-
-      const [selectedMd, cookedMd] = await Promise.all(promises);
-
-      return {
-        markdown: selectedMd || this.buffer,
-        full: !!(cookedMd && selectedMd === cookedMd),
-      };
-    } catch {
-      return { markdown: this.buffer, full: false };
-    }
-  }
-
   copyFrom(other) {
     this.selected(
       other.postId,
@@ -88,5 +76,23 @@ export default class QuoteState {
     this.#selectedHtml = null;
     this.#cookedHtml = null;
     this.#markdownPromise = null;
+  }
+
+  async #computeMarkdown() {
+    try {
+      const promises = [toMarkdown(this.#selectedHtml)];
+      if (this.#cookedHtml) {
+        promises.push(toMarkdown(this.#cookedHtml));
+      }
+
+      const [selectedMd, cookedMd] = await Promise.all(promises);
+
+      return {
+        markdown: selectedMd || this.buffer,
+        full: !!(cookedMd && selectedMd === cookedMd),
+      };
+    } catch {
+      return { markdown: this.buffer, full: false };
+    }
   }
 }

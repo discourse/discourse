@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
-import { toPlainObject } from "../../lib/utilities";
+import { toPlainObject } from "../../lib/utilities.js";
 
 const CREATE_ATTRIBUTES = [
   "id",

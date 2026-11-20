@@ -23,16 +23,22 @@ export default class ChatNotificationManager extends Service {
     this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
   }
 
+  get messageBusChannel() {
+    return `/chat${alertChannel(this.currentUser)}`;
+  }
+
+  get #shouldRun() {
+    return (
+      !this.capabilities.isMobileDevice && this.chat.userCanChat && !isTesting()
+    );
+  }
+
   start() {
     if (!this.#shouldRun) {
       return;
     }
 
     this.messageBus.subscribe(this.messageBusChannel, this.onMessage);
-  }
-
-  get messageBusChannel() {
-    return `/chat${alertChannel(this.currentUser)}`;
   }
 
   @bind
@@ -57,12 +63,6 @@ export default class ChatNotificationManager extends Service {
       this.siteSettings,
       this.currentUser,
       this.appEvents
-    );
-  }
-
-  get #shouldRun() {
-    return (
-      !this.capabilities.isMobileDevice && this.chat.userCanChat && !isTesting()
     );
   }
 }

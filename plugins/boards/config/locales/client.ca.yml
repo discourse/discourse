@@ -6,7 +6,19 @@
 
 ca:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Títol"
+        icon: "Icona"
+        color: "Color"
+      create_board:
+        name: "Nom"
+        tag_names: "Etiquetes"
+        category_ids: "Categories"
     boards:
+      status:
+        all: "Tots"
+        open: "Obre"
       board:
         remove_card: "Elimina"
         title: "Títol"
@@ -17,7 +29,9 @@ ca:
           other: "%{count} respostes"
         assign: "Assigna"
         unassign: "Desassigna"
-        created_by: "Creat per"
+        owners:
+          one: "Propietari"
+          other: "Propietaris"
       manage:
         name: "Nom"
         constraint_categories: "Categories"

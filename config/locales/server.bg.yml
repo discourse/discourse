@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 bg:
+  markdown_endpoints:
+    latest: "Последни"
+    categories: "Категории"
+    tags: "Етикети"
+    previous_page: "Предишна страница"
+    next_page: "Следваща страница"
+    replies: "Отговори"
+    last_updated: "Последна актуализация"
+    event:
+      location: "Локация"
+  mcp:
+    errors:
+      topic_not_found: "Темата не е намерена"
+    oauth:
+      deny: "Отказ"
   llms_txt:
     sections:
       optional: "По избор"
@@ -429,6 +444,7 @@ bg:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Неизвестно"
     traffic_types:
       anonymous: "Анонимен"
   change_email:
@@ -495,7 +511,7 @@ bg:
         make: "Тази тема сега е банер. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя."
         remove: "Тази тема вече не е банер. Тя няма да се появява повече най-отгоре на всяка страница."
   unsubscribe:
-    title: "Отписвам"
+    unsubscribe: "Отписвам"
     log_out: "Изход "
     digest_frequency:
       never: "никога"
@@ -955,7 +971,6 @@ bg:
     enable_names: "Покажи пълното име на потребителите на техните профили, потребителски карти, и имейли. Деактивирай за скриване на пълното име навсякъде."
     display_name_on_posts: "Покажи пълните имена на потребителите в техните публикации като допълнение към потребителските им имена @username."
     show_time_gap_days: "Ако двете публикации са направени през такъв дълъг период, покажи разликата във времето в темата."
-    short_progress_text_threshold: "След достигането на определен брой публикации в темата, в лентата за напредъка ще бъде видим само броят на текущите публикации. Ако промените ширината на лентата за напредъка, може да се наложи да промените тази стойност. "
     embed_post_limit: "Максимален брой публикации за вграждане."
     slug_generation_method: "Изберете метод за генериране на URL. 'кодирано' ще използва букви URL, кодирани с проценти. 'не' ще откаже генерацията като цяло."
     emoji_deny_list: "Тези емотикони няма да бъдат налични за използване в менюта или кратки кодове."
@@ -983,6 +998,8 @@ bg:
       invalid_reply_by_email_address: "Стойността трябва да съдържа '%{reply_key}' и да бъде различна от известяващия имейл."
       invalid_uncategorized_category_setting: 'Категорията „Некатегоризирани“ не може да бъде избрана, ако „разрешаване на некатегоризирани теми“ не е активирано.'
       invalid_search_ranking_weights: "Стойността е невалидна за настройката на сайта „search_ranking_weights\". Пример: „{0.1,0.2,0.3,1.0}“. Имайте предвид, че максималната стойност за всяко тегло е 1.0."
+    keywords:
+      company_url: "уебсайт"
   search:
     within_post: "#%{post_number} от %{username}"
     types:
@@ -1048,6 +1065,7 @@ bg:
     new_registrations_disabled: "В момента новите регистации са забранени."
     password_too_long: "Паролата е ограничена до 200 символа."
     reserved_username: "Това потребителско име не е разрешено."
+    missing_username: "Моля, въведете потребителско име"
     auth_complete: "Удостоверяването е завършено."
     click_to_continue: "Кликнете тук, за да продължите."
     second_factor_title: "Двуфакторна автентификация"
@@ -1400,14 +1418,25 @@ bg:
     graph_title: "Брой търсения"
   onebox:
     discourse:
+      recurrence:
+        weekdays:
+          sunday: "Неделя"
+          monday: "Понеделник"
+          tuesday: "Вторник"
+          wednesday: "Сряда"
+          thursday: "Четвъртък"
+          friday: "Петък"
+          saturday: "Събота"
       user_joined_community: "Присъединен на %{date}"
     google_meet:
       meeting_code: "Код:"
     github:
       closed: "затворена"
-      status_date:
-        approved: "одобрен"
-        closed: "затворена"
+      pr_status:
+        draft: "Чернова"
+        open: "Отвори"
+        approved: "Одобрена"
+        closed: "Затворена"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ви спомена в "%{topic}" - %{site_title}'
@@ -1436,6 +1465,10 @@ bg:
         one: "%{count} секунда"
         other: "%{count} секунди "
     actions:
+      answer_yes:
+        title: "Да"
+      answer_no:
+        title: "Не"
       agree:
         title: "Да"
       agree_and_keep:
@@ -1511,13 +1544,6 @@ bg:
         title: "Да"
       approve_and_unhide:
         title: "Да"
-      delete_post:
-        title: "Изтрий публикацията"
-        complete: "Публикацията е изтрита"
-      hide_post:
-        title: "Скриване на публикацията"
-      restore_post:
-        title: "Възстановяване на публикацията"
       silence_user:
         title: "Заглушаване на потребителя"
       suspend_user:

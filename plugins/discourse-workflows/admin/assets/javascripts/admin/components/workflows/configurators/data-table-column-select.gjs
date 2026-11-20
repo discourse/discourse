@@ -4,8 +4,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { propertySelectNoneKey } from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+import { propertySelectNoneKey } from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class DataTableColumnSelect extends Component {
   @service workflowsNodeTypes;
@@ -64,22 +64,22 @@ export default class DataTableColumnSelect extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       {{#if this.options.length}}
         <ComboBox
           class="workflows-data-table-column-select"
           @content={{this.options}}
           @nameProperty="name"
-          @value={{@field.value}}
-          @valueProperty="id"
           @onChange={{this.handleChange}}
           @options={{hash none=this.none}}
+          @value={{@field.value}}
+          @valueProperty="id"
         />
       {{/if}}
     </ExpressionWrapper>

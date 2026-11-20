@@ -6,7 +6,19 @@
 
 sl:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Naziv"
+        icon: "Ikona"
+        color: "Barva"
+      create_board:
+        name: "Ime"
+        tag_names: "Oznake"
+        category_ids: "Kategorije"
     boards:
+      status:
+        all: "Vsi"
+        open: "Odpri"
       board:
         remove_card: "Odstrani"
         title: "Naziv"
@@ -16,7 +28,11 @@ sl:
           two: "%{count} odgovora"
           few: "%{count} odgovori"
           other: "%{count} odgovorov"
-        created_by: "Ustvaril"
+        owners:
+          one: "Skrbnik"
+          two: "Skrbniki"
+          few: "Skrbniki"
+          other: "Skrbniki"
       manage:
         name: "Ime"
         constraint_categories: "Kategorije"

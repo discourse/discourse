@@ -86,8 +86,6 @@ el:
           other: "Σίγουρα θέλετε να διαγράψετε αυτά τα %{count} μηνύματα;"
       channel_settings:
         title: "Ρυθμίσεις καναλιού"
-        edit: "Επεξεργασία"
-        add: "Προσθήκη"
         close_channel: "Κλείσιμο καναλιού"
         open_channel: "Άνοιγμα καναλιού"
         open_channel_disabled_archived: "Τα αρχειοθετημένα κανάλια δεν μπορούν να ανοίξουν ξανά."
@@ -97,7 +95,6 @@ el:
         join_channel: "Εγγραφή στο κανάλι"
         leave_channel: "Αποχώρηση από το κανάλι"
         leave_groupchat_info: "Αποχωρώντας από αυτήν την ομαδική συνομιλία, δεν θα έχετε πλέον πρόσβαση σε αυτήν και δεν θα λαμβάνετε ειδοποιήσεις σχετικά με αυτήν. Για να συμμετάσχετε ξανά, θα πρέπει να σας προσκαλέσει ξανά ένα μέλος της ομαδικής συνομιλίας."
-        notification_settings: "Ρυθμίσεις ειδοποιήσεων"
         notification_settings_context: "Ειδοποιήσεις"
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
@@ -118,7 +115,7 @@ el:
         confirm_channel_name: "Εισαγάγετε όνομα καναλιού"
       channels_list_popup:
         browse: "Περιήγηση καναλιών"
-        create: "Νέο κανάλι"
+        create: "Νέο κανάλι..."
       close: "Κλείσιμο"
       remove: "Αφαίρεση"
       collapse: "Σύμπτυξη Συρταριού Συνομιλίας"
@@ -133,8 +130,6 @@ el:
       muted: "σε σίγαση"
       joined: "έγινε μέλος"
       empty_state:
-        direct_message_cta: "Ξεκινήστε μια προσωπική συνομιλία"
-        direct_message: "Μπορείτε επίσης να ξεκινήσετε μια προσωπική συνομιλία με έναν ή περισσότερους χρήστες."
         title: "Δεν βρέθηκαν κανάλια"
         my_threads: "Δεν έχετε κανένα νήμα ακόμη. Τα νήματα στα οποία συμμετέχετε θα εμφανίζονται εδώ."
       email_frequency:
@@ -275,21 +270,22 @@ el:
       members_view:
         filter_placeholder: Βρείτε μέλη
         add_member: Προσθήκη Μέλους
-        back_to_settings: "Πίσω στις ρυθμίσεις"
       about_view:
         associated_topic: Συνδεδεμένο θέμα
         associated_category: Συνδεδεμένη κατηγορία
-        title: Τίτλος
         name: Όνομα
         description: Περιγραφή
       channel_info:
         back_to_all_channels: "Όλα τα κανάλια"
         back_to_channel: "Πίσω"
+        nav_label: "Πληροφορίες καναλιού"
         tabs:
           members: Μέλη
+          preferences: Προτιμήσεις
           settings: Ρυθμίσεις
           search: Αναζήτηση
         remove_member: "Αφαίρεση"
+        members_title: "%{channel} μέλη"
       new_message_modal:
         title: Αποστολή μηνύματος
         add_user_long: <kbd>shift + click</kbd> ή <kbd>shift + enter</kbd><span>Προσθήκη @%{username}</span>
@@ -309,14 +305,11 @@ el:
         create_new_group_chat: "Δημιουργία ομαδικής συνομιλίας"
         group_with_too_many_members: "έχει πάρα πολλά μέλη (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Επεξεργασία καναλιού
         input_placeholder: Προσθέστε ένα όνομα
         name: Όνομα καναλιού
         reset_emoji: Επαναφορά emoji
       channel_edit_description_modal:
-        title: Επεξεργασία περιγραφής
         input_placeholder: Προσθέστε μια περιγραφή
-        description: Πείτε στους χρήστες τι αφορά αυτό το κανάλι
       direct_message_creator:
         add_to_channel: "Προσθήκη στο κανάλι"
         title: Νέο Μήνυμα
@@ -409,13 +402,15 @@ el:
         always: "Για όλες τις δραστηριότητες"
       settings:
         channel_wide_mentions_label: "Να επιτρέπονται οι επισημάνσεις @all και @here"
-        channel_wide_mentions_description: "Να επιτρέπεται στους χρήστες να ειδοποιούν όλα τα μέλη του #%{channel} με @all ή μόνο όσους είναι ενεργοί εκείνη τη στιγμή με @here"
         auto_join_users_label: "Αυτόματη προσθήκη χρηστών"
         notification_level: "Αποστολή ειδοποιήσεων push"
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
         mute: "Σίγαση καναλιού"
         unmute: "Άρση σίγασης καναλιού"
+        muted_until_hint: "έως %{until}"
+        mute_options:
+          "off": "Ανενεργό"
         threading_enabled: "Ενεργοποιημένα"
         threading_disabled: "Απενεργοποιημένο"
         muted_on: "Ενεργό"
@@ -425,9 +420,6 @@ el:
         save: "Αποθήκευση"
         saved: "Αποθηκεύτηκε! "
         unfollow: "Αποχώρηση"
-        admin_title: "Διαχειριστής"
-        settings_title: "Ρυθμίσεις"
-        info_title: "Πληροφορίες καναλιού"
         category_label: "Κατηγορία"
         history_label: "Ιστορικό"
         members_label: "Μέλη"
@@ -453,14 +445,19 @@ el:
       direct_messages:
         title: "ΑΜ"
         aria_label: "Εναλλαγή σε άμεσα μηνύματα"
-        new: "Δημιουργήστε μια προσωπική συνομιλία"
+        new_group: "Νέα ομαδική συνομιλία"
         create: "Εμπρός"
-        leave: "Αποχωρήστε από την προσωπική συνομιλία"
-        close: "Κλείστε την προσωπική συνομιλία"
+        leave: "Αποχώρηση από το κανάλι"
+        close: "Κλείσιμο καναλιού"
         cannot_create: "Λυπούμαστε, δεν μπορείτε να στείλετε άμεσα μηνύματα."
       channel_list:
         title: "Κανάλια"
         aria_label: "Εναλλαγή στη λίστα καναλιών"
+        options:
+          filter: "Φίλτρο"
+        filter:
+          all: "Όλα τα κανάλια"
+          mentions: "Επισημάνσεις"
       incoming_webhooks:
         back: "Πίσω"
         channel_placeholder: "Επιλέξτε ένα κανάλι"
@@ -515,13 +512,6 @@ el:
         notify_moderators: "Αυτό το μήνυμα χρειάζεται έλεγχο από το προσωπικό για έναν άλλον λόγο που δεν αναφέρεται παραπάνω."
       flagging:
         action: "Αναφορά μηνύματος"
-      emoji_picker:
-        favorites: "Συχνά χρησιμοποιούμενα"
-        objects: "Αντικείμενα"
-        activities: "Δραστηριότητες"
-        flags: "Σημάνσεις"
-        symbols: "Σύμβολα"
-        no_results: "Δεν υπάρχουν αποτελέσματα"
       thread:
         title: "Τίτλος"
         view_thread: Προβολή νήματος
@@ -579,11 +569,6 @@ el:
           direct_html: '<span>%{username}</span> <span>σας επισήμανε στο "%{channel}"</span>'
           other_plain: 'επισήμανε %{identifier} στο "%{channel}"'
           other_html: '<span>%{username}</span> <span>επισήμανε %{identifier} στο "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "σας επισήμανε σε προσωπική συνομιλία"
-          direct_html: "<span>%{username}</span> <span>σας επισήμανε σε προσωπική συνομιλία</span>"
-          other_plain: "επισήμανε %{identifier} σε προσωπική συνομιλία"
-          other_html: "<span>%{username}</span> <span>επισήμανε %{identifier} σε προσωπική συνομιλία</span>"
         chat_message: "Νέο μήνυμα συνομιλίας"
         chat_quoted: "%{username} παρέθεσε το μήνυμα συνομιλίας σας"
       titles:
@@ -645,9 +630,6 @@ el:
         chat:
           title: Συνομιλία
     sidebar:
-      start_new_dm:
-        text: Έναρξη νέου ΠΜ
-        title: Δημιουργία προσωπικής συνομιλίας
       panels:
         chat:
           label: "Συνομιλία"
@@ -659,8 +641,12 @@ el:
       chat_message_created:
         channel_id: "Κανάλι"
       send_chat_message:
+        targets:
+          channel: "Κανάλι"
         channel_id: "Κανάλι"
+        target_usernames: "Παραλήπτες"
         message: "Μήνυμα"
+        actor_username: "Αποστολέας"
       chat_approval:
         message: "Μήνυμα"
         buttons: "Κουμπιά"

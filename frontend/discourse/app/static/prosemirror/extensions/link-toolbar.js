@@ -8,7 +8,11 @@ import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import { isTopLevel } from "discourse-markdown-it/features/onebox";
-import { oneboxPluginKey, oneboxTypeAtPos } from "./onebox";
+import {
+  isPastOneboxLimit,
+  oneboxPluginKey,
+  oneboxTypeAtPos,
+} from "./onebox.js";
 
 const AUTO_LINKS = ["autolink", "linkify"];
 const MENU_OFFSET = 12;
@@ -131,6 +135,15 @@ class LinkToolbarPluginView {
     if (!this.#menuInstance?.content?.contains(document.activeElement)) {
       this.#resetToolbar();
     }
+  }
+
+  /**
+   * ProseMirror view destroy handler
+   */
+  destroy() {
+    this.#menuInstance?.destroy();
+    this.#menuInstance = null;
+    this.#linkToolbar = null;
   }
 
   #resetToolbar() {
@@ -302,6 +315,21 @@ class LinkToolbarPluginView {
       return;
     }
 
+    const { siteSettings, toasts } = this.#getContext();
+    if (
+      isPastOneboxLimit(
+        this.#view.state.doc,
+        range.from,
+        siteSettings.max_oneboxes_per_post
+      )
+    ) {
+      toasts.default({
+        duration: "short",
+        data: { message: i18n("composer.link_toolbar.preview_limit_reached") },
+      });
+      return;
+    }
+
     this.#resetToolbar();
 
     const { state, dispatch } = this.#view;
@@ -384,15 +412,6 @@ class LinkToolbarPluginView {
     } finally {
       this.#calculatingCoords = false;
     }
-  }
-
-  /**
-   * ProseMirror view destroy handler
-   */
-  destroy() {
-    this.#menuInstance?.destroy();
-    this.#menuInstance = null;
-    this.#linkToolbar = null;
   }
 }
 

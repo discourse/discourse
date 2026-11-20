@@ -28,7 +28,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     expect(bookmark3.reminder_last_sent_at).not_to eq(nil)
   end
 
-  it "will not send a reminder for a bookmark in the future" do
+  it "does not remind the user about a future bookmark" do
     freeze_time
     bookmark4 = Fabricate(:bookmark, reminder_at: 1.day.from_now)
     expect { job.execute }.to change { Notification.where(user: user).count }.by(3)
@@ -58,7 +58,16 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     end
   end
 
-  it "will not send notification when topic is not available" do
+  it "expires an inaccessible hidden post's reminder without notifying or deleting its bookmark" do
+    bookmark1.bookmarkable.update!(hidden: true)
+    bookmark1.update!(auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent])
+    expect { job.execute }.to change { Notification.where(user: user).count }.by(2)
+    expect(bookmark1.reload.reminder_last_sent_at).to be_present
+    expect(Bookmark.pending_reminders.where(id: bookmark1.id)).to be_empty
+    expect(bookmark1).to be_persisted
+  end
+
+  it "does not notify when the topic is unavailable" do
     bookmark1.bookmarkable.topic.destroy
     bookmark2.bookmarkable.topic.destroy
     bookmark3.bookmarkable.topic.destroy

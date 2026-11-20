@@ -1,4 +1,4 @@
-import LoginRequired from "../components/login-required";
+import LoginRequired from "../components/login-required.gjs";
 
 export default <template>
   <div class="container">

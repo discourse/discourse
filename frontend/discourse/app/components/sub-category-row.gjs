@@ -10,12 +10,12 @@ export default class SubCategoryRow extends CategoryListItem {
     {{#unless this.isHidden}}
       {{#if this.site.mobileView}}
         <tr
+          class="subcategory-list-item category {{if this.isMuted 'muted'}}"
           data-category-id={{this.category.id}}
           style={{borderColor this.category.color}}
-          class="subcategory-list-item category {{if this.isMuted 'muted'}}"
         >
           <td>
-            <CategoryTitleLink @tagName="h4" @category={{this.category}} />
+            <CategoryTitleLink @category={{this.category}} @tagName="h4" />
             <div class="subcategories-list">
               {{#if this.displayedSubcategories}}
                 <div class="subcategories">
@@ -32,20 +32,20 @@ export default class SubCategoryRow extends CategoryListItem {
         </tr>
       {{else}}
         <tr
-          data-category-id={{this.category.id}}
-          data-notification-level={{this.category.notificationLevelString}}
           class="{{if
               this.category.description_excerpt
               'has-description'
               'no-description'
             }}
             {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
+          data-category-id={{this.category.id}}
+          data-notification-level={{this.category.notificationLevelString}}
         >
           <td
             class="category {{if this.isMuted 'muted'}}"
             style={{borderColor this.category.color}}
           >
-            <CategoryTitleLink @tagName="h4" @category={{this.category}} />
+            <CategoryTitleLink @category={{this.category}} @tagName="h4" />
             {{#if this.category.description_excerpt}}
               <div class="category-description subcategory-description">
                 <DDecoratedHtml

@@ -47,8 +47,8 @@ RSpec.describe "Data Explorer AI query generation" do
       visit("/admin/plugins/discourse-data-explorer/queries/new")
 
       expect(page).to have_css(".query-mode-switch")
-      expect(page).to have_css(".query-new__ai-label", text: "Generate with AI")
-      expect(page).to have_css(".query-new__ai-textarea")
+      expect(page).to have_css(".query-new__ai-heading", text: "Generate with AI")
+      expect(page).to have_css(".query-new__ai-section [data-name='prompt'] textarea")
       expect(page).to have_button("Generate")
     end
 

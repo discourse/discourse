@@ -6,7 +6,22 @@
 
 hu:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Cím"
+        icon: "Ikon"
+        color: "Szín"
+        tag_name: "Címke"
+      create_board:
+        name: "Név"
+        slug: "URL slug"
+        tag_names: "Címkék"
+        category_ids: "Kategóriák"
     boards:
+      status:
+        all: "Összes"
+        open: "Nyitott"
+        archived: "Archivált"
       board:
         remove_card: "Eltávolítás"
         new_topic: "Új téma..."
@@ -20,7 +35,9 @@ hu:
         assign: "Kiosztás"
         reassign: "Átadás"
         unassign: "Elvétel"
-        created_by: "Létrehozta:"
+        owners:
+          one: "Tulajdonos"
+          other: "tulajdonosok"
       manage:
         name: "Név"
         slug: "URL slug"

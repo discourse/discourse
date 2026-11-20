@@ -1,10 +1,16 @@
+import PreviewNodeView from "discourse/components/composer/preview-node-view";
+import { previewSourceNode } from "discourse/lib/composer/preview-block";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import MathEditModal from "discourse/plugins/discourse-math/discourse/components/modal/math-edit";
+import MathBlockPreview from "../discourse/components/math-block-preview.gjs";
 import {
   buildDiscourseMathOptions,
+  mathSource,
   renderMathInElement,
-} from "./math-renderer";
+} from "./math-renderer.js";
+
+const LANGUAGE = "latex";
 
 const createMathNodeView =
   ({ getContext, pmState: { NodeSelection } }) =>
@@ -55,7 +61,7 @@ class MathNodeView {
     modal.show(MathEditModal, {
       model: {
         initialText: this.node.attrs.text ?? "",
-        isBlock: !this.node.isInline,
+        isBlock: false,
         mathType: this.node.attrs.mathType ?? "tex",
         onApply: (text) => this.#applyEdit(text),
       },
@@ -69,8 +75,7 @@ class MathNodeView {
     this.getContext = getContext;
     this.NodeSelection = NodeSelection;
 
-    const isInline = node.isInline;
-    this.dom = document.createElement(isInline ? "span" : "div");
+    this.dom = document.createElement("span");
     this.dom.classList.add("composer-math-node");
 
     this.editButton = document.createElement("button");
@@ -85,7 +90,7 @@ class MathNodeView {
     this.editButton.innerHTML = iconHTML("pencil");
     this.editButton.addEventListener("click", this.openEditModal);
 
-    this.content = document.createElement(isInline ? "span" : "div");
+    this.content = document.createElement("span");
     this.content.classList.add("math-node-content");
     this.content.setAttribute("contenteditable", "false");
 
@@ -133,8 +138,7 @@ class MathNodeView {
   }
 
   #syncContent() {
-    const isAscii =
-      this.node.isInline && this.node.attrs.mathType === "asciimath";
+    const isAscii = this.node.attrs.mathType === "asciimath";
 
     this.content.classList.toggle("asciimath", isAscii);
     this.content.classList.toggle("math", !isAscii);
@@ -158,7 +162,11 @@ class MathNodeView {
 const extension = {
   nodeViews: {
     math_inline: createMathNodeView,
-    math_block: createMathNodeView,
+    math_block: {
+      component: PreviewNodeView,
+      hasContent: true,
+      options: { preview: MathBlockPreview },
+    },
   },
   nodeSpec: {
     math_inline: {
@@ -172,10 +180,12 @@ const extension = {
         mathType: { default: "tex" },
       },
       parseDOM: [
+        // MathJax renders next to the source it hides, so only the source is kept
+        { tag: "span.mathjax-math", ignore: true, priority: 60 },
         {
           tag: "span.math",
           getAttrs: (dom) => ({
-            text: dom.textContent.trim(),
+            text: mathSource(dom).trim(),
             mathType: "tex",
           }),
         },
@@ -195,24 +205,24 @@ const extension = {
     },
     math_block: {
       group: "block",
+      content: "preview_source",
       atom: true,
-      selectable: true,
       defining: true,
       isolating: true,
-      attrs: {
-        text: { default: "" },
-        mathType: { default: "tex" },
-      },
+      createGapCursor: true,
       parseDOM: [
+        { tag: "div.mathjax-math", ignore: true, priority: 60 },
         {
           tag: "div.math",
-          getAttrs: (dom) => ({
-            text: dom.textContent.trim(),
-            mathType: "tex",
-          }),
+          // cooked source is plain text the parser would otherwise collapse
+          getContent: (dom, schema) =>
+            schema.nodes.math_block.create(
+              null,
+              previewSourceNode(schema, mathSource(dom), LANGUAGE)
+            ).content,
         },
       ],
-      toDOM: (node) => ["div", { class: "math" }, node.attrs.text],
+      toDOM: () => ["div", { class: "math" }, 0],
     },
   },
   parse: {
@@ -223,12 +233,14 @@ const extension = {
         mathType: token.meta?.mathType || "tex",
       }),
     },
-    math_block: {
-      node: "math_block",
-      getAttrs: (token) => ({
-        text: token.content,
-        mathType: token.meta?.mathType || "tex",
-      }),
+    math_block: (state, token) => {
+      state.openNode(state.schema.nodes.math_block);
+      state.openNode(state.schema.nodes.preview_source, { params: LANGUAGE });
+      state.addText(token.content);
+      state.closeNode();
+      state.closeNode();
+
+      return true;
     },
   },
   serializeNode({ utils: { isBoundary } }) {
@@ -250,11 +262,21 @@ const extension = {
         }
       },
       math_block(state, node) {
-        state.ensureNewLine();
-        const content = escapeDelimiter(node.attrs.text ?? "", "$");
         state.write("$$\n");
-        state.write(content);
-        state.write("\n$$\n\n");
+        // the block content is not unescaped, so only escape a line that
+        // would otherwise close the block
+        state.text(
+          node.textContent.replace(
+            /^([ \t]*)\$\$([ \t]*)$/gm,
+            (_, before, after) => `${before}\\$\\$${after}`
+          ),
+          false
+        );
+        // the closing fence needs its own write to pick up the block prefix,
+        // or the block loses it inside a blockquote
+        state.ensureNewLine();
+        state.write("$$");
+        state.closeBlock(node);
       },
     };
   },

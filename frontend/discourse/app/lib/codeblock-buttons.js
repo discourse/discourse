@@ -110,10 +110,12 @@ export default class CodeblockButtons {
     const pendingOffsets = [];
 
     codeBlocks.forEach((codeBlock) => {
+      const pre = codeBlock.parentElement;
+      const badge = pre.querySelector(":scope > .ai-badge");
       const wrapperEl = document.createElement("div");
       wrapperEl.classList.add("codeblock-button-wrapper");
 
-      codeBlock.parentElement.classList.add("codeblock-buttons");
+      pre.classList.add("codeblock-buttons");
       codeBlock.before(wrapperEl);
 
       if (this.showCopy) {
@@ -122,7 +124,6 @@ export default class CodeblockButtons {
         copyButton.ariaLabel = i18n("copy_codeblock.copy");
         copyButton.innerHTML = iconHTML("copy");
         wrapperEl.appendChild(copyButton);
-        pendingOffsets.push([wrapperEl, codeBlock]);
       }
 
       if (this.#site?.desktopView && this.showFullscreen) {
@@ -137,6 +138,14 @@ export default class CodeblockButtons {
         fullscreenButton.innerHTML = iconHTML("discourse-expand");
         wrapperEl.appendChild(fullscreenButton);
       }
+
+      if (badge) {
+        wrapperEl.appendChild(badge);
+      }
+
+      if (this.showCopy || badge) {
+        pendingOffsets.push([wrapperEl, codeBlock]);
+      }
     });
 
     // read every scrollbar gutter before writing any of them back; interleaving
@@ -146,7 +155,7 @@ export default class CodeblockButtons {
     );
 
     pendingOffsets.forEach(([wrapperEl], index) => {
-      wrapperEl.style.right = `${gutters[index]}px`;
+      wrapperEl.style.insetInlineEnd = `${gutters[index]}px`;
     });
   }
 
@@ -171,12 +180,10 @@ export default class CodeblockButtons {
 
     if (codeEl) {
       // replace any weird whitespace characters with a proper '\u20' whitespace
-      const text = codeEl.innerText
-        .replace(
-          /[\f\v\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/g,
-          " "
-        )
-        .trim();
+      const text = codeEl.innerText.replace(
+        /[\f\v\u00a0\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/g,
+        " "
+      );
 
       if (action === "copy") {
         const result = clipboardCopy(text);

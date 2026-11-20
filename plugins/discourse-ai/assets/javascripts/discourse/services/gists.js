@@ -12,26 +12,6 @@ export default class Gists extends Service {
 
   @tracked preference = this.#loadPreference();
 
-  #loadPreference() {
-    // Migrate from old PM-specific key if it exists and main key doesn't
-    const oldPmPreference = localStorage.getItem(
-      DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY
-    );
-    const currentPreference = localStorage.getItem(TOPIC_LIST_LAYOUT_KEY);
-
-    if (oldPmPreference && !currentPreference) {
-      // Migrate the PM preference to the unified key
-      localStorage.setItem(TOPIC_LIST_LAYOUT_KEY, oldPmPreference);
-      localStorage.removeItem(DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY);
-      return oldPmPreference;
-    } else if (oldPmPreference) {
-      // Just clean up the old key if main key exists
-      localStorage.removeItem(DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY);
-    }
-
-    return currentPreference;
-  }
-
   get routerAttributes() {
     return this.router.currentRoute.attributes;
   }
@@ -77,5 +57,25 @@ export default class Gists extends Service {
   setPreference(value) {
     this.preference = value;
     localStorage.setItem(TOPIC_LIST_LAYOUT_KEY, value);
+  }
+
+  #loadPreference() {
+    // Migrate from old PM-specific key if it exists and main key doesn't
+    const oldPmPreference = localStorage.getItem(
+      DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY
+    );
+    const currentPreference = localStorage.getItem(TOPIC_LIST_LAYOUT_KEY);
+
+    if (oldPmPreference && !currentPreference) {
+      // Migrate the PM preference to the unified key
+      localStorage.setItem(TOPIC_LIST_LAYOUT_KEY, oldPmPreference);
+      localStorage.removeItem(DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY);
+      return oldPmPreference;
+    } else if (oldPmPreference) {
+      // Just clean up the old key if main key exists
+      localStorage.removeItem(DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY);
+    }
+
+    return currentPreference;
   }
 }

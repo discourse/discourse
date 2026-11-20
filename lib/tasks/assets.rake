@@ -70,11 +70,6 @@ def assets_path
   "#{Rails.public_path.join("assets")}"
 end
 
-def gzip(path)
-  cmd = "gzip -f -c -9 #{path} > #{path}.gz"
-  system cmd, exception: true
-end
-
 def brotli_command(path)
   compression_quality = ENV["DISCOURSE_ASSETS_PRECOMPILE_DEFAULT_BROTLI_QUALITY"] || "6"
   "brotli -f --quality=#{compression_quality} #{path} --output=#{path}.br"
@@ -131,17 +126,12 @@ task "assets:precompile:compress_js": "environment" do
 
           file_path = "public/assets/#{digested_path}"
 
-          if File.exist?("#{file_path}.gz") && File.exist?("#{file_path}.br")
+          if File.exist?("#{file_path}.br")
             STDERR.puts "Already compressed: #{digested_path}"
             next
           end
 
-          proc.call do
-            log_task_duration(digested_path) do
-              gzip(file_path)
-              brotli(file_path)
-            end
-          end
+          proc.call { log_task_duration(digested_path) { brotli(file_path) } }
         end
     end
   end

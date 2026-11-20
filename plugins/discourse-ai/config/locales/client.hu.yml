@@ -8,6 +8,12 @@ hu:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Újra"
+          date: "Dátum"
+          outcomes:
+            failed: "Sikertelen"
         reports:
           filters:
             sort_by:
@@ -47,6 +53,18 @@ hu:
       discourse_workflows:
         ai_agent:
           mode: "Mód"
+        ai_tool:
+          arguments: "Paraméterek"
+          list_item: "Listaelem"
+          add_list_item: "Elem hozzáadása"
+        mcp_tool:
+          arguments: "Paraméterek"
+        classify:
+          text: "Szöveg"
+          upload_ids: "Képek"
+          name: "Név"
+          type: "Típus"
+          type_score: "Pontszám"
       ai_tool_approval:
         loading: "Betöltés…"
         tool: "Művelet"
@@ -58,25 +76,38 @@ hu:
       llm_selector:
         none: "Egyik sem"
       features:
-        disabled: "(kikapcsolva)"
-        groups: "Csoportok:"
+        table:
+          status: "Állapot"
+          enabled: "Bekapcsolva"
+          feature: "Funkció"
+          groups: "Csoportok"
+        who_can_use:
+          no_one: "Senki"
+        status:
+          "on": "Be"
+          "off": "Ki"
+        chatbot:
+          places:
+            personal_messages: "Személyes üzenetek"
+            chat_direct_messages: "Csevegőüzenetek"
+            none: "Nem érhető el"
         no_agent: "Nincs beállítva"
         no_groups: "Egyik sem"
         edit: "Beállítások"
-        expand_list:
-          one: "(%{count} további)"
-          other: "(%{count} további)"
-        collapse_list: "(kevesebb megjelenítése)"
         nav:
           enabled: "Bekapcsolva"
         filters:
-          all: "Összes"
           reset: "Alaphelyzetbe állítás"
+        sentiment:
+          enabled: "Bekapcsolva"
         search:
           name: "Keresés"
         embeddings:
           setting_groups:
             related_topics: "Kapcsolódó témák"
+        review_queue:
+          setting_groups:
+            settings: "Beállítások"
         image_caption:
           setting_groups:
             settings: "Beállítások"
@@ -88,7 +119,20 @@ hu:
         table: "Táblázat"
       translations:
         title: "Fordítások"
-        category_scope: "Kategóriák"
+        sections:
+          advanced: "Speciális"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategóriák"
+          ai_translation_personal_messages:
+            label: "Személyes üzenetek"
+            choices:
+              none: "Egyik sem"
+              all: "Összes"
+          content_localization_language_switcher:
+            choices:
+              none: "Senki"
+              all: "Mindenki"
         model_progress:
           detail:
             retry: "Újra"
@@ -105,6 +149,8 @@ hu:
               title: "Kategóriák"
             tag:
               title: "Címkék"
+        admin_actions:
+          enabled: "Bekapcsolva"
         stats:
           eta_minutes:
             one: "%{count} perc"
@@ -121,6 +167,8 @@ hu:
             other: "%{count} bejegyzés"
       spam:
         short_title: "Kéretlen tartalom"
+        no_llm_selected: "Egyik sem"
+        no_decision_model_selected: "Egyik sem"
         last_seven_days: "Elmúlt 7 nap"
         enable: "Engedélyezés"
         save_button: "Módosítások mentése"
@@ -226,6 +274,13 @@ hu:
         edit: "Szerkesztés"
         delete: "Törlés"
         embedding: "Beágyazás"
+      decision_models:
+        no_preset: "Egyik sem"
+        display_name: "Név"
+        provider: "Szolgáltató"
+        edit: "Szerkesztés"
+        delete: "Törlés"
+        test: "Teszt futtatása"
       mcp_servers:
         name: "Név"
         description: "Leírás"
@@ -242,6 +297,17 @@ hu:
         delete: "Törlés"
         tools_modal:
           required: "Kötelező"
+      models:
+        name: "Név"
+        type: "Típus"
+        provider: "Szolgáltató"
+        edit: "Szerkesztés"
+        select_type: "Válasszon"
+        types:
+          embedding: "Beágyazás"
+        filters:
+          all: "Összes típus"
+          reset: "Szűrők visszaállítása"
       llms:
         display_name: "Név"
         provider: "Szolgáltató"
@@ -305,6 +371,18 @@ hu:
         providers:
           google: "Google"
           fake: "Egyéni"
+      ai_artifact:
+        editor:
+          version: "Verzió"
+          default: "Alapértelmezett"
+          option_on: "Be"
+          option_off: "Ki"
+          apply: "Alkalmaz"
+        share: "Megosztás"
+        create_link: "Hivatkozás létrehozása"
+        copy_link: "Hivatkozás másolása"
+        filter_all: "Összes"
+        filter_standalone: "Önálló"
       ai_bot:
         debug_ai_modal:
           duration_label: "Időtartam:"
@@ -336,6 +414,13 @@ hu:
       summarization:
         chat:
           summarize: "Összefoglalás"
+      ai_search:
+        related_replies:
+          one: "%{count} válasz"
+          other: "%{count} válasz"
+        tabs:
+          topics: "Témák"
+          messages: "Üzenetek"
       discobot_discoveries:
         legacy:
           regular_results: "Témák"

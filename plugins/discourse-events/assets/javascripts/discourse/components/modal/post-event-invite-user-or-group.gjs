@@ -54,35 +54,35 @@ export default class PostEventInviteUserOrGroup extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_post_event.invite_user_or_group.title"}}
+      class="post-event-invite-user-or-group"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
-      class="post-event-invite-user-or-group"
+      @title={{i18n "discourse_post_event.invite_user_or_group.title"}}
     >
       <:body>
         <Form
           @data={{this.data}}
-          @onSubmit={{this.invite}}
           @onRegisterApi={{this.registerApi}}
+          @onSubmit={{this.invite}}
           as |form|
         >
           <form.Field
-            @name="invitedNames"
-            @title={{i18n "discourse_post_event.invite_user_or_group.title"}}
-            @showTitle={{false}}
-            @type="custom"
             @format="full"
+            @name="invitedNames"
+            @showTitle={{false}}
+            @title={{i18n "discourse_post_event.invite_user_or_group.title"}}
+            @type="custom"
             as |field|
           >
             <field.Control>
               <EmailGroupUserChooser
-                @value={{field.value}}
                 @onChange={{field.set}}
                 @options={{hash
                   includeMessageableGroups=true
                   filterPlaceholder="composer.users_placeholder"
                   excludeCurrentUser=true
                 }}
+                @value={{field.value}}
               />
             </field.Control>
           </form.Field>
@@ -91,8 +91,8 @@ export default class PostEventInviteUserOrGroup extends Component {
       <:footer>
         <DButton
           class="btn-primary"
-          @label="discourse_post_event.invite_user_or_group.invite"
           @action={{this.submit}}
+          @label="discourse_post_event.invite_user_or_group.invite"
         />
       </:footer>
     </DModal>

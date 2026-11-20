@@ -20,21 +20,19 @@
   "dependencies": {
     "@embroider/addon-shim": "^1.10.3",
     "discourse-i18n": "workspace:1.0.0",
-    "markdown-it": "^14.1.1",
-    "pretty-text": "workspace:1.0.0",
-    "xss": "^1.0.15",
+    "markdown-it": "^15.0.3",
+    "xss": "1.0.17",
     "discourse": "workspace:0.0.0"
   },
   "peerDependencies": {
     "discourse-i18n": "workspace:1.0.0",
-    "pretty-text": "workspace:1.0.0",
     "xss": "*"
   },
   "engines": {
-    "node": ">= 20",
+    "node": "^22.22.0 || ^24.13.0 || >=26.0.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^10"
+    "pnpm": "^12"
   },
   "ember": {
     "edition": "octane"

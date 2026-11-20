@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { destroy } from "@ember/destroyable";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -42,10 +42,17 @@ export default class DockedComposer extends Component {
   @tracked reply = "";
   @tracked uploads = trackedArray();
 
+  /** @type {HTMLElement | null} */
   inputElement = null;
+
+  /** @type {import("discourse/lib/uppy/uppy-upload").default | null} */
   uppyUpload = null;
+
+  /** @type {HTMLInputElement | null} */
   fileInputEl = null;
   #rootElement = null;
+  #typingTime = 0;
+  #lastTypedValue = "";
 
   #handlePaste = (event) => {
     if (!this.inputElement || document.activeElement !== this.inputElement) {
@@ -163,6 +170,10 @@ export default class DockedComposer extends Component {
     return this.uploads?.length > 0 || this.inProgressUploads?.length > 0;
   }
 
+  get #draftTimingKey() {
+    return `${this.draftKey}-timing`;
+  }
+
   @action
   setupEditor(textManipulation) {
     this.inputElement?.removeEventListener(
@@ -191,6 +202,11 @@ export default class DockedComposer extends Component {
     const saved = this.keyValueStore.get(this.draftKey);
     if (saved) {
       this.reply = saved;
+      this.#resetTypingTime(saved);
+      const timing = this.keyValueStore.getObject(this.#draftTimingKey);
+      if (timing?.reply === saved) {
+        this.#typingTime = timing.typingTime ?? 0;
+      }
       this.syncAutoResizeHeight();
     }
   }
@@ -199,14 +215,23 @@ export default class DockedComposer extends Component {
   persistDraft(value) {
     if (value?.length) {
       this.keyValueStore.set({ key: this.draftKey, value });
+      this.keyValueStore.setObject({
+        key: this.#draftTimingKey,
+        value: { reply: value, typingTime: this.#typingTime },
+      });
     } else {
       this.keyValueStore.remove(this.draftKey);
+      this.keyValueStore.remove(this.#draftTimingKey);
     }
   }
 
   @action
   onReplyChange(event) {
     const value = event?.target?.value ?? "";
+    if (value !== this.#lastTypedValue) {
+      this.#typingTime += 100;
+      this.#lastTypedValue = value;
+    }
     this.reply = value;
     this.persistDraft(value);
     this.syncAutoResizeHeight();
@@ -223,6 +248,7 @@ export default class DockedComposer extends Component {
   @action
   setReply(value) {
     this.reply = value ?? "";
+    this.#resetTypingTime(this.reply);
     this.persistDraft(this.reply);
   }
 
@@ -233,7 +259,7 @@ export default class DockedComposer extends Component {
     this.args.onRegisterApi?.({ setReply: this.setReply, focus: this.focus });
     this.loadDraft();
 
-    this.uppyUpload = new UppyUpload(getOwner(this), {
+    this.uppyUpload = new UppyUpload(this, {
       id: this.uploaderId,
       type: this.uploadType,
       useMultipartUploadsIfAvailable: true,
@@ -242,6 +268,7 @@ export default class DockedComposer extends Component {
           this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
             optimizeFn: (data, opts) =>
               this.mediaOptimizationWorker.optimizeImage(data, opts),
+            cancelFn: (fileId) => this.mediaOptimizationWorker.cancel(fileId),
             runParallel: !this.capabilities.isMobileDevice,
           });
         }
@@ -264,7 +291,10 @@ export default class DockedComposer extends Component {
       true
     );
     this.inputElement?.removeEventListener("paste", this.#handlePaste);
-    this.uppyUpload?.teardown();
+    if (this.uppyUpload) {
+      destroy(this.uppyUpload);
+      this.uppyUpload = null;
+    }
     this.#rootElement = null;
   }
 
@@ -313,6 +343,7 @@ export default class DockedComposer extends Component {
     try {
       const result = await this.args.onSubmit({
         raw: this.reply,
+        typingTime: this.#typingTime,
         uploads: this.uploads,
         inProgressUploadsCount: this.inProgressUploads.length,
       });
@@ -321,6 +352,7 @@ export default class DockedComposer extends Component {
       if (!result) {
         return;
       }
+      this.#resetTypingTime();
       this.reply = "";
       this.uploads = trackedArray();
       this.persistDraft("");
@@ -374,6 +406,11 @@ export default class DockedComposer extends Component {
     );
   }
 
+  #resetTypingTime(value = "") {
+    this.#lastTypedValue = value;
+    this.#typingTime = 0;
+  }
+
   <template>
     {{#if this.show}}
       {{#if @bodyClassName}}
@@ -395,12 +432,12 @@ export default class DockedComposer extends Component {
           <DResizeSeparator
             class="docked-composer__resize-handle"
             @axis="vertical"
+            @label={{i18n "composer.resize"}}
+            @max={{this.resizeAriaMax}}
+            @min={{0}}
+            @onResize={{this.onResize}}
             @side="end"
             @value={{this.dragOffset}}
-            @min={{0}}
-            @max={{this.resizeAriaMax}}
-            @label={{i18n "composer.resize"}}
-            @onResize={{this.onResize}}
           />
         {{/if}}
         {{#if (has-block "header")}}
@@ -411,15 +448,15 @@ export default class DockedComposer extends Component {
         <div class="docked-composer__inner">
           <div class="docked-composer__editor">
             <DEditor
-              @value={{this.reply}}
-              @change={{this.onReplyChange}}
-              @onSetup={{this.setupEditor}}
-              @extraButtons={{this.addToolbarButtons}}
-              @composerEvents={{this.composerEvents}}
-              @topicId={{@topicId}}
               @categoryId={{@categoryId}}
-              @processPreview={{false}}
+              @change={{this.onReplyChange}}
+              @composerEvents={{this.composerEvents}}
+              @extraButtons={{this.addToolbarButtons}}
+              @onSetup={{this.setupEditor}}
               @placeholder={{@placeholder}}
+              @processPreview={{false}}
+              @topicId={{@topicId}}
+              @value={{this.reply}}
             >
               {{#if (has-block "submit")}}
                 {{yield
@@ -432,22 +469,22 @@ export default class DockedComposer extends Component {
                 }}
               {{else}}
                 <DButton
-                  @icon="reply"
+                  class="docked-composer__submit-btn"
                   @action={{this.submit}}
                   @disabled={{this.submitDisabled}}
+                  @icon="reply"
                   @isLoading={{@isSubmitting}}
                   @title={{@submitTitle}}
-                  class="docked-composer__submit-btn"
                 />
               {{/if}}
             </DEditor>
           </div>
 
           <input
-            type="file"
-            id={{this.uploaderId}}
             class="hidden-upload-field"
+            id={{this.uploaderId}}
             multiple="multiple"
+            type="file"
             {{didInsert this.registerFileInput}}
           />
         </div>
@@ -460,9 +497,9 @@ export default class DockedComposer extends Component {
                   {{upload.original_filename}}
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.removeUpload upload}}
                   class="btn-transparent docked-composer__upload-remove"
+                  @action={{fn this.removeUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}
@@ -477,9 +514,9 @@ export default class DockedComposer extends Component {
                   {{upload.progress}}%
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.cancelUpload upload}}
                   class="btn-flat docked-composer__upload-cancel"
+                  @action={{fn this.cancelUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}

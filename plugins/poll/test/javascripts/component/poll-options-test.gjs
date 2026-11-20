@@ -29,23 +29,21 @@ module("Component | PollOptions", function (hooks) {
   setupRenderingTest(hooks);
 
   test("single, not selected", async function (assert) {
-    this.setProperties({
-      isCheckbox: false,
-      isRankedChoice: false,
-      rankedChoiceDropdownContent: [],
-      options: OPTIONS,
-      votes: [],
-    });
+    this.isCheckbox = false;
+    this.isRankedChoice = false;
+    this.rankedChoiceDropdownContent = [];
+    this.options = OPTIONS;
+    this.votes = [];
 
     await render(
       <template>
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -54,23 +52,21 @@ module("Component | PollOptions", function (hooks) {
   });
 
   test("single, selected", async function (assert) {
-    this.setProperties({
-      isCheckbox: false,
-      isRankedChoice: false,
-      rankedChoiceDropdownContent: [],
-      options: OPTIONS,
-      votes: ["6c986ebcde3d5822a6e91a695c388094"],
-    });
+    this.isCheckbox = false;
+    this.isRankedChoice = false;
+    this.rankedChoiceDropdownContent = [];
+    this.options = OPTIONS;
+    this.votes = ["6c986ebcde3d5822a6e91a695c388094"];
 
     await render(
       <template>
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -79,23 +75,21 @@ module("Component | PollOptions", function (hooks) {
   });
 
   test("multi, not selected", async function (assert) {
-    this.setProperties({
-      isCheckbox: true,
-      isRankedChoice: false,
-      rankedChoiceDropdownContent: [],
-      options: OPTIONS,
-      votes: [],
-    });
+    this.isCheckbox = true;
+    this.isRankedChoice = false;
+    this.rankedChoiceDropdownContent = [];
+    this.options = OPTIONS;
+    this.votes = [];
 
     await render(
       <template>
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -104,23 +98,21 @@ module("Component | PollOptions", function (hooks) {
   });
 
   test("multi, selected", async function (assert) {
-    this.setProperties({
-      isCheckbox: true,
-      isRankedChoice: false,
-      rankedChoiceDropdownContent: [],
-      options: OPTIONS,
-      votes: ["6c986ebcde3d5822a6e91a695c388094"],
-    });
+    this.isCheckbox = true;
+    this.isRankedChoice = false;
+    this.rankedChoiceDropdownContent = [];
+    this.options = OPTIONS;
+    this.votes = ["6c986ebcde3d5822a6e91a695c388094"];
 
     await render(
       <template>
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -131,19 +123,17 @@ module("Component | PollOptions", function (hooks) {
   });
 
   test("single with images", async function (assert) {
-    this.setProperties({
-      isCheckbox: false,
-      options: IMAGE_OPTIONS,
-      votes: [],
-    });
+    this.isCheckbox = false;
+    this.options = IMAGE_OPTIONS;
+    this.votes = [];
 
     await render(
       <template>
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @options={{this.options}}
-          @votes={{this.votes}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -152,23 +142,21 @@ module("Component | PollOptions", function (hooks) {
   });
 
   test("ranked choice - priorities", async function (assert) {
-    this.setProperties({
-      isCheckbox: false,
-      isRankedChoice: true,
-      rankedChoiceDropdownContent: [],
-      options: OPTIONS,
-      votes: [],
-    });
+    this.isCheckbox = false;
+    this.isRankedChoice = true;
+    this.rankedChoiceDropdownContent = [];
+    this.options = OPTIONS;
+    this.votes = [];
 
     await render(
       <template>
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -197,13 +185,11 @@ module("Component | PollOptions", function (hooks) {
     ];
 
     let optionSelected = false;
-    this.setProperties({
-      isCheckbox: false,
-      isRankedChoice: false,
-      options: DATE_OPTIONS,
-      votes: [],
-      sendOptionSelect: () => (optionSelected = true),
-    });
+    this.isCheckbox = false;
+    this.isRankedChoice = false;
+    this.options = DATE_OPTIONS;
+    this.votes = [];
+    this.sendOptionSelect = () => (optionSelected = true);
 
     await render(
       <template>
@@ -211,8 +197,8 @@ module("Component | PollOptions", function (hooks) {
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
           @options={{this.options}}
-          @votes={{this.votes}}
           @sendOptionSelect={{this.sendOptionSelect}}
+          @votes={{this.votes}}
         />
       </template>
     );

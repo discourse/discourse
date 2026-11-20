@@ -8,6 +8,9 @@ be:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          outcomes:
+            failed: "Няўдалыя"
         reports:
           filters:
             sort_by:
@@ -37,6 +40,14 @@ be:
       ai_decoded_transcript:
         type: "Тып"
         error: "памылка"
+      discourse_workflows:
+        ai_tool:
+          list_item: "Элемент спіса"
+        classify:
+          upload_ids: "Выява"
+          name: "Імя"
+          type: "Тып"
+          type_score: "Балы"
       ai_tool_approval:
         loading: "Загрузка ..."
         tool: "Дзеянне"
@@ -48,21 +59,34 @@ be:
       llm_selector:
         none: "Няма"
       features:
-        disabled: "(адключана)"
-        groups: "групы:"
+        table:
+          status: "Статус"
+          groups: "Груп"
         edit: "Налады"
         filters:
-          all: "усе"
           reset: "скінуць"
         search:
           name: "Пошук"
+        review_queue:
+          setting_groups:
+            settings: "Налады"
         image_caption:
           setting_groups:
             settings: "Налады"
         spam:
           name: "Спам"
       translations:
-        category_scope: "катэгорыі"
+        settings:
+          ai_translation_category_scope:
+            label: "катэгорыі"
+          ai_translation_personal_messages:
+            choices:
+              none: "Няма"
+              all: "Усе"
+          content_localization_language_switcher:
+            choices:
+              none: "Ніхто"
+              all: "усе"
         model_progress:
           detail:
             columns:
@@ -101,6 +125,8 @@ be:
             other: "%{count}запісаў"
       spam:
         short_title: "Спам"
+        no_llm_selected: "Няма"
+        no_decision_model_selected: "Няма"
         enable: "Уключыць"
         test_modal:
           spam: "Спам"
@@ -162,6 +188,11 @@ be:
         edit: "Рэдагаваць"
         delete: "Выдаліць"
         embedding: "узаемадзеянне"
+      decision_models:
+        no_preset: "Няма"
+        display_name: "Імя"
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
       mcp_servers:
         name: "Назва"
         description: "Апісанне"
@@ -171,6 +202,13 @@ be:
         delete: "Выдаліць"
         tools_modal:
           required: "Абавязкова"
+      models:
+        name: "Імя"
+        type: "Тып"
+        edit: "Рэдагаваць"
+        select_type: "Выбраць"
+        types:
+          embedding: "Убудоўванне"
       llms:
         display_name: "Імя"
         vision_modes:
@@ -205,6 +243,13 @@ be:
         display_name: "Імя"
         providers:
           google: "Google"
+      ai_artifact:
+        editor:
+          version: "Версія"
+          default: "Прадвызначаная"
+          apply: "Прымяніць"
+        share: "Абагуліць"
+        filter_all: "Усе"
       ai_bot:
         debug_ai_modal:
           request: "запыт"
@@ -222,6 +267,10 @@ be:
             category: "Катэгорыя"
           table:
             total_count: "агульны"
+      ai_search:
+        tabs:
+          topics: "тэмы"
+          messages: "Паведамленні"
       discobot_discoveries:
         legacy:
           regular_results: "тэмы"

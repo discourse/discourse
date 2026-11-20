@@ -36,6 +36,21 @@ after_initialize do
     { use_new_show_route: true },
   )
 
+  add_api_key_scope(
+    :gamification,
+    {
+      read_score_events: {
+        actions: %w[discourse_gamification/admin_gamification_score_event#show],
+      },
+      create_score_events: {
+        actions: %w[discourse_gamification/admin_gamification_score_event#create],
+      },
+      update_score_events: {
+        actions: %w[discourse_gamification/admin_gamification_score_event#update],
+      },
+    },
+  )
+
   require_relative "jobs/scheduled/update_scores_for_ten_days"
   require_relative "jobs/scheduled/update_scores_for_today"
   require_relative "jobs/regular/recalculate_scores"
@@ -73,10 +88,7 @@ after_initialize do
   end
 
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node do
-      require_relative "lib/discourse_workflows/nodes/gamification_score/v1"
-      DiscourseWorkflows::Nodes::GamificationScore::V1
-    end
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::GamificationScore::V1 }
   end
 
   add_directory_column(
@@ -99,6 +111,7 @@ after_initialize do
           .map { |group| BasicGroupSerializer.new(group, root: false, scope: scope).as_json },
       gamification_leaderboards:
         DiscourseGamification::GamificationLeaderboard
+          .includes(:created_by)
           .order(updated_at: :desc)
           .map { |leaderboard| AdminLeaderboardSerializer.new(leaderboard, root: false).as_json },
     }

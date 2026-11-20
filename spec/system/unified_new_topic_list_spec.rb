@@ -34,7 +34,7 @@ describe "Unified new topic list" do
     context "when unified new is enabled" do
       before { SiteSetting.enable_unified_new = true }
 
-      it "shows all new topics and replies by default" do
+      it "lets the user switch between all new topics, topics, and replies" do
         visit("/new")
 
         expect(topic_list).to have_topics(count: 6)
@@ -53,24 +53,7 @@ describe "Unified new topic list" do
         expect(tabs_toggle.all_tab).to be_active
         expect(tabs_toggle.replies_tab).to be_inactive
         expect(tabs_toggle.topics_tab).to be_inactive
-      end
 
-      it "respects the subset query param and activates the appropriate tab" do
-        visit("/new?subset=topics")
-
-        expect(tabs_toggle.all_tab).to be_inactive
-        expect(tabs_toggle.replies_tab).to be_inactive
-        expect(tabs_toggle.topics_tab).to be_active
-
-        visit("/new?subset=replies")
-
-        expect(tabs_toggle.all_tab).to be_inactive
-        expect(tabs_toggle.replies_tab).to be_active
-        expect(tabs_toggle.topics_tab).to be_inactive
-      end
-
-      it "shows only new topics when the user switches to the Topics tab" do
-        visit("/new")
         tabs_toggle.topics_tab.click
 
         expect(topic_list).to have_topics(count: 3)
@@ -86,10 +69,12 @@ describe "Unified new topic list" do
         expect(tabs_toggle.topics_tab).to have_count(3)
 
         expect(page).to have_current_path("/new?subset=topics")
-      end
 
-      it "shows only topics with new replies when the user switches to the Replies tab" do
-        visit("/new")
+        tabs_toggle.all_tab.click
+
+        expect(tabs_toggle.all_tab).to be_active
+        expect(topic_list).to have_topics(count: 6)
+
         tabs_toggle.replies_tab.click
 
         expect(topic_list).to have_topics(count: 3)
@@ -105,6 +90,20 @@ describe "Unified new topic list" do
         expect(tabs_toggle.topics_tab).to have_count(3)
 
         expect(page).to have_current_path("/new?subset=replies")
+      end
+
+      it "respects the subset query param and activates the appropriate tab" do
+        visit("/new?subset=topics")
+
+        expect(tabs_toggle.all_tab).to be_inactive
+        expect(tabs_toggle.replies_tab).to be_inactive
+        expect(tabs_toggle.topics_tab).to be_active
+
+        visit("/new?subset=replies")
+
+        expect(tabs_toggle.all_tab).to be_inactive
+        expect(tabs_toggle.replies_tab).to be_active
+        expect(tabs_toggle.topics_tab).to be_inactive
       end
 
       it "strips out the subset query params when switching back to the All tab from any of the other tabs" do
@@ -141,7 +140,7 @@ describe "Unified new topic list" do
       end
 
       context "when the /new topic list is scoped to a category" do
-        it "shows new topics and replies in the category" do
+        it "lets the user switch between new topics and replies in the category" do
           visit("/c/#{category.slug}/#{category.id}/l/new")
           expect(topic_list).to have_topics(count: 2)
           expect(topic_list).to have_topic(new_reply_in_category)
@@ -153,10 +152,7 @@ describe "Unified new topic list" do
 
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
-        end
 
-        it "shows only new topics in the category when the user switches to the Topics tab" do
-          visit("/c/#{category.slug}/#{category.id}/l/new")
           tabs_toggle.topics_tab.click
 
           expect(topic_list).to have_topics(count: 1)
@@ -172,10 +168,12 @@ describe "Unified new topic list" do
           expect(page).to have_current_path(
             "/c/#{category.slug}/#{category.id}/l/new?subset=topics",
           )
-        end
 
-        it "shows only topics with new replies in the category when the user switches to the Replies tab" do
-          visit("/c/#{category.slug}/#{category.id}/l/new")
+          tabs_toggle.all_tab.click
+
+          expect(tabs_toggle.all_tab).to be_active
+          expect(topic_list).to have_topics(count: 2)
+
           tabs_toggle.replies_tab.click
 
           expect(topic_list).to have_topics(count: 1)
@@ -223,7 +221,7 @@ describe "Unified new topic list" do
       end
 
       context "when the /new topic list is scoped to a tag" do
-        it "shows new topics and replies with the tag" do
+        it "lets the user switch between new topics and replies with the tag" do
           visit("/tag/#{tag.slug}/#{tag.id}/l/new")
           expect(topic_list).to have_topics(count: 2)
           [new_reply_with_tag, new_topic_with_tag].each do |topic|
@@ -236,10 +234,7 @@ describe "Unified new topic list" do
 
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
-        end
 
-        it "shows only new topics with the tag when the user switches to the Topics tab" do
-          visit("/tag/#{tag.slug}/#{tag.id}/l/new")
           tabs_toggle.topics_tab.click
 
           expect(topic_list).to have_topics(count: 1)
@@ -253,10 +248,11 @@ describe "Unified new topic list" do
           expect(tabs_toggle.topics_tab).to have_count(1)
 
           expect(page).to have_current_path("/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics")
-        end
 
-        it "shows only topics with new replies with the tag when the user switches to the Replies tab" do
-          visit("/tag/#{tag.slug}/#{tag.id}/l/new")
+          tabs_toggle.all_tab.click
+
+          expect(tabs_toggle.all_tab).to be_active
+          expect(topic_list).to have_topics(count: 2)
 
           tabs_toggle.replies_tab.click
 

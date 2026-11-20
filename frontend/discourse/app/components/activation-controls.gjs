@@ -15,19 +15,19 @@ export default class ActivationControls extends Component {
     <div class="activation-controls">
       {{#unless this.siteSettings.must_approve_users}}
         <DButton
-          @action={{@sendActivationEmail}}
-          @label="login.resend_title"
-          @icon="envelope"
           class="btn-primary resend"
+          @action={{@sendActivationEmail}}
+          @icon="envelope"
+          @label="login.resend_title"
         />
       {{/unless}}
 
       {{#if this.canEditEmail}}
         <DButton
-          @action={{@editActivationEmail}}
-          @label="login.change_email"
-          @icon="pencil"
           class="btn-default edit-email"
+          @action={{@editActivationEmail}}
+          @icon="pencil"
+          @label="login.change_email"
         />
       {{/if}}
     </div>

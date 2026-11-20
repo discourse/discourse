@@ -6,7 +6,7 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers";
+import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved-helpers.js";
 
 acceptance(`Discourse Solved Plugin`, function (needs) {
   const ITEM_SELECTOR = ".accepted-answers .d-post-accordion-item";

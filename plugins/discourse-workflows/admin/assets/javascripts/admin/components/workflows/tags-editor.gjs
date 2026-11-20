@@ -97,7 +97,6 @@ export default class WorkflowTagsEditor extends Component {
     <div class="workflows-tags-editor">
       {{#if this.isEditing}}
         <ListSetting
-          @value={{this.tags}}
           @choices={{this.choices}}
           @onChange={{this.onChange}}
           @options={{hash
@@ -105,12 +104,13 @@ export default class WorkflowTagsEditor extends Component {
             maximum=10
             filterPlaceholder="discourse_workflows.tags.placeholder"
           }}
+          @value={{this.tags}}
         />
         <DButton
+          class="btn-flat workflows-tags-editor__done"
           @action={{this.stopEditing}}
           @icon="check"
           @title="discourse_workflows.save"
-          class="btn-flat workflows-tags-editor__done"
         />
       {{else}}
         {{#each this.tags as |tag|}}
@@ -119,10 +119,10 @@ export default class WorkflowTagsEditor extends Component {
           </span>
         {{/each}}
         <DButton
+          class="btn-flat workflows-tags-editor__manage"
           @action={{this.startEditing}}
           @icon="plus"
           @label="discourse_workflows.tags.manage"
-          class="btn-flat workflows-tags-editor__manage"
         />
       {{/if}}
     </div>

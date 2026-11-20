@@ -3,7 +3,9 @@ import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import VersionCheck from "discourse/admin/models/version-check";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import dashIfEmpty from "discourse/helpers/dash-if-empty";
+import lazyHash from "discourse/helpers/lazy-hash";
 import getUrl from "discourse/lib/get-url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
@@ -135,10 +137,7 @@ export default class DashboardSystem extends Component {
   }
 
   get hasStatus() {
-    return !!(
-      this.args.data?.discourse_updated_at ||
-      this.args.data?.dashboard_updated_at
-    );
+    return !!this.args.data?.discourse_updated_at;
   }
 
   get backupsSummary() {
@@ -156,9 +155,9 @@ export default class DashboardSystem extends Component {
 
   <template>
     <DashboardSection
-      @title={{i18n "admin.dashboard.sections.system.title"}}
-      @layout="row"
       ...attributes
+      @layout="row"
+      @title={{i18n "admin.dashboard.sections.system.title"}}
     >
       {{#if @fetchError}}
         <div class="db-section__error" role="alert">
@@ -225,6 +224,11 @@ export default class DashboardSystem extends Component {
               {{this.versionStatus.message}}
             </span>
           </div>
+
+          <PluginOutlet
+            @name="admin-upgrade-header"
+            @outletArgs={{lazyHash versionCheck=this.versionCheck}}
+          />
         </div>
 
         {{#if @data.storage}}
@@ -253,9 +257,9 @@ export default class DashboardSystem extends Component {
             <div>
               {{#if this.barSegments}}
                 <div
+                  aria-label={{this.barLabel}}
                   class="db-bar-track"
                   role="img"
-                  aria-label={{this.barLabel}}
                 >
                   {{#each this.barSegments key="key" as |segment|}}
                     <span
@@ -322,19 +326,8 @@ export default class DashboardSystem extends Component {
               </div>
             {{/if}}
 
-            {{#if @data.dashboard_updated_at}}
-              <div class="db-system__headline">
-                <div class="db-system__value">
-                  {{dFormatDate @data.dashboard_updated_at leaveAgo="true"}}
-                </div>
-                <div class="db-system__label">
-                  {{i18n "admin.dashboard.sections.system.dashboard_updated"}}
-                </div>
-              </div>
-            {{/if}}
-
             <div class="db-system__footer">
-              <LinkTo @route="admin.whatsNew" class="db-system__link">
+              <LinkTo class="db-system__link" @route="admin.whatsNew">
                 {{i18n "admin.dashboard.whats_new_in_discourse"}}
               </LinkTo>
             </div>

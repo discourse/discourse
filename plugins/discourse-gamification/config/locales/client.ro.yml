@@ -30,9 +30,7 @@ ro:
       close: "Închide"
       delete: "Șterge"
       edit: "Editează"
-      back: "Înapoi"
       save: "Salvează"
-      apply: "Aplică"
       update_range:
         last_10_days: "Ultimele 10 zile"
         last_30_days: "Ultimele 30 de zile"
@@ -41,8 +39,10 @@ ro:
       custom_range_from: "De la"
       admin:
         name: "Nume"
+        created_by: "Creat de"
     discourse_workflows:
       gamification_score:
         username: "Utilizator"
         date: "Dată"
         description: "Descriere"
+        category_id: "Categorie"

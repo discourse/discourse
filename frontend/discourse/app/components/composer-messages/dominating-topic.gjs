@@ -16,10 +16,10 @@ export default class DominatingTopicComposerMessage extends Component {
 
       {{#if this.currentUser.can_invite_to_forum}}
         <DButton
-          @label="footer_nav.share"
-          @icon="link"
-          @action={{@shareModal}}
           class="btn-primary"
+          @action={{@shareModal}}
+          @icon="link"
+          @label="footer_nav.share"
         />
       {{/if}}
     </div>

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
-import { propertySelectNoneKey } from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+import { propertySelectNoneKey } from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class TimezoneControl extends Component {
   get none() {
@@ -18,17 +18,17 @@ export default class TimezoneControl extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <TimezoneInput
-        @value={{@field.value}}
         @onChange={{@field.set}}
         @options={{hash none=this.none clearable=this.clearable}}
+        @value={{@field.value}}
       />
     </ExpressionWrapper>
   </template>

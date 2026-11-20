@@ -15,7 +15,7 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <DCharCounter @value={{this.value}} @max={{this.max}} />
+        <DCharCounter @max={{this.max}} @value={{this.value}} />
       </template>
     );
 
@@ -27,7 +27,7 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <DCharCounter @value={{this.charCounterContent}} @max={{this.max}}>
+        <DCharCounter @max={{this.max}} @value={{this.charCounterContent}}>
           <textarea
             {{on "input" (withEventValue (fn (mut this.charCounterContent)))}}
           ></textarea>
@@ -52,10 +52,30 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <DCharCounter @value={{this.value}} @max={{this.max}} />
+        <DCharCounter @max={{this.max}} @value={{this.value}} />
       </template>
     );
 
     assert.dom(".char-counter.exceeded").exists("exceeded class is applied");
+  });
+
+  test("accepts @max as a string", async function (assert) {
+    await render(
+      <template><DCharCounter @max="5" @value="Hello!" /></template>
+    );
+
+    assert.dom(".char-counter__ratio").hasText("6/5", "the ratio uses @max");
+    assert
+      .dom(".char-counter")
+      .hasClass("exceeded", "a string @max is compared as a number");
+  });
+
+  test("counts a missing @value as zero", async function (assert) {
+    await render(<template><DCharCounter @max={{5}} /></template>);
+
+    assert.dom(".char-counter__ratio").hasText("0/5", "the count is zero");
+    assert
+      .dom(".char-counter")
+      .doesNotHaveClass("exceeded", "a missing value is not exceeded");
   });
 });

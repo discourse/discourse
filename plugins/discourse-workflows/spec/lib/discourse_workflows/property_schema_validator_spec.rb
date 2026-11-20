@@ -100,6 +100,28 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
       expect(validate(schema)).to eq([])
     end
 
+    it "accepts an access control with target metadata and required permissions" do
+      schema = {
+        permissions: {
+          type: :object,
+          required: true,
+          ui: {
+            control: :access_control,
+            expression: false,
+          },
+          control_options: {
+            acl_target_type: "Example::Target",
+            acl_target_key: "example_target",
+            acl_target_name: "example.target",
+            required_permissions: ["manage"],
+            permissions: %w[view edit manage],
+          },
+        },
+      }
+
+      expect(validate(schema)).to eq([])
+    end
+
     it "flags unknown ui.control values" do
       errors = validate(title: { type: :string, ui: { control: :neon } })
       expect(errors.first).to include("title.ui.control")
@@ -309,6 +331,34 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
       errors = validate(body: { type: :string, display_options: { show: "yes" } })
       expect(errors.first).to include("display_options.show")
       expect(errors.first).to include("Hash")
+    end
+
+    it "rejects unknown visibility operators and malformed metadata flags" do
+      errors =
+        validate(
+          option_id: {
+            type: :integer,
+          },
+          detail: {
+            type: :string,
+            display_options: {
+              hide: {
+                option_id: [
+                  { condition: { metadata_flg: { collection: "options", flag: "hide_detail" } } },
+                  { condition: { metadata_flag: { collection: "options", flag: "" } } },
+                ],
+              },
+            },
+          },
+        )
+
+      expect(errors).to contain_exactly(
+        a_string_including("display_options.hide.option_id.0.condition", ":metadata_flg"),
+        a_string_including(
+          "display_options.hide.option_id.1.condition.metadata_flag",
+          "collection and flag",
+        ),
+      )
     end
 
     it "requires display_options rule values to be arrays" do

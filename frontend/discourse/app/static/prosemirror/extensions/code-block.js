@@ -16,9 +16,13 @@ import {
   getRichEditorExtensionsVersion,
 } from "discourse/lib/composer/rich-editor-extensions";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
-import GlimmerNodeView from "../lib/glimmer-node-view";
+import { createAiBadge } from "../lib/ai-badge.js";
+import GlimmerNodeView from "../lib/glimmer-node-view.js";
+import { getCodeFenceInfo } from "../lib/markdown-it.js";
 
 const INDENT = "  ";
+
+const PLAIN_TEXT_LANGS = ["auto", "text", "pre", "plain"];
 
 // cached hljs instance with custom plugins/languages
 let hljs;
@@ -36,7 +40,7 @@ function registeredPreviews() {
 
   if (previewsCacheVersion !== version) {
     previewsCacheVersion = version;
-    previewsCache = {};
+    previewsCache = Object.create(null);
 
     for (const { codeBlockPreviews } of getExtensions()) {
       for (const [name, component] of Object.entries(codeBlockPreviews ?? {})) {
@@ -65,7 +69,7 @@ function hasRegisteredPreviews() {
 
 // the language a block's info string declares: its first word, lowercased
 function paramsLanguage(params) {
-  return params?.trim().split(/\s+/)[0]?.toLowerCase();
+  return getCodeFenceInfo(params)?.tag?.toLowerCase();
 }
 
 function previewComponentForParams(params) {
@@ -163,6 +167,10 @@ export function toggleCodeBlockSource(view, pos) {
   view.focus();
 }
 
+function isAiGenerated(params) {
+  return getCodeFenceInfo(params)?.attributes.ai === "true";
+}
+
 function selectedCodeLines(state) {
   const { selection } = state;
   if (
@@ -231,7 +239,32 @@ function indentCodeBlock(outdent = false) {
 }
 
 class CodeBlockWithLangSelectorNodeView {
-  #selectAdded = false;
+  #aiBadge;
+  #select;
+
+  #changeLanguage = (event) => {
+    const pos = this.getPos();
+
+    if (pos === undefined) {
+      return;
+    }
+
+    const { params } = this.node.attrs;
+    const options =
+      getCodeFenceInfo(params)?.options ?? params.trim().replace(/^\S+\s*/, "");
+    const language =
+      event.target.value ||
+      (options && !isAiGenerated(` ${options}`) ? "auto" : "");
+    const tr = this.view.state.tr.setNodeMarkup(pos, null, {
+      params: options ? `${language} ${options}` : language,
+    });
+
+    if (previewComponentForParams(language)) {
+      tr.setMeta(sourceModeKey, { pins: [pos] });
+    }
+
+    this.view.dispatch(tr);
+  };
 
   constructor(node, view, getPos) {
     this.node = node;
@@ -245,12 +278,11 @@ class CodeBlockWithLangSelectorNodeView {
     this.dom = pre;
     this.contentDOM = code;
 
-    this.appendSelect();
-
+    this.#renderAiLabel();
+    this.#appendSelect();
     registerPreviewNodeView(pre, this);
   }
 
-  // the block's code face IS this regular code block view
   get showingSource() {
     return true;
   }
@@ -258,107 +290,31 @@ class CodeBlockWithLangSelectorNodeView {
   toggleSource() {
     const pos = this.getPos();
 
-    // the view may already have been destroyed and replaced
-    if (pos === undefined) {
-      return;
+    if (pos !== undefined) {
+      toggleCodeBlockSource(this.view, pos);
     }
-
-    toggleCodeBlockSource(this.view, pos);
-  }
-
-  changeListener(e) {
-    const pos = this.getPos();
-
-    // the view may already have been destroyed and replaced
-    if (pos === undefined) {
-      return;
-    }
-
-    const language = e.target.value;
-    const rest = (this.node.attrs.params ?? "").trim().split(/\s+/).slice(1);
-
-    // an info-string tail (```mermaid height=500) belongs to the preview
-    // feature, so it survives switching between two previewable languages;
-    // plain languages have no use for it, so it drops otherwise
-    const tail =
-      rest.length &&
-      previewComponentForParams(this.node.attrs.params) &&
-      previewComponentForParams(language)
-        ? ` ${rest.join(" ")}`
-        : "";
-
-    const tr = this.view.state.tr.setNodeMarkup(pos, null, {
-      params: language + tail,
-    });
-
-    // switching to a language that previews keeps the code face (and the
-    // caret) in place rather than flipping under the user; pinning (not
-    // toggling) because setNodeMarkup replaces the node, which drops a node
-    // decoration already pinning it
-    if (previewComponentForParams(language)) {
-      tr.setMeta(sourceModeKey, { pins: [pos] });
-    }
-
-    this.view.dispatch(tr);
-
-    if (e.target.firstChild.textContent) {
-      e.target.firstChild.textContent = "";
-    }
-  }
-
-  appendSelect() {
-    if (!hljs || this.#selectAdded) {
-      return;
-    }
-
-    this.#selectAdded = true;
-
-    const select = document.createElement("select");
-    select.contentEditable = false;
-    select.addEventListener("change", (e) => this.changeListener(e));
-    select.classList.add("code-language-select");
-
-    const languages = [
-      ...new Set([
-        ...hljs.listLanguages(),
-        ...Object.keys(registeredPreviews()),
-      ]),
-    ].sort((a, b) => a.localeCompare(b));
-
-    // an info-string tail (```mermaid height=500) is not part of the language
-    const language = paramsLanguage(this.node.attrs.params);
-
-    const empty = document.createElement("option");
-    empty.textContent = languages.includes(language)
-      ? ""
-      : this.node.attrs.params;
-    select.appendChild(empty);
-
-    languages.forEach((lang) => {
-      const option = document.createElement("option");
-      option.textContent = lang;
-      option.selected = lang === language;
-      select.appendChild(option);
-    });
-
-    this.dom.appendChild(select);
   }
 
   update(node) {
-    this.appendSelect();
-
-    if (node.type !== this.node.type) {
+    if (
+      node.type !== this.node.type ||
+      showsPreview(node, this.view.state, this.getPos())
+    ) {
       return false;
     }
 
-    // recreate as the preview view when the rendered face should be shown
-    if (showsPreview(node, this.view.state, this.getPos())) {
-      return false;
-    }
-
+    const markupChanged = !this.node.sameMarkup(node);
     this.node = node;
-
+    if (markupChanged) {
+      this.#renderAiLabel();
+      this.#updateLanguage();
+    }
+    this.#appendSelect();
     return true;
+  }
+
+  destroy() {
+    this.#select?.removeEventListener("change", this.#changeLanguage);
   }
 
   // anything mounted into this dom from outside (the language select today;
@@ -370,6 +326,65 @@ class CodeBlockWithLangSelectorNodeView {
     }
 
     return !this.contentDOM.contains(mutation.target);
+  }
+
+  #appendSelect() {
+    if (!hljs || this.#select) {
+      return;
+    }
+
+    const select = document.createElement("select");
+    select.contentEditable = false;
+    select.addEventListener("change", this.#changeLanguage);
+    select.classList.add("code-language-select");
+
+    const languages = [
+      ...new Set([
+        ...hljs.listLanguages(),
+        ...Object.keys(registeredPreviews()),
+      ]),
+    ].sort((a, b) => a.localeCompare(b));
+
+    select.appendChild(document.createElement("option"));
+
+    languages.forEach((lang) => {
+      const option = document.createElement("option");
+      option.textContent = lang;
+      select.appendChild(option);
+    });
+
+    this.#select = select;
+    this.#updateLanguage();
+    this.dom.appendChild(select);
+  }
+
+  #renderAiLabel() {
+    if (isAiGenerated(this.node.attrs.params)) {
+      this.dom.setAttribute("data-code-ai", "true");
+      if (!this.#aiBadge) {
+        this.#aiBadge = createAiBadge();
+        this.dom.prepend(this.#aiBadge);
+      }
+    } else if (this.#aiBadge) {
+      this.dom.removeAttribute("data-code-ai");
+      this.#aiBadge.remove();
+      this.#aiBadge = undefined;
+    }
+  }
+
+  #updateLanguage() {
+    if (!this.#select) {
+      return;
+    }
+
+    const { params } = this.node.attrs;
+    const language = paramsLanguage(params) ?? "";
+    this.#select.firstChild.textContent = "";
+    this.#select.value = language;
+    if (this.#select.selectedIndex === -1) {
+      this.#select.firstChild.textContent = language;
+      this.#select.selectedIndex = 0;
+    }
   }
 }
 
@@ -613,6 +628,41 @@ function selectPreviewingNeighbor(dir) {
   };
 }
 
+function horizontalArrowSelectsPreview(direction) {
+  return (state, dispatch, view) => {
+    const { $cursor } = state.selection;
+
+    if (!$cursor?.depth || !view) {
+      return false;
+    }
+
+    const { parent, parentOffset } = $cursor;
+    if (parent.content.size === 0) {
+      const dom = view.nodeDOM($cursor.before());
+      const rtl =
+        getComputedStyle(dom instanceof Element ? dom : view.dom).direction ===
+        "rtl";
+      return selectNeighborPreview(
+        state,
+        dispatch,
+        (direction === "left") === rtl ? 1 : -1
+      );
+    }
+
+    if (!view.endOfTextblock(direction, state)) {
+      return false;
+    }
+
+    if (parentOffset === 0) {
+      return selectNeighborPreview(state, dispatch, -1);
+    }
+    if (parentOffset === parent.content.size) {
+      return selectNeighborPreview(state, dispatch, 1);
+    }
+    return false;
+  };
+}
+
 // a previewing block has no editable content the browser caret could step
 // through, so vertical arrows toward it stall without this
 function verticalArrowSelectsPreview(dir) {
@@ -820,6 +870,57 @@ function isBlockLevelSelection(selection) {
   return hasMultipleBlocks || isFullBlockSelection;
 }
 
+const LANGUAGE_CLASS = /^lang(?:uage)?-(.+)$/;
+
+function codeBlockLanguage(...elements) {
+  for (const element of elements) {
+    for (const className of element.classList) {
+      const language = className.match(LANGUAGE_CLASS)?.[1];
+      // `auto` is a request to autodetect, not a language
+      if (language && language !== "auto") {
+        return language;
+      }
+    }
+  }
+}
+
+export function normalizeCodeBlocks(doc) {
+  let changed = false;
+
+  for (const code of doc.querySelectorAll("pre > code")) {
+    const pre = code.parentElement;
+
+    if (!pre.hasAttribute("data-params")) {
+      const language = codeBlockLanguage(code, pre, pre.parentElement);
+      if (language) {
+        pre.setAttribute("data-params", language);
+        changed = true;
+      }
+    }
+
+    const lines = [...code.childNodes];
+    if (
+      !lines.length ||
+      !lines.every(
+        (line) => line.nodeName === "DIV" && line.lastChild?.nodeName === "BR"
+      )
+    ) {
+      continue;
+    }
+
+    // The final break ends the last line; keeping it would add a blank one.
+    lines.at(-1).lastChild.remove();
+
+    // Each line already has an explicit break; block wrappers would split the code block.
+    for (const line of lines) {
+      line.replaceWith(...line.childNodes);
+    }
+    changed = true;
+  }
+
+  return changed;
+}
+
 function convertSelectionToCodeBlock(schema) {
   return (editorState, dispatch) => {
     const { from, to } = editorState.selection;
@@ -855,16 +956,41 @@ const extension = {
       // blocks, so the generic primitive needs no knowledge of this feature
       isPreviewBlock: (node) => !!codeBlockPreviewComponent(node),
       ...markdownSchema.nodes.code_block.spec,
+      parseDOM: [
+        {
+          tag: "pre",
+          preserveWhitespace: "full",
+          getAttrs(dom) {
+            let params = dom.getAttribute("data-params") || "";
+            if (
+              dom.getAttribute("data-code-ai") === "true" &&
+              !isAiGenerated(params)
+            ) {
+              params = params.trim();
+              params += /\s/.test(params) ? ",ai" : " ai";
+            }
+            return { params };
+          },
+        },
+      ],
+      toDOM(node) {
+        const spec = markdownSchema.nodes.code_block.spec.toDOM(node);
+        if (isAiGenerated(node.attrs.params)) {
+          spec[1]["data-code-ai"] = "true";
+        }
+        return spec;
+      },
     },
   },
   nodeViews: { code_block: codeBlockNodeView },
+  transformParsedHTML: normalizeCodeBlocks,
   keymap: () => ({
     Tab: indentCodeBlock(),
     "Shift-Tab": indentCodeBlock(true),
     Backspace: selectPreviewingNeighbor(-1),
     Delete: selectPreviewingNeighbor(1),
-    ArrowLeft: selectPreviewingNeighbor(-1),
-    ArrowRight: selectPreviewingNeighbor(1),
+    ArrowLeft: horizontalArrowSelectsPreview("left"),
+    ArrowRight: horizontalArrowSelectsPreview("right"),
     ArrowUp: verticalArrowSelectsPreview(-1),
     ArrowDown: verticalArrowSelectsPreview(1),
   }),
@@ -899,21 +1025,35 @@ const extension = {
   }),
   plugins: [
     sourceModePlugin(),
-    async ({ getContext }) =>
-      highlightPlugin(
-        (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
-        ["code_block", "html_block", "preview_source"],
+    () =>
+      new Plugin({
+        props: {
+          transformPastedHTML(html) {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            return normalizeCodeBlocks(doc) ? doc.body.innerHTML : html;
+          },
+        },
+      }),
+    async ({ getContext }) => {
+      const { session, siteSettings } = getContext();
 
-        // NOTE: If the language has not been set with the code block, we default to plain
-        // text rather than autodetecting. This is to work around an infinite loop issue
-        // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
-        // for > 10 seconds, for example:
-        //
-        // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
-        //
-        // We can remove this if we find some other workaround.
-        (node) => node.attrs.params || "text"
-      ),
+      // Autodetection can hang the browser (https://github.com/b-kelly/prosemirror-highlightjs/issues/21)
+      const { default_code_lang } = siteSettings;
+      const defaultCodeLang =
+        !default_code_lang || PLAIN_TEXT_LANGS.includes(default_code_lang)
+          ? "text"
+          : default_code_lang;
+
+      return highlightPlugin(
+        (hljs = await ensureHighlightJs(session.highlightJsPath)),
+        ["code_block", "html_block", "preview_source"],
+        (node) =>
+          node.type.name === "code_block"
+            ? (getCodeFenceInfo(node.attrs.params)?.tag ?? node.attrs.params) ||
+              defaultCodeLang
+            : node.attrs.params || "text"
+      );
+    },
   ],
 };
 

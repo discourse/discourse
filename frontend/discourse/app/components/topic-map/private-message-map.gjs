@@ -37,25 +37,25 @@ export default class PrivateMessageMap extends Component {
     <div class={{this.participantsClasses}}>
       {{#each @topicDetails.allowed_groups as |group|}}
         <PmMapUserGroup
-          @model={{group}}
           @canRemoveAllowedUsers={{@topicDetails.can_remove_allowed_users}}
+          @model={{group}}
           @removeAllowedGroup={{@removeAllowedGroup}}
         />
       {{/each}}
       {{#each @topicDetails.allowed_users as |user|}}
         <PmMapUser
-          @model={{user}}
           @canRemoveAllowedUsers={{@topicDetails.can_remove_allowed_users}}
           @canRemoveSelfId={{@topicDetails.can_remove_self_id}}
+          @model={{user}}
           @removeAllowedUser={{@removeAllowedUser}}
         />
       {{/each}}
 
       {{#if this.canInvite}}
         <DButton
+          class="btn-default btn-small add-participant-btn"
           @action={{@showInvite}}
           @icon="plus"
-          class="btn-default btn-small add-participant-btn"
         />
       {{/if}}
     </div>
@@ -73,7 +73,7 @@ class PmMapUserGroup extends Component {
 
   <template>
     <div class="user group btn-default" data-id={{@model.id}}>
-      <a href={{this.groupUrl}} class="group-link">
+      <a class="group-link" href={{this.groupUrl}}>
         {{dIcon "users"}}
         <span class="group-name">{{@model.name}}</span>
       </a>
@@ -119,9 +119,9 @@ class PmMapUser extends Component {
     <div class="user btn-default" data-id={{@model.id}}>
       <DUserLink
         class="user-link trigger-user-card"
-        @username={{@model.username}}
-        @href={{@model.path}}
         title={{@model.username}}
+        @href={{@model.path}}
+        @username={{@model.username}}
       >
         {{dBoundAvatarTemplate
           @model.avatar_template
@@ -133,8 +133,8 @@ class PmMapUser extends Component {
 
       {{#if this.canRemoveLink}}
         <PmRemoveLink
-          @model={{@model}}
           @isCurrentUser={{this.isCurrentUser}}
+          @model={{@model}}
           @removeAllowedUser={{@removeAllowedUser}}
         />
       {{/if}}

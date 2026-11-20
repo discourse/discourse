@@ -10,6 +10,25 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
+const STATUS_PRESENTATION = {
+  successful: {
+    icon: "circle-check",
+    className: "--success",
+    labelKey: "successful",
+  },
+  failed: { icon: "circle-xmark", className: "--failed", labelKey: "failed" },
+  empty: {
+    icon: "triangle-exclamation",
+    className: "--warning",
+    labelKey: "empty",
+  },
+  truncated: {
+    icon: "triangle-exclamation",
+    className: "--warning",
+    labelKey: "truncated_description",
+  },
+};
+
 function compactTokenCount(value) {
   if (value < 1_000) {
     return I18n.toNumber(value, { precision: 0 });
@@ -30,7 +49,7 @@ function compactTokenCount(value) {
 export default class AiLogRow extends Component {
   get status() {
     const log = this.args.log;
-    if (["successful", "failed"].includes(log.outcome)) {
+    if (Object.hasOwn(STATUS_PRESENTATION, log.outcome)) {
       return log.outcome;
     }
 
@@ -41,15 +60,17 @@ export default class AiLogRow extends Component {
   }
 
   get statusLabel() {
-    return i18n(`discourse_ai.logs.${this.status}`);
+    return i18n(
+      `discourse_ai.logs.${STATUS_PRESENTATION[this.status].labelKey}`
+    );
   }
 
   get statusClass() {
-    return this.status === "successful" ? "--success" : "--failed";
+    return STATUS_PRESENTATION[this.status].className;
   }
 
   get statusIcon() {
-    return this.status === "successful" ? "circle-check" : "circle-xmark";
+    return STATUS_PRESENTATION[this.status].icon;
   }
 
   get featureName() {
@@ -141,9 +162,9 @@ export default class AiLogRow extends Component {
             <DTooltip @content={{i18n "discourse_ai.logs.retried"}}>
               <:trigger>
                 <span
+                  aria-label={{i18n "discourse_ai.logs.retried"}}
                   class="ai-logs__flag"
                   role="img"
-                  aria-label={{i18n "discourse_ai.logs.retried"}}
                 >
                   {{dIcon "arrows-rotate"}}
                 </span>
@@ -166,9 +187,9 @@ export default class AiLogRow extends Component {
       <td class="d-table__cell ai-logs__col-user">
         {{#if @log.username}}
           <DUserLink
-            @user={{@log}}
             class="ai-logs__user"
             title={{@log.username}}
+            @user={{@log}}
           >
             {{dAvatar
               @log
@@ -211,9 +232,9 @@ export default class AiLogRow extends Component {
         <DButton
           class="btn-default btn-small"
           @action={{fn @onOpen @log.id}}
+          @ariaLabel="discourse_ai.logs.view_details"
           @icon="far-file-lines"
           @title="discourse_ai.logs.view_details"
-          @ariaLabel="discourse_ai.logs.view_details"
         />
       </td>
     </tr>

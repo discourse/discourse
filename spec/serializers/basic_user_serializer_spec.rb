@@ -18,6 +18,7 @@ RSpec.describe BasicUserSerializer do
       let(:serializer) do
         PostActionUserSerializer.new(post_action, scope: Guardian.new(user), root: false)
       end
+
       it "returns the user correctly" do
         expect(serializer.user.username).to eq(user.username)
       end

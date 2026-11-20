@@ -3,6 +3,15 @@
 Asset = Struct.new(:local_path, :local_sha1, :remote_short_url, keyword_init: true)
 
 class LocalDoc
+  DOCS_DIR = File.expand_path("#{__dir__}/../docs")
+
+  # Relative links to other docs, e.g. `[DModal](12-dmodal-api.md#usage)`. Captures the path only;
+  # fragments are dropped on sync because Discourse heading anchors include the post id.
+  DOC_LINK_REGEX = %r{\]\((?![a-z][a-z0-9+.-]*:|/)([^)\s#]+\.md)(?:#[^)\s]*)?\)}i
+
+  # Markdown images, e.g. `![alt](/assets/image.png)`. Captures the path.
+  IMAGE_REGEX = /![^\]]+\]\(([^)]+)\)/
+
   attr_accessor :path,
                 :frontmatter,
                 :content,
@@ -10,7 +19,8 @@ class LocalDoc
                 :first_post_id,
                 :remote_title,
                 :remote_deleted,
-                :assets
+                :assets,
+                :all_docs
   attr_reader :remote_content
 
   def initialize(**kwargs)
@@ -31,7 +41,7 @@ class LocalDoc
     unused_assets = assets.dup
 
     result =
-      content.gsub(/![^\]]+\]\(([^)]+)\)/) do |match|
+      content.gsub(IMAGE_REGEX) do |match|
         path = $1
         next match if !path.start_with?("/")
 
@@ -59,6 +69,8 @@ class LocalDoc
 
     unused_assets.each { |asset| assets.delete(asset) }
 
+    result = with_doc_links(result)
+
     result = <<~MD
       #{result}
 
@@ -77,6 +89,10 @@ class LocalDoc
         END DOCS ASSET MAP -->
       MD
     end
+  end
+
+  def broken_doc_links
+    content.scan(DOC_LINK_REGEX).flatten.reject { |target| linked_doc(target) }
   end
 
   def serialized_assets
@@ -104,5 +120,20 @@ class LocalDoc
     end
 
     @remote_content = value
+  end
+
+  private
+
+  def with_doc_links(text)
+    text.gsub(DOC_LINK_REGEX) do |match|
+      # A linked doc created in this run has no topic yet; the update pass fills it in.
+      linked_topic_id = linked_doc($1)&.topic_id
+      linked_topic_id ? "](/t/-/#{linked_topic_id})" : match
+    end
+  end
+
+  def linked_doc(target)
+    resolved = File.expand_path(target, File.dirname(File.join(DOCS_DIR, path)))
+    all_docs.find { |doc| File.join(DOCS_DIR, doc.path) == resolved }
   end
 end

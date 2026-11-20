@@ -1,14 +1,20 @@
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default <template>
   <ExpressionWrapper
-    @field={{@field}}
-    @schema={{@schema}}
-    @supportsExpression={{@supportsExpression}}
-    @placeholder={{@placeholder}}
     @dynamicValueHint={{@dynamicValueHint}}
+    @field={{@field}}
+    @placeholder={{@placeholder}}
+    @schema={{@schema}}
     @session={{@session}}
+    @supportsExpression={{@supportsExpression}}
   >
-    <@field.Control placeholder={{@placeholder}} />
+    <@field.Control
+      placeholder={{@placeholder}}
+      step={{if
+        (or (eq @schema.type "number") (eq @schema.type "float"))
+        "any"
+      }}
+    />
   </ExpressionWrapper>
 </template>

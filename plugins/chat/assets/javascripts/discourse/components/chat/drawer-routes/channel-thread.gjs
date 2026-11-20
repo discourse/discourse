@@ -47,11 +47,11 @@ export default class ChatDrawerRoutesChannelThread extends Component {
           as |navbar|
         >
           <navbar.BackButton
-            @title={{this.backButton.title}}
             @route={{this.backButton.route}}
             @routeModels={{this.backButton.models}}
+            @title={{this.backButton.title}}
           />
-          <navbar.Title @title={{this.threadTitle}} @icon="discourse-threads" />
+          <navbar.Title @icon="discourse-threads" @title={{this.threadTitle}} />
           <navbar.Actions as |a|>
             <PluginOutlet
               @name="chat-thread-navbar-actions"
@@ -71,8 +71,8 @@ export default class ChatDrawerRoutesChannelThread extends Component {
           <div class="chat-drawer-content">
             {{#each (array @model.thread) as |thread|}}
               <ChatThread
-                @thread={{thread}}
                 @targetMessageId={{@params.messageId}}
+                @thread={{thread}}
               />
             {{/each}}
           </div>

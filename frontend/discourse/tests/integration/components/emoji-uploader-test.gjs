@@ -14,9 +14,7 @@ module("Integration | Component | EmojiUploader", function (hooks) {
 
   hooks.beforeEach(function () {
     requestNumber = 0;
-    this.setProperties({
-      emojiGroups: ["default", "cool-emojis"],
-    });
+    this.emojiGroups = ["default", "cool-emojis"];
 
     pretender.post("/admin/config/emoji.json", () => {
       requestNumber++;
@@ -39,23 +37,21 @@ module("Integration | Component | EmojiUploader", function (hooks) {
   });
 
   test("uses the selected group for the upload", async function (assert) {
+    const done = assert.async();
+    const onDone = (upload, group) => {
+      assert.strictEqual(group, "cool-emojis");
+      done();
+    };
+
     await render(
       <template>
-        <EmojiUploader
-          @emojiGroups={{this.emojiGroups}}
-          @done={{this.doneUpload}}
-        />
+        <EmojiUploader @done={{onDone}} @emojiGroups={{this.emojiGroups}} />
       </template>
     );
 
-    const done = assert.async();
     await selectKit("#emoji-group-selector").expand();
     await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
 
-    this.set("doneUpload", (upload, group) => {
-      assert.strictEqual(group, "cool-emojis");
-      done();
-    });
     const image = createFile("avatar.png");
 
     await this.container
@@ -64,28 +60,25 @@ module("Integration | Component | EmojiUploader", function (hooks) {
   });
 
   test("does not clear the selected group between multiple uploads", async function (assert) {
-    await render(
-      <template>
-        <EmojiUploader
-          @emojiGroups={{this.emojiGroups}}
-          @done={{this.doneUpload}}
-        />
-      </template>
-    );
-
     const done = assert.async();
-    await selectKit("#emoji-group-selector").expand();
-    await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
-
     let uploadDoneCount = 0;
-    this.set("doneUpload", (upload, group) => {
+    const onDone = (upload, group) => {
       uploadDoneCount++;
       assert.strictEqual(group, "cool-emojis");
 
       if (uploadDoneCount === 2) {
         done();
       }
-    });
+    };
+
+    await render(
+      <template>
+        <EmojiUploader @done={{onDone}} @emojiGroups={{this.emojiGroups}} />
+      </template>
+    );
+
+    await selectKit("#emoji-group-selector").expand();
+    await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
 
     const image = createFile("avatar.png");
     const image2 = createFile("avatar2.png");
@@ -96,22 +89,9 @@ module("Integration | Component | EmojiUploader", function (hooks) {
   });
 
   test("clears the name after the first upload to avoid duplicate names", async function (assert) {
-    await render(
-      <template>
-        <EmojiUploader
-          @emojiGroups={{this.emojiGroups}}
-          @done={{this.doneUpload}}
-        />
-      </template>
-    );
-
     const done = assert.async();
-    await selectKit("#emoji-group-selector").expand();
-    await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
-    await fillIn("#emoji-name", "okay");
-
     let uploadDoneCount = 0;
-    this.set("doneUpload", (upload) => {
+    const onDone = (upload) => {
       uploadDoneCount++;
 
       if (uploadDoneCount === 1) {
@@ -122,7 +102,17 @@ module("Integration | Component | EmojiUploader", function (hooks) {
         assert.strictEqual(upload.name, null);
         done();
       }
-    });
+    };
+
+    await render(
+      <template>
+        <EmojiUploader @done={{onDone}} @emojiGroups={{this.emojiGroups}} />
+      </template>
+    );
+
+    await selectKit("#emoji-group-selector").expand();
+    await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
+    await fillIn("#emoji-name", "okay");
 
     const image = createFile("avatar.png");
     const image2 = createFile("avatar2.png");
@@ -132,22 +122,21 @@ module("Integration | Component | EmojiUploader", function (hooks) {
   });
 
   test("sets the created_by field with username", async function (assert) {
+    const done = assert.async();
+    const onDone = (upload) => {
+      assert.strictEqual(upload.created_by, "benji");
+      done();
+    };
+
     await render(
       <template>
         <EmojiUploader
-          @emojiGroups={{this.emojiGroups}}
           @createdBy={{this.createdBy}}
-          @done={{this.doneUpload}}
+          @done={{onDone}}
+          @emojiGroups={{this.emojiGroups}}
         />
       </template>
     );
-
-    const done = assert.async();
-
-    this.set("doneUpload", (upload) => {
-      assert.strictEqual(upload.created_by, "benji");
-      done();
-    });
 
     const image = createFile("avatar.png");
     await this.container

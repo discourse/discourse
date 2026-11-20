@@ -6,10 +6,10 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import ChatablesLoader from "./lib/chatables-loader";
-import List from "./list";
-import ListHandler from "./list-handler";
-import Members from "./members";
+import ChatablesLoader from "./lib/chatables-loader.js";
+import listKeyboardNavigation from "./lib/list-keyboard-navigation.js";
+import List from "./list.gjs";
+import Members from "./members.gjs";
 
 export default class MembersSelector extends Component {
   @service siteSettings;
@@ -109,23 +109,30 @@ export default class MembersSelector extends Component {
   }
 
   <template>
-    <ListHandler
-      @items={{this.items}}
-      @highlightedItem={{this.highlightedChatable}}
-      @onHighlight={{this.highlightChatable}}
-      @onSelect={{this.selectChatable}}
+    <div
+      class="chat-message-creator__members-selector"
+      {{listKeyboardNavigation
+        highlightedItem=this.highlightedChatable
+        items=this.items
+        onHighlight=this.highlightChatable
+        onSelect=this.selectChatable
+      }}
     >
       <div class="chat-message-creator__add-members-header-container">
         <div class="chat-message-creator__add-members-header">
-          <Members
-            @filter={{this.filter}}
-            @members={{@members}}
-            @highlightedMember={{this.highlightedMember}}
-            @onFilter={{this.onFilter}}
-            @registerFocusFilterAction={{this.registerFocusFilterAction}}
-            @onHighlightMember={{this.highlightMember}}
-            @onSelectMember={{this.unselectMember}}
-          />
+          <div class="chat-message-creator__add-members-input">
+            <Members
+              @filter={{this.filter}}
+              @highlightedMember={{this.highlightedMember}}
+              @members={{@members}}
+              @onFilter={{this.onFilter}}
+              @onHighlightMember={{this.highlightMember}}
+              @onSelectMember={{this.unselectMember}}
+              @registerFocusFilterAction={{this.registerFocusFilterAction}}
+            />
+
+            {{yield}}
+          </div>
 
           <DButton
             class="btn-flat chat-message-creator__add-members__close-btn"
@@ -136,14 +143,14 @@ export default class MembersSelector extends Component {
       </div>
 
       <List
-        @items={{this.items}}
         @highlightedItem={{this.highlightedChatable}}
-        @onSelect={{this.selectChatable}}
-        @onHighlight={{this.highlightChatable}}
+        @items={{this.items}}
         @maxReached={{@maxReached}}
         @membersCount={{@membersCount}}
+        @onHighlight={{this.highlightChatable}}
+        @onSelect={{this.selectChatable}}
       />
 
-    </ListHandler>
+    </div>
   </template>
 }

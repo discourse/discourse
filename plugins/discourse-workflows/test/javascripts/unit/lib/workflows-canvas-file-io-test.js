@@ -1,4 +1,5 @@
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { i18n } from "discourse-i18n";
 import {
   buildWorkflowExportPayload,
@@ -32,6 +33,17 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
       id: 42,
       name: "Imported workflow",
       settings: { executionOrder: "v1" },
+      variables: [
+        {
+          id: 7,
+          key: "notify_categories",
+          label: "Notify categories",
+          description: "Categories to notify",
+          variable_type: "category_list",
+          type_options: {},
+          value: "2|24",
+        },
+      ],
       staticData: { "node:Send request": { count: 1 } },
       pinData: { "node-1": [{ json: { ok: true } }] },
       versionId: "version-1",
@@ -39,15 +51,21 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
       versionCounter: 3,
     });
 
-    assert.strictEqual(payload.id, "42");
-    assert.strictEqual(payload.name, "Imported workflow");
-    assert.deepEqual(payload.settings, { executionOrder: "v1" });
-    assert.deepEqual(payload.staticData, { "node:Send request": { count: 1 } });
-    assert.deepEqual(payload.pinData, { "node-1": [{ json: { ok: true } }] });
-    assert.strictEqual(payload.versionId, "version-1");
-    assert.strictEqual(payload.activeVersionId, "version-1");
-    assert.strictEqual(payload.versionCounter, 3);
-    assert.deepEqual(payload.connections, {});
+    assert.deepEqual(payload, {
+      name: "Imported workflow",
+      nodes: payload.nodes,
+      connections: {},
+      settings: { executionOrder: "v1" },
+      variables: [
+        {
+          key: "notify_categories",
+          description: "Categories to notify",
+          variable_type: "category_list",
+          type_options: {},
+        },
+      ],
+      staticData: { "node:Send request": { count: 1 } },
+    });
     assert.deepEqual(payload.nodes[0].credentials, {
       auth: {
         id: "42",
@@ -57,6 +75,14 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
     assert.true(payload.nodes[0].alwaysOutputData);
     assert.false("settings" in payload.nodes[0]);
     assert.false("credentials" in payload.nodes[0].parameters);
+    assert.false(
+      "id" in payload.variables[0],
+      "export never includes a variable's database id"
+    );
+    assert.false(
+      "value" in payload.variables[0],
+      "export never includes a variable's site-specific value"
+    );
   });
 
   test("buildWorkflowExportPayload serializes multi-output connections without null holes", function (assert) {
@@ -92,6 +118,48 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
         main: [[], [{ node: "Log", type: "main", index: 0 }]],
       },
     });
+  });
+
+  test("parseWorkflowImport connects nodes when crypto.randomUUID is unavailable", function (assert) {
+    const randomUUID = sinon.stub(crypto, "randomUUID").value(undefined);
+    let result;
+    try {
+      result = parseWorkflowImport(
+        JSON.stringify({
+          nodes: [
+            { id: "trigger", type: "trigger:manual", name: "Start" },
+            { id: "action", type: "action:log", name: "Log" },
+          ],
+          connections: {
+            Start: { main: [[{ node: "Log", type: "main", index: 0 }]] },
+          },
+        })
+      );
+    } finally {
+      randomUUID.restore();
+    }
+
+    const [source, target] = result.nodes;
+    const uuidV4 =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+    assert.true(uuidV4.test(source.clientId), "the trigger gets a UUID v4");
+    assert.true(uuidV4.test(target.clientId), "the action gets a UUID v4");
+    assert.notStrictEqual(
+      source.clientId,
+      target.clientId,
+      "the IDs are distinct"
+    );
+    assert.strictEqual(result.connections.length, 1, "the edge is imported");
+    assert.strictEqual(
+      result.connections[0].sourceClientId,
+      source.clientId,
+      "the edge starts at the imported trigger"
+    );
+    assert.strictEqual(
+      result.connections[0].targetClientId,
+      target.clientId,
+      "the edge ends at the imported action"
+    );
   });
 
   test("parseWorkflowImport strips credential references", function (assert) {
@@ -311,6 +379,84 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
         { error: "invalid" }
       );
     }
+  });
+
+  test("parseWorkflowImport preserves imported variables", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        variables: [
+          {
+            key: "notify_categories",
+            description: "Categories to notify",
+            variable_type: "category_list",
+            type_options: {},
+          },
+        ],
+      })
+    );
+
+    assert.deepEqual(result.variables, [
+      {
+        key: "notify_categories",
+        description: "Categories to notify",
+        variable_type: "category_list",
+        type_options: {},
+      },
+    ]);
+  });
+
+  test("parseWorkflowImport fills in defaults for a malformed variable", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        variables: [{ key: "priority" }, { description: "No key, dropped" }],
+      })
+    );
+
+    assert.deepEqual(result.variables, [
+      {
+        key: "priority",
+        description: null,
+        variable_type: "string",
+        type_options: {},
+      },
+    ]);
+  });
+
+  test("parseWorkflowImport rejects a non-array variables", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        variables: "not-an-array",
+      })
+    );
+
+    assert.deepEqual(result, { error: "invalid" });
   });
 
   test("parseWorkflowImport rejects non-object workflow JSON", function (assert) {

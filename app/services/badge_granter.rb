@@ -4,6 +4,37 @@ class BadgeGranter
   class GrantError < StandardError
   end
 
+  class InvalidReason < StandardError
+  end
+
+  def self.post_for_reason(reason, guardian:)
+    return if reason.blank?
+
+    route = Discourse.route_for(reason)
+    unless route && %w[posts topics nested_topics].include?(route[:controller])
+      raise InvalidReason, I18n.t("invalid_grant_badge_reason_link")
+    end
+
+    post =
+      case route
+      in { controller: "posts", action: "show", id: }
+        Post.find_by(id:)
+      in { controller: "posts", action: "short_link", post_id: }
+        Post.find_by(id: post_id)
+      in { controller: "posts", action: "by_number", topic_id:, post_number: }
+        Post.find_by(topic_id:, post_number:)
+      in { controller: "topics", action: "show" } | { controller: "nested_topics" }
+        topic_id = (route[:id] || route[:topic_id]).to_i
+        post_number = route[:post_number] || 1
+        Post.find_by(topic_id:, post_number:)
+      else
+        nil
+      end
+
+    guardian.ensure_can_see!(post) if post
+    post
+  end
+
   def self.disable_queue
     @queue_disabled = true
   end
@@ -150,7 +181,12 @@ class BadgeGranter
         end
 
         skip_new_user_tips = @user.user_option.skip_new_user_tips
-        unless self.class.suppress_notification?(@badge, user_badge.granted_at, skip_new_user_tips)
+        unless @opts[:suppress_notification] ||
+                 self.class.suppress_notification?(
+                   @badge,
+                   user_badge.granted_at,
+                   skip_new_user_tips,
+                 )
           notification =
             self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
           user_badge.update!(notification_id: notification.id)

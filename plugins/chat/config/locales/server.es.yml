@@ -10,7 +10,6 @@ es:
     chat_enabled: "Activar chat."
     chat_pinned_messages: "Activar los mensajes anclados en los canales de chat."
     enable_public_channels: "Activar canales públicos basados en categorías."
-    chat_channel_retention_days: "Los mensajes del chat en los canales regulares se conservarán durante este número de días. Poner a «0» para retener los mensajes para siempre."
     chat_dm_retention_days: "Los mensajes de chat en los canales de chat personales se conservarán durante este número de días. Ponlo en «0» para retener los mensajes para siempre."
     chat_auto_silence_duration: "Número de minutos que los usuarios serán silenciados cuando superen el límite de creación de mensajes de chat. Ponlo en «0» para desactivar el silenciamiento automático."
     chat_allowed_messages_for_trust_level_0: "Número de mensajes que los usuarios de nivel de confianza 0 pueden enviar en 30 segundos. Ponlo en «0» para desactivar el límite."
@@ -60,7 +59,17 @@ es:
 
         Visita el canal en %{channel_url} para volver a intentarlo.
   chat:
+    design_wizard_homepage_name: "Chat"
     deleted_chat_username: eliminado
+    crawler:
+      directory_title: "Canales de chat"
+      nav_title: "Chat"
+      members_count:
+        one: "%{count} miembro"
+        other: "%{count} miembros"
+      thread_replies:
+        one: "%{count} respuesta"
+        other: "%{count} respuestas"
     errors:
       users_cant_be_added_to_channel: "No se pueden añadir usuarios a este canal."
       user_cant_be_removed_from_channel: "No se pueden eliminar usuarios en este canal"

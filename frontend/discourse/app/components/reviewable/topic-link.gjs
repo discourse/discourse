@@ -31,15 +31,15 @@ export default <template>
       <div class="reviewable-topic-link__title-wrapper">
         <div class="reviewable-topic-link__title-status">
           <TopicStatus
-            @topic={{@reviewable.topic}}
             @showPrivateMessageIcon={{true}}
+            @topic={{@reviewable.topic}}
           />
         </div>
 
         <div class="reviewable-topic-link__title-link">
           <a
-            href={{@reviewable.target_url}}
             class="title-text"
+            href={{@reviewable.target_url}}
           >{{highlightWatchedWords
               @reviewable.topic.fancyTitle
               @reviewable
@@ -55,15 +55,15 @@ export default <template>
         {{/if}}
 
         <div class="reviewable-topic-link__details-tags">
-          <ReviewableTags @tags={{@reviewable.topic_tags}} @tagName="" />
+          <ReviewableTags @tagName="" @tags={{@reviewable.topic_tags}} />
         </div>
       </div>
     {{else if @reviewable.removed_topic_id}}
       <span class="title-text">
         {{i18n "review.topics.deleted"}}
         <LinkTo
-          @route="topic"
           @models={{array "-" @reviewable.removed_topic_id}}
+          @route="topic"
         >{{i18n "review.topics.original"}}</LinkTo>
       </span>
     {{else if (has-block)}}

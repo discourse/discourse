@@ -22,6 +22,9 @@ et:
               buckets:
                 lt_1h: "< 1 tund"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Sildid"
     notifications:
       alt:
         solved:

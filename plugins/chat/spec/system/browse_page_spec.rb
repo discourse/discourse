@@ -8,223 +8,91 @@ RSpec.describe "Browse page" do
 
   before do
     sign_in(current_user)
-    chat_system_bootstrap
+    chat_system_bootstrap(current_user)
   end
 
-  context "when public channels are disabled" do
-    before { SiteSetting.enable_public_channels = false }
+  it "redirects to the homepage when public channels are disabled" do
+    SiteSetting.enable_public_channels = false
+    visit("/chat/browse")
+    expect(page).to have_current_path("/latest")
+  end
 
-    it "redirects to homepage" do
-      visit("/chat/browse") # no page object here as we actually don't load it
-      expect(page).to have_current_path("/latest")
+  it "redirects the archived tab to the default tab when archiving is disabled" do
+    chat_page.visit_browse(:archived)
+    expect(browse_page).to have_current_path("/chat/browse/open")
+  end
+
+  it "returns to the channels page on mobile", mobile: true do
+    chat_page.visit_browse
+    find(".c-navbar__back-button").click
+    expect(browse_page).to have_current_path("/chat/channels")
+  end
+
+  context "when searching" do
+    fab!(:foo) { Fabricate(:chat_channel, name: "foo") }
+    fab!(:bar) { Fabricate(:chat_channel, name: "bar") }
+
+    it "shows matching channels" do
+      chat_page.visit_browse
+      browse_page.search(foo.name)
+      expect(browse_page).to have_channel(name: foo.name)
+      expect(browse_page).to have_no_channel(name: bar.name)
+    end
+
+    it "shows the empty state instead of channels for an unmatched query" do
+      chat_page.visit_browse
+      browse_page.search("x")
+      expect(browse_page).to have_channel(name: I18n.t("js.chat.empty_state.title"))
+      expect(browse_page).to have_no_channel(name: foo.name)
+      expect(browse_page).to have_no_channel(name: bar.name)
     end
   end
 
-  context "when user has chat enabled" do
-    context "when visiting browse page" do
-      it "defaults to open filer" do
-        chat_page.visit_browse
-        expect(browse_page).to have_current_path("/chat/browse/open")
-      end
+  context "when filtering by channel status" do
+    fab!(:open_channel) { Fabricate(:chat_channel, status: :open) }
+    fab!(:read_only_channel) { Fabricate(:chat_channel, status: :read_only) }
+    fab!(:closed_channel) { Fabricate(:chat_channel, status: :closed) }
+    fab!(:archived_channel) { Fabricate(:chat_channel, status: :archived) }
+    fab!(:deleted_channel, :chat_channel)
+    fab!(:dm) { Fabricate(:direct_message_channel, users: [current_user]) }
 
-      it "has the expected tabs" do
-        chat_page.visit_browse
-        expect(browse_page).to have_channel(name: I18n.t("js.chat.browse.filter_all"))
-        expect(browse_page).to have_channel(name: I18n.t("js.chat.browse.filter_open"))
-        expect(browse_page).to have_channel(name: I18n.t("js.chat.browse.filter_closed"))
-      end
+    before { deleted_channel.destroy! }
 
-      it "has not archived tab available" do
-        chat_page.visit_browse
-        expect(browse_page).to have_no_channel(name: I18n.t("js.chat.browse.filter_archived"))
-      end
-
-      it "redirects archived tab to default tab" do
-        chat_page.visit_browse(:archived)
-
-        expect(browse_page).to have_current_path("/chat/browse/open")
-      end
-
-      context "when archiving channels is enabled" do
-        before { SiteSetting.chat_allow_archiving_channels = true }
-
-        it "has the archived tab" do
-          chat_page.visit_browse
-          expect(browse_page).to have_channel(name: I18n.t("js.chat.browse.filter_archived"))
-        end
-      end
+    def expect_only_channels(*visible)
+      all = [open_channel, read_only_channel, closed_channel, archived_channel, deleted_channel]
+      visible.each { |channel| expect(browse_page).to have_channel(name: channel.title) }
+      (all - visible).each { |channel| expect(browse_page).to have_no_channel(name: channel.title) }
+      expect(browse_page).to have_no_channel(name: dm.title(current_user))
     end
 
-    context "when on mobile", mobile: true do
-      it "has a back button" do
-        chat_page.visit_browse
-        find(".c-navbar__back-button").click
+    it "filters the list as the user switches tabs" do
+      chat_page.visit_browse
+      expect(browse_page).to have_current_path("/chat/browse/open")
+      expect(browse_page).to have_channel(name: I18n.t("js.chat.browse.filter_open"))
+      expect(browse_page).to have_channel(name: I18n.t("js.chat.browse.filter_all"))
+      expect(browse_page).to have_channel(name: I18n.t("js.chat.browse.filter_closed"))
+      expect(browse_page).to have_no_channel(name: I18n.t("js.chat.browse.filter_archived"))
+      expect_only_channels(open_channel)
 
-        expect(browse_page).to have_current_path("/chat/channels")
-      end
+      browse_page.change_status("all")
+      expect_only_channels(open_channel, read_only_channel, closed_channel, archived_channel)
+
+      browse_page.change_status("closed")
+      expect_only_channels(closed_channel)
     end
 
-    context "when filtering results" do
-      fab!(:category_channel_1) { Fabricate(:chat_channel, name: "foo") }
-      fab!(:category_channel_2) { Fabricate(:chat_channel, name: "bar") }
-
-      context "when results are found" do
-        it "lists expected results" do
-          chat_page.visit_browse
-
-          browse_page.search(category_channel_1.name)
-
-          expect(browse_page).to have_channel(name: category_channel_1.name)
-          expect(browse_page).to have_no_channel(name: category_channel_2.name)
-        end
-      end
-
-      context "when results are not found" do
-        it "displays the correct message" do
-          chat_page.visit_browse
-          browse_page.search("x")
-
-          expect(browse_page).to have_channel(name: I18n.t("js.chat.empty_state.title"))
-        end
-
-        it "doesn’t display any channel" do
-          chat_page.visit_browse
-          browse_page.search("x")
-
-          expect(browse_page).to have_no_channel(name: category_channel_1.name)
-          expect(browse_page).to have_no_channel(name: category_channel_2.name)
-        end
-      end
+    it "loads more channels when scrolling" do
+      Fabricate.times(25, :chat_channel, status: :open)
+      chat_page.visit_browse(:all)
+      scroll_to(find(".chat-channel-card:last-child"))
+      expect(browse_page).to have_selector(".chat-channel-card", count: 29)
     end
 
-    context "when visiting tabs" do
-      fab!(:category_channel_1) { Fabricate(:chat_channel, status: :open) }
-      fab!(:category_channel_2) { Fabricate(:chat_channel, status: :read_only) }
-      fab!(:category_channel_3) { Fabricate(:chat_channel, status: :closed) }
-      fab!(:category_channel_4) { Fabricate(:chat_channel, status: :archived) }
-      fab!(:category_channel_5) { Fabricate(:chat_channel, status: :open) }
-      fab!(:direct_message_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
-
-      before { category_channel_5.destroy! }
-
-      shared_examples "never visible channels" do
-        it "doesn’t list direct message channel" do
-          expect(browse_page).to have_no_channel(name: direct_message_channel_1.title(current_user))
-        end
-
-        it "doesn’t list destroyed channels" do
-          expect(browse_page).to have_no_channel(name: category_channel_5.title)
-        end
-      end
-
-      context "when filter is all" do
-        it "lists all category channels" do
-          chat_page.visit_browse(:all)
-
-          expect(browse_page).to have_channel(name: category_channel_1.name)
-          expect(browse_page).to have_channel(name: category_channel_2.name)
-          expect(browse_page).to have_channel(name: category_channel_3.name)
-          expect(browse_page).to have_channel(name: category_channel_4.name)
-        end
-
-        context "when loading more" do
-          before { 25.times { Fabricate(:chat_channel, status: :open) } }
-
-          it "works" do
-            chat_page.visit_browse(:all)
-            scroll_to(find(".chat-channel-card:last-child"))
-
-            expect(browse_page).to have_selector(".chat-channel-card", count: 29)
-          end
-        end
-
-        include_examples "never visible channels" do
-          before { chat_page.visit_browse(:all) }
-        end
-      end
-
-      context "when filter is open" do
-        it "lists all opened category channels" do
-          chat_page.visit_browse(:open)
-
-          expect(browse_page).to have_channel(name: category_channel_1.name)
-          expect(browse_page).to have_no_channel(name: category_channel_2.name)
-          expect(browse_page).to have_no_channel(name: category_channel_3.name)
-          expect(browse_page).to have_no_channel(name: category_channel_4.name)
-        end
-
-        context "when loading more" do
-          fab!(:valid_channel) { Fabricate(:chat_channel, status: :open) }
-          fab!(:invalid_channel) { Fabricate(:chat_channel, status: :closed) }
-
-          it "keeps the filter" do
-            chat_page.visit_browse(:open)
-
-            expect(browse_page).to have_channel(name: valid_channel.title)
-            expect(browse_page).to have_no_channel(name: invalid_channel.title)
-          end
-        end
-
-        include_examples "never visible channels" do
-          before { chat_page.visit_browse(:open) }
-        end
-      end
-
-      context "when filter is closed" do
-        it "lists all closed category channels" do
-          chat_page.visit_browse(:closed)
-
-          expect(browse_page).to have_no_channel(name: category_channel_1.name)
-          expect(browse_page).to have_no_channel(name: category_channel_2.name)
-          expect(browse_page).to have_channel(name: category_channel_3.name)
-          expect(browse_page).to have_no_channel(name: category_channel_4.name)
-        end
-
-        context "when loading more" do
-          fab!(:valid_channel) { Fabricate(:chat_channel, status: :closed) }
-          fab!(:invalid_channel) { Fabricate(:chat_channel, status: :open) }
-
-          it "keeps the filter" do
-            chat_page.visit_browse(:closed)
-
-            expect(browse_page).to have_channel(name: valid_channel.title)
-            expect(browse_page).to have_no_channel(name: invalid_channel.title)
-          end
-        end
-
-        include_examples "never visible channels" do
-          before { chat_page.visit_browse(:closed) }
-        end
-      end
-
-      context "when filter is archived" do
-        before { SiteSetting.chat_allow_archiving_channels = true }
-
-        it "lists all archived category channels" do
-          chat_page.visit_browse(:archived)
-
-          expect(browse_page).to have_no_channel(name: category_channel_1.name)
-          expect(browse_page).to have_no_channel(name: category_channel_2.name)
-          expect(browse_page).to have_no_channel(name: category_channel_3.name)
-          expect(browse_page).to have_channel(name: category_channel_4.name)
-        end
-
-        context "when loading more" do
-          fab!(:valid_channel) { Fabricate(:chat_channel, status: :archived) }
-          fab!(:invalid_channel) { Fabricate(:chat_channel, status: :open) }
-
-          it "keeps the filter" do
-            chat_page.visit_browse(:archived)
-
-            expect(browse_page).to have_channel(name: valid_channel.title)
-            expect(browse_page).to have_no_channel(name: invalid_channel.title)
-          end
-        end
-
-        include_examples "never visible channels" do
-          before { chat_page.visit_browse(:archived) }
-        end
-      end
+    it "shows the archived tab and its channels when archiving is enabled" do
+      SiteSetting.chat_allow_archiving_channels = true
+      chat_page.visit_browse(:archived)
+      expect(browse_page).to have_channel(name: I18n.t("js.chat.browse.filter_archived"))
+      expect_only_channels(archived_channel)
     end
   end
 end

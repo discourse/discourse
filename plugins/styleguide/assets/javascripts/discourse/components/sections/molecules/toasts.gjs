@@ -90,8 +90,8 @@ export default class Toasts extends Component {
       <StyleguideComponent @tag="default">
         <:actions>
           <DButton
-            @translatedLabel="Show default toast"
             @action={{fn this.showToast "default"}}
+            @translatedLabel="Show default toast"
           />
         </:actions>
       </StyleguideComponent>
@@ -99,8 +99,8 @@ export default class Toasts extends Component {
       <StyleguideComponent @tag="success">
         <:actions>
           <DButton
-            @translatedLabel="Show success toast"
             @action={{fn this.showToast "success"}}
+            @translatedLabel="Show success toast"
           />
         </:actions>
       </StyleguideComponent>
@@ -108,8 +108,8 @@ export default class Toasts extends Component {
       <StyleguideComponent @tag="warning">
         <:actions>
           <DButton
-            @translatedLabel="Show warning toast"
             @action={{fn this.showToast "warning"}}
+            @translatedLabel="Show warning toast"
           />
         </:actions>
       </StyleguideComponent>
@@ -117,8 +117,8 @@ export default class Toasts extends Component {
       <StyleguideComponent @tag="info">
         <:actions>
           <DButton
-            @translatedLabel="Show info toast"
             @action={{fn this.showToast "info"}}
+            @translatedLabel="Show info toast"
           />
         </:actions>
       </StyleguideComponent>
@@ -126,8 +126,8 @@ export default class Toasts extends Component {
       <StyleguideComponent @tag="error">
         <:actions>
           <DButton
-            @translatedLabel="Show error toast"
             @action={{fn this.showToast "error"}}
+            @translatedLabel="Show error toast"
           />
         </:actions>
       </StyleguideComponent>
@@ -135,8 +135,8 @@ export default class Toasts extends Component {
       <StyleguideComponent @tag="custom component">
         <:actions>
           <DButton
-            @translatedLabel="Show toast"
             @action={{this.showCustomComponentToast}}
+            @translatedLabel="Show toast"
           />
         </:actions>
       </StyleguideComponent>
@@ -157,17 +157,17 @@ export default class Toasts extends Component {
         {{#if this.autoClose}}
           <Row @name="[@options.duration] ms">
             <input
-              {{on "input" (withEventValue (fn (mut this.duration)))}}
               type="number"
               value={{this.duration}}
+              {{on "input" (withEventValue (fn (mut this.duration)))}}
             />
           </Row>
         {{/if}}
         <Row @name="[@options.class]">
           <input
-            {{on "input" (withEventValue (fn (mut this.class)))}}
             type="text"
             value={{this.class}}
+            {{on "input" (withEventValue (fn (mut this.class)))}}
           />
         </Row>
         <Row>
@@ -175,22 +175,22 @@ export default class Toasts extends Component {
         </Row>
         <Row @name="[@options.data.title]">
           <input
-            {{on "input" (withEventValue (fn (mut this.title)))}}
             type="text"
             value={{this.title}}
+            {{on "input" (withEventValue (fn (mut this.title)))}}
           />
         </Row>
         <Row @name="[@options.data.message]">
           <input
-            {{on "input" (withEventValue (fn (mut this.message)))}}
             type="text"
             value={{this.message}}
+            {{on "input" (withEventValue (fn (mut this.message)))}}
           />
         </Row>
         <Row @name="[@options.data.icon]">
           <DIconGridPicker
-            @value={{this.icon}}
             @onChange={{fn (mut this.icon)}}
+            @value={{this.icon}}
           />
         </Row>
         <Row @name="With an action">

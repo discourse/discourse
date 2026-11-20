@@ -10,6 +10,7 @@ RSpec.describe Migrations::Converters do
     allow(described_class).to receive(:private_converters_path).and_return(private_path)
     reset_memoization(described_class, :@all_converters)
   end
+
   after do
     FileUtils.remove_dir(root_path, force: true)
     reset_memoization(described_class, :@all_converters)

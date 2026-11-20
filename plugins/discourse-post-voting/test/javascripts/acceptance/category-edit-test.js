@@ -22,7 +22,7 @@ acceptance("Category Edit", function (needs) {
       .field("custom_fields.create_as_post_voting_default")
       .toggle();
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     const payload = latestCategorySavePayload();
     assert.true(payload.custom_fields.create_as_post_voting_default);
@@ -34,7 +34,7 @@ acceptance("Category Edit", function (needs) {
       .field("custom_fields.only_post_voting_in_this_category")
       .toggle();
 
-    await click(".admin-changes-banner .btn-primary");
+    await click(".d-floating-control-bar .btn-primary");
 
     const payload = latestCategorySavePayload();
     assert.true(payload.custom_fields.only_post_voting_in_this_category);

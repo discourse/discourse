@@ -24,7 +24,7 @@ module Boards
     end
 
     def can_write(board:, guardian:)
-      guardian.can_write_boards_board?(board)
+      guardian.can_write_board?(board)
     end
 
     def fetch_column(board:, params:)
@@ -41,17 +41,8 @@ module Boards
 
     def clearable_cards(board, column, guardian)
       cards = Card.where(board_id: board.id, column_id: column.id)
-      visible_topic_ids =
-        Topic
-          .listable_topics
-          .secured(guardian)
-          .where(id: cards.where(card_type: :topic).where.not(topic_id: nil).select(:topic_id))
-          .where.not(id: Category.where.not(topic_id: nil).select(:topic_id))
-          .select(:id)
 
-      cards.where(card_type: :floater).or(
-        cards.where(card_type: :topic, topic_id: visible_topic_ids),
-      )
+      cards.where(card_type: :floater).or(cards.topic_visible_to(guardian))
     end
 
     def remove_column_tag_from_topics(cards, column, guardian)

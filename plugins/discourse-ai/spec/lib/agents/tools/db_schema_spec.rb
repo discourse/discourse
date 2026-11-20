@@ -2,13 +2,10 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::DbSchema do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   def invoke(tables)
     described_class.new({ tables: tables }, bot_user: bot_user, llm: llm).invoke

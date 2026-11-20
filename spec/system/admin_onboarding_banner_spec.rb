@@ -2,13 +2,24 @@
 
 describe "Admin Onboarding Banner" do
   fab!(:admin)
+  fab!(:general_category) { Fabricate(:category, name: "General") }
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
-  let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
   let(:design_wizard_panel) { PageObjects::Components::DesignWizardPanel.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
-  let(:composer) { PageObjects::Components::Composer.new }
-  let(:toasts) { PageObjects::Components::Toasts.new }
+  let(:category_page) { PageObjects::Pages::Category.new }
+  let(:category_form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
+
+  # plugins can register more category types, which adds a type step first
+  def open_category_form_from_banner
+    banner.click_step_action("create_category")
+    expect(page).to have_current_path(%r{\A/new-category/(setup|general)\z})
+    if page.current_path == "/new-category/setup"
+      category_type_card.find_type_card("discussion").click
+    end
+    expect(page).to have_current_path("/new-category/general")
+  end
 
   before do
     SiteSetting.enable_invite_modal_with_roles = false
@@ -26,9 +37,7 @@ describe "Admin Onboarding Banner" do
 
     it "shows all three onboarding steps" do
       visit("/")
-      expect(banner.step("select_theme")).to be_present
-      expect(banner.step("invite_collaborators")).to be_present
-      expect(banner.step("start_posting")).to be_present
+      expect(banner.step_names).to eq(%w[select_theme create_category invite_collaborators])
     end
 
     it "can close the banner prematurely" do
@@ -49,37 +58,48 @@ describe "Admin Onboarding Banner" do
     end
   end
 
-  describe "start posting step" do
-    it "opens composer with selected topic and marks step as complete when topic is created" do
-      visit("/")
-      expect(banner.step_not_completed?("start_posting")).to eq(true)
-
-      banner.click_step_action("start_posting")
-      expect(predefined_topics_modal).to be_open
-      expect(predefined_topics_modal.topic_card_count).to eq(4)
-
-      predefined_topics_modal.select_topic(0)
-
-      expect(composer).to be_opened
-      expect(composer.composer_input.value).not_to be_empty
-
-      composer.composer_input.set("Testing topic selection")
-      composer.create
-      expect(page).to have_content("Testing topic selection")
-
-      visit("/")
-      expect(banner.step_completed?("start_posting")).to eq(true)
+  describe "create category step" do
+    def create_category_step_logged?
+      UserHistory.exists?(
+        action: UserHistory.actions[:admin_onboarding_step_completed],
+        acting_user_id: admin.id,
+        subject: "create_category",
+      )
     end
 
-    it "can cancel topic selection without completing step" do
+    it "takes the admin to the category setup and completes once a category is saved" do
       visit("/")
-      banner.click_step_action("start_posting")
-      expect(predefined_topics_modal).to be_open
+      expect(banner.step_not_completed?("create_category")).to eq(true)
 
-      predefined_topics_modal.cancel
+      open_category_form_from_banner
 
-      expect(predefined_topics_modal).to be_closed
-      expect(banner.step_not_completed?("start_posting")).to eq(true)
+      category_form.field("name").fill_in("Announcements")
+      category_page.save_settings
+      expect(page).to have_current_path("/c/announcements/edit/general")
+
+      try_until_success { expect(create_category_step_logged?).to eq(true) }
+
+      visit("/")
+      expect(banner.step_completed?("create_category")).to eq(true)
+    end
+
+    it "stays open when the admin leaves the category setup without saving" do
+      visit("/")
+      open_category_form_from_banner
+
+      visit("/")
+      expect(banner.step_not_completed?("create_category")).to eq(true)
+    end
+
+    it "stays open when an existing category is edited" do
+      category_page.visit_general(general_category)
+      category_form.field("name").fill_in("General chat")
+      category_page.save_settings
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.saved"))
+
+      visit("/")
+      expect(banner.step_not_completed?("create_category")).to eq(true)
+      expect(create_category_step_logged?).to eq(false)
     end
   end
 
@@ -155,7 +175,7 @@ describe "Admin Onboarding Banner" do
 
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
 
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(page).to have_current_path("/latest?preview_theme_id=#{Theme.horizon_theme.id}")
       expect(design_wizard_panel).to be_visible
       expect(design_wizard_panel).to have_selected_theme(Theme.horizon_theme)
     end
@@ -177,7 +197,99 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
 
-    it "reflects and turns off palettes members can switch between" do
+    it "saves a light only site" do
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      expect(design_wizard_panel).to have_palette_mode("both")
+      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
+      expect(design_wizard_panel).to have_selected_palette("default", mode: "dark")
+      expect(design_wizard_panel).to have_selected_palette_name("Default", mode: "light")
+
+      design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.select_palette_mode("light")
+
+      expect(design_wizard_panel).to have_no_palette_row(mode: "dark")
+
+      design_wizard_panel.select_palette("solarized", mode: "light")
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      theme = Theme.find_default
+      expect(theme.color_scheme.base_scheme_id).to eq(
+        ColorScheme::NAMES_TO_ID_MAP["Solarized Light"],
+      )
+      expect(theme.dark_color_scheme_id).to be_nil
+    end
+
+    it "saves the dark palette for both modes on a dark only site" do
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      design_wizard_panel.select_palette_mode("dark")
+
+      expect(design_wizard_panel).to have_no_palette_row(mode: "light")
+
+      design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      theme = Theme.find_default
+      dracula_id = ColorScheme::NAMES_TO_ID_MAP["Dracula"]
+      expect(theme.color_scheme.base_scheme_id).to eq(dracula_id)
+      expect(theme.dark_color_scheme.base_scheme_id).to eq(dracula_id)
+    end
+
+    it "saves the light and dark palettes picked separately" do
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      design_wizard_panel.select_palette("solarized", mode: "light")
+      design_wizard_panel.select_palette("wcag", mode: "dark")
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      theme = Theme.find_default
+      expect(theme.color_scheme.base_scheme_id).to eq(
+        ColorScheme::NAMES_TO_ID_MAP["Solarized Light"],
+      )
+      expect(theme.dark_color_scheme.base_scheme_id).to eq(
+        ColorScheme::NAMES_TO_ID_MAP["WCAG Dark"],
+      )
+    end
+
+    it "offers palettes admins created in the mode their colors suit" do
+      night =
+        ColorScheme.create_from_base(
+          name: "Night",
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+        )
+
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      expect(design_wizard_panel).to have_no_palette("custom_#{night.id}", mode: "light")
+
+      design_wizard_panel.select_palette("custom_#{night.id}", mode: "dark")
+
+      expect(design_wizard_panel).to have_selected_palette("custom_#{night.id}", mode: "dark")
+      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
+
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      expect(Theme.find_default.dark_color_scheme_id).to eq(night.id)
+    end
+
+    it "keeps palettes members can switch between" do
       horizon = Theme.horizon_theme
       horizon.set_default!
       ColorScheme.where(theme_id: horizon.id).update_all(user_selectable: true)
@@ -185,42 +297,11 @@ describe "Admin Onboarding Banner" do
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
-
-      expect(design_wizard_panel).to have_user_selectable_palettes
-
-      design_wizard_panel.toggle_user_selectable_palettes
-
-      expect(design_wizard_panel).to have_no_user_selectable_palettes
-
       design_wizard_panel.next_step
       design_wizard_panel.save
 
       expect(banner).to be_visible
-      expect(ColorScheme.where(theme_id: horizon.id).pluck(:user_selectable)).to all(eq(false))
-    end
-
-    it "reverts a previewed welcome banner when closed without saving" do
-      visit("/")
-      banner.click_step_action("select_theme")
-
-      expect(design_wizard_panel).to be_visible
-
-      design_wizard_panel.next_step
-      design_wizard_panel.next_step
-
-      expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(page).to have_css(".welcome-banner")
-
-      design_wizard_panel.toggle_welcome_banner
-
-      expect(design_wizard_panel).to have_no_welcome_banner_enabled
-      expect(page).to have_no_css(".welcome-banner")
-
-      design_wizard_panel.close
-
-      expect(design_wizard_panel).to be_hidden
-      expect(page).to have_css(".welcome-banner")
-      expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(true)
+      expect(ColorScheme.where(theme_id: horizon.id).pluck(:user_selectable)).to all(eq(true))
     end
 
     it "previews and applies the design choices and marks step complete" do
@@ -232,25 +313,16 @@ describe "Admin Onboarding Banner" do
       # picking another theme reloads the page with a theme preview and the
       # wizard resumes in the sheet
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(page).to have_current_path("/latest?preview_theme_id=#{Theme.horizon_theme.id}")
       expect(design_wizard_panel).to be_visible
 
       design_wizard_panel.next_step
-      design_wizard_panel.select_palette("royal")
+      design_wizard_panel.select_palette("royal", mode: "light")
       expect(design_wizard_panel).to have_palette_preview
-      design_wizard_panel.toggle_user_selectable_palettes
-      design_wizard_panel.select_body_font("lato")
 
       design_wizard_panel.next_step
+      design_wizard_panel.select_body_font("lato")
       design_wizard_panel.select_homepage("categories")
-      design_wizard_panel.select_search_experience("search_icon")
-
-      expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(page).to have_css(".welcome-banner")
-      design_wizard_panel.select_welcome_banner_location("below_site_header")
-      design_wizard_panel.toggle_welcome_banner
-      expect(page).to have_no_css(".welcome-banner")
-
       design_wizard_panel.save
 
       # Page reloads after saving; wait for it to complete
@@ -261,13 +333,9 @@ describe "Admin Onboarding Banner" do
       expect(SiteSetting.default_theme_id).to eq(Theme.horizon_theme.id)
       horizon = Theme.horizon_theme
       expect(horizon.color_scheme.name).to eq("Royal")
-      expect(horizon.color_scheme.user_selectable).to eq(true)
       expect(SiteSetting.base_font).to eq("lato")
       expect(SiteSetting.default_homepage).to eq("categories")
       expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
-      expect(SiteSetting.enable_welcome_banner(theme_id: horizon.id)).to eq(false)
-      expect(SiteSetting.welcome_banner_location).to eq("below_site_header")
-      expect(SiteSetting.search_experience(theme_id: horizon.id)).to eq("search_icon")
 
       # the reload must not cancel the in-flight audit write
       expect(
@@ -283,12 +351,13 @@ describe "Admin Onboarding Banner" do
     it "disables onboarding when select theme is completed last" do
       visit("/")
 
-      banner.click_step_action("start_posting")
-      predefined_topics_modal.select_topic(0)
-      composer.create
+      open_category_form_from_banner
+      category_form.field("name").fill_in("Announcements")
+      category_page.save_settings
+      expect(page).to have_current_path("/c/announcements/edit/general")
       visit("/")
 
-      expect(banner.step_completed?("start_posting")).to eq(true)
+      expect(banner.step_completed?("create_category")).to eq(true)
 
       banner.click_step_action("invite_collaborators")
       create_invite_modal.save_button.click
@@ -313,7 +382,7 @@ describe "Admin Onboarding Banner" do
             action: UserHistory.actions[:admin_onboarding_step_completed],
             acting_user_id: admin.id,
           ).pluck(:subject),
-        ).to contain_exactly("start_posting", "invite_collaborators", "select_theme")
+        ).to contain_exactly("create_category", "invite_collaborators", "select_theme")
 
         expect(
           UserHistory.exists?(

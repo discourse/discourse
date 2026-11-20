@@ -34,7 +34,7 @@ RSpec.describe DiscoursePoll::PollsController do
   before { Group.refresh_automatic_groups! }
 
   describe "#vote" do
-    it "works" do
+    it "publishes the updated poll vote" do
       channel = "/polls/#{poll.topic_id}"
 
       message =
@@ -63,6 +63,8 @@ RSpec.describe DiscoursePoll::PollsController do
     end
 
     it "works in PM" do
+      Fabricate(:moderator)
+      admin = Fabricate(:admin)
       user2 = Fabricate(:user)
       topic =
         Fabricate(
@@ -97,7 +99,7 @@ RSpec.describe DiscoursePoll::PollsController do
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
 
       expect(message.channel).to eq(channel)
-      expect(message.user_ids).to contain_exactly(user.id, user2.id)
+      expect(message.user_ids).to contain_exactly(user.id, user2.id, admin.id)
       expect(message.group_ids).to eq(nil)
     end
 

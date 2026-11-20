@@ -67,6 +67,10 @@ on(:before_session_destroy) do |data|
   post_logout_redirect = SiteSetting.openid_connect_rp_initiated_logout_redirect.presence
   params << ["post_logout_redirect_uri", post_logout_redirect] if post_logout_redirect
 
+  if SiteSetting.openid_connect_rp_initiated_logout_include_state
+    params << ["state", SecureRandom.hex(16)]
+  end
+
   uri.query = URI.encode_www_form(params)
   data[:redirect_url] = uri.to_s
 end

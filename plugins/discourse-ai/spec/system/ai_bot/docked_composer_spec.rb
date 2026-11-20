@@ -15,11 +15,19 @@ RSpec.describe "AI Bot docked composer" do
     )
   end
 
+  fab!(:general_agent) do
+    AiAgent
+      .find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General])
+      .tap do |agent|
+        agent.update!(default_llm: claude_2)
+        agent.ensure_user!
+      end
+  end
   fab!(:bot_user) do
     enable_current_plugin
     toggle_enabled_bots(bots: [claude_2])
     SiteSetting.ai_bot_enabled = true
-    claude_2.reload.user
+    general_agent.user
   end
 
   fab!(:pm) do
@@ -53,7 +61,9 @@ RSpec.describe "AI Bot docked composer" do
   before do
     enable_current_plugin
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
-    pm.save!
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = general_agent.id
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = claude_2.id
+    pm.save_custom_fields
     toggle_enabled_bots(bots: [claude_2])
     SiteSetting.navigation_menu = "sidebar"
     SiteSetting.ai_bot_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
@@ -67,6 +77,7 @@ RSpec.describe "AI Bot docked composer" do
 
     expect(page).to have_css(".ai-bot-docked-composer")
     expect(page).to have_css(".ai-bot-docked-composer .d-editor-input")
+    expect(page).to have_no_css(".ai-bot-docked-composer .agent-llm-selector")
     # The docked composer replaces the topic footer entirely, so it is not
     # rendered (rather than hidden via CSS).
     expect(page).to have_no_css("#topic-footer-buttons")

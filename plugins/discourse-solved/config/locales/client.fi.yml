@@ -27,6 +27,11 @@ fi:
                 lt_1h: "< 1 tunti"
                 gt_24h: "> 24 tuntia"
   js:
+    discourse_workflows:
+      solution_changed:
+        changes: "Muutokset"
+        changes_removed: "Poistettu"
+        tag_names: "Tunnisteet"
     notifications:
       alt:
         solved:

@@ -10,34 +10,34 @@ export default class AdminConfigCategoryManagement extends Component {
 
   <template>
     <DPageHeader
-      @titleLabel={{i18n "admin.config.category_management.title"}}
       @descriptionLabel={{i18n
         "admin.config.category_management.header_description"
       }}
+      @titleLabel={{i18n "admin.config.category_management.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/config/category-management"
           @label={{i18n "admin.config.category_management.title"}}
+          @path="/admin/config/category-management"
         />
       </:breadcrumbs>
 
       <:tabs>
         <DNavItem
-          @route="adminConfig.categoryManagement.settings"
           @label="admin.config.category_management.tabs.settings"
+          @route="adminConfig.categoryManagement.settings"
         />
         <DNavItem
+          @label="admin.config.category_management.types.all.title"
           @route="adminConfig.categoryManagement.type"
           @routeParam="all"
-          @label="admin.config.category_management.types.all.title"
         />
         {{#each this.site.category_types as |categoryType|}}
           <DNavItem
+            @i18nLabel={{categoryType.name}}
             @route="adminConfig.categoryManagement.type"
             @routeParam={{categoryType.id}}
-            @i18nLabel={{categoryType.name}}
           />
         {{/each}}
       </:tabs>

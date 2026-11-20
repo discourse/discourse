@@ -54,8 +54,7 @@ module DiscourseEvents
           image: raw_event[:image],
           post:,
         )&.id
-        event.update_with_params!(attributes)
-        event
+        event.update_with_params(attributes)
       end
 
       def schedule_topic_bump(event:)

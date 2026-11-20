@@ -8,6 +8,10 @@ te:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "తేదీ"
+          outcomes:
+            failed: "విఫలం"
         reports:
           filters:
             sort_by:
@@ -40,6 +44,16 @@ te:
         type: "రకం"
         error: "లోపం"
         response: "ప్రతిస్పందన"
+      discourse_workflows:
+        ai_tool:
+          list_item: "జాబితా అంశం"
+          add_list_item: "అంశాన్ని జోడించండి"
+        classify:
+          text: "వచనం"
+          upload_ids: "చిత్రాలు"
+          name: "పేరు"
+          type: "రకం"
+          type_score: "స్కోర్"
       ai_tool_approval:
         loading: "లోడవుతోంది..."
         tool: "చర్య"
@@ -51,19 +65,28 @@ te:
       llm_selector:
         none: "ఏదీ లేదు"
       features:
+        table:
+          status: "స్థితి"
+          enabled: "ప్రారంభించబడింది"
+          groups: "సమూహాలు"
+        chatbot:
+          places:
+            personal_messages: "వ్యక్తిగత సందేశాలు"
+            none: "అందుబాటులో లేదు"
         no_agent: "సెట్ చేయబడలేదు"
         no_groups: "ఏదీ లేదు"
         edit: "అమరికలు"
-        expand_list:
-          one: "(మరో %{count})"
-          other: "(మరో %{count})"
         nav:
           enabled: "ప్రారంభించబడింది"
         filters:
-          all: "అన్నీ"
           reset: "రీసెట్ చేయండి"
+        sentiment:
+          enabled: "ప్రారంభించబడింది"
         search:
           name: "శోధించండి"
+        review_queue:
+          setting_groups:
+            settings: "అమరికలు"
         image_caption:
           setting_groups:
             settings: "అమరికలు"
@@ -71,7 +94,20 @@ te:
           name: "స్పామ్"
       translations:
         title: "అనువాదాలు"
-        category_scope: "వర్గాలు"
+        sections:
+          advanced: "అధునాతన"
+        settings:
+          ai_translation_category_scope:
+            label: "వర్గాలు"
+          ai_translation_personal_messages:
+            label: "వ్యక్తిగత సందేశాలు"
+            choices:
+              none: "ఏదీ లేదు"
+              all: "అన్నీ"
+          content_localization_language_switcher:
+            choices:
+              none: "ఎవరూకాదు"
+              all: "అందరూ"
         model_progress:
           detail:
             columns:
@@ -86,6 +122,8 @@ te:
               title: "వర్గాలు"
             tag:
               title: "ట్యాగులు"
+        admin_actions:
+          enabled: "ప్రారంభించబడింది"
         stats:
           eta_minutes:
             one: "ఒక నిమిషం"
@@ -102,6 +140,8 @@ te:
             other: "%{count} పోస్ట్‌లు"
       spam:
         short_title: "స్పామ్"
+        no_llm_selected: "ఏదీ లేదు"
+        no_decision_model_selected: "ఏదీ లేదు"
         enable: "ప్రారంభించండి"
         test_modal:
           spam: "స్పామ్"
@@ -179,6 +219,11 @@ te:
         edit: "సవరించండి"
         delete: "తొలగించు"
         embedding: "పొందుపరచడం"
+      decision_models:
+        no_preset: "ఏదీ లేదు"
+        display_name: "పేరు"
+        edit: "సవరించండి"
+        delete: "తొలగించు"
       mcp_servers:
         name: "పేరు"
         description: "వివరణ"
@@ -190,6 +235,13 @@ te:
         delete: "తొలగించండి"
         tools_modal:
           required: "అవసరం"
+      models:
+        name: "పేరు"
+        type: "రకం"
+        edit: "సవరించండి"
+        select_type: "ఎంచుకోండి"
+        types:
+          embedding: "పొందుపరచడం"
       llms:
         display_name: "పేరు"
         vision_modes:
@@ -236,6 +288,13 @@ te:
         providers:
           google: "గూగుల్"
           fake: "అనుకూల"
+      ai_artifact:
+        editor:
+          version: "సంస్కరణ"
+          default: "అప్రమేయ"
+          apply: "దరఖాస్తు చేసుకోండి"
+        share: "షేర్ చేయండి"
+        filter_all: "అన్నీ"
       ai_bot:
         debug_ai_modal:
           duration_label: "వ్యవధి:"
@@ -259,6 +318,13 @@ te:
             tag: "ట్యాగ్"
           table:
             total_count: "మొత్తం"
+      ai_search:
+        related_replies:
+          one: "%{count} ప్రత్యుత్తరం"
+          other: "%{count} ప్రత్యుత్తరాలు"
+        tabs:
+          topics: "విషయాలు"
+          messages: "సందేశాలు"
       discobot_discoveries:
         legacy:
           regular_results: "విషయాలు"

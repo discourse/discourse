@@ -13,6 +13,11 @@ sr:
             topic_id:
               label: ID Teme
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Obaveštenje"
+            none: "Ništa"
       disable_holiday: "Onemogući"
       enable_holiday: "Omogući"
       region:
@@ -23,6 +28,9 @@ sr:
         week: "Nedelja"
         day: "Dan"
         year: "Godina"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID Teme"
     discourse_post_event:
       event_description:
         show_more: "Pokaži više"
@@ -34,6 +42,8 @@ sr:
           status:
             private:
               title: "Privatna"
+      recording_modal:
+        save: "Sačuvaj"
       composer:
         reminder:
           units:

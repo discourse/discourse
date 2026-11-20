@@ -19,7 +19,7 @@ RSpec.describe TranslationOverride do
       end
 
       describe "when interpolation keys are missing" do
-        it "should not be valid" do
+        it "is invalid" do
           translation_override =
             TranslationOverride.upsert!(
               I18n.locale,
@@ -37,16 +37,8 @@ RSpec.describe TranslationOverride do
         end
 
         context "when custom interpolation keys are included" do
-          %w[
-            user_notifications.user_did_something
-            user_notifications.only_reply_by_email
-            user_notifications.only_reply_by_email_pm
-            user_notifications.reply_by_email
-            user_notifications.reply_by_email_pm
-            user_notifications.visit_link_to_respond
-            user_notifications.visit_link_to_respond_pm
-          ].each do |i18n_key|
-            it "should validate keys for #{i18n_key}" do
+          shared_examples "validating custom notification interpolation" do |translation_key:|
+            it "reports interpolation keys outside the permitted set" do
               interpolation_key_names =
                 described_class.custom_interpolation_keys("user_notifications.user_")
 
@@ -56,7 +48,7 @@ RSpec.describe TranslationOverride do
               translation_override =
                 TranslationOverride.upsert!(
                   I18n.locale,
-                  i18n_key,
+                  translation_key,
                   "#{string_with_interpolation_keys} %{something}",
                 )
 
@@ -70,7 +62,42 @@ RSpec.describe TranslationOverride do
             end
           end
 
-          it "should validate keys that shouldn't be used outside of user_notifications" do
+          context "with the user_did_something translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.user_did_something"
+          end
+
+          context "with the only_reply_by_email translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.only_reply_by_email"
+          end
+
+          context "with the only_reply_by_email_pm translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.only_reply_by_email_pm"
+          end
+
+          context "with the reply_by_email translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.reply_by_email"
+          end
+
+          context "with the reply_by_email_pm translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.reply_by_email_pm"
+          end
+
+          context "with the visit_link_to_respond translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.visit_link_to_respond"
+          end
+
+          context "with the visit_link_to_respond_pm translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.visit_link_to_respond_pm"
+          end
+
+          it "validates keys reserved for user_notifications" do
             I18n.backend.store_translations(:en, "not_a_notification" => "Test %{key1}")
             translation_override =
               TranslationOverride.upsert!(
@@ -90,7 +117,7 @@ RSpec.describe TranslationOverride do
       end
 
       describe "with valid custom interpolation keys" do
-        it "works" do
+        it "creates a valid translation override" do
           translation_override =
             TranslationOverride.upsert!(
               I18n.locale,
@@ -160,11 +187,13 @@ RSpec.describe TranslationOverride do
           "This has {COUNT, plural, one{one member} other{# members}}.",
         ).for(:value).against(:base)
       end
+
       it do
         is_expected.not_to allow_value(
           "This has {COUNT, plural, one{one member} many{# members} other{# members}}.",
         ).for(:value).with_message(/plural case many is not valid/, against: :base)
       end
+
       it do
         is_expected.not_to allow_value("This has {COUNT, ").for(:value).with_message(
           /invalid syntax/,

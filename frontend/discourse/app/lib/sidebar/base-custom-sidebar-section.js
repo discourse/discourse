@@ -27,9 +27,27 @@ export default class BaseCustomSidebarSection {
   get actionsIcon() {}
 
   /**
+   * Render actions as separate buttons instead of a menu. Each action may
+   * specify an icon (falling back to actionsIcon), id, and disabled state.
+   * @returns {boolean}
+   */
+  get actionsInline() {
+    return false;
+  }
+
+  /**
    * @returns {BaseCustomSidebarSectionLink[]} Links for section
    */
   get links() {}
+
+  /**
+   * Ordered contents of the section. When provided, this takes precedence
+   * over links. Child sections are supplied as classes, like panel sections.
+   * Section names must be unique among siblings.
+   *
+   * @returns {Array<{ type: "link", link: BaseCustomSidebarSectionLink } | { type: "section", section: typeof BaseCustomSidebarSection }>}
+   */
+  get items() {}
 
   /**
    * Links rendered behind a "more" drawer instead of directly in the section,

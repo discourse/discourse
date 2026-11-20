@@ -56,6 +56,36 @@ RSpec.describe HashtagAutocompleteService do
     end
   end
 
+  describe "#hashtags_for" do
+    it "disambiguates visible collisions while preserving order and case" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+      expect(
+        service.hashtags_for("tag", [tag1.name, category1.slug.upcase, private_category.slug]),
+      ).to eq(["##{tag1.name}", "##{category1.slug.upcase}::tag", "##{private_category.slug}"])
+    end
+
+    it "disambiguates references beyond the autocomplete lookup limit" do
+      slugs = Array.new(described_class::HASHTAGS_PER_REQUEST + 1) { |index| "tag-#{index}" }
+      slugs << category1.slug
+
+      expect(service.hashtags_for("tag", slugs)).to eq(
+        slugs[0...-1].map { |slug| "##{slug}" } << "##{category1.slug}::tag",
+      )
+    end
+
+    it "disambiguates Unicode tags from encoded category slugs" do
+      SiteSetting.slug_generation_method = "encoded"
+      category = Fabricate(:category, name: "日本語")
+
+      expect(service.hashtags_for("tag", [category.name])).to eq(["##{category.name}::tag"])
+    end
+
+    it "falls back to the plain name when the reference cannot be matched" do
+      expect(service.hashtags_for("tag", ["l’amour"])).to eq(["l’amour"])
+    end
+  end
+
   describe "#search" do
     it "returns search results for tags and categories by default" do
       expect(service.search("book", %w[category tag]).map(&:text)).to eq(

@@ -26,19 +26,19 @@ export default class BoardsFloaterAssign extends Component {
 
   <template>
     <DModal
+      class="discourse-boards-floater-assign-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "boards.board.assign_card"}}
-      class="discourse-boards-floater-assign-modal"
     >
       <:body>
         <EmailGroupUserChooser
-          @value={{this.assignee}}
           @onChange={{this.onAssigneeChanged}}
           @options={{hash maximum=1 excludeCurrentUser=false}}
+          @value={{this.assignee}}
         />
       </:body>
       <:footer>
-        <DButton @action={{this.save}} @label="save" class="btn-primary" />
+        <DButton class="btn-primary" @action={{this.save}} @label="save" />
       </:footer>
     </DModal>
   </template>

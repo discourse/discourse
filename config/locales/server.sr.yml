@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 sr:
+  markdown_endpoints:
+    latest: "Poslednje"
+    categories: "Kategorije"
+    tags: "Tagovi"
+    previous_page: "Prethodna strana"
+    next_page: "Sledeća strana"
+    replies: "Odgovori"
+    last_updated: "Posljednje ažuriranje"
+    event:
+      location: "Lokacija"
+  mcp:
+    errors:
+      topic_not_found: "Tema nije pronađena"
+    oauth:
+      deny: "Odbij"
   llms_txt:
     sections:
       optional: "Opciono"
@@ -281,6 +296,7 @@ sr:
   password_reset:
     title: "Resetujte Šifru"
   admin_site_traffic_explorer:
+    unknown: "Nepoznato"
     traffic_types:
       logged_in: "Prijavljen"
       anonymous: "Anonimno"
@@ -540,6 +556,8 @@ sr:
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
     enable_new_defaults_for_trust_level_3_requirements: "Ažurirali smo podrazumevane zahteve za TL3 kako bi bili razumniji za članove velikih, aktivnih zajednica. Ako ste prethodno poništili ova podešavanja, ova predstojeća promena neće imati efekta."
     enable_horizon_high_context_topic_cards: "Prikaži bogatije kartice tema u Horizon temi, uključujući izvode tema, oznake i informacije iz dodataka."
+    keywords:
+      company_url: "website"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -705,9 +723,16 @@ sr:
               private:
                 label: "Privatna"
   onebox:
+    discourse:
+      recurrence:
+        ordinals:
+          last: "poslednji"
+        weekdays:
+          monday: "Ponedeljak"
     github:
-      status_date:
-        approved: "potvrđenji"
+      pr_status:
+        open: "Otvori"
+        approved: "Potvrđenji"
   staff_action_logs:
     unknown: "nepoznato"
   reviewables:
@@ -718,6 +743,10 @@ sr:
       medium: "Srednje"
       high: "Visoko"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Da"
       delete:
@@ -769,8 +798,6 @@ sr:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "korisnik"

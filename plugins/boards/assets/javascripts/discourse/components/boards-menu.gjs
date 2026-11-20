@@ -5,8 +5,8 @@ import DiscourseURL from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { columnColorVariable } from "../lib/boards-column-helpers";
-import { membershipCardUrl } from "../lib/boards-topic-pill";
+import { columnColorVariable } from "../lib/boards-column-helpers.js";
+import { membershipCardUrl } from "../lib/boards-topic-pill.js";
 
 export default class BoardsMenu extends Component {
   get memberships() {
@@ -31,8 +31,8 @@ export default class BoardsMenu extends Component {
       {{#each this.memberships as |membership|}}
         <dropdown.item>
           <DButton
-            @action={{fn this.goToBoard membership}}
             class="btn-transparent discourse-boards-boards-menu__item --with-description"
+            @action={{fn this.goToBoard membership}}
           >
             <div class="discourse-boards-boards-menu__item-texts">
               <span

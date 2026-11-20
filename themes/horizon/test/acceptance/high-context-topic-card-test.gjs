@@ -1,8 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import Topic from "discourse/models/topic";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import HighContextTopicCard from "../../discourse/components/card/high-context-topic-card";
+import HighContextTopicCard from "../../discourse/components/card/high-context-topic-card.gjs";
 
 function topicFor(attrs = {}) {
   return Topic.create({
@@ -36,6 +37,34 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    test("renders before-link content with its topic outside the heading", async function (assert) {
+      withPluginApi((api) => {
+        api.renderInOutlet(
+          "topic-list-before-link",
+          <template>
+            <span
+              class="before-link-content"
+              data-topic-id={{@outletArgs.topic.id}}
+            >{{@outletArgs.topic.title}}</span>
+          </template>
+        );
+      });
+      const topic = topicFor();
+
+      await render(
+        <template>
+          <HighContextTopicCard @hideCategory={{true}} @topic={{topic}} />
+        </template>
+      );
+
+      assert
+        .dom(".hc-topic-card__header .before-link-content")
+        .hasText(topic.title)
+        .hasAttribute("data-topic-id", String(topic.id));
+      assert.dom(".hc-topic-card__title .before-link-content").doesNotExist();
+      assert.dom(".hc-topic-card__title.raw-topic-link").hasText(topic.title);
+    });
+
     test("shows the last reply line with the actual reply time when a reply is recent", async function (assert) {
       const lastPostedAt = "2024-06-01T12:00:00Z";
       const topic = topicFor({
@@ -45,7 +74,7 @@ module(
 
       await render(
         <template>
-          <HighContextTopicCard @topic={{topic}} @hideCategory={{true}} />
+          <HighContextTopicCard @hideCategory={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -64,7 +93,7 @@ module(
 
       await render(
         <template>
-          <HighContextTopicCard @topic={{topic}} @hideCategory={{true}} />
+          <HighContextTopicCard @hideCategory={{true}} @topic={{topic}} />
         </template>
       );
 

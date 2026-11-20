@@ -1,10 +1,11 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
+import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
+import OnboardingStep from "discourse/components/admin-onboarding/step";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { setDefaultHomepage } from "discourse/lib/utilities";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -15,14 +16,13 @@ const designWizardData = () => ({
       name: "Foundation",
       default: true,
       color_scheme_id: null,
-      dark_color_scheme_id: null,
+      dark_color_scheme_id: -2,
       screenshot_light_url: null,
       screenshot_dark_url: null,
       palette_pairs: [
         {
           key: "default",
           name: "Default",
-          dark_only: false,
           light: {
             id: -1,
             name: "Light",
@@ -56,7 +56,6 @@ const designWizardData = () => ({
         {
           key: "horizon",
           name: "Horizon",
-          dark_only: false,
           light: {
             id: 23,
             name: "Horizon",
@@ -79,7 +78,6 @@ const designWizardData = () => ({
         {
           key: "marigold",
           name: "Marigold",
-          dark_only: false,
           light: {
             id: 25,
             name: "Marigold",
@@ -130,22 +128,21 @@ const withStep = (id, assert) => {
 };
 
 acceptance("Admin - Onboarding Banner", function (needs) {
-  let loggedEvents = [];
+  const loggedEvents = [];
 
   needs.user({
     admin: true,
+    can_create_category: true,
     visibleGroups: [AUTO_GROUPS.admins],
     show_site_owner_onboarding: true,
   });
 
   needs.settings({
     enable_site_owner_onboarding: true,
-    general_category_id: 1,
-    default_composer_category: 1,
   });
 
   needs.hooks.beforeEach(function () {
-    loggedEvents = [];
+    loggedEvents.length = 0;
     this.schemeLinks = [];
 
     // registered so afterEach tears them down even when an assertion throws
@@ -249,121 +246,147 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     );
   });
 
-  test("it can complete `start_posting` step with predefined data", async function (assert) {
-    const step = withStep("start_posting", assert);
+  test("creating a category comes before inviting collaborators", async function (assert) {
+    await visit("/");
+    assert.deepEqual(
+      [...document.querySelectorAll(".onboarding-step")].map((step) => step.id),
+      ["select_theme", "create_category", "invite_collaborators"]
+    );
+  });
+
+  test("it completes `create_category` once a new category is saved", async function (assert) {
+    const step = withStep("create_category", assert);
+    await visit("/");
+    step.isNotChecked();
+
+    await step.clickAction();
+    assert.strictEqual(
+      currentURL(),
+      "/new-category/general",
+      "goes through the category setup"
+    );
+    assert.strictEqual(
+      loggedEvents.length,
+      0,
+      "opening the category setup is not completion"
+    );
+
+    await fillIn("input.category-name", "testing");
+    await click("#save-category");
+    assert.strictEqual(currentURL(), "/c/testing/edit/general");
+    assert.deepEqual(
+      loggedEvents,
+      [{ event: "step_completed", step: "create_category" }],
+      "logs the completion from the category form"
+    );
+
+    await visit("/");
+    step.isChecked();
+  });
+
+  test("the minimized progress counts a category created away from the banner", async function (assert) {
+    this.container
+      .lookup("service:key-value-store")
+      .set({ key: "onboarding_step_select_theme", value: true });
+
+    await visit("/");
+    await click(".admin-onboarding-banner .btn-minimize");
+    assert
+      .dom(".admin-onboarding-banner__subtitle")
+      .hasText("1 of 3 steps completed");
+
+    await visit("/new-category");
+    await fillIn("input.category-name", "testing");
+    await click("#save-category");
     await visit("/");
 
+    assert
+      .dom(".admin-onboarding-banner__subtitle")
+      .hasText("2 of 3 steps completed");
+  });
+
+  test("it finishes onboarding when `create_category` is the last step done", async function (assert) {
+    const keyValueStore = this.container.lookup("service:key-value-store");
+    keyValueStore.set({ key: "onboarding_step_select_theme", value: true });
+    keyValueStore.set({
+      key: "onboarding_step_invite_collaborators",
+      value: true,
+    });
+
+    await visit("/new-category");
+    await fillIn("input.category-name", "testing");
+    await click("#save-category");
+    await visit("/");
+
+    assert
+      .dom(".admin-onboarding-banner")
+      .doesNotExist("ends onboarding on returning to the banner");
+    assert.deepEqual(loggedEvents, [
+      { event: "step_completed", step: "create_category" },
+      { event: "completed" },
+    ]);
+  });
+
+  test("a registered step can stand in for `create_category`", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("admin-onboarding-steps", ({ value }) =>
+        value.map((Step) =>
+          Step.name === "create_category"
+            ? class CreateChannel extends OnboardingStep {
+                static name = "create_category";
+
+                i18nKey = "admin_onboarding_banner.custom.";
+
+                get description() {
+                  return "Open a channel for your members.";
+                }
+
+                @action
+                performAction() {
+                  this.markAsCompleted();
+                }
+              }
+            : Step
+        )
+      );
+    });
+
+    const step = withStep("create_category", assert);
+    await visit("/");
+
+    assert.deepEqual(
+      [...document.querySelectorAll(".onboarding-step")].map((el) => el.id),
+      ["select_theme", "create_category", "invite_collaborators"],
+      "keeps the stand-in step in the replaced step's place"
+    );
+    assert
+      .dom("#create_category .onboarding-step__title")
+      .includesText(
+        "custom.create_category.title",
+        "reads the title from the step's own locale keys"
+      );
+    assert
+      .dom("#create_category .onboarding-step__description")
+      .hasText(
+        "Open a channel for your members.",
+        "renders the step's own description"
+      );
+    assert
+      .dom("#create_category .onboarding-step__action .btn")
+      .includesText(
+        "custom.create_category.action",
+        "reads the action label from the step's own locale keys"
+      );
     step.isNotChecked();
 
     await step.clickAction();
 
-    assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
-    await click(".predefined-topic-options-modal__card:last-child");
-
-    await click(".create");
-    await visit("/");
-
     step.isChecked();
-  });
-
-  test("it can complete `start_posting` step with registered posting-options", async function (assert) {
-    withPluginApi((api) => {
-      api.registerValueTransformer(
-        "admin-onboarding-start-posting-options",
-        ({ value }) => {
-          value.push(
-            class ExtraOption extends StartPostingOption {
-              @service appEvents;
-
-              name = "extra-option";
-              title = "admin_onboarding_banner.start_posting.extra_option";
-              body =
-                "admin_onboarding_banner.start_posting.extra_option_description";
-
-              @action
-              onSelect() {
-                this.appEvents.trigger("admin-onboarding:posting-complete");
-                this.args.closeModal();
-              }
-            }
-          );
-          return value;
-        }
-      );
-    });
-
-    const step = withStep("start_posting", assert);
-    await visit("/");
-
-    step.isNotChecked();
-
-    await step.clickAction();
-
-    assert.dom(".start-posting-options-modal__card").exists({ count: 2 });
-    await click(".start-posting-options-modal__card.extra-option");
-
-    step.isChecked();
-  });
-
-  test("registered posting-option can be disabled when step is complete", async function (assert) {
-    withPluginApi((api) => {
-      api.registerValueTransformer(
-        "admin-onboarding-start-posting-options",
-        ({ value }) => {
-          value.push(
-            class CompletingOption extends StartPostingOption {
-              @service appEvents;
-
-              name = "completing-option";
-              title = "admin_onboarding_banner.start_posting.extra_option";
-              body =
-                "admin_onboarding_banner.start_posting.extra_option_description";
-
-              @action
-              onSelect() {
-                this.appEvents.trigger("admin-onboarding:posting-complete");
-                this.args.closeModal();
-              }
-            }
-          );
-
-          value.push(
-            class HideableOption extends StartPostingOption {
-              name = "hideable-option";
-              title = "admin_onboarding_banner.start_posting.extra_option";
-              body =
-                "admin_onboarding_banner.start_posting.extra_option_description";
-
-              get disableAction() {
-                return this.args.isComplete;
-              }
-
-              @action
-              onSelect() {}
-            }
-          );
-
-          return value;
-        }
-      );
-    });
-
-    await visit("/");
-
-    await withStep("start_posting", assert).clickAction();
-
-    assert.dom(".start-posting-options-modal__card").exists({ count: 3 });
-    assert
-      .dom(".start-posting-options-modal__card.hideable-option")
-      .isNotDisabled("card is enabled before step completion");
-
-    await click(".start-posting-options-modal__card.completing-option");
-
-    await withStep("start_posting", assert).clickAction();
-
-    assert
-      .dom(".start-posting-options-modal__card.hideable-option")
-      .isDisabled("card is disabled after step completion");
+    assert.deepEqual(
+      loggedEvents,
+      [{ event: "step_completed", step: "create_category" }],
+      "logs the completion under the replaced step"
+    );
   });
 
   test("it can complete `invite_collaborators` step", async function (assert) {
@@ -411,19 +434,26 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .doesNotExist("theme cards are left behind on the colors step");
     assert
-      .dom(".design-wizard__swatch")
-      .exists({ count: 1 }, "the colors step shows the theme's palette pairs");
+      .dom(
+        ".design-wizard__palette-row[data-mode='light'] .design-wizard__palette-card"
+      )
+      .exists({ count: 1 }, "the colors step shows the theme's light palettes");
 
-    await click(".design-wizard__swatch[data-pair-key='default']");
+    await click(
+      ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
+    );
     assert
       .dom("link[data-scheme-id]", document.documentElement)
       .exists("the page's color scheme stylesheet is swapped for the preview");
 
     assert
-      .dom(".design-wizard__font-select")
-      .exists({ count: 2 }, "the colors step offers the font dropdowns");
+      .dom(".design-wizard__section")
+      .hasClass("--section-logo", "the colors step starts with the logo");
 
     await click(".design-wizard__next");
+    assert
+      .dom(".design-wizard__font-select")
+      .exists({ count: 2 }, "the last step offers the font dropdowns");
     assert
       .dom(".design-wizard__homepage-card")
       .exists({ count: 2 }, "the homepage step offers topics and categories");
@@ -431,20 +461,11 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__homepage-card.--selected")
       .hasAttribute("data-homepage", "topics", "defaults to a topics homepage");
     assert
-      .dom(".design-wizard__option-row[data-topic-page]")
-      .exists({ count: 3 }, "a topics homepage offers the topic page types");
+      .dom(".design-wizard__detail-group")
+      .doesNotExist("a topics homepage has no further choices");
     assert
-      .dom(".design-wizard__option-row[data-topic-page].--selected")
-      .hasAttribute("data-topic-page", "latest", "defaults to latest");
-    assert
-      .dom(".design-wizard__switch-row [role='switch']")
-      .exists(
-        { count: 1 },
-        "the homepage step offers the welcome banner switch"
-      );
-    assert
-      .dom(".design-wizard__option-row[data-search-experience]")
-      .exists({ count: 2 }, "the homepage step offers the search experiences");
+      .dom(".design-wizard__section")
+      .exists({ count: 2 }, "the last step offers the fonts and homepage");
 
     await click(".design-wizard__homepage-card[data-homepage='categories']");
     assert
@@ -457,17 +478,17 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         "categories_boxes",
         "defaults to boxes with subcategories"
       );
-    assert
-      .dom(".design-wizard__option-row[data-topic-page]")
-      .doesNotExist("the topic page types are hidden for categories");
 
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists("keeps onboarding visible on the categories preview");
     assert.dom(".design-wizard__next").doesNotExist("no next on the last step");
     assert.dom(".design-wizard__save").exists("the last step offers save");
 
     await click(".design-wizard__back");
     assert
-      .dom(".design-wizard__swatch")
-      .exists({ count: 1 }, "back returns to the colors step");
+      .dom(".design-wizard__palette-row[data-mode='light']")
+      .exists("back returns to the colors step");
 
     await click(".design-wizard__close");
     assert.dom(".design-wizard").doesNotExist("closing removes the sheet");
@@ -475,12 +496,12 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom("link[data-scheme-id]", document.documentElement)
       .doesNotExist("the palette preview is reverted");
 
-    // previewing a categories homepage routed away from the banner's page
+    // closing without saving leaves the step incomplete
     await visit("/");
     step.isNotChecked();
   });
 
-  test("the design wizard activates the stylesheet for the selected color mode", async function (assert) {
+  test("the design wizard activates the stylesheet for the mode of the picked palette", async function (assert) {
     const darkLink = this.addSchemeLink(
       "dark-scheme",
       "data:text/css,design-wizard-dark",
@@ -495,7 +516,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await visit("/");
     await withStep("select_theme", assert).clickAction();
     await click(".design-wizard__next");
-    await click(".design-wizard__color-mode:not(.--active)");
+    await click(
+      ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
+    );
 
     assert
       .dom(lightLink)
@@ -570,7 +593,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .exists({ count: 2 }, "a failed progress save does not advance the step");
     assert
-      .dom(".design-wizard__swatch")
+      .dom(".design-wizard__palette-row")
       .doesNotExist("the colors step is not reached");
     assert
       .dom(".design-wizard__next")
@@ -675,5 +698,67 @@ acceptance("Admin - Onboarding Banner - setting disabled", function (needs) {
     assert
       .dom(".admin-onboarding-banner")
       .doesNotExist("does not show onboarding banner");
+  });
+});
+
+acceptance("Admin - Onboarding Banner - relocated banner", function (needs) {
+  needs.user({ admin: true, show_site_owner_onboarding: true });
+  needs.settings({ enable_site_owner_onboarding: true });
+
+  test("renders only at the render point matching the transformed location", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "admin-onboarding-banner-location",
+        () => "custom_spot"
+      );
+      api.renderInOutlet(
+        "below-site-header",
+        <template>
+          <div class="custom-spot">
+            <AdminOnboardingBanner @location="custom_spot" />
+          </div>
+        </template>
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists({ count: 1 }, "renders the banner once");
+    assert
+      .dom(".custom-spot .admin-onboarding-banner")
+      .exists("renders at the render point that claimed the location");
+    assert
+      .dom("#main-outlet .admin-onboarding-banner")
+      .doesNotExist("leaves the default render point empty");
+  });
+});
+
+acceptance("Admin - Onboarding Banner - registered homepage", function (needs) {
+  needs.user({ admin: true, show_site_owner_onboarding: true });
+  needs.settings({ enable_site_owner_onboarding: true });
+  needs.site({
+    homepage_options: [{ id: "custom", path: "/tags", server_side: false }],
+  });
+
+  test("shows the checklist on homepage choices and hides it elsewhere", async function (assert) {
+    await visit("/latest");
+    setDefaultHomepage("custom");
+    await visit("/tags");
+
+    assert
+      .dom(".admin-onboarding-banner")
+      .exists("shows onboarding on a registered homepage");
+    for (const homepagePath of ["/latest", "/categories"]) {
+      await visit(homepagePath);
+      assert
+        .dom(".admin-onboarding-banner")
+        .exists(`shows onboarding on ${homepagePath}`);
+    }
+    await visit("/about");
+    assert
+      .dom(".admin-onboarding-banner")
+      .doesNotExist("keeps onboarding off other pages");
   });
 });

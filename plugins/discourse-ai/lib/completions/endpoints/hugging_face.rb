@@ -39,9 +39,12 @@ module DiscourseAi
             .merge(messages: prompt)
             .tap do |payload|
               if !payload[:max_tokens]
+                # Unlike most providers, HF/TGI defaults an omitted limit
+                # to 100 tokens, so "no limit" is expressed explicitly as
+                # whatever the context window has left.
                 token_limit = llm_model.max_prompt_tokens
 
-                payload[:max_tokens] = token_limit - prompt_size(prompt)
+                payload[:max_tokens] = [token_limit - prompt_size(prompt), 1].max
               end
 
               payload[:stream] = true if @streaming_mode

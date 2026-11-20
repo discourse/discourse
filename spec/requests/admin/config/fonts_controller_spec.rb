@@ -8,6 +8,7 @@ RSpec.describe Admin::Config::FontsController do
   describe "#fonts" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
       it "updates the fonts and text size" do
         put "/admin/config/fonts.json",
             params: {
@@ -38,6 +39,7 @@ RSpec.describe Admin::Config::FontsController do
 
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
+
       it "denies access with a 403 response" do
         put "/admin/config/fonts.json",
             params: {

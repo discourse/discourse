@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import {
   click,
@@ -10,7 +11,9 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DButton from "discourse/ui-kit/d-button";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
+import { i18n } from "discourse-i18n";
 
 class TestComponent extends Component {
   @tracked selection = this.args.selection ?? [];
@@ -32,11 +35,12 @@ class TestComponent extends Component {
 
   <template>
     <DMultiSelect
-      @loadFn={{if @loadFn @loadFn this.loadFn}}
       @compareFn={{@compareFn}}
+      @disabled={{@disabled}}
+      @label={{@label}}
+      @loadFn={{if @loadFn @loadFn this.loadFn}}
       @onChange={{this.onChange}}
       @selection={{this.selection}}
-      @label={{@label}}
     >
       <:selection as |result|>{{result.name}}</:selection>
       <:result as |result|>{{result.name}}</:result>
@@ -48,10 +52,54 @@ class TestComponent extends Component {
 module("Integration | ui-kit | DMultiSelect", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("optional footer remains available with no results and can close the menu", async function (assert) {
+    const load = async () => [];
+    let actions = 0;
+    const activate = async (menu) => {
+      await menu.close();
+      actions++;
+    };
+    await render(
+      <template>
+        <DMultiSelect @loadFn={{load}}>
+          <:selection as |item|>{{item.name}}</:selection>
+          <:result as |item|>{{item.name}}</:result>
+          <:footer as |menu|><DButton
+              data-test-footer-action
+              @action={{fn activate menu}}
+              @label="create"
+            /></:footer>
+        </DMultiSelect>
+      </template>
+    );
+    await click(".d-multi-select-trigger");
+    assert
+      .dom(".d-multi-select-menu--with-footer")
+      .exists("marks the menu for footer-specific styling");
+    await fillIn(".d-multi-select__search-input", "nothing");
+    assert
+      .dom(".d-multi-select__search-no-results")
+      .exists("shows empty results");
+    assert
+      .dom(".d-multi-select__footer [data-test-footer-action]")
+      .exists("keeps the footer available");
+    await click("[data-test-footer-action]");
+    assert.strictEqual(actions, 1, "invokes the footer action");
+    assert
+      .dom(".d-multi-select__content")
+      .doesNotExist("closes the picker before proceeding");
+  });
+
   test("filter", async function (assert) {
     await render(<template><TestComponent /></template>);
 
     await click(".d-multi-select-trigger");
+    assert
+      .dom(".d-multi-select__footer")
+      .doesNotExist("omits the footer when no block is supplied");
+    assert
+      .dom(".d-multi-select-menu--with-footer")
+      .doesNotExist("does not apply footer styling without a footer block");
     await fillIn(".d-multi-select__search-input", "bar");
 
     assert.dom(".d-multi-select__result:nth-child(1)").hasText("bar");
@@ -265,6 +313,12 @@ module("Integration | ui-kit | DMultiSelect", function (hooks) {
       .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
       .hasText("bar");
     assert.dom(".d-multi-select__result").doesNotExist();
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .hasAria("disabled", "true");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
+      .doesNotHaveAria("disabled");
 
     // Clicking the first selected item should not remove it
     await click(".d-multi-select-trigger__selected-item:nth-child(1)");
@@ -284,6 +338,55 @@ module("Integration | ui-kit | DMultiSelect", function (hooks) {
     await click(".d-multi-select-trigger");
     assert.dom(".d-multi-select__result").exists({ count: 1 });
     assert.dom(".d-multi-select__result:nth-child(1)").hasText("bar");
+  });
+
+  test("accessible names", async function (assert) {
+    const selection = [
+      { id: 1, name: "foo", preventRemoval: true },
+      { id: 2, name: "bar" },
+    ];
+    await render(
+      <template>
+        <TestComponent @label="Pick some" @selection={{selection}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-multi-select-trigger__selection")
+      .hasAttribute("role", "group")
+      .hasAria("label", "Pick some");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .doesNotHaveAria("label", "locked chips are named by their content");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
+      .hasAria("label", i18n("multi_select.remove_item", { name: "bar" }));
+    assert
+      .dom(".d-multi-select-trigger__expand-btn")
+      .hasAria("label", "Pick some")
+      .hasAria("expanded", "false");
+
+    await click(".d-multi-select-trigger");
+    assert
+      .dom(".d-multi-select-trigger__expand-btn")
+      .hasAria("expanded", "true");
+  });
+
+  test("@disabled", async function (assert) {
+    const selection = [{ id: 1, name: "foo" }];
+    await render(
+      <template>
+        <TestComponent @disabled={{true}} @selection={{selection}} />
+      </template>
+    );
+
+    assert.dom(".d-multi-select-trigger").hasClass("--disabled");
+    assert.dom(".d-multi-select-trigger__selected-item").isDisabled();
+    assert.dom(".d-multi-select-trigger__remove-selection-icon").doesNotExist();
+
+    await click(".d-multi-select-trigger");
+    assert.dom(".d-multi-select__content").doesNotExist();
+    assert.dom(".d-multi-select-trigger__selected-item").hasText("foo");
   });
 
   test("preselect item", async function (assert) {

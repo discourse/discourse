@@ -56,10 +56,10 @@ export default class DropdownSelectBoxHeader extends SingleSelectHeaderComponent
         as |SelectedNameComponent|
       }}
         <SelectedNameComponent
-          @tabindex={{this.tabindex}}
           @item={{this.selectedContent}}
           @selectKit={{this.selectKit}}
           @shouldDisplayClearableButton={{this.shouldDisplayClearableButton}}
+          @tabindex={{this.tabindex}}
         />
       {{/let}}
 

@@ -20,6 +20,7 @@ RSpec.describe Boards::UpdateBoard do
         permission: "manage",
         groups: [manage_group],
       )
+      Fabricate(:access_control_list_with_users, target: board, permission: "owner", users: [admin])
       board
     end
     fab!(:column) { board.columns.create!(title: "Col", position: 0) }
@@ -84,6 +85,70 @@ RSpec.describe Boards::UpdateBoard do
 
         manage_acl = AccessControlList.find_by!(target: board, permission: "manage")
         expect(manage_acl.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
+        owner_acl = AccessControlList.find_by!(target: board, permission: "owner")
+        expect(owner_acl.allowed_user_ids).to contain_exactly(admin.id)
+      end
+
+      context "when an owner adds a co-owner without submitting ACL params" do
+        let(:raw) { { "owner_user_ids" => [admin.id, outsider.id] } }
+        let(:dependencies) { { guardian: admin.guardian } }
+
+        it "updates owners while preserving ordinary ACLs" do
+          expect(result).to run_successfully
+          expect(
+            AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids,
+          ).to(contain_exactly(admin.id, outsider.id))
+          expect(
+            AccessControlList.find_by!(target: board, permission: "manage").allowed_group_ids,
+          ).to(contain_exactly(manage_group.id, Group::AUTO_GROUPS[:admins]))
+        end
+      end
+
+      context "when the board is owned by the system user" do
+        fab!(:system_owned_board) do
+          board =
+            Boards::Board.create!(
+              name: "System owned",
+              slug: "system-owned",
+              created_by_id: Discourse::SYSTEM_USER_ID,
+            )
+          Fabricate(
+            :access_control_list_with_users,
+            target: board,
+            permission: Acl::Permissions::OWNER,
+            users: [Discourse.system_user],
+          )
+          Fabricate(
+            :access_control_list_with_groups,
+            target: board,
+            permission: "manage",
+            groups: [manage_group],
+          )
+          board
+        end
+
+        let(:raw) do
+          { "name" => "Updated system board", "owner_user_ids" => [Discourse::SYSTEM_USER_ID] }
+        end
+        let(:params) { raw.merge("id" => system_owned_board.id) }
+        let(:dependencies) { { guardian: admin.guardian } }
+
+        it "updates unrelated settings while preserving the system owner" do
+          expect(result).to run_successfully
+          expect(system_owned_board.reload.name).to eq("Updated system board")
+          expect(
+            AccessControlList.find_by!(
+              target: system_owned_board,
+              permission: Acl::Permissions::OWNER,
+            ).allowed_user_ids,
+          ).to eq([Discourse::SYSTEM_USER_ID])
+        end
+      end
+
+      context "when a non-owner manager changes owners" do
+        let(:raw) { { "owner_user_ids" => [admin.id, outsider.id] } }
+
+        it { is_expected.to fail_a_step(:update_acl) }
       end
 
       it "does not delete topic cards on unconstrained boards" do
@@ -181,11 +246,19 @@ RSpec.describe Boards::UpdateBoard do
                   "group_ids" => [manage_group.id],
                   "user_ids" => [],
                 },
+                "owner" => {
+                  "group_ids" => [],
+                  "user_ids" => [admin.id],
+                },
               },
               "new_permissions" => {
                 "manage" => {
                   "group_ids" => [new_group.id, Group::AUTO_GROUPS[:admins]],
                   "user_ids" => [],
+                },
+                "owner" => {
+                  "group_ids" => [],
+                  "user_ids" => [admin.id],
                 },
               },
             },
@@ -212,6 +285,53 @@ RSpec.describe Boards::UpdateBoard do
               "new_tag_ids" => [tag.id],
             },
           )
+        end
+      end
+
+      context "when the constraints exclude a card that the user cannot see" do
+        fab!(:category)
+        fab!(:other_category, :category)
+        fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:matching_card) do
+          Fabricate(:boards_topic_card, board:, column:, topic: Fabricate(:topic, category:))
+        end
+        fab!(:visible_card) do
+          Fabricate(
+            :boards_topic_card,
+            board:,
+            column:,
+            topic: Fabricate(:topic, category: other_category),
+          )
+        end
+        fab!(:hidden_card) do
+          Fabricate(
+            :boards_topic_card,
+            board:,
+            column:,
+            topic: Fabricate(:topic, category: private_category),
+          )
+        end
+
+        let(:raw) { { "category_ids" => [category.id] } }
+
+        context "when the user can see all cards" do
+          let(:dependencies) { { guardian: admin.guardian } }
+
+          it "removes all cards that the constraints exclude" do
+            expect { result }.to change { board.cards.ids }.to(contain_exactly(matching_card.id))
+          end
+        end
+
+        it "removes the visible card" do
+          expect { result }.to change { Boards::Card.exists?(visible_card.id) }.to(false)
+        end
+
+        it "keeps the card that the user cannot see" do
+          expect { result }.not_to change { Boards::Card.exists?(hidden_card.id) }
+        end
+
+        it "counts only the visible card" do
+          expect(result[:cards_removed_count]).to eq(1)
         end
       end
     end

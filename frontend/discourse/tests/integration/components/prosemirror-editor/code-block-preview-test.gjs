@@ -417,7 +417,7 @@ module(
       );
     });
 
-    test("the selector keeps the info-string tail between previewable languages", async function (assert) {
+    test("the selector preserves fence options when changing languages", async function (assert) {
       const [editorClass] = await setupRichEditor(assert, MARKDOWN);
       const { view } = editorClass;
 
@@ -430,7 +430,7 @@ module(
       assert.strictEqual(
         editorClass.value,
         "before\n\n```chart height=500\nflowchart\n```\n\nafter",
-        "the tail belongs to the preview feature and survives"
+        "options survive changing to another previewable language"
       );
 
       select.value = "ruby";
@@ -438,8 +438,8 @@ module(
 
       assert.strictEqual(
         editorClass.value,
-        "before\n\n```ruby\nflowchart\n```\n\nafter",
-        "a plain language has no use for the tail, so it drops"
+        "before\n\n```ruby height=500\nflowchart\n```\n\nafter",
+        "options survive changing to a plain language"
       );
     });
 
@@ -709,6 +709,46 @@ module(
       );
       await triggerKeyEvent(".ProseMirror", "keydown", "ArrowLeft");
       assert.true(isBlockSelected(), "ArrowLeft selects the block");
+    });
+
+    test("an inherited property name stays a plain code block language", async function (assert) {
+      await setupRichEditor(assert, "```constructor\nexample\n```");
+
+      assert.dom("pre code").hasText("example", "the fence renders as source");
+      assert.dom(".cb-preview-stub").doesNotExist("no preview is registered");
+    });
+
+    test("horizontal arrows respect the visual edge of RTL text", async function (assert) {
+      const [editorClass] = await setupRichEditor(
+        assert,
+        "שלום\n\n```mermaid\nflowchart\n```"
+      );
+      const { view } = editorClass;
+      const { pos } = findCodeBlock(view);
+      view.dom.dir = "rtl";
+      view.focus();
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, pos - 1)
+        )
+      );
+
+      await triggerKeyEvent(view.dom, "keydown", "ArrowRight");
+      assert.true(
+        view.state.selection instanceof TextSelection,
+        "moving into the paragraph keeps the text selection"
+      );
+
+      await triggerKeyEvent(view.dom, "keydown", "ArrowLeft");
+      assert.true(
+        view.state.selection instanceof NodeSelection,
+        "moving out of the paragraph selects a block"
+      );
+      assert.strictEqual(
+        view.state.selection.from,
+        pos,
+        "the preview is selected"
+      );
     });
 
     test("arrow keys are untouched next to a plain code block", async function (assert) {

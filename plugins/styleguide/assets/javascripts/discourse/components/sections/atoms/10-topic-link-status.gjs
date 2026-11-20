@@ -1,52 +1,52 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import NoStatusExample from "../../examples/atoms/topic-link-status/no-status";
+import NoStatusExample from "../../examples/atoms/topic-link-status/no-status.gjs";
 import noStatusSource from "../../examples/atoms/topic-link-status/no-status?source=file";
-import WithStatusExample from "../../examples/atoms/topic-link-status/with-status";
+import WithStatusExample from "../../examples/atoms/topic-link-status/with-status.gjs";
 import withStatusSource from "../../examples/atoms/topic-link-status/with-status?source=file";
 
 export default <template>
-  <StyleguideExample @title="topic-link (no status)" @code={{noStatusSource}}>
+  <StyleguideExample @code={{noStatusSource}} @title="topic-link (no status)">
     <NoStatusExample @topic={{@dummy.topic}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="topic-link (status: invisible)"
     @code={{withStatusSource}}
+    @title="topic-link (status: invisible)"
   >
     <WithStatusExample @topic={{@dummy.invisibleTopic}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="topic-link (status: closed)"
     @code={{withStatusSource}}
+    @title="topic-link (status: closed)"
   >
     <WithStatusExample @topic={{@dummy.closedTopic}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="topic-link (status: pinned)"
     @code={{withStatusSource}}
+    @title="topic-link (status: pinned)"
   >
     <WithStatusExample @topic={{@dummy.pinnedTopic}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="topic-link (status: unpinned)"
     @code={{withStatusSource}}
+    @title="topic-link (status: unpinned)"
   >
     <WithStatusExample @topic={{@dummy.unpinnedTopic}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="topic-link (status: archived)"
     @code={{withStatusSource}}
+    @title="topic-link (status: archived)"
   >
     <WithStatusExample @topic={{@dummy.archivedTopic}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="topic-link (status: warning)"
     @code={{withStatusSource}}
+    @title="topic-link (status: warning)"
   >
     <WithStatusExample @topic={{@dummy.warningTopic}} />
   </StyleguideExample>

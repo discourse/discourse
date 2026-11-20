@@ -2,7 +2,6 @@ import { service } from "@ember/service";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, not } from "discourse/truth-helpers";
 
 export default class SchemaSettingTypeGroups extends SchemaSettingTypeModels {
   @service site;
@@ -30,9 +29,9 @@ export default class SchemaSettingTypeGroups extends SchemaSettingTypeModels {
   <template>
     <GroupChooser
       @content={{this.groupChoices}}
-      @value={{this.value}}
       @onChange={{this.onInput}}
       @options={{this.groupChooserOptions}}
+      @value={{this.value}}
     />
 
     <div class="schema-field__input-supporting-text">
