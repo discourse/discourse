@@ -3001,6 +3001,16 @@ RSpec.describe UserNotifications do
       expect(mail.body.decoded).to include(note)
     end
 
+    it "preserves a table at the beginning of the staff note" do
+      note = "| Rule | Details |\n| --- | --- |\n| Membership | Workshop organizers only |"
+
+      mail = UserNotifications.signup_after_reject(user, reject_reason: note)
+      html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
+
+      expect(html.css("p:has(strong) + .md-table thead th").map(&:text)).to eq(%w[Rule Details])
+      expect(mail.body.decoded).to include(note)
+    end
+
     it "omits the reason section for absent or blank reasons" do
       [nil, "", " \n\n "].each do |blank_reason|
         mail = UserNotifications.signup_after_reject(user, reject_reason: blank_reason)

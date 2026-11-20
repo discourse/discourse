@@ -73,7 +73,8 @@ class UserNotifications < ActionMailer::Base
       **Dsa::AppealInstructions.message_options,
       locale: locale,
       reject_reason:,
-      reason_section: StaffMessageFormat.reason_section(reject_reason, locale:),
+      reason_section:
+        StaffMessageFormat.reason_section(reject_reason, preserve_markdown_blocks: true, locale:),
       recipient_user: user,
     )
   end

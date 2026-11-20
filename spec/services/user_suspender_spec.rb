@@ -115,10 +115,12 @@ RSpec.describe UserSuspender do
     end
 
     it "labels a reason that starts with blank lines and keeps the staff message separate" do
+      reason = "[Rule 3]: spamming"
+
       UserSuspender.new(
         user,
         suspended_till: 1.day.from_now,
-        reason: "\n\nbecause",
+        reason: "\n\n#{reason}",
         by_user: admin,
         message: "you have been suspended",
       ).suspend
@@ -126,12 +128,12 @@ RSpec.describe UserSuspender do
 
       email = ActionMailer::Base.deliveries.find { |delivery| delivery.to == [user.email] }
       expect(email.text_part.body.decoded).to include(
-        "**Reason:** because\n\nyou have been suspended",
+        "**Reason:** #{reason}\n\nyou have been suspended",
       )
       html = Nokogiri::HTML5.fragment(email.html_part.body.decoded)
       label = html.at_css("p > strong")
       expect(label.text).to eq("Reason:")
-      expect(label.parent.text).to eq("Reason: because")
+      expect(label.parent.text).to eq("Reason: #{reason}")
       expect(label.parent.next_element.text).to eq("you have been suspended")
     end
 
