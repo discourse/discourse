@@ -129,6 +129,22 @@ module PageObjects
         is_post_bookmarked(post, bookmarked: false, with_reminder: with_reminder)
       end
 
+      def click_footer_pin_action(post, action)
+        expand_post_admin_actions(post)
+        click_button(I18n.t("js.topic.pinned_footer_post.#{action}"))
+      end
+
+      def has_pinned_footer_post?(post)
+        within(".topic-footer-pinned-post") do
+          has_css?(".cooked", text: post.raw) &&
+            has_link?(I18n.t("js.topic.pinned_footer_post.view_original"), href: post.relative_url)
+        end
+      end
+
+      def has_no_pinned_footer_post?
+        has_no_css?(".topic-footer-pinned-post")
+      end
+
       def expand_post_actions(post)
         post_by_number(post).find(".show-more-actions").click
       end

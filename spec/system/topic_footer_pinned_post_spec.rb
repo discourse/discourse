@@ -15,21 +15,13 @@ describe "Pinned topic footer post" do
     topic_page.visit_topic(first_post.topic)
 
     topic_page.expand_post_actions(reply)
-    topic_page.expand_post_admin_actions(reply)
-    click_button I18n.t("js.topic.pinned_footer_post.pin")
+    topic_page.click_footer_pin_action(reply, :pin)
 
-    within(".topic-footer-pinned-post") do
-      expect(page).to have_text(reply.raw)
-      expect(page).to have_link(
-        I18n.t("js.topic.pinned_footer_post.view_original"),
-        href: reply.relative_url,
-      )
-    end
-    expect(page).to have_css("#post_#{reply.post_number} .cooked", text: reply.raw)
+    expect(topic_page).to have_pinned_footer_post(reply)
+    expect(topic_page).to have_post_content(post_number: reply.post_number, content: reply.raw)
 
-    topic_page.expand_post_admin_actions(reply)
-    click_button I18n.t("js.topic.pinned_footer_post.unpin")
+    topic_page.click_footer_pin_action(reply, :unpin)
 
-    expect(page).to have_no_css(".topic-footer-pinned-post")
+    expect(topic_page).to have_no_pinned_footer_post
   end
 end

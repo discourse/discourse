@@ -13,7 +13,20 @@ class TopicFooterPinnedPostSerializer < BasicPostSerializer
 
   def cooked
     fragment = Nokogiri::HTML5.fragment(super)
-    fragment.css("[id]").each { |element| element.remove_attribute("id") }
+    targets = {}
+    fragment
+      .css("[id]")
+      .each do |element|
+        id = element["id"]
+        element["id"] = targets[id] = "footer-post-#{object.id}-#{id}"
+      end
+    fragment
+      .css('a[href^="#"]')
+      .each do |anchor|
+        if target = targets[anchor["href"].delete_prefix("#")]
+          anchor["href"] = "##{target}"
+        end
+      end
     fragment.to_html
   end
 end
