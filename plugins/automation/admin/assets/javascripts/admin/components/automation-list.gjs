@@ -21,6 +21,15 @@ const RUN_THRESHOLD = 10;
 
 export default class AutomationList extends Component {
   @service dialog;
+  @service siteSettings;
+
+  get workflowsUrl() {
+    return getURL(
+      this.siteSettings.enable_discourse_workflows
+        ? "/admin/plugins/discourse-workflows/workflows"
+        : "/admin/config/upcoming-changes?changeNamesFilter=enable_discourse_workflows"
+    );
+  }
 
   get logsUrl() {
     return getURL("/logs?search=discourse-automation");
@@ -94,6 +103,18 @@ export default class AutomationList extends Component {
           />
         </:actions>
       </DPageSubheader>
+
+      <aside class="automation-workflows-notice">
+        <h3 class="automation-workflows-notice__title">
+          {{i18n "discourse_automation.workflows_notice.title"}}
+        </h3>
+        <p>{{i18n "discourse_automation.workflows_notice.description"}}</p>
+        <DButton
+          class="btn-default"
+          @href={{this.workflowsUrl}}
+          @label="discourse_automation.workflows_notice.action"
+        />
+      </aside>
 
       {{#if @model.content.length}}
         <table class="d-table automations">
