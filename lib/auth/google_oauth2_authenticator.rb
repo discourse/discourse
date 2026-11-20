@@ -32,11 +32,8 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     options = {
       # `state` is the CSRF nonce binding the callback to the browser session
       # that started the flow. It must stay server-generated, so keep it out of
-      # the options a request parameter is allowed to override.
-      #
-      # omniauth-google-oauth2 1.0.1 (pinned on this branch) has no
-      # `overridable_authorize_options`: any request param named in
-      # `authorize_options` replaces the generated value, so drop it there.
+      # the options a request parameter is allowed to override. Any request
+      # param named in `authorize_options` replaces the generated value.
       authorize_options:
         OmniAuth::Strategies::GoogleOauth2.default_options[:authorize_options] - %i[state],
       setup:
