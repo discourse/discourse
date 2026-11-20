@@ -65,53 +65,23 @@ class UserNotifications < ActionMailer::Base
   end
 
   def signup_after_reject(user, opts = {})
-    locale = user_locale(user)
-    template = "user_notifications.signup_after_reject"
-    without_reason = "#{template}_without_reason"
     reason = opts[:reject_reason]
-    email_options = {
+    template =
+      if reason.present?
+        "user_notifications.signup_after_reject"
+      else
+        "user_notifications.signup_after_reject_without_reason"
+      end
+
+    build_email(
+      user.email,
       template:,
       **Dsa::AppealInstructions.message_options,
-      locale:,
+      locale: user_locale(user),
       reason:,
       reject_reason: reason,
       recipient_user: user,
-    }
-
-    if reason.to_s.match?(/\A[[:space:]]*\z/)
-      original_body = "#{template}.text_body_template"
-      alternate_body = "#{without_reason}.text_body_template"
-      alternate_subject = "#{without_reason}.subject_template"
-      customizations =
-        TranslationOverride
-          .where(
-            locale: I18n.fallbacks[locale],
-            translation_key: [original_body, alternate_body, alternate_subject],
-          )
-          .where("value IS DISTINCT FROM original_translation")
-          .pluck(:translation_key, :locale)
-      original_body_customized = customizations.any? { |key, _| key == original_body }
-      alternate_body_customized = customizations.include?([alternate_body, locale.to_s])
-      alternate_body_available =
-        I18n.t(alternate_body, locale:, fallback: false, default: nil) ||
-          I18n.t(original_body, locale:) == I18n.t(original_body, locale: :en)
-
-      if alternate_body_customized || (alternate_body_available && !original_body_customized)
-        email_options[:template] = without_reason
-      end
-
-      alternate_subject_customized = customizations.include?([alternate_subject, locale.to_s])
-      subject_template = alternate_subject_customized ? without_reason : template
-      if subject_template != email_options[:template]
-        subject =
-          Email::MessageBuilder.new(
-            user.email,
-            email_options.merge(template: subject_template),
-          ).subject
-      end
-    end
-
-    build_email(user.email, email_options).tap { |message| message.subject = subject if subject }
+    )
   end
 
   def suspicious_login(user, opts = {})
