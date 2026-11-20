@@ -47,7 +47,8 @@ export default class AdminPenaltyReason extends Component {
     this.args.onChangeReason(
       this.isCustomReason
         ? this.customReason
-        : i18n(`admin.user.suspend_reasons.${this.selectedReason}`)
+        : i18n(`admin.user.suspend_reasons.${this.selectedReason}`),
+      !this.isCustomReason
     );
   }
 

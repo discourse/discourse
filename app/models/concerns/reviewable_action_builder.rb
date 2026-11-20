@@ -7,6 +7,7 @@ module ReviewableActionBuilder
     def penalty_args(params)
       {
         reason: params[:reason],
+        reason_is_preset: params[:reason_is_preset],
         message: params[:message],
         suspend_until: params[:suspend_until],
         silenced_till: params[:silenced_till],

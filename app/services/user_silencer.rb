@@ -138,7 +138,11 @@ class UserSilencer
       decision:,
       reason:,
       reason_section:
-        StaffMessageFormat.reason_section(reason, reason_given: @opts[:reason].present?, locale:),
+        StaffMessageFormat.reason_section(
+          reason,
+          label_reason: @opts[:reason].present? && !@opts[:reason_is_preset],
+          locale:,
+        ),
       from_system: true,
     }
   end

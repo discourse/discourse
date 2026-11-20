@@ -2785,7 +2785,9 @@ RSpec.describe UserNotifications do
       reviewable.reload
       mail = UserNotifications.account_deleted("user@example.com", reviewable)
 
-      expect(mail.body).to include(I18n.t("flag_reasons.spam"))
+      expect(mail.body.decoded).to include(
+        "deleted your account.\n\n#{I18n.t("flag_reasons.spam")}\n\nFor additional guidance",
+      )
       expect(mail.body).to_not include(I18n.t("flag_reasons.illegal"))
     end
 
@@ -2824,7 +2826,9 @@ RSpec.describe UserNotifications do
 
       mail = UserNotifications.account_deleted("user@example.com", reviewable)
 
-      expect(mail.body.decoded).to include("**Reason**\n\n#{custom_flag.description}")
+      expect(mail.body.decoded).to include(
+        "deleted your account.\n\n#{custom_flag.description}\n\nFor additional guidance",
+      )
       expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
     end
   end
@@ -2961,17 +2965,40 @@ RSpec.describe UserNotifications do
   end
 
   describe ".signup_after_reject" do
-    it "keeps the bold reason heading separate from the staff note's Markdown" do
+    it "places the bold reason label on the same line as the staff note" do
+      note = "Membership is limited to workshop organizers."
+
+      mail = UserNotifications.signup_after_reject(user, reject_reason: note)
+      html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
+
+      label = html.at_css("p > strong")
+      expect(label.text).to eq("Reason:")
+      expect(label.parent.text).to eq("Reason: #{note}")
+      expect(mail.body.decoded).to include("**Reason:** #{note}")
+    end
+
+    it "keeps a leading Markdown separator in the staff note" do
       note = "---\n\nMembership is limited to workshop organizers."
 
       mail = UserNotifications.signup_after_reject(user, reject_reason: note)
       html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
 
-      expect(html.at_css("p > strong").text).to eq("Reason")
+      expect(html.at_css("p > strong").text).to eq("Reason:")
       expect(html.at_css("p:has(strong) + hr + p").text).to eq(
         "Membership is limited to workshop organizers.",
       )
-      expect(mail.body.decoded).to include("**Reason**\n\n#{note}")
+      expect(mail.body.decoded).to include("**Reason:**\n\n#{note}")
+    end
+
+    it "preserves a link defined at the beginning of the staff note" do
+      note = "[policy]: https://example.com/policy\n\nSee the [application policy][policy]."
+
+      mail = UserNotifications.signup_after_reject(user, reject_reason: note)
+      html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
+
+      link = html.at_css("a[href='https://example.com/policy']")
+      expect(link.text).to eq("application policy")
+      expect(mail.body.decoded).to include(note)
     end
 
     it "omits the reason section for absent or blank reasons" do

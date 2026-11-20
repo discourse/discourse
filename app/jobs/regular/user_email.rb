@@ -233,6 +233,7 @@ module Jobs
 
       if args[:user_history_id]
         email_args[:user_history] = UserHistory.where(id: args[:user_history_id]).first
+        email_args[:reason_is_preset] = args[:reason_is_preset]
       end
 
       if args.key?(:suspension_reason_given)

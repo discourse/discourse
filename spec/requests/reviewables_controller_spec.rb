@@ -1078,17 +1078,21 @@ RSpec.describe ReviewablesController do
       it "silences the author and rejects a queued post" do
         queued = Fabricate(:reviewable_queued_post)
         expiry = 2.days.from_now.change(usec: 0)
+        reason = "Too combative"
 
         put "/review/#{queued.id}/perform/reject_and_silence.json",
             params: {
               version: queued.version,
-              reason: "Repeated spam",
+              reason:,
+              reason_is_preset: "true",
               silenced_till: expiry.iso8601,
             }
 
         expect(response).to have_http_status(:ok)
         expect(queued.reload).to be_rejected
         expect(queued.target_created_by.reload.silenced_till).to eq(expiry)
+        notice = Topic.private_messages_for_user(queued.target_created_by).sole.first_post
+        expect(notice.raw).to include("\n\n#{reason}\n\nYou can still read")
       end
 
       it "rejects missing penalty details without resolving the reviewable" do

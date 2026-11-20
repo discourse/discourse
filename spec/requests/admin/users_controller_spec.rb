@@ -2019,6 +2019,25 @@ RSpec.describe Admin::UsersController do
         expect(suspended_count).to eq(3)
       end
 
+      it "includes the chosen preset as an unlabeled paragraph in bulk suspension emails" do
+        staff_message = "Please contact staff if you have questions."
+
+        put "/admin/users/suspend-bulk.json",
+            params: suspend_params.merge(reason_is_preset: "true", message: staff_message)
+
+        expect(response.status).to eq(200)
+        Jobs::CriticalUserEmail.drain
+        messages =
+          ActionMailer::Base.deliveries.select do |mail|
+            mail.to.first.in?(suspended_users.map(&:email))
+          end
+
+        expect(messages.size).to eq(3)
+        expect(messages.map { |mail| mail.text_part.body.decoded }).to all(
+          include("\n\n#{suspend_params[:reason]}\n\n#{staff_message}"),
+        )
+      end
+
       it "responds with 404 when sending non-existent user ids" do
         put "/admin/users/suspend-bulk.json",
             params: {

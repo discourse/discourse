@@ -191,7 +191,6 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_deleted",
       **Dsa::AppealInstructions.message_options,
       flag_reason:,
-      reason_section: StaffMessageFormat.reason_section(flag_reason),
     )
   end
 
@@ -203,7 +202,12 @@ class UserNotifications < ActionMailer::Base
     locale = user_locale(user)
     reason = user_history.details
     reason_given = opts.fetch(:suspension_reason_given) { !reason.to_s.start_with?("\n\n") }
-    reason_section = StaffMessageFormat.reason_section(reason, reason_given:, locale:)
+    reason_section =
+      StaffMessageFormat.reason_section(
+        reason,
+        label_reason: reason_given && !opts[:reason_is_preset],
+        locale:,
+      )
 
     if user.suspended_forever?
       build_email(

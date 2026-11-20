@@ -142,6 +142,7 @@ export interface AdminUserFilter {
 /** Shared penalty form inputs; suspend and silence use different expiry keys. */
 export interface AdminUserPenaltyParams {
   reason?: string;
+  reason_is_preset?: boolean;
   message?: string;
   post_id?: number;
   reviewable_id?: number;

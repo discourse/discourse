@@ -30,6 +30,7 @@ export default class PenalizeUser extends Component {
   @tracked reason;
   @tracked message;
   @tracked readyToDeleteAll = false;
+  #reasonIsPreset = false;
   #beforeCompleted = false;
 
   constructor() {
@@ -97,6 +98,7 @@ export default class PenalizeUser extends Component {
 
       const opts = {
         reason: this.reason,
+        reason_is_preset: this.#reasonIsPreset,
         message: this.message,
         post_id: this.args.model.postId,
         post_action: this.postAction,
@@ -155,6 +157,12 @@ export default class PenalizeUser extends Component {
     }
 
     return true;
+  }
+
+  @action
+  updateReason(reason, reasonIsPreset) {
+    this.reason = reason;
+    this.#reasonIsPreset = reasonIsPreset;
   }
 
   @action
@@ -231,7 +239,7 @@ export default class PenalizeUser extends Component {
               <AdminPenaltyReason
                 @message={{this.message}}
                 @onChangeMessage={{fn (mut this.message)}}
-                @onChangeReason={{fn (mut this.reason)}}
+                @onChangeReason={{this.updateReason}}
                 @penaltyType={{@model.penaltyType}}
               />
               {{#if @model.postId}}

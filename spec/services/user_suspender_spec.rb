@@ -126,12 +126,13 @@ RSpec.describe UserSuspender do
 
       email = ActionMailer::Base.deliveries.find { |delivery| delivery.to == [user.email] }
       expect(email.text_part.body.decoded).to include(
-        "**Reason**\n\n\n\nbecause\n\nyou have been suspended",
+        "**Reason:** because\n\nyou have been suspended",
       )
       html = Nokogiri::HTML5.fragment(email.html_part.body.decoded)
-      reason_paragraph = html.at_css("p:has(strong) + p")
-      expect(reason_paragraph.text).to eq("because")
-      expect(reason_paragraph.next_element.text).to eq("you have been suspended")
+      label = html.at_css("p > strong")
+      expect(label.text).to eq("Reason:")
+      expect(label.parent.text).to eq("Reason: because")
+      expect(label.parent.next_element.text).to eq("you have been suspended")
     end
 
     context "when a message is not provided" do

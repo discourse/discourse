@@ -80,7 +80,7 @@ RSpec.describe User::Silence do
         [user, other_user].each do |recipient|
           topic = Topic.private_messages_for_user(recipient).sole
           expect(topic.title).to eq("Your account has been silenced")
-          expect(topic.first_post.raw).to include("**Reason**\n\nspam\n\nit was spam")
+          expect(topic.first_post.raw).to include("**Reason:** spam\n\nit was spam")
         end
         expect(Topic.private_messages_for_user(user).sole.first_post.raw).to include(
           "5:30pm (UTC+05:30)",
@@ -92,6 +92,15 @@ RSpec.describe User::Silence do
           include("type" => "user_private_message", "user_id" => user.id),
         )
         expect(Jobs::CriticalUserEmail.jobs).to be_empty
+      end
+
+      it "keeps the preset reason and staff message in their own paragraphs" do
+        params[:reason_is_preset] = "true"
+
+        result
+
+        notice = Topic.private_messages_for_user(user).sole.first_post
+        expect(notice.raw).to include("\n\n#{reason}\n\n#{message}\n\nYou can still read")
       end
 
       it "includes the reason and appeal instructions in an indefinite silence notice" do
