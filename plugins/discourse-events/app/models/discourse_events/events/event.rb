@@ -986,6 +986,7 @@ end
 #  recording_url              :string(1000)
 #  recurrence                 :string
 #  recurrence_until           :datetime
+#  registration_form          :jsonb
 #  reminders                  :string
 #  show_local_time            :boolean          default(FALSE), not null
 #  status                     :integer          default(0), not null
@@ -993,6 +994,7 @@ end
 #  url                        :string(1000)
 #  chat_channel_id            :bigint
 #  image_upload_id            :bigint
+#  registration_topic_id      :bigint
 #
 # Indexes
 #
