@@ -2220,6 +2220,25 @@ RSpec.describe UsersController do
 
       fab!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
 
+      %i[allowed_email_domains blocked_email_domains].each do |setting|
+        it "preserves the staged account when excluded by #{setting}" do
+          SiteSetting.public_send(
+            "#{setting}=",
+            setting == :allowed_email_domains ? "allowed.com" : "account.com",
+          )
+
+          post "/u.json",
+               params:
+                 honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+          expect(staged.reload.staged).to eq(true)
+          expect(staged.active).to eq(true)
+          expect(staged.custom_fields[User::FROM_STAGED]).to be_nil
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"].join).to include(I18n.t("user.email.not_allowed"))
+        end
+      end
+
       it "claims the staged account" do
         post "/u.json",
              params:

@@ -552,6 +552,11 @@ class User < ActiveRecord::Base
 
   def unstage!
     if staged
+      if !EmailValidator.allowed?(email)
+        errors.add(:email, I18n.t("user.email.not_allowed"))
+        raise ActiveRecord::RecordInvalid.new(self)
+      end
+
       ActiveRecord::Base.transaction do
         self.staged = false
         custom_fields[FROM_STAGED] = true
