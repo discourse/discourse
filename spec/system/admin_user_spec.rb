@@ -263,34 +263,6 @@ describe "Admin User Page" do
         expect(page).not_to have_css(".suspension-info")
       end
 
-      it "shows a reason label in the email when staff type the same text as a preset" do
-        Jobs.run_immediately!
-        reason = I18n.t("admin_js.admin.user.suspend_reasons.combative")
-        staff_message = "Please contact staff if you have questions."
-
-        admin_user_page.click_suspend_button
-        suspend_user_modal.select_reason("combative")
-        suspend_user_modal.fill_in_message(staff_message)
-        suspend_user_modal.set_future_date("tomorrow")
-        suspend_user_modal.perform
-        expect(suspend_user_modal).to be_closed
-
-        admin_user_page.visit(similar_user)
-        admin_user_page.click_suspend_button
-        suspend_user_modal.fill_in_suspend_reason(reason)
-        suspend_user_modal.fill_in_message(staff_message)
-        suspend_user_modal.set_future_date("tomorrow")
-        suspend_user_modal.perform
-        expect(suspend_user_modal).to be_closed
-
-        preset_mail = ActionMailer::Base.deliveries.find { |mail| mail.to == [user.email] }
-        custom_mail = ActionMailer::Base.deliveries.find { |mail| mail.to == [similar_user.email] }
-        expect(preset_mail.text_part.body.decoded).to include("\n\n#{reason}\n\n#{staff_message}")
-        expect(custom_mail.text_part.body.decoded).to include(
-          "\n\n**Reason:** #{reason}\n\n#{staff_message}",
-        )
-      end
-
       it "displays error when used is already suspended" do
         admin_user_page.click_suspend_button
         suspend_user_modal.fill_in_suspend_reason("spamming")

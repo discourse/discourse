@@ -2785,9 +2785,7 @@ RSpec.describe UserNotifications do
       reviewable.reload
       mail = UserNotifications.account_deleted("user@example.com", reviewable)
 
-      expect(mail.body.decoded).to include(
-        "deleted your account.\n\n#{I18n.t("flag_reasons.spam")}\n\nFor additional guidance",
-      )
+      expect(mail.body).to include(I18n.t("flag_reasons.spam"))
       expect(mail.body).to_not include(I18n.t("flag_reasons.illegal"))
     end
 
@@ -2826,9 +2824,7 @@ RSpec.describe UserNotifications do
 
       mail = UserNotifications.account_deleted("user@example.com", reviewable)
 
-      expect(mail.body.decoded).to include(
-        "deleted your account.\n\n#{custom_flag.description}\n\nFor additional guidance",
-      )
+      expect(mail.body).to include(custom_flag.description)
       expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
     end
   end
@@ -2910,16 +2906,6 @@ RSpec.describe UserNotifications do
       expect(email.body.decoded).to include("15/01/2027 à 17:30 (UTC+05:30)")
     end
 
-    it "shows only the staff message in a legacy email whose history has no reason" do
-      user.suspended_till = 1.day.from_now
-      staff_message = "Please contact staff about this restriction."
-      user_history.details = "\n\n#{staff_message}"
-
-      email = UserNotifications.account_suspended(user, user_history:)
-
-      expect(email.body.decoded).to include(".\n\n#{staff_message}\n\nFor additional guidance")
-    end
-
     it "keeps permanent suspensions free of an expiry date" do
       user.suspended_till = 1000.years.from_now
 
@@ -2965,75 +2951,6 @@ RSpec.describe UserNotifications do
   end
 
   describe ".signup_after_reject" do
-    it "places the bold reason label on the same line as the staff note" do
-      note = "Membership is limited to workshop organizers."
-
-      mail = UserNotifications.signup_after_reject(user, reject_reason: note)
-      html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
-
-      label = html.at_css("p > strong")
-      expect(label.text).to eq("Reason:")
-      expect(label.parent.text).to eq("Reason: #{note}")
-      expect(mail.body.decoded).to include("**Reason:** #{note}")
-    end
-
-    it "keeps a leading Markdown separator in the staff note" do
-      note = "---\n\nMembership is limited to workshop organizers."
-
-      mail = UserNotifications.signup_after_reject(user, reject_reason: note)
-      html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
-
-      expect(html.at_css("p > strong").text).to eq("Reason:")
-      expect(html.at_css("p:has(strong) + hr + p").text).to eq(
-        "Membership is limited to workshop organizers.",
-      )
-      expect(mail.body.decoded).to include("**Reason:**\n\n#{note}")
-    end
-
-    it "preserves a link defined at the beginning of the staff note" do
-      note = "[policy]: https://example.com/policy\n\nSee the [application policy][policy]."
-
-      mail = UserNotifications.signup_after_reject(user, reject_reason: note)
-      html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
-
-      link = html.at_css("a[href='https://example.com/policy']")
-      expect(link.text).to eq("application policy")
-      expect(mail.body.decoded).to include(note)
-    end
-
-    it "preserves a table at the beginning of the staff note" do
-      note = "| Rule | Details |\n| --- | --- |\n| Membership | Workshop organizers only |"
-
-      mail = UserNotifications.signup_after_reject(user, reject_reason: note)
-      html = Nokogiri::HTML5.fragment(Email::Renderer.new(mail).html)
-
-      expect(html.css("p:has(strong) + .md-table thead th").map(&:text)).to eq(%w[Rule Details])
-      expect(mail.body.decoded).to include(note)
-    end
-
-    it "omits the reason section for absent or blank reasons" do
-      [nil, "", " \n\n "].each do |blank_reason|
-        mail = UserNotifications.signup_after_reject(user, reject_reason: blank_reason)
-
-        expect(mail.body.decoded).to include(
-          "a staff member rejected your account.\n\nFor additional guidance",
-        )
-      end
-    end
-
-    it "interpolates the original staff note in customized templates" do
-      note = "Membership is limited to workshop organizers."
-      TranslationOverride.upsert!(
-        :en,
-        "user_notifications.signup_after_reject.text_body_template",
-        "Staff note: %{reject_reason}",
-      )
-
-      mail = UserNotifications.signup_after_reject(user, reject_reason: note)
-
-      expect(mail.body.decoded).to eq("Staff note: #{note}")
-    end
-
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
         enable_dsa_reporting

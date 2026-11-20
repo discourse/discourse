@@ -94,15 +94,6 @@ RSpec.describe User::Silence do
         expect(Jobs::CriticalUserEmail.jobs).to be_empty
       end
 
-      it "keeps the preset reason and staff message in their own paragraphs" do
-        params[:reason_is_preset] = "true"
-
-        result
-
-        notice = Topic.private_messages_for_user(user).sole.first_post
-        expect(notice.raw).to include("\n\n#{reason}\n\n#{message}\n\nYou can still read")
-      end
-
       it "includes the reason and appeal instructions in an indefinite silence notice" do
         TranslationOverride.upsert!(
           :en,

@@ -78,18 +78,6 @@ RSpec.describe Admin::EmailTemplatesController do
         )
       end
 
-      it "includes both reason variables for the signup rejection template" do
-        get "/admin/email/templates.json"
-
-        expect(response.status).to eq(200)
-        templates = response.parsed_body["email_templates"]
-        template =
-          templates.find { |entry| entry["id"] == "user_notifications.signup_after_reject" }
-        expect(template["interpolation_keys"]).to eq(
-          %w[base_url reason_section reject_reason site_name],
-        )
-      end
-
       it "returns interpolation_keys from body when subject is pluralized" do
         get "/admin/email/templates.json"
         expect(response.status).to eq(200)

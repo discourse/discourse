@@ -37,16 +37,6 @@ module PageObjects
         find("input.silence-reason").fill_in with: reason
       end
 
-      def select_reason(value)
-        select = PageObjects::Components::SelectKit.new(".#{@penalty_type}-reason.select-kit")
-        select.expand
-        select.select_row_by_value(value)
-      end
-
-      def fill_in_message(message)
-        modal.find(".suspend-message").fill_in(with: message)
-      end
-
       def set_future_date(date)
         select = PageObjects::Components::SelectKit.new(".future-date-input details")
         select.expand
