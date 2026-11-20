@@ -79,21 +79,35 @@ class UserNotifications < ActionMailer::Base
     }
 
     if reason.to_s.match?(/\A[[:space:]]*\z/)
+      original_body = "#{template}.text_body_template"
       alternate_body = "#{without_reason}.text_body_template"
-      overrides = I18n.overrides_by_locale(locale)
-      if overrides.key?(alternate_body) ||
-           (
-             I18n.t(alternate_body, locale:, fallback: false, default: nil) &&
-               !TranslationOverride.exists?(
-                 locale: I18n.fallbacks[locale],
-                 translation_key: "#{template}.text_body_template",
-               )
-           )
-        # Use the original subject unless the site customizes this variant.
-        unless overrides.key?("#{without_reason}.subject_template")
-          subject = Email::MessageBuilder.new(user.email, email_options).subject
-        end
+      alternate_subject = "#{without_reason}.subject_template"
+      customizations =
+        TranslationOverride
+          .where(
+            locale: I18n.fallbacks[locale],
+            translation_key: [original_body, alternate_body, alternate_subject],
+          )
+          .where("value IS DISTINCT FROM original_translation")
+          .pluck(:translation_key, :locale)
+      original_body_customized = customizations.any? { |key, _| key == original_body }
+      alternate_body_customized = customizations.include?([alternate_body, locale.to_s])
+      alternate_body_available =
+        I18n.t(alternate_body, locale:, fallback: false, default: nil) ||
+          I18n.t(original_body, locale:) == I18n.t(original_body, locale: :en)
+
+      if alternate_body_customized || (alternate_body_available && !original_body_customized)
         email_options[:template] = without_reason
+      end
+
+      alternate_subject_customized = customizations.include?([alternate_subject, locale.to_s])
+      subject_template = alternate_subject_customized ? without_reason : template
+      if subject_template != email_options[:template]
+        subject =
+          Email::MessageBuilder.new(
+            user.email,
+            email_options.merge(template: subject_template),
+          ).subject
       end
     end
 
