@@ -8,31 +8,31 @@ const CAPS = { isIpadOS: false, isFirefox: false, isAndroid: false };
 module("Unit | Lib | wait-for-keyboard", function (hooks) {
   setupTest(hooks);
 
-  // drive the closed/open signal through whichever primitive the running
-  // browser uses (Chrome exposes navigator.virtualKeyboard; others report
-  // via the visual viewport height), so the test is deterministic anywhere
-  const usesVirtualKeyboard = "virtualKeyboard" in navigator;
-
   function setKeyboardHeight(px) {
-    if (usesVirtualKeyboard) {
-      Object.defineProperty(navigator.virtualKeyboard, "boundingRect", {
-        configurable: true,
-        get: () => new DOMRect(0, 0, 0, px),
-      });
-    } else {
-      Object.defineProperty(window.visualViewport, "height", {
-        configurable: true,
-        value: window.innerHeight - px,
-      });
-    }
+    Object.defineProperty(window.visualViewport, "height", {
+      configurable: true,
+      value: window.innerHeight - px,
+    });
   }
+
+  hooks.beforeEach(function () {
+    this.virtualKeyboard = Object.getOwnPropertyDescriptor(
+      navigator,
+      "virtualKeyboard"
+    );
+    Object.defineProperty(navigator, "virtualKeyboard", {
+      configurable: true,
+      value: { overlaysContent: false, boundingRect: new DOMRect() },
+    });
+  });
 
   hooks.afterEach(function () {
     document.documentElement.classList.remove("keyboard-visible");
-    if (usesVirtualKeyboard) {
-      delete navigator.virtualKeyboard.boundingRect;
+    delete window.visualViewport.height;
+    if (this.virtualKeyboard) {
+      Object.defineProperty(navigator, "virtualKeyboard", this.virtualKeyboard);
     } else {
-      delete window.visualViewport.height;
+      delete navigator.virtualKeyboard;
     }
   });
 
@@ -49,7 +49,7 @@ module("Unit | Lib | wait-for-keyboard", function (hooks) {
     assert.true(true, "a zero-height keyboard counts as closed");
   });
 
-  test("waits for the keyboard to actually close before resolving", async function (assert) {
+  test("waits for the viewport when virtual keyboard overlays are disabled", async function (assert) {
     document.documentElement.classList.add("keyboard-visible");
     setKeyboardHeight(300);
 
@@ -67,5 +67,29 @@ module("Unit | Lib | wait-for-keyboard", function (hooks) {
 
     await done;
     assert.true(resolved, "resolves once the keyboard reports closed");
+  });
+
+  test("waits for keyboard geometry when virtual keyboard overlays are enabled", async function (assert) {
+    document.documentElement.classList.add("keyboard-visible");
+    setKeyboardHeight(0);
+    navigator.virtualKeyboard.overlaysContent = true;
+    navigator.virtualKeyboard.boundingRect = new DOMRect(0, 0, 0, 300);
+
+    let resolved = false;
+    const done = waitForClosedKeyboard(SITE_MOBILE, CAPS).then(
+      () => (resolved = true)
+    );
+
+    await Promise.resolve();
+    assert.false(
+      resolved,
+      "an unchanged viewport does not imply a closed overlay keyboard"
+    );
+
+    navigator.virtualKeyboard.boundingRect = new DOMRect();
+    window.visualViewport.dispatchEvent(new Event("resize"));
+
+    await done;
+    assert.true(resolved, "resolves once the overlay keyboard reports closed");
   });
 });

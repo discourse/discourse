@@ -184,39 +184,6 @@ export default class ComposerContainer extends Component {
     editor.style.marginTop = "";
   }
 
-  // glide the released editor into the post-reflow layout; the stylesheet
-  // margin transition would target its pre-reflow spot
-  #settleDismissedEditor(editor) {
-    const draggedTop = editor.getBoundingClientRect().top;
-
-    editor.style.marginTop = "";
-    document.activeElement.blur();
-
-    // in-focus is template state that only leaves on the next render;
-    // pre-apply it so the measurement below sees the final layout
-    editor.classList.remove("in-focus");
-    this.appEvents.trigger("keyboard:will-hide");
-
-    const delta = draggedTop - editor.getBoundingClientRect().top;
-
-    if (
-      !delta ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      editor.style.transition = "";
-      return;
-    }
-
-    editor.style.transform = `translateY(${delta}px)`;
-    // flush so the transition below starts from the dragged offset
-    editor.getBoundingClientRect();
-    editor.style.transition =
-      "transform 250ms var(--composer-slide-easing, ease)";
-    editor.style.transform = "";
-
-    discourseLater(() => (editor.style.transition = ""), 300);
-  }
-
   @action
   onSwipeCancel() {
     const editor = this.#swipeEditor;
@@ -312,6 +279,39 @@ export default class ComposerContainer extends Component {
   @bind
   onResizeDragEnd() {
     this.appEvents.trigger("composer:resize-ended");
+  }
+
+  // glide the released editor into the post-reflow layout; the stylesheet
+  // margin transition would target its pre-reflow spot
+  #settleDismissedEditor(editor) {
+    const draggedTop = editor.getBoundingClientRect().top;
+
+    editor.style.marginTop = "";
+    document.activeElement.blur();
+
+    // in-focus is template state that only leaves on the next render;
+    // pre-apply it so the measurement below sees the final layout
+    editor.classList.remove("in-focus");
+    this.appEvents.trigger("keyboard:will-hide");
+
+    const delta = draggedTop - editor.getBoundingClientRect().top;
+
+    if (
+      !delta ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      editor.style.transition = "";
+      return;
+    }
+
+    editor.style.transform = `translateY(${delta}px)`;
+    // flush so the transition below starts from the dragged offset
+    editor.getBoundingClientRect();
+    editor.style.transition =
+      "transform 250ms var(--composer-slide-easing, ease)";
+    editor.style.transform = "";
+
+    discourseLater(() => (editor.style.transition = ""), 300);
   }
 
   _triggerComposerResized() {

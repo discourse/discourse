@@ -19,7 +19,7 @@ export async function waitForClosedKeyboard(siteService, capabilitiesService) {
   const initialWindowHeight = window.innerHeight;
 
   const keyboardClosed = () => {
-    if ("virtualKeyboard" in navigator) {
+    if (navigator.virtualKeyboard?.overlaysContent) {
       return navigator.virtualKeyboard.boundingRect.height === 0;
     }
 

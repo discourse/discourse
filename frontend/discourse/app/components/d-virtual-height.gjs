@@ -49,6 +49,9 @@ export default class DVirtualHeight extends Component {
     scheduleOnce("afterRender", this, this.debouncedOnViewportResize);
 
     this.appEvents.on("keyboard:will-hide", this, this.onKeyboardWillHide);
+    this.#removeListeners.push(() =>
+      this.appEvents.off("keyboard:will-hide", this, this.onKeyboardWillHide)
+    );
 
     this.#listen(
       window.visualViewport,
@@ -75,28 +78,7 @@ export default class DVirtualHeight extends Component {
     cancel(this.showConfirmHandler);
     this.clearGhostTapSuppression?.();
 
-    this.appEvents.off("keyboard:will-hide", this, this.onKeyboardWillHide);
     this.#removeListeners.forEach((remove) => remove());
-  }
-
-  #listen(target, type, handler, options) {
-    target.addEventListener(type, handler, options);
-    this.#removeListeners.push(() =>
-      target.removeEventListener(type, handler, options)
-    );
-  }
-
-  #applyHeight(height) {
-    this.previousHeight = height;
-    document.documentElement.style.setProperty(
-      "--composer-vh",
-      `${height / 100}px`
-    );
-  }
-
-  #announceKeyboard(visible) {
-    this.appEvents.trigger("keyboard-visibility-change", visible);
-    document.documentElement.classList.toggle("keyboard-visible", visible);
   }
 
   @bind
@@ -187,37 +169,6 @@ export default class DVirtualHeight extends Component {
     );
   }
 
-  #recentTouch() {
-    return !!this.lastTouch && Date.now() - this.lastTouch.at < RECENT_TOUCH_MS;
-  }
-
-  #suppressGhostTap(touchedTarget) {
-    this.clearGhostTapSuppression?.();
-
-    const swallow = (event) => {
-      // let the tap through if it still lands on what was touched; only the
-      // reflow displacing a control under the finger is a ghost
-      if (event.target !== touchedTarget) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      this.clearGhostTapSuppression();
-    };
-
-    const timer = discourseLater(
-      () => this.clearGhostTapSuppression(),
-      GHOST_TAP_MS
-    );
-
-    this.clearGhostTapSuppression = () => {
-      cancel(timer);
-      document.removeEventListener("click", swallow, { capture: true });
-      this.clearGhostTapSuppression = null;
-    };
-
-    document.addEventListener("click", swallow, { capture: true });
-  }
-
   onFocusSettled() {
     if (!summonsSoftKeyboard(document.activeElement)) {
       this.onKeyboardWillHide();
@@ -270,45 +221,6 @@ export default class DVirtualHeight extends Component {
       this.#showKeyboardState(this.lastKeyboardHeight);
       this.#armShowConfirm();
     }
-  }
-
-  #tappedInto(focused) {
-    const touch = this.lastTouch;
-    return (
-      this.#recentTouch() &&
-      !!touch.target &&
-      (focused === touch.target || focused.contains(touch.target))
-    );
-  }
-
-  #midInferredHide() {
-    return (
-      !!this.inferredHideAt &&
-      Date.now() - this.inferredHideAt < VIEWPORT_CONFIRM_MS
-    );
-  }
-
-  #showKeyboardState(height) {
-    // a hide-report resize may still sit in the debounce; it would strip
-    // the state we are applying right here
-    cancel(this.debouncedHandler);
-
-    this.#applyHeight(height);
-    this.#announceKeyboard(true);
-
-    // this optimistic height animates the composer up in step with the
-    // keyboard; the real viewport report that follows only corrects it, and
-    // that correction must not re-animate (see onViewportResize)
-    this.showPredicted = true;
-  }
-
-  #armShowConfirm() {
-    cancel(this.showConfirmHandler);
-    this.showConfirmHandler = discourseLater(
-      this,
-      this.revertUnconfirmedShow,
-      VIEWPORT_CONFIRM_MS
-    );
   }
 
   revertUnconfirmedShow() {
@@ -367,7 +279,7 @@ export default class DVirtualHeight extends Component {
     const changed = this.setVH() !== false;
 
     if (composer) {
-      composer.offsetHeight; // flush the snapped height before restoring
+      composer.getBoundingClientRect(); // flush the snapped height before restoring
       composer.style.transition = "";
     }
 
@@ -384,5 +296,95 @@ export default class DVirtualHeight extends Component {
     }
 
     this.#announceKeyboard(keyboardVisible);
+  }
+
+  #listen(target, type, handler, options) {
+    target.addEventListener(type, handler, options);
+    this.#removeListeners.push(() =>
+      target.removeEventListener(type, handler, options)
+    );
+  }
+
+  #applyHeight(height) {
+    this.previousHeight = height;
+    document.documentElement.style.setProperty(
+      "--composer-vh",
+      `${height / 100}px`
+    );
+  }
+
+  #announceKeyboard(visible) {
+    this.appEvents.trigger("keyboard-visibility-change", visible);
+    document.documentElement.classList.toggle("keyboard-visible", visible);
+  }
+
+  #recentTouch() {
+    return !!this.lastTouch && Date.now() - this.lastTouch.at < RECENT_TOUCH_MS;
+  }
+
+  #suppressGhostTap(touchedTarget) {
+    this.clearGhostTapSuppression?.();
+
+    const swallow = (event) => {
+      // let the tap through if it still lands on what was touched; only the
+      // reflow displacing a control under the finger is a ghost
+      if (event.target !== touchedTarget) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      this.clearGhostTapSuppression();
+    };
+
+    const timer = discourseLater(
+      () => this.clearGhostTapSuppression(),
+      GHOST_TAP_MS
+    );
+
+    this.clearGhostTapSuppression = () => {
+      cancel(timer);
+      document.removeEventListener("click", swallow, { capture: true });
+      this.clearGhostTapSuppression = null;
+    };
+
+    document.addEventListener("click", swallow, { capture: true });
+  }
+
+  #tappedInto(focused) {
+    const touch = this.lastTouch;
+    return (
+      this.#recentTouch() &&
+      !!touch.target &&
+      (focused === touch.target || focused.contains(touch.target))
+    );
+  }
+
+  #midInferredHide() {
+    return (
+      !!this.inferredHideAt &&
+      Date.now() - this.inferredHideAt < VIEWPORT_CONFIRM_MS
+    );
+  }
+
+  #showKeyboardState(height) {
+    // a hide-report resize may still sit in the debounce; it would strip
+    // the state we are applying right here
+    cancel(this.debouncedHandler);
+
+    this.#applyHeight(height);
+    this.#announceKeyboard(true);
+
+    // this optimistic height animates the composer up in step with the
+    // keyboard; the real viewport report that follows only corrects it, and
+    // that correction must not re-animate (see onViewportResize)
+    this.showPredicted = true;
+  }
+
+  #armShowConfirm() {
+    cancel(this.showConfirmHandler);
+    this.showConfirmHandler = discourseLater(
+      this,
+      this.revertUnconfirmedShow,
+      VIEWPORT_CONFIRM_MS
+    );
   }
 }

@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
-import { click, find, render, settled } from "@ember/test-helpers";
+import { clearRender, click, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import DVirtualHeight from "discourse/components/d-virtual-height";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -48,12 +49,12 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
       <template>
         <DVirtualHeight />
         <textarea></textarea>
-        <input type="text" class="field" />
+        <input class="field" type="text" />
         <textarea class="readonly" readonly></textarea>
         <select><option>a</option></select>
         <input type="checkbox" />
         <div class="inert-content" role="none">plain text</div>
-        <button type="button" class="target">target</button>
+        <button class="target" type="button">target</button>
       </template>
     );
 
@@ -439,5 +440,23 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
 
     assert.dom(docEl).doesNotHaveClass("keyboard-visible");
     assert.dom(editable).isFocused();
+  });
+});
+
+module("Integration | Component | DVirtualHeight | Desktop", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("can be destroyed without registering keyboard listeners", async function (assert) {
+    const site = this.owner.lookup("service:site");
+    sinon.stub(site, "desktopView").get(() => true);
+    this.owner.lookup("service:capabilities").isIpadOS = false;
+
+    await render(<template><DVirtualHeight /></template>);
+    await clearRender();
+
+    assert.true(
+      site.desktopView,
+      "desktop teardown completes without a listener error"
+    );
   });
 });
