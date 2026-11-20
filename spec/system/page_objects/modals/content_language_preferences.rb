@@ -22,6 +22,18 @@ module PageObjects
           body.has_no_css?(".content-language-preferences-modal__understood")
       end
 
+      def has_interface_language?(language)
+        body.has_css?(
+          ".form-kit__field[data-name='interfaceLanguage'] option:checked",
+          text: language,
+        )
+      end
+
+      def select_interface_language(language)
+        body.find(".form-kit__field[data-name='interfaceLanguage'] select").select(language)
+        self
+      end
+
       def has_read_only_interface_language?(language)
         body.has_css?(".form-kit__field[data-name='interfaceLanguage'] select:disabled") &&
           body.has_css?(

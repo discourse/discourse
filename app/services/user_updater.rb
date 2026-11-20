@@ -136,6 +136,10 @@ class UserUpdater
     user.name = attributes.fetch(:name) { user.name } if guardian.can_edit_name?(user)
 
     user.locale = attributes.fetch(:locale) { user.locale }
+    if user.will_save_change_to_locale? && !user.locale_allowed?
+      user.errors.add(:locale, :invalid)
+      return false
+    end
     user.date_of_birth = attributes.fetch(:date_of_birth) { user.date_of_birth }
 
     if attributes[:title] && attributes[:title] != user.title &&

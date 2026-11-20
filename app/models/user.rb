@@ -163,6 +163,7 @@ class User < ActiveRecord::Base
   validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create }
+  validate :locale_is_allowed, if: :will_save_change_to_locale?
   validates :primary_email, presence: true, unless: :skip_email_validation
   validates :email,
             email: true,
@@ -546,8 +547,12 @@ class User < ActiveRecord::Base
     bot? && !is_system_user? && super
   end
 
+  def locale_allowed?
+    locale.blank? || SiteSetting.allowed_user_locale_values.include?(locale)
+  end
+
   def effective_locale
-    if SiteSetting.allow_user_locale && locale.present? && I18n.locale_available?(locale)
+    if locale.present? && locale_allowed? && I18n.locale_available?(locale)
       locale
     else
       SiteSetting.default_locale
@@ -2489,6 +2494,10 @@ class User < ActiveRecord::Base
       user_api_keys: user_api_keys,
       mcp_authorizations: mcp_authorizations.size,
     }
+  end
+
+  def locale_is_allowed
+    errors.add(:locale, :invalid) if !locale_allowed?
   end
 
   def deactivate_anonymous_shadow_users!

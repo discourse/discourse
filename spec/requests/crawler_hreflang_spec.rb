@@ -6,7 +6,7 @@ describe "Crawler hreflang tags" do
 
   describe "when viewing a topic as crawler" do
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.set_locale_from_param = true
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_crawler_param = true

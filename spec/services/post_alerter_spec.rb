@@ -1725,7 +1725,7 @@ RSpec.describe PostAlerter do
     describe "with content localization" do
       before do
         SiteSetting.content_localization_enabled = true
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         evil_trout.update!(locale: "ja")
         post.update_columns(locale: "en")
         post.topic.update_columns(locale: "en")

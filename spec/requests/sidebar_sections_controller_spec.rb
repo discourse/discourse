@@ -799,7 +799,7 @@ RSpec.describe SidebarSectionsController do
     before do
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_supported_locales = "en|hu"
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.default_locale = "en"
       sign_in(admin)
     end

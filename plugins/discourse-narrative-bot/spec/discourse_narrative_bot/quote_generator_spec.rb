@@ -19,7 +19,7 @@ RSpec.describe DiscourseNarrativeBot::QuoteGenerator do
     end
 
     it "localizes the quote to the user's effective locale" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user.update!(locale: "fr")
 
       expect(bundled_quotes).to include(described_class.generate(user))

@@ -252,7 +252,7 @@ describe "Admin About Config Area Page" do
 
   describe "localized about content" do
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_supported_locales = "ja"
       SiteSetting.title = "English community"

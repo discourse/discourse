@@ -80,32 +80,32 @@ module("Unit | Lib | ai-translation-settings", function (hooks) {
   test("offers a setting only once what it requires is on", function (assert) {
     assert.true(
       translationSettingAvailable("content_localization_language_switcher", {
-        allow_user_locale: true,
+        allowed_user_locales: "all",
       }),
       "the language switcher needs users to choose a language"
     );
     assert.false(
       translationSettingAvailable("content_localization_language_switcher", {
-        allow_user_locale: false,
+        allowed_user_locales: "",
       }),
       "no switcher without user locales"
     );
     assert.false(
       translationSettingAvailable("set_locale_from_param", {
-        allow_user_locale: false,
+        allowed_user_locales: "",
       }),
       "language links need users to choose a language"
     );
     assert.true(
       translationSettingAvailable("content_localization_crawler_param", {
-        allow_user_locale: true,
+        allowed_user_locales: "all",
         set_locale_from_param: true,
       }),
       "indexing follows language links"
     );
     assert.false(
       translationSettingAvailable("content_localization_crawler_param", {
-        allow_user_locale: false,
+        allowed_user_locales: "",
         set_locale_from_param: true,
       }),
       "the requirement chain is followed transitively"
@@ -128,13 +128,15 @@ module("Unit | Lib | ai-translation-settings", function (hooks) {
         },
       }),
       createSetting({
-        setting: "allow_user_locale",
-        type: "bool",
-        value: true,
+        setting: "allowed_user_locales",
+        type: "list",
+        value: "all",
       }),
       createSetting({
         setting: "content_localization_language_switcher",
         value: "none",
+        depends_behavior: "hidden",
+        depends_on: ["allowed_user_locales"],
       }),
     ];
 
@@ -152,13 +154,13 @@ module("Unit | Lib | ai-translation-settings", function (hooks) {
     );
     assert.true(
       translationSettingVisible(settings, settings[3], {
-        allow_user_locale: true,
+        allowed_user_locales: "all",
       }),
       "the language switcher is visible when available"
     );
     assert.false(
       translationSettingVisible(settings, settings[3], {
-        allow_user_locale: false,
+        allowed_user_locales: "",
       }),
       "the language switcher is hidden when it would be rejected"
     );

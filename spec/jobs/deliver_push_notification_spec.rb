@@ -110,7 +110,7 @@ RSpec.describe Jobs::DeliverPushNotification do
 
     before do
       SiteSetting.content_localization_enabled = true
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user.update!(last_seen_at: 10.minutes.ago, locale: "ja")
     end
 

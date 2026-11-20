@@ -3699,7 +3699,7 @@ RSpec.describe TopicsController do
         end
 
         before do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.content_localization_supported_locales = "en|ja"
         end
 
@@ -7830,7 +7830,7 @@ RSpec.describe TopicsController do
 
         before do
           SiteSetting.content_localization_enabled = true
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
           SiteSetting.set_locale_from_param = true
         end
 

@@ -12,16 +12,43 @@ export const LOCALE_COOKIE_EXPIRY = 365;
  * whether the `locale` cookie is honoured. Keep the two in sync: a cookie that is honoured
  * without the corresponding UI leaves visitors stuck in a locale they cannot change back.
  *
- * @param {{ content_localization_enabled: boolean, allow_user_locale: boolean, content_localization_language_switcher: string, content_localization_supported_locales: string }} siteSettings - the siteSettings service
+ * @param {{ content_localization_enabled: boolean, allowed_user_locales: string, content_localization_language_switcher: string, content_localization_supported_locales: string }} siteSettings - the siteSettings service
  * @returns {boolean}
  */
 export function languageSwitcherEnabled(siteSettings) {
   return (
     siteSettings.content_localization_enabled &&
-    siteSettings.allow_user_locale &&
+    !!siteSettings.allowed_user_locales &&
     siteSettings.content_localization_language_switcher !== "none" &&
     !!siteSettings.content_localization_supported_locales
   );
+}
+
+export function interfaceLanguageOptions(
+  siteSettings,
+  locales = siteSettings.available_locales,
+  currentLocale
+) {
+  const allowed = siteSettings.allowed_user_locales ?? "all";
+  if (allowed === "all") {
+    return locales ?? [];
+  }
+
+  const values = new Set([
+    ...allowed.split("|").filter(Boolean),
+    siteSettings.default_locale,
+    currentLocale,
+  ]);
+  return (locales ?? []).filter(({ value }) => values.has(value));
+}
+
+export function normalizeAllowedUserLocales(values, previousValues) {
+  if (values.includes("all") && values.length > 1) {
+    return previousValues.includes("all")
+      ? values.filter((value) => value !== "all")
+      : ["all"];
+  }
+  return values;
 }
 
 export function normalizeUnderstoodLanguages(languages) {

@@ -3406,6 +3406,8 @@ en:
       disabled: "Do not display"
       sidebar_footer: "Display in sidebar footer"
       header: "Display in header"
+    allowed_user_locales:
+      all: "All languages"
     category_scope:
       all: "All public and private categories"
       public: "Public categories"

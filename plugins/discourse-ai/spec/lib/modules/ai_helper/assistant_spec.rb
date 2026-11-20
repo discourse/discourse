@@ -39,7 +39,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
         "It is imperative that you write your answer in Korean (한국어), you are interacting with a Korean (한국어) speaking user. Leave tag names in English.",
       )
 
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user.update!(locale: "he")
 
       expect(assistant.custom_locale_instructions(user, false)).to eq(
@@ -49,7 +49,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
 
     it "returns sytstem instructions using Site locale if force_default_locale is true" do
       SiteSetting.default_locale = "ko"
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user.update!(locale: "he")
 
       expect(assistant.custom_locale_instructions(user, true)).to eq(
@@ -235,7 +235,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
   end
 
   describe("#attach_user_context") do
-    before { SiteSetting.allow_user_locale = true }
+    before { SiteSetting.allowed_user_locales = "all" }
 
     let(:context) { DiscourseAi::Agents::BotContext.new(user: user) }
 

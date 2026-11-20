@@ -64,12 +64,33 @@ describe "Content Localization" do
 
   context "when the feature is enabled for English and Japanese" do
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_allowed_groups =
         "#{Group::AUTO_GROUPS[:admins]}|#{jap_group.id}"
       SiteSetting.content_localization_supported_locales = "en|ja"
       japanese_user.user_option.update!(automatically_translate: true)
+    end
+
+    it "preserves an excluded interface language when saving translation preferences" do
+      SiteSetting.allowed_user_locales = "es"
+      sign_in(japanese_user)
+
+      topic_page.visit_topic(topic)
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to have_interface_language("English")
+      modal.disable_automatic_translation.save
+      expect(modal).to be_closed
+      expect(page).to have_css("html[lang='en']")
+
+      SiteSetting.allowed_user_locales = "es|ja"
+      page.refresh
+      expect(page).to have_css("html[lang='ja']")
+
+      modal = topic_page.open_content_language_preferences
+      modal.select_interface_language("English").save
+      expect(modal).to be_closed
+      expect(page).to have_css("html[lang='en']")
     end
 
     it "shows the user's language based on their user locale" do
@@ -135,7 +156,7 @@ describe "Content Localization" do
       expect(modal).to be_automatic_translation_enabled
       modal.close
 
-      SiteSetting.allow_user_locale = false
+      SiteSetting.allowed_user_locales = ""
       topic_page.visit_topic(topic)
       modal = topic_page.open_content_language_preferences
       expect(modal).to have_read_only_interface_language("English")
@@ -821,7 +842,7 @@ describe "Content Localization" do
     end
 
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}"
       SiteSetting.content_localization_supported_locales = "en|ja"

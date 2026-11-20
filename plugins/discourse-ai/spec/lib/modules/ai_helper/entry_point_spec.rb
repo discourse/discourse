@@ -9,7 +9,7 @@ describe DiscourseAi::AiHelper::EntryPoint do
   it "localizes available prompts" do
     assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.default_locale = "en"
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
     SiteSetting.ai_helper_enabled = true
     SiteSetting.composer_ai_helper_allowed_groups = "10" # tl0
     DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
