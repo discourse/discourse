@@ -20,6 +20,48 @@ describe "Classifying reviewable moderation" do
     sign_in(admin)
   end
 
+  it "lets a moderator classify and confirm deleting and blocking an author in one step" do
+    SiteSetting.dsa_community_rules = [
+      rule,
+      { ground: "No advertising", explanation: "Unsolicited advertising is not allowed." },
+    ].to_json
+    post = Fabricate(:post, topic: topic)
+    flagger = Fabricate(:user, trust_level: TrustLevel[3])
+    reviewable = PostActionCreator.spam(flagger, post).reviewable
+
+    review_page.visit_reviewable(reviewable)
+    review_page.select_bundled_action(reviewable, "post-delete_user_block", bundle_index: 1)
+
+    expect(modal).to have_action_title("Delete and block user")
+    expect(modal).to have_confirmation_prompt(
+      "Are you sure you want to delete and block @#{post.user.username}?",
+    )
+    expect(modal).to have_classification
+
+    modal.confirm("Delete and block user")
+
+    expect(modal).to have_required_errors
+
+    modal.select_rule(rule[:ground])
+    modal.cancel
+
+    expect(modal).to be_closed
+    expect(review_page).to have_reviewable_with_pending_status(reviewable)
+    expect(review_page).to have_no_note(note)
+
+    review_page.select_bundled_action(reviewable, "post-delete_user_block", bundle_index: 1)
+    modal.select_rule(rule[:ground])
+    modal.select_category(category)
+    modal.confirm("Delete and block user")
+
+    expect(modal).to be_closed
+    expect(review_page).to have_reviewable_with_problem_confirmed_status(reviewable)
+
+    page.refresh
+
+    expect(review_page).to have_note(note)
+  end
+
   it "preserves suspension details and classification when navigating back, and leaves the review pending if cancelled" do
     SiteSetting.reviewable_claiming = "disabled"
     post = Fabricate(:post, topic: topic)

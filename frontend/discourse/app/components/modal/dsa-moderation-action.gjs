@@ -11,7 +11,7 @@ export default class DsaModerationAction extends Component {
   @tracked saving = false;
 
   get buttonClass() {
-    return this.hasActionDetails && !this.#editing
+    return this.confirmationMessage && !this.#editing
       ? "btn-danger"
       : "btn-primary";
   }
@@ -20,13 +20,13 @@ export default class DsaModerationAction extends Component {
     if (this.#editing) {
       return i18n("review.continue_to_editor");
     }
-    return this.hasActionDetails
+    return this.confirmationMessage
       ? this.args.model.action.label
       : i18n("dsa_statements.save");
   }
 
-  get hasActionDetails() {
-    return Boolean(this.args.model.action.confirm_message);
+  get confirmationMessage() {
+    return this.args.model.action.confirm_message;
   }
 
   get nextStepLabel() {
@@ -34,7 +34,7 @@ export default class DsaModerationAction extends Component {
   }
 
   get title() {
-    return this.hasActionDetails || this.#editing
+    return this.confirmationMessage || this.#editing
       ? this.args.model.action.label
       : i18n("dsa_statements.title");
   }
@@ -62,8 +62,7 @@ export default class DsaModerationAction extends Component {
 
   <template>
     <DsaModeration
-      @actionStepLabel={{i18n "review.moderation_steps.confirm"}}
-      @hasActionDetails={{this.hasActionDetails}}
+      @hasActionDetails={{false}}
       @nextStepLabel={{this.nextStepLabel}}
       @onSubmit={{this.submit}}
       @options={{@model.options}}
@@ -87,13 +86,14 @@ export default class DsaModerationAction extends Component {
           <flow.Steps @disabled={{this.saving}} />
         </:belowHeader>
         <:body>
-          <flow.Body>
-            <p>{{@model.action.confirm_message}}</p>
-          </flow.Body>
+          {{#if this.confirmationMessage}}
+            <p>{{this.confirmationMessage}}</p>
+          {{/if}}
+          <flow.Body />
         </:body>
         <:footer>
           <flow.Footer
-            @cancel={{if @model.action.confirm_message @closeModal}}
+            @cancel={{if this.confirmationMessage @closeModal}}
             @cancelDisabled={{this.saving}}
             @disabled={{this.saving}}
             @isLoading={{this.saving}}
