@@ -457,6 +457,7 @@ describe DiscourseAi::Automation::LlmTriage do
     pm_topic = Topic.where(archetype: Archetype.private_message).order(:id).last
     expect(pm_topic).to be_present
     expect(pm_topic.allowed_users).to include(post.user)
+    expect(pm_topic.first_post.raw).to include("[Your post](#{post.full_url})")
   end
 
   it "uses custom PM message when provided" do

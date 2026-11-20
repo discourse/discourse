@@ -4226,9 +4226,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         Your post will remain hidden until a staff member reviews it.
 
