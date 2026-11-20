@@ -36,10 +36,18 @@ module Jobs
           .where("suspended_till IS NULL OR suspended_till <= ?", Time.zone.now)
           .where.not(id: [history.acting_user_id, *notified_ids])
 
+      if group_ids.exclude?(Group::AUTO_GROUPS[:logged_in_users]) &&
+           (
+             group_ids.exclude?(Group::AUTO_GROUPS[:everyone]) ||
+               SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+           )
+        staff = staff.where(id: GroupUser.where(group_id: group_ids).select(:user_id))
+      end
+
       staff.find_in_batches do |batch|
         records =
           batch.filter_map do |user|
-            if user.in_any_groups?(group_ids) && user.guardian.can_see_topic?(topic)
+            if user.guardian.can_see_topic?(topic)
               { user_id: user.id, topic_id: topic.id, notification_type:, data: }
             end
           end
