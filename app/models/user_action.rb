@@ -374,8 +374,15 @@ class UserAction < ActiveRecord::Base
       end
 
       if LIKE_ACTION_TYPES.include?(hash[:action_type])
-        topic = Topic.find_by(id: hash[:target_topic_id])
-        unless topic&.private_message? || topic&.like_stats_excluded?
+        topic = Topic.with_deleted.find_by(id: hash[:target_topic_id])
+        if topic&.like_stats_excluded?
+          if action
+            UserStat.transaction do
+              ids = UserStat.where(user_id: hash[:user_id]).lock.pluck(:user_id)
+              UserStat.recalculate_likes!(ids) if ids.present?
+            end
+          end
+        elsif !topic&.private_message?
           update_like_count(hash[:user_id], hash[:action_type], -1)
         end
       end
