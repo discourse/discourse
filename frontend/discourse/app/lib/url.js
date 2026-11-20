@@ -19,16 +19,18 @@ const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
 const NESTED_URL_REGEXP = /^\/n\/([^\/]+)\/(\d+)(?:\/(\d+))?/;
 
-// Query params the server applies while it renders the page, so a link that
-// sets them only takes effect when the page loads again.
-const SERVER_SIDE_QUERY_PARAMS = [
+// Query params that preview a theme, its palettes or fonts.
+export const THEME_PREVIEW_QUERY_PARAMS = [
   "preview_theme_id",
   "preview_color_scheme_id",
   "preview_dark_color_scheme_id",
   "preview_base_font",
   "preview_heading_font",
-  "safe_mode",
 ];
+
+// Query params the server applies while it renders the page, so a link that
+// sets them only takes effect when the page loads again.
+const SERVER_SIDE_QUERY_PARAMS = [...THEME_PREVIEW_QUERY_PARAMS, "safe_mode"];
 
 function setsServerSideQueryParam(path) {
   const params = searchParamsFromPath(path);

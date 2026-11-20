@@ -32,4 +32,24 @@ describe "Theme preview links" do
     expect(page).to have_css("#global-notice-theme-preview")
     expect(page).to have_no_css("#global-notice-theme-preview-failed")
   end
+
+  it "links from the preview notice back to the site without the preview" do
+    color_scheme = Fabricate(:color_scheme)
+    visit(
+      "/latest?order=activity&preview_theme_id=#{theme.id}&preview_color_scheme_id=#{color_scheme.id}&preview_base_font=lora",
+    )
+    expect(page).to have_css(
+      "meta[name='discourse_theme_id'][content='#{theme.id}']",
+      visible: false,
+    )
+
+    find("#global-notice-theme-preview .exit-theme-preview").click
+
+    expect(page).to have_current_path("/latest?order=activity")
+    expect(page).to have_no_css("#global-notice-theme-preview")
+    expect(page).to have_no_css(
+      "meta[name='discourse_theme_id'][content='#{theme.id}']",
+      visible: false,
+    )
+  end
 end
