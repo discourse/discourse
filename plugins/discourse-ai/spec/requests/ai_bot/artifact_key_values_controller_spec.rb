@@ -60,6 +60,9 @@ RSpec.describe DiscourseAi::AiBot::ArtifactKeyValuesController do
 
     context "when not logged in" do
       it "returns only public key values" do
+        public_post = Fabricate(:post, user: user)
+        artifact.update!(post: public_post)
+
         get "/discourse-ai/ai-bot/artifact-key-values/#{artifact.id}.json",
             params: {
               all_users: true,

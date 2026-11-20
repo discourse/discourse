@@ -1879,6 +1879,7 @@ en:
           suffix: "in all topics and posts with AI"
 
       ai_artifact:
+        move_warning: "If you move a post with a live artifact, this conversation’s public share will no longer give access to that artifact. Share or update the destination conversation to give public access again. Separate shared snapshots are not affected."
         editor:
           title: "AI artifact"
           edit_options: "Edit options"

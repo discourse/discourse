@@ -61,6 +61,46 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
       expect(tool.invoke {}).to eq(status: "error", error: "Access denied")
     end
 
+    it "lets a non-participant clone an artifact from a shared conversation" do
+      sharing_bot = Fabricate(:ai_agent, default_llm: llm_model).ensure_user!
+      toggle_enabled_bots(bots: [llm_model])
+      SiteSetting.ai_bot_public_sharing_allowed_groups = "10"
+      Group.user_trust_level_change!(post.user_id, post.user.trust_level)
+      private_topic = Fabricate(:private_message_topic, user: post.user, recipient: sharing_bot)
+      private_post = Fabricate(:post, topic: private_topic, user: post.user)
+      artifact.update!(post: private_post)
+      private_post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      conversation = SharedAiConversation.share_conversation(post.user, private_topic)
+      expect(conversation.publicly_visible?).to eq(true)
+      executor_post = Fabricate(:post)
+      expect(executor_post.user.guardian.can_see?(private_post)).to eq(false)
+      tool =
+        described_class.new(
+          { url: artifact.url },
+          bot_user: bot_user,
+          llm: llm_model.to_llm,
+          context: DiscourseAi::Agents::BotContext.new(post: executor_post),
+        )
+
+      expect(tool.invoke {}).to include(status: "success")
+      expect(AiArtifact.last.html).to eq(artifact.html)
+    end
+
+    it "does not clone a private artifact with a stale public flag" do
+      private_topic = Fabricate(:private_message_topic)
+      private_post = Fabricate(:post, topic: private_topic, user: private_topic.user)
+      private_artifact = Fabricate(:ai_artifact, post: private_post, metadata: { public: true })
+      tool =
+        described_class.new(
+          { url: private_artifact.url },
+          bot_user: bot_user,
+          llm: llm_model.to_llm,
+          context: DiscourseAi::Agents::BotContext.new(post: post),
+        )
+
+      expect(tool.invoke {}).to eq(status: "error", error: "Access denied")
+    end
+
     it "handles invalid URLs" do
       tool =
         described_class.new(
