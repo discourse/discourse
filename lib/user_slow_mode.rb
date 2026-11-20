@@ -15,6 +15,19 @@ class UserSlowMode
       end
     end
 
+    def check_posting(user, args, on_error:)
+      account = user.anonymous? ? user.master_user || user : user
+      return yield unless applies_to?(account, args)
+
+      synchronize(account) do
+        message = posting_error(account.reload)
+        return on_error.call(message) if message
+
+        args.delete(:created_at)
+        yield
+      end
+    end
+
     def synchronize(user, &block)
       DistributedMutex.synchronize("user_slow_mode_#{user.id}", &block)
     end
@@ -22,7 +35,8 @@ class UserSlowMode
     def posting_error(user)
       return unless active?(user)
 
-      if ReviewableQueuedPost.pending.where(target_created_by_id: user.id).exists?
+      account_ids = [user.id, *user.anonymous_user_shadows.pluck(:user_id)]
+      if ReviewableQueuedPost.pending.where(target_created_by_id: account_ids).exists?
         return I18n.t("user_slow_mode.pending")
       end
 
@@ -31,7 +45,7 @@ class UserSlowMode
         Post
           .with_deleted
           .joins("INNER JOIN topics ON topics.id = posts.topic_id")
-          .where(user_id: user.id, post_type: Post.types[:regular])
+          .where(user_id: account_ids, post_type: Post.types[:regular])
           .where(topics: { archetype: Archetype.default })
           .where("posts.created_at > ?", now - user.user_slow_mode_seconds)
           .maximum(:created_at)

@@ -57,6 +57,34 @@ RSpec.describe NewPostManager do
       ).to be_success
     end
 
+    it "counts a backdated submission using the time it was received" do
+      result =
+        described_class.new(
+          user,
+          title: "A new topic sent by email",
+          raw: "A topic with an older date in the email header",
+          created_at: 1.day.ago,
+        ).perform
+
+      expect(result).to be_success
+      expect(result.post.created_at).to eq_time(Time.current)
+      expect(
+        described_class.new(user, raw: "A second submission", topic_id: topic.id).perform,
+      ).not_to be_success
+    end
+
+    it "shares the posting interval with the user's anonymous profile" do
+      SiteSetting.allow_anonymous_mode = true
+      shadow = Fabricate(:user)
+      AnonymousUser.create!(user: shadow, master_user: user, active: true)
+      Fabricate(:post, user: shadow)
+
+      result =
+        described_class.new(user, raw: "A reply in the main account", topic_id: topic.id).perform
+
+      expect(result).not_to be_success
+    end
+
     it "allows personal messages while a user is waiting to post" do
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone].to_s
       Fabricate(:post, user:)

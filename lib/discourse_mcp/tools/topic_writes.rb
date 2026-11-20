@@ -87,15 +87,18 @@ module DiscourseMcp
 
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
+        options = {
+          title: arguments.fetch("title"),
+          raw: arguments.fetch("raw"),
+          category: arguments["category_id"],
+          tags: Array(arguments["tags"]),
+          skip_validations: false,
+        }
+        on_error = ->(message) { raise ToolError, message }
         post =
-          PostCreator.create!(
-            request_context.user,
-            title: arguments.fetch("title"),
-            raw: arguments.fetch("raw"),
-            category: arguments["category_id"],
-            tags: Array(arguments["tags"]),
-            skip_validations: false,
-          )
+          UserSlowMode.check_posting(request_context.user, options, on_error:) do
+            PostCreator.create!(request_context.user, options)
+          end
         requested_author = arguments["author_username"]
         ToolHelpers.text_and_structured(
           id: post.id,
@@ -129,13 +132,16 @@ module DiscourseMcp
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
         ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
+        options = {
+          topic_id: arguments.fetch("topic_id"),
+          raw: arguments.fetch("raw"),
+          reply_to_post_number: arguments["reply_to_post_number"],
+        }
+        on_error = ->(message) { raise ToolError, message }
         post =
-          PostCreator.create!(
-            request_context.user,
-            topic_id: arguments.fetch("topic_id"),
-            raw: arguments.fetch("raw"),
-            reply_to_post_number: arguments["reply_to_post_number"],
-          )
+          UserSlowMode.check_posting(request_context.user, options, on_error:) do
+            PostCreator.create!(request_context.user, options)
+          end
         requested_author = arguments["author_username"]
         ToolHelpers.text_and_structured(
           id: post.id,

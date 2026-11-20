@@ -231,19 +231,12 @@ class NewPostManager
   end
 
   def perform
-    if UserSlowMode.applies_to?(@user, @args)
-      UserSlowMode.synchronize(@user) do
-        if message = UserSlowMode.posting_error(User.find(@user.id))
-          result = NewPostResult.new(:created_post, false)
-          result.errors.add(:base, message)
-          result
-        else
-          process_new_post
-        end
-      end
-    else
-      process_new_post
+    on_error = ->(message) do
+      result = NewPostResult.new(:created_post, false)
+      result.errors.add(:base, message)
+      result
     end
+    UserSlowMode.check_posting(@user, @args, on_error:) { process_new_post }
   end
 
   # Enqueue this post
