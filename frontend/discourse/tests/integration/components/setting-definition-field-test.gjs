@@ -1671,6 +1671,98 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       .hasAttribute("data-name", "French (Français)");
   });
 
+  test("font_list shows each font in its own typeface with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const fonts = [
+      { value: "times_new_roman", name: "Times New Roman" },
+      { value: "arial", name: "Arial" },
+      { value: "lato", name: "Lato" },
+    ];
+
+    await render(
+      <template>
+        <Form @data={{hash my_font="arial"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_font"
+              type="font_list"
+              label="My font"
+              choices=fonts
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_font}}</span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_font'] .d-select";
+    assert.dom(control).hasAttribute("data-name", "Arial");
+    assert
+      .dom(`${control} [role='combobox']`)
+      .hasAria("label", "My font", "the picker is named after the setting");
+    assert
+      .dom(control)
+      .hasClass(
+        "body-font-arial",
+        "the held font is drawn in its typeface, in the closed field and the input alike"
+      );
+
+    await click(`${control} [role='combobox']`);
+    const input = document.querySelector(`${control} [role='combobox']`);
+    assert.deepEqual(
+      [input.value, input.selectionStart, input.selectionEnd],
+      ["Arial", 0, 5],
+      "focusing selects the held name, so typing replaces it"
+    );
+    await dSelect(control).open();
+    assert
+      .dom(
+        "[role='option'][data-value='times_new_roman'] .body-font-times-new-roman"
+      )
+      .hasText("Times New Roman", "each row is drawn in its font");
+    assert.deepEqual(
+      [...document.querySelectorAll("[role='option']")].map(
+        (row) => row.dataset.value
+      ),
+      ["arial", "lato", "times_new_roman"],
+      "the fonts are sorted by name"
+    );
+
+    await dSelect(control).select("times_new_roman");
+    assert.dom(".value-probe").hasText("times_new_roman", "stores the key");
+    assert
+      .dom(control)
+      .hasClass("body-font-times-new-roman", "the picked font takes over")
+      .doesNotHaveClass("body-font-arial");
+  });
+
+  test("font_list is disabled with its field under the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const fonts = [{ value: "arial", name: "Arial" }];
+
+    await render(
+      <template>
+        <Form @data={{hash my_font="arial"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_font"
+              type="font_list"
+              label="My font"
+              choices=fonts
+            }}
+            @disabled={{true}}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_font'] .d-select [role='combobox']")
+      .isDisabled("the picker follows its field");
+  });
+
   for (const type of [
     "group",
     "group_list",

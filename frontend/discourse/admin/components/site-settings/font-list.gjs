@@ -1,7 +1,11 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
+import SelectFont from "discourse/components/setting-field/-internals/select-font";
 import FontSelector from "discourse/select-kit/components/font-selector";
 
 export default class FontList extends Component {
+  @service siteSettings;
+
   get choices() {
     const classPrefix =
       this.args.setting.setting === "heading_font"
@@ -18,10 +22,21 @@ export default class FontList extends Component {
   }
 
   <template>
-    <FontSelector
-      @content={{this.choices}}
-      @onChange={{@changeValueCallback}}
-      @value={{@value}}
-    />
+    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <SelectFont
+        @ariaLabel={{@label}}
+        @choices={{@setting.choices}}
+        @disabled={{@disabled}}
+        @onChange={{@changeValueCallback}}
+        @value={{@value}}
+      />
+    {{else}}
+      <FontSelector
+        @content={{this.choices}}
+        @onChange={{@changeValueCallback}}
+        @value={{@value}}
+      />
+    {{/if}}
   </template>
 }
