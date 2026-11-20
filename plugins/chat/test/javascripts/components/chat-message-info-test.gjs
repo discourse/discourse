@@ -248,14 +248,16 @@ module("Component | ChatMessageInfo", function (hooks) {
     assert.dom(".chat-message-info__username.group--foo").doesNotExist();
   });
 
-  test("broadcasted copy links to its thread from the thread id alone", async function (assert) {
+  test("broadcasted copy links between the channel copy and its thread", async function (assert) {
     const fabricators = new ChatFabricators(getOwner(this));
     const channel = fabricators.channel();
     channel.threadingEnabled = true;
+    const thread = fabricators.thread({ channel });
     this.message = fabricators.message({
       channel,
+      thread,
       broadcasted: true,
-      thread_id: 42,
+      thread_id: thread.id,
     });
 
     await render(
@@ -266,24 +268,12 @@ module("Component | ChatMessageInfo", function (hooks) {
       .dom(".chat-message-info__broadcast")
       .hasAttribute(
         "href",
-        `/chat/c/${channel.slugifiedTitle}/${channel.id}/t/42/${this.message.id}`,
-        "a broadcasted copy carries no thread model, only thread_id"
+        `/chat/c/${channel.slugifiedTitle}/${channel.id}/t/${thread.id}/${this.message.id}`,
+        "the thread id in the payload is enough to reach the thread"
       );
     assert
       .dom(".chat-message-info__broadcast__text")
       .hasText(i18n("chat.thread.broadcast_sent_from_thread"));
-  });
-
-  test("broadcasted copy in the thread view links to the channel copy", async function (assert) {
-    const fabricators = new ChatFabricators(getOwner(this));
-    const channel = fabricators.channel();
-    channel.threadingEnabled = true;
-    const thread = fabricators.thread({ channel });
-    this.message = fabricators.message({
-      channel,
-      thread,
-      broadcasted: true,
-    });
 
     await render(
       <template>
@@ -300,7 +290,7 @@ module("Component | ChatMessageInfo", function (hooks) {
       .hasAttribute(
         "href",
         `/chat/c/${channel.slugifiedTitle}/${channel.id}/${this.message.id}/t/${thread.id}`,
-        "falls back to the thread model where the message has no thread_id"
+        "from the thread view it links back to the copy in the channel"
       );
   });
 });

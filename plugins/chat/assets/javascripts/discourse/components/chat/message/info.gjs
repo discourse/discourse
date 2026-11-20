@@ -79,10 +79,10 @@ export default class ChatMessageInfo extends Component {
     if (threadContext) {
       return { route: this.route, models: this.routeModels };
     }
-    if (this.#threadId) {
+    if (message.threadId) {
       return {
         route: "chat.channel.thread.near-message",
-        models: [...message.channel.routeModels, this.#threadId, message.id],
+        models: [...message.channel.routeModels, message.threadId, message.id],
       };
     }
     return null;
@@ -92,10 +92,6 @@ export default class ChatMessageInfo extends Component {
     return this.args.message?.user;
   }
 
-  get #threadId() {
-    return this.args.message?.threadId ?? this.args.message?.thread?.id;
-  }
-
   get routeModels() {
     if (this.site.mobileView) {
       return [...this.args.message.channel.routeModels, this.args.message.id];
@@ -103,7 +99,7 @@ export default class ChatMessageInfo extends Component {
       return [
         ...this.args.message.channel.routeModels,
         this.args.message.id,
-        this.#threadId,
+        this.args.message.thread.id,
       ];
     }
   }

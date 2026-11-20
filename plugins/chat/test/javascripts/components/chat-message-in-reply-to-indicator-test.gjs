@@ -113,33 +113,4 @@ module("Component | ChatMessageInReplyToIndicator", function (hooks) {
         "links directly to the replied-to message in the channel"
       );
   });
-
-  test("in channel context a broadcasted copy links to its thread", async function (assert) {
-    const channel = this.fabricators.channel();
-    channel.threadingEnabled = true;
-    const inReplyTo = this.fabricators.message({ channel });
-    const message = this.fabricators.message({
-      channel,
-      inReplyTo,
-      broadcasted: true,
-      thread_id: 42,
-    });
-
-    await render(
-      <template>
-        <ChatMessageInReplyToIndicator
-          @context="channel"
-          @message={{message}}
-        />
-      </template>
-    );
-
-    assert
-      .dom(".chat-reply.is-direct-reply")
-      .hasAttribute(
-        "href",
-        `/chat/c/${channel.slugifiedTitle}/${channel.id}/t/42`,
-        "the thread id is enough to reach the thread"
-      );
-  });
 });

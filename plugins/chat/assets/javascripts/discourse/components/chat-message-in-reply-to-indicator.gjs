@@ -12,17 +12,16 @@ export default class ChatMessageInReplyToIndicator extends Component {
   @cached
   get link() {
     const { message, context } = this.args;
-    const threadId = message?.thread?.id ?? message?.threadId;
     if (context === MESSAGE_CONTEXT_THREAD) {
       return {
         route: "chat.channel.thread.near-message",
-        model: [...message.channel.routeModels, threadId, message.inReplyTo.id],
+        model: [...message.thread.routeModels, message.inReplyTo.id],
       };
     }
-    if (message?.channel?.threadingEnabled && threadId) {
+    if (message?.channel?.threadingEnabled && message?.thread?.id) {
       return {
         route: "chat.channel.thread",
-        model: [...message.channel.routeModels, threadId],
+        model: [...message.thread.routeModels],
       };
     }
     return {
