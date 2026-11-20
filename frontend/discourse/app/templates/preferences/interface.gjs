@@ -145,19 +145,19 @@ export default <template>
     {{/if}}
   </div>
 
-  {{#if @controller.siteSettings.allow_user_locale}}
+  {{#if @controller.showInterfaceLocale}}
     <div class="control-group pref-locale" data-setting-name="user-locale">
       <label class="control-label" for="locale-selector">{{i18n
           "user.locale.title"
         }}</label>
       <div class="controls">
         <ComboBox
-          @content={{@controller.availableLocales}}
+          @content={{@controller.interfaceLocales}}
           @id="locale-selector"
           @langProperty="value"
           @onChange={{@controller.setInterfaceLanguage}}
           @options={{hash filterable=true none="user.locale.default"}}
-          @value={{@controller.model.locale}}
+          @value={{@controller.interfaceLocale}}
           @valueProperty="value"
         />
       </div>

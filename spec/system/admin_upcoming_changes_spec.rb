@@ -112,7 +112,7 @@ describe "Admin upcoming changes" do
     end
 
     it "shows a warning notice with links when the dependencies are not met" do
-      SiteSetting.allow_user_locale = false
+      SiteSetting.allowed_user_locales = "none"
       upcoming_changes_page.visit
 
       change_item = upcoming_changes_page.change_item(:set_locale_from_cookie)
@@ -121,7 +121,7 @@ describe "Admin upcoming changes" do
       )
       expect(change_item.find_item(:set_locale_from_cookie)).to have_link(
         "Allow user locale",
-        href: "/admin/site_settings/category/all_results?filter=allow_user_locale",
+        href: "/admin/site_settings/category/all_results?filter=enable_emoji",
       )
       expect(
         upcoming_changes_page.change_item(:enable_upload_debug_mode),
@@ -129,7 +129,7 @@ describe "Admin upcoming changes" do
     end
 
     it "does not show the notice when the dependencies are met" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       upcoming_changes_page.visit
 
       expect(

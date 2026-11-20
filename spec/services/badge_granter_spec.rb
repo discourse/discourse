@@ -226,7 +226,7 @@ RSpec.describe BadgeGranter do
     end
 
     it "grants badges in the user's locale" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
 
       nice_topic = Badge.find(Badge::NiceTopic)
       name_english = nice_topic.name
@@ -809,17 +809,17 @@ RSpec.describe BadgeGranter do
 
   describe "notification locales" do
     it "is using default locales when user locales are not set" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       expect(BadgeGranter.notification_locale("")).to eq(SiteSetting.default_locale)
     end
 
     it "is using default locales when user locales are set but is not allowed" do
-      SiteSetting.allow_user_locale = false
+      SiteSetting.allowed_user_locales = "none"
       expect(BadgeGranter.notification_locale("pl_PL")).to eq(SiteSetting.default_locale)
     end
 
     it "is using user locales when set and allowed" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       expect(BadgeGranter.notification_locale("pl_PL")).to eq("pl_PL")
     end
   end

@@ -8,8 +8,7 @@ class AllowUserLocaleEnabledValidator
   def valid_value?(val)
     # only validate when enabling setting locale from headers
     return true if val == "f"
-    # ensure that allow_user_locale is enabled
-    SiteSetting.allow_user_locale
+    SiteSetting.user_locale_selection_enabled?
   end
 
   def error_message

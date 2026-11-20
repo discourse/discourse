@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import {
+  languageSwitcherLocales,
   LOCALE_COOKIE,
   LOCALE_COOKIE_EXPIRY,
 } from "discourse/lib/content-localization";
@@ -30,7 +31,7 @@ export default class LanguageSwitcher extends Component {
   }
 
   get content() {
-    const langs = this.siteSettings.available_content_localization_locales.map(
+    const langs = languageSwitcherLocales(this.siteSettings).map(
       ({ value }) => ({
         name: this.languageNameLookup.getLanguageName(value),
         value,

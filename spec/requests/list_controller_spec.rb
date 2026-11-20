@@ -1002,7 +1002,7 @@ RSpec.describe ListController do
     end
 
     it "localizes latest RSS from Accept-Language for clients classified as crawlers" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.set_locale_from_param = true
       SiteSetting.set_locale_from_accept_language_header = true
       SiteSetting.content_localization_enabled = true

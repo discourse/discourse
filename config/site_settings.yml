@@ -1965,9 +1965,15 @@ posting:
     hidden: true
 
 content_localization:
-  allow_user_locale:
+  allowed_user_locales:
+    default: "all"
+    type: list
+    list_type: allowed_user_locales
+    enum: "AllowedUserLocalesSiteSetting"
+    allow_any: false
     client: true
-    default: true
+    refresh: true
+    requires_confirmation: simple
     area: "localization"
   content_localization_enabled:
     client: true
@@ -2025,21 +2031,21 @@ content_localization:
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
     depends_on:
-      - "allow_user_locale"
+      - "allowed_user_locales"
   set_locale_from_cookie:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
     depends_on:
-      - "allow_user_locale"
+      - "allowed_user_locales"
   set_locale_from_param:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
     depends_on:
-      - "allow_user_locale"
+      - "allowed_user_locales"
 
 nested_replies:
   nested_replies_enabled:

@@ -4624,7 +4624,7 @@ RSpec.describe User do
   end
 
   describe "#effective_locale" do
-    before { SiteSetting.allow_user_locale = true }
+    before { SiteSetting.allowed_user_locales = "all" }
 
     it "returns the user's locale when it is valid" do
       user.update!(locale: "fr")
@@ -4641,8 +4641,8 @@ RSpec.describe User do
       expect(user.effective_locale).to eq(SiteSetting.default_locale)
     end
 
-    it "returns the default locale when allow_user_locale is disabled" do
-      SiteSetting.allow_user_locale = false
+    it "returns the default locale when allowed_user_locales is disabled" do
+      SiteSetting.allowed_user_locales = "none"
       user.update!(locale: "fr")
       expect(user.effective_locale).to eq(SiteSetting.default_locale)
     end

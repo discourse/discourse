@@ -108,7 +108,12 @@ module("Integration | Component | Header | Icons", function (hooks) {
     this.siteSettings.content_localization_enabled = true;
     this.siteSettings.content_localization_supported_locales = "en|fr";
     this.siteSettings.content_localization_language_switcher = "all";
-    this.siteSettings.allow_user_locale = false;
+    this.siteSettings.allowed_user_locales = "none";
+    this.siteSettings.default_locale = "en";
+    this.siteSettings.available_content_localization_locales = [
+      { value: "en" },
+      { value: "fr" },
+    ];
 
     await render(
       <template>
@@ -134,6 +139,10 @@ module("Integration | Component | Header | Icons", function (hooks) {
     this.siteSettings.content_localization_enabled = true;
     this.siteSettings.content_localization_supported_locales = "en|fr";
     this.siteSettings.content_localization_language_switcher = "all";
+    this.siteSettings.available_content_localization_locales = [
+      { value: "en" },
+      { value: "fr" },
+    ];
 
     await render(
       <template>

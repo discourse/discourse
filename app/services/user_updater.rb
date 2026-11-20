@@ -85,6 +85,15 @@ class UserUpdater
   end
 
   def update(attributes = {})
+    if attributes.key?(:locale)
+      locale = attributes[:locale].presence
+      if locale && locale != user.locale && !SiteSetting.interface_locale_allowed?(locale)
+        user.errors.add(:locale, I18n.t("user.locale_not_allowed"))
+        return false
+      end
+      attributes[:locale] = locale
+    end
+
     if attributes.key?(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
       attributes[:automatically_translate] = attributes[LEGACY_SHOW_ORIGINAL_CONTENT_ATTR].to_s !=
         "true" unless attributes.key?(:automatically_translate)

@@ -108,6 +108,11 @@ class SiteSetting::Update
   end
 
   def save(params:, options:, guardian:)
+    if params.settings.any? { |setting| setting.name == :allowed_user_locales }
+      SiteSetting.refresh!
+      previous_locales = SiteSetting.interface_locales
+    end
+
     params.settings.each do |setting|
       detailed_message =
         if default_user_preference?(setting)
@@ -123,6 +128,13 @@ class SiteSetting::Update
           guardian.user,
           detailed_message,
         )
+    end
+
+    if previous_locales
+      removed_locales = previous_locales - SiteSetting.interface_locales
+      if removed_locales.present?
+        Jobs.enqueue(:reset_removed_user_locales, locales: removed_locales)
+      end
     end
   end
 

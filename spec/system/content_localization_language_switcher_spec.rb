@@ -31,7 +31,7 @@ describe "Content localization language switcher" do
     SiteSetting.default_locale = "en"
     SiteSetting.content_localization_supported_locales = "es|ja"
     SiteSetting.content_localization_enabled = true
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
 
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
     Fabricate(

@@ -75,6 +75,10 @@ export default class AdminSiteSettingStore extends Service {
         return allowedValues.map(String).includes(String(parentValue));
       }
 
+      if (name === "allowed_user_locales") {
+        return Boolean(parentValue) && parentValue !== "none";
+      }
+
       return isSettingValueTrue(parentValue);
     });
   }

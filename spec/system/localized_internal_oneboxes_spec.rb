@@ -22,7 +22,7 @@ describe "Localized internal oneboxes" do
   let(:host_post_obj) { PageObjects::Components::Post.new(1) }
 
   before do
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
     SiteSetting.content_localization_enabled = true
     SiteSetting.content_localization_supported_locales = "en|ja"
     SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]

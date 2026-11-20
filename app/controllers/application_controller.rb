@@ -1241,7 +1241,8 @@ class ApplicationController < ActionController::Base
   def persist_locale_param_to_cookie
     if SiteSetting.set_locale_from_param && SiteSetting.set_locale_from_cookie &&
          (locale_param = params[Discourse::LOCALE_PARAM]).present?
-      if I18n.locale_available?(locale_param)
+      locale_param = locale_param.to_s.tr("-", "_")
+      if SiteSetting.interface_locale_allowed?(locale_param)
         cookie_args = { path: "/" }
         cookie_args[:path] = Discourse.base_path if Discourse.base_path.present?
         cookies[:locale] = cookie_args.merge(value: locale_param)

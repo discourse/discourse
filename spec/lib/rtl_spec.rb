@@ -5,7 +5,7 @@ RSpec.describe Rtl do
 
   describe ".css_class" do
     context "when user locale is allowed" do
-      before { SiteSetting.allow_user_locale = true }
+      before { SiteSetting.allowed_user_locales = "all" }
 
       context "when user locale is RTL" do
         before { user.locale = "he" }
@@ -23,7 +23,7 @@ RSpec.describe Rtl do
     end
 
     context "when user locale is not allowed" do
-      before { SiteSetting.allow_user_locale = false }
+      before { SiteSetting.allowed_user_locales = "none" }
 
       context "when site default locale is RTL" do
         before { SiteSetting.default_locale = "he" }

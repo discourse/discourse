@@ -582,8 +582,7 @@ class BadgeGranter
   end
 
   def self.notification_locale(locale)
-    use_default_locale = !SiteSetting.allow_user_locale || locale.blank?
-    use_default_locale ? SiteSetting.default_locale : locale
+    SiteSetting.interface_locale_allowed?(locale) ? locale : SiteSetting.default_locale
   end
 
   def self.send_notification(user_id, username, locale, badge)

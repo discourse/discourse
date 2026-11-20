@@ -6,7 +6,7 @@ describe "Crawler hreflang tags" do
 
   describe "when viewing a topic as crawler" do
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.set_locale_from_param = true
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_crawler_param = true
@@ -197,7 +197,9 @@ describe "Crawler hreflang tags" do
       expect(response.body).not_to include('hreflang="x-default"')
     end
 
-    it "self-canonicalizes translated topic pages when ?tl= is present" do
+    it "self-canonicalizes translated topic pages even when the interface does not offer the locale" do
+      SiteSetting.allowed_user_locales = "en"
+
       get "/t/#{post.topic.slug}/#{post.topic.id}?#{Discourse::LOCALE_PARAM}=ja",
           headers: {
             "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
@@ -206,6 +208,7 @@ describe "Crawler hreflang tags" do
       expect(response.body).to include(
         %(<link rel="canonical" href="#{Discourse.base_url}/t/#{post.topic.slug}/#{post.topic.id}?#{Discourse::LOCALE_PARAM}=ja">),
       )
+      expect(Nokogiri.HTML5(response.body).at_css("html")["lang"]).to eq("ja")
       expect(response.headers["X-Robots-Tag"].to_s).not_to include("noindex")
     end
 

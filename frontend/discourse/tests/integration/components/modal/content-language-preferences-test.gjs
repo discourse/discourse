@@ -26,7 +26,7 @@ module(
       this.siteSettings.available_locales = ALL_LOCALES;
       this.siteSettings.available_content_localization_locales =
         CONFIGURED_LOCALES;
-      this.siteSettings.allow_user_locale = true;
+      this.siteSettings.allowed_user_locales = "all";
     });
 
     const noop = () => {};

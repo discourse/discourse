@@ -10,7 +10,9 @@ import {
   AUTOMATICALLY_TRANSLATE_COOKIE,
   AUTOMATICALLY_TRANSLATE_COOKIE_EXPIRY,
   automaticallyTranslate,
+  interfaceLocaleOptions,
   languageSwitcherEnabled,
+  languageSwitcherLocales,
   LOCALE_COOKIE,
   LOCALE_COOKIE_EXPIRY,
   normalizeUnderstoodLanguages,
@@ -57,16 +59,14 @@ export default class ContentLanguagePreferencesModal extends Component {
       !this.siteSettings.set_locale_from_cookie &&
       languageSwitcherEnabled(this.siteSettings)
     ) {
-      return this.#toOptions(
-        this.siteSettings.available_content_localization_locales
-      );
+      return this.#toOptions(languageSwitcherLocales(this.siteSettings));
     }
 
-    return this.allLanguageOptions;
+    return this.#toOptions(interfaceLocaleOptions(this.siteSettings));
   }
 
   get canChangeInterfaceLanguage() {
-    if (!this.siteSettings.allow_user_locale) {
+    if (this.siteSettings.allowed_user_locales === "none") {
       return false;
     }
 
@@ -119,7 +119,10 @@ export default class ContentLanguagePreferencesModal extends Component {
           automatically_translate: data.automaticallyTranslate,
           understood_languages: understoodLanguages,
         };
-        if (this.canChangeInterfaceLanguage) {
+        if (
+          this.canChangeInterfaceLanguage &&
+          data.interfaceLanguage !== this.data.interfaceLanguage
+        ) {
           preferences.locale = data.interfaceLanguage;
         }
 
@@ -128,7 +131,10 @@ export default class ContentLanguagePreferencesModal extends Component {
           contentType: "application/json",
           data: JSON.stringify(preferences),
         });
-        if (this.canChangeInterfaceLanguage) {
+        if (
+          this.canChangeInterfaceLanguage &&
+          data.interfaceLanguage !== this.data.interfaceLanguage
+        ) {
           this.currentUser.set("locale", data.interfaceLanguage);
           this.currentUser.set("effective_locale", data.interfaceLanguage);
         }
@@ -141,7 +147,10 @@ export default class ContentLanguagePreferencesModal extends Component {
           understoodLanguages
         );
       } else {
-        if (this.canChangeInterfaceLanguage) {
+        if (
+          this.canChangeInterfaceLanguage &&
+          data.interfaceLanguage !== this.data.interfaceLanguage
+        ) {
           cookie(LOCALE_COOKIE, data.interfaceLanguage, {
             path: getURL("/"),
             expires: LOCALE_COOKIE_EXPIRY,

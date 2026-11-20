@@ -176,6 +176,30 @@ class SiteSetting < ActiveRecord::Base
     LocaleSiteSetting.values.to_json
   end
 
+  def self.allow_user_locale
+    Discourse.deprecate(
+      "Use SiteSetting.allowed_user_locales instead of SiteSetting.allow_user_locale",
+      drop_from: "2027.2",
+    )
+    user_locale_selection_enabled?
+  end
+
+  def self.user_locale_selection_enabled?
+    allowed_user_locales != "none"
+  end
+
+  def self.interface_locales
+    value = allowed_user_locales
+    return LocaleSiteSetting.supported_locales if value == "all"
+    return [default_locale] if value == "none"
+
+    (value.split("|") & LocaleSiteSetting.supported_locales) | [default_locale]
+  end
+
+  def self.interface_locale_allowed?(locale)
+    locale.present? && interface_locales.include?(locale.to_s)
+  end
+
   def self.content_localization_locales
     locales = SiteSetting.content_localization_supported_locales.split("|")
     default_locale = SiteSetting.default_locale
@@ -190,6 +214,10 @@ class SiteSetting < ActiveRecord::Base
 
     locales = content_localization_locales
     LocaleSiteSetting.values.select { |locale| locales.include?(locale[:value]) }
+  end
+
+  def self.language_switcher_locales
+    content_localization_locales & interface_locales
   end
 
   def self.topic_title_length

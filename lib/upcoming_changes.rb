@@ -663,6 +663,8 @@ module UpcomingChanges
       value = settings_provider.public_send(dependency)
       if (allowed = allowed_values&.dig(dependency))
         allowed.include?(value.to_s)
+      elsif dependency == :allowed_user_locales
+        settings_provider.user_locale_selection_enabled?
       else
         value == true
       end

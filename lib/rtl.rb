@@ -10,15 +10,7 @@ class Rtl
   end
 
   def enabled?
-    site_locale_rtl? || current_user_rtl?
-  end
-
-  def current_user_rtl?
-    SiteSetting.allow_user_locale && (user&.locale || SiteSetting.default_locale).in?(LOCALES)
-  end
-
-  def site_locale_rtl?
-    !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(LOCALES)
+    (user&.effective_locale || I18n.locale).to_s.in?(LOCALES)
   end
 
   def css_class

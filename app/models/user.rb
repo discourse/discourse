@@ -530,7 +530,7 @@ class User < ActiveRecord::Base
   end
 
   def effective_locale
-    if SiteSetting.allow_user_locale && locale.present? && I18n.locale_available?(locale)
+    if SiteSetting.interface_locale_allowed?(locale)
       locale
     else
       SiteSetting.default_locale

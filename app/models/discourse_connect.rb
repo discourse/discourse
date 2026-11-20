@@ -262,9 +262,7 @@ class DiscourseConnect < DiscourseConnectBase
           registration_ip_address: ip_address,
         }
 
-        if SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
-          user_params[:locale] = locale
-        end
+        user_params[:locale] = locale if SiteSetting.interface_locale_allowed?(locale)
 
         user = User.new(user_params)
         user.skip_username_watched_words_validation = true
@@ -357,10 +355,7 @@ class DiscourseConnect < DiscourseConnectBase
       user.name = name || User.suggest_name(username.presence || email)
     end
 
-    if locale_force_update && SiteSetting.allow_user_locale && locale.present? &&
-         LocaleSiteSetting.valid_value?(locale)
-      user.locale = locale
-    end
+    user.locale = locale if locale_force_update && SiteSetting.interface_locale_allowed?(locale)
 
     avatar_missing = user.uploaded_avatar_id.nil? || !Upload.exists?(user.uploaded_avatar_id)
 

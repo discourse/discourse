@@ -236,7 +236,7 @@ describe "Admin Customize Themes" do
     end
 
     it "uses translations matching the current user's locale" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.set_locale_from_accept_language_header = true
       SiteSetting.default_locale = "fr"
 

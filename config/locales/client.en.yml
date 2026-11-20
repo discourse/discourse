@@ -10536,6 +10536,12 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
+        allowed_user_locales:
+          mode: "Interface language policy"
+          all: "All available languages"
+          selected: "Selected languages"
+          none: "Site default only"
+          select_languages: "Select at least one language"
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
         depends_on_notice:
@@ -10637,6 +10643,8 @@ en:
           add_types_toast: "%{types} file types added"
         mandatory_group: "Group is mandatory"
         requires_confirmation_messages:
+          allowed_user_locales:
+            prompt: "If you remove an interface language, members using it will switch to the site default and their saved language choice will be cleared."
           default:
             prompt: "Changing this setting may have far-reaching or unintended consequences for your site. Are you sure you want to proceed?"
             confirm: "Yes, I'm sure"

@@ -14,6 +14,7 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import "discourse/admin/lib/setting-field-types";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
+import SettingAllowedUserLocales from "discourse/admin/components/site-settings/allowed-user-locales";
 import SettingBool from "discourse/admin/components/site-settings/bool";
 import SettingCategory from "discourse/admin/components/site-settings/category";
 import SettingCategoryList from "discourse/admin/components/site-settings/category-list";
@@ -96,6 +97,7 @@ const TYPE_COMPONENTS = {
   file_types_list: SettingFileTypesList,
   font_list: SettingFontList,
   locale_list: SettingLocaleList,
+  allowed_user_locales_list: SettingAllowedUserLocales,
   locale_enum: SettingLocaleEnum,
   topic: SettingTopic,
   icon: SettingIcon,

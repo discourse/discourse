@@ -870,7 +870,7 @@ RSpec.describe DiscourseConnect do
 
   describe "user locale" do
     it "sets default user locale if specified" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
 
       sso = new_discourse_sso
       sso.username = "test"

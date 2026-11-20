@@ -835,7 +835,7 @@ RSpec.describe Discourse do
 
     before do
       SiteSetting.default_locale = "en"
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
     end
 
     it "ignores the locale cookie by default" do
@@ -885,7 +885,7 @@ RSpec.describe Discourse do
       end
 
       it "ignores the cookie when user locales are not allowed" do
-        SiteSetting.allow_user_locale = false
+        SiteSetting.allowed_user_locales = "none"
 
         expect(locale_for(cookie: "es")).to eq("en")
       end

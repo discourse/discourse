@@ -279,7 +279,7 @@ RSpec.describe UserNotifications do
 
       it "renders selected topics and replies with the standard digest preparation" do
         SiteSetting.content_localization_enabled = true
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         user.update!(locale: "ja")
         topic = Fabricate(:topic, locale: "en")
         first_post = Fabricate(:post, topic: topic, locale: "en")
@@ -747,7 +747,7 @@ RSpec.describe UserNotifications do
     fab!(:other_topic_translation) { Fabricate(:topic_localization, topic: other_topic) }
 
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_enabled = true
       SiteSetting.digest_topics = 1
       SiteSetting.digest_other_topics = 1
@@ -825,7 +825,7 @@ RSpec.describe UserNotifications do
     end
 
     it "uses the effective locale when user locales are disabled" do
-      SiteSetting.allow_user_locale = false
+      SiteSetting.allowed_user_locales = "none"
       mail = digest_mail
       [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
         expect(body).to include(topic.title, reply.raw)
@@ -908,7 +908,7 @@ RSpec.describe UserNotifications do
     fab!(:topic_translation) { Fabricate(:topic_localization, topic: topic) }
 
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_enabled = true
       user.user_option.update!(
         email_previous_replies: UserOption.previous_replies_type[:always],
@@ -1094,7 +1094,7 @@ RSpec.describe UserNotifications do
     end
 
     it "uses the effective locale when user locales are disabled" do
-      SiteSetting.allow_user_locale = false
+      SiteSetting.allowed_user_locales = "none"
       mail = notification_mail
       expect(mail.subject).to include(topic.title)
       expect(mail.html_part.body.to_s).to include(reply.raw)
@@ -2524,7 +2524,7 @@ RSpec.describe UserNotifications do
     end
 
     context "when user locale is allowed" do
-      before { SiteSetting.allow_user_locale = true }
+      before { SiteSetting.allowed_user_locales = "all" }
 
       context "with signup mail" do
         include_examples "applying the site locale policy to notification mail",
@@ -2576,7 +2576,7 @@ RSpec.describe UserNotifications do
     end
 
     context "when user locale is not allowed" do
-      before { SiteSetting.allow_user_locale = false }
+      before { SiteSetting.allowed_user_locales = "none" }
 
       context "with signup mail" do
         include_examples "applying the site locale policy to notification mail",
@@ -2882,7 +2882,7 @@ RSpec.describe UserNotifications do
     end
 
     it "uses the recipient locale and customized date format" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user.locale = "fr"
       user.user_option.timezone = "Asia/Kolkata"
       user.suspended_till = Time.iso8601("2027-01-15T12:00:00Z")

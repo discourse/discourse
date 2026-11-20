@@ -19,7 +19,7 @@ RSpec.describe UpcomingChanges::List do
             impact_type: "other",
             impact_role: "developers",
           },
-          allow_user_locale: {
+          enable_emoji: {
             impact: "feature,all_members",
             status: :beta,
             impact_type: "feature",
@@ -176,8 +176,7 @@ RSpec.describe UpcomingChanges::List do
         end
 
         it "is nil for changes without a status change event" do
-          mock_setting =
-            result.upcoming_changes.find { |change| change[:setting] == :allow_user_locale }
+          mock_setting = result.upcoming_changes.find { |change| change[:setting] == :enable_emoji }
 
           expect(mock_setting[:upcoming_change][:status_changed_at]).to be_nil
         end
@@ -213,7 +212,7 @@ RSpec.describe UpcomingChanges::List do
 
         it "returns false for overriding_defaults when no upcoming_change_default_override points to the change" do
           results = result.upcoming_changes
-          mock_setting = results.find { |change| change[:setting] == :allow_user_locale }
+          mock_setting = results.find { |change| change[:setting] == :enable_emoji }
           expect(mock_setting[:overriding_defaults]).to eq(false)
         end
       end
@@ -244,12 +243,12 @@ RSpec.describe UpcomingChanges::List do
           results = result.upcoming_changes
           mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
 
-          expect(mock_setting[:depends_on]).to eq([:allow_user_locale])
-          expect(mock_setting[:depends_on_humanized_names]).to eq(["Allow user locale"])
+          expect(mock_setting[:depends_on]).to eq([:allowed_user_locales])
+          expect(mock_setting[:depends_on_humanized_names]).to eq(["Allowed user locales"])
         end
 
         it "includes depends_on_met as false when a dependency is not enabled" do
-          SiteSetting.allow_user_locale = false
+          SiteSetting.allowed_user_locales = "none"
 
           results = result.upcoming_changes
           mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
@@ -258,7 +257,7 @@ RSpec.describe UpcomingChanges::List do
         end
 
         it "includes depends_on_met as true when all dependencies are enabled" do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
 
           results = result.upcoming_changes
           mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
@@ -390,7 +389,7 @@ RSpec.describe UpcomingChanges::List do
             expect(
               results.find { |change| change[:setting] == :enable_upload_debug_mode },
             ).not_to be_present
-            expect(results.find { |change| change[:setting] == :allow_user_locale }).to be_present
+            expect(results.find { |change| change[:setting] == :enable_emoji }).to be_present
           end
         end
       end

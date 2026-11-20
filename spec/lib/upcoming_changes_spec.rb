@@ -810,13 +810,13 @@ RSpec.describe UpcomingChanges do
     end
 
     it "returns false when a boolean dependency is disabled" do
-      SiteSetting.allow_user_locale = false
+      SiteSetting.allowed_user_locales = "none"
 
       expect(described_class.change_dependencies_met?(:set_locale_from_cookie)).to eq(false)
     end
 
     it "returns true when all boolean dependencies are enabled" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
 
       expect(described_class.change_dependencies_met?(:set_locale_from_cookie)).to eq(true)
     end

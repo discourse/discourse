@@ -127,7 +127,7 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       let(:setting_name) { :set_locale_from_cookie }
 
       before do
-        SiteSetting.allow_user_locale = false
+        SiteSetting.allowed_user_locales = "none"
         mock_upcoming_change_metadata(
           set_locale_from_cookie: {
             impact: "feature,all_members",

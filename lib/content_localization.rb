@@ -145,8 +145,9 @@ class ContentLocalization
   # means a locale cookie is only ever honoured while there is UI to change it back.
   # @return [Boolean]
   def self.language_switcher_enabled?
-    SiteSetting.content_localization_enabled && SiteSetting.allow_user_locale &&
+    SiteSetting.content_localization_enabled &&
       SiteSetting.content_localization_language_switcher != "none" &&
-      SiteSetting.content_localization_supported_locales.present?
+      SiteSetting.content_localization_supported_locales.present? &&
+      SiteSetting.language_switcher_locales.size > 1
   end
 end

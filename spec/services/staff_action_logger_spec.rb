@@ -295,7 +295,7 @@ RSpec.describe StaffActionLogger do
     end
 
     it "logs boolean values" do
-      log_record = logger.log_site_setting_change("allow_user_locale", true, false)
+      log_record = logger.log_site_setting_change("enable_emoji", true, false)
       expect(log_record.previous_value).to eq("true")
       expect(log_record.new_value).to eq("false")
     end
@@ -307,7 +307,7 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  # allow_user_locale is just used as an example here because upcoming
+  # enable_emoji is just used as an example here because upcoming
   # changes will not exist forever, so there aren't any stable names we
   # can use
   describe "log_upcoming_change_toggle" do
@@ -321,7 +321,7 @@ RSpec.describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_upcoming_change_toggle("allow_user_locale", false, true) }.to change {
+      expect { logger.log_upcoming_change_toggle("enable_emoji", false, true) }.to change {
         UserHistory.count
       }.by(1)
     end
@@ -330,11 +330,11 @@ RSpec.describe StaffActionLogger do
       details =
         I18n.t(
           "staff_action_logs.upcoming_changes.log_promoted",
-          change_status: UpcomingChanges.change_status(:allow_user_locale),
+          change_status: UpcomingChanges.change_status(:enable_emoji),
           base_path: Discourse.base_path,
         )
 
-      result = logger.log_upcoming_change_toggle("allow_user_locale", false, true, { details: })
+      result = logger.log_upcoming_change_toggle("enable_emoji", false, true, { details: })
       expect(result.details).to eq(details)
     end
   end

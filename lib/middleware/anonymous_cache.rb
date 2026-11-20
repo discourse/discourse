@@ -129,7 +129,7 @@ module Middleware
           locale += "|#{Discourse.anonymous_locale(@request, include_param: false)}"
         end
 
-        locale
+        "#{locale}|#{SiteSetting.allowed_user_locales}|#{SiteSetting.default_locale}|#{SiteSetting.content_localization_supported_locales}"
       end
 
       # rubocop:disable Lint/BooleanSymbol

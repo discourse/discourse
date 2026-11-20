@@ -721,7 +721,7 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       it "returns html_message: true with linkified errors when a validator message references settings" do
-        SiteSetting.allow_user_locale = false
+        SiteSetting.allowed_user_locales = "none"
 
         put "/admin/site_settings/content_localization_language_switcher.json",
             params: {
@@ -737,13 +737,34 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.parsed_body["errors"].first).not_to include("{{setting")
       end
 
+      it "rejects invalid lists and schedules preference cleanup when removing locales" do
+        SiteSetting.allowed_user_locales = "fr|ja"
+
+        put "/admin/site_settings/allowed_user_locales.json",
+            params: {
+              allowed_user_locales: "all|ja",
+            }
+
+        expect(response.status).to eq(422)
+        expect(SiteSetting.allowed_user_locales).to eq("fr|ja")
+
+        expect_enqueued_with(job: :reset_removed_user_locales, args: { locales: ["ja"] }) do
+          put "/admin/site_settings/allowed_user_locales.json",
+              params: {
+                allowed_user_locales: "fr",
+              }
+        end
+
+        expect(response.status).to eq(204)
+      end
+
       it "keeps the exception message plain text for non-admin-UI consumers" do
-        SiteSetting.allow_user_locale = false
+        SiteSetting.allowed_user_locales = "none"
 
         expect { SiteSetting.set("content_localization_language_switcher", "all") }.to raise_error(
           Discourse::InvalidHTMLParameters,
         ) do |error|
-          expect(error.message).to include("'Allow user locale'")
+          expect(error.message).to include("'Allowed user locales'")
           expect(error.message).not_to include("<a", "{{setting")
           expect(error.html_message).to include('class="site-setting-link"')
         end

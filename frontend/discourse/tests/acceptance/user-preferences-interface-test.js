@@ -117,10 +117,12 @@ acceptance("User Preferences - Interface", function (needs) {
 acceptance("Content language preferences", function (needs) {
   needs.user();
   needs.settings({
-    allow_user_locale: true,
+    allowed_user_locales: "ja",
+    default_locale: "en",
     available_locales: [
       { name: "English", value: "en" },
       { name: "Japanese (日本語)", value: "ja" },
+      { name: "French", value: "fr" },
     ],
   });
 
@@ -141,6 +143,13 @@ acceptance("Content language preferences", function (needs) {
     const modalService = owner.lookup("service:modal");
     modalService.show(ContentLanguagePreferencesModal);
     await settled();
+
+    assert
+      .dom(".form-kit__field[data-name='interfaceLanguage'] option[value='ja']")
+      .exists();
+    assert
+      .dom(".form-kit__field[data-name='interfaceLanguage'] option[value='fr']")
+      .doesNotExist();
 
     await selectKit(
       ".form-kit__field[data-name='understoodLanguages'] .multi-select"

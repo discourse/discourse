@@ -1391,10 +1391,29 @@ module Discourse
 
   def self.anonymous_locale(request, include_param: true)
     locale = request.params[LOCALE_PARAM] if include_param && SiteSetting.set_locale_from_param
-    locale ||= locale_from_cookie(request)
-    locale ||=
+    locale = locale.is_a?(String) ? locale.tr("-", "_") : nil
+    return locale if SiteSetting.interface_locale_allowed?(locale)
+    return SiteSetting.default_locale if locale == ""
+
+    if locale && ContentLocalization.crawler_locale_param_enabled? &&
+         SiteSetting.content_localization_locales.include?(locale) &&
+         CrawlerDetection.crawler_layout_request?(ActionDispatch::Request.new(request.env))
+      return locale
+    end
+
+    locales = SiteSetting.interface_locales
+    [locale, locale_from_cookie(request)].compact.each do |preferred_locale|
+      preferred_locale = preferred_locale.tr("-", "_")
+      return preferred_locale if locales.include?(preferred_locale)
+
+      matched_locale = HttpLanguageParser.match(preferred_locale, locales:)
+      return matched_locale if matched_locale
+      return SiteSetting.default_locale if SiteSetting.allowed_user_locales == "all"
+    end
+
+    header =
       request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
-    HttpLanguageParser.parse(locale)
+    header ? HttpLanguageParser.parse(header, locales:) : SiteSetting.default_locale
   end
 
   def self.locale_from_cookie(request)
@@ -1406,7 +1425,7 @@ module Discourse
     # Restricted to the configured locales so anonymous cache variance stays bounded by the
     # site's own locale list rather than every available locale.
     if ContentLocalization.language_switcher_enabled? &&
-         SiteSetting.content_localization_locales.include?(cookie)
+         SiteSetting.language_switcher_locales.include?(cookie)
       cookie
     end
   end

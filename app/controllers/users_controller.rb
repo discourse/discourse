@@ -783,6 +783,10 @@ class UsersController < ApplicationController
       ensure_external_ids_allowed!
     end
 
+    if !SiteSetting.interface_locale_allowed?(new_user_params[:locale])
+      new_user_params.delete(:locale)
+    end
+
     signup_email = new_user_params[:email].strip.downcase
     user = User.where(staged: true).with_email(signup_email).first || User.new
     authentication = UserAuthenticator.new(user, server_session)
