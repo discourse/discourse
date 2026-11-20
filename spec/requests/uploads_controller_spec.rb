@@ -1647,6 +1647,79 @@ RSpec.describe UploadsController do
           expect(response.status).to eq(429)
         end
       end
+
+      context "when the request has 100 part numbers" do
+        let(:part_numbers) { (1..100).to_a }
+        let(:presigned_urls) { response.parsed_body["presigned_urls"] }
+
+        before do
+          stub_list_multipart_request
+          post "/uploads/batch-presign-multipart-parts.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+                 part_numbers:,
+               },
+               as: :json
+        end
+
+        it "returns a presigned URL for each part number" do
+          expect(presigned_urls.keys).to eq(part_numbers.map(&:to_s))
+        end
+      end
+
+      context "when the request has 101 part numbers" do
+        let(:part_numbers) { (1..101).to_a }
+        let(:request_format) { :json }
+        let!(:list_parts_request) { stub_list_multipart_request }
+
+        before do
+          post "/uploads/batch-presign-multipart-parts.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+                 part_numbers:,
+               },
+               as: request_format
+        end
+
+        context "when the request has a form body" do
+          let(:request_format) { nil }
+
+          it "rejects the request" do
+            expect(response).to have_http_status(:bad_request)
+          end
+        end
+
+        it "rejects the request" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "gives the maximum in the error" do
+          expect(response.parsed_body["errors"]).to contain_exactly(
+            a_string_including("At most 100 part numbers are allowed"),
+          )
+        end
+
+        it "sends no request to the store" do
+          expect(list_parts_request).not_to have_been_requested
+        end
+      end
+
+      context "when the part numbers are not an array" do
+        let(:part_numbers) { "1" }
+
+        before do
+          post "/uploads/batch-presign-multipart-parts.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+                 part_numbers:,
+               },
+               as: :json
+        end
+
+        it "rejects the request" do
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
     end
 
     context "when the store is not external" do
