@@ -2976,6 +2976,23 @@ RSpec.describe User do
   end
 
   describe "#publish_notifications_state" do
+    it "omits staff user-note notices from the full state for a regular user" do
+      notification = Fabricate(:notification, user:)
+      Fabricate(:notification, user:, notification_type: Notification.types[:staff_user_note])
+
+      payload =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+          .first
+          .data
+
+      expect(payload[:recent]).to eq([[notification.id, false]])
+      expect(payload[:unread_notifications]).to eq(1)
+      expect(payload[:all_unread_notifications_count]).to eq(1)
+      expect(payload[:grouped_unread_notifications].keys).to eq([notification.notification_type])
+      expect(payload[:available_notification_types]).to eq([notification.notification_type])
+    end
+
     it "publishes the message sorted by descending ID" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)

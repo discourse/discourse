@@ -738,6 +738,7 @@ class User < ActiveRecord::Base
          WHERE t.deleted_at IS NULL
            AND n.notification_type = :notification_type
            AND n.user_id = :user_id
+           #{staff_user_note_visibility_clause}
            AND NOT read
            #{since ? "AND n.created_at > :since" : ""}
     SQL
@@ -755,6 +756,7 @@ class User < ActiveRecord::Base
          WHERE t.deleted_at IS NULL
            AND n.high_priority = :high_priority
            AND n.user_id = :user_id
+           #{staff_user_note_visibility_clause}
            AND NOT read
     SQL
 
@@ -763,7 +765,7 @@ class User < ActiveRecord::Base
   end
 
   def available_notification_types
-    notifications.visible.distinct.pluck(:notification_type)
+    notifications.visible.visible_to(guardian).distinct.pluck(:notification_type)
   end
 
   MAX_UNREAD_BACKLOG = 400
@@ -775,6 +777,7 @@ class User < ActiveRecord::Base
         LEFT JOIN topics t ON t.id = n.topic_id
         WHERE t.deleted_at IS NULL
           AND n.user_id = :user_id
+           #{staff_user_note_visibility_clause}
           AND NOT n.read
         LIMIT :limit
       ) AS X
@@ -829,7 +832,9 @@ class User < ActiveRecord::Base
           LEFT JOIN topics t ON t.id = n.topic_id
            WHERE t.deleted_at IS NULL AND
             n.high_priority = FALSE AND
-            n.user_id = :user_id AND
+            n.user_id = :user_id
+            #{staff_user_note_visibility_clause}
+            AND
             n.id > :seen_notification_id AND
             NOT read
           LIMIT :limit
@@ -856,7 +861,9 @@ class User < ActiveRecord::Base
           notifications n
           LEFT JOIN topics t ON t.id = n.topic_id
            WHERE t.deleted_at IS NULL AND
-            n.user_id = :user_id AND
+            n.user_id = :user_id
+            #{staff_user_note_visibility_clause}
+            AND
             n.id > :seen_notification_id AND
             NOT read
           LIMIT :limit
@@ -875,7 +882,7 @@ class User < ActiveRecord::Base
   end
 
   def total_unread_notifications
-    @unread_total_notifications ||= notifications.where("read = false").count
+    @unread_total_notifications ||= notifications.visible_to(guardian).where("read = false").count
   end
 
   def reviewable_count
@@ -883,7 +890,7 @@ class User < ActiveRecord::Base
   end
 
   def bump_last_seen_notification!
-    query = notifications.visible
+    query = notifications.visible.visible_to(guardian)
     query = query.where("notifications.id > ?", seen_notification_id) if seen_notification_id
     if max_notification_id = query.maximum(:id)
       update!(seen_notification_id: max_notification_id)
@@ -933,7 +940,9 @@ class User < ActiveRecord::Base
          WHERE
           t.deleted_at IS NULL AND
           n.high_priority AND
-          n.user_id = :user_id AND
+          n.user_id = :user_id
+          #{staff_user_note_visibility_clause}
+            AND
           NOT read
         ORDER BY n.id DESC
         LIMIT 20
@@ -946,6 +955,7 @@ class User < ActiveRecord::Base
         t.deleted_at IS NULL AND
         (n.high_priority = FALSE OR read) AND
         n.user_id = :user_id
+        #{staff_user_note_visibility_clause}
        ORDER BY n.id DESC
        LIMIT 20
       ) AS y
@@ -2338,6 +2348,12 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def staff_user_note_visibility_clause
+    return "" if Notification.staff_user_notes_visible_to?(guardian)
+
+    "AND n.notification_type <> #{Notification.types[:staff_user_note]}"
+  end
 
   def deactivate_anonymous_shadow_users!
     update_anonymous_shadow_users!(active: false)

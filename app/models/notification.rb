@@ -33,8 +33,7 @@ class Notification < ActiveRecord::Base
         }
   scope :visible_to,
         ->(guardian) do
-          if guardian.is_staff? && SiteSetting.has_setting?(:user_notes_enabled) &&
-               SiteSetting.user_notes_enabled?
+          if staff_user_notes_visible_to?(guardian)
             all
           else
             where.not(notification_type: types[:staff_user_note])
@@ -349,6 +348,11 @@ class Notification < ActiveRecord::Base
       Notification.types[:liked_consolidated],
       Notification.types[:reaction],
     ]
+  end
+
+  def self.staff_user_notes_visible_to?(guardian)
+    guardian.is_staff? && SiteSetting.has_setting?(:user_notes_enabled) &&
+      SiteSetting.user_notes_enabled?
   end
 
   def self.prioritized_list(user, count: 30, types: [])

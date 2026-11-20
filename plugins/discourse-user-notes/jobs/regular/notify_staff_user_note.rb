@@ -15,21 +15,28 @@ module Jobs
 
       DistributedMutex.synchronize("staff-user-note-#{note[:id]}") do
         type = Notification.types[:staff_user_note]
-        notified_user_ids =
-          Notification
-            .where(notification_type: type)
-            .where("data::jsonb ->> 'user_note_id' = ?", note[:id])
-            .select(:user_id)
-
         recipients =
           User
             .human_users
             .where(active: true)
             .where("admin OR moderator")
             .where("suspended_till IS NULL OR suspended_till <= ?", Time.current)
-            .where(id: GroupUser.where(group_id: groups).select(:user_id))
             .where.not(id: note[:created_by])
-            .where.not(id: notified_user_ids)
+
+        if groups.exclude?(Group::AUTO_GROUPS[:logged_in_users]) &&
+             (
+               groups.exclude?(Group::AUTO_GROUPS[:everyone]) ||
+                 SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+             )
+          recipients = recipients.where(id: GroupUser.where(group_id: groups).select(:user_id))
+        end
+
+        notified_user_ids =
+          Notification
+            .where(notification_type: type, user_id: recipients.select(:id))
+            .where("data::jsonb ->> 'user_note_id' = ?", note[:id])
+            .select(:user_id)
+        recipients = recipients.where.not(id: notified_user_ids)
 
         data = { username: user.username, user_note_id: note[:id] }.to_json
         records =
