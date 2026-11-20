@@ -46,11 +46,11 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
     fields = user.custom_fields
     UserField
       .where(show_on_signup: true)
-      .pluck(:id)
-      .each do |field_id|
-        value = user_fields[field_id.to_s]
+      .includes(:user_field_options)
+      .each do |field|
+        value = UserCreator.clean_custom_field_values(field, user_fields[field.id.to_s])
         value = nil if value == "false"
-        fields["#{User::USER_FIELD_PREFIX}#{field_id}"] = value[
+        fields["#{User::USER_FIELD_PREFIX}#{field.id}"] = value[
           0...UserField.max_length
         ] if value.present?
       end

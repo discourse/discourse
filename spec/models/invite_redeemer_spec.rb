@@ -430,6 +430,26 @@ RSpec.describe InviteRedeemer do
         expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq("value2")
       end
 
+      it "stores numbers and discards values that aren't numbers for number fields" do
+        age_field = Fabricate(:user_field, field_type: "number", requirement: "optional")
+        score_field = Fabricate(:user_field, field_type: "number", requirement: "optional")
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+            user_custom_fields: {
+              age_field.id.to_s => " 42 ",
+              score_field.id.to_s => "abc",
+            },
+          ).redeem
+
+        expect(user.custom_fields["user_field_#{age_field.id}"]).to eq("42")
+        expect(user.custom_fields["user_field_#{score_field.id}"]).to be_nil
+      end
+
       it "assigns signup fields while preserving hidden staged fields" do
         visible_field = Fabricate(:user_field, show_on_signup: true, editable: false)
         hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)

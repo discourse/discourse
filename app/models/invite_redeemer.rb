@@ -131,14 +131,14 @@ class InviteRedeemer
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
-    user_fields = UserField.where(show_on_signup: true)
+    user_fields = UserField.where(show_on_signup: true).includes(:user_field_options)
     if user_custom_fields.present? && user_fields.present?
       field_params = user_custom_fields || {}
       fields = user.custom_fields
 
       user_fields.each do |f|
         field_params[f.id.to_s] = nil if field_params[f.id.to_s] === "false"
-        field_val = field_params[f.id.to_s]
+        field_val = UserCreator.clean_custom_field_values(f, field_params[f.id.to_s])
         fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
           0...UserField.max_length
         ] if field_val.present?
