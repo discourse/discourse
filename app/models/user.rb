@@ -1742,6 +1742,8 @@ class User < ActiveRecord::Base
         value =
           if ftype == "confirm"
             !!Helpers::CUSTOM_FIELD_TRUE.include?(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
+          elsif ftype == "number"
+            UserField.cast_number(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
           else
             custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
           end

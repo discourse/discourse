@@ -229,7 +229,7 @@ export interface ReviewableFields {
   reply_count?: number;
   reply_to_post_number?: number;
   link_admin?: boolean;
-  user_fields?: Record<string, string | string[]>;
+  user_fields?: Record<string, string | string[] | number | boolean | null>;
   reject_reason?: string | null;
   /** Embedded JSON, unlike the side-loaded target_created_by model. */
   target_user?: TopicBasicUser & ReviewableUserFields;

@@ -10466,6 +10466,7 @@ en:
           text: "Text"
           textarea: "Textarea"
           date: "Date"
+          number: "Number"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"
