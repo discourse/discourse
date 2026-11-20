@@ -28,6 +28,20 @@ module(
         .hasText("-10", "shows the negative number");
     });
 
+    test("shows 0 rather than a dash", async function (assert) {
+      const item = itemWithValue([0]);
+
+      await render(
+        <template>
+          <DirectoryItemUserFieldValue @column={{column}} @item={{item}} />
+        </template>
+      );
+
+      assert
+        .dom(".directory-table__value--user-field")
+        .hasText("0", "shows the zero");
+    });
+
     test("replaces dashes in text values with spaces", async function (assert) {
       const item = itemWithValue(["blue-green"]);
 
