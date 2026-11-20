@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  findAll,
   select,
   visit,
   waitUntil,
@@ -445,6 +446,18 @@ acceptance("Blog composer", function (needs) {
     );
   });
 
+  test("starts a draft in one click with a single blog", async function (assert) {
+    await visit("/blog-editor");
+    await click(".d-page-header__actions .btn-primary");
+
+    assert.dom("#reply-control .d-editor").exists("the composer opens");
+    assert.strictEqual(
+      this.owner.lookup("service:composer").model.blogId,
+      null,
+      "the draft belongs to the only blog"
+    );
+  });
+
   test("accepts a short title for a page", async function (assert) {
     await visit("/blog-editor");
     await click(".d-page-header__actions .btn-primary");
@@ -592,14 +605,34 @@ acceptance("Blog editor with several blogs", function (needs) {
     );
   });
 
-  test("starts a new draft on the blog being viewed", async function (assert) {
-    await visit("/blog-editor?blog=2");
-    await click(".d-page-header__actions .btn-primary");
+  test("starts a new draft on the blog chosen from the menu", async function (assert) {
+    await visit("/blog-editor");
+    await click(".blog-dashboard__new-draft");
 
+    assert
+      .dom(".blog-dashboard__new-draft-blog")
+      .exists({ count: 2 }, "every blog is offered");
+    assert
+      .dom(".blog-dashboard__new-draft-blog")
+      .hasText("The blog", "the default blog comes first");
+
+    await click(findAll(".blog-dashboard__new-draft-blog")[1]);
     assert.strictEqual(
       this.owner.lookup("service:composer").model.blogId,
       2,
-      "the draft is created for the filtered blog"
+      "the draft is created for the chosen blog"
+    );
+  });
+
+  test("leaves the blog filter out of new drafts", async function (assert) {
+    await visit("/blog-editor?blog=2");
+    await click(".blog-dashboard__new-draft");
+    await click(".blog-dashboard__new-draft-blog");
+
+    assert.strictEqual(
+      this.owner.lookup("service:composer").model.blogId,
+      null,
+      "choosing the default blog records no blog, whatever the filter shows"
     );
   });
 });

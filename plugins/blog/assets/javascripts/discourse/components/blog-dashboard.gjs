@@ -25,7 +25,6 @@ import {
   editorFilters,
   STATUS_OPTIONS,
 } from "discourse/plugins/blog/discourse/lib/blog-editor-filters";
-import { findBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 
 // "Changes pending" is still a live article; the edits are shown as separate pending work.
 function articleState(topic) {
@@ -92,6 +91,10 @@ export default class BlogDashboard extends Component {
     this.blogFilter = blog || "all";
   }
 
+  get blogsDefaultFirst() {
+    return [...this.site.blogs].sort((a, b) => b.is_default - a.is_default);
+  }
+
   get blogOptions() {
     return [
       { value: "all", label: i18n("blog.all_blogs") },
@@ -143,16 +146,13 @@ export default class BlogDashboard extends Component {
 
   @action
   async newDraft() {
-    const category =
-      Category.findById(this.siteSettings.blog_drafts_category) ||
-      (await this.#ensureDraftsCategory());
-    if (!category) {
-      return;
-    }
-    await this.composer.openNewTopic({ category });
-    // A draft without a recorded blog belongs to the default blog.
-    const blog = findBlog(this.site, this.blogFilter);
-    this.composer.model?.set("blogId", blog?.is_default ? null : blog?.id);
+    await this.#openDraftComposer();
+  }
+
+  @action
+  async newDraftOn(blog, menu) {
+    await menu.close();
+    await this.#openDraftComposer(blog);
   }
 
   @action
@@ -229,6 +229,21 @@ export default class BlogDashboard extends Component {
     }
   }
 
+  async #openDraftComposer(blog) {
+    const category =
+      Category.findById(this.siteSettings.blog_drafts_category) ||
+      (await this.#ensureDraftsCategory());
+    if (!category) {
+      return;
+    }
+    await this.composer.openNewTopic({ category });
+    // A draft without a recorded blog belongs to the default blog.
+    this.composer.model?.set(
+      "blogId",
+      blog && !blog.is_default ? blog.id : null
+    );
+  }
+
   // The drafts category is created the first time anyone starts a draft.
   async #ensureDraftsCategory() {
     try {
@@ -281,12 +296,39 @@ export default class BlogDashboard extends Component {
         @titleLabel={{i18n "blog.editor_title"}}
       >
         <:actions as |actions|>
-          <actions.Primary
-            @action={{this.newDraft}}
-            @disabled={{this.data.error}}
-            @icon="pen-to-square"
-            @label="blog.new_draft"
-          />
+          {{#if this.hasSeveralBlogs}}
+            <actions.Wrapped>
+              <DMenu
+                @disabled={{this.data.error}}
+                @icon="pen-to-square"
+                @identifier="blog-dashboard-new-draft"
+                @label={{i18n "blog.new_draft"}}
+                @placement="bottom-end"
+                @triggerClass="d-page-action-button btn-small btn-primary blog-dashboard__new-draft"
+              >
+                <:content as |menu|>
+                  <DDropdownMenu as |dropdown|>
+                    {{#each this.blogsDefaultFirst as |blog|}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent blog-dashboard__new-draft-blog"
+                          @action={{fn this.newDraftOn blog menu}}
+                          @translatedLabel={{blog.name}}
+                        />
+                      </dropdown.item>
+                    {{/each}}
+                  </DDropdownMenu>
+                </:content>
+              </DMenu>
+            </actions.Wrapped>
+          {{else}}
+            <actions.Primary
+              @action={{this.newDraft}}
+              @disabled={{this.data.error}}
+              @icon="pen-to-square"
+              @label="blog.new_draft"
+            />
+          {{/if}}
           <actions.Wrapped>
             <DMenu
               @icon="ellipsis-vertical"
