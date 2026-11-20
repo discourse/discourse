@@ -151,6 +151,24 @@ RSpec.describe "events" do
         schema expected_response_schema
 
         fab!(:event) { Fabricate(:event, original_starts_at: 1.day.from_now) }
+        fab!(:event_with_registration) do
+          Fabricate(
+            :event,
+            original_starts_at: 2.days.from_now,
+            registration_form: {
+              title: "Workshop signup",
+              fields: [
+                {
+                  id: "session",
+                  label: "Session",
+                  type: "dropdown",
+                  required: true,
+                  choices: [{ id: "morning", label: "Morning" }],
+                },
+              ],
+            },
+          )
+        end
 
         let(:include_details) { "true" }
 
