@@ -313,6 +313,9 @@ describe DiscourseMcp::Tools do
       allow(context).to receive(:has_scopes?).with(
         DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ,
       ).and_return(true)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Tools::ListNotifications::CHAT_READ_SCOPE,
+      ).and_return(true)
 
       result =
         described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
@@ -320,6 +323,48 @@ describe DiscourseMcp::Tools do
       notification_ids = result.fetch(:notifications).pluck(:id)
       expect(notification_ids).to include(visible_notification.id)
       expect(notification_ids).not_to include(hidden_notification.id)
+    end
+
+    it "hides watched chat thread notifications without the chat read scope" do
+      chat_notification =
+        Fabricate(
+          :notification,
+          user:,
+          topic: nil,
+          notification_type: Notification.types[:chat_watched_thread],
+          data: {
+            chat_channel_id: 1,
+            chat_thread_id: 1,
+            description: "Watched chat thread root message",
+          }.to_json,
+        )
+      visible_notification = Fabricate(:notification, user:)
+      context = request_context(user)
+      allow(context).to receive(:has_scopes?).and_return(true)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Tools::ListNotifications::CHAT_READ_SCOPE,
+      ).and_return(false)
+
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+
+      expect(result.fetch(:notifications).pluck(:id)).to contain_exactly(visible_notification.id)
+      expect(result.fetch(:notifications).to_s).not_to include("Watched chat thread root message")
+
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Tools::ListNotifications::CHAT_READ_SCOPE,
+      ).and_return(true)
+
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+
+      chat_notification_result =
+        result
+          .fetch(:notifications)
+          .find { |notification| notification[:id] == chat_notification.id }
+      expect(chat_notification_result.dig(:data, :description)).to eq(
+        "Watched chat thread root message",
+      )
     end
   end
 

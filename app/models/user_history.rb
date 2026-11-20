@@ -17,6 +17,9 @@ class UserHistory < ActiveRecord::Base
   # Subjects logged alongside the :admin_onboarding_step_completed action, one
   # per step of the admin onboarding panel.
   ADMIN_ONBOARDING_STEPS = %w[select_theme create_category invite_collaborators].freeze
+  # Steps the panel no longer offers but older sites have already logged, kept
+  # so the onboarding stats still report them.
+  RETIRED_ADMIN_ONBOARDING_STEPS = %w[start_posting].freeze
 
   # Each value in the context should be shorter than this
   MAX_CONTEXT_LENGTH = 50_000

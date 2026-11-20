@@ -1432,7 +1432,10 @@ CREATE TABLE public.appearance_changes (
     user_id integer NOT NULL,
     activated_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    styles jsonb DEFAULT '{}'::jsonb NOT NULL,
+    css text DEFAULT ''::text NOT NULL,
+    replaces_theme_id integer
 );
 
 
@@ -26818,6 +26821,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261119153028'),
 ('20261118230947'),
 ('20261118215054'),
 ('20261118184327'),

@@ -4,6 +4,7 @@ RSpec.describe DiscourseWorkflows::NodeIssues do
   subject(:issues) { described_class.for_node(node, node_type) }
 
   let(:configuration) { {} }
+  let(:options) { {} }
   let(:node) do
     DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(
       id: "n1",
@@ -16,15 +17,24 @@ RSpec.describe DiscourseWorkflows::NodeIssues do
   let(:node_type) do
     Class
       .new do
-        def initialize(schema)
+        attr_reader :identifier, :version, :credentials
+
+        def initialize(schema, options)
+          @identifier = "action:test"
+          @version = "1.0"
           @schema = schema
+          @options = options
         end
 
         def property_schema
           @schema
         end
+
+        def load_options_context(context)
+          @options[context.method_name]
+        end
       end
-      .new(schema)
+      .new(schema, options)
   end
 
   context "when all required fields are set" do
@@ -166,6 +176,45 @@ RSpec.describe DiscourseWorkflows::NodeIssues do
 
       it "still reports the nested blank required field" do
         expect(issues.map { |issue| issue[:path] }).to eq(["columns.values.0.header"])
+      end
+    end
+  end
+
+  context "with an option metadata rule on a required field" do
+    let(:schema) do
+      {
+        option_id: {
+          type: :integer,
+          type_options: {
+            load_options_method: "options",
+          },
+        },
+        detail: {
+          type: :string,
+          required: true,
+          display_options: {
+            hide: {
+              option_id: [
+                { condition: { metadata_flag: { collection: "options", flag: "hide_detail" } } },
+              ],
+            },
+          },
+        },
+      }
+    end
+    let(:options) { { "options" => [{ id: 1, hide_detail: true }, { id: 2, hide_detail: false }] } }
+
+    context "when the selected option hides the field" do
+      let(:configuration) { { "option_id" => "1" } }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "when the selected option shows the field" do
+      let(:configuration) { { "option_id" => "2" } }
+
+      it "reports the missing required field" do
+        expect(issues.pluck(:path)).to eq(["detail"])
       end
     end
   end

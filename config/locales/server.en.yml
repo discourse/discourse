@@ -4152,9 +4152,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         %{flag_reason}
 
@@ -4221,9 +4219,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden again.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden again.
 
         %{flag_reason}
 
@@ -4237,9 +4233,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         Your post will remain hidden until a staff member reviews it.
 
@@ -5707,6 +5701,8 @@ en:
 
   appearance_changes:
     dark_palette_name: "%{name} Dark"
+    draft_name: "%{name} (draft)"
+    previous_name: "%{name} (previous)"
 
   color_schemes:
     base_theme_name: "Base"
