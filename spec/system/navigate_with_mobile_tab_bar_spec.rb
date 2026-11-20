@@ -199,16 +199,38 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
 
   it "lets members who can edit a topic's title, category and tags do so from the header" do
     SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_0]
-    topic = Fabricate(:post, user: Fabricate(:user)).topic
+    topic = Fabricate(:post, user: Fabricate(:user), raw: "Scrollable post content\n\n" * 50).topic
+    topic_page = PageObjects::Pages::Topic.new
+    edit_topic_label = I18n.t("js.mobile_tab_bar.edit_topic")
     sign_in(other_user)
 
-    visit(topic.url)
+    topic_page.visit_topic(topic)
 
-    expect(page).to have_no_css("#topic-title")
+    expect(topic_page).to have_topic_title(topic.title)
 
-    find(".d-header .header-title__edit").click
+    page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    expect(page).to have_button(edit_topic_label)
 
-    expect(page).to have_css("#topic-title .edit-topic-title #edit-title")
+    page.execute_script("window.scrollTo(0, 0)")
+    expect(page).to have_no_button(edit_topic_label)
+
+    page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    find_button(edit_topic_label).click
+
+    expect(topic_page).to have_topic_title_editor
+  end
+
+  it "lets the user edit a nested topic's title from the header" do
+    SiteSetting.nested_replies_enabled = true
+    topic = Fabricate(:post, user: current_user, raw: "Scrollable post content\n\n" * 50).topic
+    Fabricate(:nested_topic, topic:)
+    nested_view = PageObjects::Pages::NestedView.new
+
+    nested_view.visit_nested(topic)
+    nested_view.scroll_past_topic_title
+    find_button(I18n.t("js.mobile_tab_bar.edit_topic")).click
+
+    expect(nested_view).to have_topic_title_editor
   end
 
   it "lets the user reply to the topic they're reading from the create button" do
@@ -336,8 +358,9 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     PageObjects::Components::TopicList.new.visit_topic(topic)
 
     expect(page).to have_css(".mobile-tab-bar-back")
-    expect(page).to have_css(".d-header .extra-info-wrapper", text: topic.title)
-    expect(page).to have_no_css(".d-header .title--minimized", visible: :visible)
+    expect(PageObjects::Pages::Topic.new).to have_topic_title(topic.title)
+    expect(page).to have_no_css(".d-header .extra-info-wrapper")
+    expect(page).to have_css(".d-header .title--minimized")
 
     find(".mobile-tab-bar-back").click
 

@@ -203,3 +203,20 @@ html.mobile-tab-bar-visible
     }
   }
 }
+
+@media (display-mode: standalone) {
+  html.mobile-tab-bar-visible.mobile-tab-bar-tucked:not(
+      :has(
+        .mobile-tab-bar :focus-visible,
+        #reply-control.draft,
+        #reply-control.saving
+      )
+    )
+    .container.posts
+    .topic-navigation.with-topic-progress {
+    bottom: max(
+      var(--space-2),
+      min(var(--mobile-tab-bar-bottom-inset), var(--safe-area-inset-bottom))
+    );
+  }
+}

@@ -10688,7 +10688,7 @@ en:
           modal_title: Badge Groupings
         granted_by: Granted By
         granted_at: Granted At
-        reason_help: (A link to a post or topic)
+        reason_help: A link to a post or topic
         save: Save
         delete: Delete
         delete_confirm: Are you sure you want to delete this badge?

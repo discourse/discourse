@@ -3,26 +3,11 @@ import { action } from "@ember/object";
 import { cancel, later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import randomUUID from "discourse/lib/random-uuid";
 import { i18n } from "discourse-i18n";
 import SmoothStreamer from "../lib/smooth-streamer.gjs";
 
 const DISCOVERY_TIMEOUT_MS = 20000;
-
-function buildRequestId(cryptoProvider = globalThis.crypto) {
-  if (cryptoProvider.randomUUID) {
-    return cryptoProvider.randomUUID();
-  }
-
-  const bytes = new Uint8Array(16);
-  cryptoProvider.getRandomValues(bytes);
-  bytes[6] = (bytes[6] % 16) + 64;
-  bytes[8] = (bytes[8] % 64) + 128;
-  const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
-
-  return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex
-    .slice(6, 8)
-    .join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10).join("")}`;
-}
 
 export default class DiscobotDiscoveries extends Service {
   // We use this to retain state after search menu gets closed.
@@ -238,7 +223,7 @@ export default class DiscobotDiscoveries extends Service {
       return;
     }
 
-    const requestId = buildRequestId();
+    const requestId = randomUUID();
     this.loadingDiscoveries = true;
     this.activeRequestId = requestId;
     // a search that may defer its answer is not an ask until the server says so

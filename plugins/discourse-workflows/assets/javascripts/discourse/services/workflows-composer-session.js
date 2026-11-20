@@ -1,4 +1,5 @@
 import Service from "@ember/service";
+import randomUUID from "discourse/lib/random-uuid";
 
 // Saved in the draft too, so a workflow fired by an autosave can answer the
 // composer that saved it.
@@ -16,7 +17,7 @@ export default class WorkflowsComposerSession extends Service {
     // Opening the composer resets its draft fields, or restores a saved draft's,
     // so a mismatch means a new opening.
     if (!id || composer.get(SESSION_ID_FIELD) !== id) {
-      id = crypto.randomUUID();
+      id = randomUUID();
       this.#ids.set(composer, id);
       composer.set(SESSION_ID_FIELD, id);
     }
