@@ -1,0 +1,4 @@
+hopper:
+  hopper_enabled:
+    default: true
+    client: true
