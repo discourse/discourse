@@ -5103,6 +5103,46 @@ ALTER SEQUENCE public.discourse_calendar_post_event_dates_id_seq OWNED BY public
 
 
 --
+-- Name: discourse_event_registrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_event_registrations (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    submission_key uuid NOT NULL,
+    username character varying NOT NULL,
+    email character varying NOT NULL,
+    occurrence_starts_at timestamp(6) without time zone NOT NULL,
+    recurring boolean NOT NULL,
+    definition jsonb NOT NULL,
+    answers jsonb NOT NULL,
+    report_post_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_event_registrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_event_registrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_event_registrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_event_registrations_id_seq OWNED BY public.discourse_event_registrations.id;
+
+
+--
 -- Name: discourse_kanban_board_histories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5333,7 +5373,9 @@ CREATE TABLE public.discourse_post_event_events (
     image_upload_id bigint,
     livestream boolean DEFAULT false NOT NULL,
     recording_url character varying(1000),
-    allow_anonymous_livestream boolean DEFAULT false NOT NULL
+    allow_anonymous_livestream boolean DEFAULT false NOT NULL,
+    registration_form jsonb,
+    registration_topic_id bigint
 );
 
 
@@ -15350,6 +15392,13 @@ ALTER TABLE ONLY public.discourse_calendar_post_event_dates ALTER COLUMN id SET 
 
 
 --
+-- Name: discourse_event_registrations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_event_registrations ALTER COLUMN id SET DEFAULT nextval('public.discourse_event_registrations_id_seq'::regclass);
+
+
+--
 -- Name: discourse_kanban_board_histories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18100,6 +18149,14 @@ ALTER TABLE ONLY public.discourse_calendar_disabled_holidays
 
 ALTER TABLE ONLY public.discourse_calendar_post_event_dates
     ADD CONSTRAINT discourse_calendar_post_event_dates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_event_registrations discourse_event_registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_event_registrations
+    ADD CONSTRAINT discourse_event_registrations_pkey PRIMARY KEY (id);
 
 
 --
@@ -21058,6 +21115,13 @@ CREATE INDEX idx_notifications_speedup_unread_count ON public.notifications USIN
 --
 
 CREATE UNIQUE INDEX idx_on_decision_model_id_usage_date_85aaac4721 ON public.decision_model_credit_daily_usages USING btree (decision_model_id, usage_date);
+
+
+--
+-- Name: idx_on_event_id_user_id_submission_key_d4b3cd1ae8; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_event_id_user_id_submission_key_d4b3cd1ae8 ON public.discourse_event_registrations USING btree (event_id, user_id, submission_key);
 
 
 --
@@ -26984,6 +27048,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261121231304'),
 ('20261120183731'),
 ('20261120090013'),
+('20261119201221'),
 ('20261119190450'),
 ('20261119153028'),
 ('20261118215054'),

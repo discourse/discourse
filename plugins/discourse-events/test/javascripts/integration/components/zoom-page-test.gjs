@@ -67,8 +67,7 @@ function stubMessageBus(context) {
 
 function stubEventApi(context) {
   const api = {
-    joinEvent: sinon.fake.resolves(),
-    updateEventAttendance: sinon.fake.resolves(),
+    rsvp: sinon.fake.resolves(true),
   };
 
   const owner = getOwner(context);
@@ -188,7 +187,7 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     );
 
     assert.true(
-      this.eventApi.joinEvent.calledWithMatch(sinon.match.any, {
+      this.eventApi.rsvp.calledWithMatch(sinon.match.any, {
         status: "going",
       }),
       "the user is entered into the event on the way in"
@@ -204,8 +203,7 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
       <template><LivestreamZoomPage @topic={{this.topic}} /></template>
     );
 
-    assert.false(this.eventApi.joinEvent.called, "no answer is overwritten");
-    assert.false(this.eventApi.updateEventAttendance.called);
+    assert.false(this.eventApi.rsvp.called, "no answer is overwritten");
   });
 
   test("answers once, however often the post changes underneath it", async function (assert) {
@@ -222,7 +220,7 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     post.event = { ...event };
     await settled();
 
-    assert.strictEqual(this.eventApi.joinEvent.callCount, 1);
+    assert.strictEqual(this.eventApi.rsvp.callCount, 1);
   });
 
   test("does not answer for a user the event will not take one from", async function (assert) {
@@ -230,6 +228,6 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
       <template><LivestreamZoomPage @topic={{this.topic}} /></template>
     );
 
-    assert.false(this.eventApi.joinEvent.called);
+    assert.false(this.eventApi.rsvp.called);
   });
 });
