@@ -9,9 +9,15 @@ import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 const INDEX_KEY = "@index";
+
+/** A choice as the add picker's record. */
+function choiceRecord(choice) {
+  return { id: choice, name: choice };
+}
 
 // args: onChange, inputDelimiter, values, allowAny, choices
 /**
@@ -44,6 +50,15 @@ export default class SimpleList extends Component {
 
   get validValues() {
     return this.args.choices?.filter((name) => !this.collection.includes(name));
+  }
+
+  get addOptions() {
+    return this.validValues.map(choiceRecord);
+  }
+
+  get addTexts() {
+    const prompt = i18n("admin.site_settings.simple_list.add_item");
+    return { ariaLabel: prompt, placeholder: prompt };
   }
 
   @action
@@ -185,7 +200,27 @@ export default class SimpleList extends Component {
 
       <div class="simple-list-input">
         {{#if this.isPredefinedList}}
-          {{#if this.validValues}}
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            {{#if this.validValues}}
+              <DSelect
+                class="add-value-input"
+                @onChange={{this.addValue}}
+                @options={{this.addOptions}}
+                @texts={{this.addTexts}}
+                @value={{null}}
+              >
+                <:empty as |state|>
+                  {{#if state.query}}
+                    {{i18n
+                      "admin.site_settings.value_list.not_a_choice"
+                      value=state.query
+                    }}
+                  {{/if}}
+                </:empty>
+              </DSelect>
+            {{/if}}
+          {{else if this.validValues}}
             <ComboBox
               class="add-value-input"
               @content={{this.validValues}}
