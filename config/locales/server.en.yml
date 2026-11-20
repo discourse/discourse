@@ -6209,6 +6209,32 @@ en:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
+  popular_themes:
+    graceful:
+      description: "A light and graceful theme for Discourse."
+    material_design:
+      description: "Inspired by Material Design, this theme comes with several color palettes."
+    mint:
+      description: "A minty colored theme with featured homepage categories and a search banner."
+    simple:
+      description: "Simplified front page design with classic colors and typography."
+    brand_header:
+      description: "Add an extra top header with your logo, navigation links and social icons."
+    custom_header_links:
+      description: "Easily add custom text-based links to the header."
+    category_banners:
+      description: "Show banners on category pages using your existing category details."
+    tag_banners:
+      description: "Show banners on tag pages using your existing tag details."
+    sidebar_theme_toggle:
+      description: "Displays a theme selector in the sidebar menu’s footer provided there is more than one user-selectable theme."
+    header_submenus:
+      description: "Lets you build a header menu with submenus (dropdowns)."
+    table_of_contents:
+      description: "Generates an interactive table of contents on the sidebar of your topic with a simple click in the composer."
+    easy_footer:
+      description: "Add a fully responsive footer without writing any HTML."
+
   design_wizard:
     themes:
       concord:
