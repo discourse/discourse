@@ -46,7 +46,7 @@ RSpec.describe "DSA classification suggestion" do
       review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
 
       expect(modal).to have_selected_rule(advertising_rule[:ground])
-      expect(modal).to have_selected_category(category)
+      expect(modal).to have_accessible_selection("category", category)
     end
   end
 end

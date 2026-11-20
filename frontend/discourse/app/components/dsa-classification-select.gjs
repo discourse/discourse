@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { array, fn } from "@ember/helper";
+import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
@@ -15,6 +15,10 @@ export default class DsaClassificationSelect extends Component {
     );
   }
 
+  get selectionId() {
+    return `${this.args.field.id}-selection`;
+  }
+
   @action
   select(menu, value) {
     this.args.field.set(value);
@@ -24,21 +28,24 @@ export default class DsaClassificationSelect extends Component {
   <template>
     <DMenu
       aria-describedby={{@field.describedBy}}
-      aria-description={{this.selection}}
       aria-invalid={{if @field.error "true"}}
+      aria-labelledby={{concat @field.labelId " " this.selectionId}}
       data-value={{@field.value}}
       id={{@field.id}}
       ...attributes
+      @ariaLabel={{@field.title}}
       @contentClass="form-kit__control-menu-content dsa-classification-options"
       @disabled={{@field.disabled}}
       @fallbackPlacements={{array "top-start"}}
-      @label={{this.selection}}
       @matchTriggerWidth={{true}}
       @modalForMobile={{true}}
       @placement="bottom-start"
       @triggerClass="form-kit__control-menu-trigger dsa-classification-select"
     >
       <:trigger>
+        <span class="d-button-label" id={{this.selectionId}}>
+          {{this.selection}}
+        </span>
         {{dIcon "angle-down"}}
       </:trigger>
       <:content as |menu|>
@@ -46,12 +53,14 @@ export default class DsaClassificationSelect extends Component {
           {{#each @options as |option|}}
             <dropdown.item>
               <DButton
+                aria-current={{if (eq option.id @field.value) "true"}}
                 class={{dConcatClass
                   "btn-flat dsa-classification-option"
                   (if option.description "--with-description")
                 }}
                 data-value={{option.id}}
                 @action={{fn this.select menu option.id}}
+                @suffixIcon={{if (eq option.id @field.value) "check"}}
               >
                 {{#if option.description}}
                   <span class="dsa-classification-option__texts">
