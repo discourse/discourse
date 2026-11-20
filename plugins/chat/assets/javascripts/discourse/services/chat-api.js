@@ -654,6 +654,18 @@ export default class ChatApi extends Service {
     );
   }
 
+  setMessageBroadcast(channelId, messageId) {
+    return this.#postRequest(
+      `/channels/${channelId}/messages/${messageId}/broadcast`
+    );
+  }
+
+  removeMessageBroadcast(channelId, messageId) {
+    return this.#deleteRequest(
+      `/channels/${channelId}/messages/${messageId}/broadcast`
+    );
+  }
+
   async pinnedMessages(channel) {
     const response = await this.#getRequest(`/channels/${channel.id}/pins`);
     const pinnedMessages = response.pinned_messages.map((pin) => {

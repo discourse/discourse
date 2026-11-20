@@ -28,6 +28,40 @@ describe Chat::Publisher do
       end
     end
 
+    context "when the message is a broadcasted thread reply" do
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+
+      before do
+        channel.update!(threading_enabled: true)
+        message_1.update!(thread: thread)
+        message_2.update!(thread: thread, broadcasted: true)
+      end
+
+      it "publishes deletes to both the thread bus and the channel bus" do
+        publishes = MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }
+
+        thread_publish =
+          publishes.find { |p| p.channel == "/chat/#{channel.id}/thread/#{thread.id}" }
+        channel_publish = publishes.find { |p| p.channel == "/chat/#{channel.id}" }
+
+        expect(thread_publish.data["type"]).to eq("delete")
+        expect(channel_publish.data["type"]).to eq("delete")
+      end
+
+      context "when threading is disabled after the broadcast" do
+        before { channel.update!(threading_enabled: false) }
+
+        it "publishes the delete without touching the thread bus" do
+          publishes =
+            MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }
+          channels = publishes.map(&:channel)
+
+          expect(channels).to include("/chat/#{channel.id}")
+          expect(channels).not_to include("/chat/#{channel.id}/thread/#{thread.id}")
+        end
+      end
+    end
+
     context "when the message is in a thread and the channel has threading_enabled" do
       before do
         thread = Fabricate(:chat_thread, channel: channel)

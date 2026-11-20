@@ -135,6 +135,18 @@ module Chat
               )
             SQL
 
+    # Messages that render in the channel's main stream
+    scope :channel_stream, -> { where(<<~SQL) }
+        chat_messages.thread_id IS NULL
+          OR chat_messages.broadcasted
+          OR EXISTS (
+            SELECT 1
+            FROM chat_threads
+            WHERE chat_threads.id = chat_messages.thread_id
+              AND chat_threads.original_message_id = chat_messages.id
+          )
+      SQL
+
     before_save { ensure_last_editor_id }
 
     normalizes :blocks,
@@ -445,6 +457,10 @@ module Chat
       in_thread? && thread&.original_message_id == id
     end
 
+    def channel_stream?
+      !in_thread? || thread_om? || broadcasted?
+    end
+
     def parsed_mentions
       @parsed_mentions ||= Chat::ParsedMentions.new(self)
     end
@@ -539,6 +555,7 @@ end
 #
 #  id              :bigint           not null, primary key
 #  blocks          :jsonb
+#  broadcasted     :boolean          default(FALSE), not null
 #  cooked          :text
 #  cooked_version  :integer
 #  created_by_sdk  :boolean          default(FALSE), not null

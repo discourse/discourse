@@ -3951,7 +3951,8 @@ CREATE TABLE public.chat_messages (
     streaming boolean DEFAULT false NOT NULL,
     excerpt character varying(1000),
     created_by_sdk boolean DEFAULT false NOT NULL,
-    blocks jsonb
+    blocks jsonb,
+    broadcasted boolean DEFAULT false NOT NULL
 );
 
 
@@ -26834,6 +26835,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261110093228'),
 ('20261110093224'),
 ('20261110080540'),
+('20261109184113'),
 ('20261109074217'),
 ('20261109060019'),
 ('20261106020035'),
