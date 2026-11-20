@@ -765,6 +765,9 @@
         "can_review_topic": {
           "type": "boolean"
         },
+        "can_open_topic": {
+          "type": "boolean"
+        },
         "can_close_topic": {
           "type": "boolean"
         },

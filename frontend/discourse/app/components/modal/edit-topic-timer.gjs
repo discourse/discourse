@@ -44,8 +44,9 @@ export default class EditTopicTimer extends Component {
 
   get publicTimerTypes() {
     const types = [];
-    const { closed, category, isPrivateMessage, invisible } =
+    const { closed, category, isPrivateMessage, invisible, details } =
       this.args.model.topic;
+    const mayReopen = details.can_open_topic !== false;
 
     if (!closed) {
       types.push({
@@ -58,7 +59,7 @@ export default class EditTopicTimer extends Component {
       });
     }
 
-    if (closed) {
+    if (closed && mayReopen) {
       types.push({
         id: OPEN_STATUS_TYPE,
         name: i18n("topic.auto_reopen.title"),
@@ -88,14 +89,14 @@ export default class EditTopicTimer extends Component {
       });
     }
 
-    if (closed) {
+    if (closed && mayReopen) {
       types.push({
         id: CLOSE_STATUS_TYPE,
         name: i18n("topic.temp_open.title"),
       });
     }
 
-    if (!closed) {
+    if (!closed && mayReopen) {
       types.push({
         id: OPEN_STATUS_TYPE,
         name: i18n("topic.temp_close.title"),

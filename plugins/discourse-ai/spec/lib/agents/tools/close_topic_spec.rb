@@ -68,6 +68,23 @@ RSpec.describe DiscourseAi::Agents::Tools::CloseTopic do
     expect(topic.reload.closed).to eq(false)
   end
 
+  it "requires the requesting user to have reopening permission" do
+    SiteSetting.tl4_can_reopen_topics = false
+    requester = Fabricate(:user, trust_level: TrustLevel[4])
+    topic.update!(closed: true)
+    requester_context = DiscourseAi::Agents::BotContext.new(user: requester)
+    action_tool =
+      described_class.new(
+        { topic_id: topic.id, closed: false, reason: "Reopening" },
+        bot_user:,
+        llm:,
+        context: requester_context,
+      )
+
+    expect(action_tool.invoke[:status]).to eq("error")
+    expect(topic.reload).to be_closed
+  end
+
   it "posts the reason as a small action when public_reason is true" do
     result =
       tool(
