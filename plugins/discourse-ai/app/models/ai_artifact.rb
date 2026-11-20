@@ -56,11 +56,76 @@ class AiArtifact < ActiveRecord::Base
 
   def self.share_publicly(id:, post:)
     artifact = AiArtifact.find_by(id: id)
-    if artifact&.post&.topic&.id == post.topic.id
-      artifact.metadata ||= {}
-      artifact.metadata[:public] = true
-      artifact.save!
+    return if !artifact
+
+    artifact.with_lock do
+      if artifact.post&.topic_id == post.topic_id
+        artifact.metadata ||= {}
+        artifact.metadata[:public] = true
+        artifact.save!
+      end
     end
+  end
+
+  def self.publicly_available_in(topic, post_ids: nil)
+    guest = Guardian.new
+    if guest.can_see?(topic)
+      posts = topic.posts.secured(guest).where(hidden: false)
+      posts = posts.where(id: post_ids) if post_ids
+      return where(post_id: posts.select(:id))
+    end
+
+    conversation = SharedAiConversation.find_by(target: topic)
+    return none if !conversation&.publicly_visible?
+
+    artifacts = where(post_id: topic.posts.select(:id))
+    if post_ids
+      context_ids = conversation.context.filter_map { |post| post["id"] } & post_ids
+      invalidates_share = topic.posts.where(id: context_ids).where.not(post_number: 1).exists?
+      artifacts = artifacts.where(post_id: post_ids) if !invalidates_share
+    end
+    published_ids = conversation.context.flat_map { |post| Array(post["artifact_ids"]) }
+    artifacts.where(id: published_ids).where("metadata->>'public' = 'true'")
+  end
+
+  def self.handle_posts_move(
+    destination_topic_id:,
+    original_topic_id:,
+    post_id_map:,
+    preserve_original: false
+  )
+    return if preserve_original || post_id_map.blank?
+
+    artifacts = where(post_id: post_id_map.keys).select(:id, :post_id).to_a
+    return if artifacts.empty?
+
+    artifacts.each do |artifact|
+      new_post_id = post_id_map.fetch(artifact.post_id)
+      artifact.update_columns(post_id: new_post_id) if new_post_id != artifact.post_id
+    end
+    destination = Topic.find(destination_topic_id)
+    return if Guardian.new.can_see?(destination)
+
+    artifact_ids = artifacts.map(&:id)
+    where(id: artifact_ids).update_all(
+      "metadata = jsonb_set(COALESCE(metadata, '{}'), '{public}', 'false')",
+    )
+    SharedAiConversation
+      .where(target_type: "Topic", target_id: [original_topic_id, destination_topic_id])
+      .order(:id)
+      .lock
+      .each do |conversation|
+        context =
+          conversation.context.map do |context_post|
+            ids = context_post["artifact_ids"]
+            if ids.is_a?(Array) && ids.intersect?(artifact_ids)
+              context_post.merge("artifact_ids" => ids - artifact_ids)
+            else
+              context_post
+            end
+          end
+        conversation.update_columns(context: context) if context != conversation.context
+      end
   end
 
   def self.unshare_publicly(id:)

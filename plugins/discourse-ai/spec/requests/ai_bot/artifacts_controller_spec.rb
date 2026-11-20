@@ -40,6 +40,192 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
     SiteSetting.ai_artifact_security = "strict"
   end
 
+  describe "#move_warning" do
+    let(:path) { "/discourse-ai/ai-bot/artifacts/move-warning.json" }
+
+    it "reports public access lost by the selected source posts without exposing other topics" do
+      admin = Fabricate(:admin)
+      public_topic = Fabricate(:topic, user: user)
+      public_post = Fabricate(:post, topic: public_topic, user: user)
+      artifact.update!(post: public_post, metadata: { public: true })
+      destination =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      params = {
+        topic_id: public_topic.id,
+        post_ids: [public_post.id],
+        destination_topic_id: destination.id,
+      }
+
+      process(:post, path, params: params)
+      expect(response.status).to eq(403)
+      sign_in(user)
+      process(:post, path, params: params)
+      expect(response.status).to eq(403)
+      sign_in(admin)
+      process(:post, path, params: params)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("count" => 1)
+      process(:post, path, params: params.merge(freeze_original: true))
+      expect(response.parsed_body).to eq("count" => 0)
+
+      now = Time.current
+      Post.insert_all!(
+        (2..1101).map do |number|
+          {
+            topic_id: public_topic.id,
+            user_id: user.id,
+            post_number: number,
+            raw: "Post #{number}",
+            cooked: "<p>Post #{number}</p>",
+            last_version_at: now,
+            created_at: now,
+            updated_at: now,
+          }
+        end,
+      )
+      process(:post, path, params: params.merge(post_ids: public_topic.posts.pluck(:id)))
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("count" => 1)
+      public_topic.posts.last.update!(deleted_at: now)
+      selected_ids = public_topic.posts.with_deleted.pluck(:id)
+      process(:post, path, params: params.merge(post_ids: selected_ids))
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("count" => 1)
+
+      process(:post, path, params: params.merge(destination_topic_id: Fabricate(:topic).id))
+      expect(response.parsed_body).to eq("count" => 0)
+      process(:post, path, params: params.merge(post_ids: [post.id]))
+      expect(response.parsed_body).to eq("count" => 0)
+      public_post.update!(hidden: true)
+      process(:post, path, params: params)
+      expect(response.parsed_body).to eq("count" => 0)
+    end
+
+    it "includes all artifacts when a selected context post invalidates a public conversation share" do
+      post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
+      second_post = Fabricate(:post, topic: topic, user: user)
+      second_artifact =
+        AiArtifact.create!(
+          user: user,
+          post: second_post,
+          name: "Second artifact",
+          html: "<p>Second artifact</p>",
+        )
+      second_post.update!(raw: "[ai-artifact id=\"#{second_artifact.id}\"]")
+      text_post = Fabricate(:post, topic: topic, user: user)
+      conversation = share_topic_publicly(topic)
+      expect(conversation.publicly_visible?).to eq(true)
+      destination = Fabricate(:private_message_topic, user: user)
+      sign_in(Fabricate(:admin))
+      params = {
+        topic_id: topic.id,
+        post_ids: [text_post.id],
+        destination_topic_id: destination.id,
+      }
+
+      process(:post, path, params: params)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("count" => 2)
+      process(:post, path, params: params.merge(all_posts: true).except(:post_ids))
+      expect(response.parsed_body).to eq("count" => 2)
+      process(:post, path, params: params.merge(post_ids: [post.id]))
+      expect(response.parsed_body).to eq("count" => 1)
+      process(
+        :post,
+        path,
+        params: params.except(:destination_topic_id).merge(archetype: "private_message"),
+      )
+      expect(response.parsed_body).to eq("count" => 2)
+    end
+  end
+
+  describe "moving published artifacts" do
+    it "revokes publication when a public source moves to a private topic" do
+      public_topic = Fabricate(:topic, user: user)
+      Fabricate(:post, topic: public_topic, user: user)
+      public_post = Fabricate(:post, topic: public_topic, user: user)
+      artifact.update!(post: public_post, metadata: { public: true, custom: "preserved" })
+      destination =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      Fabricate(:post, topic: destination)
+      admin = Fabricate(:admin)
+
+      get artifact.url
+      expect(response.status).to eq(200)
+      sign_in(admin)
+      PostMover.new(public_topic, admin, [public_post.id]).to_topic(destination.id)
+      expect(artifact.reload.metadata).to eq("public" => false, "custom" => "preserved")
+      expect(artifact.post.topic_id).to eq(destination.id)
+      get artifact.url
+      expect(response.status).to eq(200)
+      delete "/session/#{admin.username}.json"
+      get "/session/current.json"
+      expect(response.status).to eq(404)
+      get artifact.url
+      expect(response.status).to eq(404)
+    end
+
+    it "moves the artifact source with a first post but leaves copies unchanged" do
+      public_topic = Fabricate(:topic, user: user)
+      public_post = Fabricate(:post, topic: public_topic, user: user)
+      artifact.update!(post: public_post, metadata: { public: true })
+      destination =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      Fabricate(:post, topic: destination)
+      admin = Fabricate(:admin)
+
+      PostMover.new(
+        public_topic,
+        admin,
+        [public_post.id],
+        options: {
+          freeze_original: true,
+        },
+      ).to_topic(destination.id)
+      expect(artifact.reload.post_id).to eq(public_post.id)
+      expect(artifact.public?).to eq(true)
+
+      PostMover.new(public_topic, admin, [public_post.id]).to_topic(destination.id)
+      expect(artifact.reload.post_id).not_to eq(public_post.id)
+      expect(artifact.post.topic_id).to eq(destination.id)
+      expect(artifact.public?).to eq(false)
+      get artifact.url
+      expect(response.status).to eq(404)
+    end
+
+    it "keeps publication if a move rolls back or its destination is public" do
+      public_topic = Fabricate(:topic, user: user)
+      Fabricate(:post, topic: public_topic, user: user)
+      public_post = Fabricate(:post, topic: public_topic, user: user)
+      artifact.update!(post: public_post, metadata: { public: true })
+      destination =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      Fabricate(:post, topic: destination)
+      admin = Fabricate(:admin)
+      mover = PostMover.new(public_topic, admin, [public_post.id])
+      allow(DiscourseEvent).to receive(:trigger).and_wrap_original do |original, event, *args|
+        result = original.call(event, *args)
+        if event == :posts_moved
+          expect(artifact.reload.public?).to eq(false)
+          raise "move failed"
+        end
+        result
+      end
+
+      expect { mover.to_topic(destination.id) }.to raise_error("move failed")
+      expect(artifact.reload.public?).to eq(true)
+      expect(public_post.reload.topic_id).to eq(public_topic.id)
+      allow(DiscourseEvent).to receive(:trigger).and_call_original
+
+      public_destination = Fabricate(:topic)
+      Fabricate(:post, topic: public_destination)
+      PostMover.new(public_topic, admin, [public_post.id]).to_topic(public_destination.id)
+      expect(artifact.reload.public?).to eq(true)
+      get artifact.url
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe "#embed" do
     it "renders current and explicit versions without an authenticated bridge even for a signed-in owner" do
       artifact.update!(metadata: { public: true })
@@ -506,14 +692,31 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
       artifact_post = Fabricate(:post, topic: topic, user: user)
       artifact.update!(post: artifact_post)
       artifact_post.update!(raw: "[ai-artifact id=\"#{artifact.id}\"]")
-      share_topic_publicly(topic)
+      other_artifact =
+        AiArtifact.create!(user: user, post: post, name: "Unmoved artifact", html: "<p>Unmoved</p>")
+      original_share = share_topic_publicly(topic)
 
       destination = Fabricate(:private_message_topic, user: user)
       Fabricate(:post, topic: destination, user: user)
       destination_share = share_topic_publicly(destination)
+      [original_share, destination_share].each do |share|
+        context =
+          share.context.map do |context_post|
+            context_post.merge(
+              "artifact_ids" =>
+                (Array(context_post["artifact_ids"]) + [artifact.id, other_artifact.id]).uniq,
+            )
+          end
+        share.update!(context: context)
+      end
       PostMover.new(topic, Fabricate(:admin), [artifact_post.id]).to_topic(destination.id)
-      expect(destination_share.reload.publicly_visible?).to eq(true)
-      expect(artifact.reload.public?).to eq(true)
+      [original_share, destination_share].each do |share|
+        expect(share.reload.publishes_artifact?(artifact.id)).to eq(false)
+        expect(share.publishes_artifact?(other_artifact.id)).to eq(true)
+      end
+      expect(destination_share.publicly_visible?).to eq(true)
+      expect(artifact.reload.public?).to eq(false)
+      artifact.update!(metadata: { public: true })
 
       get artifact.url
       expect(response.status).to eq(404)
@@ -539,7 +742,8 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
       SharedAiConversation.destroy_conversation(original_share)
       destination_share = share_topic_publicly(destination)
       expect(destination_share.publicly_visible?).to eq(true)
-      expect(artifact.reload.public?).to eq(true)
+      expect(artifact.reload.public?).to eq(false)
+      artifact.update!(metadata: { public: true })
 
       private_html = "<p>Private update after the original publication was revoked</p>"
       artifact.update!(html: private_html)

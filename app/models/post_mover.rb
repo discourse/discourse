@@ -25,6 +25,7 @@ class PostMover
     # For now we store a copy of post_ids. If `freeze_original` is present, we will have new post_ids.
     # When we create the new posts, we will pluck out post_ids out of this and replace with updated ids.
     @post_ids_after_move = post_ids
+    @post_id_map = {}
     @move_to_pm = move_to_pm
     @options = options
   end
@@ -156,6 +157,8 @@ class PostMover
       :posts_moved,
       destination_topic_id: destination_topic.id,
       original_topic_id: original_topic.id,
+      post_id_map: @post_id_map,
+      preserve_original: @options[:freeze_original],
     )
     destination_topic
   end
@@ -421,6 +424,9 @@ class PostMover
   end
 
   def store_movement(metadata, new_post)
+    if metadata[:old_topic_id] != destination_topic.id
+      @post_id_map[metadata[:old_post_id]] = new_post.id
+    end
     metadata[:new_post_id] = new_post.id
     metadata[:now] = Time.zone.now
     metadata[:created_new_topic] = @creating_new_topic

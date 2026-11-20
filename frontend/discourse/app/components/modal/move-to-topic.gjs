@@ -11,7 +11,10 @@ import ChooseTopic from "discourse/components/choose-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -171,11 +174,22 @@ export default class MoveToTopic extends Component {
     );
 
     try {
-      let result;
-      if (this.args.model.selectedAllPosts) {
-        result = await mergeTopic(this.args.model.topic.id, mergeOptions);
-      } else {
-        result = await movePosts(this.args.model.topic.id, moveOptions);
+      const result = await applyBehaviorTransformer(
+        "move-to-topic",
+        () =>
+          this.args.model.selectedAllPosts
+            ? mergeTopic(this.args.model.topic.id, mergeOptions)
+            : movePosts(this.args.model.topic.id, moveOptions),
+        {
+          topic: this.args.model.topic,
+          allPosts: this.args.model.selectedAllPosts,
+          options: this.args.model.selectedAllPosts
+            ? mergeOptions
+            : moveOptions,
+        }
+      );
+      if (!result) {
+        return;
       }
 
       this.args.closeModal();

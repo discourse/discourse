@@ -74,6 +74,18 @@ api.registerBehaviorTransformer(
 
 If multiple transformers are registered against a single name, then they will be run in order of registration. The input to valueTransformers will be the value returned by the previous transformer. The `next()` function passed to behaviorTransformers will call the remaining transformers in the chain.
 
+## Moving posts
+
+The `move-to-topic` behavior transformer runs before the move dialog submits a move or merge. Its context contains:
+
+- `topic`: the source topic model.
+- `allPosts`: whether the operation merges the whole topic.
+- `options`: the final move or merge request parameters, including the destination and selected post IDs when applicable.
+
+Middleware can await a confirmation before calling `next()`. Return the result of `next()` to complete the move. Return without calling `next()` to cancel and keep the move dialog open. Errors appear in the move dialog. Server-side permissions must still apply independently of this transformer.
+
+On the server, the `posts_moved` event runs inside the move transaction. Its payload contains `original_topic_id`, `destination_topic_id`, `post_id_map`, and `preserve_original`. The map links source post IDs to destination post IDs, including first-post copies. `preserve_original` identifies copy operations. Event handlers must not assume that a copy removes the source post.
+
 ## Finding Transformers
 
 At the moment there is no centralized documentation for transformers. However, a list of all core transformers can be found in the code [here](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts). You can then search for those names in the core codebase to find where they're called, the context/value, and the expected return type.

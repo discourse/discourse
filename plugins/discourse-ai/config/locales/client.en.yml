@@ -1722,6 +1722,11 @@ en:
           suffix: "in all topics and posts with AI"
 
       ai_artifact:
+        move_warning_title: "Stop public artifact access?"
+        move_warning_message:
+          one: "Moving these posts will stop public access to %{count} artifact. Existing public artifact links will no longer work. Users with access to the destination can still view the artifact. Separate shared snapshots are not affected."
+          other: "Moving these posts will stop public access to %{count} artifacts. Existing public artifact links will no longer work. Users with access to the destination can still view the artifacts. Separate shared snapshots are not affected."
+        move_warning_confirm: "Move and stop public access"
         editor:
           title: "AI artifact"
           edit_options: "Edit options"

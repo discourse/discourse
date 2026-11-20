@@ -4,10 +4,48 @@ module DiscourseAi
   module AiBot
     class ArtifactsController < ApplicationController
       requires_plugin PLUGIN_NAME
+      requires_login only: %i[move_warning]
       before_action :require_site_settings!
 
       skip_before_action :preload_json, :check_xhr, only: %i[show shared embed forum]
       skip_after_action :set_cross_origin_opener_policy_header, only: %i[show shared embed forum]
+
+      def move_warning
+        topic = Topic.find(params.require(:topic_id))
+        guardian.ensure_can_see!(topic)
+        guardian.ensure_can_move_posts!(topic)
+        response.headers["Cache-Control"] = "no-store"
+        return render json: { count: 0 } if params[:freeze_original] == "true"
+
+        post_ids = nil
+        if params[:all_posts] != "true"
+          post_ids = params[:post_ids]
+          if !post_ids.is_a?(Array) || post_ids.size > topic.posts.with_deleted.count ||
+               post_ids.any? { |id| !id.to_s.match?(/\A[1-9]\d{0,18}\z/) }
+            raise Discourse::InvalidParameters.new(:post_ids)
+          end
+          post_ids = post_ids.map(&:to_i)
+        end
+        count = AiArtifact.publicly_available_in(topic, post_ids: post_ids).count
+        return render json: { count: 0 } if count.zero?
+
+        if params[:destination_topic_id].present?
+          destination = Topic.find(params[:destination_topic_id])
+          guardian.ensure_can_create_post_on_topic!(destination)
+        elsif params[:archetype] == Archetype.private_message
+          raise Discourse::InvalidAccess if !guardian.is_staff?
+          destination = Topic.new(archetype: Archetype.private_message)
+        else
+          category =
+            Category.find(params[:category_id].presence || SiteSetting.uncategorized_category_id)
+          if params[:category_id].present?
+            guardian.ensure_can_create_topic_on_category!(category.id)
+          end
+          destination = Topic.new(category: category)
+        end
+
+        render json: { count: Guardian.new.can_see?(destination) ? 0 : count }
+      end
 
       def embed
         raise Discourse::NotFound if !params[:id].to_s.match?(/\A[1-9]\d*\z/)

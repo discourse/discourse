@@ -425,6 +425,15 @@ module DiscourseAi
           name || topic.custom_fields["ai_agent"]
         end
 
+        plugin.on(:posts_moved) do |args|
+          AiArtifact.handle_posts_move(
+            destination_topic_id: args[:destination_topic_id],
+            original_topic_id: args[:original_topic_id],
+            post_id_map: args[:post_id_map],
+            preserve_original: args[:preserve_original],
+          )
+        end
+
         plugin.on(:post_created) do |post, opts, user|
           DiscourseAi::AiBot::Playground.schedule_reply(
             post,

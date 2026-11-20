@@ -76,6 +76,7 @@ DiscourseAi::Engine.routes.draw do
   end
 
   scope module: :ai_bot, path: "/ai-bot/artifacts" do
+    post "/move-warning" => "artifacts#move_warning", :defaults => { format: :json }
     get "/:id/metadata" => "artifacts#metadata", :defaults => { format: :json }
     get "/:id/embed" => "artifacts#embed"
     get "/:id/:version/embed" => "artifacts#embed"

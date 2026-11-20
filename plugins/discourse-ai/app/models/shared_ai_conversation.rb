@@ -17,19 +17,24 @@ class SharedAiConversation < ActiveRecord::Base
   def self.share_conversation(user, target, max_posts: DEFAULT_MAX_POSTS)
     raise "Target must be a topic for now" if !target.is_a?(Topic)
 
-    conversation = find_by(user: user, target: target)
-    conversation_data = build_conversation_data(target, max_posts: max_posts)
+    conversation = nil
+    shared = false
+    target.with_lock do
+      conversation = find_by(user: user, target: target)
+      conversation_data = build_conversation_data(target, max_posts: max_posts)
 
-    shared =
-      if conversation
-        conversation.update(**conversation_data)
-      else
-        conversation = create(user_id: user.id, target: target, **conversation_data)
-        conversation.persisted?
-      end
+      shared =
+        if conversation
+          conversation.update(**conversation_data)
+        else
+          conversation = create(user_id: user.id, target: target, **conversation_data)
+          conversation.persisted?
+        end
+
+      share_artifacts(target, max_posts: max_posts) if shared
+    end
 
     if shared
-      share_artifacts(target, max_posts: max_posts)
       ::Jobs.enqueue(:shared_conversation_adjust_upload_security, conversation_id: conversation.id)
     end
 

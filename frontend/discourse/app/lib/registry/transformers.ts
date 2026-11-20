@@ -21,6 +21,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "custom-homepage-model",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
+  "move-to-topic",
   "post-menu-toggle-like-action",
   "post-stream-error-loading",
   "post-stream-suggested-topics",

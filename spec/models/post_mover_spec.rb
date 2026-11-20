@@ -1138,12 +1138,23 @@ RSpec.describe PostMover do
                 topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
               end
 
-            expect(
-              events.detect do |e|
-                e[:params] ==
-                  [{ destination_topic_id: destination_topic.id, original_topic_id: topic.id }]
-              end,
-            ).to be_present
+            expect(events.map { |event| event[:params] }).to eq(
+              [
+                [
+                  {
+                    destination_topic_id: destination_topic.id,
+                    original_topic_id: topic.id,
+                    post_id_map: {
+                      p1.id => destination_topic.posts.find_by!(post_number: 2).id,
+                      p2.id => p2.id,
+                      p3.id => p3.id,
+                      p4.id => p4.id,
+                    },
+                    preserve_original: nil,
+                  },
+                ],
+              ],
+            )
           end
 
           it "does not try to move small action posts" do
