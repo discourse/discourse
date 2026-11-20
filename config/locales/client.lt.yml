@@ -9555,6 +9555,8 @@ lt:
       site_text:
         search: "Ieškoti teksto arba vertimo raktų"
         search_label: "Paieška"
+        preview:
+          default: "Numatytasis"
         theme: "Tema arba komponentas"
         all_themes: "Visi svetainės tekstai"
         theme_disabled: "Neleidžiama"
@@ -9664,7 +9666,7 @@ lt:
           modal_title: Ženklelių grupavimas
         granted_by: Suteiktas nuo
         granted_at: Suteiktas
-        reason_help: (nuoroda į įrašą ar temą)
+        reason_help: nuoroda į įrašą ar temą
         save: Išsaugoti
         delete: Ištrinti
         delete_confirm: Ar tikrai norite ištrinti šitą ženklelį?

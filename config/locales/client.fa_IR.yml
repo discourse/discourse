@@ -7005,6 +7005,8 @@ fa_IR:
       site_text:
         description: "شما می توانید هر یک از متن های موجود در انجمن خود را سفارشی کنید."
         search_label: "جستجو"
+        preview:
+          default: "پیش‌فرض"
         all_themes: "تمام متن‌های وبگاه"
         theme_disabled: "ازکاراندازی"
         filters: "فیلترها"
@@ -7137,7 +7139,7 @@ fa_IR:
           modal_title: گروه بندی نشان
         granted_by: اعطا شده توسط
         granted_at: اعطا شده در
-        reason_help: (یک لینک به یک نوشته یا موضوع)
+        reason_help: یک لینک به یک نوشته یا موضوع
         save: ذخیره
         delete: حذف
         delete_confirm: آیا مطمئنید که می‌خواهید این نشان را حذف کنید؟

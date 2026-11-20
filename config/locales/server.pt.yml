@@ -1500,16 +1500,6 @@ pt:
     queued_by_staff:
       title: "A Publicação Necessita de Aprovação"
       subject_template: "Publicação ocultada pelo pessoal, aguardando aprovação"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} a dar-lhe conta de que a sua publicação foi ocultada.
-
-        <%{base_url}%{url}>
-
-        A sua publicação permanecerá oculta até que um membro do pessoal a reveja.
-
-        Para orientações adicionais, por favor consulte as nossas [regras da comunidade](%{base_url}/guidelines).
     welcome_user:
       title: "Bem-vindo Utilizador"
       preview: "Bem-vindo a %{site_name}!"

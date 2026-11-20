@@ -126,6 +126,9 @@ zh_CN:
           title: "字体系统"
         colors:
           title: "颜色"
+        design_variables:
+          type: "类型"
+          default: "默认"
         dialog:
           title: "对话框"
         drag_and_drop:

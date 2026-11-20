@@ -8168,6 +8168,8 @@ ug:
       site_text:
         description: "مۇنبىرىڭىزدىكى خالىغان تېكىستنى خاسلاشتۇرالايسىز."
         search_label: "ئىزدە"
+        preview:
+          default: "كۆڭۈلدىكى"
         theme_disabled: "چەكلەندى"
         title: "بېكەت تېكىستى"
         edit: "تەھرىر"
@@ -8319,7 +8321,7 @@ ug:
           modal_title: تارتۇق گۇرۇپپىسى
         granted_by: ئىجازەت بەرگۈچى
         granted_at: ئىجازەت ۋاقتى
-        reason_help: (يازما ياكى تېمىغا ئۇلىنىش)
+        reason_help: يازما ياكى تېمىغا ئۇلىنىش
         save: ساقلا
         delete: ئۆچۈر
         delete_confirm: بۇ تارتۇقنى راستتىنلا ئۆچۈرەمسىز؟

@@ -9181,6 +9181,8 @@ fr:
       site_text:
         description: "Vous pouvez personnaliser n'importe quel texte de votre forum."
         search_label: "Recherche"
+        preview:
+          default: "Par défaut"
         theme_disabled: "Désactivées"
         filters: "Filtres"
         status:
@@ -9360,7 +9362,7 @@ fr:
           modal_title: Groupes de badges
         granted_by: Attribué par
         granted_at: Attribué à
-        reason_help: (Lien vers un message ou un sujet)
+        reason_help: Lien vers un message ou un sujet
         save: Enregistrer
         delete: Supprimer
         delete_confirm: Voulez-vous vraiment supprimer ce badge ?

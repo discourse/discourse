@@ -7935,6 +7935,8 @@ vi:
       site_text:
         description: "Bạn có thể tùy chỉnh bất kỳ văn bản nào trên diễn đàn của mình."
         search_label: "Tìm"
+        preview:
+          default: "Mặc định"
         theme_disabled: "Vô hiệu hóa"
         filters: "Bộ lọc"
         title: "Văn bản trang web"
@@ -8093,7 +8095,7 @@ vi:
           modal_title: Nhóm huy hiệu
         granted_by: Trao bởi
         granted_at: Đã trao
-        reason_help: (Link của tút hoặc chủ đề)
+        reason_help: Link của tút hoặc chủ đề
         save: Lưu
         delete: Xóa
         delete_confirm: Bạn có chắc chắn muốn xóa huy hiệu này?

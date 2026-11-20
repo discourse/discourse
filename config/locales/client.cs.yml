@@ -8781,6 +8781,8 @@ cs:
       site_text:
         description: "Můžete přizpůsobit libovolný text na vašem fóru."
         search_label: "Vyhledat"
+        preview:
+          default: "Výchozí"
         theme_disabled: "Vypnuto"
         filters: "Filtry"
         title: "Texty"
@@ -8952,7 +8954,7 @@ cs:
           modal_title: Skupiny odznaků
         granted_by: Uděleno
         granted_at: Uděleno v
-        reason_help: (Odkaz na příspěvek nebo téma)
+        reason_help: Odkaz na příspěvek nebo téma
         save: Uložit
         delete: Smazat
         delete_confirm: Určitě chcete tento oznak smazat?

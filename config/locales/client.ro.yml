@@ -5643,6 +5643,8 @@ ro:
       site_text:
         description: "Poți personaliza orice text de pe forumul tău."
         search_label: "Caută"
+        preview:
+          default: "Implicit"
         theme_disabled: "Dezactivate"
         filters: "Filtre"
         title: "Texte site"
@@ -5744,7 +5746,7 @@ ro:
           modal_title: Grupuri ecusoane
         granted_by: Acordat de
         granted_at: Acordat la
-        reason_help: (O legătură către o postare sau un subiect)
+        reason_help: O legătură către o postare sau un subiect
         save: Salvează
         delete: Șterge
         delete_confirm: Ești sigur că vrei să ștergi acest ecuson?
