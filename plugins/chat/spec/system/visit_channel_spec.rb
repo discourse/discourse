@@ -15,7 +15,7 @@ RSpec.describe "Visit channel" do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
-  before { chat_system_bootstrap }
+  before { chat_system_bootstrap(current_user) }
 
   context "when chat disabled" do
     before do
@@ -114,17 +114,12 @@ RSpec.describe "Visit channel" do
         context "when category channel" do
           fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
-          it "allows to join it" do
-            chat.visit_channel(category_channel_1)
-
-            expect(page).to have_content(I18n.t("js.chat.channel_settings.join"))
-          end
-
-          it "shows a preview of the channel" do
+          it "shows the channel preview with the option to join" do
             chat.visit_channel(category_channel_1)
 
             expect(page).to have_content(category_channel_1.name)
             expect(channel_page.messages).to have_message(id: message_1.id)
+            expect(page).to have_content(I18n.t("js.chat.channel_settings.join"))
           end
 
           context "with a thread" do
@@ -166,27 +161,15 @@ RSpec.describe "Visit channel" do
 
           before { category_channel_1.add(current_user) }
 
-          it "doesn’t ask to join it" do
-            chat.visit_channel(category_channel_1)
+          it "opens the canonical channel URL without asking the member to join" do
+            visit("/chat/c/-/#{category_channel_1.id}")
 
-            expect(page).to have_no_content(I18n.t("js.chat.channel_settings.join_channel"))
-          end
-
-          it "shows a preview of the channel" do
-            chat.visit_channel(category_channel_1)
-
+            expect(page).to have_current_path(
+              "/chat/c/#{category_channel_1.slug}/#{category_channel_1.id}",
+            )
             expect(page).to have_content(category_channel_1.name)
             expect(channel_page.messages).to have_message(id: message_1.id)
-          end
-
-          context "when URL doesn’t contain slug" do
-            it "redirects to correct URL" do
-              visit("/chat/c/-/#{category_channel_1.id}")
-
-              expect(page).to have_current_path(
-                "/chat/c/#{category_channel_1.slug}/#{category_channel_1.id}",
-              )
-            end
+            expect(page).to have_no_content(I18n.t("js.chat.channel_settings.join_channel"))
           end
 
           context "when visiting a specific channel message ID then navigating to another channel" do
@@ -217,26 +200,14 @@ RSpec.describe "Visit channel" do
             Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user)
           end
 
-          it "doesn't ask to join it" do
-            chat.visit_channel(dm_channel_1)
+          it "opens the canonical DM URL without asking the member to join" do
+            visit("/chat/c/-/#{dm_channel_1.id}")
 
-            expect(page).to have_no_content(I18n.t("js.chat.channel_settings.join_channel"))
-          end
-
-          it "shows a preview of the channel" do
-            chat.visit_channel(dm_channel_1)
-
+            expect(page).to have_current_path(
+              "/chat/c/#{Slug.for(dm_channel_1.title(current_user))}/#{dm_channel_1.id}",
+            )
             expect(channel_page.messages).to have_message(id: message_1.id)
-          end
-
-          context "when URL doesn't contain slug" do
-            it "redirects to correct URL" do
-              visit("/chat/c/-/#{dm_channel_1.id}")
-
-              expect(page).to have_current_path(
-                "/chat/c/#{Slug.for(dm_channel_1.title(current_user))}/#{dm_channel_1.id}",
-              )
-            end
+            expect(page).to have_no_content(I18n.t("js.chat.channel_settings.join_channel"))
           end
         end
 
