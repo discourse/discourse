@@ -282,6 +282,8 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def log_on_user(user, session, cookie_jar, opts = {})
+    user.unstage!
+
     @env[USER_TOKEN_KEY] = @user_token =
       UserAuthToken.generate!(
         user_id: user.id,
@@ -294,7 +296,6 @@ class Auth::DefaultCurrentUserProvider
       )
 
     set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
-    user.unstage!
 
     make_developer_admin(user)
     bootstrap_first_admin(user)

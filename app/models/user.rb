@@ -163,6 +163,9 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
+  validates :email,
+            email: true,
+            if: -> { will_save_change_to_staged?(from: true, to: false) && !skip_email_validation }
   validates :validatable_user_fields_values,
             watched_words: true,
             unless: :should_skip_user_fields_validation?
