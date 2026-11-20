@@ -72,7 +72,7 @@ RSpec.describe AboutController do
       end
 
       it "localizes JSON responses from Accept-Language for clients classified as crawlers" do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.set_locale_from_accept_language_header = true
         SiteSetting.content_localization_crawler_param = true
         SiteSetting.content_localization_supported_locales = "ja"

@@ -41,6 +41,20 @@ module PageObjects
         self
       end
 
+      def remove_list_value(setting_name, value)
+        selector = "#{setting_row_selector(setting_name)} .select-kit"
+        PageObjects::Components::SelectKit.new(selector).expand
+        find("#{selector} .selected-choice[data-value='#{value}']").click
+        PageObjects::Components::SelectKit.new(selector).collapse
+        self
+      end
+
+      def has_list_values?(setting_name, values)
+        has_css?(
+          "#{setting_row_selector(setting_name)} .select-kit-header[data-value='#{values.join(",")}']",
+        )
+      end
+
       def select_enum_value(setting_name, value)
         enum_setting(setting_name).select(value)
         self

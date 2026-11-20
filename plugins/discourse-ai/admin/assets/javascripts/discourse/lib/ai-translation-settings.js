@@ -27,7 +27,7 @@ export const TRANSLATION_SETTING_GROUPS = [
     key: "readers",
     settings: [
       "content_localization_enabled",
-      "allow_user_locale",
+      "allowed_user_locales",
       "content_localization_language_switcher",
       "set_locale_from_param",
       "content_localization_crawler_param",
@@ -53,8 +53,8 @@ export const TRANSLATION_SETTING_GROUPS = [
 // Settings that are rejected unless another setting on this page is on, so they
 // are only offered once it is.
 const REQUIRED_SETTINGS = {
-  content_localization_language_switcher: "allow_user_locale",
-  set_locale_from_param: "allow_user_locale",
+  content_localization_language_switcher: "allowed_user_locales",
+  set_locale_from_param: "allowed_user_locales",
   content_localization_crawler_param: "set_locale_from_param",
 };
 
@@ -64,6 +64,9 @@ const REQUIRED_SETTINGS = {
  */
 export function translationSettingAvailable(name, data) {
   const required = REQUIRED_SETTINGS[name];
+  if (required === "allowed_user_locales") {
+    return !!data.allowed_user_locales;
+  }
   return (
     !required ||
     (isSettingValueTrue(data[required]) &&

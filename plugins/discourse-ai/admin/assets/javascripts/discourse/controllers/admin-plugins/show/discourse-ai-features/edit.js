@@ -40,6 +40,8 @@ const CREATE_CHOICE_LINKS = {
 };
 
 export default class AdminPluginsShowDiscourseAiFeaturesEditController extends Controller {
+  @service dialog;
+  @service siteSettings;
   @service toasts;
   @service router;
 
@@ -133,7 +135,11 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
       data,
       this.formApi,
       undefined,
-      { isVisible: (setting) => this.isSettingVisible(setting, data) }
+      {
+        dialog: this.dialog,
+        siteSettings: this.siteSettings,
+        isVisible: (setting) => this.isSettingVisible(setting, data),
+      }
     );
 
     if (success) {
@@ -143,7 +149,7 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
       });
 
       this.router.refresh("adminPlugins.show.discourse-ai-features");
-    } else {
+    } else if (success === false) {
       this.toasts.error({
         data: {
           message: i18n("discourse_ai.features.settings_save_error"),

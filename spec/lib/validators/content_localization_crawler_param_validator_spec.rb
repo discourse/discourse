@@ -14,7 +14,7 @@ describe ContentLocalizationCrawlerParamValidator do
   end
 
   it "allows enabling when locale params are enabled" do
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
     SiteSetting.set_locale_from_param = true
 
     expect(validator.valid_value?("t")).to eq(true)

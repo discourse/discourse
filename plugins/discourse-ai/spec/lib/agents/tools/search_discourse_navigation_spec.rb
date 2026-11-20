@@ -145,18 +145,18 @@ RSpec.describe DiscourseAi::Agents::Tools::SearchDiscourseNavigation do
           title: "discourse_ai.ai_bot.navigation.settings.title",
           description: "discourse_ai.ai_bot.navigation.settings.description",
           keywords: ["example-subscription"],
-        ) { |guardian| guardian.user.id == admin.id && SiteSetting.allow_user_locale }
+        ) { |guardian| guardian.user.id == admin.id && SiteSetting.allowed_user_locales.present? }
 
         SiteSetting.discourse_sample_plugin_enabled = true
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         expect(search("example-subscription")[:destinations].pluck(:id, :url)).to eq(
           [["navigation-test:portal", "#{Discourse.base_url}/admin/example-portal"]],
         )
 
-        SiteSetting.allow_user_locale = false
+        SiteSetting.allowed_user_locales = ""
         expect(search("example-subscription")[:destinations]).to eq([])
 
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.discourse_sample_plugin_enabled = false
         expect(search("example-subscription")[:destinations]).to eq([])
       ensure

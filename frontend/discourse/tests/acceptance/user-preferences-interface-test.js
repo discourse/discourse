@@ -85,6 +85,42 @@ acceptance("User Preferences - Interface", function (needs) {
     });
   });
 
+  test("limits interface choices and preserves the saved language", async function (assert) {
+    await visit("/");
+    const owner = getOwner(this);
+    Object.assign(owner.lookup("service:site-settings"), {
+      allowed_user_locales: "ja",
+      default_locale: "en",
+      content_localization_enabled: true,
+      available_locales: [
+        { name: "English", value: "en" },
+        { name: "French", value: "fr" },
+        { name: "German", value: "de" },
+        { name: "日本語", value: "ja" },
+      ],
+    });
+    await visit("/u/eviltrout/preferences/interface");
+    owner.lookup("controller:preferences/interface").model.set("locale", "de");
+    await settled();
+
+    const interfaceLanguage = selectKit("#locale-selector");
+    assert.strictEqual(interfaceLanguage.header().value(), "de");
+    await interfaceLanguage.expand();
+    assert.dom('#locale-selector-body [data-value="ja"]').exists();
+    assert.dom('#locale-selector-body [data-value="en"]').exists();
+    assert.dom('#locale-selector-body [data-value="fr"]').doesNotExist();
+    await interfaceLanguage.collapse();
+
+    await selectKit("#understood-languages-selector").expand();
+    assert
+      .dom('#understood-languages-selector-body [data-value="fr"]')
+      .exists();
+    await selectKit("#understood-languages-selector").collapse();
+
+    await click(".save-changes");
+    assert.strictEqual(lastUserData.locale, "de");
+  });
+
   test("saves the selected theme", async function (assert) {
     Site.current().set("user_themes", [
       { theme_id: 1, name: "A Theme", default: true },
@@ -117,7 +153,7 @@ acceptance("User Preferences - Interface", function (needs) {
 acceptance("Content language preferences", function (needs) {
   needs.user();
   needs.settings({
-    allow_user_locale: true,
+    allowed_user_locales: "all",
     available_locales: [
       { name: "English", value: "en" },
       { name: "Japanese (日本語)", value: "ja" },

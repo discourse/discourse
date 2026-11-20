@@ -582,7 +582,7 @@ class BadgeGranter
   end
 
   def self.notification_locale(locale)
-    use_default_locale = !SiteSetting.allow_user_locale || locale.blank?
+    use_default_locale = SiteSetting.allowed_user_locales.blank? || locale.blank?
     use_default_locale ? SiteSetting.default_locale : locale
   end
 

@@ -42,10 +42,10 @@ RSpec.describe SiteSetting::Update do
       end
 
       context "when the site setting is a boolean and the new value has not been coerced to a boolean" do
-        let(:setting_name) { :allow_user_locale }
+        let(:setting_name) { :allow_uncategorized_topics }
         let(:new_value) { "false" }
 
-        before { SiteSetting.allow_user_locale = false }
+        before { SiteSetting.allow_uncategorized_topics = false }
 
         it "does not create a staff action log" do
           expect { result }.to not_change { UserHistory.count }
@@ -181,14 +181,14 @@ RSpec.describe SiteSetting::Update do
     end
 
     context "when updating dependent settings" do
-      before { SiteSetting.allow_user_locale = false }
+      before { SiteSetting.allowed_user_locales = "" }
 
       let(:settings) do
         [
           # The first setting depends on the second one, which will fail
           # unless we re-order them before updating.
           { setting_name: "set_locale_from_param", value: true },
-          { setting_name: "allow_user_locale", value: true },
+          { setting_name: "allowed_user_locales", value: "all" },
         ]
       end
 

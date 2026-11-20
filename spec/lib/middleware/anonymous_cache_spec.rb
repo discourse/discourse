@@ -102,7 +102,7 @@ RSpec.describe Middleware::AnonymousCache do
         expect(none).to eq(french2)
         expect(none).to eq(english)
 
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.set_locale_from_accept_language_header = true
 
         french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
@@ -120,7 +120,7 @@ RSpec.describe Middleware::AnonymousCache do
 
       it "keys on the locale cookie when the language switcher is enabled" do
         SiteSetting.default_locale = "en"
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.set_locale_from_cookie = false
         SiteSetting.content_localization_supported_locales = "es|fr"
         SiteSetting.content_localization_enabled = true
@@ -134,7 +134,7 @@ RSpec.describe Middleware::AnonymousCache do
 
       it "keys on the same locale the request renders in" do
         SiteSetting.default_locale = "en"
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.content_localization_supported_locales = "es"
         SiteSetting.content_localization_enabled = true
         SiteSetting.content_localization_language_switcher = "all"
@@ -146,7 +146,7 @@ RSpec.describe Middleware::AnonymousCache do
       end
 
       it "keys locale param URLs on the locale the plain URL serves when crawler URLs are localized" do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.set_locale_from_param = true
         SiteSetting.set_locale_from_accept_language_header = true
         SiteSetting.content_localization_enabled = true
@@ -165,7 +165,7 @@ RSpec.describe Middleware::AnonymousCache do
       end
 
       it "keys blank locale param URLs on the locale the plain URL serves when crawler URLs are localized" do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         SiteSetting.set_locale_from_param = true
         SiteSetting.set_locale_from_accept_language_header = true
         SiteSetting.content_localization_enabled = true

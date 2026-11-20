@@ -1,4 +1,4 @@
 email,locale,team
 test@example.com,de,red
-test2@example.com,pl,blue
+test2@example.com,pl_PL,blue
 test3@example.com,,red

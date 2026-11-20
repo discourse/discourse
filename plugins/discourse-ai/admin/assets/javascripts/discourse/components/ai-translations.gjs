@@ -34,6 +34,7 @@ import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-p
 
 export default class AiTranslations extends Component {
   @service aiCredits;
+  @service dialog;
   @service router;
   @service siteSettings;
   @service toasts;
@@ -232,7 +233,11 @@ export default class AiTranslations extends Component {
           this.siteSettings[key] = value;
         }
       },
-      { isVisible: (setting) => this.isSettingVisible(setting, data) }
+      {
+        dialog: this.dialog,
+        siteSettings: this.siteSettings,
+        isVisible: (setting) => this.isSettingVisible(setting, data),
+      }
     );
 
     if (success) {
@@ -240,7 +245,7 @@ export default class AiTranslations extends Component {
         data: { message: i18n("saved") },
         duration: "short",
       });
-    } else {
+    } else if (success === false) {
       this.toasts.error({
         data: {
           message: i18n("discourse_ai.translations.settings_save_error"),

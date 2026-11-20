@@ -64,7 +64,7 @@ describe "Content Localization" do
 
   context "when the feature is enabled for English and Japanese" do
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_allowed_groups =
         "#{Group::AUTO_GROUPS[:admins]}|#{jap_group.id}"
@@ -135,7 +135,7 @@ describe "Content Localization" do
       expect(modal).to be_automatic_translation_enabled
       modal.close
 
-      SiteSetting.allow_user_locale = false
+      SiteSetting.allowed_user_locales = ""
       topic_page.visit_topic(topic)
       modal = topic_page.open_content_language_preferences
       expect(modal).to have_read_only_interface_language("English")
@@ -816,7 +816,7 @@ describe "Content Localization" do
     end
 
     before do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}"
       SiteSetting.content_localization_supported_locales = "en|ja"

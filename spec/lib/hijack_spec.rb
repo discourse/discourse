@@ -249,7 +249,7 @@ RSpec.describe Hijack do
     end
 
     it "uses the current user's locale for translations" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       test_current_user.update!(locale: "es")
       test_translation = nil
 

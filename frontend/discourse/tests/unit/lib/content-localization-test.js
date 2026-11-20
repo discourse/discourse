@@ -67,7 +67,7 @@ module("Unit | Lib | content-localization", function (hooks) {
   test("resolves whether the language switcher is available", function (assert) {
     const settings = {
       content_localization_enabled: true,
-      allow_user_locale: true,
+      allowed_user_locales: "all",
       content_localization_language_switcher: "all",
       content_localization_supported_locales: "es|fr",
     };
@@ -98,7 +98,7 @@ module("Unit | Lib | content-localization", function (hooks) {
       "it requires content localization"
     );
     assert.false(
-      languageSwitcherEnabled({ ...settings, allow_user_locale: false }),
+      languageSwitcherEnabled({ ...settings, allowed_user_locales: "" }),
       "it requires user locales to be allowed"
     );
     assert.false(

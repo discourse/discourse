@@ -3401,6 +3401,8 @@ en:
       disabled: "Do not display"
       sidebar_footer: "Display in sidebar footer"
       header: "Display in header"
+    allowed_user_locales:
+      all: "All languages"
     category_scope:
       all: "All public and private categories"
       public: "Public categories"
@@ -10637,6 +10639,9 @@ en:
           add_types_toast: "%{types} file types added"
         mandatory_group: "Group is mandatory"
         requires_confirmation_messages:
+          allowed_user_locales:
+            prompt: "Users who use a removed language will be reset to the site's default language. Continue?"
+            confirm: "Remove languages and reset users"
           default:
             prompt: "Changing this setting may have far-reaching or unintended consequences for your site. Are you sure you want to proceed?"
             confirm: "Yes, I'm sure"

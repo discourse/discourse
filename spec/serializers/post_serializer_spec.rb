@@ -199,7 +199,7 @@ RSpec.describe PostSerializer do
     before { post.user.update!(locale: "ja") }
 
     it "includes the author's locale for admins only when user locale is enabled" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
 
       expect(described_class.new(post, scope: Guardian.new(admin), root: false).as_json).to include(
         user_locale: "ja",
@@ -219,7 +219,7 @@ RSpec.describe PostSerializer do
     end
 
     it "omits the author's locale when user locale is disabled" do
-      SiteSetting.allow_user_locale = false
+      SiteSetting.allowed_user_locales = ""
 
       expect(described_class.new(post, scope: Guardian.new(admin), root: false).as_json).not_to(
         have_key(:user_locale),

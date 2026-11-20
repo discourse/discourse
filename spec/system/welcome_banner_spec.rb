@@ -59,7 +59,7 @@ describe "Welcome banner" do
       context "with `non-en` default locale and `en` interface locale" do
         before do
           SiteSetting.default_locale = "uk"
-          SiteSetting.allow_user_locale = true
+          SiteSetting.allowed_user_locales = "all"
         end
 
         it "hides subheader if active locale key is missing and fallback `en` translation is an empty string" do

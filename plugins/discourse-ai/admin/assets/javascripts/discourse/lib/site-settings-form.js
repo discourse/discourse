@@ -2,6 +2,7 @@ import SiteSetting, {
   isSettingValueTrue,
 } from "discourse/admin/models/site-setting";
 import { extractError } from "discourse/lib/ajax-error";
+import confirmUserLocaleRemoval from "discourse/lib/confirm-user-locale-removal";
 
 /**
  * Helpers for FormKit forms that edit site settings, one field per setting.
@@ -39,7 +40,9 @@ export function isSettingVisible(settings, setting, data) {
     const allowedValues = setting.depends_on_values?.[name];
     return allowedValues
       ? allowedValues.map(String).includes(String(value))
-      : isSettingValueTrue(value);
+      : parent.type === "list"
+        ? !!value
+        : isSettingValueTrue(value);
   });
 }
 
@@ -57,16 +60,36 @@ export function isSettingVisible(settings, setting, data) {
  * @param {Object} [options]
  * @param {(setting: SiteSetting) => boolean} [options.isVisible] - settings that
  *   fail this check are left untouched
- * @returns {Promise<boolean>} whether every changed setting was saved
+ * @returns {Promise<boolean | undefined>} success, failure, or cancellation
  */
 export async function saveSettings(
   settings,
   data,
   formApi,
   onSaved,
-  { isVisible } = {}
+  { isVisible, dialog, siteSettings } = {}
 ) {
   formApi?.removeErrors();
+  const userLocales = findSetting(settings, "allowed_user_locales");
+  let userLocaleReset;
+  if (
+    userLocales &&
+    Object.hasOwn(data, "allowed_user_locales") &&
+    (!isVisible || isVisible(userLocales)) &&
+    !isSameSettingValue(userLocales.value, data.allowed_user_locales)
+  ) {
+    userLocaleReset = await confirmUserLocaleRemoval(
+      dialog,
+      siteSettings,
+      userLocales.value,
+      data.allowed_user_locales,
+      data.default_locale
+    );
+    if (userLocaleReset === false) {
+      return;
+    }
+  }
+
   let success = true;
 
   for (const setting of settings) {
@@ -80,7 +103,10 @@ export async function saveSettings(
     }
 
     try {
-      await SiteSetting.update(key, value);
+      await SiteSetting.update(key, value, {
+        updateExistingUsers:
+          key === "allowed_user_locales" && userLocaleReset === true,
+      });
       setting.value = value;
       onSaved?.(key, value);
     } catch (error) {

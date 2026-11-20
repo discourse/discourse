@@ -88,7 +88,7 @@ module("Integration | Component | AiTranslations", function (hooks) {
     const values = {
       content_localization_supported_locales: "en|fr",
       content_localization_enabled: false,
-      allow_user_locale: true,
+      allowed_user_locales: "all",
       content_localization_language_switcher: "none",
       set_locale_from_param: false,
       content_localization_crawler_param: false,
@@ -116,6 +116,17 @@ module("Integration | Component | AiTranslations", function (hooks) {
         default: "",
       })
     );
+    const interfaceLocales = settings.find(
+      (setting) => setting.setting === "allowed_user_locales"
+    );
+    interfaceLocales.type = "list";
+    interfaceLocales.list_type = "locale";
+    interfaceLocales.allow_any = false;
+    interfaceLocales.valid_values = [
+      { name: "All languages", value: "all" },
+      { name: "English", value: "en" },
+      { name: "French", value: "fr" },
+    ];
     const scope = settings.find(
       (setting) => setting.setting === "ai_translation_category_scope"
     );
@@ -667,7 +678,12 @@ module("Integration | Component | AiTranslations", function (hooks) {
 
     assert.dom("[data-name='content_localization_crawler_param']").exists();
 
-    await click("[data-name='allow_user_locale'] input");
+    const interfaceLocales = selectKit(
+      "[data-name='allowed_user_locales'] .multi-select"
+    );
+    await interfaceLocales.expand();
+    await interfaceLocales.deselectItemByValue("all");
+    await interfaceLocales.collapse();
 
     for (const name of [
       "set_locale_from_param",
@@ -772,17 +788,29 @@ module("Integration | Component | AiTranslations", function (hooks) {
 
   test("does not submit a dependent setting that a parent change hid", async function (assert) {
     const updates = [];
+    let acknowledged;
     pretender.put("/admin/site_settings/:name", (request) => {
-      updates.push([
-        request.params.name,
-        new URLSearchParams(request.requestBody).get(request.params.name),
-      ]);
+      const body = new URLSearchParams(request.requestBody);
+      if (request.params.name === "allowed_user_locales") {
+        acknowledged = body.get("update_existing_user");
+      }
+      updates.push([request.params.name, body.get(request.params.name)]);
       return response({});
     });
 
-    await render(<template><AiTranslations @model={{this.model}} /></template>);
+    await render(
+      <template>
+        <DialogHolder /><AiTranslations @model={{this.model}} />
+      </template>
+    );
+    await form().field("content_localization_enabled").toggle();
     await form().field("content_localization_language_switcher").fillIn("all");
-    await form().field("allow_user_locale").toggle();
+    const interfaceLocales = selectKit(
+      "[data-name='allowed_user_locales'] .multi-select"
+    );
+    await interfaceLocales.expand();
+    await interfaceLocales.deselectItemByValue("all");
+    await interfaceLocales.collapse();
 
     assert
       .form()
@@ -790,10 +818,28 @@ module("Integration | Component | AiTranslations", function (hooks) {
       .doesNotExist("the switcher is no longer offered");
 
     await form().submit();
+    assert
+      .dom(".dialog-body")
+      .includesText(
+        i18n(
+          "admin.site_settings.requires_confirmation_messages.allowed_user_locales.prompt"
+        )
+      );
+    assert.strictEqual(
+      updates.length,
+      0,
+      "nothing is saved before confirmation"
+    );
+    await click(".dialog-footer .btn-default");
+    assert.deepEqual(updates, [], "cancelling leaves every setting unsaved");
 
+    await form().submit();
+    await click(".dialog-footer .btn-primary");
+
+    assert.strictEqual(acknowledged, "true");
     assert.deepEqual(
       Object.fromEntries(updates),
-      { allow_user_locale: "false" },
+      { content_localization_enabled: "true", allowed_user_locales: "" },
       "the hidden setting's stale draft value is not submitted"
     );
     assert
