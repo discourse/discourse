@@ -49,6 +49,7 @@ RSpec.describe DiscourseAi::Embeddings::Strategies::Truncation do
           raw: "secret staff whisper content",
         )
       hidden_post = Fabricate(:post, topic: topic, hidden: true, raw: "hidden flagged post content")
+      open_ai_embedding_def.update!(embed_prompt: prefix)
 
       prepared_topic_text = truncation.prepare_target_text(topic, open_ai_embedding_def)
 

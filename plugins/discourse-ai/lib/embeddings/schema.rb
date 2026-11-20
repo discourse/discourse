@@ -106,7 +106,7 @@ module DiscourseAi
           SELECT *
           FROM #{table}
           WHERE
-            model_id = :vid AND strategy_id = :vsid
+            model_id = :vid AND strategy_id = :vsid AND strategy_version >= :minimum_strategy_version
           ORDER BY
             embeddings::halfvec(#{dimensions}) #{pg_function} '[:query_embedding]'::halfvec(#{dimensions})
           LIMIT 1
@@ -114,6 +114,7 @@ module DiscourseAi
           query_embedding: embedding,
           vid: vector_def.id,
           vsid: vector_def.strategy_id,
+          minimum_strategy_version:,
         ).first
       end
 
@@ -125,12 +126,14 @@ module DiscourseAi
           WHERE
             model_id = :vid AND
             strategy_id = :vsid AND
+            strategy_version >= :minimum_strategy_version AND
             #{target_column} = :target_id
           LIMIT 1
         SQL
           target_id: target.id,
           vid: vector_def.id,
           vsid: vector_def.strategy_id,
+          minimum_strategy_version:,
         ).first
       end
 
@@ -160,9 +163,10 @@ module DiscourseAi
         SQL
 
         builder.where(
-          "model_id = :model_id AND strategy_id = :strategy_id",
+          "model_id = :model_id AND strategy_id = :strategy_id AND strategy_version >= :minimum_strategy_version",
           model_id: vector_def.id,
           strategy_id: vector_def.strategy_id,
+          minimum_strategy_version:,
         )
 
         yield(builder) if block_given?
@@ -204,6 +208,7 @@ module DiscourseAi
             WHERE
               model_id = :vid AND
               strategy_id = :vsid AND
+              strategy_version >= :minimum_strategy_version AND
               #{target_column} = :target_id
             LIMIT 1
           )
@@ -229,7 +234,9 @@ module DiscourseAi
           LIMIT #{limit / 2};
         SQL
 
-        builder.where("model_id = :vid AND strategy_id = :vsid")
+        builder.where(
+          "model_id = :vid AND strategy_id = :vsid AND strategy_version >= :minimum_strategy_version",
+        )
 
         if use_age_penalty
           distance_sql = <<~SQL
@@ -272,7 +279,12 @@ module DiscourseAi
 
         yield(builder) if block_given?
 
-        query_params = { vid: vector_def.id, vsid: vector_def.strategy_id, target_id: record.id }
+        query_params = {
+          vid: vector_def.id,
+          vsid: vector_def.strategy_id,
+          minimum_strategy_version:,
+          target_id: record.id,
+        }
         if use_age_penalty
           query_params[:age_penalty] = age_penalty
           query_params[:time_scale] = SiteSetting.ai_embeddings_semantic_related_age_time_scale
@@ -313,6 +325,10 @@ module DiscourseAi
       end
 
       private
+
+      def minimum_strategy_version
+        table == RAG_DOCS_TABLE ? 0 : vector_def.strategy_version
+      end
 
       def hnsw_scan_relaxed_order
         # https://github.com/pgvector/pgvector?tab=readme-ov-file#iterative-index-scans

@@ -11,10 +11,14 @@ module DiscourseAi
         end
 
         def version
-          1
+          2
         end
 
         def prepare_target_text(target, vdef)
+          if target.is_a?(Post) && (target.post_type != Post.types[:regular] || target.hidden?)
+            return ""
+          end
+
           max_length = vdef.max_sequence_length - 2
 
           prepared_text =
@@ -101,8 +105,6 @@ module DiscourseAi
         end
 
         def post_truncation(post, tokenizer, max_length)
-          return "" if post.post_type != Post.types[:regular] || post.hidden?
-
           text = +topic_information(post.topic)
 
           if post.is_first_post? && post.topic&.topic_embed&.embed_content_cache.present?
