@@ -1,5 +1,3 @@
-import { syntaxTree } from "@codemirror/language";
-
 function findDot(memberExpr) {
   for (let child = memberExpr.lastChild; child; child = child.prevSibling) {
     if (child.name === ".") {
@@ -45,8 +43,7 @@ export function resolveNodeValue(node, doc) {
   return null;
 }
 
-export function analyzePropertyAccess(state, pos) {
-  const tree = syntaxTree(state);
+export function analyzePropertyAccess(tree, state, pos) {
   const node = tree.resolveInner(pos, -1);
   const doc = state.doc;
 
@@ -77,8 +74,7 @@ export function analyzePropertyAccess(state, pos) {
   return { kind: "blank", from: pos };
 }
 
-export function isInsideExpressionAt(state, pos) {
-  const tree = syntaxTree(state);
+export function isInsideExpressionAt(tree, pos) {
   let node = tree.resolve(pos, -1);
   while (node) {
     if (node.name === "Expression") {
@@ -87,8 +83,4 @@ export function isInsideExpressionAt(state, pos) {
     node = node.parent;
   }
   return false;
-}
-
-export function isInsideExpression(context) {
-  return isInsideExpressionAt(context.state, context.pos);
 }

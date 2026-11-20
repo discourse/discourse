@@ -1,7 +1,7 @@
 import { lookupWorkflowMethodDoc, walkScope } from "../expression-context.js";
 import { buildDollarVars } from "./dollar-vars.js";
 
-// Extends core's generic analyzePropertyAccess with workflow-specific
+// Extends the generic analyzePropertyAccess with workflow-specific
 // patterns: $('Node Name') references and $-prefixed variables.
 function buildAnalyzeAtCursor({ cmLanguage, utils }) {
   const { syntaxTree } = cmLanguage;

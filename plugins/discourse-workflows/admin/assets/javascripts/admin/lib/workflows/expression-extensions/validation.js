@@ -1,42 +1,40 @@
-export function buildValidation({ cmLanguage, cmView }) {
+import { i18n } from "discourse-i18n";
+
+export function buildValidation({ cmLanguage, cmLint }) {
   const { syntaxTree } = cmLanguage;
-  const { Decoration, ViewPlugin } = cmView;
+  const { linter } = cmLint;
 
-  const errorMark = Decoration.mark({ class: "cm-wf-error" });
+  return linter(
+    ({ state }) => {
+      const diagnostics = [];
 
-  return ViewPlugin.fromClass(
-    class {
-      decorations;
+      syntaxTree(state).iterate({
+        enter(node) {
+          if (
+            node.name === "Expression" &&
+            !state.doc.sliceString(node.from, node.to).endsWith("}}")
+          ) {
+            diagnostics.push({
+              from: node.from,
+              to: state.doc.length,
+              severity: "error",
+              message: i18n(
+                "discourse_workflows.expression_language.unclosed_expression"
+              ),
+              markClass: "cm-wf-error",
+            });
+          }
+        },
+      });
 
-      constructor(view) {
-        this.decorations = this.build(view.state);
-      }
-
-      update(update) {
-        if (update.docChanged || update.startState.tree !== update.state.tree) {
-          this.decorations = this.build(update.state);
-        }
-      }
-
-      build(state) {
-        const widgets = [];
-        const tree = syntaxTree(state);
-        const docLen = state.doc.length;
-
-        tree.iterate({
-          enter(node) {
-            if (node.name === "Expression") {
-              const text = state.doc.sliceString(node.from, node.to);
-              if (!text.endsWith("}}")) {
-                widgets.push(errorMark.range(node.from, docLen));
-              }
-            }
-          },
-        });
-
-        return Decoration.set(widgets, true);
-      }
+      return diagnostics;
     },
-    { decorations: (v) => v.decorations }
+    {
+      // Flag an unclosed expression as soon as it's typed, not after a pause.
+      delay: 0,
+      // Long values are parsed in stages; recheck as more of the tree arrives.
+      needsRefresh: (update) =>
+        syntaxTree(update.startState) !== syntaxTree(update.state),
+    }
   );
 }

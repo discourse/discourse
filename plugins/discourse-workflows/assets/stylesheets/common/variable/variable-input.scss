@@ -92,17 +92,6 @@
       }
     }
 
-    // Section headers in the autocomplete dropdown
-    .cm-expr-section-header {
-      padding: 0.1em 0.4em;
-      font-size: var(--font-down-3);
-      font-weight: 700;
-      color: var(--primary-medium);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--primary-low);
-    }
-
     // Info tooltip panel next to autocomplete — inherits font-size
     // from .cm-tooltip (--font-down-2) for consistency with the list.
     .cm-completionInfo {
@@ -190,6 +179,7 @@
 
     // Validation underlines
     .cm-wf-error {
+      background-image: none;
       text-decoration: wavy underline var(--danger);
       text-decoration-skip-ink: none;
       text-underline-offset: 3px;
@@ -358,6 +348,15 @@
       color: var(--primary-high);
       line-height: 1.3;
     }
+  }
+
+  // Shares the hover tooltip with the docs above, so it matches their sizing.
+  .cm-tooltip-lint .cm-diagnostic {
+    margin-left: 0;
+    padding: 0.4em 0.6em;
+    max-width: 260px;
+    font-size: var(--font-down-2);
+    border-left: 3px solid var(--danger);
   }
 
   .workflows-property-engine__collection-fields & {
