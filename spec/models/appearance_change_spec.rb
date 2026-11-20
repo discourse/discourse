@@ -140,6 +140,39 @@ RSpec.describe AppearanceChange do
   end
 
   describe "#discard!" do
+    it "removes an installed theme along with the palettes it came with" do
+      theme = Fabricate(:theme)
+      own = Fabricate(:color_scheme, theme_id: theme.id)
+      unused = Fabricate(:color_scheme, theme_id: theme.id)
+      shared = Fabricate(:color_scheme)
+      theme.update!(color_scheme: own, dark_color_scheme: shared)
+      appearance_change =
+        freeze_time(1.minute.from_now) do
+          Fabricate(
+            :installed_theme_appearance_change,
+            theme:,
+            light_color_scheme: own,
+            dark_color_scheme: shared,
+          )
+        end
+
+      appearance_change.discard!
+
+      expect(described_class.exists?(appearance_change.id)).to eq(false)
+      expect(Theme.exists?(theme.id)).to eq(false)
+      expect(ColorScheme.where(id: [own.id, unused.id])).to be_empty
+      expect(ColorScheme.exists?(shared.id)).to eq(true)
+    end
+
+    it "keeps an installed theme someone has let users choose" do
+      appearance_change = Fabricate(:installed_theme_appearance_change)
+      appearance_change.theme.update_columns(user_selectable: true)
+
+      appearance_change.discard!
+
+      expect(Theme.exists?(appearance_change.theme_id)).to eq(true)
+    end
+
     it "removes a new theme along with its generated styles" do
       appearance_change = styled_theme_appearance_change
 

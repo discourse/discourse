@@ -167,6 +167,7 @@ module DiscourseAi
             Tools::ActivateAppearanceChange,
             Tools::RevertAppearanceChange,
             Tools::ListAppearanceChanges,
+            Tools::InstallPopularTheme,
             Tools::ThemeAppHandoff,
             Tools::EnableMcpThemeAccess,
             Tools::RandomPicker,

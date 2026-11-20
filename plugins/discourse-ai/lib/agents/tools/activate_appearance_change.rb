@@ -38,14 +38,15 @@ module DiscourseAi
         def approval_changes
           return [] if appearance_change.nil?
 
-          live_theme = appearance_change.kind_theme? ? Theme.find_default : appearance_change.theme
+          live_theme =
+            appearance_change.new_default_theme? ? Theme.find_default : appearance_change.theme
           changes =
             AppearanceAuthoring.color_changes(
               before: AppearanceAuthoring.theme_palettes(live_theme),
               after: AppearanceAuthoring.change_palettes(appearance_change),
             )
           changes += AppearanceAuthoring.font_changes(appearance_change.site_settings)
-          if appearance_change.kind_theme?
+          if appearance_change.new_default_theme?
             changes << AppearanceAuthoring.default_theme_change(
               from: live_theme,
               to: appearance_change.theme,
