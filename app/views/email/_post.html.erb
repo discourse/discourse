@@ -1,3 +1,4 @@
+<%- use_excerpt &&= !Dsa::ModerationGuideline.email_disclosure?(post) -%>
 <div class='post-wrapper <%= post.whisper? ? "whisper" : "" %> <%= use_excerpt ? "excerpt" : ""%>'>
   <table>
     <tr>

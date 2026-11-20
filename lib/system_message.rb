@@ -23,8 +23,6 @@ class SystemMessage
     target_group_names = params.delete(:target_group_names)
 
     params = defaults.merge(params)
-    community_rule = params[:community_rule]
-    params[:moderation_guideline] = community_rule ? Dsa::ModerationGuideline::PLACEHOLDER : ""
 
     if I18n.exists?("system_messages.#{type}.preview", @recipient.effective_locale)
       params[:email_preview] = I18n.t("system_messages.#{type}.preview", params)
@@ -38,18 +36,15 @@ class SystemMessage
     raw =
       params[:message_raw] ||
         I18n.with_locale(@recipient.effective_locale) do
-          I18n.t("system_messages.#{type}.text_body_template", params)
+          translate_body("system_messages.#{type}.text_body_template", params)
         end
-
-    if community_rule
-      guideline =
-        Dsa::ModerationGuideline.new(
-          community_rule,
-          locale: @recipient.effective_locale,
-          for_responders: params[:community_rule_for_responders],
-        )
-      raw = guideline.insert_into(raw)
-    end
+    raw =
+      Dsa::ModerationGuideline.append_to(
+        raw,
+        rule: params[:community_rule],
+        locale: @recipient.effective_locale,
+        for_responders: params[:community_rule_for_responders],
+      )
 
     if key = params[:body_suffix_key]
       paragraph = I18n.with_locale(@recipient.effective_locale) { I18n.t(key, params) }
@@ -118,5 +113,28 @@ class SystemMessage
       base_url: Discourse.base_url,
       email_preview: "",
     }
+  end
+
+  private
+
+  def translate_body(key, params)
+    return I18n.t(key, params) unless params[:community_rule] && params[:flagged_post_raw_content]
+
+    template = I18n.t(key, skip_interpolation: true)
+    template =
+      template.gsub(
+        /^(?<indent> {0,3})(?<fence>`{2,}|~{3,})(?<language>[^\n]*)\n%\{(?<content>flagged_post_(?:response_)?raw_content)\}\n(?<closing_indent> {0,3})\k<fence>[ \t]*$/,
+      ) do |block|
+        match = Regexp.last_match
+        fence = match[:fence]
+        longest_run =
+          params[match[:content].to_sym].to_s.scan(/#{fence[0]}+/).map(&:length).max.to_i
+        fence_length = [3, longest_run + 1].max
+        next block if fence_length <= fence.length
+
+        fence = fence[0] * fence_length
+        "#{match[:indent]}#{fence}#{match[:language]}\n%{#{match[:content]}}\n#{match[:closing_indent]}#{fence}"
+      end
+    I18n.interpolate(template, params)
   end
 end

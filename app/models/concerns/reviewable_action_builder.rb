@@ -220,13 +220,10 @@ module ReviewableActionBuilder
   def delete_user(user, delete_options, performed_by, args:)
     email = user.email
     community_rule = Dsa::ModerationGuideline.selected_rule(args[:dsa_classification])
-    mail_options = community_rule ? { community_rule:, locale: user.effective_locale } : {}
 
-    UserDestroyer.new(performed_by).destroy(
-      user,
-      delete_options.merge(reviewable_id: id, community_rule:),
-    )
+    UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: id))
 
+    mail_options = community_rule ? { community_rule: } : {}
     message = UserNotifications.account_deleted(email, self, **mail_options)
     Email::Sender.new(message, :account_deleted).send
   end

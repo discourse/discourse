@@ -1257,7 +1257,6 @@ RSpec.describe PostDestroyer do
       expect(Post.last.raw).to eq(
         I18n.t(
           "system_messages.flags_agreed_and_post_deleted.text_body_template",
-          moderation_guideline: "",
           flagged_post_raw_content: second_post.raw,
           url: url,
           flag_reason:

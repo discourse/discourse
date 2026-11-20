@@ -575,8 +575,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     context "when sending moderation notices" do
       let(:rule) do
         {
-          "ground" => "Community Guidelines: Be agreeable",
-          "explanation" => "Personal attacks are not allowed.",
+          "ground" => "Community Guidelines: Q&A [labels]",
+          "explanation" =>
+            'Use file_names and leave :smile:, &lt;, and <img src="/uploads/default/example.png"> as text.',
         }
       end
       let(:classification) do
@@ -627,7 +628,15 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
           expect(details["open"]).to be_nil
           expect(details.at_css("summary").text).to eq(rule.fetch("ground"))
           expect(details.at_css("p").text).to eq(rule.fetch("explanation"))
-          expect(details.previous_element.text).to eq(paragraph)
+          intro = details.previous_element
+          expect(intro.text).to eq(paragraph)
+          expect(intro.previous_element.at_css("a")["href"]).to eq(
+            "#{Discourse.base_url}/guidelines",
+          )
+          expect(details.next_element.text).to eq(
+            "To appeal this decision, contact appeals@example.com",
+          )
+          expect(details.next_element.next_element).to be_nil
           raw = raw.sub(%r{\n\n#{Regexp.escape(paragraph)}\n\n<details\b.*?</details>}m, "")
         end
 
@@ -647,7 +656,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
       end
 
-      it "delivers the full selected rule in both parts of the private message email" do
+      it "delivers the complete notice in both email parts when excerpts are enabled" do
+        SiteSetting.post_excerpts_in_emails = true
         NotificationEmailer.enable
         author = post.user
         author.user_option.update!(email_messages_level: UserOption.email_level_types[:always])
@@ -667,10 +677,17 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(quote.at_css("strong").text).to eq(rule.fetch("ground"))
         expect(quote.text).to include(rule.fetch("explanation"))
         expect(quote.previous_element.text).to eq(paragraph)
-        expect(mail.text_part.decoded).to include(rule.fetch("ground"), rule.fetch("explanation"))
+        expect(quote.previous_element.previous_element.text).to include("For additional guidance")
+        expect(quote.next_element.text).to eq(
+          "To appeal this decision, contact appeals@example.com",
+        )
+        expect(mail.text_part.decoded).to match(
+          /For additional guidance.*#{Regexp.escape(rule.fetch("ground"))}.*#{Regexp.escape(rule.fetch("explanation"))}.*To appeal this decision/m,
+        )
       end
 
       it "includes the selected rule only in the suspension email for the reviewed account" do
+        SiteSetting.dsa_moderation_appeal_email = ""
         author = post.user
         other_user = Fabricate(:user)
         reviewable = PostActionCreator.inappropriate(user, post).reviewable
@@ -693,19 +710,40 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
           rule.fetch("ground"),
           rule.fetch("explanation"),
         )
-        expect(
-          Nokogiri::HTML5.fragment(primary_mail.html_part.decoded).at_css("blockquote").text,
-        ).to include(rule.fetch("ground"), rule.fetch("explanation"))
+        quote = Nokogiri::HTML5.fragment(primary_mail.html_part.decoded).at_css("blockquote")
+        expect(quote.text).to include(rule.fetch("ground"), rule.fetch("explanation"))
+        expect(quote.previous_element.previous_element.text).to include("For additional guidance")
+        expect(quote.xpath("following-sibling::p")).to be_empty
+        expect(primary_mail.text_part.decoded.rstrip).to end_with(rule.fetch("explanation"))
         expect(messages.fetch(other_user.email).text_part.decoded).not_to include(
           rule.fetch("ground"),
         )
+      end
+
+      it "appends the rule to an existing translation when there is no appeal address" do
+        SiteSetting.dsa_moderation_appeal_email = ""
+        SiteSetting.allow_user_locale = true
+        post.user.update!(locale: "fr")
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
+        Jobs::SendSystemMessage.drain
+
+        notice = Nokogiri::HTML5.fragment(Post.last.cooked)
+        details = notice.at_css("details")
+        expect(details.at_css("summary").text).to eq(rule.fetch("ground"))
+        expect(details.previous_element.previous_element.at_css("a")["href"]).to eq(
+          "#{Discourse.base_url}/guidelines",
+        )
+        expect(details.next_element).to be_nil
       end
 
       it "keeps custom notice copy and includes the selected rule before the appeal" do
         TranslationOverride.upsert!(
           "en",
           "system_messages.post_hidden.text_body_template",
-          "Custom message: %{flag_reason}",
+          "Custom message: %{flag_reason}\n\n[Read the rules](%{base_url}/guidelines)",
         )
         reviewable = PostActionCreator.inappropriate(user, post).reviewable
         Jobs::SendSystemMessage.clear
@@ -717,6 +755,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(notice.element_children.map { |node| node.text.squish }).to eq(
           [
             Nokogiri::HTML5.fragment(PrettyText.cook("Custom message: #{flag_reason}")).text.strip,
+            "Read the rules",
             paragraph,
             "#{rule.fetch("ground")}#{rule.fetch("explanation")}",
             "To appeal this decision, contact appeals@example.com",
@@ -725,6 +764,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       end
 
       it "adds the selected rule and explanation to the removal notice for delete_and_agree" do
+        post.update!(raw: "I am documenting the %{moderation_guideline} translation variable.")
         baseline = existing_notice(type: :flags_agreed_and_post_deleted)
         reviewable = PostActionCreator.inappropriate(user, post).reviewable
         Jobs::SendSystemMessage.clear
@@ -732,6 +772,41 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         reviewable.perform(moderator, :delete_and_agree, dsa_classification: classification)
 
         expect_notice(args: Jobs::SendSystemMessage.jobs.sole["args"].first, baseline:, paragraph:)
+      end
+
+      it "preserves literal code from a removed post without consuming the guideline" do
+        raw = <<~MARKDOWN.chomp
+          ```ruby
+          puts "hello"
+          ```
+
+          <details class="moderation-guideline"><summary>Example title</summary><p>Example text</p></details>
+        MARKDOWN
+        post.update!(raw:)
+        NotificationEmailer.enable
+        post.user.user_option.update!(email_messages_level: UserOption.email_level_types[:always])
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+        Jobs::PostAlert.clear
+        Jobs::UserEmail.clear
+
+        reviewable.perform(moderator, :delete_and_agree, dsa_classification: classification)
+        Jobs::SendSystemMessage.drain
+        Jobs::PostAlert.drain
+        Jobs::UserEmail.drain
+
+        notice = Nokogiri::HTML5.fragment(Post.last.cooked)
+        expect(notice.at_css("pre code").text.chomp).to eq(raw)
+        details = notice.css("details").sole
+        expect(details.at_css("summary").text).to eq(rule.fetch("ground"))
+        expect(details.previous_element.previous_element.text).to include("Please review")
+        expect(details.next_element.text).to include("To appeal this decision")
+
+        mail = ActionMailer::Base.deliveries.sole
+        html = Nokogiri::HTML5.fragment(mail.html_part.decoded)
+        expect(html.at_css("pre code").text.chomp).to eq(raw)
+        expect(html.css("blockquote").sole.at_css("strong").text).to eq(rule.fetch("ground"))
+        expect(mail.text_part.decoded).to include(raw, "> #{rule.fetch("explanation")}")
       end
 
       it "adds the selected rule and explanation to the removal notice for delete_and_ignore" do
@@ -824,6 +899,39 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
           baseline: responder_baseline,
           paragraph: reply_paragraph,
         )
+      end
+
+      it "keeps the rule outside quoted code in a translated reply notice" do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+        original_code = "```ruby\nputs :hello"
+        post.update!(raw: original_code)
+        responder = Fabricate(:user, locale: "zh_CN")
+        PostCreator.create!(
+          responder,
+          topic_id: post.topic_id,
+          reply_to_post_number: post.post_number,
+          raw: "Please keep the discussion respectful.",
+        )
+        post.reload
+        reviewable = PostActionCreator.inappropriate(user, post).reviewable
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(moderator, :delete_and_agree_replies, dsa_classification: classification)
+
+        responder_job =
+          Jobs::SendSystemMessage.jobs.find { |job| job["args"].first["user_id"] == responder.id }
+        Jobs::SendSystemMessage.new.perform(responder_job["args"].first)
+        notice = Nokogiri::HTML5.fragment(Post.last.cooked)
+        expect(notice.css("pre code").map { |code| code.text.chomp }).to eq(
+          [original_code, "Please keep the discussion respectful."],
+        )
+        details = notice.css("details").sole
+        expect(details.at_css("summary").text).to eq(rule.fetch("ground"))
+        expect(details.previous_element.previous_element.at_css("a")["href"]).to end_with(
+          "/guidelines",
+        )
+        expect(details.next_element.at_css("a")["href"]).to eq("mailto:appeals@example.com")
       end
 
       it "adds the selected rule and explanation to the notice when a post is hidden again" do

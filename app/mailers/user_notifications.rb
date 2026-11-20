@@ -177,7 +177,7 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
-  def account_deleted(email, reviewable, community_rule: nil, locale: I18n.locale)
+  def account_deleted(email, reviewable, community_rule: nil)
     post_action_type_view = PostActionTypeView.new
     post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
 
@@ -197,7 +197,6 @@ class UserNotifications < ActionMailer::Base
       **Dsa::AppealInstructions.message_options,
       flag_reason: flag_reason,
       community_rule:,
-      locale:,
     )
   end
 
@@ -579,8 +578,7 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false, localization: nil)
-    raw = Dsa::ModerationGuideline.email_markdown(localization&.raw.presence || post.raw, post:)
-    result = +"#{raw}\n\n"
+    result = +"#{localization&.raw.presence || post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t("user_notifications.posted_by", username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end
@@ -924,6 +922,10 @@ class UserNotifications < ActionMailer::Base
     }
 
     email_opts[:body_topic_title] = body_topic_title if body_topic_title
+    if !SiteSetting.private_email? &&
+         [post, *context_posts].any? { |item| Dsa::ModerationGuideline.email_disclosure?(item) }
+      email_opts[:has_moderation_guideline] = true
+    end
     email_opts[:recipient_user] = user
     email_opts[:html_override] = html unless translation_override_exists
 

@@ -196,18 +196,13 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    community_rule = Dsa::ModerationGuideline.selected_rule(args[:dsa_classification])
-    UserDestroyer.new(performed_by).destroy(
-      post.user,
-      delete_opts.merge(reviewable_id: id, community_rule:),
-    )
+    UserDestroyer.new(performed_by).destroy(post.user, delete_opts.merge(reviewable_id: id))
 
     agree
   end
 
   def perform_delete_user_block(performed_by, args)
-    community_rule = Dsa::ModerationGuideline.selected_rule(args[:dsa_classification])
-    delete_options = delete_opts.merge(reviewable_id: id, community_rule:)
+    delete_options = delete_opts.merge(reviewable_id: id)
 
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 

@@ -8,10 +8,12 @@ module Email
     end
 
     def text
-      return @text if @text
-      @text =
-        (+(@message.text_part ? @message.text_part : @message).body.to_s).force_encoding("UTF-8")
-      @text = CGI.unescapeHTML(@text)
+      @text ||=
+        if moderation_guideline?
+          Dsa::ModerationGuideline.email_plain_text(raw_body)
+        else
+          CGI.unescapeHTML(raw_body)
+        end
     end
 
     def html
@@ -25,7 +27,7 @@ module Email
               template: "layouts/email_template",
               format: :html,
               locals: {
-                html_body: PrettyText.cook(text, user_id: @opts[:user_id]).html_safe,
+                html_body: PrettyText.cook(html_source, user_id: @opts[:user_id]).html_safe,
                 email_preview: email_preview,
               },
             )
@@ -36,6 +38,20 @@ module Email
       style.format_html
       DiscoursePluginRegistry.apply_modifier(:email_renderer_html, style, @message)
       style.to_html
+    end
+
+    private
+
+    def raw_body
+      (+(@message.text_part || @message).body.to_s).force_encoding("UTF-8")
+    end
+
+    def moderation_guideline?
+      @message.header[Dsa::ModerationGuideline::EMAIL_HEADER].present?
+    end
+
+    def html_source
+      moderation_guideline? ? Dsa::ModerationGuideline.email_html_source(raw_body) : text
     end
   end
 end

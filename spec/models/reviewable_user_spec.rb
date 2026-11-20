@@ -479,6 +479,37 @@ RSpec.describe ReviewableUser, type: :model do
         )
       end
 
+      it "includes the guideline in the existing rejection email only for a suspect signup" do
+        SiteSetting.must_approve_users = true
+        rule = { "ground" => "No impersonation", "explanation" => "Use your own identity." }
+        enable_dsa_reporting(community_rules: [rule])
+        classification = {
+          community_rule: rule,
+          category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY,
+        }
+        suspect = Fabricate(:suspect_user_reviewable)
+        suspect_email = suspect.target.email
+        signup_email = reviewable.target.email
+
+        suspect.perform(
+          moderator,
+          :delete_user,
+          send_email: true,
+          dsa_classification: classification,
+        )
+        reviewable.perform(
+          moderator,
+          :delete_user,
+          send_email: true,
+          dsa_classification: classification,
+        )
+
+        messages = ActionMailer::Base.deliveries.index_by { |mail| mail.to.sole }
+        expect(messages.keys).to contain_exactly(suspect_email, signup_email)
+        expect(messages.fetch(suspect_email).text_part.decoded).to include(*rule.values)
+        expect(messages.fetch(signup_email).text_part.decoded).not_to include(rule.fetch("ground"))
+      end
+
       it "allows us to reject a user who has posts" do
         Fabricate(:post, user: reviewable.target)
         result = reviewable.perform(moderator, :delete_user)
