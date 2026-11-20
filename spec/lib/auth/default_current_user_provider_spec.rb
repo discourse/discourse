@@ -678,6 +678,31 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     expect(provider("/", "HTTP_COOKIE" => "_t=#{cookie}").current_user).to eq(nil)
   end
 
+  it "rejects excluded staged users before issuing a session" do
+    user.update!(staged: true)
+    SiteSetting.allowed_email_domains = "allowed.example"
+    @provider = provider("/")
+
+    expect { @provider.log_on_user(user, {}, @provider.cookie_jar) }.to raise_error(
+      ActiveRecord::RecordInvalid,
+    )
+
+    expect(user.reload.staged).to eq(true)
+    expect(user.user_auth_tokens).to be_empty
+    expect(@provider.cookie_jar["_t"]).to be_nil
+  end
+
+  it "allows existing members to log in after their domain is excluded" do
+    SiteSetting.allowed_email_domains = "allowed.example"
+    @provider = provider("/")
+    existing_user = Fabricate(:user, email: "member@allowed.example")
+    SiteSetting.allowed_email_domains = "other.example"
+
+    @provider.log_on_user(existing_user, {}, @provider.cookie_jar)
+
+    expect(@provider.cookie_jar["_t"]).to be_present
+  end
+
   it "always unstage users" do
     user.update!(staged: true)
     @provider = provider("/")

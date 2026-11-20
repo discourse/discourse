@@ -46,6 +46,13 @@ class UserAuthenticator
     @auth_result&.email_valid
   end
 
+  def unstage!(signup_email:)
+    if @user.email == signup_email && authenticated? && @auth_result.skip_email_validation
+      @user.skip_email_validation = true
+    end
+    @user.unstage!
+  end
+
   def authenticated?
     return false if !@auth_result
     return false if @auth_result&.email&.downcase != @user.email.downcase

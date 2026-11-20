@@ -2220,6 +2220,70 @@ RSpec.describe UsersController do
 
       fab!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
 
+      shared_examples "an excluded staged account" do |setting, domains|
+        it "preserves the staged account when excluded by #{setting}" do
+          SiteSetting.public_send("#{setting}=", domains)
+
+          post "/u.json",
+               params:
+                 honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+          expect(staged.reload.staged).to eq(true)
+          expect(staged.active).to eq(true)
+          expect(staged.custom_fields[User::FROM_STAGED]).to be_nil
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"].join).to include(I18n.t("user.email.not_allowed"))
+        end
+      end
+
+      include_examples "an excluded staged account", :allowed_email_domains, "allowed.com"
+      include_examples "an excluded staged account", :blocked_email_domains, "account.com"
+
+      it "preserves the staged account when its email is screened" do
+        ScreenedEmail.block(staged.email)
+
+        post "/u.json",
+             params:
+               honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].join).to include(I18n.t("user.email.blocked"))
+        expect(staged.reload.staged).to eq(true)
+      end
+
+      it "honors a provider override for the verified staged email" do
+        SiteSetting.blocked_email_domains = "account.com"
+        server_session[:authentication] = {
+          email: staged.email,
+          email_valid: true,
+          skip_email_validation: true,
+        }
+
+        post "/u.json",
+             params:
+               honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(staged.reload.staged).to eq(false)
+      end
+
+      it "does not apply a provider override verified for a different email" do
+        SiteSetting.blocked_email_domains = "account.com"
+        server_session[:authentication] = {
+          email: "other@account.com",
+          email_valid: true,
+          skip_email_validation: true,
+        }
+
+        post "/u.json",
+             params:
+               honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].join).to include(I18n.t("user.email.not_allowed"))
+        expect(staged.reload.staged).to eq(true)
+      end
+
       it "claims the staged account" do
         post "/u.json",
              params:
