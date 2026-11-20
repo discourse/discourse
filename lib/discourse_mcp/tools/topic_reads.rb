@@ -352,6 +352,8 @@ module DiscourseMcp
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
+          optional: ["plugin_data"],
+          plugin_data: OutputSchema::OBJECT,
           id: OutputSchema::INTEGER,
           title: OutputSchema::STRING,
           slug: OutputSchema::STRING,
@@ -397,6 +399,8 @@ module DiscourseMcp
               has_more:,
             },
           )
+        plugin_data = ToolHelpers.topic_plugin_data([topic], request_context)
+        result[:plugin_data] = plugin_data[topic.id] if plugin_data[topic.id].present?
         ToolHelpers.text_and_structured(result)
       end
     end

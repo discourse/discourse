@@ -61,6 +61,14 @@ module DiscourseAssign
         all_scoped_group_ids & user.group_ids
       end
 
+      def scoped_group_ids_for_categories(category_ids)
+        CategoryCustomField
+          .where(category_id: category_ids, name: CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS)
+          .pluck(:category_id, :value)
+          .to_h
+          .transform_values { |value| group_ids_from_value(value) }
+      end
+
       def scoped_group_ids_for_category(category_id)
         return [] if category_id.blank?
 

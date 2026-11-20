@@ -42,6 +42,9 @@ en:
     mcp:
       query_failed: "The query could not be run: %{message}"
       query_not_found: "Query not found"
+      groups_not_found: "One or more groups do not exist."
+      no_changes: "Provide at least one query field to update."
+      invalid_fields: "Query fields cannot contain null characters. Name and SQL must not be blank."
     ai:
       error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."
       error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."

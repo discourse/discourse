@@ -20,6 +20,17 @@ module DiscourseAssign
         end
     end
 
+    def preload_assign_permissions(category_ids)
+      return if can_assign_globally?
+
+      @scoped_assign_group_ids_by_category ||= {}
+      missing_ids = category_ids.compact.uniq - @scoped_assign_group_ids_by_category.keys
+      return if missing_ids.empty?
+
+      groups = DiscourseAssign::AssignmentPermissions.scoped_group_ids_for_categories(missing_ids)
+      missing_ids.each { |id| @scoped_assign_group_ids_by_category[id] = groups.fetch(id, []) }
+    end
+
     private
 
     def can_assign_target?(target)

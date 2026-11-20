@@ -3,6 +3,17 @@
 module DiscourseDataExplorer
   module McpTools
     READ_SCOPE = "mcp:data-explorer:read"
+    WRITE_SCOPE = "mcp:data-explorer:write"
+    SAVED_QUERY_SCHEMA =
+      DiscourseMcp::OutputSchema.object(
+        id: DiscourseMcp::OutputSchema::INTEGER,
+        name: DiscourseMcp::OutputSchema::STRING,
+        description: DiscourseMcp::OutputSchema::STRING_OR_NULL,
+        group_ids: {
+          type: "array",
+          items: DiscourseMcp::OutputSchema::INTEGER,
+        },
+      )
 
     module Support
       module_function
@@ -20,6 +31,43 @@ module DiscourseDataExplorer
         raise DiscourseMcp::ToolError, I18n.t("discourse_data_explorer.mcp.query_not_found")
       end
 
+      def validate_fields!(arguments)
+        fields = arguments.slice("name", "sql", "description")
+        if fields.values.any? { |value| value.include?("\0") } ||
+             fields.slice("name", "sql").values.any?(&:blank?)
+          raise DiscourseMcp::ToolError, I18n.t("discourse_data_explorer.mcp.invalid_fields")
+        end
+      end
+
+      def validate_groups!(group_ids)
+        return if group_ids.nil?
+        unless Group.where(id: group_ids).count == group_ids.uniq.size
+          raise DiscourseMcp::ToolError, I18n.t("discourse_data_explorer.mcp.groups_not_found")
+        end
+      end
+
+      def saved_query_json(query)
+        {
+          id: query.id,
+          name: query.name,
+          description: query.description,
+          group_ids: query.groups.pluck(:id),
+        }
+      end
+
+      def log_change(request_context, action, query, arguments:)
+        details = {
+          query_id: query.id,
+          oauth_client_id: request_context.oauth_client_id,
+          fields: arguments.keys & %w[name sql description group_ids],
+        }
+        details[:group_ids] = arguments["group_ids"] if arguments.key?("group_ids")
+        StaffActionLogger.new(request_context.user).log_custom(
+          "data_explorer_query_#{action}",
+          details,
+        )
+      end
+
       def parameter_json(parameter)
         {
           identifier: parameter.identifier,
@@ -34,6 +82,74 @@ module DiscourseDataExplorer
         return QUERY_RESULT_MAX_LIMIT if value == "ALL"
 
         value
+      end
+    end
+
+    class CreateQuery
+      REQUIRED_SCOPES = [WRITE_SCOPE].freeze
+      OUTPUT_SCHEMA = SAVED_QUERY_SCHEMA
+
+      def self.call(arguments:, request_context:)
+        request_context.guardian.ensure_is_admin!
+        Support.validate_fields!(arguments)
+        Support.validate_groups!(arguments["group_ids"])
+        query = nil
+        Query.transaction do
+          query =
+            QueryCreator.create(
+              query_params: arguments.slice("name", "sql", "description").symbolize_keys,
+              group_ids: arguments["group_ids"],
+              user: request_context.user,
+            )
+          Support.log_change(request_context, "created", query, arguments:)
+        end
+        DiscourseMcp::ToolHelpers.text_and_structured(Support.saved_query_json(query))
+      end
+    end
+
+    class UpdateQuery
+      REQUIRED_SCOPES = [WRITE_SCOPE].freeze
+      OUTPUT_SCHEMA = SAVED_QUERY_SCHEMA
+
+      def self.call(arguments:, request_context:)
+        query =
+          Support.query!(arguments.fetch("id"), guardian: request_context.guardian, admin: true)
+        query_params = arguments.slice("name", "sql", "description")
+        if query_params.empty? && !arguments.key?("group_ids")
+          raise DiscourseMcp::ToolError, I18n.t("discourse_data_explorer.mcp.no_changes")
+        end
+        Support.validate_fields!(arguments)
+        Support.validate_groups!(arguments["group_ids"])
+        query.with_lock do
+          if query.hidden
+            raise DiscourseMcp::ToolError, I18n.t("discourse_data_explorer.mcp.query_not_found")
+          end
+          QueryUpdater.update(query:, query_params:, group_ids: arguments["group_ids"])
+          Support.log_change(request_context, "updated", query, arguments:)
+        end
+        DiscourseMcp::ToolHelpers.text_and_structured(Support.saved_query_json(query))
+      end
+    end
+
+    class DeleteQuery
+      REQUIRED_SCOPES = [WRITE_SCOPE].freeze
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          id: DiscourseMcp::OutputSchema::INTEGER,
+          deleted: DiscourseMcp::OutputSchema::BOOLEAN,
+        )
+
+      def self.call(arguments:, request_context:)
+        query =
+          Support.query!(arguments.fetch("id"), guardian: request_context.guardian, admin: true)
+        query.with_lock do
+          if query.hidden
+            raise DiscourseMcp::ToolError, I18n.t("discourse_data_explorer.mcp.query_not_found")
+          end
+          QueryDestroyer.destroy(query:)
+          Support.log_change(request_context, "deleted", query, arguments:)
+        end
+        DiscourseMcp::ToolHelpers.text_and_structured(id: query.id, deleted: true)
       end
     end
 

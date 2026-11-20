@@ -203,21 +203,25 @@ RSpec.describe UserAction do
         log_test_action(action_type: UserAction::WAS_LIKED)
       end
 
-      after { DiscoursePluginRegistry.clear_modifiers! }
-
       it "allows the plugin to modify the builder query" do
-        Plugin::Instance
-          .new
-          .register_modifier(:user_action_stream_builder) do |builder|
+        plugin = Plugin::Instance.new
+        modifier =
+          proc do |builder|
             expect(builder).to be_a(MiniSqlMultisiteConnection::CustomBuilder)
             builder.limit(1)
           end
+        plugin.register_modifier(:user_action_stream_builder, &modifier)
 
-        stream = UserAction.stream(user_id: user.id, guardian: user.guardian)
-
-        expect(stream.count).to eq(1)
-
-        DiscoursePluginRegistry.clear_modifiers!
+        begin
+          stream = UserAction.stream(user_id: user.id, guardian: user.guardian)
+          expect(stream.count).to eq(1)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin,
+            :user_action_stream_builder,
+            &modifier
+          )
+        end
 
         stream = UserAction.stream(user_id: user.id, guardian: user.guardian)
         expect(stream.count).to eq(2)

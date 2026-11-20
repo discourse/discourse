@@ -1,6 +1,12 @@
 en:
   admin_js:
     admin:
+      logs:
+        staff_actions:
+          actions:
+            data_explorer_query_created: "Create Data Explorer query"
+            data_explorer_query_updated: "Update Data Explorer query"
+            data_explorer_query_deleted: "Delete Data Explorer query"
       site_settings:
         categories:
           discourse_data_explorer: "Discourse Data Explorer"

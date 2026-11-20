@@ -56,7 +56,13 @@ module DiscourseMcp
           )
 
         visible_tag_ids = ToolHelpers.visible_tag_ids(topics, request_context.guardian)
-        results = topics.map { |topic| ToolHelpers.discovery_topic_json(topic, visible_tag_ids) }
+        plugin_data = ToolHelpers.topic_plugin_data(topics, request_context)
+        results =
+          topics.map do |topic|
+            result = ToolHelpers.discovery_topic_json(topic, visible_tag_ids)
+            result[:plugin_data] = plugin_data[topic.id] if plugin_data[topic.id].present?
+            result
+          end
         ToolHelpers.text_and_structured(
           results:,
           meta: {

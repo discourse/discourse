@@ -328,7 +328,11 @@ after_initialize do
   end
 
   register_modifier(:user_action_stream_builder) do |builder|
-    builder.where("t.deleted_at IS NULL").where("t.archetype <> ?", Archetype.private_message)
+    builder.where("t.deleted_at IS NULL").where(
+      "a.action_type <> ? OR t.archetype <> ?",
+      UserAction::SOLVED,
+      Archetype.private_message,
+    )
   end
 
   add_to_serializer(:user_card, :accepted_answers) do

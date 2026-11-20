@@ -219,30 +219,15 @@ module DiscourseDataExplorer
     end
 
     def update
-      sql_changed = @query.sql != params.dig(:query, :sql)
       submitted_query = params.require(:query)
       query_params = submitted_query.permit(:name, :sql, :description, tags: [])
-      tag_names = query_params.delete(:tags)
-
-      ActiveRecord::Base.transaction do
-        @query.update!(query_params.merge(hidden: false))
-        if tag_names || submitted_query.key?(:tags_present)
-          QueryTag.sync!(query: @query, names: tag_names || [])
-        end
-
+      query_params[:tags] = [] if submitted_query.key?(:tags_present) && !query_params.key?(:tags)
+      group_ids =
         if submitted_query.key?(:group_ids) || submitted_query.key?(:group_ids_present)
-          group_ids = Array.wrap(submitted_query[:group_ids]).reject(&:blank?)
-          query_groups = QueryGroup.where(query_id: @query.id)
-          if group_ids.empty?
-            query_groups.delete_all
-          else
-            query_groups.where.not(group_id: group_ids).delete_all
-          end
-          group_ids.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
+          Array.wrap(submitted_query[:group_ids]).reject(&:blank?)
         end
-      end
 
-      QueryRunner.invalidate(@query.id) if sql_changed
+      QueryUpdater.update(query: @query, query_params:, group_ids:)
 
       render_serialized @query, QueryDetailsSerializer, root: "query"
     rescue ValidationError => e
@@ -250,12 +235,7 @@ module DiscourseDataExplorer
     end
 
     def destroy
-      query = Query.find(params[:id])
-      query.update!(hidden: true)
-      ::AdminDashboard::Reports::Mounter.unmount(
-        source: AdminDashboardReportProvider::SOURCE_NAME,
-        identifier: query.id.to_s,
-      )
+      QueryDestroyer.destroy(query: Query.find(params[:id]))
       render json: { success: true, errors: [] }
     end
 
