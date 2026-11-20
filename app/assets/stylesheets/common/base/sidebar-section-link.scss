@@ -10,7 +10,6 @@
 @mixin sidebar-section-link-highlight {
   background: var(--d-sidebar-highlight-background);
   color: var(--d-sidebar-highlight-color);
-  outline: none;
 
   .prefix-text {
     background: var(--d-sidebar-highlight-prefix-background);
