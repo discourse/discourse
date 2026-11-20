@@ -70,12 +70,18 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
 .dsa-classification-options.fk-d-menu {
   z-index: z("modal", "popover");
 
+  .dropdown-menu {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
   .dropdown-menu__item > .dsa-classification-option.btn {
     height: auto;
     min-height: var(--d-sidebar-row-height);
   }
 
   .fk-d-menu__inner-content {
+    flex: 1;
     max-height: 40dvh;
   }
 }
