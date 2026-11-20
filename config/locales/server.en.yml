@@ -104,6 +104,7 @@ en:
       moderation_operation_failed: "The moderation action could not be verified. Read the user's current state before retrying."
       moderation_user_not_found: "User not found. Use an exact existing username."
       post_not_found: "Post not found"
+      post_not_created: "The post could not be created"
       user_directory_disabled: "The user directory is disabled"
       filter_only_for_filtered_view: "Filter is only supported by the filtered view"
       filter_required: "A nonblank filter is required for the filtered view"
