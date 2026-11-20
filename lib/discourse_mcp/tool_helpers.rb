@@ -205,6 +205,35 @@ module DiscourseMcp
       raise Discourse::InvalidAccess
     end
 
+    # The checks for the first post of a user (fast typing, silence words,
+    # silence regex) stay off, as for an API request: a tool call has no
+    # typing time.
+    def submit_post!(user, **options)
+      result = NewPostManager.new(user, options.with_indifferent_access).perform
+
+      if result.failed? || (result.post.nil? && !queued?(result))
+        raise ToolError,
+              result.errors.full_messages.flatten.to_sentence.presence ||
+                I18n.t("mcp.errors.post_not_created")
+      end
+
+      result
+    end
+
+    def queued?(submission)
+      submission.action == :enqueued
+    end
+
+    def author_fields(arguments, user)
+      requested_author = arguments["author_username"]
+
+      {
+        username: user.username,
+        requested_author:,
+        author_applied: requested_author.present? ? user.username.casecmp?(requested_author) : nil,
+      }
+    end
+
     def user_post_json(action)
       {
         id: action.post_id || action.id,

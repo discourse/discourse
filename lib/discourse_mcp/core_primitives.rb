@@ -792,7 +792,8 @@ module DiscourseMcp
         registry,
         "discourse_create_topic",
         title: "Create topic",
-        description: "Creates a topic as the authenticated user.",
+        description:
+          "Creates a topic as the authenticated user. When the site holds the topic for review, queued is true and the IDs are null. Do not submit a queued topic again.",
         implementation: Tools::CreateTopic,
         input_schema:
           object_schema(
@@ -832,7 +833,8 @@ module DiscourseMcp
         registry,
         "discourse_create_post",
         title: "Create post",
-        description: "Creates a reply in a topic as the authenticated user.",
+        description:
+          "Creates a reply in a topic as the authenticated user. When the site holds the reply for review, queued is true and the post ID is null. Do not submit a queued reply again.",
         implementation: Tools::ReplyTopic,
         input_schema:
           object_schema(
