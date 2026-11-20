@@ -270,6 +270,8 @@ module SiteSettings::Validations
   end
 
   def validate_builtin_badge_thresholds(new_val)
+    return if new_val.blank?
+
     badges = JSON.parse(new_val).pluck("badge")
     validate_error :duplicate_builtin_badge_thresholds if badges.uniq.size != badges.size
   end

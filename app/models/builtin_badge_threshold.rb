@@ -31,7 +31,7 @@ class BuiltinBadgeThreshold
     return unless definition
 
     setting = SiteSetting.builtin_badge_thresholds
-    return if setting == "[]"
+    return if setting.blank? || setting == "[]"
 
     name, rule, minimum_likes = definition
     threshold = JSON.parse(setting).find { |entry| entry["badge"] == name }
