@@ -66,9 +66,56 @@ RSpec.describe AppearanceChange::InstallTheme do
     end
 
     context "when the site already has the theme" do
-      before { RemoteTheme.create!(remote_url: "#{remote_url.upcase}.git") }
+      fab!(:existing_theme) do
+        Fabricate(
+          :theme,
+          name: "Mint Theme",
+          color_scheme: light_palette,
+          remote_theme:
+            RemoteTheme.create!(
+              remote_url: "https://GitHub.com/discourse/discourse-mint-theme.git",
+            ),
+        )
+      end
 
-      it { is_expected.to fail_a_policy(:not_installed) }
+      it { is_expected.to run_successfully }
+
+      it "saves it as it is, without installing it again" do
+        expect(result[:appearance_change]).to have_attributes(
+          kind: "existing_theme",
+          name: "Mint Theme",
+          theme: existing_theme,
+          light_color_scheme: light_palette,
+          dark_color_scheme: nil,
+          activated_at: nil,
+        )
+        expect(RemoteTheme).not_to have_received(:import_theme)
+      end
+
+      it "reuses a change already saved for it that isn't live" do
+        first = described_class.call(params:, **dependencies)[:appearance_change]
+
+        expect { result }.not_to change { AppearanceChange.count }
+        expect(result[:appearance_change]).to eq(first)
+      end
+
+      context "when the user can't create new themes" do
+        before { allow_any_instance_of(Guardian).to receive(:can_create_theme?).and_return(false) }
+
+        it { is_expected.to run_successfully }
+      end
+
+      context "when it's already the default theme" do
+        before { existing_theme.set_default! }
+
+        it { is_expected.to fail_a_policy(:not_default) }
+      end
+
+      context "when the user can't edit it" do
+        before { allow_any_instance_of(Guardian).to receive(:can_edit_theme?).and_return(false) }
+
+        it { is_expected.to fail_a_policy(:can_edit_theme) }
+      end
     end
 
     context "when the theme can't be imported" do

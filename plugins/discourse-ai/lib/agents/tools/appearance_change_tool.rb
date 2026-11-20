@@ -20,7 +20,7 @@ module DiscourseAi
           palettes_available_to_theme: "palettes_missing",
           restorable: "cannot_restore",
           allowed_theme_repo: "theme_repo_not_allowed",
-          not_installed: "theme_already_installed",
+          not_default: "theme_already_default",
         }.freeze
 
         def self.requires_approval?
