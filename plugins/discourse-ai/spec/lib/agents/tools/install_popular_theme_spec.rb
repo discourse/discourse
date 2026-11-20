@@ -116,10 +116,82 @@ RSpec.describe DiscourseAi::Agents::Tools::InstallPopularTheme do
     )
   end
 
-  it "refuses a theme the site already has" do
-    RemoteTheme.create!(remote_url: "#{remote_url}.git")
+  context "when the site already has the theme" do
+    fab!(:existing_theme) do
+      Fabricate(
+        :theme,
+        name: "Mint Theme",
+        remote_theme:
+          RemoteTheme.create!(remote_url: "https://github.com/discourse/discourse-mint-theme.git"),
+      )
+    end
 
-    expect(tool.validation_error).to eq(error(:already_installed, name: "Mint"))
+    it "offers to use it, and saves it once approved without installing it again" do
+      expect(tool.validation_error).to be_nil
+      expect(tool.approval_title).to eq("Use theme: Mint Theme")
+      expect(tool.approval_details).to include("Mint Theme is already installed")
+
+      result = approve_as(other_admin, build_reviewable)
+
+      appearance_change = AppearanceChange.last
+      expect(RemoteTheme).not_to have_received(:import_theme)
+      expect(appearance_change).to have_attributes(kind: "existing_theme", theme: existing_theme)
+      expect(result).to include(
+        status: "success",
+        appearance_change_id: appearance_change.id,
+        message: I18n.t("discourse_ai.appearance_authoring.saved_existing_theme"),
+      )
+    end
+
+    it "doesn't need the site to allow new themes" do
+      plugin = Plugin::Instance.new
+      modifier =
+        proc do |decision, request|
+          decision.deny!("No new themes here.") if request.feature == :theme_authoring
+          decision
+        end
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      expect(tool.validation_error).to be_nil
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+
+    it "says when it's already the default theme" do
+      existing_theme.set_default!
+
+      expect(tool.validation_error).to eq(error(:already_default, name: "Mint Theme"))
+    end
+
+    it "makes it live and switches back without removing it" do
+      approve_as(other_admin, build_reviewable)
+      appearance_change = AppearanceChange.last
+      previous_default = Theme.find_default
+
+      expect(
+        AppearanceChange::Activate.call(
+          params: {
+            appearance_change_id: appearance_change.id,
+          },
+          guardian: admin.guardian,
+        ),
+      ).to run_successfully
+      expect(existing_theme.reload).to be_default
+      expect(
+        AppearanceChange::Revert.call(
+          params: {
+            appearance_change_id: appearance_change.id,
+          },
+          guardian: admin.guardian,
+        ),
+      ).to run_successfully
+      expect(Theme.find_default).to eq(previous_default)
+      expect(Theme.exists?(existing_theme.id)).to eq(true)
+    end
   end
 
   it "says when the theme can't be installed" do

@@ -40,7 +40,7 @@ module DiscourseAi
 
         def self.custom_system_message
           <<~TEXT
-            When an administrator wants a different design rather than new colors or styles, or asks which themes they could use, describe the ready-made themes install_popular_theme offers, using their names and descriptions as given and never their ids, and suggest the ones that fit. Only call it once they've chosen one, or when they name a theme themselves. Installing needs approval and doesn't change the site. Once it's installed, share the preview link and ask whether to make it live with activate_appearance_change, using the returned appearance_change_id. Its layout and palettes replace the current theme's.
+            When an administrator wants a different design rather than new colors or styles, or asks which themes they could use, describe the ready-made themes install_popular_theme offers, using their names and descriptions as given and never their ids, and suggest the ones that fit. Only call it once they've chosen one, or when they name a theme themselves. It also works for one of these themes the site already has, without installing it again. Installing or saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live with activate_appearance_change, using the returned appearance_change_id. Its layout and palettes replace the current theme's.
           TEXT
         end
 
@@ -48,8 +48,8 @@ module DiscourseAi
           return I18n.t("discourse_ai.appearance_authoring.not_popular") if popular_theme.nil?
 
           I18n.t(
-            "discourse_ai.ai_bot.chat_tool_approval.install_theme_title",
-            name: popular_theme[:name],
+            "discourse_ai.ai_bot.chat_tool_approval.#{approval_key}_title",
+            name: installed_theme&.name || popular_theme[:name],
           )
         end
 
@@ -61,32 +61,43 @@ module DiscourseAi
           return I18n.t("discourse_ai.appearance_authoring.not_popular") if popular_theme.nil?
 
           I18n.t(
-            "discourse_ai.ai_bot.chat_tool_approval.install_theme_details",
+            "discourse_ai.ai_bot.chat_tool_approval.#{approval_key}_details",
             description: popular_theme[:description],
             remote_url: popular_theme[:remote_url],
+            name: installed_theme&.name,
           )
         end
 
         def approval_question
-          I18n.t("discourse_ai.ai_bot.chat_tool_approval.install_theme_question")
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.#{approval_key}_question")
         end
 
         def validation_error
-          refusal =
-            AppearanceAuthoring.denial(user: context.user, phase: execution_phase, new_theme: true)
-          return error_response(refusal) if refusal
           if popular_theme.nil?
+            refusal = AppearanceAuthoring.denial(user: context.user, phase: execution_phase)
+            return error_response(refusal) if refusal
             return error_response(I18n.t("discourse_ai.appearance_authoring.not_popular"))
           end
-          if already_installed?
+          # a theme the site already has isn't a new one
+          refusal =
+            AppearanceAuthoring.denial(
+              user: context.user,
+              phase: execution_phase,
+              new_theme: installed_theme.nil?,
+            )
+          return error_response(refusal) if refusal
+          if installed_theme&.default?
             return(
               error_response(
                 I18n.t(
-                  "discourse_ai.appearance_authoring.already_installed",
-                  name: popular_theme[:name],
+                  "discourse_ai.appearance_authoring.already_default",
+                  name: installed_theme.name,
                 ),
               )
             )
+          end
+          if installed_theme && !context.user.guardian.can_edit_theme?(installed_theme)
+            return error_response(I18n.t("discourse_ai.appearance_authoring.theme_not_editable"))
           end
 
           nil
@@ -98,6 +109,7 @@ module DiscourseAi
           end
 
           with_approval do
+            existing = installed_theme.present?
             result =
               AppearanceChange::InstallTheme.call(
                 params: {
@@ -113,7 +125,10 @@ module DiscourseAi
               appearance_change_id: appearance_change.id,
               name: appearance_change.name,
               preview_url: AppearanceAuthoring.preview_url(appearance_change),
-              message: I18n.t("discourse_ai.appearance_authoring.installed"),
+              message:
+                I18n.t(
+                  "discourse_ai.appearance_authoring.#{existing ? "saved_existing_theme" : "installed"}",
+                ),
             }
           end
         rescue ActiveRecord::ActiveRecordError
@@ -128,9 +143,21 @@ module DiscourseAi
             PopularThemes.themes.find { |entry| entry[:id] == parameters[:theme].to_s }
         end
 
-        def already_installed?
+        # The site's copy of the theme, when it already has one.
+        def installed_theme
+          return @installed_theme if defined?(@installed_theme)
           url = popular_theme[:remote_url].downcase
-          RemoteTheme.where("lower(remote_url) IN (?)", [url, "#{url}.git"]).exists?
+          @installed_theme =
+            Theme
+              .where(component: false)
+              .joins(:remote_theme)
+              .where("lower(remote_themes.remote_url) IN (?)", [url, "#{url}.git"])
+              .order(:id)
+              .first
+        end
+
+        def approval_key
+          installed_theme ? "use_theme" : "install_theme"
         end
 
         def approved_parameters?(tool_parameters)
