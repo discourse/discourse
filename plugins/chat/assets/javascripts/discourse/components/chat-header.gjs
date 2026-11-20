@@ -82,7 +82,9 @@ export default class ChatHeader extends Component {
   <template>
     {{#if (and this.shouldRender this.sharesSiteHeader)}}
       <div class="c-header --site">
-        <HomeLogo @minimized={{this.mobileTabBar.isNestedPage}} />
+        {{#unless this.mobileTabBar.isTitledPage}}
+          <HomeLogo @minimized={{this.mobileTabBar.isNestedPage}} />
+        {{/unless}}
         <div
           class="c-header__navbar-slot"
           {{didInsert this.registerNavbarSlot}}

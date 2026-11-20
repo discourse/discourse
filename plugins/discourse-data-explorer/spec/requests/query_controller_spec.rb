@@ -1451,6 +1451,15 @@ RSpec.describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["rows"]).to eq([[1828]])
       end
 
+      it "rejects negative limits in CSV downloads" do
+        query = make_query("SELECT 1 AS value", {}, [group.id.to_s])
+
+        get "/data-explorer/queries/#{query.id}/run.csv", params: { download: 1, limit: -1 }
+
+        expect(response.status).to eq(400)
+        expect(response.body).to include("You supplied invalid parameters to the request: limit")
+      end
+
       it "returns 404 when the user does not have access" do
         # query restricted to another group, user is not a member
         other_group = Fabricate(:group)

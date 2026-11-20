@@ -316,15 +316,6 @@ function findClosingBlockLine(state, startLine, endLine, isEndMarker) {
   }
 }
 
-function extractMultilineBlockContent(state, startLine, nextLine, closed) {
-  const contentStart =
-    state.bMarks[startLine + 1] + state.tShift[startLine + 1];
-  const contentEnd = closed
-    ? state.eMarks[nextLine - 1]
-    : state.eMarks[nextLine];
-  return state.src.slice(contentStart, contentEnd);
-}
-
 function processMultilineBlock(state, startLine, endLine, silent, isEndMarker) {
   if (silent) {
     return true;
@@ -336,11 +327,12 @@ function processMultilineBlock(state, startLine, endLine, silent, isEndMarker) {
     endLine,
     isEndMarker
   );
-  const content = extractMultilineBlockContent(
-    state,
-    startLine,
+  // getLines strips the list indent and blockquote markers of nested lines
+  const content = state.getLines(
+    startLine + 1,
     nextLine,
-    closed
+    state.blkIndent,
+    false
   );
 
   addBlockMathToken(state, content);

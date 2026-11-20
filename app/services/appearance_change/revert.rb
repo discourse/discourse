@@ -21,11 +21,13 @@ class AppearanceChange::Revert
   policy :applied
   model :previous_state
   policy :restorable
+  only_if(:renamed_versions) { policy :can_edit_versions }
   step :record_pending_revert
   only_if(:changes_site_settings) { step :restore_site_settings }
 
   transaction do
     only_if(:changes_palettes) { step :restore_palettes }
+    only_if(:renamed_versions) { step :restore_theme_names }
     step :record_revert
   end
 
@@ -82,6 +84,22 @@ class AppearanceChange::Revert
       color_scheme_id: previous_state["color_scheme_id"],
       dark_color_scheme_id: previous_state["dark_color_scheme_id"],
     )
+  end
+
+  def renamed_versions(previous_state:)
+    previous_state["theme_names"].present?
+  end
+
+  def can_edit_versions(guardian:, previous_state:)
+    Theme
+      .where(id: previous_state["theme_names"].keys)
+      .all? { |theme| guardian.can_edit_theme?(theme) }
+  end
+
+  def restore_theme_names(previous_state:)
+    Theme
+      .where(id: previous_state["theme_names"].keys)
+      .find_each { |theme| theme.update!(name: previous_state["theme_names"][theme.id.to_s]) }
   end
 
   def record_revert(appearance_change:)

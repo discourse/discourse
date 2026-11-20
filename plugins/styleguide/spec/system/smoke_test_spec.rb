@@ -24,6 +24,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/atoms/topic-link", title: "Topic Link and Status" },
       { href: "/atoms/segmented-control", title: "Segmented Control (Button toggle group)" },
       { href: "/atoms/shortcut", title: "Shortcut" },
+      { href: "/atoms/design-variables", title: "Design variables" },
     ],
     "molecules" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
