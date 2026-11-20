@@ -56,7 +56,7 @@ en:
           body: |
             Hi @%{username},
 
-            [Your post](%{post_url}) in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically.
+            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically and you can [view your post](%{base_url}%{post_url}) again.
       llm_report:
         title: Periodic report using AI
         description: "Periodic report based on a large language model"
