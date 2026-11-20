@@ -7,7 +7,6 @@ class User::Action::SuspendAndPublish < Service::ActionBase
   option :total_size
   option :suspend_until
   option :reason
-  option :reason_is_preset, default: -> { false }
   option :message, default: proc { nil }
 
   def call
@@ -26,7 +25,6 @@ class User::Action::SuspendAndPublish < Service::ActionBase
       user,
       suspended_till: suspend_until,
       reason:,
-      reason_is_preset:,
       by_user: actor,
       message:,
     ).suspend

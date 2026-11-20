@@ -6,7 +6,6 @@ class User::BulkSuspend
   params do
     attribute :user_ids, :array, compact_blank: true
     attribute :reason, :string
-    attribute :reason_is_preset, :boolean, default: false
     attribute :suspend_until, :datetime
     attribute :message, :string
 
@@ -46,7 +45,6 @@ class User::BulkSuspend
           total_size: users.size,
           suspend_until: params.suspend_until,
           reason: params.reason,
-          reason_is_preset: params.reason_is_preset,
           message: params.message,
         )
       end

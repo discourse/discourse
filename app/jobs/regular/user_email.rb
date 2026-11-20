@@ -233,12 +233,8 @@ module Jobs
 
       if args[:user_history_id]
         email_args[:user_history] = UserHistory.where(id: args[:user_history_id]).first
-        email_args[:reason_is_preset] = args[:reason_is_preset]
       end
 
-      if args.key?(:suspension_reason_given)
-        email_args[:suspension_reason_given] = args[:suspension_reason_given]
-      end
       email_args[:reject_reason] = args[:reject_reason]
 
       message =

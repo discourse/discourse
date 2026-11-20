@@ -39,8 +39,6 @@ export default class BulkUserSuspendConfirmation extends Component {
     };
   });
 
-  #reasonIsPreset = false;
-
   get submitDisabled() {
     return (
       this.submitting ||
@@ -105,7 +103,6 @@ export default class BulkUserSuspendConfirmation extends Component {
           user_ids: this.args.model.userIds,
           suspend_until: this.suspendUntil,
           reason: this.reason,
-          reason_is_preset: this.#reasonIsPreset,
           message: this.message,
         },
       });
@@ -114,12 +111,6 @@ export default class BulkUserSuspendConfirmation extends Component {
       this.#logError(extractError(err));
       this.submitting = false;
     }
-  }
-
-  @action
-  updateReason(reason, reasonIsPreset) {
-    this.reason = reason;
-    this.#reasonIsPreset = reasonIsPreset;
   }
 
   @action
@@ -188,7 +179,7 @@ export default class BulkUserSuspendConfirmation extends Component {
           <AdminPenaltyReason
             @message={{this.message}}
             @onChangeMessage={{fn (mut this.message)}}
-            @onChangeReason={{this.updateReason}}
+            @onChangeReason={{fn (mut this.reason)}}
             @penaltyType="suspend"
           />
         {{/if}}

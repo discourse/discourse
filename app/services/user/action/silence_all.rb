@@ -6,14 +6,7 @@ class User::Action::SilenceAll < Service::ActionBase
   option :params
   option :raise_on_failure, default: -> { false }
 
-  delegate :message,
-           :post_id,
-           :silenced_till,
-           :reason,
-           :reason_is_preset,
-           :reviewable_id,
-           to: :params,
-           private: true
+  delegate :message, :post_id, :silenced_till, :reason, :reviewable_id, to: :params, private: true
 
   def call
     silenced_users.first.try(:user_history).try(:details)
@@ -34,7 +27,6 @@ class User::Action::SilenceAll < Service::ActionBase
           keep_posts: true,
           silenced_till:,
           reason:,
-          reason_is_preset:,
           post_id:,
           reviewable_id:,
         )

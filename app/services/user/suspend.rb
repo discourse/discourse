@@ -6,7 +6,6 @@ class User::Suspend
   params do
     attribute :user_id, :integer
     attribute :reason, :string
-    attribute :reason_is_preset, :boolean, default: false
     attribute :message, :string
     attribute :suspend_until, :datetime
     attribute :other_user_ids, :array

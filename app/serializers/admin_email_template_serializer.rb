@@ -51,7 +51,7 @@ class AdminEmailTemplateSerializer < ApplicationSerializer
         body_text = I18n.overrides_disabled { I18n.t(body_key, locale: :en, default: "") }
         keys |= I18nInterpolationKeysFinder.find(body_text) if body_text.is_a?(String)
 
-        keys |= TranslationOverride.custom_interpolation_keys(body_key)
+        keys |= TranslationOverride.custom_interpolation_keys(object)
 
         keys.sort
       end

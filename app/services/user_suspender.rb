@@ -42,14 +42,12 @@ class UserSuspender
     reason:,
     by_user:,
     message: nil,
-    reason_is_preset: false,
     post_id: nil,
     reviewable_id: nil
   )
     @user = user
     @suspended_till = suspended_till
     @reason = reason
-    @reason_is_preset = reason_is_preset
     @by_user = by_user
     @message = message
     @post_id = post_id
@@ -90,8 +88,6 @@ class UserSuspender
         type: "account_suspended",
         user_id: @user.id,
         user_history_id: @user_history.id,
-        suspension_reason_given: @reason.present?,
-        reason_is_preset: @reason_is_preset,
       )
     end
 

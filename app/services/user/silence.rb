@@ -6,7 +6,6 @@ class User::Silence
   params do
     attribute :user_id, :integer
     attribute :reason, :string
-    attribute :reason_is_preset, :boolean, default: false
     attribute :message, :string
     attribute :silenced_till, :datetime
     attribute :other_user_ids, :array

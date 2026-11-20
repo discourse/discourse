@@ -4134,7 +4134,6 @@ en:
 
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
-    moderation_reason_label: "Reason:"
     moderation_appeal_instructions: "To appeal this decision, contact %{email}"
     moderation_reason: "More specifically, your post violated the following community guideline: **%{ground}**. %{explanation}"
     moderation_reason_for_responders: "More specifically, the post you replied to violated the following community guideline: **%{ground}**. %{explanation}"
@@ -4835,7 +4834,9 @@ en:
       text_body_template: |
         Hello,
 
-        %{decision}%{reason_section}
+        %{decision}
+
+        **Reason:** %{reason}
 
         You can still read discussions, but you can’t participate in them while your account is silenced.
 
@@ -5270,7 +5271,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.%{reason_section}
+        This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
+
+        **Reason:** %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5281,7 +5284,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your account has been suspended.%{reason_section}
+        This is an automated message from %{site_name} to let you know that your account has been suspended.
+
+        **Reason:** %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5539,7 +5544,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that a staff member rejected your account.%{reason_section}
+        This is an automated message from %{site_name} to let you know that a staff member rejected your account.
+
+        %{reject_reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 

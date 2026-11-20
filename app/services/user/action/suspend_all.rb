@@ -6,14 +6,7 @@ class User::Action::SuspendAll < Service::ActionBase
   option :params
   option :raise_on_failure, default: -> { false }
 
-  delegate :message,
-           :post_id,
-           :suspend_until,
-           :reason,
-           :reason_is_preset,
-           :reviewable_id,
-           to: :params,
-           private: true
+  delegate :message, :post_id, :suspend_until, :reason, :reviewable_id, to: :params, private: true
 
   def call
     suspended_users.first.try(:user_history).try(:details)
@@ -27,7 +20,6 @@ class User::Action::SuspendAll < Service::ActionBase
         user,
         suspended_till: suspend_until,
         reason: reason,
-        reason_is_preset: reason_is_preset,
         by_user: actor,
         message: message,
         post_id: post_id,
