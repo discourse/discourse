@@ -19,7 +19,7 @@ RSpec.describe UpcomingChanges::List do
             impact_type: "other",
             impact_role: "developers",
           },
-          allow_user_locale: {
+          allow_uncategorized_topics: {
             impact: "feature,all_members",
             status: :beta,
             impact_type: "feature",
@@ -177,7 +177,9 @@ RSpec.describe UpcomingChanges::List do
 
         it "is nil for changes without a status change event" do
           mock_setting =
-            result.upcoming_changes.find { |change| change[:setting] == :allow_user_locale }
+            result.upcoming_changes.find do |change|
+              change[:setting] == :allow_uncategorized_topics
+            end
 
           expect(mock_setting[:upcoming_change][:status_changed_at]).to be_nil
         end
@@ -213,7 +215,7 @@ RSpec.describe UpcomingChanges::List do
 
         it "returns false for overriding_defaults when no upcoming_change_default_override points to the change" do
           results = result.upcoming_changes
-          mock_setting = results.find { |change| change[:setting] == :allow_user_locale }
+          mock_setting = results.find { |change| change[:setting] == :allow_uncategorized_topics }
           expect(mock_setting[:overriding_defaults]).to eq(false)
         end
       end
@@ -224,7 +226,7 @@ RSpec.describe UpcomingChanges::List do
           # enable_upload_debug_mode must be re-mocked here.
           mock_upcoming_change_metadata(
             {
-              set_locale_from_cookie: {
+              show_preview_for_form_templates: {
                 impact: "feature,all_members",
                 status: :experimental,
                 impact_type: "feature",
@@ -242,26 +244,29 @@ RSpec.describe UpcomingChanges::List do
 
         it "includes the settings the change depends on and their humanized names" do
           results = result.upcoming_changes
-          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+          mock_setting =
+            results.find { |change| change[:setting] == :show_preview_for_form_templates }
 
-          expect(mock_setting[:depends_on]).to eq([:allow_user_locale])
-          expect(mock_setting[:depends_on_humanized_names]).to eq(["Allow user locale"])
+          expect(mock_setting[:depends_on]).to eq([:enable_form_templates])
+          expect(mock_setting[:depends_on_humanized_names]).to eq(["Enable form templates"])
         end
 
         it "includes depends_on_met as false when a dependency is not enabled" do
-          SiteSetting.allow_user_locale = false
+          SiteSetting.enable_form_templates = false
 
           results = result.upcoming_changes
-          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+          mock_setting =
+            results.find { |change| change[:setting] == :show_preview_for_form_templates }
 
           expect(mock_setting[:depends_on_met]).to eq(false)
         end
 
         it "includes depends_on_met as true when all dependencies are enabled" do
-          SiteSetting.allow_user_locale = true
+          SiteSetting.enable_form_templates = true
 
           results = result.upcoming_changes
-          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+          mock_setting =
+            results.find { |change| change[:setting] == :show_preview_for_form_templates }
 
           expect(mock_setting[:depends_on_met]).to eq(true)
         end
@@ -390,7 +395,9 @@ RSpec.describe UpcomingChanges::List do
             expect(
               results.find { |change| change[:setting] == :enable_upload_debug_mode },
             ).not_to be_present
-            expect(results.find { |change| change[:setting] == :allow_user_locale }).to be_present
+            expect(
+              results.find { |change| change[:setting] == :allow_uncategorized_topics },
+            ).to be_present
           end
         end
       end

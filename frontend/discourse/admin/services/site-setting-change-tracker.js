@@ -5,6 +5,7 @@ import { DEFAULT_TEXT_SIZES } from "discourse/admin/lib/constants";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import confirmUserLocaleRemoval from "discourse/lib/confirm-user-locale-removal";
 import { i18n } from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories.gjs";
 
@@ -64,6 +65,24 @@ export default class SiteSettingChangeTracker extends Service {
 
     try {
       let confirm = true;
+      const userLocales = [...this.dirtySiteSettings].find(
+        (setting) => setting.setting === "allowed_user_locales"
+      );
+      const userLocaleReset = userLocales
+        ? await confirmUserLocaleRemoval(
+            this.dialog,
+            this.siteSettings,
+            userLocales.value,
+            userLocales.pendingValue,
+            [...this.dirtySiteSettings].find(
+              (setting) => setting.setting === "default_locale"
+            )?.pendingValue
+          )
+        : undefined;
+      if (userLocaleReset === false) {
+        this.#stopSaving();
+        return;
+      }
 
       // Settings with custom confirmation messages.
       if (this.#requiresConfirmation.length > 0) {
@@ -89,7 +108,10 @@ export default class SiteSettingChangeTracker extends Service {
       this.dirtySiteSettings.forEach((setting) => {
         params[setting.setting] = {
           value: setting.pendingValue,
-          backfill: !!setting.updateExistingUsers,
+          backfill:
+            setting.setting === "allowed_user_locales"
+              ? userLocaleReset === true
+              : !!setting.updateExistingUsers,
         };
       });
 

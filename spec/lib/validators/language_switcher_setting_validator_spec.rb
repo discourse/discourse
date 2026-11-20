@@ -4,7 +4,7 @@ RSpec.describe LanguageSwitcherSettingValidator do
   subject(:validator) { described_class.new }
 
   it "always allows disabling the switcher" do
-    SiteSetting.allow_user_locale = false
+    SiteSetting.allowed_user_locales = ""
     SiteSetting.content_localization_supported_locales = ""
 
     expect(validator.valid_value?("none")).to eq(true)
@@ -20,8 +20,8 @@ RSpec.describe LanguageSwitcherSettingValidator do
       expect(validator.valid_value?("anonymous")).to eq(true)
     end
 
-    it "requires allow_user_locale" do
-      SiteSetting.allow_user_locale = false
+    it "requires allowed_user_locales" do
+      SiteSetting.allowed_user_locales = ""
 
       expect(validator.valid_value?("all")).to eq(false)
     end
@@ -35,7 +35,7 @@ RSpec.describe LanguageSwitcherSettingValidator do
 
   it "links the remaining requirements from its error message" do
     expect(validator.error_message).to include(
-      "{{setting:allow_user_locale}}",
+      "{{setting:allowed_user_locales}}",
       "{{setting:content_localization_supported_locales}}",
     )
     expect(validator.error_message).not_to include("set_locale_from_cookie")

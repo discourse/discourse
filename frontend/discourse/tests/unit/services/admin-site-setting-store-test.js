@@ -19,6 +19,25 @@ module("Unit | Service | admin-site-setting-store", function (hooks) {
     this.store = getOwner(this).lookup("service:admin-site-setting-store");
   });
 
+  test("list dependencies require at least one choice", function (assert) {
+    const parent = build({
+      setting: "allowed_user_locales",
+      type: "list",
+      value: "all",
+    });
+    const child = build({
+      setting: "set_locale_from_cookie",
+      depends_on: ["allowed_user_locales"],
+    });
+    this.store.register([parent, child]);
+
+    assert.true(this.store.dependenciesSatisfied(child));
+    parent.buffered.set("value", "fr|ja");
+    assert.true(this.store.dependenciesSatisfied(child));
+    parent.buffered.set("value", "");
+    assert.false(this.store.dependenciesSatisfied(child));
+  });
+
   module("isVisible", function () {
     test("non-hidden settings are always visible", function (assert) {
       const s = build({ depends_behavior: null });

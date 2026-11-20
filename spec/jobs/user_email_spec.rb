@@ -54,7 +54,7 @@ RSpec.describe Jobs::UserEmail do
     end
 
     it "delivers translated digests according to each recipient's language preferences" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       SiteSetting.content_localization_enabled = true
       popular_topic.update!(locale: "en")
       post = Fabricate(:post, topic: popular_topic, locale: "en", raw: "Original digest post")

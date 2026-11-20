@@ -74,7 +74,7 @@ describe Chat::Notifier do
       end
 
       it "uses the user's locale for the mention warning" do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         user_1.update!(locale: "pt_BR")
         channel.update!(allow_channel_wide_mentions: false)
         msg = build_cooked_msg(mention, user_1)
@@ -461,7 +461,7 @@ describe Chat::Notifier do
       end
 
       it "respects user locale on notice about users who are not allowed to use chat" do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         user_1.update!(locale: "pt_BR")
         msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
 
@@ -818,7 +818,7 @@ describe Chat::Notifier do
       end
 
       it "respects user locale on notice about group disallowing mentions" do
-        SiteSetting.allow_user_locale = true
+        SiteSetting.allowed_user_locales = "all"
         user_1.update!(locale: "pt_BR")
         group.update!(mentionable_level: Group::ALIAS_LEVELS[:only_admins])
         msg = build_cooked_msg("Hello @#{group.name}", user_1)
@@ -1029,7 +1029,7 @@ describe Chat::Notifier do
     end
 
     it "translates the action title using the user's locale" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user.update!(locale: "fr")
       TranslationOverride.upsert!(
         "fr",

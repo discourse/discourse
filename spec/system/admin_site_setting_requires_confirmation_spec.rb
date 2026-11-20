@@ -45,6 +45,32 @@ describe "Admin Site Setting Requires Confirmation" do
     expect(settings_page).to have_no_overridden_setting("min_password_length")
   end
 
+  it "saves removed languages only after the admin confirms" do
+    SiteSetting.allowed_user_locales = "fr|ja"
+    settings_page.visit("allowed_user_locales")
+    settings_page.remove_list_value("allowed_user_locales", "ja")
+    settings_page.save_setting("allowed_user_locales")
+
+    expect(dialog).to be_open
+    expect(dialog).to have_content(
+      I18n.t(
+        "admin_js.admin.site_settings.requires_confirmation_messages.allowed_user_locales.prompt",
+      ),
+    )
+    dialog.click_no
+    expect(dialog).to be_closed
+    settings_page.visit("allowed_user_locales")
+    expect(settings_page).to have_list_values("allowed_user_locales", %w[fr ja])
+
+    settings_page.remove_list_value("allowed_user_locales", "ja")
+    settings_page.save_setting("allowed_user_locales")
+    expect(dialog).to be_open
+    dialog.click_yes
+    expect(dialog).to be_closed
+    settings_page.visit("allowed_user_locales")
+    expect(settings_page).to have_list_values("allowed_user_locales", ["fr"])
+  end
+
   context "with simple_on_enable confirmation type" do
     it "shows confirmation when enabling the setting" do
       settings_page.visit("can_permanently_delete")

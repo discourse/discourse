@@ -835,7 +835,7 @@ RSpec.describe Discourse do
 
     before do
       SiteSetting.default_locale = "en"
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
     end
 
     it "ignores the locale cookie by default" do
@@ -885,7 +885,7 @@ RSpec.describe Discourse do
       end
 
       it "ignores the cookie when user locales are not allowed" do
-        SiteSetting.allow_user_locale = false
+        SiteSetting.allowed_user_locales = ""
 
         expect(locale_for(cookie: "es")).to eq("en")
       end
@@ -894,6 +894,34 @@ RSpec.describe Discourse do
         SiteSetting.set_locale_from_param = true
 
         expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
+      end
+    end
+
+    context "with restricted interface languages" do
+      before do
+        SiteSetting.allowed_user_locales = "fr|ja"
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_accept_language_header = true
+      end
+
+      it "does not select disallowed languages from cookies or parameters" do
+        expect(locale_for(cookie: "de")).to eq("en")
+        expect(locale_for(path: "/?tl=de")).to eq("en")
+        expect(locale_for(cookie: "fr")).to eq("fr")
+      end
+
+      it "keeps configured content translation URLs reachable" do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_supported_locales = "de"
+        SiteSetting.content_localization_crawler_param = true
+
+        expect(locale_for(path: "/?tl=de")).to eq("de")
+        expect(locale_for(cookie: "de")).to eq("en")
+      end
+
+      it "selects the first allowed language from the browser preferences" do
+        expect(locale_for(env: { "HTTP_ACCEPT_LANGUAGE" => "de,ja;q=0.8" })).to eq("ja")
       end
     end
 

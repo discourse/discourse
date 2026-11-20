@@ -58,6 +58,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import SettingDefinitionField from "discourse/components/setting-definition-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import confirmUserLocaleRemoval from "discourse/lib/confirm-user-locale-removal";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
 import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
@@ -108,6 +109,8 @@ export default class SiteSettingComponent extends Component {
   @service siteSettingChangeTracker;
   @service messageBus;
   @service site;
+  @service dialog;
+  @service siteSettings;
 
   /** @type {boolean | null | undefined} */
   @tracked isSecret = null;
@@ -556,6 +559,24 @@ export default class SiteSettingComponent extends Component {
 
   @action
   async save(settings = [this.setting]) {
+    const userLocales = settings.find(
+      (setting) => setting.setting === "allowed_user_locales"
+    );
+    if (userLocales) {
+      const confirmed = await confirmUserLocaleRemoval(
+        this.dialog,
+        this.siteSettings,
+        userLocales.value,
+        userLocales.pendingValue,
+        settings.find((setting) => setting.setting === "default_locale")
+          ?.pendingValue
+      );
+      if (confirmed === false) {
+        return;
+      }
+      userLocales.updateExistingUsers = confirmed === true;
+    }
+
     settings.forEach((setting) => (setting.isSaving = true));
 
     try {

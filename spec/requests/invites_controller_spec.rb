@@ -2565,7 +2565,7 @@ RSpec.describe InvitesController do
         expect(user.locale).to eq("de")
 
         user2 = User.where(staged: true).find_by_email("test2@example.com")
-        expect(user2.locale).to eq("pl")
+        expect(user2.locale).to eq("pl_PL")
       end
 
       it "strips arbitrary CSV header columns that are not allowed" do

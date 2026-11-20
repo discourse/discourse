@@ -242,6 +242,61 @@ RSpec.describe Admin::SiteSettingsController do
   end
 
   describe "#update" do
+    it "requires confirmation before removing languages even when nobody uses them" do
+      sign_in(admin)
+
+      put "/admin/site_settings/allowed_user_locales.json",
+          params: {
+            allowed_user_locales: "en|fr",
+            update_existing_user: "false",
+          }
+
+      expect(response.status).to eq(422)
+      expect(SiteSetting.allowed_user_locales).to eq("all")
+    end
+
+    it "clears only removed language choices after confirmation" do
+      sign_in(admin)
+      SiteSetting.allowed_user_locales = "fr|ja"
+      affected = Fabricate(:user, locale: "ja")
+      affected.user_option.update!(understood_languages: %w[ja fr])
+      unaffected = Fabricate(:user, locale: "fr")
+      default_user = Fabricate(:user, locale: "en")
+
+      put "/admin/site_settings/bulk_update.json",
+          params: {
+            settings: {
+              allowed_user_locales: {
+                value: "fr",
+                backfill: true,
+              },
+            },
+          }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.allowed_user_locales).to eq("fr")
+      expect(affected.reload.locale).to be_nil
+      expect(affected.effective_locale).to eq("en")
+      expect(affected.user_option.reload.understood_languages).to eq(%w[ja fr])
+      expect(unaffected.reload.locale).to eq("fr")
+      expect(default_user.reload.locale).to eq("en")
+      SiteSetting.default_locale = "de"
+      expect(affected.effective_locale).to eq("de")
+    end
+
+    it "does not require confirmation when adding languages or keeping the site default" do
+      sign_in(admin)
+      SiteSetting.allowed_user_locales = "en|fr"
+
+      put "/admin/site_settings/allowed_user_locales.json",
+          params: {
+            allowed_user_locales: "fr|ja",
+          }
+
+      expect(response.status).to eq(204)
+      expect(SiteSetting.allowed_user_locales).to eq("fr|ja")
+    end
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -721,7 +776,7 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       it "returns html_message: true with linkified errors when a validator message references settings" do
-        SiteSetting.allow_user_locale = false
+        SiteSetting.allowed_user_locales = ""
 
         put "/admin/site_settings/content_localization_language_switcher.json",
             params: {
@@ -738,12 +793,12 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       it "keeps the exception message plain text for non-admin-UI consumers" do
-        SiteSetting.allow_user_locale = false
+        SiteSetting.allowed_user_locales = ""
 
         expect { SiteSetting.set("content_localization_language_switcher", "all") }.to raise_error(
           Discourse::InvalidHTMLParameters,
         ) do |error|
-          expect(error.message).to include("'Allow user locale'")
+          expect(error.message).to include("'Allowed user locales'")
           expect(error.message).not_to include("<a", "{{setting")
           expect(error.html_message).to include('class="site-setting-link"')
         end

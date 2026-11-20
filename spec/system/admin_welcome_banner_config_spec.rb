@@ -6,7 +6,7 @@ describe "Admin Welcome Banner Config" do
 
   before do
     sign_in(admin)
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
   end
 
   after { I18n.reload! }

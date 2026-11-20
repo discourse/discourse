@@ -108,6 +108,77 @@ module("Unit | Service | site-setting-change-tracker", function (hooks) {
     );
   });
 
+  test("removing an unavailable language confirms before saving any dirty settings", async function (assert) {
+    Object.assign(this.tracker.siteSettings, {
+      default_locale: "en",
+      available_locales: [{ value: "en" }, { value: "fr" }, { value: "ja" }],
+    });
+    const confirm = sinon
+      .stub(this.tracker.dialog, "confirm")
+      .onFirstCall()
+      .resolves(false)
+      .onSecondCall()
+      .resolves(true);
+    let requests = 0;
+    let body;
+    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
+      requests++;
+      body = new URLSearchParams(request.requestBody);
+      return response({});
+    });
+    const locales = stubHandle({
+      setting: "allowed_user_locales",
+      value: "fr|removed_plugin_locale",
+      pendingValue: "fr",
+    });
+    this.tracker.add(stubHandle());
+    this.tracker.add(locales);
+
+    await this.tracker.save();
+
+    assert.strictEqual(requests, 0);
+    assert.strictEqual(this.tracker.count, 2);
+    assert.false(locales.isSaving);
+
+    await this.tracker.save();
+
+    assert.strictEqual(confirm.callCount, 2);
+    assert.strictEqual(requests, 1);
+    assert.strictEqual(
+      body.get("settings[allowed_user_locales][backfill]"),
+      "true"
+    );
+    assert.true(locales.committed);
+  });
+
+  test("adding languages keeps the implicit default and does not claim confirmation", async function (assert) {
+    Object.assign(this.tracker.siteSettings, {
+      default_locale: "en",
+      available_locales: [{ value: "en" }, { value: "fr" }, { value: "ja" }],
+    });
+    const confirm = sinon.stub(this.tracker.dialog, "confirm");
+    let body;
+    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
+      body = new URLSearchParams(request.requestBody);
+      return response({});
+    });
+    this.tracker.add(
+      stubHandle({
+        setting: "allowed_user_locales",
+        value: "en|fr",
+        pendingValue: "fr|ja",
+      })
+    );
+
+    await this.tracker.save();
+
+    assert.false(confirm.called);
+    assert.strictEqual(
+      body.get("settings[allowed_user_locales][backfill]"),
+      "false"
+    );
+  });
+
   test("discard rolls every dirty setting back", function (assert) {
     const title = stubHandle();
     const description = stubHandle({ setting: "site_description" });

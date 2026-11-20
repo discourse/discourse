@@ -51,7 +51,7 @@ describe "Viewing sidebar" do
         )
       end
 
-      before { SiteSetting.allow_user_locale = true }
+      before { SiteSetting.allowed_user_locales = "all" }
 
       it "has correct translations" do
         sign_in user

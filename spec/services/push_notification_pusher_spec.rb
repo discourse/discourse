@@ -102,7 +102,7 @@ RSpec.describe PushNotificationPusher do
     end
 
     it "sends notification in user's locale" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user.update!(locale: "pt_BR")
 
       TranslationOverride.upsert!(

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AllowUserLocaleEnabledValidator
+class AllowedUserLocalesEnabledValidator
   def initialize(opts = {})
     @opts = opts
   end
@@ -8,8 +8,7 @@ class AllowUserLocaleEnabledValidator
   def valid_value?(val)
     # only validate when enabling setting locale from headers
     return true if val == "f"
-    # ensure that allow_user_locale is enabled
-    SiteSetting.allow_user_locale
+    SiteSetting.allowed_user_locales.present?
   end
 
   def error_message

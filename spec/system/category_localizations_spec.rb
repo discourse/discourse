@@ -22,7 +22,7 @@ describe "Category Localizations" do
   before do
     SiteSetting.content_localization_supported_locales = "es|ja|fr"
     SiteSetting.content_localization_enabled = true
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
     SiteSetting.set_locale_from_cookie = true
     SiteSetting.desktop_category_page_style = "categories_boxes"
   end

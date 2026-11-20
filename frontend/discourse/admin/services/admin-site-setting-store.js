@@ -75,7 +75,9 @@ export default class AdminSiteSettingStore extends Service {
         return allowedValues.map(String).includes(String(parentValue));
       }
 
-      return isSettingValueTrue(parentValue);
+      return parent.type === "list"
+        ? !!parentValue
+        : isSettingValueTrue(parentValue);
     });
   }
 

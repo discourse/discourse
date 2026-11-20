@@ -496,7 +496,7 @@ RSpec.describe Categories::Types::Base do
         schema[:site_settings].find { |e| e[:key] == "set_locale_from_accept_language_header" }
 
       expect(title_entry).not_to have_key(:depends_on)
-      expect(dependent_entry[:depends_on]).to eq("allow_user_locale")
+      expect(dependent_entry[:depends_on]).to eq("allowed_user_locales")
     end
 
     it "resolves depends_on for category custom fields" do

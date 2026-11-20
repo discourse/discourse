@@ -10,6 +10,7 @@ import {
   AUTOMATICALLY_TRANSLATE_COOKIE,
   AUTOMATICALLY_TRANSLATE_COOKIE_EXPIRY,
   automaticallyTranslate,
+  interfaceLanguageOptions,
   languageSwitcherEnabled,
   LOCALE_COOKIE,
   LOCALE_COOKIE_EXPIRY,
@@ -58,15 +59,24 @@ export default class ContentLanguagePreferencesModal extends Component {
       languageSwitcherEnabled(this.siteSettings)
     ) {
       return this.#toOptions(
-        this.siteSettings.available_content_localization_locales
+        interfaceLanguageOptions(
+          this.siteSettings,
+          this.siteSettings.available_content_localization_locales
+        )
       );
     }
 
-    return this.allLanguageOptions;
+    return this.#toOptions(
+      interfaceLanguageOptions(
+        this.siteSettings,
+        this.siteSettings.available_locales,
+        this.currentUser?.effective_locale
+      )
+    );
   }
 
   get canChangeInterfaceLanguage() {
-    if (!this.siteSettings.allow_user_locale) {
+    if (!this.siteSettings.allowed_user_locales) {
       return false;
     }
 

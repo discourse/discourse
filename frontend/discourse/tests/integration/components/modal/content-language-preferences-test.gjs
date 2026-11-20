@@ -26,10 +26,33 @@ module(
       this.siteSettings.available_locales = ALL_LOCALES;
       this.siteSettings.available_content_localization_locales =
         CONFIGURED_LOCALES;
-      this.siteSettings.allow_user_locale = true;
+      this.siteSettings.allowed_user_locales = "all";
     });
 
     const noop = () => {};
+
+    test("limits interface choices without changing installed languages", async function (assert) {
+      this.siteSettings.allowed_user_locales = "ja";
+      this.siteSettings.default_locale = "en";
+      this.siteSettings.set_locale_from_cookie = true;
+
+      await render(
+        <template>
+          <ContentLanguagePreferences @closeModal={{noop}} @inline={{true}} />
+        </template>
+      );
+
+      assert
+        .dom(".content-language-preferences-modal select option")
+        .exists({ count: 2 });
+      assert
+        .dom('.content-language-preferences-modal option[value="ja"]')
+        .exists();
+      assert
+        .dom('.content-language-preferences-modal option[value="en"]')
+        .exists();
+      assert.deepEqual(this.siteSettings.available_locales, ALL_LOCALES);
+    });
 
     test("anonymous visitors only get the locales the switcher honours", async function (assert) {
       this.siteSettings.set_locale_from_cookie = false;

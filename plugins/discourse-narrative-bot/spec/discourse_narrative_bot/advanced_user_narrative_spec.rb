@@ -832,7 +832,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
   end
 
   it "invites to advanced training using the user's effective locale" do
-    SiteSetting.allow_user_locale = true
+    SiteSetting.allowed_user_locales = "all"
     recipient = Fabricate(:user, locale: "de")
 
     TranslationOverride.upsert!(

@@ -715,9 +715,9 @@ en:
               none: "Nobody"
               anonymous: "Anonymous visitors"
               all: "Everyone"
-          allow_user_locale:
-            label: "Let users choose their language"
-            description: "Signed-in users can set their preferred language. Required for the language switcher and language links."
+          allowed_user_locales:
+            label: "Allowed interface languages"
+            description: "Languages users can choose for the interface. All languages includes future additions. Leave empty to use the site default for everyone."
           set_locale_from_param:
             label: "Language links"
             description: "Anyone can open a page in a language by adding it to the address, for example ?tl=es."

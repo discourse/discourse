@@ -6,7 +6,7 @@ class SiteSetting::Update
   class Conflict < StandardError
   end
 
-  Setting = Struct.new(:name, :value, :backfill, :change)
+  Setting = Struct.new(:name, :value, :backfill, :change, :user_locale_reset)
 
   options do
     attribute :allow_changing_hidden, :array, default: []
@@ -29,7 +29,7 @@ class SiteSetting::Update
             Setting.new(
               setting[:setting_name].to_sym,
               setting[:value].to_s.strip,
-              !!setting[:backfill],
+              ActiveModel::Type::Boolean.new.cast(setting[:backfill]),
               nil,
             )
           end
@@ -78,6 +78,7 @@ class SiteSetting::Update
       step :ensure_expected_values
 
       transaction do
+        step :ensure_user_locale_confirmation
         step :save
         step :backfill
       end
@@ -107,10 +108,24 @@ class SiteSetting::Update
     end
   end
 
+  def ensure_user_locale_confirmation(params:)
+    setting = params.settings.find { |s| s.name == :allowed_user_locales }
+    return if !setting
+
+    default_locale =
+      params.settings.find { |s| s.name == :default_locale }&.value || SiteSetting.default_locale
+    setting.user_locale_reset = UserLocaleReset.new(setting.value, default_locale:)
+
+    if setting.user_locale_reset.required? && !setting.backfill
+      raise Discourse::InvalidParameters,
+            I18n.t("errors.site_settings.user_locale_reset_requires_confirmation")
+    end
+  end
+
   def save(params:, options:, guardian:)
     params.settings.each do |setting|
       detailed_message =
-        if default_user_preference?(setting)
+        if default_user_preference?(setting) || setting.name == :allowed_user_locales
           value =
             setting.backfill ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
           I18n.t("staff_action_logs.site_setting.update_existing_users", value:)
@@ -128,7 +143,13 @@ class SiteSetting::Update
 
   def backfill(params:)
     params.settings.each do |setting|
-      next if !setting.backfill || !default_user_preference?(setting)
+      next if !setting.backfill
+
+      if setting.name == :allowed_user_locales
+        setting.user_locale_reset.apply
+        next
+      end
+      next if !default_user_preference?(setting)
 
       SiteSettingUpdateExistingUsers.call(
         setting.name.to_s,

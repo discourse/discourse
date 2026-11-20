@@ -22,7 +22,7 @@ RSpec.describe LocaleFileValidator do
       "{{setting:s3_upload_bucket}}",
       "{{settings:title,logo}}",
       "{{settings:title,logo|All required settings}}",
-      "{{settings:set_locale_from_cookie,allow_user_locale,title|View them}}",
+      "{{settings:set_locale_from_cookie,allowed_user_locales,title|View them}}",
     ]
 
     MALFORMED_MARKERS = [

@@ -810,15 +810,17 @@ RSpec.describe UpcomingChanges do
     end
 
     it "returns false when a boolean dependency is disabled" do
-      SiteSetting.allow_user_locale = false
+      SiteSetting.enable_form_templates = false
 
-      expect(described_class.change_dependencies_met?(:set_locale_from_cookie)).to eq(false)
+      expect(described_class.change_dependencies_met?(:show_preview_for_form_templates)).to eq(
+        false,
+      )
     end
 
     it "returns true when all boolean dependencies are enabled" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.enable_form_templates = true
 
-      expect(described_class.change_dependencies_met?(:set_locale_from_cookie)).to eq(true)
+      expect(described_class.change_dependencies_met?(:show_preview_for_form_templates)).to eq(true)
     end
 
     context "with depends_on_values for a non-boolean dependency" do

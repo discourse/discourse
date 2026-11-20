@@ -78,8 +78,8 @@ RSpec.describe UserUpdater do
 
     it "preserves explicitly submitted understood languages when user locales are disabled" do
       SiteSetting.default_locale = "en"
-      SiteSetting.allow_user_locale = false
       user.update!(locale: "fr")
+      SiteSetting.allowed_user_locales = ""
 
       UserUpdater.new(user, user).update(understood_languages: %w[en ja])
 

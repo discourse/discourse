@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
+  describe ".allow_user_locale" do
+    it "reflects whether interface language selection is enabled" do
+      { "all" => true, "fr" => true, "" => false }.each do |locales, enabled|
+        SiteSetting.allowed_user_locales = locales
+
+        expect(SiteSetting.allow_user_locale).to eq(enabled)
+        expect(SiteSetting.allow_user_locale?).to eq(enabled)
+      end
+    end
+  end
+
   describe ".site_logo_dimensions" do
     it "exposes upload dimensions by URL and refreshes them when a logo changes" do
       logo = Fabricate(:upload, width: 600, height: 200)

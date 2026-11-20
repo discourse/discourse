@@ -446,7 +446,7 @@ RSpec.describe StaticController do
         Plugin::Instance
           .new
           .add_topic_static_page("faq") do
-            current_user&.locale == "pl" ? "test_some_other_topic_id" : "test_some_topic_id"
+            current_user&.locale == "pl_PL" ? "test_some_other_topic_id" : "test_some_topic_id"
           end
 
         get "/guidelines"
@@ -454,7 +454,7 @@ RSpec.describe StaticController do
         expect(response.status).to eq(200)
         expect(response.body).to include("Regular FAQ")
 
-        sign_in(Fabricate(:user, locale: "pl"))
+        sign_in(Fabricate(:user, locale: "pl_PL"))
         get "/guidelines"
 
         expect(response.status).to eq(200)

@@ -11,7 +11,7 @@ RSpec.describe SystemMessage do
     before { SiteSetting.site_contact_username = admin.username }
 
     it "appends a paragraph in the recipient locale to a custom body before the plugin event" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user.update!(locale: "fr")
       TranslationOverride.upsert!(:fr, "system_messages.private_topic_title", "Sujet %{id}")
       expected_raw = "Custom outcome.\n\nSujet 42"
@@ -46,7 +46,7 @@ RSpec.describe SystemMessage do
     end
 
     it "can create a post from system user in user selected locale" do
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       user_de = Fabricate(:user, locale: "de")
       system_user = Discourse.system_user
 

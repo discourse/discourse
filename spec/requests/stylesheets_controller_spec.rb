@@ -92,7 +92,7 @@ RSpec.describe StylesheetsController do
       Stylesheet::Importer.register_imports!
       StylesheetCache.destroy_all
       SiteSetting.has_login_hint = false
-      SiteSetting.allow_user_locale = true
+      SiteSetting.allowed_user_locales = "all"
       sign_in(user)
     end
 

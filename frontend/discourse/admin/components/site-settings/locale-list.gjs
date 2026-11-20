@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { normalizeAllowedUserLocales } from "discourse/lib/content-localization";
 import ListSetting from "discourse/select-kit/components/list-setting";
 
 export default class LocaleList extends Component {
@@ -26,6 +27,9 @@ export default class LocaleList extends Component {
 
   @action
   onChangeListSetting(value) {
+    if (this.args.setting.setting === "allowed_user_locales") {
+      value = normalizeAllowedUserLocales(value, this.settingValue);
+    }
     this.args.changeValueCallback(value.join(this.tokenSeparator));
   }
 
