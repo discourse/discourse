@@ -473,7 +473,8 @@ module AppearanceStyles
         @checked_rules.each_with_index.map do |rule, index|
           rule.merge(index:, specificity: specificity(rule))
         end
-      @catalog.all.all? { |area| readable_area?(area, rules) }
+      # every area is checked, so all of them can be fixed at once
+      @catalog.all.map { |area| readable_area?(area, rules) }.all?
     end
 
     # Level 0 is the area's own element, which the areas it shares an element
@@ -733,12 +734,12 @@ module AppearanceStyles
       if strict
         error(
           path,
-          "text on background is #{ratio}:1 in #{mode} mode#{where}; it needs #{required}:1. Set a readable color too.",
+          "text on background is #{ratio}:1 in #{mode} mode#{where}; it needs #{required}:1 (text ##{text_hex}, background ##{background}). Set a readable color too.",
         )
       else
         error(
           path,
-          "#{area.label} text is #{ratio}:1 on the background around it in #{mode} mode#{where}; it needs #{required}:1",
+          "#{area.label} text is #{ratio}:1 on the background around it in #{mode} mode#{where}; it needs #{required}:1 (text ##{text_hex}, background ##{background}). Set a readable color in a rule for the #{area.key} area too.",
         )
       end
     end
@@ -1022,35 +1023,44 @@ module AppearanceStyles
     # defaults miss 4.5:1 in places, so a pair passes when it is AA or at
     # least as readable as core's default.
     def readable_variables?(variables, path = "variables")
-      variable_pairs.all? do |background, text|
-        next true if !variables.key?(background) && !variables.key?(text)
+      variable_pairs
+        .map do |background, text|
+          next true if !variables.key?(background) && !variables.key?(text)
 
-        %w[light dark].all? do |mode|
-          background_hex = shown_variable_background(background, mode)
-          text_hex = resolve_variable(text, mode)
-          if background_hex.nil? && variables.key?(background)
-            next unreadable_unknown(path, background)
-          end
-          next unreadable_unknown(path, text) if text_hex.nil? && variables.key?(text)
-          if text_hex == :translucent && variables.key?(text)
-            next error(path, "#{text}: text needs an opaque color")
-          end
-          next true if !background_hex.is_a?(String) || !text_hex.is_a?(String)
+          %w[light dark].all? do |mode|
+            background_hex = shown_variable_background(background, mode)
+            text_hex = resolve_variable(text, mode)
+            if background_hex.nil? && variables.key?(background)
+              next unreadable_unknown(path, background)
+            end
+            next unreadable_unknown(path, text) if text_hex.nil? && variables.key?(text)
+            if text_hex == :translucent && variables.key?(text)
+              next error(path, "#{text}: text needs an opaque color")
+            end
+            next true if !background_hex.is_a?(String) || !text_hex.is_a?(String)
 
-          ratio = contrast(text_hex, background_hex)
-          required = text.include?("icon") ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
-          default_background = shown_variable_background(background, mode, use_draft: false)
-          default_text = resolve_variable(text, mode, use_draft: false)
-          if default_background.is_a?(String) && default_text.is_a?(String)
-            required = [required, contrast(default_text, default_background)].min
+            ratio = contrast(text_hex, background_hex)
+            required = text.include?("icon") ? MINIMUM_ICON_CONTRAST : MINIMUM_CONTRAST
+            default_background = shown_variable_background(background, mode, use_draft: false)
+            default_text = resolve_variable(text, mode, use_draft: false)
+            if default_background.is_a?(String) && default_text.is_a?(String)
+              required = [required, contrast(default_text, default_background)].min
+            end
+            next true if ratio >= required
+            error(
+              path,
+              "#{text} on #{background} is #{ratio}:1 in #{mode} mode; it needs #{required}:1 (#{text} is ##{text_hex}, #{background} is ##{background_hex}).#{variable_pair_hint(background, text)}",
+            )
           end
-          next true if ratio >= required
-          error(
-            path,
-            "#{text} on #{background} is #{ratio}:1 in #{mode} mode; it needs #{required}:1",
-          )
         end
-      end
+        .all?
+    end
+
+    # Core's own text colors are shared by the whole site, so a background
+    # that shows one is better given its own text color with a rule.
+    def variable_pair_hint(background, text)
+      return "" if BACKGROUND_TEXT[background] != text
+      " #{text} is used across the site, so set a readable color in a rule for the area instead of changing #{text}."
     end
 
     def contrast(color, other_color)

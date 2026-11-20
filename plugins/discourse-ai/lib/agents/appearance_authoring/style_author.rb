@@ -144,11 +144,11 @@ module DiscourseAi
         end
 
         CONTRAST_ADVICE = <<~TEXT
-          For text that isn't readable: mid-tone backgrounds such as brand blues and oranges often can't carry white or dark text. Make the background darker or lighter by mixing it with a palette color, such as color-mix(in srgb, var(--tertiary) 70%, var(--primary)), or give explicit shades with light-dark(#light, #dark), and set a color that contrasts with every color of a gradient.
+          For text that isn't readable: mid-tone backgrounds such as brand blues and oranges often can't carry white or dark text. Make the background darker or lighter by mixing it with a palette color, such as color-mix(in srgb, var(--tertiary) 70%, var(--primary)), or give explicit shades with light-dark(#light, #dark), and set a color that contrasts with every color of a gradient. Palette colors swap in dark mode, so var(--secondary) is white only in light mode; for text that has to stay light or dark on a background that does, use light-dark() with the same kind of color in both. Each error gives the colors it measured, and when it names an area, set the color in a rule for that area.
         TEXT
 
         def repair_message(errors)
-          advice = CONTRAST_ADVICE if errors.any? { |error| error.include?("text on background") }
+          advice = CONTRAST_ADVICE if errors.any? { |error| error.match?(/ is [\d.]+:1 /) }
           <<~TEXT
             Those styles were rejected:
             #{errors.map { |error| "- #{error}" }.join("\n")}
@@ -168,6 +168,8 @@ module DiscourseAi
             Prefer a variable whenever one does the job; use a rule only for what no variable reaches. Keep changes to what was asked for.
 
             Values:
+            - An area's text color doesn't reach the areas inside it that have their own text color. When you darken or lighten an area's background, give those a readable color in a rule too, except the ones with their own background, which keep theirs.
+            - Palette colors swap in dark mode: var(--primary) is the text color and var(--secondary) the page background, so var(--secondary) is only white in light mode. Text on a background that stays the same in both modes needs light-dark() too.
             - Colors must follow the palette, so dark mode keeps working: var(--primary), var(--tertiary-low) and the other palette variables, rgba(var(--primary-rgb), 0.1), color-mix(in srgb, var(--tertiary) 20%, var(--secondary)), or light-dark(#light, #dark) for a raw color. A raw hex outside light-dark() is rejected.
             - var() may only reference palette or design variables, without fallbacks.
             - Lengths use px, rem, em or %. No url(), no quotes, no !important, no comments.
@@ -208,9 +210,27 @@ module DiscourseAi
                 ("hideable" if area.hideable),
                 ("sizeable" if area.sizeable),
               ].compact
-              "- #{area.key}: #{area.label}#{" [#{options.join(", ")}]" if options.any?}"
+              "- #{area.key}: #{area.label}#{" [#{options.join(", ")}]" if options.any?}#{nesting(area)}"
             end
             .join("\n")
+        end
+
+        # Where an area sits, and whether its text follows the area around it,
+        # so a new background comes with readable text for everything on it.
+        def nesting(area)
+          return "" if area.within.empty?
+
+          text =
+            if area.text_color.nil?
+              nil
+            elsif area.paints_background
+              "has its own background and text color"
+            elsif area.inherits_color
+              "takes its text color"
+            else
+              "has its own text color"
+            end
+          " (inside #{area.within.first}#{", #{text}" if text})"
         end
 
         def variable_lines

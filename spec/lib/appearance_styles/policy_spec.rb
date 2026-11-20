@@ -1061,4 +1061,35 @@ RSpec.describe AppearanceStyles::Policy do
       )
     end
   end
+
+  describe "error messages" do
+    it "give the colors measured and the area to style, for every area at once" do
+      result =
+        run(
+          rules: [
+            {
+              area: "category_box",
+              declarations: {
+                "background-color" => "light-dark(#6b6b6b, #6b6b6b)",
+                "color" => "light-dark(#000000, #000000)",
+              },
+            },
+          ],
+        )
+
+      errors = result.errors.join("\n")
+      expect(errors).to include("(text #", "background #6b6b6b)")
+      expect(errors).to include("in a rule for the category_title area")
+      expect(errors).to include("in a rule for the category_description area")
+    end
+
+    it "suggest a rule rather than changing the site's own text color" do
+      result =
+        run(variables: { "--d-category-box-background-color" => "light-dark(#0f172a, #0f172a)" })
+
+      expect(result.errors.join).to include(
+        "--primary is used across the site, so set a readable color in a rule for the area",
+      )
+    end
+  end
 end
