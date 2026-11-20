@@ -105,7 +105,9 @@ export default class AutomationList extends Component {
       </DPageSubheader>
 
       <aside class="automation-workflows-notice">
-        <strong>{{i18n "discourse_automation.workflows_notice.title"}}</strong>
+        <h3 class="automation-workflows-notice__title">
+          {{i18n "discourse_automation.workflows_notice.title"}}
+        </h3>
         <p>{{i18n "discourse_automation.workflows_notice.description"}}</p>
         <DButton
           class="btn-default"

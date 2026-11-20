@@ -31,6 +31,12 @@
     border-inline-start: 4px solid var(--primary-low-mid);
     background: var(--primary-very-low);
 
+    &__title {
+      margin: 0;
+      font-size: inherit;
+      font-weight: bold;
+    }
+
     p {
       margin-block: var(--space-1) var(--space-3);
     }
