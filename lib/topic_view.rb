@@ -187,7 +187,16 @@ class TopicView
     @can_review_topic = @guardian.can_review_topic?(@topic)
     @queued_posts_enabled =
       NewPostManager.queue_enabled? ||
-        (@guardian.authenticated? && @guardian.reply_posting_review_required?(@topic.category))
+        (
+          @guardian.authenticated? &&
+            (
+              @guardian.reply_posting_review_required?(@topic.category) ||
+                (
+                  SiteSetting.enable_topic_reply_approval && @topic.regular? &&
+                    @topic.reply_approval_required?
+                )
+            )
+        )
     @personal_message = @topic.private_message?
   end
 

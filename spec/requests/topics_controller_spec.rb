@@ -1439,6 +1439,17 @@ RSpec.describe TopicsController do
     context "when topic reply approval is enabled" do
       before { SiteSetting.enable_topic_reply_approval = true }
 
+      it "returns a writer's pending reply even when only topic approval is enabled" do
+        topic.update!(reply_approval_required: true)
+        sign_in(user)
+        post "/posts.json", params: { topic_id: topic.id, raw: "A reply requiring approval" }
+
+        get "/t/#{topic.id}.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.fetch("pending_posts").size).to eq(1)
+      end
+
       it "lets moderators change the requirement and records each change" do
         sign_in(moderator)
 
