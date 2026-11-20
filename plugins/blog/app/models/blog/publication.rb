@@ -190,9 +190,11 @@ module ::Blog
       Instance.find_cached(blog_id) || super
     end
 
-    # Once an article has a discussion, it belongs to that discussion's blog.
+    # Once an article has a discussion, it belongs to that discussion's blog. A
+    # topic already in a blog's public category becomes its own discussion.
     def blog_movable?
-      published_revision_id_in_database.nil? && discussion_topic_id_in_database.nil?
+      published_revision_id_in_database.nil? && discussion_topic_id_in_database.nil? &&
+        category_blog.nil?
     end
 
     def publicly_visible?
@@ -466,20 +468,35 @@ module ::Blog
     # from the start. A topic in a blog's public category can only be published
     # there, since its discussion stays in that category.
     def assign_blog
-      category_id = topic&.category_id
-      category_blog = category_id && Instance.cached.find { |blog| blog.category_id == category_id }
       self.blog_id ||= (category_blog || Instance.default_blog).id
     end
 
+    def category_blog
+      category_id = topic&.category_id
+      category_id && Instance.cached.find { |blog| blog.category_id == category_id }
+    end
+
+    # A publisher approved and scheduled the article for the blog it was on, so
+    # moving it needs a new approval.
     def move_to_blog(id)
       return false if id.blank? || id.to_i == blog_id
       self.blog_id = id.to_i
+      assign_attributes(
+        submitted_revision: nil,
+        approved_revision: nil,
+        scheduled_revision: nil,
+        scheduled_at: nil,
+        scheduler_id: nil,
+        schedule_token: nil,
+      )
       true
     end
 
     def movable_to_blog
       return errors.add(:blog_id, :invalid) if Instance.find_cached(blog_id).nil?
-      errors.add(:blog_id, I18n.t("blog.errors.blog_fixed")) if !blog_movable?
+      return if blog_movable?
+      return if new_record? && blog_id == category_blog&.id
+      errors.add(:blog_id, I18n.t("blog.errors.blog_fixed"))
     end
 
     def capture_live_article

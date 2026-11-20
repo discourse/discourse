@@ -242,11 +242,13 @@ export default class BlogDashboard extends Component {
       return;
     }
     await this.composer.openNewTopic({ category });
+    const model = this.composer.model;
+    // Declining to discard a draft in progress keeps it open, for its own blog.
+    if (!model || model.anyDirty) {
+      return;
+    }
     // A draft without a recorded blog belongs to the default blog.
-    this.composer.model?.set(
-      "blogId",
-      blog && !blog.is_default ? blog.id : null
-    );
+    model.set("blogId", blog && !blog.is_default ? blog.id : null);
   }
 
   // The drafts category is created the first time anyone starts a draft.

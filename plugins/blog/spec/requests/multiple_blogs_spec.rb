@@ -185,6 +185,67 @@ RSpec.describe "Several blogs", type: :request do
       expect(publication.reload.blog_id).to eq(engineering.id)
     end
 
+    it "keeps a topic in a blog's public category on that blog" do
+      topic = Fabricate(:topic, category: engineering_category, user: admin)
+      Fabricate(:post, topic:, user: admin)
+      sign_in(admin)
+
+      get "/blog-editor/publications/#{topic.id}.json"
+      expect(response.parsed_body).to include(
+        "blog_id" => engineering.id,
+        "can_change_blog" => false,
+      )
+
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              blog_id: Blog::Instance.default_blog.id,
+            },
+          }
+      expect(response.status).to eq(422)
+      expect(Blog::Publication.where(topic:).pluck(:blog_id)).not_to include(
+        Blog::Instance.default_blog.id,
+      )
+
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              excerpt: "Still saved on its own blog.",
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(Blog::Publication.find_by!(topic:).blog_id).to eq(engineering.id)
+    end
+
+    it "withdraws the approval and schedule when a draft moves to another blog" do
+      topic = Fabricate(:topic, category: drafts, user: writer, title: "Approved for the main blog")
+      Fabricate(:post, topic:, user: writer)
+      publication = Blog::Publication.for_topic(topic)
+      revision = submit_blog_draft(publication, writer)
+      approve_blog_revision(publication, revision, admin)
+      schedule_blog_revision(publication, revision, admin)
+      token = publication.schedule_token
+      sign_in(writer)
+
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              blog_id: engineering.id,
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(publication.reload).to have_attributes(
+        blog_id: engineering.id,
+        submitted_revision_id: nil,
+        approved_revision_id: nil,
+        scheduled_revision_id: nil,
+        scheduled_at: nil,
+        schedule_token: nil,
+      )
+      expect(run_blog_schedule(publication, token).published_revision_id).to be_nil
+    end
+
     it "gives each listed topic the blog it belongs to, including topics not yet assigned" do
       engineering_article =
         publish_article(engineering, path: "/story", raw: "An engineering story.")

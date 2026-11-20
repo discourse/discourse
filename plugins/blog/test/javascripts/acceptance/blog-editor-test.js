@@ -642,6 +642,24 @@ acceptance("Blog editor with several blogs", function (needs) {
     );
   });
 
+  test("keeps a draft in progress on its blog when a new draft is declined", async function (assert) {
+    await visit("/blog-editor");
+    await click(".blog-dashboard__new-draft");
+    await click(findAll(".blog-dashboard__new-draft-blog")[1]);
+    await fillIn("#reply-title", "An engineering draft in progress");
+    await fillIn(".d-editor-input", "Words that are not saved yet.");
+
+    await click(".blog-dashboard__new-draft");
+    await click(findAll(".blog-dashboard__new-draft-blog")[0]);
+    await click(".discard-draft-modal__cancel-btn");
+
+    assert.strictEqual(
+      this.owner.lookup("service:composer").model.blogId,
+      2,
+      "the kept draft stays on the blog it was started for"
+    );
+  });
+
   test("shows each article's blog", async function (assert) {
     await visit("/blog-editor?blog=2");
 
