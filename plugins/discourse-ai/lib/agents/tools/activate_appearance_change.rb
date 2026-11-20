@@ -59,7 +59,13 @@ module DiscourseAi
           return I18n.t("discourse_ai.appearance_authoring.not_found") if appearance_change.nil?
 
           I18n.t(
-            "discourse_ai.ai_bot.chat_tool_approval.activate_appearance_details",
+            (
+              if appearance_change.base_theme_id
+                "discourse_ai.appearance_authoring.horizon_activate_details"
+              else
+                "discourse_ai.ai_bot.chat_tool_approval.activate_appearance_details"
+              end
+            ),
             preview_url: AppearanceAuthoring.preview_url(appearance_change),
           )
         end
@@ -110,7 +116,16 @@ module DiscourseAi
             {
               status: "success",
               message:
-                I18n.t("discourse_ai.appearance_authoring.live", name: appearance_change.name),
+                I18n.t(
+                  (
+                    if appearance_change.base_theme_id
+                      "discourse_ai.appearance_authoring.horizon_live"
+                    else
+                      "discourse_ai.appearance_authoring.live"
+                    end
+                  ),
+                  name: appearance_change.name,
+                ),
               safe_mode_url: AppearanceAuthoring.safe_mode_url,
             }
           end
@@ -130,6 +145,7 @@ module DiscourseAi
 
           AppearanceStyles::Policy.call(
             appearance_change.styles,
+            base_theme_id: appearance_change.base_theme_id,
             palettes: AppearanceAuthoring.change_palettes(appearance_change),
           ).valid?
         end

@@ -403,4 +403,43 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
     )
     expect(AppearanceChange.count).to eq(0)
   end
+
+  context "with a Horizon copy" do
+    let(:kind) { "theme" }
+    let(:draft_attributes) do
+      super().merge(
+        base_theme_id: Theme.horizon_theme.id,
+        styles: {
+          "variables" => {
+            "--d-border-radius" => "12px",
+          },
+        },
+      )
+    end
+
+    before { Theme.horizon_theme.set_default! }
+
+    it "describes Horizon on the approval card and saves the signed base" do
+      expect(tool.approval_details).to include("Horizon", "keeps Horizon's layout")
+      expect(tool.approval_details).not_to include("Foundation")
+      result = approve_as(admin, build_reviewable)
+      expect(result[:status]).to eq("success")
+      change = AppearanceChange.find(result[:appearance_change_id])
+      expect(change.base_theme_id).to eq(Theme.horizon_theme.id)
+      expect(change.theme_unchanged?).to eq(true)
+      expect(result[:message]).to include("Horizon")
+    end
+
+    it "refuses a signed draft with color rules instead of saving unchecked Horizon colors" do
+      draft_attributes[:styles] = {
+        "variables" => {
+          "--d-sidebar-background" => "var(--secondary)",
+        },
+      }
+      expect { expect(approve_as(admin, build_reviewable)[:status]).to eq("error") }.not_to change(
+        Theme,
+        :count,
+      )
+    end
+  end
 end
