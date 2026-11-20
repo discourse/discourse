@@ -95,6 +95,7 @@ class UserAction < ActiveRecord::Base
     builder.where("a.user_id = :user_id", user_id: user_id)
 
     apply_common_filters(builder, user_id, guardian)
+    filter_suppressed_like_activity(builder)
 
     results = builder.query
     results.sort! { |a, b| ORDER[a.action_type] <=> ORDER[b.action_type] }
@@ -277,6 +278,7 @@ class UserAction < ActiveRecord::Base
     SQL
 
     apply_common_filters(builder, user_id, guardian, ignore_private_messages)
+    filter_suppressed_like_activity(builder)
 
     if action_id
       builder.where("a.id = :id", id: action_id.to_i)
@@ -465,7 +467,9 @@ class UserAction < ActiveRecord::Base
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)
     filter_ignored_users(builder, guardian)
+  end
 
+  def self.filter_suppressed_like_activity(builder)
     suppressed_categories = SiteSetting.suppress_like_notifications_in_categories_map
     if suppressed_categories.present?
       builder.where(

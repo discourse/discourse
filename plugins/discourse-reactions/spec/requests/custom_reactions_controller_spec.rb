@@ -648,6 +648,18 @@ describe DiscourseReactions::CustomReactionsController do
   end
 
   describe "#post_reactions_users" do
+    it "lists reactions in a category where like activity is suppressed" do
+      category = Fabricate(:category)
+      post_2.topic.update!(category:)
+      SiteSetting.suppress_like_notifications_in_categories = category.id.to_s
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+      expect(response).to have_http_status(:ok)
+      users = response.parsed_body["reaction_users"].flat_map { |reaction| reaction["users"] }
+      expect(users.pluck("username")).to include(user_5.username)
+    end
+
     it "return reaction_users of post when theres no parameters" do
       get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
       parsed = response.parsed_body
