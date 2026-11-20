@@ -7006,6 +7006,10 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["footer_staff_notice"]).to be_nil
         expect(notice_topic.reload.footer_staff_notice).to be_nil
+
+        sign_in(user)
+        get "/t/#{notice_topic.id}.json"
+        expect(response.parsed_body).to include("footer_staff_notice" => nil)
       end
     end
   end

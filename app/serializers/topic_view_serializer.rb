@@ -96,8 +96,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_footer_staff_notice?
-    SiteSetting.enable_topic_footer_notices && !object.topic.private_message? &&
-      footer_staff_notice.present?
+    SiteSetting.enable_topic_footer_notices && !object.topic.private_message?
   end
 
   def message_bus_last_id

@@ -326,6 +326,7 @@ basic:
   enable_topic_footer_notices:
     default: false
     client: true
+    refresh: true
     area: "posts_and_topics"
   post_menu_hidden_items:
     client: true
