@@ -111,9 +111,9 @@ export default class ChatThread extends Component {
   }
 
   @action
-  onTargetMessageIdChange(_el, targetMessageId) {
-    if (targetMessageId) {
-      this.highlightOrFetchMessage(targetMessageId);
+  onTargetMessageIdChange() {
+    if (this.args.targetMessageId) {
+      this.highlightOrFetchMessage(this.args.targetMessageId);
     }
   }
 

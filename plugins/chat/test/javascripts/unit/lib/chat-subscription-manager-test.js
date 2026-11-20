@@ -152,6 +152,39 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     );
   });
 
+  test("thread manager keeps the thread id of a reconciled staged reply", function (assert) {
+    // Without threadId the author's own reply offers no "Send to #channel" until reload.
+    const channel = this.fabricators.channel({ id: 12 });
+    channel.threadingEnabled = true;
+    const thread = this.fabricators.thread({ id: 223, channel });
+    const manager = new ChatChannelThreadSubscriptionManager(this, thread);
+    manager.currentUser = { id: 1 };
+
+    const stagedMessage = this.fabricators.message({
+      id: "staged-9",
+      channel,
+      thread,
+      staged: true,
+      processed: false,
+      message: "",
+      cooked: "",
+      user: { id: 1, username: "current_user" },
+    });
+    thread.messagesManager.addMessages([stagedMessage]);
+
+    manager.handleSentMessage({
+      type: "sent",
+      staged_id: "staged-9",
+      chat_message: {
+        ...buildChatMessagePayload({ id: 119 }),
+        thread_id: 223,
+      },
+    });
+
+    assert.strictEqual(stagedMessage.id, 119);
+    assert.strictEqual(stagedMessage.threadId, 223);
+  });
+
   test("channel manager moves a confirmed message to its server position", function (assert) {
     const channel = this.fabricators.channel({ id: 15 });
     const manager = new ChatChannelSubscriptionManager(this, channel);

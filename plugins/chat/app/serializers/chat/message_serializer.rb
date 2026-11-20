@@ -146,11 +146,10 @@ module Chat
     end
 
     def include_in_reply_to?
-      object.in_reply_to_id.present? &&
-        (
-          scope&.can_moderate_chat?(channel_object.chatable) ||
-            !object.thread&.original_message&.trashed?
-        )
+      return false if object.in_reply_to_id.blank?
+      return true if object.thread_id.blank?
+      return true if scope&.can_moderate_chat?(channel_object.chatable)
+      object.thread&.original_message.present? && !object.thread.original_message.trashed?
     end
 
     def reviewable_id

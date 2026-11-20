@@ -65,7 +65,8 @@ module Chat
         if !thread_id.present?
           messages =
             messages.left_joins(:thread).where(
-              "chat_threads.id IS NULL OR chat_threads.force = false OR chat_messages.id = chat_threads.original_message_id",
+              "chat_threads.id IS NULL OR chat_threads.force = false OR
+                chat_messages.broadcasted OR chat_messages.id = chat_threads.original_message_id",
             )
         end
       else
