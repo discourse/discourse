@@ -4145,9 +4145,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         %{flag_reason}
 
@@ -4214,9 +4212,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden again.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden again.
 
         %{flag_reason}
 
