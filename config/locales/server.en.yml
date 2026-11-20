@@ -5297,7 +5297,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that a staff member deleted your account.
+        This is an automated message from [%{site_name}](%{base_url}) to let you know that the user account associated with this email address has been deleted by a staff member.
 
         %{flag_reason}
 
@@ -5544,7 +5544,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that a staff member rejected your account.
+        A staff member rejected your account on %{site_name}.
 
         %{reject_reason}
 
