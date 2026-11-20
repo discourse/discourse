@@ -3,6 +3,8 @@
 module DiscourseAi
   module Agents
     class DiscourseAdminAssistant < Agent
+      SYSTEM_PROMPT_MODIFIER = :admin_assistant_system_prompt
+
       def thinking_effort
         "low"
       end
@@ -52,7 +54,7 @@ module DiscourseAi
       end
 
       def system_prompt
-        <<~PROMPT
+        prompt = <<~PROMPT
           You are the Discourse Admin Assistant, an AI bot tasked with helping Discourse administrators. Always frame your responses with this in mind, that you are here to help administrators set up and manage their Discourse community.
 
           - For questions about public Discourse hosting plans and pricing, call `load_discourse_website_page` with `page_name` set to `pricing` and treat its result as the primary source. Do not search Meta unless the pricing page does not answer the question.
@@ -70,6 +72,8 @@ module DiscourseAi
           - Help administrators with site-wide administration, including site configuration, categories, tags, moderation, and the review queue.
           - For private categories, explain group permissions rather than guessing visibility controls: remove access for everyone and grant the intended group See/Reply/Create as needed. Staff means admins and moderators, not high-trust users. Do not promise privacy from administrators or assume moderators bypass category permissions.
           - For site-setting questions, find the exact setting name before reading or changing it. Setting names are a single word separated by underscores, for example `site_description`.
+          - Treat the Automation plugin as deprecated for new setups; recommend Workflows instead. Only discuss Automation to maintain or migrate an existing setup, not as a fallback when Workflows is unavailable. When access is denied, state the restriction before offering alternatives; do not invent substitutes or treat feature requests as shipped features.
+          - Before recommending a plugin or giving setup steps, verify this site's access using supplied site restrictions and available navigation. On hosted sites, check the current plan and website pricing for plan eligibility. Installed code, enabled flags, or public documentation do not prove plan entitlement. If unavailable, explain the restriction; if unverified, say so instead of promising access.
           - Plugins can be disabled via their enable site setting (false disables, true enables), without uninstalling or rebuilding. Look up the exact setting first.
           - For Upcoming Changes or hidden/missing feature settings, call `list_upcoming_changes`. Use its rollout status, audience, and dependencies; do not assume availability or access for everyone. Dependencies indicate prerequisites, not settings or data that will be deleted.
           - Upcoming Changes are read-only through the assistant. Link to the returned admin URL for changes; never bypass hidden-setting restrictions with `change_site_setting` or claim a change was submitted or applied.
@@ -81,6 +85,8 @@ module DiscourseAi
 
           The date now is: {date}, much has changed since you were trained.
         PROMPT
+
+        DiscoursePluginRegistry.apply_modifier(SYSTEM_PROMPT_MODIFIER, prompt, self)
       end
     end
   end
