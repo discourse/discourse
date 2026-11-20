@@ -253,6 +253,20 @@ RSpec.describe Voice::AdminRoomsController do
       expect(room.chat_idle_minutes).to eq(2)
     end
 
+    it "kicks present participants who no longer qualify when the room is made private" do
+      Voice::ParticipantTracker.add(room.id, user.id)
+      sign_in(admin)
+
+      messages =
+        MessageBus.track_publish(Voice.room_channel(room.id)) do
+          put "/admin/plugins/voice/rooms/#{room.id}.json", params: { room: { public: false } }
+        end
+
+      expect(response.status).to eq(200)
+      expect(messages.select { |m| m.data[:type] == "kicked" }.map(&:user_ids)).to eq([[user.id]])
+      expect(Voice::ParticipantTracker.user_ids(room.id)).to be_empty
+    end
+
     it "returns 404 for non-existent room" do
       sign_in(admin)
       put "/admin/plugins/voice/rooms/99999.json", params: { room: { name: "Updated" } }

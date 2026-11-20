@@ -60,6 +60,8 @@ module Voice
       user_id = membership.user_id
       membership.destroy!
 
+      return head :no_content if Voice::ParticipantEvictor.evict_unless_authorized!(@room, user_id)
+
       if Voice::ParticipantTracker.user_ids(@room.id).include?(user_id)
         metadata = Voice::ParticipantTracker.get_metadata(@room.id, user_id)
         metadata[:role] = "participant"

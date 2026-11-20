@@ -110,6 +110,7 @@ module Voice
       if @room.update(room_params)
         Voice::DirectoryBroadcaster.broadcast(action: :updated, room: @room)
         refresh_participant_statuses(@room) if name_changed
+        Voice::ParticipantEvictor.evict_unauthorized!(@room)
         render_serialized @room, Voice::RoomSerializer, root: :room
       else
         render_json_error @room
@@ -372,7 +373,7 @@ module Voice
         return head :no_content
       end
 
-      session = close_session_for(@room.id, current_user.id)
+      session = Voice::ParticipantEvictor.close_session(@room.id, current_user.id)
       Voice::ParticipantTracker.mark_left(@room.id, current_user.id)
       Voice::ParticipantTracker.remove(@room.id, current_user.id)
       if Voice::ParticipantTracker.human_user_ids(@room.id).empty?
@@ -518,28 +519,7 @@ module Voice
         raise Discourse::InvalidParameters.new(I18n.t("voice.errors.cannot_kick_creator"))
       end
 
-      Voice::AgentManager.evict!(room: @room, user_id: user_id) if user_id.negative?
-
-      session = close_session_for(@room.id, user_id)
-      Voice::ParticipantTracker.mark_left(@room.id, user_id)
-      Voice::ParticipantTracker.remove(@room.id, user_id)
-
-      kicked_user = User.find_by(id: user_id)
-      Voice::UserStatusManager.clear_voice_status(kicked_user) if kicked_user
-
-      Voice::BadgeGranterHooks.on_leave(kicked_user, session) if kicked_user
-      Voice::RoomBroadcaster.publish_kick(@room, user_id)
-      Voice::RoomBroadcaster.publish_participants(@room)
-
-      # The client-side kicked handler already forces a clean leave; this
-      # additionally evicts the media session from the SFU.
-      Voice::Livekit::RoomServiceClient.remove_participant(@room, user_id) unless user_id.negative?
-
-      if Voice::ParticipantTracker.human_user_ids(@room.id).empty? &&
-           Voice::AgentManager.provider_room?(@room.id)
-        Voice::AgentManager.evict_agents_in_room!(@room)
-        Voice::RoomBroadcaster.publish_participants(@room)
-      end
+      Voice::ParticipantEvictor.evict!(@room, user_id)
 
       head :no_content
     end
@@ -793,15 +773,6 @@ module Voice
           next unless Voice::UserStatusManager.voice_status_active?(user)
           Voice::UserStatusManager.set_voice_status(user, room)
         end
-    end
-
-    def close_session_for(room_id, user_id)
-      metadata = Voice::ParticipantTracker.get_metadata(room_id, user_id)
-      return unless metadata[:session_id]
-
-      session = Voice::Session.find_by(id: metadata[:session_id])
-      session&.close!
-      session
     end
 
     def video_publisher_count(room, exclude_user_id: nil)
