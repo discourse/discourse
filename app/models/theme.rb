@@ -1383,6 +1383,7 @@ end
 # Table name: themes
 #
 #  id                   :integer          not null, primary key
+#  appearance_sync      :jsonb
 #  auto_update          :boolean          default(TRUE), not null
 #  compiler_version     :integer          default(0), not null
 #  component            :boolean          default(FALSE), not null

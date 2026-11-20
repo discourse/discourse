@@ -166,16 +166,18 @@ module AppearanceStyles
     # { "light" => { "primary" => "222222", ... }, "dark" => { ... } }.
     # Without them, contrast is checked against core's own light and dark
     # palettes.
-    def self.call(styles, palettes: nil)
+    def self.call(styles, palettes: nil, base_theme_id: nil)
       new(
         styles,
         registry: VariableRegistry.instance,
         catalog: AreaCatalog.instance,
         palettes:,
+        base_theme_id:,
       ).call
     end
 
-    def initialize(styles, registry:, catalog:, palettes: nil)
+    def initialize(styles, registry:, catalog:, palettes: nil, base_theme_id: nil)
+      @horizon = base_theme_id == Theme::CORE_THEMES["horizon"]
       @draft = styles.is_a?(Hash) ? styles.deep_stringify_keys : {}
       @registry = registry
       @catalog = catalog
@@ -273,6 +275,10 @@ module AppearanceStyles
       variable = @registry[name.to_s]
       return error(path, "unknown variable") if !variable
       return error(path, "not authorable (#{variable.reason})") if !variable.allowed
+
+      if @horizon && !%w[length keyword font_weight].include?(variable.type)
+        return horizon_color_error(path)
+      end
 
       nodes = parse(value, path)
       return if !nodes
@@ -378,7 +384,32 @@ module AppearanceStyles
       @draft_variables = global_variables if global_variables
     end
 
+    def horizon_color_error(path)
+      error(
+        path,
+        "Horizon copies only support non-color styles until Horizon-aware contrast checking is available; change colors with palettes on Horizon instead",
+      )
+    end
+
     def check_property(property, value, path, area)
+      if @horizon &&
+           (
+             COLOR_PROPERTIES.include?(property) ||
+               %w[
+                 background
+                 background-image
+                 border
+                 border-top
+                 border-right
+                 border-bottom
+                 border-left
+                 box-shadow
+                 text-shadow
+                 opacity
+               ].include?(property)
+           )
+        return horizon_color_error(path)
+      end
       spec = PROPERTY_SPECS[property]
       if !spec && area.sizeable && SIZE_PROPERTIES.include?(property)
         return true if value.to_s.strip == "auto"

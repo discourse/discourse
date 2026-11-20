@@ -61,24 +61,36 @@ class AppearanceChange < ActiveRecord::Base
   # components to since, so all they hold is their palettes and the styles
   # the change wrote.
   def self.managed_theme_ids
-    kind_theme
-      .where.not(
-        ThemeField
-          .where("theme_fields.theme_id = appearance_changes.theme_id")
-          .where.not(<<~SQL, common: Theme.targets[:common])
+    foundation_ids =
+      kind_theme
+        .where(base_theme_id: nil)
+        .where.not(
+          ThemeField
+            .where("theme_fields.theme_id = appearance_changes.theme_id")
+            .where.not(<<~SQL, common: Theme.targets[:common])
             appearance_changes.css <> ''
             AND theme_fields.target_id = :common
             AND theme_fields.name = 'scss'
             AND theme_fields.value = appearance_changes.css
           SQL
-          .arel
-          .exists,
-      )
-      .where.not(
-        ChildTheme.where("child_themes.parent_theme_id = appearance_changes.theme_id").arel.exists,
-      )
-      .distinct
-      .pluck(:theme_id)
+            .arel
+            .exists,
+        )
+        .where.not(
+          ChildTheme
+            .where("child_themes.parent_theme_id = appearance_changes.theme_id")
+            .arel
+            .exists,
+        )
+        .distinct
+        .pluck(:theme_id)
+    horizon_ids =
+      kind_theme
+        .where(base_theme_id: Theme::CORE_THEMES["horizon"])
+        .includes(theme: [:theme_modifier_set])
+        .select(&:theme_unchanged?)
+        .map(&:theme_id)
+    foundation_ids + horizon_ids
   end
 
   def draft?
@@ -97,6 +109,13 @@ class AppearanceChange < ActiveRecord::Base
   # components, and no files except the styles it wrote.
   def theme_unchanged?
     return true if !kind_theme?
+
+    if base_theme_id
+      return(
+        AppearanceStyles::SyncedTheme.unchanged?(theme) && theme.appearance_sync["css"] == css &&
+          theme.appearance_sync["styles"] == styles
+      )
+    end
 
     theme.theme_fields.all? { |field| generated_styles?(field) } && theme.child_theme_relation.none?
   end
@@ -287,7 +306,17 @@ class AppearanceChange < ActiveRecord::Base
   end
 
   def disposable_theme?
-    !edited_since_saved?(theme) && !theme.default? && !theme.user_selectable? && theme_unchanged? &&
+    (
+      !edited_since_saved?(theme) ||
+        (
+          base_theme_id && theme_unchanged? &&
+            [
+              name,
+              self.class.version_name(name, :draft),
+              self.class.version_name(name, :previous),
+            ].include?(theme.name)
+        )
+    ) && !theme.default? && !theme.user_selectable? && theme_unchanged? &&
       AppearanceChange.where(
         "previous_state -> 'site_settings' ->> 'default_theme_id' = ?",
         theme.id.to_s,
@@ -310,6 +339,7 @@ end
 #
 #  id                    :bigint           not null, primary key
 #  activated_at          :datetime
+#  base_theme_id         :integer
 #  css                   :text             default(""), not null
 #  kind                  :integer          not null
 #  name                  :string           not null
@@ -326,5 +356,6 @@ end
 #
 # Indexes
 #
+#  index_appearance_changes_on_base_theme_id  (base_theme_id)
 #  index_appearance_changes_on_theme_id  (theme_id)
 #

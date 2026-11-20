@@ -284,7 +284,7 @@ export default <template>
         />
       </div>
     </section>
-  {{else}}
+  {{else if (not @controller.model.horizon_synced)}}
     <section
       class="form-horizontal theme settings control-unit relative-theme-selector included-components-setting"
     >
@@ -307,7 +307,11 @@ export default <template>
   {{/if}}
 
   {{#unless
-    (or @controller.model.system @controller.model.remote_theme.is_git)
+    (or
+      @controller.model.system
+      @controller.model.remote_theme.is_git
+      @controller.model.horizon_synced
+    )
   }}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>

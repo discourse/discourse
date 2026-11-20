@@ -74,6 +74,16 @@ export default <template>
       @outletArgs={{lazyHash theme=@controller.model}}
     />
 
+    {{#if @controller.model.horizon_synced}}
+      <div class="alert alert-info">
+        <p>{{i18n "admin.customize.theme.horizon_synced_description"}}</p>
+        <DButton
+          @action={{@controller.detachFromHorizon}}
+          @label="admin.customize.theme.horizon_detach"
+        />
+      </div>
+    {{/if}}
+
     {{#each @controller.model.errors as |error|}}
       <div class="alert alert-error">{{error}}</div>
     {{/each}}

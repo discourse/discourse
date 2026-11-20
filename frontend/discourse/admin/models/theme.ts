@@ -116,6 +116,7 @@ export interface ThemeUser {
 
 /** Full editor fields and mutable UI state; index/create payloads can omit editor data. Plugins augment here. */
 export interface ThemeFields extends BasicTheme {
+  horizon_synced: boolean;
   color_scheme_id: number | null;
   dark_color_scheme_id: number | null;
   remote_theme_id: number | null;

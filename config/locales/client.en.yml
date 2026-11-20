@@ -9319,6 +9319,9 @@ en:
           compare_commits: "(See new commits)"
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
+          horizon_synced_description: "This copy keeps Horizon's layout and receives Horizon updates. Detach it before editing its files, settings or components by hand."
+          horizon_detach: "Detach from Horizon updates"
+          horizon_detach_confirm: "Stop receiving Horizon updates? This copy will become an ordinary theme and the assistant will no longer manage its styles. This cannot be undone."
           built_in_description: "This theme is preinstalled and can not be deleted or customized"
           imported_from_archive: "This theme was imported from a .zip file"
           scss:

@@ -19,7 +19,8 @@ class ThemeSerializer < BasicThemeSerializer
              :screenshot_dark_url,
              :screenshot_light_url,
              :system,
-             :only_theme_color_schemes
+             :only_theme_color_schemes,
+             :horizon_synced
 
   has_one :color_scheme, serializer: ColorSchemeSerializer, embed: :object
   has_one :user, serializer: UserNameSerializer, embed: :object
@@ -29,6 +30,10 @@ class ThemeSerializer < BasicThemeSerializer
   has_many :parent_themes, serializer: BasicThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects
   has_many :translations, serializer: ThemeTranslationSerializer, embed: :objects
+
+  def horizon_synced
+    object.appearance_sync.present?
+  end
 
   def initialize(theme, options = {})
     super
