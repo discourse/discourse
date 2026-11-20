@@ -4,8 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { getAbsoluteURL } from "discourse/lib/get-url";
+import { isValidSearchTerm } from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
 import { clipboardCopyAsync, postUrl } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
@@ -71,7 +73,7 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   get selectionSearchTerm() {
-    return this.quoteState.buffer.replace(/\s+/g, " ").trim();
+    return this.args.data.selectedText.replace(/\s+/g, " ").trim();
   }
 
   get showSelectionSearch() {
@@ -82,8 +84,11 @@ export default class PostTextSelectionToolbar extends Component {
       return false;
     }
 
-    const length = this.selectionSearchTerm.length;
-    return length > 0 && length <= MAX_SEARCH_SELECTION_LENGTH;
+    const term = this.selectionSearchTerm;
+    return (
+      term.length <= MAX_SEARCH_SELECTION_LENGTH &&
+      isValidSearchTerm(term, this.siteSettings)
+    );
   }
 
   @action
@@ -101,19 +106,27 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   @action
+  async searchSelection() {
+    const q = this.selectionSearchTerm;
+    await this.args.data.hideToolbar();
+    this.router.transitionTo("full-page-search", {
+      queryParams: {
+        q,
+        context: null,
+        context_id: null,
+        skip_context: undefined,
+        search_type: SEARCH_TYPE_DEFAULT,
+      },
+    });
+  }
+
+  @action
   share(source) {
     Sharing.shareSource(source, {
       url: this.shareUrl,
       title: this.topic.title,
       quote: window.getSelection().toString(),
     });
-  }
-
-  @action
-  async searchSelection() {
-    const q = this.selectionSearchTerm;
-    await this.args.data.hideToolbar();
-    this.router.transitionTo("full-page-search", { queryParams: { q } });
   }
 
   <template>
