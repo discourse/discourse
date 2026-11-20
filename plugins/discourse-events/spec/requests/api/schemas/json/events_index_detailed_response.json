@@ -81,6 +81,50 @@
               "null"
             ]
           },
+          "can_export_registrations": {
+            "type": "boolean",
+            "description": "Whether the current user can export this event's registration submissions."
+          },
+          "registration_revision": {
+            "type": "string",
+            "description": "The revision to submit with registration answers."
+          },
+          "registration_form": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "description": { "type": ["string", "null"] },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "label": { "type": "string" },
+                    "type": {
+                      "type": "string",
+                      "enum": ["text", "textarea", "number", "date", "checkbox", "dropdown", "radio"]
+                    },
+                    "required": { "type": "boolean" },
+                    "placeholder": { "type": ["string", "null"] },
+                    "choices": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "label": { "type": "string" }
+                        },
+                        "required": ["id", "label"]
+                      }
+                    }
+                  },
+                  "required": ["id", "label", "type", "required"]
+                }
+              }
+            },
+            "required": ["title", "fields"]
+          },
           "creator": {
             "type": "object",
             "additionalProperties": false,
@@ -400,6 +444,7 @@
           "timezone",
           "can_act_on_discourse_post_event",
           "can_update_attendance",
+          "can_export_registrations",
           "is_closed",
           "is_expired",
           "is_ongoing",
