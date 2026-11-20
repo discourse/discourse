@@ -300,6 +300,36 @@ RSpec.describe InviteRedeemer do
       InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name)
     end
 
+    context "with an invite link and a staged user whose domain is now blocked" do
+      fab!(:staged) { Fabricate(:staged, email: "invitee@account.com") }
+      fab!(:invite) { Fabricate(:invite, email: nil) }
+
+      before { SiteSetting.blocked_email_domains = "account.com" }
+
+      it "redeems the invite when the provider grants an override for the verified email" do
+        session = {
+          authentication: {
+            email: staged.email,
+            email_valid: true,
+            skip_email_validation: true,
+          },
+        }
+        redeemer = described_class.new(invite:, email: staged.email, session:)
+
+        expect(redeemer.redeem).to eq(staged)
+        expect(staged.reload).not_to be_staged
+        expect(invite.reload).to be_redeemed
+      end
+
+      it "leaves the invite and staged user unchanged without an override" do
+        redeemer = described_class.new(invite:, email: staged.email)
+
+        expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(staged.reload).to be_staged
+        expect(invite.reload).not_to be_redeemed
+      end
+    end
+
     it "rejects an unverified supplied email when the user's primary email does not match the invite" do
       invite = Fabricate(:invite, email: "invited@example.com")
       user = Fabricate(:user, email: "other@example.com")

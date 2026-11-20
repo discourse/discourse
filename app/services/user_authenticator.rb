@@ -46,8 +46,11 @@ class UserAuthenticator
     @auth_result&.email_valid
   end
 
-  def verified_email_skips_validation?
-    authenticated? && @auth_result.skip_email_validation
+  def unstage!(signup_email:)
+    if @user.email == signup_email && authenticated? && @auth_result.skip_email_validation
+      @user.skip_email_validation = true
+    end
+    @user.unstage!
   end
 
   def authenticated?

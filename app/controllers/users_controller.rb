@@ -788,11 +788,8 @@ class UsersController < ApplicationController
     authentication = UserAuthenticator.new(user, server_session)
 
     if user.staged?
-      if user.email == signup_email && authentication.verified_email_skips_validation?
-        user.skip_email_validation = true
-      end
       user.active = false
-      user.unstage!
+      authentication.unstage!(signup_email:)
     end
 
     user.attributes = new_user_params
