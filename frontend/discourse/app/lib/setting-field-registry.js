@@ -4,6 +4,7 @@ import CategoryListControl from "discourse/components/setting-field/category-lis
 import ColorControl from "discourse/components/setting-field/color";
 import CompactListControl from "discourse/components/setting-field/compact-list";
 import DatetimeControl from "discourse/components/setting-field/datetime";
+import DecimalControl from "discourse/components/setting-field/decimal";
 import DurationControl from "discourse/components/setting-field/duration";
 import EnumControl from "discourse/components/setting-field/enum";
 import FontListControl from "discourse/components/setting-field/font-list";
@@ -173,6 +174,11 @@ registerSettingFieldType("bool", {
   includeDescription: false,
   adminReady: true,
   renderer: BoolControl,
+});
+registerSettingFieldType("decimal", {
+  ...ROW,
+  type: "input-number",
+  renderer: DecimalControl,
 });
 registerSettingFieldType("integer", {
   ...INLINE,

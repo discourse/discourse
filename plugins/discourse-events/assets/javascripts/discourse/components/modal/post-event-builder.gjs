@@ -5,6 +5,7 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import Form from "discourse/components/form";
+import FormDefinitionEditor from "discourse/components/form-definition-editor";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -37,12 +38,16 @@ import {
   showRecordingField,
 } from "../../lib/raw-event-helper.js";
 import CompactEventEditor from "../compact-event-editor.gjs";
+import EventRegistration from "./event-registration.gjs";
 
 export default class PostEventBuilder extends Component {
   @service dialog;
   @service siteSettings;
   @service currentUser;
 
+  @tracked registrationForm = this.event.registrationForm ?? null;
+  @tracked registrationDraft;
+  @tracked registrationPreview;
   @tracked flash = null;
   @tracked isSaving = false;
   @tracked screen = this.args.model.initialScreen || "compact";
@@ -253,6 +258,7 @@ export default class PostEventBuilder extends Component {
         this.event.imageUpload?.url ??
         null,
       allowedGroups: (this.event.rawInvitees || []).join(",") || null,
+      registrationForm: this.registrationForm,
       hosts:
         (this.event.hosts || []).map((host) => host.username).join(",") || null,
       closed: !!this.event.isClosed,
@@ -262,6 +268,43 @@ export default class PostEventBuilder extends Component {
 
   get allowsRsvps() {
     return this.event.status !== "standalone";
+  }
+
+  @action
+  editRegistration() {
+    this.registrationDraft = this.registrationForm || {
+      title: i18n("event_registration.title"),
+      description: "",
+      fields: [],
+    };
+  }
+
+  @action
+  toggleRegistration(enabled) {
+    if (enabled) {
+      this.editRegistration();
+    } else {
+      this.registrationForm = null;
+      this.formApi.set("registrationEnabled", false);
+    }
+  }
+
+  @action
+  closeRegistration() {
+    this.registrationDraft = null;
+    this.formApi.set("registrationEnabled", Boolean(this.registrationForm));
+  }
+
+  @action
+  saveRegistration(definition) {
+    this.registrationForm = definition;
+    this.closeRegistration();
+  }
+
+  @action
+  previewRegistration(draft) {
+    this.registrationDraft = draft;
+    this.registrationPreview = draft;
   }
 
   @action
@@ -418,6 +461,7 @@ export default class PostEventBuilder extends Component {
     this.event.rawInvitees = state.allowedGroups
       ? state.allowedGroups.split(",")
       : [];
+    this.registrationForm = state.registrationForm;
     this.event.hosts = state.hosts
       ? state.hosts.split(",").map((username) => ({ username }))
       : [];
@@ -619,6 +663,7 @@ export default class PostEventBuilder extends Component {
       return;
     }
 
+    this.event.registrationForm = this.registrationForm;
     const eventParams = buildParams(
       this.startsAt,
       this.endsAt,
@@ -634,7 +679,9 @@ export default class PostEventBuilder extends Component {
 
   @action
   async updateEvent() {
+    const previousRegistration = this.event.registrationForm;
     try {
+      this.event.registrationForm = this.registrationForm;
       this.isSaving = true;
 
       await this.args.model.onUpdate(
@@ -646,6 +693,7 @@ export default class PostEventBuilder extends Component {
 
       this.args.closeModal();
     } catch (e) {
+      this.event.registrationForm = previousRegistration;
       this.flash = extractError(e);
     } finally {
       this.isSaving = false;
@@ -690,6 +738,7 @@ export default class PostEventBuilder extends Component {
       livestream: !!this.event.livestream,
       allowAnonymousLivestream: !!this.event.allowAnonymousLivestream,
       recordingUrl: this.event.recordingUrl ?? "",
+      registrationEnabled: Boolean(this.registrationForm),
       attendanceMode: this.attendanceMode,
       maxAttendees: this.event.maxAttendees ?? null,
       eventType:
@@ -759,6 +808,7 @@ export default class PostEventBuilder extends Component {
         {{if this.isAdvancedScreen 'is-advanced' 'is-compact'}}"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @hidden={{this.registrationDraft}}
       @inline={{@inline}}
       @title={{i18n
         (concat
@@ -1032,6 +1082,23 @@ export default class PostEventBuilder extends Component {
                 </form.Field>
 
                 {{#if this.allowsRsvps}}
+                  <form.Field
+                    @name="registrationEnabled"
+                    @onSet={{this.toggleRegistration}}
+                    @title={{i18n "event_registration.enable"}}
+                    @type="checkbox"
+                    as |field|
+                  >
+                    <field.Control>{{i18n
+                        "event_registration.host_notice"
+                      }}</field.Control>
+                  </form.Field>
+                  {{#if this.registrationForm}}
+                    <form.Button
+                      @action={{this.editRegistration}}
+                      @label="event_registration.edit"
+                    />
+                  {{/if}}
                   <form.Field
                     @format="full"
                     @name="eventType"
@@ -1414,5 +1481,27 @@ export default class PostEventBuilder extends Component {
         {{/if}}
       </:footer>
     </DModal>
+    {{#if this.registrationPreview}}
+      <EventRegistration
+        @closeModal={{fn (mut this.registrationPreview) null}}
+        @inline={{@inline}}
+        @model={{hash definition=this.registrationPreview}}
+      />
+    {{else if this.registrationDraft}}
+      <DModal
+        @closeModal={{this.closeRegistration}}
+        @inline={{@inline}}
+        @title={{i18n "event_registration.title"}}
+      >
+        <:body>
+          <p>{{i18n "event_registration.host_notice"}}</p>
+          <FormDefinitionEditor
+            @definition={{this.registrationDraft}}
+            @onPreview={{this.previewRegistration}}
+            @onSave={{this.saveRegistration}}
+          />
+        </:body>
+      </DModal>
+    {{/if}}
   </template>
 }

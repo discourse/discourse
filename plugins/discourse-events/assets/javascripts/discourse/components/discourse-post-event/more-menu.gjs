@@ -47,6 +47,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
       this.canInvite,
       this.canSeeUpcomingEvents,
       this.shouldShowParticipants,
+      this.args.event.canExportRegistrations,
       this.canActOnEvent,
     ].some(Boolean);
   }
@@ -134,6 +135,17 @@ export default class DiscoursePostEventMoreMenu extends Component {
       });
     } catch (e) {
       popupAjaxError(e);
+    }
+  }
+
+  @action
+  async exportRegistrations() {
+    this.menuApi.close();
+    try {
+      await exportEntity("event_registrations", { id: this.args.event.id });
+      this.dialog.alert(i18n("event_registration.export_queued"));
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 
@@ -346,6 +358,15 @@ export default class DiscoursePostEventMoreMenu extends Component {
               </dropdown.item>
 
               <dropdown.divider />
+            {{/if}}
+            {{#if @event.canExportRegistrations}}
+              <dropdown.item>
+                <DButton
+                  @action={{this.exportRegistrations}}
+                  @icon="file-csv"
+                  @label="event_registration.download"
+                />
+              </dropdown.item>
             {{/if}}
             {{#if this.canActOnEvent}}
               <dropdown.item class="export-event">

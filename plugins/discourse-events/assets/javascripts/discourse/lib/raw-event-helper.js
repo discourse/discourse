@@ -325,6 +325,12 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.allowedGroups = (event.rawInvitees || []).join(",");
   }
 
+  if (event.registrationForm && event.status !== "standalone") {
+    params.registrationForm = encodeURIComponent(
+      JSON.stringify(event.registrationForm)
+    ).replaceAll("'", "%27");
+  }
+
   const hosts = (event.hosts || [])
     .map((host) => (typeof host === "string" ? host : host?.username))
     .filter(Boolean);
@@ -466,6 +472,7 @@ export function defaultEventState() {
     closed: false,
     customFields: {},
     hosts: null,
+    registrationForm: null,
   };
 }
 
@@ -508,7 +515,19 @@ export function parseEventAttrs(
     closed: attrs.closed === "true",
     customFields,
     hosts: attrs.hosts || null,
+    registrationForm: decodeRegistrationForm(attrs.registrationForm),
   };
+}
+
+function decodeRegistrationForm(value) {
+  if (!value) {
+    return null;
+  }
+  try {
+    return JSON.parse(decodeURIComponent(value));
+  } catch {
+    return null;
+  }
 }
 
 export function stateToEventInput(state) {
@@ -533,6 +552,7 @@ export function stateToEventInput(state) {
     reminders: state.reminders,
     imageUpload: state.image ? { url: state.image } : null,
     customFields: state.customFields,
+    registrationForm: state.registrationForm,
     hosts: state.hosts ? state.hosts.split(",") : [],
   };
 }

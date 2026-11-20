@@ -61,6 +61,7 @@ export default class CompactEventEditor extends Component {
   @tracked image;
   @tracked allowedGroups;
   @tracked hosts;
+  @tracked registrationForm;
   @tracked closed;
   @tracked customFields;
   @tracked linkify;
@@ -100,6 +101,7 @@ export default class CompactEventEditor extends Component {
       recording: this.recording,
       image: this.image,
       allowedGroups: this.allowedGroups,
+      registrationForm: this.registrationForm,
       hosts: this.hosts,
       closed: this.closed,
       customFields: this.customFields,
@@ -529,6 +531,7 @@ export default class CompactEventEditor extends Component {
       all_day: this.allDay,
       reminders: this.reminders,
       raw_invitees: this.allowedGroups?.split(",") || [],
+      registration_form: this.registrationForm,
       hosts: this.hosts?.split(",").map((username) => ({ username })) || [],
       custom_fields: { ...this.customFields },
       starts_at: this.startsAt,
@@ -572,6 +575,7 @@ export default class CompactEventEditor extends Component {
           this.#startedWithUrl ||= !!this.url;
           this.allowedGroups =
             (updatedEvent.rawInvitees || []).join(",") || null;
+          this.registrationForm = updatedEvent.registrationForm;
           this.hosts =
             (updatedEvent.hosts || []).map((host) => host.username).join(",") ||
             null;
@@ -618,6 +622,7 @@ export default class CompactEventEditor extends Component {
     this.#startedWithUrl ||= !!s.url;
     this.image = s.image;
     this.allowedGroups = s.allowedGroups;
+    this.registrationForm = s.registrationForm;
     this.hosts = s.hosts;
     this.closed = s.closed;
     this.customFields = { ...s.customFields };

@@ -1,9 +1,10 @@
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 import moment from "moment";
 import { ajax } from "discourse/lib/ajax";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 import DiscoursePostEventInvitee from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-invitee";
 import DiscoursePostEventInvitees from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-invitees";
+import EventRegistration from "../components/modal/event-registration.gjs";
 
 /**
  * Discourse post event API service. Provides methods to interact with the discourse post event API.
@@ -12,6 +13,9 @@ import DiscoursePostEventInvitees from "discourse/plugins/discourse-events/disco
  * @implements {@ember/service}
  */
 export default class DiscoursePostEventApi extends Service {
+  @service appEvents;
+  @service modal;
+
   eventsPromise = null;
 
   #eventsByTopicId = new Map();
@@ -87,6 +91,41 @@ export default class DiscoursePostEventApi extends Service {
     });
     event.updateFromEvent(updatedEvent);
     return event;
+  }
+
+  async rsvp(event, payload) {
+    const submit = async (registration) => {
+      const updating = Boolean(event.watchingInvitee);
+      const data = registration ? { ...payload, registration } : payload;
+      if (updating) {
+        await this.updateEventAttendance(event, data);
+      } else {
+        await this.joinEvent(event, data);
+      }
+      this.appEvents.trigger(
+        updating
+          ? "calendar:update-invitee-status"
+          : "calendar:create-invitee-status",
+        { status: payload.status, postId: event.id }
+      );
+    };
+
+    if (payload.status === "going" && event.registrationForm) {
+      const revision = event.registrationRevision;
+      const occurrence = event.isFutureOccurrence
+        ? this.#normalizedOccurrenceStartsAt(event)
+        : null;
+      const result = await this.modal.show(EventRegistration, {
+        model: {
+          definition: event.registrationForm,
+          onSubmit: (answers, key) =>
+            submit(JSON.stringify({ key, revision, occurrence, answers })),
+        },
+      });
+      return Boolean(result?.submitted);
+    }
+    await submit();
+    return true;
   }
 
   async updateEventAttendance(event, data = {}) {

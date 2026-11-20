@@ -9,6 +9,7 @@ module DiscourseEvents
         attribute :event_id, :integer
         attribute :status, :symbol
         attribute :user_id, :integer
+        attribute :registration, :string
         attribute :recurring, :boolean, default: false
 
         validates :event_id, presence: true
@@ -22,7 +23,7 @@ module DiscourseEvents
       policy :can_invite_user
       policy :has_capacity
 
-      model :invitee, :create_invitee
+      step :create_invitee
 
       private
 
@@ -47,18 +48,38 @@ module DiscourseEvents
         guardian.can_act_on_discourse_post_event?(event)
       end
 
-      def has_capacity(event:, params:)
-        params.status != :going || !event.at_capacity?
+      def has_capacity(event:, params:, user:)
+        params.status != :going || !event.at_capacity? ||
+          (
+            params.registration.present? &&
+              event.invitees.exists?(user_id: user.id, status: Invitee.statuses[:going])
+          )
       end
 
       def create_invitee(user:, event:, params:, guardian:)
-        Invitee.create_attendance!(
-          user.id,
-          event.id,
-          params.status,
-          recurring: params.recurring,
+        context[:invitee] = Registration.record_attendance!(
+          event:,
+          user:,
           acting_user: guardian.user,
-        )
+          params:,
+        ) do
+          if params.registration.present? && (existing = event.invitees.find_by(user_id: user.id))
+            existing.update_attendance!(
+              params.status,
+              recurring: params.recurring,
+              acting_user: guardian.user,
+            )
+            next existing
+          end
+
+          Invitee.create_attendance!(
+            user.id,
+            event.id,
+            params.status,
+            recurring: params.recurring,
+            acting_user: guardian.user,
+          )
+        end
       end
     end
   end

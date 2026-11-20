@@ -59,6 +59,36 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     });
   });
 
+  test("previews the registration draft and returns to the same event", async function (assert) {
+    const event = eventWith();
+    await renderAdvanced(event);
+    await fillIn('[data-name="location"] input', "Room 4");
+    await click('[data-name="registrationEnabled"] input');
+    await fillIn(
+      '.form-definition-editor [data-name="title"] input',
+      "Workshop signup"
+    );
+    await click(".form-definition-editor__add");
+    await fillIn(
+      '.form-definition-editor [data-name="fields.0.label"] input',
+      "Team"
+    );
+    await click(".form-definition-editor__preview");
+    assert.dom(".event-registration h1").hasText("Workshop signup");
+    assert.dom(".event-registration label").includesText("Team");
+    await click(".event-registration .modal-close");
+    await click('.form-definition-editor [type="submit"]');
+    assert.strictEqual(
+      event.registrationForm,
+      undefined,
+      "the draft stays local until the event is saved"
+    );
+    assert.dom('[data-name="location"] input').hasValue("Room 4");
+    assert.dom('[data-name="registrationEnabled"] input').isChecked();
+    await click(".btn-primary");
+    assert.strictEqual(event.registrationForm.fields[0].label, "Team");
+  });
+
   test("reminder edits persist in advanced settings and the saved event", async function (assert) {
     const event = eventWith({
       reminders: [

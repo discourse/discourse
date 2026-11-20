@@ -36,6 +36,12 @@ module DiscourseEvents
             current_status: @post.event&.status || Event.statuses[:standalone],
           )
 
+        if extracted_event.key?(:"registration-form") &&
+             !FormDefinition.new(attributes.registration_form).valid?
+          add_error("invalid_registration_form")
+          return
+        end
+
         group_names = attributes.raw_invitees.to_a
         invitees = group_names - [Event::PUBLIC_GROUP]
 
@@ -46,6 +52,7 @@ module DiscourseEvents
 
         return unless can_invite_groups?(group_names)
         return unless valid_hosts?(extracted_event)
+        return unless valid_registration_edit?(extracted_event, attributes.registration_form)
 
         if @post.acting_user && @post.event
           if !@post.acting_user.guardian.can_act_on_discourse_post_event?(@post.event)
@@ -127,6 +134,22 @@ module DiscourseEvents
 
       def add_error(key, **args)
         @post.errors.add(:base, I18n.t("discourse_post_event.errors.models.event.#{key}", **args))
+      end
+
+      def valid_registration_edit?(raw, definition)
+        event = @post.event
+        return true unless event
+        if definition == event.registration_form &&
+             (
+               !event.registration_form && !event.registration_topic_id ||
+                 extract_hosts(raw).sort == event.hosts.pluck(:username_lower).sort
+             )
+          return true
+        end
+        return true if @post.acting_user&.guardian&.can_export_event_registrations?(event)
+
+        add_error("registration_hosts")
+        false
       end
 
       def valid_hosts?(event)

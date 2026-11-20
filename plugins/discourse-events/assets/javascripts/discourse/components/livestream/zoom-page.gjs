@@ -26,7 +26,6 @@ import LivestreamNotificationPause from "./notification-pause.gjs";
 const FRAME_MESSAGE_SOURCE = "discourse-zoom-frame";
 
 export default class LivestreamZoomPage extends Component {
-  @service appEvents;
   @service currentUser;
   @service discoursePostEventApi;
   @service embeddableChat;
@@ -179,16 +178,8 @@ export default class LivestreamZoomPage extends Component {
     }
 
     const payload = { status: "going" };
-    const appEventData = { status: payload.status, postId: event.id };
-
     try {
-      if (event.watchingInvitee) {
-        await this.discoursePostEventApi.updateEventAttendance(event, payload);
-        this.appEvents.trigger("calendar:update-invitee-status", appEventData);
-      } else {
-        await this.discoursePostEventApi.joinEvent(event, payload);
-        this.appEvents.trigger("calendar:create-invitee-status", appEventData);
-      }
+      await this.discoursePostEventApi.rsvp(event, payload);
     } catch (e) {
       // Chat beside the webinar stays read-only without this, and its own RSVP
       // prompt is the way back from that, so the failure is worth saying out

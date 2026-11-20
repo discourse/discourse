@@ -2990,6 +2990,26 @@ en:
       screen_reader:
         one: Enter a number
         other: Enter %{count} numbers
+    form_definition:
+      title: "Form title"
+      description: "Description"
+      label: "Field label"
+      placeholder: "Placeholder"
+      required: "Required"
+      type: "Field type"
+      choice: "Choice"
+      add_choice: "Add choice"
+      add_field: "Add question"
+      untitled: "Untitled"
+      preview: "Preview"
+      types:
+        text: "Text"
+        textarea: "Text area"
+        number: "Number"
+        date: "Date"
+        checkbox: "Checkbox"
+        dropdown: "Dropdown"
+        radio: "Radio buttons"
     form_kit:
       reset: Reset
       optional: optional
