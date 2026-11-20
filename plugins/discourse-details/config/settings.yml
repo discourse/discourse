@@ -2,3 +2,7 @@ plugins:
   details_enabled:
     default: true
     client: true
+  details_max_nesting_depth:
+    default: 0
+    min: 0
+    max: 10
