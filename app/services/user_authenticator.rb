@@ -46,6 +46,10 @@ class UserAuthenticator
     @auth_result&.email_valid
   end
 
+  def verified_email_skips_validation?
+    authenticated? && @auth_result.skip_email_validation
+  end
+
   def authenticated?
     return false if !@auth_result
     return false if @auth_result&.email&.downcase != @user.email.downcase

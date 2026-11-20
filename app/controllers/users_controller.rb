@@ -783,14 +783,18 @@ class UsersController < ApplicationController
       ensure_external_ids_allowed!
     end
 
-    user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
+    signup_email = new_user_params[:email].strip.downcase
+    user = User.where(staged: true).with_email(signup_email).first || User.new
+    authentication = UserAuthenticator.new(user, server_session)
 
-    if user
+    if user.staged?
+      if user.email == signup_email && authentication.verified_email_skips_validation?
+        user.skip_email_validation = true
+      end
       user.active = false
       user.unstage!
     end
 
-    user ||= User.new
     user.attributes = new_user_params
 
     # Handle API approval and
@@ -821,8 +825,6 @@ class UsersController < ApplicationController
         associations << association
       end
     end
-
-    authentication = UserAuthenticator.new(user, server_session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins &&
          !(current_user&.admin? && is_api?)
