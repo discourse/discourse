@@ -36,8 +36,15 @@ module DiscourseAi
         # current_styles: the styles of the theme being edited, if any; the
         # answer replaces them as a whole.
         # Returns a Result, or a Failure with the last errors.
-        def call(request, palettes:, current_styles: nil)
+        def call(request, palettes:, current_styles: nil, base_theme_id: nil)
           prompt = build_prompt(request.to_s.truncate(MAX_REQUEST_LENGTH), palettes, current_styles)
+          if base_theme_id == Theme::CORE_THEMES["horizon"]
+            prompt.push(
+              type: :user,
+              content:
+                "This theme stays on Horizon. Only non-color styles are supported. Do not set colors, backgrounds, borders with colors, shadows or opacity, including through variables. Report these requests as unsupported; palettes handle colors separately.",
+            )
+          end
           errors = []
 
           @max_attempts.times do |attempt|
@@ -56,7 +63,7 @@ module DiscourseAi
               return Failure.new(errors: ["The model gave no styles."], attempts: attempt + 1)
             end
 
-            result = AppearanceStyles::Policy.call(styles, palettes:)
+            result = AppearanceStyles::Policy.call(styles, palettes:, base_theme_id:)
             if result.valid?
               return(
                 Result.new(

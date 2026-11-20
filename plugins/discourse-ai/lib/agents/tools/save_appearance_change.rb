@@ -21,6 +21,7 @@ module DiscourseAi
           site_settings
           styles
           replaces_theme_id
+          base_theme_id
         ].freeze
 
         def self.name
@@ -77,6 +78,10 @@ module DiscourseAi
 
         def approval_details
           return I18n.t("discourse_ai.appearance_authoring.invalid_draft") if !valid_draft?
+
+          if theme_draft? && draft[:base_theme_id] == Theme::CORE_THEMES["horizon"]
+            return I18n.t("discourse_ai.appearance_authoring.horizon_save_details")
+          end
 
           I18n.t("discourse_ai.ai_bot.chat_tool_approval.save_appearance_details.#{draft[:kind]}")
         end
@@ -157,7 +162,16 @@ module DiscourseAi
             appearance_change_id: appearance_change.id,
             name: appearance_change.name,
             preview_url: AppearanceAuthoring.preview_url(appearance_change),
-            message: I18n.t("discourse_ai.appearance_authoring.saved"),
+            message:
+              I18n.t(
+                (
+                  if appearance_change.base_theme_id
+                    "discourse_ai.appearance_authoring.horizon_saved"
+                  else
+                    "discourse_ai.appearance_authoring.saved"
+                  end
+                ),
+              ),
           }
         rescue StandardError
           AppearanceAuthoring::Draft.release(draft_token, reviewable_id: reviewable.id)

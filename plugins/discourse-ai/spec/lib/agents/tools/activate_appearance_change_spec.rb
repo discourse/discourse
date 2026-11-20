@@ -237,4 +237,32 @@ RSpec.describe DiscourseAi::Agents::Tools::ActivateAppearanceChange do
       Theme.foundation_theme.reload.color_scheme_id
     }
   end
+
+  context "with a styled Horizon copy" do
+    before { Theme.horizon_theme.set_default! }
+
+    let(:horizon_change) do
+      save_change(
+        service: AppearanceChange::DraftTheme,
+        base_theme_id: Theme.horizon_theme.id,
+        styles: {
+          variables: {
+            "--d-border-radius" => "12px",
+          },
+        },
+      )
+    end
+
+    it "can be approved after a bundled update and is refused after a hand edit" do
+      change = horizon_change
+      SystemThemesManager.sync_theme!("horizon")
+      expect(build_tool(change).validation_error).to be_nil
+      expect(build_tool(change).approval_details).to include("stays on Horizon")
+      change.theme.set_field(target: :desktop, name: :scss, value: ".manual { margin: 2px; }")
+      change.theme.save!
+      expect(build_tool(change).invoke[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.theme_changed"),
+      )
+    end
+  end
 end

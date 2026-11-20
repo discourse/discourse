@@ -55,18 +55,26 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
   end
 
   it "drafts a new theme when asked, warning when the site's layout would change" do
-    Theme.horizon_theme.set_default!
+    theme = Fabricate(:theme)
+    theme.set_default!
 
     result = invoke(name: "Acme", brand_color: "#e8590c", new_theme: true)
 
     expect(result[:saves_as]).to eq(
       I18n.t(
         "discourse_ai.appearance_authoring.new_theme_target_with_layout_change",
-        theme: Theme.horizon_theme.name,
+        theme: theme.name,
       ),
     )
     expect(draft(result)).to include(kind: "theme")
     expect(draft(result)).not_to have_key(:theme_id)
+  end
+
+  it "keeps colors-only requests on Horizon's palette flow even when a separate theme is requested" do
+    Theme.horizon_theme.set_default!
+    result = invoke(name: "Acme", brand_color: "#e8590c", new_theme: true)
+    expect(draft(result)).to include(kind: "palettes", theme_id: Theme.horizon_theme.id)
+    expect(draft(result)).not_to have_key(:base_theme_id)
   end
 
   it "only uses fonts Discourse offers" do
@@ -218,6 +226,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
     end
 
     it "doesn't draft a new theme, which would need new palettes" do
+      Theme.foundation_theme.set_default!
       expect(invoke(name: "Acme", brand_color: "#1ed760", new_theme: true)[:error]).to eq(
         "New palettes aren't available here.",
       )
@@ -470,6 +479,65 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
           DiscourseAi::Agents::AppearanceAuthoring.theme_palettes(Theme.foundation_theme)[:light],
         ),
       )
+    end
+
+    it "uses a Horizon copy with no layout-change warning for non-color styles" do
+      Theme.horizon_theme.set_default!
+      result = invoke_with_styles(name: "Rounded Horizon", styles: "Rounder corners")
+      expect(result[:status]).to eq("success")
+      expect(draft(result)).to include(kind: "theme", base_theme_id: Theme.horizon_theme.id)
+      expect(result[:saves_as]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.horizon_theme_target"),
+      )
+      expect(result[:saves_as]).not_to include("Foundation", "layout will change")
+      saved =
+        AppearanceChange::DraftTheme.call(
+          params: draft(result).slice(:name, :light_colors, :dark_colors, :styles, :base_theme_id),
+          guardian: admin.guardian,
+        )
+      expect(saved).to run_successfully
+      change = saved[:appearance_change]
+      expect(
+        AppearanceChange::Activate.call(
+          params: {
+            appearance_change_id: change.id,
+          },
+          guardian: admin.guardian,
+        ),
+      ).to run_successfully
+      next_result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([styles_answer]) do
+          described_class.new(
+            { name: "More rounded", styles: "Rounder corners again" },
+            bot_user: Discourse.system_user,
+            llm: DiscourseAi::Completions::Llm.proxy(llm_model),
+            context:,
+          ).invoke
+        end
+      expect(draft(next_result)).to include(
+        base_theme_id: Theme.horizon_theme.id,
+        replaces_theme_id: change.theme_id,
+      )
+      expect(next_result[:saves_as]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.horizon_version_target", name: change.name),
+      )
+    end
+
+    it "repairs color styles instead of accepting Foundation contrast checks on Horizon" do
+      Theme.horizon_theme.set_default!
+      colored = {
+        "variables" => [{ "name" => "--d-sidebar-background", "value" => "var(--secondary)" }],
+        "rules" => [],
+        "unsupported" => [],
+      }
+      result =
+        invoke_with_styles(
+          [colored, styles_answer],
+          name: "Horizon",
+          styles: "Change background and corners",
+        )
+      expect(result[:status]).to eq("success")
+      expect(draft(result)[:styles]).to eq("variables" => { "--d-border-radius" => "12px" })
     end
 
     it "uses new palettes too when given a brand color" do

@@ -83,7 +83,7 @@ module DiscourseAi
 
         def self.custom_system_message
           <<~TEXT
-            When an administrator asks to change the site's colors or fonts, or to match the look of their website, call generate_appearance_change. Pass website_url when they share a website. If it returns needs_brand_color, show the candidate colors and ask which one is their brand color, then call it again with brand_color and the same website_url. When it succeeds, say briefly what will change, including any colors adjusted so text stays readable, then call save_appearance_change with the exact draft token. When the result has a note, the site can't have new palettes, so it uses the closest palettes the site already has: pass the note on and name the palettes. If it returns no_change, tell the administrator nothing needs to change. Saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live. Only call activate_appearance_change when the administrator asks to make it live; that needs approval too. To undo a change, find it with list_appearance_changes and call revert_appearance_change. Never say a change is live before activate_appearance_change succeeds. For other cosmetic changes, such as corners, shadows, borders, sizes, spacing or hiding minor elements, describe them in the styles parameter; they need a new theme. Pass the brand colors too when the administrator also wants new colors; otherwise the current colors are kept. Report the style_changes it returns, and anything under not_supported, which these tools can't do. Never write CSS yourself. A new theme starts from Foundation, core's default design, so warn a site using another theme that its layout will change.
+            When an administrator asks to change the site's colors or fonts, or to match the look of their website, call generate_appearance_change. Pass website_url when they share a website. If it returns needs_brand_color, show the candidate colors and ask which one is their brand color, then call it again with brand_color and the same website_url. When it succeeds, say briefly what will change, including any colors adjusted so text stays readable, then call save_appearance_change with the exact draft token. When the result has a note, the site can't have new palettes, so it uses the closest palettes the site already has: pass the note on and name the palettes. If it returns no_change, tell the administrator nothing needs to change. Saving needs approval and doesn't change the site. Once it's saved, share the preview link and ask whether to make it live. Only call activate_appearance_change when the administrator asks to make it live; that needs approval too. To undo a change, find it with list_appearance_changes and call revert_appearance_change. Never say a change is live before activate_appearance_change succeeds. For other cosmetic changes, such as corners, shadows, borders, sizes, spacing or hiding minor elements, describe them in the styles parameter; they need a new theme. Pass the brand colors too when the administrator also wants new colors; otherwise the current colors are kept. Report the style_changes it returns, and anything under not_supported, which these tools can't do. Never write CSS yourself. On Horizon, non-color styles stay on an updated Horizon copy with the same layout. Colors alone use palettes on the current theme. On other themes, a new theme starts from Foundation, core's default design, so warn that its layout will change.
           TEXT
         end
 
@@ -153,6 +153,7 @@ module DiscourseAi
             kind: theme ? "palettes" : "theme",
             theme_id: theme&.id,
             replaces_theme_id: edited&.theme_id,
+            base_theme_id: (horizon_base_id if theme.nil?),
             name: edited&.name || name,
             light_colors: palettes.light,
             dark_colors: palettes.dark,
@@ -182,8 +183,19 @@ module DiscourseAi
           raise Refusal, message
         end
 
+        def horizon_base_id
+          return @horizon_base_id if defined?(@horizon_base_id)
+
+          @horizon_base_id =
+            if AppearanceStyles::SyncedTheme.horizon?(Theme.find_default)
+              Theme::CORE_THEMES["horizon"]
+            end
+        end
+
         # Styles only go in a theme of their own.
         def new_theme?
+          return false if horizon_base_id && style_request.blank?
+
           ActiveModel::Type::Boolean.new.cast(parameters[:new_theme]) == true ||
             style_request.present?
         end
@@ -212,6 +224,7 @@ module DiscourseAi
                 dark:,
               },
               current_styles: edited_change&.styles,
+              base_theme_id: horizon_base_id,
             )
           if result.is_a?(AppearanceAuthoring::StyleAuthor::Failure)
             refuse(I18n.t("discourse_ai.appearance_authoring.styles_failed"))
@@ -245,6 +258,15 @@ module DiscourseAi
         end
 
         def new_version_target(appearance_change)
+          if horizon_base_id
+            return(
+              I18n.t(
+                "discourse_ai.appearance_authoring.horizon_version_target",
+                name: appearance_change.name,
+              )
+            )
+          end
+
           I18n.t(
             "discourse_ai.appearance_authoring.new_version_target",
             name: appearance_change.name,
@@ -264,7 +286,8 @@ module DiscourseAi
 
           combined = (authored&.styles || {}).deep_dup
           combined["variables"] = website["variables"].merge(combined["variables"] || {})
-          result = AppearanceStyles::Policy.call(combined, palettes:)
+          result =
+            AppearanceStyles::Policy.call(combined, palettes:, base_theme_id: horizon_base_id)
           if result.valid?
             Styles.new(styles: combined, changes: result.changes)
           elsif authored
@@ -501,6 +524,8 @@ module DiscourseAi
           if theme
             return I18n.t("discourse_ai.appearance_authoring.palettes_target", theme: theme.name)
           end
+
+          return I18n.t("discourse_ai.appearance_authoring.horizon_theme_target") if horizon_base_id
 
           current = Theme.find_default
           if current.nil? || current.id == Theme::CORE_THEMES["foundation"]
