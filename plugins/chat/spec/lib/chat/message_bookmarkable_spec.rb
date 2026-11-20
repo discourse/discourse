@@ -68,6 +68,27 @@ describe Chat::MessageBookmarkable do
         [bookmark2.id],
       )
     end
+
+    context "when the message is a reply whose thread original message was trashed" do
+      fab!(:threading_channel) { Fabricate(:category_channel, threading_enabled: true) }
+      fab!(:original_message) { Fabricate(:chat_message, chat_channel: threading_channel) }
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: threading_channel, original_message: original_message)
+      end
+      fab!(:reply) { Fabricate(:chat_message, chat_channel: threading_channel, thread: thread) }
+
+      before { original_message.trash! }
+
+      it "returns the bookmark for staff" do
+        admin = Fabricate(:admin)
+        threading_channel.add(admin)
+        admin_bookmark = Fabricate(:bookmark, user: admin, bookmarkable: reply)
+
+        expect(
+          registered_bookmarkable.perform_list_query(admin, Guardian.new(admin)).map(&:id),
+        ).to include(admin_bookmark.id)
+      end
+    end
   end
 
   describe "#perform_search_query" do

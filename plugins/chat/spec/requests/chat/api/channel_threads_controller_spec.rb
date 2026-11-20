@@ -484,6 +484,35 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         expect(response.status).to eq(404)
       end
     end
+
+    context "when the original message is a reply in a hidden thread" do
+      fab!(:thread_original) do
+        Fabricate(:chat_message, chat_channel: channel_1, message: "thread original secret")
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: channel_1, original_message: thread_original)
+      end
+      fab!(:hidden_reply) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_1,
+          thread: thread,
+          message: "thread reply secret",
+        )
+      end
+
+      let(:params) { { title: title, original_message_id: hidden_reply.id } }
+
+      before { thread_original.trash! }
+
+      it "returns 404 without leaking the hidden thread" do
+        post "/chat/api/channels/#{channel_id}/threads", params: params
+
+        expect(response.body).not_to include("thread reply secret")
+        expect(response.body).not_to include("thread original secret")
+        expect(response.status).to eq(404)
+      end
+    end
   end
 
   describe "silenced users" do
