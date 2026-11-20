@@ -90,7 +90,7 @@ class BasicCategorySerializer < ApplicationSerializer
   end
 
   def include_topic_creation_prompt_max_trust_level?
-    include_topic_creation_prompt? && !object.topic_creation_prompt_max_trust_level.nil?
+    !object.topic_creation_prompt_max_trust_level.nil?
   end
 
   def custom_fields
