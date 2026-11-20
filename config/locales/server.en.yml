@@ -70,6 +70,7 @@ en:
   mcp:
     errors:
       author_must_match: "This connection acts as %{username} and cannot create content as another user. Omit author_username or use %{username}."
+      authoring_guide_unavailable: "Guide unavailable. Choose a Markdown file under .skills/ or docs/developer-guides/ in this site's repository (maximum 256 KiB)."
       category_create_failed: "Category could not be created"
       category_delete_confirmation_required: "Category deletion must be confirmed"
       category_delete_name_mismatch: "Category name does not match"
@@ -145,6 +146,9 @@ en:
       site_setting_value_forbidden: "Do not provide a value when resetting a site setting"
       site_setting_value_required: "Provide a value when setting a site setting"
       site_setting_verification_failed: "The site setting update could not be verified"
+      source_path_unavailable: "Choose a tracked source file under the documented source directories. Absolute paths, private configuration, and symlink escapes are unavailable."
+      source_too_large: "Source output is too large. Use a narrower query, fewer lines, or a file of at most 2 MiB."
+      source_unavailable: "Source checkout or reported commit is unavailable. No latest-version fallback was fetched."
       theme_children_must_be_components: "Only standalone themes can have child components, and every child_theme_id must identify an existing component. Convert a standalone child with component:true first."
       theme_code_compile_failed: "Theme compilation failed; no changes were committed: %{message}"
       theme_code_js_invalid: "The theme's JavaScript bundle failed compilation, possibly in another file; no changes were committed: %{message}"
@@ -3335,7 +3339,7 @@ en:
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The {{setting:faq_url}} setting works as before."
-    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is clicked if the user has permission to view that category."
+    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is hovered if the user has permission to view that category."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
@@ -4141,9 +4145,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         %{flag_reason}
 
@@ -4210,9 +4212,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden again.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden again.
 
         %{flag_reason}
 
@@ -4226,9 +4226,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         Your post will remain hidden until a staff member reviews it.
 
@@ -5625,6 +5623,9 @@ en:
 
   upload:
     edit_reason: "downloaded local copies of images"
+    too_many_short_urls:
+      one: "Can't look up more than %{count} URL in a single request."
+      other: "Can't look up more than %{count} URLs in a single request."
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     images_only: "Sorry, you can only upload images for this setting."
     pasted_image_filename: "Pasted image"
@@ -5693,6 +5694,8 @@ en:
 
   appearance_changes:
     dark_palette_name: "%{name} Dark"
+    draft_name: "%{name} (draft)"
+    previous_name: "%{name} (previous)"
 
   color_schemes:
     base_theme_name: "Base"

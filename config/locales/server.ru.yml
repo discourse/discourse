@@ -3946,6 +3946,8 @@ ru:
         В качестве меры предосторожности ваш аккаунт был заморожен: вы не сможете создавать сообщения и темы до тех пор, пока сотрудник не просмотрит его. Приносим извинения за доставленные неудобства.
 
         Подробнее смотрите в [рекомендациях для сообщества](%{base_url}/guidelines).
+    moderator_silence:
+      subject_template: "Ваш аккаунт был заморожен"
     silenced_by_staff:
       title: "Заморозка персоналом"
       preview: "Учетная запись временно заблокирована."
@@ -4319,14 +4321,6 @@ ru:
       title: "Аккаунт заблокирован"
       subject_template: "[%{email_prefix}] Ваш аккаунт был заблокирован"
       subject_template_improved: "Ваш аккаунт заблокирован."
-    account_silenced:
-      title: "Аккаунт заморожен"
-      subject_template: "[%{email_prefix}] Ваш аккаунт был заморожен"
-      subject_template_improved: "Ваш аккаунт был заморожен"
-    account_silenced_forever:
-      title: "Аккаунт заморожен"
-      subject_template: "[%{email_prefix}] Ваш аккаунт был заморожен"
-      subject_template_improved: "Ваш аккаунт был заморожен"
     account_deleted:
       title: "Аккаунт удален"
       subject_template: "[%{email_prefix}] Ваш аккаунт удален"

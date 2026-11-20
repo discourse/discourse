@@ -56,9 +56,7 @@ en:
           body: |
             Hi @%{username},
 
-            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically.
-
-            Reference: %{post_url}
+            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically and you can [view your post](%{base_url}%{post_url}) again.
       llm_report:
         title: Periodic report using AI
         description: "Periodic report based on a large language model"
@@ -369,6 +367,13 @@ en:
     multiple_models: "Multiple models"
 
     discourse_workflows:
+      ai_tool:
+        errors:
+          unavailable: "The selected AI tool is not available for workflow execution."
+          invalid_arguments: "The AI tool arguments are invalid"
+          invalid_schema: "The tool returned an argument schema that cannot be resolved."
+          llm_not_found: "The selected language model was not found."
+          failed: "The AI tool failed."
       ai_agent:
         errors:
           invalid_mode: "'%{mode}' is not a supported AI agent execution mode."
@@ -1429,6 +1434,12 @@ en:
       not_allowed: "Only administrators can change how the site looks."
       unavailable: "Changing how the site looks isn't available here."
       themes_unavailable: "Creating new themes isn't available on this site. I can change the current theme's colors and fonts instead."
+      styles_unavailable: "Styles beyond colors and fonts aren't available on this site. I can change the current theme's colors and fonts instead."
+      styles_failed: "I couldn't write styles that pass the theme's safety checks. Ask the administrator to describe the change differently, or offer to build it with their own AI app."
+      more_styles: "More style changes"
+      theme_changed: "This theme has been changed since it was saved, so I can't make it live. Make it the default in Admin > Appearance > Themes instead, or ask me for a new version."
+      new_version_target: "A new version of %{name}, saved as a draft until it's made live. The current version is kept so you can switch back."
+      styles_unsupported: "These styles can't make that change: %{requests}. Offer to build it with the administrator's own AI app instead."
       name_required: "Give the palettes or theme a short name."
       brand_color_required: "Give a brand color, or the website to take colors from."
       invalid_color: "Use hex colors, such as #635bff. These aren't valid: %{colors}"

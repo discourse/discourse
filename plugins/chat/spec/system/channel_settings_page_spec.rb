@@ -9,7 +9,7 @@ RSpec.describe "Channel - Info - Settings page" do
   let(:channel_settings_page) { PageObjects::Pages::ChatChannelSettings.new }
 
   before do
-    chat_system_bootstrap
+    chat_system_bootstrap(current_user)
     sign_in(current_user)
   end
 
@@ -67,24 +67,17 @@ RSpec.describe "Channel - Info - Settings page" do
   context "as regular user of channel" do
     before { channel_1.add(current_user) }
 
-    it "shows settings page" do
+    it "shows read-only channel info without admin controls" do
       chat_page.visit_channel_settings(channel_1)
 
       expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
-    end
-
-    it "shows channel info" do
-      chat_page.visit_channel_settings(channel_1)
-
       expect(page.find(".badge-category__name")).to have_content(channel_1.chatable.name)
       expect(page.find(".c-channel-settings__name")).to have_content(channel_1.title)
       expect(page.find(".c-channel-settings__slug")).to have_content(channel_1.slug)
-    end
-
-    it "can’t edit the channel" do
-      chat_page.visit_channel_settings(channel_1)
-
       expect(channel_settings_page.channel_form).to have_no_field_with_name("name")
+      expect(channel_settings_page.channel_form).to have_no_field_with_name(
+        "allow_channel_wide_mentions",
+      )
       expect(page).to have_no_css(".c-channel-settings__channel-form button[type='submit']")
     end
 
@@ -97,14 +90,6 @@ RSpec.describe "Channel - Info - Settings page" do
       )
       expect(page.find(".chat-channel-name__label")["innerHTML"].strip).to include(
         "&lt;script&gt;alert('hello')&lt;/script&gt;",
-      )
-    end
-
-    it "is not showing admin settings" do
-      chat_page.visit_channel_settings(channel_1)
-
-      expect(channel_settings_page.channel_form).to have_no_field_with_name(
-        "allow_channel_wide_mentions",
       )
     end
 
@@ -141,7 +126,6 @@ RSpec.describe "Channel - Info - Settings page" do
       membership.update!(muted: true, muted_until: 1.hour.from_now)
 
       chat_page.visit_channel_preferences(channel_1)
-
       channel_settings_page.notification_form.field("mute").select("off")
 
       expect(toasts).to have_success(I18n.t("js.saved"))
@@ -215,28 +199,22 @@ RSpec.describe "Channel - Info - Settings page" do
 
     before { channel_1.add(current_user) }
 
-    it "can edit name" do
+    it "can edit the channel name and description" do
       chat_page.visit_channel_settings(channel_1)
       form = channel_settings_page.channel_form
 
       expect(form.field("name")).to have_value(channel_1.title)
 
+      expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
       form.field("name").fill_in("A new name")
-      form.submit
-
-      expect(toasts).to have_success(I18n.t("js.saved"))
-      expect(channel_1.reload.name).to eq("A new name")
-    end
-
-    it "can edit description" do
-      chat_page.visit_channel_settings(channel_1)
-      form = channel_settings_page.channel_form
-
       form.field("description").fill_in("A new description")
       form.submit
 
       expect(toasts).to have_success(I18n.t("js.saved"))
-      expect(channel_1.reload.description).to eq("A new description")
+      expect(channel_1.reload).to have_attributes(
+        name: "A new name",
+        description: "A new description",
+      )
     end
 
     it "can edit slug" do
@@ -289,12 +267,6 @@ RSpec.describe "Channel - Info - Settings page" do
       expect(page).to have_selector(".chat-channel-title .d-icon-d-chat")
     end
 
-    it "shows settings page" do
-      chat_page.visit_channel_settings(channel_1)
-
-      expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
-    end
-
     it "can change auto join setting" do
       chat_page.visit_channel_settings(channel_1)
 
@@ -344,17 +316,12 @@ RSpec.describe "Channel - Info - Settings page" do
       chat_page.visit_channel_settings(channel_1)
 
       click_button(I18n.t("js.chat.channel_settings.delete_channel"))
+      fill_in("channel-delete-confirm-name", with: channel_1.title + "wrong")
+      expect(page).to have_button("chat-confirm-delete-channel", disabled: true)
+
       fill_in("channel-delete-confirm-name", with: channel_1.title)
       find_button("chat-confirm-delete-channel", disabled: false).click
       expect(page).to have_content(I18n.t("js.chat.channel_delete.process_started"))
-    end
-
-    it "doesn’t delete when confirmation is wrong" do
-      chat_page.visit_channel_settings(channel_1)
-      find(".delete-btn").click
-      fill_in("channel-delete-confirm-name", with: channel_1.title + "wrong")
-
-      expect(page).to have_button("chat-confirm-delete-channel", disabled: true)
     end
   end
 end

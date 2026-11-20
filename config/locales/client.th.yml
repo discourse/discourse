@@ -2076,10 +2076,8 @@ th:
           label: "เลือกแล้ว"
           title: "คลิกเพื่อลบโพสต์จากการเลือก"
         select_replies:
-          label: "เลือก + ตอบ"
           title: "เพิ่มโพสต์และคำตอบทั้งหมดไปยังการเลือก"
         select_below:
-          label: "เลือก+ด้านล่าง"
           title: "เพิ่มโพสต์และทุกอย่างหลังจากนั้นไปยังการเลือก"
         delete: ลบที่เลือก
         cancel: ยกเลิกการเลือก
@@ -3453,7 +3451,6 @@ th:
         suspend_message: "ข้อความอีเมล"
         suspended_by: "ระงับการใช้งานโดย"
         silence_reason: "เหตุผล"
-        silence_message: "ข้อความอีเมล"
         suspended_until: "(จนกระทั่ง%{until})"
         cant_suspend: "ไม่สามารถระงับผู้ใช้งานนี้ได้"
         delete_posts_failed: "มีปัญหาขณะกำลังลบโพสต์"

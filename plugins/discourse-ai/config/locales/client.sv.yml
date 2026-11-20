@@ -46,6 +46,9 @@ sv:
         error: "Fel"
         response: "Svar"
       discourse_workflows:
+        ai_tool:
+          list_item: "Listobjekt"
+          add_list_item: "Lägg till objekt"
         classify:
           text: "Text"
           upload_ids: "Bilder"
@@ -83,6 +86,9 @@ sv:
           enabled: "Aktiverad"
         search:
           name: "Sök"
+        review_queue:
+          setting_groups:
+            settings: "Inställningar"
         image_caption:
           setting_groups:
             settings: "Inställningar"

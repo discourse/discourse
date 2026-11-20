@@ -28,10 +28,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Read do
   fab!(:post1) { Fabricate(:post, topic: topic_with_tags, raw: "hello there") }
   fab!(:post2) { Fabricate(:post, topic: topic_with_tags, raw: "mister sam") }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   describe "#process" do
     it "uses usernames for authors when names are disabled" do

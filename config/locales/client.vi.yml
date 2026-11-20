@@ -3824,10 +3824,8 @@ vi:
           label: "đã chọn"
           title: "Nhấp để xóa tút khỏi lựa chọn"
         select_replies:
-          label: "chọn + trả lời"
           title: "Thêm tút và tất cả các câu trả lời của nó cho lựa chọn"
         select_below:
-          label: "chọn + bên dưới"
           title: "Thêm tút và tất cả sau đó để lựa chọn"
         delete: xóa lựa chọn
         cancel: hủy lựa chọn
@@ -7624,7 +7622,6 @@ vi:
         silence_duration: "Thành viên sẽ bị hạn chế trong bao lâu?"
         silence_reason_title: "Lý do hạn chế"
         silence_reason_placeholder: "Lý do hạn chế"
-        silence_message: "Tin nhắn Email"
         suspended_until: "(đến %{until})"
         suspend_forever: "Đình chỉ vĩnh viễn"
         cant_suspend: "Thành viên này không thể bị đình chỉ."

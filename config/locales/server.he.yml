@@ -3666,6 +3666,8 @@ he:
         ליתר בטחון, החשבון החדש שלך הושתק ולא תהיה לך אפשרות להגיב או ליצור נושאים עד שחבר סגל יוכל לסקור את החשבון שלך. אנו מתנצלים על חוסר הנעימות.
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
+    moderator_silence:
+      subject_template: "חשבונך הושתק"
     silenced_by_staff:
       title: "השתקה מצד הסגל"
       subject_template: "חשבון בהשהיה זמנית"
@@ -4016,14 +4018,6 @@ he:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
       subject_template_improved: "חשבונך הושעה"
-    account_silenced:
-      title: "חשבון מושתק"
-      subject_template: "[%{email_prefix}] חשבונך הושתק"
-      subject_template_improved: "חשבונך הושתק"
-    account_silenced_forever:
-      title: "חשבון מושתק"
-      subject_template: "[%{email_prefix}] חשבונך הושתק"
-      subject_template_improved: "חשבונך הושתק"
     account_deleted:
       title: "החשבון נמחק"
       subject_template: "[%{email_prefix}] החשבון שלך נמחק"

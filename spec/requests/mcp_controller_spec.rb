@@ -94,6 +94,31 @@ describe "MCP transport" do
   describe "#create" do
     fab!(:category)
 
+    it "requires repository scope rather than theme scope for source access" do
+      name = "discourse_source_version"
+      McpPrimitive.create!(kind: "tool", identifier: name, enabled: true)
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::THEMES_READ)
+      request_payload = payload.deep_dup
+      request_payload[:params][:name] = name
+      request_headers = headers.merge("HTTP_MCP_NAME" => name)
+
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(403)
+
+      authorization.scope_records.create!(name: DiscourseMcp::Scopes::REPOSITORY_READ)
+      request_headers[
+        "HTTP_AUTHORIZATION"
+      ] = "Bearer #{McpOauthAccessToken.issue!(authorization: authorization)}"
+      post "/mcp", params: request_payload.to_json, headers: request_headers
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("result", "isError")).to eq(false)
+      expect(response.parsed_body.dig("result", "structuredContent", "source")).to include(
+        "site_version" => Discourse::VERSION::STRING,
+        "source_revision" => Discourse.git_version,
+        "public_permalink_verified" => false,
+      )
+    end
+
     it "requires theme write scope and returns compilation failures without changing saved code" do
       theme = Fabricate(:theme, component: true)
       name = "discourse_set_theme_code"

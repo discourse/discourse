@@ -5,7 +5,9 @@ module ::Blog
     FILTERS = %w[all drafts published unpublished pages].freeze
     MAX_QUERY_LENGTH = 100
 
-    def self.call(guardian, filter: "all", query: "")
+    # A blog narrows the list to articles assigned to it. Topics without a
+    # publication yet belong to no blog.
+    def self.call(guardian, filter: "all", query: "", blog: nil)
       raise Discourse::InvalidParameters.new(:filter) if FILTERS.exclude?(filter)
       if !query.is_a?(String) || query.length > MAX_QUERY_LENGTH
         raise Discourse::InvalidParameters.new(:q)
@@ -15,9 +17,7 @@ module ::Blog
         Topic
           .secured(guardian)
           .listable_topics
-          .where(
-            category_id: [SiteSetting.blog_category.to_i, SiteSetting.blog_drafts_category.to_i],
-          )
+          .where(category_id: [*Instance.category_ids, SiteSetting.blog_drafts_category.to_i])
           .where.not(id: Category.where.not(topic_id: nil).select(:topic_id))
 
       topics =
@@ -46,6 +46,7 @@ module ::Blog
               .select(:topic_id),
         )
       topics = topics.where(user_id: guardian.user.id) unless guardian.is_blog_editor?
+      topics = topics.where(id: Publication.where(blog_id: blog.id).select(:topic_id)) if blog
 
       live_ids = Publication.publicly_visible.select("blog_publications.topic_id")
       topics =
@@ -57,7 +58,7 @@ module ::Blog
         when "published"
           topics.where(id: live_ids)
         when "unpublished"
-          topics.where(category_id: SiteSetting.blog_category.to_i).where.not(id: live_ids)
+          topics.where(category_id: Instance.category_ids).where.not(id: live_ids)
         when "pages"
           # A staged page setting wins over the live one, as in the article settings.
           topics.where(

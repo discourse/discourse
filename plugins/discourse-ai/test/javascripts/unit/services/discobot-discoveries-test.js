@@ -335,4 +335,45 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
       "the completed answer is announced"
     );
   });
+
+  test("announces a cached answer that arrives before the request acknowledgment", async function (assert) {
+    const announcements = [];
+    this.owner.register(
+      "service:a11y",
+      class extends Service {
+        announce(message) {
+          announcements.push(message);
+        }
+      }
+    );
+    const service = getOwner(this).lookup("service:discobot-discoveries");
+    const query = "What is Discourse?";
+
+    pretender.post("/discourse-ai/discoveries/reply", async (request) => {
+      const requestId = new URLSearchParams(request.requestBody).get(
+        "request_id"
+      );
+      await service.onDiscoveryUpdate({
+        request_id: requestId,
+        cached_at: "2026-11-18T16:00:00Z",
+        answerable: true,
+        ai_discover_reply: "A supported answer.",
+        done: true,
+      });
+      return response(200, { request_id: requestId });
+    });
+
+    await service.triggerDiscovery(query, { deferIfPrecise: true });
+
+    assert.deepEqual(
+      announcements,
+      ["Ask AI answer ready."],
+      "only the ready answer is announced"
+    );
+    assert.strictEqual(
+      service.recentAsks[0]?.term,
+      query,
+      "the answer is still recorded in recent asks"
+    );
+  });
 });

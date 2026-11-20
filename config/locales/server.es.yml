@@ -4049,12 +4049,6 @@ es:
     account_suspended_forever:
       title: "Cuenta suspendida"
       subject_template: "[%{email_prefix}] Tu cuenta ha sido suspendida"
-    account_silenced:
-      title: "Cuenta silenciada"
-      subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
-    account_silenced_forever:
-      title: "Cuenta silenciada"
-      subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
     account_deleted:
       title: "Cuenta eliminada"
       subject_template: "[%{email_prefix}] Tu cuenta se ha eliminado"

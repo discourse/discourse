@@ -1849,10 +1849,8 @@ sw:
           label: "imechaguliwa"
           title: "Bofya kuondoa chapisho kwenye chaguo"
         select_replies:
-          label: "chagua +majibu"
           title: "Ongeza chapisho na majibu yake yote kwenye uteuzi"
         select_below:
-          label: "chagua +chini"
           title: "Ongeza chapisho na vile vya baadae kwenye uteuzi"
         delete: futa vilivyochaguliwa
         cancel: ghairi uchaguaji
@@ -3412,7 +3410,6 @@ sw:
         silence_modal_title: "Nyamazisha Mtumiaji"
         silence_duration: "Mtumiaji atanyamazishwa kwa mda gani?"
         silence_reason_placeholder: "Nyamazisha Sababu"
-        silence_message: "Tuma ujumbe kwa Barua Pepe"
         suspended_until: "(mpaka %{until})"
         cant_suspend: "Mtumiaji huyu hawezi kusitishwa kwa mda."
         penalty_post_actions: "Ungependa kufanya nini na taarifa shirika?"

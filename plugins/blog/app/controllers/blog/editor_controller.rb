@@ -303,6 +303,7 @@ module ::Blog
 
     def preview
       @publication = find_editable_publication
+      @blog = @publication.blog
       @topic = @publication.topic
       @preview = true
       @canonical_url = @publication.url
@@ -318,6 +319,7 @@ module ::Blog
       @article_metadata = ArticleMetadata.new(@publication, revision:, description: @description)
       @template_variables =
         TemplateVariables.new(
+          blog: @blog,
           title: @page_title,
           article: ArticleVariables.new(@publication, revision:, topic: @topic),
         )

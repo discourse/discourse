@@ -31,6 +31,26 @@ module Jobs
       feature_context = ask_log ? { ask_ai_log_id: ask_log.id } : {}
 
       base = { query:, request_id: args[:request_id] }
+      result_settings = request_result_settings(args, user)
+      repeat_answer = repeat_answer_cache(user, args, ai_agent, llm_model, result_settings)
+      if !args[:fresh_answer] && (cached = repeat_answer&.read)
+        return if !active_request?(user, args[:request_id])
+
+        keyword_query = cached[:rewritten] ? cached[:keyword_query] : query
+        semantic_query = cached[:rewritten] ? cached[:semantic_query] : query
+        ask_log&.assign_attributes(
+          keyword_query:,
+          semantic_query:,
+          query_locale: cached[:query_locale],
+          candidate_post_ids: cached[:posts].map(&:first).uniq,
+          time_to_first_answer_ms: ask_log.ms_since_answer_requested,
+        )
+        publish_rewrite(user, base, keyword_query, semantic_query) if cached[:rewritten]
+        publish_answer(user, base, ask_log, ai_agent.id, cached)
+        ask_log&.assign_attributes(cache_hit: true)
+        return
+      end
+
       queued_at = Float(args[:queued_at], exception: false)
       if queued_at && Time.now.to_f - queued_at > MAX_QUEUE_DELAY
         ask_log.ask_outcome = :failed if ask_log
@@ -69,16 +89,15 @@ module Jobs
       end
       return if !active_request?(user, args[:request_id])
 
-      if !rewritten_queries.failed &&
-           (rewritten_queries.keyword_query != query || rewritten_queries.semantic_query != query)
-        publish_update(
+      rewritten =
+        !rewritten_queries.failed &&
+          (rewritten_queries.keyword_query != query || rewritten_queries.semantic_query != query)
+      if rewritten
+        publish_rewrite(
           user,
-          base.merge(
-            done: false,
-            phase: "rewritten",
-            keyword_query: rewritten_queries.keyword_query,
-            semantic_query: rewritten_queries.semantic_query,
-          ),
+          base,
+          rewritten_queries.keyword_query,
+          rewritten_queries.semantic_query,
         )
       end
 
@@ -116,7 +135,6 @@ module Jobs
       candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").compact.uniq
 
       stage = :synthesis
-      result_settings = request_result_settings(args, user)
       synthesis =
         DiscourseAi::Discoveries::Synthesis.new(
           user:,
@@ -219,35 +237,25 @@ module Jobs
           DiscourseAi::Discoveries::Synthesis.meaningful_answer?(result.answer)
 
       if answerable
-        ask_log&.assign_attributes(
-          ask_outcome: :answered,
-          answer_title: result.title,
+        answer = {
           answer: result.answer,
-          suggested_follow_up: result.follow_up,
-          source_post_ids: final_sources.pluck("post_id").compact,
-        )
-        DiscourseAi::Discoveries.store_result(
-          user_id: user.id,
-          request_id: args[:request_id],
-          query:,
-          answer: result.answer,
-          sources: final_sources,
-          agent_id: ai_agent.id,
+          title: result.title,
           follow_up: result.follow_up,
-        )
-        publish_update(
-          user,
-          base.merge(
-            done: true,
-            phase: "complete",
-            answerable: true,
-            ai_discover_title: result.title,
-            ai_discover_reply: result.answer,
-            ai_discover_follow_up: result.follow_up,
-            sources: serialize_sources(final_sources),
-            candidate_topic_ids:,
-          ),
-        )
+          sources: final_sources,
+          candidate_topic_ids:,
+          scope_fallback: retrieval_result.scope_fallback,
+        }
+        evictions =
+          repeat_answer&.write(
+            **answer,
+            candidates: retrieval_result.synthesis_candidates,
+            rewritten:,
+            keyword_query: rewritten_queries.keyword_query,
+            semantic_query: rewritten_queries.semantic_query,
+            query_locale: rewritten_queries.original_query_locale,
+          )
+        ask_log&.cache_evictions = evictions if evictions&.positive?
+        publish_answer(user, base, ask_log, ai_agent.id, answer)
       else
         ask_log&.assign_attributes(
           ask_outcome: :no_answer,
@@ -279,6 +287,75 @@ module Jobs
           ask_log.ms_since_answer_requested if ask_log.ask_outcome_changed?
         ask_log.save! if ask_log.changed?
       end
+    end
+
+    def repeat_answer_cache(user, args, agent, llm, settings)
+      return if !args.key?(:requested_scope) || !DiscourseAi::Discoveries.combined_search_for?(user)
+      if agent.tools.present? || agent.subagent_ids.present? || agent.ai_agent_mcp_servers.present?
+        return
+      end
+
+      requested_scope = args[:requested_scope]
+      if DiscourseAi::Discoveries.private_search?(
+           query: args[:query],
+           scope: requested_scope,
+           guardian: Guardian.new(user),
+         )
+        return
+      end
+
+      DiscourseAi::Discoveries::RepeatAnswer.new(
+        user:,
+        query: args[:query],
+        requested_scope:,
+        scope: args[:scope],
+        agent:,
+        llm:,
+        settings:,
+      )
+    end
+
+    def publish_rewrite(user, base, keyword_query, semantic_query)
+      return if keyword_query == base[:query] && semantic_query == base[:query]
+
+      publish_update(
+        user,
+        base.merge(done: false, phase: "rewritten", keyword_query:, semantic_query:),
+      )
+    end
+
+    def publish_answer(user, base, ask_log, agent_id, answer)
+      sources = answer.fetch(:sources)
+      ask_log&.assign_attributes(
+        ask_outcome: :answered,
+        answer_title: answer[:title],
+        answer: answer[:answer],
+        suggested_follow_up: answer[:follow_up],
+        source_post_ids: sources.pluck("post_id").compact,
+      )
+      DiscourseAi::Discoveries.store_result(
+        user_id: user.id,
+        request_id: base[:request_id],
+        query: base[:query],
+        answer: answer[:answer],
+        sources:,
+        agent_id:,
+        follow_up: answer[:follow_up],
+      )
+      payload =
+        base.merge(
+          done: true,
+          phase: "complete",
+          answerable: true,
+          ai_discover_title: answer[:title],
+          ai_discover_reply: answer[:answer],
+          ai_discover_follow_up: answer[:follow_up],
+          sources: serialize_sources(sources),
+          candidate_topic_ids: answer[:candidate_topic_ids],
+        )
+      payload[:scope_fallback] = true if answer[:scope_fallback]
+      payload[:cached_at] = answer[:cached_at] if answer[:cached_at]
+      publish_update(user, payload)
     end
 
     def publish_update(user, payload)

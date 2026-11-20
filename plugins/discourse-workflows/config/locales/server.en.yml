@@ -259,6 +259,9 @@ en:
         execution_failed: "Called workflow finished with status '%{status}'."
         execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
+      badge:
+        reason_id_requires_prefix: "Use post:%{id} for a post ID or topic:%{id} for a topic ID."
+        reason_id_not_found: "No post was found for %{reference}."
     post:
       destroy_context: "Deleted by a workflow"
     flag_post:

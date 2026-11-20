@@ -131,4 +131,8 @@ module BlogSpecHelpers
   end
 end
 
-RSpec.configure { |config| config.include(BlogSpecHelpers) }
+RSpec.configure do |config|
+  config.include(BlogSpecHelpers)
+  # The database rolls back between examples, but the cached blog list does not.
+  config.before { Blog::Instance.clear_cache }
+end

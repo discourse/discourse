@@ -42,6 +42,8 @@ sq:
         type: "Lloji"
         error: "Gabim"
       discourse_workflows:
+        ai_tool:
+          list_item: "Element liste"
         classify:
           text: "Tekst"
           upload_ids: "Imazhet"
@@ -79,6 +81,9 @@ sq:
           enabled: "Aktivizuar"
         search:
           name: "Kërko"
+        review_queue:
+          setting_groups:
+            settings: "Rregullimet"
         image_caption:
           setting_groups:
             settings: "Rregullimet"

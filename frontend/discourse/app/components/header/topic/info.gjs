@@ -69,24 +69,26 @@ export default class Info extends Component {
     return participants.slice(0, this.maxExtraItems);
   }
 
-  // With the tab bar, the header holds the topic's title in place of the
-  // page's, so it also leads to editing it
+  // With footer navigation, the header keeps title editing within reach while reading.
   get showEditTopic() {
-    return (
-      this.mobileTabBar.isTitledPage && this.args.topicInfo.details?.can_edit
-    );
+    return this.mobileTabBar.enabled && this.args.topicInfo.details?.can_edit;
   }
 
   get pmHref() {
     return this.currentUser.pmPath(this.args.topicInfo);
   }
 
-  // As tapping the page's own title does: edit, then show the editor up top
   @action
   editTopic(event) {
     const topicController = getOwner(this).lookup("controller:topic");
-    topicController.editTopic(event);
-    topicController.jumpTop(event);
+
+    if (this.args.topicInfo.is_nested_view) {
+      topicController.nestedController.startEditingTopic(event);
+      scrollTop();
+      return;
+    }
+
+    topicController.handleTitleClick(event);
   }
 
   @action

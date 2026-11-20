@@ -3023,12 +3023,6 @@ ur:
     account_suspended_forever:
       title: "اکاؤنٹ معطل"
       subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ معطل کر دیا گیا ہے"
-    account_silenced:
-      title: "اکاؤنٹ خاموش"
-      subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ خاموش کر دیا گیا ہے"
-    account_silenced_forever:
-      title: "اکاؤنٹ خاموش"
-      subject_template: "[%{email_prefix}] آپ کا اکاؤنٹ خاموش کر دیا گیا ہے"
     account_exists:
       title: "اکاؤنٹ پہلے سے موجود"
       subject_template: "[%{email_prefix}] اکاؤنٹ پہلے سے ہی موجود ہے"

@@ -6952,14 +6952,15 @@ RSpec.describe UsersController do
 
   describe "#search_users" do
     fab!(:topic)
-    let(:user) { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
+    fab!(:user) do
+      SearchIndexer.with_indexing do
+        Fabricate(:user, username: "joecabot", name: "Lawrence Tierney")
+      end
+    end
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
     let(:staged_user) { Fabricate(:user, staged: true) }
 
-    before do
-      SearchIndexer.enable
-      post1
-    end
+    before { SearchIndexer.enable }
 
     it "searches when provided the term only" do
       get "/u/search/users.json", params: { term: user.name.split(" ").last }
@@ -7059,6 +7060,8 @@ RSpec.describe UsersController do
     end
 
     it "searches when provided the topic only" do
+      post1
+
       get "/u/search/users.json", params: { topic_id: topic.id }
       expect(response.status).to eq(200)
       json = response.parsed_body
@@ -7066,6 +7069,8 @@ RSpec.describe UsersController do
     end
 
     it "searches when provided the term and topic" do
+      post1
+
       get "/u/search/users.json", params: { term: user.name.split(" ").last, topic_id: topic.id }
 
       expect(response.status).to eq(200)
@@ -9044,18 +9049,18 @@ RSpec.describe UsersController do
       register_test_bookmarkable
       TopicUser.change(user1.id, bookmark1.bookmarkable.topic_id, total_msecs_viewed: 1)
       TopicUser.change(user1.id, bookmark2.bookmarkable_id, total_msecs_viewed: 1)
-      Fabricate(:post, topic: bookmark2.bookmarkable)
-      bookmark3 && bookmark4
+      bookmark3
     end
 
     after { DiscoursePluginRegistry.reset! }
 
     fab!(:topic)
     fab!(:post)
-    let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: post) }
-    let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: topic) }
+    fab!(:topic_post) { Fabricate(:post, topic: topic) }
+    fab!(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: post) }
+    fab!(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: topic) }
+    fab!(:bookmark4, :bookmark)
     let(:bookmark3) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:user)) }
-    let(:bookmark4) { Fabricate(:bookmark) }
 
     it "returns a list of serialized bookmarks for the user" do
       sign_in(user1)
