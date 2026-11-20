@@ -149,6 +149,22 @@ module(
       assert.true(field.swatches().every((s) => s.isDisabled));
     });
 
+    test("names the native color picker", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="color" @title="Color" @type="color" as |field|>
+              <field.Control />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom(formKit().field("color").pickerElement)
+        .hasAria("label", "Pick a color");
+    });
+
     test("native color picker updates field", async function (assert) {
       let data = { color: "FF0000" };
       const mutateData = (x) => (data = x);
@@ -169,7 +185,7 @@ module(
 
       await formKit().submit();
 
-      assert.strictEqual(data.color, "00ff00");
+      assert.strictEqual(data.color, "00FF00");
     });
 
     test("picker displays named colors correctly", async function (assert) {
@@ -254,7 +270,7 @@ module(
 
       await formKit().submit();
 
-      assert.strictEqual(data.color, "#00ff00");
+      assert.strictEqual(data.color, "#00FF00");
     });
 
     test("@collapseSwatches and @collapseSwatchesLabel", async function (assert) {

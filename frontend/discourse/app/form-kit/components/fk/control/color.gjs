@@ -5,12 +5,9 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import {
-  isValidHex,
-  normalizeHex,
-  resolveColor,
-} from "discourse/lib/color-transformations";
+import { isValidHex } from "discourse/lib/color-transformations";
 import getUrl from "discourse/lib/get-url";
+import DColorInput from "discourse/ui-kit/d-color-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -68,10 +65,6 @@ export default class FKControlColor extends FKBaseControl {
     return this.args.prefixHex || !this.args.allowNamedColors;
   }
 
-  get maxLength() {
-    return this.args.allowNamedColors ? null : 6;
-  }
-
   get unusedColors() {
     if (!this.args.usedColors) {
       return this.args.colors;
@@ -102,38 +95,7 @@ export default class FKControlColor extends FKBaseControl {
     );
   }
 
-  get bareValue() {
-    const value = this.args.field.value;
-    return value?.replace(/^#/, "") ?? "";
-  }
-
-  get normalizedValueForPicker() {
-    const value = this.bareValue;
-    if (!value) {
-      return "#000000";
-    }
-
-    if (isValidHex(value)) {
-      return `#${normalizeHex(value)}`;
-    }
-
-    if (this.args.allowNamedColors) {
-      return resolveColor(value) ?? "#000000";
-    }
-
-    return "#000000";
-  }
-
-  get pickerIconClass() {
-    const value = this.bareValue;
-    if (!value || !isValidHex(value)) {
-      return "--is-light";
-    }
-
-    const hex = normalizeHex(value);
-    return calculateLuminance(hex) > 0.5 ? "--is-light" : "--is-dark";
-  }
-
+  @action
   setValue(value) {
     if (this.args.prefixHex && value && isValidHex(value.replace(/^#/, ""))) {
       value = value.startsWith("#") ? value : `#${value}`;
@@ -142,28 +104,10 @@ export default class FKControlColor extends FKBaseControl {
   }
 
   @action
-  handleTextInput(event) {
-    this.setValue(event.target.value);
-  }
-
-  @action
   handleBlur() {
     if (!this.args.field.value && this.args.fallbackValue) {
       this.setValue(this.args.fallbackValue);
     }
-  }
-
-  @action
-  handlePickerInput(event) {
-    const value = event.target.value.replace(/^#/, "");
-    this.setValue(value);
-  }
-
-  @action
-  handlePaste(event) {
-    event.preventDefault();
-    const colorCode = event.clipboardData.getData("text/plain") ?? "";
-    this.setValue(colorCode.replace(/^#/, ""));
   }
 
   @action
@@ -177,39 +121,20 @@ export default class FKControlColor extends FKBaseControl {
   <template>
     <div class="form-kit__control-color">
       <div class="form-kit__control-color-input">
-        {{#if this.showPrefix}}
-          <span class="form-kit__control-color-input-prefix">#</span>
-        {{/if}}
-        <input
+        <DColorInput
           aria-describedby={{@field.describedBy}}
           aria-invalid={{if @field.error "true"}}
           class="form-kit__control-color-input-hex"
-          disabled={{@field.disabled}}
           id={{@field.id}}
-          maxlength={{this.maxLength}}
           name={{@field.name}}
-          type="text"
-          value={{this.bareValue}}
           ...attributes
-          {{on "input" this.handleTextInput}}
+          @allowNamedColors={{@allowNamedColors}}
+          @disabled={{@field.disabled}}
+          @hashPrefix={{this.showPrefix}}
+          @onChange={{this.setValue}}
+          @value={{@field.value}}
           {{on "blur" this.handleBlur}}
-          {{on "paste" this.handlePaste}}
         />
-        <span
-          class={{dConcatClass
-            "form-kit__control-color-picker-wrapper"
-            this.pickerIconClass
-          }}
-        >
-          <input
-            class="form-kit__control-color-input-picker"
-            disabled={{@field.disabled}}
-            type="color"
-            value={{this.normalizedValueForPicker}}
-            {{on "input" this.handlePickerInput}}
-          />
-          {{dIcon "eye-dropper"}}
-        </span>
         {{#if (and @colors @collapseSwatches)}}
           <DMenu
             class="btn-default form-kit__control-color-swatches-btn"

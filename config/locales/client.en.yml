@@ -456,6 +456,9 @@ en:
     skip_user_nav: "Skip to profile content"
     a11y_announcement_separator: ". "
 
+    color_input:
+      picker: "Pick a color"
+
     reorder:
       announcement: "Moved %{label} to position %{position} of %{total}"
       announcement_cross_list: "Moved %{label} to %{list}, position %{position} of %{total}"

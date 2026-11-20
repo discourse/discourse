@@ -135,7 +135,7 @@ class Field {
     if (this.controlType !== "color") {
       throw new Error(`Unsupported control type: ${this.controlType}`);
     }
-    return this.element.querySelector(".form-kit__control-color-input-picker");
+    return this.element.querySelector(".d-color-input__picker");
   }
 
   value() {
@@ -260,9 +260,7 @@ class Field {
     if (this.controlType !== "color") {
       throw new Error(`Unsupported control type: ${this.controlType}`);
     }
-    return !!this.element.querySelector(
-      ".form-kit__control-color-input-prefix"
-    );
+    return !!this.element.querySelector(".d-color-input__prefix");
   }
 
   swatches() {
