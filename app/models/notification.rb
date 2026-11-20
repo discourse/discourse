@@ -253,6 +253,23 @@ class Notification < ActiveRecord::Base
     notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
   end
 
+  def self.staff_queued_review_visibility_sql(guardian, table_name = "notifications")
+    type = types[:staff_queued_post_review]
+    return "#{table_name}.notification_type <> #{type}" unless guardian.can_see_review_queue?
+
+    accessible_ids = Reviewable.viewable_by(guardian.user, preload: false).reorder(nil).select(:id)
+    <<~SQL.squish
+      (#{table_name}.notification_type <> #{type} OR
+        EXISTS (
+          SELECT 1 FROM (#{accessible_ids.to_sql}) visible_reviews
+          WHERE visible_reviews.id =
+            CASE WHEN #{table_name}.data::jsonb ->> 'reviewable_id' ~ '^[0-9]{1,18}$'
+              THEN (#{table_name}.data::jsonb ->> 'reviewable_id')::bigint
+            END
+        ))
+    SQL
+  end
+
   def self.filter_inaccessible_reviewable_notifications(guardian, notifications)
     reviewable_ids =
       notifications

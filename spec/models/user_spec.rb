@@ -2976,6 +2976,29 @@ RSpec.describe User do
   end
 
   describe "#publish_notifications_state" do
+    it "omits review notifications from live state when the review is no longer visible" do
+      reviewable = Fabricate(:reviewable_queued_post)
+      moderator = Fabricate(:moderator, last_seen_at: 1.minute.ago)
+      notification =
+        Fabricate(
+          :notification,
+          user: moderator,
+          notification_type: Notification.types[:staff_queued_post_review],
+          data: { reviewable_id: reviewable.id }.to_json,
+        )
+      reviewable.update!(reviewable_by_moderator: false)
+
+      payload =
+        MessageBus
+          .track_publish("/notification/#{moderator.id}") { moderator.publish_notifications_state }
+          .first
+          .data
+
+      expect(payload[:last_notification]).to be_nil
+      expect(payload[:recent]).not_to include([notification.id, false])
+      expect(payload[:all_unread_notifications_count]).to eq(0)
+    end
+
     it "publishes the message sorted by descending ID" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
