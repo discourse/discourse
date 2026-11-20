@@ -76,6 +76,33 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
     )
   end
 
+  it "prefers Workflows over deprecated Automation only after checking site access" do
+    expect(assistant.system_prompt).to include(
+      "Treat the Automation plugin as deprecated for new setups; recommend Workflows instead.",
+      "not as a fallback when Workflows is unavailable",
+      "Before recommending a plugin or giving setup steps, verify this site's access",
+      "Installed code, enabled flags, or public documentation do not prove plan entitlement.",
+    )
+  end
+
+  it "includes site-specific restrictions in the shared system prompt" do
+    plugin = Plugin::Instance.new
+    restriction = "Workflows is unavailable on this site."
+    modifier = ->(prompt, _agent) { "#{prompt}\n#{restriction}" }
+    DiscoursePluginRegistry.register_modifier(plugin, :admin_assistant_system_prompt, &modifier)
+
+    prompt = assistant.craft_prompt(DiscourseAi::Agents::BotContext.new(user: admin))
+
+    expect(prompt.system_message_text).to include(
+      restriction,
+      "You are the Discourse Admin Assistant",
+    )
+  ensure
+    if plugin && modifier
+      DiscoursePluginRegistry.unregister_modifier(plugin, :admin_assistant_system_prompt, &modifier)
+    end
+  end
+
   it "is registered as a system agent with a deterministic id" do
     expect(DiscourseAi::Agents::Agent.system_agents[described_class]).to eq(-39)
   end
