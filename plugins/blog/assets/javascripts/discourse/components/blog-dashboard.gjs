@@ -25,6 +25,7 @@ import {
   editorFilters,
   STATUS_OPTIONS,
 } from "discourse/plugins/blog/discourse/lib/blog-editor-filters";
+import { findBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 
 // "Changes pending" is still a live article; the edits are shown as separate pending work.
 function articleState(topic) {
@@ -105,7 +106,6 @@ export default class BlogDashboard extends Component {
     return this._data || this.args.model;
   }
 
-  // With one blog the filters stay as they were before blogs could be added.
   get dropdownOptions() {
     if (!this.hasSeveralBlogs) {
       return STATUS_OPTIONS;
@@ -151,9 +151,7 @@ export default class BlogDashboard extends Component {
     }
     await this.composer.openNewTopic({ category });
     // A draft without a recorded blog belongs to the default blog.
-    const blog = this.site.blogs?.find(
-      (candidate) => String(candidate.id) === this.blogFilter
-    );
+    const blog = findBlog(this.site, this.blogFilter);
     this.composer.model?.set("blogId", blog?.is_default ? null : blog?.id);
   }
 

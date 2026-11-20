@@ -10,6 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
+import { defaultBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 
 const SETTINGS = ["blog_title", "blog_description", "blog_about"];
 const PATH_PRESETS = {
@@ -46,20 +47,19 @@ export default class BlogIdentity extends Component {
     }));
   }
 
-  // The settings on this page still configure only the default blog.
-  get blogUrl() {
-    return this.site.blogs?.find((blog) => blog.is_default)?.base_url;
-  }
-
   get blogBase() {
     // On the forum's own host the path is enough; a separate blog domain is worth showing.
-    const url = new URL(this.blogUrl, window.location.origin);
+    const url = new URL(this.defaultBlogUrl, window.location.origin);
     const path = url.pathname.replace(/\/$/, "");
     return url.host === window.location.host ? path : `${url.host}${path}`;
   }
 
+  get defaultBlogUrl() {
+    return defaultBlog(this.site)?.base_url;
+  }
+
   get safeUrl() {
-    return `${this.blogUrl}/?blog_safe_mode=1`;
+    return `${this.defaultBlogUrl}/?blog_safe_mode=1`;
   }
 
   @action
@@ -135,7 +135,7 @@ export default class BlogIdentity extends Component {
       />
       <div class="blog-identity__links">
         <a
-          href={{this.blogUrl}}
+          href={{this.defaultBlogUrl}}
           rel="noopener noreferrer"
           target="_blank"
         >{{i18n "blog.admin.open_blog"}} ↗</a>

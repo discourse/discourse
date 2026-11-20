@@ -23,7 +23,7 @@ export default {
         });
       }
       api.renderInOutlet("topic-above-post-stream", BlogPublicationPanel);
-      // "New draft" records the blog the editor was viewing; drafts keep it too.
+      // Set by "New draft" in the editor.
       api.serializeOnCreate("blog_id", "blogId");
       api.serializeToDraft("blogId");
       // Article titles like "Contact" are shorter than a forum topic title needs to be.

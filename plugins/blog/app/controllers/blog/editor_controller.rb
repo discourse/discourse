@@ -16,8 +16,9 @@ module ::Blog
       respond_to do |format|
         format.html { render "default/empty" }
         format.json do
-          blog = Instance.find_cached(params[:blog].to_i) if params[:blog].present?
-          raise Discourse::NotFound if params[:blog].present? && blog.nil?
+          if params[:blog].present?
+            blog = Instance.find_cached(params[:blog].to_i) || raise(Discourse::NotFound)
+          end
           topics =
             EditorQuery.call(
               guardian,

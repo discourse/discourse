@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
+import { defaultBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 
 export default class BlogAdminPluginActions extends Component {
   @service site;
 
   get defaultBlogUrl() {
-    return this.site.blogs?.find((blog) => blog.is_default)?.base_url;
+    return defaultBlog(this.site)?.base_url;
   }
 
   <template>

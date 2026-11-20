@@ -20,6 +20,7 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { findBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 import BlogReviews from "./modal/blog-reviews.gjs";
 import BlogSchedule from "./modal/blog-schedule.gjs";
 
@@ -136,9 +137,7 @@ export default class BlogPublicationPanel extends Component {
   }
 
   get pathHint() {
-    const blog = this.site.blogs?.find(
-      (candidate) => candidate.id === this.publication.blog_id
-    );
+    const blog = findBlog(this.site, this.publication.blog_id);
     return /\{(year|month|day)\}/.test(blog?.path_format)
       ? i18n("blog.path_hint_dated")
       : i18n("blog.path_hint");

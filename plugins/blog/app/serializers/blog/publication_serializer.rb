@@ -182,7 +182,7 @@ module ::Blog
     end
 
     def can_change_blog
-      object.published_revision_id.nil? && object.discussion_topic_id.nil?
+      object.blog_movable?
     end
 
     def review_feedback_count

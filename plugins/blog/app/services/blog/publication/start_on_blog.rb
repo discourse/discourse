@@ -42,7 +42,6 @@ class Blog::Publication::StartOnBlog
     !blog.is_default?
   end
 
-  # Another article on the blog can hold the generated path, so add the topic id.
   def create_publication(topic:, blog:)
     path = Blog::Publication.default_path(topic, blog:)
     if Blog::Path.exists?(blog_id: blog.id, path:)

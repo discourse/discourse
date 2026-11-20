@@ -190,6 +190,11 @@ module ::Blog
       Instance.find_cached(blog_id) || super
     end
 
+    # Once an article has a discussion, it belongs to that discussion's blog.
+    def blog_movable?
+      published_revision_id_in_database.nil? && discussion_topic_id_in_database.nil?
+    end
+
     def publicly_visible?
       persisted? && self.class.publicly_visible.where(id: id).exists?
     end
@@ -466,20 +471,15 @@ module ::Blog
       self.blog_id ||= (category_blog || Instance.default_blog).id
     end
 
-    # A draft moves with its unpublished settings, so a generated path follows the
-    # new blog's format.
     def move_to_blog(id)
       return false if id.blank? || id.to_i == blog_id
       self.blog_id = id.to_i
       true
     end
 
-    # Once an article has a discussion, it belongs to that discussion's blog.
     def movable_to_blog
       return errors.add(:blog_id, :invalid) if Instance.find_cached(blog_id).nil?
-      return if new_record?
-      return if published_revision_id_in_database.nil? && discussion_topic_id_in_database.nil?
-      errors.add(:blog_id, I18n.t("blog.errors.blog_fixed"))
+      errors.add(:blog_id, I18n.t("blog.errors.blog_fixed")) if !blog_movable?
     end
 
     def capture_live_article
