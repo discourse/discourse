@@ -646,6 +646,21 @@ RSpec.describe User do
     end
   end
 
+  describe "#user_fields" do
+    fab!(:number_field) { Fabricate(:user_field, field_type: "number") }
+
+    it "returns numbers for number fields" do
+      values =
+        %w[42 -2.5 1e3 abc].map do |stored_value|
+          user.set_user_field(number_field.id, stored_value)
+          user.save_custom_fields
+          user.reload.user_fields[number_field.id.to_s]
+        end
+
+      expect(values).to eql([42, -2.5, 1000, nil])
+    end
+  end
+
   describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all

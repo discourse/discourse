@@ -1985,6 +1985,24 @@ RSpec.describe UsersController do
       include_examples "failed signup"
     end
 
+    context "when using a value that isn't a number for a number user field on signup" do
+      fab!(:user_field) { Fabricate(:user_field, field_type: "number") }
+
+      let(:create_params) do
+        {
+          name: @user.name,
+          username: @user.username,
+          password: "strongpassword",
+          email: @user.email,
+          user_fields: {
+            user_field.id.to_s => "forty-two",
+          },
+        }
+      end
+
+      include_examples "failed signup"
+    end
+
     context "with custom fields" do
       fab!(:user_field)
       fab!(:another_field, :user_field)
@@ -2135,6 +2153,53 @@ RSpec.describe UsersController do
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
             end.to change { user1.reload.user_fields[field_id] }.from(valid_options.last).to(nil)
+          end
+        end
+
+        context "with number fields" do
+          before { sign_in(user1) }
+
+          fab!(:user_field) do
+            Fabricate(:user_field, field_type: "number", requirement: "optional")
+          end
+
+          def stored_value
+            user1.reload.custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"]
+          end
+
+          it "stores numbers in the format a number input submits" do
+            %w[42 -7 3.14 .5 1e3 -2.5E-4].each do |number|
+              put update_user_url, params: { user_fields: { field_id => " #{number} " } }
+
+              expect(stored_value).to eq(number)
+            end
+          end
+
+          it "stores numbers sent as JSON numbers" do
+            put update_user_url, params: { user_fields: { field_id => 42 } }, as: :json
+
+            expect(response.status).to eq(200)
+            expect(stored_value).to eq("42")
+          end
+
+          it "discards values that aren't numbers" do
+            ["abc", "0x1A", "1_000", "1.", "NaN", "Infinity", "1e999", %w[1 2]].each do |value|
+              put update_user_url, params: { user_fields: { field_id => "42" } }
+              put update_user_url, params: { user_fields: { field_id => value } }
+
+              expect(stored_value).to be_nil
+            end
+          end
+
+          it "rejects a value that isn't a number if the field is required" do
+            put update_user_url, params: { user_fields: { field_id => "42" } }
+            user_field.for_all_users!
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "abc" } }
+            end.not_to change { user1.reload.user_fields[field_id] }
+
+            expect(response.status).to eq(422)
           end
         end
 

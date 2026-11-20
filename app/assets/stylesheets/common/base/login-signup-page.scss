@@ -242,6 +242,7 @@ body.signup-page {
 
     label.alt-placeholder,
     .user-field.text label.control-label,
+    .user-field.number label.control-label,
     .user-field.dropdown label.control-label,
     .user-field.multiselect label.control-label {
       display: block;
@@ -262,6 +263,7 @@ body.signup-page {
     }
 
     .user-field.text label.control-label,
+    .user-field.number label.control-label,
     .user-field.dropdown label.control-label,
     .user-field.multiselect label.control-label,
     .user-field.date label.control-label {
@@ -277,11 +279,13 @@ body.signup-page {
       z-index: z("dropdown") + 1;
     }
 
-    .user-field.text label.control-label {
+    .user-field.text label.control-label,
+    .user-field.number label.control-label {
       top: 13px;
     }
 
     .user-field.text:focus-within,
+    .user-field.number:focus-within,
     .user-field.dropdown:focus-within,
     .user-field.multiselect:focus-within {
       z-index: 1000; // ensures the active input is always on top of sibling input labels
@@ -372,7 +376,8 @@ body.signup-page {
         }
 
         label.alt-placeholder,
-        .user-field.text label.control-label {
+        .user-field.text label.control-label,
+        .user-field.number label.control-label {
           top: 11px;
         }
 
