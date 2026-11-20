@@ -55,13 +55,6 @@ export default class FileSizeInput extends Component {
     ];
   }
 
-  get unitOptions() {
-    return this.dropdownOptions.map(({ label, value }) => ({
-      id: value,
-      name: label,
-    }));
-  }
-
   @action
   keyDown(event) {
     allowOnlyNumericInput(event);
@@ -129,10 +122,12 @@ export default class FileSizeInput extends Component {
       {{#if this.siteSettings.enable_new_select_controls}}
         <DSelect
           class="file-size-unit-selector"
+          @labelField="label"
           @onChange={{this.onFileSizeUnitChange}}
-          @options={{this.unitOptions}}
+          @options={{this.dropdownOptions}}
           @texts={{hash ariaLabel=(i18n "file_size_input.unit")}}
           @value={{this.unit}}
+          @valueField="value"
           @variant="static"
         />
       {{else}}

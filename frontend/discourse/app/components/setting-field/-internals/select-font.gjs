@@ -12,11 +12,9 @@ function fontClass(value) {
   return `body-font-${String(value).replace(/_/g, "-")}`;
 }
 
-/** A font setting's `{ name, value }` choices as the picker's records, sorted by name. */
-function fontRecords(choices) {
-  return (choices ?? [])
-    .map(({ name, value }) => ({ id: value, name }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+/** A font setting's `{ name, value }` choices, sorted by name. */
+function sortedFonts(choices) {
+  return [...(choices ?? [])].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**
@@ -29,9 +27,10 @@ const SelectFont = <template>
     class={{concat "select-font " (fontClass @value)}}
     @disabled={{@disabled}}
     @onChange={{@onChange}}
-    @options={{fontRecords @choices}}
+    @options={{sortedFonts @choices}}
     @texts={{hash ariaLabel=@ariaLabel}}
     @value={{@value}}
+    @valueField="value"
   >
     <:option as |option|>
       <span class={{fontClass option.value}}>{{option.label}}</span>
