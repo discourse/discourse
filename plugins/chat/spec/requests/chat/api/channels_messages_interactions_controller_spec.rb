@@ -105,6 +105,56 @@ RSpec.describe Chat::Api::ChannelsMessagesInteractionsController do
       end
     end
 
+    context "when the message is a reply in a thread whose original message was trashed" do
+      fab!(:threading_channel) { Fabricate(:category_channel, threading_enabled: true) }
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: threading_channel, message: "thread original secret")
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: threading_channel, original_message: original_message)
+      end
+      fab!(:hidden_reply) do
+        Fabricate(
+          :chat_message,
+          chat_channel: threading_channel,
+          thread: thread,
+          message: "thread reply secret",
+          blocks: [
+            {
+              type: "actions",
+              elements: [
+                {
+                  action_id: "xxx",
+                  value: "foo",
+                  type: "button",
+                  text: {
+                    type: "plain_text",
+                    text: "Click Me",
+                  },
+                },
+              ],
+            },
+          ],
+        )
+      end
+
+      before do
+        threading_channel.add(current_user)
+        original_message.trash!
+      end
+
+      it "returns 404 and does not create an interaction" do
+        expect {
+          post "/chat/api/channels/#{threading_channel.id}/messages/#{hidden_reply.id}/interactions",
+               params: {
+                 action_id: "xxx",
+               }
+        }.not_to change(Chat::MessageInteraction, :count)
+
+        expect(response.status).to eq(404)
+      end
+    end
+
     context "when user is not logged in" do
       before { sign_out }
 

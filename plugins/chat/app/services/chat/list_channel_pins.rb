@@ -30,7 +30,7 @@ module Chat
       channel.membership_for(guardian.user)
     end
 
-    def fetch_pins(channel:)
+    def fetch_pins(channel:, guardian:)
       user_includes =
         if SiteSetting.enable_user_status
           %i[user_status user_option primary_group]
@@ -38,7 +38,10 @@ module Chat
           %i[user_option primary_group]
         end
 
-      Chat::PinnedMessage.for_channel(channel).includes(
+      pins = Chat::PinnedMessage.for_channel(channel)
+      pins = pins.excluding_deleted_threads if !guardian.can_moderate_chat?(channel.chatable)
+
+      pins.includes(
         chat_message: [
           :revisions,
           :bookmarks,

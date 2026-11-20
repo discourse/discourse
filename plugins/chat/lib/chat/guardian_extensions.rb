@@ -167,6 +167,16 @@ module Chat
       message.user_id == @user.id || is_staff?
     end
 
+    def can_see_chat_thread?(thread)
+      # Replies in a channel without threading are ordinary timeline messages,
+      # so the thread's original message does not gate them.
+      return true if !thread.effective?
+      return false if thread.original_message.blank?
+      return true if !thread.original_message.trashed?
+
+      can_moderate_chat?(thread.channel.chatable)
+    end
+
     def can_join_chat_channel?(chat_channel, post_allowed_category_ids: nil)
       return false if anonymous?
       return false unless can_chat?
@@ -311,7 +321,18 @@ module Chat
     end
 
     def can_manage_chat_message_pin?(message)
+      return false if !can_see_chat_message_thread?(message)
+
       can_manage_chat_channel_pins?(message.chat_channel)
+    end
+
+    # Replies of a deleted effective thread are only readable by channel moderators,
+    # so pinning or unpinning one must follow the same visibility.
+    def can_see_chat_message_thread?(message)
+      return true if message.thread.blank?
+      return true if can_moderate_chat?(message.chat_channel.chatable)
+
+      can_see_chat_thread?(message.thread)
     end
   end
 end

@@ -69,8 +69,10 @@ module Chat
     policy :channel_allows_message_creation, class_name: Chat::Channel::Policy::MessageCreation
     model :reply, optional: true
     policy :ensure_reply_consistency
+    policy :can_see_reply
     model :thread, optional: true
     policy :ensure_valid_thread_for_channel
+    policy :can_see_thread
     policy :ensure_thread_matches_parent
     model :uploads, optional: true
     model :message_instance, :instantiate_message
@@ -144,6 +146,18 @@ module Chat
     def ensure_valid_thread_for_channel(thread:, params:, channel:)
       return true if params.thread_id.blank?
       thread&.channel == channel
+    end
+
+    def can_see_reply(reply:, guardian:)
+      return true if reply.blank?
+
+      guardian.can_see_chat_message_thread?(reply)
+    end
+
+    def can_see_thread(thread:, guardian:)
+      return true if thread.blank?
+
+      guardian.can_see_chat_thread?(thread)
     end
 
     def ensure_thread_matches_parent(thread:, reply:)

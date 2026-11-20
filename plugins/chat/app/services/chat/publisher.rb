@@ -81,6 +81,10 @@ module Chat
     end
 
     def self.publish_thread_original_message_metadata!(thread)
+      # The preview carries reply content to the whole channel audience, which
+      # must not see it once the thread is hidden.
+      return if !anonymous_guardian.can_see_chat_thread?(thread)
+
       preview =
         ::Chat::ThreadPreviewSerializer.new(
           thread,

@@ -13,6 +13,10 @@ module Chat
     validates :chat_message_id, uniqueness: true
 
     scope :for_channel, ->(channel) { where(chat_channel: channel).order(created_at: :desc) }
+
+    # Pins render live message content, so they follow the message's thread visibility.
+    scope :excluding_deleted_threads,
+          -> { joins(:chat_message).merge(Chat::Message.excluding_deleted_threads) }
   end
 end
 
