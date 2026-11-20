@@ -5621,6 +5621,11 @@ en:
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      creation_success:
+        message: "Category created successfully"
+        message_with_type: "%{typeName} category created successfully"
+        edit_settings: "Edit settings"
+        create_another: "Create another"
       settings_apply_to_all_of_type_warning: "Changes below will apply to all categories of this type"
       type_settings_schema:
         category_settings: "Category settings"

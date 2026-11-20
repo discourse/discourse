@@ -35,6 +35,7 @@ RSpec.describe "Support Category Type Setup" do
     expect(banner).to be_visible
     banner.click_save
 
+    toast.click_action(I18n.t("js.category.creation_success.edit_settings"))
     expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Support"))
     expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
     expect(SiteSetting.solved_enabled).to eq(true)
@@ -62,6 +63,7 @@ RSpec.describe "Support Category Type Setup" do
     category_type_selector.option(".category-type-selector__result.--category-type-support").click
     banner.click_save
 
+    toast.click_action(I18n.t("js.category.creation_success.edit_settings"))
     expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
     category = Category.find_by(name: "Discussion + Support")
     expect(category.category_types.keys).to include(:discussion, :support)
@@ -81,6 +83,7 @@ RSpec.describe "Support Category Type Setup" do
     category_type_selector.remove_selected_option("Support")
     banner.click_save
 
+    toast.click_action(I18n.t("js.category.creation_success.edit_settings"))
     expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-support")
     category = Category.find_by(name: "No longer support")
     expect(category.category_types.keys).to eq(%i[discussion])

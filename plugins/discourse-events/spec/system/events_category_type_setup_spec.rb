@@ -32,6 +32,11 @@ RSpec.describe "Events Category Type Setup" do
     expect(banner).to be_visible
     banner.click_save
 
+    expect(page).to have_current_path(%r{\A/c/events/\d+\z})
+    success_message = I18n.t("js.category.creation_success.message_with_type", typeName: "Events")
+    expect(toast).to have_success(success_message)
+    toast.click_action(I18n.t("js.category.creation_success.edit_settings"))
+
     expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Events"))
     expect(page).to have_css(".d-nav-submenu__tabs .edit-category-events")
     expect(SiteSetting.discourse_events_enabled).to eq(true)
@@ -42,6 +47,9 @@ RSpec.describe "Events Category Type Setup" do
     expect(SiteSetting.calendar_categories).to include(
       "categoryId=#{category.id};weekends=true;defaultView=month",
     )
+
+    visit(category.url)
+    expect(toast).to have_no_message
   end
 
   context "when there is an events category already configured" do

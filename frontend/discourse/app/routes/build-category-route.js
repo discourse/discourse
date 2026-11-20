@@ -17,6 +17,7 @@ import { i18n } from "discourse-i18n";
 
 @disableImplicitInjections
 class AbstractCategoryRoute extends DiscourseRoute {
+  @service categoryCreationNotification;
   @service composer;
   @service router;
   @service site;
@@ -142,6 +143,8 @@ class AbstractCategoryRoute extends DiscourseRoute {
     if (p?.ascending !== undefined) {
       controller.ascending = p.ascending;
     }
+
+    this.categoryCreationNotification.showForCategory(model.category);
   }
 
   deactivate() {

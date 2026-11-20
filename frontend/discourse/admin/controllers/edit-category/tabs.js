@@ -13,8 +13,7 @@ import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import getURL from "discourse/lib/get-url";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import DiscourseURL, { getEditCategoryUrl } from "discourse/lib/url";
-import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 const SIMPLIFIED_FIELD_LIST = [
@@ -91,6 +90,7 @@ const DISCUSSION_TYPE_ID = "discussion";
  */
 export default class EditCategoryTabsController extends Controller {
   @service appEvents;
+  @service categoryCreationNotification;
   @service currentUser;
   @service dialog;
   @service site;
@@ -431,16 +431,31 @@ export default class EditCategoryTabsController extends Controller {
         return;
       }
 
-      const newTypes = Object.keys(result.category.category_types ?? {});
-      const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
-      // A reload is needed when site texts change
-      if (typeWasAdded || siteTextsChanged) {
-        if (this.model.id) {
-          window.location.reload();
-        } else {
-          DiscourseURL.redirectAbsolute(getEditCategoryUrl(updatedModel));
+      const savedTypes = result.category.category_types ?? {};
+      const typeWasAdded = Object.keys(savedTypes).some(
+        (type) => !previousTypes.has(type)
+      );
+      const reload = typeWasAdded || siteTextsChanged;
+
+      if (isNew) {
+        const [selectedType] = previousTypes;
+        const type = savedTypes[selectedType] ?? savedTypes[DISCUSSION_TYPE_ID];
+        this.categoryCreationNotification.remember(updatedModel.id, type, {
+          reload,
+        });
+
+        if (!reload) {
+          this.set("saving", false);
+          await this.router.transitionTo(updatedModel.path);
+          return;
         }
 
+        DiscourseURL.redirectAbsolute(updatedModel.url);
+      } else if (reload) {
+        window.location.reload();
+      }
+
+      if (reload) {
         // Never resolves: keeps the form busy until the page unloads
         return new Promise(() => {});
       }
@@ -452,13 +467,6 @@ export default class EditCategoryTabsController extends Controller {
         duration: "short",
         data: { message: i18n("saved") },
       });
-
-      if (!this.model.id) {
-        this.router.transitionTo(
-          "editCategory",
-          Category.slugFor(updatedModel)
-        );
-      }
 
       // ensure breadcrumbs contain the updated category model
       this.breadcrumbCategories = this.site.categoriesList.map((c) =>

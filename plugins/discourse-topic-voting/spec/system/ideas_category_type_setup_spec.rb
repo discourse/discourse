@@ -28,6 +28,7 @@ RSpec.describe "Ideas Category Type Setup" do
     expect(banner).to be_visible
     banner.click_save
 
+    toast.click_action(I18n.t("js.category.creation_success.edit_settings"))
     expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Ideas"))
     expect(page).to have_css(".d-nav-submenu__tabs .edit-category-ideas")
     expect(SiteSetting.topic_voting_enabled).to eq(true)
@@ -48,6 +49,7 @@ RSpec.describe "Ideas Category Type Setup" do
     category_type_selector.remove_selected_option("Ideas")
     banner.click_save
 
+    toast.click_action(I18n.t("js.category.creation_success.edit_settings"))
     expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-ideas")
     category = Category.find_by(name: "No longer ideas")
     expect(category.category_types.keys).to eq(%i[discussion])
@@ -67,6 +69,7 @@ RSpec.describe "Ideas Category Type Setup" do
       )
 
       banner.click_save
+      toast.click_action(I18n.t("js.category.creation_success.edit_settings"))
       expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Ideas"))
 
       expect(SiteSetting.topic_voting_tl0_vote_limit).to eq(10)

@@ -15,6 +15,10 @@ module PageObjects
         find(".fk-d-default-toast__close-container .btn")
       end
 
+      def click_action(label)
+        find(".fk-d-default-toast__actions").click_button(label)
+      end
+
       def has_warning?(message)
         has_css?(".fk-d-default-toast.-warning", text: message)
       end
