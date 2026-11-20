@@ -1704,6 +1704,339 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert.dom(".value-probe").hasText("a|b", "a choice is added");
   });
 
+  test("enum picks from a typeahead of its choices with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_enum="a"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_enum"
+              type="enum"
+              label="My enum"
+              choices=(array "a" "b")
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_enum}}</span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_enum'] .d-select";
+    assert.dom("[data-name='my_enum'] select").doesNotExist("no native select");
+    assert.dom(control).hasAttribute("data-name", "Apple");
+    assert
+      .dom(`${control} input[role='combobox']`)
+      .hasAria("label", "My enum", "a typeahead named after the setting");
+
+    await dSelect(control).open();
+    assert.deepEqual(
+      [...document.querySelectorAll("[role='option']:not(.--none)")].map(
+        (row) => row.textContent.trim()
+      ),
+      ["Apple", "Banana"],
+      "offers the valid values by name"
+    );
+
+    await dSelect(control).select("b");
+    assert.dom(".value-probe").hasText("b", "stores the value");
+  });
+
+  test("enum offers none only when the setting allows a blank value, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form
+          @data={{hash with_none="a" without_none="a" no_allows_none_key="a"}}
+          as |form data|
+        >
+          <SettingDefinitionField
+            @definition={{hash
+              key="with_none"
+              type="enum"
+              label="With none"
+              valid_values=(array
+                "" (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+          <SettingDefinitionField
+            @definition={{hash
+              key="without_none"
+              type="enum"
+              label="Without none"
+              allows_none=false
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+          <SettingDefinitionField
+            @definition={{hash
+              key="no_allows_none_key"
+              type="enum"
+              label="Consumer default"
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.with_none}}</span>
+        </Form>
+      </template>
+    );
+
+    await dSelect("[data-name='without_none'] .d-select").open();
+    assert
+      .dom("[role='option'].--none")
+      .doesNotExist(
+        "a setting that doesn't allow a blank value can't be cleared"
+      );
+    await dSelect("[data-name='without_none'] .d-select").close();
+
+    await dSelect("[data-name='no_allows_none_key'] .d-select").open();
+    assert
+      .dom("[role='option'].--none")
+      .exists(
+        "definitions without allows_none keep the optional-field default"
+      );
+    await dSelect("[data-name='no_allows_none_key'] .d-select").close();
+
+    await dSelect("[data-name='with_none'] .d-select").open();
+    assert
+      .dom("[role='option']")
+      .exists({ count: 3 }, "none plus the two choices, never a blank row");
+    await click("[role='option'].--none");
+    assert.dom(".value-probe").hasText("", "none clears the value");
+  });
+
+  test("enum holds a named choice stored as a blank value, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash default_homepage=""}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="default_homepage"
+              type="enum"
+              label="Default homepage"
+              default=""
+              allows_none=false
+              valid_values=(array
+                (hash value="" name="First item in top menu")
+                (hash value="latest" name="Latest")
+              )
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.default_homepage}}</span>
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='default_homepage'] .d-select";
+    assert
+      .dom(control)
+      .hasAttribute(
+        "data-name",
+        "First item in top menu",
+        "the blank value is a choice, shown by its name"
+      );
+    assert
+      .dom(`${control} .d-select__clear`)
+      .doesNotExist("the blank choice is picked, not cleared to");
+
+    await dSelect(control).open();
+    assert.deepEqual(
+      [...document.querySelectorAll("[role='option']")].map((row) =>
+        row.textContent.trim()
+      ),
+      ["First item in top menu", "Latest"],
+      "no extra none row next to it"
+    );
+
+    await dSelect(control).select("latest");
+    assert.dom(".value-probe").hasText("latest");
+
+    await dSelect(control).open();
+    await click("[role='option']:first-child");
+    assert.dom(".value-probe").hasText("", "picking it stores the blank value");
+    assert.dom(control).hasAttribute("data-name", "First item in top menu");
+  });
+
+  test("enum can be cleared only when its default is blank, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash blank_default="a" set_default="a"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="blank_default"
+              type="enum"
+              label="Blank default"
+              default=""
+              allows_none=false
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+          <SettingDefinitionField
+            @definition={{hash
+              key="set_default"
+              type="enum"
+              label="Set default"
+              default="a"
+              allows_none=false
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.blank_default}}</span>
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='set_default'] .d-select__clear")
+      .doesNotExist("a setting whose default is a value can't be cleared");
+
+    await dSelect("[data-name='blank_default'] .d-select").clear();
+    assert.dom(".value-probe").hasText("", "a blank default can be restored");
+  });
+
+  test("enum keeps a stored value that is no longer a choice, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_enum="retired"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_enum"
+              type="enum"
+              label="My enum"
+              valid_values=(array
+                (hash value="a" name="Apple") (hash value="b" name="Banana")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    const control = "[data-name='my_enum'] .d-select";
+    assert
+      .dom(control)
+      .hasAttribute(
+        "data-name",
+        "retired",
+        "the stored value is shown as itself"
+      );
+
+    await dSelect(control).open();
+    assert
+      .dom("[role='option'][data-value='retired']")
+      .hasAria("selected", "true", "and listed, so it isn't silently replaced");
+  });
+
+  test("enum matches values that are not strings, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_enum=5}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_enum"
+              type="enum"
+              label="My enum"
+              valid_values=(array
+                (hash value=5 name="Five") (hash value=6 name="Six")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_enum'] .d-select")
+      .hasAttribute("data-name", "Five");
+  });
+
+  test("locale_enum names each locale with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+      { value: "fr", name: "French (Français)" },
+    ];
+
+    await render(
+      <template>
+        <Form @data={{hash default_locale="fr"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="default_locale"
+              type="locale_enum"
+              label="Default locale"
+              valid_values=(array
+                (hash value="en" name="languages.en.name")
+                (hash value="fr" name="languages.fr.name")
+              )
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='default_locale'] .d-select")
+      .hasAttribute("data-name", "French (Français)");
+  });
+
+  test("enum is disabled with its field under the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await render(
+      <template>
+        <Form @data={{hash my_enum="a"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_enum"
+              type="enum"
+              label="My enum"
+              valid_values=(array (hash value="a" name="Apple"))
+            }}
+            @disabled={{true}}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom("[data-name='my_enum'] .d-select input[role='combobox']")
+      .isDisabled();
+  });
+
   test("font_list shows each font in its own typeface with the new select controls", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
     const fonts = [

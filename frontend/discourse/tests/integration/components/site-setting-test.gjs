@@ -785,6 +785,30 @@ module("Integration | Component | SiteSetting", function (hooks) {
       );
   });
 
+  test("an enum setting whose default is blank can be cleared with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    let body;
+    pretender.put("/admin/site_settings/onebox_locale", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "onebox_locale",
+      type: "enum",
+      value: "fr",
+      default: "",
+      valid_values: [
+        { name: "English", value: "en" },
+        { name: "French", value: "fr" },
+      ],
+    });
+
+    await dSelect(".form-kit__field .d-select").clear();
+    await click(".setting-controls__ok");
+    assert.strictEqual(body.onebox_locale, "", "saves the blank default");
+  });
+
   test("an upload setting shows its restrictions and saves a removed file", async function (assert) {
     let body;
     pretender.put("/admin/site_settings/test_upload", (request) => {

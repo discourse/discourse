@@ -95,15 +95,18 @@ registerSettingFieldType("radio-group", {
   type: "radio-group",
   renderer: RadioGroupControl,
 });
+// TODO (select-kit-replacement-cleanup): make `custom` the type and drop `newSelectControlsType`.
 registerSettingFieldType("enum", {
   ...ROW,
   type: "select",
+  newSelectControlsType: "custom",
   adminReady: true,
   renderer: EnumControl,
 });
 registerSettingFieldType("locale_enum", {
   ...ROW,
   type: "select",
+  newSelectControlsType: "custom",
   adminReady: true,
   renderer: LocaleEnumControl,
 });
