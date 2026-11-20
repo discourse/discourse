@@ -118,6 +118,16 @@ export interface TopicBasicUser {
 
 type TopicTimerValue = TopicTimerData | EmberObject | null;
 
+/** Optional excerpt of the most recent visible reply on a topic list. */
+export interface TopicListLatestReply {
+  post_number: number;
+  excerpt: string;
+  created_at: string;
+  username: string;
+  name: string | null;
+  avatar_template: string;
+}
+
 /**
  * Core payload and client-assigned fields; extensions can augment this interface.
  * Most are optional because routes and bookmark lists create partial topics.
@@ -170,6 +180,7 @@ export interface TopicFields {
   last_poster_username?: string | null;
   last_read_post_id?: number | null;
   last_read_post_number?: number | null;
+  latest_reply?: TopicListLatestReply;
   like_count?: number;
   liked?: boolean | null;
   liked_post_numbers?: number[];

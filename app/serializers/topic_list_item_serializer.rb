@@ -21,7 +21,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :participant_groups,
              :is_hot,
              :is_nested_view,
-             :has_new_replies
+             :has_new_replies,
+             :latest_reply
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -36,6 +37,37 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def op_like_count
     object.first_post && object.first_post.like_count
+  end
+
+  def include_latest_reply?
+    return false unless SiteSetting.include_latest_reply_excerpt_on_topic_list
+
+    reply = object.topic_list&.latest_reply_for(object)
+    reply && reply.user && scope&.can_see_post?(reply)
+  end
+
+  def latest_reply
+    reply = object.topic_list.latest_reply_for(object)
+    limit = SiteSetting.topic_excerpt_maxlength
+    excerpt =
+      Discourse
+        .cache
+        .fetch(
+          "topic-list-latest-reply:#{reply.cache_key_with_version}:#{limit}:#{I18n.locale}",
+          expires_in: 1.day,
+        ) do
+          preview = reply.excerpt(limit, strip_links: true, strip_images: true)
+          ExcerptParser.to_plain_text(preview).to_s.squish.truncate(limit)
+        end
+
+    {
+      post_number: reply.post_number,
+      excerpt:,
+      created_at: reply.created_at,
+      username: reply.user.username,
+      name: SiteSetting.enable_names ? reply.user.name : nil,
+      avatar_template: reply.user.avatar_template,
+    }
   end
 
   def include_op_can_like?

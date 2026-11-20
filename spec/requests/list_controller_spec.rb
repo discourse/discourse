@@ -11,6 +11,60 @@ RSpec.describe ListController do
     SiteSetting.top_menu = "latest|new|categories"
   end
 
+  describe "latest reply excerpts" do
+    fab!(:first_post) { Fabricate(:post, topic:, post_number: 1) }
+    fab!(:latest_reply) do
+      Fabricate(:post, topic:, post_number: 2, raw: "Read the **latest public update**.")
+    end
+
+    def listed_topic
+      response.parsed_body["topic_list"]["topics"].find { |entry| entry["id"] == topic.id }
+    end
+
+    before { topic.update!(highest_post_number: 2) }
+
+    it "omits reply previews and the extra query by default" do
+      queries = track_sql_queries { get "/latest.json" }
+      expect(response.status).to eq(200)
+      expect(listed_topic).not_to have_key("latest_reply")
+      expect(queries.grep(/DISTINCT ON \(posts\.topic_id\) posts\.\*/)).to be_empty
+    end
+
+    context "when enabled" do
+      before { SiteSetting.include_latest_reply_excerpt_on_topic_list = true }
+
+      it "preloads one query and exposes the author and plain-text reply preview" do
+        other = Fabricate(:topic, highest_post_number: 2)
+        Fabricate(:post, topic: other, post_number: 2)
+        queries = track_sql_queries { get "/latest.json" }
+
+        expect(response.status).to eq(200)
+        expect(listed_topic["latest_reply"]).to include(
+          "post_number" => 2,
+          "excerpt" => "Read the latest public update.",
+          "username" => latest_reply.user.username,
+          "avatar_template" => latest_reply.user.avatar_template,
+        )
+        expect(queries.grep(/DISTINCT ON \(posts\.topic_id\) posts\.\*/).size).to eq(1)
+      end
+
+      it "skips posts that are hidden, deleted, whispers, or from an ignored author" do
+        Fabricate(:post, topic:, post_number: 3, hidden: true)
+        Fabricate(:post, topic:, post_number: 4).trash!(admin)
+        Fabricate(:post, topic:, post_number: 5, post_type: Post.types[:whisper])
+        ignored = Fabricate(:post, topic:, post_number: 6)
+        Fabricate(:ignored_user, user:, ignored_user: ignored.user)
+        topic.update!(highest_post_number: 6)
+        sign_in(user)
+
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+        expect(listed_topic.dig("latest_reply", "post_number")).to eq(2)
+      end
+    end
+  end
+
   describe "#filter unified New membership" do
     before { SiteSetting.enable_unified_new = true }
 
