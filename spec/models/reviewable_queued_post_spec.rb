@@ -13,7 +13,6 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
       expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
         "reject_post",
-        "revise_and_reject_post",
         "reject_and_suspend",
         "reject_and_silence",
         "delete_user",

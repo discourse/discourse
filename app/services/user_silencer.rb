@@ -134,7 +134,9 @@ class UserSilencer
         )
       end
 
-    { decision:, reason:, from_system: true }
+    options = { decision:, reason:, from_system: true }
+    options[:community_rule] = @opts[:community_rule] if @opts[:community_rule]
+    options
   end
 
   def formatted_silence_end

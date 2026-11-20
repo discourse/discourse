@@ -205,8 +205,10 @@ module Email
           @template_args[:topic_title] = ERB::Util.html_escape(@opts[:body_topic_title])
         end
 
+        community_rule = @opts[:community_rule]
         augmented_template_args =
           @template_args.merge(
+            moderation_guideline: community_rule ? Dsa::ModerationGuideline::PLACEHOLDER : "",
             optional_re: "",
             optional_pm: "",
             optional_cat: format_category,
@@ -216,6 +218,12 @@ module Email
         body = I18n.t("#{@opts[:template]}.text_body_template", augmented_template_args).dup
       else
         body = @opts[:body].dup
+      end
+
+      if community_rule
+        guideline =
+          Dsa::ModerationGuideline.new(community_rule, locale: @opts[:locale] || I18n.locale)
+        body = guideline.insert_into(body, email: true)
       end
 
       if key = @template_args[:body_suffix_key]

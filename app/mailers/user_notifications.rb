@@ -78,6 +78,7 @@ class UserNotifications < ActionMailer::Base
       locale:,
       reason_line:,
       reject_reason: reason,
+      community_rule: opts[:community_rule],
       recipient_user: user,
     )
   end
@@ -176,7 +177,7 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
-  def account_deleted(email, reviewable)
+  def account_deleted(email, reviewable, community_rule: nil, locale: I18n.locale)
     post_action_type_view = PostActionTypeView.new
     post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
 
@@ -195,6 +196,8 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.account_deleted",
       **Dsa::AppealInstructions.message_options,
       flag_reason: flag_reason,
+      community_rule:,
+      locale:,
     )
   end
 
@@ -212,6 +215,7 @@ class UserNotifications < ActionMailer::Base
         **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
+        community_rule: opts[:community_rule],
         recipient_user: user,
       )
     else
@@ -225,6 +229,7 @@ class UserNotifications < ActionMailer::Base
         **Dsa::AppealInstructions.message_options,
         locale:,
         reason: user_history.details,
+        community_rule: opts[:community_rule],
         suspended_till:
           I18n.t(
             "user_notifications.account_suspended.date_with_timezone",
@@ -574,7 +579,8 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false, localization: nil)
-    result = +"#{localization&.raw.presence || post.raw}\n\n"
+    raw = Dsa::ModerationGuideline.email_markdown(localization&.raw.presence || post.raw, post:)
+    result = +"#{raw}\n\n"
     if add_posted_by
       result << "#{I18n.t("user_notifications.posted_by", username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end

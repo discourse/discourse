@@ -23,6 +23,8 @@ class SystemMessage
     target_group_names = params.delete(:target_group_names)
 
     params = defaults.merge(params)
+    community_rule = params[:community_rule]
+    params[:moderation_guideline] = community_rule ? Dsa::ModerationGuideline::PLACEHOLDER : ""
 
     if I18n.exists?("system_messages.#{type}.preview", @recipient.effective_locale)
       params[:email_preview] = I18n.t("system_messages.#{type}.preview", params)
@@ -38,6 +40,16 @@ class SystemMessage
         I18n.with_locale(@recipient.effective_locale) do
           I18n.t("system_messages.#{type}.text_body_template", params)
         end
+
+    if community_rule
+      guideline =
+        Dsa::ModerationGuideline.new(
+          community_rule,
+          locale: @recipient.effective_locale,
+          for_responders: params[:community_rule_for_responders],
+        )
+      raw = guideline.insert_into(raw)
+    end
 
     if key = params[:body_suffix_key]
       paragraph = I18n.with_locale(@recipient.effective_locale) { I18n.t(key, params) }

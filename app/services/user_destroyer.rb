@@ -193,6 +193,7 @@ class UserDestroyer
           post,
           context: I18n.t("staff_action_logs.user_associated_posts_deleted"),
           reviewable_id: opts[:reviewable_id],
+          message_options: opts.slice(:community_rule),
         ).destroy
       end
 

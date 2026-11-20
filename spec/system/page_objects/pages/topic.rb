@@ -64,6 +64,14 @@ module PageObjects
         find(post_by_number_selector(post_number)).has_content?(content)
       end
 
+      def has_collapsed_details?(summary)
+        has_css?(".cooked details:not([open]) > summary", text: summary, exact_text: true)
+      end
+
+      def expand_details(summary)
+        find(".cooked details > summary", text: summary, exact_text: true).click
+      end
+
       def has_deleted_post?(post)
         has_css?(".topic-post.deleted:has(#post_#{post.post_number})")
       end

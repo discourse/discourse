@@ -5,6 +5,7 @@ class User::Action::SilenceAll < Service::ActionBase
   option :actor
   option :params
   option :raise_on_failure, default: -> { false }
+  option :community_rule, optional: true
 
   delegate :message, :post_id, :silenced_till, :reason, :reviewable_id, to: :params, private: true
 
@@ -29,6 +30,7 @@ class User::Action::SilenceAll < Service::ActionBase
           reason:,
           post_id:,
           reviewable_id:,
+          community_rule: (community_rule if user.id == params.user_id),
         )
         .tap do |silencer|
           raise ActiveRecord::RecordInvalid.new(user) if !silencer.silence && raise_on_failure

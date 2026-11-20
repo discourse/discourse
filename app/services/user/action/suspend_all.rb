@@ -5,6 +5,7 @@ class User::Action::SuspendAll < Service::ActionBase
   option :actor
   option :params
   option :raise_on_failure, default: -> { false }
+  option :community_rule, optional: true
 
   delegate :message, :post_id, :suspend_until, :reason, :reviewable_id, to: :params, private: true
 
@@ -24,6 +25,7 @@ class User::Action::SuspendAll < Service::ActionBase
         message: message,
         post_id: post_id,
         reviewable_id: reviewable_id,
+        community_rule: (community_rule if user.id == params.user_id),
       ).tap(&:suspend)
     rescue => err
       raise if raise_on_failure

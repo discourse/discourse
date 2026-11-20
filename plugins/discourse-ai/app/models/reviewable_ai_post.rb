@@ -123,7 +123,9 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
-    post.hide!(reviewable_scores.first.reviewable_score_type)
+    moderation_action(performed_by:, args:).hide(
+      post_action_type_id: reviewable_scores.first.reviewable_score_type,
+    )
 
     agree
   end
@@ -170,37 +172,42 @@ class ReviewableAiPost < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    destroyer(performed_by).destroy
+    moderation_action(performed_by:, args:).delete
 
     perform_ignore(performed_by, args)
   end
 
   def perform_delete_and_agree(performed_by, args)
-    destroyer(performed_by).destroy
+    moderation_action(performed_by:, args:).delete
 
     agree
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    moderation_action(performed_by:, args:).delete_with_replies
 
     perform_ignore(performed_by, args)
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    moderation_action(performed_by:, args:).delete_with_replies
 
     agree
   end
 
   def perform_delete_user(performed_by, args)
-    UserDestroyer.new(performed_by).destroy(post.user, delete_opts.merge(reviewable_id: id))
+    community_rule = Dsa::ModerationGuideline.selected_rule(args[:dsa_classification])
+    UserDestroyer.new(performed_by).destroy(
+      post.user,
+      delete_opts.merge(reviewable_id: id, community_rule:),
+    )
 
     agree
   end
 
   def perform_delete_user_block(performed_by, args)
-    delete_options = delete_opts.merge(reviewable_id: id)
+    community_rule = Dsa::ModerationGuideline.selected_rule(args[:dsa_classification])
+    delete_options = delete_opts.merge(reviewable_id: id, community_rule:)
 
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
