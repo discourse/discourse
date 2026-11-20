@@ -45,6 +45,21 @@ describe "Desktop notification toasts" do
     expect(page).to have_css("#topic-title", text: post.topic.title)
   end
 
+  it "shows a new toast when the unread count is capped" do
+    old_max = User.max_unread_notifications
+    User.max_unread_notifications = 1
+    notify(:mentioned, "existing_sender")
+    sign_in(user)
+    visit "/latest"
+
+    notify(:mentioned, "new_sender")
+
+    expect(page).to have_css(".desktop-notification-toast", text: "new_sender")
+    expect(page).to have_no_css(".desktop-notification-toast", text: "existing_sender")
+  ensure
+    User.max_unread_notifications = old_max
+  end
+
   it "suppresses the toast during Do Not Disturb" do
     user.do_not_disturb_timings.create!(starts_at: 1.minute.ago, ends_at: 1.hour.from_now)
     sign_in(user)

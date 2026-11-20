@@ -10,7 +10,6 @@ import {
 } from "discourse/lib/desktop-notifications";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
-import { getRenderDirector } from "discourse/lib/notification-types-manager";
 import {
   isPushNotificationsEnabled,
   register as registerPushNotifications,
@@ -18,6 +17,7 @@ import {
 } from "discourse/lib/push-notifications";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import DiscourseURL from "discourse/lib/url";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Notification from "discourse/models/notification";
 import { i18n } from "discourse-i18n";
 
@@ -194,7 +194,7 @@ class SubscribeUserNotificationsInit {
     );
     const lastNotification = data.last_notification?.notification;
 
-    this.#maybeShowNotificationToast(lastNotification, data, oldAllUnread);
+    this.#maybeShowNotificationToast(lastNotification, data);
 
     if (stale?.hasResults && lastNotification) {
       const oldNotifications = stale.results.get("content");
@@ -310,8 +310,12 @@ class SubscribeUserNotificationsInit {
     }
   }
 
-  #maybeShowNotificationToast(notification, data, oldUnreadCount) {
-    if (!notification || notification.id <= this.#lastObservedNotificationId) {
+  #maybeShowNotificationToast(notification, data) {
+    if (
+      !data.new_notification ||
+      !notification ||
+      notification.id <= this.#lastObservedNotificationId
+    ) {
       return;
     }
     this.#lastObservedNotificationId = notification.id;
@@ -325,8 +329,7 @@ class SubscribeUserNotificationsInit {
       EmbedMode.enabled ||
       document.visibilityState !== "visible" ||
       notification.read ||
-      notification.id <= data.seen_notification_id ||
-      !(data.all_unread_notifications_count > oldUnreadCount)
+      notification.id <= data.seen_notification_id
     ) {
       return;
     }
@@ -338,13 +341,13 @@ class SubscribeUserNotificationsInit {
       return;
     }
 
-    const director = getRenderDirector(
-      type,
-      Notification.create(notification),
-      this.currentUser,
-      this.siteSettings,
-      this.site
-    );
+    const item = new UserMenuNotificationItem({
+      notification: Notification.create(notification),
+      currentUser: this.currentUser,
+      appEvents: this.appEvents,
+      siteSettings: this.siteSettings,
+      site: this.site,
+    });
     const active = this.toasts.activeToasts.filter(
       (toast) => toast.options.class === NOTIFICATION_TOAST_CLASS
     );
@@ -356,8 +359,8 @@ class SubscribeUserNotificationsInit {
       this.toasts.close(toast);
     }
 
-    const href = director.linkHref;
-    const sender = director.label;
+    const href = item.linkHref;
+    const sender = item.label;
     const topic = notification.data.topic_title;
     this.toasts.default({
       class: NOTIFICATION_TOAST_CLASS,
@@ -365,8 +368,8 @@ class SubscribeUserNotificationsInit {
       duration:
         this.siteSettings.desktop_notification_toast_duration_seconds * 1000,
       data: {
-        icon: type ? director.icon : "bell",
-        title: director.linkTitle || i18n("notifications.desktop_toast.title"),
+        icon: type ? item.icon : "bell",
+        title: i18n("notifications.desktop_toast.title"),
         message:
           sender && topic
             ? i18n("notifications.desktop_toast.sender_and_topic", {
@@ -379,6 +382,7 @@ class SubscribeUserNotificationsInit {
               {
                 label: i18n("notifications.desktop_toast.open"),
                 action: ({ close }) => {
+                  item.prepareClick();
                   close();
                   DiscourseURL.routeTo(href);
                 },
