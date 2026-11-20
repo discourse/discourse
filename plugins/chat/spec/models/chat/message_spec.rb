@@ -233,6 +233,72 @@ describe Chat::Message do
     end
   end
 
+  describe ".excluding_deleted_threads" do
+    fab!(:threading_channel) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:original_message) do
+      Fabricate(:chat_message, chat_channel: threading_channel, message: "original message")
+    end
+    fab!(:thread) do
+      Fabricate(:chat_thread, channel: threading_channel, original_message: original_message)
+    end
+    fab!(:reply) do
+      Fabricate(
+        :chat_message,
+        chat_channel: threading_channel,
+        thread: thread,
+        message: "reply message",
+      )
+    end
+
+    it "keeps the reply while the original message is visible" do
+      expect(described_class.excluding_deleted_threads).to include(reply)
+    end
+
+    it "excludes the reply when the original message is trashed" do
+      original_message.trash!
+
+      expect(described_class.excluding_deleted_threads).not_to include(reply)
+    end
+
+    it "includes the reply again once the original message is recovered" do
+      original_message.trash!
+      original_message.recover!
+
+      expect(described_class.excluding_deleted_threads).to include(reply)
+    end
+
+    it "excludes the reply when the original message was purged" do
+      original_message.destroy!
+
+      expect(described_class.excluding_deleted_threads).not_to include(reply)
+    end
+
+    it "excludes replies of forced threads in a channel with threading disabled" do
+      channel = Fabricate(:chat_channel)
+      original = Fabricate(:chat_message, chat_channel: channel)
+      forced_thread =
+        Fabricate(:chat_thread, channel: channel, original_message: original, force: true)
+      forced_reply = Fabricate(:chat_message, chat_channel: channel, thread: forced_thread)
+      original.trash!
+
+      expect(described_class.excluding_deleted_threads).not_to include(forced_reply)
+    end
+
+    it "keeps replies in a channel with threading disabled" do
+      channel = Fabricate(:chat_channel)
+      original = Fabricate(:chat_message, chat_channel: channel)
+      inline_thread = Fabricate(:chat_thread, channel: channel, original_message: original)
+      inline_reply = Fabricate(:chat_message, chat_channel: channel, thread: inline_thread)
+      original.trash!
+
+      expect(described_class.excluding_deleted_threads).to include(inline_reply)
+    end
+
+    it "keeps messages that are not in a thread" do
+      expect(described_class.excluding_deleted_threads).to include(original_message)
+    end
+  end
+
   describe "#cook" do
     fab!(:editor, :user)
 

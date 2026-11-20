@@ -30,7 +30,7 @@ module Chat
       channel.membership_for(guardian.user)
     end
 
-    def fetch_pins(channel:)
+    def fetch_pins(channel:, guardian:)
       user_includes =
         if SiteSetting.enable_user_status
           %i[user_status user_option flair_group primary_group]
@@ -38,23 +38,23 @@ module Chat
           %i[user_option flair_group primary_group]
         end
 
+      pins = Chat::PinnedMessage.for_channel(channel)
+      pins = pins.excluding_deleted_threads if !guardian.can_moderate_chat?(channel.chatable)
+
       # timeline order (oldest message first), so the list reads like the channel
-      Chat::PinnedMessage
-        .for_channel(channel)
-        .reorder(chat_message_id: :asc)
-        .includes(
-          chat_message: [
-            :revisions,
-            :bookmarks,
-            { uploads: { optimized_videos: :optimized_upload } },
-            { chat_channel: :chatable },
-            :thread,
-            { user: user_includes },
-            { user_mentions: { user: user_includes } },
-            { reactions: :user },
-            { in_reply_to: [:user] },
-          ],
-        )
+      pins.reorder(chat_message_id: :asc).includes(
+        chat_message: [
+          :revisions,
+          :bookmarks,
+          { uploads: { optimized_videos: :optimized_upload } },
+          { chat_channel: :chatable },
+          :thread,
+          { user: user_includes },
+          { user_mentions: { user: user_includes } },
+          { reactions: :user },
+          { in_reply_to: [:user] },
+        ],
+      )
     end
   end
 end
