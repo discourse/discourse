@@ -65,20 +65,19 @@ class UserNotifications < ActionMailer::Base
   end
 
   def signup_after_reject(user, opts = {})
+    locale = user_locale(user)
     reason = opts[:reject_reason]
-    template =
+    reason_line =
       if reason.present?
-        "user_notifications.signup_after_reject"
-      else
-        "user_notifications.signup_after_reject_without_reason"
+        I18n.t("user_notifications.signup_after_reject.reason_line", locale:, reason:)
       end
 
     build_email(
       user.email,
-      template:,
+      template: "user_notifications.signup_after_reject",
       **Dsa::AppealInstructions.message_options,
-      locale: user_locale(user),
-      reason:,
+      locale:,
+      reason_line:,
       reject_reason: reason,
       recipient_user: user,
     )
