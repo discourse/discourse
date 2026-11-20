@@ -15,6 +15,11 @@ export const VARIANTS = {
 };
 
 export default class SettingFieldValueList extends Component {
+  /** Only a list setting can refuse typed values; the others always take them. */
+  get allowAny() {
+    return this.args.definition.allow_any !== false;
+  }
+
   get variant() {
     return VARIANTS[this.args.definition.type];
   }
@@ -28,6 +33,7 @@ export default class SettingFieldValueList extends Component {
     <@field.Control>
       <ValueList
         @addKey={{this.variant.addKey}}
+        @allowAny={{this.allowAny}}
         @choices={{@definition.choices}}
         @disabled={{@field.disabled}}
         @inputDelimiter={{this.variant.delimiter}}

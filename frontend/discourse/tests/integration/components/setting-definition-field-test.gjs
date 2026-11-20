@@ -1671,6 +1671,39 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       .hasAttribute("data-name", "French (Français)");
   });
 
+  test("list takes typed values only when the setting allows any, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const choices = ["a", "b"];
+
+    await render(
+      <template>
+        <Form @data={{hash my_list="a"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_list"
+              type="list"
+              label="My list"
+              choices=choices
+              allow_any=false
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_list}}</span>
+        </Form>
+      </template>
+    );
+
+    const add = "[data-name='my_list'] .value-list .d-select";
+    await dSelect(add).search("zed");
+    assert
+      .dom("[role='option'].--create")
+      .doesNotExist("the setting allows only its choices");
+
+    await dSelect(add).search("b");
+    await click("[role='option'][data-value='b']");
+    assert.dom(".value-probe").hasText("a|b", "a choice is added");
+  });
+
   test("font_list shows each font in its own typeface with the new select controls", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
     const fonts = [

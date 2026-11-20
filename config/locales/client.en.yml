@@ -10701,6 +10701,8 @@ en:
           add_more_placeholder: "Add another…"
           empty: "No values yet"
           not_allowed: "Values can't contain |"
+        value_list:
+          not_a_choice: "No choice matches “%{value}”. This setting only takes its listed choices."
         host_list:
           placeholder: "Type a host to add it"
           add_more_placeholder: "Add another host…"
