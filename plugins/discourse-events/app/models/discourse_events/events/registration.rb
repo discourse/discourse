@@ -96,3 +96,26 @@ module DiscourseEvents
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: discourse_event_registrations
+#
+#  id                   :bigint           not null, primary key
+#  answers              :jsonb            not null
+#  definition           :jsonb            not null
+#  email                :string           not null
+#  occurrence_starts_at :datetime         not null
+#  recurring            :boolean          not null
+#  submission_key       :uuid             not null
+#  username             :string           not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  event_id             :bigint           not null
+#  report_post_id       :bigint
+#  user_id              :integer          not null
+#
+# Indexes
+#
+#  idx_on_event_id_user_id_submission_key_d4b3cd1ae8  (event_id,user_id,submission_key) UNIQUE
+#
