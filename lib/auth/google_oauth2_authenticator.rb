@@ -30,6 +30,12 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
 
   def register_middleware(omniauth)
     options = {
+      # `state` is the CSRF nonce binding the callback to the browser session
+      # that started the flow. It must stay server-generated, so keep it out of
+      # the options a request parameter is allowed to override. Any request
+      # param named in `authorize_options` replaces the generated value.
+      authorize_options:
+        OmniAuth::Strategies::GoogleOauth2.default_options[:authorize_options] - %i[state],
       setup:
         lambda do |env|
           opts = env["omniauth.strategy"].options
