@@ -2010,6 +2010,107 @@ module(
         .doesNotExist("the custom block renders no default input");
     });
 
+    test("the default create row starts where the rows' content does", async function (assert) {
+      const twoItems = objectItems().slice(0, 2);
+      const oneItem = objectItems().slice(0, 1);
+      const left = (selector) => find(selector).getBoundingClientRect().left;
+
+      await render(
+        <template>
+          <DMenus />
+          <div class="with-handles">
+            <DReorderableList
+              @allowCreate={{true}}
+              @items={{twoItems}}
+              @key="id"
+              @label={{label}}
+              @onCreate={{noop}}
+              @onMove={{noop}}
+            >
+              <:row as |item|><span
+                  data-test-item={{item.id}}
+                >{{item.name}}</span></:row>
+            </DReorderableList>
+          </div>
+          <div class="without-handles">
+            <DReorderableList
+              @allowCreate={{true}}
+              @items={{oneItem}}
+              @key="id"
+              @label={{label}}
+              @onCreate={{noop}}
+              @onMove={{noop}}
+            >
+              <:row as |item|><span
+                  data-test-item={{item.id}}
+                >{{item.name}}</span></:row>
+            </DReorderableList>
+          </div>
+        </template>
+      );
+
+      assert.true(
+        Math.abs(
+          left(".with-handles .d-reorderable-list__create-input") -
+            left(`.with-handles [data-test-item="${twoItems[0].id}"]`)
+        ) < 1,
+        "past the handles, when the rows have them"
+      );
+      assert.true(
+        Math.abs(
+          left(".without-handles .d-reorderable-list__create-input") -
+            left(`.without-handles [data-test-item="${oneItem[0].id}"]`)
+        ) < 1,
+        "at the start, when a lone row has none"
+      );
+    });
+
+    test("a custom create block can hold the handle's place", async function (assert) {
+      const twoItems = objectItems().slice(0, 2);
+      const oneItem = objectItems().slice(0, 1);
+
+      await render(
+        <template>
+          <DMenus />
+          <div class="with-handles">
+            <DReorderableList
+              @allowCreate={{true}}
+              @items={{twoItems}}
+              @key="id"
+              @label={{label}}
+              @onMove={{noop}}
+            >
+              <:row as |item|>{{item.name}}</:row>
+              <:create as |create|>
+                <li><create.handleSlot />Consumer create</li>
+              </:create>
+            </DReorderableList>
+          </div>
+          <div class="without-handles">
+            <DReorderableList
+              @allowCreate={{true}}
+              @items={{oneItem}}
+              @key="id"
+              @label={{label}}
+              @onMove={{noop}}
+            >
+              <:row as |item|>{{item.name}}</:row>
+              <:create as |create|>
+                <li><create.handleSlot />Consumer create</li>
+              </:create>
+            </DReorderableList>
+          </div>
+        </template>
+      );
+
+      assert
+        .dom(".with-handles li:last-child .d-reorderable-list__handle-slot")
+        .exists("a slot when the rows have handles");
+      assert
+        .dom(".without-handles li:last-child .d-reorderable-list__handle-slot")
+        .doesNotExist("nothing when they have none");
+    });
+
     test("create renders alongside the empty block", async function (assert) {
       const items = [];
 

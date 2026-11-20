@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
+import type { TOC } from "@ember/component/template-only";
 import { assert } from "@ember/debug";
 import {
   associateDestroyableChild,
@@ -79,6 +80,16 @@ const LIST_ROOT = ".d-reorderable-list";
  */
 const ARROW_INERT =
   '[role="switch"], [role="checkbox"], button:not([role]):not([aria-haspopup])';
+
+/**
+ * Holds the handle's place in a create block while the rows have handles, so
+ * what is created starts where the rows' content does.
+ */
+const CreateHandleSlot: TOC<{ Args: { reserved: boolean } }> = <template>
+  {{#if @reserved}}
+    <HandleSlotPart />
+  {{/if}}
+</template>;
 
 /**
  * A reorderable list: the standard shell for any surface where the user
@@ -1162,9 +1173,20 @@ export default class DReorderableList<T> extends Component<
         {{/if}}
         {{#if @allowCreate}}
           {{#if (has-block "create")}}
-            {{yield to="create"}}
+            {{yield
+              (hash
+                handleSlot=(component
+                  CreateHandleSlot reserved=this.reservesHandleSlot
+                )
+              )
+              to="create"
+            }}
           {{else}}
-            <CreateRow @itemTag={{this.itemTag}} @onCreate={{@onCreate}} />
+            <CreateRow
+              @itemTag={{this.itemTag}}
+              @onCreate={{@onCreate}}
+              @reservesHandleSlot={{this.reservesHandleSlot}}
+            />
           {{/if}}
         {{/if}}
       </List>
