@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import TopicList from "discourse/components/topic-list/list";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
@@ -7,6 +7,27 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | TopicListItem", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("routes middle-click through the topic row click transformer", async function (assert) {
+    this.siteSettings.enable_clickable_desktop_topic_rows = true;
+    let invocations = 0;
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer("topic-list-item-click", () => {
+        invocations++;
+      });
+    });
+    const store = this.owner.lookup("service:store");
+    const topics = [store.createRecord("topic", { id: 1234 })];
+
+    await render(<template><TopicList @topics={{topics}} /></template>);
+    await triggerEvent(".topic-list-item td", "auxclick", { button: 1 });
+
+    assert.strictEqual(
+      invocations,
+      1,
+      "passes a single middle-click to the transformer"
+    );
+  });
 
   test("checkbox is rendered checked if topic is in selected array", async function (assert) {
     const store = this.owner.lookup("service:store");

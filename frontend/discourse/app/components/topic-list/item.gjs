@@ -285,13 +285,6 @@ export default class Item extends Component {
   }
 
   @action
-  auxClick(event) {
-    if (event.button === 1) {
-      this.#navigateFromDesktopRow(event);
-    }
-  }
-
-  @action
   keyDown(event) {
     // We only handle cmd/meta+Enter to open topic in a new window here
     // Simple Enter event for topic list is handled in keyboard-shortcuts (which triggers click() event)
@@ -306,6 +299,7 @@ export default class Item extends Component {
       !this.siteSettings.enable_clickable_desktop_topic_rows ||
       this.site.mobileView ||
       this.args.bulkSelectEnabled ||
+      (event.button !== 0 && event.button !== 1) ||
       event.defaultPrevented ||
       event.altKey ||
       event.shiftKey ||
@@ -366,7 +360,6 @@ export default class Item extends Component {
       {{on "blur" this.onBlur}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
-      {{on "auxclick" this.auxClick}}
       {{on "auxclick" this.click}}
     >
       <PluginOutlet
