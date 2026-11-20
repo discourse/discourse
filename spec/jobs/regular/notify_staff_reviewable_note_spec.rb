@@ -35,6 +35,14 @@ RSpec.describe Jobs::NotifyStaffReviewableNote do
     )
   end
 
+  it "supports the logged-in users group without notifying nonstaff" do
+    SiteSetting.reviewable_note_notification_groups = Group::AUTO_GROUPS[:logged_in_users].to_s
+
+    ReviewableNote.create!(reviewable:, user: author, content: "Needs a second opinion")
+
+    expect(notifications.pluck(:user_id)).to contain_exactly(recipient.id, other_staff.id)
+  end
+
   it "only notifies staff who can see the review item" do
     SiteSetting.reviewable_note_notification_groups = group.id.to_s
     group.add(other_staff)

@@ -30,9 +30,16 @@ module Jobs
           .where(active: true)
           .where("admin OR moderator")
           .where("suspended_till IS NULL OR suspended_till <= ?", Time.current)
-          .where(id: GroupUser.where(group_id: groups).select(:user_id))
           .where.not(id: note.user_id)
           .where.not(id: notified_user_ids)
+
+      if groups.exclude?(Group::AUTO_GROUPS[:logged_in_users]) &&
+           (
+             groups.exclude?(Group::AUTO_GROUPS[:everyone]) ||
+               SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+           )
+        recipients = recipients.where(id: GroupUser.where(group_id: groups).select(:user_id))
+      end
 
       data = { reviewable_id: note.reviewable_id, reviewable_note_id: note.id }.to_json
       recipients.find_in_batches do |batch|
