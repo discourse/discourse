@@ -100,6 +100,17 @@ You can set the default list of values for the setting by joining the values wit
 
 You can see a real-world use case for list settings here: https://meta.discourse.org/t/linkify-words-in-post-theme-component/82193?u=osama.
 
+**Color list setting:**
+
+```yaml
+brand_palette:
+  default: "BF1E2E|F1592A|F7941D"
+  type: list
+  list_type: color
+```
+
+With `list_type: color`, each value is a 6-digit hex color without `#`, such as `FF0000`, and an empty list is allowed. Site owners edit the colors in a reorderable list, typing a color or choosing one with a color picker, so the order you read in your theme is the order they chose. A default or a saved value holding anything else is refused.
+
 > :loudspeaker: **Note**: Pay attention to indentation when working with YAML because YAML is very picky about spaces and will throw a syntax error if your code indentation is incorrect.
 
 **Icon Setting:**

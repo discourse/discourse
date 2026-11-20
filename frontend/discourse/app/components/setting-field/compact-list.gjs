@@ -31,14 +31,6 @@ export default class SettingFieldCompactList extends Component {
       .filter(Boolean);
   }
 
-  /**
-   * Whether the values are colours, drawn as squares. A setting can't say so itself yet, so its
-   * name decides, as it did for select-kit.
-   */
-  get isColorList() {
-    return Boolean(this.args.definition.key?.includes("color"));
-  }
-
   /** The setting's own choices: an enum's `{ name, value }` pairs, or its plain choices. */
   get ownChoices() {
     if (this.hasEnumChoices) {
@@ -84,7 +76,6 @@ export default class SettingFieldCompactList extends Component {
           @allowAny={{this.allowAny}}
           @ariaLabel={{@field.title}}
           @choices={{this.ownChoices}}
-          @colors={{this.isColorList}}
           @disabled={{@field.disabled}}
           @mandatory={{@definition.mandatory_values}}
           @onChange={{this.onChange}}

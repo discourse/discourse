@@ -197,7 +197,7 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
       .isDisabled("the picker follows the setting's disabled state");
   });
 
-  test("the control draws a colour square for a colour list with the new select controls", async function (assert) {
+  test("the control draws no colour squares, whatever the setting is named", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
     const setting = { setting: "category_colors" };
     const changeValue = () => {};
@@ -215,10 +215,10 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
     );
 
     assert
-      .dom(".d-select__chip[data-value='f00'] .select-string-list__swatch")
-      .hasAttribute("style", /#f00/, "a held colour shows its square");
+      .dom(".d-select__chip[data-value='f00'] .d-select__chip-label")
+      .hasText("f00", "a held value shows only itself");
     assert
-      .dom(".d-select__chip[data-value='nope'] .select-string-list__swatch")
-      .doesNotExist("a value that isn't a colour shows none");
+      .dom(".d-select__chip [style]")
+      .doesNotExist("with nothing coloured beside it");
   });
 });

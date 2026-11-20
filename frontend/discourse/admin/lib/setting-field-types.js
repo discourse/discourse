@@ -1,3 +1,4 @@
+import ColorListControl from "discourse/admin/components/setting-field/color-list";
 import EmojiListControl from "discourse/admin/components/setting-field/emoji-list";
 import FileSizeRestrictionControl from "discourse/admin/components/setting-field/file-size-restriction";
 import FileTypesListControl from "discourse/admin/components/setting-field/file-types-list";
@@ -22,6 +23,7 @@ for (const type of Object.keys(VALUE_LIST_VARIANTS)) {
 
 const RENDERERS = {
   simple_list: SimpleListControl,
+  color_list: ColorListControl,
   emoji_list: EmojiListControl,
   secret_list: SecretListControl,
   upload: UploadControl,

@@ -1228,7 +1228,7 @@ module SiteSettingExtension
     if %i[list emoji_list tag_list host_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
-      if %w[simple compact locale].include?(list_type) || list_type.nil?
+      if %w[simple compact locale color].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
           public_send(clean_name, scoped_to).to_s.split("|")
         end

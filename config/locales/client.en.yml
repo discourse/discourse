@@ -10771,6 +10771,11 @@ en:
           modal_no: "No, only apply change going forward"
         simple_list:
           add_item: "Add item…"
+        color_list:
+          add: "Add color"
+          already_listed: "Already in the list"
+          color: "Color %{position}"
+          new_color: "New color"
         json_schema:
           edit: Launch Editor
           modal_title: "Edit %{name}"

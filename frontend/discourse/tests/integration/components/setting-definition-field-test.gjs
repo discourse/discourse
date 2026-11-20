@@ -1592,25 +1592,17 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert.dom(".value-probe").hasAttribute("data-value", "1|2");
   });
 
-  test("compact_list draws a colour square for a colour list with the new select controls", async function (assert) {
+  test("compact_list draws no colour squares, whatever the setting is named", async function (assert) {
     this.siteSettings.enable_new_select_controls = true;
 
     await render(
       <template>
-        <Form @data={{hash my_colors="f00|nope|0f0" my_list="f00"}} as |form|>
+        <Form @data={{hash my_colors="f00|0f0"}} as |form|>
           <SettingDefinitionField
             @definition={{hash
               key="my_colors"
               type="compact_list"
               label="My colors"
-            }}
-            @form={{form}}
-          />
-          <SettingDefinitionField
-            @definition={{hash
-              key="my_list"
-              type="compact_list"
-              label="My list"
             }}
             @form={{form}}
           />
@@ -1620,24 +1612,17 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
 
     const colors = "[data-name='my_colors'] .d-select";
     assert
-      .dom(
-        `${colors} .d-select__chip[data-value='f00'] .select-string-list__swatch`
-      )
-      .hasAttribute("style", /#f00/, "a held colour shows its square");
+      .dom(`${colors} .d-select__chip[data-value='f00'] .d-select__chip-label`)
+      .hasText("f00", "a held value shows only itself");
     assert
-      .dom(
-        `${colors} .d-select__chip[data-value='nope'] .select-string-list__swatch`
-      )
-      .doesNotExist("a value that isn't a colour shows none");
-    assert
-      .dom("[data-name='my_list'] .select-string-list__swatch")
-      .doesNotExist("a list that isn't about colours shows none");
+      .dom(`${colors} .d-select__chip [style]`)
+      .doesNotExist("with nothing coloured beside it");
 
     await dSelect(colors).remove("0f0");
     await dSelect(colors).open();
     assert
-      .dom("[role='option'][data-value='0f0'] .select-string-list__swatch")
-      .hasAttribute("style", /#0f0/, "a listed colour shows its square too");
+      .dom("[role='option'][data-value='0f0'] [style]")
+      .doesNotExist("nor beside a listed value");
   });
 
   test("locale_list shows language names with the new select controls", async function (assert) {

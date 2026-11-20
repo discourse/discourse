@@ -2,14 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { trustHTML } from "@ember/template";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { renderSelectText } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 const TOKEN_SEPARATOR = "|";
-const HEX_COLOR = /^#?(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
 
 /** A typed value as the picker's record. */
 function typedRecord(value) {
@@ -25,33 +23,10 @@ function choiceRecord(choice) {
   return { id: String(choice.value), name: choice.name };
 }
 
-/** The square's colour, only for a hex colour, so nothing else reaches the style attribute. */
-function swatchStyle(value) {
-  const color = String(value);
-  if (!HEX_COLOR.test(color)) {
-    return null;
-  }
-  const hex = color.startsWith("#") ? color : `#${color}`;
-  return trustHTML(`--select-string-list-swatch: ${hex}`);
-}
-
-const Swatch = <template>
-  {{#let (swatchStyle @value) as |style|}}
-    {{#if style}}
-      <span
-        aria-hidden="true"
-        class="select-string-list__swatch"
-        style={{style}}
-      ></span>
-    {{/if}}
-  {{/let}}
-</template>;
-
 /**
  * Picks a string list setting's values: its choices, plus typed ones when `@allowAny` is set. A
- * value removed from the list stays listed, unticked, held `@mandatory` values can't be removed, and
- * `@colors` draws each value that is a hex colour as a small square. A `:footer` block draws in the
- * open panel, below the list.
+ * value removed from the list stays listed, unticked, and held `@mandatory` values can't be
+ * removed. A `:footer` block draws in the open panel, below the list.
  */
 export default class SelectStringList extends Component {
   /**
@@ -130,12 +105,7 @@ export default class SelectStringList extends Component {
         {{#if option.create}}
           {{renderSelectText config "createOption" (hash label=option.label)}}
         {{else}}
-          <span class="select-string-list__value">
-            {{~#if @colors~}}
-              <Swatch @value={{option.value}} />
-            {{~/if~}}
-            {{option.label~}}
-          </span>
+          {{option.label}}
         {{/if}}
       </:option>
       <:empty as |state config|>
@@ -152,12 +122,6 @@ export default class SelectStringList extends Component {
       <:footer as |state config|>
         {{yield state config to="footer"}}
       </:footer>
-      <:selection as |option|>
-        {{#if @colors}}
-          <Swatch @value={{option.value}} />
-        {{/if}}
-        {{option.label}}
-      </:selection>
     </DSelect>
   </template>
 }

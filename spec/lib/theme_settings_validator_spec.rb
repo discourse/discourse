@@ -137,6 +137,36 @@ RSpec.describe ThemeSettingsValidator do
     end
   end
 
+  describe "color lists" do
+    it "takes 6-digit hex colors in either case, or none" do
+      %w[ff0000|00FF00]
+        .push("")
+        .each do |value|
+          expect(
+            described_class.validate_value(
+              value,
+              ThemeSetting.types[:list],
+              { list_type: "color" },
+            ),
+          ).to be_empty
+        end
+    end
+
+    it "refuses anything else" do
+      %w[FF0000|nope #FF0000 F00].each do |value|
+        expect(
+          described_class.validate_value(value, ThemeSetting.types[:list], { list_type: "color" }),
+        ).to contain_exactly(I18n.t("themes.settings_errors.color_list_value_not_valid"))
+      end
+    end
+
+    it "leaves other lists alone" do
+      expect(
+        described_class.validate_value("nope", ThemeSetting.types[:list], { list_type: "compact" }),
+      ).to be_empty
+    end
+  end
+
   describe ".validate_resolve_group_membership" do
     it "returns error when resolve_group_membership is true on non-list setting" do
       errors =

@@ -18,6 +18,7 @@ import SettingBool from "discourse/admin/components/site-settings/bool";
 import SettingCategory from "discourse/admin/components/site-settings/category";
 import SettingCategoryList from "discourse/admin/components/site-settings/category-list";
 import SettingColor from "discourse/admin/components/site-settings/color";
+import SettingColorList from "discourse/admin/components/site-settings/color-list";
 import SettingCompactList from "discourse/admin/components/site-settings/compact-list";
 import SettingDate from "discourse/admin/components/site-settings/date";
 import SettingDatetime from "discourse/admin/components/site-settings/datetime";
@@ -82,6 +83,7 @@ const TYPE_COMPONENTS = {
   category: SettingCategory,
   uploaded_image_list: SettingUploadedImageList,
   compact_list: SettingCompactList,
+  color_list: SettingColorList,
   secret_list: SettingSecretList,
   upload: SettingUpload,
   group_list: SettingGroupList,

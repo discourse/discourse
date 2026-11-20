@@ -311,3 +311,10 @@
   flex-wrap: wrap;
   gap: 0.35em;
 }
+
+.color-list__add {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding-block: 0.25em;
+}

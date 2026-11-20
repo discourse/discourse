@@ -12,14 +12,6 @@ export default class NamedList extends Component {
 
   tokenSeparator = "|";
 
-  /**
-   * Whether the values are colours, drawn as squares. A setting can't say so itself yet, so its
-   * name decides, as it did for select-kit.
-   */
-  get isColorList() {
-    return Boolean(this.args.setting.setting?.includes("color"));
-  }
-
   get settingValue() {
     return this.args.value
       .toString()
@@ -56,7 +48,6 @@ export default class NamedList extends Component {
           @allowAny={{@allowAny}}
           @ariaLabel={{@label}}
           @choices={{makeArray @setting.choices}}
-          @colors={{this.isColorList}}
           @disabled={{@disabled}}
           @onChange={{this.onChangeListSetting}}
           @values={{this.settingValue}}

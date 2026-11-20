@@ -32,14 +32,6 @@ export default class CompactList extends Component {
     return this.args.setting.validValues?.length > 0;
   }
 
-  /**
-   * Whether the values are colours, drawn as squares. A setting can't say so itself yet, so its
-   * name decides, as it did for select-kit.
-   */
-  get isColorList() {
-    return Boolean(this.args.setting.setting?.includes("color"));
-  }
-
   /** The setting's own choices: an enum's `{ name, value }` pairs, or its plain choices. */
   get ownChoices() {
     if (this.hasValidValues) {
@@ -104,7 +96,6 @@ export default class CompactList extends Component {
         @allowAny={{@allowAny}}
         @ariaLabel={{@label}}
         @choices={{this.ownChoices}}
-        @colors={{this.isColorList}}
         @disabled={{@disabled}}
         @mandatory={{@setting.mandatory_values}}
         @onChange={{this.onChangeListSetting}}

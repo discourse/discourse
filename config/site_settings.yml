@@ -388,7 +388,7 @@ basic:
   category_colors:
     client: true
     type: list
-    list_type: compact
+    list_type: color
     default: "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|E45735"
     area: "categories|interface"
   max_category_nesting:
@@ -2756,8 +2756,7 @@ files:
   restrict_letter_avatar_colors:
     default: ""
     type: list
-    list_type: compact
-    validator: "ColorListValidator"
+    list_type: color
   selectable_avatars_mode:
     default: disabled
     client: true

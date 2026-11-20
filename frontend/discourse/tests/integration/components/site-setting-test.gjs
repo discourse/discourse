@@ -896,6 +896,29 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
   });
 
+  test("a color list setting saves its colors in order with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    let body;
+    pretender.put("/admin/site_settings/test_colors", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_colors",
+      value: "FF0000|00FF00",
+      default: "",
+      type: "list",
+      list_type: "color",
+    });
+
+    await fillIn(".color-list__add .d-color-input__hex", "0000ff");
+    await click(".color-list__add-btn");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_colors, "FF0000|00FF00|0000FF");
+  });
+
   test("a locale list setting names its choices from the available locales", async function (assert) {
     let body;
     pretender.put("/admin/site_settings/test_locales", (request) => {
