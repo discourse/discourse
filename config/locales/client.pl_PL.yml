@@ -10769,6 +10769,10 @@ pl_PL:
         description: "Możesz dostosować dowolny tekst na swoim forum."
         search: "Wyszukaj tekst lub klucze tłumaczeń"
         search_label: "Szukaj"
+        preview:
+          label: "Podgląd tekstu dla %{key}"
+          customized: "Twój tekst"
+          default: "Domyślny"
         theme: "Motyw lub komponent"
         all_themes: "Wszystkie teksty witryny"
         theme_disabled: "Wyłączone"
@@ -10991,7 +10995,7 @@ pl_PL:
           modal_title: Grupy odznak
         granted_by: Przyznana przez
         granted_at: Przyznana
-        reason_help: (Link do wpisu lub tematu)
+        reason_help: Link do wpisu lub tematu
         save: Zapisz
         delete: Usuń
         delete_confirm: Czy na pewno chcesz usunąć tę odznakę?

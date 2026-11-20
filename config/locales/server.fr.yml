@@ -3436,20 +3436,6 @@ fr:
       title: "Message masqué"
       preview: "Publication masquée à la suite de signalements de membres de la communauté."
       subject_template: "Message masqué suite à des signalements de la communauté"
-      text_body_template: |
-        Bonjour,
-
-        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que votre message a été masqué.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ce message a été masqué suite à des signalements de la communauté. Nous vous invitons par conséquent à envisager de le modifier en prenant en considération leurs commentaires. **Vous pourrez modifier votre message d'ici %{edit_delay} minutes, et il sera ensuite rendu automatiquement visible à nouveau.**
-
-        Toutefois, si ce message était masqué par la communauté une seconde fois, il le resterait jusqu'à ce qu'il soit examiné par des responsables.
-
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject_edit_post: "Vous pouvez modifier votre publication d'origine ci-dessous et la soumettre à nouveau afin d'apporter les changements suggérés, ou répondre à ce message si vous avez des questions."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Vous pouvez modifier votre publication d'origine ci-dessous et la soumettre à nouveau afin d'apporter les changements suggérés."
     reviewable_queued_post_revise_and_reject_edit_topic: "Vous pouvez modifier la publication initiale de votre sujet ci-dessous et la soumettre à nouveau afin d'apporter les changements suggérés, ou répondre à ce message si vous avez des questions."
@@ -3504,31 +3490,9 @@ fr:
       title: "Message masqué à nouveau"
       preview: "Publication de nouveau masquée à la suite de signalements de membres de la communauté."
       subject_template: "Message masqué suite à des signalements de la communauté, responsables avertis"
-      text_body_template: |
-        Bonjour,
-
-        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que votre message a été masqué à nouveau.
-
-         <%{base_url}%{url}>
-
-         %{flag_reason}
-
-        La communauté a signalé ce message et il est maintenant masqué. **Ce message ayant été masqué plus d'une fois, il le restera jusqu'à ce qu'un responsable intervienne.**
-
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     queued_by_staff:
       title: "Message en attente de vérification"
       subject_template: "Message masqué par un responsable, en attente de vérification"
-      text_body_template: |
-        Bonjour,
-
-        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que votre message a été masqué.
-
-        <%{base_url}%{url}>
-
-        Votre message restera masqué jusqu'à ce qu'un responsable en prenne connaissance et l'examine.
-
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     flags_disagreed:
       title: "Le message signalé a été rétabli par un responsable"
       subject_template: "Le message signalé a été rétabli par un responsable"
@@ -4064,16 +4028,6 @@ fr:
     user_automatically_silenced_with_reason:
       title: "Utilisateur automatiquement mis en sourdine"
       subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
-      text_body_template: |
-        Ceci est un message automatique.
-
-        Le nouvel utilisateur [%{username}](%{user_url}) a été automatiquement mis en sourdine.
-
-        Motif : %{reason}
-
-        Veuillez [examiner les signalements](%{base_url}/review). Si %{username} a été mis en sourdine par erreur, cliquez sur le bouton permettant de lever la mise en sourdine sur [la page d'administration de cet utilisateur](%{user_url}).
-
-        Ce seuil peut être modifié dans le paramètre de site `silence_new_user`.
     spam_post_blocked:
       title: "Publication de contenu indésirable bloquée"
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
@@ -4624,10 +4578,6 @@ fr:
     signup_after_reject:
       title: "Inscription suite à un refus"
       subject_template: "Votre inscription à %{site_name} a été rejetée"
-      text_body_template: |
-        Un responsable a refusé votre inscription sur %{site_name}.
-
-        Motif : %{reject_reason}
     signup:
       title: "Inscription"
       preview: "Confirmez votre compte."

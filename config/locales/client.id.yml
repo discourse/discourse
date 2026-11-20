@@ -3107,6 +3107,8 @@ id:
           date: "Tanggal"
       site_text:
         search_label: "Cari"
+        preview:
+          default: "Asal"
         theme_disabled: "Dinonaktifkan"
         edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"

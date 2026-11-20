@@ -48,12 +48,6 @@ fr:
         flagged_post_response: "Réponse du modèle : %{llm_response}"
         notify_author_pm:
           subject: "Votre publication a été temporairement retirée pour vérification"
-          body: |
-            Bonjour @%{username},
-
-            Votre publication dans « %{topic_title} » a été temporairement retirée et placée dans notre file d'attente de vérification afin d'être examinée par l'équipe de modération. Si elle est approuvée, elle sera automatiquement restaurée.
-
-            Référence : %{post_url}
       llm_report:
         title: Rapport périodique utilisant l'IA
         description: "Rapport périodique basé sur un grand modèle linguistique"

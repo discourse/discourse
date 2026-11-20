@@ -50,6 +50,9 @@ pt_BR:
           title: "Sistema da fonte"
         colors:
           title: "Cores"
+        design_variables:
+          type: "Tipo"
+          default: "Padrão"
         dialog:
           title: "Diálogo"
         drag_and_drop:

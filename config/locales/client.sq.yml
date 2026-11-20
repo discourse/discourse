@@ -5000,6 +5000,8 @@ sq:
           dropdown: "Listë Dropdown"
       site_text:
         search_label: "Kërko"
+        preview:
+          default: "Paracaktuar"
         theme_disabled: "E çaktivizuar"
         edit: "Redaktoni"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
@@ -5068,7 +5070,6 @@ sq:
           modal_title: Grupime Steme
         granted_by: Atribuar nga
         granted_at: Atribuar më
-        reason_help: '{një lidhje për një postim ose temë)'
         save: Ruaj
         delete: Fshij
         delete_confirm: Jeni i sigurtë që doni ta fshini këtë stemë?

@@ -2862,20 +2862,6 @@ cs:
     post_hidden:
       title: "Skrytý příspěvek"
       subject_template: "Příspěvek skrytý nahlášeními komunity"
-      text_body_template: |
-        Dobrý den,
-
-        Toto je automatická zpráva od %{site_name} , která vás informuje, že váš příspěvek byl skrytý.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Tento příspěvek byl skryt z důvodu nahlášení z komunity, proto prosím zvažte, jak byste jej mohli upravit aby váš příspěvek odrážel jejich zpětnou vazbu. **Svůj příspěvek můžete upravit po %{edit_delay} minutách a automaticky se zobrazí.**
-
-        Pokud však příspěvek skryje komunita podruhé, zůstane skrytý, dokud jej nezpracuje redakce.
-
-        Další pokyny naleznete v našich [pravidlech komunity](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Zpětná vazba na váš příspěvek"
       subject_template: "Zpětná vazba na váš příspěvek v %{topic_title}"
@@ -2885,31 +2871,9 @@ cs:
     post_hidden_again:
       title: "Příspěvek byl opět skryt"
       subject_template: "Příspěvek skryt nahlášeními komunity, redakce byla upozorněna"
-      text_body_template: |
-        Dobrý den,
-
-        Toto je automatická zpráva z %{site_name} , která vás informuje, že váš příspěvek byl znovu skryt.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Komunita nahlásila tento příspěvek a nyní je skrytý. **Protože tento příspěvek byl skryt vícekrát, váš příspěvek nyní zůstane skrytý, dokud nebude zpracován členem redakce.**
-
-        Další pokyny najdete v našich [pravidlech komunity](%{base_url}/guidelines).
     queued_by_staff:
       title: "Příspěvek potřebuje schválení"
       subject_template: "Příspěvek skrytý redakcí, čeká na schválení"
-      text_body_template: |
-        Dobrý den,
-
-        Toto je automatická zpráva od %{site_name}, která vás informuje o tom, že váš příspěvek byl skryt.
-
-        <%{base_url}%{url}>
-
-        Váš příspěvek zůstane skrytý, dokud jej nezkontroluje člen redakce.
-
-        Další pokyny naleznete v našich [zásadách komunity](%{base_url}/guidelines).
     flags_disagreed:
       text_body_template: |
         Dobrý den,
@@ -3740,11 +3704,6 @@ cs:
         Věříme v [civilizované chování komunity](%{base_url}/guidelines) za všech okolností.
 
         Užijte si svůj pobyt!
-    signup_after_reject:
-      text_body_template: |
-        Člen redakce odmítl váš účet na webu %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registrace"
       subject_template: "[%{email_prefix}] Potvrďte svůj nový účet"

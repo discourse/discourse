@@ -5271,6 +5271,8 @@ hy:
           dropdown: "Բացվող Ցուցակ"
       site_text:
         search_label: "Որոնում"
+        preview:
+          default: "Լռելյայն"
         theme_disabled: "Անջատված"
         filters: "Ֆիլտրներ"
         edit: "Խմբագրել"
@@ -5353,7 +5355,7 @@ hy:
           modal_title: Կրծքանշանների Խմբավորումները
         granted_by: Շնորհող՝
         granted_at: Շնորհված
-        reason_help: (Գրառման կամ թեմայի հղում)
+        reason_help: Գրառման կամ թեմայի հղում
         save: Պահպանել
         delete: Ջնջել
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կրծքանշանը:'

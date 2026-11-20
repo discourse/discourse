@@ -18,6 +18,9 @@ bg:
           cross_list_primary: "Основен"
         colors:
           title: "Цветове"
+        design_variables:
+          type: "Тип"
+          default: "По подразбиране"
         icons:
           title: "Икони"
         categories:

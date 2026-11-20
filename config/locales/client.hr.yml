@@ -7452,6 +7452,8 @@ hr:
       site_text:
         description: "Možete prilagoditi bilo koji tekst na svom forumu."
         search_label: "Pretraživanje"
+        preview:
+          default: "Zadano"
         theme_disabled: "Onemogućeno"
         filters: "Filteri"
         edit: "Uredi"
@@ -7561,7 +7563,7 @@ hr:
           modal_title: Grupiranja znački
         granted_by: Dodijelio/la
         granted_at: Dodijeljeno pri
-        reason_help: (Poveznica na objavu ili temu)
+        reason_help: Poveznica na objavu ili temu
         save: Spremi
         delete: Obriši
         delete_confirm: Jeste li sigurni da želite izbrisati ovu značku?

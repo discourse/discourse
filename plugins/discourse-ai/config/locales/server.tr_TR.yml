@@ -38,12 +38,6 @@ tr_TR:
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
         notify_author_pm:
           subject: "Gönderiniz inceleme için geçici olarak kaldırılmıştır."
-          body: |
-            Merhaba %{username},
-
-            "%{topic_title}" başlıklı gönderiniz geçici olarak kaldırılmış ve moderatörün incelemesi için inceleme kuyruğuna alınmıştır. Onaylanırsa, otomatik olarak geri yüklenecektir.
-
-            Referans: %{post_url}
       llm_report:
         title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"

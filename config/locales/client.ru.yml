@@ -8947,6 +8947,8 @@ ru:
       site_text:
         description: "Вы можете настроить любой текст на своем форуме."
         search_label: "Искать"
+        preview:
+          default: "Домашнюю страницу"
         theme_disabled: "Отключен"
         filters: "Фильтры"
         status:
@@ -9129,7 +9131,7 @@ ru:
           modal_title: Группы наград
         granted_by: Кем выдана
         granted_at: Когда выдана
-        reason_help: (Ссылка на сообщение или тему)
+        reason_help: Ссылка на сообщение или тему
         save: Сохранить
         delete: Удалить
         delete_confirm: Действительно удалить эту награду?

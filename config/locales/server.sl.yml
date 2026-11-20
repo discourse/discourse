@@ -1693,10 +1693,6 @@ sl:
     signup_after_reject:
       title: "Prijava po zavrnitvi"
       subject_template: "Zavrnjeni ste bili na %{site_name}"
-      text_body_template: |
-        Član osebja je zavrnil vaš račun na %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registracija"
       subject_template: "[%{email_prefix}] Potrdite nov uporabniški račun"

@@ -4882,6 +4882,8 @@ sl:
           dropdown: "Spustni meni"
       site_text:
         search_label: "Išči"
+        preview:
+          default: "Privzeto"
         theme_disabled: "Onemogočeno"
         filters: "Filtri"
         edit: "Uredi"
@@ -4958,7 +4960,7 @@ sl:
           modal_title: Skupine značk
         granted_by: Podeljeno od
         granted_at: Podeljeno
-        reason_help: (povezava na prispevek ali temo)
+        reason_help: povezava na prispevek ali temo
         save: Shrani
         delete: Izbriši
         delete_confirm: Si prepričan, da želiš odstraniti to značko?

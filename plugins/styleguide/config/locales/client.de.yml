@@ -51,6 +51,9 @@ de:
           title: "Schrift"
         colors:
           title: "Farben"
+        design_variables:
+          type: "Typ"
+          default: "Standard"
         dialog:
           title: "Dialog"
         drag_and_drop:
