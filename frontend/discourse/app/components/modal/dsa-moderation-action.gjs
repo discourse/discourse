@@ -30,35 +30,7 @@ export default class DsaModerationAction extends Component {
   }
 
   get confirmationTitle() {
-    if (!this.confirmationMessage) {
-      return;
-    }
-
-    const { action: reviewAction, reviewable } = this.args.model;
-    switch (reviewAction.server_action) {
-      case "delete_user":
-      case "delete_user_block": {
-        const username =
-          reviewable.target_user?.username ??
-          reviewable.target_created_by?.username;
-        if (username) {
-          return i18n(
-            `review.confirmation_titles.${reviewAction.server_action}`,
-            {
-              username,
-            }
-          );
-        }
-        break;
-      }
-      case "delete_and_agree_replies":
-      case "delete_and_ignore_replies":
-        return i18n(`review.confirmation_titles.${reviewAction.server_action}`);
-    }
-  }
-
-  get hasActionDetails() {
-    return Boolean(this.confirmationMessage && !this.confirmationTitle);
+    return this.args.model.action.confirm_title;
   }
 
   get nextStepLabel() {
@@ -66,12 +38,12 @@ export default class DsaModerationAction extends Component {
   }
 
   get title() {
-    return (
-      this.confirmationTitle ??
-      (this.confirmationMessage || this.#editing
-        ? this.args.model.action.label
-        : i18n("dsa_statements.title"))
-    );
+    if (this.confirmationMessage) {
+      return this.confirmationTitle ?? this.args.model.action.label;
+    }
+    return this.#editing
+      ? this.args.model.action.label
+      : i18n("dsa_statements.title");
   }
 
   get #editing() {
@@ -97,8 +69,7 @@ export default class DsaModerationAction extends Component {
 
   <template>
     <DsaModeration
-      @actionStepLabel={{i18n "review.moderation_steps.confirm"}}
-      @hasActionDetails={{this.hasActionDetails}}
+      @hasActionDetails={{false}}
       @nextStepLabel={{this.nextStepLabel}}
       @onSubmit={{this.submit}}
       @options={{@model.options}}
@@ -114,7 +85,7 @@ export default class DsaModerationAction extends Component {
         @title={{this.title}}
       >
         <:headerBelowTitle>
-          {{#if (and flow.showTitleHelp (not this.confirmationTitle))}}
+          {{#if (and flow.showTitleHelp (not this.confirmationMessage))}}
             <flow.Help class="dsa-moderation-title-help" />
           {{/if}}
         </:headerBelowTitle>
@@ -122,15 +93,16 @@ export default class DsaModerationAction extends Component {
           <flow.Steps @disabled={{this.saving}} />
         </:belowHeader>
         <:body>
-          {{#if this.confirmationTitle}}
+          {{#if this.confirmationMessage}}
+            {{#unless this.confirmationTitle}}
+              <p>{{this.confirmationMessage}}</p>
+            {{/unless}}
             <div class="dsa-moderation-action__classification">
               <h2>{{i18n "dsa_statements.title"}}</h2>
               <flow.Help />
             </div>
           {{/if}}
-          <flow.Body>
-            <p>{{this.confirmationMessage}}</p>
-          </flow.Body>
+          <flow.Body />
         </:body>
         <:footer>
           <flow.Footer
@@ -138,7 +110,7 @@ export default class DsaModerationAction extends Component {
             @cancelDisabled={{this.saving}}
             @disabled={{this.saving}}
             @isLoading={{this.saving}}
-            @requireCompleteClassification={{this.confirmationTitle}}
+            @requireCompleteClassification={{this.confirmationMessage}}
             @submitClass={{this.buttonClass}}
             @submitLabel={{this.buttonLabel}}
           />

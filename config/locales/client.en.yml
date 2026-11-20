@@ -1021,11 +1021,6 @@ en:
       save: "Save classification"
     review:
       continue_to_editor: "Continue to editor"
-      confirmation_titles:
-        delete_user: "Delete @%{username}?"
-        delete_user_block: "Delete and block @%{username}?"
-        delete_and_agree_replies: "Delete post and replies?"
-        delete_and_ignore_replies: "Delete post and replies, ignore flag?"
       moderation_steps:
         label: "Moderation steps"
         action: "Action details"

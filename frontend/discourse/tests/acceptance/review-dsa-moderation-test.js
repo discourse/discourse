@@ -41,6 +41,11 @@ const actions = [
     confirmMessage: repliesConfirmation,
   },
 ];
+const pluginAction = {
+  id: "plugin_remove_attachment",
+  label: "Remove attachment",
+  confirmMessage: "This removes the attachment from the post.",
+};
 
 async function openAction(actionId) {
   const menu = selectKit(".reviewable-action-dropdown");
@@ -68,6 +73,7 @@ acceptance("Review DSA moderation", function (needs) {
   });
 
   needs.pretender((server, helper) => {
+    const reviewActions = [...actions, pluginAction];
     server.get("/review/1", () =>
       helper.response({
         reviewable: {
@@ -85,14 +91,15 @@ acceptance("Review DSA moderation", function (needs) {
           {
             id: "1-actions",
             label: "Actions",
-            action_ids: actions.map(({ id }) => `1-${id}`),
+            action_ids: reviewActions.map(({ id }) => `1-${id}`),
           },
         ],
-        actions: actions.map(({ id, label, confirmMessage }) => ({
+        actions: reviewActions.map(({ id, label, title, confirmMessage }) => ({
           id: `1-${id}`,
           action_name: `post-${id}`,
           server_action: id,
           label,
+          confirm_title: title,
           confirm_message: confirmMessage,
           confirm_destructive: true,
           dsa_classification_required: Boolean(classificationOptions),
@@ -184,5 +191,20 @@ acceptance("Review DSA moderation", function (needs) {
         "shows the standard confirmation"
       );
     assert.dom(modal).doesNotExist("the DSA form is absent");
+  });
+
+  test("preserves custom confirmation copy alongside classification for a plugin action", async function (assert) {
+    await visit("/review/1");
+    await openAction(pluginAction.id);
+
+    assert.dom(`${modal} .d-modal__title-text`).hasText(pluginAction.label);
+    assert
+      .dom(`${modal} .d-modal__body`)
+      .includesText(pluginAction.confirmMessage);
+    assert.dom(`${modal} form`).isVisible();
+    assert.dom(submitButton).hasText(pluginAction.label).isDisabled();
+
+    await click(`${modal} .d-modal-cancel`);
+    assert.dom(modal).doesNotExist();
   });
 });
