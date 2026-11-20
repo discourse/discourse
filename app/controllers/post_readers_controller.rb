@@ -43,6 +43,8 @@ class PostReadersController < ApplicationController
     guardian.ensure_is_staff!
 
     post = Post.includes(:topic).find(params[:id])
+    raise Discourse::NotFound if post.topic.nil?
+
     guardian.ensure_can_see!(post)
     if post.post_type != Post.types[:regular] || post.topic.private_message?
       raise Discourse::NotFound

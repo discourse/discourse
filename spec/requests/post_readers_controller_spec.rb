@@ -44,6 +44,16 @@ RSpec.describe PostReadersController do
         expect(response.status).to eq(404)
       end
 
+      it "does not report readers of a deleted topic" do
+        deleted_post = Fabricate(:post)
+        deleted_post.topic.trash!
+        sign_in(Fabricate(:admin))
+
+        report_for(deleted_post)
+
+        expect(response).to have_http_status(:not_found)
+      end
+
       it "does not report readers of a whisper" do
         whisper = Fabricate(:post, topic: post.topic, post_type: Post.types[:whisper])
         sign_in(Fabricate(:admin))
