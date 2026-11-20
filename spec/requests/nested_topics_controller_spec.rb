@@ -1553,10 +1553,32 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json["ancestor_chain"]).to be_empty
     end
 
-    it "returns 404 for nonexistent post_number" do
+    it "falls back to the topic root when the requested post is beyond an OP-only topic" do
       sign_in(user)
-      get context_url(topic, 99_999)
-      expect(response.status).to eq(404)
+      get context_url(topic, 2, sort: "old")
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["op_post"]["id"]).to eq(op.id)
+      expect(response.parsed_body["roots"]).to be_empty
+    end
+
+    it "falls back to the preceding visible reply for missing post numbers" do
+      reply = Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic, post_number: 4)
+      sign_in(user)
+
+      get context_url(topic, 3)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["target_post"]["id"]).to eq(reply.id)
+    end
+
+    it "skips whispers when falling back for a non-whisperer" do
+      reply = Fabricate(:post, topic: topic)
+      whisper = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      sign_in(user)
+
+      get context_url(topic, whisper.post_number + 1)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["target_post"]["id"]).to eq(reply.id)
     end
 
     it "retains direct context access to a deleted root leaf hidden from the root list" do

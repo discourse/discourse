@@ -119,7 +119,7 @@ module PageObjects
       end
 
       def has_highlighted_post?(post)
-        has_css?(".nested-post--highlighted [data-post-number='#{post.post_number}']", wait: 5)
+        has_css?(".nested-post[data-highlighted] [data-post-number='#{post.post_number}']", wait: 5)
       end
 
       def has_reply_button_for?(post)

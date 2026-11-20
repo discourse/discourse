@@ -778,9 +778,10 @@ export default class Nested extends Component {
     if (target) {
       const postEl = target.closest(".nested-post");
       if (postEl) {
-        postEl.classList.add("nested-post--highlighted");
+        // Glimmer owns the wrapper class and can overwrite it during rerenders.
+        postEl.setAttribute("data-highlighted", "");
         this.#highlightTimer = setTimeout(
-          () => postEl.classList.remove("nested-post--highlighted"),
+          () => postEl.removeAttribute("data-highlighted"),
           2000
         );
       }
