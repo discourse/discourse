@@ -590,20 +590,15 @@
 
     &:hover {
       background-color: var(--d-hover);
-      outline: none;
     }
 
-    &:focus-within {
-      background: var(--d-hover);
+    &:has(a:focus-visible) {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
 
       a {
-        // we don't need the link focus because we're styling the parent
+        // the ring is on the item
         outline: 0;
-      }
-
-      .btn-flat:focus {
-        // undo default btn-flat style
-        background: transparent;
       }
     }
 
