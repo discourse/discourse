@@ -4,6 +4,7 @@ import {
   click,
   fillIn,
   render,
+  triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -95,6 +96,38 @@ module("Integration | Component | ColorList", function (hooks) {
       this.changes.at(-1),
       ["123456", "AABBCC", "0000FF"],
       "the picker edits the row too"
+    );
+  });
+
+  test("a pasted color edits a row like a typed one", async function (assert) {
+    const paste = async (selector, text) => {
+      const input = document.querySelector(selector);
+      input.select();
+      const clipboardData = new DataTransfer();
+      clipboardData.setData("text/plain", text);
+      await triggerEvent(input, "paste", { clipboardData });
+    };
+
+    await render(
+      <template>
+        <ColorList @onChange={{this.onChange}} @values={{this.values.value}} />
+      </template>
+    );
+
+    await paste(rowHex(1), " #123456 ");
+    assert.deepEqual(
+      this.changes,
+      [["FF0000", "123456", "0000FF"]],
+      "a whole color is kept at once"
+    );
+
+    await paste(rowHex(1), "#f00");
+    assert.dom(rowHex(1)).hasValue("F00", "a short one shows as pasted");
+    await blur(rowHex(1));
+    assert.deepEqual(
+      this.changes.at(-1),
+      ["FF0000", "FF0000", "0000FF"],
+      "and expands when the field is left"
     );
   });
 

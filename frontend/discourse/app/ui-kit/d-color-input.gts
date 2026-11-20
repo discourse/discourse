@@ -87,12 +87,32 @@ export default class DColorInput extends Component<DColorInputSignature> {
     return BLACK;
   }
 
+  /**
+   * A pasted color replaces the field; other text goes in at the cursor, as much as fits. Either
+   * way it then counts as typed.
+   */
   @action
   handlePaste(event: ClipboardEvent) {
     event.preventDefault();
-    this.args.onChange(
-      this.#typed(withoutHash(event.clipboardData?.getData("text/plain") ?? ""))
+    const input = event.target as HTMLInputElement;
+    const pasted = this.#typed(
+      withoutHash((event.clipboardData?.getData("text/plain") ?? "").trim())
     );
+
+    if (isValidHex(pasted)) {
+      input.value = pasted;
+    } else {
+      const start = input.selectionStart ?? input.value.length;
+      const end = input.selectionEnd ?? start;
+      const room =
+        (this.maxLength ?? Infinity) - (input.value.length - (end - start));
+      const fitted = pasted.slice(0, Math.max(room, 0));
+      input.value =
+        input.value.slice(0, start) + fitted + input.value.slice(end);
+      input.setSelectionRange(start + fitted.length, start + fitted.length);
+    }
+
+    this.args.onChange(input.value);
   }
 
   @action

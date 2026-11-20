@@ -78,6 +78,80 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
     assert.strictEqual(input.selectionStart, 2, "the caret stays put");
   });
 
+  test("a pasted color replaces the field, without spaces or #", async function (assert) {
+    const changes = [];
+    const onChange = (value) => changes.push(value);
+
+    await render(
+      <template>
+        <DColorInput @onChange={{onChange}} @value="ABCDEF" />
+      </template>
+    );
+
+    const input = document.querySelector(HEX);
+    input.setSelectionRange(2, 2);
+    const clipboardData = new DataTransfer();
+    clipboardData.setData("text/plain", " #f00 ");
+    await triggerEvent(HEX, "paste", { clipboardData });
+
+    assert.dom(HEX).hasValue("F00", "the field shows the pasted color");
+    assert.deepEqual(changes, ["F00"]);
+  });
+
+  test("other pasted text goes in at the cursor, within the limit", async function (assert) {
+    const changes = [];
+    const onChange = (value) => changes.push(value);
+
+    await render(
+      <template>
+        <DColorInput class="partial" @onChange={{onChange}} @value="AB" />
+        <DColorInput class="alpha" @onChange={{onChange}} @value="" />
+      </template>
+    );
+
+    const partial = document.querySelector(`${HEX}.partial`);
+    partial.setSelectionRange(1, 1);
+    let clipboardData = new DataTransfer();
+    clipboardData.setData("text/plain", "cdefgh");
+    await triggerEvent(partial, "paste", { clipboardData });
+
+    assert
+      .dom(partial)
+      .hasValue("ACDEFB", "only what fits goes in, where the cursor is");
+    assert.strictEqual(partial.selectionStart, 5, "and the cursor follows it");
+
+    clipboardData = new DataTransfer();
+    clipboardData.setData("text/plain", "#ff0000aa");
+    await triggerEvent(`${HEX}.alpha`, "paste", { clipboardData });
+
+    assert
+      .dom(`${HEX}.alpha`)
+      .hasValue("FF0000", "a color with alpha keeps the 6 digits that fit");
+    assert.deepEqual(changes, ["ACDEFB", "FF0000"]);
+  });
+
+  test("keeps pasted names as pasted, without spaces", async function (assert) {
+    const changes = [];
+    const onChange = (value) => changes.push(value);
+
+    await render(
+      <template>
+        <DColorInput
+          @allowNamedColors={{true}}
+          @onChange={{onChange}}
+          @value=""
+        />
+      </template>
+    );
+
+    const clipboardData = new DataTransfer();
+    clipboardData.setData("text/plain", " cornflowerblue ");
+    await triggerEvent(HEX, "paste", { clipboardData });
+
+    assert.dom(HEX).hasValue("cornflowerblue");
+    assert.deepEqual(changes, ["cornflowerblue"]);
+  });
+
   test("keeps typed names as typed, but picks in uppercase", async function (assert) {
     const changes = [];
     const onChange = (value) => changes.push(value);
