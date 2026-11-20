@@ -310,6 +310,15 @@ acceptance("Blog editor", function (needs) {
     );
   });
 
+  test("leaves out the blog column with a single blog", async function (assert) {
+    await visit("/blog-editor");
+
+    assert.dom(".blog-dashboard__row").exists("the list has articles");
+    assert
+      .dom(".blog-dashboard__blog")
+      .doesNotExist("one blog needs no column for it");
+  });
+
   test("offers page actions in the header", async function (assert) {
     await visit("/blog-editor");
     assert
@@ -568,7 +577,16 @@ acceptance("Blog editor with several blogs", function (needs) {
     server.get("/blog-editor.json", (request) => {
       requests.push({ ...request.queryParams });
       return helper.response({
-        topics: [],
+        topics: [
+          {
+            id: 321,
+            blog_id: 2,
+            title: "Notes from the offsite",
+            status: "draft",
+            draft: true,
+            topic_url: "/t/notes-from-the-offsite/321",
+          },
+        ],
         blog_url: "https://blog.example.com",
       });
     });
@@ -622,6 +640,14 @@ acceptance("Blog editor with several blogs", function (needs) {
       2,
       "the draft is created for the chosen blog"
     );
+  });
+
+  test("shows each article's blog", async function (assert) {
+    await visit("/blog-editor?blog=2");
+
+    assert
+      .dom(".blog-dashboard__blog")
+      .includesText("Engineering", "the article's blog is named");
   });
 
   test("leaves the blog filter out of new drafts", async function (assert) {

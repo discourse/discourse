@@ -25,6 +25,11 @@ import {
   editorFilters,
   STATUS_OPTIONS,
 } from "discourse/plugins/blog/discourse/lib/blog-editor-filters";
+import { findBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
+
+function blogName(site, topic) {
+  return findBlog(site, topic.blog_id)?.name;
+}
 
 // "Changes pending" is still a live article; the edits are shown as separate pending work.
 function articleState(topic) {
@@ -401,6 +406,11 @@ export default class BlogDashboard extends Component {
                   <th class="d-table__header-cell">{{i18n
                       "blog.editor_table.title"
                     }}</th>
+                  {{#if this.hasSeveralBlogs}}
+                    <th class="d-table__header-cell">{{i18n
+                        "blog.editor_table.blog"
+                      }}</th>
+                  {{/if}}
                   <th
                     class="d-table__header-cell blog-dashboard__status-column"
                   >{{i18n "blog.editor_table.status"}}</th>
@@ -459,6 +469,14 @@ export default class BlogDashboard extends Component {
                         {{/if}}
                       {{/if}}
                     </td>
+                    {{#if this.hasSeveralBlogs}}
+                      <td class="d-table__cell --detail blog-dashboard__blog">
+                        <div class="d-table__mobile-label">{{i18n
+                            "blog.editor_table.blog"
+                          }}</div>
+                        {{blogName this.site topic}}
+                      </td>
+                    {{/if}}
                     <td
                       class="d-table__cell --detail blog-dashboard__status-column"
                     >

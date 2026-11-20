@@ -185,6 +185,24 @@ RSpec.describe "Several blogs", type: :request do
       expect(publication.reload.blog_id).to eq(engineering.id)
     end
 
+    it "gives each listed topic the blog it belongs to, including topics not yet assigned" do
+      engineering_article =
+        publish_article(engineering, path: "/story", raw: "An engineering story.")
+      unassigned = Fabricate(:topic, category: engineering_category, user: admin)
+      Fabricate(:post, topic: unassigned, user: admin)
+      draft = Fabricate(:topic, category: drafts, user: admin)
+      sign_in(admin)
+
+      get "/blog-editor.json"
+
+      blog_ids = response.parsed_body["topics"].to_h { [_1["id"], _1["blog_id"]] }
+      expect(blog_ids).to include(
+        engineering_article.topic_id => engineering.id,
+        unassigned.id => engineering.id,
+        draft.id => Blog::Instance.default_blog.id,
+      )
+    end
+
     it "lists one blog's work when the editor filters by blog" do
       article = publish_article(engineering, path: "/story", raw: "An engineering story.")
       sign_in(admin)
