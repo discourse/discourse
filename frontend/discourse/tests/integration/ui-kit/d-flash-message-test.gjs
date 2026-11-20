@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DFlashMessage from "discourse/ui-kit/d-flash-message";
@@ -130,6 +131,28 @@ module("Integration | ui-kit | DFlashMessage", function (hooks) {
     state.flash = "Second error";
     await settled();
     assert.strictEqual(a11y.assertiveMessage, "Second error");
+  });
+
+  test("the same message set again is announced again", async function (assert) {
+    const state = trackedObject({ flash: "Wrong password" });
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(
+      <template>
+        <DFlashMessage @flash={{state.flash}} @type="error" />
+      </template>
+    );
+    state.flash = "Wrong password";
+    await settled();
+
+    assert.strictEqual(
+      announce.callCount,
+      2,
+      "a repeated error is announced each time it is set"
+    );
   });
 
   test("it does not render anything when flash is not provided", async function (assert) {
