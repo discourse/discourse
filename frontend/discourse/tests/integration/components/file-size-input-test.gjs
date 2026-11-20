@@ -2,6 +2,7 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import FileSizeInput from "discourse/admin/components/file-size-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module("Integration | Component | FileSizeInput", function (hooks) {
@@ -192,5 +193,52 @@ module("Integration | Component | FileSizeInput", function (hooks) {
       "1 MB is smaller than the min allowed 2 MB",
       "A message is showed when the input is smaller than the min"
     );
+  });
+
+  test("picks the unit from a static select with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const sizes = [];
+    const onChangeSize = (size) => sizes.push(size);
+    const noop = () => {};
+
+    await render(
+      <template>
+        <FileSizeInput
+          @max={{4194304}}
+          @onChangeSize={{onChangeSize}}
+          @setValidationMessage={{noop}}
+          @sizeValueKB={{2048}}
+        />
+      </template>
+    );
+
+    const unit = ".file-size-unit-selector";
+    assert.dom(".file-size-picker .select-kit").doesNotExist();
+    assert
+      .dom(unit)
+      .hasAttribute("data-name", "MB", "a value of 1 MB or more starts in MB");
+    assert.dom(".file-size-input").hasValue("2");
+    assert
+      .dom(".file-size-picker [role='combobox']")
+      .hasAria("label", "Unit", "named after what it picks");
+    assert
+      .dom(".file-size-picker input[role='combobox']")
+      .doesNotExist("a short fixed list, so nothing to type");
+
+    await dSelect(unit).open();
+    assert.deepEqual(
+      [...document.querySelectorAll("[role='option']")].map((row) =>
+        row.textContent.trim()
+      ),
+      ["KB", "MB", "GB"]
+    );
+    await dSelect(unit).close();
+
+    await dSelect(unit).select("kb");
+    assert.dom(unit).hasAttribute("data-name", "KB");
+    assert.dom(".file-size-input").hasValue("2048", "shows the size in KB");
+
+    await fillIn(".file-size-input", "3");
+    assert.deepEqual(sizes, [3], "a typed size is read in the picked unit");
   });
 });

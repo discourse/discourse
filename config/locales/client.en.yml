@@ -3524,6 +3524,7 @@ en:
       to: To
 
     file_size_input:
+      unit: "Unit"
       error:
         size_too_large: "%{provided_file_size} is greater than the max allowed %{max_file_size}"
         size_too_small: "%{provided_file_size} is smaller than the min allowed %{min_file_size}"
