@@ -1425,8 +1425,8 @@ CREATE TABLE public.appearance_changes (
     kind integer NOT NULL,
     name character varying NOT NULL,
     theme_id integer NOT NULL,
-    light_color_scheme_id integer NOT NULL,
-    dark_color_scheme_id integer NOT NULL,
+    light_color_scheme_id integer,
+    dark_color_scheme_id integer,
     site_settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     previous_state jsonb DEFAULT '{}'::jsonb NOT NULL,
     user_id integer NOT NULL,
@@ -26819,6 +26819,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261120183731'),
 ('20261119153028'),
 ('20261118215054'),
 ('20261118184327'),
